@@ -1,160 +1,208 @@
-Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0087.outbound.protection.outlook.com ([104.47.0.87]:62132
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S934411AbeCEMZF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 5 Mar 2018 07:25:05 -0500
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 10/12] dt-bindings: connector: add properties for typec
- power delivery
-Date: Mon, 5 Mar 2018 12:25:01 +0000
-Message-ID: <VI1PR0402MB39174AB429CCDFCE63DA784789DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
- <CGME20180226120532epcas5p3c4b0258ec0677939f4241b24da5f48bc@epcas5p3.samsung.com>
- <1519645759-12701-11-git-send-email-jun.li@nxp.com>
- <20522804-65ab-5d48-716a-c199e4c095fc@samsung.com>
- <20180302223841.2lj3dutyknlhxvra@rob-hp-laptop>
- <VI1PR0402MB3917DD4CFB7D6EAF255BC7E689DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3917DD4CFB7D6EAF255BC7E689DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=suOX=F3=samsung.com=a.hajda@kernel.org>
+Subject: Re: [PATCH v2 10/12] dt-bindings: connector: add properties for
+ typec power delivery
+From: Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <133b5194-26ff-071a-d3d1-2bfca1375cae@samsung.com>
+Date: Mon, 5 Mar 2018 10:59:16 +0100
+MIME-Version: 1.0
+In-Reply-To: <VI1PR0402MB39175D757B94FB52CB5A09F889DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+	<CGME20180226120532epcas5p3c4b0258ec0677939f4241b24da5f48bc@epcas5p3.samsung.com>
+	<1519645759-12701-11-git-send-email-jun.li@nxp.com>
+	<20522804-65ab-5d48-716a-c199e4c095fc@samsung.com>
+	<VI1PR0402MB39175D757B94FB52CB5A09F889DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+To: Jun Li <jun.li@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEp1biBMaQ0KPiBTZW50OiAy
-MDE45bm0M+aciDXml6UgMTU6NTINCj4gVG86IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-OyBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPg0KPiBDYzogZ3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc7IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb207DQo+IGxpbnV4
-QHJvZWNrLXVzLm5ldDsgbWFyay5ydXRsYW5kQGFybS5jb207IHl1ZXlhb0Bnb29nbGUuY29tOyBQ
-ZXRlcg0KPiBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2YUBlbWJlZGRlZG9yLmNv
-bTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsgc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsgbGludXgt
-dXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxp
-bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjIgMTAv
-MTJdIGR0LWJpbmRpbmdzOiBjb25uZWN0b3I6IGFkZCBwcm9wZXJ0aWVzIGZvcg0KPiB0eXBlYyBw
-b3dlciBkZWxpdmVyeQ0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-PiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gPiBTZW50OiAy
-MDE45bm0M+aciDPml6UgNjozOQ0KPiA+IFRvOiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1
-bmcuY29tPg0KPiA+IENjOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91
-bmRhdGlvbi5vcmc7DQo+ID4gaGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgbGludXhA
-cm9lY2stdXMubmV0Ow0KPiA+IG1hcmsucnV0bGFuZEBhcm0uY29tOyB5dWV5YW9AZ29vZ2xlLmNv
-bTsgUGV0ZXIgQ2hlbg0KPiA+IDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2YUBlbWJlZGRl
-ZG9yLmNvbTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsNCj4gPiBzaHVmYW5fbGVlQHJpY2h0ZWsu
-Y29tOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiA+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjIgMTAvMTJdIGR0LWJpbmRpbmdzOiBjb25uZWN0b3I6IGFkZCBwcm9wZXJ0aWVz
-DQo+ID4gZm9yIHR5cGVjIHBvd2VyIGRlbGl2ZXJ5DQo+ID4NCj4gPiBPbiBUdWUsIEZlYiAyNywg
-MjAxOCBhdCAwOTo0MToxOUFNICswMTAwLCBBbmRyemVqIEhhamRhIHdyb3RlOg0KPiA+ID4gT24g
-MjYuMDIuMjAxOCAxMjo0OSwgTGkgSnVuIHdyb3RlOg0KPiA+ID4gPiBJbiBjYXNlIG9mIHVzYi1j
-LWNvbm5lY3RvciB3aXRoIHBvd2VyIGRlbGl2ZXJ5IHN1cHBvcnQsIGFkZA0KPiA+ID4gPiBiaW5n
-ZGluZ3Mgc3VwcG9ydGVkIGJ5IGN1cnJlbnQgdHlwZWMgZHJpdmVyLCBzbyB1c2VyIGNhbiBwYXNz
-IGFsbA0KPiA+ID4gPiB0aG9zZSBwcm9wZXJ0aWVzIHZpYSBkdC4NCj4gPiA+ID4NCj4gPiA+ID4g
-U2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4g
-PiA+IENoYW5nZXMgZm9yIHYyOg0KPiA+ID4gPiAtIEFkZGVkIHR5cGVjIHByb3BlcnRpZXMgYXJl
-IGJhc2VkIG9uIGdlbmVyYWwgdXNiIGNvbm5lY3Rvcg0KPiBiaW5kaW5nc1sxXQ0KPiA+ID4gPiAg
-IHByb3Bvc2VkIGJ5IEFuZHJ6ZWogSGFqZGEuDQo+ID4gPiA+IC0gVXNlIHRoZSBzdGFuZGFyZCB1
-bml0IHN1ZmZpeGVzIGFzIGRlZmluZWQgaW4gcHJvcGVydHktdW5pdHMudHh0Lg0KPiA+ID4gPg0K
-PiA+ID4gPiBbMV0NCj4gPiA+ID4NCj4gPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVj
-dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcA0KPiA+ID4gPg0KPiA+DQo+IGF0
-Y2h3b3JrLmtlcm5lbC5vcmclMkZwYXRjaCUyRjEwMjMxNDQ3JTJGJmRhdGE9MDIlN0MwMSU3Q2p1
-bi5saSUNCj4gPiA0MG54DQo+ID4gPiA+DQo+ID4NCj4gcC5jb20lN0NjZWEzMjU4OWYzMzE0NDg4
-ZTE4ZjA4ZDU4MDhlNWFhZSU3QzY4NmVhMWQzYmMyYjRjNmZhOTINCj4gPiBjZDk5YzUNCj4gPiA+
-ID4NCj4gPg0KPiBjMzAxNjM1JTdDMCU3QzElN0M2MzY1NTYyNzEyNjY0NjkwMTImc2RhdGE9QU5y
-MWplVzh4OGN5NkNHNnR6DQo+ID4gQUNnaiUyQg0KPiA+ID4gPiBGZ05LbDlESmJScGVydkZ3YVFL
-TSUzRCZyZXNlcnZlZD0wDQo+ID4gPiA+DQo+ID4gPiA+ICAuLi4vYmluZGluZ3MvY29ubmVjdG9y
-L3VzYi1jb25uZWN0b3IudHh0ICAgICAgICAgICB8IDQzDQo+ID4gKysrKysrKysrKysrKysrKysr
-KysrKw0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykNCj4gPiA+ID4N
-Cj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiA+ID4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4g
-PiA+IGluZGV4IGUxNDYzZjEuLjI0MmY2ZGYgMTAwNjQ0DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rv
-ci50eHQNCj4gPiA+ID4gKysrDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4DQo+ID4gPiA+ICsrKyB0DQo+ID4gPiA+IEBAIC0x
-NSw2ICsxNSwzMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgLSB0eXBlOiBzaXpl
-IG9mIHRoZSBjb25uZWN0b3IsIHNob3VsZCBiZSBzcGVjaWZpZWQgaW4gY2FzZSBvZg0KPiA+ID4g
-PiBVU0ItQSwNCj4gPiBVU0ItQg0KPiA+ID4gPiAgICBub24tZnVsbHNpemUgY29ubmVjdG9yczog
-Im1pbmkiLCAibWljcm8iLg0KPiA+ID4gPg0KPiA+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllcyBm
-b3IgdXNiLWMtY29ubmVjdG9yIHdpdGggcG93ZXIgZGVsaXZlcnkgc3VwcG9ydDoNCj4gPiA+ID4g
-Ky0gcG9ydC10eXBlOiBzaG91bGQgYmUgb25lIG9mICJzb3VyY2UiLCAic2luayIgb3IgImR1YWwi
-Lg0KPiA+ID4gPiArLSBkZWZhdWx0LXJvbGU6IHByZWZlcnJlZCBwb3dlciByb2xlIGlmIHBvcnQt
-dHlwZSBpcyAiZHVhbCIoZHJwKSwNCj4gPiA+ID4gK3Nob3VsZCBiZQ0KPiA+ID4gPiArICAic2lu
-ayIgb3IgInNvdXJjZSIuDQo+ID4gPg0KPiA+ID4gU2luY2UgcG9ydCBjYXJyaWVzIGRhdGEgYW5k
-IHBvd2VyLCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gZXhwbGljaXRseQ0KPiA+ID4gbWVudGlvbiBp
-dCBpbiBuYW1lcyBvZiBwcm9wZXJ0aWVzIHdoaWNoIGNhbiBiZSBhbWJpZ3VvdXMuDQo+ID4gPiBN
-YXliZSBpbnN0ZWFkIG9mICdwb3J0LXR5cGUnIHlvdSBjYW4gdXNlICdwb3dlci1yb2xlJywgZm9y
-IGV4YW1wbGUuDQo+ID4gPiBPdGhlciB0aGluZyBpcyB0aGF0IGRlZmF1bHQtcm9sZSBpcyByZXF1
-aXJlZCBvbmx5IGluIGNhc2Ugb2YgRFJQLCBzbw0KPiA+ID4gbWF5YmUgYmV0dGVyIHdvdWxkIGJl
-IHRvIHNxdWFzaCBpdCBpbiBwb3dlci1yb2xlLCBmb3IgZXhhbXBsZToNCj4gPiA+IMKgwqDCoCBw
-b3dlci1yb2xlOiBzaG91bGQgYmUgb24gb2YgInNvdXJjZSIsICJzaW5rIiwgImR1YWwtc291cmNl
-IiwNCj4gPiA+ICJkdWFsLXNpbmsiLCBpbiBjYXNlIG9mIGR1YWwgcm9sZXMgc3VmZml4IGRldGVy
-bWluZXMgcHJlZmVycmVkIHJvbGUuDQo+ID4gPg0KPiA+ID4NCj4gPiA+ID4gKy0gc3JjLXBkb3M6
-IEFuIGFycmF5IG9mIHUzMiB3aXRoIGVhY2ggZW50cnkgcHJvdmlkaW5nIHN1cHBvcnRlZA0KPiA+
-ID4gPiArcG93ZXINCj4gPiA+ID4gKyAgc291cmNlIGRhdGEgb2JqZWN0KFBETyksIHRoZSBkZXRh
-aWxlZCBiaXQgZGVmaW5pdGlvbnMgb2YgUERPDQo+ID4gPiA+ICtjYW4gYmUgZm91bmQNCj4gPiA+
-ID4gKyAgaW4gIlVuaXZlcnNhbCBTZXJpYWwgQnVzIFBvd2VyIERlbGl2ZXJ5IFNwZWNpZmljYXRp
-b24iIGNoYXB0ZXINCj4gPiA+ID4gKzYuNC4xLjINCj4gPiA+ID4gKyAgU291cmNlX0NhcGFiaWxp
-dGllcyBNZXNzYWdlLCB0aGUgb3JkZXIgb2YgZWFjaCBlbnRyeShQRE8pDQo+ID4gPiA+ICtzaG91
-bGQgZm9sbG93DQo+ID4gPiA+ICsgIHRoZSBQRCBzcGVjIGNoYXB0ZXIgNi40LjEuIFJlcXVpcmVk
-IGZvciBwb3dlciBzb3VyY2UgYW5kIHBvd2VyDQo+ID4gPiA+ICtkdWFsDQo+ID4gcm9sZS4NCj4g
-PiA+ID4gKy0gc25rLXBkb3M6IEFuIGFycmF5IG9mIHUzMiB3aXRoIGVhY2ggZW50cnkgcHJvdmlk
-aW5nIHN1cHBvcnRlZA0KPiA+ID4gPiArcG93ZXINCj4gPiA+ID4gKyAgc2luayBkYXRhIG9iamVj
-dChQRE8pLCB0aGUgZGV0YWlsZWQgYml0IGRlZmluaXRpb25zIG9mIFBETyBjYW4NCj4gPiA+ID4g
-K2JlIGZvdW5kIGluDQo+ID4gPiA+ICsgICJVbml2ZXJzYWwgU2VyaWFsIEJ1cyBQb3dlciBEZWxp
-dmVyeSBTcGVjaWZpY2F0aW9uIiBjaGFwdGVyDQo+ID4gPiA+ICs2LjQuMS4zIFNpbmsNCj4gPiA+
-ID4gKyAgQ2FwYWJpbGl0aWVzIE1lc3NhZ2UsIHRoZSBvcmRlciBvZiBlYWNoIGVudHJ5KFBETykg
-c2hvdWxkDQo+ID4gPiA+ICtmb2xsb3cgdGhlIFBEDQo+ID4gPiA+ICsgIHNwZWMgY2hhcHRlciA2
-LjQuMS4gUmVxdWlyZWQgZm9yIHBvd2VyIHNpbmsgYW5kIHBvd2VyIGR1YWwgcm9sZS4NCj4gPiA+
-DQo+ID4gPiBXZSBzaG91bGQgYXZvaWQgbWFnaWMgbnVtYmVycywgbWFnaWMgbnVtYmVycyBhcmUg
-YmFkIDopDQo+ID4NCj4gPiBJIGRvbid0IG1pbmQgaWYgdGhlcmUncyBhIGRlZmluZWQgZm9ybWF0
-IGZvciB0aGUgZGF0YS4NCj4gPg0KPiANCj4gWWVzLCB0aGVyZSBpcyBkZWZpbmVkIGZvcm1hdCBp
-biBzcGVjIGZvciB0aGlzIGRhdGEuDQo+IA0KPiA+ID4gSWYgd2UgcmVhbGx5IG5lZWQgdG8gdXNl
-IFBET3MgaGVyZSwgSSB0aGluayB3ZSBjYW4gcmUtdXNlIFBET18qDQo+ID4gPiBtYWNyb3MgWzFd
-IC0gRFRDIHNob3VsZCBiZSBhYmxlIHRvIHBhcnNlIGl0LCBtYXliZSBzb21lIGxpZnRpbmcgd2ls
-bCBiZQ0KPiBuZWNlc3NhcnkuDQo+ID4gPg0KPiA+ID4gWzFdOg0KPiA+ID4NCj4gPg0KPiBodHRw
-czovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNB
-JTJGJTJGZWxpDQo+ID4gPg0KPiA+DQo+IHhpci5ib290bGluLmNvbSUyRmxpbnV4JTJGdjQuMTYt
-cmMzJTJGc291cmNlJTJGaW5jbHVkZSUyRmxpbnV4JTJGdXNiDQo+ID4gJTINCj4gPiA+DQo+ID4N
-Cj4gRnBkLmglMjNMMTYxJmRhdGE9MDIlN0MwMSU3Q2p1bi5saSU0MG54cC5jb20lN0NjZWEzMjU4
-OWYzMzE0NDg4DQo+ID4gZTE4ZjA4ZA0KPiA+ID4NCj4gPg0KPiA1ODA4ZTVhYWUlN0M2ODZlYTFk
-M2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MxJTdDNjM2NTU2DQo+ID4gMjcxMjY2NDY5
-DQo+ID4gPg0KPiA+DQo+IDAxMiZzZGF0YT1yZWJGQ2FmelRwcUk3RnlZazlaZ1cybkloSjBjYTVJ
-QiUyQkJVYTdXQzA1bE0lM0QmcmVzDQo+ID4gZXJ2ZWQ9MA0KPiA+ID4gPiArLSBtYXgtc25rLW1p
-Y3Jvdm9sdDogVGhlIG1heCB2b2x0YWdlIHRoZSBzaW5rIGNhbiBzdXBwb3J0IGluDQo+ID4gPiA+
-ICttaWNybyB2b2x0cywNCj4gPiA+ID4gKyAgcmVxdWlyZWQgZm9yIHBvd2VyIHNpbmsgYW5kIHBv
-d2VyIGR1YWwgcm9sZS4NCj4gPiA+ID4gKy0gbWF4LXNuay1taWNyb2FtcDogVGhlIG1heCBjdXJy
-ZW50IHRoZSBzaW5rIGNhbiBzdXBwb3J0IGluIG1pY3JvDQo+ID4gPiA+ICthbXBzLA0KPiA+ID4g
-PiArICByZXF1aXJlZCBmb3IgcG93ZXIgc2luayBhbmQgcG93ZXIgZHVhbCByb2xlLg0KPiA+ID4g
-PiArLSBtYXgtc25rLW1pY3Jvd2F0dC1ob3VyczogVGhlIG1heCBwb3dlciB0aGUgc2luayBjYW4g
-c3VwcG9ydCBpbg0KPiA+ID4gPiArbWljcm8NCj4gPiA+ID4gKyAgV2F0dC1ob3VycywgcmVxdWly
-ZWQgZm9yIHBvd2VyIHNpbmsgYW5kIHBvd2VyIGR1YWwgcm9sZS4NCj4gPiA+ID4gKy0gb3Atc25r
-LW1pY3Jvd2F0dC1ob3VyczogU2luayByZXF1aXJlZCBvcGVyYXRpbmcgcG93ZXIgaW4gbWljcm8N
-Cj4gPiA+ID4gK1dhdHQtaG91cnMsDQo+ID4gPiA+ICsgIGlmIHNvdXJjZSBvZmZlcmVkIHBvd2Vy
-IGlzIGxlc3MgdGhlbiBpdCwgQ2FwYWJpbGl0eSBNaXNtYXRjaCBpcw0KPiA+ID4gPiArc2V0LA0K
-PiA+ID4gPiArICByZXF1aXJlZCBmb3IgcG93ZXIgc2luayBhbmQgcG93ZXIgZHVhbCByb2xlLg0K
-PiA+ID4NCj4gPiA+IFdoYXQgaXMgdGhlIHJlbGF0aW9uIGJldHdlZW4gYWJvdmUgcHJvcGVydGll
-cyBhbmQgUERPcyBzcGVjaWZpZWQNCj4gZWFybGllcj8NCj4gPiA+IEFyZSB5b3Ugc3VyZSBhbGwg
-dGhlc2UgcHJvcHMgYXJlIHJlcXVpcmVkPw0KPiA+ID4NCj4gPiA+IEFuZCBnZW5lcmFsIHJlbWFy
-ayByZWdhcmRpbmcgYWxsIGFib3ZlIHByb3BlcnRpZXMuIEZvciBtZSwgbW9zdCBvZg0KPiA+ID4g
-dGhlbSBhcmUgc3BlY2lmaWMgbm90IHRvIHRoZSBwb3J0IGJ1dCB0byBkZXZpY2VzIHJlc3BvbnNp
-YmxlIGZvcg0KPiA+ID4gcG93ZXINCj4gPiA+IG1hbmFnZW1lbnQ6IGNoYXJnZXJzLCBwbWljcywu
-Li4uDQo+ID4gPiBJbiBtYW55IGNhc2VzIHRoZXNlIHByb3BlcnRpZXMgYXJlIHJlZHVuZGFudCB3
-aXRoIGRldmljZXMgY2FwYWJpbGl0aWVzLg0KPiA+ID4gT24gdGhlIG90aGVyIHNpZGUgSSBndWVz
-cyBpbiBtYW55IGNhc2VzIGl0IG1heSBiZSBjb252ZW5pZW50IHRvIHB1dA0KPiA+ID4gdGhlbSBo
-ZXJlLCBzbyBJIGFtIG5vdCBzdXJlIHdoYXQgaXMgYmV0dGVyIDopDQo+ID4NCj4gPiBJIGRlYmF0
-ZWQgdGhhdCB0b28sIGJ1dCBkZWNpZGVkIGlmIHlvdSBoYWQgMiBjb25uZWN0b3JzIGNvbm5lY3Rl
-ZCB0byBhDQo+ID4gc2luZ2xlIHBvd2VyIGNvbnRyb2xsZXIsIHRoZW4geW91J2Qgd2FudCB0aGVz
-ZSBpbiB0aGUgY29ubmVjdG9yLg0KPiA+DQo+IA0KPiBUaGUgc3RhbmRhcmQgdHlwZWMgcG9ydCBj
-b250cm9sbGVyKHRjcGNpKSBjYW4gb25seSBtYW5hZ2Ugb25lIHR5cGVjIHBvcnQNCj4gKGNvbm5l
-Y3RvciksIHNvIGluIG15IGNhc2UsIHRob3NlIHByb3BzIHNob3VsZCBiZSBhcHBsaWVkIHRvIHRo
-ZSB0eXBlYw0KPiBjb250cm9sbGVyLCBpZiBvbmx5IGZvciBwb3dlciwgY29ubmVjdG9yIGNoaWxk
-IG5vZGUgaXMgbm90IHJlcXVpcmVkLg0KPiBJIHdpbGwgbW92ZSB0aG9zZSB0eXBlYyBwcm9wcyBk
-ZXNjcmlwdGlvbnMgdG8gYSBzZXBhcmF0ZSBmaWxlOg0KPiAoRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3VzYi90eWVwYy50eHQpDQoNCkFmdGVyIGNsYXJpZnkgd2l0aCB0eXBlYyBz
-dWJzeXN0ZW0gbWFpbnRhaW5lciBIZWlra2ksIHdlIGFsaWduZWQgYW5kDQpjb3JyZWN0bHkgdW5k
-ZXJzdGFuZCB5b3VyIGlkZWEgdGhhdCB0eXBlYyBwcm9wcyBzaG91bGQgYmUgaW4gdXNiIGNvbm5l
-Y3Rvcg0Kbm9kZSBpbiBhbGwgY2FzZXMsIEkgd2lsbCBrZWVwIHRoaXMsIHNvcnJ5IGZvciB0aGUg
-bm9pc2UuDQoNCkp1biBMaQ0KPiANCj4gPiBSb2INCg==
+On 05.03.2018 08:00, Jun Li wrote:
+>
+>> -----Original Message-----
+>> From: Andrzej Hajda [mailto:a.hajda@samsung.com]
+>> Sent: 2018年2月27日 16:41
+>> To: Jun Li <jun.li@nxp.com>; gregkh@linuxfoundation.org;
+>> robh+dt@kernel.org; heikki.krogerus@linux.intel.com; linux@roeck-us.net
+>> Cc: mark.rutland@arm.com; yueyao@google.com; Peter Chen
+>> <peter.chen@nxp.com>; garsilva@embeddedor.com; o_leveque@orange.fr;
+>> shufan_lee@richtek.com; linux-usb@vger.kernel.org;
+>> devicetree@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+>> Subject: Re: [PATCH v2 10/12] dt-bindings: connector: add properties for
+>> typec power delivery
+>>
+>> On 26.02.2018 12:49, Li Jun wrote:
+>>> In case of usb-c-connector with power delivery support, add bingdings
+>>> supported by current typec driver, so user can pass all those
+>>> properties via dt.
+>>>
+>>> Signed-off-by: Li Jun <jun.li@nxp.com>
+>>> ---
+>>> Changes for v2:
+>>> - Added typec properties are based on general usb connector bindings[1]
+>>>   proposed by Andrzej Hajda.
+>>> - Use the standard unit suffixes as defined in property-units.txt.
+>>>
+>>> [1]
+>>>
+>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpat
+>> chwork.kernel.org%2Fpatch%2F10231447%2F&data=02%7C01%7Cjun.li%40
+>> nxp.co
+>> m%7Cccf14a36ca6445ee5f1108d57dbde3c7%7C686ea1d3bc2b4c6fa92cd99
+>> c5c30163
+>> 5%7C0%7C0%7C636553176880292197&sdata=2Pi0AtiwAqHQE3rGl%2Bo49K
+>> 7yZZcp%2B
+>>> 5bvJAknRBMGTrk%3D&reserved=0
+>>>
+>>>  .../bindings/connector/usb-connector.txt           | 43
+>> ++++++++++++++++++++++
+>>>  1 file changed, 43 insertions(+)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>> b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>> index e1463f1..242f6df 100644
+>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>> @@ -15,6 +15,30 @@ Optional properties:
+>>>  - type: size of the connector, should be specified in case of USB-A, USB-B
+>>>    non-fullsize connectors: "mini", "micro".
+>>>
+>>> +Required properties for usb-c-connector with power delivery support:
+>>> +- port-type: should be one of "source", "sink" or "dual".
+>>> +- default-role: preferred power role if port-type is "dual"(drp),
+>>> +should be
+>>> +  "sink" or "source".
+>> Since port carries data and power, it would be better to explicitly mention it
+>> in names of properties which can be ambiguous.
+>> Maybe instead of 'port-type' you can use 'power-role', for example.
+> Port-type is align with the name of typec coding and ABI, 'power-role'
+> is more like for the current role rather than the port's ability.
+
+I am not sure what are you exactly mean by "coding and ABI", but I guess
+it is just about Power-Delivery part of USB-C. And if you want to put
+this property into USB node without mark it is related to PD part of USB
+connector, you risk confusion with possible USB data related properties.
+Simple question, what if somebody wants to add property describing USB
+data capabilities (DFP, UFP, DRD), how should it be named?
+
+>
+>> Other thing is that default-role is required only in case of DRP, so maybe
+>> better would be to squash it in power-role, for example:
+>>     power-role: should be on of "source", "sink", "dual-source", "dual-sink",
+>> in case of dual roles suffix determines preferred role.
+> I don't know how much this squash can benefit, "dual-source/sink" is not
+> directly showing its meaning by name.
+
+Some benefit is simpler binding, no conditionally-required property.
+
+Another question is that USB TypeC specification describes 7 different
+"behavioral models" [1]:
+- Source-only
+- Source (Default) – strong preference toward being a Source but
+subsequently
+capable of becoming a Sink using USB PD swap mechanisms.
+- Sink-only
+- Sink (Default) – strong preference toward being a Sink but
+subsequently capable of
+becoming a Source using USB PD swap mechanisms.
+- DRP: Toggling (Source/Sink)
+- DRP: Sourcing Device
+- DRP: Sinking Host
+
+How it maps to your proposed props?
+
+[1]: USB Type-C specification release 1.3, chapter 4.5.1.4.
+
+Regards
+Andrzej
+
+>
+>>
+>>> +- src-pdos: An array of u32 with each entry providing supported power
+>>> +  source data object(PDO), the detailed bit definitions of PDO can be
+>>> +found
+>>> +  in "Universal Serial Bus Power Delivery Specification" chapter
+>>> +6.4.1.2
+>>> +  Source_Capabilities Message, the order of each entry(PDO) should
+>>> +follow
+>>> +  the PD spec chapter 6.4.1. Required for power source and power dual
+>> role.
+>>> +- snk-pdos: An array of u32 with each entry providing supported power
+>>> +  sink data object(PDO), the detailed bit definitions of PDO can be
+>>> +found in
+>>> +  "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
+>>> +Sink
+>>> +  Capabilities Message, the order of each entry(PDO) should follow
+>>> +the PD
+>>> +  spec chapter 6.4.1. Required for power sink and power dual role.
+>> We should avoid magic numbers, magic numbers are bad :) If we really need
+>> to use PDOs here, I think we can re-use PDO_* macros [1] - DTC should be
+>> able to parse it, maybe some lifting will be necessary.
+>>
+>> [1]:
+>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Felix
+>> ir.bootlin.com%2Flinux%2Fv4.16-rc3%2Fsource%2Finclude%2Flinux%2Fusb%
+>> 2Fpd.h%23L161&data=02%7C01%7Cjun.li%40nxp.com%7Cccf14a36ca6445e
+>> e5f1108d57dbde3c7%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%
+>> 7C636553176880292197&sdata=72HA33wgRyd2PMoPnZOlMatI2CuadplkYN
+>> DDGKFSUB0%3D&reserved=0
+>>> +- max-snk-microvolt: The max voltage the sink can support in micro
+>>> +volts,
+>>> +  required for power sink and power dual role.
+>>> +- max-snk-microamp: The max current the sink can support in micro
+>>> +amps,
+>>> +  required for power sink and power dual role.
+>>> +- max-snk-microwatt-hours: The max power the sink can support in
+>>> +micro
+>>> +  Watt-hours, required for power sink and power dual role.
+>>> +- op-snk-microwatt-hours: Sink required operating power in micro
+>>> +Watt-hours,
+>>> +  if source offered power is less then it, Capability Mismatch is
+>>> +set,
+>>> +  required for power sink and power dual role.
+>> What is the relation between above properties and PDOs specified earlier?
+>> Are you sure all these props are required?
+>>
+> Sorry, with latest tcpm code, those props are not required, will remove them.
+>
+> Jun Li
+>> And general remark regarding all above properties. For me, most of them
+>> are specific not to the port but to devices responsible for power
+>> management: chargers, pmics,....
+>> In many cases these properties are redundant with devices capabilities.
+>> On the other side I guess in many cases it may be convenient to put them
+>> here, so I am not sure what is better :)
+>>
+>> Regards
+>> Andrzej
+>>
+>>> +
+>>>  Required nodes:
+>>>  - any data bus to the connector should be modeled using the OF graph
+>> bindings
+>>>    specified in bindings/graph.txt, unless the bus is between parent
+>>> node and @@ -73,3 +97,22 @@ ccic: s2mm005@33 {
+>>>  		};
+>>>  	};
+>>>  };
+>>> +
+>>> +3. USB-C connector attached to a typec port controller(ptn5110),
+>>> +which has power delivery support and enables drp.
+>>> +
+>>> +typec: ptn5110@50 {
+>>> +	...
+>>> +	usb_con: connector {
+>>> +		compatible = "usb-c-connector";
+>>> +		label = "USB-C";
+>>> +		port-type = "dual";
+>>> +		default-role = "sink";
+>>> +		src-pdos = <0x380190c8>;
+>>> +		snk-pdos = <0x380190c8 0x3802d0c8>;
+>>> +		max-snk-microvolt = <9000>;
+>>> +		max-snk-microamp = <2000>;
+>>> +		max-snk-microwatt-hours = <18000>;
+>>> +		op-snk-microwatt-hours = <9000>;
+>>> +	};
+>>> +};
