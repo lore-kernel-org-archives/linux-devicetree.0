@@ -1,48 +1,50 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] arm: dts: zynq: Add Digilent Zybo Z7 board
-Date: Mon, 5 Mar 2018 13:03:05 +0100
-Message-ID: <045eae47-49bb-971c-6e83-ad1e436b5848@xilinx.com>
-References: <20180228022552.9088-1-nobuhiro.iwamatsu@cybertrust.co.jp>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 00/16] mmc: tmio: another batch of TMIO MMC fixes and cleanups
+Date: Mon, 5 Mar 2018 13:06:44 +0100
+Message-ID: <CAPDyKFr0=oR2s-SiejG580iy71dUh-K64Ya=trEjZE4zmc5Xfg@mail.gmail.com>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <20180304224248.mzhsvl4ccmtzg5am@ninjato> <CAPDyKFq_1mR=b3iu6o4ZJQeAjRnWf_tzb=__7SxvZYqDNCo2bg@mail.gmail.com>
+ <20180305092259.bcpfbzvvoqxsfomf@katana> <CAK7LNATrq11iaa=uTuJx8Z9XMDg9CA8Nf0jdU3GkLKFH5fH9Gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180228022552.9088-1-nobuhiro.iwamatsu@cybertrust.co.jp>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu@cybertrust.co.jp>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATrq11iaa=uTuJx8Z9XMDg9CA8Nf0jdU3GkLKFH5fH9Gg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28.2.2018 03:25, Nobuhiro Iwamatsu wrote:
-> This add a DTS for the Digilent Zybo Z7 board.
-> This board is the successor board of Zybo, these are almost the same except
-> for ps-clk-frequency specifications.
-> 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu@cybertrust.co.jp>
-> ---
->  v2:
->    - Fix SPDX format
->    - Rebase linux-xlnx/tree/zynq/dt
->    - Add digilent,zynq-zybo-z7 compatible string
->    - Fix memory node.
-> 
->  Documentation/devicetree/bindings/arm/xilinx.txt |  3 ++
->  arch/arm/boot/dts/Makefile                       |  3 +-
->  arch/arm/boot/dts/zynq-zybo-z7.dts               | 58 ++++++++++++++++++++++++
->  3 files changed, 63 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/zynq-zybo-z7.dts
+On 5 March 2018 at 10:34, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> Hi Ulf, Wolfram,
+>
+> 2018-03-05 18:22 GMT+09:00 Wolfram Sang <wsa@the-dreams.de>:
+>>
+>>> I have added Wolframs tags to the already applied patches and applied
+>>> that last two, 15 and 16.
+>>
+>> Thanks. Please note that patch 14 misses my Rev tag. (I gave it
+>> yesterday but the patch was accidently applied before. One round too
+>> early, so to say).
 
-I can't see any issue with this patch that's why will apply when
-previous series is acked.
+Added rev. tag.
 
-Thanks,
-Michal
+>>
+>>> They are all present in my next branch. The fix that Wolfram sent on
+>>> top, is added immediately after the commit it fixes.
+>>
+>> Could we also squash it, then?
+>>
+>
+> If Wolfram is fine with squashing,
+> that would be cleaner.
+>
+
+Done.
+
+> In that case, can you add Tested-by
+> to patch 12?
+
+Done.
+
+Kind regards
+Uffe
