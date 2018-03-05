@@ -1,118 +1,402 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Mon, 5 Mar 2018 07:28:24 +0100 (CET)
-Message-ID: <1219888621.198216.1520231304685@email.1und1.de>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <395166283.280598.1520200683559@email.1und1.de>
- <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH 1/6] reset: qcom: AOSS (Always on subsystem) reset
+ controller
+Date: Mon, 5 Mar 2018 12:17:26 +0530
+Message-ID: <d1502495-3a7a-79a1-093a-3b6dc81d9a32@codeaurora.org>
+References: <1519982619-28336-1-git-send-email-sibis@codeaurora.org>
+ <1519982619-28336-2-git-send-email-sibis@codeaurora.org>
+ <1519986620.16239.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519986620.16239.3.camel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, robh+dt@kernel.org, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY2VsLAoKPiBNYXJjZWwgSG9sdG1hbm4gPG1hcmNlbEBob2x0bWFubi5vcmc+IGhhdCBh
-bSA1LiBNw6RyeiAyMDE4IHVtIDA2OjE5IGdlc2NocmllYmVuOgo+IAo+IAo+IEhpIFN0ZWZhbiwK
-PiAKPiA+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJkZXYgc2xhdmUgZGV2
-aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPiA+Pj4+PiBUaGlzIGFsbG93cyB0byBhdXRv
-bWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+ID4+Pj4+IHN1
-YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2UgaGVscGVycyAo
-aGNpYXR0YWNoKS4KPiA+Pj4+PiAKPiA+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEgZGVidWcgVUFS
-VCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPiA+Pj4+PiAKPiA+Pj4+PiBTaWduZWQtb2Zm
-LWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+Pj4+IC0tLQo+
-ID4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgfCAxNCArKysr
-KysrKysrKysrLQo+ID4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pCj4gPj4+Pj4gCj4gPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16
-ZXJvLXcuZHRzCj4gPj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAxMDA2NDQKPiA+Pj4+PiAt
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4gPj4+Pj4gKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+ID4+Pj4+IEBAIC0x
-MzEsNiArMTMxLDE4IEBACj4gPj4+Pj4gCj4gPj4+Pj4gJnVhcnQwIHsKPiA+Pj4+PiAJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKPiA+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzE0
-PjsKPiA+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzMyICZ1YXJ0MF9jdHNydHNfZ3Bp
-bzMwPjsKPiA+Pj4+PiArCXN0YXR1cyA9ICJva2F5IjsKPiA+Pj4+PiArCj4gPj4+Pj4gKwlibHVl
-dG9vdGggewo+ID4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiYnJjbSxiY200MzQzOC1idCI7Cj4gPj4+
-Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+ID4+Pj4+ICsJCXNodXRkb3duLWdwaW9zID0g
-PCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+Pj4+ICsJfTsKPiA+Pj4+PiArfTsKPiA+
-Pj4+IAo+ID4+Pj4gaXMgdGhlIHNodXRkb3duIEdQSU8gd29ya2luZyBhcyBleHBlY3RlZCB3aXRo
-IHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9kdWxlIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZp
-bmU/Cj4gPj4+IAo+ID4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmUuIAo+ID4+
-PiAKPiA+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1MjAwIGRlZmF1
-bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+ID4+PiAKPiA+Pj4gSSBhc3N1bWUgdGhhdCwgYmVj
-YXVzZSByZWxvYWQgd29ya3MgYXMgZXhwZWN0ZWQuIAo+ID4+IAo+ID4+IGF3ZXNvbWUuIFRoYXQg
-aXMgZ29vZCBuZXdzLgo+ID4+IAo+ID4+IFNpbmNlIHlvdSBzYWlkIHRoYXQgdGhlIEdQSU8gZXhw
-YW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4gYWNjZXB0ZWQsIGRpZCB5b3UgdGVz
-dCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3b3VsZCBiZSBnb29kIHRvIGdldCBh
-IHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1ncGlvcyBmb3IgUlBpIDMuCj4gPiAK
-PiA+IHNvIGhlcmUgY29tZXMgdGhlIGJhZCBuZXdzLiBoY2lfYmNtIHVzZXMgZ3Bpb2Rfc2V0X3Zh
-bHVlKCkgd2hpY2ggaXMgZm9yIGludGVycnVwdCBjb250ZXh0LCBidXQgdGhlIGdwaW8gZXhwYW5k
-ZXIgY2FuIHNsZWVwLiBTbyB3ZSB3aWxsIGdldCB0aGlzIHdhcm5pbmc6Cj4gPiAKPiA+IFsgICAg
-NC44MDI0NDddIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+ID4gWyAgICA0
-LjgwMjQ4NV0gV0FSTklORzogQ1BVOiAzIFBJRDogOTEgYXQgZHJpdmVycy9ncGlvL2dwaW9saWIu
-YzoyOTg2IGdwaW9kX3NldF92YWx1ZSsweDUwLzB4NTgKPiA+IFsgICAgNC44MDI0ODldIE1vZHVs
-ZXMgbGlua2VkIGluOiBoY2lfdWFydCBhYzk3X2J1cyBidGJjbSBzbmRfcGNtX2RtYWVuZ2luZSBi
-bHVldG9vdGggc25kX3BjbSBzbmRfdGltZXIgZWNkaF9nZW5lcmljIHNuZCBzb3VuZGNvcmUgYmNt
-MjgzNV90aGVybWFsIGNyYzMyX2FybV9jZQo+ID4gWyAgICA0LjgwMjU0M10gQ1BVOiAzIFBJRDog
-OTEgQ29tbToga3dvcmtlci91ODoyIE5vdCB0YWludGVkIDQuMTYuMC1yYzMtbmV4dC0yMDE4MDMw
-Mi1kaXJ0eSAjNAo+ID4gWyAgICA0LjgwMjU0N10gSGFyZHdhcmUgbmFtZTogQkNNMjgzNQo+ID4g
-WyAgICA0LjgwMjU2Ml0gV29ya3F1ZXVlOiBldmVudHNfdW5ib3VuZCBhc3luY19ydW5fZW50cnlf
-Zm4KPiA+IFsgICAgNC44MDI1OTNdIFs8YzAzMTE5YTQ+XSAodW53aW5kX2JhY2t0cmFjZSkgZnJv
-bSBbPGMwMzBjYzI0Pl0gKHNob3dfc3RhY2srMHgxMC8weDE0KQo+ID4gWyAgICA0LjgwMjYxMl0g
-WzxjMDMwY2MyND5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzBkOGU5ZGM+XSAoZHVtcF9zdGFjaysw
-eDhjLzB4YTApCj4gPiBbICAgIDQuODAyNjI4XSBbPGMwZDhlOWRjPl0gKGR1bXBfc3RhY2spIGZy
-b20gWzxjMDM0M2EyYz5dIChfX3dhcm4rMHhlMC8weGY4KQo+ID4gWyAgICA0LjgwMjY0MF0gWzxj
-MDM0M2EyYz5dIChfX3dhcm4pIGZyb20gWzxjMDM0M2I1Yz5dICh3YXJuX3Nsb3dwYXRoX251bGwr
-MHg0MC8weDQ4KQo+ID4gWyAgICA0LjgwMjY1Ml0gWzxjMDM0M2I1Yz5dICh3YXJuX3Nsb3dwYXRo
-X251bGwpIGZyb20gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUrMHg1MC8weDU4KQo+ID4g
-WyAgICA0LjgwMjY5M10gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUpIGZyb20gWzxiZjBl
-MmU5MD5dIChiY21fZ3Bpb19zZXRfc2h1dGRvd24rMHhjLzB4MTQgW2hjaV91YXJ0XSkKPiA+IFsg
-ICAgNC44MDI3NTddIFs8YmYwZTJlOTA+XSAoYmNtX2dwaW9fc2V0X3NodXRkb3duIFtoY2lfdWFy
-dF0pIGZyb20gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93ZXIrMHgxOC8weDE0MCBbaGNp
-X3VhcnRdKQo+ID4gWyAgICA0LjgwMjgwNl0gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93
-ZXIgW2hjaV91YXJ0XSkgZnJvbSBbPGJmMGUyZTRjPl0gKGJjbV9zZXJkZXZfcHJvYmUrMHg2NC8w
-eDljIFtoY2lfdWFydF0pCj4gPiBbICAgIDQuODAyODQ4XSBbPGJmMGUyZTRjPl0gKGJjbV9zZXJk
-ZXZfcHJvYmUgW2hjaV91YXJ0XSkgZnJvbSBbPGMwOGYyNTI4Pl0gKGRyaXZlcl9wcm9iZV9kZXZp
-Y2UrMHgyNTQvMHgzMmMpCj4gPiBbICAgIDQuODAyODYzXSBbPGMwOGYyNTI4Pl0gKGRyaXZlcl9w
-cm9iZV9kZXZpY2UpIGZyb20gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2grMHhhNC8weGE4
-KQo+ID4gWyAgICA0LjgwMjg3OF0gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2gpIGZyb20g
-WzxjMDhmMDhiOD5dIChidXNfZm9yX2VhY2hfZGV2KzB4NzQvMHhiNCkKPiA+IFsgICAgNC44MDI4
-OTVdIFs8YzA4ZjA4Yjg+XSAoYnVzX2Zvcl9lYWNoX2RldikgZnJvbSBbPGMwMzY2NDk4Pl0gKGFz
-eW5jX3J1bl9lbnRyeV9mbisweDQ0LzB4MTA4KQo+ID4gWyAgICA0LjgwMjkxMF0gWzxjMDM2NjQ5
-OD5dIChhc3luY19ydW5fZW50cnlfZm4pIGZyb20gWzxjMDM1ZDU5ND5dIChwcm9jZXNzX29uZV93
-b3JrKzB4MjAwLzB4NGY4KQo+ID4gWyAgICA0LjgwMjkyM10gWzxjMDM1ZDU5ND5dIChwcm9jZXNz
-X29uZV93b3JrKSBmcm9tIFs8YzAzNWU0YTg+XSAod29ya2VyX3RocmVhZCsweDRjLzB4NWQ0KQo+
-ID4gWyAgICA0LjgwMjkzOF0gWzxjMDM1ZTRhOD5dICh3b3JrZXJfdGhyZWFkKSBmcm9tIFs8YzAz
-NjMzMDA+XSAoa3RocmVhZCsweDE1MC8weDE1OCkKPiA+IFsgICAgNC44MDI5NTJdIFs8YzAzNjMz
-MDA+XSAoa3RocmVhZCkgZnJvbSBbPGMwMzAxMGU4Pl0gKHJldF9mcm9tX2ZvcmsrMHgxNC8weDJj
-KQo+ID4gWyAgICA0LjgwMjk1N10gRXhjZXB0aW9uIHN0YWNrKDB4ZWQ5NTlmYjAgdG8gMHhlZDk1
-OWZmOCkKPiA+IFsgICAgNC44MDI5NjZdIDlmYTA6ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCj4gPiBbICAgIDQu
-ODAyOTc3XSA5ZmMwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
-MCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMAo+ID4gWyAgICA0LjgwMjk4Nl0gOWZlMDogMDAw
-MDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMTMgMDAwMDAwMDAKPiA+IFsg
-ICAgNC44MDI5OTNdIC0tLVsgZW5kIHRyYWNlIGI5NDdmOWQ0YzQwZmEyNjEgXeKAlAo+IAo+IHRo
-YXQgaXMgd2VpcmQgc2luY2Ugd2Ugc2hvdWxkIGJlIGVpdGhlciBpbiBhIHByb2JlIGNvbnRleHQg
-b3IgaW4gaGRldi0+b3BlbiBjb250ZXh0IGFuZCBib3RoIGNhbiBzbGVlcCBhcyBmYXIgYXMgSSBr
-bm93LgoKb2theSBpbiB0aGlzIGNhc2Ugd2UgY2FuIHJlcGxhY2UgZ3Bpb2Rfc2V0X3ZhbHVlIHdp
-dGggZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwLgoKU3RlZmFuCgo+IAo+IFJlZ2FyZHMKPiAKPiBN
-YXJjZWwKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Hi Philipp,
+
+Thanks for the review. I will post out the v2 of the patch series.
+
+On 03/02/2018 04:00 PM, Philipp Zabel wrote:
+> Hi sibis,
+> 
+> thank you for the patch. I have a few questions and comments below.
+> 
+> On Fri, 2018-03-02 at 14:53 +0530, sibis wrote:
+>> Add reset controller driver for Qualcomm SDM845 SoC to
+>> control reset signals provided by AOSS for Modem, Venus
+>> ADSP, GPU, Camera, Wireless, Display subsystem
+>>
+>> Signed-off-by: sibis <sibis@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
+>>   drivers/reset/Kconfig                              |  10 ++
+>>   drivers/reset/Makefile                             |   1 +
+>>   drivers/reset/reset-qcom-aoss.c                    | 161 +++++++++++++++++++++
+>>   include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
+>>   5 files changed, 243 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>>   create mode 100644 drivers/reset/reset-qcom-aoss.c
+>>   create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> new file mode 100644
+>> index 0000000..5318e14
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> @@ -0,0 +1,54 @@
+>> +Qualcomm AOSS Reset Controller
+>> +======================================
+>> +
+>> +This binding describes a reset-controller found on AOSS (Always on SubSysem)
+>> +for Qualcomm SDM845 SoCs.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be:
+>> +		    "qcom,aoss-reset-sdm845", "syscon"
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the
+>> +		    syscon device.
+>> +
+>> +
+>> +- #reset-cells:
+>> +	Usage: required
+>> +	Value type: <uint>
+>> +	Definition: must be 1; cell entry represents the reset index.
+>> +
+>> +example:
+>> +
+>> +aoss_reset: qcom,reset-controller@b2e0100 {
+>> +	compatible = "qcom,aoss-reset-sdm845", "syscon";
+>> +	reg = <0xc2b0000 0x20004>;
+>> +	#reset-cells = <1>;
+>> +};
+>> +
+>> +
+>> +Specifying reset lines connected to IP modules
+>> +==============================================
+>> +
+>> +Device nodes that need access to reset lines should
+>> +specify them as a reset phandle in their corresponding node as
+>> +specified in reset.txt.
+>> +
+>> +Example:
+>> +
+>> +	modem-pil@4080000 {
+>> +		...
+>> +
+>> +		resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
+>> +		reset-names = "mss_restart";
+>> +
+>> +		...
+>> +        };
+>> +
+>> +For list of all valid reset indicies see
+>> +<dt-bindings/reset/qcom,aoss-sdm845.h>
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index 7fc7769..4b1da86 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -81,6 +81,16 @@ config RESET_PISTACHIO
+>>   	help
+>>   	  This enables the reset driver for ImgTec Pistachio SoCs.
+>>   
+>> +config RESET_QCOM_AOSS
+>> +	bool "Qcom AOSS Reset Driver"
+>> +	depends on ARCH_QCOM || COMPILE_TEST
+> 
+> Do all ARCH_QCOM have AOSS? If so, should this be enabled by default?
+> 
+
+AOSS reset is currently supported on SDM845 SoCs and not on any of other 
+the previously upstreamed Qualcomm SoCs. I will change description to 
+convey the same. I needs to explicitly enabled for SDM845 SoCs.
+
+>> +	select MFD_SYSCON
+>> +	help
+>> +	  This enables the AOSS (Always On SubSystem) reset driver
+>> +	  for Qcom SoCs. Say Y if you want to control reset signals
+> 
+> Is Qcom and Qualcomm interchangeable?
+> 
+
+Though it is used interchangeably, it will make more sense if I
+change it to Qualcomm here.
+
+>> +	  provided by AOSS for Modem, Venus, ADSP, GPU, Camera,
+>> +	  Wireless, Display subsystem. Otherwise, say N.
+>> +
+>>   config RESET_SIMPLE
+>>   	bool "Simple Reset Controller Driver" if COMPILE_TEST
+>>   	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 132c24f..c30044a 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>>   obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>> +obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+>>   obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+>>   obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+>>   obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
+>> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
+>> new file mode 100644
+>> index 0000000..eb8c69b
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-qcom-aoss.c
+>> @@ -0,0 +1,161 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/of_device.h>
+>> +#include <dt-bindings/reset/qcom,aoss-sdm845.h>
+>> +
+>> +struct qcom_aoss_reset_map {
+>> +	unsigned int reg;
+>> +	u8 bit;
+>> +};
+>> +
+>> +struct qcom_aoss_desc {
+>> +	const struct regmap_config *config;
+>> +	const struct qcom_aoss_reset_map *resets;
+>> +	int delay;
+>> +	size_t num_resets;
+>> +};
+>> +
+>> +struct qcom_aoss_reset_data {
+>> +	struct reset_controller_dev rcdev;
+>> +	struct regmap *regmap;
+>> +	const struct qcom_aoss_desc *desc;
+>> +};
+>> +
+>> +static const struct regmap_config aoss_sdm845_regmap_config = {
+>> +	.name		= "aoss-reset",
+>> +	.reg_bits	= 32,
+>> +	.reg_stride	= 4,
+>> +	.val_bits	= 32,
+>> +	.max_register	= 0x20000,
+>> +	.fast_io	= true,
+>> +};
+>> +
+>> +static const struct qcom_aoss_reset_map aoss_sdm845_resets[] = {
+>> +	[AOSS_CC_MSS_RESTART] = { 0x0, 0 },
+>> +	[AOSS_CC_CAMSS_RESTART] = { 0x1000, 0 },
+>> +	[AOSS_CC_VENUS_RESTART] = { 0x2000, 0 },
+>> +	[AOSS_CC_GPU_RESTART] = { 0x3000, 0 },
+>> +	[AOSS_CC_DISPSS_RESTART] = { 0x4000, 0 },
+>> +	[AOSS_CC_WCSS_RESTART] = { 0x10000, 0 },
+>> +	[AOSS_CC_LPASS_RESTART] = { 0x20000, 0 },
+>> +};
+>> +
+>> +static const struct qcom_aoss_desc aoss_sdm845_desc = {
+>> +	.config = &aoss_sdm845_regmap_config,
+>> +	.resets = aoss_sdm845_resets,
+>> +	/* Wait 6 32kHz sleep cycles for reset */
+>> +	.delay = 200,
+>> +	.num_resets = ARRAY_SIZE(aoss_sdm845_resets),
+>> +};
+>> +
+>> +static struct qcom_aoss_reset_data *to_qcom_aoss_reset_data(
+>> +				struct reset_controller_dev *rcdev)
+>> +{
+>> +	return container_of(rcdev, struct qcom_aoss_reset_data, rcdev);
+>> +}
+>> +
+>> +static int qcom_aoss_control_assert(struct reset_controller_dev *rcdev,
+>> +					unsigned long idx)
+>> +{
+>> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
+>> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
+>> +
+>> +	if (idx >= rcdev->nr_resets)
+>> +		return -EINVAL;
+> 
+> This check is not necessary. For all drivers that don't set of_xlate,
+> the default of_reset_simple_xlate already makes sure no reset_control
+> is ever returned with rstc->id >= rcdev->nr_resets.
+>
+
+Will remove it
+
+>> +	return regmap_update_bits(data->regmap, map->reg,
+>> +					BIT(map->bit), BIT(map->bit));
+>> +}
+>> +
+>> +static int qcom_aoss_control_deassert(struct reset_controller_dev *rcdev,
+>> +					unsigned long idx)
+>> +{
+>> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
+>> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
+>> +
+>> +	if (idx >= rcdev->nr_resets)
+>> +		return -EINVAL;
+> 
+> Same here.
+> 
+
+ditto
+
+>> +	return regmap_update_bits(data->regmap, map->reg, BIT(map->bit), 0);
+>> +}
+>> +
+>> +static int qcom_aoss_control_reset(struct reset_controller_dev *rcdev,
+>> +					unsigned long idx)
+>> +{
+>> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
+>> +	int ret;
+>> +
+>> +	ret = rcdev->ops->assert(rcdev, idx);
+> 
+> Don't use the ops function pointers here, just call
+> qcom_aoss_control_assert directly.
+
+sure will repace it.
+
+> 
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	udelay(data->desc->delay);
+>> +
+>> +	ret = rcdev->ops->deassert(rcdev, idx);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+> 
+> This can be simplified to just
+> 
+> 	return qcom_aoss_control_deassert(rcdev, idx);
+> 
+
+ditto
+
+>> +}
+>> +
+>> +static const struct reset_control_ops qcom_aoss_reset_ops = {
+>> +	.reset = qcom_aoss_control_reset,
+>> +	.assert = qcom_aoss_control_assert,
+>> +	.deassert = qcom_aoss_control_deassert,
+>> +};
+>> +
+>> +static int qcom_aoss_reset_probe(struct platform_device *pdev)
+>> +{
+>> +	struct qcom_aoss_reset_data *data;
+>> +	struct device *dev = &pdev->dev;
+>> +	const struct qcom_aoss_desc *desc;
+>> +
+>> +	desc = of_device_get_match_data(&pdev->dev);
+> 
+> You could use dev here instead of pdev->dev.
+>
+
+Yeah I will replace all instances of pdev->dev with dev
+
+>> +	if (!desc)
+>> +		return -EINVAL;
+>> +
+>> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	data->desc = desc;
+>> +	data->regmap = syscon_node_to_regmap(dev->of_node);
+>> +	if (IS_ERR(data->regmap)) {
+>> +		dev_err(dev, "Unable to get aoss-reset regmap");
+>> +		return PTR_ERR(data->regmap);
+>> +	}
+>> +	regmap_attach_dev(dev, data->regmap, desc->config);
+>> +
+>> +	data->rcdev.owner = THIS_MODULE;
+>> +	data->rcdev.ops = &qcom_aoss_reset_ops;
+>> +	data->rcdev.nr_resets = desc->num_resets;
+>> +	data->rcdev.of_node = pdev->dev.of_node;
+> 
+> And here.
+> 
+>> +	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
+> 
+> And here.
+> 
+>> +}
+>> +
+>> +static const struct of_device_id qcom_aoss_reset_of_match[] = {
+>> +	{ .compatible = "qcom,aoss-reset-sdm845", .data = &aoss_sdm845_desc},
+> 
+> Consider adding a space between &aoss_sdm845_desc and } ...
+> 
+
+sure will do
+
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver qcom_aoss_reset_driver = {
+>> +	.probe = qcom_aoss_reset_probe,
+>> +	.driver  = {
+>> +		.name  = "qcom_aoss_reset",
+> 
+> ... and removing the superfluous space here.
+
+Will remove the superfluous spacing
+
+> 
+>> +		.of_match_table = qcom_aoss_reset_of_match,
+>> +	},
+>> +};
+>> +
+>> +builtin_platform_driver(qcom_aoss_reset_driver);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm AOSS Reset Driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/dt-bindings/reset/qcom,aoss-sdm845.h b/include/dt-bindings/reset/qcom,aoss-sdm845.h
+>> new file mode 100644
+>> index 0000000..e9b38fc
+>> --- /dev/null
+>> +++ b/include/dt-bindings/reset/qcom,aoss-sdm845.h
+>> @@ -0,0 +1,17 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
+>> +#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
+>> +
+>> +#define AOSS_CC_MSS_RESTART	0
+>> +#define AOSS_CC_CAMSS_RESTART	1
+>> +#define AOSS_CC_VENUS_RESTART	2
+>> +#define AOSS_CC_GPU_RESTART	3
+>> +#define AOSS_CC_DISPSS_RESTART	4
+>> +#define AOSS_CC_WCSS_RESTART	5
+>> +#define AOSS_CC_LPASS_RESTART	6
+>> +
+>> +#endif
+> 
+> regards
+> Philipp
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
