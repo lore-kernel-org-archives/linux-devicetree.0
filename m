@@ -1,28 +1,47 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 3/3] of: add early boot allocation of
- of_find_node_by_phandle() cache
-Date: Mon, 5 Mar 2018 14:26:17 -0600
-Message-ID: <CAL_Jsq+sD=Hj+3cYy0injRSZ5Dj2M6c+KbiFrrwsO_9pqq8wKg@mail.gmail.com>
-References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com> <1520208889-3908-4-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 3/5] dt-bindings: soc: Add a binding for the Broadcom VCHI services.
+Date: Mon,  5 Mar 2018 12:28:04 -0800
+Message-ID: <20180305202806.21219-4-eric@anholt.net>
+References: <20180305202806.21219-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520208889-3908-4-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20180305202806.21219-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 4, 2018 at 6:14 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> The initial implementation of the of_find_node_by_phandle() cache
-> allocates the cache using kcalloc().  Add an early boot allocation
-> of the cache so it will be usable during early boot.  Switch over
-> to the kcalloc() based cache once normal memory allocation
-> becomes available.
+The VCHI communication channel can be provided by BCM283x and Capri
+SoCs, to communicate with the VPU-side OS services.
 
-Do we get a lot of lookups early? It makes sense to me to do early,
-but freeing and repopulating seems to add needless complexity.
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ .../devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+new file mode 100644
+index 000000000000..4055a8977f3e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+@@ -0,0 +1,18 @@
++Broadcom VCHIQ firmware services
++
++Required properties:
++
++- compatible:	Should be "brcm,bcm2835-vchiq"
++- reg:		Physical base address and length of the doorbell register pair
++- interrupts:	The interrupt number
++		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++- firmware:	Reference to the RPi firmware device node
++
++Example:
++
++vchi@7e00b840 {
++	compatible = "brcm,bcm2835-vchiq";
++	reg = <0x7e00b840 0xf>;
++	interrupts = <0 2>;
++	firmware = <&firmware>;
++};
+-- 
+2.16.2
