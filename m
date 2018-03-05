@@ -1,197 +1,54 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v6 04/20] firmware: arm_scmi: add common infrastructure
- and support for base protocol
-Date: Mon, 5 Mar 2018 14:11:54 +0000
-Message-ID: <20180305151154.000051c2@huawei.com>
-References: <1519403030-21189-1-git-send-email-sudeep.holla@arm.com>
-        <1519403030-21189-5-git-send-email-sudeep.holla@arm.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
+Date: Mon, 05 Mar 2018 15:15:46 +0100
+Message-ID: <3530074.WSbKf9j6h0@phil>
+References: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519403030-21189-5-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Alexey Klimov <klimov.linux@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+To: Daniel Schultz <d.schultz@phytec.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Feb 2018 16:23:34 +0000
-Sudeep Holla <sudeep.holla@arm.com> wrote:
+Hi Daniel,
 
-> The base protocol describes the properties of the implementation and
-> provide generic error management. The base protocol provides commands
-> to describe protocol version, discover implementation specific
-> attributes and vendor/sub-vendor identification, list of protocols
-> implemented and the various agents are in the system including OSPM
-> and the platform. It also supports registering for notifications of
-> platform errors.
+Am Montag, 5. März 2018, 13:45:11 CET schrieb Daniel Schultz:
+> The CLK_O_SEL default is synchronous to XI input clock, which is 25 MHz.
+> Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OUT.
 > 
-> This protocol is mandatory. This patch adds support for the same along
-> with some basic infrastructure to add support for other protocols.
+> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> ---
 > 
-<snip>
+> The binding will be added with the next merge of net-next:
+> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
 
-Minor comments inline.
+I did find the commit, but no related change of the dp83867 dt binding
+document [0], including a review by dt-maintainers.
 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index fa0e9cf31f4c..ba784b8ec170 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -105,21 +105,27 @@ struct scmi_desc {
->   * @dev: Device pointer
->   * @desc: SoC description for this instance
->   * @handle: Instance of SCMI handle to send to clients
-> + * @version: SCMI revision information containing protocol version,
-> + *	implementation version and (sub-)vendor identification.
->   * @cl: Mailbox Client
->   * @tx_chan: Transmit mailbox channel
->   * @tx_payload: Transmit mailbox channel payload area
->   * @minfo: Message info
-> + * @protocols_imp: list of protocols implemented, currently maximum of
-> + *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
-If it is fixed size, is there a benefit in not just putting it in here
-as a fixed size array and simplifying the allocation?
+While your property does not look overly complicated, the binding
+should be updated nontheless.
 
->   * @node: list head
->   * @users: Number of users of this instance
->   */
->  struct scmi_info {
->  	struct device *dev;
->  	const struct scmi_desc *desc;
-> +	struct scmi_revision_info version;
->  	struct scmi_handle handle;
->  	struct mbox_client cl;
->  	struct mbox_chan *tx_chan;
->  	void __iomem *tx_payload;
->  	struct scmi_xfers_info minfo;
-> +	u8 *protocols_imp;
->  	struct list_head node;
->  	int users;
+
+Heiko
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Documentation/devicetree/bindings/net/ti,dp83867.txt?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
+
+>  arch/arm/boot/dts/rk3288-phycore-som.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> index bdd80aa..e60535d 100644
+> --- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> @@ -141,6 +141,7 @@
+>  			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+>  			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+>  			enet-phy-lane-no-swap;
+> +			ti,clk-output-sel = <DP83867_CLK_O_SEL_CHN_A_TCLK>;
+>  		};
+>  	};
 >  };
-> @@ -433,6 +439,45 @@ int scmi_one_xfer_init(const struct scmi_handle *handle, u8 msg_id, u8 prot_id,
->  }
->  
->  /**
-> + * scmi_version_get() - command to get the revision of the SCMI entity
-> + *
-> + * @handle: Handle to SCMI entity information
-> + *
-> + * Updates the SCMI information in the internal data structure.
-> + *
-> + * Return: 0 if all went fine, else return appropriate error.
-> + */
-> +int scmi_version_get(const struct scmi_handle *handle, u8 protocol,
-> +		     u32 *version)
-> +{
-> +	int ret;
-> +	__le32 *rev_info;
-> +	struct scmi_xfer *t;
-> +
-> +	ret = scmi_one_xfer_init(handle, PROTOCOL_VERSION, protocol, 0,
-> +				 sizeof(*version), &t);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = scmi_do_xfer(handle, t);
-> +	if (!ret) {
-> +		rev_info = t->rx.buf;
-> +		*version = le32_to_cpu(*rev_info);
-> +	}
-> +
-> +	scmi_one_xfer_put(handle, t);
-blank line before all simple returns is common kernel coding style
-and does help for readability (a little bit)
-
-> +	return ret;
-> +}
-> +
-> +void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
-> +				     u8 *prot_imp)
-> +{
-> +	struct scmi_info *info = handle_to_scmi_info(handle);
-> +
-> +	info->protocols_imp = prot_imp;
-> +}
-> +
-> +/**
->   * scmi_handle_get() - Get the  SCMI handle for a device
->   *
->   * @dev: pointer to device for which we want SCMI handle
-> @@ -660,11 +705,19 @@ static int scmi_probe(struct platform_device *pdev)
->  
->  	handle = &info->handle;
->  	handle->dev = info->dev;
-> +	handle->version = &info->version;
->  
->  	ret = scmi_mbox_chan_setup(info);
->  	if (ret)
->  		return ret;
->  
-> +	ret = scmi_base_protocol_init(handle);
-> +	if (ret) {
-> +		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
-> +		scmi_mbox_free_channel(info);
-> +		return ret;
-> +	}
-> +
->  	mutex_lock(&scmi_list_mutex);
->  	list_add_tail(&info->node, &scmi_list);
->  	mutex_unlock(&scmi_list_mutex);
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index 854ed2479993..664da3d763f2 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -17,11 +17,48 @@
->   */
->  #include <linux/types.h>
->  
-> +#define SCMI_MAX_STR_SIZE	16
-> +
-> +/**
-> + * struct scmi_revision_info - version information structure
-This isn't really just the version stuff. It's more about discovery
-of what is present.
-Perhaps the naming could make that clear if you want to keep this
-as one structure?
-
-> + *
-> + * @major_ver: Major ABI version. Change here implies risk of backward
-> + *	compatibility break.
-> + * @minor_ver: Minor ABI version. Change here implies new feature addition,
-> + *	or compatible change in ABI.
-> + * @num_protocols: Number of protocols that are implemented, excluding the
-> + *	base protocol.
-> + * @num_agents: Number of agents in the system.
-> + * @impl_ver: A vendor-specific implementation version.
-> + * @vendor_id: A vendor identifier(Null terminated ASCII string)
-> + * @sub_vendor_id: A sub-vendor identifier(Null terminated ASCII string)
-> + */
-> +struct scmi_revision_info {
-> +	u16 major_ver;
-> +	u16 minor_ver;
-> +	u8 num_protocols;
-> +	u8 num_agents;
-> +	u32 impl_ver;
-> +	char vendor_id[SCMI_MAX_STR_SIZE];
-> +	char sub_vendor_id[SCMI_MAX_STR_SIZE];
-> +};
-> +
->  /**
->   * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
->   *
->   * @dev: pointer to the SCMI device
-> + * @version: pointer to the structure containing SCMI version information
->   */
->  struct scmi_handle {
->  	struct device *dev;
-> +	struct scmi_revision_info *version;
-> +};
-> +
-> +enum scmi_std_protocol {
-> +	SCMI_PROTOCOL_BASE = 0x10,
-> +	SCMI_PROTOCOL_POWER = 0x11,
-> +	SCMI_PROTOCOL_SYSTEM = 0x12,
-> +	SCMI_PROTOCOL_PERF = 0x13,
-> +	SCMI_PROTOCOL_CLOCK = 0x14,
-> +	SCMI_PROTOCOL_SENSOR = 0x15,
->  };
+> 
