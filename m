@@ -1,126 +1,111 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 0/5] mmc: add stm32 sdmmc controller
-Date: Mon, 5 Mar 2018 13:53:25 +0100
-Message-ID: <CAPDyKFopp6aSXO0vguWah44vBqfvuRvFHUSNbynjFE8NFPnNRA@mail.gmail.com>
-References: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFpfPAaLRZLqpyi6RwC1-=7Ao=u+OmEfHaYBABzd_-BKAw@mail.gmail.com>
- <8f328063-610f-a2e8-5f29-d3f0019384f2@st.com> <CAPDyKFqFWcZnWoUdnfRtj9WA1+ooNCXKfZ94Ddq4j849CH2QOQ@mail.gmail.com>
- <cbdd31d8-dbea-4ea3-01ba-443daeb51775@st.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
+Date: Mon, 5 Mar 2018 14:02:17 +0100
+Message-ID: <CAMRc=Mdhi=byn4gPY6tVxgGjn9cgvc3smUkjV=Ku9i3euaZZtQ@mail.gmail.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <1519071723-31790-11-git-send-email-david@lechnology.com> <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
+ <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com> <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
+ <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cbdd31d8-dbea-4ea3-01ba-443daeb51775@st.com>
+In-Reply-To: <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+To: David Lechner <david@lechnology.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 March 2018 at 09:51, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
->
-> On 03/01/2018 11:44 AM, Ulf Hansson wrote:
+2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
 >>
->> On 1 March 2018 at 10:57, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
 >>>
->>> Hi Ulf
+>>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
+>>>>
+>>>>
+>>>>
+>>>> I think I found the reason for the strange crashes we were
+>>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
+>>>> me in the right direction.
+>>>>
+>>>> The mdio driver fails to probe with v7 due to the supplied clock rate
+>>>> being wrong. Before failing we register the emac clock with
+>>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
+>>>> reference count of the clock, but we never actually increased it in
+>>>> the first place in the line above. The core clock code then destroys
+>>>> the associated clk_core structure. When the next user comes around (in
+>>>> our case the clk debug functions) the system crashes.
+>>>>
+>>>> I believe there to be two issues: one is with v7 - we need to increase
+>>>> the clock reference count in davinci_psc_genpd_attach_dev().
+>>>>
+>>>> Second is the error path in the clock framework - we should remove the
+>>>> destroyed clk_core from the debug list, which is not being done now.
+>>>>
+>>>> Why we even need to track the refcount of clk_core is a mistery for me
+>>>> though. Stephen, Mike?
+>>>>
+>>>> Best regards,
+>>>> Bartosz Golaszewski
 >>>
->>> On 03/01/2018 10:06 AM, Ulf Hansson wrote:
->>>>
->>>>
->>>> Hi Ludovic,
->>>>
->>>> On 28 February 2018 at 16:47, Ludovic Barre <ludovic.Barre@st.com>
->>>> wrote:
->>>>>
->>>>>
->>>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>>
->>>>> This patch serie adds support of stm32 SDMMC controller.
->>>>> stm32h7 is the first SoC to use stm32 SDMMC controller
->>>>> (previous SoC had pl180 controller).
->>>>
->>>>
->>>>
->>>> I am a not convinced this isn't a new improved variant of the pl180.
->>>> According to register layout and the code you submitted in patch2,
->>>> there are great similarities to pl180 and the mmci driver.
 >>>
 >>>
+>>> Great find. I figured it had to be something like this, but I wasn't
+>>> able to reproduce the problem yet.
 >>>
->>> In fact, ST designers which created stm32-sdmmc hardware block from
->>> scratch
->>> are the same which have done the modifications on pl180 variant (stm32
->>> legacy f4, f7).
->>> So some registers or bits name seem identical (or strongly inspirited)
->>> but
->>> the engine and features are different.
+>>> I suppose it is time to spin up a v8 with some fixes.
 >>
 >>
->> Well, in that case, I assume the driver would also need work
->> differently, but when looking at the code in patch2 this doesn't seem
->> to be the case.
+>> I still don't know why the mdio clock rate is much lower than in
+>> mainline though. Any ideas?
+>>
+>> Thanks,
+>> Bart
 >>
 >
-> I understand why you push to avoid drivers multiplication. But I'm
-> scared to squash 2 different hardware block which are their own roadmap
-> in the same drivers. I fear that it complicates the features management and
-> maintenance of this driver.
-
-It may require more work for you to upstream the code you need. You
-may even have to re-factor existing code in mmci before you can add
-your specific parts on top.
-
-However, whether it gets complicated or not, I think much depends on
-the quality of the code changes we make. Both sdhci and dw_mmc gives
-an idea of how we can deal with variant differences, in particular
-when variant changes are a bit bigger.
-
-In the mmci case, so far the controller that differs the most, is the
-qcom variant, which also has the built-in DMA support, similar to your
-new ST variant. Perhaps there is some code we can re-use around that.
-
+> Now that you have fixed the crash, can you answer the questions I have
+> asked earlier?
 >
-> there are some difference:
-> -the stm32-sdmmc use an internal dma (stm32-sdmmc is master on the bus),
-> -idma alignment constraint.
-> -idma transfer mode single buffer, double buffer... (future evolution)
-> -need a command to stop transmission for data state machine
-> -same bit naming could have offset, mask width or set in different register.
-> => I will try to synthesis register difference in a document
-> -voltage switch sequence
-> -delay block: calibration, tunning (sdr104)
-> -reset line required
-> -the same feature have not the same impact, example ddr mode
-> stm32:no bypass clk, activated in clk register
-> pl180: clkreg_neg_edge_enable, activated in datactrl register,
-
-Doesn't sound like this couldn't be done, yes there are differences
-but not that much.
-
-Sure we may need re-work the core driver mmci code, maybe convert it
-to set of library function instead and invent a couple mmci specific
-callbacks. As I said, sdhci and dw_mmc already does it, so I am sure
-it can be done.
-
-> ...
+>> Can you post the output of this command so that I can see how your
 >
-> stm32-sdmmc is just at begining of its life cycle. Each revision of this
-> block increases the difference with pl180. Today, I've just push the minimal
-
-That's fine, this happens all the time to sdhci and dw_mmc variants.
-Again, if it works for them, it should work for mmci.
-
-> driver to start a request, but I've not yet send all features of this
-> revision like sdio, sdr104 support. After this revision there already are 2
-> other revisions in the pipe (at short term).
+> clocks are setup:
 >
-> I am Out of Office with limited access to my e-mail till 2018 march 12th
-> I'll try to think about it on ski slope. euh, in fact no just ski and enjoy
-> ;-)
+> cat /sys/kernel/debug/clk/clk_summary
+>
+>> Using your workaround, can you run:
+>
+>
+> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>
+> If you see:
+>   1e27000.clock-controller: emac  off-0
+>
+> then genpd is not working like it is supposed to. You should see something
+> like this for device that are working:
+>           1e27000.clock-controller: uart2  on
+>     /devices/platform/soc@1c00000/1d0d000.serial        active
 
-Enjoy you skiing and let's talk more when you get back!
+Hi David, Sekhar,
 
-[...]
+I tried booting the board today over tftp but didn't succeed. I then
+switched to a normal boot from SD card and the boot process froze at
+the same moment (right after the DHCP config, or after rtc config if I
+disabled DHCP in bootargs). I then realized that the emac clock can't
+be the culprit. After some digging I found out that the late_initcall
+to clk_disable_unused() disables sysclk6 - the parent of the arm
+clock, which of course freezes the device.
 
-Kind regards
-Uffe
+If I remove the call to clk_disable_unused(), I can boot just fine.
+
+The following other clocks are disabled before pll0_sysclk6:
+pll1_sysclk3
+pll0_obsclk
+pll0_sysclk7
+
+davinci_lpsc_clk_enable() is never called for these clocks - in fact
+it's not called for any parent that's not explicitly defined in
+psc-da850.c - I believe this may be one of the reasons. I will get
+back to debugging it tomorrow.
+
+Best regards,
+Bartosz Golaszewski
