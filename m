@@ -1,35 +1,60 @@
-From: =?UTF-8?Q?Joonas_Kylm=c3=a4l=c3=a4?= <joonas.kylmala-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 15/16] ARM: dts: sun8i: h3: Enable HDMI
- output on H3 boards
-Date: Mon, 05 Mar 2018 15:27:00 +0000
-Message-ID: <57afe052-9a8c-f63b-ee43-5bad8cd1d193@iki.fi>
-References: <20180301213442.16677-1-jernej.skrabec@siol.net>
- <20180301213442.16677-16-jernej.skrabec@siol.net>
-Reply-To: joonas.kylmala-X3B1VOXEql0@public.gmane.org
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] arm64: dts: stratix10: Add PL330 DMAC to Stratix10 dts
+Date: Mon, 5 Mar 2018 09:27:45 -0600
+Message-ID: <855c7ccd-d675-7d4f-f380-a2e11233d331@kernel.org>
+References: <1519141127-22038-1-git-send-email-graham.moore@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDKPPPP3Z4PBBYWD6XKAKGQEKR5YY3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180301213442.16677-16-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519141127-22038-1-git-send-email-graham.moore@linux.intel.com>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Graham Moore <graham.moore@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jernej Skrabec:
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint = <&hdmi_con_in>;
-> +	};
-> +};
 
-This node is added to all the DTS files you enabled HDMI on. Is it
-something that could be instead put to the DTSI file?
 
-Joonas
+On 02/20/2018 09:38 AM, Graham Moore wrote:
+> The Stratix10 SoCFPGA uses the PL330 DMAC.  This patch adds the PL330
+> DMAC to the Stratix10 device tree.
+> 
+> Signed-off-by: Graham Moore <graham.moore@linux.intel.com>
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index aa4080d..0666c0f 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -711,6 +711,25 @@
+>  			reg = <0xffe00000 0x100000>;
+>  		};
+>  
+> +		pdma: pdma@ffda0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0xffda0000 0x1000>;
+> +			interrupts = <0 81 4>,
+> +				     <0 82 4>,
+> +				     <0 83 4>,
+> +				     <0 84 4>,
+> +				     <0 85 4>,
+> +				     <0 86 4>,
+> +				     <0 87 4>,
+> +				     <0 88 4>,
+> +				     <0 89 4>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +			clocks = <&l4_main_clk>;
+
+This clock doesn't exist. Can you please resend this patch based on the
+clock driver patch?
+
+please base your updated patch with :
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/log/?h=socfpga_for_next_v4.17_dts
+
+Dinh
