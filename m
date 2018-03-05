@@ -1,40 +1,46 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v6 4/6] regulator: pfuze100: add fsl,pmic-stby-poweroff property
-Date: Mon,  5 Mar 2018 11:25:21 +0100
-Message-ID: <20180305102524.5905-5-o.rempel@pengutronix.de>
+Subject: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Mon,  5 Mar 2018 11:25:20 +0100
+Message-ID: <20180305102524.5905-4-o.rempel@pengutronix.de>
 References: <20180305102524.5905-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180305102524.5905-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the new optional "fsl,pmic-stby-poweroff" property.
+Export pm_power_off_prepare. It is needed to implement power off on
+Freescale/NXP iMX6 based boards with external power management
+integrated circuit (PMIC).
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/regulator/pfuze100.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ kernel/reboot.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index c6dd3f5e485b..91fec1a0785d 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -4,6 +4,13 @@ Required properties:
- - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
- - reg: I2C slave address
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index e4ced883d8de..350be6baa60d 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -49,6 +49,7 @@ int reboot_force;
+  */
  
-+Optional properties:
-+- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
-+  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
-+  Use this option if the SoC should be powered off by external power
-+  management IC (PMIC) on PMIC_STBY_REQ signal.
-+  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
-+
- Required child node:
- - regulators: This is the list of child nodes that specify the regulator
-   initialization data for defined regulators. Please refer to below doc
+ void (*pm_power_off_prepare)(void);
++EXPORT_SYMBOL(pm_power_off_prepare);
+ 
+ /**
+  *	emergency_restart - reboot the system
 -- 
 2.16.1
