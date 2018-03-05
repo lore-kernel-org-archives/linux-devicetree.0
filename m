@@ -1,35 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/2] Add R8A77970/Eagle I2C support
-Date: Mon, 5 Mar 2018 10:10:12 +0100
-Message-ID: <20180305091009.fj4f6riash7ibklw@verge.net.au>
-References: <23c5b1f4-d92b-455f-7288-5aabd002183a@cogentembedded.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 00/16] mmc: tmio: another batch of TMIO MMC fixes and
+ cleanups
+Date: Mon, 5 Mar 2018 10:22:59 +0100
+Message-ID: <20180305092259.bcpfbzvvoqxsfomf@katana>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <20180304224248.mzhsvl4ccmtzg5am@ninjato>
+ <CAPDyKFq_1mR=b3iu6o4ZJQeAjRnWf_tzb=__7SxvZYqDNCo2bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="otjtt6lvg234ipuq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <23c5b1f4-d92b-455f-7288-5aabd002183a@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAPDyKFq_1mR=b3iu6o4ZJQeAjRnWf_tzb=__7SxvZYqDNCo2bg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 03, 2018 at 10:02:41PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20180301-v4.16-rc3' tag. We're adding the R8A77970 I2C nodes
-> and then describing the PCA9654 I/O expander connected to the I2C0 bus.
-> 
-> [1/2] arm64: dts: renesas: r8a77970: add I2C support
-> [2/2] arm64: dts: renesas: eagle: add I2C0 support
 
-Thanks, applied.
+--otjtt6lvg234ipuq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> I have added Wolframs tags to the already applied patches and applied
+> that last two, 15 and 16.
+
+Thanks. Please note that patch 14 misses my Rev tag. (I gave it
+yesterday but the patch was accidently applied before. One round too
+early, so to say).
+
+> They are all present in my next branch. The fix that Wolfram sent on
+> top, is added immediately after the commit it fixes.
+
+Could we also squash it, then?
+
+
+--otjtt6lvg234ipuq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqdDGsACgkQFA3kzBSg
+KbY17A/+IDT0E3zqsrKQG3Gv9dXc2OBuEEOpjyQGn2WLSiFUW/YNY+HfZO9af/MF
+YRqPBeqWVdUYsB4S4d++HqHYipQYF2Mngi5o7oC1qRoVauoWwJuc4pSY7yujQ7Ux
+c3aEt+HEWcU1gR/3vsnAwGMjoWNyRtONl6W2NRUwM6sj+dLjHubSDVuE8hJ6/MUD
+jmmuhLFC6NkXhhbz2lN3i2QVlI1B9LX5Hj7vWTm7D4afWykuxLI/+tY5ycGuC0in
+S33YCD7iHdWw1C5A6TlVwSlmAsVOCPtL87FQABOlhkeaJcJWTlhncgkTstqoYDyd
+c5thdAH2vtMIuhmb6+RK4G8yQdKK7HGzUl7Of6/y8wIn4eKKoyJ3b4WDMKewy6EL
+96DJlj2eaCCK+EV64o0Eq+MC50OSkL5OSuWhEUSX7oaB6twVF7Mmjo8hxYYvRLqM
+rGOcaGua4Zzj2iS1Cx5GB7o4cAq/2btqeR9V1KZsQzsyHXC9g25LEQnnvmt/n3cM
+E7BK+9RnEc2JcvrVFXzevNhWgGNTzHttmXyzHl4s783o79f5liLAK2NG+mM1hwTR
+sPIUI8TwEqVg3lJxIoRUWPWKka7sqlDZ5C79gNZbc0QwC9FKHvGFyRQqWq/xXs0K
+ela9XXc607vVX9VismHS3GKF0koS8LmZLhXYSv3eZm+2l9dlGVk=
+=DgLh
+-----END PGP SIGNATURE-----
+
+--otjtt6lvg234ipuq--
