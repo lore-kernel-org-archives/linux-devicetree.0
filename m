@@ -1,13 +1,13 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add SPI support on STM32H743 SoC
-Date: Mon, 5 Mar 2018 09:42:48 +0100
-Message-ID: <f14b8e89-6487-1a1c-7f66-a0dcd3cd705b@st.com>
-References: <1519814190-3208-1-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
+Date: Mon, 5 Mar 2018 09:43:49 +0100
+Message-ID: <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
+References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519814190-3208-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,54 +18,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org
+Cc: mcoquelin.stm32@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW3DqWxpZQoKT24gMDIvMjgvMjAxOCAxMTozNiBBTSwgQW1lbGllIERlbGF1bmF5IHdyb3Rl
-Ogo+IFRoaXMgcGF0Y2ggYWRkcyBhbGwgU1BJIGluc3RhbmNlcyBvZiB0aGUgU1RNMzJINzQzIFNv
-Qy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbWVsaWUgRGVsYXVuYXkgPGFtZWxpZS5kZWxhdW5heUBz
-dC5jb20+Cj4gLS0tCgpBcHBsaWVkIG9uIHN0bTMyLW5leHQuCgpUaGFua3MuCkFsZXgKCj4gICBh
-cmNoL2FybS9ib290L2R0cy9zdG0zMmg3NDMuZHRzaSB8IDYxICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA2MSBpbnNlcnRpb25zKCsp
-Cj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0My5kdHNpIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzLmR0c2kKPiBpbmRleCAzYTI4Y2QyLi4yYmIxMDNlIDEw
-MDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0My5kdHNpCj4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzLmR0c2kKPiBAQCAtMTAxLDYgKzEwMSwyNyBAQAo+ICAg
-CQkJfTsKPiAgIAkJfTsKPiAgIAo+ICsJCXNwaTI6IHNwaUA0MDAwMzgwMCB7Cj4gKwkJCSNhZGRy
-ZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQkJY29tcGF0aWJs
-ZSA9ICJzdCxzdG0zMmg3LXNwaSI7Cj4gKwkJCXJlZyA9IDwweDQwMDAzODAwIDB4NDAwPjsKPiAr
-CQkJaW50ZXJydXB0cyA9IDwzNj47Cj4gKwkJCWNsb2NrcyA9IDwmcmNjIFNQSTJfQ0s+Owo+ICsJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsKPiArCQl9Owo+ICsKPiArCQlzcGkzOiBzcGlANDAw
-MDNjMDAgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8
-MD47Cj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzJoNy1zcGkiOwo+ICsJCQlyZWcgPSA8MHg0
-MDAwM2MwMCAweDQwMD47Cj4gKwkJCWludGVycnVwdHMgPSA8NTE+Owo+ICsJCQljbG9ja3MgPSA8
-JnJjYyBTUEkzX0NLPjsKPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQl9Owo+ICsKPiAg
-IAkJdXNhcnQyOiBzZXJpYWxANDAwMDQ0MDAgewo+ICAgCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0z
-MmY3LXVhcnQiOwo+ICAgCQkJcmVnID0gPDB4NDAwMDQ0MDAgMHg0MDA+Owo+IEBAIC0xNDEsNiAr
-MTYyLDM2IEBACj4gICAJCQljbG9ja3MgPSA8JnJjYyBVU0FSVDFfQ0s+Owo+ICAgCQl9Owo+ICAg
-Cj4gKwkJc3BpMTogc3BpQDQwMDEzMDAwIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4g
-KwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyaDctc3Bp
-IjsKPiArCQkJcmVnID0gPDB4NDAwMTMwMDAgMHg0MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDM1
-PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJMV9DSz47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxl
-ZCI7Cj4gKwkJfTsKPiArCj4gKwkJc3BpNDogc3BpQDQwMDEzNDAwIHsKPiArCQkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0g
-InN0LHN0bTMyaDctc3BpIjsKPiArCQkJcmVnID0gPDB4NDAwMTM0MDAgMHg0MDA+Owo+ICsJCQlp
-bnRlcnJ1cHRzID0gPDg0PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJNF9DSz47Cj4gKwkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJfTsKPiArCj4gKwkJc3BpNTogc3BpQDQwMDE1MDAwIHsK
-PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJ
-CQljb21wYXRpYmxlID0gInN0LHN0bTMyaDctc3BpIjsKPiArCQkJcmVnID0gPDB4NDAwMTUwMDAg
-MHg0MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDg1PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJ
-NV9DSz47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJfTsKPiArCj4gICAJCWRtYTE6
-IGRtYUA0MDAyMDAwMCB7Cj4gICAJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLWRtYSI7Cj4gICAJ
-CQlyZWcgPSA8MHg0MDAyMDAwMCAweDQwMD47Cj4gQEAgLTI2Miw2ICszMTMsMTYgQEAKPiAgIAkJ
-CXJlZyA9IDwweDU4MDAwNDAwIDB4NDAwPjsKPiAgIAkJfTsKPiAgIAo+ICsJCXNwaTY6IHNwaUA1
-ODAwMTQwMCB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9
-IDwwPjsKPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMmg3LXNwaSI7Cj4gKwkJCXJlZyA9IDww
-eDU4MDAxNDAwIDB4NDAwPjsKPiArCQkJaW50ZXJydXB0cyA9IDw4Nj47Cj4gKwkJCWNsb2NrcyA9
-IDwmcmNjIFNQSTZfQ0s+Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCX07Cj4gKwo+
-ICAgCQlscHRpbWVyMjogdGltZXJANTgwMDI0MDAgewo+ICAgCQkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47Cj4gICAJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Patrice,
+
+On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> This series adds :
+>   _ SDIO pins definition for STM32F7 SoCs family
+>   _ add sdio1 DT entry for STM32F746 Discovery board
+>   _ add sdio1 DT entry for STM32F746 Evaluation board
+>   _ add sdio1 DT entry for STM32F769 Discovery board
+>   _ add SDMMC2 entry in stm32f7-rcc.h
+>   _ replace sdio2 hard coded value in stm32f746.dtsi
+> 
+> v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
+>        and update board dts files accordingly.
+> 
+> 
+> Patrice Chotard (6):
+>    ARM: dts: stm32: Add sdio pins definition for stm32f7
+>    ARM: dts: stm32: Enable sdio1 for stm32f746-disco
+>    ARM: dts: stm32: Enable sdio1 for stm32f746-eval
+>    ARM: dts: stm32: Enable sdio1 for stm32f769-disco
+>    dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
+>    ARM: dts: stm32: Fix sdio2 rcc hard coded value
+> 
+>   arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
+>   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
+>   arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
+>   arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
+>   include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
+>   6 files changed, 119 insertions(+), 1 deletion(-)
+> 
+Series applied on stm32-next.
+
+Regards
+Alex
