@@ -1,37 +1,94 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arm64: dts: stratix10: enable i2c, add i2c periperals
-Date: Mon, 5 Mar 2018 09:25:04 -0600
-Message-ID: <6661d0f4-79b5-91d2-7507-e15e7004ebe5@kernel.org>
-References: <20180221202541.3258-1-atull@kernel.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 1/2] dmaengine: Introduce DW AXI DMAC driver
+Date: Mon, 5 Mar 2018 15:26:07 +0000
+Message-ID: <1520263566.3152.17.camel@synopsys.com>
+References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
+ <20180226145628.11892-2-Eugeniy.Paltsev@synopsys.com>
+ <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180221202541.3258-1-atull@kernel.org>
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-ID: <78788F79FADF0D4D91A0F9E14416F4D6@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
-
-On 02/21/2018 02:25 PM, Alan Tull wrote:
-> Add clock for i2c
-> Enable i2c1
-> Set the i2c bus speed to 100KHz
-> Add the following i2c peripherals
-> * ds1339 RTC
-> * 24c32 EEPROM
-> * max1619 temperature monitor
-> * ltc2497 ADC
->   * Add a fixed regulator for the ADC's Vref.
+On Mon, 2018-02-26 at 18:42 +0200, Andy Shevchenko wrote:
+> On Mon, Feb 26, 2018 at 4:56 PM, Eugeniy Paltsev
+> <Eugeniy.Paltsev@synopsys.com> wrote:
+> > +static int parse_device_properties(struct axi_dma_chip *chip)
+> > +{
+> > +       ret = device_property_read_u32(dev, "snps,dma-masters", &tmp);
 > 
-> This requires Dinh Nguyen's Stratix10 clock driver
-> ("clk: socfpga: stratix10: add clock driver for Stratix10 platform")
+> Why it has prefix?
+> 
+> > +       ret = device_property_read_u32(dev, "snps,data-width", &tmp);
+> 
+> Ditto.
+> 
+> > +       ret = device_property_read_u32_array(dev, "snps,block-size", carr,
+> > +                                            chip->dw->hdata->nr_channels);
+> 
+> (perhaps this one can be moved outside of local namespace)
+> 
+> > +       ret = device_property_read_u32_array(dev, "snps,priority", carr,
+> > +                                            chip->dw->hdata->nr_channels);
+> 
+> Can you use just "priority"?
+> 
 > 
 
-Thanks for the patch! I've staged this patch based on the clock driver
-patch.
+Rob Herring asked me to add vendor prefix to this properties.
+See http://patchwork.ozlabs.org/patch/719708/
 
-Dinh
+-------------------->8--------------------------
+> > +Required properties:
+> > +- compatible: "snps,axi-dma"
+> 
+> Too generic. This needs an IP version at least.
+> 
+> > +- reg: Address range of the DMAC registers. This should include
+> > +  all of the per-channel registers.
+> > +- interrupt: Should contain the DMAC interrupt number.
+> > +- interrupt-parent: Should be the phandle for the interrupt controller
+> > +  that services interrupts for this device.
+> > +- dma-channels: Number of channels supported by hardware.
+> > +- dma-masters: Number of AXI masters supported by the hardware.
+> > +- data-width: Maximum AXI data width supported by hardware.
+> > +  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
+> 
+> > +- priority: Priority of channel. Array property. Priority value must be
+> > +  programmed within [0:dma-channels-1] range. (0 - minimum priority)
+> > +- block-size: Maximum block size supported by the controller channel. Array
+> > +  property.
+> 
+> Other than dma-channels, all these either need vendor prefix.
+> 
+-------------------->8--------------------------
+
+
+
+On Fri, 2018-03-02 at 13:44 +0530, Vinod Koul wrote:
+> On Mon, Feb 26, 2018 at 05:56:28PM +0300, Eugeniy Paltsev wrote:
+> > +dmac: dma-controller@80000 {
+> > +	compatible = "snps,axi-dma-1.01a";
+> 
+> do we need "snps here..?
+> 
+
+Ditto.
+
+-- 
+ Eugeniy Paltsev
