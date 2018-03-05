@@ -1,58 +1,45 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Mon, 5 Mar 2018 15:14:55 -0800
-Message-ID: <20180305231455.GJ18510@minitux>
-References: <20180226175802.20052-1-ilina@codeaurora.org>
- <20180226175802.20052-3-ilina@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] PCI: Move declaration of of_irq_parse_and_map_pci under
+ OF_IRQ
+Date: Mon, 5 Mar 2018 15:19:36 -0800
+Message-ID: <20180305231936.GA14751@roeck-us.net>
+References: <1519687145-9430-1-git-send-email-linux@roeck-us.net>
+ <20180305215737.oxelfzdgsro6poee@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180226175802.20052-3-ilina@codeaurora.org>
+In-Reply-To: <20180305215737.oxelfzdgsro6poee@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
-
-> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+On Mon, Mar 05, 2018 at 03:57:37PM -0600, Rob Herring wrote:
+> On Mon, Feb 26, 2018 at 03:19:05PM -0800, Guenter Roeck wrote:
+> > Since commit 4670d610d5923 ("PCI: Move OF-related PCI functions into
+> > PCI core"), sparc:allmodconfig fails to build with the following error.
+> > 
+> > pcie-cadence-host.c:(.text+0x4c4):
+> > 	undefined reference to `of_irq_parse_and_map_pci'
+> > pcie-cadence-host.c:(.text+0x4c8):
+> > 	undefined reference to `of_irq_parse_and_map_pci'
+> > 
+> > of_irq_parse_and_map_pci is now only available if OF_IRQ is enabled.
+> > Make its declaration and its dummy function dependent on OF_IRQ
+> > to solve the problem.
+> > 
+> > Fixes: 4670d610d5923 ("PCI: Move OF-related PCI functions into PCI core")
+> > Cc: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > ---
+> >  include/linux/of_pci.h | 17 ++++++++++-------
+> >  1 file changed, 10 insertions(+), 7 deletions(-)
 > 
-> Command DB provides information on shared resources like clocks,
-> regulators etc., probed at boot by the remote subsytem and made
-> available in shared memory.
+> Bjorn should take this. Can you resend to linux-pci so it is in his 
+> queue.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
-> 
-> Changes in v4:
-> 	- Fix unwanted capitalization
-> 	- Add reg property
-> ---
->  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-[..]
-> +	reserved-memory {
-> +		[...]
-> +		qcom,cmd-db@c3f000c {
-> +			reg = <0x0 0xc3f000c 0x0 0x8>,
-> +			      <0x0 0x85fe0000 0x0 0x20000>;
+MAINTAINERS lists you as maintainer and devicetree@vger.kernel.org as
+mailing list. But, sure, no problem.
 
-I'm still concerned about the use of the redirection mapping here,
-the relocation at 0xc3f000c is used a convenience thing so that the
-command db can be relocated, but because of how Linux will consume any
-non-reserved memory the dts would still need to be manually updated.
-
-As such I think you should just describe only the 0x85fe0000 + 0x20000
-region here and to support the dynamic aspect of this from a system
-point of view you can have the boot loader read the information at
-0xc3f000c and adjust the reserved memory. (Or just keep the step of
-manually update the dts without caring about the indirection)
-
-Regards,
-Bjorn
+Guenter
