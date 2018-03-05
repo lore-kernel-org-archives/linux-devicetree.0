@@ -1,42 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] scsi: ufs-qcom: add number of lanes for Tx and Rx
- links
-Date: Mon, 5 Mar 2018 16:02:00 -0600
-Message-ID: <20180305220200.rah223rn4ndq7hd4@rob-hp-laptop>
-References: <20180227055500.10416-1-cang@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2 0/4] Add support for the Gateworks System Controller
+Date: Mon,  5 Mar 2018 14:02:37 -0800
+Message-ID: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180227055500.10416-1-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>
-Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Yaniv Gardi <ygardi@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, Maya Erez <merez@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 01:46:17PM +0800, Can Guo wrote:
-> From: Gilad Broner <gbroner@codeaurora.org>
-> 
-> Different platforms may have different number of lanes for the UFS Tx/Rx
-> links. Add parameter to device tree specifying how many lanes should be
-> configured for the UFS Tx/Rx links. And don't print err message for clocks
-> that are optional, this leads to unnecessary confusion about failure.
-> 
-> Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
-> 
-> Changes since v1:
-> 	- Change commit subject for better description.
-> 	- Incorporated Rob's review comments to use lanes-tx and lanes-rx
-> 	  to handle asymmetric Tx/Rx links.
-> 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 ++
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
->  drivers/scsi/ufs/ufs-qcom.c                        | 65 +++++++++++++---------
->  drivers/scsi/ufs/ufshcd.c                          | 29 ++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  5 ++
->  4 files changed, 78 insertions(+), 25 deletions(-)
+see http://trac.gateworks.com/wiki/gsc for more details
+
+Tim Harvey (4):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+  input: misc: Add Gateworks System Controller support
+
+ Documentation/devicetree/bindings/mfd/gsc.txt | 159 +++++++++++++
+ drivers/hwmon/Kconfig                         |   9 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/gsc-hwmon.c                     | 330 ++++++++++++++++++++++++++
+ drivers/input/misc/Kconfig                    |   9 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/gsc-input.c                | 180 ++++++++++++++
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/gsc.c                             | 330 ++++++++++++++++++++++++++
+ include/linux/mfd/gsc.h                       |  82 +++++++
+ include/linux/platform_data/gsc_hwmon.h       |  34 +++
+ include/linux/platform_data/gsc_input.h       |  30 +++
+ 13 files changed, 1179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gsc.txt
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/input/misc/gsc-input.c
+ create mode 100644 drivers/mfd/gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+ create mode 100644 include/linux/platform_data/gsc_input.h
+
+-- 
+2.7.4
