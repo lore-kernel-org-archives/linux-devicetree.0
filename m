@@ -1,36 +1,64 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 1/3] dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8a77965
-Date: Mon,  5 Mar 2018 14:32:43 +0900
-Message-ID: <1520227965-4471-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1520227965-4471-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 2/2] watchdog: Add Nuvoton NPCM watchdog driver
+Date: Mon, 5 Mar 2018 16:12:05 +1030
+Message-ID: <CACPK8Xdcd7Dx5OvoRKH8OCJ1O1uOKi8BTwpTRz6+YAiOG5eoAw@mail.gmail.com>
+References: <20180302063746.10993-1-joel@jms.id.au> <20180302063746.10993-3-joel@jms.id.au>
+ <20180302112059.GA27322@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520227965-4471-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20180302112059.GA27322@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for r8a77965 (R-Car M3-N).
+On Fri, Mar 2, 2018 at 9:50 PM, Marcus Folkesson
+<marcus.folkesson@gmail.com> wrote:
+> Hello Joel!
+>
+> On Fri, Mar 02, 2018 at 05:07:46PM +1030, Joel Stanley wrote:
+>> The Nuvoton NPCM750 has a watchdog implemented as a single register
+>> inside the timer peripheral.
+>>
+>> This driver exposes that watchdog as a standard watchdog device with
+>> coarse timeout intervals, limited by the combination of prescaler and
+>> counter that is provided by the hardware. The calculation is taken from
+>> the Nuvoton vendor tree.
+>>
+>> There is a pre-timeout IRQ that is wired up. This timeout always occurs
+>> 1024 clocks before the timeout.
+>>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> ---
+>>  drivers/watchdog/Kconfig    |  11 +++
+>>  drivers/watchdog/Makefile   |   1 +
+>>  drivers/watchdog/npcm_wdt.c | 223 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 235 insertions(+)
+>>  create mode 100644 drivers/watchdog/npcm_wdt.c
+>>
+>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> index aff773bcebdb..0c1cc68894e6 100644
+>> --- a/drivers/watchdog/Kconfig
+>> +++ b/drivers/watchdog/Kconfig
+>> @@ -513,6 +513,17 @@ config COH901327_WATCHDOG
+>>         This watchdog is used to reset the system and thus cannot be
+>>         compiled as a module.
+>>
+>> +config NPCM7XX_WATCHDOG
+>> +     bool "NPCM750 watchdog"
+>
+> Just asking, we do not want to make it possible to build this as a module?
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
- 1 file changed, 2 insertions(+)
+The watchdog provides the SoC with a way to reboot itself, so I would
+expect all users of the kernel to have it built in in case the system
+cannot find it's initrd or root file system, and therefore is unable
+to load the watchdog module.
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 99b651b..dbd137c 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -8,6 +8,8 @@ Required properties:
- 	      SoC.
- 	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
- 	      SoC.
-+	      "renesas,usb2-phy-r8a77965" if the device is a part of an
-+	      R8A77965 SoC.
- 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
- 	      R8A77995 SoC.
- 	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 compatible device.
--- 
-1.9.1
+I am happy to change it if you would prefer.
+
+Thanks for the review.
+
+Cheers,
+
+Joel
