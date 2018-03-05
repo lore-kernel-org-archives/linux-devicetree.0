@@ -1,51 +1,75 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/6] dma-mapping: support fsl-mc bus
-Date: Mon, 5 Mar 2018 18:51:56 +0000
-Message-ID: <1729ae21-d08c-b413-51a3-f22c394b388d@arm.com>
-References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
-	<1520260166-29387-6-git-send-email-nipun.gupta@nxp.com>
-	<20180305150814.GA15918@lst.de>
-	<7b4f9972-6aaa-fc9d-3854-d48b19a8051c@arm.com>
-	<20180305183938.GB20086@lst.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180305183938.GB20086-jcswGhMUV9g@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH] thermal: of: Allow selection of thermal governor in DT
+Date: Tue,  6 Mar 2018 00:06:45 +0530
+Message-ID: <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
+References: <cover.1520274879.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1520274879.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Ram Chandrasekar <rkumbako@codeaurora.org>, ilina@codeaurora.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/18 18:39, Christoph Hellwig wrote:
-> On Mon, Mar 05, 2018 at 03:48:32PM +0000, Robin Murphy wrote:
->> Unfortunately for us, fsl-mc is conceptually rather like PCI in that it's
->> software-discoverable and the only thing described in DT is the bus "host",
->> thus we need the same sort of thing as for PCI to map from the child
->> devices back to the bus root in order to find the appropriate firmware
->> node. Worse than PCI, though, we wouldn't even have the option of
->> describing child devices statically in firmware at all, since it's actually
->> one of these runtime-configurable "build your own network accelerator"
->> hardware pools where userspace gets to create and destroy "devices" as it
->> likes.
-> 
-> I really hate the PCI special case just as much.  Maybe we just
-> need a dma_configure method on the bus, and move PCI as well as fsl-mc
-> to it.
+From: Ram Chandrasekar <rkumbako@codeaurora.org>
 
-Hmm, on reflection, 100% ack to that idea. It would neatly supersede 
-bus->force_dma *and* mean that we don't have to effectively pull pci.h 
-into everything, which I've never liked. In hindsight dma_configure() 
-does feel like it's grown into this odd choke point where we munge 
-everything in just for it to awkwardly unpick things again.
+There is currently no way for the governor to be selected for each thermal
+zone in devicetree. This results in the default governor being used for all
+thermal zones even though no such restriction exists in the core code.
 
-Robin.
+Add support for specifying the thermal governor to be used for a thermal
+zone in the devicetree. The devicetree config should specify the governor
+name as a string that matches any available governors. If not specified, we
+maintain the current behaviour of using the default governor.
+
+Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ Documentation/devicetree/bindings/thermal/thermal.txt | 8 ++++++++
+ drivers/thermal/of-thermal.c                          | 6 ++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index 1719d47..fced9d3 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -168,6 +168,14 @@ Optional property:
+ 			by means of sensor ID. Additional coefficients are
+ 			interpreted as constant offset.
+ 
++- thermal-governor:     Thermal governor to be used for this thermal zone.
++			Expected values are:
++			"step_wise": Use step wise governor.
++			"fair_share": Use fair share governor.
++			"user_space": Use user space governor.
++			"power_allocator": Use power allocator governor.
++  Type: string
++
+ - sustainable-power:	An estimate of the sustainable power (in mW) that the
+   Type: unsigned	thermal zone can dissipate at the desired
+   Size: one cell	control temperature.  For reference, the
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index e09f035..a884b01 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -974,6 +974,7 @@ int __init of_parse_thermal_zones(void)
+ 		struct thermal_zone_params *tzp;
+ 		int i, mask = 0;
+ 		u32 prop;
++		const char *governor_name;
+ 
+ 		tz = thermal_of_build_thermal_zone(child);
+ 		if (IS_ERR(tz)) {
+@@ -996,6 +997,11 @@ int __init of_parse_thermal_zones(void)
+ 		/* No hwmon because there might be hwmon drivers registering */
+ 		tzp->no_hwmon = true;
+ 
++		if (!of_property_read_string(child, "thermal-governor",
++						&governor_name))
++			strlcpy(tzp->governor_name, governor_name,
++					THERMAL_NAME_LENGTH);
++
+ 		if (!of_property_read_u32(child, "sustainable-power", &prop))
+ 			tzp->sustainable_power = prop;
+ 
+-- 
+2.7.4
