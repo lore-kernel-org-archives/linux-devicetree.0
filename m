@@ -1,30 +1,85 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next] dt-bindings: net: dsa: marvell: describe
- compatibility string
-Date: Mon, 5 Mar 2018 23:41:26 +0100
-Message-ID: <20180305224126.GB17529@lunn.ch>
-References: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v8 1/4] dt-bindings: display: renesas: Add R-Car LVDS encoder
+ DT bindings
+Date: Tue,  6 Mar 2018 00:54:00 +0200
+Message-ID: <20180305225403.25298-2-laurent.pinchart+renesas@ideasonboard.com>
+References: <20180305225403.25298-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brandon Streiff <brandon.streiff@ni.com>
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180305225403.25298-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 04:05:22PM -0600, Brandon Streiff wrote:
-> There are two compatibility strings for mv88e6xxx, but it isn't clear
-> from the documentation why only those two exist when the mv88e6xxx driver
-> supports more than the 6085 and 6190. Briefly describe how the compatible
-> property is used, and provide guidance on which to use.
-> 
-> The model list comes from looking at port_base_addr values (0x0 vs 0x10)
-> in drivers/net/dsa/mv88e6xxx/chip.c.
-> 
-> Signed-off-by: Brandon Streiff <brandon.streiff@ni.com>
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+VGhlIFJlbmVzYXMgUi1DYXIgR2VuMiBhbmQgR2VuMyBTb0NzIGhhdmUgaW50ZXJuYWwgTFZEUyBl
+bmNvZGVycy4gQWRkCmNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYmluZGluZ3MuCgpTaWduZWQt
+b2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNv
+bmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClJl
+dmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJh
+Z25hdGVjaC5zZT4KLS0tCkNoYW5nZXMgc2luY2UgdjY6CgotIEZpeGVkIHR5cG8gaW4gU29DIG5h
+bWUKCkNoYW5nZXMgc2luY2UgdjE6CgotIE1vdmUgdGhlIFNvQyBuYW1lIGJlZm9yZSB0aGUgSVAg
+bmFtZSBpbiBjb21wYXRpYmxlIHN0cmluZ3MKLSBSZW5hbWUgcGFyYWxsZWwgaW5wdXQgdG8gcGFy
+YWxsZWwgUkdCIGlucHV0Ci0gRml4ZWQgInJlbmVzYXMscjhhNzc0My1sdmRzIiBkZXNjcmlwdGlv
+bgotIERvY3VtZW50IHRoZSByZXNldHMgcHJvcGVydHkKLSBGaXhlZCB0eXBvCi0tLQogLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgICAgfCA1NiArKysrKysr
+KysrKysrKysrKysrKysrCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAxICsKIDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4
+dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLmFmNDViYTlkOGY5MAot
+LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0CkBAIC0wLDAgKzEsNTYgQEAKK1JlbmVzYXMgUi1D
+YXIgTFZEUyBFbmNvZGVyCis9PT09PT09PT09PT09PT09PT09PT09PT09PQorCitUaGVzZSBEVCBi
+aW5kaW5ncyBkZXNjcmliZSB0aGUgTFZEUyBlbmNvZGVyIGVtYmVkZGVkIGluIHRoZSBSZW5lc2Fz
+IFItQ2FyCitHZW4yLCBSLUNhciBHZW4zIGFuZCBSWi9HIFNvQ3MuCisKK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6CisKKy0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9mCisgIC0gInJlbmVz
+YXMscjhhNzc0My1sdmRzIiBmb3IgUjhBNzc0MyAoUlovRzFNKSBjb21wYXRpYmxlIExWRFMgZW5j
+b2RlcnMKKyAgLSAicmVuZXNhcyxyOGE3NzkwLWx2ZHMiIGZvciBSOEE3NzkwIChSLUNhciBIMikg
+Y29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCisgIC0gInJlbmVzYXMscjhhNzc5MS1sdmRzIiBmb3Ig
+UjhBNzc5MSAoUi1DYXIgTTItVykgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCisgIC0gInJlbmVz
+YXMscjhhNzc5My1sdmRzIiBmb3IgUjhBNzc5MyAoUi1DYXIgTTItTikgY29tcGF0aWJsZSBMVkRT
+IGVuY29kZXJzCisgIC0gInJlbmVzYXMscjhhNzc5NS1sdmRzIiBmb3IgUjhBNzc5NSAoUi1DYXIg
+SDMpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycworICAtICJyZW5lc2FzLHI4YTc3OTYtbHZkcyIg
+Zm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycworCistIHJl
+ZzogQmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggZm9yIHRoZSBtZW1vcnktbWFwcGVkIHJlZ2lzdGVy
+cworLSBjbG9ja3M6IEEgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlyIGZvciB0aGUgZnVu
+Y3Rpb25hbCBjbG9jaworLSByZXNldHM6IEEgcGhhbmRsZSArIHJlc2V0IHNwZWNpZmllciBmb3Ig
+dGhlIG1vZHVsZSByZXNldAorCitSZXF1aXJlZCBub2RlczoKKworVGhlIExWRFMgZW5jb2RlciBo
+YXMgdHdvIHZpZGVvIHBvcnRzLiBUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxsZWQgdXNpbmcg
+dGhlCitPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKworLSBWaWRlbyBwb3J0IDAgY29ycmVzcG9uZHMgdG8g
+dGhlIHBhcmFsbGVsIFJHQiBpbnB1dAorLSBWaWRlbyBwb3J0IDEgY29ycmVzcG9uZHMgdG8gdGhl
+IExWRFMgb3V0cHV0CisKK0VhY2ggcG9ydCBzaGFsbCBoYXZlIGEgc2luZ2xlIGVuZHBvaW50Lgor
+CisKK0V4YW1wbGU6CisKKwlsdmRzMDogbHZkc0BmZWI5MDAwMCB7CisJCWNvbXBhdGlibGUgPSAi
+cmVuZXNhcyxyOGE3NzkwLWx2ZHMiOworCQlyZWcgPSA8MCAweGZlYjkwMDAwIDAgMHgxYz47CisJ
+CWNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI2PjsKKwkJcmVzZXRzID0gPCZjcGcgNzI2PjsKKwor
+CQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+
+OworCisJCQlwb3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKwkJCQlsdmRzMF9pbjogZW5kcG9pbnQg
+eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmR1X291dF9sdmRzMD47CisJCQkJfTsKKwkJCX07
+CisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlsdmRzMF9vdXQ6IGVuZHBvaW50IHsK
+KwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OwpkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlO
+VEFJTkVSUwppbmRleCAyYWZiYTkwOTcyNGMuLjEzYzhlYzExMTM1YSAxMDA2NDQKLS0tIGEvTUFJ
+TlRBSU5FUlMKKysrIGIvTUFJTlRBSU5FUlMKQEAgLTQ3NDQsNiArNDc0NCw3IEBAIEY6CWRyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1LwogRjoJZHJpdmVycy9ncHUvZHJtL3NobW9iaWxlLwogRjoJaW5j
+bHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL3NobW9iX2RybS5oCiBGOglEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy1oZG1pLnR4dAorRjoJ
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMs
+bHZkcy50eHQKIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
+bmVzYXMsZHUudHh0CiAKIERSTSBEUklWRVJTIEZPUiBST0NLQ0hJUAotLSAKUmVnYXJkcywKCkxh
+dXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
