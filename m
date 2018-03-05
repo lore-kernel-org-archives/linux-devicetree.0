@@ -1,404 +1,59 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v3 3/3] gpio: Add Spreadtrum PMIC EIC driver support
-Date: Mon,  5 Mar 2018 10:56:52 +0800
-Message-ID: <c84c05b6619a17848a11335f881f42153a4e51c0.1520218279.git.baolin.wang@linaro.org>
-References: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
-In-Reply-To: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
-References: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Mon, 5 Mar 2018 10:12:21 +0530
+Message-ID: <20180305044221.GC23018@vireshk-i7>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-3-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180302215638.6145-3-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Spreadtrum PMIC EIC controller contains only one bank of debounce EIC,
-and this bank contains 16 EICs. Each EIC can only be used as input mode,
-as well as supporting the debounce and the capability to trigger interrupts
-when detecting input signals.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Changes since v2:
- - Fix coding style issue.
- - Fix possible overflow.
- - Use for_each_set_bit().
-
-Changes since v1:
- - New patch.
----
- drivers/gpio/Kconfig              |    8 +
- drivers/gpio/Makefile             |    1 +
- drivers/gpio/gpio-pmic-eic-sprd.c |  330 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 339 insertions(+)
- create mode 100644 drivers/gpio/gpio-pmic-eic-sprd.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c937407..f642314 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -380,6 +380,14 @@ config GPIO_PL061
- 	help
- 	  Say yes here to support the PrimeCell PL061 GPIO device
- 
-+config GPIO_PMIC_EIC_SPRD
-+	tristate "Spreadtrum PMIC EIC support"
-+	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-+	depends on OF_GPIO
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support Spreadtrum PMIC EIC device.
-+
- config GPIO_PXA
- 	bool "PXA GPIO support"
- 	depends on ARCH_PXA || ARCH_MMP
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 66eaa9e..50ba64b 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -99,6 +99,7 @@ obj-$(CONFIG_GPIO_PCI_IDIO_16)	+= gpio-pci-idio-16.o
- obj-$(CONFIG_GPIO_PCIE_IDIO_24)	+= gpio-pcie-idio-24.o
- obj-$(CONFIG_GPIO_PISOSR)	+= gpio-pisosr.o
- obj-$(CONFIG_GPIO_PL061)	+= gpio-pl061.o
-+obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
- obj-$(CONFIG_GPIO_PXA)		+= gpio-pxa.o
- obj-$(CONFIG_GPIO_RC5T583)	+= gpio-rc5t583.o
- obj-$(CONFIG_GPIO_RDC321X)	+= gpio-rdc321x.o
-diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-new file mode 100644
-index 0000000..66d68d9
---- /dev/null
-+++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-@@ -0,0 +1,330 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 Spreadtrum Communications Inc.
-+ * Copyright (C) 2018 Linaro Ltd.
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* EIC registers definition */
-+#define SPRD_PMIC_EIC_DATA		0x0
-+#define SPRD_PMIC_EIC_DMSK		0x4
-+#define SPRD_PMIC_EIC_IEV		0x14
-+#define SPRD_PMIC_EIC_IE		0x18
-+#define SPRD_PMIC_EIC_RIS		0x1c
-+#define SPRD_PMIC_EIC_MIS		0x20
-+#define SPRD_PMIC_EIC_IC		0x24
-+#define SPRD_PMIC_EIC_TRIG		0x28
-+#define SPRD_PMIC_EIC_CTRL0		0x40
-+
-+/*
-+ * The PMIC EIC controller only has one bank, and each bank now can contain
-+ * 16 EICs.
-+ */
-+#define SPRD_PMIC_EIC_PER_BANK_NR	16
-+#define SPRD_PMIC_EIC_NR		SPRD_PMIC_EIC_PER_BANK_NR
-+#define SPRD_PMIC_EIC_DATA_MASK		GENMASK(15, 0)
-+#define SPRD_PMIC_EIC_BIT(x)		((x) & (SPRD_PMIC_EIC_PER_BANK_NR - 1))
-+#define SPRD_PMIC_EIC_DBNC_MASK		GENMASK(11, 0)
-+
-+/*
-+ * These registers are modified under the irq bus lock and cached to avoid
-+ * unnecessary writes in bus_sync_unlock.
-+ */
-+enum {
-+	REG_IEV,
-+	REG_IE,
-+	REG_TRIG,
-+	CACHE_NR_REGS
-+};
-+
-+/**
-+ * struct sprd_pmic_eic - PMIC EIC controller
-+ * @chip: the gpio_chip structure.
-+ * @intc: the irq_chip structure.
-+ * @regmap: the regmap from the parent device.
-+ * @offset: the EIC controller's offset address of the PMIC.
-+ * @reg: the array to cache the EIC registers.
-+ * @buslock: for bus lock/sync and unlock.
-+ * @irq: the interrupt number of the PMIC EIC conteroller.
-+ */
-+struct sprd_pmic_eic {
-+	struct gpio_chip chip;
-+	struct irq_chip intc;
-+	struct regmap *map;
-+	u32 offset;
-+	u8 reg[CACHE_NR_REGS];
-+	struct mutex buslock;
-+	int irq;
-+};
-+
-+static void sprd_pmic_eic_update(struct gpio_chip *chip, unsigned int offset,
-+				 u16 reg, unsigned int val)
-+{
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 shift = SPRD_PMIC_EIC_BIT(offset);
-+
-+	regmap_update_bits(pmic_eic->map, pmic_eic->offset + reg,
-+			   BIT(shift), val << shift);
-+}
-+
-+static int sprd_pmic_eic_read(struct gpio_chip *chip, unsigned int offset,
-+			      u16 reg)
-+{
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 value;
-+	int ret;
-+
-+	ret = regmap_read(pmic_eic->map, pmic_eic->offset + reg, &value);
-+	if (ret)
-+		return ret;
-+
-+	return !!(value & BIT(SPRD_PMIC_EIC_BIT(offset)));
-+}
-+
-+static int sprd_pmic_eic_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_DMSK, 1);
-+	return 0;
-+}
-+
-+static void sprd_pmic_eic_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_DMSK, 0);
-+}
-+
-+static int sprd_pmic_eic_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return sprd_pmic_eic_read(chip, offset, SPRD_PMIC_EIC_DATA);
-+}
-+
-+static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
-+					 unsigned int offset)
-+{
-+	/* EICs are always input, nothing need to do here. */
-+	return 0;
-+}
-+
-+static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
-+			      int value)
-+{
-+	/* EICs are always input, nothing need to do here. */
-+}
-+
-+static int sprd_pmic_eic_set_debounce(struct gpio_chip *chip,
-+				      unsigned int offset,
-+				      unsigned int debounce)
-+{
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 reg, value;
-+	int ret;
-+
-+	reg = SPRD_PMIC_EIC_CTRL0 + SPRD_PMIC_EIC_BIT(offset) * 0x4;
-+	ret = regmap_read(pmic_eic->map, pmic_eic->offset + reg, &value);
-+	if (ret)
-+		return ret;
-+
-+	value &= ~SPRD_PMIC_EIC_DBNC_MASK;
-+	value |= (debounce / 1000) & SPRD_PMIC_EIC_DBNC_MASK;
-+	return regmap_write(pmic_eic->map, pmic_eic->offset + reg, value);
-+}
-+
-+static int sprd_pmic_eic_set_config(struct gpio_chip *chip, unsigned int offset,
-+				    unsigned long config)
-+{
-+	unsigned long param = pinconf_to_config_param(config);
-+	u32 arg = pinconf_to_config_argument(config);
-+
-+	if (param == PIN_CONFIG_INPUT_DEBOUNCE)
-+		return sprd_pmic_eic_set_debounce(chip, offset, arg);
-+
-+	return -ENOTSUPP;
-+}
-+
-+static void sprd_pmic_eic_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+
-+	pmic_eic->reg[REG_IE] = 0;
-+	pmic_eic->reg[REG_TRIG] = 0;
-+}
-+
-+static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+
-+	pmic_eic->reg[REG_IE] = 1;
-+	pmic_eic->reg[REG_TRIG] = 1;
-+}
-+
-+static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
-+				      unsigned int flow_type)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+
-+	switch (flow_type) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		pmic_eic->reg[REG_IEV] = 1;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		pmic_eic->reg[REG_IEV] = 0;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sprd_pmic_eic_bus_lock(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+
-+	mutex_lock(&pmic_eic->buslock);
-+}
-+
-+static void sprd_pmic_eic_bus_sync_unlock(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	/* Set irq type */
-+	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
-+			     pmic_eic->reg[REG_IEV]);
-+	/* Set irq unmask */
-+	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
-+			     pmic_eic->reg[REG_IE]);
-+	/* Generate trigger start pulse for debounce EIC */
-+	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
-+			     pmic_eic->reg[REG_TRIG]);
-+
-+	mutex_unlock(&pmic_eic->buslock);
-+}
-+
-+static irqreturn_t sprd_pmic_eic_irq_handler(int irq, void *data)
-+{
-+	struct sprd_pmic_eic *pmic_eic = data;
-+	struct gpio_chip *chip = &pmic_eic->chip;
-+	unsigned long status;
-+	u32 n, girq, val;
-+	int ret;
-+
-+	ret = regmap_read(pmic_eic->map, pmic_eic->offset + SPRD_PMIC_EIC_MIS,
-+			  &val);
-+	if (ret)
-+		return IRQ_RETVAL(ret);
-+
-+	status = val & SPRD_PMIC_EIC_DATA_MASK;
-+
-+	for_each_set_bit(n, &status, chip->ngpio) {
-+		/* Clear the interrupt */
-+		sprd_pmic_eic_update(chip, n, SPRD_PMIC_EIC_IC, 1);
-+
-+		girq = irq_find_mapping(chip->irq.domain, n);
-+		handle_nested_irq(girq);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_pmic_eic_probe(struct platform_device *pdev)
-+{
-+	struct gpio_irq_chip *irq;
-+	struct sprd_pmic_eic *pmic_eic;
-+	int ret;
-+
-+	pmic_eic = devm_kzalloc(&pdev->dev, sizeof(*pmic_eic), GFP_KERNEL);
-+	if (!pmic_eic)
-+		return -ENOMEM;
-+
-+	mutex_init(&pmic_eic->buslock);
-+
-+	pmic_eic->irq = platform_get_irq(pdev, 0);
-+	if (pmic_eic->irq < 0) {
-+		dev_err(&pdev->dev, "Failed to get PMIC EIC interrupt.\n");
-+		return pmic_eic->irq;
-+	}
-+
-+	pmic_eic->map = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!pmic_eic->map)
-+		return -ENODEV;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "reg", &pmic_eic->offset);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get PMIC EIC base address.\n");
-+		return ret;
-+	}
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, pmic_eic->irq, NULL,
-+					sprd_pmic_eic_irq_handler,
-+					IRQF_TRIGGER_LOW |
-+					IRQF_ONESHOT | IRQF_NO_SUSPEND,
-+					dev_name(&pdev->dev), pmic_eic);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request PMIC EIC IRQ.\n");
-+		return ret;
-+	}
-+
-+	pmic_eic->chip.label = dev_name(&pdev->dev);
-+	pmic_eic->chip.ngpio = SPRD_PMIC_EIC_NR;
-+	pmic_eic->chip.base = -1;
-+	pmic_eic->chip.parent = &pdev->dev;
-+	pmic_eic->chip.of_node = pdev->dev.of_node;
-+	pmic_eic->chip.direction_input = sprd_pmic_eic_direction_input;
-+	pmic_eic->chip.request = sprd_pmic_eic_request;
-+	pmic_eic->chip.free = sprd_pmic_eic_free;
-+	pmic_eic->chip.set_config = sprd_pmic_eic_set_config;
-+	pmic_eic->chip.set = sprd_pmic_eic_set;
-+	pmic_eic->chip.get = sprd_pmic_eic_get;
-+
-+	pmic_eic->intc.name = dev_name(&pdev->dev);
-+	pmic_eic->intc.irq_mask = sprd_pmic_eic_irq_mask;
-+	pmic_eic->intc.irq_unmask = sprd_pmic_eic_irq_unmask;
-+	pmic_eic->intc.irq_set_type = sprd_pmic_eic_irq_set_type;
-+	pmic_eic->intc.irq_bus_lock = sprd_pmic_eic_bus_lock;
-+	pmic_eic->intc.irq_bus_sync_unlock = sprd_pmic_eic_bus_sync_unlock;
-+	pmic_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
-+
-+	irq = &pmic_eic->chip.irq;
-+	irq->chip = &pmic_eic->intc;
-+	irq->threaded = true;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, &pmic_eic->chip, pmic_eic);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Could not register gpiochip %d.\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pmic_eic);
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_pmic_eic_of_match[] = {
-+	{ .compatible = "sprd,sc27xx-eic", },
-+	{ /* end of list */ }
-+};
-+MODULE_DEVICE_TABLE(of, sprd_pmic_eic_of_match);
-+
-+static struct platform_driver sprd_pmic_eic_driver = {
-+	.probe = sprd_pmic_eic_probe,
-+	.driver = {
-+		.name = "sprd-pmic-eic",
-+		.of_match_table	= sprd_pmic_eic_of_match,
-+	},
-+};
-+
-+module_platform_driver(sprd_pmic_eic_driver);
-+
-+MODULE_DESCRIPTION("Spreadtrum PMIC EIC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+T24gMDItMDMtMTgsIDE0OjU2LCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+IEFkZCB0aGUgbm9kZXMg
+YW5kIG90aGVyIGJpdHMgdG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdNVQo+IGRldmlj
+ZXMuCj4gCj4gQ2hhbmdlLUlkOiBJYmY0ZGMwZWJiMGFjMDNkOGI2YjhlNjU3NDdlMTQyYzQ0MGU3
+MGIwYQoKUmVtb3ZlIGl0ID8KCj4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3Vz
+ZUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
+NS5kdHNpIHwgMTIwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAxMjAgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
+ODQ1LmR0c2kKPiBpbmRleCA3YjVjMTZlYjYzYjcuLmNjNmQzNjdlZTU1ZSAxMDA2NDQKPiAtLS0g
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMzEyLDUgKzMxMiwxMjUgQEAKPiAgCQkJ
+CXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gIAkJCX07Cj4gIAkJfTsKPiArCj4gKwkJYWRyZW5vX3Nt
+bXU6IGFybSxzbW11LWFkcmVub0A1MDQwMDAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJxY29tLG1z
+bTg5OTYtc21tdS12MiI7Cj4gKwkJCXJlZyA9IDwweDUwNDAwMDAgMHgxMDAwMD47Cj4gKwkJCSNp
+b21tdS1jZWxscyA9IDwxPjsKPiArCQkJI2dsb2JhbC1pbnRlcnJ1cHRzID0gPDI+Owo+ICsJCQlp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI5IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsJCQkJICAg
+ICA8R0lDX1NQSSAyMzEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCQkgICAgIDxHSUNfU1BJ
+IDM2NCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKwkJCQkgICAgIDxHSUNfU1BJIDM2NSBJUlFf
+VFlQRV9FREdFX1JJU0lORz4sCj4gKwkJCQkgICAgIDxHSUNfU1BJIDM2NiBJUlFfVFlQRV9FREdF
+X1JJU0lORz4sCj4gKwkJCQkgICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQRV9FREdFX1JJU0lORz4s
+Cj4gKwkJCQkgICAgIDxHSUNfU1BJIDM2OCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKwkJCQkg
+ICAgIDxHSUNfU1BJIDM2OSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKwkJCQkgICAgIDxHSUNf
+U1BJIDM3MCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKwkJCQkgICAgIDxHSUNfU1BJIDM3MSBJ
+UlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKwkJCWNsb2NrcyA9IDwmY2xvY2tfZ2NjIEdDQ19HUFVf
+TUVNTk9DX0dGWF9DTEs+LAo+ICsJCQkJIDwmY2xvY2tfZ2NjIEdDQ19HUFVfQ0ZHX0FIQl9DTEs+
+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOwo+ICsKPiArCQkJcG93ZXItZG9t
+YWlucyA9IDwmY2xvY2tfZ3B1Y2MgR1BVX0NYX0dEU0M+Owo+ICsJCX07Cj4gKwo+ICsJCWdwdV9v
+cHBfdGFibGU6IGFkcmVuby1vcHAtdGFibGUgewo+ICsJCQljb21wYXRpYmxlID0gIm9wZXJhdGlu
+Zy1wb2ludHMtdjIiOwo+ICsKPiArCQkJb3BwLTcxMDAwMDAwMCB7Cj4gKwkJCQlvcHAtaHogPSAv
+Yml0cy8gNjQgPDcxMDAwMDAwMD47Cj4gKwkJCQlxY29tLGFyYy1sZXZlbCA9IDw0MTY+OwoKSSBh
+bSBub3Qgc3VyZSBpZiBJIHNhdyB3aGVyZSB0aGlzIGlzIGRlZmluZWQgPwoKCi0tIAp2aXJlc2gK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
