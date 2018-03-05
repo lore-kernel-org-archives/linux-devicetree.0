@@ -1,56 +1,41 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: Re: [PATCH v2 8/8] MIPS: jz4740: Drop old platform reset code
-Date: Mon, 5 Mar 2018 18:31:58 +0000
-Message-ID: <20180305183157.GI4197@saruman>
-References: <20171228162939.3928-2-paul@crapouillou.net>
- <20171230135108.6834-1-paul@crapouillou.net>
- <20171230135108.6834-8-paul@crapouillou.net>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH 5/6] dma-mapping: support fsl-mc bus
+Date: Mon, 5 Mar 2018 19:39:38 +0100
+Message-ID: <20180305183938.GB20086@lst.de>
+References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
+	<1520260166-29387-6-git-send-email-nipun.gupta@nxp.com>
+	<20180305150814.GA15918@lst.de>
+	<7b4f9972-6aaa-fc9d-3854-d48b19a8051c@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CNK/L7dwKXQ4Ub8J"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171230135108.6834-8-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <7b4f9972-6aaa-fc9d-3854-d48b19a8051c-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 05, 2018 at 03:48:32PM +0000, Robin Murphy wrote:
+> Unfortunately for us, fsl-mc is conceptually rather like PCI in that it's 
+> software-discoverable and the only thing described in DT is the bus "host", 
+> thus we need the same sort of thing as for PCI to map from the child 
+> devices back to the bus root in order to find the appropriate firmware 
+> node. Worse than PCI, though, we wouldn't even have the option of 
+> describing child devices statically in firmware at all, since it's actually 
+> one of these runtime-configurable "build your own network accelerator" 
+> hardware pools where userspace gets to create and destroy "devices" as it 
+> likes.
 
---CNK/L7dwKXQ4Ub8J
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Dec 30, 2017 at 02:51:08PM +0100, Paul Cercueil wrote:
-> This work is now performed by the watchdog driver directly.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Acked-by: James Hogan <jhogan@kernel.org>
-
-Cheers
-James
-
---CNK/L7dwKXQ4Ub8J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqdjR0ACgkQbAtpk944
-dnrXCBAAqbAXly/TPoIHI8GzFZRLzM/t1VZBJR1y4DsyrFdylavt8+0ayRLf+zOc
-SRG94UZftjLHUuxuqsmyHzq3KMrbh/xrPvE2l4UJf+kBgclRr+R84rsWjf2FSywk
-4+Vik/HNRXMslNVla5tGHLRLG65Wzj5FW6AFeY1ib+VLh4rUi9eQFx6rtBuDq3f5
-JX/AMHEdjybSisqaRcxlIir9rl6vxF/hziqc7XicOjF7tuq5NSxwUolhr7zeXYvH
-u6WR0L89GjOOK92fWO3t5wxUo2ELC5YWRdFg45PwgxS7xfrcfM4rLTRtlkArc2WC
-BYF+RHGT8G3seocfafYzrFGBzNfP6QE5Z+e0aGpLdVCn9TGt2JKYssYVsBcHZ+M3
-nEoWwHUYyt/lfTnFbFpBo6iOYK5d5ULvoGTDLFVghe87xQp58/JSSSyhqrGBIMvH
-FHYVuELdKCqiy3khn+uSIBTkUkzjXEsp1QcSC3PBoGKjkPIMKizKNfYBktGKdGld
-DecC0Hza2Si/SAHddh72Ew5zxSKbfgwgblDjnsWEEmpt26NoFhKI1S3RFmmBOcq5
-Uhf1Lv/TqbEuVL75lckhqo5Ux9BDyrYSSDq9d/fY9ud2U6VFIArOEoKmf5Dasx4G
-qaXQWtR+7/BWjhUD9CK2WTpF+Mc0s1aNxEFRe5kH56BcUAPpbAo=
-=IUUM
------END PGP SIGNATURE-----
-
---CNK/L7dwKXQ4Ub8J--
+I really hate the PCI special case just as much.  Maybe we just
+need a dma_configure method on the bus, and move PCI as well as fsl-mc
+to it.
