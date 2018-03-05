@@ -1,21 +1,13 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Mon, 5 Mar 2018 08:06:32 +0100
-Message-ID: <524739BF-BD94-4276-BDAB-31B4944D24C3@holtmann.org>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <395166283.280598.1520200683559@email.1und1.de>
- <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
- <1219888621.198216.1520231304685@email.1und1.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH] dt-bindings: rockchip-dw-mshc: use consistent clock names
+Date: Mon, 5 Mar 2018 15:45:38 +0800
+Message-ID: <d4a6c91e-9304-8b4f-5089-b7d7541ac98f@rock-chips.com>
+References: <20180301103447.7059-1-john@metanate.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1219888621.198216.1520231304685@email.1und1.de>
+In-Reply-To: <20180301103447.7059-1-john@metanate.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,94 +17,8 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: John Keeping <john@metanate.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKPj4+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJkZXYg
-c2xhdmUgZGV2aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPj4+Pj4+PiBUaGlzIGFsbG93
-cyB0byBhdXRvbWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+
-Pj4+Pj4+IHN1YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2Ug
-aGVscGVycyAoaGNpYXR0YWNoKS4KPj4+Pj4+PiAKPj4+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEg
-ZGVidWcgVUFSVCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPj4+Pj4+PiAKPj4+Pj4+PiBT
-aWduZWQtb2ZmLWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+Pj4+
-Pj4+IC0tLQo+Pj4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMg
-fCAxNCArKysrKysrKysrKysrLQo+Pj4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pCj4+Pj4+Pj4gCj4+Pj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20y
-ODM1LXJwaS16ZXJvLXcuZHRzCj4+Pj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAxMDA2NDQK
-Pj4+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4+
-Pj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+Pj4+
-Pj4+IEBAIC0xMzEsNiArMTMxLDE4IEBACj4+Pj4+Pj4gCj4+Pj4+Pj4gJnVhcnQwIHsKPj4+Pj4+
-PiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFy
-dDBfZ3BpbzE0PjsKPj4+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzMyICZ1YXJ0MF9j
-dHNydHNfZ3BpbzMwPjsKPj4+Pj4+PiArCXN0YXR1cyA9ICJva2F5IjsKPj4+Pj4+PiArCj4+Pj4+
-Pj4gKwlibHVldG9vdGggewo+Pj4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiYnJjbSxiY200MzQzOC1i
-dCI7Cj4+Pj4+Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+Pj4+Pj4+ICsJCXNodXRkb3du
-LWdwaW9zID0gPCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+Pj4+Pj4+ICsJfTsKPj4+Pj4+
-PiArfTsKPj4+Pj4+IAo+Pj4+Pj4gaXMgdGhlIHNodXRkb3duIEdQSU8gd29ya2luZyBhcyBleHBl
-Y3RlZCB3aXRoIHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9kdWxlIHVubG9hZCBhbmQgcmVsb2Fk
-IHdvcmtzIGZpbmU/Cj4+Pj4+IAo+Pj4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZp
-bmUuIAo+Pj4+PiAKPj4+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1
-MjAwIGRlZmF1bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+Pj4+PiAKPj4+Pj4gSSBhc3N1bWUg
-dGhhdCwgYmVjYXVzZSByZWxvYWQgd29ya3MgYXMgZXhwZWN0ZWQuIAo+Pj4+IAo+Pj4+IGF3ZXNv
-bWUuIFRoYXQgaXMgZ29vZCBuZXdzLgo+Pj4+IAo+Pj4+IFNpbmNlIHlvdSBzYWlkIHRoYXQgdGhl
-IEdQSU8gZXhwYW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4gYWNjZXB0ZWQsIGRp
-ZCB5b3UgdGVzdCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3b3VsZCBiZSBnb29k
-IHRvIGdldCBhIHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1ncGlvcyBmb3IgUlBp
-IDMuCj4+PiAKPj4+IHNvIGhlcmUgY29tZXMgdGhlIGJhZCBuZXdzLiBoY2lfYmNtIHVzZXMgZ3Bp
-b2Rfc2V0X3ZhbHVlKCkgd2hpY2ggaXMgZm9yIGludGVycnVwdCBjb250ZXh0LCBidXQgdGhlIGdw
-aW8gZXhwYW5kZXIgY2FuIHNsZWVwLiBTbyB3ZSB3aWxsIGdldCB0aGlzIHdhcm5pbmc6Cj4+PiAK
-Pj4+IFsgICAgNC44MDI0NDddIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+
-Pj4gWyAgICA0LjgwMjQ4NV0gV0FSTklORzogQ1BVOiAzIFBJRDogOTEgYXQgZHJpdmVycy9ncGlv
-L2dwaW9saWIuYzoyOTg2IGdwaW9kX3NldF92YWx1ZSsweDUwLzB4NTgKPj4+IFsgICAgNC44MDI0
-ODldIE1vZHVsZXMgbGlua2VkIGluOiBoY2lfdWFydCBhYzk3X2J1cyBidGJjbSBzbmRfcGNtX2Rt
-YWVuZ2luZSBibHVldG9vdGggc25kX3BjbSBzbmRfdGltZXIgZWNkaF9nZW5lcmljIHNuZCBzb3Vu
-ZGNvcmUgYmNtMjgzNV90aGVybWFsIGNyYzMyX2FybV9jZQo+Pj4gWyAgICA0LjgwMjU0M10gQ1BV
-OiAzIFBJRDogOTEgQ29tbToga3dvcmtlci91ODoyIE5vdCB0YWludGVkIDQuMTYuMC1yYzMtbmV4
-dC0yMDE4MDMwMi1kaXJ0eSAjNAo+Pj4gWyAgICA0LjgwMjU0N10gSGFyZHdhcmUgbmFtZTogQkNN
-MjgzNQo+Pj4gWyAgICA0LjgwMjU2Ml0gV29ya3F1ZXVlOiBldmVudHNfdW5ib3VuZCBhc3luY19y
-dW5fZW50cnlfZm4KPj4+IFsgICAgNC44MDI1OTNdIFs8YzAzMTE5YTQ+XSAodW53aW5kX2JhY2t0
-cmFjZSkgZnJvbSBbPGMwMzBjYzI0Pl0gKHNob3dfc3RhY2srMHgxMC8weDE0KQo+Pj4gWyAgICA0
-LjgwMjYxMl0gWzxjMDMwY2MyND5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzBkOGU5ZGM+XSAoZHVt
-cF9zdGFjaysweDhjLzB4YTApCj4+PiBbICAgIDQuODAyNjI4XSBbPGMwZDhlOWRjPl0gKGR1bXBf
-c3RhY2spIGZyb20gWzxjMDM0M2EyYz5dIChfX3dhcm4rMHhlMC8weGY4KQo+Pj4gWyAgICA0Ljgw
-MjY0MF0gWzxjMDM0M2EyYz5dIChfX3dhcm4pIGZyb20gWzxjMDM0M2I1Yz5dICh3YXJuX3Nsb3dw
-YXRoX251bGwrMHg0MC8weDQ4KQo+Pj4gWyAgICA0LjgwMjY1Ml0gWzxjMDM0M2I1Yz5dICh3YXJu
-X3Nsb3dwYXRoX251bGwpIGZyb20gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUrMHg1MC8w
-eDU4KQo+Pj4gWyAgICA0LjgwMjY5M10gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUpIGZy
-b20gWzxiZjBlMmU5MD5dIChiY21fZ3Bpb19zZXRfc2h1dGRvd24rMHhjLzB4MTQgW2hjaV91YXJ0
-XSkKPj4+IFsgICAgNC44MDI3NTddIFs8YmYwZTJlOTA+XSAoYmNtX2dwaW9fc2V0X3NodXRkb3du
-IFtoY2lfdWFydF0pIGZyb20gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93ZXIrMHgxOC8w
-eDE0MCBbaGNpX3VhcnRdKQo+Pj4gWyAgICA0LjgwMjgwNl0gWzxiZjBlMmE2ND5dIChiY21fZ3Bp
-b19zZXRfcG93ZXIgW2hjaV91YXJ0XSkgZnJvbSBbPGJmMGUyZTRjPl0gKGJjbV9zZXJkZXZfcHJv
-YmUrMHg2NC8weDljIFtoY2lfdWFydF0pCj4+PiBbICAgIDQuODAyODQ4XSBbPGJmMGUyZTRjPl0g
-KGJjbV9zZXJkZXZfcHJvYmUgW2hjaV91YXJ0XSkgZnJvbSBbPGMwOGYyNTI4Pl0gKGRyaXZlcl9w
-cm9iZV9kZXZpY2UrMHgyNTQvMHgzMmMpCj4+PiBbICAgIDQuODAyODYzXSBbPGMwOGYyNTI4Pl0g
-KGRyaXZlcl9wcm9iZV9kZXZpY2UpIGZyb20gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2gr
-MHhhNC8weGE4KQo+Pj4gWyAgICA0LjgwMjg3OF0gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRh
-Y2gpIGZyb20gWzxjMDhmMDhiOD5dIChidXNfZm9yX2VhY2hfZGV2KzB4NzQvMHhiNCkKPj4+IFsg
-ICAgNC44MDI4OTVdIFs8YzA4ZjA4Yjg+XSAoYnVzX2Zvcl9lYWNoX2RldikgZnJvbSBbPGMwMzY2
-NDk4Pl0gKGFzeW5jX3J1bl9lbnRyeV9mbisweDQ0LzB4MTA4KQo+Pj4gWyAgICA0LjgwMjkxMF0g
-WzxjMDM2NjQ5OD5dIChhc3luY19ydW5fZW50cnlfZm4pIGZyb20gWzxjMDM1ZDU5ND5dIChwcm9j
-ZXNzX29uZV93b3JrKzB4MjAwLzB4NGY4KQo+Pj4gWyAgICA0LjgwMjkyM10gWzxjMDM1ZDU5ND5d
-IChwcm9jZXNzX29uZV93b3JrKSBmcm9tIFs8YzAzNWU0YTg+XSAod29ya2VyX3RocmVhZCsweDRj
-LzB4NWQ0KQo+Pj4gWyAgICA0LjgwMjkzOF0gWzxjMDM1ZTRhOD5dICh3b3JrZXJfdGhyZWFkKSBm
-cm9tIFs8YzAzNjMzMDA+XSAoa3RocmVhZCsweDE1MC8weDE1OCkKPj4+IFsgICAgNC44MDI5NTJd
-IFs8YzAzNjMzMDA+XSAoa3RocmVhZCkgZnJvbSBbPGMwMzAxMGU4Pl0gKHJldF9mcm9tX2Zvcmsr
-MHgxNC8weDJjKQo+Pj4gWyAgICA0LjgwMjk1N10gRXhjZXB0aW9uIHN0YWNrKDB4ZWQ5NTlmYjAg
-dG8gMHhlZDk1OWZmOCkKPj4+IFsgICAgNC44MDI5NjZdIDlmYTA6ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCj4+
-PiBbICAgIDQuODAyOTc3XSA5ZmMwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
-MCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMAo+Pj4gWyAgICA0LjgwMjk4Nl0g
-OWZlMDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMTMgMDAwMDAw
-MDAKPj4+IFsgICAgNC44MDI5OTNdIC0tLVsgZW5kIHRyYWNlIGI5NDdmOWQ0YzQwZmEyNjEgXeKA
-lAo+PiAKPj4gdGhhdCBpcyB3ZWlyZCBzaW5jZSB3ZSBzaG91bGQgYmUgZWl0aGVyIGluIGEgcHJv
-YmUgY29udGV4dCBvciBpbiBoZGV2LT5vcGVuIGNvbnRleHQgYW5kIGJvdGggY2FuIHNsZWVwIGFz
-IGZhciBhcyBJIGtub3cuCj4gCj4gb2theSBpbiB0aGlzIGNhc2Ugd2UgY2FuIHJlcGxhY2UgZ3Bp
-b2Rfc2V0X3ZhbHVlIHdpdGggZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwLgoKaWYgeW91IGRvIHRo
-YXQsIGRvZXMgaXQgd29yayBmb3IgeW91IG9uIGJvdGggdGhlIFJQaSAzIGFuZCBaZXJvIFc/CgpS
-ZWdhcmRzCgpNYXJjZWwKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
