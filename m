@@ -1,88 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] arm: rzn1: Add basic support for RZN1D-DB Board
-Date: Mon, 5 Mar 2018 10:52:16 +0100
-Message-ID: <CAMuHMdVdXh428vfLW5has3THUWq5x6iA-6CLL+uQudOGOJfTrA@mail.gmail.com>
-References: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com> <1519647518-15579-3-git-send-email-michel.pollet@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: sibis <sibis@codeaurora.org>
+Subject: [PATCH 0/6] Add support for remoteproc modem-pil on SDM845 SoCs
+Date: Mon,  5 Mar 2018 15:23:27 +0530
+Message-ID: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519647518-15579-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: bjorn.andersson@linaro.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, robh+dt@kernel.org, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+This patch series add support for remoteproc Q6v5 modem-pil on Qualcomm
+SDM845 SoC. The first patch adds AOSS (Always on subsystem) reset driver
+to provide for mss reset line. The third patch adds the APCS offset for
+SDM845. The last couple of patches add the resets sequence for Q6 on
+SDM845 and adds helper functions for arbitrary reset assert/deassert
+sequences
 
-On Mon, Feb 26, 2018 at 1:18 PM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> Only enables the uart0 for now, and also relies on the bootloader
-> for setting up the clocks and pinctrl.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+V2:
+   Addressed reset-qcom-aoss review suggestions and reworked
+   re-ordering of the active clk and reset sequence in
+   qcom_q6v5_pil
 
-Thanks for your patch!
+sibis (6):
+  reset: qcom: AOSS (Always on subsystem) reset controller
+  dt-bindings: mailbox: Add APCS global binding for SDM845 SoCs
+  mailbox: Add support for Qualcomm SDM845 SoCs
+  dt-bindings: remoteproc: Add Q6v5 Modem PIL binding for SDM845
+  remoteproc: qcom: Add support for mss remoteproc on SDM845
+  remoteproc: qcom: Always assert and deassert reset signals in SDM845
 
-This should be split in two parts:
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   3 +-
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   5 +-
+ .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |   1 +
+ drivers/remoteproc/qcom_q6v5_pil.c                 | 163 ++++++++++++++++++++-
+ drivers/reset/Kconfig                              |  10 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-qcom-aoss.c                    | 151 +++++++++++++++++++
+ include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
+ 9 files changed, 396 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 drivers/reset/reset-qcom-aoss.c
+ create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
 
->  Documentation/devicetree/bindings/arm/shmobile.txt |  2 ++
-
-1. DT bindings
-
->  arch/arm/boot/dts/rzn1d400-db.dts                  | 25 ++++++++++++++++++++++
-
-2. Board DTS + (missing) arch/arm/boot/dts/Makefile update.
-
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/rzn1d400-db.dts
-
-Why the 400? 400-pin package?
-
-Please follow <SoC>-<board>.dts naming convention, i.e.
-r9a06g032-rzn1d-db.dts
-
-> @@ -0,0 +1,25 @@
-> +/*
-> + * Device Tree Source for the RZN1D-DB Board
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rzn1.dtsi"
-> +
-> +/ {
-> +       model = "RZN1D-DB Board";
-> +       compatible = "renesas,rzn1d-db", "renesas,r9a06g032";
-> +
-> +       chosen {
-> +               bootargs = "console=ttyS0,115200";
-
-"console=" is not needed, as it is handled by stdout-path these days,
-so you can remove bootargs for now.
-
-> +               stdout-path = &uart0;
-
-stdout-path = "serial0:115200n8";
-
-Please move the serial0 alias definition to the board DTS, as labeling
-of serial ports
-is board-specific.
-
-> +               linux,stdout-path = &uart0;
-
-linux,stdout-path is deprecated, please remove it.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
