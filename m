@@ -1,38 +1,59 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH v2 1/2] dmaengine: Introduce DW AXI DMAC driver
-Date: Mon, 5 Mar 2018 15:56:37 +0000
-Message-ID: <1520265396.3152.27.camel@synopsys.com>
-References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
-         <20180226145628.11892-2-Eugeniy.Paltsev@synopsys.com>
-         <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 1/2] ASoC: codecs: Add support for PCM1789
+Date: Mon, 5 Mar 2018 16:57:15 +0100
+Message-ID: <20180305155715.GJ3035@piout.net>
+References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
+ <20180305124817.7421-2-mylene.josserand@bootlin.com>
+ <20180305154910.GJ8588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <FDE8ACC55BBB764A9982F947CC578253@internal.synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <20180305154910.GJ8588@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-Cc: "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE4LTAyLTI2IGF0IDE4OjQyICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IE9uIE1vbiwgRmViIDI2LCAyMDE4IGF0IDQ6NTYgUE0sIEV1Z2VuaXkgUGFsdHNldg0KPiA8
-RXVnZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICsgICAgICAgY2hp
-cC0+Y29yZV9jbGsgPSBkZXZtX2Nsa19nZXQoY2hpcC0+ZGV2LCAiY29yZS1jbGsiKTsNCj4gDQo+
-IERvZXMgdGhlIG5hbWUgY29tZSBmcm9tIGRhdGFzaGVldD8NCj4gDQo+ID4gKyAgICAgICBjaGlw
-LT5jZmdyX2NsayA9IGRldm1fY2xrX2dldChjaGlwLT5kZXYsICJjZmdyLWNsayIpOw0KPiANCj4g
-RGl0dG8/DQoNClllcywgdGhlc2UgbmFtZXMgY2FtZSBmcm9tIGRhdGFzaGVldC4NCg0KPiA+ICsg
-ICAgICAgfQ0KPiA+ICsgICAgICAgLyogRW5hYmxlIGNsayBiZWZvcmUgYWNjZXNzaW5nIHRvIHJl
-Z2lzdGVycyAqLw0KPiA+ICsgICAgICAgY2xrX3ByZXBhcmVfZW5hYmxlKGNoaXAtPmNmZ3JfY2xr
-KTsNCj4gPiArICAgICAgIGNsa19wcmVwYXJlX2VuYWJsZShjaGlwLT5jb3JlX2Nsayk7DQo+IA0K
-PiBFYWNoIG9mIHRoZW0gbWF5IGZhaWwuIElzIGl0IG9rYXk/DQoNCkFzIGl0IGlzIGRyaXZlciBy
-ZW1vdmUgY2FsbGJhY2sgSSBndWVzcyBpdCBpcyBva2F5Lg0KDQo+ID4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgZGV2X3BtX29wcyBkd19heGlfZG1hX3BtX29wcyA9IHsNCj4gPiArICAgICAgIFNFVF9S
-VU5USU1FX1BNX09QUyhheGlfZG1hX3J1bnRpbWVfc3VzcGVuZCwgYXhpX2RtYV9ydW50aW1lX3Jl
-c3VtZSwgTlVMTCkNCj4gPiArfTsNCj4gDQo+IE5vIHN5c3RlbSBzdXNwZW5kPw0KDQpBcmUgeW91
-IHRhbGtpbmcgYWJvdXQgU0VUX1NZU1RFTV9TTEVFUF9QTV9PUFM/DQpJIGRvbid0IGltcGxlbWVu
-dCB0aGVzZSBPUFMgYXMgd2UgZG9uJ3QgaGF2ZSBhbnkgcGxhdGZvcm0gd2hpY2ggaGFzIERXIEFY
-SSBETUFDDQphbmQgc3VwcG9ydHMgc2xlZXBpbmcgLSBzbyBJIGNhbid0IHRlc3QgdGhlbS4NCg0K
-LS0gDQogRXVnZW5peSBQYWx0c2V2
+On 05/03/2018 at 15:49:10 +0000, Mark Brown wrote:
+> On Mon, Mar 05, 2018 at 01:48:16PM +0100, Mylène Josserand wrote:
+> 
+> > --- /dev/null
+> > +++ b/sound/soc/codecs/pcm1789-i2c.c
+> > @@ -0,0 +1,76 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * PCM1789 ASoC I2C driver
+> > + *
+> > + * Copyright (c) Bootlin 2018
+> > + *
+> > + * Mylène Josserand <mylene.josserand@bootlin.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> 
+> Please don't mix C and C++ style comments in a single comment like this
+> - it looks unintentional.  Just use the same style for the whole thing.
+> You also don't need to include all the boilerplate with the SPDX header.
+> 
+
+I think Linus made it clear that he wants the SPDX header to be a
+C++ comment, the documentation has:
+
+"
+2. Style:
+
+   The SPDX license identifier is added in form of a comment.  The comment
+   style depends on the file type::
+
+      C source: // SPDX-License-Identifier: <SPDX License Expression>
+"
+
+I agree the boilerplate should be removed.
+
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
