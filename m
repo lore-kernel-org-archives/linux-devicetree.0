@@ -1,59 +1,88 @@
-Return-Path: <SRS0=zrMl=GI=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/4] Revert "dt-bindings: ifc: Fix the unit address format in the examples"
-Date: Sun, 18 Mar 2018 11:17:30 -0300
-Message-Id: <1521382651-10256-3-git-send-email-festevam@gmail.com>
-In-Reply-To: <1521382651-10256-1-git-send-email-festevam@gmail.com>
-References: <1521382651-10256-1-git-send-email-festevam@gmail.com>
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr30083.outbound.protection.outlook.com ([40.107.3.83]:59907
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S933263AbeCEMi4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Mar 2018 07:38:56 -0500
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 03/12] staging: typec: tcpci: support port config
+ passed via dt
+Date: Mon, 5 Mar 2018 12:38:52 +0000
+Message-ID: <VI1PR0402MB391775BD37D91614331FA5CE89DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+ <1519645759-12701-4-git-send-email-jun.li@nxp.com>
+ <20180226140604.GD25535@kuha.fi.intel.com>
+ <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180227110302.GE25535@kuha.fi.intel.com>
+ <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180305095346.GB10598@kuha.fi.intel.com>
+ <VI1PR0402MB39173B772C2642C4ECC626B589DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180305113005.GD10598@kuha.fi.intel.com>
+In-Reply-To: <20180305113005.GD10598@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
-
-This reverts commit 4e017f1419397473cf3db6e9fa020013998b1aa4.
-
-As explained by Rob Herring:
-
-"This "fix" is wrong. Memory controllers with chip selects should have
-the chip select in the unit-address. The correct fix here is you should drop
-"simple-bus"."
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-index a4d4b6a..89427b0 100644
---- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-@@ -43,7 +43,7 @@ Example:
- 			  0x1 0x0 0x0 0xffa00000 0x00010000
- 			  0x3 0x0 0x0 0xffb00000 0x00020000>;
- 
--		flash@0 {
-+		flash@0,0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "cfi-flash";
-@@ -58,7 +58,7 @@ Example:
- 			};
- 		};
- 
--		flash@100000000 {
-+		flash@1,0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "fsl,ifc-nand";
-@@ -73,7 +73,7 @@ Example:
- 			};
- 		};
- 
--		cpld@@300000000 {
-+		cpld@3,0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "fsl,p1010rdb-cpld";
--- 
-2.7.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
+IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
+M9TCNcjVIDE5OjMwDQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogZ3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbGludXhAcm9lY2stdXMu
+bmV0Ow0KPiBhLmhhamRhQHNhbXN1bmcuY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgeXVleWFv
+QGdvb2dsZS5jb207DQo+IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdhcnNpbHZh
+QGVtYmVkZGVkb3IuY29tOw0KPiBvX2xldmVxdWVAb3JhbmdlLmZyOyBzaHVmYW5fbGVlQHJpY2h0
+ZWsuY29tOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCB2MiAwMy8xMl0gc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBzdXBwb3J0IHBvcnQgY29u
+ZmlnDQo+IHBhc3NlZCB2aWEgZHQNCj4gDQo+IEhpLA0KPiANCj4gT24gTW9uLCBNYXIgMDUsIDIw
+MTggYXQgMTA6MzU6MDdBTSArMDAwMCwgSnVuIExpIHdyb3RlOg0KPiA+ID4gU28gaXQgYWN0dWFs
+bHkgZG9lcyBtYWtlIHNlbnNlIHRvIGRlZmluZSB0aG9zZSBwcm9wZXJ0aWVzIGZvciB0aGUNCj4g
+PiA+ICJjb25uZWN0b3IiIG5vZGUgaW5zdGVhZCBvZiBUQ1BDIHBhcmVudC4gVGhleSBhcmUgZ2Vu
+ZXJpYyAiVHlwZS1DIg0KPiA+ID4gcHJvcGVydGllcyAocmlnaHQ/KSwgc28gd2UgbWF5IHdhbnQg
+dG8gdXNlIHRoZW0gd2l0aCBtdWx0aXBvcnQNCj4gPiA+IGRldmljZXMgYXMgd2VsbC4NCj4gPiA+
+DQo+ID4NCj4gPiBZZXMsIHRoYXQncyB0aGUgaWRlYSBvZiBteSB2MiwgSSB3aWxsIGtlZXAgdGhp
+cyBidXQgdmlhIGZ3bm9kZV9wcm9wZXJ0eSouDQo+IA0KPiBDb29sLiBXaGlsZSBhdCBpdCwgY2Fu
+IHlvdSBhbHNvIGFkZCBhIHBhdGNoIHRvIHRoaXMgc2VyaWVzIHdoZXJlIHRoZSBmd25vZGUgaXMN
+Cj4gYmluZCB0byB0aGUgcG9ydD8gU29tZXRoaW5nIGxpa2UgdGhpczoNCg0KT0ssIEkgd2lsbCBh
+ZGQgYSBwYXRjaCBmb3IgdGhpcy4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2lu
+Zy90eXBlYy90Y3BjaS5jIGIvZHJpdmVycy9zdGFnaW5nL3R5cGVjL3RjcGNpLmMNCj4gaW5kZXgg
+OWJkNDQxMjM1NmM5Li5hYzRlNzYwNWY5ZDUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3RhZ2lu
+Zy90eXBlYy90Y3BjaS5jDQo+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jDQo+
+IEBAIC00NTIsNiArNDUyLDggQEAgc3RhdGljIGludCB0Y3BjaV9wcm9iZShzdHJ1Y3QgaTJjX2Ns
+aWVudCAqY2xpZW50LA0KPiAgICAgICAgIGlmIChJU19FUlIodGNwY2ktPnJlZ21hcCkpDQo+ICAg
+ICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUih0Y3BjaS0+cmVnbWFwKTsNCj4gDQo+ICsgICAg
+ICAgdGNwY2ktPnRjcGMuZndub2RlID0NCj4gZGV2aWNlX2dldF9uYW1lZF9jaGlsZF9ub2RlKCZj
+bGllbnQtPmRldiwNCj4gKyAiY29ubmVjdG9yIik7DQo+ICsNCj4gICAgICAgICB0Y3BjaS0+dGNw
+Yy5pbml0ID0gdGNwY2lfaW5pdDsNCj4gICAgICAgICB0Y3BjaS0+dGNwYy5nZXRfdmJ1cyA9IHRj
+cGNpX2dldF92YnVzOw0KPiAgICAgICAgIHRjcGNpLT50Y3BjLnNldF92YnVzID0gdGNwY2lfc2V0
+X3ZidXM7IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgYi9kcml2ZXJz
+L3VzYi90eXBlYy90Y3BtLmMgaW5kZXgNCj4gZjRkNTYzZWU3NjkwLi42OGEwZWFkNDAwYzAgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYw0KPiArKysgYi9kcml2ZXJzL3Vz
+Yi90eXBlYy90Y3BtLmMNCj4gQEAgLTM3MjksNiArMzcyOSw3IEBAIHN0cnVjdCB0Y3BtX3BvcnQg
+KnRjcG1fcmVnaXN0ZXJfcG9ydChzdHJ1Y3QNCj4gZGV2aWNlICpkZXYsIHN0cnVjdCB0Y3BjX2Rl
+diAqdGNwYykNCj4gICAgICAgICBlbHNlDQo+ICAgICAgICAgICAgICAgICBwb3J0LT50cnlfcm9s
+ZSA9IFRZUEVDX05PX1BSRUZFUlJFRF9ST0xFOw0KPiANCj4gKyAgICAgICBwb3J0LT50eXBlY19j
+YXBzLmZ3bm9kZSA9IHRjcGMtPmZ3bm9kZTsNCj4gICAgICAgICBwb3J0LT50eXBlY19jYXBzLnBy
+ZWZlcl9yb2xlID0gdGNwYy0+Y29uZmlnLT5kZWZhdWx0X3JvbGU7DQo+ICAgICAgICAgcG9ydC0+
+dHlwZWNfY2Fwcy50eXBlID0gdGNwYy0+Y29uZmlnLT50eXBlOw0KPiAgICAgICAgIHBvcnQtPnR5
+cGVjX2NhcHMucmV2aXNpb24gPSAweDAxMjA7ICAgICAvKiBUeXBlLUMgc3BlYyByZWxlYXNlDQo+
+IDEuMiAqLw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC91c2IvdGNwbS5oIGIvaW5jbHVk
+ZS9saW51eC91c2IvdGNwbS5oIGluZGV4DQo+IGNhMWMwYjU3ZjAzZi4uYTI1ZWJmZWEwNTRkIDEw
+MDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3VzYi90Y3BtLmgNCj4gKysrIGIvaW5jbHVkZS9s
+aW51eC91c2IvdGNwbS5oDQo+IEBAIC0xMjcsNiArMTI3LDcgQEAgc3RydWN0IHRjcGNfbXV4X2Rl
+diB7DQo+ICAvKioNCj4gICAqIHN0cnVjdCB0Y3BjX2RldiAtIFBvcnQgY29uZmlndXJhdGlvbiBh
+bmQgY2FsbGJhY2sgZnVuY3Rpb25zDQo+ICAgKiBAY29uZmlnOiAgICBQb2ludGVyIHRvIHBvcnQg
+Y29uZmlndXJhdGlvbg0KPiArICogQGZ3bm9kZTogICAgUG9pbnRlciB0byBwb3J0IGZ3bm9kZQ0K
+PiAgICogQGdldF92YnVzOiAgQ2FsbGVkIHRvIHJlYWQgY3VycmVudCBWQlVTIHN0YXRlDQo+ICAg
+KiBAZ2V0X2N1cnJlbnRfbGltaXQ6DQo+ICAgKiAgICAgICAgICAgICBPcHRpb25hbDsgY2FsbGVk
+IGJ5IHRoZSB0Y3BtIGNvcmUgd2hlbiBjb25maWd1cmVkIGFzIGENCj4gc25rDQo+IEBAIC0xNTUs
+NiArMTU2LDcgQEAgc3RydWN0IHRjcGNfbXV4X2RldiB7DQo+ICAgKi8NCj4gIHN0cnVjdCB0Y3Bj
+X2RldiB7DQo+ICAgICAgICAgY29uc3Qgc3RydWN0IHRjcGNfY29uZmlnICpjb25maWc7DQo+ICsg
+ICAgICAgc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZTsNCj4gDQo+ICAgICAgICAgaW50ICgq
+aW5pdCkoc3RydWN0IHRjcGNfZGV2ICpkZXYpOw0KPiAgICAgICAgIGludCAoKmdldF92YnVzKShz
+dHJ1Y3QgdGNwY19kZXYgKmRldik7DQo+IA0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVp
+a2tpDQo=
