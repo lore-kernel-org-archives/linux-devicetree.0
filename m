@@ -1,85 +1,87 @@
-From: Nipun Gupta <nipun.gupta@nxp.com>
-Subject: RE: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
-Date: Mon, 5 Mar 2018 15:54:34 +0000
-Message-ID: <HE1PR0401MB2425F261CA777DAA1D41A477E6DA0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
-References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
- <1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
- <5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
- <HE1PR0401MB24254CBDB8B6F537D08B925DE6DA0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
- <f382e92a-8ab5-7c93-1f39-fe6797e5c876@arm.com>
+From: Daniel Schultz <d.schultz@phytec.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
+Date: Mon, 5 Mar 2018 16:57:13 +0100
+Message-ID: <cecf3c08-d43d-c340-c5ff-30e41e338469@phytec.de>
+References: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
+ <3530074.WSbKf9j6h0@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f382e92a-8ab5-7c93-1f39-fe6797e5c876@arm.com>
-Content-Language: en-US
+In-Reply-To: <3530074.WSbKf9j6h0@phil>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "hch@lst.de" <hch@lst.de>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "joro@8bytes.org" <joro@8bytes.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Bharat Bhushan <bharat.bhushan@nxp.com>, "stuyoder@gmail.com" <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IFtt
-YWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMDUsIDIw
-MTggMjE6MDcNCj4gVG86IE5pcHVuIEd1cHRhIDxuaXB1bi5ndXB0YUBueHAuY29tPjsgd2lsbC5k
-ZWFjb25AYXJtLmNvbTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bh
-cm0uY29tDQo+IENjOiBpb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsgcm9iaCtkdEBr
-ZXJuZWwub3JnOyBoY2hAbHN0LmRlOw0KPiBtLnN6eXByb3dza2lAc2Ftc3VuZy5jb207IGdyZWdr
-aEBsaW51eGZvdW5kYXRpb24ub3JnOyBqb3JvQDhieXRlcy5vcmc7DQo+IExlbyBMaSA8bGVveWFu
-Zy5saUBueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsg
-QmhhcmF0IEJodXNoYW4NCj4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+OyBzdHV5b2RlckBnbWFp
-bC5jb207IExhdXJlbnRpdSBUdWRvcg0KPiA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggMS82XSBEb2NzOiBkdDogYWRkIGZzbC1tYyBpb21tdS1wYXJlbnQg
-ZGV2aWNlLXRyZWUgYmluZGluZw0KPiANCj4gT24gMDUvMDMvMTggMTU6MDAsIE5pcHVuIEd1cHRh
-IHdyb3RlOg0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4g
-RnJvbTogUm9iaW4gTXVycGh5IFttYWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+ID4+IFNl
-bnQ6IE1vbmRheSwgTWFyY2ggMDUsIDIwMTggMjA6MjMNCj4gPj4gVG86IE5pcHVuIEd1cHRhIDxu
-aXB1bi5ndXB0YUBueHAuY29tPjsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gPj4gbWFyay5ydXRs
-YW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tDQo+ID4+IENjOiBpb21tdUBsaXN0
-cy5saW51eC1mb3VuZGF0aW9uLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBoY2hAbHN0LmRlOw0K
-PiA+PiBtLnN6eXByb3dza2lAc2Ftc3VuZy5jb207IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
-Ow0KPiBqb3JvQDhieXRlcy5vcmc7DQo+ID4+IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsg
-c2hhd25ndW9Aa2VybmVsLm9yZzsgbGludXgtDQo+ID4+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+ID4+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgQmhhcmF0IEJo
-dXNoYW4NCj4gPj4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+OyBzdHV5b2RlckBnbWFpbC5jb207
-IExhdXJlbnRpdSBUdWRvcg0KPiA+PiA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+ID4+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggMS82XSBEb2NzOiBkdDogYWRkIGZzbC1tYyBpb21tdS1wYXJlbnQg
-ZGV2aWNlLXRyZWUNCj4gYmluZGluZw0KPiA+Pg0KPiA+PiBPbiAwNS8wMy8xOCAxNDoyOSwgTmlw
-dW4gR3VwdGEgd3JvdGU6DQo+ID4+PiBUaGUgZXhpc3RpbmcgSU9NTVUgYmluZGluZ3MgY2Fubm90
-IGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUgcmVsYXRpb25zaGlwDQo+ID4+PiBiZXR3ZWVuIGZzbC1t
-YyBkZXZpY2VzIGFuZCBJT01NVXMuIFRoaXMgcGF0Y2ggYWRkcyBhIGJpbmRpbmcgZm9yDQo+ID4+
-PiBtYXBwaW5nIGZzbC1tYyBkZXZpY2VzIHRvIElPTU1VcywgdXNpbmcgYSBuZXcgaW9tbXUtcGFy
-ZW50IHByb3BlcnR5Lg0KPiA+Pg0KPiA+PiBHaXZlbiB0aGF0IGFsbG93aW5nICJtc2ktcGFyZW50
-IiBmb3IgI21zaS1jZWxscyA+IDEgaXMgbWVyZWx5IGENCj4gPj4gYmFja3dhcmQtY29tcGF0aWJp
-bGl0eSBib2RnZSBmdWxsIG9mIGhhcmQtY29kZWQgYXNzdW1wdGlvbnMsIHdoeSB3b3VsZA0KPiA+
-PiB3ZSB3YW50IHRvIGtub3dpbmdseSBpbnRyb2R1Y2UgYSBzaW1pbGFybHkgdW5wbGVhc2FudCBl
-cXVpdmFsZW50IGZvcg0KPiA+PiBJT01NVXM/IFdoYXQncyB3cm9uZyB3aXRoICJpb21tdS1tYXAi
-Pw0KPiA+DQo+ID4gSGkgUm9iaW4sDQo+ID4NCj4gPiBXaXRoICdtc2ktcGFyZW50JyB0aGUgcHJv
-cGVydHkgaXMgZml4ZWQgdXAgdG8gaGF2ZSBtc2ktbWFwLiBJbiB0aGlzIGNhc2UgdGhlcmUgaXMN
-Cj4gPiBubyBmaXh1cCByZXF1aXJlZCBhbmQgc2ltcGxlICdpb21tdS1wYXJlbnQnIHByb3BlcnR5
-IGNhbiBiZSB1c2VkLCB3aXRoIE1DDQo+IGJ1cw0KPiA+IGl0c2VsZiBwcm92aWRpbmcgdGhlIHN0
-cmVhbS1pZCdzIChpbiB0aGUgY29kZSBleGVjdXRpb24gdmlhIEZXKS4NCj4gPg0KPiA+IFdlIGNh
-biBhbHNvIHVzZSB0aGUgaW9tbXUtbWFwIHByb3BlcnR5IHNpbWlsYXIgdG8gUENJLCB3aGljaCB3
-aWxsIHJlcXVpcmUgdS0NCj4gYm9vdA0KPiA+IGZpeHVwLiBCdXQgdGhlbiBpdCBsZWFkcyB0byBs
-aXR0bGUgYml0IGNvbXBsaWNhdGlvbnMgb2YgdS1ib290IC0ga2VybmVsDQo+IGNvbXBhdGliaWxp
-dHkuDQo+IA0KPiBXaGF0IG5lZWRzIGZpeGluZyB1cD8gV2l0aCBhIHN0cmVhbS1tYXAtbWFzayBp
-biBwbGFjZSB0byBpZ25vcmUgdGhlDQo+IHVwcGVyIFN0cmVhbSBJRCBiaXRzLCB5b3UganVzdCBu
-ZWVkOg0KPiANCj4gCWlvbW11LW1hcCA9IDwwICZzbW11IDAgMHg4MD47DQo+IA0KPiB0byBzYXkg
-dGhhdCB0aGUgbG93ZXIgYml0cyBvZiB0aGUgSUNJRCB2YWx1ZSBtYXAgZGlyZWN0bHkgdG8gdGhl
-IGxvd2VyDQo+IGJpdHMgb2YgdGhlIFN0cmVhbSBJRCB2YWx1ZSAtIHRoYXQncyB0aGUgc2FtZSBm
-aXhlZCBwcm9wZXJ0eSBvZiB0aGUNCj4gaGFyZHdhcmUgdGhhdCB5b3UncmUgd2FudGluZyB0byBh
-c3N1bWUgaW4gaW9tbXUtcGFyZW50Lg0KDQpNYWtlcyBzZW5zZS4gSSB3YXMgZ29pbmcgaW4gYSBs
-aXR0bGUgYml0IHdyb25nIGRpcmVjdGlvbi4gVGhhbmtzIGZvciBjb3JyZWN0aW5nLg0KSSB3aWxs
-IHNlbmQgdjIgcGF0Y2hzZXQgd2l0aCBpb21tdS1tYXAgcHJvcGVydHkuDQoNClJlZ2FyZHMsDQpO
-aXB1bg0KDQo+IA0KPiA+IElmIHlvdSBzdWdnZXN0IHdlIGNhbiByZS11c2UgdGhlIGlvbW11LW1h
-cCBwcm9wZXJ0eS4gV2hhdCBpcyB5b3VyIG9waW5pb24/DQo+IA0KPiBJIHRoaW5rIGl0IG1ha2Vz
-IGEgbG90IG1vcmUgc2Vuc2UgdG8gZGlyZWN0bHkgdXNlIHRoZSBwcm9wZXJ0eSB3aGljaA0KPiBh
-bHJlYWR5IGV4aXN0cywgdGhhbiB0byBpbnRyb2R1Y2UgYSBuZXcgb25lIHRvIG1lcmVseSBhc3N1
-bWUgb25lDQo+IGhhcmQtY29kZWQgdmFsdWUgb2YgdGhlIGV4aXN0aW5nIG9uZS4gRXh0ZW5kaW5n
-IG1zaS1wYXJlbnQgdG8gbXNpLW1hcA0KPiB3YXMgYSBjYXNlIG9mICJvb3BzLCBpdCB0dXJucyBv
-dXQgd2UgbmVlZCBtb3JlIGZsZXhpYmlsaXR5IGhlcmUiOyBmb3INCj4gdGhlIGNhc2Ugb2YgaW9t
-bXUtbWFwIEkgY2FuJ3QgaW1hZ2luZSBhbnkganVzdGlmaWNhdGlvbiBmb3Igc2F5aW5nDQo+ICJv
-b3BzLCB3ZSBuZWVkIGxlc3MgZmxleGliaWxpdHkgaGVyZSIgKHNhdmluZyA5IHdob2xlIGJ5dGVz
-IGluIHRoZSBEVA0KPiByZWFsbHkgaXMgaXJyZWxldmFudCkuDQo+IA0KPiBSb2Jpbi4NCg==
+Hi,
+
+
+On 03/05/2018 03:15 PM, Heiko Stuebner wrote:
+> Hi Daniel,
+>
+> Am Montag, 5. März 2018, 13:45:11 CET schrieb Daniel Schultz:
+>> The CLK_O_SEL default is synchronous to XI input clock, which is 25 MHz.
+>> Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OUT.
+>>
+>> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+>> ---
+>>
+>> The binding will be added with the next merge of net-next:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Documentation/devicetree/bindings/net/ti,dp83867.txt
+
+If I search in the master branch, I get the patch. Did I searched wrong?
+
+Daniel
+> I did find the commit, but no related change of the dp83867 dt binding
+> document [0], including a review by dt-maintainers.
+>
+> While your property does not look overly complicated, the binding
+> should be updated nontheless.
+>
+>
+> Heiko
+>
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Documentation/devicetree/bindings/net/ti,dp83867.txt?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
+>
+>>   arch/arm/boot/dts/rk3288-phycore-som.dtsi | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+>> index bdd80aa..e60535d 100644
+>> --- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+>> @@ -141,6 +141,7 @@
+>>   			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+>>   			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+>>   			enet-phy-lane-no-swap;
+>> +			ti,clk-output-sel = <DP83867_CLK_O_SEL_CHN_A_TCLK>;
+>>   		};
+>>   	};
+>>   };
+>>
+>
+
+-- 
+Mit freundlichen Grüßen,
+With best regards,
+   Daniel Schultz
+
+- Entwicklung -
+Tel.: 	+49 6131 92 21 457
+d.schultz@phytec.de
+www.phytec.de
+
+Sie finden uns auch auf: Facebook, LinkedIn, Xing, YouTube
+
+PHYTEC Messtechnik GmbH | Robert-Koch-Str. 39 | 55129 Mainz, Germany
+Geschäftsführer: Dipl.-Ing. Michael Mitezki, Dipl.-Ing. Bodo Huber |
+Handelsregister Mainz HRB 4656 | Finanzamt Mainz-Mitte | St.Nr. 266500608,
+DE 149059855
+This E-Mail may contain confidential or privileged information. If you are
+not the intended recipient (or have received this E-Mail in error) please
+notify the sender immediately and destroy this E-Mail. Any unauthorized
+copying, disclosure or distribution of the material in this E-Mail is
+strictly forbidden.
