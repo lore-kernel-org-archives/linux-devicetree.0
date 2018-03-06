@@ -1,54 +1,104 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 4/7] dt-bindings: panel: Add the Ilitek ILI9881c panel
- documentation
-Date: Tue,  6 Mar 2018 14:56:01 +0100
-Message-ID: <98f6b4c0746a0d244d009263e8b3e20f40ac280f.1520344489.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 7/7] [DO NOT MERGE] arm: dts: sun8i: bpi-m2m: Add DSI display
+Date: Tue,  6 Mar 2018 14:56:04 +0100
+Message-ID: <7c43c99d4faed3f37aad899d3516e606c14381e4.1520344489.git-series.maxime.ripard@bootlin.com>
 References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
 In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
 References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Cc: dri-devel@lists.freedesktop.org, Gustavo Padovan <gustavo@padovan.org>, Daniel Vetter <daniel.vetter@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+CgpU
-aGUgTEhSMDUwSDQxIGZyb20gQmFuYW5hUGkgaXMgYSAxMjgweDcwMCA0LWxhbmVzIERTSSBwYW5l
-bCBiYXNlZCBvbiB0aGUKSUxJOTg4MWMgZnJvbSBJbGl0ZWsuCgpBY2tlZC1ieTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1l
-LnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaWxpdGVrLGlsaTk4ODFjLnR4dCB8IDIwICsrKysrKysr
-KysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L2lsaXRlayxpbGk5ODgxYy50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbGl0ZWssaWxpOTg4MWMudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaWxpdGVrLGlsaTk4ODFjLnR4
-dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLmRmMDVlOGJiNDg1MQot
-LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL2lsaXRlayxpbGk5ODgxYy50eHQKQEAgLTAsMCArMSwyMCBAQAorSWxpdGVrIElM
-STk4ODFjIGJhc2VkIE1JUEktRFNJIHBhbmVscworCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorICAt
-IGNvbXBhdGlibGU6IG11c3QgYmUgImlsaXRlayxpbGk5ODgxYyIgYW5kIG9uZSBvZjoKKyAgICAq
-ICJiYW5hbmFwaSxsaHIwNTBoNDEiCisgIC0gcmVnOiBEU0kgdmlydHVhbCBjaGFubmVsIHVzZWQg
-YnkgdGhhdCBzY3JlZW4KKyAgLSBwb3dlci1ncGlvczogYSBHUElPIHBoYW5kbGUgZm9yIHRoZSBw
-b3dlciBwaW4KKyAgLSByZXNldC1ncGlvczogYSBHUElPIHBoYW5kbGUgZm9yIHRoZSByZXNldCBw
-aW4KKworT3B0aW9uYWwgcHJvcGVydGllczoKKyAgLSBiYWNrbGlnaHQ6IHBoYW5kbGUgdG8gdGhl
-IGJhY2tsaWdodCB1c2VkCisKK0V4YW1wbGU6CitwYW5lbEAwIHsKKwljb21wYXRpYmxlID0gImJh
-bmFuYXBpLGxocjA1MGg0MSIsICJpbGl0ZWssaWxpOTg4MWMiOworCXJlZyA9IDwwPjsKKwlwb3dl
-ci1ncGlvcyA9IDwmcGlvIDEgNyBHUElPX0FDVElWRV9ISUdIPjsgLyogUEIwNyAqLworCXJlc2V0
-LWdwaW9zID0gPCZyX3BpbyAwIDUgR1BJT19BQ1RJVkVfTE9XPjsgLyogUEwwNSAqLworCWJhY2ts
-aWdodCA9IDwmcHdtX2JsPjsKK307Ci0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+The BananaPi M2M has an optional 1280x720 DSI panel. Since that panel is
+optional, we can only show a DT patch that would show how to enable it.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 39 +++++++++++++++++++++-
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index eaf09666720d..e1bc9bb1c992 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -44,6 +44,7 @@
+ #include "sun8i-a33.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "BananaPi M2 Magic";
+@@ -81,6 +82,14 @@
+ 		};
+ 	};
+ 
++	pwm_bl: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <8>;
++		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PG10 */
++	};
++
+ 	reg_vcc5v0: vcc5v0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc5v0";
+@@ -120,6 +129,26 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
++&dphy0 {
++	status = "okay";
++};
++
++&dsi0 {
++	status = "okay";
++
++	panel@0 {
++		compatible = "bananapi,lhr050h41", "ilitek,ili9881c";
++		reg = <0>;
++		power-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB07 */
++		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL05 */
++		backlight = <&pwm_bl>;
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -179,6 +208,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins>;
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -291,6 +326,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_b>;
+-- 
+git-series 0.9.1
