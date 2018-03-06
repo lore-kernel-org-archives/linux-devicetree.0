@@ -1,92 +1,169 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs,
- wifi reset)
-Date: Tue, 6 Mar 2018 11:58:33 +0000
-Message-ID: <d0aac677-ed2e-c059-0cba-79f88de194b4@arm.com>
-References: <20180227204711.29357-1-dianders@chromium.org>
- <3831527.HjPPvuL6zK@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v5 2/5] MIPS: mscc: add ocelot dtsi
+Date: Tue,  6 Mar 2018 13:16:04 +0100
+Message-ID: <20180306121607.1567-3-alexandre.belloni@bootlin.com>
+References: <20180306121607.1567-1-alexandre.belloni@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3831527.HjPPvuL6zK@diego>
-Content-Language: en-GB
+In-Reply-To: <20180306121607.1567-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Add a device tree include file for the Microsemi Ocelot SoC.
 
-On 01/03/18 08:43, Heiko Stübner wrote:
-> Am Dienstag, 27. Februar 2018, 21:47:11 CET schrieb Douglas Anderson:
->> Back in the early days when gru devices were still under development
->> we found an issue where the WiFi reset line needed to be configured as
->> early as possible during the boot process to avoid the WiFi module
->> being in a bad state.
->>
->> We found that the way to get the kernel to do this in the earliest
->> possible place was to configure this line in the pinctrl hogs, so
->> that's what we did.  For some history here you can see
->> <http://crosreview.com/368770>.  After the time that change landed in
->> the kernel, we landed a firmware change to configure this line even
->> earlier.  See <http://crosreview.com/399919>.  However, even after the
->> firmware change landed we kept the kernel change to deal with the fact
->> that some people working on devices might take a little while to
->> update their firmware.
->>
->> At this there are definitely zero devices out in the wild that have
->> firmware without the fix in it.  Specifically looking in the firmware
->> branch several critically important fixes for memory stability landed
->> after the patch in coreboot and I know we didn't ship without those.
->> Thus, by now, everyone should have the new firmware and it's safe to
->> not have the kernel set this up in a pinctrl hog.
->>
->> Historically, even though it wasn't needed to have this in a pinctrl
->> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
->> default hog at bootup and then would never touch things again.  That
->> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
->> during suspend/resume").  After that commit then we'll re-apply the
->> default hog at resume time and that can screw up the reset state of
->> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
->> then the whole system can go haywire.  That's what was happening.
->> Specifically you'd resume a rk3399-gru-* device and it would mostly
->> resume, then would crash with some crazy weird crash.
->>
->> One could say, perhaps, that the recent pinctrl change was at fault
->> (and should be fixed) since it changed behavior.  ...but that's not
->> really true.  The device tree for rk3399-gru is really to blame.
->> Specifically since the pinctrl is defined in the hog and not in the
->> "wlan-pd-n" node then the actual user of this pin doesn't have a
->> pinctrl entry for it.  That's bad.
->>
->> Let's fix our problems by just moving the control of
->> "wlan_module_reset_l pinctrl" out of the hog and put them in the
->> proper place.
->>
->> NOTE: in theory, I think it should actually be possible to have a pin
->> controlled _both_ by the hog and by an actual device.  Once the device
->> claims the pin I think the hog is supposed to let go.  I'm not 100%
->> sure that this works and in any case this solution would be more
->> complex than is necessary.
->>
->> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
->> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
->> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> 
-> applied as fix for 4.16 with the 2 Tested-tags
-Sorry to rain on everyone's parade, but further testing shows that this
-patch may not be enough to restore a reliable s2r. My initial testing
-did show that we were resuming without the VOP errors, but there seem to
-be further issues (I'm loosing the keyboard and the trackpad after
-resume on Kevin).
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ arch/mips/boot/dts/Makefile         |   1 +
+ arch/mips/boot/dts/mscc/Makefile    |   1 +
+ arch/mips/boot/dts/mscc/ocelot.dtsi | 117 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 arch/mips/boot/dts/mscc/Makefile
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot.dtsi
 
-Applying my initial hack makes it work again. I suspect that there are
-more hog pins that need tweaking, but I'm a bit out of my depth here.
-
-Thanks,
-
-	M.
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index e2c6f131c8eb..1e79cab8e269 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
+ subdir-y	+= img
+ subdir-y	+= ingenic
+ subdir-y	+= lantiq
++subdir-y	+= mscc
+ subdir-y	+= mti
+ subdir-y	+= netlogic
+ subdir-y	+= ni
+diff --git a/arch/mips/boot/dts/mscc/Makefile b/arch/mips/boot/dts/mscc/Makefile
+new file mode 100644
+index 000000000000..dd08e63a10ba
+--- /dev/null
++++ b/arch/mips/boot/dts/mscc/Makefile
+@@ -0,0 +1 @@
++obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+new file mode 100644
+index 000000000000..8c3210577410
+--- /dev/null
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -0,0 +1,117 @@
++//SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/* Copyright (c) 2017 Microsemi Corporation */
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "mscc,ocelot";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "mips,mips24KEc";
++			device_type = "cpu";
++			clocks = <&cpu_clk>;
++			reg = <0>;
++		};
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	cpuintc: interrupt-controller@0 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	cpu_clk: cpu-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <500000000>;
++	};
++
++	ahb_clk: ahb-clk {
++		compatible = "fixed-factor-clock";
++		#clock-cells = <0>;
++		clocks = <&cpu_clk>;
++		clock-div = <2>;
++		clock-mult = <1>;
++	};
++
++	ahb {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x70000000 0x2000000>;
++
++		interrupt-parent = <&intc>;
++
++		cpu_ctrl: syscon@0 {
++			compatible = "mscc,ocelot-cpu-syscon", "syscon";
++			reg = <0x0 0x2c>;
++		};
++
++		intc: interrupt-controller@70 {
++			compatible = "mscc,ocelot-icpu-intr";
++			reg = <0x70 0x70>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>;
++		};
++
++		uart0: serial@100000 {
++			pinctrl-0 = <&uart_pins>;
++			pinctrl-names = "default";
++			compatible = "ns16550a";
++			reg = <0x100000 0x20>;
++			interrupts = <6>;
++			clocks = <&ahb_clk>;
++			reg-io-width = <4>;
++			reg-shift = <2>;
++
++			status = "disabled";
++		};
++
++		uart2: serial@100800 {
++			pinctrl-0 = <&uart2_pins>;
++			pinctrl-names = "default";
++			compatible = "ns16550a";
++			reg = <0x100800 0x20>;
++			interrupts = <7>;
++			clocks = <&ahb_clk>;
++			reg-io-width = <4>;
++			reg-shift = <2>;
++
++			status = "disabled";
++		};
++
++		reset@1070008 {
++			compatible = "mscc,ocelot-chip-reset";
++			reg = <0x1070008 0x4>;
++		};
++
++		gpio: pinctrl@1070034 {
++			compatible = "mscc,ocelot-pinctrl";
++			reg = <0x1070034 0x68>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&gpio 0 0 22>;
++
++			uart_pins: uart-pins {
++				pins = "GPIO_6", "GPIO_7";
++				function = "uart";
++			};
++
++			uart2_pins: uart2-pins {
++				pins = "GPIO_12", "GPIO_13";
++				function = "uart2";
++			};
++		};
++	};
++};
 -- 
-Jazz is not dead. It just smells funny...
+2.16.2
