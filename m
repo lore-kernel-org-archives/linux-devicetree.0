@@ -1,104 +1,74 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 7/7] [DO NOT MERGE] arm: dts: sun8i: bpi-m2m: Add DSI display
-Date: Tue,  6 Mar 2018 14:56:04 +0100
-Message-ID: <7c43c99d4faed3f37aad899d3516e606c14381e4.1520344489.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 1/7] drm/sun4i: tcon: Add TRI finish interrupt for vblank
+Date: Tue,  6 Mar 2018 14:55:58 +0100
+Message-ID: <1903b01ae43dafc43a8d3cfb325ac1db6aed60f4.1520344489.git-series.maxime.ripard@bootlin.com>
 References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
 In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
 References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, Gustavo Padovan <gustavo@padovan.org>, Daniel Vetter <daniel.vetter@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-The BananaPi M2M has an optional 1280x720 DSI panel. Since that panel is
-optional, we can only show a DT patch that would show how to enable it.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 39 +++++++++++++++++++++-
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-index eaf09666720d..e1bc9bb1c992 100644
---- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-+++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-@@ -44,6 +44,7 @@
- #include "sun8i-a33.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "BananaPi M2 Magic";
-@@ -81,6 +82,14 @@
- 		};
- 	};
- 
-+	pwm_bl: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <8>;
-+		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PG10 */
-+	};
-+
- 	reg_vcc5v0: vcc5v0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc5v0";
-@@ -120,6 +129,26 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy0 {
-+	status = "okay";
-+};
-+
-+&dsi0 {
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "bananapi,lhr050h41", "ilitek,ili9881c";
-+		reg = <0>;
-+		power-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB07 */
-+		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL05 */
-+		backlight = <&pwm_bl>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -179,6 +208,12 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins>;
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -291,6 +326,10 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_b>;
--- 
-git-series 0.9.1
+RnJvbTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+CgpU
+aGUgIkNQVSIgKG9yIEludGVsIDgwODApIGludGVyZmFjZSB1c2VzIGEgZGlmZmVyZW50IGludGVy
+cnVwdCBjYWxsZWQKVFJJX0ZJTklTSCAobW9zdCBsaWtlbHkgVFJJIGJlaW5nIGZvciB0cmlnZ2Vy
+KSB0byBub3RpZnkgdGhlIGVuZCBvZiBmcmFtZXMsCmFuZCBoZW5jZSB0aGUgVkJMQU5LIHBlcmlv
+ZC4KCkFuZCB0aGF0IGludGVycnVwdCB0byB0aGUgcG9zc2libGUgVkJMQU5LIGludGVycnVwdHMg
+c291cmNlLgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KU2lnbmVk
+LW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+
+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyB8ICA5ICsrKysrKy0tLQog
+ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaCB8ICA0ICsrKysKIDIgZmlsZXMgY2hh
+bmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
+bjRpX3Rjb24uYwppbmRleCBiMzk2MDExOGRlYjkuLjdlNTEzNGJmYjAyOCAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
+c3VuNGkvc3VuNGlfdGNvbi5jCkBAIC0xOTYsNyArMTk2LDggQEAgdm9pZCBzdW40aV90Y29uX2Vu
+YWJsZV92Ymxhbmsoc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sIGJvb2wgZW5hYmxlKQogCURSTV9E
+RUJVR19EUklWRVIoIiVzYWJsaW5nIFZCTEFOSyBpbnRlcnJ1cHRcbiIsIGVuYWJsZSA/ICJFbiIg
+OiAiRGlzIik7CiAKIAltYXNrID0gU1VONElfVENPTl9HSU5UMF9WQkxBTktfRU5BQkxFKDApIHwK
+LQkgICAgICAgU1VONElfVENPTl9HSU5UMF9WQkxBTktfRU5BQkxFKDEpOworCQlTVU40SV9UQ09O
+X0dJTlQwX1ZCTEFOS19FTkFCTEUoMSkgfAorCQlTVU40SV9UQ09OX0dJTlQwX1RDT04wX1RSSV9G
+SU5JU0hfRU5BQkxFOwogCiAJaWYgKGVuYWJsZSkKIAkJdmFsID0gbWFzazsKQEAgLTU0OCw3ICs1
+NDksOCBAQCBzdGF0aWMgaXJxcmV0dXJuX3Qgc3VuNGlfdGNvbl9oYW5kbGVyKGludCBpcnEsIHZv
+aWQgKnByaXZhdGUpCiAJcmVnbWFwX3JlYWQodGNvbi0+cmVncywgU1VONElfVENPTl9HSU5UMF9S
+RUcsICZzdGF0dXMpOwogCiAJaWYgKCEoc3RhdHVzICYgKFNVTjRJX1RDT05fR0lOVDBfVkJMQU5L
+X0lOVCgwKSB8Ci0JCQlTVU40SV9UQ09OX0dJTlQwX1ZCTEFOS19JTlQoMSkpKSkKKwkJCVNVTjRJ
+X1RDT05fR0lOVDBfVkJMQU5LX0lOVCgxKSB8CisJCQlTVU40SV9UQ09OX0dJTlQwX1RDT04wX1RS
+SV9GSU5JU0hfSU5UKSkpCiAJCXJldHVybiBJUlFfTk9ORTsKIAogCWRybV9jcnRjX2hhbmRsZV92
+YmxhbmsoJnNjcnRjLT5jcnRjKTsKQEAgLTU1Nyw3ICs1NTksOCBAQCBzdGF0aWMgaXJxcmV0dXJu
+X3Qgc3VuNGlfdGNvbl9oYW5kbGVyKGludCBpcnEsIHZvaWQgKnByaXZhdGUpCiAJLyogQWNrbm93
+bGVkZ2UgdGhlIGludGVycnVwdCAqLwogCXJlZ21hcF91cGRhdGVfYml0cyh0Y29uLT5yZWdzLCBT
+VU40SV9UQ09OX0dJTlQwX1JFRywKIAkJCSAgIFNVTjRJX1RDT05fR0lOVDBfVkJMQU5LX0lOVCgw
+KSB8Ci0JCQkgICBTVU40SV9UQ09OX0dJTlQwX1ZCTEFOS19JTlQoMSksCisJCQkgICBTVU40SV9U
+Q09OX0dJTlQwX1ZCTEFOS19JTlQoMSkgfAorCQkJICAgU1VONElfVENPTl9HSU5UMF9UQ09OMF9U
+UklfRklOSVNIX0lOVCwKIAkJCSAgIDApOwogCiAJcmV0dXJuIElSUV9IQU5ETEVEOwpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaCBiL2RyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW40aV90Y29uLmgKaW5kZXggYjc2MWM3YjgyM2M1Li4wNjcxODMwNzY4MDcgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmgKKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaApAQCAtMjgsNyArMjgsMTEgQEAKIAogI2RlZmlu
+ZSBTVU40SV9UQ09OX0dJTlQwX1JFRwkJCTB4NAogI2RlZmluZSBTVU40SV9UQ09OX0dJTlQwX1ZC
+TEFOS19FTkFCTEUocGlwZSkJCUJJVCgzMSAtIChwaXBlKSkKKyNkZWZpbmUgU1VONElfVENPTl9H
+SU5UMF9UQ09OMF9UUklfRklOSVNIX0VOQUJMRQlCSVQoMjcpCisjZGVmaW5lIFNVTjRJX1RDT05f
+R0lOVDBfVENPTjBfVFJJX0NPVU5URVJfRU5BQkxFCUJJVCgyNikKICNkZWZpbmUgU1VONElfVENP
+Tl9HSU5UMF9WQkxBTktfSU5UKHBpcGUpCQlCSVQoMTUgLSAocGlwZSkpCisjZGVmaW5lIFNVTjRJ
+X1RDT05fR0lOVDBfVENPTjBfVFJJX0ZJTklTSF9JTlQJCUJJVCgxMSkKKyNkZWZpbmUgU1VONElf
+VENPTl9HSU5UMF9UQ09OMF9UUklfQ09VTlRFUl9JTlQJCUJJVCgxMCkKIAogI2RlZmluZSBTVU40
+SV9UQ09OX0dJTlQxX1JFRwkJCTB4OAogI2RlZmluZSBTVU40SV9UQ09OX0ZSTV9DVExfUkVHCQkJ
+MHgxMAotLSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
