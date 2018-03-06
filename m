@@ -1,24 +1,114 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
-Date: Tue, 6 Mar 2018 19:04:31 -0300
-Message-ID: <CAOMZO5DAxDixb-mkTefd39bo6qeyNrdqd0ZxSmCUDYtKSdNrZg@mail.gmail.com>
-References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
+ legacy DT to create LVDS encoder nodes)
+Date: Tue, 6 Mar 2018 16:05:26 -0600
+Message-ID: <CAL_JsqLFEwy7Q4pQYVFOvWcDdb7oO7QONMOiMWrGi=hir=8CKA@mail.gmail.com>
+References: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
+ <20180306035412.GU2650@umbus.fritz.box>
+ <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
+ <20180306140746.GX2650@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180306140746.GX2650@umbus.fritz.box>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Frank Rowand <frowand.list@gmail.com>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2018 at 6:58 PM, Martin Kaiser <martin@kaiser.cx> wrote:
-> According to the i.MX25 reference manuals, each SSI has four FIFOs. All
-> of those FIFOs can store up to 15 entries.
->
-> The fsl_ssi driver's internal default for the FIFO depth in 8. Set our
-> non-default FIFO depth explicitly in the Device Tree.
->
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+T24gVHVlLCBNYXIgNiwgMjAxOCBhdCA4OjA3IEFNLCBEYXZpZCBHaWJzb24KPGRhdmlkQGdpYnNv
+bi5kcm9wYmVhci5pZC5hdT4gd3JvdGU6Cj4gT24gVHVlLCBNYXIgMDYsIDIwMTggYXQgMDE6MzA6
+MDVQTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBIaSBEYXZpZCwKPj4KPj4g
+T24gVHVlLCBNYXIgNiwgMjAxOCBhdCA0OjU0IEFNLCBEYXZpZCBHaWJzb24KPj4gPGRhdmlkQGdp
+YnNvbi5kcm9wYmVhci5pZC5hdT4gd3JvdGU6Cj4+ID4gT24gRnJpLCBGZWIgMjMsIDIwMTggYXQg
+MDk6MDU6MjRBTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiA+PiBPbiBGcmks
+IEZlYiAyMywgMjAxOCBhdCAzOjM4IEFNLCBGcmFuayBSb3dhbmQgPGZyb3dhbmQubGlzdEBnbWFp
+bC5jb20+IHdyb3RlOgo+PiA+PiA+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxlIHRvIGNvbnZlcnQg
+dGhlIC5kdHMgZmlsZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+PiA+PiA+IGluc3RlYWQgb2YgaGFu
+ZCBjb2RpbmcgdGhlIGZyYWdtZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4+
+ID4+ID4gb2YgZmlsZXMgSSBmYWlsZWQsIHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZl
+IGJlZW4gcmVxdWlyZWQgZG8KPj4gPj4gPiBub3QgYWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAu
+ZHRzIGZpbGVzIHRoYXQgdGhhdCBvdmVybGF5cyB3b3VsZCBiZQo+PiA+PiA+IGFwcGxpZWQgYWdh
+aW5zdC4KPj4gPj4KPj4gPj4gSW5kZWVkLCBoZW5jZSB0aGUgZml4dXAgb3ZlcmxheXMgdXNlICJ0
+YXJnZXQtcGF0aCIuCj4+ID4+Cj4+ID4+IEJUVywgaXMgdGhlcmUgYW55IHNwZWNpZmljIHJlYXNv
+biB0aGVyZSBpcyBubyBzdWdhciBzeW50YXggc3VwcG9ydCBpbiBkdGMKPj4gPj4gZm9yIGFic29s
+dXRlIHRhcmdldCBwYXRocz8gSSBndWVzcyB0byBwcmV2ZW50IGFkZGluZyBzdHVmZiB0byBhIHJh
+bmRvbQo+PiA+PiBleGlzdGluZyBub2RlLCBhbmQgdG8gZW5jb3VyYWdlIHBlb3BsZSB0byB1c2Ug
+YSAiY29ubmVjdG9yIiBBUEkgZGVmaW5lZCBpbgo+PiA+PiB0ZXJtIG9mIGxhYmVscz8KPj4gPgo+
+PiA+IE9ubHkgYmVjYXVzZSBpdCBoYXNuJ3QgYmVlbiBpbXBsZW1lbnRlZC4gIFVzaW5nICZ7L3do
+YXRldmVyfSBzaG91bGQKPj4gPiBJTU8gZ2VuZXJhdGUgYSB0YXJnZXQtcGF0aCBhbmQgdGhlIGZh
+Y3QgaXQgZG9lc24ndCBpcyBhIGJ1Zy4KPj4gPgo+PiA+PiBJJ20gYWxzbyBpbiB0aGUgcHJvY2Vz
+cyBvZiBjb252ZXJ0aW5nIG15IGNvbGxlY3Rpb24gb2YgRFQgb3ZlcmxheXMgdG8gc3VnYXIKPj4g
+Pj4gc3ludGF4LCBhbmQgbGFjayBvZiBzdXBwb3J0IGZvciAidGFyZ2V0LXBhdGgiIGlzIHRoZSBz
+b2xlIHRoaW5nIHRoYXQgaG9sZHMKPj4gPj4gbWUgYmFjayBmcm9tIGNvbXBsZXRpbmcgdGhpcy4g
+U28gZm9yIG5vdyBJIHVzZSBhIG1peCBvZiBzdWdhciBhbmQKPj4gPj4gdHJhZGl0aW9uYWwgb3Zl
+cmxheSBzeW50YXguCj4+ID4+Cj4+ID4+IEluIHBhcnRpY3VsYXIsIEkgbmVlZCAidGFyZ2V0LXBh
+dGgiIGZvciB0d28gdGhpbmdzOgo+PiA+PiAgIDEuIFRvIHJlZmVyIHRvIHRoZSByb290IG5vZGUs
+IGZvciBhZGRpbmcgZGV2aWNlcyB0aGF0IHNob3VsZCBsaXZlIGF0Cj4+ID4+ICAgICAgKGEgYm9h
+cmQgc3Vibm9kZSBvZikgdGhlIHJvb3Qgbm9kZSwgbGlrZToKPj4gPj4gICAgICAgIC0gZGV2aWNl
+cyBjb25uZWN0ZWQgdG8gR1BJTyBjb250cm9sbGVycyBwcm92aWRlZCBieSBvdGhlciBiYXNlIG9y
+Cj4+ID4+ICAgICAgICAgIG92ZXJsYXkgZGV2aWNlcyAoZS5nLiBMRURzLCBkaXNwbGF5cywgYnV0
+dG9ucywgLi4uKSwKPj4gPj4gICAgICAgIC0gY2xvY2sgcHJvdmlkZXJzIGZvciBvdGhlciBvdmVy
+bGF5cyBkZXZpY2VzIChlLmcuIGZpeGVkLWNsb2NrKS4KPj4KPj4gPj4gVGhlIGZvcm1lciBpcyB0
+aGUgcmVhbCBibG9ja2VyIGZvciBtZS4KPj4KPj4gPiBCZWxvdyBpcyBkcmFmdCBwYXRjaCBhZGRp
+bmcgdGFyZ2V0LXBhdGggc3VwcG9ydC4gIFRoZSBwcmV0dHkgbWluaW1hbAo+PiA+IHRlc3QgZXhh
+bXBsZXMgZG8gaW5jbHVkZSBhIGNhc2UgdXNpbmcgJnsvfQo+PiA+Cj4+ID4gRnJvbSA4ZjFiMzVm
+ODgzOTVhZGVhMDFjZTExMDBjNWZhYTI3ZGFjYmM4NDEwIE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAw
+MQo+PiA+IEZyb206IERhdmlkIEdpYnNvbiA8ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1Pgo+
+PiA+IERhdGU6IFR1ZSwgNiBNYXIgMjAxOCAxMzoyNzo1MyArMTEwMAo+PiA+IFN1YmplY3Q6IFtQ
+QVRDSF0gQ29ycmVjdCBvdmVybGF5IHN5bnRhY3RpYyBzdWdhciBmb3IgZ2VuZXJhdGluZyB0YXJn
+ZXQtcGF0aAo+PiA+ICBmcmFnbWVudHMKPj4gPgo+PiA+IFdlJ3ZlIHJlY2VudGx5IGFkZGVkICJz
+eW50YWN0aWMgc3VnYXIiIHN1cHBvcnQgdG8gZ2VuZXJhdGUgcnVudGltZSBkdGIKPj4gPiBvdmVy
+bGF5cyB1c2luZyBzaW1pbGFyIHN5bnRheCB0byB0aGUgY29tcGlsZSB0aW1lIG92ZXJsYXlzIHdl
+J3ZlIGhhZCBmb3IKPj4gPiBhIHdoaWxlLiAgVGhpcyB3b3JrZWQgd2l0aCB0aGUgJmxhYmVsIHsg
+Li4uIH0gc3ludGF4LCBhZGp1c3RpbmcgYW4gZXhpc3RpbmcKPj4gPiBsYWJlbGxlZCBub2RlLCBi
+dXQgd291bGQgZmFpbCB3aXRoIHRoZSAmey9wYXRofSB7IC4uLiB9IHN5bnRheCBhdHRlbXB0aW5n
+Cj4+ID4gdG8gYWRqdXN0IGFuIGV4aXN0aW5nIG5vZGUgcmVmZXJlbmNlZCBieSBpdHMgcGF0aC4K
+Pj4gPgo+PiA+IFRoZSBwcmV2aW91cyBjb2RlIHdvdWxkIGFsd2F5cyB0cnkgdG8gdXNlIHRoZSAi
+dGFyZ2V0IiBwcm9wZXJ0eSBpbiB0aGUKPj4gPiBvdXRwdXQgb3ZlcmxheSwgd2hpY2ggbmVlZHMg
+dG8gYmUgZml4ZWQgdXAsIGFuZCBfX2ZpeHVwc19fIGNhbiBvbmx5IGVuY29kZQo+PiA+IHN5bWJv
+bHMsIG5vdCBwYXRocywgc28gdGhlIHJlc3VsdCBjb3VsZCBuZXZlciB3b3JrIHByb3Blcmx5Lgo+
+PiA+Cj4+ID4gVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSAmey9wYXRofSBzeW50YXggZm9yIG92
+ZXJsYXlzLCB0cmFuc2xhdGluZyBpdCBpbnRvCj4+ID4gdGhlICJ0YXJnZXQtcGF0aCIgZW5jb2Rp
+bmcgaW4gdGhlIG91dHB1dC4gIEl0IGFsc28gY2hhbmdlcyBleGlzdGluZwo+PiA+IGJlaGF2aW91
+ciBhIGxpdHRsZSBiZWNhdXNlIHdlIG5vdyB1bmNvbmRpdGlvbmFsbHkgb25lIGZyYWdtZW50IGZv
+ciBlYWNoCj4+ID4gb3ZlcmxheSBzZWN0aW9uIGluIHRoZSBzb3VyY2UuICBQcmV2aW91c2x5IHdl
+IHdvdWxkIG9ubHkgY3JlYXRlIGEgZnJhZ21lbnQKPj4gPiBpZiB3ZSBjb3VsZG4ndCBsb2NhbGx5
+IHJlc29sdmUgdGhlIG5vZGUgcmVmZXJlbmNlZC4gIFdlIG5lZWQgdGhpcyBmb3IKPj4gPiBwYXRo
+IHJlZmVyZW5jZXMsIGJlY2F1c2UgdGhlIHBhdGggaXMgc3VwcG9zZWQgdG8gYmUgcmVmZXJlbmNp
+bmcgc29tZXRoaW5nCj4+ID4gaW4gdGhlIChub3QgeWV0IGtub3duKSBiYXNlIHRyZWUsIHJhdGhl
+ciB0aGFuIHRoZSBvdmVybGF5IHRyZWUgd2UgYXJlCj4+ID4gd29ya2luZyB3aXRoIG5vdy4gIElu
+IHBhcnRpY3VsYXIgb25lIHVzZWZ1bCBjYXNlIGZvciBwYXRoIGJhc2VkIG92ZXJsYXlzCj4+ID4g
+aXMgdXNpbmcgJnsvfSAtIGJ1dCB0aGUgY29uc3RydWN0ZWQgb3ZlcmxheSB0cmVlIHdpbGwgYWx3
+YXlzIGhhdmUgYSByb290Cj4+ID4gbm9kZSwgbWVhbmluZyB0aGF0IHdpdGhvdXQgdGhlIGNoYW5n
+ZSB0aGF0IHdvdWxkIGF0dGVtcHQgdG8gcmVzb2x2ZSB0aGUKPj4gPiBmcmFnbWVudCBsb2NhbGx5
+LCB3aGljaCBpcyBub3Qgd2hhdCB3ZSB3YW50Lgo+PiA+Cj4+ID4gU2lnbmVkLW9mZi1ieTogRGF2
+aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+Cj4+Cj4+IFRoYW5rIHlvdSwg
+c2VlbXMgdG8gd29yayBmaW5lIG9uIGR0Yy5naXQuCj4+Cj4+IE5vdGUgdGhhdCB3aGlsZSB0aGUg
+ZHRjIHBhcnQgYXBwbGllcyBvbiB0aGUgaW4ta2VybmVsIGNvcHkgb2YgZHRjLCBpdAo+PiBkb2Vz
+bid0IHdvcmsgdGhlcmU6ICImey99IiBiZWhhdmVzIHRoZSBzYW1lIGFzICIvIiAoaS5lLiBubyBv
+dmVybGF5Cj4+IGZyYWdtZW50IGlzIGdlbmVyYXRlZCksIGJ1dCAiJnsvZm9vfSIgZG9lcyBjcmVh
+dGUgdGhlIG92ZXJsYXkgZnJhZ21lbnQuCj4+IE1lcmdpbmcgaW4gUm9iJ3MgZm9yLW5leHQgYnJh
+bmNoIHRvIHVwZ3JhZGUgTGludXgnIGNvcHkgb2YgZHRjIGZpeGVzCj4+IHRoYXQuCj4KPiBJIHRo
+aW5rIHRoYXQnbGwgYmUgYmVjYXVzZSB0aGUga2VybmVsIG1ha2VmaWxlcyAoYXQgbGVhc3QgYnkg
+ZGVmYXVsdCkKPiB1c2UgYSBwcmUtZ2VuZXJhdGVkIHZlcnNpb24gb2YgdGhlIHBhcnNlciwgcmF0
+aGVyIHRoYW4gcnVubmluZyBiaXNvbi4KCkp1c3QgRllJLCBhcyBvZiB0aGF0IGJyYW5jaCwgdGhh
+dCBpcyBubyBsb25nZXIgdHJ1ZS4gV2Ugbm93IHJ1biBiaXNvbi4KCj4gU2luY2UgdGhlcmUgd2Vy
+ZSBjaGFuZ2VzIGluIHRoZSAueSBmaWxlLCB0aG9zZSB3aWxsIGJlIG1pc3Npbmcgd2hpY2gKPiB3
+b3VsZCBjYXVzZSB0aGUgZXJyb3IgeW91IGRlc2NyaWJlLgo+Cj4gLS0KPiBEYXZpZCBHaWJzb24g
+ICAgICAgICAgICAgICAgICAgIHwgSSdsbCBoYXZlIG15IG11c2ljIGJhcm9xdWUsIGFuZCBteSBj
+b2RlCj4gZGF2aWQgQVQgZ2lic29uLmRyb3BiZWFyLmlkLmF1ICB8IG1pbmltYWxpc3QsIHRoYW5r
+IHlvdS4gIE5PVCBfdGhlXyBfb3RoZXJfCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IF93YXlfIF9hcm91bmRfIQo+IGh0dHA6Ly93d3cub3psYWJzLm9yZy9+ZGdpYnNvbgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
