@@ -1,108 +1,93 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 6/6] dt-bindings: PCI: rockchip: Add DT bindings for
- Rockchip PCIe endpoint controller
-Date: Tue,  6 Mar 2018 10:44:16 +0800
-Message-ID: <1520304256-235121-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
+From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 00/14] iommu/rockchip: Use OF_IOMMU
+Date: Tue,  6 Mar 2018 11:02:38 +0800
+Message-ID: <20180306030252.3197-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1520304173-231081-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <markyao0591-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the DT bindings for the Rockchip PCIe controller
-when configured in endpoint mode.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+This series fixes some issues in rockchip iommu driver, and add of_iommu
+support in it.
 
-Changes in v3: None
-Changes in v2: None
+Changes in v7:
+Add WARN_ON in irq isr, and modify iommu archdata comment.
+Use iommu_group_ref_get to avoid ref leak
 
- .../devicetree/bindings/pci/rockchip-pcie-ep.txt   | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+Changes in v6:
+Add clk names, and modify all iommu nodes in all existing rockchip dts
+Fix dt-binding as Robin suggested.
+Use aclk and iface clk as Rob and Robin suggested, and split binding
+patch.
+Fix dt-binding as Robin suggested.
+Use aclk and iface clk as Rob and Robin suggested, and split binding
+patch.
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
-new file mode 100644
-index 0000000..77846730
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
-@@ -0,0 +1,62 @@
-+* Rockchip AXI PCIe Endpoint Controller DT description
-+
-+Required properties:
-+- compatible: Should contain "rockchip,rk3399-pcie-ep"
-+- reg: Two register ranges as listed in the reg-names property
-+- reg-names: Must include the following names
-+	- "apb-base"
-+	- "mem-base"
-+- clocks: Must contain an entry for each entry in clock-names.
-+		See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+	- "aclk"
-+	- "aclk-perf"
-+	- "hclk"
-+	- "pm"
-+- resets: Must contain seven entries for each entry in reset-names.
-+	   See ../reset/reset.txt for details.
-+- reset-names: Must include the following names
-+	- "core"
-+	- "mgmt"
-+	- "mgmt-sticky"
-+	- "pipe"
-+	- "pm"
-+	- "aclk"
-+	- "pclk"
-+- pinctrl-names : The pin control state names
-+- pinctrl-0: The "default" pinctrl state
-+- phys: Must contain an phandle to a PHY for each entry in phy-names.
-+- phy-names: Must include 4 entries for all 4 lanes even if some of
-+  them won't be used for your cases. Entries are of the form "pcie-phy-N":
-+  where N ranges from 0 to 3.
-+  (see example below and you MUST also refer to ../phy/rockchip-pcie-phy.txt
-+  for changing the #phy-cells of phy node to support it)
-+- rockchip,max-outbound-regions: Maximum number of outbound regions
-+
-+Optional Property:
-+- num-lanes: number of lanes to use
-+- max-functions: Maximum number of functions that can be configured (default 1).
-+
-+pcie0-ep: pcie@f8000000 {
-+	compatible = "rockchip,rk3399-pcie-ep";
-+	#address-cells = <3>;
-+	#size-cells = <2>;
-+	rockchip,max-outbound-regions = <16>;
-+	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-+		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-+	clock-names = "aclk", "aclk-perf",
-+		      "hclk", "pm";
-+	max-functions = /bits/ 8 <8>;
-+	num-lanes = <4>;
-+	reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0x80000000 0x0 0x20000>;
-+	reg-names = "apb-base", "mem-base";
-+	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-+		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
-+		 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
-+	reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
-+		      "pm", "pclk", "aclk";
-+	phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
-+	phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreq>;
-+};
+Changes in v5:
+Use out labels to save the duplication between the error and success paths.
+Use RK_MMU_POLL_PERIOD_US instead of 100.
+Remove clk names.
+Use clk_bulk APIs.
+Avoid race about pm_runtime_get_if_in_use() and pm_runtime_enabled().
+
+Changes in v4:
+Rewrite commit message.
+
+Changes in v3:
+Also remove remove() and module_exit() as Tomasz suggested.
+Loop platform_get_irq() as Robin suggested.
+Add struct rk_iommudata.
+Squash iommu/rockchip: Use iommu_group_get_for_dev() for add_device
+Only call startup() and shutdown() when iommu attached.
+Remove pm_mutex.
+Check runtime PM disabled.
+Check pm_runtime in rk_iommu_irq().
+Remove rk_iommudata->domain.
+
+Changes in v2:
+Move irq request to probe(in patch[0])
+Move bus_set_iommu() to rk_iommu_probe().
+
+Jeffy Chen (10):
+  iommu/rockchip: Prohibit unbind and remove
+  iommu/rockchip: Fix error handling in probe
+  iommu/rockchip: Request irqs in rk_iommu_probe()
+  ARM: dts: rockchip: add clocks in iommu nodes
+  dt-bindings: iommu/rockchip: Add clock property
+  iommu/rockchip: Use IOMMU device for dma mapping operations
+  iommu/rockchip: Use OF_IOMMU to attach devices automatically
+  iommu/rockchip: Fix error handling in init
+  iommu/rockchip: Add runtime PM support
+  iommu/rockchip: Support sharing IOMMU between masters
+
+Tomasz Figa (4):
+  iommu/rockchip: Fix error handling in attach
+  iommu/rockchip: Use iopoll helpers to wait for hardware
+  iommu/rockchip: Fix TLB flush of secondary IOMMUs
+  iommu/rockchip: Control clocks needed to access the IOMMU
+
+ .../devicetree/bindings/iommu/rockchip,iommu.txt   |   7 +
+ arch/arm/boot/dts/rk3036.dtsi                      |   2 +
+ arch/arm/boot/dts/rk322x.dtsi                      |   8 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  12 +
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  10 +
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  10 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  14 +-
+ drivers/iommu/rockchip-iommu.c                     | 608 +++++++++++----------
+ 8 files changed, 382 insertions(+), 289 deletions(-)
+
 -- 
-1.9.1
+2.11.0
