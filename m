@@ -1,90 +1,58 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain
- bindings
-Date: Tue, 06 Mar 2018 09:06:24 +0100
-Message-ID: <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
-References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
-        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
-        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
-        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
-        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v2 0/3] Fix STi aliases property name
+Date: Tue, 6 Mar 2018 09:07:27 +0100
+Message-ID: <1520323650-11030-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
-Cc: Jolly Shah <jolly.shah@xilinx.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Bj=c3=b6rn_Andersson?= <bjorn.andersson@linaro.org>, sean.wang@mediatek.com, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, rajanv@xilinx.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org
+Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+From: Patrice Chotard <patrice.chotard@st.com>
 
-On 2018-03-06 08:59, Geert Uytterhoeven wrote:
-> Hi Rob, Jolly,
->
-> On Mon, Mar 5, 2018 at 11:39 PM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Feb 27, 2018 at 03:55:49PM -0800, Jolly Shah wrote:
->>> Add documentation to describe ZynqMP power domain bindings.
->>>
->>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
->>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
->>> ---
->>>   .../devicetree/bindings/power/zynqmp-genpd.txt     | 46 ++++++++++++++++++++++
->>>   1 file changed, 46 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/power/zynqmp-genpd.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
->>> new file mode 100644
->>> index 0000000..25f9711
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
->>> +This node contains a number of subnodes, each representing a single PM domain
->>> +that PM domain consumer devices reference.
->>> +
->>> +== PM Domain Nodes ==
->>> +
->>> +Required properties:
->>> + - #power-domain-cells: Number of cells in a PM domain specifier. Must be 0.
->>> + - pd-id: List of domain identifiers of as defined by platform firmware. These
->>> +       identifiers are passed to the PM firmware.
->>> +
->>> +Example:
->>> +     zynqmp-genpd {
->>> +             compatible = "xlnx,zynqmp-genpd";
->> What's the control interface for controlling the domains?
->>> +
->>> +             pd_usb0: pd-usb0 {
->>> +                     pd-id = <22>;
->>> +                     #power-domain-cells = <0>;
->> There's no need for all these sub nodes. Make #power-domain-cells 1 and
->> put the id in the cell value.
-> That was my first reaction, too...
->>> +             };
->>> +
->>> +             pd_sata: pd-sata {
->>> +                     pd-id = <28>;
->>> +                     #power-domain-cells = <0>;
->>> +             };
->>> +
->>> +             pd_gpu: pd-gpu {
->>> +                     pd-id = <58 20 21>;
-> ... until I saw the above.
-> Controlling the GPU power area requires controlling 3 physical areas?
->
-> However, doing it this way may bite you in the future, if a need arises to
-> control a subset. And what about power up/down order?
+Since dtc v1.4.6-9-gaadd0b65c987, when compiling dtb with W=1 option,
+the following warnings are triggered :
+    
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
 
-What about defining 3 separate domains and arranging them in parent-child
-relationship? generic power domains already supports that and this allows
-to nicely define the power on/off order.
+_ Patch 1, convert the aliases property name in lowercase in 
+  all STi board dts files.
 
->>> +                     #power-domain-cells = <0x0>;
->>> +             };
->>> +     };
+_ Patch 2, remove useless stdout-path property
 
-Best regards
+_ Patch 3, rework the tty driver st-asc accordingly, as aliases id is retrieved 
+  using of_alias_get_id() with a defined string with is not lowercase only.
+
+v2: Fix Rob Herring's remarks :
+  	  _ use serialN instead of ttyasN aliases to not break ABI
+	  _ remove useless stdout-path property
+	  _ update st-asc driver with "serial" alias prefix
+
+Patrice Chotard (2):
+  ARM: dts: STi: Fix aliases property name for STi boards
+  ARM: dts: STi: Remove useless stdout-path for STi boards
+  tty: st-asc: Update tty alias
+
+ arch/arm/boot/dts/stih407-b2120.dts | 5 ++---
+ arch/arm/boot/dts/stih410-b2120.dts | 5 ++---
+ arch/arm/boot/dts/stih410-b2260.dts | 5 ++---
+ arch/arm/boot/dts/stih418-b2199.dts | 5 ++---
+ drivers/tty/serial/st-asc.c         | 2 +-
+ 5 files changed, 9 insertions(+), 13 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.9.1
