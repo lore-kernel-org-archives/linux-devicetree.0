@@ -1,55 +1,79 @@
-From: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND PATCH v6 09/14] dt-bindings: iommu/rockchip: Add clock
-	property
-Date: Tue, 06 Mar 2018 10:32:45 +0800
-Message-ID: <5A9DFDCD.7040107@rock-chips.com>
-References: <20180301101837.27969-1-jeffy.chen@rock-chips.com>
-	<20180301101837.27969-10-jeffy.chen@rock-chips.com>
-	<20180306022742.yfx2ond45orzhqiy@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/6] ARM: dts: stm32: Enable sdio1 for stm32f769-disco
+Date: Mon, 5 Mar 2018 20:37:47 -0600
+Message-ID: <20180306023747.lzh5yxfyugtlu62t@rob-hp-laptop>
+References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
+ <1519901623-23216-5-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180306022742.yfx2ond45orzhqiy@rob-hp-laptop>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1519901623-23216-5-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patrice.chotard@st.com
+Cc: mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org, mcoquelin.stm32@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 01, 2018 at 11:53:41AM +0100, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> Adds SDIO related DT nodes for stm32f769-disco board.
+> 
+> broken-cd property is needed as it misses a pullup on board
+> (resistor R76 is missing).
+> 
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> ---
+>  arch/arm/boot/dts/stm32f769-disco.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
+> index 9dba286c6d2f..2d922b5d4766 100644
+> --- a/arch/arm/boot/dts/stm32f769-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
+> @@ -44,6 +44,7 @@
+>  #include "stm32f746.dtsi"
+>  #include "stm32f769-pinctrl.dtsi"
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  
+>  / {
+>  	model = "STMicroelectronics STM32F769-DISCO board";
+> @@ -62,6 +63,12 @@
+>  		serial0 = &usart1;
+>  	};
+>  
+> +	mmc_vcard: mmc_vcard {
 
-Thanks for your reply.
+mmc-vcard {
 
-On 03/06/2018 10:27 AM, Rob Herring wrote:
-> On Thu, Mar 01, 2018 at 06:18:32PM +0800, Jeffy Chen wrote:
->> Add clock property, since we are going to control clocks in rockchip
->> iommu driver.
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->> Changes in v6: None
->
-> Really? There was a different number of clocks before.
-hmm, right, forgot to modify the change log, sorry...
->
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>   Documentation/devicetree/bindings/iommu/rockchip,iommu.txt | 7 +++++++
->>   1 file changed, 7 insertions(+)
->
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
->
->
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "mmc_vcard";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+>  };
+>  
+>  &cec {
+> @@ -74,6 +81,18 @@
+>  	clock-frequency = <25000000>;
+>  };
+>  
+> +&sdio2 {
+> +	status = "okay";
+> +	vmmc-supply = <&mmc_vcard>;
+> +	cd-gpios = <&gpioi 15 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +	broken-cd;
+> +	pinctrl-names = "default", "opendrain";
+> +	pinctrl-0 = <&sdio_pins_b>;
+> +	pinctrl-1 = <&sdio_pins_od_b>;
+> +	bus-width = <4>;
+> +};
+> +
+>  &usart1 {
+>  	pinctrl-0 = <&usart1_pins_a>;
+>  	pinctrl-names = "default";
+> -- 
+> 1.9.1
+> 
