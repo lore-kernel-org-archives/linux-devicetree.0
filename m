@@ -1,36 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 0/8] ARTPEC-6 ARM SoC device tree updates
-Date: Tue, 6 Mar 2018 17:45:30 +0100
-Message-ID: <CAK8P3a0ykwsO40w49TL9xgVKv3wrvx7KXz1o6XD5+qXQ6n8YUA@mail.gmail.com>
-References: <20180221090000.18091-1-niklas.cassel@axis.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 3/6] arm64: dts: exynos: add micro-USB connector node
+ to TM2 platforms
+Date: Tue, 6 Mar 2018 17:49:24 +0100
+Message-ID: <20180306164924.fvwx72pmobn67h7z@kozik-lap>
+References: <20180227071134.28063-1-a.hajda@samsung.com>
+ <CGME20180227071139eucas1p1d28b39a6636a7e6625aeb3a16091f81a@eucas1p1.samsung.com>
+ <20180227071134.28063-4-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180221090000.18091-1-niklas.cassel@axis.com>
+Content-Disposition: inline
+In-Reply-To: <20180227071134.28063-4-a.hajda@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: arm-soc <arm@kernel.org>, linux-arm-kernel@axis.com, DTML <devicetree@vger.kernel.org>, Niklas Cassel <niklass@axis.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 9:59 AM, Niklas Cassel <niklas.cassel@axis.com> wrote:
-> Hello,
->
-> Here comes some ARTPEC-6 ARM SoC device tree updates.
->
-> Niklas Cassel (8):
->   ARM: dts: artpec: disable Accelerator Coherency Port
->   ARM: dts: artpec: use 1 GiB RAM
->   ARM: dts: artpec: remove 0x prefix from clkctrl unit address
->   ARM: dts: artpec: migrate ethernet to stmmac binding
->   ARM: dts: artpec: add and utilize artpec6 pin controller
->   ARM: dts: artpec: add and utilize nbpfaxi DMA controllers
->   ARM: dts: artpec: add disabled node for PCIe endpoint mode
->   ARM: dts: artpec: add node for hardware crypto accelerator
+On Tue, Feb 27, 2018 at 08:11:31AM +0100, Andrzej Hajda wrote:
+> Since USB connector bindings are available we can describe it on TM2(e).
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-For a series eight patches, a pull request would save me some work, but
-I applied it anyway.
+Thanks, applied.
 
-Are you sure that the first three patches shouldn't be applied to stable
-backports?
-
-     Arnd
+Best regards,
+Krzysztof
