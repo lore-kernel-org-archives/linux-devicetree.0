@@ -1,53 +1,84 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v3 0/2] Introduce DW AXI DMAC driver
-Date: Tue,  6 Mar 2018 14:46:13 +0300
-Message-ID: <20180306114615.8895-1-Eugeniy.Paltsev@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 2/2] dt-bindings: Document the Synopsys DW AXI DMA bindings
+Date: Tue,  6 Mar 2018 14:46:15 +0300
+Message-ID: <20180306114615.8895-3-Eugeniy.Paltsev@synopsys.com>
+References: <20180306114615.8895-1-Eugeniy.Paltsev@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180306114615.8895-1-Eugeniy.Paltsev@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add support for the DW AXI DMAC controller.
+This patch adds documentation of device tree bindings for the Synopsys
+DesignWare AXI DMA controller.
 
-DW AXI DMAC is a part of HSDK development board from Synopsys.
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v2->v3:
+ * None.
 
-In this driver implementation only DMA_MEMCPY transfers
-are supported.
-
-Changes v2->v3 (suggested by Andy Shevchenko and Vinod Koul):
- * Fix SPDX licence comment style.
- * Use KBUILD_MODNAME macro instead of custom one.
- * Refactor dma_chan_tx_status function.
- * Refactor dma_chan_pause function.
- * Remove dma_cookie_init() call from dma_chan_alloc_chan_resources()
- * Use upper_32_bits() and lower_32_bits() instead of custom one.
- * Add __maybe_unused to runtime PM callback functions instead of
-   CONFIG_PM ifdef use.
- * Other small fixies.
-
-Changes v1->v2 (suggested by Andy Shevchenko):
- * Use SPDX licence identifier.
- * Refactor axi_chan_get_xfer_width function.
- * Fix timeout calculation in dma_chan_pause.
- * Add record to MAINTAINERS in correct alphabetical order.
-
-Eugeniy Paltsev (2):
-  dmaengine: Introduce DW AXI DMAC driver
-  dt-bindings: Document the Synopsys DW AXI DMA bindings
-
- .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   |   41 +
- MAINTAINERS                                        |    6 +
- drivers/dma/Kconfig                                |   10 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/dw-axi-dmac/Makefile                   |    1 +
- drivers/dma/dw-axi-dmac/axi_dma_platform.c         | 1010 ++++++++++++++++++++
- drivers/dma/dw-axi-dmac/axi_dma_platform.h         |  342 +++++++
- 7 files changed, 1411 insertions(+)
+ .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
- create mode 100644 drivers/dma/dw-axi-dmac/Makefile
- create mode 100644 drivers/dma/dw-axi-dmac/axi_dma_platform.c
- create mode 100644 drivers/dma/dw-axi-dmac/axi_dma_platform.h
 
+diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+new file mode 100644
+index 000000000000..f237b7928283
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+@@ -0,0 +1,41 @@
++Synopsys DesignWare AXI DMA Controller
++
++Required properties:
++- compatible: "snps,axi-dma-1.01a"
++- reg: Address range of the DMAC registers. This should include
++  all of the per-channel registers.
++- interrupt: Should contain the DMAC interrupt number.
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device.
++- dma-channels: Number of channels supported by hardware.
++- snps,dma-masters: Number of AXI masters supported by the hardware.
++- snps,data-width: Maximum AXI data width supported by hardware.
++  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
++- snps,priority: Priority of channel. Array size is equal to the number of
++  dma-channels. Priority value must be programmed within [0:dma-channels-1]
++  range. (0 - minimum priority)
++- snps,block-size: Maximum block size supported by the controller channel.
++  Array size is equal to the number of dma-channels.
++
++Optional properties:
++- snps,axi-max-burst-len: Restrict master AXI burst length by value specified
++  in this property. If this property is missing the maximum AXI burst length
++  supported by DMAC is used. [1:256]
++
++Example:
++
++dmac: dma-controller@80000 {
++	compatible = "snps,axi-dma-1.01a";
++	reg = <0x80000 0x400>;
++	clocks = <&core_clk>, <&cfgr_clk>;
++	clock-names = "core-clk", "cfgr-clk";
++	interrupt-parent = <&intc>;
++	interrupts = <27>;
++
++	dma-channels = <4>;
++	snps,dma-masters = <2>;
++	snps,data-width = <3>;
++	snps,block-size = <4096 4096 4096 4096>;
++	snps,priority = <0 1 2 3>;
++	snps,axi-max-burst-len = <16>;
++};
 -- 
-2.9.3
+2.14.3
