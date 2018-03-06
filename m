@@ -1,14 +1,9 @@
-Return-Path: <SRS0=Ax0d=F6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0044.outbound.protection.outlook.com ([104.47.1.44]:26776
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S934250AbeCHBl2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 7 Mar 2018 20:41:28 -0500
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 10/12] dt-bindings: connector: add properties for typec
- power delivery
-Date: Thu, 8 Mar 2018 01:41:23 +0000
-Message-ID: <VI1PR0402MB3917083C9CEAA9418D37C80F89DF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=0TRk=F4=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Tue, 6 Mar 2018 14:02:02 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 10/12] dt-bindings: connector: add properties for
+ typec power delivery
+Message-ID: <20180306120202.GA4951@kuha.fi.intel.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <CGME20180226120532epcas5p3c4b0258ec0677939f4241b24da5f48bc@epcas5p3.samsung.com>
  <1519645759-12701-11-git-send-email-jun.li@nxp.com>
@@ -16,115 +11,465 @@ References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <VI1PR0402MB39175D757B94FB52CB5A09F889DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <133b5194-26ff-071a-d3d1-2bfca1375cae@samsung.com>
  <VI1PR0402MB3917B47072CEC815AB6AE06A89D90@VI1PR0402MB3917.eurprd04.prod.outlook.com>
- <20180306120202.GA4951@kuha.fi.intel.com>
-In-Reply-To: <20180306120202.GA4951@kuha.fi.intel.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: multipart/mixed; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3917B47072CEC815AB6AE06A89D90@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+To: Jun Li <jun.li@nxp.com>
 Cc: Andrzej Hajda <a.hajda@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
-IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
-M9TCNsjVIDIwOjAyDQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogQW5kcnpl
-aiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
-Ow0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsgbWFyay5ydXRsYW5k
-QGFybS5jb207DQo+IHl1ZXlhb0Bnb29nbGUuY29tOyBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54
-cC5jb20+Ow0KPiBnYXJzaWx2YUBlbWJlZGRlZG9yLmNvbTsgb19sZXZlcXVlQG9yYW5nZS5mcjsN
-Cj4gc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4g
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5j
-b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMTAvMTJdIGR0LWJpbmRpbmdzOiBjb25uZWN0
-b3I6IGFkZCBwcm9wZXJ0aWVzIGZvcg0KPiB0eXBlYyBwb3dlciBkZWxpdmVyeQ0KPiANCj4gSGkg
-Z3V5cywNCj4gDQo+IE9uIFR1ZSwgTWFyIDA2LCAyMDE4IGF0IDA5OjM4OjU5QU0gKzAwMDAsIEp1
-biBMaSB3cm90ZToNCj4gPiA+ID4+PiBkaWZmIC0tZ2l0DQo+ID4gPiA+Pj4gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0DQo+ID4g
-PiA+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1j
-b25uZWN0b3IudHh0DQo+ID4gPiA+Pj4gaW5kZXggZTE0NjNmMS4uMjQyZjZkZiAxMDA2NDQNCj4g
-PiA+ID4+PiAtLS0NCj4gPiA+ID4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQNCj4gPiA+ID4+PiArKysNCj4gPiA+IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4
-dA0KPiA+ID4gPj4+IEBAIC0xNSw2ICsxNSwzMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+
-ID4gPj4+ICAtIHR5cGU6IHNpemUgb2YgdGhlIGNvbm5lY3Rvciwgc2hvdWxkIGJlIHNwZWNpZmll
-ZCBpbiBjYXNlIG9mDQo+ID4gPiA+Pj4gVVNCLUEsDQo+ID4gPiBVU0ItQg0KPiA+ID4gPj4+ICAg
-IG5vbi1mdWxsc2l6ZSBjb25uZWN0b3JzOiAibWluaSIsICJtaWNybyIuDQo+ID4gPiA+Pj4NCj4g
-PiA+ID4+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdXNiLWMtY29ubmVjdG9yIHdpdGggcG93
-ZXIgZGVsaXZlcnkNCj4gc3VwcG9ydDoNCj4gPiA+ID4+PiArLSBwb3J0LXR5cGU6IHNob3VsZCBi
-ZSBvbmUgb2YgInNvdXJjZSIsICJzaW5rIiBvciAiZHVhbCIuDQo+ID4gPiA+Pj4gKy0gZGVmYXVs
-dC1yb2xlOiBwcmVmZXJyZWQgcG93ZXIgcm9sZSBpZiBwb3J0LXR5cGUgaXMNCj4gPiA+ID4+PiAr
-ImR1YWwiKGRycCksIHNob3VsZCBiZQ0KPiA+ID4gPj4+ICsgICJzaW5rIiBvciAic291cmNlIi4N
-Cj4gPiA+ID4+IFNpbmNlIHBvcnQgY2FycmllcyBkYXRhIGFuZCBwb3dlciwgaXQgd291bGQgYmUg
-YmV0dGVyIHRvDQo+ID4gPiA+PiBleHBsaWNpdGx5IG1lbnRpb24gaXQgaW4gbmFtZXMgb2YgcHJv
-cGVydGllcyB3aGljaCBjYW4gYmUgYW1iaWd1b3VzLg0KPiA+ID4gPj4gTWF5YmUgaW5zdGVhZCBv
-ZiAncG9ydC10eXBlJyB5b3UgY2FuIHVzZSAncG93ZXItcm9sZScsIGZvciBleGFtcGxlLg0KPiA+
-ID4gPiBQb3J0LXR5cGUgaXMgYWxpZ24gd2l0aCB0aGUgbmFtZSBvZiB0eXBlYyBjb2RpbmcgYW5k
-IEFCSSwgJ3Bvd2VyLXJvbGUnDQo+ID4gPiA+IGlzIG1vcmUgbGlrZSBmb3IgdGhlIGN1cnJlbnQg
-cm9sZSByYXRoZXIgdGhhbiB0aGUgcG9ydCdzIGFiaWxpdHkuDQo+ID4gPg0KPiA+ID4gSSBhbSBu
-b3Qgc3VyZSB3aGF0IGFyZSB5b3UgZXhhY3RseSBtZWFuIGJ5ICJjb2RpbmcgYW5kIEFCSSIsIGJ1
-dCBJDQo+ID4gPiBndWVzcyBpdCBpcyBqdXN0IGFib3V0IFBvd2VyLURlbGl2ZXJ5IHBhcnQgb2Yg
-VVNCLUMuIEFuZCBpZiB5b3Ugd2FudA0KPiA+ID4gdG8gcHV0IHRoaXMgcHJvcGVydHkgaW50byBV
-U0Igbm9kZSB3aXRob3V0IG1hcmsgaXQgaXMgcmVsYXRlZCB0byBQRA0KPiA+ID4gcGFydCBvZiBV
-U0IgY29ubmVjdG9yLCB5b3UgcmlzayBjb25mdXNpb24gd2l0aCBwb3NzaWJsZSBVU0IgZGF0YSBy
-ZWxhdGVkDQo+IHByb3BlcnRpZXMuDQo+ID4NCj4gPiBVbmRlcnN0b29kIHlvdXIgY29uY2Vybiwg
-SSBhbSBmb2xsb3dpbmcgdHlwZWMgbmFtaW5nIGNvbnZlbnRpb25zLCBmb3INCj4gPiB0eXBlYywg
-cG9ydC10eXBlIHByb3BlcnR5IGhhcyB0aGUgc2FtZSBtZWFuaW5nIGFzDQo+ID4gL3N5cy9jbGFz
-cy90eXBlYy9wb3J0eC9wb3J0X3R5cGUgd2hpY2ggaXMgbm90IG9ubHkgZm9yIHBvd2VyLCBhbHNv
-IGZvcg0KPiA+IGRhdGEsIHRoZXJlIGFyZSBkZWRpY2F0ZWQgc3lzIGZpbGVzIHBvd2VyX3JvbGUg
-Zm9yIHBvd2VyIGFuZCBkYXRhX3JvbGUNCj4gPiBmb3IgZGF0YS4NCj4gPg0KPiA+ID4gU2ltcGxl
-IHF1ZXN0aW9uLCB3aGF0IGlmIHNvbWVib2R5IHdhbnRzIHRvIGFkZCBwcm9wZXJ0eSBkZXNjcmli
-aW5nDQo+ID4gPiBVU0IgZGF0YSBjYXBhYmlsaXRpZXMgKERGUCwgVUZQLCBEUkQpLCBob3cgc2hv
-dWxkIGl0IGJlIG5hbWVkPw0KPiA+ID4NCj4gPg0KPiA+IFRoZW4gd2UgbWF5IHVzZSBkYXRhLXJv
-bGU/DQo+ID4NCj4gPiA+ID4NCj4gPiA+ID4+IE90aGVyIHRoaW5nIGlzIHRoYXQgZGVmYXVsdC1y
-b2xlIGlzIHJlcXVpcmVkIG9ubHkgaW4gY2FzZSBvZiBEUlAsDQo+ID4gPiA+PiBzbyBtYXliZSBi
-ZXR0ZXIgd291bGQgYmUgdG8gc3F1YXNoIGl0IGluIHBvd2VyLXJvbGUsIGZvciBleGFtcGxlOg0K
-PiA+ID4gPj4gPz8/Pz8/IHBvd2VyLXJvbGU6IHNob3VsZCBiZSBvbiBvZiAic291cmNlIiwgInNp
-bmsiLA0KPiA+ID4gPj4gImR1YWwtc291cmNlIiwgImR1YWwtc2luayIsIGluIGNhc2Ugb2YgZHVh
-bCByb2xlcyBzdWZmaXggZGV0ZXJtaW5lcw0KPiBwcmVmZXJyZWQgcm9sZS4NCj4gPiA+ID4gSSBk
-b24ndCBrbm93IGhvdyBtdWNoIHRoaXMgc3F1YXNoIGNhbiBiZW5lZml0LCAiZHVhbC1zb3VyY2Uv
-c2luayINCj4gPiA+ID4gaXMgbm90IGRpcmVjdGx5IHNob3dpbmcgaXRzIG1lYW5pbmcgYnkgbmFt
-ZS4NCj4gPiA+DQo+ID4gPiBTb21lIGJlbmVmaXQgaXMgc2ltcGxlciBiaW5kaW5nLCBubyBjb25k
-aXRpb25hbGx5LXJlcXVpcmVkIHByb3BlcnR5Lg0KPiA+ID4NCj4gPg0KPiA+IFRoZXJlIGlzIGFs
-cmVhZHkgc3RyaW5nIGRlZmluaXRpb24gZm9yIHBvcnQgdHlwZSBhbmQgcHJlZmVycmVkIHJvbGUN
-Cj4gPiBwYXJzZSBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHR5cGVjX3BvcnRfdHlwZXNbXSA9
-IHsNCj4gPiAgICAgICAgICBbVFlQRUNfUE9SVF9ERlBdID0gInNvdXJjZSIsDQo+ID4gICAgICAg
-ICAgW1RZUEVDX1BPUlRfVUZQXSA9ICJzaW5rIiwNCj4gPiAgICAgICAgICBbVFlQRUNfUE9SVF9E
-UlBdID0gImR1YWwiLA0KPiA+IH07DQo+ID4gQW5kIEkgdGhpbmsgdGhlcmUgd2lsbCBiZSBvdGhl
-ciBjb25kaXRpb25hbGx5LXJlcXVpcmVkIHByb3BlcnRpZXMgdG8NCj4gPiBiZSBleHRlbmRlZCBs
-YXRlciwgYXJlIHdlIGdvaW5nIHRvIG5hbWUgYWxsIG9mIHRoZW0gYnkgdGhpcyB3YXk/DQo+ID4g
-RWl0aGVyIHdheSBpcyBPSyBmb3IgbWUsIEkgYW0gbm90IHN1cmUgaWYgdGhlcmUgaXMgcHJpbmNp
-cGxlIGxpa2Ugd2UNCj4gPiBzaG91bGQgYXZvaWQgY29uZGl0aW9uYWxseS1yZXF1aXJlZCBwcm9w
-ZXJ0eSwgaWYgd2Ugc2hvdWxkLCBtYXliZQ0KPiA+ICJkdWFsLXByZWZlcnJlZC1zb3VyY2Uvc2lu
-ayIgaXMgYmV0dGVyLg0KPiA+DQo+ID4gSGkgSGVpa2tpLA0KPiA+IERvIHlvdSBoYXZlIGFueSBj
-b21tZW50cy9wcmVmZXJlbmNlIGhlcmU/DQo+IA0KPiBJbiB0aGUgZmlyc3QgdmVyc2lvbnMgb2Yg
-VVNCIFR5cGUtQyBzcGVjaWZpY2F0aW9uIHRoZSBkYXRhIGFuZCBwb3dlciByb2xlcw0KPiB3ZXJl
-IGluIHByYWN0aWNlIGNvdXBsZWQgdG9nZXRoZXIuIFRoZXJlIHdlcmUgbm8gZGF0YSByb2xlIHNw
-ZWNpZmljIG1vZGVzLA0KPiBqdXN0IERGUCwgVUZQIGFuZCBEUlAuIEhvd2V2ZXIsIHYxLjIgb2Yg
-dGhlIHNwZWMuDQo+IGludHJvZHVjZWQgc2VwYXJhdGUgbW9kZXMgZm9yIHRoZSBkYXRhIHJvbGVz
-IGFzIHdlbGwsIGFuZCBJIGhhdmUgYSBwYXRjaCBmb3INCj4gdGhhdCAoYXR0YWNoZWQpLg0KPiAN
-Cj4gSWYgeW91IGFyZSBhc2tpbmcgbXkgb3BpbmlvbiwgdGhlIGRhdGEgcm9sZSBtdXN0IGJlIGhh
-bmRsZWQgYXMgc2VwYXJhdGUNCj4gY2FwYWJpbGl0eSBvZiB0aGUgcG9ydCwgaS5lLiB5b3UgcHJv
-YmFibGUgd2FudCB0byBoYXZlIHNlcGFyYXRlIHByb3BlcnRpZXMgZm9yDQo+IHRoZSBwb3dlciBy
-b2xlIGFuZCBkYXRhIHJvbGUsIGV2ZW4gaWYgd2UgZGlkIG5vdCBzdXBwb3J0IHRoYXQgeWV0IGlu
-IHRoZSBjbGFzcw0KPiBjb2RlLiBEb24ndCB1c2UgInBvcnQtdHlwZSIgbmFtZSwganVzdCBjYWxs
-IHRoZW0gInBvd2VyLXJvbGUiIGFuZA0KPiAiZGF0YS1yb2xlIiBmcm9tIG5vdyBvbi4NCj4gDQoN
-Ck9LLCBJIHdpbGwgaW50cm9kdWNlIHBvd2VyLXJvbGUgYW5kIGRhdGEtcm9sZSwgbWVhbndoaWxl
-LCBJIHRoaW5rIHRoZSBjbGFzcyBjb2RlDQpzaG91bGQgYmUgY2hhbmdlZCBhY2NvcmRpbmdseShs
-b29rcyBsaWtlIHlvdXIgYXR0YWNoZWQgcGF0Y2ggaXMgZG9pbmcgdGhhdCkuDQoNCj4gVGhlIGRl
-ZmF1bHQtcm9sZSBzaG91bGQgdGVsbCB0aGUgc3RhdGUgbWFjaGluZXMgd2hldGhlciBUcnkuU05L
-IG9yIFRyeS5TUkMNCj4gc3RhdGVzIHNob3VsZCBiZSB1c2VkIG9yIG5vdC4gUGVyaGFwcyB5b3Ug
-c2hvdWxkIGhhdmUgYm9vbGVhbiBwcm9wZXJ0eSBmb3INCj4gYm90aDogInRyeS1zbmsiIGFuZCAi
-dHJ5LXNyYyIgKG5vdGU6IGJvdGggY2FuIG5vdCBiZSB0cnVlKS4NCj4gDQoNCnRyeS1zaW5rIGFu
-ZCB0cnktc291cmNlLCBib3RoIGFyZSBvcHRpb25hbCwgY2FuJ3QgYmUgdHJ1ZSBhdCB0aGUgc2Ft
-ZSB0aW1lLg0KDQo+IEZpbmFsIG5vdGUuIEkgdGhpbmsgaXQgd291bGQgbWFrZSBzZW5zZSB0byBj
-bGVhcmx5IHNlcGFyYXRlIHRoZSBVU0IgVHlwZS1DDQo+IHNwZWNpZmljIHByb3BlcnRpZXMgZnJv
-bSBVU0IgUEQgb25lcy4gVGhvdWdoIGl0IGlzIHVubGlrZWx5IHRoYXQgd2Ugd2lsbCBzZWUNCj4g
-VVNCIFBEIGJlaW5nIHVzZWQgd2l0aCBvdGhlciBjb25uZWN0b3IgdHlwZXMgYmVzaWRlcyBUeXBl
-LUMgYW55bW9yZSwgVVNCDQo+IFR5cGUtQyBjb25uZWN0b3JzIHdpbGwgc3RpbGwgZGVmaW5pdGVs
-eSBub3QgYWx3YXlzIHN1cHBvcnQgVVNCIFBELCBidXQgd2hlbg0KPiBVU0IgUEQgaXMgbm90IHN1
-cHBvcnRlZCwgd2Ugc3RpbGwgbmVlZCB0byBrbm93IHRoZSBkYXRhLXJvbGUsIHBvd2VyLXJvbGUs
-DQo+IGRlZmF1bHQtcm9sZSAob3IgdHJ5LXNuaywgdHJ5LXNyYyksIGV0Yy4NCj4gDQoNCkFncmVl
-LCBJIHRoaW5rIHdlIGNhbiBqdWRnZSBpZiB0aGUgdHlwZWMgY29ubmVjdG9yIHN1cHBvcnQgUEQg
-YnkgY2hlY2tpbmcNCmlmIHRoZXJlIGFyZSBQRCByZXF1aXJlZCBwcm9wZXJ0aWVzKGxpa2UgUERP
-KS4NCg0KVGhhbmtzDQpKdW4gTGkNCj4gDQo+IEJyLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
+
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi guys,
+
+On Tue, Mar 06, 2018 at 09:38:59AM +0000, Jun Li wrote:
+> > >>> diff --git
+> > >>> a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > >>> b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > >>> index e1463f1..242f6df 100644
+> > >>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > >>> +++
+> > b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> > >>> @@ -15,6 +15,30 @@ Optional properties:
+> > >>>  - type: size of the connector, should be specified in case of USB-A,
+> > USB-B
+> > >>>    non-fullsize connectors: "mini", "micro".
+> > >>>
+> > >>> +Required properties for usb-c-connector with power delivery support:
+> > >>> +- port-type: should be one of "source", "sink" or "dual".
+> > >>> +- default-role: preferred power role if port-type is "dual"(drp),
+> > >>> +should be
+> > >>> +  "sink" or "source".
+> > >> Since port carries data and power, it would be better to explicitly
+> > >> mention it in names of properties which can be ambiguous.
+> > >> Maybe instead of 'port-type' you can use 'power-role', for example.
+> > > Port-type is align with the name of typec coding and ABI, 'power-role'
+> > > is more like for the current role rather than the port's ability.
+> > 
+> > I am not sure what are you exactly mean by "coding and ABI", but I guess it is
+> > just about Power-Delivery part of USB-C. And if you want to put this property
+> > into USB node without mark it is related to PD part of USB connector, you
+> > risk confusion with possible USB data related properties.
+> 
+> Understood your concern, I am following typec naming conventions,
+> for typec, port-type property has the same meaning as
+> /sys/class/typec/portx/port_type
+> which is not only for power, also for data, there are dedicated
+> sys files power_role for power and data_role for data.
+> 
+> > Simple question, what if somebody wants to add property describing USB
+> > data capabilities (DFP, UFP, DRD), how should it be named?
+> > 
+> 
+> Then we may use data-role?
+> 
+> > >
+> > >> Other thing is that default-role is required only in case of DRP, so
+> > >> maybe better would be to squash it in power-role, for example:
+> > >> ?????? power-role: should be on of "source", "sink", "dual-source",
+> > >> "dual-sink", in case of dual roles suffix determines preferred role.
+> > > I don't know how much this squash can benefit, "dual-source/sink" is
+> > > not directly showing its meaning by name.
+> > 
+> > Some benefit is simpler binding, no conditionally-required property.
+> > 
+> 
+> There is already string definition for port type and preferred role parse 
+> static const char * const typec_port_types[] = {
+>          [TYPEC_PORT_DFP] = "source",
+>          [TYPEC_PORT_UFP] = "sink",
+>          [TYPEC_PORT_DRP] = "dual",
+> };
+> And I think there will be other conditionally-required properties
+> to be extended later, are we going to name all of them by this way?
+> Either way is OK for me, I am not sure if there is principle like we
+> should avoid conditionally-required property, if we should, maybe
+> "dual-preferred-source/sink" is better.
+> 
+> Hi Heikki,
+> Do you have any comments/preference here?
+
+In the first versions of USB Type-C specification the data and power
+roles were in practice coupled together. There were no data role
+specific modes, just DFP, UFP and DRP. However, v1.2 of the spec.
+introduced separate modes for the data roles as well, and I have a
+patch for that (attached).
+
+If you are asking my opinion, the data role must be handled as
+separate capability of the port, i.e. you probable want to have
+separate properties for the power role and data role, even if we did
+not support that yet in the class code. Don't use "port-type" name,
+just call them "power-role" and "data-role" from now on.
+
+The default-role should tell the state machines whether Try.SNK or
+Try.SRC states should be used or not. Perhaps you should have boolean
+property for both: "try-snk" and "try-src" (note: both can not be true).
+
+Final note. I think it would make sense to clearly separate the USB
+Type-C specific properties from USB PD ones. Though it is unlikely
+that we will see USB PD being used with other connector types besides
+Type-C anymore, USB Type-C connectors will still definitely not
+always support USB PD, but when USB PD is not supported, we still need
+to know the data-role, power-role, default-role (or try-snk, try-src),
+etc.
+
+
+Br,
+
+-- 
+heikki
+
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="0001-usb-typec-Separate-the-definitions-for-data-and-powe.patch"
+
+>From 4f7652ba8a3d4e8f7bd30cf7ca8beba6af5ad873 Mon Sep 17 00:00:00 2001
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Date: Tue, 2 Jan 2018 17:07:58 +0300
+Subject: [PATCH] usb: typec: Separate the definitions for data and power roles
+
+USB Type-C specification v1.2 separated the power and data
+roles more clearly. Dual-Role-Data term was introduced, and
+the meaning of DRP was changed from "Dual-Role-Port" to
+"Dual-Role-Power".
+
+In order to allow the port drivers to describe the
+capabilities of the ports more clearly according to the
+newest specifications, introducing separate definitions for
+the data roles.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/usb/typec/class.c           | 56 ++++++++++++++++++++++---------------
+ drivers/usb/typec/fusb302/fusb302.c |  1 +
+ drivers/usb/typec/tcpm.c            |  9 +++---
+ drivers/usb/typec/tps6598x.c        | 26 +++++++++++------
+ drivers/usb/typec/typec_wcove.c     |  1 +
+ drivers/usb/typec/ucsi/ucsi.c       | 13 +++++++--
+ include/linux/usb/tcpm.h            |  1 +
+ include/linux/usb/typec.h           | 14 ++++++++--
+ 8 files changed, 80 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 2620a694704f..53df10df2f9d 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -282,10 +282,10 @@ typec_altmode_roles_show(struct device *dev, struct device_attribute *attr,
+ 	ssize_t ret;
+ 
+ 	switch (mode->roles) {
+-	case TYPEC_PORT_DFP:
++	case TYPEC_PORT_SRC:
+ 		ret = sprintf(buf, "source\n");
+ 		break;
+-	case TYPEC_PORT_UFP:
++	case TYPEC_PORT_SNK:
+ 		ret = sprintf(buf, "sink\n");
+ 		break;
+ 	case TYPEC_PORT_DRP:
+@@ -797,14 +797,14 @@ static const char * const typec_data_roles[] = {
+ };
+ 
+ static const char * const typec_port_types[] = {
+-	[TYPEC_PORT_DFP] = "source",
+-	[TYPEC_PORT_UFP] = "sink",
++	[TYPEC_PORT_SRC] = "source",
++	[TYPEC_PORT_SNK] = "sink",
+ 	[TYPEC_PORT_DRP] = "dual",
+ };
+ 
+ static const char * const typec_port_types_drp[] = {
+-	[TYPEC_PORT_DFP] = "dual [source] sink",
+-	[TYPEC_PORT_UFP] = "dual source [sink]",
++	[TYPEC_PORT_SRC] = "dual [source] sink",
++	[TYPEC_PORT_SNK] = "dual source [sink]",
+ 	[TYPEC_PORT_DRP] = "[dual] source sink",
+ };
+ 
+@@ -875,9 +875,7 @@ static ssize_t data_role_store(struct device *dev,
+ 		return ret;
+ 
+ 	mutex_lock(&port->port_type_lock);
+-	if (port->port_type != TYPEC_PORT_DRP) {
+-		dev_dbg(dev, "port type fixed at \"%s\"",
+-			     typec_port_types[port->port_type]);
++	if (port->cap->data != TYPEC_PORT_DRD) {
+ 		ret = -EOPNOTSUPP;
+ 		goto unlock_and_ret;
+ 	}
+@@ -897,7 +895,7 @@ static ssize_t data_role_show(struct device *dev,
+ {
+ 	struct typec_port *port = to_typec_port(dev);
+ 
+-	if (port->cap->type == TYPEC_PORT_DRP)
++	if (port->cap->data == TYPEC_PORT_DRD)
+ 		return sprintf(buf, "%s\n", port->data_role == TYPEC_HOST ?
+ 			       "[host] device" : "host [device]");
+ 
+@@ -1328,7 +1326,6 @@ struct typec_port *typec_register_port(struct device *parent,
+ 				       const struct typec_capability *cap)
+ {
+ 	struct typec_port *port;
+-	int role;
+ 	int ret;
+ 	int id;
+ 
+@@ -1354,21 +1351,36 @@ struct typec_port *typec_register_port(struct device *parent,
+ 		goto err_mux;
+ 	}
+ 
+-	if (cap->type == TYPEC_PORT_DFP)
+-		role = TYPEC_SOURCE;
+-	else if (cap->type == TYPEC_PORT_UFP)
+-		role = TYPEC_SINK;
+-	else
+-		role = cap->prefer_role;
+-
+-	if (role == TYPEC_SOURCE) {
+-		port->data_role = TYPEC_HOST;
++	switch (cap->type) {
++	case TYPEC_PORT_SRC:
+ 		port->pwr_role = TYPEC_SOURCE;
+ 		port->vconn_role = TYPEC_SOURCE;
+-	} else {
+-		port->data_role = TYPEC_DEVICE;
++		break;
++	case TYPEC_PORT_SNK:
+ 		port->pwr_role = TYPEC_SINK;
+ 		port->vconn_role = TYPEC_SINK;
++		break;
++	case TYPEC_PORT_DRP:
++		if (cap->prefer_role != TYPEC_NO_PREFERRED_ROLE)
++			port->pwr_role = cap->prefer_role;
++		else
++			port->pwr_role = TYPEC_SINK;
++		break;
++	}
++
++	switch (cap->data) {
++	case TYPEC_PORT_DFP:
++		port->data_role = TYPEC_HOST;
++		break;
++	case TYPEC_PORT_UFP:
++		port->data_role = TYPEC_DEVICE;
++		break;
++	case TYPEC_PORT_DRD:
++		if (cap->prefer_role == TYPEC_SOURCE)
++			port->data_role = TYPEC_HOST;
++		else
++			port->data_role = TYPEC_DEVICE;
++		break;
+ 	}
+ 
+ 	port->id = id;
+diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+index b267b907bf24..76c9d955fa40 100644
+--- a/drivers/usb/typec/fusb302/fusb302.c
++++ b/drivers/usb/typec/fusb302/fusb302.c
+@@ -1230,6 +1230,7 @@ static const struct tcpc_config fusb302_tcpc_config = {
+ 	.max_snk_mw = 15000,
+ 	.operating_snk_mw = 2500,
+ 	.type = TYPEC_PORT_DRP,
++	.data = TYPEC_PORT_DRD,
+ 	.default_role = TYPEC_SINK,
+ 	.alt_modes = NULL,
+ };
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index bfcaf6618a1f..0e1d92381522 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -350,7 +350,7 @@ static enum tcpm_state tcpm_default_state(struct tcpm_port *port)
+ 		else if (port->tcpc->config->default_role == TYPEC_SINK)
+ 			return SNK_UNATTACHED;
+ 		/* Fall through to return SRC_UNATTACHED */
+-	} else if (port->port_type == TYPEC_PORT_UFP) {
++	} else if (port->port_type == TYPEC_PORT_SNK) {
+ 		return SNK_UNATTACHED;
+ 	}
+ 	return SRC_UNATTACHED;
+@@ -2264,7 +2264,7 @@ static inline enum tcpm_state unattached_state(struct tcpm_port *port)
+ 			return SRC_UNATTACHED;
+ 		else
+ 			return SNK_UNATTACHED;
+-	} else if (port->port_type == TYPEC_PORT_DFP) {
++	} else if (port->port_type == TYPEC_PORT_SRC) {
+ 		return SRC_UNATTACHED;
+ 	}
+ 
+@@ -3554,11 +3554,11 @@ static int tcpm_port_type_set(const struct typec_capability *cap,
+ 
+ 	if (!port->connected) {
+ 		tcpm_set_state(port, PORT_RESET, 0);
+-	} else if (type == TYPEC_PORT_UFP) {
++	} else if (type == TYPEC_PORT_SNK) {
+ 		if (!(port->pwr_role == TYPEC_SINK &&
+ 		      port->data_role == TYPEC_DEVICE))
+ 			tcpm_set_state(port, PORT_RESET, 0);
+-	} else if (type == TYPEC_PORT_DFP) {
++	} else if (type == TYPEC_PORT_SRC) {
+ 		if (!(port->pwr_role == TYPEC_SOURCE &&
+ 		      port->data_role == TYPEC_HOST))
+ 			tcpm_set_state(port, PORT_RESET, 0);
+@@ -3748,6 +3748,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 
+ 	port->typec_caps.prefer_role = tcpc->config->default_role;
+ 	port->typec_caps.type = tcpc->config->type;
++	port->typec_caps.data = tcpc->config->data;
+ 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
+ 	port->typec_caps.pd_revision = 0x0200;	/* USB-PD spec release 2.0 */
+ 	port->typec_caps.dr_set = tcpm_dr_set;
+diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
+index 37a15c14a6c6..8b8406867c02 100644
+--- a/drivers/usb/typec/tps6598x.c
++++ b/drivers/usb/typec/tps6598x.c
+@@ -393,31 +393,39 @@ static int tps6598x_probe(struct i2c_client *client)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	tps->typec_cap.revision = USB_TYPEC_REV_1_2;
++	tps->typec_cap.pd_revision = 0x200;
++	tps->typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
++	tps->typec_cap.pr_set = tps6598x_pr_set;
++	tps->typec_cap.dr_set = tps6598x_dr_set;
++
+ 	switch (TPS_SYSCONF_PORTINFO(conf)) {
+ 	case TPS_PORTINFO_SINK_ACCESSORY:
+ 	case TPS_PORTINFO_SINK:
+-		tps->typec_cap.type = TYPEC_PORT_UFP;
++		tps->typec_cap.type = TYPEC_PORT_SNK;
++		tps->typec_cap.data = TYPEC_PORT_UFP;
+ 		break;
+ 	case TPS_PORTINFO_DRP_UFP_DRD:
+ 	case TPS_PORTINFO_DRP_DFP_DRD:
+-		tps->typec_cap.dr_set = tps6598x_dr_set;
+-		/* fall through */
++		tps->typec_cap.type = TYPEC_PORT_DRP;
++		tps->typec_cap.data = TYPEC_PORT_DRD;
++		break;
+ 	case TPS_PORTINFO_DRP_UFP:
++		tps->typec_cap.type = TYPEC_PORT_DRP;
++		tps->typec_cap.data = TYPEC_PORT_UFP;
++		break;
+ 	case TPS_PORTINFO_DRP_DFP:
+-		tps->typec_cap.pr_set = tps6598x_pr_set;
+ 		tps->typec_cap.type = TYPEC_PORT_DRP;
++		tps->typec_cap.data = TYPEC_PORT_DFP;
+ 		break;
+ 	case TPS_PORTINFO_SOURCE:
+-		tps->typec_cap.type = TYPEC_PORT_DFP;
++		tps->typec_cap.type = TYPEC_PORT_SRC;
++		tps->typec_cap.data = TYPEC_PORT_DFP;
+ 		break;
+ 	default:
+ 		return -ENODEV;
+ 	}
+ 
+-	tps->typec_cap.revision = USB_TYPEC_REV_1_2;
+-	tps->typec_cap.pd_revision = 0x200;
+-	tps->typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
+-
+ 	tps->port = typec_register_port(&client->dev, &tps->typec_cap);
+ 	if (IS_ERR(tps->port))
+ 		return PTR_ERR(tps->port);
+diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
+index 2e990e0d917d..19cca7f1b2c5 100644
+--- a/drivers/usb/typec/typec_wcove.c
++++ b/drivers/usb/typec/typec_wcove.c
+@@ -572,6 +572,7 @@ static struct tcpc_config wcove_typec_config = {
+ 	.operating_snk_mw = 15000,
+ 
+ 	.type = TYPEC_PORT_DRP,
++	.data = TYPEC_PORT_DRD,
+ 	.default_role = TYPEC_SINK,
+ };
+ 
+diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+index 69d544cfcd45..bf0977fbd100 100644
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -592,11 +592,18 @@ static int ucsi_register_port(struct ucsi *ucsi, int index)
+ 		return ret;
+ 
+ 	if (con->cap.op_mode & UCSI_CONCAP_OPMODE_DRP)
+-		cap->type = TYPEC_PORT_DRP;
++		cap->data = TYPEC_PORT_DRD;
+ 	else if (con->cap.op_mode & UCSI_CONCAP_OPMODE_DFP)
+-		cap->type = TYPEC_PORT_DFP;
++		cap->data = TYPEC_PORT_DFP;
+ 	else if (con->cap.op_mode & UCSI_CONCAP_OPMODE_UFP)
+-		cap->type = TYPEC_PORT_UFP;
++		cap->data = TYPEC_PORT_UFP;
++
++	if (con->cap.provider && con->cap.consumer)
++		cap->type = TYPEC_PORT_DRP;
++	else if (con->cap.provider)
++		cap->type = TYPEC_PORT_SRC;
++	else if (con->cap.consumer)
++		cap->type = TYPEC_PORT_SNK;
+ 
+ 	cap->revision = ucsi->cap.typec_version;
+ 	cap->pd_revision = ucsi->cap.pd_version;
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index fe3508e6e1df..f0d839daeaea 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -91,6 +91,7 @@ struct tcpc_config {
+ 	unsigned int operating_snk_mw;
+ 
+ 	enum typec_port_type type;
++	enum typec_port_data data;
+ 	enum typec_role default_role;
+ 	bool try_role_hw;	/* try.{src,snk} implemented in hardware */
+ 
+diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+index 2408e5c2ed91..672b39bb0adc 100644
+--- a/include/linux/usb/typec.h
++++ b/include/linux/usb/typec.h
+@@ -22,9 +22,15 @@ struct typec_port;
+ struct fwnode_handle;
+ 
+ enum typec_port_type {
++	TYPEC_PORT_SRC,
++	TYPEC_PORT_SNK,
++	TYPEC_PORT_DRP,
++};
++
++enum typec_port_data {
+ 	TYPEC_PORT_DFP,
+ 	TYPEC_PORT_UFP,
+-	TYPEC_PORT_DRP,
++	TYPEC_PORT_DRD,
+ };
+ 
+ enum typec_plug_type {
+@@ -186,10 +192,11 @@ struct typec_partner_desc {
+ 
+ /*
+  * struct typec_capability - USB Type-C Port Capabilities
+- * @role: DFP (Host-only), UFP (Device-only) or DRP (Dual Role)
++ * @type: Supported power role of the port
++ * @data: Supported data role of the port
+  * @revision: USB Type-C Specification release. Binary coded decimal
+  * @pd_revision: USB Power Delivery Specification revision if supported
+- * @prefer_role: Initial role preference
++ * @prefer_role: Initial role preference (DRP ports).
+  * @accessory: Supported Accessory Modes
+  * @sw: Cable plug orientation switch
+  * @mux: Multiplexer switch for Alternate/Accessory Modes
+@@ -205,6 +212,7 @@ struct typec_partner_desc {
+  */
+ struct typec_capability {
+ 	enum typec_port_type	type;
++	enum typec_port_data	data;
+ 	u16			revision; /* 0120H = "1.2" */
+ 	u16			pd_revision; /* 0300H = "3.0" */
+ 	int			prefer_role;
+-- 
+2.16.1
+
+
+--opJtzjQTFsWo+cga--
