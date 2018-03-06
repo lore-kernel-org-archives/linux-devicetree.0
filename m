@@ -1,31 +1,88 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/2] ARM: dts: amx3xx: add emif interrupt info
-Date: Mon, 5 Mar 2018 16:08:43 -0800
-Message-ID: <23a93c87-d065-b2c1-9883-0ba82b7826f1@oracle.com>
-References: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2] PCI: Move declaration of of_irq_parse_and_map_pci
+ under OF_IRQ
+Date: Mon, 5 Mar 2018 18:10:04 -0600
+Message-ID: <20180306001004.GB33706@bhelgaas-glaptop.roam.corp.google.com>
+References: <1520292150-15699-1-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1520292150-15699-1-git-send-email-linux@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/18 7:04 AM, Tero Kristo wrote:
-> Hi,
+On Mon, Mar 05, 2018 at 03:22:30PM -0800, Guenter Roeck wrote:
+> Since commit 4670d610d5923 ("PCI: Move OF-related PCI functions into
+> PCI core"), sparc:allmodconfig fails to build with the following error.
 > 
-> Adding these two patches per the addition of required interrupt property
-> under emif node.
->
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+> pcie-cadence-host.c:(.text+0x4c4):
+> 	undefined reference to `of_irq_parse_and_map_pci'
+> pcie-cadence-host.c:(.text+0x4c8):
+> 	undefined reference to `of_irq_parse_and_map_pci'
+> 
+> of_irq_parse_and_map_pci is now only available if OF_IRQ is enabled.
+> Make its declaration and its dummy function dependent on OF_IRQ
+> to solve the problem.
+> 
+> Fixes: 4670d610d5923 ("PCI: Move OF-related PCI functions into PCI core")
+> Cc: Rob Herring <robh@kernel.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+
+Applied to for-linus for v4.16, thanks!
+
+> ---
+> v2: Added Rob's Ack
+>     Sent to linux-pci mailing list per Rob's request
+> 
+>  include/linux/of_pci.h | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index 88865e0ebf4d..091033a6b836 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -13,7 +13,6 @@ struct device_node;
+>  struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  					     unsigned int devfn);
+>  int of_pci_get_devfn(struct device_node *np);
+> -int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+>  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+>  int of_get_pci_domain_nr(struct device_node *node);
+>  int of_pci_get_max_link_speed(struct device_node *node);
+> @@ -34,12 +33,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
+>  }
+>  
+>  static inline int
+> -of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int
+>  of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+>  {
+>  	return -EINVAL;
+> @@ -67,6 +60,16 @@ of_pci_get_max_link_speed(struct device_node *node)
+>  static inline void of_pci_check_probe_only(void) { }
+>  #endif
+>  
+> +#if IS_ENABLED(CONFIG_OF_IRQ)
+> +int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+> +#else
+> +static inline int
+> +of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #if defined(CONFIG_OF_ADDRESS)
+>  int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  			unsigned char busno, unsigned char bus_max,
+> -- 
+> 2.7.4
+> 
