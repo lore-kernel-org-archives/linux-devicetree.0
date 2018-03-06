@@ -1,88 +1,78 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: Move declaration of of_irq_parse_and_map_pci
- under OF_IRQ
-Date: Mon, 5 Mar 2018 18:10:04 -0600
-Message-ID: <20180306001004.GB33706@bhelgaas-glaptop.roam.corp.google.com>
-References: <1520292150-15699-1-git-send-email-linux@roeck-us.net>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Mon, 05 Mar 2018 16:21:13 -0800
+Message-ID: <152029567344.218381.8756848686590091138@swboyd.mtv.corp.google.com>
+References: <20180226175802.20052-1-ilina@codeaurora.org>
+ <20180226175802.20052-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520292150-15699-1-git-send-email-linux@roeck-us.net>
+In-Reply-To: <20180226175802.20052-3-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 03:22:30PM -0800, Guenter Roeck wrote:
-> Since commit 4670d610d5923 ("PCI: Move OF-related PCI functions into
-> PCI core"), sparc:allmodconfig fails to build with the following error.
-> 
-> pcie-cadence-host.c:(.text+0x4c4):
-> 	undefined reference to `of_irq_parse_and_map_pci'
-> pcie-cadence-host.c:(.text+0x4c8):
-> 	undefined reference to `of_irq_parse_and_map_pci'
-> 
-> of_irq_parse_and_map_pci is now only available if OF_IRQ is enabled.
-> Make its declaration and its dummy function dependent on OF_IRQ
-> to solve the problem.
-> 
-> Fixes: 4670d610d5923 ("PCI: Move OF-related PCI functions into PCI core")
-> Cc: Rob Herring <robh@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-
-Applied to for-linus for v4.16, thanks!
-
-> ---
-> v2: Added Rob's Ack
->     Sent to linux-pci mailing list per Rob's request
-> 
->  include/linux/of_pci.h | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 88865e0ebf4d..091033a6b836 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -13,7 +13,6 @@ struct device_node;
->  struct device_node *of_pci_find_child_device(struct device_node *parent,
->  					     unsigned int devfn);
->  int of_pci_get_devfn(struct device_node *np);
-> -int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
->  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
->  int of_get_pci_domain_nr(struct device_node *node);
->  int of_pci_get_max_link_speed(struct device_node *node);
-> @@ -34,12 +33,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
->  }
->  
->  static inline int
-> -of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int
->  of_pci_parse_bus_range(struct device_node *node, struct resource *res)
->  {
->  	return -EINVAL;
-> @@ -67,6 +60,16 @@ of_pci_get_max_link_speed(struct device_node *node)
->  static inline void of_pci_check_probe_only(void) { }
->  #endif
->  
-> +#if IS_ENABLED(CONFIG_OF_IRQ)
-> +int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
-> +#else
-> +static inline int
-> +of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
-> +{
-> +	return 0;
-> +}
-> +#endif
+Quoting Lina Iyer (2018-02-26 09:58:02)
+> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> new file mode 100644
+> index 000000000000..5737ed2ac6e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> @@ -0,0 +1,38 @@
+> +Command DB
+> +---------
 > +
->  #if defined(CONFIG_OF_ADDRESS)
->  int of_pci_get_host_bridge_resources(struct device_node *dev,
->  			unsigned char busno, unsigned char bus_max,
-> -- 
-> 2.7.4
-> 
+> +Command DB is a database that provides a mapping between resource key and the
+
+s/between/between the/
+
+> +resource address for a system resource managed by a remote processor. The data
+> +is stored in a shared memory region and is loaded by the remote processor.
+> +
+> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+
+s/SoC's/SoCs/
+
+> +controlling shared resources. Depending on the board configuration the shared
+> +resource properties may change. These properties are dynamically probed by the
+> +remote processor and made available in the shared memory.
+> +
+> +The bindings for Command DB is specified in the reserved-memory section in
+
+s/bindings/node/
+
+maybe?
+
+> +devicetree. The devicetree representation of the command DB driver should be:
+
+Maybe drop this last sentence entirely.
+
+> +
+> +Properties:
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: Should be "qcom,cmd-db"
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <prop encoded array>
+> +       Definition: The register address that points to the location of the
+> +                   Command DB in memory. Additionally, specify the address
+> +                   and size of the actual lacation in memory.
+
+s/lacation/location/
+
+> +
+> +Example:
+> +
+> +       reserved-memory {
+> +               [...]
+> +               qcom,cmd-db@c3f000c {
+> +                       reg = <0x0 0xc3f000c 0x0 0x8>,
+> +                             <0x0 0x85fe0000 0x0 0x20000>;
+> +                       compatible = "qcom,cmd-db";
+> +               };
+> +       };
