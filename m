@@ -1,197 +1,66 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v5 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Tue, 6 Mar 2018 16:59:10 +0800
-Message-ID: <20180306085911.5930-2-ran.wang_1@nxp.com>
-References: <20180306085911.5930-1-ran.wang_1@nxp.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 11/25] ASoC: qcom: q6asm: add support to
+ audio stream apis
+Date: Tue, 6 Mar 2018 09:26:34 +0000
+Message-ID: <d76a271d-707c-3f5c-9327-d7f43da3cc92@linaro.org>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-12-srinivas.kandagatla@linaro.org>
+ <20180301213356.GV12864@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180306085911.5930-1-ran.wang_1@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>
-Cc: devicetree@vger.kernel.org, ran.wang_1@nxp.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180301213356.GV12864@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0 DWC3.
-When only one value means INCRx mode with fix burst type.
-When more than one value, means undefined length burst mode, USB controller
-can use the length less than or equal to the largest enabled burst length.
+Thanks for the review comments.
 
-While enabling undefined length INCR burst type and INCR16 burst type,
-get better write performance on NXP Layerscape platforms:
-around 3% improvement (from 364MB/s to 375MB/s).
+sorry for delay, for some reason these emails endup in my SPAM folder.
 
-Signed-off-by: Changming Huang <jerry.huang@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Changes in v5:
-  - add support for ls1021a, ls1012a, ls1046a, ls1088a, ls1021a
-  - update ls208xa support according to code base change
-Changes in v4:
-  - change definition for this property.
-Changes in v3:
-  - add new property for INCR burst in usb node.
+On 01/03/18 21:33, Mark Brown wrote:
+> On Tue, Feb 13, 2018 at 04:58:23PM +0000, srinivas.kandagatla@linaro.org wrote:
+> 
+>>   	uint32_t used;
+>> @@ -131,7 +191,7 @@ static int q6asm_apr_send_session_pkt(struct q6asm *a, struct audio_client *ac,
+>>   
+>>   	rc = wait_event_timeout(a->mem_wait, (a->mem_state <= 0), 5 * HZ);
+>>   	if (!rc) {
+>> -		dev_err(a->dev, "CMD timeout \n");
+>> +		dev_err(a->dev, "CMD timeout\n");
+>>   		rc = -ETIMEDOUT;
+>>   	} else if (a->mem_state < 0) {
+>>   		rc =  q6dsp_errno(a->mem_state);
+> 
+> This should be folded into whatever patch is being fixed.
+> 
 
- Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++++++
- arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |    1 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    2 ++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |    2 ++
- 7 files changed, 18 insertions(+), 0 deletions(-)
+My Bad, I will fix this in next version.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 44e8bab..d1779b2 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -59,6 +59,11 @@ Optional properties:
- 	fladj_30mhz_sdbnd signal is invalid or incorrect.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-+ - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-+	register, undefined length INCR burst type enable and INCRx type.
-+	When just one value, which means INCRX burst mode. When more than one
-+	value, which means undefined length INCR burst type enabled.
-+	The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
- 
-  - in addition all properties from usb-xhci.txt from the current directory are
-    supported as well
-@@ -71,4 +76,5 @@ dwc3@4a030000 {
- 	reg = <0x4a030000 0xcfff>;
- 	interrupts = <0 92 4>
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
-+	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- };
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c31dad9..b0c3f4f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -705,6 +705,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		pcie@3400000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 82b272f..4275a8f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -464,6 +464,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 380e7c7..0067567 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -622,6 +622,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb3@3000000 {
-@@ -631,6 +632,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb2: usb3@3100000 {
-@@ -640,6 +642,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 06b5e12..2bf6756 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -602,6 +602,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb@3000000 {
-@@ -611,6 +612,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb2: usb@3100000 {
-@@ -620,6 +622,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 4fc150c..c2b5b45 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -478,6 +478,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 			status = "disabled";
- 		};
- 
-@@ -488,6 +489,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index f3a40af..d5b25f2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -754,6 +754,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -764,6 +765,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		ccn@4000000 {
--- 
-1.7.1
+>> +	open.hdr.opcode = ASM_STREAM_CMD_OPEN_WRITE_V3;
+>> +	open.mode_flags = 0x00;
+>> +	open.mode_flags |= ASM_LEGACY_STREAM_SESSION;
+> 
+> What is a legacy stream and why are we using it in new code?
+
+This is basically Ensures backward compatibility to the original 
+behavior of ASM_STREAM_CMD_OPEN_WRITE_V2 command.
+
+I will take a closer look and see if its possible to remove this in the 
+first place.
+
+thanks,
+srini
+
+> 
