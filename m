@@ -1,61 +1,46 @@
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH] arm64: dts: ls208x: remove Freescale Erratum A008585 from LS2088A.
-Date: Tue,  6 Mar 2018 12:50:29 +0530
-Message-ID: <1520320829-14050-1-git-send-email-pankaj.bansal@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, leoyang.li@nxp.com, V.Sethi@nxp.com, Pankaj Bansal <pankaj.bansal@nxp.com>, "# 4 . 14" <stable@vger.kernel.org>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v4 0/3] gpio-keys: Add support for specifying wakeup event action
+Date: Tue,  6 Mar 2018 15:44:15 +0800
+Message-ID: <20180306074418.8879-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, Jeffy Chen <jeffy.chen@rock-chips.com>, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arv>
 List-Id: devicetree@vger.kernel.org
 
-Freescale Erratum A008585 affects A57 core cluster used in LS2085rev1.
-However this problem has been fixed in A72 core cluster used in LS2088.
-Therefore remove the erratum from LS2088A. Keeping it only in LS2085.
 
-Cc: <stable@vger.kernel.org> # 4.14
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-Reviewed-by: Sandeep Malik <sandeep.malik@nxp.com>
-Acked-by: Priyanka Jain <priyanka.jain@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 3 +--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+On chromebook kevin, we are using gpio-keys for pen insert event. But
+we only want it to wakeup the system when ejecting the pen.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 8d73930..f55cb3e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -150,6 +150,10 @@
- 	};
- };
- 
-+&timer {
-+	fsl,erratum-a008585;
-+};
-+
- &pcie1 {
- 	reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 	       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index f3a40af..4f06676 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -111,13 +111,12 @@
- 		mask = <0x2>;
- 	};
- 
--	timer {
-+	timer: timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <1 13 4>, /* Physical Secure PPI, active-low */
- 			     <1 14 4>, /* Physical Non-Secure PPI, active-low */
- 			     <1 11 4>, /* Virtual PPI, active-low */
- 			     <1 10 4>; /* Hypervisor PPI, active-low */
--		fsl,erratum-a008585;
- 	};
- 
- 	pmu {
+So we may need to change the interrupt trigger type during suspending.
+
+Changes in v4:
+Add dt-binding gpio-keys.h, stop saving irq trigger type, add enable/disable wakeup helpers as Dmitry suggested.
+Include dt-binding gpio-keys.h
+
+Changes in v3:
+Adding more comments as Brian suggested.
+
+Changes in v2:
+Specify wakeup event action instead of irq trigger type as Brian
+suggested.
+Specify wakeup event action instead of irq trigger type as Brian
+suggested.
+Specify wakeup event action instead of irq trigger type as Brian
+suggested.
+
+Jeffy Chen (3):
+  Input: gpio-keys - add support for wakeup event action
+  Input: gpio-keys - allow setting wakeup event action in DT
+  arm64: dts: rockchip: kevin: Avoid wakeup when inserting the pen
+
+ .../devicetree/bindings/input/gpio-keys.txt        |  8 +++
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  |  3 +
+ drivers/input/keyboard/gpio_keys.c                 | 67 +++++++++++++++++++++-
+ include/dt-bindings/input/gpio-keys.h              | 13 +++++
+ include/linux/gpio_keys.h                          |  2 +
+ 5 files changed, 90 insertions(+), 3 deletions(-)
+ create mode 100644 include/dt-bindings/input/gpio-keys.h
+
 -- 
-2.7.4
+2.11.0
