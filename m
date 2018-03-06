@@ -1,71 +1,102 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 07/25] ASoC: qcom: qdsp6: Add support to
-	Q6ADM
-Date: Tue, 6 Mar 2018 09:26:42 +0000
-Message-ID: <bb87bd34-ab81-e297-3bd4-3e52f6859e34@linaro.org>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
- <20180213165837.1620-8-srinivas.kandagatla@linaro.org>
- <20180301212402.GT12864@sirena.org.uk>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mailbox: add STMicroelectronics STM32
+ IPCC binding
+Date: Tue, 6 Mar 2018 10:54:39 +0100
+Message-ID: <CA+M3ks51PxJ_MBFcwKoLhVvBR0j8d_sY6uVkxjNEvP3Atvj4qQ@mail.gmail.com>
+References: <1519824270-7134-1-git-send-email-fabien.dessenne@st.com>
+ <1519824270-7134-2-git-send-email-fabien.dessenne@st.com> <20180306005729.odhf4g5br7tfrq35@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180301212402.GT12864@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180306005729.odhf4g5br7tfrq35@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Fabien Dessenne <fabien.dessenne@st.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jassi Brar <jassisinghbrar@gmail.com>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
-
-On 01/03/18 21:24, Mark Brown wrote:
-> On Tue, Feb 13, 2018 at 04:58:19PM +0000, srinivas.kandagatla@linaro.org wrote:
-> 
->> +static struct copp *adm_find_copp(struct q6adm *adm, int port_idx,
->> +				  int copp_idx)
->> +{
->> +	struct copp *c;
+2018-03-06 1:57 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Wed, Feb 28, 2018 at 02:24:29PM +0100, Fabien Dessenne wrote:
+>> Add a binding for the STMicroelectronics STM32 IPCC block exposing a
+>> mailbox mechanism between two processors.
+>>
+>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>  .../devicetree/bindings/mailbox/stm32-ipcc.txt     | 48 ++++++++++++++++++++++
+>>  1 file changed, 48 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+>> new file mode 100644
+>> index 0000000..2321689
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+>> @@ -0,0 +1,48 @@
+>> +* STMicroelectronics STM32 IPCC (Inter-Processor Communication Controller)
 >> +
->> +	spin_lock(&adm->copps_list_lock);
->> +	list_for_each_entry(c, &adm->copps_list, node) {
->> +		if ((port_idx == c->afe_port) && (copp_idx == c->copp_idx)) {
->> +			spin_unlock(&adm->copps_list_lock);
->> +			return c;
->> +		}
->> +	}
+>> +The IPCC block provides a non blocking signaling mechanism to post and
+>> +retrieve messages in an atomic way between two processors.
+>> +It provides the signaling for N bidirectionnal channels. The number of channels
+>> +(N) can be read from a dedicated register.
 >> +
->> +	spin_unlock(&adm->copps_list_lock);
-> 
-> We've again got this use of spinlocks here but no IRQ safety - what
-> exactly is going on with the locking?  In general all of the locking in
-> this stuff is raising very serious alarm bells with me, I don't
-> understand what is being protected against what and there's some very
-> obvious bugs.  We could probably use some documentation about what the
-> locking is supposed to be doing.
-> 
-I agree, there are locking issues here, Am revisiting them all before I 
-send a next version.
+>> +Required properties:
+>> +- compatible:   Must be "st,stm32-ipcc"
+>
+> Kind of generic. There's only 1 version of h/w across all stm32 parts?
+>
 
->> +	case ADM_CMDRSP_DEVICE_OPEN_V5: {
-> 
->> +		copp->id = open->copp_id;
->> +		wake_up(&copp->wait);
->> +	}
->> +	break;
->> +	default:
-> 
-> This indentation is confusing.
-> 
-I agree, will fix such instances in next version.
+We can check the version in one of the hardware block register.
+I guess in this case we can have this kind of generic compatible, right ?
 
-thanks,
-srini
+Benjamin
+
+>> +- reg:          Register address range (base address and length)
+>> +- st,proc_id:   Processor id using the mailbox (0 or 1)
+>
+> s/_/-/
+>
+>
+>> +- clocks:       Input clock
+>> +- interrupt-names: List of names for the interrupts described by the interrupt
+>> +                   property. Must contain the following entries:
+>> +                   - "rx"
+>> +                   - "tx"
+>> +- interrupts:   Interrupt specifiers for "rx channel occupied" and "tx channel
+>> +                free"
+>> +- #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
+>> +                The data contained in the mbox specifier of the "mboxes"
+>> +                property in the client node is the mailbox channel index.
+>> +
+>> +Optional properties:
+>> +- wakeup-source: Flag to indicate whether this device can wake up the system
+>
+>> +- interrupts:    Wakeup interrupt used to wake up the system.
+>> +- interrupt-names: "wakeup" for the wakeup interrupt.
+>
+> Make these required. "wakeup-source" alone determines if you use it.
+>
+>> +
+>> +
+>> +
+>> +Example:
+>> +     ipcc: mailbox@4c001000 {
+>> +             compatible = "st,stm32-ipcc";
+>> +             #mbox-cells = <1>;
+>> +             reg = <0x4c001000 0x400>;
+>> +             st,proc_id = <0>;
+>> +             interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
+>> +                                   <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
+>> +                                   <&aiec 62 1>;
+>> +             interrupt-names = "rx", "tx", "wakeup";
+>> +             clocks = <&rcc_clk IPCC>;
+>> +             wakeup-source;
+>> +     }
+>> +
+>> +Client:
+>> +     mbox_test {
+>> +             ...
+>> +             mboxes = <&ipcc 0>, <&ipcc 1>;
+>> +     };
+>> --
+>> 2.7.4
+>>
