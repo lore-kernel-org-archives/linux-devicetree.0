@@ -1,103 +1,52 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
- legacy DT to create LVDS encoder nodes)
-Date: Tue, 6 Mar 2018 13:30:05 +0100
-Message-ID: <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
-References: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
- <20180306035412.GU2650@umbus.fritz.box>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v3 5/8] scsi: hisi_sas: increase timer expire of internal
+ abort task
+Date: Tue, 6 Mar 2018 12:30:06 +0000
+Message-ID: <c2a60f8b-8332-df6f-6bfd-147817208dee@huawei.com>
+References: <1520261330-204596-1-git-send-email-john.garry@huawei.com>
+ <1520261330-204596-6-git-send-email-john.garry@huawei.com>
+ <3983d075-af2e-5c69-2708-51db8a6b79cb@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180306035412.GU2650@umbus.fritz.box>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3983d075-af2e-5c69-2708-51db8a6b79cb@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hannes Reinecke <hare@suse.de>, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGF2aWQsCgpPbiBUdWUsIE1hciA2LCAyMDE4IGF0IDQ6NTQgQU0sIERhdmlkIEdpYnNvbgo8
-ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1PiB3cm90ZToKPiBPbiBGcmksIEZlYiAyMywgMjAx
-OCBhdCAwOTowNToyNEFNICswMTAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+IE9uIEZy
-aSwgRmViIDIzLCAyMDE4IGF0IDM6MzggQU0sIEZyYW5rIFJvd2FuZCA8ZnJvd2FuZC5saXN0QGdt
-YWlsLmNvbT4gd3JvdGU6Cj4+ID4gSSB3YXMgaG9waW5nIHRvIGJlIGFibGUgdG8gY29udmVydCB0
-aGUgLmR0cyBmaWxlcyB0byB1c2Ugc3VnYXIgc3ludGF4Cj4+ID4gaW5zdGVhZCBvZiBoYW5kIGNv
-ZGluZyB0aGUgZnJhZ21lbnQgbm9kZXMsIGJ1dCBmb3IgdGhpcyBzcGVjaWZpYyBzZXQKPj4gPiBv
-ZiBmaWxlcyBJIGZhaWxlZCwgc2luY2UgdGhlIGxhYmVscyB0aGF0IHdvdWxkIGhhdmUgYmVlbiBy
-ZXF1aXJlZCBkbwo+PiA+IG5vdCBhbHJlYWR5IGV4aXN0IGluIHRoZSBiYXNlIC5kdHMgZmlsZXMg
-dGhhdCB0aGF0IG92ZXJsYXlzIHdvdWxkIGJlCj4+ID4gYXBwbGllZCBhZ2FpbnN0Lgo+Pgo+PiBJ
-bmRlZWQsIGhlbmNlIHRoZSBmaXh1cCBvdmVybGF5cyB1c2UgInRhcmdldC1wYXRoIi4KPj4KPj4g
-QlRXLCBpcyB0aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoZXJlIGlzIG5vIHN1Z2FyIHN5bnRh
-eCBzdXBwb3J0IGluIGR0Ywo+PiBmb3IgYWJzb2x1dGUgdGFyZ2V0IHBhdGhzPyBJIGd1ZXNzIHRv
-IHByZXZlbnQgYWRkaW5nIHN0dWZmIHRvIGEgcmFuZG9tCj4+IGV4aXN0aW5nIG5vZGUsIGFuZCB0
-byBlbmNvdXJhZ2UgcGVvcGxlIHRvIHVzZSBhICJjb25uZWN0b3IiIEFQSSBkZWZpbmVkIGluCj4+
-IHRlcm0gb2YgbGFiZWxzPwo+Cj4gT25seSBiZWNhdXNlIGl0IGhhc24ndCBiZWVuIGltcGxlbWVu
-dGVkLiAgVXNpbmcgJnsvd2hhdGV2ZXJ9IHNob3VsZAo+IElNTyBnZW5lcmF0ZSBhIHRhcmdldC1w
-YXRoIGFuZCB0aGUgZmFjdCBpdCBkb2Vzbid0IGlzIGEgYnVnLgo+Cj4+IEknbSBhbHNvIGluIHRo
-ZSBwcm9jZXNzIG9mIGNvbnZlcnRpbmcgbXkgY29sbGVjdGlvbiBvZiBEVCBvdmVybGF5cyB0byBz
-dWdhcgo+PiBzeW50YXgsIGFuZCBsYWNrIG9mIHN1cHBvcnQgZm9yICJ0YXJnZXQtcGF0aCIgaXMg
-dGhlIHNvbGUgdGhpbmcgdGhhdCBob2xkcwo+PiBtZSBiYWNrIGZyb20gY29tcGxldGluZyB0aGlz
-LiBTbyBmb3Igbm93IEkgdXNlIGEgbWl4IG9mIHN1Z2FyIGFuZAo+PiB0cmFkaXRpb25hbCBvdmVy
-bGF5IHN5bnRheC4KPj4KPj4gSW4gcGFydGljdWxhciwgSSBuZWVkICJ0YXJnZXQtcGF0aCIgZm9y
-IHR3byB0aGluZ3M6Cj4+ICAgMS4gVG8gcmVmZXIgdG8gdGhlIHJvb3Qgbm9kZSwgZm9yIGFkZGlu
-ZyBkZXZpY2VzIHRoYXQgc2hvdWxkIGxpdmUgYXQKPj4gICAgICAoYSBib2FyZCBzdWJub2RlIG9m
-KSB0aGUgcm9vdCBub2RlLCBsaWtlOgo+PiAgICAgICAgLSBkZXZpY2VzIGNvbm5lY3RlZCB0byBH
-UElPIGNvbnRyb2xsZXJzIHByb3ZpZGVkIGJ5IG90aGVyIGJhc2Ugb3IKPj4gICAgICAgICAgb3Zl
-cmxheSBkZXZpY2VzIChlLmcuIExFRHMsIGRpc3BsYXlzLCBidXR0b25zLCAuLi4pLAo+PiAgICAg
-ICAgLSBjbG9jayBwcm92aWRlcnMgZm9yIG90aGVyIG92ZXJsYXlzIGRldmljZXMgKGUuZy4gZml4
-ZWQtY2xvY2spLgoKPj4gVGhlIGZvcm1lciBpcyB0aGUgcmVhbCBibG9ja2VyIGZvciBtZS4KCj4g
-QmVsb3cgaXMgZHJhZnQgcGF0Y2ggYWRkaW5nIHRhcmdldC1wYXRoIHN1cHBvcnQuICBUaGUgcHJl
-dHR5IG1pbmltYWwKPiB0ZXN0IGV4YW1wbGVzIGRvIGluY2x1ZGUgYSBjYXNlIHVzaW5nICZ7L30K
-Pgo+IEZyb20gOGYxYjM1Zjg4Mzk1YWRlYTAxY2UxMTAwYzVmYWEyN2RhY2JjODQxMCBNb24gU2Vw
-IDE3IDAwOjAwOjAwIDIwMDEKPiBGcm9tOiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9w
-YmVhci5pZC5hdT4KPiBEYXRlOiBUdWUsIDYgTWFyIDIwMTggMTM6Mjc6NTMgKzExMDAKPiBTdWJq
-ZWN0OiBbUEFUQ0hdIENvcnJlY3Qgb3ZlcmxheSBzeW50YWN0aWMgc3VnYXIgZm9yIGdlbmVyYXRp
-bmcgdGFyZ2V0LXBhdGgKPiAgZnJhZ21lbnRzCj4KPiBXZSd2ZSByZWNlbnRseSBhZGRlZCAic3lu
-dGFjdGljIHN1Z2FyIiBzdXBwb3J0IHRvIGdlbmVyYXRlIHJ1bnRpbWUgZHRiCj4gb3ZlcmxheXMg
-dXNpbmcgc2ltaWxhciBzeW50YXggdG8gdGhlIGNvbXBpbGUgdGltZSBvdmVybGF5cyB3ZSd2ZSBo
-YWQgZm9yCj4gYSB3aGlsZS4gIFRoaXMgd29ya2VkIHdpdGggdGhlICZsYWJlbCB7IC4uLiB9IHN5
-bnRheCwgYWRqdXN0aW5nIGFuIGV4aXN0aW5nCj4gbGFiZWxsZWQgbm9kZSwgYnV0IHdvdWxkIGZh
-aWwgd2l0aCB0aGUgJnsvcGF0aH0geyAuLi4gfSBzeW50YXggYXR0ZW1wdGluZwo+IHRvIGFkanVz
-dCBhbiBleGlzdGluZyBub2RlIHJlZmVyZW5jZWQgYnkgaXRzIHBhdGguCj4KPiBUaGUgcHJldmlv
-dXMgY29kZSB3b3VsZCBhbHdheXMgdHJ5IHRvIHVzZSB0aGUgInRhcmdldCIgcHJvcGVydHkgaW4g
-dGhlCj4gb3V0cHV0IG92ZXJsYXksIHdoaWNoIG5lZWRzIHRvIGJlIGZpeGVkIHVwLCBhbmQgX19m
-aXh1cHNfXyBjYW4gb25seSBlbmNvZGUKPiBzeW1ib2xzLCBub3QgcGF0aHMsIHNvIHRoZSByZXN1
-bHQgY291bGQgbmV2ZXIgd29yayBwcm9wZXJseS4KPgo+IFRoaXMgYWRkcyBzdXBwb3J0IGZvciB0
-aGUgJnsvcGF0aH0gc3ludGF4IGZvciBvdmVybGF5cywgdHJhbnNsYXRpbmcgaXQgaW50bwo+IHRo
-ZSAidGFyZ2V0LXBhdGgiIGVuY29kaW5nIGluIHRoZSBvdXRwdXQuICBJdCBhbHNvIGNoYW5nZXMg
-ZXhpc3RpbmcKPiBiZWhhdmlvdXIgYSBsaXR0bGUgYmVjYXVzZSB3ZSBub3cgdW5jb25kaXRpb25h
-bGx5IG9uZSBmcmFnbWVudCBmb3IgZWFjaAo+IG92ZXJsYXkgc2VjdGlvbiBpbiB0aGUgc291cmNl
-LiAgUHJldmlvdXNseSB3ZSB3b3VsZCBvbmx5IGNyZWF0ZSBhIGZyYWdtZW50Cj4gaWYgd2UgY291
-bGRuJ3QgbG9jYWxseSByZXNvbHZlIHRoZSBub2RlIHJlZmVyZW5jZWQuICBXZSBuZWVkIHRoaXMg
-Zm9yCj4gcGF0aCByZWZlcmVuY2VzLCBiZWNhdXNlIHRoZSBwYXRoIGlzIHN1cHBvc2VkIHRvIGJl
-IHJlZmVyZW5jaW5nIHNvbWV0aGluZwo+IGluIHRoZSAobm90IHlldCBrbm93bikgYmFzZSB0cmVl
-LCByYXRoZXIgdGhhbiB0aGUgb3ZlcmxheSB0cmVlIHdlIGFyZQo+IHdvcmtpbmcgd2l0aCBub3cu
-ICBJbiBwYXJ0aWN1bGFyIG9uZSB1c2VmdWwgY2FzZSBmb3IgcGF0aCBiYXNlZCBvdmVybGF5cwo+
-IGlzIHVzaW5nICZ7L30gLSBidXQgdGhlIGNvbnN0cnVjdGVkIG92ZXJsYXkgdHJlZSB3aWxsIGFs
-d2F5cyBoYXZlIGEgcm9vdAo+IG5vZGUsIG1lYW5pbmcgdGhhdCB3aXRob3V0IHRoZSBjaGFuZ2Ug
-dGhhdCB3b3VsZCBhdHRlbXB0IHRvIHJlc29sdmUgdGhlCj4gZnJhZ21lbnQgbG9jYWxseSwgd2hp
-Y2ggaXMgbm90IHdoYXQgd2Ugd2FudC4KPgo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIEdpYnNvbiA8
-ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1PgoKVGhhbmsgeW91LCBzZWVtcyB0byB3b3JrIGZp
-bmUgb24gZHRjLmdpdC4KCk5vdGUgdGhhdCB3aGlsZSB0aGUgZHRjIHBhcnQgYXBwbGllcyBvbiB0
-aGUgaW4ta2VybmVsIGNvcHkgb2YgZHRjLCBpdApkb2Vzbid0IHdvcmsgdGhlcmU6ICImey99IiBi
-ZWhhdmVzIHRoZSBzYW1lIGFzICIvIiAoaS5lLiBubyBvdmVybGF5CmZyYWdtZW50IGlzIGdlbmVy
-YXRlZCksIGJ1dCAiJnsvZm9vfSIgZG9lcyBjcmVhdGUgdGhlIG92ZXJsYXkgZnJhZ21lbnQuCk1l
-cmdpbmcgaW4gUm9iJ3MgZm9yLW5leHQgYnJhbmNoIHRvIHVwZ3JhZGUgTGludXgnIGNvcHkgb2Yg
-ZHRjIGZpeGVzIHRoYXQuCgpUaGFua3MgYSBsb3QhCkNvbnZlcnRpbmcgbXkgcmVtYWluaW5nIG92
-ZXJsYXkgZnJhZ21lbnRzIHRvIHN1Z2FyIHN5bnRheC4uLgoKR3J7b2V0amUsZWV0aW5nfXMsCgog
-ICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRo
-ZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoK
-SW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBt
-eXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVz
-dCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 06/03/2018 11:23, Hannes Reinecke wrote:
+> On 03/05/2018 03:48 PM, John Garry wrote:
+>> From: Xiaofei Tan <tanxiaofei@huawei.com>
+>>
+>> The current 110ms expiry time is not long enough for the internal
+>> abort task.
+>>
+>> The reason is that the internal abort task could be blocked in HW
+>> if the HW is retrying to set up link. The internal abort task will
+>> be executed only when the retry process finished.
+>>
+> Hmm. That sounds weird.
+> I would have expected that a link retrain will force a device reset,
+> after which no tasks should be active on the target.
+> Consequently the succeeding abort task will be a no-op.
+> Care to clarify?
+>
+
+Hi Hannes,
+
+It sounds like you're talking about TMF task abort, right? This patch is 
+related to controller internal abort function.
+
+Our HW supports internal abort, where any pending queued commands in the 
+controller can be aborted, so they will not be executed. When a disk is 
+removed or a nexus reset are times when we issue such a command.
+
+Thanks very much,
+John
+
+> Cheers,
+>
+> Hannes
+>
