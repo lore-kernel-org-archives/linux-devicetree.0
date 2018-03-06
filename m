@@ -1,125 +1,81 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 2/7] dt-bindings: display: Add Allwinner MIPI-DSI bindings
-Date: Tue,  6 Mar 2018 14:55:59 +0100
-Message-ID: <5f183ae295c0190369ec576ecfb10c1d78f41eb3.1520344489.git-series.maxime.ripard@bootlin.com>
-References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-In-Reply-To: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 0/7] drm/sun4i: Allwinner MIPI-DSI support
+Date: Tue,  6 Mar 2018 14:55:57 +0100
+Message-ID: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, Gustavo Padovan <gustavo@padovan.org>, Daniel Vetter <daniel.vetter@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-The Allwinner SoCs usually come with a DSI encoder. Add a binding for it.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 93 +++++++-
- 1 file changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-new file mode 100644
-index 000000000000..6a6cf5de08b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -0,0 +1,93 @@
-+Allwinner A31 DSI Encoder
-+=========================
-+
-+The DSI pipeline consists of two separate blocks: the DSI controller
-+itself, and its associated D-PHY.
-+
-+DSI Encoder
-+-----------
-+
-+The DSI Encoder generates the DSI signal from the TCON's.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun6i-a31-mipi-dsi
-+  - reg: base address and size of memory-mapped region
-+  - interrupts: interrupt associated to this IP
-+  - clocks: phandles to the clocks feeding the DSI encoder
-+    * bus: the DSI interface clock
-+    * mod: the DSI module clock
-+  - clock-names: the clock names mentioned above
-+  - phys: phandle to the D-PHY
-+  - phy-names: must be "dphy"
-+  - resets: phandle to the reset controller driving the encoder
-+
-+  - ports: A ports node with endpoint definitions as defined in
-+    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+    first port should be the input endpoint, usually coming from the
-+    associated TCON.
-+
-+Any MIPI-DSI device attached to this should be described according to
-+the bindings defined in ../mipi-dsi-bus.txt
-+
-+D-PHY
-+-----
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun6i-a31-mipi-dphy
-+  - reg: base address and size of memory-mapped region
-+  - clocks: phandles to the clocks feeding the DSI encoder
-+    * bus: the DSI interface clock
-+    * mod: the DSI module clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandle to the reset controller driving the encoder
-+
-+Example:
-+
-+dsi0: dsi@1ca0000 {
-+	compatible = "allwinner,sun6i-a31-mipi-dsi";
-+	reg = <0x01ca0000 0x1000>;
-+	interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+		 <&ccu CLK_DSI_SCLK>;
-+	clock-names = "bus", "mod";
-+	resets = <&ccu RST_BUS_MIPI_DSI>;
-+	phys = <&dphy0>;
-+	phy-names = "dphy";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	panel@0 {
-+		compatible = "bananapi,lhr050h41", "ilitek,ili9881c";
-+		reg = <0>;
-+		power-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB07 */
-+		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL05 */
-+		backlight = <&pwm_bl>;
-+	};
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			dsi0_in_tcon0: endpoint {
-+				remote-endpoint = <&tcon0_out_dsi0>;
-+			};
-+		};
-+	};
-+};
-+
-+dphy0: d-phy@1ca1000 {
-+	compatible = "allwinner,sun6i-a31-mipi-dphy";
-+	reg = <0x01ca1000 0x1000>;
-+	clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+		 <&ccu CLK_DSI_DPHY>;
-+	clock-names = "bus", "mod";
-+	resets = <&ccu RST_BUS_MIPI_DSI>;
-+	#phy-cells = <0>;
-+};
--- 
-git-series 0.9.1
+SGksCgpIZXJlIGlzIGFuIHByZWxpbWluYXJ5IHZlcnNpb24gb2YgdGhlIE1JUEktRFNJIHN1cHBv
+cnQgZm9yIHRoZSBBbGx3aW5uZXIKU29Dcy4KClRoaXMgY29udHJvbGxlciBjYW4gYmUgZm91bmQg
+b24gYSBudW1iZXIgb2YgcmVjZW50IFNvQ3MsIHN1Y2ggYXMgdGhlCkEzMSwgQTMzIG9yIHRoZSBB
+NjQuCgpHaXZlbiB0aGUgc3BhcnNlIGRvY3VtZW50YXRpb24sIHRoZXJlJ3MgYSBudW1iZXIgb2Yg
+b2JzY3VyZSBhcmVhcywgYnV0CnRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIGhhcyBiZWVuIHRl
+c3RlZCB3aXRoIGEgNC1sYW5lcyBEU0kgcGFuZWwgb24KYW4gQTMzLgoKVGhlIHN1cHBvcnQgaXMg
+YSBiaXQgcm91Z2ggYXJvdW5kIHRoZSBlZGdlcyBhdCB0aGUgdGltZSwgYW5kIHNvbWUgYXJ0aWZh
+Y3RzCmFyZSBzdGlsbCBzaG93biBvbiB0aGUgc2NyZWVuIGZvciBzb21lIHJlYXNvbnMuIFdpZGVy
+IHRlc3Rpbmcgd2l0aApkaWZmZXJlbnQgZGlzcGxheSB3aWxsIGhvcGVmdWxseSBuYWlsIHRob3Nl
+IGRvd24uCgpMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluaywKTWF4aW1lCgpDaGFuZ2VzIGZyb20g
+djI6CiAgLSBBZGRlZCBhIHBvcnRzIG5vZGUgdW5kZXIgdGhlIERTSSBub2RlCiAgLSBDaGFuZ2Vk
+IHRoZSBodWFydWkgcGFuZWwgZHJpdmVyIHRvIGFuIGlsaTk4ODFjIGRyaXZlcgogIC0gQ2hhbmdl
+ZCB0aGUgcGFuZWwgdmVuZG9yIHRvIGJhbmFuYXBpCiAgLSBNYWRlIHRoZSBpbml0IHRhYmxlIHN0
+YXRpYyBpbiB0aGUgcGFuZWwgZHJpdmVyCiAgLSBEcm9wcGVkIHRoZSBodWFydWkgdmVuZG9yIHBh
+dGNoIGZvciB0aGUgRFQgZG9jLgoKQ2hhbmdlcyBmcm9tIHYxOgogIC0gUmViYXNlZCBvbiA0LjE2
+LXJjMQogIC0gQ29uc3RpZmllZCBhIGZldyBmdW5jdGlvbiBhcmd1bWVudHMgYW5kIHN0cnVjdHVy
+ZXMKICAtIFJld29ya2VkIHRoZSBEVCBiaW5kaW5nIGV4YW1wbGUgYSBiaXQKICAtIFJld29ya2Vk
+IHRoZSBwYW5lbCBkcml2ZXIgdG8gY2hlY2sgZm9yIERTSSByZXR1cm4gY29kZXMsIGFuZCB1c2Ug
+RENTCiAgICBoZWxwZXJzIHdoZW4gcG9zc2libGUKCk1heGltZSBSaXBhcmQgKDcpOgogIGRybS9z
+dW40aTogdGNvbjogQWRkIFRSSSBmaW5pc2ggaW50ZXJydXB0IGZvciB2YmxhbmsKICBkdC1iaW5k
+aW5nczogZGlzcGxheTogQWRkIEFsbHdpbm5lciBNSVBJLURTSSBiaW5kaW5ncwogIGRybS9zdW40
+aTogQWRkIEFsbHdpbm5lciBBMzEgTUlQSS1EU0kgY29udHJvbGxlciBzdXBwb3J0CiAgZHQtYmlu
+ZGluZ3M6IHBhbmVsOiBBZGQgdGhlIElsaXRlayBJTEk5ODgxYyBwYW5lbCBkb2N1bWVudGF0aW9u
+CiAgZHJtL3BhbmVsOiBBZGQgSWxpdGVrIElMSTk4ODFjIHBhbmVsIGRyaXZlcgogIGFybTogZHRz
+OiBzdW44aTogYTMzOiBBZGQgdGhlIERTSS1yZWxhdGVkIG5vZGVzCiAgW0RPIE5PVCBNRVJHRV0g
+YXJtOiBkdHM6IHN1bjhpOiBicGktbTJtOiBBZGQgRFNJIGRpc3BsYXkKCiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbGl0ZWssaWxpOTg4MWMudHh0IHwg
+ICAyMCArLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkv
+c3VuNmktZHNpLnR4dCAgICAgICB8ICAgOTMgKysrKysrLQogYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
+OGktYTMzLmR0c2kgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNDQgKysr
+LQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcjE2LWJhbmFuYXBpLW0ybS5kdHMgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMzkgKysrLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDkgKy0KIGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAxICstCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtaWxpdGVrLWlsaTk4ODFj
+LmMgICAgICAgICAgICAgICAgICAgICAgIHwgIDUwNiArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICAxMCArLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDQgKy0KIGRy
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgMTExICsrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29u
+LmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDQ2ICsrKy0KIGRyaXZlcnMv
+Z3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RwaHkuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMjk3ICsrKysrKysrKysrKysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NmlfbWlwaV9kc2kuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTExMSArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuaCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICA2NyArKysrLQogMTQgZmlsZXMgY2hhbmdlZCwgMjM1
+NSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lsaXRlayxpbGk5ODgx
+Yy50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9zdW54aS9zdW42aS1kc2kudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLWlsaXRlay1pbGk5ODgxYy5jCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHBoeS5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuaAoKYmFzZS1jb21t
+aXQ6IDM3NzQ2YjkzNWZiMmI3NWNkM2FhMDE0ZTA4Zjk1OWUwMzIxYmRlNTkKLS0gCmdpdC1zZXJp
+ZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
