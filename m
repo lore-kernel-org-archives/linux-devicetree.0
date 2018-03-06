@@ -1,35 +1,37 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3 2/4] rtc: isl1208: switch to rtc_register_device
-Date: Tue, 6 Mar 2018 21:20:36 +0100
-Message-ID: <20180306202036.GH3035@piout.net>
-References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
- <1520246373-19023-3-git-send-email-Denis.Osterland@diehl.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 6/8] [PATCH 6/8] Documentation: hwmon: Add a document
+ for PECI hwmon client driver
+Date: Tue, 6 Mar 2018 12:28:15 -0800
+Message-ID: <0e3750a0-d45b-368d-f5cb-d2cca6797ecb@infradead.org>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-7-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520246373-19023-3-git-send-email-Denis.Osterland@diehl.com>
+In-Reply-To: <20180221161606.32247-7-jae.hyun.yoo@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2018 at 10:43:53 +0000, Denis OSTERLAND wrote:
-> From: Denis Osterland <Denis.Osterland@diehl.com>
+Hi,
+
+On 02/21/2018 08:16 AM, Jae Hyun Yoo wrote:
+
+> +temp<n>_label		Provides DDR DIMM temperature if this label indicates
+> +			'DIMM #'.
+> +temp<n>_input		Provides current temperature of the DDR DIMM.
+> +
+> +Note:
+> +	DIMM temperature group will be appeared when the client CPU's BIOS
+
+	                       will appear when
+
+> +	completes memory training and testing.
 > 
-> Fix possible race condition.
-> It is not allowed to return with an error code after RTC is registered.
-> 
-> Suggested-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
-> Reviewed-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> ---
->  drivers/rtc/rtc-isl1208.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-Applied, thanks.
+
 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+~Randy
