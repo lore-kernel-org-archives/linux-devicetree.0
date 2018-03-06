@@ -1,50 +1,178 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: usb: ehci: add optional external vbus
- supply property
-Date: Tue, 6 Mar 2018 14:09:17 +0000
-Message-ID: <ae4c741e-d5aa-4a8c-4029-1dff6bef2cdd@arm.com>
-References: <1519897899-8577-1-git-send-email-amelie.delaunay@st.com>
- <1519897899-8577-2-git-send-email-amelie.delaunay@st.com>
- <20180306015743.uazy4e5quil2ijy2@rob-hp-laptop>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] input: Add RAVE SP Powerbutton driver
+Date: Tue, 06 Mar 2018 15:12:08 +0100
+Message-ID: <1520345528.4095.18.camel@pengutronix.de>
+References: <20180301165527.22274-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180306015743.uazy4e5quil2ijy2@rob-hp-laptop>
-Content-Language: en-GB
+In-Reply-To: <20180301165527.22274-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Roger Quadros <rogerq@ti.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/18 01:57, Rob Herring wrote:
-> On Thu, Mar 01, 2018 at 10:51:38AM +0100, Amelie Delaunay wrote:
->> On some boards, especially when vbus supply requires large current,
->> and the charge pump on the PHY isn't enough, an external vbus power switch
->> per port may be used.
->> Add portN_vbus-supply property to usb-ehci bindings. As the number of ports
->> depends on the ehci controller, and the port on which an external vbus
->> supply depends on the platform, <portN> is used to make it generic.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>   Documentation/devicetree/bindings/usb/usb-ehci.txt | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> index 3efde12..cd576db 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> @@ -19,6 +19,7 @@ Optional properties:
->>    - phys : phandle + phy specifier pair
->>    - phy-names : "usb"
->>    - resets : phandle + reset specifier pair
->> + - portN_vbus-supply : phandle of regulator supplying vbus for port N
+Am Donnerstag, den 01.03.2018, 08:55 -0800 schrieb Andrey Smirnov:
+> Add driver that properly handles input event emitted by RAVE SP
+> devices.
 > 
-> Just make this an array with the index being the port (and drop
-> "portN_").
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Does that still work if there is an external supply for port 1 but none 
-for port 0? I believe that was brought up as a possibility before.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-Robin.
+> ---
+> 
+> Changes since [v1]:
+> 
+> 	- Removed redundant dev.parent assignment
+> 
+> 	- Various cosmetic changes
+> 
+> [v1] lkml.kernel.org/r/20180226154130.25774-1-andrew.smirnov@gmail.com
+> 
+>  drivers/input/misc/Kconfig             |  9 ++++
+>  drivers/input/misc/Makefile            |  1 +
+>  drivers/input/misc/rave-sp-pwrbutton.c | 94 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 104 insertions(+)
+>  create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 62a1312a7387..6a3c753b093b 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called hisi_powerkey.
+>  
+> +config INPUT_RAVE_SP_PWRBUTTON
+> > +	tristate "RAVE SP Power button Driver"
+> > +	depends on RAVE_SP_CORE
+> > +	help
+> > +	  Say Y here if you want to enable power key reporting from RAVE SP
+> +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called rave-sp-pwrbutton.
+> +
+>  endif
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index a8f61af865aa..8cc58f362bb8 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> > @@ -60,6 +60,7 @@ obj-$(CONFIG_INPUT_PMIC8XXX_PWRKEY)	+= pmic8xxx-pwrkey.o
+> >  obj-$(CONFIG_INPUT_POWERMATE)		+= powermate.o
+> >  obj-$(CONFIG_INPUT_PWM_BEEPER)		+= pwm-beeper.o
+> >  obj-$(CONFIG_INPUT_PWM_VIBRA)		+= pwm-vibra.o
+> > +obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)	+= rave-sp-pwrbutton.o
+> >  obj-$(CONFIG_INPUT_RB532_BUTTON)	+= rb532_button.o
+> >  obj-$(CONFIG_INPUT_REGULATOR_HAPTIC)	+= regulator-haptic.o
+> >  obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
+> diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
+> new file mode 100644
+> index 000000000000..bcab3cdb7ebd
+> --- /dev/null
+> +++ b/drivers/input/misc/rave-sp-pwrbutton.c
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// Power Button driver for RAVE SP
+> +//
+> +// Copyright (C) 2017 Zodiac Inflight Innovations
+> +//
+> +//
+> +
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/rave-sp.h>
+> +#include <linux/platform_device.h>
+> +
+> > +#define RAVE_SP_EVNT_BUTTON_PRESS	(RAVE_SP_EVNT_BASE + 0x00)
+> +
+> +struct rave_sp_power_button {
+> > +	struct input_dev *idev;
+> > +	struct notifier_block nb;
+> +};
+> +
+> +static int rave_sp_power_button_event(struct notifier_block *nb,
+> > +				      unsigned long action, void *data)
+> +{
+> > +	struct rave_sp_power_button *pb =
+> > +		container_of(nb, struct rave_sp_power_button, nb);
+> > +	const u8 event = rave_sp_action_unpack_event(action);
+> > +	const u8 value = rave_sp_action_unpack_value(action);
+> > +	struct input_dev *idev = pb->idev;
+> +
+> > +	if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
+> > +		input_report_key(idev, KEY_POWER, value);
+> > +		input_sync(idev);
+> +
+> > +		return NOTIFY_STOP;
+> > +	}
+> +
+> > +	return NOTIFY_DONE;
+> +}
+> +
+> +static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
+> +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct rave_sp_power_button *pb;
+> > +	struct input_dev *idev;
+> > +	int error;
+> +
+> > +	pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
+> > +	if (!pb)
+> > +		return -ENOMEM;
+> +
+> > +	idev = devm_input_allocate_device(dev);
+> > +	if (!idev)
+> > +		return -ENOMEM;
+> +
+> > +	idev->name = pdev->name;
+> +
+> > +	input_set_capability(idev, EV_KEY, KEY_POWER);
+> +
+> > +	error = input_register_device(idev);
+> > +	if (error)
+> > +		return error;
+> +
+> > +	pb->idev = idev;
+> > +	pb->nb.notifier_call = rave_sp_power_button_event;
+> > +	pb->nb.priority = 128;
+> +
+> > +	error = devm_rave_sp_register_event_notifier(dev, &pb->nb);
+> > +	if (error)
+> > +		return error;
+> +
+> > +	return 0;
+> +}
+> +
+> +static const struct of_device_id rave_sp_pwrbutton_of_match[] = {
+> > +	{ .compatible = "zii,rave-sp-pwrbutton" },
+> > +	{}
+> +};
+> +
+> +static struct platform_driver rave_sp_pwrbutton_driver = {
+> > +	.probe = rave_sp_pwrbutton_probe,
+> > > +	.driver	= {
+> > +		.name = KBUILD_MODNAME,
+> > +		.of_match_table = rave_sp_pwrbutton_of_match,
+> > +	},
+> +};
+> +module_platform_driver(rave_sp_pwrbutton_driver);
+> +
+> +MODULE_DEVICE_TABLE(of, rave_sp_pwrbutton_of_match);
+> +MODULE_LICENSE("GPL");
+> > +MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
+> > +MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
+> > +MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
+> +MODULE_DESCRIPTION("RAVE SP Power Button driver");
