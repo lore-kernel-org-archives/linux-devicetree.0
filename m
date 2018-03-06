@@ -1,65 +1,131 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 07/37] iommu: Add a page fault handler
-Date: Tue, 6 Mar 2018 10:24:29 +0000
-Message-ID: <4d3d9bbf-a1a7-82ff-9b8d-5634121d83ad@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-8-jean-philippe.brucker@arm.com>
-	<b2a3d2a7-7042-aef3-0def-05e64e39d046@codeaurora.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/5] staging: vc04_services: Remove cache-line-size
+ property.
+Date: Tue, 6 Mar 2018 11:30:27 +0100
+Message-ID: <a8f369f5-691c-c05f-4c7c-2eadcf4c48c8@i2se.com>
+References: <20180305202806.21219-1-eric@anholt.net>
+ <20180305202806.21219-3-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <b2a3d2a7-7042-aef3-0def-05e64e39d046-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180305202806.21219-3-eric@anholt.net>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/18 21:44, Sinan Kaya wrote:
-> On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
->> +static int iommu_queue_fault(struct iommu_domain *domain, struct device *dev,
->> +			     struct iommu_fault_event *evt)
->> +{
->> +	struct iommu_fault_group *group;
->> +	struct iommu_fault_context *fault, *next;
->> +
->> +	if (!iommu_fault_queue)
->> +		return -ENOSYS;
->> +
->> +	if (!evt->last_req) {
->> +		fault = kzalloc(sizeof(*fault), GFP_KERNEL);
->> +		if (!fault)
->> +			return -ENOMEM;
->> +
->> +		fault->evt = *evt;
->> +		fault->dev = dev;
->> +
->> +		/* Non-last request of a group. Postpone until the last one */
->> +		spin_lock(&iommu_partial_faults_lock);
->> +		list_add_tail(&fault->head, &iommu_partial_faults);
->> +		spin_unlock(&iommu_partial_faults_lock);
->> +
->> +		return IOMMU_PAGE_RESP_HANDLED;
->> +	}
->> +
->> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
->> +	if (!group)
->> +		return -ENOMEM;
-> 
-> Release the requests in iommu_partial_faults here.
+Hi Eric,
 
-We move these requests to the group->faults list (which btw should use
-list_move instead of the current list_del+list_add) and we release them in
-iommu_fault_handle_group()
 
-Thanks,
-Jean
+Am 05.03.2018 um 21:28 schrieb Eric Anholt:
+> This was just a way for the DT-passed value to get out of sync with
+> what Linux has configured the ARM for.
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>   .../interface/vchiq_arm/vchiq_2835_arm.c           | 25 +++++++---------------
+>   .../interface/vchiq_arm/vchiq_pagelist.h           |  1 -
+>   2 files changed, 8 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> index b59ef14890aa..e0e01c812036 100644
+> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> @@ -77,7 +77,6 @@ struct vchiq_pagelist_info {
+>   };
+>   
+>   static void __iomem *g_regs;
+> -static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
+>   static unsigned int g_fragments_size;
+>   static char *g_fragments_base;
+>   static char *g_free_fragments;
+> @@ -117,15 +116,7 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+>   	if (err < 0)
+>   		return err;
+>   
+> -	err = of_property_read_u32(dev->of_node, "cache-line-size",
+> -				   &g_cache_line_size);
+> -
+> -	if (err) {
+> -		dev_err(dev, "Missing cache-line-size property\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	g_fragments_size = 2 * g_cache_line_size;
+> +	g_fragments_size = 2 * cache_line_size();
+>   
+>   	/* Allocate space for the channels in coherent memory */
+>   	slot_mem_size = PAGE_ALIGN(TOTAL_SLOTS * VCHIQ_SLOT_SIZE);
+> @@ -548,9 +539,9 @@ create_pagelist(char __user *buf, size_t count, unsigned short type)
+>   
+>   	/* Partial cache lines (fragments) require special measures */
+>   	if ((type == PAGELIST_READ) &&
+> -		((pagelist->offset & (g_cache_line_size - 1)) ||
+> +		((pagelist->offset & (cache_line_size() - 1)) ||
+>   		((pagelist->offset + pagelist->length) &
+> -		(g_cache_line_size - 1)))) {
+> +		 (cache_line_size() - 1)))) {
+>   		char *fragments;
+>   
+>   		if (down_interruptible(&g_free_fragments_sema) != 0) {
+> @@ -598,10 +589,10 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
+>   			g_fragments_size;
+>   		int head_bytes, tail_bytes;
+>   
+> -		head_bytes = (g_cache_line_size - pagelist->offset) &
+> -			(g_cache_line_size - 1);
+> +		head_bytes = (cache_line_size() - pagelist->offset) &
+> +			(cache_line_size() - 1);
+>   		tail_bytes = (pagelist->offset + actual) &
+> -			(g_cache_line_size - 1);
+> +			(cache_line_size() - 1);
+
+should it be so easy? Back in 2016 we said that cache_line_size() won't 
+work. I always thought that we need the cache line size of L2 not of the 
+L1 one.
+
+Did you already test the behavior for these combinations?
+BCM2835 ARM32, expected cache line size = 32
+BCM2836 ARM32, expected cache line size = 64
+BCM2837 ARM32, expected cache line size = 64
+BCM2837 ARM64, expected cache line size = 64
+
+Regards
+Stefan
+
+>   
+>   		if ((actual >= 0) && (head_bytes != 0)) {
+>   			if (head_bytes > actual)
+> @@ -617,8 +608,8 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
+>   			(tail_bytes != 0)) {
+>   			memcpy((char *)kmap(pages[num_pages - 1]) +
+>   				((pagelist->offset + actual) &
+> -				(PAGE_SIZE - 1) & ~(g_cache_line_size - 1)),
+> -				fragments + g_cache_line_size,
+> +				(PAGE_SIZE - 1) & ~(cache_line_size() - 1)),
+> +				fragments + cache_line_size(),
+>   				tail_bytes);
+>   			kunmap(pages[num_pages - 1]);
+>   		}
+> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+> index a6c5f7cc78f0..bec411061554 100644
+> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+> @@ -34,7 +34,6 @@
+>   #ifndef VCHIQ_PAGELIST_H
+>   #define VCHIQ_PAGELIST_H
+>   
+> -#define CACHE_LINE_SIZE 32
+>   #define PAGELIST_WRITE 0
+>   #define PAGELIST_READ 1
+>   #define PAGELIST_READ_WITH_FRAGMENTS 2
