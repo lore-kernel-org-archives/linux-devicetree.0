@@ -1,82 +1,68 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Tue, 6 Mar 2018 08:57:40 -0700
-Message-ID: <20180306155740.GB4930@codeaurora.org>
-References: <20180226175802.20052-1-ilina@codeaurora.org>
- <20180226175802.20052-3-ilina@codeaurora.org>
- <152029567344.218381.8756848686590091138@swboyd.mtv.corp.google.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v16 0/9] LPC: legacy ISA I/O support
+Date: Tue, 6 Mar 2018 16:22:36 +0000
+Message-ID: <3ef757ff-8430-017f-59d3-ff67f49f5a80@huawei.com>
+References: <1520333268-82754-1-git-send-email-john.garry@huawei.com>
+ <1520335317.10722.416.camel@linux.intel.com>
+ <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
+ <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152029567344.218381.8756848686590091138@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05 2018 at 17:21 -0700, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-02-26 09:58:02)
->> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
->> new file mode 100644
->> index 000000000000..5737ed2ac6e8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
->> @@ -0,0 +1,38 @@
->> +Command DB
->> +---------
->> +
->> +Command DB is a database that provides a mapping between resource key and the
+>>>>
+>>>> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
+>>>> peripherals can
+>>>> be supported without any changes on the existing ipmi-si driver.
+>>>>
+>>>> The whole patchset has been tested on Hip07 D05 board both using DTB
+>>>> and ACPI.
+>>>>
+>>>
+>>>> V15 thread here: https://lkml.org/lkml/2018/2/26/584
+>>>
+>>>
+>>> Thanks for an update.
+>>> Though I answered to previous thread.
+>>>
+>>> Summary: I'm fine with the series as long as maintainers are fine
+>>> (Rafael et al.). On personal side I think that the handler approach is
+>>> better. Details are in v15 thread.
+>>
+>>
+>> Hi Andy,
+>>
+>> Thanks for your input and continued support. As I mentioned in reply in v15,
+>> the handler support would (or has) faced issues. And Rafael seems fine with
+>> deferring the probe to the LLDD in Patch #7/9
 >
->s/between/between the/
->
->> +resource address for a system resource managed by a remote processor. The data
->> +is stored in a shared memory region and is loaded by the remote processor.
->> +
->> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
->
->s/SoC's/SoCs/
->
->> +controlling shared resources. Depending on the board configuration the shared
->> +resource properties may change. These properties are dynamically probed by the
->> +remote processor and made available in the shared memory.
->> +
->> +The bindings for Command DB is specified in the reserved-memory section in
->
->s/bindings/node/
->
->maybe?
->
->> +devicetree. The devicetree representation of the command DB driver should be:
->
->Maybe drop this last sentence entirely.
->
->> +
->> +Properties:
->> +- compatible:
->> +       Usage: required
->> +       Value type: <string>
->> +       Definition: Should be "qcom,cmd-db"
->> +
->> +- reg:
->> +       Usage: required
->> +       Value type: <prop encoded array>
->> +       Definition: The register address that points to the location of the
->> +                   Command DB in memory. Additionally, specify the address
->> +                   and size of the actual lacation in memory.
->
->s/lacation/location/
->
-Will take care of these in the next spin.
 
->> +
->> +Example:
->> +
->> +       reserved-memory {
->> +               [...]
->> +               qcom,cmd-db@c3f000c {
->> +                       reg = <0x0 0xc3f000c 0x0 0x8>,
->> +                             <0x0 0x85fe0000 0x0 0x20000>;
->> +                       compatible = "qcom,cmd-db";
->> +               };
->> +       };
+Hi Rafael,
+
+> Well, the only sort-of concern is that these devices may not be
+> "serial bus slaves" in general, so the naming is slightly confusing.
+>
+
+Right, the name.
+
+The key point is that we model the bus the same as other serial buses 
+like I2C or SPI, so require the same treatment from the ACPI scan.
+
+Would you prefer acpi_is_serial_bus_slave() and 
+acpi_device_flags.serial_bus_slave symbols be modified also?
+
+> But overall this approach and the one based on a scan handler both
+> boil down to checking a (list of) device ID(s) and doing something
+> special in case of a match.
+>
+> .
+>
+
+Thanks,
+John
