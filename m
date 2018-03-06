@@ -1,54 +1,94 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 10/12] ARM: dts: remove no longer needed samsung thermal properties
-Date: Tue, 6 Mar 2018 16:23:47 +0100
-Message-ID: <CAJKOXPfdQo=wCixbREyOriEUZPRGOT35sT3ojcoeXRt0UsBwqQ@mail.gmail.com>
-References: <CGME20180306144511epcas2p1c1c00d0bdea1e329d2d3d5583f135437@epcas2p1.samsung.com>
- <1520347435-22970-1-git-send-email-b.zolnierkie@samsung.com> <1520347435-22970-11-git-send-email-b.zolnierkie@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v16 0/9] LPC: legacy ISA I/O support
+Date: Tue, 6 Mar 2018 16:30:03 +0100
+Message-ID: <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com>
+References: <1520333268-82754-1-git-send-email-john.garry@huawei.com>
+ <1520335317.10722.416.camel@linux.intel.com> <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520347435-22970-11-git-send-email-b.zolnierkie@samsung.com>
+In-Reply-To: <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2018 at 3:43 PM, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> Remove no longer needed samsung thermal properties.
+On Tue, Mar 6, 2018 at 12:36 PM, John Garry <john.garry@huawei.com> wrote:
+> On 06/03/2018 11:21, Andy Shevchenko wrote:
+>>
+>> On Tue, 2018-03-06 at 18:47 +0800, John Garry wrote:
+>>>
+>>> This patchset supports the IPMI-bt device attached to the Low-Pin-
+>>> Count
+>>> interface implemented on Hisilicon Hip06/Hip07 SoC.
+>>>                         -----------
+>>>                         | LPC host|
+>>>                         |         |
+>>>                         -----------
+>>>                              |
+>>>                 _____________V_______________LPC
+>>>                   |                       |
+>>>                   V                       V
+>>>                                      ------------
+>>>                                      |  BT(ipmi)|
+>>>                                      ------------
+>>>
+>>> When master accesses those peripherals beneath the Hip06/Hip07 LPC, a
+>>> specific
+>>> LPC driver is needed to make LPC host generate the standard LPC I/O
+>>> cycles with
+>>> the target peripherals'I/O port addresses. But on curent arm64 world,
+>>> there is
+>>> no real I/O accesses. All the I/O operations through in/out accessors
+>>> are based
+>>> on MMIO ranges; on Hip06/Hip07 LPC the I/O accesses are performed
+>>> through driver
+>>> specific accessors rather than MMIO.
+>>> To solve this issue and keep the relevant existing peripherals'
+>>> drivers untouched,
+>>> this patchset:
+>>>    - introduces a generic I/O space management framework, logical PIO,
+>>> to support
+>>>       I/O operations on host controllers operating either on MMIO
+>>> buses or on buses
+>>>      requiring specific driver I/O accessors;
+>>>    - redefines the in/out accessors to provide a unified interface for
+>>> both MMIO
+>>>      and driver specific I/O operations. Using logical PIO, th call of
+>>> in/out() from
+>>>      the host children drivers, such as ipmi-si, will be redirected to
+>>> the
+>>>      corresponding device-specific I/O hooks to perform the I/O
+>>> accesses.
+>>>
+>>> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
+>>> peripherals can
+>>> be supported without any changes on the existing ipmi-si driver.
+>>>
+>>> The whole patchset has been tested on Hip07 D05 board both using DTB
+>>> and ACPI.
+>>>
+>>
+>>> V15 thread here: https://lkml.org/lkml/2018/2/26/584
+>>
+>>
+>> Thanks for an update.
+>> Though I answered to previous thread.
+>>
+>> Summary: I'm fine with the series as long as maintainers are fine
+>> (Rafael et al.). On personal side I think that the handler approach is
+>> better. Details are in v15 thread.
 >
-> There should be no functional changes caused by this patch.
 >
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi                   |  2 +-
->  arch/arm/boot/dts/exynos4.dtsi                      |  2 +-
->  arch/arm/boot/dts/exynos4412-tmu-sensor-conf.dtsi   | 20 --------------------
->  arch/arm/boot/dts/exynos5250.dtsi                   |  2 +-
->  arch/arm/boot/dts/exynos5410.dtsi                   |  8 ++++----
->  arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi   | 21 ---------------------
->  arch/arm/boot/dts/exynos5420.dtsi                   | 10 +++++-----
->  arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi   | 20 --------------------
->  arch/arm/boot/dts/exynos5440.dtsi                   |  6 +++---
->  .../dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi  | 20 --------------------
->  .../boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi | 19 -------------------
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi          | 10 +++++-----
->  .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi    | 21 ---------------------
->  arch/arm64/boot/dts/exynos/exynos7.dtsi             |  2 +-
->  14 files changed, 21 insertions(+), 142 deletions(-)
->  delete mode 100644 arch/arm/boot/dts/exynos4412-tmu-sensor-conf.dtsi
->  delete mode 100644 arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
->  delete mode 100644 arch/arm/boot/dts/exynos5440-tmu-sensor-conf.dtsi
->  delete mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi
->  delete mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
->  delete mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+> Hi Andy,
+>
+> Thanks for your input and continued support. As I mentioned in reply in v15,
+> the handler support would (or has) faced issues. And Rafael seems fine with
+> deferring the probe to the LLDD in Patch #7/9
 
-Hi,
+Well, the only sort-of concern is that these devices may not be
+"serial bus slaves" in general, so the naming is slightly confusing.
 
-Please split the arm64 to separate patchset.
-
-It is a cleanup patch and it depends on your driver changes so it will
-have to wait till your driver patches hit mainline.
-
-Best regards,
-Krzysztof
+But overall this approach and the one based on a scan handler both
+boil down to checking a (list of) device ID(s) and doing something
+special in case of a match.
