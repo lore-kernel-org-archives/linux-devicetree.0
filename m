@@ -1,45 +1,65 @@
-From: Bich HEMON <bich.hemon@st.com>
-Subject: Re: [PATCH 0/2] Update interrupt names
-Date: Tue, 6 Mar 2018 09:58:38 +0000
-Message-ID: <d855b529-be9b-13d9-8834-c2d0b7a16884@st.com>
-References: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 07/37] iommu: Add a page fault handler
+Date: Tue, 6 Mar 2018 10:24:29 +0000
+Message-ID: <4d3d9bbf-a1a7-82ff-9b8d-5634121d83ad@arm.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-8-jean-philippe.brucker@arm.com>
+	<b2a3d2a7-7042-aef3-0def-05e64e39d046@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <b2a3d2a7-7042-aef3-0def-05e64e39d046-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Language: en-US
-Content-ID: <0AA9BE539F3A4A4AAAC39B354D85FF2F@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-On 02/28/2018 11:51 AM, Bich HEMON wrote:
-> This patchset updates existing stm32 usart driver by updating interrupt
-> initialization by name.
+On 05/03/18 21:44, Sinan Kaya wrote:
+> On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+>> +static int iommu_queue_fault(struct iommu_domain *domain, struct device *dev,
+>> +			     struct iommu_fault_event *evt)
+>> +{
+>> +	struct iommu_fault_group *group;
+>> +	struct iommu_fault_context *fault, *next;
+>> +
+>> +	if (!iommu_fault_queue)
+>> +		return -ENOSYS;
+>> +
+>> +	if (!evt->last_req) {
+>> +		fault = kzalloc(sizeof(*fault), GFP_KERNEL);
+>> +		if (!fault)
+>> +			return -ENOMEM;
+>> +
+>> +		fault->evt = *evt;
+>> +		fault->dev = dev;
+>> +
+>> +		/* Non-last request of a group. Postpone until the last one */
+>> +		spin_lock(&iommu_partial_faults_lock);
+>> +		list_add_tail(&fault->head, &iommu_partial_faults);
+>> +		spin_unlock(&iommu_partial_faults_lock);
+>> +
+>> +		return IOMMU_PAGE_RESP_HANDLED;
+>> +	}
+>> +
+>> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
+>> +	if (!group)
+>> +		return -ENOMEM;
 > 
-> Bich Hemon (2):
->    dt-bindings: serial: stm32: add wakeup option using note
->    serial: stm32: update interrupt initialization
-> 
->   Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 4 ++++
->   drivers/tty/serial/stm32-usart.c                            | 4 ++--
->   2 files changed, 6 insertions(+), 2 deletions(-)
-> 
+> Release the requests in iommu_partial_faults here.
 
-Please note that this patch set is abandoned. As Rob pointed that out, 
-the interrupt indices are fixed, so there is no need to keep these patches.
+We move these requests to the group->faults list (which btw should use
+list_move instead of the current list_del+list_add) and we release them in
+iommu_fault_handle_group()
 
-Best regards,
-
-Bich
+Thanks,
+Jean
