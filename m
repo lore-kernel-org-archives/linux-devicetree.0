@@ -1,172 +1,148 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
- legacy DT to create LVDS encoder nodes)
-Date: Wed, 7 Mar 2018 01:07:46 +1100
-Message-ID: <20180306140746.GX2650@umbus.fritz.box>
-References: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
- <20180306035412.GU2650@umbus.fritz.box>
- <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs,
+ wifi reset)
+Date: Tue, 6 Mar 2018 10:00:32 -0800
+Message-ID: <CAD=FV=Wr6_U9c1qFRgx3=JhMg8US20_oMEmEfCdpVyGKek_8gQ@mail.gmail.com>
+References: <20180227204711.29357-1-dianders@chromium.org> <3831527.HjPPvuL6zK@diego>
+ <d0aac677-ed2e-c059-0cba-79f88de194b4@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0646693386=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d0aac677-ed2e-c059-0cba-79f88de194b4@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============0646693386==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5860PwWXAiuGjz3C"
-Content-Disposition: inline
+On Tue, Mar 6, 2018 at 3:58 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> Hi all,
+>
+> On 01/03/18 08:43, Heiko St=C3=BCbner wrote:
+>> Am Dienstag, 27. Februar 2018, 21:47:11 CET schrieb Douglas Anderson:
+>>> Back in the early days when gru devices were still under development
+>>> we found an issue where the WiFi reset line needed to be configured as
+>>> early as possible during the boot process to avoid the WiFi module
+>>> being in a bad state.
+>>>
+>>> We found that the way to get the kernel to do this in the earliest
+>>> possible place was to configure this line in the pinctrl hogs, so
+>>> that's what we did.  For some history here you can see
+>>> <http://crosreview.com/368770>.  After the time that change landed in
+>>> the kernel, we landed a firmware change to configure this line even
+>>> earlier.  See <http://crosreview.com/399919>.  However, even after the
+>>> firmware change landed we kept the kernel change to deal with the fact
+>>> that some people working on devices might take a little while to
+>>> update their firmware.
+>>>
+>>> At this there are definitely zero devices out in the wild that have
+>>> firmware without the fix in it.  Specifically looking in the firmware
+>>> branch several critically important fixes for memory stability landed
+>>> after the patch in coreboot and I know we didn't ship without those.
+>>> Thus, by now, everyone should have the new firmware and it's safe to
+>>> not have the kernel set this up in a pinctrl hog.
+>>>
+>>> Historically, even though it wasn't needed to have this in a pinctrl
+>>> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
+>>> default hog at bootup and then would never touch things again.  That
+>>> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
+>>> during suspend/resume").  After that commit then we'll re-apply the
+>>> default hog at resume time and that can screw up the reset state of
+>>> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
+>>> then the whole system can go haywire.  That's what was happening.
+>>> Specifically you'd resume a rk3399-gru-* device and it would mostly
+>>> resume, then would crash with some crazy weird crash.
+>>>
+>>> One could say, perhaps, that the recent pinctrl change was at fault
+>>> (and should be fixed) since it changed behavior.  ...but that's not
+>>> really true.  The device tree for rk3399-gru is really to blame.
+>>> Specifically since the pinctrl is defined in the hog and not in the
+>>> "wlan-pd-n" node then the actual user of this pin doesn't have a
+>>> pinctrl entry for it.  That's bad.
+>>>
+>>> Let's fix our problems by just moving the control of
+>>> "wlan_module_reset_l pinctrl" out of the hog and put them in the
+>>> proper place.
+>>>
+>>> NOTE: in theory, I think it should actually be possible to have a pin
+>>> controlled _both_ by the hog and by an actual device.  Once the device
+>>> claims the pin I think the hog is supposed to let go.  I'm not 100%
+>>> sure that this works and in any case this solution would be more
+>>> complex than is necessary.
+>>>
+>>> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
+>>> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
+>>> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resum=
+e")
+>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>
+>> applied as fix for 4.16 with the 2 Tested-tags
+> Sorry to rain on everyone's parade, but further testing shows that this
+> patch may not be enough to restore a reliable s2r. My initial testing
+> did show that we were resuming without the VOP errors, but there seem to
+> be further issues (I'm loosing the keyboard and the trackpad after
+> resume on Kevin).
+>
+> Applying my initial hack makes it work again. I suspect that there are
+> more hog pins that need tweaking, but I'm a bit out of my depth here.
+
+Are you positive you weren't just wearing your lucky hat when you
+tested your patch and then took it off when you tested mine?  As far
+as I can see the only hogs left on kevin are:
+
+  &ap_pwroff      /* AP will auto-assert this when in S3 */
+  &clk_32k        /* This pin is always 32k on gru boards */
+
+Those map to:
+
+  ap_pwroff: ap-pwroff {
+     rockchip,pins =3D <1 5 RK_FUNC_1 &pcfg_pull_none>;
+  };
+
+  clk_32k: clk-32k {
+    rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
+  };
+
+So I added some printouts at suspend/resume time.  Specifically I set
+a boolean to "true" for the duration rockchip_pinctrl_suspend() and
+rockchip_pinctrl_resume() and this turned on a printout in
+rockchip_set_mux().  My printout looked like this (yeah, I know it's a
+whitespace-damaged patch just to show what I'm doing):
+
++       regmap_read(regmap, reg, &before);
+        data =3D (mask << (bit + 16));
+        rmask =3D data | (data >> 16);
+        data |=3D (mux & mask) << bit;
+        ret =3D regmap_update_bits(regmap, reg, rmask, data);
+
++       regmap_read(regmap, reg, &after);
++
++       if (DOUG) {
++               dev_info(info->dev,
++                        "setting mux of GPIO%d-%d to %d; %#010x=3D>%#010x\=
+n",
++                        bank->bank_num, pin, mux, reg, before, after);
++       }
+
+...and a similar one in rockchip_set_pull().  That showed this at resume ti=
+me:
+
+[   62.284427] rockchip-pinctrl pinctrl: setting mux of GPIO1-5 to 1;
+0x00009400=3D>0x00009400
+[   62.294423] rockchip-pinctrl pinctrl: setting pull of GPIO1-5;
+0x000041aa=3D>0x000041aa
+[   62.303343] rockchip-pinctrl pinctrl: setting mux of GPIO0-0 to 2;
+0x00005002=3D>0x00005002
+[   62.313240] rockchip-pinctrl pinctrl: setting pull of GPIO0-0;
+0x00000ddc=3D>0x00000ddc
+[
+
+Said another way: pinmux and pull isn't actually changing due to the
+hogs.  We can see if something else could be changing, but I'd really
+want to be sure you're certain that the hogs are causing you
+problems...
 
 
---5860PwWXAiuGjz3C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 06, 2018 at 01:30:05PM +0100, Geert Uytterhoeven wrote:
-> Hi David,
->=20
-> On Tue, Mar 6, 2018 at 4:54 AM, David Gibson
-> <david@gibson.dropbear.id.au> wrote:
-> > On Fri, Feb 23, 2018 at 09:05:24AM +0100, Geert Uytterhoeven wrote:
-> >> On Fri, Feb 23, 2018 at 3:38 AM, Frank Rowand <frowand.list@gmail.com>=
- wrote:
-> >> > I was hoping to be able to convert the .dts files to use sugar syntax
-> >> > instead of hand coding the fragment nodes, but for this specific set
-> >> > of files I failed, since the labels that would have been required do
-> >> > not already exist in the base .dts files that that overlays would be
-> >> > applied against.
-> >>
-> >> Indeed, hence the fixup overlays use "target-path".
-> >>
-> >> BTW, is there any specific reason there is no sugar syntax support in =
-dtc
-> >> for absolute target paths? I guess to prevent adding stuff to a random
-> >> existing node, and to encourage people to use a "connector" API define=
-d in
-> >> term of labels?
-> >
-> > Only because it hasn't been implemented.  Using &{/whatever} should
-> > IMO generate a target-path and the fact it doesn't is a bug.
-> >
-> >> I'm also in the process of converting my collection of DT overlays to =
-sugar
-> >> syntax, and lack of support for "target-path" is the sole thing that h=
-olds
-> >> me back from completing this. So for now I use a mix of sugar and
-> >> traditional overlay syntax.
-> >>
-> >> In particular, I need "target-path" for two things:
-> >>   1. To refer to the root node, for adding devices that should live at
-> >>      (a board subnode of) the root node, like:
-> >>        - devices connected to GPIO controllers provided by other base =
-or
-> >>          overlay devices (e.g. LEDs, displays, buttons, ...),
-> >>        - clock providers for other overlays devices (e.g. fixed-clock).
->=20
-> >> The former is the real blocker for me.
->=20
-> > Below is draft patch adding target-path support.  The pretty minimal
-> > test examples do include a case using &{/}
-> >
-> > From 8f1b35f88395adea01ce1100c5faa27dacbc8410 Mon Sep 17 00:00:00 2001
-> > From: David Gibson <david@gibson.dropbear.id.au>
-> > Date: Tue, 6 Mar 2018 13:27:53 +1100
-> > Subject: [PATCH] Correct overlay syntactic sugar for generating target-=
-path
-> >  fragments
-> >
-> > We've recently added "syntactic sugar" support to generate runtime dtb
-> > overlays using similar syntax to the compile time overlays we've had for
-> > a while.  This worked with the &label { ... } syntax, adjusting an exis=
-ting
-> > labelled node, but would fail with the &{/path} { ... } syntax attempti=
-ng
-> > to adjust an existing node referenced by its path.
-> >
-> > The previous code would always try to use the "target" property in the
-> > output overlay, which needs to be fixed up, and __fixups__ can only enc=
-ode
-> > symbols, not paths, so the result could never work properly.
-> >
-> > This adds support for the &{/path} syntax for overlays, translating it =
-into
-> > the "target-path" encoding in the output.  It also changes existing
-> > behaviour a little because we now unconditionally one fragment for each
-> > overlay section in the source.  Previously we would only create a fragm=
-ent
-> > if we couldn't locally resolve the node referenced.  We need this for
-> > path references, because the path is supposed to be referencing somethi=
-ng
-> > in the (not yet known) base tree, rather than the overlay tree we are
-> > working with now.  In particular one useful case for path based overlays
-> > is using &{/} - but the constructed overlay tree will always have a root
-> > node, meaning that without the change that would attempt to resolve the
-> > fragment locally, which is not what we want.
-> >
-> > Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
->=20
-> Thank you, seems to work fine on dtc.git.
->=20
-> Note that while the dtc part applies on the in-kernel copy of dtc, it
-> doesn't work there: "&{/}" behaves the same as "/" (i.e. no overlay
-> fragment is generated), but "&{/foo}" does create the overlay fragment.
-> Merging in Rob's for-next branch to upgrade Linux' copy of dtc fixes
-> that.
-
-I think that'll be because the kernel makefiles (at least by default)
-use a pre-generated version of the parser, rather than running bison.
-Since there were changes in the .y file, those will be missing which
-would cause the error you describe.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---5860PwWXAiuGjz3C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlqeoK8ACgkQbDjKyiDZ
-s5IhyA/+OkscdFmD0xFHT4WP3cJ6Hzt4H9rjR9W0LJaNogZtBfGJbTUw5RF9j71/
-st5PuKMpppH9xSDSe619e2D+xRtLEG0niwHsbfXIhASNIp7+N1/8OgBWAggTlTQs
-TzBZ0Sz40HWU9Xksd96JlgBDe5YGYokfXXauOuVHT+KkuF+rcoOjJc2ETBN2aVSl
-54JrbLm8vTlktYnf2xabt1/OBWzatKhhgRn7uXN52y4DZou+zXR1AWeMuHs6WE4W
-R96Uk2uIvMZzqkTDSFs7CQe7/FBk7zpuS0j+NuBCicQozrylLoE8Ygcd5mtNjVwR
-p45edtpZWvfp86cEBZdB3BQDPh8M+iX/riJSICbVJpPylJIpjYayYhzMBKOEoRRN
-ETeNm8Y7D9RbixXvjZqoHUVMrs6Mp5Tl1IGg5Tosq1ZxW3wOOJzenIxYjlE/iTIA
-dHWiY1koywaY1ru8F8M5mjDmsGvPmB91meSG1KLBuVnNm9hp88GZuGTJr66H7Lww
-+Is/aOKKzixyRbNV4eh/5muQsjvGcEKidzW9HW2oMzpbUkgydU/3TIAk3KU9wp8X
-W15JMn6VizDjNQOGW2gew6j0NNx1hNAmPsWD5mrO0rz7E6Bbf8BjbdwKFIDOAnvn
-h1kSLa2Mnstg+vgjrcsT42UhOkgnAb+LAZsz5LTqycPV4SVs5rw=
-=/YHd
------END PGP SIGNATURE-----
-
---5860PwWXAiuGjz3C--
-
---===============0646693386==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0646693386==--
+-Doug
