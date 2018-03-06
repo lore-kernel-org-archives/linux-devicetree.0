@@ -1,30 +1,63 @@
-Return-Path: <SRS0=q+06=GB=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH 2/3] dt-bindings: thermal: rcar-thermal: add R8A77995 support
-Date: Mon, 12 Mar 2018 05:26:34 +0900
-Message-Id: <1520799995-26347-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1520799995-26347-1-git-send-email-ykaneko0929@gmail.com>
-References: <1520799995-26347-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=nzd3=F4=armlinux.org.uk=linux+robh+dt=kernel.org@kernel.org>
+Date: Tue, 6 Mar 2018 15:02:22 +0000
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next 3/4] dt-bindings: add maximum power level to SFP
+ binding
+Message-ID: <20180306150221.GL9418@n2100.armlinux.org.uk>
+References: <20180227155218.GT9418@n2100.armlinux.org.uk>
+ <E1eqhYx-0003th-OT@rmk-PC.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1eqhYx-0003th-OT@rmk-PC.armlinux.org.uk>
+Sender: Russell King - ARM Linux <linux@armlinux.org.uk>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi Rob,
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 349e635..b2829cb 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -12,6 +12,7 @@ Required properties:
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
- 			  if it has "interrupts".
+This patch, and the patches that make use of it have now been merged
+into their respective trees, but I note that you haven't reviewed
+this patch.  Obviously, providing an ack is now moot, but it would
+still be good for a response before 4.16-final is released.
+
+On Tue, Feb 27, 2018 at 03:53:07PM +0000, Russell King wrote:
+> Add the new maximum power level property to the SFP binding.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  Documentation/devicetree/bindings/net/sff,sfp.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
+> index f1c441bedf68..929591d52ed6 100644
+> --- a/Documentation/devicetree/bindings/net/sff,sfp.txt
+> +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
+> @@ -33,6 +33,10 @@ Transceiver
+>    Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate, high:
+>    high Tx rate. Must not be present for SFF modules
+>  
+> +- maximum-power-milliwatt : Maximum module power consumption
+> +  Specifies the maximum power consumption allowable by a module in the
+> +  slot, in milli-Watts.  Presently, modules can be up to 1W, 1.5W or 2W.
+> +
+>  Example #1: Direct serdes to SFP connection
+>  
+>  sfp_eth3: sfp-eth3 {
+> @@ -40,6 +44,7 @@ sfp_eth3: sfp-eth3 {
+>  	i2c-bus = <&sfp_1g_i2c>;
+>  	los-gpios = <&cpm_gpio2 22 GPIO_ACTIVE_HIGH>;
+>  	mod-def0-gpios = <&cpm_gpio2 21 GPIO_ACTIVE_LOW>;
+> +	maximum-power-milliwatt = <1000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&cpm_sfp_1g_pins &cps_sfp_1g_pins>;
+>  	tx-disable-gpios = <&cps_gpio1 24 GPIO_ACTIVE_HIGH>;
+> -- 
+> 2.7.4
+> 
+
 -- 
-1.9.1
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
