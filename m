@@ -1,94 +1,58 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v16 0/9] LPC: legacy ISA I/O support
-Date: Tue, 6 Mar 2018 16:30:03 +0100
-Message-ID: <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com>
-References: <1520333268-82754-1-git-send-email-john.garry@huawei.com>
- <1520335317.10722.416.camel@linux.intel.com> <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Tue, 6 Mar 2018 08:37:57 -0700
+Message-ID: <20180306153757.GD15200@jcrouse-lnx.qualcomm.com>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-3-jcrouse@codeaurora.org>
+ <20180305044221.GC23018@vireshk-i7>
+ <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
+ <20180306042656.GJ23018@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180306042656.GJ23018@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, vireshk@kernel.org, freedreno@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2018 at 12:36 PM, John Garry <john.garry@huawei.com> wrote:
-> On 06/03/2018 11:21, Andy Shevchenko wrote:
->>
->> On Tue, 2018-03-06 at 18:47 +0800, John Garry wrote:
->>>
->>> This patchset supports the IPMI-bt device attached to the Low-Pin-
->>> Count
->>> interface implemented on Hisilicon Hip06/Hip07 SoC.
->>>                         -----------
->>>                         | LPC host|
->>>                         |         |
->>>                         -----------
->>>                              |
->>>                 _____________V_______________LPC
->>>                   |                       |
->>>                   V                       V
->>>                                      ------------
->>>                                      |  BT(ipmi)|
->>>                                      ------------
->>>
->>> When master accesses those peripherals beneath the Hip06/Hip07 LPC, a
->>> specific
->>> LPC driver is needed to make LPC host generate the standard LPC I/O
->>> cycles with
->>> the target peripherals'I/O port addresses. But on curent arm64 world,
->>> there is
->>> no real I/O accesses. All the I/O operations through in/out accessors
->>> are based
->>> on MMIO ranges; on Hip06/Hip07 LPC the I/O accesses are performed
->>> through driver
->>> specific accessors rather than MMIO.
->>> To solve this issue and keep the relevant existing peripherals'
->>> drivers untouched,
->>> this patchset:
->>>    - introduces a generic I/O space management framework, logical PIO,
->>> to support
->>>       I/O operations on host controllers operating either on MMIO
->>> buses or on buses
->>>      requiring specific driver I/O accessors;
->>>    - redefines the in/out accessors to provide a unified interface for
->>> both MMIO
->>>      and driver specific I/O operations. Using logical PIO, th call of
->>> in/out() from
->>>      the host children drivers, such as ipmi-si, will be redirected to
->>> the
->>>      corresponding device-specific I/O hooks to perform the I/O
->>> accesses.
->>>
->>> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
->>> peripherals can
->>> be supported without any changes on the existing ipmi-si driver.
->>>
->>> The whole patchset has been tested on Hip07 D05 board both using DTB
->>> and ACPI.
->>>
->>
->>> V15 thread here: https://lkml.org/lkml/2018/2/26/584
->>
->>
->> Thanks for an update.
->> Though I answered to previous thread.
->>
->> Summary: I'm fine with the series as long as maintainers are fine
->> (Rafael et al.). On personal side I think that the handler approach is
->> better. Details are in v15 thread.
->
->
-> Hi Andy,
->
-> Thanks for your input and continued support. As I mentioned in reply in v15,
-> the handler support would (or has) faced issues. And Rafael seems fine with
-> deferring the probe to the LLDD in Patch #7/9
-
-Well, the only sort-of concern is that these devices may not be
-"serial bus slaves" in general, so the naming is slightly confusing.
-
-But overall this approach and the one based on a scan handler both
-boil down to checking a (list of) device ID(s) and doing something
-special in case of a match.
+T24gVHVlLCBNYXIgMDYsIDIwMTggYXQgMDk6NTY6NTZBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDA1LTAzLTE4LCAwODoyOCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEknbSBn
+bGFkIHlvdSBicm91Z2h0IHRoaXMgdXAgLSBJIHdhcyB0cnlpbmcgdG8gZmluZCBhIHBsYWNlIGlu
+IHRoZSBkb2N1bWVudGF0aW9uCj4gPiB0byBwdXQgaXQsIGJ1dCBzaW5jZSB0YXJnZXQgc3BlY2lm
+aWMgbm9kZXMgd291bGQgYmUgYSBuZXcgdHJpY2sgZm9yIE9QUCBJIGRpZG4ndAo+ID4gcXVpdGUg
+a25vdyBob3cgdG8gZ28gYWJvdXQgZG9pbmcgaXQuIERvIHdlIGp1c3QgbGlzdCB0aGVtIGFzIE9w
+dGlvbmFsOiBvcgo+ID4gc2hvdWxkIHdlIGFkZCBhIHRhcmdldCBzcGVjaWZpYyBzZWN0aW9uIHRv
+IHRoZSBkb2N1bWVudGF0aW9uIGFuZCBsaXN0IHRoZW0gb3V0Cj4gPiB0aGVyZSBpbnN0ZWFkPwo+
+IAo+IFNvbWV0aGluZyBsaWtlIHRoaXMgYW5kIHlvdSBuZWVkIHRvIGhhdmUgeW91ciBvd24gY29t
+cGF0aWJsZSBzdHJpbmcgYXMKPiB3ZWxsOgo+IAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9vcHAvdGktb21hcDUtb3BwLXN1cHBseS50eHQKPiAKPiBCdXQgZmlyc3QsIHdoYXQn
+cyB0aGUgcHVycG9zZSBvZiB0aGlzIGZpZWxkPyBKdXN0IHRvIGNoZWNrIGlmIGl0IGNhbgo+IGJl
+IGhhbmRsZWQgYnkgY3VycmVudCBiaW5kaW5ncy4KCkknbGwgdHJ5IHRvIGV4cGxhaW4gYnV0IEkg
+bWlnaHQgbmVlZCBTdGVwaGVuIG9yIHNvbWUgb2YgdGhlIG90aGVyIGZvbGtzIHRvIGp1bXAKaW4g
+YW5kIHNhdmUgbWUuCgpPbiBzZG04NDUgdGhlcmUgYXJlIHNoYXJlZCBwb3dlciByZXNvdXJjZXMg
+Y29udHJvbGxlZCBieSB0aGUgUlBNaCB3aGljaCBpcwpwcm9ncmFtZWQgYnkgYSBzZXJpZXMgb2Yg
+Y29tbWFuZHMgZnJvbSB0aGUgcmVndWxhdG9yIGRyaXZlcjsgYnV0IGluIHRoZSBjYXNlCm9mIHRo
+ZSBHUFUgdGhlIHZvdGVzIGFyZSBwYXNzZWQgdG8gdGhlIEdNVSAoZ3JhcGhpY3MgbWFuYWdlbWVu
+dCB1bml0KSB3aGljaApjb21tdW5pY2F0ZXMgd2l0aCB0aGUgUlBNaCBvbiBiZWhhbGYgb2YgdGhl
+IEdQVS4KCkluIG9yZGVyIHRvIGNvbnN0cnVjdCB0aGUgUlBNaCB2b3RlIHdlIG5lZWQgZmlyc3Qg
+bmVlZCBhIHZvbHRhZ2UgbGV2ZWwgdGhhdCB3ZQpjYW4gbG9vayB1cCBpbiBhIGRhdGFiYXNlLiBx
+Y29tLGFyYy1sZXZlbCBpcyB0aGUgdm9sdGFnZSBsZXZlbCBhc3NvY2lhdGVkIHdpdGgKYSBzcGVj
+aWZpYyBPUFAuCgpJIGhhZCBwcmV2aW91c2x5IGJlZW4gYWJ1c2luZyB0aGlzIHdpdGggb3BwLW1p
+Y3Jvdm9sdCBidXQgdGhhdCB3YXMgd3JvbmcgZm9yCm9idmlvdXMgcmVhc29ucyBhbmQgdGhlbiBT
+dGVwaGVuIHBvaW50ZWQgb3V0IHRoYXQgdGhpcyB3b3VsZCBiZSBhIGJldHRlciB3YXkuCgpKb3Jk
+YW4KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFBy
+b2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
