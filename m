@@ -1,262 +1,60 @@
-Return-Path: <SRS0=KgiW=GU=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v2 1/3] thermal: rcar_thermal: add r8a77995 support
-Date: Fri, 30 Mar 2018 12:13:01 +0900
-Message-Id: <1522379583-4503-2-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=v9aX=F4=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
+ r8a774[35] CMT support
+Date: Tue, 6 Mar 2018 16:21:16 +0000
+Message-ID: <TY1PR01MB17702E7EB6DBDDC6CF3176A8C0D90@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <SG2PR06MB088625944BCD8F4307315520C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
+ <1acdad3b-c2fd-df1d-f25b-cf80b79a9842@linaro.org>
+ <CAMuHMdUX8D6c_ehNJAS8nWprvY60bkoxwTekEEqT5oJcz4QGPA@mail.gmail.com>
+ <bf1b052d-c8e1-49dc-9e62-13d564d223a4@linaro.org>
+In-Reply-To: <bf1b052d-c8e1-49dc-9e62-13d564d223a4@linaro.org>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "Chris Paterson  <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for R-Car D3 (r8a77995) thermal sensor.
-
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- drivers/thermal/rcar_thermal.c | 148 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 116 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
-index 73e5fee..a631bff 100644
---- a/drivers/thermal/rcar_thermal.c
-+++ b/drivers/thermal/rcar_thermal.c
-@@ -58,10 +58,35 @@ struct rcar_thermal_common {
- 	spinlock_t lock;
- };
- 
-+enum rcar_thermal_type {
-+	RCAR_THERMAL,
-+	RCAR_GEN2_THERMAL,
-+	RCAR_GEN3_THERMAL,
-+};
-+
-+struct rcar_thermal_chip {
-+	int use_of_thermal;
-+	enum rcar_thermal_type type;
-+};
-+
-+static const struct rcar_thermal_chip rcar_thermal = {
-+	.use_of_thermal = 0,
-+	.type = RCAR_THERMAL,
-+};
-+static const struct rcar_thermal_chip rcar_gen2_thermal = {
-+	.use_of_thermal = 1,
-+	.type = RCAR_GEN2_THERMAL,
-+};
-+static const struct rcar_thermal_chip rcar_gen3_thermal = {
-+	.use_of_thermal = 1,
-+	.type = RCAR_GEN3_THERMAL,
-+};
-+
- struct rcar_thermal_priv {
- 	void __iomem *base;
- 	struct rcar_thermal_common *common;
- 	struct thermal_zone_device *zone;
-+	struct rcar_thermal_chip *chip;
- 	struct delayed_work work;
- 	struct mutex lock;
- 	struct list_head list;
-@@ -77,13 +102,20 @@ struct rcar_thermal_priv {
- #define rcar_priv_to_dev(priv)		((priv)->common->dev)
- #define rcar_has_irq_support(priv)	((priv)->common->base)
- #define rcar_id_to_shift(priv)		((priv)->id * 8)
--#define rcar_of_data(dev)		((unsigned long)of_device_get_match_data(dev))
--#define rcar_use_of_thermal(dev)	(rcar_of_data(dev) == USE_OF_THERMAL)
- 
--#define USE_OF_THERMAL	1
- static const struct of_device_id rcar_thermal_dt_ids[] = {
--	{ .compatible = "renesas,rcar-thermal", },
--	{ .compatible = "renesas,rcar-gen2-thermal", .data = (void *)USE_OF_THERMAL },
-+	{
-+		.compatible = "renesas,rcar-thermal",
-+		.data = &rcar_thermal,
-+	},
-+	{
-+		.compatible = "renesas,rcar-gen2-thermal",
-+		 .data = &rcar_gen2_thermal,
-+	},
-+	{
-+		.compatible = "renesas,thermal-r8a77995",
-+		.data = &rcar_gen3_thermal,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, rcar_thermal_dt_ids);
-@@ -190,7 +222,8 @@ static int rcar_thermal_update_temp(struct rcar_thermal_priv *priv)
- 	 * enable IRQ
- 	 */
- 	if (rcar_has_irq_support(priv)) {
--		rcar_thermal_write(priv, FILONOFF, 0);
-+		if (priv->chip->type != RCAR_GEN3_THERMAL)
-+			rcar_thermal_write(priv, FILONOFF, 0);
- 
- 		/* enable Rising/Falling edge interrupt */
- 		rcar_thermal_write(priv, POSNEG,  0x1);
-@@ -420,7 +453,7 @@ static int rcar_thermal_remove(struct platform_device *pdev)
- 
- 	rcar_thermal_for_each_priv(priv, common) {
- 		rcar_thermal_irq_disable(priv);
--		if (rcar_use_of_thermal(dev))
-+		if (priv->chip->use_of_thermal)
- 			thermal_remove_hwmon_sysfs(priv->zone);
- 		else
- 			thermal_zone_device_unregister(priv->zone);
-@@ -438,6 +471,9 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 	struct rcar_thermal_priv *priv;
- 	struct device *dev = &pdev->dev;
- 	struct resource *res, *irq;
-+	struct rcar_thermal_chip *chip = ((struct rcar_thermal_chip *)
-+					  of_device_get_match_data(dev));
-+	int nirq = chip->type == RCAR_GEN3_THERMAL ? 2 : 1;
- 	int mres = 0;
- 	int i;
- 	int ret = -ENODEV;
-@@ -457,19 +493,35 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
--	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (irq) {
--		/*
--		 * platform has IRQ support.
--		 * Then, driver uses common registers
--		 * rcar_has_irq_support() will be enabled
--		 */
--		res = platform_get_resource(pdev, IORESOURCE_MEM, mres++);
--		common->base = devm_ioremap_resource(dev, res);
--		if (IS_ERR(common->base))
--			return PTR_ERR(common->base);
-+	for (i = 0; i < nirq; i++) {
-+		irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+		if (!irq)
-+			continue;
-+		if (!common->base) {
-+			/*
-+			 * platform has IRQ support.
-+			 * Then, driver uses common registers
-+			 * rcar_has_irq_support() will be enabled
-+			 */
-+			res = platform_get_resource(pdev, IORESOURCE_MEM,
-+						    mres++);
-+			common->base = devm_ioremap_resource(dev, res);
-+			if (IS_ERR(common->base))
-+				return PTR_ERR(common->base);
-+
-+			idle = 0; /* polling delay is not needed */
-+		}
-+
-+		ret = devm_request_irq(dev, irq->start, rcar_thermal_irq,
-+				       IRQF_SHARED, dev_name(dev), common);
-+		if (ret) {
-+			dev_err(dev, "irq request failed\n ");
-+			goto error_unregister;
-+		}
- 
--		idle = 0; /* polling delay is not needed */
-+		/* update ENR bits */
-+		if (chip->type == RCAR_GEN3_THERMAL)
-+			enr_bits |= 1 << i;
- 	}
- 
- 	for (i = 0;; i++) {
-@@ -491,6 +543,7 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 
- 		priv->common = common;
- 		priv->id = i;
-+		priv->chip = chip;
- 		mutex_init(&priv->lock);
- 		INIT_LIST_HEAD(&priv->list);
- 		INIT_DELAYED_WORK(&priv->work, rcar_thermal_work);
-@@ -498,7 +551,7 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 		if (ret < 0)
- 			goto error_unregister;
- 
--		if (rcar_use_of_thermal(dev))
-+		if (chip->use_of_thermal)
- 			priv->zone = devm_thermal_zone_of_sensor_register(
- 						dev, i, priv,
- 						&rcar_thermal_zone_of_ops);
-@@ -515,7 +568,7 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 			goto error_unregister;
- 		}
- 
--		if (rcar_use_of_thermal(dev)) {
-+		if (chip->use_of_thermal) {
- 			/*
- 			 * thermal_zone doesn't enable hwmon as default,
- 			 * but, enable it here to keep compatible
-@@ -531,20 +584,12 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 		list_move_tail(&priv->list, &common->head);
- 
- 		/* update ENR bits */
--		enr_bits |= 3 << (i * 8);
-+		if (chip->type != RCAR_GEN3_THERMAL)
-+			enr_bits |= 3 << (i * 8);
- 	}
- 
--	/* enable temperature comparation */
--	if (irq) {
--		ret = devm_request_irq(dev, irq->start, rcar_thermal_irq, 0,
--				       dev_name(dev), common);
--		if (ret) {
--			dev_err(dev, "irq request failed\n ");
--			goto error_unregister;
--		}
--
-+	if (enr_bits)
- 		rcar_thermal_common_write(common, ENR, enr_bits);
--	}
- 
- 	dev_info(dev, "%d sensor probed\n", i);
- 
-@@ -556,9 +601,48 @@ static int rcar_thermal_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int rcar_thermal_suspend(struct device *dev)
-+{
-+	struct rcar_thermal_common *common = dev_get_drvdata(dev);
-+	struct rcar_thermal_priv *priv = list_first_entry(&common->head,
-+							  typeof(*priv), list);
-+
-+	if (priv->chip->type == RCAR_GEN3_THERMAL) {
-+		rcar_thermal_common_write(common, ENR, 0);
-+		rcar_thermal_irq_disable(priv);
-+		rcar_thermal_bset(priv, THSCR, CPCTL, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rcar_thermal_resume(struct device *dev)
-+{
-+	struct rcar_thermal_common *common = dev_get_drvdata(dev);
-+	struct rcar_thermal_priv *priv = list_first_entry(&common->head,
-+							  typeof(*priv), list);
-+	int ret;
-+
-+	if (priv->chip->type == RCAR_GEN3_THERMAL) {
-+		ret = rcar_thermal_update_temp(priv);
-+		if (ret < 0)
-+			return ret;
-+		rcar_thermal_irq_enable(priv);
-+		rcar_thermal_common_write(common, ENR, 0x03);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(rcar_thermal_pm_ops, rcar_thermal_suspend,
-+			 rcar_thermal_resume);
-+
- static struct platform_driver rcar_thermal_driver = {
- 	.driver	= {
- 		.name	= "rcar_thermal",
-+		.pm = &rcar_thermal_pm_ops,
- 		.of_match_table = rcar_thermal_dt_ids,
- 	},
- 	.probe		= rcar_thermal_probe,
--- 
-1.9.1
+SGVsbG8gVGhvbWFzLA0KDQpkbyB5b3UgdGhpbmsgeW91IGNhbiB0YWtlIHRoaXMgcGF0Y2g/DQoN
+ClRoYW5rcywNCkZhYg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRl
+dmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86ZGV2aWNldHJlZS1vd25lckB2
+Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBEYW5pZWwgTGV6Y2Fubw0KPiBTZW50OiAyNSBK
+YW51YXJ5IDIwMTggMDg6MzUNCj4gVG86IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgt
+bTY4ay5vcmc+DQo+IENjOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
+c2FzLmNvbT47IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IFNpbW9uDQo+IEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pjsg
+R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVy
+c29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+Ow0KPiBCaWp1IERhcyA8YmlqdS5kYXNA
+YnAucmVuZXNhcy5jb20+OyBsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc7IFJvYiBI
+ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFu
+ZEBhcm0uY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvM10gZHQtYmluZGluZ3M6IHRp
+bWVyOiByZW5lc2FzLCBjbXQ6IERvY3VtZW50IHI4YTc3NFszNV0gQ01UIHN1cHBvcnQNCj4NCj4g
+T24gMjUvMDEvMjAxOCAwOToyMSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+IEhpIERh
+bmllbCwNCj4gPg0KPiA+IE9uIFRodSwgSmFuIDI1LCAyMDE4IGF0IDk6MDkgQU0sIERhbmllbCBM
+ZXpjYW5vDQo+ID4gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+IHdyb3RlOg0KPiA+PiBPbiAy
+NC8wMS8yMDE4IDE3OjQ5LCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4+PiBJIGFtIHNvcnJ5
+IHRvIGJvdGhlciB5b3UsIGp1c3Qgd29uZGVyaW5nIGlmIHlvdSB0aGluayB0aGVyZSBhcmUgYW55
+IGNoYW5jZXMgZm9yIHRoaXMgcGF0Y2ggdG8gYXBwbGllZCBvbiB0b3Agb2YgdjQuMTY/DQo+ID4+
+DQo+ID4+IFlvdSBjYW4gdGFrZSBpdCB0aHJvdWdoIHRoZSByZW5lc2FzIHRyZWUuDQo+ID4+DQo+
+ID4+IEFja2VkLWJ5OiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4N
+Cj4gPg0KPiA+IFRoYW5rIHlvdSENCj4gPg0KPiA+IFVuZm9ydHVuYXRlbHkgaXQncyBhIGJpdCBs
+YXRlIHRvIGdldCBub24tYnVnZml4ZXMgaW4gdjQuMTYgdGhyb3VnaCB0aGUgcmVuZXNhcw0KPiA+
+IHRyZWUgYW5kIGFybS1zb2MuDQo+DQo+IEkgdGhvdWdodCB0aGV5IHdlcmUgZ29pbmcgdGhyb3Vn
+aCB0aGUgcmVuZXNhcyB0cmVlLCBzbyBJIGRpc2NhcmRlZCB0aGVtIDovDQo+DQo+IE1heSBiZSBU
+aG9tYXMgY2FuIHRha2UgdGhlbSBpbiB0aGUgdGlwL3RpbWVycyB0cmVlID8NCj4NCj4gVGhvbWFz
+ID8NCj4NCj4NCj4gLS0NCj4gIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKU
+giBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MNCj4NCj4gRm9sbG93IExpbmFybzog
+IDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwNCj4gPGh0
+dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfA0KPiA8aHR0cDovL3d3dy5s
+aW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZw0KPg0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBm
+cm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4N
+Cj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4g
+TW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8t
+aW5mby5odG1sDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1l
+YWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVG
+SCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8u
+IDA0NTg2NzA5Lg0K
