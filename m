@@ -1,59 +1,69 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
-Date: Tue, 6 Mar 2018 16:43:04 +0100
-Message-ID: <4e3cc8a6-4b4b-4b09-5c04-b7b331158339@linaro.org>
-References: <cover.1520274879.git.amit.kucheria@linaro.org>
- <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
- <e6c78c81-f18d-c811-925d-5b1dd427fb65@linaro.org>
- <CAP245DWvBjcS73YhPxwh2OKW_PYvBLTe-ay6XD8VrSWpukQ3CQ@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Tue, 6 Mar 2018 08:57:03 -0700
+Message-ID: <20180306155703.GA4930@codeaurora.org>
+References: <20180226175802.20052-1-ilina@codeaurora.org>
+ <20180226175802.20052-3-ilina@codeaurora.org>
+ <20180305231455.GJ18510@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP245DWvBjcS73YhPxwh2OKW_PYvBLTe-ay6XD8VrSWpukQ3CQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180305231455.GJ18510@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: DTML <devicetree@vger.kernel.org>, Ram Chandrasekar <rkumbako@codeaurora.org>, Lina Iyer <ilina@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2018 06:48, Amit Kucheria wrote:
-> On Tue, Mar 6, 2018 at 2:41 AM, Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->> On 05/03/2018 19:36, Amit Kucheria wrote:
->>> From: Ram Chandrasekar <rkumbako@codeaurora.org>
->>>
->>> There is currently no way for the governor to be selected for each thermal
->>> zone in devicetree. This results in the default governor being used for all
->>> thermal zones even though no such restriction exists in the core code.
->>>
->>> Add support for specifying the thermal governor to be used for a thermal
->>> zone in the devicetree. The devicetree config should specify the governor
->>> name as a string that matches any available governors. If not specified, we
->>> maintain the current behaviour of using the default governor.
->>>
->>> Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
->>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Mon, Mar 05 2018 at 16:15 -0700, Bjorn Andersson wrote:
+>On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
+>
+>> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 >>
->> Why not create a kernel parameter (eg. thermal.governor=) ? So everyone
->> can gain benefit of this feature. And in order to specify that from the
->> DT, add the 'chosen' node and bootargs with the desired kernel parameter?
+>> Command DB provides information on shared resources like clocks,
+>> regulators etc., probed at boot by the remote subsytem and made
+>> available in shared memory.
 >>
-> 
-> This is supposed to be a per-thermal zone property. So specifying it
-> on the command-line, while possible, might be a little cumbersome. I'm
-> not even sure if kernel parameters can have a variable number of
-> arguments. IOW, thermal.tz0.governor=userspace,
-> thermal.tz1.governor=step_wise, thermal.tz2.governor=userspace, .....
-> 
-> I'm already seeing SoCs defining 8 or more thermal zones.
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>
+>> Changes in v4:
+>> 	- Fix unwanted capitalization
+>> 	- Add reg property
+>> ---
+>>  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>[..]
+>> +	reserved-memory {
+>> +		[...]
+>> +		qcom,cmd-db@c3f000c {
+>> +			reg = <0x0 0xc3f000c 0x0 0x8>,
+>> +			      <0x0 0x85fe0000 0x0 0x20000>;
+>
+>I'm still concerned about the use of the redirection mapping here,
+>the relocation at 0xc3f000c is used a convenience thing so that the
+>command db can be relocated, but because of how Linux will consume any
+>non-reserved memory the dts would still need to be manually updated.
+>
+This location is fixed and it is not expected to change between
+different boards. OEMs may change the actual address of the command db
+location, but would not change the dictionary location.
 
-Ah yes indeed.
+>As such I think you should just describe only the 0x85fe0000 + 0x20000
+>region here and to support the dynamic aspect of this from a system
+>point of view you can have the boot loader read the information at
+>0xc3f000c and adjust the reserved memory. (Or just keep the step of
+>manually update the dts without caring about the indirection)
+>
+It would be incorrect and very board specific to just use the 0x85fe000
+as the address. It is not how the SoC defines the location. Upon request
+earlier, this memory location was added in DT and the location is
+typical reference platform usage only.
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Lina
