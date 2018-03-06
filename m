@@ -1,123 +1,53 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 0/8] PECI device driver introduction
-Date: Tue, 6 Mar 2018 13:40:14 +0100
-Message-ID: <20180306124014.GB13950@amd>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+From: okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH 07/37] iommu: Add a page fault handler
+Date: Tue, 06 Mar 2018 07:52:37 -0500
+Message-ID: <93dc46c9f4c9f5f6f9dc50c26333398b@codeaurora.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-8-jean-philippe.brucker@arm.com>
+	<77afa195-4842-a112-eba5-409b861b5315@codeaurora.org>
+	<430e9754-4cf7-0aa8-7899-fc13e6a2e079@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <430e9754-4cf7-0aa8-7899-fc13e6a2e079-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, linux-acpi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-03-06 05:46, Jean-Philippe Brucker wrote:
+> On 05/03/18 21:53, Sinan Kaya wrote:
+>> On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+>>> +static struct workqueue_struct *iommu_fault_queue;
+>> 
+>> Is there anyway we can make this fault queue per struct device?
+>> Since this is common code, I think it needs some care.
+> 
+> I don't think it's better, the workqueue struct seems large. Maybe 
+> having
+> one wq per IOMMU is a good compromise?
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, one per iommu sounds reasonable.
 
-Hi!
 
-> Introduction of the Platform Environment Control Interface (PECI) bus
-> device driver. PECI is a one-wire bus interface that provides a
-> communication channel between Intel processor and chipset components to
-> external monitoring or control devices. PECI is designed to support the
-> following sideband functions:
->=20
-> * Processor and DRAM thermal management
->   - Processor fan speed control is managed by comparing Digital Thermal
->     Sensor (DTS) thermal readings acquired via PECI against the
->     processor-specific fan speed control reference point, or TCONTROL.
->     Both TCONTROL and DTS thermal readings are accessible via the process=
-or
->     PECI client. These variables are referenced to a common temperature,
->     the TCC activation point, and are both defined as negative offsets fr=
-om
->     that reference.
->   - PECI based access to the processor package configuration space provid=
-es
->     a means for Baseboard Management Controllers (BMC) or other platform
->     management devices to actively manage the processor and memory power
->     and thermal features.
->=20
-> * Platform Manageability
->   - Platform manageability functions including thermal, power, and error
->     monitoring. Note that platform 'power' management includes monitoring
->     and control for both the processor and DRAM subsystem to assist with
->     data center power limiting.
->   - PECI allows read access to certain error registers in the processor M=
-SR
->     space and status monitoring registers in the PCI configuration space
->     within the processor and downstream devices.
->   - PECI permits writes to certain registers in the processor PCI
->     configuration space.
->=20
-> * Processor Interface Tuning and Diagnostics
->   - Processor interface tuning and diagnostics capabilities
->     (Intel(c) Interconnect BIST). The processors Intel(c) Interconnect
->     Built In Self Test (Intel(c) IBIST) allows for infield diagnostic
->     capabilities in the Intel UPI and memory controller interfaces. PECI
->     provides a port to execute these diagnostics via its PCI Configuration
->     read and write capabilities.
->=20
-> * Failure Analysis
->   - Output the state of the processor after a failure for analysis via
->     Crashdump.
->=20
-> PECI uses a single wire for self-clocking and data transfer. The bus
-> requires no additional control lines. The physical layer is a self-clocked
-> one-wire bus that begins each bit with a driven, rising edge from an idle
-> level near zero volts. The duration of the signal driven high depends on
-> whether the bit value is a logic '0' or logic '1'. PECI also includes
-> variable data transfer rate established with every message. In this way,
-> it is highly flexible even though underlying logic is simple.
->=20
-> The interface design was optimized for interfacing to Intel processor and
-> chipset components in both single processor and multiple processor
-> environments. The single wire interface provides low board routing
-> overhead for the multiple load connections in the congested routing area
-> near the processor and chipset components. Bus speed, error checking, and
-> low protocol overhead provides adequate link bandwidth and reliability to
-> transfer critical device operating conditions and configuration
-> information.
->=20
-> This implementation provides the basic framework to add PECI extensions
-> to the Linux bus and device models. A hardware specific 'Adapter' driver
-> can be attached to the PECI bus to provide sideband functions described
-> above. It is also possible to access all devices on an adapter from
-> userspace through the /dev interface. A device specific 'Client' driver
-> also can be attached to the PECI bus so each processor client's features
-> can be supported by the 'Client' driver through an adapter connection in
-> the bus. This patch set includes Aspeed 24xx/25xx PECI driver and a gener=
-ic
-> PECI hwmon driver as the first implementation for both adapter and client
-> drivers on the PECI bus framework.
-
-Ok, how does this interact with ACPI/SMM BIOS/Secure mode code? Does
-Linux _need_ to control the fan? Or is SMM BIOS capable of doing all
-the work itself and Linux has just read-only access for monitoring
-purposes?
-
-Pavel
-
--- (english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures)
-http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlqejC4ACgkQMOfwapXb+vL7QwCbBLqyD0r8Cf3YWmTe5LwbrEhg
-QccAoJBgfUrVQ0t2o/5ZoHIVamsWUL6r
-=rQIF
------END PGP SIGNATURE-----
-
---dTy3Mrz/UPE2dbVg--
+As said in my other reply for this
+> patch, doing so isn't completely straightforward. I'll consider adding 
+> an
+> iommu pointer to the iommu_param struct attached to each device.
+> 
+> Thanks,
+> Jean
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" 
+> in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
