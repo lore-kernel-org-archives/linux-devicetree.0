@@ -1,36 +1,107 @@
-Return-Path: <SRS0=lEEj=F5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-it0-f69.google.com ([209.85.214.69]:60034 "EHLO
-        mail-it0-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754056AbeCGEub (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 6 Mar 2018 23:50:31 -0500
-Received: by mail-it0-f69.google.com with SMTP id m37so1328739iti.9
-        for <devicetree@vger.kernel.org>; Tue, 06 Mar 2018 20:50:31 -0800 (PST)
+Return-Path: <SRS0=HxI5=F4=codeaurora.org=kramasub@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: soc: qcom: Add device tree binding
+ for GENI SE
+References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
+ <1519781889-16117-2-git-send-email-kramasub@codeaurora.org>
+ <20180305235831.i7kxups7khus2g5c@rob-hp-laptop>
+ <af0d4155-c3bf-97cb-98b2-978093a30611@codeaurora.org>
+ <CAL_JsqJHSSsVs4Lut_f7Nk7NU1=NQnOvsyXz8g9-STrwO58GrA@mail.gmail.com>
+From: Karthik Ramasubramanian <kramasub@codeaurora.org>
+Message-ID: <31601f77-10b2-2974-6a55-52b3cf9abe5b@codeaurora.org>
+Date: Tue, 6 Mar 2018 10:13:09 -0700
 MIME-Version: 1.0
-Message-ID: <f4f5e807f9987c40770566cb4c73@google.com>
-Date: Wed, 07 Mar 2018 04:50:31 +0000
-Subject: B2B Prospect Contacts for 2018
-From: laury.nancy@dizileads.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+In-Reply-To: <CAL_JsqJHSSsVs4Lut_f7Nk7NU1=NQnOvsyXz8g9-STrwO58GrA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, evgreen@chromium.org, acourbot@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGksDQoNCkhvcGUgeW91IGFyZSBkb2luZyB3ZWxsLg0KDQpXZSBhcmUgYSBkYXRhYmFzZSBwcm92
-aWRpbmcgY29tcGFueSB3aGljaCBwcm92aWRlcyBsaXN0cy9kYXRhYmFzZXMgZm9yICANCnZhcmlv
-dXMgaW5kdXN0cmllcyBhY3Jvc3MgdGhlIGdsb2JlIGFuZCB3ZSBjYW4gcHJvdmlkZSB5b3Ugd2l0
-aCBjb250YWN0ICANCmRldGFpbHMgb2YgZGVjaXNpb24gbWFrZXJzIGFuZCBpbmZsdWVuY2VycyBv
-ZiB5b3VyIHRhcmdldCBtYXJrZXQuDQoNCkFsbCB0aGUgY29udGFjdHMgaW5jbHVkZSBDb250YWN0
-IG5hbWUsIEpvYiB0aXRsZSwgbWFpbGluZyBhZGRyZXNzLCBDaXR5LCAgDQpTdGF0ZSwgWmlwIGNv
-ZGUsIFJldmVudWUgc2l6ZSwgRW1wbG95ZWUgc2l6ZSwgUGhvbmUsIEluZHVzdHJ5LCBVUkwgYW5k
-ICANClZlcmlmaWVkIGRlbGl2ZXJhYmxlIGVtYWlscyBvbmx5Lg0KDQpJZiB5b3UgY2FuIGxldCBt
-ZSBrbm93IHlvdXIgdGFyZ2V0ZWQgY3JpdGVyaWEgYXMgYmVsb3csIEkgY2FuIGFzc2lzdCB5b3Ug
-IA0Kd2l0aCBzb21lIHNhbXBsZXMgYWxvbmcgd2l0aCB0aGUgY291bnQvY29zdHMsIGFuZCBtb3Jl
-IGRldGFpbHMgZm9yIHlvdXIgIA0KY29uc2lkZXJhdGlvbi4NCg0K4oCiIEdlb2dyYXBoeToNCuKA
-oiBJbmR1c3RyeToNCuKAoiBFeGVjdXRpdmUgdGl0bGUvam9iIHJvbGVzOg0KDQpUaGFua3MsIGFu
-ZCBsb29raW5nIGZvcndhcmQgdG8gaGVhcmluZyBmcm9tIHlvdSENCg0KUmVnYXJkcywNCkxhdXJ5
-IE5hbmN5DQpNYXJrZXRpbmcgQW5hbHlzdA0KDQpPdGhlciBJbmR1c3RyaWVzOiAtIE9pbCAmIEdh
-cywgRW5lcmd5ICYgVXRpbGl0eSwgSGVhbHRoY2FyZSwgIA0KVHJhbnNwb3J0YXRpb24sIElUIFNl
-Y3VyaXR5LCBNYW51ZmFjdHVyaW5nLCBGaW5hbmNlLCBJbnN1cmFuY2UsIEZvb2QgJiAgDQpCZXZl
-cmFnZSwgSG9zcGl0YWxpdHksIENvbnN0cnVjdGlvbiwgUHVibGlzaGluZyBhbmQgUHJpbnRpbmcs
-ICANClNlbWljb25kdWN0b3JzLCBTZWN1cml0eSBFdGMuDQo=
+
+
+On 3/6/2018 6:22 AM, Rob Herring wrote:
+> On Mon, Mar 5, 2018 at 6:55 PM, Karthik Ramasubramanian
+> <kramasub@codeaurora.org> wrote:
+>>
+>>
+>> On 3/5/2018 4:58 PM, Rob Herring wrote:
+>>>
+>>> On Tue, Feb 27, 2018 at 06:38:06PM -0700, Karthikeyan Ramasubramanian
+>>> wrote:
+>>>>
+>>>> Add device tree binding support for the QCOM GENI SE driver.
+>>>>
+>>>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+>>>> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+>>>> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+>>>> ---
+>>>>    .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 89
+>>>> ++++++++++++++++++++++
+>>>>    1 file changed, 89 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>>> b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>>> new file mode 100644
+>>>> index 0000000..fe6a0c0
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>>> @@ -0,0 +1,89 @@
+>>>> +Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
+>>>> +
+>>>> +Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP)
+>>>> wrapper
+>>>> +is a programmable module for supporting a wide range of serial
+>>>> interfaces
+>>>> +like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8
+>>>> Serial
+>>>> +Interfaces, using its internal Serial Engines. The GENI Serial Engine
+>>>> QUP
+>>>> +Wrapper controller is modeled as a node with zero or more child nodes
+>>>> each
+>>>> +representing a serial engine.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:          Must be "qcom,geni-se-qup".
+>>>> +- reg:                 Must contain QUP register address and length.
+>>>> +- clock-names:         Must contain "m-ahb" and "s-ahb".
+>>>> +- clocks:              AHB clocks needed by the device.
+>>>> +
+>>>> +Required properties if child node exists:
+>>>> +- #address-cells:      Must be <1> for Serial Engine Address
+>>>> +- #size-cells:                 Must be <1> for Serial Engine Address
+>>>> Size
+>>>> +- ranges:              Must be present
+>>>> +
+>>>> +Properties for children:
+>>>> +
+>>>> +A GENI based QUP wrapper controller node can contain 0 or more child
+>>>> nodes
+>>>> +representing serial devices.  These serial devices can be a QCOM UART,
+>>>> I2C
+>>>> +controller, spi controller, or some combination of aforementioned
+>>>> devices.
+>>>
+>>>
+>>> s/spi/SPI/
+>>>
+>>> Where's the SPI binding?
+>>
+>> Since the patch series introduces UART and I2C drivers, I added the bindings
+>> only for them. I thought about adding the SPI binding when the SPI
+>> controller driver is introduced. Please let me know if you want me to add
+>> the bindings for SPI in this patch series itself.
+> 
+> There's no requirement to have the driver and I prefer bindings be as
+> complete as possible.
+Ok, I will add the bindings for SPI controller in the next posting.
+> 
+> Rob
+> 
+Regards,
+Karthik.
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
