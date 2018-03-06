@@ -1,56 +1,116 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
-Date: Tue, 6 Mar 2018 12:32:08 +0000
-Message-ID: <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
-References: <cover.1520274879.git.amit.kucheria@linaro.org>
- <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 2/8] [PATCH 2/8] Documentations: dt-bindings: Add a
+ document of PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Tue, 6 Mar 2018 13:40:02 +0100
+Message-ID: <20180306124002.GA13950@amd>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-3-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180221161606.32247-3-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ram Chandrasekar <rkumbako@codeaurora.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, ilina@codeaurora.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 05/03/18 18:36, Amit Kucheria wrote:
-> From: Ram Chandrasekar <rkumbako@codeaurora.org>
-> 
-> There is currently no way for the governor to be selected for each thermal
-> zone in devicetree. 
+Hi!
 
-How is that any different from cpufreq, cpuidle or devfreq subsystems ?
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> ---
+>  .../devicetree/bindings/peci/peci-aspeed.txt       | 73 ++++++++++++++++=
+++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.txt b/Doc=
+umentation/devicetree/bindings/peci/peci-aspeed.txt
+> new file mode 100644
+> index 000000000000..8a86f346d550
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
+> @@ -0,0 +1,73 @@
+> +Device tree configuration for PECI buses on the AST24XX and AST25XX SoCs.
 
-> This results in the default governor being used for all
-> thermal zones even though no such restriction exists in the core code.
-> 
+Are these SoCs x86-based?
 
-What restrictions ?
+> +Required properties:
+> +- compatible
+> +	"aspeed,ast2400-peci" or "aspeed,ast2500-peci"
+> +	- aspeed,ast2400-peci: Aspeed AST2400 family PECI controller
+> +	- aspeed,ast2500-peci: Aspeed AST2500 family PECI controller
+> +
+> +- reg
+> +	Should contain PECI registers location and length.
 
-> Add support for specifying the thermal governor to be used for a thermal
-> zone in the devicetree.
+Other dts documents put it on one line, reg: Should contain ...
 
-Then what prevents us from doing the same for other subsystems with so
-called /inefficient default/ governors ?
+> +- clock_frequency
+> +	Should contain the operation frequency of PECI hardware module.
+> +	187500 ~ 24000000
 
-> The devicetree config should specify the governor
-> name as a string that matches any available governors. If not specified, we
-> maintain the current behaviour of using the default governor.
+specify this is Hz?
 
-If one is specified, can the user change it from sysfs ? If
-yes, then why do we need this binding at all ? If no, we are basically
-restricting, then what would happen if the DT was shipped with wrong
-governor specified because the firmware author didn't know about any
-other governor ?
+> +- rd-sampling-point
+> +	Read sampling point selection. The whole period of a bit time will be
+> +	divided into 16 time frames. This value will determine which time frame
+> +	this controller will sample PECI signal for data read back. Usually in
+> +	the middle of a bit time is the best.
 
-IMO, having this in DT is bad idea as it may cause more issues than
-gain. We already have sysfs support like other PM subsystems and
-userspace can deal with it.
+English? "This value will determine when this controller"?
 
--- 
-Regards,
-Sudeep
+> +	0 ~ 15 (default: 8)
+> +
+> +- cmd_timeout_ms
+> +	Command timeout in units of ms.
+> +	1 ~ 60000 (default: 1000)
+> +
+> +Example:
+> +	peci: peci@1e78b000 {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges =3D <0x0 0x1e78b000 0x60>;
+> +
+> +		peci0: peci-bus@0 {
+> +			compatible =3D "aspeed,ast2500-peci";
+> +			reg =3D <0x0 0x60>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			interrupts =3D <15>;
+> +			clocks =3D <&clk_clkin>;
+> +			clock-frequency =3D <24000000>;
+> +			msg-timing-nego =3D <1>;
+> +			addr-timing-nego =3D <1>;
+> +			rd-sampling-point =3D <8>;
+> +			cmd-timeout-ms =3D <1000>;
+> +		};
+> +	};
+> \ No newline at end of file
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqejCIACgkQMOfwapXb+vLaLQCcDjI/E5KqNtK+MwWD+At6Hvze
+Wb8An3DjmGPHUBCIvAPa11iSMb/A6KuP
+=YJ4Q
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
