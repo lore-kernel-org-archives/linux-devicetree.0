@@ -1,49 +1,54 @@
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v4 2/3] Input: gpio-keys - allow setting wakeup event action in DT
-Date: Tue,  6 Mar 2018 15:51:22 +0800
-Message-ID: <20180306075123.20989-1-jeffy.chen@rock-chips.com>
+Subject: [PATCH v4 3/3] arm64: dts: rockchip: kevin: Avoid wakeup when inserting the pen
+Date: Tue,  6 Mar 2018 15:51:23 +0800
+Message-ID: <20180306075123.20989-2-jeffy.chen@rock-chips.com>
 References: <20180306074418.8879-2-jeffy.chen@rock-chips.com>
+ <20180306075123.20989-1-jeffy.chen@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180306074418.8879-2-jeffy.chen@rock-chips.com>
+In-Reply-To: <20180306075123.20989-1-jeffy.chen@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Emil Renner Berthing <kernel@esmil.dk>, Brian Norris <briannorris@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Allow specifying event actions to trigger wakeup when using the
-gpio-keys input device as a wakeup source.
+Add wakeup event action for Pen Insert gpio key, to avoid wakeup when
+inserting the pen.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
-Changes in v4: None
+Changes in v4:
+Include dt-binding gpio-keys.h
+
 Changes in v3: None
 Changes in v2:
 Specify wakeup event action instead of irq trigger type as Brian
 suggested.
 
- Documentation/devicetree/bindings/input/gpio-keys.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-index a94940481e55..996ce84352cb 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -26,6 +26,14 @@ Optional subnode-properties:
- 	  If not specified defaults to 5.
- 	- wakeup-source: Boolean, button can wake-up the system.
- 			 (Legacy property supported: "gpio-key,wakeup")
-+	- wakeup-event-action: Specifies whether the key should wake the
-+	  system when asserted, when deasserted, or both. This property is
-+	  only valid for keys that wake up the system (e.g., when the
-+	  "wakeup-source" property is also provided).
-+	  Supported values are defined in linux-event-codes.h:
-+		EV_ACT_ASSERTED		- asserted
-+		EV_ACT_DEASSERTED	- deasserted
-+		EV_ACT_ANY		- both asserted and deasserted
- 	- linux,can-disable: Boolean, indicates that button is connected
- 	  to dedicated (not shared) interrupt which can be disabled to
- 	  suppress events from the button.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index 191a6bcb1704..89126dbe5d91 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -44,6 +44,7 @@
+ 
+ /dts-v1/;
+ #include "rk3399-gru.dtsi"
++#include <dt-bindings/input/gpio-keys.h>
+ #include <dt-bindings/input/linux-event-codes.h>
+ 
+ /*
+@@ -134,6 +135,8 @@
+ 		gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+ 		linux,code = <SW_PEN_INSERTED>;
+ 		linux,input-type = <EV_SW>;
++		/* Wakeup only when ejecting */
++		wakeup-event-action = <EV_ACT_DEASSERTED>;
+ 		wakeup-source;
+ 	};
+ };
 -- 
 2.11.0
