@@ -1,68 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: rng: add bindings doc for
- Keystone SA HWRNG driver
-Date: Mon, 5 Mar 2018 20:40:38 -0600
-Message-ID: <20180306024038.uszf3r4nb4pw6kkf@rob-hp-laptop>
-References: <1519908900-10388-1-git-send-email-vitalya@ti.com>
- <1519908900-10388-2-git-send-email-vitalya@ti.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/6] Add endpoint driver for Rockchip PCIe controller
+Date: Tue,  6 Mar 2018 10:42:53 +0800
+Message-ID: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519908900-10388-2-git-send-email-vitalya@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vitaly Andrianov <vitalya@ti.com>
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, t-kristo@ti.com, m-karicheri2@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2018 at 07:54:59AM -0500, Vitaly Andrianov wrote:
-> The Keystone SA module has a hardware random generator module.
-> This commit adds binding doc for the KS2 SA HWRNG driver.
 
-Preferred subject prefix is "dt-bindings: rng: ..."
+Patch 1 firstly move the whole Rockchip PCIe host driver from
+drivers/pci/host to a new folder, driver/pci/rockchip/, and rename
+pcie-rockchip.c to pcie-rockchip-host.c. It also updates the
+Kconfig/Makefile etc to repect this change.
 
-> 
-> Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  Documentation/devicetree/bindings/rng/ks-sa-rng.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/ks-sa-rng.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/ks-sa-rng.txt b/Documentation/devicetree/bindings/rng/ks-sa-rng.txt
-> new file mode 100644
-> index 0000000..cc8ee44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/ks-sa-rng.txt
-> @@ -0,0 +1,21 @@
-> +Keystone SoC Hardware Random Number Generator(HWRNG) Module
-> +
-> +On Keystone SoCs HWRNG module is a submodule of the Security Accelerator.
-> +
-> +- compatible: should be "ti,keystone-rng"
-> +- ti,syscon-sa-cfg: phandle to syscon node of the SA configuration registers.
-> +		    This registers are shared between hwrng and crypto drivers.
-> +- clocks: phandle to the reference clocks for the subsystem
-> +- clock-names: functional clock name. Should be set to "fck"
-> +- reg: HWRNG module register space
-> +
-> +Example:
-> +/* K2HK */
-> +
-> +hwrng@0x24000 {
+Then patch 2 and patch 3 are trying to spilt out some common code in
+preparation for adding endponit controller driver support.
 
-rng@24000
+Patch 4 rename rockchip-pcie.txt to rockchip-pcie-host.txt.
 
-With those,
+Patch 5 adds endpoint controller driver support as well as the new
+documentation, rockchip-pcie-ep.txt, introduced by patch 6.
 
-Reviewed-by: Rob Herring <robh@kernel.org>                                 
 
-> +	compatible = "ti,keystone-rng";
-> +	ti,syscon-sa-cfg = <&sa_config>;
-> +	clocks = <&clksa>;
-> +	clock-names = "fck";
-> +	reg = <0x24000 0x1000>;
-> +};
-> -- 
-> 2.7.4
-> 
+Changes in v2:
+- remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
+- fix some error handling
+Changes in v3:
+- fix all issues suggested by Lorenzo
+
+Shawn Lin (6):
+  PCI: rockchip: Create individual folder for rockchip drivers
+  PCI: rockchip: Split out common function to parse DT
+  PCI: rockchip: Split out common function to init controller
+  dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
+    rockchip-pcie-host.txt
+  PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
+    controller
+  dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
+    controller
+
+ .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  62 ++
+ .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   0
+ MAINTAINERS                                        |   4 +-
+ drivers/pci/Kconfig                                |   1 +
+ drivers/pci/Makefile                               |   2 +
+ drivers/pci/host/Kconfig                           |  11 -
+ drivers/pci/host/Makefile                          |   1 -
+ drivers/pci/rockchip/Kconfig                       |  32 ++
+ drivers/pci/rockchip/Makefile                      |   4 +
+ drivers/pci/rockchip/pcie-rockchip-ep.c            | 638 +++++++++++++++++++++
+ .../pcie-rockchip-host.c}                          | 594 +------------------
+ drivers/pci/rockchip/pcie-rockchip.c               | 417 ++++++++++++++
+ drivers/pci/rockchip/pcie-rockchip.h               | 341 +++++++++++
+ 13 files changed, 1512 insertions(+), 595 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+ rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
+ create mode 100644 drivers/pci/rockchip/Kconfig
+ create mode 100644 drivers/pci/rockchip/Makefile
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
+ rename drivers/pci/{host/pcie-rockchip.c => rockchip/pcie-rockchip-host.c} (61%)
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip.c
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip.h
+
+-- 
+1.9.1
