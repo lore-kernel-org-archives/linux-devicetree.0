@@ -1,71 +1,92 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v5 1/3] USB3/DWC3: Add definition for global soc bus configuration register
-Date: Tue, 6 Mar 2018 16:59:09 +0800
-Message-ID: <20180306085911.5930-1-ran.wang_1@nxp.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs,
+ wifi reset)
+Date: Tue, 6 Mar 2018 11:58:33 +0000
+Message-ID: <d0aac677-ed2e-c059-0cba-79f88de194b4@arm.com>
+References: <20180227204711.29357-1-dianders@chromium.org>
+ <3831527.HjPPvuL6zK@diego>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3831527.HjPPvuL6zK@diego>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>
-Cc: ran.wang_1@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Changming Huang <jerry.huang@nxp.com>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Changming Huang <jerry.huang@nxp.com>
+Hi all,
 
-Add the macro definition for global soc bus configuration register 0/1
+On 01/03/18 08:43, Heiko Stübner wrote:
+> Am Dienstag, 27. Februar 2018, 21:47:11 CET schrieb Douglas Anderson:
+>> Back in the early days when gru devices were still under development
+>> we found an issue where the WiFi reset line needed to be configured as
+>> early as possible during the boot process to avoid the WiFi module
+>> being in a bad state.
+>>
+>> We found that the way to get the kernel to do this in the earliest
+>> possible place was to configure this line in the pinctrl hogs, so
+>> that's what we did.  For some history here you can see
+>> <http://crosreview.com/368770>.  After the time that change landed in
+>> the kernel, we landed a firmware change to configure this line even
+>> earlier.  See <http://crosreview.com/399919>.  However, even after the
+>> firmware change landed we kept the kernel change to deal with the fact
+>> that some people working on devices might take a little while to
+>> update their firmware.
+>>
+>> At this there are definitely zero devices out in the wild that have
+>> firmware without the fix in it.  Specifically looking in the firmware
+>> branch several critically important fixes for memory stability landed
+>> after the patch in coreboot and I know we didn't ship without those.
+>> Thus, by now, everyone should have the new firmware and it's safe to
+>> not have the kernel set this up in a pinctrl hog.
+>>
+>> Historically, even though it wasn't needed to have this in a pinctrl
+>> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
+>> default hog at bootup and then would never touch things again.  That
+>> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
+>> during suspend/resume").  After that commit then we'll re-apply the
+>> default hog at resume time and that can screw up the reset state of
+>> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
+>> then the whole system can go haywire.  That's what was happening.
+>> Specifically you'd resume a rk3399-gru-* device and it would mostly
+>> resume, then would crash with some crazy weird crash.
+>>
+>> One could say, perhaps, that the recent pinctrl change was at fault
+>> (and should be fixed) since it changed behavior.  ...but that's not
+>> really true.  The device tree for rk3399-gru is really to blame.
+>> Specifically since the pinctrl is defined in the hog and not in the
+>> "wlan-pd-n" node then the actual user of this pin doesn't have a
+>> pinctrl entry for it.  That's bad.
+>>
+>> Let's fix our problems by just moving the control of
+>> "wlan_module_reset_l pinctrl" out of the hog and put them in the
+>> proper place.
+>>
+>> NOTE: in theory, I think it should actually be possible to have a pin
+>> controlled _both_ by the hog and by an actual device.  Once the device
+>> claims the pin I think the hog is supposed to let go.  I'm not 100%
+>> sure that this works and in any case this solution would be more
+>> complex than is necessary.
+>>
+>> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
+>> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
+>> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> 
+> applied as fix for 4.16 with the 2 Tested-tags
+Sorry to rain on everyone's parade, but further testing shows that this
+patch may not be enough to restore a reliable s2r. My initial testing
+did show that we were resuming without the VOP errors, but there seem to
+be further issues (I'm loosing the keyboard and the trackpad after
+resume on Kevin).
 
-Signed-off-by: Changming Huang <jerry.huang@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Changes in v5:
-  - no change
-Changes in v4:
-  - no change
-Changes in v3:
-  - no change
-Changes in v2:
-  - split the patch
-  - add more macro definition for soc bus configuration register
+Applying my initial hack makes it work again. I suspect that there are
+more hog pins that need tweaking, but I'm a bit out of my depth here.
 
- drivers/usb/dwc3/core.h |   26 ++++++++++++++++++++++++++
- 1 files changed, 26 insertions(+), 0 deletions(-)
+Thanks,
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 860d2bc..8f97f61 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -153,6 +153,32 @@
- 
- /* Bit fields */
- 
-+/* Global SoC Bus Configuration Register 0 */
-+#define AXI3_CACHE_TYPE_AW		0x8 /* write allocate */
-+#define AXI3_CACHE_TYPE_AR		0x4 /* read allocate */
-+#define AXI3_CACHE_TYPE_SNP		0x2 /* cacheable */
-+#define AXI3_CACHE_TYPE_BUF		0x1 /* bufferable */
-+#define DWC3_GSBUSCFG0_DATARD_SHIFT	28
-+#define DWC3_GSBUSCFG0_DESCRD_SHIFT	24
-+#define DWC3_GSBUSCFG0_DATAWR_SHIFT	20
-+#define DWC3_GSBUSCFG0_DESCWR_SHIFT	16
-+#define DWC3_GSBUSCFG0_SNP_MASK		0xffff0000
-+#define DWC3_GSBUSCFG0_DATABIGEND	(1 << 11)
-+#define DWC3_GSBUSCFG0_DESCBIGEND	(1 << 10)
-+#define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
-+#define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
-+#define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
-+#define DWC3_GSBUSCFG0_INCR32BRSTENA	(1 << 4) /* INCR32 burst */
-+#define DWC3_GSBUSCFG0_INCR16BRSTENA	(1 << 3) /* INCR16 burst */
-+#define DWC3_GSBUSCFG0_INCR8BRSTENA	(1 << 2) /* INCR8 burst */
-+#define DWC3_GSBUSCFG0_INCR4BRSTENA	(1 << 1) /* INCR4 burst */
-+#define DWC3_GSBUSCFG0_INCRBRSTENA	(1 << 0) /* undefined length enable */
-+#define DWC3_GSBUSCFG0_INCRBRST_MASK	0xff
-+
-+/* Global SoC Bus Configuration Register 1 */
-+#define DWC3_GSBUSCFG1_1KPAGEENA	(1 << 12) /* 1K page boundary enable */
-+#define DWC3_GSBUSCFG1_PTRANSLIMIT_MASK	0xf00
-+
- /* Global Debug Queue/FIFO Space Available Register */
- #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
- #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+	M.
 -- 
-1.7.1
+Jazz is not dead. It just smells funny...
