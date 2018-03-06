@@ -1,28 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/6] dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
-Date: Mon, 5 Mar 2018 20:38:06 -0600
-Message-ID: <20180306023806.rhmpp7lwftgb74un@rob-hp-laptop>
-References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
- <1519901623-23216-6-git-send-email-patrice.chotard@st.com>
+Subject: Re: [PATCH 1/2] Documentation: dt: rng: add bindings doc for
+ Keystone SA HWRNG driver
+Date: Mon, 5 Mar 2018 20:40:38 -0600
+Message-ID: <20180306024038.uszf3r4nb4pw6kkf@rob-hp-laptop>
+References: <1519908900-10388-1-git-send-email-vitalya@ti.com>
+ <1519908900-10388-2-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519901623-23216-6-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <1519908900-10388-2-git-send-email-vitalya@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: patrice.chotard@st.com
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org, mcoquelin.stm32@gmail.com
+To: Vitaly Andrianov <vitalya@ti.com>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, t-kristo@ti.com, m-karicheri2@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2018 at 11:53:42AM +0100, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
+On Thu, Mar 01, 2018 at 07:54:59AM -0500, Vitaly Andrianov wrote:
+> The Keystone SA module has a hardware random generator module.
+> This commit adds binding doc for the KS2 SA HWRNG driver.
+
+Preferred subject prefix is "dt-bindings: rng: ..."
+
 > 
-> STM32F769 SoC provides 2 SDMMC instances, add missing
-> RCC SDMMC2 entry for it.
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 > ---
->  include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/rng/ks-sa-rng.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/ks-sa-rng.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/ks-sa-rng.txt b/Documentation/devicetree/bindings/rng/ks-sa-rng.txt
+> new file mode 100644
+> index 0000000..cc8ee44
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/ks-sa-rng.txt
+> @@ -0,0 +1,21 @@
+> +Keystone SoC Hardware Random Number Generator(HWRNG) Module
+> +
+> +On Keystone SoCs HWRNG module is a submodule of the Security Accelerator.
+> +
+> +- compatible: should be "ti,keystone-rng"
+> +- ti,syscon-sa-cfg: phandle to syscon node of the SA configuration registers.
+> +		    This registers are shared between hwrng and crypto drivers.
+> +- clocks: phandle to the reference clocks for the subsystem
+> +- clock-names: functional clock name. Should be set to "fck"
+> +- reg: HWRNG module register space
+> +
+> +Example:
+> +/* K2HK */
+> +
+> +hwrng@0x24000 {
+
+rng@24000
+
+With those,
 
 Reviewed-by: Rob Herring <robh@kernel.org>                                 
+
+> +	compatible = "ti,keystone-rng";
+> +	ti,syscon-sa-cfg = <&sa_config>;
+> +	clocks = <&clksa>;
+> +	clock-names = "fck";
+> +	reg = <0x24000 0x1000>;
+> +};
+> -- 
+> 2.7.4
+> 
