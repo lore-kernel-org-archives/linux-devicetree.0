@@ -1,67 +1,40 @@
-Return-Path: <SRS0=aH0K=F7=bootlin.com=maxime.ripard@kernel.org>
-Date: Fri, 9 Mar 2018 16:36:39 +0100
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v8 0/2] media: v4l: Add support for the Cadence MIPI-CSI2
- RX
-Message-ID: <20180309153639.f2oauh5gvlgagc5v@flea>
-References: <20180215133335.9335-1-maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="76sdo5dsk34ofwrl"
-Content-Disposition: inline
-In-Reply-To: <20180215133335.9335-1-maxime.ripard@bootlin.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+Return-Path: <SRS0=MR/7=F4=linaro.org=shawn.guo@kernel.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 0/2] Add HiSilicon Hi3798CV200 specific dw_mmc extension driver
+Date: Tue,  6 Mar 2018 14:58:49 +0800
+Message-Id: <1520319531-24661-1-git-send-email-shawn.guo@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
+It adds the dt-bindings and driver support for HiSilicon Hi3798CV200
+specific dw_mmc extension.
 
---76sdo5dsk34ofwrl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes for v2:
+ - Rebase to v4.16-rc.
+ - Use SPDX tag for license.
+ - Make ciu-sample and ciu-drive clock be required.
+ - Drop deprecated num-slots property from bindings example.
+ - Do not show board vs. SoC portion split in bindings example.
+ - Use .init hook instead of .parse_dt for initialization.
+ - Improve MODULE_DESCRIPTION to make it clear this is Hi3798CV200
+   specific extension.
+ - Various style improvements and code cleanups.
 
-On Thu, Feb 15, 2018 at 02:33:33PM +0100, Maxime Ripard wrote:
-> Hi,
->=20
-> Here is another attempt at supporting the MIPI-CSI2 RX block from
-> Cadence.
->=20
-> This IP block is able to receive CSI data over up to 4 lanes, and
-> split it to over 4 streams. Those streams are basically the interfaces
-> to the video grabbers that will perform the capture.
->=20
-> It is able to map streams to both CSI datatypes and virtual channels,
-> dynamically. This is unclear at this point what the right way to
-> support it would be, so the driver only uses a static mapping between
-> the virtual channels and streams, and ignores the data types.
+v1: https://lkml.org/lkml/2017/10/17/1213
 
-Ping?
+tianshuliang (2):
+  dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
+  mmc: dw_mmc: add support for hi3798cv200 specific extensions of
+    dw-mshc
 
-Maxime
+ .../bindings/mmc/hi3798cv200-dw-mshc.txt           |  40 +++++
+ drivers/mmc/host/Kconfig                           |   9 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/dw_mmc-hi3798cv200.c              | 197 +++++++++++++++++++++
+ 4 files changed, 247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-hi3798cv200.c
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---76sdo5dsk34ofwrl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqiqgYACgkQ0rTAlCFN
-r3R3aRAAkUsN9bD09gOZaSnrfBzNr1sDXkzoj+EZqYggMh+mnl2hl7mTy9/CtVLY
-vS3TFy17W0XzdiT76k0s+3ENp8pqpQ1uAVk+eHfbG4soX2BaE/nc53YJMIb9U2if
-xc9i+HK/MqP8M+jZwcfGoBFbTcMxYazrSOdGI6kqCl8XYAzSyQDuIg8qP/z1CD0f
-tML0k/WKBa5LcRJuaDIFPahhHaHjBXSXRJeJgUeuvjfsR/5kXNdmfD8RZnrH06t0
-IxChnuv+doNwFCSHyyF8boKHZyb3vx8XepjBCox87YiclKsf8xdfC4km/J27y4G3
-0yGXiVsI0wUwCBv6lEcWy+OoRGkxzMXroztPONqUNcWNXZTtvDd46BGh3vsRPuM/
-xPyNLWKYawXc8qYj+IugVEhgdMAOh9FWXnIttrH+dfk/gpRMC6ylup3xKKBAcH9d
-wqlCgV+iXGtmvlx6gi7absH9wKSfv4hcC7aJDC/MLegcQZGSOnV5XPEF2FP14Rpq
-cj0FUei68iszb6Grc4wgooIRJ709CTyC+MLQHjn9j8YabelGe1aSeFQAVMDrZgZA
-t/9QznRkeOXA4dy7gytyikpTTlMBkYtLphcH6j7Tvo+10bN5A1p+dsmWULFETnDr
-dA9pOsnEvfjzw7PYDhKpqa1IkRep/G6ccUlrTMda6pr7X7QTvwM=
-=QBSz
------END PGP SIGNATURE-----
-
---76sdo5dsk34ofwrl--
+-- 
+1.9.1
