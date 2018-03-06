@@ -1,193 +1,72 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
- SoCs
-Date: Tue, 06 Mar 2018 14:30:14 -0800
-Message-ID: <152037541468.218381.12480897609076588560@swboyd.mtv.corp.google.com>
-References: <20180302164317.10554-1-ilina@codeaurora.org>
- <20180302164317.10554-3-ilina@codeaurora.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] MAINTAINERS: Add linux/of_*.h headers to appropriate subsystems
+Date: Tue, 6 Mar 2018 15:49:11 -0800
+Message-ID: <CAErSpo6bMDNe7wSraC3jUetn=Vx5ZcTFOprhMti7NRyY2JUGcw@mail.gmail.com>
+References: <20180306151334.28720-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302164317.10554-3-ilina@codeaurora.org>
+In-Reply-To: <20180306151334.28720-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Joerg Roedel <joro@8bytes.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2018-03-02 08:43:09)
-> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-> driver. The hardware block is used for communicating resource state
+On Tue, Mar 6, 2018 at 7:13 AM, Rob Herring <robh@kernel.org> wrote:
+> The DeviceTree support code for specific subsystems are maintained by
+> the respective subsystem maintainers. However, only the DT
+> maintainers are listed for most of the linux/of_*.h headers. Fix this
+> and add the headers to the appropriate subsystem maintainer.
+>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-s/driver/hardware/
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> requests for shared resources.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
-> 
-> Changes in v2:
->         - Amend text to describe the registers in reg property
->         - Add reg-names for the registers
->         - Update examples to use GIC_SPI in interrupts instead of 0
->         - Rephrase incorrect description
-> 
-> Changes in v3:
->         - Fix unwanted capitalization
->         - Remove clients from the examples, this doc does not describe
->           them
->         - Rephrase introductory paragraph
->         - Remove hardware specifics from DT bindings
-> ---
->  .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 131 +++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-> new file mode 100644
-> index 000000000000..afd3817cc615
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-
-Shouldn't this go into bindings/soc/qcom/ ?
-
-> @@ -0,0 +1,131 @@
-> +RPMH RSC:
-> +------------
-> +
-> +Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
-> +the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
-> +can be written to the Trigger Command Set (TCS)  registers and using a (addr,
-> +val) pair and triggered. Messages in the TCS are then sent in sequence over an
-> +internal bus.
-> +
-> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
-> +(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
-> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
-> +be written to from Linux. The structure of each DRV follows the same template
-> +with a few variations that are captured by the properties here.
-> +
-> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
-> +have powered off to facilitate idle power saving. TCS could be classified as -
-> +
-> +       SLEEP,  /* Triggered by F/W */
-> +       WAKE,   /* Triggered by F/W */
-> +       ACTIVE, /* Triggered by Linux */
-> +       CONTROL /* Triggered by F/W */
-> +
-> +The order in which they are described in the DT, should match the hardware
-> +configuration.
-> +
-> +Requests can be made for the state of a resource, when the subsystem is active
-> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
-> +will be an aggregate of the sleep votes from each of those subsystem. Drivers
-
-s/subsystem/subsystems/
-s/Drivers/Clients/ ?
-
-> +may request a sleep value for their shared resources in addition to the active
-> +mode requests.
-> +
-> +Control requests are instance specific requests that may or may not reach an
-> +accelerator. Only one platform device in Linux can request a control channel
-> +on a DRV.
-
-Not sure what this last sentence has to do with the DT binding. We
-generally try to avoid saying 'Linux' or 'driver' in DT binding
-documents, because they usually document hardware.
-
-> +
-> +Properties:
-> +
-> +- compatible:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: Should be "qcom,rpmh-rsc".
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: The first register specifies the base address of the DRV.
-> +                   The second register specifies the start address of the
-> +                   TCS.
-> +
-> +- reg-names:
-> +       Usage: required
-
-optional?
-
-> +       Value type: <string>
-> +       Definition: Maps the register specified in the reg property. Must be
-> +                   "drv" and "tcs".
-> +
-> +- interrupts:
-> +       Usage: required
-> +       Value type: <prop-encoded-interrupt>
-> +       Definition: The interrupt that trips when a message complete/response
-> +                  is received for this DRV from the accelerators.
-> +
-> +- qcom,drv-id:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: the id of the DRV in the RSC block.
-> +
-> +- qcom,tcs-config:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: the tuple defining the configuration of TCS.
-> +                   Must have 2 cells which describe each TCS type.
-> +                   <type number_of_tcs>.
-> +                   The order of the TCS must match the hardware
-> +                   configuration.
-> +       - Cell #1 (TCS Type): TCS types to be specified -
-> +               SLEEP_TCS
-> +               WAKE_TCS
-> +               ACTIVE_TCS
-> +               CONTROL_TCS
-> +       - Cell #2 (Number of TCS): <u32>
-> +
-> +- label:
-> +       Usage: optional
-> +       Value type: <string>
-> +       Definition: Name for the RSC. The name would be used in trace logs.
-> +
-> +Drivers that want to use the RSC to communicate with RPMH must specify their
-> +bindings as child of the RSC controllers they wish to communicate with.
-
-Is that going to work for drivers that want to talk to two or more RSCs?
-I suppose that they'll have to hook up into some sort of framework like
-clk or regulator and then drivers that want to use two RSCs for those
-things would be linked to those sub-device drivers with the normal clk
-or regulator bindings?
-
-> +
-> +Example 1:
-> +
-> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-> +register offsets for DRV2 start at 0D00, the register calculations are like
-> +this -
-> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-> +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
-> +
-> +       apps_rsc: rsc@179e000 {
-> +               label = "apps_rsc";
-> +               compatible = "qcom,rpmh-rsc";
-> +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-> +               reg-names = "drv", "tcs";
-> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +               qcom,drv-id = <2>;
-> +               qcom,tcs-config = <SLEEP_TCS   3>,
-> +                                 <WAKE_TCS    3>,
-> +                                 <ACTIVE_TCS  2>,
-> +                                 <CONTROL_TCS 1>;
-
-Could qcom,tcs-config become something more like below?
-
-	#qcom,sleep-tcs = <3>;
-	#qcom,wake-tcs = <3>;
-	#qcom,active-tcs = <2>;
-	#qcom,control-tcs = <1>;
-
-I don't really understand the binding design to have many cells with the
-*_TCS defines indicating what comes next.
+>  MAINTAINERS | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 93a12af4f180..248f4266c6bd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4333,6 +4333,7 @@ Q:        https://patchwork.kernel.org/project/linux-dmaengine/list/
+>  S:     Maintained
+>  F:     drivers/dma/
+>  F:     include/linux/dmaengine.h
+> +F:     include/linux/of_dma.h
+>  F:     Documentation/devicetree/bindings/dma/
+>  F:     Documentation/driver-api/dmaengine/
+>  T:     git git://git.infradead.org/users/vkoul/slave-dma.git
+> @@ -6033,6 +6034,7 @@ F:        Documentation/ABI/obsolete/sysfs-gpio
+>  F:     drivers/gpio/
+>  F:     include/linux/gpio/
+>  F:     include/linux/gpio.h
+> +F:     include/linux/of_gpio.h
+>  F:     include/asm-generic/gpio.h
+>  F:     include/uapi/linux/gpio.h
+>  F:     tools/gpio/
+> @@ -7321,6 +7323,7 @@ S:        Maintained
+>  F:     Documentation/devicetree/bindings/iommu/
+>  F:     drivers/iommu/
+>  F:     include/linux/iommu.h
+> +F:     include/linux/of_iommu.h
+>  F:     include/linux/iova.h
+>
+>  IP MASQUERADING
+> @@ -10712,6 +10715,7 @@ F:      drivers/acpi/pci*
+>  F:     drivers/pci/
+>  F:     include/asm-generic/pci*
+>  F:     include/linux/pci*
+> +F:     include/linux/of_pci.h
+>  F:     include/uapi/linux/pci*
+>  F:     lib/pci*
+>  F:     arch/x86/pci/
+> --
+> 2.14.1
+>
