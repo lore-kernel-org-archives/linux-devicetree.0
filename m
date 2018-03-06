@@ -1,106 +1,75 @@
-Return-Path: <SRS0=s344=F4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50105.outbound.protection.outlook.com ([40.107.5.105]:21051
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753491AbeCFPh2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 6 Mar 2018 10:37:28 -0500
-Subject: Re: [Dragonboard-aosp] [PATCH 2/4] usb: chipidea: Hook into mux
+Return-Path: <SRS0=cRNX=F4=qti.qualcomm.com=yossim@kernel.org>
+From: Yossi Mansharoff <yossim@qti.qualcomm.com>
+Subject: RE: [Dragonboard-aosp] [PATCH 2/4] usb: chipidea: Hook into mux
  framework to toggle usb switch
+Date: Tue, 6 Mar 2018 15:16:31 +0000
+Message-ID: <6f4463b04060484bb8cca2e3a5468012@euamsexm01e.eu.qualcomm.com>
 References: <1519199101-27065-1-git-send-email-yossim@codeaurora.org>
  <1519199101-27065-2-git-send-email-yossim@codeaurora.org>
  <20180301221104.uo5xbwjn6gjhfcb6@rob-hp-laptop>
- <6f4463b04060484bb8cca2e3a5468012@euamsexm01e.eu.qualcomm.com>
-From: Peter Rosin <peda@axentia.se>
-Message-ID: <22d3658b-d5a0-108b-c8f2-92cbe3786e5b@axentia.se>
-Date: Tue, 6 Mar 2018 16:37:22 +0100
-MIME-Version: 1.0
-In-Reply-To: <6f4463b04060484bb8cca2e3a5468012@euamsexm01e.eu.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20180301221104.uo5xbwjn6gjhfcb6@rob-hp-laptop>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Yossi Mansharoff <yossim@qti.qualcomm.com>, Rob Herring <robh@kernel.org>
-Cc: "dragonboard-aosp@lists.96boards.org" <dragonboard-aosp@lists.96boards.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <peter.chen@nxp.com>, Yossi Mansharoff <yossim@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Rob Herring <robh@kernel.org>
+Cc: "dragonboard-aosp@lists.96boards.org" <dragonboard-aosp@lists.96boards.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <stephen.boyd@linaro.org>, "Peter Chen  <peter.chen@nxp.com>, Peter Rosin <peda@axentia.se>, Yossi Mansharoff" <yossim@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 2018-03-06 16:16, Yossi Mansharoff wrote:
->> On Wed, Feb 21, 2018 at 09:44:59AM +0200, Yossi Mansharoff wrote:
->>> On the db410c 96boards platform we have a TC7USB40MU on the board
->>> to mux the D+/D- lines coming from the controller between a micro
->>> usb "device" port and a USB hub for "host" roles[1]. During a
->>> role switch, we need to toggle this mux to forward the D+/D-
->>> lines to either the port or the hub. Add the necessary code to do
->>> the role switch in chipidea core via the generic mux framework.
->>> Board configurations like on db410c are expected to change roles
->>> via the sysfs API described in
->>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
->>>
->>> [1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
->>>
->>> Cc: Peter Rosin <peda@axentia.se>
->>> Cc: Peter Chen <peter.chen@nxp.com>
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Cc: <devicetree@vger.kernel.org>
->>> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
->>>
->>> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
->>> ---
->>>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
->>
->> Please make bindings a separate patch.
-> sure
->>
->>>  drivers/usb/chipidea/Kconfig                           |  2 ++
->>>  drivers/usb/chipidea/core.c                            |  6 ++++++
->>>  drivers/usb/chipidea/host.c                            |  7 +++++++
->>>  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
->>>  include/linux/usb/chipidea.h                           |  2 ++
->>>  6 files changed, 35 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->>> index 0e03344..2e93181 100644
->>> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->>> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->>> @@ -76,6 +76,10 @@ Optional properties:
->>>    needs to make sure it does not send more than 90%
->>>    maximum_periodic_data_per_frame. The use case is multiple transactions, but
->>>    less frame rate.
->>> +- mux-controls: The mux control for toggling host/device output of this
->>> +  controller. It's expected that a mux state of 0 indicates device mode and a
->>> +  mux state of 1 indicates host mode.
->>> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
->>
->> -names is pointless when there is only 1.
-> the names  is used to find the attached mux in the dt .
-> it is used in the following lines in mux/core.c
-> if (mux_name) {
-> 		index = of_property_match_string(np, "mux-control-names",
-> 						 mux_name);
-> so I think iwe need to keep it, agreed?
-
-If mux_name is NULL, index defaults to 0, i.e. the first (and presumably
-only) mux control is grabbed from the mux-controls list.
-
-So, you should be able to call mux_control_get_optional with a NULL
-mux_name argument for this to work. But please try it...
-
-Cheers,
-Peter
-
->>
->>>  
->>>  i.mx specific properties
->>>  - fsl,usbmisc: phandler of non-core register device, with one
->>> @@ -102,4 +106,6 @@ Example:
->>>  		rx-burst-size-dword = <0x10>;
->>>  		extcon = <0>, <&usb_id>;
->>>  		phy-clkgate-delay-us = <400>;
->>> +		mux-controls = <&usb_switch>;
->>> +		mux-control-names = "usb_switch";
->>>  	};
-> _______________________________________________
-> Dragonboard-aosp mailing list
-> Dragonboard-aosp@lists.96boards.org
-> https://lists.96boards.org/mailman/listinfo/dragonboard-aosp
-> 
-
+Pk9uIFdlZCwgRmViIDIxLCAyMDE4IGF0IDA5OjQ0OjU5QU0gKzAyMDAsIFlvc3NpIE1hbnNoYXJv
+ZmYgd3JvdGU6DQo+PiBPbiB0aGUgZGI0MTBjIDk2Ym9hcmRzIHBsYXRmb3JtIHdlIGhhdmUgYSBU
+QzdVU0I0ME1VIG9uIHRoZSBib2FyZA0KPj4gdG8gbXV4IHRoZSBEKy9ELSBsaW5lcyBjb21pbmcg
+ZnJvbSB0aGUgY29udHJvbGxlciBiZXR3ZWVuIGEgbWljcm8NCj4+IHVzYiAiZGV2aWNlIiBwb3J0
+IGFuZCBhIFVTQiBodWIgZm9yICJob3N0IiByb2xlc1sxXS4gRHVyaW5nIGENCj4+IHJvbGUgc3dp
+dGNoLCB3ZSBuZWVkIHRvIHRvZ2dsZSB0aGlzIG11eCB0byBmb3J3YXJkIHRoZSBEKy9ELQ0KPj4g
+bGluZXMgdG8gZWl0aGVyIHRoZSBwb3J0IG9yIHRoZSBodWIuIEFkZCB0aGUgbmVjZXNzYXJ5IGNv
+ZGUgdG8gZG8NCj4+IHRoZSByb2xlIHN3aXRjaCBpbiBjaGlwaWRlYSBjb3JlIHZpYSB0aGUgZ2Vu
+ZXJpYyBtdXggZnJhbWV3b3JrLg0KPj4gQm9hcmQgY29uZmlndXJhdGlvbnMgbGlrZSBvbiBkYjQx
+MGMgYXJlIGV4cGVjdGVkIHRvIGNoYW5nZSByb2xlcw0KPj4gdmlhIHRoZSBzeXNmcyBBUEkgZGVz
+Y3JpYmVkIGluDQo+PiBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLXBsYXRmb3JtLWNo
+aXBpZGVhLXVzYjIuDQo+PiANCj4+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vOTZib2FyZHMvZG9j
+dW1lbnRhdGlvbi9yYXcvbWFzdGVyL0NvbnN1bWVyRWRpdGlvbi9EcmFnb25Cb2FyZC00MTBjL0hh
+cmR3YXJlRG9jcy9TY2hlbWF0aWNzX0RyYWdvbkJvYXJkLnBkZg0KPj4gDQo+PiBDYzogUGV0ZXIg
+Um9zaW4gPHBlZGFAYXhlbnRpYS5zZT4NCj4+IENjOiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54
+cC5jb20+DQo+PiBDYzogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZz4NCj4+IENjOiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+DQo+PiBTaWduZWQtb2Zm
+LWJ5OiBTdGVwaGVuIEJveWQgPHN0ZXBoZW4uYm95ZEBsaW5hcm8ub3JnPg0KPj4gDQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBZb3NzaSBNYW5zaGFyb2ZmIDx5b3NzaW1AY29kZWF1cm9yYS5vcmc+DQo+PiAt
+LS0NCj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNi
+Mi50eHQgfCAgNiArKysrKysNCj4NCj5QbGVhc2UgbWFrZSBiaW5kaW5ncyBhIHNlcGFyYXRlIHBh
+dGNoLg0Kc3VyZQ0KPg0KPj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL0tjb25maWcgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAyICsrDQo+PiAgZHJpdmVycy91c2IvY2hpcGlkZWEvY29yZS5j
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysrKysrDQo+PiAgZHJpdmVycy91c2Iv
+Y2hpcGlkZWEvaG9zdC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDcgKysrKysrKw0K
+Pj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IDEzICsrKysrKysrKysrKy0NCj4+ICBpbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArKw0KPj4gIDYgZmlsZXMgY2hhbmdlZCwgMzUg
+aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+PiBpbmRl
+eCAwZTAzMzQ0Li4yZTkzMTgxIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQNCj4+IEBAIC03Niw2ICs3
+NiwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gICAgbmVlZHMgdG8gbWFrZSBzdXJlIGl0
+IGRvZXMgbm90IHNlbmQgbW9yZSB0aGFuIDkwJQ0KPj4gICAgbWF4aW11bV9wZXJpb2RpY19kYXRh
+X3Blcl9mcmFtZS4gVGhlIHVzZSBjYXNlIGlzIG11bHRpcGxlIHRyYW5zYWN0aW9ucywgYnV0DQo+
+PiAgICBsZXNzIGZyYW1lIHJhdGUuDQo+PiArLSBtdXgtY29udHJvbHM6IFRoZSBtdXggY29udHJv
+bCBmb3IgdG9nZ2xpbmcgaG9zdC9kZXZpY2Ugb3V0cHV0IG9mIHRoaXMNCj4+ICsgIGNvbnRyb2xs
+ZXIuIEl0J3MgZXhwZWN0ZWQgdGhhdCBhIG11eCBzdGF0ZSBvZiAwIGluZGljYXRlcyBkZXZpY2Ug
+bW9kZSBhbmQgYQ0KPj4gKyAgbXV4IHN0YXRlIG9mIDEgaW5kaWNhdGVzIGhvc3QgbW9kZS4NCj4+
+ICstIG11eC1jb250cm9sLW5hbWVzOiBTaGFsbCBiZSAidXNiX3N3aXRjaCIgaWYgbXV4LWNvbnRy
+b2xzIGlzIHNwZWNpZmllZC4NCj4NCj4tbmFtZXMgaXMgcG9pbnRsZXNzIHdoZW4gdGhlcmUgaXMg
+b25seSAxLg0KdGhlIG5hbWVzICBpcyB1c2VkIHRvIGZpbmQgdGhlIGF0dGFjaGVkIG11eCBpbiB0
+aGUgZHQgLg0KaXQgaXMgdXNlZCBpbiB0aGUgZm9sbG93aW5nIGxpbmVzIGluIG11eC9jb3JlLmMN
+CmlmIChtdXhfbmFtZSkgew0KCQlpbmRleCA9IG9mX3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwg
+Im11eC1jb250cm9sLW5hbWVzIiwNCgkJCQkJCSBtdXhfbmFtZSk7DQpzbyBJIHRoaW5rIGl3ZSBu
+ZWVkIHRvIGtlZXAgaXQsIGFncmVlZD8NCg0KPg0KPj4gIA0KPj4gIGkubXggc3BlY2lmaWMgcHJv
+cGVydGllcw0KPj4gIC0gZnNsLHVzYm1pc2M6IHBoYW5kbGVyIG9mIG5vbi1jb3JlIHJlZ2lzdGVy
+IGRldmljZSwgd2l0aCBvbmUNCj4+IEBAIC0xMDIsNCArMTA2LDYgQEAgRXhhbXBsZToNCj4+ICAJ
+CXJ4LWJ1cnN0LXNpemUtZHdvcmQgPSA8MHgxMD47DQo+PiAgCQlleHRjb24gPSA8MD4sIDwmdXNi
+X2lkPjsNCj4+ICAJCXBoeS1jbGtnYXRlLWRlbGF5LXVzID0gPDQwMD47DQo+PiArCQltdXgtY29u
+dHJvbHMgPSA8JnVzYl9zd2l0Y2g+Ow0KPj4gKwkJbXV4LWNvbnRyb2wtbmFtZXMgPSAidXNiX3N3
+aXRjaCI7DQo+PiAgCX07DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXw0KRHJhZ29uYm9hcmQtYW9zcCBtYWlsaW5nIGxpc3QNCkRyYWdvbmJvYXJkLWFvc3BA
+bGlzdHMuOTZib2FyZHMub3JnDQpodHRwczovL2xpc3RzLjk2Ym9hcmRzLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyYWdvbmJvYXJkLWFvc3ANCg==
