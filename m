@@ -1,57 +1,76 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 4/5] dt-bindings: pwm: sunxi: add new compatible strings
-Date: Wed,  7 Mar 2018 02:07:18 +0000
-Message-ID: <20180307020719.6675-5-andre.przywara@arm.com>
-References: <20180307020719.6675-1-andre.przywara@arm.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
+ connector
+Date: Wed, 07 Mar 2018 11:12:13 +0900
+Message-ID: <5A9F4A7D.9020409@samsung.com>
+References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
+        <20180227071134.28063-1-a.hajda@samsung.com>
+        <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBF4U7XKAKGQE3FKPL4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180307020719.6675-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
-compatible to the PWM controllers found in the A13 and H3.
-Add new compatible strings for those SoCs to the binding document, so
-that they can be safely used, together with a fallback string
-(preferably "allwinner,sun5i-a13-pwm").
-Add add the optionals "resets" property, needed by the H6.
+Hi Rob and Andrzej,
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 2018년 03월 06일 21:53, Andrzej Hajda wrote:
+> Hi Rob, Chanwoo, Krzysztof,
+> 
+> 
+> On 27.02.2018 08:11, Andrzej Hajda wrote:
+>> Hi,
+>>
+>> Thanks for reviews of previous iterations.
+>>
+>> This patchset introduces USB physical connector bindings, together with
+>> working example.
+>> I have removed RFC prefix - the patchset seems to be heading
+>> to a happy end :)
+>>
+>> v5: fixed extra parenthesis in dts, renamed extcon function.
+>> v4: improved binding descriptions, added missing reg in dts.
+>> v3: Separate binding for Samsung 11-pin connector, added full-blown USB-C
+>>     example.
+>> v2: I have addressed comments by Rob and Laurent, thanks 
+>>
+>> Changes in datail are described in the patches.
+>>
+>> Regards
+>> Andrzej
+>>
+>>
+>> Andrzej Hajda (5):
+>>   dt-bindings: add bindings for USB physical connector
+>>   dt-bindings: add bindings for Samsung micro-USB 11-pin connector
+>>   arm64: dts: exynos: add micro-USB connector node to TM2 platforms
+>>   arm64: dts: exynos: add OF graph between MHL and USB connector
+>>   extcon: add possibility to get extcon device by OF node
+>>
+>> Maciej Purski (1):
+>>   drm/bridge/sii8620: use micro-USB cable detection logic to detect MHL
+> 
+> It looks like all patches received R-B or acks (I forgot add Krzysztof's
+> acks for dts part).
+> Now I have a question how to merge them.
+> The only functional dependency is between bridge and extcon, and from
+> the formal PoV bindings should be merged 1st.
+> I can merge it:
+> 1. All patches via drm-misc tree.
+> 2. All patches except dts via drm-misc, and Krzysztof will merge dts via
+> samsung-soc tree.
+> 
+> Is it OK, for all? Better ideas?
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-index 51ff54c8b8ef..b3a127a0e58c 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-@@ -7,11 +7,17 @@ Required properties:
-     - "allwinner,sun5i-a13-pwm"
-     - "allwinner,sun7i-a20-pwm"
-     - "allwinner,sun8i-h3-pwm"
-+    - "allwinner,sun50i-a64-pwm"
-+    - "allwinner,sun50i-h5-pwm"
-+    - "allwinner,sun50i-h6-pwm"
-   - reg: physical base address and length of the controller's registers
-   - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-     the cells format.
-   - clocks: From common clock binding, handle to the parent clock.
- 
-+Optional properties:
-+  - resets: shall be the reset control phandle for the PWM block, if required.
-+
- Example:
- 
- 	pwm: pwm@1c20e00 {
+Krzysztof picked the dts patches. I'll make the immutable branch based on v4.16-rc1
+and apply them except for dts patchs. And I'll send the immutable branch to Rob and Andrzej.
+
+
 -- 
-2.14.1
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
