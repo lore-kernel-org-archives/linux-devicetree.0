@@ -1,60 +1,135 @@
-Return-Path: <SRS0=v9aX=F4=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
- r8a774[35] CMT support
-Date: Tue, 6 Mar 2018 16:21:16 +0000
-Message-ID: <TY1PR01MB17702E7EB6DBDDC6CF3176A8C0D90@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB088625944BCD8F4307315520C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
- <1acdad3b-c2fd-df1d-f25b-cf80b79a9842@linaro.org>
- <CAMuHMdUX8D6c_ehNJAS8nWprvY60bkoxwTekEEqT5oJcz4QGPA@mail.gmail.com>
- <bf1b052d-c8e1-49dc-9e62-13d564d223a4@linaro.org>
-In-Reply-To: <bf1b052d-c8e1-49dc-9e62-13d564d223a4@linaro.org>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=lEEj=F5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0122.outbound.protection.outlook.com ([104.47.2.122]:6896
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754128AbeCGKap (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 7 Mar 2018 05:30:45 -0500
+Subject: Re: [Dragonboard-aosp] [PATCH 2/4] usb: chipidea: Hook into mux
+ framework to toggle usb switch
+References: <1519199101-27065-1-git-send-email-yossim@codeaurora.org>
+ <1519199101-27065-2-git-send-email-yossim@codeaurora.org>
+ <20180301221104.uo5xbwjn6gjhfcb6@rob-hp-laptop>
+ <6f4463b04060484bb8cca2e3a5468012@euamsexm01e.eu.qualcomm.com>
+ <22d3658b-d5a0-108b-c8f2-92cbe3786e5b@axentia.se>
+ <889cbb389bee49aea02a8b5de89ed10f@euamsexm01e.eu.qualcomm.com>
+From: Peter Rosin <peda@axentia.se>
+Message-ID: <b0f6848a-08d6-04ab-4b60-c31aea81041b@axentia.se>
+Date: Wed, 7 Mar 2018 11:30:37 +0100
 MIME-Version: 1.0
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "Chris Paterson  <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob
+In-Reply-To: <889cbb389bee49aea02a8b5de89ed10f@euamsexm01e.eu.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Yossi Mansharoff <yossim@qti.qualcomm.com>, Rob Herring <robh@kernel.org>
+Cc: "dragonboard-aosp@lists.96boards.org" <dragonboard-aosp@lists.96boards.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <swboyd@chromium.org>, Peter Chen <peter.chen@nxp.com>, Yossi Mansharoff <yossim@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gVGhvbWFzLA0KDQpkbyB5b3UgdGhpbmsgeW91IGNhbiB0YWtlIHRoaXMgcGF0Y2g/DQoN
-ClRoYW5rcywNCkZhYg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRl
-dmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86ZGV2aWNldHJlZS1vd25lckB2
-Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBEYW5pZWwgTGV6Y2Fubw0KPiBTZW50OiAyNSBK
-YW51YXJ5IDIwMTggMDg6MzUNCj4gVG86IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgt
-bTY4ay5vcmc+DQo+IENjOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
-c2FzLmNvbT47IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IFNpbW9uDQo+IEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pjsg
-R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVy
-c29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+Ow0KPiBCaWp1IERhcyA8YmlqdS5kYXNA
-YnAucmVuZXNhcy5jb20+OyBsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc7IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFu
-ZEBhcm0uY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvM10gZHQtYmluZGluZ3M6IHRp
-bWVyOiByZW5lc2FzLCBjbXQ6IERvY3VtZW50IHI4YTc3NFszNV0gQ01UIHN1cHBvcnQNCj4NCj4g
-T24gMjUvMDEvMjAxOCAwOToyMSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+IEhpIERh
-bmllbCwNCj4gPg0KPiA+IE9uIFRodSwgSmFuIDI1LCAyMDE4IGF0IDk6MDkgQU0sIERhbmllbCBM
-ZXpjYW5vDQo+ID4gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+IHdyb3RlOg0KPiA+PiBPbiAy
-NC8wMS8yMDE4IDE3OjQ5LCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4+PiBJIGFtIHNvcnJ5
-IHRvIGJvdGhlciB5b3UsIGp1c3Qgd29uZGVyaW5nIGlmIHlvdSB0aGluayB0aGVyZSBhcmUgYW55
-IGNoYW5jZXMgZm9yIHRoaXMgcGF0Y2ggdG8gYXBwbGllZCBvbiB0b3Agb2YgdjQuMTY/DQo+ID4+
-DQo+ID4+IFlvdSBjYW4gdGFrZSBpdCB0aHJvdWdoIHRoZSByZW5lc2FzIHRyZWUuDQo+ID4+DQo+
-ID4+IEFja2VkLWJ5OiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4N
-Cj4gPg0KPiA+IFRoYW5rIHlvdSENCj4gPg0KPiA+IFVuZm9ydHVuYXRlbHkgaXQncyBhIGJpdCBs
-YXRlIHRvIGdldCBub24tYnVnZml4ZXMgaW4gdjQuMTYgdGhyb3VnaCB0aGUgcmVuZXNhcw0KPiA+
-IHRyZWUgYW5kIGFybS1zb2MuDQo+DQo+IEkgdGhvdWdodCB0aGV5IHdlcmUgZ29pbmcgdGhyb3Vn
-aCB0aGUgcmVuZXNhcyB0cmVlLCBzbyBJIGRpc2NhcmRlZCB0aGVtIDovDQo+DQo+IE1heSBiZSBU
-aG9tYXMgY2FuIHRha2UgdGhlbSBpbiB0aGUgdGlwL3RpbWVycyB0cmVlID8NCj4NCj4gVGhvbWFz
-ID8NCj4NCj4NCj4gLS0NCj4gIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKU
-giBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MNCj4NCj4gRm9sbG93IExpbmFybzog
-IDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwNCj4gPGh0
-dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfA0KPiA8aHR0cDovL3d3dy5s
-aW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZw0KPg0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBm
-cm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4N
-Cj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4g
-TW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8t
-aW5mby5odG1sDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1l
-YWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVG
-SCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8u
-IDA0NTg2NzA5Lg0K
+[finally remembered to switch email for Stephen Boyd]
+
+On 2018-03-07 10:22, Yossi Mansharoff wrote:
+>> On 2018-03-06 16:16, Yossi Mansharoff wrote:
+>>>> On Wed, Feb 21, 2018 at 09:44:59AM +0200, Yossi Mansharoff wrote:
+>>>>> On the db410c 96boards platform we have a TC7USB40MU on the board to 
+>>>>> mux the D+/D- lines coming from the controller between a micro usb 
+>>>>> "device" port and a USB hub for "host" roles[1]. During a role 
+>>>>> switch, we need to toggle this mux to forward the D+/D- lines to 
+>>>>> either the port or the hub. Add the necessary code to do the role 
+>>>>> switch in chipidea core via the generic mux framework.
+>>>>> Board configurations like on db410c are expected to change roles via 
+>>>>> the sysfs API described in 
+>>>>> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+>>>>>
+>>>>> [1] 
+>>>>> https://github.com/96boards/documentation/raw/master/ConsumerEdition
+>>>>> /DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+>>>>>
+>>>>> Cc: Peter Rosin <peda@axentia.se>
+>>>>> Cc: Peter Chen <peter.chen@nxp.com>
+>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>> Cc: <devicetree@vger.kernel.org>
+>>>>> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+>>>>>
+>>>>> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+>>>>
+>>>> Please make bindings a separate patch.
+>>> sure
+>>>>
+>>>>>  drivers/usb/chipidea/Kconfig                           |  2 ++
+>>>>>  drivers/usb/chipidea/core.c                            |  6 ++++++
+>>>>>  drivers/usb/chipidea/host.c                            |  7 +++++++
+>>>>>  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
+>>>>>  include/linux/usb/chipidea.h                           |  2 ++
+>>>>>  6 files changed, 35 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt 
+>>>>> b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>> index 0e03344..2e93181 100644
+>>>>> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>>>>> @@ -76,6 +76,10 @@ Optional properties:
+>>>>>    needs to make sure it does not send more than 90%
+>>>>>    maximum_periodic_data_per_frame. The use case is multiple transactions, but
+>>>>>    less frame rate.
+>>>>> +- mux-controls: The mux control for toggling host/device output of 
+>>>>> +this
+>>>>> +  controller. It's expected that a mux state of 0 indicates device 
+>>>>> +mode and a
+>>>>> +  mux state of 1 indicates host mode.
+>>>>> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+>>>>
+>>>> -names is pointless when there is only 1.
+>>> the names  is used to find the attached mux in the dt .
+>>> it is used in the following lines in mux/core.c if (mux_name) {
+>>> 		index = of_property_match_string(np, "mux-control-names",
+>>> 						 mux_name);
+>>> so I think iwe need to keep it, agreed?
+>>
+>> If mux_name is NULL, index defaults to 0, i.e. the first (and presumably
+>> only) mux control is grabbed from the mux-controls list.
+>>
+>> So, you should be able to call mux_control_get_optional with a NULL mux_name argument for this to work. But please try it...
+>>
+>> Cheers,
+>> Peter
+> 
+> that's correct, my thought is that it would be safer to explicitly call the mux_control_get_optional function with a mux name, just for the case of multiple muxes. 
+> Thanks.
+> For example another mux to switch off vBUS.
+> Yossi
+
+Right. Rob, how do you propose to handle the future where a second
+mux with a different function is needed? Specifically, everything
+I come up with introduces some ugly compatibility crap in the future
+code to handle old devicetrees w/o the mux-control-names property.
+So, how to avoid that?
+
+I'm inclined to just requiring a mux-control-names up front to keep
+the future simple.
+
+Cheers,
+Peter
+
+> 
+>>
+>>>>
+>>>>>  
+>>>>>  i.mx specific properties
+>>>>>  - fsl,usbmisc: phandler of non-core register device, with one @@ 
+>>>>> -102,4 +106,6 @@ Example:
+>>>>>  		rx-burst-size-dword = <0x10>;
+>>>>>  		extcon = <0>, <&usb_id>;
+>>>>>  		phy-clkgate-delay-us = <400>;
+>>>>> +		mux-controls = <&usb_switch>;
+>>>>> +		mux-control-names = "usb_switch";
+>>>>>  	};
+>>> _______________________________________________
+>>> Dragonboard-aosp mailing list
+>>> Dragonboard-aosp@lists.96boards.org
+>>> https://lists.96boards.org/mailman/listinfo/dragonboard-aosp
+>>>
+>>
+>>
+
