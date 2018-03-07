@@ -1,73 +1,47 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
-Date: Wed, 7 Mar 2018 09:11:03 +0000
-Message-ID: <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
-References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
- <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
- <20180307083538.vicxhbu72jex7zi6@dell>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: add binding for MT7622 SoC
+Date: Wed, 7 Mar 2018 17:12:21 +0800
+Message-ID: <1520413941.677.0.camel@mtkswgap22>
+References: <c72262a17332a227aa2db39b682db50e2324821a.1518856935.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180307083538.vicxhbu72jex7zi6@dell>
-Content-Language: en-US
-Content-ID: <BECE1318239103438E1B695E8C20C3AE@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c72262a17332a227aa2db39b682db50e2324821a.1518856935.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org
+Cc: rui.zhang@intel.com, edubezval@gmail.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee
+Hi, Rui
 
-On 03/07/2018 09:35 AM, Lee Jones wrote:
-> On Mon, 05 Mar 2018, Alexandre Torgue wrote:
-> 
->> Hi Patrice,
->>
->> On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
->>> From: Patrice Chotard <patrice.chotard@st.com>
->>>
->>> This series adds :
->>>    _ SDIO pins definition for STM32F7 SoCs family
->>>    _ add sdio1 DT entry for STM32F746 Discovery board
->>>    _ add sdio1 DT entry for STM32F746 Evaluation board
->>>    _ add sdio1 DT entry for STM32F769 Discovery board
->>>    _ add SDMMC2 entry in stm32f7-rcc.h
->>>    _ replace sdio2 hard coded value in stm32f746.dtsi
->>>
->>> v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
->>>         and update board dts files accordingly.
->>>
->>>
->>> Patrice Chotard (6):
->>>     ARM: dts: stm32: Add sdio pins definition for stm32f7
->>>     ARM: dts: stm32: Enable sdio1 for stm32f746-disco
->>>     ARM: dts: stm32: Enable sdio1 for stm32f746-eval
->>>     ARM: dts: stm32: Enable sdio1 for stm32f769-disco
->>>     dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
->>>     ARM: dts: stm32: Fix sdio2 rcc hard coded value
->>>
->>>    arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
->>>    arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
->>>    arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
->>>    arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
->>>    arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
->>>    include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
->>>    6 files changed, 119 insertions(+), 1 deletion(-)
->>>
->> Series applied on stm32-next.
-> 
-> Even the MFD patch?
-> 
+just a gentle ping to the both patches
 
-Yes, the MFD part has been taken by Alex.
+	Sean
 
-Patrice
+On Sat, 2018-02-17 at 16:49 +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Add devicetree bindings for MediaTek MT7622 thermal controller
+> 
+> Changes v1 -> v2: add tag from Rob
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/mediatek-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> index 0d73ea5..41d6a44 100644
+> --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>    - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
+>    - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
+>    - "mediatek,mt2712-thermal" : For MT2712 family of SoCs
+> +  - "mediatek,mt7622-thermal" : For MT7622 SoC
+>  - reg: Address range of the thermal controller
+>  - interrupts: IRQ for the thermal controller
+>  - clocks, clock-names: Clocks needed for the thermal controller. required
