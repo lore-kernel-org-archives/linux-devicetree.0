@@ -1,68 +1,72 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 2/6] staging: vc04_services: Add comments describing g_cache_line_size.
-Date: Wed,  7 Mar 2018 10:57:12 -0800
-Message-ID: <20180307185716.17449-2-eric@anholt.net>
+Subject: [PATCH v2 3/6] dt-bindings: soc: Add a binding for the Broadcom VCHIQ
+ services.
+Date: Wed,  7 Mar 2018 10:57:13 -0800
+Message-ID: <20180307185716.17449-3-eric@anholt.net>
 References: <20180307185716.17449-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It's been tempting to replace this with (L1) cache_line_size(), but
-that's really not what the value is about.  It's about coordinating
-the condition for the pagelist fragment behavior between the two
-sides.
+The VCHIQ communication channel can be provided by BCM283x and Capri
+SoCs, to communicate with the VPU-side OS services.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
 
-v2: new patch to replace the cache_line_size() patch.
+v2: dropped firmware property, added cache-line-size.
 
- .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 +++++++++-
- .../staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h |  1 -
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index b59ef14890aa..3aeffa189f64 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -77,7 +77,11 @@ struct vchiq_pagelist_info {
- };
- 
- static void __iomem *g_regs;
--static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
-+/* This value is the size of the L2 cache lines as understood by the
-+ * VPU firmware, which determines the required alignment of the
-+ * offsets/sizes in pagelists.
-+ */
-+static unsigned int g_cache_line_size = 32;
- static unsigned int g_fragments_size;
- static char *g_fragments_base;
- static char *g_free_fragments;
-@@ -117,6 +121,10 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
- 	if (err < 0)
- 		return err;
- 
-+	/* Get the L2 cache-line-size as set by the VPU.  If the
-+	 * property is missing, then the firmware assumes an older
-+	 * kernel using a 32-byte cache line size for compatibility.
-+	 */
- 	err = of_property_read_u32(dev->of_node, "cache-line-size",
- 				   &g_cache_line_size);
- 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-index a6c5f7cc78f0..bec411061554 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-@@ -34,7 +34,6 @@
- #ifndef VCHIQ_PAGELIST_H
- #define VCHIQ_PAGELIST_H
- 
--#define CACHE_LINE_SIZE 32
- #define PAGELIST_WRITE 0
- #define PAGELIST_READ 1
- #define PAGELIST_READ_WITH_FRAGMENTS 2
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+new file mode 100644
+index 000000000000..cdef4abc5e47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+@@ -0,0 +1,28 @@
++Broadcom VCHIQ firmware services
++
++Required properties:
++
++- compatible:	Should be "brcm,bcm2835-vchiq"
++- reg:		Physical base address and length of the doorbell register pair
++- interrupts:	The interrupt number
++		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++
++Optional properties:
++
++- cache-line-size:
++		Size of L2 cache lines.  The VPU firmware detects
++		  this property and overrides it with the actual L2
++		  cache line size it's using when loading the
++		  device-tree.  Determines the required alignment of
++		  offsets/sizes of VCHIQ pagelists.  If missing, the
++		  firmware assumes an older kernel using 32-byte
++		  alignment.
++
++Example:
++
++vchiq@7e00b840 {
++	compatible = "brcm,bcm2835-vchiq";
++	reg = <0x7e00b840 0xf>;
++	interrupts = <0 2>;
++	cache-line-size: <32>;
++};
 -- 
 2.16.2
