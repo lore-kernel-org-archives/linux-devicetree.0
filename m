@@ -1,87 +1,69 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCHv2 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
-Date: Wed, 7 Mar 2018 16:20:41 -0600
-Message-ID: <CANk1AXS3gbLLy5fvyxcmeSBEaV2LZY9P=M3sOUHUceTgso5YkQ@mail.gmail.com>
-References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
- <1519949975-13548-5-git-send-email-richard.gong@linux.intel.com> <20180307194745.657ewa6rtcta6eqm@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] ASoC: Add bindings for PCM1789
+Date: Wed, 7 Mar 2018 16:30:48 -0600
+Message-ID: <20180307223048.lqnryaazr5egg2m7@rob-hp-laptop>
+References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
+ <20180305124817.7421-3-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307194745.657ewa6rtcta6eqm@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180305124817.7421-3-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Richard Gong <richard.gong@linux.intel.com>, catalin.marinas@arm.com, will.deacon@arm.com, Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Yves Vandervennet <yves.vandervennet@linux.intel.com>
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 1:47 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 01, 2018 at 06:19:32PM -0600, richard.gong@linux.intel.com wrote:
->> From: Alan Tull <atull@kernel.org>
->>
->> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
->>
->> Signed-off-by: Alan Tull <atull@kernel.org>
->> ---
->> v2: this patch is added in patch set version 2
->> ---
->>  .../devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt  | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->> new file mode 100644
->> index 0000000..78de689
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->> @@ -0,0 +1,10 @@
->> +Intel Stratix10 SoC FPGA Manager
->> +
->> +Required properties:
->> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
->> +
->> +Example:
->> +
->> +     fpga_mgr: fpga-mgr@0 {
->> +             compatible = "intel,stratix10-soc-fpga-mgr";
->
-> No reg or anything else? Is that because it all goes thru the service
-> layer firmware?
+On Mon, Mar 05, 2018 at 01:48:17PM +0100, Mylène Josserand wrote:
+> Add a device-tree binding for Texas Instrument's PCM1789 codec.
+> For the moment, only I2C bus is supported but SPI could be added
+> in future.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/sound/pcm1789.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/pcm1789.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/pcm1789.txt b/Documentation/devicetree/bindings/sound/pcm1789.txt
+> new file mode 100644
+> index 000000000000..a6cdc2c83c98
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/pcm1789.txt
+> @@ -0,0 +1,21 @@
+> +Texas Instruments pcm1789 DT bindings
 
-Yes.
+What function does this device provide?
 
-There will be a few more clients of the service layer: QSPI, Crypto
-and warm reset.
+> +
+> +This driver supports the I2C bus.
 
-> Just get the service layer driver to instantiate a
-> device for this driver or get rid of the 2 layers if that's all the
-> firmware interface does. DT is not a Linux driver instantiation
-> mechanism.
+Bindings describe h/w, not drivers.
 
-Right, this should be describing hardware.
+> +
+> +Required properties:
+> +
+> + - compatible: "ti,pcm1789"
+> +
+> +Required properties on I2C:
+> +
+> + - reg: the I2C address
+> + - reset-gpios: GPIO to control the RESET pin
+> +
+> +Examples:
+> +
+> +	codec: pcm1789@4c {
 
-I could add this to the service layer binding:
+audio-codec@4c
 
-firmware {
-        svc {
-                compatible = "intel,stratix10-svc";
-                method = "smc";
-                memory-region = <&service_reserved>;
-                fpga-mgr {
-                        compatible = "intel,stratix10-soc-fpga-mgr";
-                };
-        };
-};
+If that's the function...
 
->
-> And build your dts files with "W=1" because there's an error in this
-> example.
-
-Ouch.  Yes.
-
-Warning (unit_address_vs_reg): Node /soc/fpga-mgr@0 has a unit name,
-but no reg property
-
-Thanks for the review,
-Alan
-
->
-> Rob
+> +		compatible = "ti,pcm1789";
+> +		reg = <0x4c>;
+> +		reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
+> +		#sound-dai-cells = <0>;
+> +	};
+> -- 
+> 2.11.0
+> 
