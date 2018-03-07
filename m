@@ -1,49 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 0/8] ARTPEC-6 ARM SoC device tree updates
-Date: Wed, 7 Mar 2018 15:48:49 +0100
-Message-ID: <CAK8P3a3=nNvR=Dk_fYKwbb+srgQ6XQ73E1i_2GNwvs44ZhFyug@mail.gmail.com>
-References: <20180221090000.18091-1-niklas.cassel@axis.com>
- <CAK8P3a0ykwsO40w49TL9xgVKv3wrvx7KXz1o6XD5+qXQ6n8YUA@mail.gmail.com> <20180307144027.GA17727@axis.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v3 1/2] mfd: arizona: Update reset pin to use GPIOD
+Date: Wed, 7 Mar 2018 14:55:59 +0000
+Message-ID: <20180307145559.y4tyyzd2pbqrk4yb@localhost.localdomain>
+References: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
+ <CAOMZO5BNYkuz6pH2qZmj+4kBPQB=j-JniiqVbqzdH8nTOXVZQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307144027.GA17727@axis.com>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BNYkuz6pH2qZmj+4kBPQB=j-JniiqVbqzdH8nTOXVZQQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: arm-soc <arm@kernel.org>, linux-arm-kernel@axis.com, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 3:40 PM, Niklas Cassel <niklas.cassel@axis.com> wrote:
-> On Tue, Mar 06, 2018 at 05:45:30PM +0100, Arnd Bergmann wrote:
->> On Wed, Feb 21, 2018 at 9:59 AM, Niklas Cassel <niklas.cassel@axis.com> wrote:
->> > Hello,
->> >
->> > Here comes some ARTPEC-6 ARM SoC device tree updates.
->> >
->> > Niklas Cassel (8):
->> >   ARM: dts: artpec: disable Accelerator Coherency Port
->> >   ARM: dts: artpec: use 1 GiB RAM
->> >   ARM: dts: artpec: remove 0x prefix from clkctrl unit address
->> >   ARM: dts: artpec: migrate ethernet to stmmac binding
->> >   ARM: dts: artpec: add and utilize artpec6 pin controller
->> >   ARM: dts: artpec: add and utilize nbpfaxi DMA controllers
->> >   ARM: dts: artpec: add disabled node for PCIe endpoint mode
->> >   ARM: dts: artpec: add node for hardware crypto accelerator
->>
->> For a series eight patches, a pull request would save me some work, but
->> I applied it anyway.
->
-> Thank you Arnd.
-> You will receive pull requests in the future.
->
->>
->> Are you sure that the first three patches shouldn't be applied to stable
->> backports?
->
-> The only DTS available upstream is for the ARTPEC-6 devboard.
-> Considering that ARTPEC-6 devboards are only used in-house,
-> I don't see a reason to backport anything from this series.
+On Wed, Mar 07, 2018 at 11:24:10AM -0300, Fabio Estevam wrote:
+> >  static inline void arizona_enable_reset(struct arizona *arizona)
+> >  {
+> >         if (arizona->pdata.reset)
+> > -               gpio_set_value_cansleep(arizona->pdata.reset, 0);
+> > +               gpiod_set_value_cansleep(arizona->pdata.reset, 0);
+> 
+> This should be:
+> 
+> gpiod_set_value_cansleep(arizona->pdata.reset, 1);
+> 
+> as here you want to put the reset GPIO into its active state.
+> 
+> Assuming that in the dts this GPIO is defined as GPIO_ACTIVE_LOW, then
+> the command should put it to logic level 0 as done originally.
+> 
+> >  static void arizona_disable_reset(struct arizona *arizona)
+> > @@ -295,7 +295,7 @@ static void arizona_disable_reset(struct arizona *arizona)
+> >                         break;
+> >                 }
+> >
+> > -               gpio_set_value_cansleep(arizona->pdata.reset, 1);
+> > +               gpiod_set_value_cansleep(arizona->pdata.reset, 1);
+> 
+> This should be:
+> 
+> gpiod_set_value_cansleep(arizona->pdata.reset, 0);
+> 
+> as here you want to put the reset GPIO into its inactive state.
 
-Ok, makes sense. Thanks for checking!
+Hmm... this raises a rather good point that I hadn't considered.
+This driver is used in a lot of shipping devices and the old
+style GPIO calls didn't take the activeness of the GPIO into
+account just blindly setting the value you asked for. However the
+new style calls do take this into account.
 
-      Arnd
+The trouble is I guess we don't know whether most users bothered
+to set GPIO_ACTIVE_LOW or not. So it is very hard to say here if
+we are about to breaking a lot of existing device trees here.
+
+I guess probably the safest approach is to use
+gpiod_set_raw_value_cansleep here?
+
+Thanks,
+Charles
