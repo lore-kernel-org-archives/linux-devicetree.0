@@ -1,87 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a7795: Add cpu
- capacity-dmips-mhz
-Date: Wed, 7 Mar 2018 08:47:43 +0100
-Message-ID: <CAMuHMdXYZB8emmj5TdZih-VQ5SVF-F0LkBRsPPGe=XGvNDt_Lg@mail.gmail.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
- <1519697995-6061-4-git-send-email-gaku.inami.xh@renesas.com>
- <CAMuHMdWswL8N3uTCcGmWSfa98_bpz7_11PDs=m+_RC--wBVu6w@mail.gmail.com>
- <OSBPR01MB1800C2DBEAB2BC506BF80AB9A2D80@OSBPR01MB1800.jpnprd01.prod.outlook.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: STi: Remove useless stdout-path for STi
+ boards
+Date: Wed, 7 Mar 2018 07:59:40 +0000
+Message-ID: <0bac9e25-0d63-2f11-b54a-0d6282fe19d3@st.com>
+References: <1520323650-11030-1-git-send-email-patrice.chotard@st.com>
+ <1520323650-11030-3-git-send-email-patrice.chotard@st.com>
+ <CAL_Jsq+-C5h1-xLOB39bhSsn9JR31UaEQL+cRwydD0a4w6sYNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <OSBPR01MB1800C2DBEAB2BC506BF80AB9A2D80@OSBPR01MB1800.jpnprd01.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gaku Inami <gaku.inami.xh@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+-C5h1-xLOB39bhSsn9JR31UaEQL+cRwydD0a4w6sYNw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <25ACD39E009FC641B2CC558BEC751F24@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Inami-san,
-
-On Wed, Mar 7, 2018 at 2:48 AM, Gaku Inami <gaku.inami.xh@renesas.com> wrote:
->> From: geert.uytterhoeven@gmail.com [mailto:geert.uytterhoeven@gmail.com] On Behalf Of Geert Uytterhoeven
->> Sent: Monday, March 5, 2018 7:24 PM
-> [snip]
->>
->> 411 for the A53 cores sounds a bit low to me, though.
->> Documentation/devicetree/bindings/arm/cpu-capacity.txt uses 578.
->>
->> Perhaps you already took into account the maximum clock frequencies?
->> According to the binding document, you should not do that (cfr.
->> "final capacities are 1024 for cluster0 and 446 for cluster1" in the
->> bindings doc).
->
-> Thanks for your review.
->
-> I set 411 for CA53 based on dhrystone measurement and current implementation.
->
-> The average in 10 times of measurement as follows:
->
->   cpu   max-freq   dhrystone
->   ---------------------------------
->   A57   1500 MHz  15532585 lps/s
->   A53   1200 MHz   6241541 lps/s
->
-> With the value of CA57 is scaled at 1024, I end up with 411 for CA53.
-> However, since cpufreq is not available on renesas-devel-20180212-v4.16-rc1,
-> the final capacity is set by directly using capacity-dmips-mhz in dt as below.
-
-Documentation/devicetree/bindings/arm/cpu-capacity.txt:
-
-"capacity-dmips-mhz is an optional cpu node [1] property: u32 value
- representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
- maximum frequency available to the cpu is then used to calculate the capacity
- value internally used by the kernel."
-
-IIUIC, you should thus not use 15532585 and 6241541 directly, but
-scale them to the frequency.
-
-So the formula for CA53 becomes:
-
-1024 / (15532585 / 1500) * (6241541 / 1200) = 514
-
-> Considering cpufreq is available later, is it better to set the value(514)
-> for CA53 scaled by different maximum frequencies?
-
-DT describes the hardware, not software limitations, so IMHO 514 is the correct
-value.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgUm9iDQoNCk9uIDAzLzA2LzIwMTggMDI6MjYgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBUdWUsIE1hciA2LCAyMDE4IGF0IDI6MDcgQU0sICA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4g
+d3JvdGU6DQo+PiBGcm9tOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+
+DQo+Pg0KPj4gQXMgc2VyaWFsIGludGVyZmFjZSBpcyBhbHJlYWR5IHNwZWNpZmllZCBpbnRvIGJv
+b3RhcmdzLA0KPj4gc3Rkb3V0LXBhdGggY2FuIGJlIHJlbW92ZWQuDQo+IA0KPiBXcm9uZyB3YXkg
+YXJvdW5kLiBzdGRvdXQtcGF0aCBpcyBwcmVmZXJyZWQgb3ZlciB1c2luZyBjb25zb2xlIGluIGJv
+b3RhcmdzLg0KDQpBaCBzb3JyeSwgaSBtaXN1bmRlcnN0b29kIHdoYXQgeW91IHByZXZpb3VzbHkg
+c3VnZ2VzdGVkLiBJIHdpbGwgZml4IGl0Lg0KDQpUaGFua3MNCg0KUGF0cmljZQ0KDQo+IA0KPj4N
+Cj4+IFNpZ25lZC1vZmYtYnk6IFBhdHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0LmNv
+bT4NCj4+IC0tLQ0KPj4NCj4+IHYyOiBfIG5vbmUNCj4+DQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRz
+L3N0aWg0MDctYjIxMjAuZHRzIHwgMSAtDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAt
+YjIxMjAuZHRzIHwgMSAtDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIyNjAuZHRz
+IHwgMSAtDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTgtYjIxOTkuZHRzIHwgMSAtDQo+
+PiAgIDQgZmlsZXMgY2hhbmdlZCwgNCBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1iMjEyMC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9z
+dGloNDA3LWIyMTIwLmR0cw0KPj4gaW5kZXggMmM0ZDYwMzNiNDQ4Li4wNzRiNGNkMGNhODkgMTAw
+NjQ0DQo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWIyMTIwLmR0cw0KPj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1iMjEyMC5kdHMNCj4+IEBAIC0xNSw3ICsxNSw2
+IEBADQo+Pg0KPj4gICAgICAgICAgY2hvc2VuIHsNCj4+ICAgICAgICAgICAgICAgICAgYm9vdGFy
+Z3MgPSAiY29uc29sZT1zZXJpYWwwLDExNTIwMCBjbGtfaWdub3JlX3VudXNlZCI7DQo+PiAtICAg
+ICAgICAgICAgICAgc3Rkb3V0LXBhdGggPSAmc2JjX3NlcmlhbDA7DQo+PiAgICAgICAgICB9Ow0K
+Pj4NCj4+ICAgICAgICAgIG1lbW9yeUA0MDAwMDAwMCB7DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3RpaDQxMC1iMjEyMC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDEw
+LWIyMTIwLmR0cw0KPj4gaW5kZXggNTQyMjg1MDY0MWU4Li5lYWUzMDUwOTg0ZDAgMTAwNjQ0DQo+
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMTIwLmR0cw0KPj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjEyMC5kdHMNCj4+IEBAIC0xNSw3ICsxNSw2IEBADQo+
+Pg0KPj4gICAgICAgICAgY2hvc2VuIHsNCj4+ICAgICAgICAgICAgICAgICAgYm9vdGFyZ3MgPSAi
+Y29uc29sZT1zZXJpYWwwLDExNTIwMCBjbGtfaWdub3JlX3VudXNlZCI7DQo+PiAtICAgICAgICAg
+ICAgICAgc3Rkb3V0LXBhdGggPSAmc2JjX3NlcmlhbDA7DQo+PiAgICAgICAgICB9Ow0KPj4NCj4+
+ICAgICAgICAgIG1lbW9yeUA0MDAwMDAwMCB7DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYw
+LmR0cw0KPj4gaW5kZXggY2EzNDcxNjBlMzVkLi5jMjZlMzg4YmQxYTQgMTAwNjQ0DQo+PiAtLS0g
+YS9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0cw0KPj4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMNCj4+IEBAIC0xNiw3ICsxNiw2IEBADQo+Pg0KPj4g
+ICAgICAgICAgY2hvc2VuIHsNCj4+ICAgICAgICAgICAgICAgICAgYm9vdGFyZ3MgPSAiY29uc29s
+ZT1zZXJpYWwxLDExNTIwMCBjbGtfaWdub3JlX3VudXNlZCI7DQo+PiAtICAgICAgICAgICAgICAg
+c3Rkb3V0LXBhdGggPSAmdWFydDE7DQo+PiAgICAgICAgICB9Ow0KPj4NCj4+ICAgICAgICAgIG1l
+bW9yeUA0MDAwMDAwMCB7DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQx
+OC1iMjE5OS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDE4LWIyMTk5LmR0cw0KPj4gaW5k
+ZXggZGJmN2JiNzA0YTFhLi5kOTQ4Zjc3NGZlZTcgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL2FybS9i
+b290L2R0cy9zdGloNDE4LWIyMTk5LmR0cw0KPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
+aDQxOC1iMjE5OS5kdHMNCj4+IEBAIC0xNSw3ICsxNSw2IEBADQo+Pg0KPj4gICAgICAgICAgY2hv
+c2VuIHsNCj4+ICAgICAgICAgICAgICAgICAgYm9vdGFyZ3MgPSAiY29uc29sZT1zZXJpYWwwLDEx
+NTIwMCBjbGtfaWdub3JlX3VudXNlZCI7DQo+PiAtICAgICAgICAgICAgICAgc3Rkb3V0LXBhdGgg
+PSAmc2JjX3NlcmlhbDA7DQo+PiAgICAgICAgICB9Ow0KPj4NCj4+ICAgICAgICAgIG1lbW9yeUA0
+MDAwMDAwMCB7DQo+PiAtLQ0KPj4gMS45LjENCj4+
