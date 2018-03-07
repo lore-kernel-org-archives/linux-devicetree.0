@@ -1,41 +1,45 @@
-Return-Path: <SRS0=k2mn=GG=gondor.apana.org.au=herbert@kernel.org>
-Date: Fri, 16 Mar 2018 23:54:08 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/2] hwrng: mxc-rnga - add driver support on boards
+Return-Path: <SRS0=yMxL=F5=arm.com=kim.phillips@kernel.org>
+Date: Wed, 7 Mar 2018 10:13:32 -0600
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: [PATCH v2 2/2] hwrng: mxc-rnga - add driver support on boards
  with device tree
-Message-ID: <20180316155408.GD7095@gondor.apana.org.au>
+Message-Id: <20180307101332.0fb08a8b830b96f3bb94e5c6@arm.com>
+In-Reply-To: <20180305222100.29351-3-vz@mleia.com>
 References: <20180305222100.29351-1-vz@mleia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180305222100.29351-1-vz@mleia.com>
+	<20180305222100.29351-3-vz@mleia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Mar 06, 2018 at 12:20:58AM +0200, Vladimir Zapolskiy wrote:
-> The series is a trivial change to extend Freescale i.MX31 RNGA
-> driver to work on boards with device description taken from device
-> tree blob. The change was tested on a legacy LogicPD MX31Lite board.
+On Tue, 6 Mar 2018 00:21:00 +0200
+Vladimir Zapolskiy <vz@mleia.com> wrote:
+
+> The driver works well on i.MX31 powered boards with device description
+> taken from board device tree, the only change to add to the driver is
+> the missing OF device id, the affected list of included headers and
+> indentation in platform driver struct are beautified a little.
 > 
-> Vladimir Zapolskiy (2):
->   dt-bindings: rng: Document Freescale i.MX21 and i.MX31 RNGA compatibles
->   hwrng: mxc-rnga - add driver support on boards with device tree
-> 
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> ---
 > Changes from v1 to v2:
 > * a kernel for iMX boards is always built with multiplatform support,
 >   thus CONFIG_OF guards were removed, thanks to Kim Phillips for review,
-> * added i.MX21 RNGA compatible, i.MX31 RNGA is backward compatible to it,
-> * though the list of documented compatibles is extended, I dare to add
->   Rob's Reviewed-by tag casted for v1.
-> 
->  .../bindings/rng/{imx-rngc.txt => imx-rng.txt}     | 11 +++++------
->  drivers/char/hw_random/mxc-rnga.c                  | 23 +++++++++++++---------
->  2 files changed, 19 insertions(+), 15 deletions(-)
->  rename Documentation/devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt} (54%)
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+That's not necessarily the reason, e.g., of_match_table is available to
+be assigned even if CONFIG_OF is not set.  Recall, I tested building
+without CONFIG_OF by removing the SOC_IMX31 dependency in Kconfig, and
+building with netwinder_defconfig as a base.
+
+Nevertheless, this v2 is much easier to review without the ifdef
+CONFIG_OF, so:
+
+Reviewed-by: Kim Phillips <kim.phillips@arm.com>
+
+Thanks,
+
+Kim
+
+p.s. my responses typically have lower latencies when I'm added to cc.
