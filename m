@@ -1,79 +1,51 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
- connector
-Date: Wed, 7 Mar 2018 12:22:15 +0100
-Message-ID: <CAJKOXPfWwD-wYOzYacH4j7gfgDGh5MPAhXTR46wbYU=pw3zEhg@mail.gmail.com>
-References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
- <20180227071134.28063-1-a.hajda@samsung.com>
- <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
- <5A9F4A7D.9020409@samsung.com> <5A9F6F29.5020501@samsung.com>
- <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: msm8916: Add cpu cooling maps
+Date: Wed, 7 Mar 2018 16:56:50 +0530
+Message-ID: <CAP245DU-VO9S7jh9d8gZNgM6Hr29P=Uzi4kxb_T8QLqbuQwFig@mail.gmail.com>
+References: <cover.1520398076.git.amit.kucheria@linaro.org>
+ <9f7199f0027ef2382e5ccc61a5118d0a00fa2e63.1520340931.git.amit.kucheria@linaro.org>
+ <4d134dee2154ae3fa56b375aaed9568e21b1a777.1520398076.git.amit.kucheria@linaro.org>
+ <CAOh2x=k6aXd=pPaNKhd-fna58wk4mNcMWgy1Eb=VYwECRtqLaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOh2x=k6aXd=pPaNKhd-fna58wk4mNcMWgy1Eb=VYwECRtqLaA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgNywgMjAxOCBhdCAxMjoxMyBQTSwgQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
-YW1zdW5nLmNvbT4gd3JvdGU6Cj4gSGkgQ2hhbndvbywgQXJjaGl0LAo+Cj4gT24gMDcuMDMuMjAx
-OCAwNTo0OCwgQ2hhbndvbyBDaG9pIHdyb3RlOgo+PiBPbiAyMDE464WEIDAz7JuUIDA37J28IDEx
-OjEyLCBDaGFud29vIENob2kgd3JvdGU6Cj4+PiBIaSBSb2IgYW5kIEFuZHJ6ZWosCj4+Pgo+Pj4g
-T24gMjAxOOuFhCAwM+yblCAwNuydvCAyMTo1MywgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+PiBI
-aSBSb2IsIENoYW53b28sIEtyenlzenRvZiwKPj4+Pgo+Pj4+Cj4+Pj4gT24gMjcuMDIuMjAxOCAw
-ODoxMSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+Pj4gSGksCj4+Pj4+Cj4+Pj4+IFRoYW5rcyBm
-b3IgcmV2aWV3cyBvZiBwcmV2aW91cyBpdGVyYXRpb25zLgo+Pj4+Pgo+Pj4+PiBUaGlzIHBhdGNo
-c2V0IGludHJvZHVjZXMgVVNCIHBoeXNpY2FsIGNvbm5lY3RvciBiaW5kaW5ncywgdG9nZXRoZXIg
-d2l0aAo+Pj4+PiB3b3JraW5nIGV4YW1wbGUuCj4+Pj4+IEkgaGF2ZSByZW1vdmVkIFJGQyBwcmVm
-aXggLSB0aGUgcGF0Y2hzZXQgc2VlbXMgdG8gYmUgaGVhZGluZwo+Pj4+PiB0byBhIGhhcHB5IGVu
-ZCA6KQo+Pj4+Pgo+Pj4+PiB2NTogZml4ZWQgZXh0cmEgcGFyZW50aGVzaXMgaW4gZHRzLCByZW5h
-bWVkIGV4dGNvbiBmdW5jdGlvbi4KPj4+Pj4gdjQ6IGltcHJvdmVkIGJpbmRpbmcgZGVzY3JpcHRp
-b25zLCBhZGRlZCBtaXNzaW5nIHJlZyBpbiBkdHMuCj4+Pj4+IHYzOiBTZXBhcmF0ZSBiaW5kaW5n
-IGZvciBTYW1zdW5nIDExLXBpbiBjb25uZWN0b3IsIGFkZGVkIGZ1bGwtYmxvd24gVVNCLUMKPj4+
-Pj4gICAgIGV4YW1wbGUuCj4+Pj4+IHYyOiBJIGhhdmUgYWRkcmVzc2VkIGNvbW1lbnRzIGJ5IFJv
-YiBhbmQgTGF1cmVudCwgdGhhbmtzCj4+Pj4+Cj4+Pj4+IENoYW5nZXMgaW4gZGF0YWlsIGFyZSBk
-ZXNjcmliZWQgaW4gdGhlIHBhdGNoZXMuCj4+Pj4+Cj4+Pj4+IFJlZ2FyZHMKPj4+Pj4gQW5kcnpl
-ago+Pj4+Pgo+Pj4+Pgo+Pj4+PiBBbmRyemVqIEhhamRhICg1KToKPj4+Pj4gICBkdC1iaW5kaW5n
-czogYWRkIGJpbmRpbmdzIGZvciBVU0IgcGh5c2ljYWwgY29ubmVjdG9yCj4+Pj4+ICAgZHQtYmlu
-ZGluZ3M6IGFkZCBiaW5kaW5ncyBmb3IgU2Ftc3VuZyBtaWNyby1VU0IgMTEtcGluIGNvbm5lY3Rv
-cgo+Pj4+PiAgIGFybTY0OiBkdHM6IGV4eW5vczogYWRkIG1pY3JvLVVTQiBjb25uZWN0b3Igbm9k
-ZSB0byBUTTIgcGxhdGZvcm1zCj4+Pj4+ICAgYXJtNjQ6IGR0czogZXh5bm9zOiBhZGQgT0YgZ3Jh
-cGggYmV0d2VlbiBNSEwgYW5kIFVTQiBjb25uZWN0b3IKPj4+Pj4gICBleHRjb246IGFkZCBwb3Nz
-aWJpbGl0eSB0byBnZXQgZXh0Y29uIGRldmljZSBieSBPRiBub2RlCj4+Pj4+Cj4+Pj4+IE1hY2ll
-aiBQdXJza2kgKDEpOgo+Pj4+PiAgIGRybS9icmlkZ2Uvc2lpODYyMDogdXNlIG1pY3JvLVVTQiBj
-YWJsZSBkZXRlY3Rpb24gbG9naWMgdG8gZGV0ZWN0IE1ITAo+Pj4+IEl0IGxvb2tzIGxpa2UgYWxs
-IHBhdGNoZXMgcmVjZWl2ZWQgUi1CIG9yIGFja3MgKEkgZm9yZ290IGFkZCBLcnp5c3p0b2Yncwo+
-Pj4+IGFja3MgZm9yIGR0cyBwYXJ0KS4KPj4+PiBOb3cgSSBoYXZlIGEgcXVlc3Rpb24gaG93IHRv
-IG1lcmdlIHRoZW0uCj4+Pj4gVGhlIG9ubHkgZnVuY3Rpb25hbCBkZXBlbmRlbmN5IGlzIGJldHdl
-ZW4gYnJpZGdlIGFuZCBleHRjb24sIGFuZCBmcm9tCj4+Pj4gdGhlIGZvcm1hbCBQb1YgYmluZGlu
-Z3Mgc2hvdWxkIGJlIG1lcmdlZCAxc3QuCj4+Pj4gSSBjYW4gbWVyZ2UgaXQ6Cj4+Pj4gMS4gQWxs
-IHBhdGNoZXMgdmlhIGRybS1taXNjIHRyZWUuCj4+Pj4gMi4gQWxsIHBhdGNoZXMgZXhjZXB0IGR0
-cyB2aWEgZHJtLW1pc2MsIGFuZCBLcnp5c3p0b2Ygd2lsbCBtZXJnZSBkdHMgdmlhCj4+Pj4gc2Ft
-c3VuZy1zb2MgdHJlZS4KPj4+Pgo+Pj4+IElzIGl0IE9LLCBmb3IgYWxsPyBCZXR0ZXIgaWRlYXM/
-Cj4+PiBLcnp5c3p0b2YgcGlja2VkIHRoZSBkdHMgcGF0Y2hlcy4gSSdsbCBtYWtlIHRoZSBpbW11
-dGFibGUgYnJhbmNoIGJhc2VkIG9uIHY0LjE2LXJjMQo+Pj4gYW5kIGFwcGx5IHRoZW0gZXhjZXB0
-IGZvciBkdHMgcGF0Y2hzLiBBbmQgSSdsbCBzZW5kIHRoZSBpbW11dGFibGUgYnJhbmNoIHRvIFJv
-YiBhbmQgQW5kcnplai4KPj4+Cj4+Pgo+PiBJIG1hZGUgdGhlIGltbXV0YWJsZSBicmFuY2hbMV0g
-YXMgZm9sbG93aW5nOiBJZiB5b3UgYWdyZWUsIEknbGwgc2VuZCBwdWxsIHJlcXVlc3QuCj4+IFsx
-XSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9jaGFud29v
-L2V4dGNvbi5naXQvbG9nLz9oPWliLWV4dGNvbi1kcm0tZHQtdjQuMTcKPj4KPj4gT3IgeW91IGNh
-biBtYWtlIHRoZSBpbW11dGFibGUgYnJhbmNoIGFuZCBzZW5kIHB1bGwgcmVxdWVzdCB0byBSb2Ig
-YW5kIG1lLgo+Pgo+Cj4gSXQgc2VlbXMgeW91IHRvb2sgdjUgaW5zdGVhZCBvZiB2NiB2ZXJzaW9u
-IG9mIGV4dGNvbiBwYXRjaC4KCkkgYWxzbyB0b29rIHY1OgpodHRwczovL3BhdGNod29yay5rZXJu
-ZWwub3JnL3BhdGNoLzEwMjQ0NDA3LwpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
-LzEwMjQ0NDMxLwoKVGhlcmUgd2FzIG5vIHY2IGluIHNhbXN1bmctc29jIHBhdGNod29yay4gSXMg
-aXQgYSBwcm9ibGVtIGZvciBEVFM/CgpCUiwKS3J6eXN6dG9mCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Mar 7, 2018 at 10:44 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On Wed, Mar 7, 2018 at 10:30 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>> From: Rajendra Nayak <rnayak@codeaurora.org>
+>>
+>> Add cpu cooling maps for cpu passive trip points. The cpu cooling
+>> device states are mapped to cpufreq based scaling frequencies.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> index e468277..66b318e 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> @@ -15,6 +15,7 @@
+>>  #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+>>  #include <dt-bindings/reset/qcom,gcc-msm8916.h>
+>>  #include <dt-bindings/clock/qcom,rpmcc.h>
+>> +#include <dt-bindings/thermal/thermal.h>
+>>
+>>  / {
+>>         model = "Qualcomm Technologies, Inc. MSM8916";
+>> @@ -115,6 +116,7 @@
+>>                         cpu-idle-states = <&CPU_SPC>;
+>>                         clocks = <&apcs 0>;
+>>                         operating-points-v2 = <&cpu_opp_table>;
+>> +                       #cooling-cells = <2>;
+>
+> LGTM.
+
+Can I take that as a Reviewed-by?
