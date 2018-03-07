@@ -1,63 +1,42 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: backlight: Add binding for RAVE SP backlight driver
-Date: Tue,  6 Mar 2018 18:40:11 -0800
-Message-ID: <20180307024011.25033-2-andrew.smirnov@gmail.com>
-References: <20180307024011.25033-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307024011.25033-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/3] arm64: dts: msm8916: Add cpu cooling maps
+Date: Wed, 7 Mar 2018 08:18:33 +0530
+Message-ID: <CAOh2x=n0zQMCtC2=NF9rRbSkNUrUJBxu1KWAoOpDh3CBDkCFgQ@mail.gmail.com>
+References: <cover.1520340931.git.amit.kucheria@linaro.org>
+ <9f7199f0027ef2382e5ccc61a5118d0a00fa2e63.1520340931.git.amit.kucheria@linaro.org>
+ <CAL_Jsq+QRTi6MnsnZeDVzUXsj5ya0OBROp8HeZ1cX+F=EGtoCA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+QRTi6MnsnZeDVzUXsj5ya0OBROp8HeZ1cX+F=EGtoCA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Brown <david.brown@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Andy Gross <andy.gross@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP backlihgt drvier - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On Tue, Mar 6, 2018 at 8:13 PM, Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, Mar 6, 2018 at 7:05 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../leds/backlight/zii,rave-sp-backlight.txt       | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
+>>         model = "Qualcomm Technologies, Inc. MSM8916";
+>> @@ -115,6 +116,10 @@
+>>                         cpu-idle-states = <&CPU_SPC>;
+>>                         clocks = <&apcs 0>;
+>>                         operating-points-v2 = <&cpu_opp_table>;
+>> +                       /* cooling options */
+>> +                       cooling-min-level = <0>;
+>> +                       cooling-max-level = <7>;
+>
+> Viresh is working on removing these from the binding...
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
-new file mode 100644
-index 000000000000..2eba8322fc28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
-@@ -0,0 +1,23 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor Backlight Bindings
-+
-+RAVE SP backlight device is a "MFD cell" device corresponding to
-+backlight functionality of RAVE Supervisory Processor. It is expected
-+that its Device Tree node is specified as a child of the node
-+corresponding to the parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Should be "zii,rave-sp-backlight"
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		pwrbutton {
-+			compatible = "zii,rave-sp-backlight";
-+		};
-+	}
-+
--- 
-2.14.3
+Yep, just drop all cooling-{min|max}-level lines from your code. That
+is not used
+anywhere by the kernel.
