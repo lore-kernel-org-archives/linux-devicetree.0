@@ -1,35 +1,32 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: add missing LEDs for Buffalo WZR-900DHP
-Date: Wed, 7 Mar 2018 09:51:58 +0100
-Message-ID: <CACna6rwKt1wdryaSs1DsGztSjugBbfRfQqpzGKjvqWf=j=N5kw@mail.gmail.com>
-References: <1520260563-4167-1-git-send-email-musashino.open@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] MAINTAINERS: Add linux/of_*.h headers to appropriate subsystems
+Date: Wed, 7 Mar 2018 10:02:41 +0100
+Message-ID: <CACRpkdaKFekSHZZn-zc714NZ_CtoN+zsaSmw4u-cpy+jcY4reg@mail.gmail.com>
+References: <20180306151334.28720-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520260563-4167-1-git-send-email-musashino.open@gmail.com>
+In-Reply-To: <20180306151334.28720-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: musashino.open@gmail.com
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Joerg Roedel <joro@8bytes.org>, Bjorn Helgaas <bhelgaas@google.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2018 at 15:36,  <musashino.open@gmail.com> wrote:
-> From: INAGAKI Hiroshi <musashino.open@gmail.com>
+On Tue, Mar 6, 2018 at 4:13 PM, Rob Herring <robh@kernel.org> wrote:
+
+> The DeviceTree support code for specific subsystems are maintained by
+> the respective subsystem maintainers. However, only the DT
+> maintainers are listed for most of the linux/of_*.h headers. Fix this
+> and add the headers to the appropriate subsystem maintainer.
 >
-> Buffalo WZR-900DHP has 8 LEDs, but there is not LED definitions in the
-> dts and cannot configure these LEDs.
-> I Added missing LED definitions for WZR-900DHP.
->
-> Signed-off-by: INAGAKI Hiroshi <musashino.open@gmail.com>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Looks almost good, thanks for sending this patch to Florian.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-One comment: please drop all linux,default-trigger = "default-off";
-lines. I did the same mistake long time ago, see my fixing commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0b660259e927177dc0c6eb3b1c39f23c6a011c5f
-
-When you fix that, please generate a V2 of your patch, you can do it
-with something like:
-git format-patch --subject-prefix="PATCH V2" -1
-and send again the same way.
-
-Thanks!
+Yours,
+Linus Walleij
