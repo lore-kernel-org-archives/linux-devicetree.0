@@ -1,188 +1,122 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v3 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Date: Wed, 7 Mar 2018 13:54:16 -0700
-Message-ID: <20180307205416.GH4930@codeaurora.org>
-References: <20180302164317.10554-1-ilina@codeaurora.org>
- <20180302164317.10554-3-ilina@codeaurora.org>
- <152037541468.218381.12480897609076588560@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: add bindings doc for HiSilicon INNO
+ USB2 PHY
+Date: Wed, 7 Mar 2018 15:11:18 -0600
+Message-ID: <20180307211118.su2vyfa4zyfh4w2t@rob-hp-laptop>
+References: <1520217605-9312-1-git-send-email-shawn.guo@linaro.org>
+ <1520217605-9312-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <152037541468.218381.12480897609076588560@swboyd.mtv.corp.google.com>
+In-Reply-To: <1520217605-9312-2-git-send-email-shawn.guo@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengcheng Li <lpc.li@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 06 2018 at 15:30 -0700, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-03-02 08:43:09)
->> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
->> driver. The hardware block is used for communicating resource state
->
->s/driver/hardware/
->
-Ok.
-
->> requests for shared resources.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>
->> Changes in v2:
->>         - Amend text to describe the registers in reg property
->>         - Add reg-names for the registers
->>         - Update examples to use GIC_SPI in interrupts instead of 0
->>         - Rephrase incorrect description
->>
->> Changes in v3:
->>         - Fix unwanted capitalization
->>         - Remove clients from the examples, this doc does not describe
->>           them
->>         - Rephrase introductory paragraph
->>         - Remove hardware specifics from DT bindings
->> ---
->>  .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 131 +++++++++++++++++++++
->>  1 file changed, 131 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
->> new file mode 100644
->> index 000000000000..afd3817cc615
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
->
->Shouldn't this go into bindings/soc/qcom/ ?
->
-Didn;t realize the location. Thanks for pointing out.
-
+On Mon, Mar 05, 2018 at 10:40:04AM +0800, Shawn Guo wrote:
+> From: Pengcheng Li <lpc.li@hisilicon.com>
+> 
+> It adds device tree bindings document for HiSilicon INNO USB2 PHY.
+> 
+> Signed-off-by: Pengcheng Li <lpc.li@hisilicon.com>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> new file mode 100644
+> index 000000000000..4dbf87c70b96
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> @@ -0,0 +1,72 @@
+> +Device tree bindings for HiSilicon INNO USB2 PHY
 > +
->> +Requests can be made for the state of a resource, when the subsystem is active
->> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
->> +will be an aggregate of the sleep votes from each of those subsystem. Drivers
->
->s/subsystem/subsystems/
->s/Drivers/Clients/ ?
->
-Ok
+> +Required properties:
+> +- compatible: Should be one of the following strings:
+> +	"hisilicon,inno-usb2-phy",
+> +	"hisilicon,hi3798cv200-usb2-phy".
+> +- reg: Should be the address space for PHY configuration register in peripheral
+> +  controller, e.g. PERI_USB0 for USB 2.0 PHY01 on Hi3798CV200 SoC.
+> +- clocks: The phandle and clock specifier pair for INNO USB2 PHY device
+> +  reference clock.
+> +- resets: The phandle and reset specifier pair for INNO USB2 PHY device reset
+> +  signal.
+> +- #address-cells: Must be 1.
+> +- #size-cells: Must be 0.
+> +
+> +The INNO USB2 PHY device should be a child node of peripheral controller that
+> +contains the PHY configuration register, and each device suppports up to 2 PHY
+> +ports which are represented as child nodes of INNO USB2 PHY device.
+> +
+> +Required properties for PHY port node:
+> +- reg: The PHY port instance number.
+> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+> +- resets: The phandle and reset specifier pair for PHY port reset signal.
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +
+> +perictrl: peripheral-controller@8a20000 {
+> +	compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
+> +		     "simple-mfd";
 
->> +may request a sleep value for their shared resources in addition to the active
->> +mode requests.
->> +
->> +Control requests are instance specific requests that may or may not reach an
->> +accelerator. Only one platform device in Linux can request a control channel
->> +on a DRV.
->
->Not sure what this last sentence has to do with the DT binding. We
->generally try to avoid saying 'Linux' or 'driver' in DT binding
->documents, because they usually document hardware.
->
-This para can go away.
+Is syscon needed here? Doesn't look like the phys need it.
 
->> +
->> +Properties:
->> +
->> +- compatible:
->> +       Usage: required
->> +       Value type: <string>
->> +       Definition: Should be "qcom,rpmh-rsc".
->> +
->> +- reg:
->> +       Usage: required
->> +       Value type: <prop-encoded-array>
->> +       Definition: The first register specifies the base address of the DRV.
->> +                   The second register specifies the start address of the
->> +                   TCS.
->> +
->> +- reg-names:
->> +       Usage: required
->
->optional?
->
-No, it is required. Driver has been using the by_name for clarity.
+Is there no dependency on the peri ctrl probing first for the phys to 
+probe successfully? If there is some dependency, simple-mfd should not 
+be used.
 
->> +       Value type: <string>
->> +       Definition: Maps the register specified in the reg property. Must be
->> +                   "drv" and "tcs".
->> +
->> +- interrupts:
->> +       Usage: required
->> +       Value type: <prop-encoded-interrupt>
->> +       Definition: The interrupt that trips when a message complete/response
->> +                  is received for this DRV from the accelerators.
->> +
->> +- qcom,drv-id:
->> +       Usage: required
->> +       Value type: <u32>
->> +       Definition: the id of the DRV in the RSC block.
->> +
->> +- qcom,tcs-config:
->> +       Usage: required
->> +       Value type: <prop-encoded-array>
->> +       Definition: the tuple defining the configuration of TCS.
->> +                   Must have 2 cells which describe each TCS type.
->> +                   <type number_of_tcs>.
->> +                   The order of the TCS must match the hardware
->> +                   configuration.
->> +       - Cell #1 (TCS Type): TCS types to be specified -
->> +               SLEEP_TCS
->> +               WAKE_TCS
->> +               ACTIVE_TCS
->> +               CONTROL_TCS
->> +       - Cell #2 (Number of TCS): <u32>
->> +
->> +- label:
->> +       Usage: optional
->> +       Value type: <string>
->> +       Definition: Name for the RSC. The name would be used in trace logs.
->> +
->> +Drivers that want to use the RSC to communicate with RPMH must specify their
->> +bindings as child of the RSC controllers they wish to communicate with.
->
->Is that going to work for drivers that want to talk to two or more RSCs?
->I suppose that they'll have to hook up into some sort of framework like
->clk or regulator and then drivers that want to use two RSCs for those
->things would be linked to those sub-device drivers with the normal clk
->or regulator bindings?
->
-Correct. This follows the same model as RPM SMD driver.
+As for the phy binding,
 
->> +
->> +Example 1:
->> +
->> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
->> +register offsets for DRV2 start at 0D00, the register calculations are like
->> +this -
->> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
->> +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
->> +
->> +       apps_rsc: rsc@179e000 {
->> +               label = "apps_rsc";
->> +               compatible = "qcom,rpmh-rsc";
->> +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
->> +               reg-names = "drv", "tcs";
->> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
->> +               qcom,drv-id = <2>;
->> +               qcom,tcs-config = <SLEEP_TCS   3>,
->> +                                 <WAKE_TCS    3>,
->> +                                 <ACTIVE_TCS  2>,
->> +                                 <CONTROL_TCS 1>;
->
->Could qcom,tcs-config become something more like below?
->
->	#qcom,sleep-tcs = <3>;
->	#qcom,wake-tcs = <3>;
->	#qcom,active-tcs = <2>;
->	#qcom,control-tcs = <1>;
->
->I don't really understand the binding design to have many cells with the
->*_TCS defines indicating what comes next.
->
-This format helps preserve the order in which the TCS are designed in
-the firmware. Thats additional information that is described by the
-cells.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-Lina
+> +	reg = <0x8a20000 0x1000>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x0 0x8a20000 0x1000>;
+> +
+> +	usb2_phy1: usb2-phy@120 {
+> +		compatible = "hisilicon,hi3798cv200-usb2-phy";
+> +		reg = <0x120 0x4>;
+> +		clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
+> +		resets = <&crg 0xbc 4>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usb2_phy1_port0: phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +			resets = <&crg 0xbc 8>;
+> +		};
+> +
+> +		usb2_phy1_port1: phy@1 {
+> +			reg = <1>;
+> +			#phy-cells = <0>;
+> +			resets = <&crg 0xbc 9>;
+> +		};
+> +	};
+> +
+> +	usb2_phy2: usb2-phy@124 {
+> +		compatible = "hisilicon,hi3798cv200-usb2-phy";
+> +		reg = <0x124 0x4>;
+> +		clocks = <&crg HISTB_USB2_PHY2_REF_CLK>;
+> +		resets = <&crg 0xbc 6>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usb2_phy2_port0: phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +			resets = <&crg 0xbc 10>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
