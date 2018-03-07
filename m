@@ -1,69 +1,66 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 1/5] iommu/arm-smmu: Destroy domain context in failure
-	path
-Date: Wed, 7 Mar 2018 12:20:45 +0000
-Message-ID: <d3500b33-8ce6-d767-7e9b-2fd75fea6cbb@arm.com>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
-	<20180302101050.6191-2-vivek.gautam@codeaurora.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH v4 07/10] scsi: hisi_sas: fix return value of hisi_sas_task_prep()
+Date: Wed, 7 Mar 2018 20:25:11 +0800
+Message-ID: <1520425514-205565-8-git-send-email-john.garry@huawei.com>
+References: <1520425514-205565-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180302101050.6191-2-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520425514-205565-1-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com, hare@suse.de
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/18 10:10, Vivek Gautam wrote:
-> If we fail after initializing domain_context, we should destroy
-> the context to free up resources.
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-Have another think about why the "problem" this patch caters for cannot 
-ever happen (hint: consider how domain->smmu is used in 
-arm_smmu_init_domain_context()). And then also about the really 
-catastrophically bad problem it actually introduces (hint: 
-"iommu_attach(domain, good_dev); iommu_attach(domain, bad_dev);")
+It is an implicit regulation that error code that function returned
+should be negative. But hisi_sas_task_prep() doesn't follow this.
+This may cause problems in the upper layer code.
 
-Robin.
+For example, in sas_expander.c of libsas, smp_execute_task_sg() may
+return the number of bytes of underrun. It will be conflicted with
+the scenaio lldd_execute_task() return an positive error code.
 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-> 
->   * New patch added in this series.
-> 
->   drivers/iommu/arm-smmu.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 69e7c60792a8..ffc152c36002 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1223,11 +1223,16 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->   		dev_err(dev,
->   			"cannot attach to SMMU %s whilst already attached to domain on SMMU %s\n",
->   			dev_name(smmu_domain->smmu->dev), dev_name(smmu->dev));
-> -		return -EINVAL;
-> +		ret = -EINVAL;
-> +		goto destroy_domain;
->   	}
->   
->   	/* Looks ok, so add the device to the domain */
->   	return arm_smmu_domain_add_master(smmu_domain, fwspec);
-> +
-> +destroy_domain:
-> +	arm_smmu_destroy_domain_context(domain);
-> +	return ret;
->   }
->   
->   static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
-> 
+This patch change the return value from SAS_PHY_DOWN to -ECOMM in
+hisi_sas_task_prep().
+
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 88ad8d4..dff9723 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -316,7 +316,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
+ 		 */
+ 		if (device->dev_type != SAS_SATA_DEV)
+ 			task->task_done(task);
+-		return SAS_PHY_DOWN;
++		return -ECOMM;
+ 	}
+ 
+ 	if (DEV_IS_GONE(sas_dev)) {
+@@ -327,7 +327,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
+ 			dev_info(dev, "task prep: device %016llx not ready\n",
+ 				 SAS_ADDR(device->sas_addr));
+ 
+-		return SAS_PHY_DOWN;
++		return -ECOMM;
+ 	}
+ 
+ 	port = to_hisi_sas_port(sas_port);
+@@ -337,7 +337,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
+ 			 "SATA/STP" : "SAS",
+ 			 device->port->id);
+ 
+-		return SAS_PHY_DOWN;
++		return -ECOMM;
+ 	}
+ 
+ 	if (!sas_protocol_ata(task->task_proto)) {
+-- 
+1.9.1
