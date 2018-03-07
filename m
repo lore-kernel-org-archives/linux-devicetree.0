@@ -1,119 +1,99 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
- legacy DT to create LVDS encoder nodes)
-Date: Tue, 6 Mar 2018 13:40:20 -0800
-Message-ID: <28e8e3cb-263d-5352-badf-34b269ad860b@gmail.com>
-References: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
- <20180306035412.GU2650@umbus.fritz.box>
- <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
- <e46f67ff-2900-8500-b1aa-503a9757997f@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 2/8] [PATCH 2/8] Documentations: dt-bindings: Add a
+ document of PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Wed, 7 Mar 2018 23:11:24 +0100
+Message-ID: <20180307221124.GD10438@amd>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-3-jae.hyun.yoo@linux.intel.com>
+ <20180306124002.GA13950@amd>
+ <33bf6563-b220-7ff9-8b04-84e9bd781b3f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e46f67ff-2900-8500-b1aa-503a9757997f@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, David Gibson <david@gibson.dropbear.id.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0166014956428172138=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <33bf6563-b220-7ff9-8b04-84e9bd781b3f@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: linux-hwmon@vger.kernel.org, andrew@lunn.ch, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMDYvMTggMTE6NTEsIEZyYW5rIFJvd2FuZCB3cm90ZToKPiBPbiAwMy8wNi8xOCAwNDoz
-MCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBIaSBEYXZpZCwKPj4KPj4gT24gVHVlLCBN
-YXIgNiwgMjAxOCBhdCA0OjU0IEFNLCBEYXZpZCBHaWJzb24KPj4gPGRhdmlkQGdpYnNvbi5kcm9w
-YmVhci5pZC5hdT4gd3JvdGU6Cj4+PiBPbiBGcmksIEZlYiAyMywgMjAxOCBhdCAwOTowNToyNEFN
-ICswMTAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+Pj4gT24gRnJpLCBGZWIgMjMsIDIw
-MTggYXQgMzozOCBBTSwgRnJhbmsgUm93YW5kIDxmcm93YW5kLmxpc3RAZ21haWwuY29tPiB3cm90
-ZToKPj4+Pj4gSSB3YXMgaG9waW5nIHRvIGJlIGFibGUgdG8gY29udmVydCB0aGUgLmR0cyBmaWxl
-cyB0byB1c2Ugc3VnYXIgc3ludGF4Cj4+Pj4+IGluc3RlYWQgb2YgaGFuZCBjb2RpbmcgdGhlIGZy
-YWdtZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4+Pj4+IG9mIGZpbGVzIEkg
-ZmFpbGVkLCBzaW5jZSB0aGUgbGFiZWxzIHRoYXQgd291bGQgaGF2ZSBiZWVuIHJlcXVpcmVkIGRv
-Cj4+Pj4+IG5vdCBhbHJlYWR5IGV4aXN0IGluIHRoZSBiYXNlIC5kdHMgZmlsZXMgdGhhdCB0aGF0
-IG92ZXJsYXlzIHdvdWxkIGJlCj4+Pj4+IGFwcGxpZWQgYWdhaW5zdC4KPj4+Pgo+Pj4+IEluZGVl
-ZCwgaGVuY2UgdGhlIGZpeHVwIG92ZXJsYXlzIHVzZSAidGFyZ2V0LXBhdGgiLgo+Pj4+Cj4+Pj4g
-QlRXLCBpcyB0aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoZXJlIGlzIG5vIHN1Z2FyIHN5bnRh
-eCBzdXBwb3J0IGluIGR0Ywo+Pj4+IGZvciBhYnNvbHV0ZSB0YXJnZXQgcGF0aHM/IEkgZ3Vlc3Mg
-dG8gcHJldmVudCBhZGRpbmcgc3R1ZmYgdG8gYSByYW5kb20KPj4+PiBleGlzdGluZyBub2RlLCBh
-bmQgdG8gZW5jb3VyYWdlIHBlb3BsZSB0byB1c2UgYSAiY29ubmVjdG9yIiBBUEkgZGVmaW5lZCBp
-bgo+Pj4+IHRlcm0gb2YgbGFiZWxzPwo+Pj4KPj4+IE9ubHkgYmVjYXVzZSBpdCBoYXNuJ3QgYmVl
-biBpbXBsZW1lbnRlZC4gIFVzaW5nICZ7L3doYXRldmVyfSBzaG91bGQKPj4+IElNTyBnZW5lcmF0
-ZSBhIHRhcmdldC1wYXRoIGFuZCB0aGUgZmFjdCBpdCBkb2Vzbid0IGlzIGEgYnVnLgo+Pj4KPj4+
-PiBJJ20gYWxzbyBpbiB0aGUgcHJvY2VzcyBvZiBjb252ZXJ0aW5nIG15IGNvbGxlY3Rpb24gb2Yg
-RFQgb3ZlcmxheXMgdG8gc3VnYXIKPj4+PiBzeW50YXgsIGFuZCBsYWNrIG9mIHN1cHBvcnQgZm9y
-ICJ0YXJnZXQtcGF0aCIgaXMgdGhlIHNvbGUgdGhpbmcgdGhhdCBob2xkcwo+Pj4+IG1lIGJhY2sg
-ZnJvbSBjb21wbGV0aW5nIHRoaXMuIFNvIGZvciBub3cgSSB1c2UgYSBtaXggb2Ygc3VnYXIgYW5k
-Cj4+Pj4gdHJhZGl0aW9uYWwgb3ZlcmxheSBzeW50YXguCj4+Pj4KPj4+PiBJbiBwYXJ0aWN1bGFy
-LCBJIG5lZWQgInRhcmdldC1wYXRoIiBmb3IgdHdvIHRoaW5nczoKPj4+PiAgIDEuIFRvIHJlZmVy
-IHRvIHRoZSByb290IG5vZGUsIGZvciBhZGRpbmcgZGV2aWNlcyB0aGF0IHNob3VsZCBsaXZlIGF0
-Cj4+Pj4gICAgICAoYSBib2FyZCBzdWJub2RlIG9mKSB0aGUgcm9vdCBub2RlLCBsaWtlOgo+Pj4+
-ICAgICAgICAtIGRldmljZXMgY29ubmVjdGVkIHRvIEdQSU8gY29udHJvbGxlcnMgcHJvdmlkZWQg
-Ynkgb3RoZXIgYmFzZSBvcgo+Pj4+ICAgICAgICAgIG92ZXJsYXkgZGV2aWNlcyAoZS5nLiBMRURz
-LCBkaXNwbGF5cywgYnV0dG9ucywgLi4uKSwKPj4+PiAgICAgICAgLSBjbG9jayBwcm92aWRlcnMg
-Zm9yIG90aGVyIG92ZXJsYXlzIGRldmljZXMgKGUuZy4gZml4ZWQtY2xvY2spLgo+Pgo+Pj4+IFRo
-ZSBmb3JtZXIgaXMgdGhlIHJlYWwgYmxvY2tlciBmb3IgbWUuCj4+Cj4+PiBCZWxvdyBpcyBkcmFm
-dCBwYXRjaCBhZGRpbmcgdGFyZ2V0LXBhdGggc3VwcG9ydC4gIFRoZSBwcmV0dHkgbWluaW1hbAo+
-Pj4gdGVzdCBleGFtcGxlcyBkbyBpbmNsdWRlIGEgY2FzZSB1c2luZyAmey99Cj4+Pgo+Pj4gRnJv
-bSA4ZjFiMzVmODgzOTVhZGVhMDFjZTExMDBjNWZhYTI3ZGFjYmM4NDEwIE1vbiBTZXAgMTcgMDA6
-MDA6MDAgMjAwMQo+Pj4gRnJvbTogRGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIu
-aWQuYXU+Cj4+PiBEYXRlOiBUdWUsIDYgTWFyIDIwMTggMTM6Mjc6NTMgKzExMDAKPj4+IFN1Ympl
-Y3Q6IFtQQVRDSF0gQ29ycmVjdCBvdmVybGF5IHN5bnRhY3RpYyBzdWdhciBmb3IgZ2VuZXJhdGlu
-ZyB0YXJnZXQtcGF0aAo+Pj4gIGZyYWdtZW50cwo+Pj4KPj4+IFdlJ3ZlIHJlY2VudGx5IGFkZGVk
-ICJzeW50YWN0aWMgc3VnYXIiIHN1cHBvcnQgdG8gZ2VuZXJhdGUgcnVudGltZSBkdGIKPj4+IG92
-ZXJsYXlzIHVzaW5nIHNpbWlsYXIgc3ludGF4IHRvIHRoZSBjb21waWxlIHRpbWUgb3ZlcmxheXMg
-d2UndmUgaGFkIGZvcgo+Pj4gYSB3aGlsZS4gIFRoaXMgd29ya2VkIHdpdGggdGhlICZsYWJlbCB7
-IC4uLiB9IHN5bnRheCwgYWRqdXN0aW5nIGFuIGV4aXN0aW5nCj4+PiBsYWJlbGxlZCBub2RlLCBi
-dXQgd291bGQgZmFpbCB3aXRoIHRoZSAmey9wYXRofSB7IC4uLiB9IHN5bnRheCBhdHRlbXB0aW5n
-Cj4+PiB0byBhZGp1c3QgYW4gZXhpc3Rpbmcgbm9kZSByZWZlcmVuY2VkIGJ5IGl0cyBwYXRoLgo+
-Pj4KPj4+IFRoZSBwcmV2aW91cyBjb2RlIHdvdWxkIGFsd2F5cyB0cnkgdG8gdXNlIHRoZSAidGFy
-Z2V0IiBwcm9wZXJ0eSBpbiB0aGUKPj4+IG91dHB1dCBvdmVybGF5LCB3aGljaCBuZWVkcyB0byBi
-ZSBmaXhlZCB1cCwgYW5kIF9fZml4dXBzX18gY2FuIG9ubHkgZW5jb2RlCj4+PiBzeW1ib2xzLCBu
-b3QgcGF0aHMsIHNvIHRoZSByZXN1bHQgY291bGQgbmV2ZXIgd29yayBwcm9wZXJseS4KPj4+Cj4+
-PiBUaGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlICZ7L3BhdGh9IHN5bnRheCBmb3Igb3ZlcmxheXMs
-IHRyYW5zbGF0aW5nIGl0IGludG8KPj4+IHRoZSAidGFyZ2V0LXBhdGgiIGVuY29kaW5nIGluIHRo
-ZSBvdXRwdXQuICBJdCBhbHNvIGNoYW5nZXMgZXhpc3RpbmcKPj4+IGJlaGF2aW91ciBhIGxpdHRs
-ZSBiZWNhdXNlIHdlIG5vdyB1bmNvbmRpdGlvbmFsbHkgb25lIGZyYWdtZW50IGZvciBlYWNoCj4+
-PiBvdmVybGF5IHNlY3Rpb24gaW4gdGhlIHNvdXJjZS4gIFByZXZpb3VzbHkgd2Ugd291bGQgb25s
-eSBjcmVhdGUgYSBmcmFnbWVudAo+Pj4gaWYgd2UgY291bGRuJ3QgbG9jYWxseSByZXNvbHZlIHRo
-ZSBub2RlIHJlZmVyZW5jZWQuICBXZSBuZWVkIHRoaXMgZm9yCj4+PiBwYXRoIHJlZmVyZW5jZXMs
-IGJlY2F1c2UgdGhlIHBhdGggaXMgc3VwcG9zZWQgdG8gYmUgcmVmZXJlbmNpbmcgc29tZXRoaW5n
-Cj4+PiBpbiB0aGUgKG5vdCB5ZXQga25vd24pIGJhc2UgdHJlZSwgcmF0aGVyIHRoYW4gdGhlIG92
-ZXJsYXkgdHJlZSB3ZSBhcmUKPj4+IHdvcmtpbmcgd2l0aCBub3cuICBJbiBwYXJ0aWN1bGFyIG9u
-ZSB1c2VmdWwgY2FzZSBmb3IgcGF0aCBiYXNlZCBvdmVybGF5cwo+Pj4gaXMgdXNpbmcgJnsvfSAt
-IGJ1dCB0aGUgY29uc3RydWN0ZWQgb3ZlcmxheSB0cmVlIHdpbGwgYWx3YXlzIGhhdmUgYSByb290
-Cj4+PiBub2RlLCBtZWFuaW5nIHRoYXQgd2l0aG91dCB0aGUgY2hhbmdlIHRoYXQgd291bGQgYXR0
-ZW1wdCB0byByZXNvbHZlIHRoZQo+Pj4gZnJhZ21lbnQgbG9jYWxseSwgd2hpY2ggaXMgbm90IHdo
-YXQgd2Ugd2FudC4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdp
-YnNvbi5kcm9wYmVhci5pZC5hdT4KPj4KPj4gVGhhbmsgeW91LCBzZWVtcyB0byB3b3JrIGZpbmUg
-b24gZHRjLmdpdC4KPiAKPiBBbmQgdGhlIHBhdGNoZWQgZHRjIHdvcmtzIGZvciBhIGR0cyBmaWxl
-IHRoYXQgSSB3YXMgdHJ5aW5nIHRvIGNvbnZlcnQKPiB0byBzdWdhciBkdHMgc3ludGF4Cgo8IHNu
-aXAgPgoKSSBub3RpY2VkIHRoYXQgYSBzcGFjZSBpbiAiJnsvfSIgaXMgYW4gZXJyb3IuICBJIHdh
-bnRlZCB0byBjaGVjayB3aGV0aGVyCnRoYXQgd2FzIGRlbGliZXJhdGUsIG9yIHRoYXQgdGhlIHBh
-dGNoIHdhc24ndCBmdWxseSBjb21wbGV0ZSB5ZXQuCmNhdCBwYXRoX3N1Z2FyX3YxLmR0cyAKCiQg
-bmwgLWJhIHBhdGhfc3VnYXJfdjEuZHRzCiAgICAgMQkKICAgICAyCS9kdHMtdjEvOwogICAgIDMJ
-L3BsdWdpbi87CiAgICAgNAkmey99IHsKICAgICA1CQkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47CiAg
-ICAgNgkJCSNzaXplLWNlbGxzID0gPDI+OwogICAgIDcJCiAgICAgOAkJCW15X25vZGVAZmViOTAw
-MDAgewogICAgIDkJCQkJY29tcGF0aWJsZSA9ICJ2ZW5kb3IsZGV2aWNlIjsKICAgIDEwCQkJCXJl
-ZyA9IDwwIDB4ZmViOTAwMDAgMCAweDFjPjsKICAgIDExCQogICAgMTIJCQl9OwogICAgMTMJCiAg
-ICAxNAl9OwoKJCBkdGMgLU8gZHRzIHBhdGhfc3VnYXJfdjEuZHRzIAovZHRzLXYxLzsKCi8gewoK
-CWZyYWdtZW50QDAgewoJCXRhcmdldC1wYXRoID0gWzJmIDAwXTsKCgkJX19vdmVybGF5X18gewoJ
-CQkjYWRkcmVzcy1jZWxscyA9IDwweDI+OwoJCQkjc2l6ZS1jZWxscyA9IDwweDI+OwoKCQkJbXlf
-bm9kZUBmZWI5MDAwMCB7CgkJCQljb21wYXRpYmxlID0gInZlbmRvcixkZXZpY2UiOwoJCQkJcmVn
-ID0gPDB4MCAweGZlYjkwMDAwIDB4MCAweDFjPjsKCQkJfTsKCQl9OwoJfTsKfTsKCiQgbmwgLWJh
-IHBhdGhfc3VnYXJfdjIuZHRzCiAgICAgMQkKICAgICAyCS9kdHMtdjEvOwogICAgIDMJL3BsdWdp
-bi87CiAgICAgNAkmeyAvIH0gewogICAgIDUJCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsKICAgICA2
-CQkJI3NpemUtY2VsbHMgPSA8Mj47CiAgICAgNwkKICAgICA4CQkJbXlfbm9kZUBmZWI5MDAwMCB7
-CiAgICAgOQkJCQljb21wYXRpYmxlID0gInZlbmRvcixkZXZpY2UiOwogICAgMTAJCQkJcmVnID0g
-PDAgMHhmZWI5MDAwMCAwIDB4MWM+OwogICAgMTEJCiAgICAxMgkJCX07CiAgICAxMwkKICAgIDE0
-CX07CgokIGR0YyAtTyBkdHMgcGF0aF9zdWdhcl92Mi5kdHMgCkVycm9yOiBwYXRoX3N1Z2FyX3Yy
-LmR0czo0LjEtMiBzeW50YXggZXJyb3IKRkFUQUwgRVJST1I6IFVuYWJsZSB0byBwYXJzZSBpbnB1
-dCB0cmVlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0166014956428172138==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
+Content-Disposition: inline
+
+
+--76DTJ5CE0DCVQemd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >Are these SoCs x86-based?
+>=20
+> Yes, these are ARM SoCs. Please see Andrew's answer as well.
+
+Understood, thanks.
+
+> >>+	Read sampling point selection. The whole period of a bit time will be
+> >>+	divided into 16 time frames. This value will determine which time fra=
+me
+> >>+	this controller will sample PECI signal for data read back. Usually in
+> >>+	the middle of a bit time is the best.
+> >
+> >English? "This value will determine when this controller"?
+> >
+>=20
+> Could I change it like below?:
+>=20
+> "This value will determine in which time frame this controller samples PE=
+CI
+> signal for data read back"
+
+I guess... I'm not native speaker, I guess this could be improved some
+more.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--76DTJ5CE0DCVQemd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqgY4wACgkQMOfwapXb+vKkpwCgxIl38neoJCtEDSh34sHCjHMb
+QxUAnRhNCAIzVU8cgKZ4g2D+qFLjBZM8
+=gl0E
+-----END PGP SIGNATURE-----
+
+--76DTJ5CE0DCVQemd--
+
+
+--===============0166014956428172138==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0166014956428172138==--
