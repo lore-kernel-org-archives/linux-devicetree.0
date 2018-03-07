@@ -1,99 +1,91 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
-Date: Wed, 7 Mar 2018 16:29:38 +0530
-Message-ID: <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
-References: <cover.1520274879.git.amit.kucheria@linaro.org>
- <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
- <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
+ connector
+Date: Wed, 7 Mar 2018 12:13:42 +0100
+Message-ID: <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
+References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
+        <20180227071134.28063-1-a.hajda@samsung.com>
+        <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
+        <5A9F4A7D.9020409@samsung.com> <5A9F6F29.5020501@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
+In-Reply-To: <5A9F6F29.5020501@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Ram Chandrasekar <rkumbako@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2018 at 6:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 05/03/18 18:36, Amit Kucheria wrote:
->> From: Ram Chandrasekar <rkumbako@codeaurora.org>
+Hi Chanwoo, Archit,
+
+On 07.03.2018 05:48, Chanwoo Choi wrote:
+> On 2018년 03월 07일 11:12, Chanwoo Choi wrote:
+>> Hi Rob and Andrzej,
 >>
->> There is currently no way for the governor to be selected for each thermal
->> zone in devicetree.
->
-> How is that any different from cpufreq, cpuidle or devfreq subsystems ?
-
-Cpufreq/cpuidle are designed to control a single parameter while
-thermal framework is trying to mitigate heat from several disparate
-sources that are throttled in different ways. Besides, cpufreq/cpuidle
-have somewhat mature governors. Cpuidle has only one governor (for
-tickless) - menu governor, cpufreq has ondemand in mainline, replaced
-by interactive in android and hopefully soon both will be replaced by
-schedutil.
-
-Badly configured cpufreq/cpuidle/devfreq only leads to wasted power,
-while badly configured thermal zone leads to the loss of operation
-e.g. reboots, too hot to touch, etc.
-
->> This results in the default governor being used for all
->> thermal zones even though no such restriction exists in the core code.
+>> On 2018년 03월 06일 21:53, Andrzej Hajda wrote:
+>>> Hi Rob, Chanwoo, Krzysztof,
+>>>
+>>>
+>>> On 27.02.2018 08:11, Andrzej Hajda wrote:
+>>>> Hi,
+>>>>
+>>>> Thanks for reviews of previous iterations.
+>>>>
+>>>> This patchset introduces USB physical connector bindings, together with
+>>>> working example.
+>>>> I have removed RFC prefix - the patchset seems to be heading
+>>>> to a happy end :)
+>>>>
+>>>> v5: fixed extra parenthesis in dts, renamed extcon function.
+>>>> v4: improved binding descriptions, added missing reg in dts.
+>>>> v3: Separate binding for Samsung 11-pin connector, added full-blown USB-C
+>>>>     example.
+>>>> v2: I have addressed comments by Rob and Laurent, thanks 
+>>>>
+>>>> Changes in datail are described in the patches.
+>>>>
+>>>> Regards
+>>>> Andrzej
+>>>>
+>>>>
+>>>> Andrzej Hajda (5):
+>>>>   dt-bindings: add bindings for USB physical connector
+>>>>   dt-bindings: add bindings for Samsung micro-USB 11-pin connector
+>>>>   arm64: dts: exynos: add micro-USB connector node to TM2 platforms
+>>>>   arm64: dts: exynos: add OF graph between MHL and USB connector
+>>>>   extcon: add possibility to get extcon device by OF node
+>>>>
+>>>> Maciej Purski (1):
+>>>>   drm/bridge/sii8620: use micro-USB cable detection logic to detect MHL
+>>> It looks like all patches received R-B or acks (I forgot add Krzysztof's
+>>> acks for dts part).
+>>> Now I have a question how to merge them.
+>>> The only functional dependency is between bridge and extcon, and from
+>>> the formal PoV bindings should be merged 1st.
+>>> I can merge it:
+>>> 1. All patches via drm-misc tree.
+>>> 2. All patches except dts via drm-misc, and Krzysztof will merge dts via
+>>> samsung-soc tree.
+>>>
+>>> Is it OK, for all? Better ideas?
+>> Krzysztof picked the dts patches. I'll make the immutable branch based on v4.16-rc1
+>> and apply them except for dts patchs. And I'll send the immutable branch to Rob and Andrzej.
 >>
+>>
+> I made the immutable branch[1] as following: If you agree, I'll send pull request.
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git/log/?h=ib-extcon-drm-dt-v4.17
 >
-> What restrictions ?
-
-I said "no such restriction exists". IOW, the core code does allow the
-governor to be changed.
-
->> Add support for specifying the thermal governor to be used for a thermal
->> zone in the devicetree.
+> Or you can make the immutable branch and send pull request to Rob and me.
 >
-> Then what prevents us from doing the same for other subsystems with so
-> called /inefficient default/ governors ?
 
-Nothing? :-)
+It seems you took v5 instead of v6 version of extcon patch.
 
-It depends on how closely we want the board DT to represent a
-production-ready setup. If a platform maintainer wants to ship a
-well-tested configuration in DT, is that really a problem?
+Beside it I am OK with your immutable branch, Archit is it OK to do it
+this way in drm-misc?
 
-If however, you are requiring them to ship magic runes for userspace
-daemons (e.g. per-board thermald config) to tweak the various
-governors in sysfs, it takes a bit more work to get to a
-production-ready setup.
 
-We should of course continue to improve our govenors to arrive at the
-one true governor, but that'll take some time and might never even
-happen in the case of thermal IMHO.
+Regards
 
->> The devicetree config should specify the governor
->> name as a string that matches any available governors. If not specified, we
->> maintain the current behaviour of using the default governor.
->
-> If one is specified, can the user change it from sysfs ? If
-> yes, then why do we need this binding at all ? If no, we are basically
-> restricting, then what would happen if the DT was shipped with wrong
-> governor specified because the firmware author didn't know about any
-> other governor ?
-
-The governor can be changed from sysfs today. So it is all override-able.
-
-I guess your main worry is an unmodifiable DT with this option being
-shipped in firmware, right? That is a fair point, though that could be
-worked around from sysfs.
-
-> IMO, having this in DT is bad idea as it may cause more issues than
-> gain. We already have sysfs support like other PM subsystems and
-> userspace can deal with it.
-
-As mentioned above, I think thermal is a bit special because bad
-configuration may lead to loss of operation. But iff we're strictly
-enforcing the rule about no policy in board DTs, then I concede.
-
-Personally, I'd like mainline board DTs to have enough policy to
-provide a stable system so I don't have to futz around with userspace
-to set it all up correctly (in 3 different distros).
-
-Regards,
-Amit
+Andrzej
