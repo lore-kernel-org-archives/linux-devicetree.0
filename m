@@ -1,128 +1,35 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v3 1/3] ARM: dts: STi: Fix aliases property name for STi boards
-Date: Wed, 7 Mar 2018 09:49:55 +0100
-Message-ID: <1520412597-30545-2-git-send-email-patrice.chotard@st.com>
-References: <1520412597-30545-1-git-send-email-patrice.chotard@st.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: add missing LEDs for Buffalo WZR-900DHP
+Date: Wed, 7 Mar 2018 09:51:58 +0100
+Message-ID: <CACna6rwKt1wdryaSs1DsGztSjugBbfRfQqpzGKjvqWf=j=N5kw@mail.gmail.com>
+References: <1520260563-4167-1-git-send-email-musashino.open@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520412597-30545-1-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <1520260563-4167-1-git-send-email-musashino.open@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org
-Cc: patrice.chotard@st.com
+To: musashino.open@gmail.com
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+On 5 March 2018 at 15:36,  <musashino.open@gmail.com> wrote:
+> From: INAGAKI Hiroshi <musashino.open@gmail.com>
+>
+> Buffalo WZR-900DHP has 8 LEDs, but there is not LED definitions in the
+> dts and cannot configure these LEDs.
+> I Added missing LED definitions for WZR-900DHP.
+>
+> Signed-off-by: INAGAKI Hiroshi <musashino.open@gmail.com>
 
-Update serial aliases from "ttyASN" to more common "serialN".
+Looks almost good, thanks for sending this patch to Florian.
 
-Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
-be lowercase only. This allows to fix following dtc warnings:
+One comment: please drop all linux,default-trigger = "default-off";
+lines. I did the same mistake long time ago, see my fixing commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0b660259e927177dc0c6eb3b1c39f23c6a011c5f
 
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+When you fix that, please generate a V2 of your patch, you can do it
+with something like:
+git format-patch --subject-prefix="PATCH V2" -1
+and send again the same way.
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
-
-v3: _ none
-v2: _ use serialN instead of ttyasN aliases to not break ABI
-
- arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
- arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
- arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
- arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-index de3c8bf129b5..2c4d6033b448 100644
---- a/arch/arm/boot/dts/stih407-b2120.dts
-+++ b/arch/arm/boot/dts/stih407-b2120.dts
-@@ -14,7 +14,7 @@
- 	compatible = "st,stih407-b2120", "st,stih407";
- 
- 	chosen {
--		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-+		bootargs = "console=serial0,115200 clk_ignore_unused";
- 		stdout-path = &sbc_serial0;
- 	};
- 
-@@ -24,7 +24,7 @@
- 	};
- 
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
- 
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 0a59b7b0f4b2..5422850641e8 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -14,7 +14,7 @@
- 	compatible = "st,stih410-b2120", "st,stih410";
- 
- 	chosen {
--		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-+		bootargs = "console=serial0,115200 clk_ignore_unused";
- 		stdout-path = &sbc_serial0;
- 	};
- 
-@@ -24,7 +24,7 @@
- 	};
- 
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
- 
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index feb8834478fa..ca347160e35d 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -15,7 +15,7 @@
- 	compatible = "st,stih410-b2260", "st,stih410";
- 
- 	chosen {
--		bootargs = "console=ttyAS1,115200 clk_ignore_unused";
-+		bootargs = "console=serial1,115200 clk_ignore_unused";
- 		stdout-path = &uart1;
- 	};
- 
-@@ -25,7 +25,7 @@
- 	};
- 
- 	aliases {
--		ttyAS1 = &uart1;
-+		serial1 = &uart1;
- 		ethernet0 = &ethernet0;
- 	};
- 
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 39b4db2e3507..dbf7bb704a1a 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -14,7 +14,7 @@
- 	compatible = "st,stih418-b2199", "st,stih418";
- 
- 	chosen {
--		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-+		bootargs = "console=serial0,115200 clk_ignore_unused";
- 		stdout-path = &sbc_serial0;
- 	};
- 
-@@ -24,7 +24,7 @@
- 	};
- 
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
- 
--- 
-1.9.1
+Thanks!
