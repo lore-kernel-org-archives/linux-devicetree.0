@@ -1,251 +1,784 @@
-From: Rajkumar Rampelli <rrajk@nvidia.com>
-Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
- based tachometer
-Date: Wed, 7 Mar 2018 15:17:51 +0530
-Message-ID: <952cb50e-d9a0-ae5e-d9f6-d1ce268f0384@nvidia.com>
-References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
- <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
- <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
- <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
- <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
- <2628eff2-dd33-34f4-a7e1-cfe46ef88a3f@nvidia.com>
- <4556a8d2-947d-72c4-2962-3167afb53978@kapsi.fi>
- <62ba7f67-5a99-51ab-1214-eb68ebb7e642@roeck-us.net>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v5 02/12] [media] cxd2880-spi: Add support for CXD2880
+ SPI interface
+Date: Wed, 7 Mar 2018 07:15:29 -0300
+Message-ID: <20180307071529.66e33f54@vento.lan>
+References: <20180118084016.20689-1-Yasunari.Takiguchi@sony.com>
+        <20180118084610.20967-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <62ba7f67-5a99-51ab-1214-eb68ebb7e642@roeck-us.net>
+In-Reply-To: <20180118084610.20967-1-Yasunari.Takiguchi@sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Mikko Perttunen <cyndis@kapsi.fi>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
+To: Yasunari.Takiguchi@sony.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, tbird20d@gmail.com, frowand.list@gmail.com, Masayuki.Yamamoto@sony.com, Hideki.Nozawa@sony.com, Kota.Yonezawa@sony.com, Toshihiko.Matsumoto@sony.com, Satoshi.C.Watanabe@sony.com
 List-Id: devicetree@vger.kernel.org
 
+Em Thu, 18 Jan 2018 17:46:10 +0900
+<Yasunari.Takiguchi@sony.com> escreveu:
+
+> From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> 
+> This is the SPI adapter part of the driver for the
+> Sony CXD2880 DVB-T2/T tuner + demodulator.
+
+Thanks for the patches!
+
+The patch series look ok. Just a few nitpicks that could be solved
+later.
+
+I had to apply a few patches to make it build and remove some
+warnings with W=1. Patches sent.
+
+With that, I'm applying this series.
+
+Regards,
+Mauro
+
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+> ---
+> 
+> [Change list]
+> Changes in V5
+>    Using SPDX-License-Identifier
+>    drivers/media/spi/cxd2880-spi.c
+>       -modified typo about "ivnalid" -> "invalid"
+>       -modified typo about "drvier" -> "driver"
+>       -removed unnecessary if() 
+>       -modified return error code
+>       -reduction of valiable names
+>       -removed unnecessary parentheses 
+>       -changed members of struct cxd2880_ts_buf_info
+> 
+> Changes in V4
+>    drivers/media/spi/cxd2880-spi.c
+>       -removed Camel case
+>       -removed unnecessary initialization at variable declaration
+>       -removed unnecessary brace {}
+> 
+> Changes in V3
+>    drivers/media/spi/cxd2880-spi.c
+>       -adjusted of indent spaces
+>       -removed unnecessary cast
+>       -changed debugging code
+>       -changed timeout method
+>       -modified coding style of if()
+>       -changed hexadecimal code to lower case. 
+> 
+> Changes in V2
+>    drivers/media/spi/cxd2880-spi.c
+>       -Modified PID filter setting.
+> 
+>  drivers/media/spi/cxd2880-spi.c | 670 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 670 insertions(+)
+>  create mode 100644 drivers/media/spi/cxd2880-spi.c
+> 
+> diff --git a/drivers/media/spi/cxd2880-spi.c b/drivers/media/spi/cxd2880-spi.c
+> new file mode 100644
+> index 000000000000..857e4c0d7a92
+> --- /dev/null
+> +++ b/drivers/media/spi/cxd2880-spi.c
+> @@ -0,0 +1,670 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * cxd2880-spi.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * SPI adapter
+> + *
+> + * Copyright (C) 2016, 2017, 2018 Sony Semiconductor Solutions Corporation
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": %s: " fmt, __func__
+> +
+> +#include <linux/spi/spi.h>
+> +#include <linux/ktime.h>
+> +
+> +#include "dvb_demux.h"
+> +#include "dmxdev.h"
+> +#include "dvb_frontend.h"
+> +#include "cxd2880.h"
+> +
+> +#define CXD2880_MAX_FILTER_SIZE 32
+> +#define BURST_WRITE_MAX 128
+> +#define MAX_TRANS_PKT 300
+> +
+> +struct cxd2880_ts_buf_info {
+> +	u8 read_ready:1;
+> +	u8 almost_full:1;
+> +	u8 almost_empty:1;
+> +	u8 overflow:1;
+> +	u8 underflow:1;
+> +	u16 pkt_num;
+> +};
+> +
+> +struct cxd2880_pid_config {
+> +	u8 is_enable;
+> +	u16 pid;
+> +};
+> +
+> +struct cxd2880_pid_filter_config {
+> +	u8 is_negative;
+> +	struct cxd2880_pid_config pid_config[CXD2880_MAX_FILTER_SIZE];
+> +};
+> +
+> +struct cxd2880_dvb_spi {
+> +	struct dvb_frontend dvb_fe;
+> +	struct dvb_adapter adapter;
+> +	struct dvb_demux demux;
+> +	struct dmxdev dmxdev;
+> +	struct dmx_frontend dmx_fe;
+> +	struct task_struct *cxd2880_ts_read_thread;
+> +	struct spi_device *spi;
+> +	struct mutex spi_mutex; /* For SPI access exclusive control */
+> +	int feed_count;
+> +	int all_pid_feed_count;
+> +	u8 *ts_buf;
+> +	struct cxd2880_pid_filter_config filter_config;
+> +};
+> +
+> +DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+> +
+> +static int cxd2880_write_spi(struct spi_device *spi, u8 *data, u32 size)
+> +{
+> +	struct spi_message msg;
+> +	struct spi_transfer tx;
+> +
+> +	if (!spi || !data) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	memset(&tx, 0, sizeof(tx));
+
+Nitpick:
+
+	instead, you could just declare tx as:
+
+		struct spi_transfer tx = {};
+
+and get rid of memset (same applies to similar code blocks).
 
 
-On Wednesday 28 February 2018 07:59 PM, Guenter Roeck wrote:
-> On 02/27/2018 11:03 PM, Mikko Perttunen wrote:
->> On 02/28/2018 08:12 AM, Rajkumar Rampelli wrote:
->>>
->>> On Wednesday 28 February 2018 11:28 AM, Guenter Roeck wrote:
->>>> On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
->>>>>
->>>>> On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
->>>>>> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
->>>>>>> Add generic PWM based tachometer driver via HWMON interface
->>>>>>> to report the RPM of motor. This drivers get the period/duty
->>>>>>> cycle from PWM IP which captures the motor PWM output.
->>>>>>>
->>>>>>> This driver implements a simple interface for monitoring the 
->>>>>>> speed of
->>>>>>> a fan and exposes it in roatations per minute (RPM) to the user 
->>>>>>> space
->>>>>>> by using the hwmon's sysfs interface
->>>>>>>
->>>>>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
->>>>>>> ---
->>>>>>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
->>>>>>>   drivers/hwmon/Kconfig                      |  10 +++
->>>>>>>   drivers/hwmon/Makefile                     |   1 +
->>>>>>>   drivers/hwmon/generic-pwm-tachometer.c     | 112 
->>>>>>> +++++++++++++++++++++++++++++
->>>>>>>   4 files changed, 140 insertions(+)
->>>>>>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
->>>>>>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
->>>>>>>
->>>>>>> diff --git a/Documentation/hwmon/generic-pwm-tachometer 
->>>>>>> b/Documentation/hwmon/generic-pwm-tachometer
->>>>>>> new file mode 100644
->>>>>>> index 0000000..e0713ee
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/hwmon/generic-pwm-tachometer
->>>>>>> @@ -0,0 +1,17 @@
->>>>>>> +Kernel driver generic-pwm-tachometer
->>>>>>> +====================================
->>>>>>> +
->>>>>>> +This driver enables the use of a PWM module to monitor a fan. 
->>>>>>> It uses the
->>>>>>> +generic PWM interface and can be used on SoCs as along as the 
->>>>>>> SoC supports
->>>>>>> +Tachometer controller that moniors the Fan speed in periods.
->>>>>>> +
->>>>>>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
->>>>>>> +
->>>>>>> +Description
->>>>>>> +-----------
->>>>>>> +
->>>>>>> +The driver implements a simple interface for monitoring the Fan 
->>>>>>> speed using
->>>>>>> +PWM module and Tachometer controller. It requests period value 
->>>>>>> through PWM
->>>>>>> +capture interface to Tachometer and measures the Rotations per 
->>>>>>> minute using
->>>>>>> +received period value. It exposes the Fan speed in RPM to the 
->>>>>>> user space by
->>>>>>> +using the hwmon's sysfs interface.
->>>>>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->>>>>>> index ef23553..8912dcb 100644
->>>>>>> --- a/drivers/hwmon/Kconfig
->>>>>>> +++ b/drivers/hwmon/Kconfig
->>>>>>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
->>>>>>>         If you say yes here you get support for the temperature
->>>>>>>         and power sensors for APM X-Gene SoC.
->>>>>>>   +config GENERIC_PWM_TACHOMETER
->>>>>>> +    tristate "Generic PWM based tachometer driver"
->>>>>>> +    depends on PWM
->>>>>>> +    help
->>>>>>> +      Enables a driver to use PWM signal from motor to use
->>>>>>> +      for measuring the motor speed. The RPM is captured by
->>>>>>> +      PWM modules which has PWM capture capability and this
->>>>>>> +      drivers reads the captured data from PWM IP to convert
->>>>>>> +      it to speed in RPM.
->>>>>>> +
->>>>>>>   if ACPI
->>>>>>>     comment "ACPI drivers"
->>>>>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->>>>>>> index f814b4a..9dcc374 100644
->>>>>>> --- a/drivers/hwmon/Makefile
->>>>>>> +++ b/drivers/hwmon/Makefile
->>>>>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += 
->>>>>>> wm8350-hwmon.o
->>>>>>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
->>>>>>>     obj-$(CONFIG_PMBUS)        += pmbus/
->>>>>>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
->>>>>>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
->>>>>>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c 
->>>>>>> b/drivers/hwmon/generic-pwm-tachometer.c
->>>>>>> new file mode 100644
->>>>>>> index 0000000..9354d43
->>>>>>> --- /dev/null
->>>>>>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
->>>>>>> @@ -0,0 +1,112 @@
->>>>>>> +/*
->>>>>>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights 
->>>>>>> reserved.
->>>>>>> + *
->>>>>>> + * This program is free software; you can redistribute it 
->>>>>>> and/or modify it
->>>>>>> + * under the terms and conditions of the GNU General Public 
->>>>>>> License,
->>>>>>> + * version 2, as published by the Free Software Foundation.
->>>>>>> + *
->>>>>>> + * This program is distributed in the hope it will be useful, 
->>>>>>> but WITHOUT
->>>>>>> + * ANY WARRANTY; without even the implied warranty of 
->>>>>>> MERCHANTABILITY or
->>>>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General 
->>>>>>> Public License for
->>>>>>> + * more details.
->>>>>>> + *
->>>>>>> + */
->>>>>>> +
->>>>>>> +#include <linux/module.h>
->>>>>>> +#include <linux/platform_device.h>
->>>>>>> +#include <linux/err.h>
->>>>>>> +#include <linux/pwm.h>
->>>>>>> +#include <linux/hwmon.h>
->>>>>>> +#include <linux/hwmon-sysfs.h>
->>>>>>> +
->>>>>>> +struct pwm_hwmon_tach {
->>>>>>> +    struct device        *dev;
->>>>>>> +    struct pwm_device    *pwm;
->>>>>>> +    struct device        *hwmon;
->>>>>>> +};
->>>>>>> +
->>>>>>> +static ssize_t show_rpm(struct device *dev, struct 
->>>>>>> device_attribute *attr,
->>>>>>> +            char *buf)
->>>>>>> +{
->>>>>>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
->>>>>>> +    struct pwm_device *pwm = ptt->pwm;
->>>>>>> +    struct pwm_capture result;
->>>>>>> +    int err;
->>>>>>> +    unsigned int rpm = 0;
->>>>>>> +
->>>>>>> +    err = pwm_capture(pwm, &result, 0);
->>>>>>> +    if (err < 0) {
->>>>>>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
->>>>>>> +        return err;
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    if (result.period)
->>>>>>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
->>>>>>> +                        result.period);
->>>>>>> +
->>>>>>> +    return sprintf(buf, "%u\n", rpm);
->>>>>>> +}
->>>>>>> +
->>>>>>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
->>>>>>> +
->>>>>>> +static struct attribute *pwm_tach_attrs[] = {
->>>>>>> +    &sensor_dev_attr_rpm.dev_attr.attr,
->>>>>>> +    NULL,
->>>>>>> +};
->>>>>>
->>>>>> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
->>>>>> a single standard hwmon sysfs attribute, having a hwmon driver is 
->>>>>> pointless.
->>>>> Guenter Roeck,
->>>>> I will define a new hwmon sysfs attribute node called 
->>>>> "hwmon_tachometer_attributes" in hwmon.h like below and update the 
->>>>> same in tachometer hwmon driver. Is it fine ?
->>>>> enum hwmon_tachometer_attributes {
->>>>
->>>> Are you kidding me ?
->>>>
->>>> Guenter
->>> Sorry, I just wanted to confirm whether my understanding is correct 
->>> or not before implementing it actually.
->>> Or, shall I add this attribute as a part of fan attributes with 
->>> "hwmon_fan_rpm" ? or any other way to do it ? I need your inputs in 
->>> fixing this.
->>
->> I think he wants the attribute to be named according to the 
->> properties in this document: 
->> https://www.kernel.org/doc/Documentation/hwmon/sysfs-interface. I 
->> guess the attribute would then map to fan1_input, though I'm not sure 
->> if that's 100% correct either since this could technically be 
->> attached to something other than a fan. But I would think in practice 
->> that's not a big concern.
->>
->> Guenter,
->> Please correct me as well if I'm wrong.
->>
-> You are absolutely correct.
->
-> While I am not opposed to ABI changes, the merits of those would need 
-> to be
-> discussed on the mailing list. But replacing "fan1_input" with "rpm" is
-> not an acceptable ABI change, even if it may measure something that turns
-> but isn't a fan.
->
-> If this _is_ in fact supposed to be used for something else but fans, we
-> would have to discuss what that might be, and if hwmon is the appropriate
-> subsystem to measure and report it. This does to some degree lead back to
-> my concern of having the "fan" part of this patch series in the pwm core.
-> I am still not sure if that makes sense.
->
-> Thanks,
-> Guenter
-I am planning to add tachometer support in pwm-fan.c driver 
-(drivers/hwmon/) instead of adding new generic-pwm-tachometer.c driver. 
-Measuring RPM value will be done in pwm-fan driver itself using pwm 
-capture feature and will add new sysfs attributes under this driver to 
-report rpm value of fan.
->
->> Thank you,
->> Mikko
->>
->>>
->>> -- 
->>> To unsubscribe from this list: send the line "unsubscribe 
->>> linux-tegra" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at http://vger.kernel.org/majordomo-info.html
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe 
->> linux-hwmon" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at http://vger.kernel.org/majordomo-info.html
->>
->
+> +	tx.tx_buf = data;
+> +	tx.len = size;
+> +
+> +	spi_message_init(&msg);
+> +	spi_message_add_tail(&tx, &msg);
+> +
+> +	return spi_sync(spi, &msg);
+> +}
+> +
+> +static int cxd2880_write_reg(struct spi_device *spi,
+> +			     u8 sub_address, const u8 *data, u32 size)
+> +{
+> +	u8 send_data[BURST_WRITE_MAX + 4];
+> +	const u8 *write_data_top = NULL;
+> +	int ret = 0;
+> +
+> +	if (!spi || !data) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +	if (size > BURST_WRITE_MAX) {
+> +		pr_err("data size > WRITE_MAX\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (sub_address + size > 0x100) {
+> +		pr_err("out of range\n");
+> +		return -EINVAL;
+> +	}
+
+It is better to use dev_err(spi->dev, ...) instead of pr_err().
+
+
+> +
+> +	send_data[0] = 0x0e;
+> +	write_data_top = data;
+> +
+> +	while (size > 0) {
+> +		send_data[1] = sub_address;
+> +		if (size > 255)
+> +			send_data[2] = 255;
+> +		else
+> +			send_data[2] = (u8)size;
+> +
+> +		memcpy(&send_data[3], write_data_top, send_data[2]);
+> +
+> +		ret = cxd2880_write_spi(spi, send_data, send_data[2] + 3);
+> +		if (ret) {
+> +			pr_err("write spi failed %d\n", ret);
+> +			break;
+> +		}
+> +		sub_address += send_data[2];
+> +		write_data_top += send_data[2];
+> +		size -= send_data[2];
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_spi_read_ts(struct spi_device *spi,
+> +			       u8 *read_data,
+> +			       u32 packet_num)
+> +{
+> +	int ret;
+> +	u8 data[3];
+> +	struct spi_message message;
+> +	struct spi_transfer transfer[2];
+> +
+> +	if (!spi || !read_data || !packet_num) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +	if (packet_num > 0xffff) {
+> +		pr_err("packet num > 0xffff\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	data[0] = 0x10;
+> +	data[1] = packet_num >> 8;
+> +	data[2] = packet_num;
+> +
+> +	spi_message_init(&message);
+> +	memset(transfer, 0, sizeof(transfer));
+> +
+> +	transfer[0].len = 3;
+> +	transfer[0].tx_buf = data;
+> +	spi_message_add_tail(&transfer[0], &message);
+> +	transfer[1].len = packet_num * 188;
+> +	transfer[1].rx_buf = read_data;
+> +	spi_message_add_tail(&transfer[1], &message);
+> +
+> +	ret = spi_sync(spi, &message);
+> +	if (ret)
+> +		pr_err("spi_write_then_read failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_spi_read_ts_buffer_info(struct spi_device *spi,
+> +					   struct cxd2880_ts_buf_info *info)
+> +{
+> +	u8 send_data = 0x20;
+> +	u8 recv_data[2];
+> +	int ret;
+> +
+> +	if (!spi || !info) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = spi_write_then_read(spi, &send_data, 1,
+> +				  recv_data, sizeof(recv_data));
+> +	if (ret)
+> +		pr_err("spi_write_then_read failed\n");
+> +
+> +	info->read_ready = (recv_data[0] & 0x80) ? 1 : 0;
+> +	info->almost_full = (recv_data[0] & 0x40) ? 1 : 0;
+> +	info->almost_empty = (recv_data[0] & 0x20) ? 1 : 0;
+> +	info->overflow = (recv_data[0] & 0x10) ? 1 : 0;
+> +	info->underflow = (recv_data[0] & 0x08) ? 1 : 0;
+> +	info->pkt_num = ((recv_data[0] & 0x07) << 8) | recv_data[1];
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_spi_clear_ts_buffer(struct spi_device *spi)
+> +{
+> +	u8 data = 0x03;
+> +	int ret;
+> +
+> +	ret = cxd2880_write_spi(spi, &data, 1);
+> +
+> +	if (ret)
+> +		pr_err("write spi failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_set_pid_filter(struct spi_device *spi,
+> +				  struct cxd2880_pid_filter_config *cfg)
+> +{
+> +	u8 data[65];
+> +	int i;
+> +	u16 pid = 0;
+> +	int ret;
+> +
+> +	if (!spi) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	data[0] = 0x00;
+> +	ret = cxd2880_write_reg(spi, 0x00, &data[0], 1);
+> +	if (ret)
+> +		return ret;
+> +	if (!cfg) {
+> +		data[0] = 0x02;
+> +		ret = cxd2880_write_reg(spi, 0x50, &data[0], 1);
+> +	} else {
+> +		data[0] = cfg->is_negative ? 0x01 : 0x00;
+> +
+> +		for (i = 0; i < CXD2880_MAX_FILTER_SIZE; i++) {
+> +			pid = cfg->pid_config[i].pid;
+> +			if (cfg->pid_config[i].is_enable) {
+> +				data[1 + (i * 2)] = (pid >> 8) | 0x20;
+> +				data[2 + (i * 2)] = pid & 0xff;
+> +			} else {
+> +				data[1 + (i * 2)] = 0x00;
+> +				data[2 + (i * 2)] = 0x00;
+> +			}
+> +		}
+> +		ret = cxd2880_write_reg(spi, 0x50, data, 65);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_update_pid_filter(struct cxd2880_dvb_spi *dvb_spi,
+> +				     struct cxd2880_pid_filter_config *cfg,
+> +				     bool is_all_pid_filter)
+> +{
+> +	int ret;
+> +
+> +	if (!dvb_spi || !cfg) {
+> +		pr_err("invalid arg.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	mutex_lock(&dvb_spi->spi_mutex);
+> +	if (is_all_pid_filter) {
+> +		struct cxd2880_pid_filter_config tmpcfg;
+> +
+> +		memset(&tmpcfg, 0, sizeof(tmpcfg));
+> +		tmpcfg.is_negative = 1;
+> +		tmpcfg.pid_config[0].is_enable = 1;
+> +		tmpcfg.pid_config[0].pid = 0x1fff;
+> +
+> +		ret = cxd2880_set_pid_filter(dvb_spi->spi, &tmpcfg);
+> +	} else {
+> +		ret = cxd2880_set_pid_filter(dvb_spi->spi, cfg);
+> +	}
+> +	mutex_unlock(&dvb_spi->spi_mutex);
+> +
+> +	if (ret)
+> +		pr_err("set_pid_filter failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int cxd2880_ts_read(void *arg)
+> +{
+> +	struct cxd2880_dvb_spi *dvb_spi = NULL;
+> +	struct cxd2880_ts_buf_info info;
+> +	ktime_t start;
+> +	u32 i;
+> +	int ret;
+> +
+> +	dvb_spi = arg;
+> +	if (!dvb_spi) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = cxd2880_spi_clear_ts_buffer(dvb_spi->spi);
+> +	if (ret) {
+> +		pr_err("set_clear_ts_buffer failed\n");
+> +		return ret;
+> +	}
+> +
+> +	start = ktime_get();
+> +	while (!kthread_should_stop()) {
+> +		ret = cxd2880_spi_read_ts_buffer_info(dvb_spi->spi,
+> +						      &info);
+> +		if (ret) {
+> +			pr_err("spi_read_ts_buffer_info error\n");
+> +			return ret;
+> +		}
+> +
+> +		if (info.pkt_num > MAX_TRANS_PKT) {
+> +			for (i = 0; i < info.pkt_num / MAX_TRANS_PKT; i++) {
+> +				cxd2880_spi_read_ts(dvb_spi->spi,
+> +						    dvb_spi->ts_buf,
+> +						    MAX_TRANS_PKT);
+> +				dvb_dmx_swfilter(&dvb_spi->demux,
+> +						 dvb_spi->ts_buf,
+> +						 MAX_TRANS_PKT * 188);
+> +			}
+> +			start = ktime_get();
+> +		} else if ((info.pkt_num > 0) &&
+> +			   (ktime_to_ms(ktime_sub(ktime_get(), start)) >= 500)) {
+> +			cxd2880_spi_read_ts(dvb_spi->spi,
+> +					    dvb_spi->ts_buf,
+> +					    info.pkt_num);
+> +			dvb_dmx_swfilter(&dvb_spi->demux,
+> +					 dvb_spi->ts_buf,
+> +					 info.pkt_num * 188);
+> +			start = ktime_get();
+> +		} else {
+> +			usleep_range(10000, 11000);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxd2880_start_feed(struct dvb_demux_feed *feed)
+> +{
+> +	int ret = 0;
+> +	int i = 0;
+> +	struct dvb_demux *demux = NULL;
+> +	struct cxd2880_dvb_spi *dvb_spi = NULL;
+> +
+> +	if (!feed) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	demux = feed->demux;
+> +	if (!demux) {
+> +		pr_err("feed->demux is NULL\n");
+> +		return -EINVAL;
+> +	}
+> +	dvb_spi = demux->priv;
+> +
+> +	if (dvb_spi->feed_count == CXD2880_MAX_FILTER_SIZE) {
+> +		pr_err("Exceeded maximum PID count (32).");
+> +		pr_err("Selected PID cannot be enabled.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (feed->pid == 0x2000) {
+> +		if (dvb_spi->all_pid_feed_count == 0) {
+> +			ret = cxd2880_update_pid_filter(dvb_spi,
+> +							&dvb_spi->filter_config,
+> +							true);
+> +			if (ret) {
+> +				pr_err("update pid filter failed\n");
+> +				return ret;
+> +			}
+> +		}
+> +		dvb_spi->all_pid_feed_count++;
+> +
+> +		pr_debug("all PID feed (count = %d)\n",
+> +			 dvb_spi->all_pid_feed_count);
+> +	} else {
+> +		struct cxd2880_pid_filter_config cfgtmp;
+> +
+> +		cfgtmp = dvb_spi->filter_config;
+> +
+> +		for (i = 0; i < CXD2880_MAX_FILTER_SIZE; i++) {
+> +			if (cfgtmp.pid_config[i].is_enable == 0) {
+> +				cfgtmp.pid_config[i].is_enable = 1;
+> +				cfgtmp.pid_config[i].pid = feed->pid;
+> +				pr_debug("store PID %d to #%d\n",
+> +					 feed->pid, i);
+> +				break;
+> +			}
+> +		}
+> +		if (i == CXD2880_MAX_FILTER_SIZE) {
+> +			pr_err("PID filter is full. Assumed bug.\n");
+
+"Assumed bug"? What do you mean?
+
+If the hardware filters are full, it is likely an userspace problem,
+not a Kernel bug.
+
+> +			return -EINVAL;
+> +		}
+> +		if (!dvb_spi->all_pid_feed_count)
+> +			ret = cxd2880_update_pid_filter(dvb_spi,
+> +							&cfgtmp,
+> +							false);
+> +		if (ret)
+> +			return ret;
+> +
+> +		dvb_spi->filter_config = cfgtmp;
+> +	}
+> +
+> +	if (dvb_spi->feed_count == 0) {
+> +		dvb_spi->ts_buf =
+> +			kmalloc(MAX_TRANS_PKT * 188,
+> +				GFP_KERNEL | GFP_DMA);
+
+> +		if (!dvb_spi->ts_buf) {
+> +			pr_err("ts buffer allocate failed\n");
+> +			memset(&dvb_spi->filter_config, 0,
+> +			       sizeof(dvb_spi->filter_config));
+> +			dvb_spi->all_pid_feed_count = 0;
+> +			return -ENOMEM;
+> +		}
+> +		dvb_spi->cxd2880_ts_read_thread = kthread_run(cxd2880_ts_read,
+> +							      dvb_spi,
+> +							      "cxd2880_ts_read");
+> +		if (IS_ERR(dvb_spi->cxd2880_ts_read_thread)) {
+> +			pr_err("kthread_run failed/\n");
+> +			kfree(dvb_spi->ts_buf);
+> +			dvb_spi->ts_buf = NULL;
+> +			memset(&dvb_spi->filter_config, 0,
+> +			       sizeof(dvb_spi->filter_config));
+> +			dvb_spi->all_pid_feed_count = 0;
+> +			return PTR_ERR(dvb_spi->cxd2880_ts_read_thread);
+> +		}
+> +	}
+> +
+> +	dvb_spi->feed_count++;
+> +
+> +	pr_debug("start feed (count %d)\n", dvb_spi->feed_count);
+> +	return 0;
+> +}
+> +
+> +static int cxd2880_stop_feed(struct dvb_demux_feed *feed)
+> +{
+> +	int i = 0;
+> +	int ret;
+> +	struct dvb_demux *demux = NULL;
+> +	struct cxd2880_dvb_spi *dvb_spi = NULL;
+> +
+> +	if (!feed) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	demux = feed->demux;
+> +	if (!demux) {
+> +		pr_err("feed->demux is NULL\n");
+> +		return -EINVAL;
+> +	}
+> +	dvb_spi = demux->priv;
+> +
+> +	if (!dvb_spi->feed_count) {
+> +		pr_err("no feed is started\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (feed->pid == 0x2000) {
+> +		/*
+> +		 * Special PID case.
+> +		 * Number of 0x2000 feed request was stored
+> +		 * in dvb_spi->all_pid_feed_count.
+> +		 */
+> +		if (dvb_spi->all_pid_feed_count <= 0) {
+> +			pr_err("PID %d not found.\n", feed->pid);
+> +			return -EINVAL;
+> +		}
+> +		dvb_spi->all_pid_feed_count--;
+> +	} else {
+> +		struct cxd2880_pid_filter_config cfgtmp;
+> +
+> +		cfgtmp = dvb_spi->filter_config;
+> +
+> +		for (i = 0; i < CXD2880_MAX_FILTER_SIZE; i++) {
+> +			if (feed->pid == cfgtmp.pid_config[i].pid &&
+> +			    cfgtmp.pid_config[i].is_enable != 0) {
+> +				cfgtmp.pid_config[i].is_enable = 0;
+> +				cfgtmp.pid_config[i].pid = 0;
+> +				pr_debug("removed PID %d from #%d\n",
+> +					 feed->pid, i);
+> +				break;
+> +			}
+> +		}
+> +		dvb_spi->filter_config = cfgtmp;
+> +
+> +		if (i == CXD2880_MAX_FILTER_SIZE) {
+> +			pr_err("PID %d not found\n", feed->pid);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	ret = cxd2880_update_pid_filter(dvb_spi,
+> +					&dvb_spi->filter_config,
+> +					dvb_spi->all_pid_feed_count > 0);
+> +	dvb_spi->feed_count--;
+> +
+> +	if (dvb_spi->feed_count == 0) {
+> +		int ret_stop = 0;
+> +
+> +		ret_stop = kthread_stop(dvb_spi->cxd2880_ts_read_thread);
+> +		if (ret_stop) {
+> +			pr_err("'kthread_stop failed. (%d)\n", ret_stop);
+> +			ret = ret_stop;
+> +		}
+> +		kfree(dvb_spi->ts_buf);
+> +		dvb_spi->ts_buf = NULL;
+> +	}
+> +
+> +	pr_debug("stop feed ok.(count %d)\n", dvb_spi->feed_count);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id cxd2880_spi_of_match[] = {
+> +	{ .compatible = "sony,cxd2880" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, cxd2880_spi_of_match);
+> +
+> +static int
+> +cxd2880_spi_probe(struct spi_device *spi)
+> +{
+> +	int ret;
+> +	struct cxd2880_dvb_spi *dvb_spi = NULL;
+> +	struct cxd2880_config config;
+> +
+> +	if (!spi) {
+> +		pr_err("invalid arg.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dvb_spi = kzalloc(sizeof(struct cxd2880_dvb_spi), GFP_KERNEL);
+> +	if (!dvb_spi)
+> +		return -ENOMEM;
+> +
+> +	dvb_spi->spi = spi;
+> +	mutex_init(&dvb_spi->spi_mutex);
+> +	dev_set_drvdata(&spi->dev, dvb_spi);
+> +	config.spi = spi;
+> +	config.spi_mutex = &dvb_spi->spi_mutex;
+> +
+> +	ret = dvb_register_adapter(&dvb_spi->adapter,
+> +				   "CXD2880",
+> +				   THIS_MODULE,
+> +				   &spi->dev,
+> +				   adapter_nr);
+> +	if (ret < 0) {
+> +		pr_err("dvb_register_adapter() failed\n");
+> +		goto fail_adapter;
+> +	}
+> +
+> +	if (!dvb_attach(cxd2880_attach, &dvb_spi->dvb_fe, &config)) {
+> +		pr_err("cxd2880_attach failed\n");
+> +		goto fail_attach;
+> +	}
+> +
+> +	ret = dvb_register_frontend(&dvb_spi->adapter,
+> +				    &dvb_spi->dvb_fe);
+> +	if (ret < 0) {
+> +		pr_err("dvb_register_frontend() failed\n");
+> +		goto fail_frontend;
+> +	}
+> +
+> +	dvb_spi->demux.dmx.capabilities = DMX_TS_FILTERING;
+> +	dvb_spi->demux.priv = dvb_spi;
+> +	dvb_spi->demux.filternum = CXD2880_MAX_FILTER_SIZE;
+> +	dvb_spi->demux.feednum = CXD2880_MAX_FILTER_SIZE;
+> +	dvb_spi->demux.start_feed = cxd2880_start_feed;
+> +	dvb_spi->demux.stop_feed = cxd2880_stop_feed;
+> +
+> +	ret = dvb_dmx_init(&dvb_spi->demux);
+> +	if (ret < 0) {
+> +		pr_err("dvb_dmx_init() failed\n");
+> +		goto fail_dmx;
+> +	}
+> +
+> +	dvb_spi->dmxdev.filternum = CXD2880_MAX_FILTER_SIZE;
+> +	dvb_spi->dmxdev.demux = &dvb_spi->demux.dmx;
+> +	dvb_spi->dmxdev.capabilities = 0;
+> +	ret = dvb_dmxdev_init(&dvb_spi->dmxdev,
+> +			      &dvb_spi->adapter);
+> +	if (ret < 0) {
+> +		pr_err("dvb_dmxdev_init() failed\n");
+> +		goto fail_dmxdev;
+> +	}
+> +
+> +	dvb_spi->dmx_fe.source = DMX_FRONTEND_0;
+> +	ret = dvb_spi->demux.dmx.add_frontend(&dvb_spi->demux.dmx,
+> +					      &dvb_spi->dmx_fe);
+> +	if (ret < 0) {
+> +		pr_err("add_frontend() failed\n");
+> +		goto fail_dmx_fe;
+> +	}
+> +
+> +	ret = dvb_spi->demux.dmx.connect_frontend(&dvb_spi->demux.dmx,
+> +						  &dvb_spi->dmx_fe);
+> +	if (ret < 0) {
+> +		pr_err("dvb_register_frontend() failed\n");
+> +		goto fail_fe_conn;
+> +	}
+> +
+> +	pr_info("Sony CXD2880 has successfully attached.\n");
+> +
+> +	return 0;
+> +
+> +fail_fe_conn:
+> +	dvb_spi->demux.dmx.remove_frontend(&dvb_spi->demux.dmx,
+> +					   &dvb_spi->dmx_fe);
+> +fail_dmx_fe:
+> +	dvb_dmxdev_release(&dvb_spi->dmxdev);
+> +fail_dmxdev:
+> +	dvb_dmx_release(&dvb_spi->demux);
+> +fail_dmx:
+> +	dvb_unregister_frontend(&dvb_spi->dvb_fe);
+> +fail_frontend:
+> +	dvb_frontend_detach(&dvb_spi->dvb_fe);
+> +fail_attach:
+> +	dvb_unregister_adapter(&dvb_spi->adapter);
+> +fail_adapter:
+> +	kfree(dvb_spi);
+> +	return ret;
+> +}
+> +
+> +static int
+> +cxd2880_spi_remove(struct spi_device *spi)
+> +{
+> +	struct cxd2880_dvb_spi *dvb_spi;
+> +
+> +	if (!spi) {
+> +		pr_err("invalid arg\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dvb_spi = dev_get_drvdata(&spi->dev);
+> +
+> +	if (!dvb_spi) {
+> +		pr_err("failed\n");
+> +		return -EINVAL;
+> +	}
+> +	dvb_spi->demux.dmx.remove_frontend(&dvb_spi->demux.dmx,
+> +					   &dvb_spi->dmx_fe);
+> +	dvb_dmxdev_release(&dvb_spi->dmxdev);
+> +	dvb_dmx_release(&dvb_spi->demux);
+> +	dvb_unregister_frontend(&dvb_spi->dvb_fe);
+> +	dvb_frontend_detach(&dvb_spi->dvb_fe);
+> +	dvb_unregister_adapter(&dvb_spi->adapter);
+> +
+> +	kfree(dvb_spi);
+> +	pr_info("cxd2880_spi remove ok.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct spi_device_id cxd2880_spi_id[] = {
+> +	{ "cxd2880", 0 },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(spi, cxd2880_spi_id);
+> +
+> +static struct spi_driver cxd2880_spi_driver = {
+> +	.driver	= {
+> +		.name	= "cxd2880",
+> +		.of_match_table = cxd2880_spi_of_match,
+> +	},
+> +	.id_table = cxd2880_spi_id,
+> +	.probe    = cxd2880_spi_probe,
+> +	.remove   = cxd2880_spi_remove,
+> +};
+> +module_spi_driver(cxd2880_spi_driver);
+> +
+> +MODULE_DESCRIPTION("Sony CXD2880 DVB-T2/T tuner + demod driver SPI adapter");
+> +MODULE_AUTHOR("Sony Semiconductor Solutions Corporation");
+> +MODULE_LICENSE("GPL v2");
+
+
+
+Thanks,
+Mauro
