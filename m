@@ -1,173 +1,118 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/2] mfd: arizona: Update reset pin to use GPIOD
-Date: Wed, 7 Mar 2018 13:28:12 +0000
-Message-ID: <20180307132812.r5epcs26clpnh72t@dell>
-References: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Wed, 7 Mar 2018 14:35:48 +0100
+Message-ID: <EDAE86B1-1392-481A-8AF8-886B004B180D@holtmann.org>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <438185389.274708.1520422108782@email.1und1.de>
+ <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
+ <2071508922.276811.1520426568577@email.1und1.de>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2071508922.276811.1520426568577@email.1und1.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Feb 2018, Charles Keepax wrote:
+Hi Stefan,
 
-> Now GPIOD has support for both pdata systems and for non-standard DT
-> bindings the Arizona reset GPIO can be converted to use it.
+>>>>>>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/ttyAMA0).
+>>>>>>> This allows to automatically insert the bcm43438 to the bluetooth
+>>>>>>> subsystem instead of relying on patched userspace helpers (hciattach).
+>>>>>>> 
+>>>>>>> In order to keep a debug UART we need to switch to uart1.
+>>>>>>> 
+>>>>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>>>>> ---
+>>>>>>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
+>>>>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
+>>>>>>> 
+>>>>>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>>>> index cf53436..b7f79f1 100644
+>>>>>>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>>>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>>>> @@ -131,6 +131,18 @@
+>>>>>>> 
+>>>>>>> &uart0 {
+>>>>>>> 	pinctrl-names = "default";
+>>>>>>> -	pinctrl-0 = <&uart0_gpio14>;
+>>>>>>> +	pinctrl-0 = <&uart0_gpio32 &uart0_ctsrts_gpio30>;
+>>>>>>> +	status = "okay";
+>>>>>>> +
+>>>>>>> +	bluetooth {
+>>>>>>> +		compatible = "brcm,bcm43438-bt";
+>>>>>>> +		max-speed = <2000000>;
+>>>>>>> +		shutdown-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
+>>>>>>> +	};
+>>>>>>> +};
+>>>>>> 
+>>>>>> is the shutdown GPIO working as expected with this hardware. So even module unload and reload works fine?
+>>>>> 
+>>>>> Yes, unload and reload works fine. 
+>>>>> 
+>>>>>> Meaning we are getting back to the 115200 default baud rate on the UART?
+>>>>> 
+>>>>> I assume that, because reload works as expected. 
+>>>> 
+>>>> awesome. That is good news.
+>>>> 
+>>>> Since you said that the GPIO expander driver for the RPi 3 has been accepted, did you test it there as well? If so, then it would be good to get a patch that also provides shutdown-gpios for RPi 3.
+>>> 
+>>> after applying Loic's patch and the necessary patch for the RPi 3 dts file (see below), i will get this output:
+>>> 
+>>> [    4.873246] Bluetooth: HCI UART driver ver 2.3
+>>> [    4.873260] Bluetooth: HCI UART protocol H4 registered
+>>> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
+>>> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
+>>> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
+>>> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
+>>> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
+>>> [   15.192312] Bluetooth: hci0: Failed to set baudrate
+>>> [   15.316415] Bluetooth: hci0: BCM: chip id 94
+>>> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
+>>> [   15.341538] Bluetooth: hci0: BCM43430A1
+>>> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
+>>> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
+>>> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
+>>> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
+>>> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
+>>> 
+>>> I don't see these errors on RPi Zero W. Maybe the reason for this is the lack of hardware flowcontrol on RPi 3. Or some of the downstream patches on BlueZ must be adapted for the kernel [1].
+>>> 
+>>> Btw the bcm43438 is detected even after unloading and reloading the driver. But the timeout occurs also on driver reload. Reducing the baudrate to 115200 doesn't help here.
+>> 
+>> maybe it needs some time after switching the hardware on. Have you tried to sleep for a bit at the end of bcm_gpio_set_power?
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
+> I will try, but this could also be an "issue" of the gpio expander driver. AFAIK the expander is connected via I2C to the GPU. In case the mailbox reply come before the I2C command has been handled by the GPIO expander, we are running out of sync.
 > 
-> Changes since v2:
->  - Kept null check in arizona_enable_reset, although
->    gpiod_set_value_cansleep does its own null check it will also issue
->    a fat WARN we don't want if gpiolib is not built in.
->  - Added a check for ENOSYS in arizona_of_get_core_pdata, just to
->    silence the extra error that would be printed here if gpiolib is not
->    built in.
+>> 
+>> Can you also dump where the Frame reassembly fails. Or correlate that with the btmon trace of which packets make its through. The 0x0c14 is Read Local Name and maybe we actually have bit errors here.
+>> 
+>> In theory we could also run this hardware in 3-wire protocol mode. I just do not know how to get that one started, but maybe that would be an option if there is some sort of packet loss. However maybe this is really just some timing issue for the hardware to settle its baud rate. However I assume that the firmware loading itself succeeds here.
 > 
-> Thanks,
-> Charles
-> 
->  drivers/mfd/arizona-core.c        | 50 ++++++++++++++++++++++++++-------------
->  include/linux/mfd/arizona/pdata.h |  3 ++-
->  2 files changed, 36 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index 77875250abe5..9558c4d9c8ca 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -279,7 +279,7 @@ static int arizona_wait_for_boot(struct arizona *arizona)
->  static inline void arizona_enable_reset(struct arizona *arizona)
->  {
->  	if (arizona->pdata.reset)
-> -		gpio_set_value_cansleep(arizona->pdata.reset, 0);
-> +		gpiod_set_value_cansleep(arizona->pdata.reset, 0);
->  }
->  
->  static void arizona_disable_reset(struct arizona *arizona)
-> @@ -295,7 +295,7 @@ static void arizona_disable_reset(struct arizona *arizona)
->  			break;
->  		}
->  
-> -		gpio_set_value_cansleep(arizona->pdata.reset, 1);
-> +		gpiod_set_value_cansleep(arizona->pdata.reset, 1);
->  		usleep_range(1000, 5000);
->  	}
->  }
-> @@ -799,14 +799,26 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
->  	struct arizona_pdata *pdata = &arizona->pdata;
->  	int ret, i;
->  
-> -	pdata->reset = of_get_named_gpio(arizona->dev->of_node, "wlf,reset", 0);
-> -	if (pdata->reset == -EPROBE_DEFER) {
-> -		return pdata->reset;
-> -	} else if (pdata->reset < 0) {
-> -		dev_err(arizona->dev, "Reset GPIO missing/malformed: %d\n",
-> -			pdata->reset);
-> +	pdata->reset = devm_gpiod_get_from_of_node(arizona->dev,
-> +						   arizona->dev->of_node,
-> +						   "wlf,reset", 0,
-> +						   GPIOD_OUT_LOW,
-> +						   "arizona /RESET");
-> +	if (IS_ERR(pdata->reset)) {
-> +		ret = PTR_ERR(pdata->reset);
-> +		switch (ret) {
-> +		case -ENOENT:
-> +		case -ENOSYS:
-> +			break;
-> +		case -EPROBE_DEFER:
-> +			return ret;
-> +		default:
-> +			dev_err(arizona->dev, "Reset GPIO malformed: %d\n",
-> +				ret);
-> +			break;
-> +		}
+> According to the link from my last email, the RPi 3 is using 3-wire protocol mode. Maybe we should detect the presence of "uart-has-rtscts" in the master node? In absence we better use 3-wire.
 
-I haven't seen a switch statement used in the error handling path
-before.  There is probably good reason for that.
+currently we are using it in H:4 protocol mode. Using it in H:5 protocol mode (aka 3-wire) would require a lot of extra work. There is some work ongoing for the Realtek hardware that is actually always 3-wire.
 
-What is the 'default' case?  -EINVAL?
+Maybe the Broadcom hardware auto-detects H:4 vs H:5 protocol and switches accordingly. You could try to work with the Realtek patches and see if we can get that going with the Broadcom chips as well.
 
-> -		pdata->reset = 0;
-> +		pdata->reset = NULL;
->  	}
->  
->  	ret = of_property_read_u32_array(arizona->dev->of_node,
-> @@ -1050,14 +1062,20 @@ int arizona_dev_init(struct arizona *arizona)
->  		goto err_early;
->  	}
->  
-> -	if (arizona->pdata.reset) {
-> +	if (!arizona->pdata.reset) {
->  		/* Start out with /RESET low to put the chip into reset */
-> -		ret = devm_gpio_request_one(arizona->dev, arizona->pdata.reset,
-> -					    GPIOF_DIR_OUT | GPIOF_INIT_LOW,
-> -					    "arizona /RESET");
-> -		if (ret != 0) {
-> -			dev_err(dev, "Failed to request /RESET: %d\n", ret);
-> -			goto err_dcvdd;
-> +		arizona->pdata.reset = devm_gpiod_get(arizona->dev, "reset",
-> +						      GPIOD_OUT_LOW);
-> +		if (IS_ERR(arizona->pdata.reset)) {
-> +			ret = PTR_ERR(arizona->pdata.reset);
-> +			if (ret == -EPROBE_DEFER)
-> +				goto err_dcvdd;
-> +			else
-> +				dev_err(arizona->dev,
-> +					"Reset GPIO missing/malformed: %d\n",
-> +					ret);
+On the other hand, when not using the shutdown GPIO entry in the DT, does everything work fine for you?
 
-You don't need the else.
+Regards
 
-	arizona->pdata.reset =
-		devm_gpiod_get(arizona->dev, "reset", GPIOD_OUT_LOW);
-
-	ret = PTR_ERR(arizona->pdata.reset);
-	if (ret == -EPROBE_DEFER)
-		goto err_dcvdd;
-
-	if (ret) {
-		dev_err(arizona->dev,
-			"Reset GPIO missing/malformed: %d\n", ret);
-		arizona->pdata.reset = NULL;
-	}
-
-> +			arizona->pdata.reset = NULL;
->  		}
->  	}
->  
-> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-> index f72dc53848d7..0013075d4cda 100644
-> --- a/include/linux/mfd/arizona/pdata.h
-> +++ b/include/linux/mfd/arizona/pdata.h
-> @@ -56,6 +56,7 @@
->  #define ARIZONA_MAX_PDM_SPK 2
->  
->  struct regulator_init_data;
-> +struct gpio_desc;
->  
->  struct arizona_micbias {
->  	int mV;                    /** Regulated voltage */
-> @@ -77,7 +78,7 @@ struct arizona_micd_range {
->  };
->  
->  struct arizona_pdata {
-> -	int reset;      /** GPIO controlling /RESET, if any */
-> +	struct gpio_desc *reset;      /** GPIO controlling /RESET, if any */
->  
->  	/** Regulator configuration for MICVDD */
->  	struct arizona_micsupp_pdata micvdd;
-
-I know it doesn't have much to do with this patch, but it's probably
-better to use a Kerneldoc header for this struct.
-
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Marcel
