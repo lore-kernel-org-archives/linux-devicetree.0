@@ -1,66 +1,109 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
- compatible strings
-Date: Wed, 7 Mar 2018 20:08:22 -0600
-Message-ID: <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
-References: <20180307020719.6675-1-andre.przywara@arm.com>
- <20180307020719.6675-5-andre.przywara@arm.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
+Date: Wed, 7 Mar 2018 16:40:19 -0600
+Message-ID: <20180307224019.oowh74pkbi5izuft@rob-hp-laptop>
+References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
+	<1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBGFWQLKQKGQESMIDG5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180307020719.6675-5-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1520260166-29387-2-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
-> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
-> compatible to the PWM controllers found in the A13 and H3.
-
-If fully compatible, then shouldn't there be a fallback to one of the 
-existing compatible strings?
-
-> Add new compatible strings for those SoCs to the binding document, so
-> that they can be safely used, together with a fallback string
-> (preferably "allwinner,sun5i-a13-pwm").
-> Add add the optionals "resets" property, needed by the H6.
+On Mon, Mar 05, 2018 at 07:59:21PM +0530, Nipun Gupta wrote:
+> The existing IOMMU bindings cannot be used to specify the relationship
+> between fsl-mc devices and IOMMUs. This patch adds a binding for
+> mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
 > 
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-> index 51ff54c8b8ef..b3a127a0e58c 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-> @@ -7,11 +7,17 @@ Required properties:
->      - "allwinner,sun5i-a13-pwm"
->      - "allwinner,sun7i-a20-pwm"
->      - "allwinner,sun8i-h3-pwm"
-> +    - "allwinner,sun50i-a64-pwm"
-> +    - "allwinner,sun50i-h5-pwm"
-> +    - "allwinner,sun50i-h6-pwm"
->    - reg: physical base address and length of the controller's registers
->    - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
->      the cells format.
->    - clocks: From common clock binding, handle to the parent clock.
+> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> index 6611a7c..011c7d6 100644
+> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> @@ -9,6 +9,24 @@ blocks that can be used to create functional hardware objects/devices
+>  such as network interfaces, crypto accelerator instances, L2 switches,
+>  etc.
 >  
-> +Optional properties:
-> +  - resets: shall be the reset control phandle for the PWM block, if required.
+> +For an overview of the DPAA2 architecture and fsl-mc bus see:
+> +drivers/staging/fsl-mc/README.txt
 > +
+> +As described in the above overview, all DPAA2 objects in a DPRC share the
+> +same hardware "isolation context" and a 10-bit value called an ICID
+> +(isolation context id) is expressed by the hardware to identify
+> +the requester.
+> +
+> +The generic 'iommus' property is cannot be used to describe the relationship
+> +between fsl-mc and IOMMUs, so an iommu-parent property is used to define
+> +the same.
+
+Why not? It is just a link between 2 nodes.
+
+> +
+> +For generic IOMMU bindings, see
+> +Documentation/devicetree/bindings/iommu/iommu.txt.
+> +
+> +For arm-smmu binding, see:
+> +Documentation/devicetree/bindings/iommu/arm,smmu.txt.
+> +
+>  Required properties:
+>  
+>      - compatible
+> @@ -88,14 +106,27 @@ Sub-nodes:
+>                Value type: <phandle>
+>                Definition: Specifies the phandle to the PHY device node associated
+>                            with the this dpmac.
+> +Optional properties:
+> +
+> +- iommu-parent: Maps the devices on fsl-mc bus to an IOMMU.
+> +  The property specifies the IOMMU behind which the devices on
+> +  fsl-mc bus are residing.
+
+If you want a generic property, this should be documented in the common 
+binding.
+
+Couldn't you have more than 1 IOMMU upstream of a MC?
+
+>  
 >  Example:
 >  
->  	pwm: pwm@1c20e00 {
+> +        smmu: iommu@5000000 {
+> +               compatible = "arm,mmu-500";
+> +               #iommu-cells = <1>;
+> +               stream-match-mask = <0x7C00>;
+> +               ...
+> +        };
+> +
+>          fsl_mc: fsl-mc@80c000000 {
+>                  compatible = "fsl,qoriq-mc";
+>                  reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
+>                        <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>                  msi-parent = <&its>;
+> +                iommu-parent = <&smmu>;
+>                  #address-cells = <3>;
+>                  #size-cells = <1>;
+>  
 > -- 
-> 2.14.1
+> 1.9.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
