@@ -1,74 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: dmaengine: Add MediaTek High-Speed
- DMA controller bindings
-Date: Wed, 7 Mar 2018 13:28:49 -0600
-Message-ID: <20180307192849.bdedrzqmpmwprpc2@rob-hp-laptop>
-References: <cover.1520407882.git.sean.wang@mediatek.com>
- <1ae80ef14cac41dea35dca49e8071d67c955f5e7.1520407882.git.sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: rockchip-dw-mshc: use consistent clock names
+Date: Wed, 7 Mar 2018 13:31:40 -0600
+Message-ID: <20180307193140.gbccxsp3rxanxjpp@rob-hp-laptop>
+References: <20180301103447.7059-1-john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1ae80ef14cac41dea35dca49e8071d67c955f5e7.1520407882.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180301103447.7059-1-john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 04:16:26PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Thu, Mar 01, 2018 at 10:34:47AM +0000, John Keeping wrote:
+> The names of these clocks are "ciu-drive" and "ciu-sample" as described
+> for the clock-names property.  Avoid confusion by spelling these
+> correctly everywhere they are referenced.
 > 
-> Document the devicetree bindings for MediaTek High-Speed DMA controller
-> which could be found on MT7623 SoC or other similar Mediatek SoCs.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/dma/mtk-hsdma.txt          | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please add reviewed-by's when posting new versions.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-> new file mode 100644
-> index 0000000..4bb31735
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-> @@ -0,0 +1,33 @@
-> +MediaTek High-Speed DMA Controller
-> +==================================
-> +
-> +This device follows the generic DMA bindings defined in dma/dma.txt.
-> +
-> +Required properties:
-> +
-> +- compatible:	Must be one of
-> +		  "mediatek,mt7622-hsdma": for MT7622 SoC
-> +		  "mediatek,mt7623-hsdma": for MT7623 SoC
-> +- reg:		Should contain the register's base address and length.
-> +- interrupts:	Should contain a reference to the interrupt used by this
-> +		device.
-> +- clocks:	Should be the clock specifiers corresponding to the entry in
-> +		clock-names property.
-> +- clock-names:	Should contain "hsdma" entries.
-> +- power-domains: Phandle to the power domain that the device is part of
-> +- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
-> +		in dmas property of a client device represents the channel
-> +		number.
-> +Example:
-> +
-> +        hsdma: dma-controller@1b007000 {
-> +		compatible = "mediatek,mt7623-hsdma";
-> +		reg = <0 0x1b007000 0 0x1000>;
-> +		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
-> +		clock-names = "hsdma";
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-> +		#dma-cells = <1>;
-> +	};
-> +
-> +DMA clients must use the format described in dma/dma.txt file.
-> -- 
-> 2.7.4
-> 
+Applied, thanks.
