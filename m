@@ -1,27 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 05/16] dt-bindings: display: sun4i-drm: Add
- compatibles for H3 HDMI pipeline
-Date: Wed, 7 Mar 2018 13:37:48 -0600
-Message-ID: <20180307193748.5uvdab2rbndhuvog@rob-hp-laptop>
-References: <20180301213442.16677-1-jernej.skrabec@siol.net>
- <20180301213442.16677-6-jernej.skrabec@siol.net>
+Subject: Re: [PATCHv2 1/7] dt-bindings, firmware: add Intel Stratix10 service
+ layer binding
+Date: Wed, 7 Mar 2018 13:39:19 -0600
+Message-ID: <20180307193919.56ogsh32odpk6bul@rob-hp-laptop>
+References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
+ <1519949975-13548-2-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180301213442.16677-6-jernej.skrabec@siol.net>
+In-Reply-To: <1519949975-13548-2-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+To: richard.gong@linux.intel.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2018 at 10:34:31PM +0100, Jernej Skrabec wrote:
-> Add missing compatibles for H3 HDMI pipeline. These compatibles can also
-> be used with H5 SoC.
+On Thu, Mar 01, 2018 at 06:19:29PM -0600, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Add a device tree binding for the Intel Stratix10 service layer driver
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Signed-off-by: Alan Tull <atull@kernel.org>
 > ---
->  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> v2: Change to put service layer driver node under the firmware node
+>     Change compatible to "intel, stratix10-svc"
+> ---
+>  .../bindings/firmware/intel,stratix10-svc.txt      | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
