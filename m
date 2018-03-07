@@ -1,172 +1,29 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Wed, 07 Mar 2018 11:08:24 -0800
-Message-ID: <87sh9bvh3r.fsf@anholt.net>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: display: Add Allwinner MIPI-DSI
+ bindings
+Date: Wed, 7 Mar 2018 13:26:44 -0600
+Message-ID: <20180307192644.7kowpqidew3jq2bw@rob-hp-laptop>
+References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
+ <5f183ae295c0190369ec576ecfb10c1d78f41eb3.1520344489.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1656647127498595809=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2071508922.276811.1520426568577@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?utf-8?B?RnLDqWTDqXJpYw==?= Danis <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5f183ae295c0190369ec576ecfb10c1d78f41eb3.1520344489.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Gustavo Padovan <gustavo@padovan.org>, Daniel Vetter <daniel.vetter@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1656647127498595809==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Tue, Mar 06, 2018 at 02:55:59PM +0100, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@free-electrons.com>
+> 
+> The Allwinner SoCs usually come with a DSI encoder. Add a binding for it.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 93 +++++++-
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Stefan Wahren <stefan.wahren@i2se.com> writes:
-
-> Hi Marcel,
-> hi Loic,
->
->> Marcel Holtmann <marcel@holtmann.org> hat am 7. M=C3=A4rz 2018 um 13:12 =
-geschrieben:
->>=20
->>=20
->> Hi Stefan,
->>=20
->> >>>>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/=
-ttyAMA0).
->> >>>>> This allows to automatically insert the bcm43438 to the bluetooth
->> >>>>> subsystem instead of relying on patched userspace helpers (hciatta=
-ch).
->> >>>>>=20
->> >>>>> In order to keep a debug UART we need to switch to uart1.
->> >>>>>=20
->> >>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> >>>>> ---
->> >>>>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
->> >>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
->> >>>>>=20
->> >>>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/b=
-oot/dts/bcm2835-rpi-zero-w.dts
->> >>>>> index cf53436..b7f79f1 100644
->> >>>>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->> >>>>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->> >>>>> @@ -131,6 +131,18 @@
->> >>>>>=20
->> >>>>> &uart0 {
->> >>>>> 	pinctrl-names =3D "default";
->> >>>>> -	pinctrl-0 =3D <&uart0_gpio14>;
->> >>>>> +	pinctrl-0 =3D <&uart0_gpio32 &uart0_ctsrts_gpio30>;
->> >>>>> +	status =3D "okay";
->> >>>>> +
->> >>>>> +	bluetooth {
->> >>>>> +		compatible =3D "brcm,bcm43438-bt";
->> >>>>> +		max-speed =3D <2000000>;
->> >>>>> +		shutdown-gpios =3D <&gpio 45 GPIO_ACTIVE_HIGH>;
->> >>>>> +	};
->> >>>>> +};
->> >>>>=20
->> >>>> is the shutdown GPIO working as expected with this hardware. So eve=
-n module unload and reload works fine?
->> >>>=20
->> >>> Yes, unload and reload works fine.=20
->> >>>=20
->> >>>> Meaning we are getting back to the 115200 default baud rate on the =
-UART?
->> >>>=20
->> >>> I assume that, because reload works as expected.=20
->> >>=20
->> >> awesome. That is good news.
->> >>=20
->> >> Since you said that the GPIO expander driver for the RPi 3 has been a=
-ccepted, did you test it there as well? If so, then it would be good to get=
- a patch that also provides shutdown-gpios for RPi 3.
->> >=20
->> > after applying Loic's patch and the necessary patch for the RPi 3 dts =
-file (see below), i will get this output:
->> >=20
->> > [    4.873246] Bluetooth: HCI UART driver ver 2.3
->> > [    4.873260] Bluetooth: HCI UART protocol H4 registered
->> > [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
->> > [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
->> > [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
->> > [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
->> > [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (=
--110)
->> > [   15.192312] Bluetooth: hci0: Failed to set baudrate
->> > [   15.316415] Bluetooth: hci0: BCM: chip id 94
->> > [   15.318567] Bluetooth: hci0: BCM: features 0x2e
->> > [   15.341538] Bluetooth: hci0: BCM43430A1
->> > [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
->> > [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
->> > [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
->> > [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
->> > [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
->> >=20
->> > I don't see these errors on RPi Zero W. Maybe the reason for this is t=
-he lack of hardware flowcontrol on RPi 3. Or some of the downstream patches=
- on BlueZ must be adapted for the kernel [1].
->> >=20
->> > Btw the bcm43438 is detected even after unloading and reloading the dr=
-iver. But the timeout occurs also on driver reload. Reducing the baudrate t=
-o 115200 doesn't help here.
->>=20
->> maybe it needs some time after switching the hardware on. Have you tried=
- to sleep for a bit at the end of bcm_gpio_set_power?
->
-> I will try, but this could also be an "issue" of the gpio expander
-> driver. AFAIK the expander is connected via I2C to the GPU. In case
-> the mailbox reply come before the I2C command has been handled by the
-> GPIO expander, we are running out of sync.
-
-The mailbox command for setting GPIO state is synchronous in terms of
-sending the i2c command to the GPIO expander HW.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqgOKgACgkQtdYpNtH8
-nuhW/BAAhTztqF2dqtUznqHBnGcWKOAB5jcf5LOlL23Iv4xUBRRtm7u2Vy1Pg9Rf
-wl3A/R93Vsx06r6qx4DJsaLtp+akBeSc0+j9YBQiySTFB2lG6rYp8CQlfUr+IM0y
-5UzP41+Bngx017pAsx7lwXF6h3gkek1ldlhrECQt/HjEehU5bjSBst47WQGswC7d
-3CWSDzPQtOqRAp1N9iCNfJgopep+OprqDPVnWnhu92GfYsF52VUrGSpa8uZezBjp
-5rB8SgZ5uhxmfpG7Ux28O+D1e4FViD6GOcTJrxydK+f+O4ad7rE4PyE68ATN4Az6
-zW88bYzxHCgQSRbO+bXdyoJEyXsWu7h1rGi6eQNw4tr89MA+pwyQADqoTbY31JgX
-j9/AVwLecqdVyxOaHW9wJx5hvEChB8rJFuTfKNmcEA4zkdIFG+F6eJuGVkQuuxif
-D8dZHSGaaDDZ0l/Too+/Q+W2it1gonioQIzAzA9ANxGQsxIbLc4phXlsBpHA4jIt
-TivF/QaCyNc/8+f0KGOmrOvXMDLNUlu+KhqX2jIDzaL7KgrDNFbLfWRcPLcoASvs
-VOdCl+HCBqTmwON7Ru+XR2dChcg+ckrY2IFHXzrgbMBZd11ru5HRPc9zmdms62SD
-4XfFNwflLtSjYvcUwtR8pJAbienbKFRudGGsHIhY1J+gVhiZH6g=
-=w778
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============1656647127498595809==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1656647127498595809==--
+Reviewed-by: Rob Herring <robh@kernel.org>
