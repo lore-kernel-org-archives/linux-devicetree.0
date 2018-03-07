@@ -1,24 +1,26 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V6 1/2] ARM: dts: imx7s: add temperature monitor support
-Date: Thu, 8 Mar 2018 16:36:28 +0800
-Message-ID: <20180308083627.GV3217@dragon>
-References: <1519955970-11365-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] arm64: dts: mt2712: add pintcrl file
+Date: Wed, 7 Mar 2018 16:28:22 -0600
+Message-ID: <20180307222822.7uxuibviglidhp4j@rob-hp-laptop>
+References: <1520249745-6757-1-git-send-email-zhiyong.tao@mediatek.com>
+ <1520249745-6757-2-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519955970-11365-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1520249745-6757-2-git-send-email-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: leonard.crestez@nxp.com, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 09:59:29AM +0800, Anson Huang wrote:
-> Add i.MX7 temperature monitor support.
+On Mon, Mar 05, 2018 at 07:35:42PM +0800, Zhiyong Tao wrote:
+> This patch adds pinctrl file for mt2712.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
-> Acked-by: Shawn Guo <shawnguo@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1123 +++++++++++++++++++++++++
+>  1 file changed, 1123 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
 
-Applied this dts patch, thanks.
+Reviewed-by: Rob Herring <robh@kernel.org>
