@@ -1,35 +1,46 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/3] Input: gpio-keys - add support for wakeup event action
-Date: Wed, 7 Mar 2018 13:57:17 +0200
-Message-ID: <CAHp75VcmbHbnD8FnTHXAqGajhs10wA7Z7U_D6SY9=j=y+GLLPA@mail.gmail.com>
-References: <20180306074418.8879-1-jeffy.chen@rock-chips.com> <20180306074418.8879-2-jeffy.chen@rock-chips.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 0/3] pinctrl: bcm2835: Add brcm,level property
+Date: Wed, 7 Mar 2018 12:58:07 +0100 (CET)
+Message-ID: <821312841.275581.1520423887935@email.1und1.de>
+References: <431699005.307231.1520086916739@email.1und1.de>
+ <1520216960-19880-1-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180306074418.8879-2-jeffy.chen@rock-chips.com>
+In-Reply-To: <1520216960-19880-1-git-send-email-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, briannorris@google.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Dmitry Torokhov <dtor@google.com>, Douglas Anderson <dianders@google.com>, devicetree <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>, Joseph Lo <josephl@nvidia.com>, stephen lu <lumotuwe@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-input <linux-input@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Philippe Ombredanne <pombredanne@nexb.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: linus.walleij@linaro.org, Matheus Castello <matheus@castello.eng.br>
+Cc: eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2018 at 9:44 AM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
-> Add support for specifying event actions to trigger wakeup when using
-> the gpio-keys input device as a wakeup source.
+Hi Matheus,
+
+> Matheus Castello <matheus@castello.eng.br> hat am 5. März 2018 um 03:29 geschrieben:
+> 
+> 
+> Hi Linus and Stefan,
+> 
+> thanks for the tips.
+> 
+> This series adds support for generic binding for pinctrl bcm2835 driver,
+> and add the code for set output buffer of a pin using the output-low and
+> output-high generic properties.
+> 
+> Tested on Raspberry Pi Zero W, based on bcm2835 SoC.
+> 
+> Matheus Castello (3):
+
+looks like you missed the changes to the dt binding. Please also add Rob Herring and Mark Rutland to CC. We need a ACK from them.
+
+>   pinctrl: bcm2835: switch to GENERIC_PINCONF
+>   pinctrl: bcm2835: Add support for generic pinctrl binding
+>   pinctrl: bcm2835: Add support for output-low output-high properties
+> 
+>  drivers/pinctrl/bcm/Kconfig           |  1 +
+>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 88 +++++++++++++++++++++++------------
+>  2 files changed, 60 insertions(+), 29 deletions(-)
+> 
+> --
+> 2.7.4
 >
-> This would allow the device to configure when to wakeup the system. For
-> example a gpio-keys input device for pen insert, may only want to wakeup
-> the system when ejecting the pen.
-
-> +       bool wakeup_enabled;
-
-> +                       if (bdata->wakeup_enabled) {
-
-This is redundant. IRQ core keeps track on this information already.
-
-Check below as an example
-aef3ad103a68 ("serial: core: remove unneeded irq_wake flag")
-
-
--- 
-With Best Regards,
-Andy Shevchenko
