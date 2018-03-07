@@ -1,68 +1,77 @@
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: [PATCH 1/2] net: macb: Add phy-handle DT support
-Date: Wed, 7 Mar 2018 16:42:56 -0600
-Message-ID: <20180307224257.1959-1-brad.mouring@ni.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
+ firmware
+Date: Wed, 7 Mar 2018 22:25:03 +0000
+Message-ID: <CY1PR0201MB0764FB23021F5DC694C7F56DB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-2-git-send-email-jollys@xilinx.com>
+ <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brad Mouring <brad.mouring@ni.com>
+To: Sudeep Holla <sudeep.holla@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This optional binding (as described in the ethernet DT bindings doc)
-directs the netdev to the phydev to use. This is useful for a phy
-chip that has >1 phy in it, and two netdevs are using the same phy
-chip (i.e. the second mac's phy lives on the first mac's MDIO bus)
-
-The devicetree snippet would look something like this:
-
-ethernet@feedf00d {
-	...
-	phy-handle = <&phy0> // the first netdev is physically wired to phy0
-	...
-	phy0: phy@0 {
-		...
-		reg = <0x0> // MDIO address 0
-		...
-	}
-	phy1: phy@1 {
-		...
-		reg = <0x1> // MDIO address 1
-		...
-	}
-...
-}
-
-ethernet@deadbeef {
-	...
-	phy-handle = <&phy1> // tells the driver to use phy1 on the
-						 // first mac's mdio bus (it's wired thusly)
-	...
-}
-
-The work done to add the phy_node in the first place (dacdbb4dfc1a1:
-"net: macb: add fixed-link node support") will consume the
-device_node (if found).
-
-Signed-off-by: Brad Mouring <brad.mouring@ni.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index e84afcf1ecb5..cc5b9e6e3526 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -567,6 +567,9 @@ static int macb_mii_init(struct macb *bp)
- 
- 			err = mdiobus_register(bp->mii_bus);
- 		} else {
-+			/* attempt to find a phy-handle */
-+			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
-+
- 			/* try dt phy registration */
- 			err = of_mdiobus_register(bp->mii_bus, np);
- 
--- 
-2.16.2
+SGkgU3VkZWVwLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1ZGVl
+cCBIb2xsYSBbbWFpbHRvOnN1ZGVlcC5ob2xsYUBhcm0uY29tXQ0KPiBTZW50OiBUaHVyc2RheSwg
+TWFyY2ggMDEsIDIwMTggNjoxNSBBTQ0KPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5j
+b20+OyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gbWF0dEBjb2RlYmx1ZXByaW50LmNv
+LnVrOyBoa2FsbHdlaXQxQGdtYWlsLmNvbTsgbWljaGFsLnNpbWVrQHhpbGlueC5jb207DQo+IHJv
+YmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb20NCj4gQ2M6IGFyZC5iaWVzaGV1
+dmVsQGxpbmFyby5vcmc7IG1pbmdvQGtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9taXVtLm9yZzsN
+Cj4gZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFA
+YXJtLmNvbT47IFJhamFuDQo+IFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsgbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEpvbGx5IFNoYWgNCj4gPEpPTExZU0B4aWxp
+bnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDEvNF0gZHQtYmluZGluZ3M6IGZpcm13
+YXJlOiBBZGQgYmluZGluZ3MgZm9yIFp5bnFNUA0KPiBmaXJtd2FyZQ0KPiANCj4gDQo+IA0KPiBP
+biAyMC8wMi8xOCAxOToyMSwgSm9sbHkgU2hhaCB3cm90ZToNCj4gPiBBZGQgZG9jdW1lbnRhdGlv
+biB0byBkZXNjcmliZSBYaWxpbnggWnlucU1QIGZpcm13YXJlIGRyaXZlciBiaW5kaW5ncy4NCj4g
+PiBGaXJtd2FyZSBkcml2ZXIgcHJvdmlkZXMgYW4gaW50ZXJmYWNlIHRvIGZpcm13YXJlIEFQSXMu
+IEludGVyZmFjZSBBUElzDQo+ID4gY2FuIGJlIHVzZWQgYnkgYW55IGRyaXZlciB0byBjb21tdW5p
+Y2F0ZSB0byBQTVVGVyAoUGxhdGZvcm0gTWFuYWdlbWVudA0KPiA+IFVuaXQpLg0KPiA+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9sbHlzQHhpbGlueC5jb20+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogUmFqYW4gVmFqYSA8cmFqYW52QHhpbGlueC5jb20+DQo+ID4gLS0tDQo+ID4gIC4u
+Li9maXJtd2FyZS94aWxpbngveGxueCx6eW5xbXAtZmlybXdhcmUudHh0ICAgICAgIHwgMjQNCj4g
+KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9u
+cygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLWZpcm13YXJlDQo+ID4gLnR4
+dA0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Zpcm13YXJlL3hpbGlueC94bG54LHp5bnFtcC1maXJtd2ENCj4gPiByZS50eHQNCj4g
+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9maXJtd2FyZS94aWxpbngveGxu
+eCx6eW5xbXAtZmlybXdhDQo+ID4gcmUudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+PiBpbmRleCAwMDAwMDAwLi45OTQzNGJhDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9maXJtd2FyZS94aWxpbngveGxueCx6eW5x
+bXAtZmkNCj4gPiArKysgcm13YXJlLnR4dA0KPiA+IEBAIC0wLDAgKzEsMjQgQEANCj4gPiArWGls
+aW54IFp5bnEgTVBTb0MgRmlybXdhcmUgRGV2aWNlIFRyZWUgQmluZGluZ3MNCj4gPiArDQo+ID4g
+K1RoZSB6eW5xbXAtZmlybXdhcmUgbm9kZSBkZXNjcmliZXMgdGhlIGludGVyZmFjZSB0byBwbGF0
+Zm9ybSBmaXJtd2FyZS4NCj4gPiArWnlucU1QIGhhcyBhbiBpbnRlcmZhY2UgdG8gY29tbXVuaWNh
+dGUgd2l0aCBzZWN1cmUgZmlybXdhcmUuIEZpcm13YXJlDQo+ID4gK2RyaXZlciBwcm92aWRlcyBh
+biBpbnRlcmZhY2UgdG8gZmlybXdhcmUgQVBJcy4gSW50ZXJmYWNlIEFQSXMgY2FuIGJlDQo+ID4g
+K3VzZWQgYnkgYW55IGRyaXZlciB0byBjb21tdW5pY2F0ZSB0byBQTVVGVyhQbGF0Zm9ybSBNYW5h
+Z2VtZW50IFVuaXQpLg0KPiA+ICtUaGVzZSByZXF1ZXN0cyBpbmNsdWRlIGNsb2NrIG1hbmFnZW1l
+bnQsIHBpbiBjb250cm9sLCBkZXZpY2UgY29udHJvbCwNCj4gPiArcG93ZXIgbWFuYWdlbWVudCBz
+ZXJ2aWNlLCBGUEdBIHNlcnZpY2UgYW5kIG90aGVyIHBsYXRmb3JtIG1hbmFnZW1lbnQNCj4gPiAr
+c2VydmljZXMuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsgLSBjb21w
+YXRpYmxlOglNdXN0IGNvbnRhaW46ICAieGxueCx6eW5xbXAtZmlybXdhcmUiDQo+ID4gKyAtIG1l
+dGhvZDoJVGhlIG1ldGhvZCBvZiBjYWxsaW5nIHRoZSBQTS1BUEkgZmlybXdhcmUgbGF5ZXIuDQo+
+ID4gKwkJUGVybWl0dGVkIHZhbHVlcyBhcmU6DQo+ID4gKwkJICAtICJzbWMiIDogU01DICMwLCBm
+b2xsb3dpbmcgdGhlIFNNQ0NDDQo+ID4gKwkJICAtICJodmMiIDogSFZDICMwLCBmb2xsb3dpbmcg
+dGhlIFNNQ0NDDQo+ID4gKw0KPiA+ICtFeGFtcGxlczoNCj4gPiArCWZpcm13YXJlIHsNCj4gPiAr
+CQl6eW5xbXBfZmlybXdhcmU6IHp5bnFtcC1maXJtd2FyZSB7DQo+ID4gKwkJCWNvbXBhdGlibGUg
+PSAieGxueCx6eW5xbXAtZmlybXdhcmUiOw0KPiA+ICsJCQltZXRob2QgPSAic21jIjsNCj4gPiAr
+CQl9Ow0KPiA+ICsJfTsNCj4gPg0KPiANCj4gRG8geW91IGZvcmVzZWUgdXNpbmcgU01DL0hWQyBm
+b3IgdGhpcyBmaXJtd2FyZSBldmVuIG9uIGZ1dHVyZSBwbGF0Zm9ybXM/DQo+IElmIG5vdCwgSSBz
+dWdnZXN0IHRvIGtlZXAgdGhlIHByb3RvY29sIHBhcnQgc2VwYXJhdGUgZnJvbSB0aGUgdHJhbnNw
+b3J0IGkuZS4NCj4gc21jL2h2YyB2aWEgQVRGLiBJdCBjb3VsZCBiZSByZXBsYWNlZCB3aXRoIG1h
+aWxib3ggb3Igc29tZSBoL3cgbWVjaGFuaXNtIGluDQo+IGZ1dHVyZSA/DQo+IA0KDQpXZSBoYXZl
+IFBTQ0kgYW5kIEVFTUkgaW50ZXJmYWNlcyBleHBvc2VkIHRvIGxpbnV4IGZyb20gQVRGLiAgUFND
+SSBpcyBhbiBFRU1JIGNsaWVudC4gV2UgZG8gbm90IGhhdmUgY3VycmVudCBwbGFucyB0byBzd2l0
+Y2ggdG8gbWFpbGJveCBhcyBpdCB3aWxsIHJlcXVpcmUgMiBjb21tdW5pY2F0aW9uIGNoYW5uZWxz
+IHRvIFBNVSBhcyBQU0NJIGlzIHRocm91Z2ggQVRGLiANCg0KPiAtLQ0KPiBSZWdhcmRzLA0KPiBT
+dWRlZXANCg==
