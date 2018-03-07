@@ -1,94 +1,84 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3 3/4] rtc: isl1208: add support for isl1219 with tamper
- detection
-Date: Wed, 7 Mar 2018 11:47:14 +0100
-Message-ID: <20180307104714.GL3035@piout.net>
-References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
- <1520246373-19023-4-git-send-email-Denis.Osterland@diehl.com>
- <20180306204255.GI3035@piout.net>
- <1520410754.5976.27.camel@diehl.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
+Date: Wed, 7 Mar 2018 10:57:21 +0000
+Message-ID: <20180307105721.yxrun3xztrgun4me@dell>
+References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
+ <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
+ <20180307083538.vicxhbu72jex7zi6@dell>
+ <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520410754.5976.27.camel@diehl.com>
+In-Reply-To: <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Patrice CHOTARD <patrice.chotard@st.com>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/2018 at 08:19:15 +0000, Denis OSTERLAND wrote:
-> > > +/* event section */
-> > > +#define ISL1208_REG_SCT 0x14
-> > > +#define ISL1208_REG_MNT 0x15
-> > > +#define ISL1208_REG_HRT 0x16
-> > > +#define ISL1208_REG_DTT 0x17
-> > > +#define ISL1208_REG_MOT 0x18
-> > > +#define ISL1208_REG_YRT 0x19
-> > > +#define ISL1208_EVT_SECTION_LEN 6
-> > > +
-> > Because they are not available on ISL1208, maybe it would be better to
-> > prefix them with ISL1219.
-> I see. Yes, this would clarify that they are only available on isl1219.
-> Shall we rename isl1208_rtc_event_show_timestamp/isl1208_rtc_event_clear
-> to isl1219_rtc_event_show_timestamp/isl1219_rtc_event_clear, too?
+On Wed, 07 Mar 2018, Patrice CHOTARD wrote:
 
-That could be done too, yes.
-
+> Hi Lee
+> 
+> On 03/07/2018 09:35 AM, Lee Jones wrote:
+> > On Mon, 05 Mar 2018, Alexandre Torgue wrote:
 > > 
-> > > 
-> > > +
-> > > +	tv64.tv_sec = rtc_tm_to_time64(&tm);
-> > Why not using an unsigned long long directly here? time64_t is not the
-> > correct type.
-> Do you mean timespec64 is not the correct type here?
-> Then yes, sould be time64_t.
-> If you mean time64_t is not the correct type here,
-> then can you give me some detail why there is no rtc_tm_to_u64,
-> or something like that?
-
-The rtc subsystem forbids negative times, the proper type should be
-unsigned.
-
-> sprintf(buf, "%lld\n", rtc_tm_to_time64(&tm)) seems correct to me.
-> By the way, is it needed to check for seconds < 0 and return error?
-
-Indeed, you shoud check the tm with rtc_valid_tm before calling
-rtc_tm_to_time64.
-
-> > > -	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
-> > > +	if (id->driver_data == TYPE_ISL1219) {
-> > > +		rc = i2c_smbus_write_byte_data(client, ISL1208_REG_09, 0x10);
-> > > +		if (rc < 0) {
-> > > +			dev_err(&client->dev, "could not enable tamper detection\n");
-> > > +			return rc;
-> > > +		}
-> > > +		isl1208->sysfs_files = &isl1219_rtc_sysfs_files;
-> > > +	} else {
-> > > +		isl1208->sysfs_files = &isl1208_rtc_sysfs_files;
-> > > +	}
-> > > +
-> > I don't think the whole isl1208 is necessary. You should probably use
-> > the .is_visible callback of isl1219_rtc_sysfs_files. This will make the
-> > changelog quite smaller.
+> >> Hi Patrice,
+> >>
+> >> On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
+> >>> From: Patrice Chotard <patrice.chotard@st.com>
+> >>>
+> >>> This series adds :
+> >>>    _ SDIO pins definition for STM32F7 SoCs family
+> >>>    _ add sdio1 DT entry for STM32F746 Discovery board
+> >>>    _ add sdio1 DT entry for STM32F746 Evaluation board
+> >>>    _ add sdio1 DT entry for STM32F769 Discovery board
+> >>>    _ add SDMMC2 entry in stm32f7-rcc.h
+> >>>    _ replace sdio2 hard coded value in stm32f746.dtsi
+> >>>
+> >>> v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
+> >>>         and update board dts files accordingly.
+> >>>
+> >>>
+> >>> Patrice Chotard (6):
+> >>>     ARM: dts: stm32: Add sdio pins definition for stm32f7
+> >>>     ARM: dts: stm32: Enable sdio1 for stm32f746-disco
+> >>>     ARM: dts: stm32: Enable sdio1 for stm32f746-eval
+> >>>     ARM: dts: stm32: Enable sdio1 for stm32f769-disco
+> >>>     dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
+> >>>     ARM: dts: stm32: Fix sdio2 rcc hard coded value
+> >>>
+> >>>    arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
+> >>>    arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
+> >>>    arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
+> >>>    arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
+> >>>    arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
+> >>>    include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
+> >>>    6 files changed, 119 insertions(+), 1 deletion(-)
+> >>>
+> >> Series applied on stm32-next.
 > > 
-> Well, I don´t know how to access i2c_device_id from kobject.
-> rtc_attr_is_visible shows how to convert kobject to device and rtc_device,
-> but how to do (id->driver_data == TYPE_ISL1219) here?
+> > Even the MFD patch?
+> > 
+> 
+> Yes, the MFD part has been taken by Alex.
 
-I'd use i2c_set_clientdata/i2c_get_clientdata but I agree that then it
-is basically the same as having isl1208->sysfs_files.
+You should really wait for all of the appropriate Acks.  This helps to
+avoid possible merge conflicts when Linus starts pulling branches
+during the merge-window.
 
-but this makes me realize that the timestamp file doesn't end up at the
-correct location. What you do now is placing it under the i2c device
-while it should be placed under the rtc device (i.e. in
-/sys/class/rtc/rtcX/). This was a mistake made back in 2006.
+As it happens, I do not think Alex's tree and MFD will conflict this
+time, but it's something to bear in mind in the future.
 
-I guess you'll have to add a new group instead of adding to the current
-one.
+Please add my:
+
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+
+... to the patch.
 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org â”‚ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
