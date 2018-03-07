@@ -1,55 +1,40 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
-Date: Wed, 7 Mar 2018 20:52:27 +0530
-Message-ID: <CANc+2y6yNkgrJnM64D-JyL3jyWwk_Tes4MZfMw0NRmsf5v7=4w@mail.gmail.com>
-References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
- <20170927151527.25570-4-prasannatsmkumar@gmail.com> <20180306000832.GL4197@saruman>
- <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
- <20180307143541.GN4197@saruman> <CANc+2y5wsvGWszu3pePYhs2wb1_AgPdjG+ugfOCzbZVfVHDMvw@mail.gmail.com>
- <20180307151025.GP4197@saruman>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v5 2/5] MIPS: mscc: add ocelot dtsi
+Date: Wed, 7 Mar 2018 16:27:51 +0100
+Message-ID: <20180307152751.GM3035@piout.net>
+References: <20180306121607.1567-1-alexandre.belloni@bootlin.com>
+ <20180306121607.1567-3-alexandre.belloni@bootlin.com>
+ <20180307151753.GQ4197@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307151025.GP4197@saruman>
+Content-Disposition: inline
+In-Reply-To: <20180307151753.GQ4197@saruman>
 Sender: linux-kernel-owner@vger.kernel.org
 To: James Hogan <jhogan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 March 2018 at 20:40, James Hogan <jhogan@kernel.org> wrote:
-> On Wed, Mar 07, 2018 at 08:35:00PM +0530, PrasannaKumar Muralidharan wrote:
->> On 7 March 2018 at 20:05, James Hogan <jhogan@kernel.org> wrote:
->> > On Wed, Mar 07, 2018 at 07:14:49PM +0530, PrasannaKumar Muralidharan wrote:
->> >> > Does X1000 use a different PRID, or is it basically just a JZ4780 core
->> >> > with different SoC peripherals?
->> >>
->> >> Yes X1000 does have a different PRID (PRID = 0x2ed1024f). X1000 has
->> >
->> > Right, so thats 0x2e000000 | PRID_COMP_INGENIC_D1 | PRID_IMP_JZRISC |
->> > 0x4f, which cpu-probe.c already handles (apparently the D1 company code
->> > is used for JZ4770 & JZ4775 too).
->>
->> Okay. Does this mean I need not modify get_board_mach_type() and
->> get_system_type()?
->
-> You still need to modify them, otherwise it won't understand
-> "ingenic,x1000" compatible string, and will call it a JZ4740 in
-> /proc/cpuinfo.
+On 07/03/2018 at 15:17:56 +0000, James Hogan wrote:
+> On Tue, Mar 06, 2018 at 01:16:04PM +0100, Alexandre Belloni wrote:
+> > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > new file mode 100644
+> > index 000000000000..8c3210577410
+> > --- /dev/null
+> > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > @@ -0,0 +1,117 @@
+> > +//SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> 
+> Niggle: there should be a space after // for consistency with other
+> files. Same in patch 3.
+> 
 
-Oh okay. Will make the changes.
+Ah, yes...
 
->> >> I used to get my code tested from Domink but I could not reach him for
->> >> quite some time. Before buying the development board myself I would
->> >> like to see if anyone can help me in testing. Do you have any contact
->> >> with Ingenic who can help in testing this?
->> >
->> > Not personally, but I'll ask around. Of course if nobody much cares
->> > about it in practice and nobody has the hardware, there may be little
->> > value in supporting it upstream.
->>
->> Seems Jiaxun is interested in the board and is willing to help.
->
-> Okay, cool.
->
-> Cheers
-> James
+If that is the only thing left, I can resend right away
+
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
