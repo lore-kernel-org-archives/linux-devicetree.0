@@ -1,84 +1,70 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] iommu/arm-smmu: Invoke pm_runtime during probe,
-	add/remove device
-Date: Wed, 7 Mar 2018 22:52:22 +0900
-Message-ID: <CAAFQd5BTdF176x5ycatCmCHrMyVX2OZqdXd-JGq06RyDUb0N3g@mail.gmail.com>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
-	<20180302101050.6191-4-vivek.gautam@codeaurora.org>
-	<d0f2b3ed-136d-7704-2aef-1173a342a89c@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <d0f2b3ed-136d-7704-2aef-1173a342a89c-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: James Hogan <jhogan@kernel.org>
+Subject: [PATCH] kbuild: Handle builtin dtb files containing hyphens
+Date: Wed,  7 Mar 2018 14:06:33 +0000
+Message-ID: <20180307140633.26182-1-jhogan@kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 9:38 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 02/03/18 10:10, Vivek Gautam wrote:
->>
->> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> The smmu device probe/remove and add/remove master device callbacks
->> gets called when the smmu is not linked to its master, that is without
->> the context of the master device. So calling runtime apis in those places
->> separately.
->>
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> [vivek: Cleanup pm runtime calls]
->> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   drivers/iommu/arm-smmu.c | 96
->> ++++++++++++++++++++++++++++++++++++++++++++----
->>   1 file changed, 88 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index c8b16f53f597..3d6a1875431f 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -209,6 +209,8 @@ struct arm_smmu_device {
->>         struct clk_bulk_data            *clks;
->>         int                             num_clks;
->>   +     bool                            rpm_supported;
->> +
->
->
-> Can we not automatically infer this from whether clocks and/or power domains
-> are specified or not, then just use pm_runtime_enabled() as the fast-path
-> check as Tomasz originally proposed?
+On dtb files which contain hyphens, the dt_S_dtb command to build the
+dtb.S files (which allow DTB files to be built into the kernel) results
+in errors like the following:
 
-I wouldn't tie this to presence of clocks, since as a next step we
-would want to actually control the clocks separately. (As far as I
-understand, on QCom SoCs we might want to have runtime PM active for
-the translation to work, but clocks gated whenever access to SMMU
-registers is not needed.) Moreover, you might still have some super
-high scale thousand-core systems that require clocks to be
-prepare-enabled, but runtime PM would be undesirable for the reasons
-we discussed before.
+bcm3368-netgear-cvg834g.dtb.S: Assembler messages:
+bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section
+bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'
+bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'
+bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'
+bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section
+bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
 
->
-> I worry that relying on statically-defined matchdata is just going to blow
-> up the driver and DT binding into a maintenance nightmare; I really don't
-> want to start needing separate definitions for e.g. "arm,juno-etr-mmu-401"
-> and "arm,juno-hdlcd-mmu-401" just because one otherwise-identical instance
-> within the SoC is in a separate controllable power domain while the others
-> aren't.
+This is due to the hyphen being used in symbol names. Replace all
+hyphens with underscores in the dt_S_dtb command to avoid this problem.
 
-I don't see a reason why both couldn't just have RPM supported
-regardless of whether there is a real power domain. It would
-effectively be just a no-op for those that don't have one. IMHO the
-only reason to avoid having the RPM enabled is the scalability issue
-we discussed before.
+Quite a lot of dts files have hyphens, but its only a problem on MIPS
+where such files can be built into the kernel. For example when
+CONFIG_DT_NETGEAR_CVG834G=y, or on BMIPS kernels when the dtbs target is
+used (in the latter case it admitedly shouldn't really build all the
+dtb.o files, but thats a separate issue).
 
-Best regards,
-Tomasz
+Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+Signed-off-by: James Hogan <jhogan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: <stable@vger.kernel.org> # 4.9+
+---
+ scripts/Makefile.lib | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 5589bae34af6..a6f538b31ad6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -297,11 +297,11 @@ cmd_dt_S_dtb=						\
+ 	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
+ 	echo '.section .dtb.init.rodata,"a"';		\
+ 	echo '.balign STRUCT_ALIGNMENT';		\
+-	echo '.global __dtb_$(*F)_begin';		\
+-	echo '__dtb_$(*F)_begin:';			\
++	echo '.global __dtb_$(subst -,_,$(*F))_begin';	\
++	echo '__dtb_$(subst -,_,$(*F))_begin:';		\
+ 	echo '.incbin "$<" ';				\
+-	echo '__dtb_$(*F)_end:';			\
+-	echo '.global __dtb_$(*F)_end';			\
++	echo '__dtb_$(subst -,_,$(*F))_end:';		\
++	echo '.global __dtb_$(subst -,_,$(*F))_end';	\
+ 	echo '.balign STRUCT_ALIGNMENT'; 		\
+ ) > $@
+ 
+-- 
+2.13.6
