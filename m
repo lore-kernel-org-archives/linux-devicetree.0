@@ -1,95 +1,44 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: Re: [PATCH] kbuild: Handle builtin dtb files containing hyphens
-Date: Wed, 7 Mar 2018 20:25:14 +0000
-Message-ID: <20180307202511.GT4197@saruman>
-References: <20180307140633.26182-1-jhogan@kernel.org>
- <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Patch 1/4] dt-bindings: display/ti: Move common dispc bindings
+ to omap-dss.txt
+Date: Wed, 7 Mar 2018 14:26:37 -0600
+Message-ID: <20180307202637.b6voqkzkyxkvjn3x@rob-hp-laptop>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-2-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ck3np9Ek/EMsFxRu"
-Return-path: <stable-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
+In-Reply-To: <20180302134804.3690-2-bparrot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ck3np9Ek/EMsFxRu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 07, 2018 at 12:11:41PM -0800, Frank Rowand wrote:
-> I initially misread the patch description (and imagined an entirely
-> different problem).
->=20
->=20
-> On 03/07/18 06:06, James Hogan wrote:
-> > On dtb files which contain hyphens, the dt_S_dtb command to build the> =
-dtb.S files (which allow DTB files to be built into the kernel) results> in=
- errors like the following:> > bcm3368-netgear-cvg834g.dtb.S: Assembler mes=
-sages:> bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section> bcm3368-=
-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized cha=
-racter is `-'> bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode =
-`__dtb_bcm3368-netgear-cvg834g_begin:'> bcm3368-netgear-cvg834g.dtb.S:8: Er=
-ror: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'> bcm3368-netg=
-ear-cvg834g.dtb.S:9: Error: : no such section> bcm3368-netgear-cvg834g.dtb.=
-S:9: Error: junk at end of line, first unrecognized character is `-'
-> Please replace the following section:
->=20
-> > This is due to the hyphen being used in symbol names. Replace all
-> > hyphens=20
-> > with underscores in the dt_S_dtb command to avoid this problem.
-> >=20
-> > Quite a lot of dts files have hyphens, but its only a problem on MIPS
-> > where such files can be built into the kernel. For example when
-> > CONFIG_DT_NETGEAR_CVG834G=3Dy, or on BMIPS kernels when the dtbs target=
- is
-> > used (in the latter case it admitedly shouldn't really build all the
-> > dtb.o files, but thats a separate issue).
->=20
-> with:
->=20
->    cmd_dt_S_dtb constructs the assembly source to incorporate a devicetree
->    FDT (that is, the .dtb file) as binary data in the kernel image.
->    This assembly source contains labels before and after the binary data.
->    The label names incorporate the file name of the corresponding .dtb
->    file.  Hyphens are not legal characters in labels, so transform all
->    hyphens from the file name to underscores when constructing the labels.
-
-Thanks, that is clearer.
-
-I'll keep the paragraph about MIPS and the example configuration though,
-as I think its important information to reproduce the problem, and to
-justify why it wouldn't be appropriate to just rename the files (which
-was my first reaction).
-
-> Reviewed-by: Frank Rowand <frowand.list@gmail.com>
-
-Thanks
-James
-
---ck3np9Ek/EMsFxRu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqgSqEACgkQbAtpk944
-dno+qg/+OVG/O0znyZup1R3l0Cs07bQYye+qoIv2byyBKi2HJtRKIRA/9oUww8L6
-b0/aBIY0NpayhhsC0/EziivmKMwTF1aQROnbN5AS1Z1B+vVnFX38jw2yc7C0RMd3
-bezjC4/qxZ3Tt5Q24ITliAc8IS36fo7448F1nCRhjqHkF4wOEmZ8GzGYY7SoOIaf
-u1NS/Cjl/gwEGN6XlLVVY7S6pdtNYYjOSS04UWTPBYsjqESLznkHYDeHvoS2kpsf
-HOnVTAqYv5Vv03iA3g+Rfse6sOuzIA9cL79Y7y7RQgbh/eqtXQzXbYdOrboFr7ZI
-cUn0p2YLSQvpbJe4wuXndmkJGotJIomhsgFZGs1B3FEyE1Hg7f/PIRzp3MTXnbDd
-pvDKQ7Y3n9K0dm4XIKcp0b3BH7sLNuxOnb2l/DVbf9uSLtcnfSbRyNDwGlqqHyEH
-JHvyo5odx80kL5+0w74ABX5hDOuK7bPqhF8slID+xv8zsnAt2vMIkVqx2TmIYqBo
-GL6RJI3xZPZk/oDA+rN3zw4TssFdQ5JBOs9B3q3iAtkGqd0/CIKMj4P5IItxqw2E
-tnucDBhc0cvbNCYpWw5X6wCiMzhhM8MdVTxnGvzKn/DAk+EWnGh6dfgvoY/Sl3r5
-O3g7tS2zfrFqvdm6Wecbro58Mzs+WcctRqK2h2LTXorEjBIRjig=
-=+//s
------END PGP SIGNATURE-----
-
---ck3np9Ek/EMsFxRu--
+T24gRnJpLCBNYXIgMDIsIDIwMTggYXQgMDc6NDg6MDFBTSAtMDYwMCwgQmVub2l0IFBhcnJvdCB3
+cm90ZToKPiBBZGQgY29tbW9uIERJU1BDIGJpbmRpbmdzIGludG8gdGhlIHRvcCBsZXZlbCBiaW5k
+aW5ncyBmaWxlLgo+IE1vdmUgY29tbW9uIGJpbmRpbmdzIGhlcmUgaW5zdGVhZCBvZiBoYXZpbmcg
+bXVsdGlwbGUgY29waWVzIG9mCj4gdGhlIHNhbWUgaW5mb3JtYXRpb24gaW4gYWxsIG9mIHRoZSB2
+YXJpYW50IHNwZWNpZmljIGZpbGVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJlbm9pdCBQYXJyb3Qg
+PGJwYXJyb3RAdGkuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgIHwgNSAtLS0tLQo+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwLWRzcy50eHQgIHwgNyArKysr
+KysrCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9t
+YXAyLWRzcy50eHQgfCA0IC0tLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvdGkvdGksb21hcDMtZHNzLnR4dCB8IDQgLS0tLQo+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0IHwgNCAtLS0tCj4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRz
+cy50eHQgfCA0IC0tLS0KPiAgNiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDIxIGRl
+bGV0aW9ucygtKQoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
