@@ -1,117 +1,105 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Wed, 7 Mar 2018 13:42:48 +0100 (CET)
-Message-ID: <2071508922.276811.1520426568577@email.1und1.de>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Wed, 7 Mar 2018 12:47:28 +0000
+Message-ID: <f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+	<20180302101050.6191-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180302101050.6191-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY2VsLApoaSBMb2ljLAoKPiBNYXJjZWwgSG9sdG1hbm4gPG1hcmNlbEBob2x0bWFubi5v
-cmc+IGhhdCBhbSA3LiBNw6RyeiAyMDE4IHVtIDEzOjEyIGdlc2NocmllYmVuOgo+IAo+IAo+IEhp
-IFN0ZWZhbiwKPiAKPiA+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJkZXYg
-c2xhdmUgZGV2aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPiA+Pj4+PiBUaGlzIGFsbG93
-cyB0byBhdXRvbWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+
-ID4+Pj4+IHN1YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2Ug
-aGVscGVycyAoaGNpYXR0YWNoKS4KPiA+Pj4+PiAKPiA+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEg
-ZGVidWcgVUFSVCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPiA+Pj4+PiAKPiA+Pj4+PiBT
-aWduZWQtb2ZmLWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+
-Pj4+IC0tLQo+ID4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMg
-fCAxNCArKysrKysrKysrKysrLQo+ID4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pCj4gPj4+Pj4gCj4gPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20y
-ODM1LXJwaS16ZXJvLXcuZHRzCj4gPj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAxMDA2NDQK
-PiA+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4g
-Pj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+ID4+
-Pj4+IEBAIC0xMzEsNiArMTMxLDE4IEBACj4gPj4+Pj4gCj4gPj4+Pj4gJnVhcnQwIHsKPiA+Pj4+
-PiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiA+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFy
-dDBfZ3BpbzE0PjsKPiA+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzMyICZ1YXJ0MF9j
-dHNydHNfZ3BpbzMwPjsKPiA+Pj4+PiArCXN0YXR1cyA9ICJva2F5IjsKPiA+Pj4+PiArCj4gPj4+
-Pj4gKwlibHVldG9vdGggewo+ID4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiYnJjbSxiY200MzQzOC1i
-dCI7Cj4gPj4+Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+ID4+Pj4+ICsJCXNodXRkb3du
-LWdwaW9zID0gPCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+Pj4+ICsJfTsKPiA+Pj4+
-PiArfTsKPiA+Pj4+IAo+ID4+Pj4gaXMgdGhlIHNodXRkb3duIEdQSU8gd29ya2luZyBhcyBleHBl
-Y3RlZCB3aXRoIHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9kdWxlIHVubG9hZCBhbmQgcmVsb2Fk
-IHdvcmtzIGZpbmU/Cj4gPj4+IAo+ID4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZp
-bmUuIAo+ID4+PiAKPiA+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1
-MjAwIGRlZmF1bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+ID4+PiAKPiA+Pj4gSSBhc3N1bWUg
-dGhhdCwgYmVjYXVzZSByZWxvYWQgd29ya3MgYXMgZXhwZWN0ZWQuIAo+ID4+IAo+ID4+IGF3ZXNv
-bWUuIFRoYXQgaXMgZ29vZCBuZXdzLgo+ID4+IAo+ID4+IFNpbmNlIHlvdSBzYWlkIHRoYXQgdGhl
-IEdQSU8gZXhwYW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4gYWNjZXB0ZWQsIGRp
-ZCB5b3UgdGVzdCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3b3VsZCBiZSBnb29k
-IHRvIGdldCBhIHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1ncGlvcyBmb3IgUlBp
-IDMuCj4gPiAKPiA+IGFmdGVyIGFwcGx5aW5nIExvaWMncyBwYXRjaCBhbmQgdGhlIG5lY2Vzc2Fy
-eSBwYXRjaCBmb3IgdGhlIFJQaSAzIGR0cyBmaWxlIChzZWUgYmVsb3cpLCBpIHdpbGwgZ2V0IHRo
-aXMgb3V0cHV0Ogo+ID4gCj4gPiBbICAgIDQuODczMjQ2XSBCbHVldG9vdGg6IEhDSSBVQVJUIGRy
-aXZlciB2ZXIgMi4zCj4gPiBbICAgIDQuODczMjYwXSBCbHVldG9vdGg6IEhDSSBVQVJUIHByb3Rv
-Y29sIEg0IHJlZ2lzdGVyZWQKPiA+IFsgICAgNC44NzMyNjVdIEJsdWV0b290aDogSENJIFVBUlQg
-cHJvdG9jb2wgVGhyZWUtd2lyZSAoSDUpIHJlZ2lzdGVyZWQKPiA+IFsgICAgNC44NzM3NTFdIEJs
-dWV0b290aDogSENJIFVBUlQgcHJvdG9jb2wgQnJvYWRjb20gcmVnaXN0ZXJlZAo+ID4gWyAgICA0
-Ljg3NzI3OV0gdWFydC1wbDAxMSAzZjIwMTAwMC5zZXJpYWw6IG5vIERNQSBwbGF0Zm9ybSBkYXRh
-Cj4gPiBbICAgIDYuOTUyMzgyXSBCbHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHhmYzE4IHR4IHRp
-bWVvdXQKPiA+IFsgICAxNS4xOTIyOThdIEJsdWV0b290aDogaGNpMDogQkNNOiBmYWlsZWQgdG8g
-d3JpdGUgdXBkYXRlIGJhdWRyYXRlICgtMTEwKQo+ID4gWyAgIDE1LjE5MjMxMl0gQmx1ZXRvb3Ro
-OiBoY2kwOiBGYWlsZWQgdG8gc2V0IGJhdWRyYXRlCj4gPiBbICAgMTUuMzE2NDE1XSBCbHVldG9v
-dGg6IGhjaTA6IEJDTTogY2hpcCBpZCA5NAo+ID4gWyAgIDE1LjMxODU2N10gQmx1ZXRvb3RoOiBo
-Y2kwOiBCQ006IGZlYXR1cmVzIDB4MmUKPiA+IFsgICAxNS4zNDE1MzhdIEJsdWV0b290aDogaGNp
-MDogQkNNNDM0MzBBMQo+ID4gWyAgIDE1LjM0MTU2MF0gQmx1ZXRvb3RoOiBoY2kwOiBCQ000MzQz
-MEExICgwMDEuMDAyLjAwOSkgYnVpbGQgMDAwMAo+ID4gWyAgIDE5LjExMjY3MF0gQmx1ZXRvb3Ro
-OiBoY2kwOiBCQ00gKDAwMS4wMDIuMDA5KSBidWlsZCAwMzYwCj4gPiBbICAyNzQuNzEzNzMyXSBC
-bHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHgwYzE0IHR4IHRpbWVvdXQKPiA+IFsgIDI3NC43MTQw
-ODVdIEJsdWV0b290aDogaGNpMDogRnJhbWUgcmVhc3NlbWJseSBmYWlsZWQgKC04NCkKPiA+IFsg
-IDMxNy4yNzU5NDFdIEJsdWV0b290aDogaGNpMDogbGFzdCBldmVudCBpcyBub3QgY21kIGNvbXBs
-ZXRlICgweDBmKQo+ID4gCj4gPiBJIGRvbid0IHNlZSB0aGVzZSBlcnJvcnMgb24gUlBpIFplcm8g
-Vy4gTWF5YmUgdGhlIHJlYXNvbiBmb3IgdGhpcyBpcyB0aGUgbGFjayBvZiBoYXJkd2FyZSBmbG93
-Y29udHJvbCBvbiBSUGkgMy4gT3Igc29tZSBvZiB0aGUgZG93bnN0cmVhbSBwYXRjaGVzIG9uIEJs
-dWVaIG11c3QgYmUgYWRhcHRlZCBmb3IgdGhlIGtlcm5lbCBbMV0uCj4gPiAKPiA+IEJ0dyB0aGUg
-YmNtNDM0MzggaXMgZGV0ZWN0ZWQgZXZlbiBhZnRlciB1bmxvYWRpbmcgYW5kIHJlbG9hZGluZyB0
-aGUgZHJpdmVyLiBCdXQgdGhlIHRpbWVvdXQgb2NjdXJzIGFsc28gb24gZHJpdmVyIHJlbG9hZC4g
-UmVkdWNpbmcgdGhlIGJhdWRyYXRlIHRvIDExNTIwMCBkb2Vzbid0IGhlbHAgaGVyZS4KPiAKPiBt
-YXliZSBpdCBuZWVkcyBzb21lIHRpbWUgYWZ0ZXIgc3dpdGNoaW5nIHRoZSBoYXJkd2FyZSBvbi4g
-SGF2ZSB5b3UgdHJpZWQgdG8gc2xlZXAgZm9yIGEgYml0IGF0IHRoZSBlbmQgb2YgYmNtX2dwaW9f
-c2V0X3Bvd2VyPwoKSSB3aWxsIHRyeSwgYnV0IHRoaXMgY291bGQgYWxzbyBiZSBhbiAiaXNzdWUi
-IG9mIHRoZSBncGlvIGV4cGFuZGVyIGRyaXZlci4gQUZBSUsgdGhlIGV4cGFuZGVyIGlzIGNvbm5l
-Y3RlZCB2aWEgSTJDIHRvIHRoZSBHUFUuIEluIGNhc2UgdGhlIG1haWxib3ggcmVwbHkgY29tZSBi
-ZWZvcmUgdGhlIEkyQyBjb21tYW5kIGhhcyBiZWVuIGhhbmRsZWQgYnkgdGhlIEdQSU8gZXhwYW5k
-ZXIsIHdlIGFyZSBydW5uaW5nIG91dCBvZiBzeW5jLgoKPiAKPiBDYW4geW91IGFsc28gZHVtcCB3
-aGVyZSB0aGUgRnJhbWUgcmVhc3NlbWJseSBmYWlscy4gT3IgY29ycmVsYXRlIHRoYXQgd2l0aCB0
-aGUgYnRtb24gdHJhY2Ugb2Ygd2hpY2ggcGFja2V0cyBtYWtlIGl0cyB0aHJvdWdoLiBUaGUgMHgw
-YzE0IGlzIFJlYWQgTG9jYWwgTmFtZSBhbmQgbWF5YmUgd2UgYWN0dWFsbHkgaGF2ZSBiaXQgZXJy
-b3JzIGhlcmUuCj4gCj4gSW4gdGhlb3J5IHdlIGNvdWxkIGFsc28gcnVuIHRoaXMgaGFyZHdhcmUg
-aW4gMy13aXJlIHByb3RvY29sIG1vZGUuIEkganVzdCBkbyBub3Qga25vdyBob3cgdG8gZ2V0IHRo
-YXQgb25lIHN0YXJ0ZWQsIGJ1dCBtYXliZSB0aGF0IHdvdWxkIGJlIGFuIG9wdGlvbiBpZiB0aGVy
-ZSBpcyBzb21lIHNvcnQgb2YgcGFja2V0IGxvc3MuIEhvd2V2ZXIgbWF5YmUgdGhpcyBpcyByZWFs
-bHkganVzdCBzb21lIHRpbWluZyBpc3N1ZSBmb3IgdGhlIGhhcmR3YXJlIHRvIHNldHRsZSBpdHMg
-YmF1ZCByYXRlLiBIb3dldmVyIEkgYXNzdW1lIHRoYXQgdGhlIGZpcm13YXJlIGxvYWRpbmcgaXRz
-ZWxmIHN1Y2NlZWRzIGhlcmUuCgpBY2NvcmRpbmcgdG8gdGhlIGxpbmsgZnJvbSBteSBsYXN0IGVt
-YWlsLCB0aGUgUlBpIDMgaXMgdXNpbmcgMy13aXJlIHByb3RvY29sIG1vZGUuIE1heWJlIHdlIHNo
-b3VsZCBkZXRlY3QgdGhlIHByZXNlbmNlIG9mICJ1YXJ0LWhhcy1ydHNjdHMiIGluIHRoZSBtYXN0
-ZXIgbm9kZT8gSW4gYWJzZW5jZSB3ZSBiZXR0ZXIgdXNlIDMtd2lyZS4KClN0ZWZhbgoKPiAKPiBS
-ZWdhcmRzCj4gCj4gTWFyY2VsCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 02/03/18 10:10, Vivek Gautam wrote:
+> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Finally add the device link between the master device and
+> smmu, so that the smmu gets runtime enabled/disabled only when the
+> master needs it. This is done from add_device callback which gets
+> called once when the master is added to the smmu.
+> 
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>   drivers/iommu/arm-smmu.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 3d6a1875431f..bb1ea82c1003 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -217,6 +217,9 @@ struct arm_smmu_device {
+>   
+>   	/* IOMMU core code handle */
+>   	struct iommu_device		iommu;
+> +
+> +	/* runtime PM link to master */
+> +	struct device_link *link;
+
+Just the one?
+
+>   };
+>   
+>   enum arm_smmu_context_fmt {
+> @@ -1470,10 +1473,26 @@ static int arm_smmu_add_device(struct device *dev)
+>   
+>   	iommu_device_link(&smmu->iommu, dev);
+>   
+> +	/*
+> +	 * Establish the link between smmu and master, so that the
+> +	 * smmu gets runtime enabled/disabled as per the master's
+> +	 * needs.
+> +	 */
+> +	smmu->link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+
+Maybe I've misunderstood how the API works, but AFAICS the second and 
+subsequent devices are all just going to overwrite (and leak) the link 
+of the previous one...
+
+> +	if (!smmu->link) {
+> +		dev_warn(smmu->dev, "Unable to create device link between %s and %s\n",
+> +			 dev_name(smmu->dev), dev_name(dev));
+> +		ret = -ENODEV;
+> +		goto out_unlink;
+> +	}
+> +
+>   	arm_smmu_rpm_put(smmu);
+>   
+>   	return 0;
+>   
+> +out_unlink:
+> +	iommu_device_unlink(&smmu->iommu, dev);
+> +	arm_smmu_master_free_smes(fwspec);
+>   out_rpm_put:
+>   	arm_smmu_rpm_put(smmu);
+>   out_cfg_free:
+> @@ -1496,6 +1515,8 @@ static void arm_smmu_remove_device(struct device *dev)
+>   	cfg  = fwspec->iommu_priv;
+>   	smmu = cfg->smmu;
+>   
+> +	device_link_del(smmu->link);
+
+...and equivalently you end up with a double-free (or more) here of a 
+link which may not have belonged to dev anyway.
+
+Robin.
+
+> +
+>   	ret = arm_smmu_rpm_get(smmu);
+>   	if (ret < 0)
+>   		return;
+> 
