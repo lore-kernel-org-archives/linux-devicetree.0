@@ -1,77 +1,102 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/7] ARM: dts: dra7: Enable x2 lane mode support
-Date: Wed, 7 Mar 2018 17:57:37 +0530
-Message-ID: <6698a64b-8f4d-53fd-ad93-36c742633d0c@ti.com>
-References: <20171219093133.16565-1-kishon@ti.com>
- <20180307120824.GC15139@e107981-ln.cambridge.arm.com>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH v4 02/10] scsi: hisi_sas: support the property of signal attenuation for v2 hw
+Date: Wed, 7 Mar 2018 20:25:06 +0800
+Message-ID: <1520425514-205565-3-git-send-email-john.garry@huawei.com>
+References: <1520425514-205565-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307120824.GC15139@e107981-ln.cambridge.arm.com>
+In-Reply-To: <1520425514-205565-1-git-send-email-john.garry@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com, hare@suse.de
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-On Wednesday 07 March 2018 05:38 PM, Lorenzo Pieralisi wrote:
-> On Tue, Dec 19, 2017 at 03:01:26PM +0530, Kishon Vijay Abraham I wrote:
->> Add properties to enable PCIe x2 lane mode since all dra7
->> based SoCs support x2 lane mode.
->>
->> However only dra76-evm has a slot which can support x2 lane
->> cards. Hence only enable x2 lane mode in dra76-evm.
->> (am571x-idk can support x2 lane mode but that makes usb port
->> not functional so not including the patch to enable
->> x2 mode in am571x-idk)
->>
->> Also included in this series is patch to enable PCIe configs
->> (both host and device) in omap2plus_defconfig and
->> multi_v7_defconfig
->>
->> In order to get x2 mode working [1] is required.
->>
->> However by keeping the older compatible, this series won't
->> break functionality if this series is merged before [1]
->>
->> [1] -> https://lkml.org/lkml/2017/12/19/175
->>
->> Kishon Vijay Abraham I (7):
->>   ARM: dts: dra7: Add properties to enable PCIe x2 lane mode
->>   ARM: dts: DRA74x: Use PCIe compatible specific to dra74
->>   ARM: dts: DRA72x: Use PCIe compatible specific to dra72
->>   ARM: dts: dra76-evm: Enable x2 PCIe lanes
->>   ARM: dts: dra7: Remove deprecated PCI compatible string
->>   ARM: omap2plus_defconfig: Enable CONFIG_PCI_DRA7XX (Host & Device
->>     modes)
->>   ARM: multi_v7_defconfig: Enable CONFIG_PCI_DRA7XX (Host & Device
->>     modes)
->>
->>  arch/arm/boot/dts/dra7.dtsi          |  9 +++++----
->>  arch/arm/boot/dts/dra72x.dtsi        | 12 ++++++++++++
->>  arch/arm/boot/dts/dra74x.dtsi        | 12 ++++++++++++
->>  arch/arm/boot/dts/dra76-evm.dts      | 16 ++++++++++++++++
->>  arch/arm/configs/multi_v7_defconfig  |  6 ++++++
->>  arch/arm/configs/omap2plus_defconfig |  8 ++++++++
->>  6 files changed, 59 insertions(+), 4 deletions(-)
-> 
-> Hi Kishon,
-> 
-> I would like to ask you please what are your expectations with this
-> series, which tree these changes are going to be queued through ?
-> 
-> Please let me know, thanks.
+The register SAS_PHY_CTRL is configured according to signal quality.
+The signal quality is calculated by signal attenuation of hardware
+physical link. It may be different for different PCB layout.
 
-Rob has given some comments on the dt [1]. I'll post the driver changes and
-once that gets accepted I'll post the dts changes. dts changes are generally
-merged via linux-omap tree maintained by Tony.
+So, in order to give better support to new board, this patch add
+support to reading the devicetree property, "hisilicon,signal-attenuation".
+Of course, we still keep an default value in driver to adapt old
+board.
 
-Thanks
-Kishon
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 39 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-https://lkml.org/lkml/2017/12/20/625
-> 
-> Lorenzo
-> 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 4ccb61e..42b3fd6 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -406,6 +406,17 @@ struct hisi_sas_err_record_v2 {
+ 	__le32 dma_rx_err_type;
+ };
+ 
++struct signal_attenuation_s {
++	u32 de_emphasis;
++	u32 preshoot;
++	u32 boost;
++};
++
++struct sig_atten_lu_s {
++	const struct signal_attenuation_s *att;
++	u32 sas_phy_ctrl;
++};
++
+ static const struct hisi_sas_hw_error one_bit_ecc_errors[] = {
+ 	{
+ 		.irq_msk = BIT(SAS_ECC_INTR_DQE_ECC_1B_OFF),
+@@ -1130,9 +1141,16 @@ static void phys_try_accept_stp_links_v2_hw(struct hisi_hba *hisi_hba)
+ 	}
+ }
+ 
++static const struct signal_attenuation_s x6000 = {9200, 0, 10476};
++static const struct sig_atten_lu_s sig_atten_lu[] = {
++	{ &x6000, 0x3016a68 },
++};
++
+ static void init_reg_v2_hw(struct hisi_hba *hisi_hba)
+ {
+ 	struct device *dev = hisi_hba->dev;
++	u32 sas_phy_ctrl = 0x30b9908;
++	u32 signal[3];
+ 	int i;
+ 
+ 	/* Global registers init */
+@@ -1176,9 +1194,28 @@ static void init_reg_v2_hw(struct hisi_hba *hisi_hba)
+ 	hisi_sas_write32(hisi_hba, AXI_AHB_CLK_CFG, 1);
+ 	hisi_sas_write32(hisi_hba, HYPER_STREAM_ID_EN_CFG, 1);
+ 
++	/* Get sas_phy_ctrl value to deal with TX FFE issue. */
++	if (!device_property_read_u32_array(dev, "hisilicon,signal-attenuation",
++					    signal, ARRAY_SIZE(signal))) {
++		for (i = 0; i < ARRAY_SIZE(sig_atten_lu); i++) {
++			const struct sig_atten_lu_s *lookup = &sig_atten_lu[i];
++			const struct signal_attenuation_s *att = lookup->att;
++
++			if ((signal[0] == att->de_emphasis) &&
++			    (signal[1] == att->preshoot) &&
++			    (signal[2] == att->boost)) {
++				sas_phy_ctrl = lookup->sas_phy_ctrl;
++				break;
++			}
++		}
++
++		if (i == ARRAY_SIZE(sig_atten_lu))
++			dev_warn(dev, "unknown signal attenuation values, using default PHY ctrl config\n");
++	}
++
+ 	for (i = 0; i < hisi_hba->n_phy; i++) {
+ 		hisi_sas_phy_write32(hisi_hba, i, PROG_PHY_LINK_RATE, 0x855);
+-		hisi_sas_phy_write32(hisi_hba, i, SAS_PHY_CTRL, 0x30b9908);
++		hisi_sas_phy_write32(hisi_hba, i, SAS_PHY_CTRL, sas_phy_ctrl);
+ 		hisi_sas_phy_write32(hisi_hba, i, SL_TOUT_CFG, 0x7d7d7d7d);
+ 		hisi_sas_phy_write32(hisi_hba, i, SL_CONTROL, 0x0);
+ 		hisi_sas_phy_write32(hisi_hba, i, TXID_AUTO, 0x2);
+-- 
+1.9.1
