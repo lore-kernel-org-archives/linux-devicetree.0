@@ -1,81 +1,44 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: Re: [PATCH v5 2/5] MIPS: mscc: add ocelot dtsi
-Date: Wed, 7 Mar 2018 15:56:07 +0000
-Message-ID: <20180307155605.GS4197@saruman>
-References: <20180306121607.1567-1-alexandre.belloni@bootlin.com>
- <20180306121607.1567-3-alexandre.belloni@bootlin.com>
- <20180307151753.GQ4197@saruman>
- <20180307152751.GM3035@piout.net>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
+Date: Wed, 07 Mar 2018 23:52:51 +0800
+Message-ID: <1520437971.3731.22.camel@flygoat.com>
+References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
+         <20170927151527.25570-4-prasannatsmkumar@gmail.com>
+         <20180306000832.GL4197@saruman>
+         <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
+         <20180307143541.GN4197@saruman>
+         <CANc+2y5wsvGWszu3pePYhs2wb1_AgPdjG+ugfOCzbZVfVHDMvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PhxIMoEr374zxJm2"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180307152751.GM3035@piout.net>
+In-Reply-To: <CANc+2y5wsvGWszu3pePYhs2wb1_AgPdjG+ugfOCzbZVfVHDMvw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, James Hogan <jhogan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+在 2018-03-07三的 20:35 +0530，PrasannaKumar Muralidharan写道：
+> Hi James,
+> 
+> Seems Jiaxun is interested in the board and is willing to help.
+> 
+> I have been told that Ingenic is focusing on IoT market and X1000 is
+> intended for IoT segment. I think that they would be selling several
+> 100Ks of chip over the coming years. But I feel Ingenic spends time
+> only on maintaining their Linux port which is usually based on very
+> old kernel version.
 
---PhxIMoEr374zxJm2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ingenic is going to release their XBrust2 core with it's products such
+as X2000 a few days later. Witch is a pure MIPS64r5 with MXU2(A
+superset of MIPS's MSA SIMD instruction set). The newest kernel port of
+X1000 maintain by Ingenic is based on Linux-4.4 [1]. After communicated
+with Ingenic, they said they are forcusing on China domestic market.
+But they're looking for partners to enter foriegn market. 
 
-On Wed, Mar 07, 2018 at 04:27:51PM +0100, Alexandre Belloni wrote:
-> On 07/03/2018 at 15:17:56 +0000, James Hogan wrote:
-> > On Tue, Mar 06, 2018 at 01:16:04PM +0100, Alexandre Belloni wrote:
-> > > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts=
-/mscc/ocelot.dtsi
-> > > new file mode 100644
-> > > index 000000000000..8c3210577410
-> > > --- /dev/null
-> > > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-> > > @@ -0,0 +1,117 @@
-> > > +//SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> >=20
-> > Niggle: there should be a space after // for consistency with other
-> > files. Same in patch 3.
-> >=20
->=20
-> Ah, yes...
->=20
-> If that is the only thing left, I can resend right away
-
-There are a couple of irqchip patches from v2 which have gone from the
-latest versions:
-https://patchwork.linux-mips.org/project/linux-mips/list/?series=3D568
-
-and the vendor prefix too from v4:
-https://patchwork.linux-mips.org/project/linux-mips/list/?series=3D856
-
-I presume they're all still relevant. Were you expecting the irqchip
-ones to go through MIPS too? We'd need an ack from the irqchip folk if
-so.
-
-Cheers
-James
-
---PhxIMoEr374zxJm2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqgC5UACgkQbAtpk944
-dnqpZxAAhdOHk4mQz5uDlvDsxv02A9Zn0D04DY5dAfGqYa6PoqNNrx7+Mj0rxo5s
-G0LweMNaHETxNlIae1bbOEF0FqT3jlRw4t6QQE4cdBYKq+v02rcmCCKlSPBLACSy
-gVpvSvl9QU3bJjMFErUTtboS3Ohn0SAC5TmSyVnUFxNGTCfZfT14/xLVE+nZLhBv
-R79kLdKwwWm/Cmk8yfSFAWEDygkSAPWoZ2VYgeE9DHbRMWTNUPNujF5HMug3j4rx
-suHmOpI1Hr/aP0eD5iY5YW5wXCeDqSCAQN8U6QVjttE9O1MZrWW3iKzSkuFc0f8h
-dgfDIj8sNazAO7rrvgwEMG8L4KiAD3fdwKazIxtkH941lJVJlOYPnXsG+i5agadw
-VpNJR/WvkQdXsUIOp5F9ETwSTwXbTti2DaoPqtOC7eC9fXFIx5Ie+5IaeZF3/uEv
-RKRkHcOrc2jxxQzF9SX9CM+n/ZDsr8zbfLSlsuDfZQEsDbLQr2ul69IqY7h5WOWH
-6coqoXWJESUG1mZwoLn62uschdbcALLFRoJ8Thm+u5moFkcXxaTRwPqerb9IqXLP
-X6eTgIyUvMIxCJNpMAv/W1dBZ3FRdL8IYzGbdHnRxfED+pF4T4IKpe4K6PRiJAK9
-gSfYeKJ3NCjAGMldOjtkzGkJ27o2wwpgXnpL2CcZKxXbSfoAXcg=
-=vF5I
------END PGP SIGNATURE-----
-
---PhxIMoEr374zxJm2--
+[1] https://pan.baidu.com/s/1o8MeYts (Well you can download from this
+Chinese website, ingenic have a gerrit but I don't have access to it.
+As my experience, it's hard to develop on Chinese-made chips wihout
+reading Chinese documents.)  
+> 
+> > 
