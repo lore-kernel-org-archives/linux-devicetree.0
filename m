@@ -1,108 +1,69 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Wed, 7 Mar 2018 12:18:33 +0000
-Message-ID: <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 1/5] iommu/arm-smmu: Destroy domain context in failure
+	path
+Date: Wed, 7 Mar 2018 12:20:45 +0000
+Message-ID: <d3500b33-8ce6-d767-7e9b-2fd75fea6cbb@arm.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+	<20180302101050.6191-2-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180223133742.26044-11-mylene.josserand@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180302101050.6191-2-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, maxime.ripard@bootlin.com, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/02/18 13:37, Mylène Josserand wrote:
-> On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
+On 02/03/18 10:10, Vivek Gautam wrote:
+> If we fail after initializing domain_context, we should destroy
+> the context to free up resources.
 
-Only on A7? Is that specific to your platform?
+Have another think about why the "problem" this patch caters for cannot 
+ever happen (hint: consider how domain->smmu is used in 
+arm_smmu_init_domain_context()). And then also about the really 
+catastrophically bad problem it actually introduces (hint: 
+"iommu_attach(domain, good_dev); iommu_attach(domain, bad_dev);")
 
-> It should be done by the bootloader but it is currently not the case,
-> even for boot CPU because this SoC is booting in secure mode.
-> It leads to an random offset value meaning that each CPU will have a
-> different time, which isn't working very well.
-> 
-> Add assembly code used for boot CPU and secondary CPU cores to make
-> sure that the CNTVOFF register is initialized.
-> 
-> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+Robin.
+
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
->  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
->  2 files changed, 25 insertions(+)
 > 
-> diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> index d5c97e945e69..605896251927 100644
-> --- a/arch/arm/mach-sunxi/headsmp.S
-> +++ b/arch/arm/mach-sunxi/headsmp.S
-> @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
->  	first: .word sunxi_mc_smp_first_comer - .
->  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
->  
-> +ENTRY(sunxi_init_cntvoff)
-> +	/*
-> +	 * CNTVOFF has to be initialized either from non-secure Hypervisor
-> +	 * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
-> +	 * then it should be handled by the secure code
-> +	 */
-> +	cps	#MON_MODE
-> +	mrc	p15, 0, r1, c1, c1, 0		/* Get Secure Config */
-> +	orr	r0, r1, #1
-> +	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
-> +	instr_sync
-
-Since these CPUs are all ARMv7, you can use isb directly. Nobody wants
-to see more of the CP15 barriers.
-
-> +	mov	r0, #0
-> +	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF = 0 */
-> +	instr_sync
-> +	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
-> +	instr_sync
-> +	cps	#SVC_MODE
-> +	ret	lr
-
-Given that this code is identical to the shmobile hack, it'd be good to
-make it common, one way or another.
-
-> +ENDPROC(sunxi_init_cntvoff)
-> +
->  #ifdef CONFIG_SMP
->  ENTRY(sunxi_boot)
->  	bl	sunxi_mc_smp_cluster_cache_enable
-> +	bl	sunxi_init_cntvoff
->  	b	secondary_startup
->  ENDPROC(sunxi_boot)
->  
-> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> index 5e9602ce1573..4bb041492b54 100644
-> --- a/arch/arm/mach-sunxi/sunxi.c
-> +++ b/arch/arm/mach-sunxi/sunxi.c
-> @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] = {
->  };
->  
->  extern void __init sun6i_reset_init(void);
-> +extern void sunxi_init_cntvoff(void);
-> +
->  static void __init sun6i_timer_init(void)
->  {
-> +	sunxi_init_cntvoff();
-> +
-
-It is slightly odd that some CPUs get initialized from the early asm
-code, and some others do a detour via some C code. I'm sure this could
-be made to work
-
->  	of_clk_init(NULL);
->  	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
->  		sun6i_reset_init();
+>   * New patch added in this series.
 > 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>   drivers/iommu/arm-smmu.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 69e7c60792a8..ffc152c36002 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1223,11 +1223,16 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   		dev_err(dev,
+>   			"cannot attach to SMMU %s whilst already attached to domain on SMMU %s\n",
+>   			dev_name(smmu_domain->smmu->dev), dev_name(smmu->dev));
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto destroy_domain;
+>   	}
+>   
+>   	/* Looks ok, so add the device to the domain */
+>   	return arm_smmu_domain_add_master(smmu_domain, fwspec);
+> +
+> +destroy_domain:
+> +	arm_smmu_destroy_domain_context(domain);
+> +	return ret;
+>   }
+>   
+>   static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+> 
