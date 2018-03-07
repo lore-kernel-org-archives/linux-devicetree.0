@@ -1,289 +1,217 @@
-From: Julia Cartwright <juliac@eso.teric.us>
-Subject: Re: [PATCH v2 1/8] [PATCH 1/8] drivers/peci: Add support for PECI
- bus driver core
-Date: Tue, 6 Mar 2018 21:19:07 -0600
-Message-ID: <20180307031907.GD1924@kryptos.localdomain>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
- <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+From: Matheus Castello <matheus@castello.eng.br>
+Subject: Re: [PATCH v2 2/3] pinctrl: bcm2835: Add support for generic pinctrl
+ binding
+Date: Tue, 6 Mar 2018 23:28:55 -0400
+Message-ID: <061d22c5-d955-fea0-6c35-79e7d2425bf6@castello.eng.br>
+References: <431699005.307231.1520086916739@email.1und1.de>
+ <1520216960-19880-1-git-send-email-matheus@castello.eng.br>
+ <1520216960-19880-3-git-send-email-matheus@castello.eng.br>
+ <87d10irtvt.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <87d10irtvt.fsf@anholt.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+To: Eric Anholt <eric@anholt.net>
+Cc: stefan.wahren@i2se.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 08:15:59AM -0800, Jae Hyun Yoo wrote:
-> This commit adds driver implementation for PECI bus into linux
-> driver framework.
+Hi Eric,
+
+thanks for reviewing it. I will send the v3 of the patch with your notes. 
+I will just wait for the Linus considerations.
+
+Best Regards
+Matheus Castello
+
+On 03/05/2018 07:21 PM, Eric Anholt wrote:
+> Matheus Castello <matheus@castello.eng.br> writes:
 > 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> ---
-[..]
-> +static int peci_locked_xfer(struct peci_adapter *adapter,
-> +			    struct peci_xfer_msg *msg,
-> +			    bool do_retry,
-> +			    bool has_aw_fcs)
-
-_locked generally means that this function is invoked with some critical
-lock held, what lock does the caller need to acquire before invoking
-this function?
-
-> +{
-> +	ktime_t start, end;
-> +	s64 elapsed_ms;
-> +	int rc = 0;
-> +
-> +	if (!adapter->xfer) {
-
-Is this really an optional feature of an adapter?  If this is not
-optional, then this check should be in place when the adapter is
-registered, not here.  (And it should WARN_ON(), because it's a driver
-developer error).
-
-> +		dev_dbg(&adapter->dev, "PECI level transfers not supported\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (in_atomic() || irqs_disabled()) {
-
-As Andrew mentioned, this is broken.
-
-You don't even need a might_sleep().  The locking functions you use here
-will already include a might_sleep() w/ CONFIG_DEBUG_ATOMIC_SLEEP.
-
-> +		rt_mutex_trylock(&adapter->bus_lock);
-> +		if (!rc)
-> +			return -EAGAIN; /* PECI activity is ongoing */
-> +	} else {
-> +		rt_mutex_lock(&adapter->bus_lock);
-> +	}
-> +
-> +	if (do_retry)
-> +		start = ktime_get();
-> +
-> +	do {
-> +		rc = adapter->xfer(adapter, msg);
-> +
-> +		if (!do_retry)
-> +			break;
-> +
-> +		/* Per the PECI spec, need to retry commands that return 0x8x */
-> +		if (!(!rc && ((msg->rx_buf[0] & DEV_PECI_CC_RETRY_ERR_MASK) ==
-> +			      DEV_PECI_CC_TIMEOUT)))
-> +			break;
-
-This is pretty difficult to parse.  Can you split it into two different
-conditions?
-
-> +
-> +		/* Set the retry bit to indicate a retry attempt */
-> +		msg->tx_buf[1] |= DEV_PECI_RETRY_BIT;
-
-Are you sure this bit is to be set in the _second_ byte of tx_buf?
-
-> +
-> +		/* Recalculate the AW FCS if it has one */
-> +		if (has_aw_fcs)
-> +			msg->tx_buf[msg->tx_len - 1] = 0x80 ^
-> +						peci_aw_fcs((u8 *)msg,
-> +							    2 + msg->tx_len);
-> +
-> +		/* Retry for at least 250ms before returning an error */
-> +		end = ktime_get();
-> +		elapsed_ms = ktime_to_ms(ktime_sub(end, start));
-> +		if (elapsed_ms >= DEV_PECI_RETRY_TIME_MS) {
-> +			dev_dbg(&adapter->dev, "Timeout retrying xfer!\n");
-> +			break;
-> +		}
-> +	} while (true);
-> +
-> +	rt_mutex_unlock(&adapter->bus_lock);
-> +
-> +	return rc;
-> +}
-> +
-> +static int peci_xfer(struct peci_adapter *adapter, struct peci_xfer_msg *msg)
-> +{
-> +	return peci_locked_xfer(adapter, msg, false, false);
-> +}
-> +
-> +static int peci_xfer_with_retries(struct peci_adapter *adapter,
-> +				  struct peci_xfer_msg *msg,
-> +				  bool has_aw_fcs)
-> +{
-> +	return peci_locked_xfer(adapter, msg, true, has_aw_fcs);
-> +}
-> +
-> +static int peci_scan_cmd_mask(struct peci_adapter *adapter)
-> +{
-> +	struct peci_xfer_msg msg;
-> +	u32 dib;
-> +	int rc = 0;
-> +
-> +	/* Update command mask just once */
-> +	if (adapter->cmd_mask & BIT(PECI_CMD_PING))
-> +		return 0;
-> +
-> +	msg.addr      = PECI_BASE_ADDR;
-> +	msg.tx_len    = GET_DIB_WR_LEN;
-> +	msg.rx_len    = GET_DIB_RD_LEN;
-> +	msg.tx_buf[0] = GET_DIB_PECI_CMD;
-> +
-> +	rc = peci_xfer(adapter, &msg);
-> +	if (rc < 0) {
-> +		dev_dbg(&adapter->dev, "PECI xfer error, rc : %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	dib = msg.rx_buf[0] | (msg.rx_buf[1] << 8) |
-> +	      (msg.rx_buf[2] << 16) | (msg.rx_buf[3] << 24);
-> +
-> +	/* Check special case for Get DIB command */
-> +	if (dib == 0x00) {
-> +		dev_dbg(&adapter->dev, "DIB read as 0x00\n");
-> +		return -1;
-> +	}
-> +
-> +	if (!rc) {
-
-You should change this to:
-
-	if (rc) {
-		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
-		return rc;
-	}
-
-And then leave the happy path below unindented.
-
-> +		/**
-> +		 * setting up the supporting commands based on minor rev#
-> +		 * see PECI Spec Table 3-1
-> +		 */
-> +		dib = (dib >> 8) & 0xF;
-> +
-> +		if (dib >= 0x1) {
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PKG_CFG);
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PKG_CFG);
-> +		}
-> +
-> +		if (dib >= 0x2)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_IA_MSR);
-> +
-> +		if (dib >= 0x3) {
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG_LOCAL);
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG_LOCAL);
-> +		}
-> +
-> +		if (dib >= 0x4)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG);
-> +
-> +		if (dib >= 0x5)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG);
-> +
-> +		if (dib >= 0x6)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_IA_MSR);
-> +
-> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_TEMP);
-> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_DIB);
-> +		adapter->cmd_mask |= BIT(PECI_CMD_PING);
-
-These cmd_mask updates are not done with any locking in mind.  Is this
-intentional?  Or: is synchronization not necessary because this is
-always done during enumeration prior to exposing the adapter to users?
-
-> +	} else {
-> +		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int peci_cmd_support(struct peci_adapter *adapter, enum peci_cmd cmd)
-> +{
-> +	if (!(adapter->cmd_mask & BIT(PECI_CMD_PING)) &&
-> +	    peci_scan_cmd_mask(adapter) < 0) {
-> +		dev_dbg(&adapter->dev, "Failed to scan command mask\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (!(adapter->cmd_mask & BIT(cmd))) {
-> +		dev_dbg(&adapter->dev, "Command %d is not supported\n", cmd);
-> +		return -EINVAL;
-> +	}
-
-It would be nicer if you did this check prior to dispatching to the
-various subfunctions (peci_ioctl_ping, peci_ioctl_get_dib, etc.).  In
-that way, these functions could just assume the adapter supports them.
-
-[..]
-> +static int peci_register_adapter(struct peci_adapter *adapter)
-> +{
-> +	int res = -EINVAL;
-> +
-> +	/* Can't register until after driver model init */
-> +	if (WARN_ON(!is_registered)) {
-
-Is this solving a problem you actually ran into?
-
-[.. skipped review due to fatigue ..]
-
-> +++ b/include/linux/peci.h
-> @@ -0,0 +1,97 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2018 Intel Corporation
-> +
-> +#ifndef __LINUX_PECI_H
-> +#define __LINUX_PECI_H
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/device.h>
-> +#include <linux/peci-ioctl.h>
-> +#include <linux/rtmutex.h>
-> +
-> +#define PECI_BUFFER_SIZE  32
-> +#define PECI_NAME_SIZE    32
-> +
-> +struct peci_xfer_msg {
-> +	u8	addr;
-> +	u8	tx_len;
-> +	u8	rx_len;
-> +	u8	tx_buf[PECI_BUFFER_SIZE];
-> +	u8	rx_buf[PECI_BUFFER_SIZE];
-> +} __attribute__((__packed__));
-
-The packed attribute has historically caused gcc to emit atrocious code,
-as it seems to assume packed implies members might not be naturally
-aligned.  Seeing as you're only working with u8s in this case, though,
-this shouldn't be a problem.
-
-> +struct peci_board_info {
-> +	char			type[PECI_NAME_SIZE];
-> +	u8			addr;	/* CPU client address */
-> +	struct device_node	*of_node;
-> +};
-> +
-> +struct peci_adapter {
-> +	struct module	*owner;
-> +	struct rt_mutex	bus_lock;
-
-Why an rt_mutex, instead of a regular mutex.  Do you explicitly need PI
-in mainline?
-
-> +	struct device	dev;
-> +	struct cdev	cdev;
-> +	int		nr;
-> +	char		name[PECI_NAME_SIZE];
-> +	int		(*xfer)(struct peci_adapter *adapter,
-> +				struct peci_xfer_msg *msg);
-> +	uint		cmd_mask;
-> +};
-> +
-> +#define to_peci_adapter(d) container_of(d, struct peci_adapter, dev)
-
-You can also do this with a static inline, which provides a marginally
-better error when screwed up.
-
-   Julia
+>> To keep driver up to date we add generic pinctrl binding support, which covers
+>> the features used in this driver and has additional node properties that this
+>> SoC has compatibility, so enabling future implementations of these properties
+>> without the need to create new node properties in the device trees.
+>>
+>> The logic of this change maintain the old brcm legacy binding support in order
+>> to keep the ABI stable.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>
+>> A brief explanation of what I did:
+>>
+>> Add pinconf-generic header for use the defines and pinctrl-generic API.
+>>
+>> Add dt-bindings pinctrl bcm2835 header to use functions selections and
+>> pulls definitions, which functions definitions where duplicated in the
+>> enum bcm2835_fsel, I removed the duplicate defines from enum.
+>>
+>> In the bcm2835_pctl_dt_node_to_map_pull I used the generic macro for
+>> pack the legacy param and arguments, since it will be unpacked along with
+>> generic properties that is packed with this same macro.
+>>
+>> In bcm2835_pctl_dt_node_to_map I thougt it was better, and simpler, to use
+>> pinctrl-generic parse code instead of parsing it inside the driver, so code
+>> first check for generic binding parse, if something is parsed then it is
+>> assumed that are using the new generic style, and when nothing is found then
+>> parse continues to search for legacy properties.
+>>
+>> In the bcm2835_pinconf_set was changed the unpack legacy by the generic, and
+>> was added a switch for the parameter tests, since pinctrl generic uses 3
+>> properties to define the states of the pull instead of one with arguments, that
+>> was the reason too that bcm2835_pull_config_set function was added, for reuse
+>> the code that set state of pull.
+>>
+>>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 83 +++++++++++++++++++++++------------
+>>  1 file changed, 54 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>> index 785c366..755ea90 100644
+>> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>> @@ -36,11 +36,13 @@
+>>  #include <linux/pinctrl/pinconf.h>
+>>  #include <linux/pinctrl/pinctrl.h>
+>>  #include <linux/pinctrl/pinmux.h>
+>> +#include <linux/pinctrl/pinconf-generic.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/seq_file.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/spinlock.h>
+>>  #include <linux/types.h>
+>> +#include <dt-bindings/pinctrl/bcm2835.h>
+>>
+>>  #define MODULE_NAME "pinctrl-bcm2835"
+>>  #define BCM2835_NUM_GPIOS 54
+>> @@ -213,14 +215,6 @@ static const char * const bcm2835_gpio_groups[] = {
+>>  };
+>>
+>>  enum bcm2835_fsel {
+>> -	BCM2835_FSEL_GPIO_IN = 0,
+>> -	BCM2835_FSEL_GPIO_OUT = 1,
+>> -	BCM2835_FSEL_ALT0 = 4,
+>> -	BCM2835_FSEL_ALT1 = 5,
+>> -	BCM2835_FSEL_ALT2 = 6,
+>> -	BCM2835_FSEL_ALT3 = 7,
+>> -	BCM2835_FSEL_ALT4 = 3,
+>> -	BCM2835_FSEL_ALT5 = 2,
+>>  	BCM2835_FSEL_COUNT = 8,
+>>  	BCM2835_FSEL_MASK = 0x7,
+>>  };
+>> @@ -714,7 +708,7 @@ static int bcm2835_pctl_dt_node_to_map_pull(struct bcm2835_pinctrl *pc,
+>>  	configs = kzalloc(sizeof(*configs), GFP_KERNEL);
+>>  	if (!configs)
+>>  		return -ENOMEM;
+>> -	configs[0] = BCM2835_PINCONF_PACK(BCM2835_PINCONF_PARAM_PULL, pull);
+>> +	configs[0] = PIN_CONF_PACKED(BCM2835_PINCONF_PARAM_PULL, pull);
+>>
+>>  	map->type = PIN_MAP_TYPE_CONFIGS_PIN;
+>>  	map->data.configs.group_or_pin = bcm2835_gpio_pins[pin].name;
+>> @@ -736,6 +730,12 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
+>>  	int i, err;
+>>  	u32 pin, func, pull;
+>>
+>> +	/* Check for generic binding in this node */
+>> +	err = pinconf_generic_dt_node_to_map_all(pctldev, np, map, num_maps);
+>> +	if (err || *num_maps)
+>> +		return err;
+>> +
+>> +	/* Generic binding did not find anything continue with legacy parse */
+>>  	pins = of_find_property(np, "brcm,pins", NULL);
+>>  	if (!pins) {
+>>  		dev_err(pc->dev, "%pOF: missing brcm,pins property\n", np);
+>> @@ -917,37 +917,62 @@ static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
+>>  	return -ENOTSUPP;
+>>  }
+>>
+>> +static void bcm2835_pull_config_set(struct bcm2835_pinctrl *pc,
+>> +		unsigned pin, unsigned arg)
+>> +{
+>> +	u32 off, bit;
+>> +
+>> +	off = GPIO_REG_OFFSET(pin);
+>> +	bit = GPIO_REG_SHIFT(pin);
+>> +
+>> +	bcm2835_gpio_wr(pc, GPPUD, arg & 3);
+>> +	/*
+>> +	* BCM2835 datasheet say to wait 150 cycles, but not of what.
+>> +	* But the VideoCore firmware delay for this operation
+>> +	* based nearly on the same amount of VPU cycles and this clock
+>> +	* runs at 250 MHz.
+>> +	*/
+>> +	udelay(1);
+>> +	bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
+>> +	udelay(1);
+>> +	bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
+>> +}
+>> +
+>>  static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
+>>  			unsigned pin, unsigned long *configs,
+>>  			unsigned num_configs)
+>>  {
+>>  	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+>> -	enum bcm2835_pinconf_param param;
+>> -	u16 arg;
+>> -	u32 off, bit;
+>> +	u16 param, arg;
+>>  	int i;
+>>
+>>  	for (i = 0; i < num_configs; i++) {
+>> -		param = BCM2835_PINCONF_UNPACK_PARAM(configs[i]);
+>> -		arg = BCM2835_PINCONF_UNPACK_ARG(configs[i]);
+>> +		param = configs[i] & 0xffUL;
+>> +		arg = configs[i] >> 8;
+> 
+> If you're removing the usage of BCM2835_PINCONF_PACK() and UNPACK, let's
+> delete those macros, too.  Also, it looks like there's
+> "pinconf_to_config_param()" for unpacking, instead of rolling your own.
+> 
+> Other than that, it looks good to me.  I'll let Linus comment on whether
+> this is handling the generic properties correctly.
+> 
+>>
+>> -		if (param != BCM2835_PINCONF_PARAM_PULL)
+>> -			return -EINVAL;
+>> +		switch (param) {
+>> +		/* Set legacy brcm,pull */
+>> +		case BCM2835_PINCONF_PARAM_PULL:
+>> +			bcm2835_pull_config_set(pc, pin, arg);
+>> +			break;
+>>
+>> -		off = GPIO_REG_OFFSET(pin);
+>> -		bit = GPIO_REG_SHIFT(pin);
+>> +		/* Set pull generic bindings */
+>> +		case PIN_CONFIG_BIAS_DISABLE:
+>> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_OFF);
+>> +			break;
+>>
+>> -		bcm2835_gpio_wr(pc, GPPUD, arg & 3);
+>> -		/*
+>> -		 * BCM2835 datasheet say to wait 150 cycles, but not of what.
+>> -		 * But the VideoCore firmware delay for this operation
+>> -		 * based nearly on the same amount of VPU cycles and this clock
+>> -		 * runs at 250 MHz.
+>> -		 */
+>> -		udelay(1);
+>> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
+>> -		udelay(1);
+>> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
+>> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+>> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_DOWN);
+>> +			break;
+>> +
+>> +		case PIN_CONFIG_BIAS_PULL_UP:
+>> +			bcm2835_pull_config_set(pc, pin, BCM2835_PUD_UP);
+>> +			break;
+>> +
+>> +		default:
+>> +			return -EINVAL;
+>> +
+>> +		} /* switch param type */
+>>  	} /* for each config */
+>>
+>>  	return 0;
+>> --
+>> 2.7.4
