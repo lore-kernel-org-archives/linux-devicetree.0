@@ -1,118 +1,85 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Wed, 7 Mar 2018 14:35:48 +0100
-Message-ID: <EDAE86B1-1392-481A-8AF8-886B004B180D@holtmann.org>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2071508922.276811.1520426568577@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
+Date: Wed, 7 Mar 2018 19:14:49 +0530
+Message-ID: <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
+References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
+ <20170927151527.25570-4-prasannatsmkumar@gmail.com> <20180306000832.GL4197@saruman>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180306000832.GL4197@saruman>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Hi James,
 
->>>>>>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/ttyAMA0).
->>>>>>> This allows to automatically insert the bcm43438 to the bluetooth
->>>>>>> subsystem instead of relying on patched userspace helpers (hciattach).
->>>>>>> 
->>>>>>> In order to keep a debug UART we need to switch to uart1.
->>>>>>> 
->>>>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>>>>>> ---
->>>>>>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
->>>>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
->>>>>>> 
->>>>>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->>>>>>> index cf53436..b7f79f1 100644
->>>>>>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->>>>>>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->>>>>>> @@ -131,6 +131,18 @@
->>>>>>> 
->>>>>>> &uart0 {
->>>>>>> 	pinctrl-names = "default";
->>>>>>> -	pinctrl-0 = <&uart0_gpio14>;
->>>>>>> +	pinctrl-0 = <&uart0_gpio32 &uart0_ctsrts_gpio30>;
->>>>>>> +	status = "okay";
->>>>>>> +
->>>>>>> +	bluetooth {
->>>>>>> +		compatible = "brcm,bcm43438-bt";
->>>>>>> +		max-speed = <2000000>;
->>>>>>> +		shutdown-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
->>>>>>> +	};
->>>>>>> +};
->>>>>> 
->>>>>> is the shutdown GPIO working as expected with this hardware. So even module unload and reload works fine?
->>>>> 
->>>>> Yes, unload and reload works fine. 
->>>>> 
->>>>>> Meaning we are getting back to the 115200 default baud rate on the UART?
->>>>> 
->>>>> I assume that, because reload works as expected. 
->>>> 
->>>> awesome. That is good news.
->>>> 
->>>> Since you said that the GPIO expander driver for the RPi 3 has been accepted, did you test it there as well? If so, then it would be good to get a patch that also provides shutdown-gpios for RPi 3.
->>> 
->>> after applying Loic's patch and the necessary patch for the RPi 3 dts file (see below), i will get this output:
->>> 
->>> [    4.873246] Bluetooth: HCI UART driver ver 2.3
->>> [    4.873260] Bluetooth: HCI UART protocol H4 registered
->>> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
->>> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
->>> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
->>> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
->>> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
->>> [   15.192312] Bluetooth: hci0: Failed to set baudrate
->>> [   15.316415] Bluetooth: hci0: BCM: chip id 94
->>> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
->>> [   15.341538] Bluetooth: hci0: BCM43430A1
->>> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
->>> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
->>> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
->>> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
->>> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
->>> 
->>> I don't see these errors on RPi Zero W. Maybe the reason for this is the lack of hardware flowcontrol on RPi 3. Or some of the downstream patches on BlueZ must be adapted for the kernel [1].
->>> 
->>> Btw the bcm43438 is detected even after unloading and reloading the driver. But the timeout occurs also on driver reload. Reducing the baudrate to 115200 doesn't help here.
->> 
->> maybe it needs some time after switching the hardware on. Have you tried to sleep for a bit at the end of bcm_gpio_set_power?
-> 
-> I will try, but this could also be an "issue" of the gpio expander driver. AFAIK the expander is connected via I2C to the GPU. In case the mailbox reply come before the I2C command has been handled by the GPIO expander, we are running out of sync.
-> 
->> 
->> Can you also dump where the Frame reassembly fails. Or correlate that with the btmon trace of which packets make its through. The 0x0c14 is Read Local Name and maybe we actually have bit errors here.
->> 
->> In theory we could also run this hardware in 3-wire protocol mode. I just do not know how to get that one started, but maybe that would be an option if there is some sort of packet loss. However maybe this is really just some timing issue for the hardware to settle its baud rate. However I assume that the firmware loading itself succeeds here.
-> 
-> According to the link from my last email, the RPi 3 is using 3-wire protocol mode. Maybe we should detect the presence of "uart-has-rtscts" in the master node? In absence we better use 3-wire.
+Thanks for reviewing this.
 
-currently we are using it in H:4 protocol mode. Using it in H:5 protocol mode (aka 3-wire) would require a lot of extra work. There is some work ongoing for the Realtek hardware that is actually always 3-wire.
+On 6 March 2018 at 05:38, James Hogan <jhogan@kernel.org> wrote:
+> On Wed, Sep 27, 2017 at 08:45:26PM +0530, PrasannaKumar Muralidharan wrote:
+>> Add initial Ingenic X1000 SoC support. Provide minimum necessary
+>> information to boot kernel to an initramfs userspace.
+>>
+>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> ---
+>>  arch/mips/boot/dts/ingenic/x1000.dtsi | 93 +++++++++++++++++++++++++++++++++++
+>>  arch/mips/jz4740/Kconfig              |  6 +++
+>>  arch/mips/jz4740/time.c               |  2 +-
+>>  3 files changed, 100 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+>
+> arch/mips/jz4780/setup.c, specifically get_board_mach_type() and
+> get_system_type() will need updating too.
 
-Maybe the Broadcom hardware auto-detects H:4 vs H:5 protocol and switches accordingly. You could try to work with the Realtek patches and see if we can get that going with the Broadcom chips as well.
+Missed it. Will make necessary changes.
 
-On the other hand, when not using the shutdown GPIO entry in the DT, does everything work fine for you?
+> Does X1000 use a different PRID, or is it basically just a JZ4780 core
+> with different SoC peripherals?
 
-Regards
+Yes X1000 does have a different PRID (PRID = 0x2ed1024f). X1000 has
+single CPU core so it is definitely not JZ4780.
 
-Marcel
+>> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> new file mode 100644
+>> index 0000000..abbb9ec
+>> --- /dev/null
+>> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> @@ -0,0 +1,93 @@
+>> +/*
+>> + * Copyright (C) 2016 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2. This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>
+> (these will need updating to use SPDX identifiers if you respin)
+
+Sure. Will take care while submitting next version.
+
+>> +     cgu: jz4780-cgu@10000000 {
+>
+> not sure jz4780 is appropriate here.
+
+No, it is not. Copy pasted from jz4780.dtsi but missed updating this.
+
+>> +             compatible = "ingenic,x1000-cgu";
+>> +             reg = <0x10000000 0x100>;
+>> +
+>> +             clocks = <&ext>, <&rtc>;
+>> +             clock-names = "ext", "rtc";
+>> +
+>> +             #clock-cells = <1>;
+>> +     };
+>
+> Cheers
+> James
+
+I used to get my code tested from Domink but I could not reach him for
+quite some time. Before buying the development board myself I would
+like to see if anyone can help me in testing. Do you have any contact
+with Ingenic who can help in testing this?
+
+Thanks,
+PrasannaKumar
