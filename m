@@ -1,362 +1,172 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v2 1/8] [PATCH 1/8] drivers/peci: Add support for PECI bus
- driver core
-Date: Wed, 7 Mar 2018 11:03:25 -0800
-Message-ID: <1bd83849-50f4-d857-d346-d5a5bd0ca569@linux.intel.com>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
- <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
- <20180307031907.GD1924@kryptos.localdomain>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Wed, 07 Mar 2018 11:08:24 -0800
+Message-ID: <87sh9bvh3r.fsf@anholt.net>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <438185389.274708.1520422108782@email.1und1.de>
+ <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
+ <2071508922.276811.1520426568577@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307031907.GD1924@kryptos.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julia Cartwright <juliac@eso.teric.us>
-Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============1656647127498595809=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2071508922.276811.1520426568577@email.1und1.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Marcel Holtmann <marcel@holtmann.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?utf-8?B?RnLDqWTDqXJpYw==?= Danis <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Julia,
+--===============1656647127498595809==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Thanks for sharing your time on reviewing it. Please see my inline answers.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Jae
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-On 3/6/2018 7:19 PM, Julia Cartwright wrote:
-> On Wed, Feb 21, 2018 at 08:15:59AM -0800, Jae Hyun Yoo wrote:
->> This commit adds driver implementation for PECI bus into linux
->> driver framework.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> ---
-> [..]
->> +static int peci_locked_xfer(struct peci_adapter *adapter,
->> +			    struct peci_xfer_msg *msg,
->> +			    bool do_retry,
->> +			    bool has_aw_fcs)
-> 
-> _locked generally means that this function is invoked with some critical
-> lock held, what lock does the caller need to acquire before invoking
-> this function?
-> 
+> Hi Marcel,
+> hi Loic,
+>
+>> Marcel Holtmann <marcel@holtmann.org> hat am 7. M=C3=A4rz 2018 um 13:12 =
+geschrieben:
+>>=20
+>>=20
+>> Hi Stefan,
+>>=20
+>> >>>>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/=
+ttyAMA0).
+>> >>>>> This allows to automatically insert the bcm43438 to the bluetooth
+>> >>>>> subsystem instead of relying on patched userspace helpers (hciatta=
+ch).
+>> >>>>>=20
+>> >>>>> In order to keep a debug UART we need to switch to uart1.
+>> >>>>>=20
+>> >>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> >>>>> ---
+>> >>>>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
+>> >>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
+>> >>>>>=20
+>> >>>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/b=
+oot/dts/bcm2835-rpi-zero-w.dts
+>> >>>>> index cf53436..b7f79f1 100644
+>> >>>>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>> >>>>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>> >>>>> @@ -131,6 +131,18 @@
+>> >>>>>=20
+>> >>>>> &uart0 {
+>> >>>>> 	pinctrl-names =3D "default";
+>> >>>>> -	pinctrl-0 =3D <&uart0_gpio14>;
+>> >>>>> +	pinctrl-0 =3D <&uart0_gpio32 &uart0_ctsrts_gpio30>;
+>> >>>>> +	status =3D "okay";
+>> >>>>> +
+>> >>>>> +	bluetooth {
+>> >>>>> +		compatible =3D "brcm,bcm43438-bt";
+>> >>>>> +		max-speed =3D <2000000>;
+>> >>>>> +		shutdown-gpios =3D <&gpio 45 GPIO_ACTIVE_HIGH>;
+>> >>>>> +	};
+>> >>>>> +};
+>> >>>>=20
+>> >>>> is the shutdown GPIO working as expected with this hardware. So eve=
+n module unload and reload works fine?
+>> >>>=20
+>> >>> Yes, unload and reload works fine.=20
+>> >>>=20
+>> >>>> Meaning we are getting back to the 115200 default baud rate on the =
+UART?
+>> >>>=20
+>> >>> I assume that, because reload works as expected.=20
+>> >>=20
+>> >> awesome. That is good news.
+>> >>=20
+>> >> Since you said that the GPIO expander driver for the RPi 3 has been a=
+ccepted, did you test it there as well? If so, then it would be good to get=
+ a patch that also provides shutdown-gpios for RPi 3.
+>> >=20
+>> > after applying Loic's patch and the necessary patch for the RPi 3 dts =
+file (see below), i will get this output:
+>> >=20
+>> > [    4.873246] Bluetooth: HCI UART driver ver 2.3
+>> > [    4.873260] Bluetooth: HCI UART protocol H4 registered
+>> > [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
+>> > [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
+>> > [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
+>> > [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
+>> > [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (=
+-110)
+>> > [   15.192312] Bluetooth: hci0: Failed to set baudrate
+>> > [   15.316415] Bluetooth: hci0: BCM: chip id 94
+>> > [   15.318567] Bluetooth: hci0: BCM: features 0x2e
+>> > [   15.341538] Bluetooth: hci0: BCM43430A1
+>> > [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
+>> > [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
+>> > [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
+>> > [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
+>> > [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
+>> >=20
+>> > I don't see these errors on RPi Zero W. Maybe the reason for this is t=
+he lack of hardware flowcontrol on RPi 3. Or some of the downstream patches=
+ on BlueZ must be adapted for the kernel [1].
+>> >=20
+>> > Btw the bcm43438 is detected even after unloading and reloading the dr=
+iver. But the timeout occurs also on driver reload. Reducing the baudrate t=
+o 115200 doesn't help here.
+>>=20
+>> maybe it needs some time after switching the hardware on. Have you tried=
+ to sleep for a bit at the end of bcm_gpio_set_power?
+>
+> I will try, but this could also be an "issue" of the gpio expander
+> driver. AFAIK the expander is connected via I2C to the GPU. In case
+> the mailbox reply come before the I2C command has been handled by the
+> GPIO expander, we are running out of sync.
 
-I intended to show that this function has a mutex locking inside for 
-serialization of PECI data transactions from multiple callers, but as 
-you commented out below, the mutex protection scope should be adjusted 
-to make that covers the peci_scan_cmd_mask() function too. I'll rewrite 
-the mutex protection scope then this function will be in the locked scope.
+The mailbox command for setting GPIO state is synchronous in terms of
+sending the i2c command to the GPIO expander HW.
 
->> +{
->> +	ktime_t start, end;
->> +	s64 elapsed_ms;
->> +	int rc = 0;
->> +
->> +	if (!adapter->xfer) {
-> 
-> Is this really an optional feature of an adapter?  If this is not
-> optional, then this check should be in place when the adapter is
-> registered, not here.  (And it should WARN_ON(), because it's a driver
-> developer error).
-> 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I agree with you. I'll move this code into the peci_register_adapter() 
-function.
+-----BEGIN PGP SIGNATURE-----
 
->> +		dev_dbg(&adapter->dev, "PECI level transfers not supported\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (in_atomic() || irqs_disabled()) {
-> 
-> As Andrew mentioned, this is broken.
-> 
-> You don't even need a might_sleep().  The locking functions you use here
-> will already include a might_sleep() w/ CONFIG_DEBUG_ATOMIC_SLEEP.
-> 
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqgOKgACgkQtdYpNtH8
+nuhW/BAAhTztqF2dqtUznqHBnGcWKOAB5jcf5LOlL23Iv4xUBRRtm7u2Vy1Pg9Rf
+wl3A/R93Vsx06r6qx4DJsaLtp+akBeSc0+j9YBQiySTFB2lG6rYp8CQlfUr+IM0y
+5UzP41+Bngx017pAsx7lwXF6h3gkek1ldlhrECQt/HjEehU5bjSBst47WQGswC7d
+3CWSDzPQtOqRAp1N9iCNfJgopep+OprqDPVnWnhu92GfYsF52VUrGSpa8uZezBjp
+5rB8SgZ5uhxmfpG7Ux28O+D1e4FViD6GOcTJrxydK+f+O4ad7rE4PyE68ATN4Az6
+zW88bYzxHCgQSRbO+bXdyoJEyXsWu7h1rGi6eQNw4tr89MA+pwyQADqoTbY31JgX
+j9/AVwLecqdVyxOaHW9wJx5hvEChB8rJFuTfKNmcEA4zkdIFG+F6eJuGVkQuuxif
+D8dZHSGaaDDZ0l/Too+/Q+W2it1gonioQIzAzA9ANxGQsxIbLc4phXlsBpHA4jIt
+TivF/QaCyNc/8+f0KGOmrOvXMDLNUlu+KhqX2jIDzaL7KgrDNFbLfWRcPLcoASvs
+VOdCl+HCBqTmwON7Ru+XR2dChcg+ckrY2IFHXzrgbMBZd11ru5HRPc9zmdms62SD
+4XfFNwflLtSjYvcUwtR8pJAbienbKFRudGGsHIhY1J+gVhiZH6g=
+=w778
+-----END PGP SIGNATURE-----
+--=-=-=--
 
-Thanks for letting me know that. I'll drop that checking code and 
-might_sleep() too.
 
->> +		rt_mutex_trylock(&adapter->bus_lock);
->> +		if (!rc)
->> +			return -EAGAIN; /* PECI activity is ongoing */
->> +	} else {
->> +		rt_mutex_lock(&adapter->bus_lock);
->> +	}
->> +
->> +	if (do_retry)
->> +		start = ktime_get();
->> +
->> +	do {
->> +		rc = adapter->xfer(adapter, msg);
->> +
->> +		if (!do_retry)
->> +			break;
->> +
->> +		/* Per the PECI spec, need to retry commands that return 0x8x */
->> +		if (!(!rc && ((msg->rx_buf[0] & DEV_PECI_CC_RETRY_ERR_MASK) ==
->> +			      DEV_PECI_CC_TIMEOUT)))
->> +			break;
-> 
-> This is pretty difficult to parse.  Can you split it into two different
-> conditions?
-> 
+--===============1656647127498595809==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Sure. I'll split it out.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
->> +
->> +		/* Set the retry bit to indicate a retry attempt */
->> +		msg->tx_buf[1] |= DEV_PECI_RETRY_BIT;
-> 
-> Are you sure this bit is to be set in the _second_ byte of tx_buf?
-> 
-
-Yes, I'm pretty sure. The first byte contains a PECI command value and 
-the second byte contains 'HostID[7:1] & Retry[0]' value.
-
->> +
->> +		/* Recalculate the AW FCS if it has one */
->> +		if (has_aw_fcs)
->> +			msg->tx_buf[msg->tx_len - 1] = 0x80 ^
->> +						peci_aw_fcs((u8 *)msg,
->> +							    2 + msg->tx_len);
->> +
->> +		/* Retry for at least 250ms before returning an error */
->> +		end = ktime_get();
->> +		elapsed_ms = ktime_to_ms(ktime_sub(end, start));
->> +		if (elapsed_ms >= DEV_PECI_RETRY_TIME_MS) {
->> +			dev_dbg(&adapter->dev, "Timeout retrying xfer!\n");
->> +			break;
->> +		}
->> +	} while (true);
->> +
->> +	rt_mutex_unlock(&adapter->bus_lock);
->> +
->> +	return rc;
->> +}
->> +
->> +static int peci_xfer(struct peci_adapter *adapter, struct peci_xfer_msg *msg)
->> +{
->> +	return peci_locked_xfer(adapter, msg, false, false);
->> +}
->> +
->> +static int peci_xfer_with_retries(struct peci_adapter *adapter,
->> +				  struct peci_xfer_msg *msg,
->> +				  bool has_aw_fcs)
->> +{
->> +	return peci_locked_xfer(adapter, msg, true, has_aw_fcs);
->> +}
->> +
->> +static int peci_scan_cmd_mask(struct peci_adapter *adapter)
->> +{
->> +	struct peci_xfer_msg msg;
->> +	u32 dib;
->> +	int rc = 0;
->> +
->> +	/* Update command mask just once */
->> +	if (adapter->cmd_mask & BIT(PECI_CMD_PING))
->> +		return 0;
->> +
->> +	msg.addr      = PECI_BASE_ADDR;
->> +	msg.tx_len    = GET_DIB_WR_LEN;
->> +	msg.rx_len    = GET_DIB_RD_LEN;
->> +	msg.tx_buf[0] = GET_DIB_PECI_CMD;
->> +
->> +	rc = peci_xfer(adapter, &msg);
->> +	if (rc < 0) {
->> +		dev_dbg(&adapter->dev, "PECI xfer error, rc : %d\n", rc);
->> +		return rc;
->> +	}
->> +
->> +	dib = msg.rx_buf[0] | (msg.rx_buf[1] << 8) |
->> +	      (msg.rx_buf[2] << 16) | (msg.rx_buf[3] << 24);
->> +
->> +	/* Check special case for Get DIB command */
->> +	if (dib == 0x00) {
->> +		dev_dbg(&adapter->dev, "DIB read as 0x00\n");
->> +		return -1;
->> +	}
->> +
->> +	if (!rc) {
-> 
-> You should change this to:
-> 
-> 	if (rc) {
-> 		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
-> 		return rc;
-> 	}
-> 
-> And then leave the happy path below unindented.
-> 
-
-Agreed. That would be neater. Will rewrite it. Thanks!
-
->> +		/**
->> +		 * setting up the supporting commands based on minor rev#
->> +		 * see PECI Spec Table 3-1
->> +		 */
->> +		dib = (dib >> 8) & 0xF;
->> +
->> +		if (dib >= 0x1) {
->> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PKG_CFG);
->> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PKG_CFG);
->> +		}
->> +
->> +		if (dib >= 0x2)
->> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_IA_MSR);
->> +
->> +		if (dib >= 0x3) {
->> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG_LOCAL);
->> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG_LOCAL);
->> +		}
->> +
->> +		if (dib >= 0x4)
->> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG);
->> +
->> +		if (dib >= 0x5)
->> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG);
->> +
->> +		if (dib >= 0x6)
->> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_IA_MSR);
->> +
->> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_TEMP);
->> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_DIB);
->> +		adapter->cmd_mask |= BIT(PECI_CMD_PING);
-> 
-> These cmd_mask updates are not done with any locking in mind.  Is this
-> intentional?  Or: is synchronization not necessary because this is
-> always done during enumeration prior to exposing the adapter to users?
-> 
-
-Thanks for the pointing it out. This function should be done in a locked 
-scope as you said. I'll adjust mutex protection scope to make that 
-covers this function as well.
-
->> +	} else {
->> +		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
->> +	}
->> +
->> +	return rc;
->> +}
->> +
->> +static int peci_cmd_support(struct peci_adapter *adapter, enum peci_cmd cmd)
->> +{
->> +	if (!(adapter->cmd_mask & BIT(PECI_CMD_PING)) &&
->> +	    peci_scan_cmd_mask(adapter) < 0) {
->> +		dev_dbg(&adapter->dev, "Failed to scan command mask\n");
->> +		return -EIO;
->> +	}
->> +
->> +	if (!(adapter->cmd_mask & BIT(cmd))) {
->> +		dev_dbg(&adapter->dev, "Command %d is not supported\n", cmd);
->> +		return -EINVAL;
->> +	}
-> 
-> It would be nicer if you did this check prior to dispatching to the
-> various subfunctions (peci_ioctl_ping, peci_ioctl_get_dib, etc.).  In
-> that way, these functions could just assume the adapter supports them.
-> 
-
-Agreed. I'll drop all individual calls from subfunctions and will call 
-it from peci_command().
-
-> [..]
->> +static int peci_register_adapter(struct peci_adapter *adapter)
->> +{
->> +	int res = -EINVAL;
->> +
->> +	/* Can't register until after driver model init */
->> +	if (WARN_ON(!is_registered)) {
-> 
-> Is this solving a problem you actually ran into?
-> 
-
-Generally, an adapter driver registration will be happened after the 
-PECI bus registration because peci_init uses postcore_initcall, but in 
-case of incorrect implementation of an adapter driver which uses
-a preceding postcore_initcall or a core_initcall as its module init, 
-then an adapter registration would be prior to bus registration. This 
-code is an exceptional case handling for that to warn the incorrect 
-adapter driver implementation.
-
-> [.. skipped review due to fatigue ..]
-> 
->> +++ b/include/linux/peci.h
->> @@ -0,0 +1,97 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2018 Intel Corporation
->> +
->> +#ifndef __LINUX_PECI_H
->> +#define __LINUX_PECI_H
->> +
->> +#include <linux/cdev.h>
->> +#include <linux/device.h>
->> +#include <linux/peci-ioctl.h>
->> +#include <linux/rtmutex.h>
->> +
->> +#define PECI_BUFFER_SIZE  32
->> +#define PECI_NAME_SIZE    32
->> +
->> +struct peci_xfer_msg {
->> +	u8	addr;
->> +	u8	tx_len;
->> +	u8	rx_len;
->> +	u8	tx_buf[PECI_BUFFER_SIZE];
->> +	u8	rx_buf[PECI_BUFFER_SIZE];
->> +} __attribute__((__packed__));
-> 
-> The packed attribute has historically caused gcc to emit atrocious code,
-> as it seems to assume packed implies members might not be naturally
-> aligned.  Seeing as you're only working with u8s in this case, though,
-> this shouldn't be a problem.
-> 
-
-It should be a packed struct because it is also being used for CRC8 
-calculation which is treating it as a contiguous byte array.
-
->> +struct peci_board_info {
->> +	char			type[PECI_NAME_SIZE];
->> +	u8			addr;	/* CPU client address */
->> +	struct device_node	*of_node;
->> +};
->> +
->> +struct peci_adapter {
->> +	struct module	*owner;
->> +	struct rt_mutex	bus_lock;
-> 
-> Why an rt_mutex, instead of a regular mutex.  Do you explicitly need PI
-> in mainline?
-> 
-
-Currently this implementation has only a temperature monitoring sideband 
-feature but other sideband features such as CPU error detection and 
-crash dump will be implemented later, and those additional sideband 
-features should have higher priority than the temperature monitoring 
-feature so it is the reason why I used an rt_mutex.
-
->> +	struct device	dev;
->> +	struct cdev	cdev;
->> +	int		nr;
->> +	char		name[PECI_NAME_SIZE];
->> +	int		(*xfer)(struct peci_adapter *adapter,
->> +				struct peci_xfer_msg *msg);
->> +	uint		cmd_mask;
->> +};
->> +
->> +#define to_peci_adapter(d) container_of(d, struct peci_adapter, dev)
-> 
-> You can also do this with a static inline, which provides a marginally
-> better error when screwed up.
-> 
-
-Agreed. That would be more helpful for debugging in debug build. I'll 
-rewrite the macro to a static inline like below:
-
-static inline struct peci_adapter *to_peci_adapter(void *d)
-{
-	return container_of(d, struct peci_adapter, dev);
-}
-
->     Julia
-> 
+--===============1656647127498595809==--
