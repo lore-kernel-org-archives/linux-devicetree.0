@@ -1,140 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 05/10] dt-bindings: gpio: Add gpio nodes for Actions
- S900 SoC
-Date: Wed, 7 Mar 2018 13:52:33 -0600
-Message-ID: <20180307195233.bstixvrmwo4ozino@rob-hp-laptop>
-References: <20180302035045.14660-1-manivannan.sadhasivam@linaro.org>
- <20180302035045.14660-6-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/6] dt-bindings: soc: Add a binding for the Broadcom
+ VCHIQ services.
+Date: Wed, 7 Mar 2018 14:00:29 -0600
+Message-ID: <CAL_Jsq+1-9-RGfzPimYwCokEZx1vef_PX5rkp-c8s6fUchg=ag@mail.gmail.com>
+References: <20180307185716.17449-1-eric@anholt.net> <20180307185716.17449-3-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180302035045.14660-6-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180307185716.17449-3-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+To: Eric Anholt <eric@anholt.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 09:20:40AM +0530, Manivannan Sadhasivam wrote:
-> Add gpio nodes for Actions Semi S900 SoC.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Wed, Mar 7, 2018 at 12:57 PM, Eric Anholt <eric@anholt.net> wrote:
+> The VCHIQ communication channel can be provided by BCM283x and Capri
+> SoCs, to communicate with the VPU-side OS services.
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
->  .../devicetree/bindings/gpio/actions,owl-gpio.txt  | 95 ++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+>
+> v2: dropped firmware property, added cache-line-size.
+>
+>  .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
 > new file mode 100644
-> index 000000000000..d2939ca6cfaf
+> index 000000000000..cdef4abc5e47
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> @@ -0,0 +1,95 @@
-> +* Actions Semi OWL GPIO controller bindings
-> +
-> +The GPIOs are organized as individual banks/ports with variable number
-> +of GPIOs. Each bank is represented as an individual GPIO controller.
+> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+> @@ -0,0 +1,28 @@
+> +Broadcom VCHIQ firmware services
 > +
 > +Required properties:
-> +- compatible            : Should be "actions,s900-gpio"
-> +- reg                   : Address and range of the GPIO controller registers.
-> +- gpio-controller       : Marks the device node as a GPIO controller.
-> +- #gpio-cells           : Should be <2>. The first cell is the gpio number
-> +                          and the second cell is used to specify optional
-> +                          parameters.
-> +- interrupt-controller  : Marks the device node as an interrupt controller.
-> +- #interrupt-cells      : Specifies the number of cells needed to encode an
-> +                          interrupt.  Shall be set to 2.  The first cell
-> +                          defines the interrupt number, the second encodes
-> +                          the trigger flags described in
-> +                          bindings/interrupt-controller/interrupts.txt
+> +
+> +- compatible:  Should be "brcm,bcm2835-vchiq"
+> +- reg:         Physical base address and length of the doorbell register pair
+> +- interrupts:  The interrupt number
+> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
 > +
 > +Optional properties:
-> +- gpio-ranges           : Mapping between GPIO and pinctrl
 > +
-> +Note: Each GPIO port should have an alias correctly numbered in "aliases"
-> +node.
+> +- cache-line-size:
+> +               Size of L2 cache lines.  The VPU firmware detects
+> +                 this property and overrides it with the actual L2
+> +                 cache line size it's using when loading the
+> +                 device-tree.  Determines the required alignment of
+> +                 offsets/sizes of VCHIQ pagelists.  If missing, the
+> +                 firmware assumes an older kernel using 32-byte
+> +                 alignment.
 
-Why? Please don't use aliases for gpios.
+How is this a VCHIQ property? This is a standard property for cache
+nodes, but this is not a cache node.
+
+Is it really a problem to just use a fixed maximum alignment? That
+seems to be good enough for all the rest of the kernel.
 
 > +
-> +Examples:
+> +Example:
 > +
-> +aliases {
-> +        gpio0 = &gpioa;
-> +        gpio1 = &gpiob;
-> +        gpio2 = &gpioc;
-> +        gpio3 = &gpiod;
-> +        gpio4 = &gpioe;
-> +        gpio5 = &gpiof;
+> +vchiq@7e00b840 {
+
+mailbox@...
+
+> +       compatible = "brcm,bcm2835-vchiq";
+> +       reg = <0x7e00b840 0xf>;
+> +       interrupts = <0 2>;
+> +       cache-line-size: <32>;
 > +};
-> +
-> +       gpioa: gpioa@e01b0000 {
-
-Use generic node names (gpio).
-
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 0 32>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpiob: gpiob@e01b0000 {
-
-Ah, but your are duplicating addresses here which you shouldn't do 
-either. These should be all one node if you can avoid overlapping.
-
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 32 32>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpioc: gpioc@e01b0000 {
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 64 12>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpiod: gpiod@e01b0000 {
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 76 30>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpioe: gpioe@e01b0000 {
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 106 32>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> +
-> +       gpiof: gpiof@e01b0000 {
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               gpio-ranges = <&pinctrl 0 138 8>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +       };
-> -- 
-> 2.14.1
-> 
+> --
+> 2.16.2
+>
