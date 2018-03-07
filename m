@@ -1,84 +1,99 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
-Date: Wed, 7 Mar 2018 10:57:21 +0000
-Message-ID: <20180307105721.yxrun3xztrgun4me@dell>
-References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
- <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
- <20180307083538.vicxhbu72jex7zi6@dell>
- <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
+Date: Wed, 7 Mar 2018 16:29:38 +0530
+Message-ID: <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
+References: <cover.1520274879.git.amit.kucheria@linaro.org>
+ <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
+ <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
+In-Reply-To: <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrice CHOTARD <patrice.chotard@st.com>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Ram Chandrasekar <rkumbako@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Mar 2018, Patrice CHOTARD wrote:
+On Tue, Mar 6, 2018 at 6:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 05/03/18 18:36, Amit Kucheria wrote:
+>> From: Ram Chandrasekar <rkumbako@codeaurora.org>
+>>
+>> There is currently no way for the governor to be selected for each thermal
+>> zone in devicetree.
+>
+> How is that any different from cpufreq, cpuidle or devfreq subsystems ?
 
-> Hi Lee
-> 
-> On 03/07/2018 09:35 AM, Lee Jones wrote:
-> > On Mon, 05 Mar 2018, Alexandre Torgue wrote:
-> > 
-> >> Hi Patrice,
-> >>
-> >> On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
-> >>> From: Patrice Chotard <patrice.chotard@st.com>
-> >>>
-> >>> This series adds :
-> >>>    _ SDIO pins definition for STM32F7 SoCs family
-> >>>    _ add sdio1 DT entry for STM32F746 Discovery board
-> >>>    _ add sdio1 DT entry for STM32F746 Evaluation board
-> >>>    _ add sdio1 DT entry for STM32F769 Discovery board
-> >>>    _ add SDMMC2 entry in stm32f7-rcc.h
-> >>>    _ replace sdio2 hard coded value in stm32f746.dtsi
-> >>>
-> >>> v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
-> >>>         and update board dts files accordingly.
-> >>>
-> >>>
-> >>> Patrice Chotard (6):
-> >>>     ARM: dts: stm32: Add sdio pins definition for stm32f7
-> >>>     ARM: dts: stm32: Enable sdio1 for stm32f746-disco
-> >>>     ARM: dts: stm32: Enable sdio1 for stm32f746-eval
-> >>>     ARM: dts: stm32: Enable sdio1 for stm32f769-disco
-> >>>     dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
-> >>>     ARM: dts: stm32: Fix sdio2 rcc hard coded value
-> >>>
-> >>>    arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
-> >>>    arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
-> >>>    arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
-> >>>    arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
-> >>>    arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
-> >>>    include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
-> >>>    6 files changed, 119 insertions(+), 1 deletion(-)
-> >>>
-> >> Series applied on stm32-next.
-> > 
-> > Even the MFD patch?
-> > 
-> 
-> Yes, the MFD part has been taken by Alex.
+Cpufreq/cpuidle are designed to control a single parameter while
+thermal framework is trying to mitigate heat from several disparate
+sources that are throttled in different ways. Besides, cpufreq/cpuidle
+have somewhat mature governors. Cpuidle has only one governor (for
+tickless) - menu governor, cpufreq has ondemand in mainline, replaced
+by interactive in android and hopefully soon both will be replaced by
+schedutil.
 
-You should really wait for all of the appropriate Acks.  This helps to
-avoid possible merge conflicts when Linus starts pulling branches
-during the merge-window.
+Badly configured cpufreq/cpuidle/devfreq only leads to wasted power,
+while badly configured thermal zone leads to the loss of operation
+e.g. reboots, too hot to touch, etc.
 
-As it happens, I do not think Alex's tree and MFD will conflict this
-time, but it's something to bear in mind in the future.
+>> This results in the default governor being used for all
+>> thermal zones even though no such restriction exists in the core code.
+>>
+>
+> What restrictions ?
 
-Please add my:
+I said "no such restriction exists". IOW, the core code does allow the
+governor to be changed.
 
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+>> Add support for specifying the thermal governor to be used for a thermal
+>> zone in the devicetree.
+>
+> Then what prevents us from doing the same for other subsystems with so
+> called /inefficient default/ governors ?
 
-... to the patch.
+Nothing? :-)
 
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+It depends on how closely we want the board DT to represent a
+production-ready setup. If a platform maintainer wants to ship a
+well-tested configuration in DT, is that really a problem?
+
+If however, you are requiring them to ship magic runes for userspace
+daemons (e.g. per-board thermald config) to tweak the various
+governors in sysfs, it takes a bit more work to get to a
+production-ready setup.
+
+We should of course continue to improve our govenors to arrive at the
+one true governor, but that'll take some time and might never even
+happen in the case of thermal IMHO.
+
+>> The devicetree config should specify the governor
+>> name as a string that matches any available governors. If not specified, we
+>> maintain the current behaviour of using the default governor.
+>
+> If one is specified, can the user change it from sysfs ? If
+> yes, then why do we need this binding at all ? If no, we are basically
+> restricting, then what would happen if the DT was shipped with wrong
+> governor specified because the firmware author didn't know about any
+> other governor ?
+
+The governor can be changed from sysfs today. So it is all override-able.
+
+I guess your main worry is an unmodifiable DT with this option being
+shipped in firmware, right? That is a fair point, though that could be
+worked around from sysfs.
+
+> IMO, having this in DT is bad idea as it may cause more issues than
+> gain. We already have sysfs support like other PM subsystems and
+> userspace can deal with it.
+
+As mentioned above, I think thermal is a bit special because bad
+configuration may lead to loss of operation. But iff we're strictly
+enforcing the rule about no policy in board DTs, then I concede.
+
+Personally, I'd like mainline board DTs to have enough policy to
+provide a stable system so I don't have to futz around with userspace
+to set it all up correctly (in 3 different distros).
+
+Regards,
+Amit
