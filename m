@@ -1,107 +1,120 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Wed, 7 Mar 2018 12:09:27 +0000
-Message-ID: <dd55eee9-8ddc-f186-0bef-0a15764ff368@arm.com>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
- <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/5] staging: vc04_services: Remove cache-line-size
+ property.
+Date: Wed, 7 Mar 2018 13:10:30 +0100 (CET)
+Message-ID: <1332781939.275857.1520424630939@email.1und1.de>
+References: <20180305202806.21219-1-eric@anholt.net>
+ <20180305202806.21219-3-eric@anholt.net>
+ <a8f369f5-691c-c05f-4c7c-2eadcf4c48c8@i2se.com> <87muzl9ger.fsf@anholt.net>
+ <638bd870-bb17-a0e1-d2aa-30a364b53279@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, quentin.schulz@bootlin.com, Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <638bd870-bb17-a0e1-d2aa-30a364b53279@raspberrypi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/02/18 16:17, Chen-Yu Tsai wrote:
-> On Fri, Feb 23, 2018 at 9:37 PM, Mylène Josserand
-> <mylene.josserand@bootlin.com> wrote:
->> On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
->> It should be done by the bootloader but it is currently not the case,
->> even for boot CPU because this SoC is booting in secure mode.
->> It leads to an random offset value meaning that each CPU will have a
->> different time, which isn't working very well.
->>
->> Add assembly code used for boot CPU and secondary CPU cores to make
->> sure that the CNTVOFF register is initialized.
->>
->> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
->> ---
->>  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
->>  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
->>  2 files changed, 25 insertions(+)
->>
->> diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
->> index d5c97e945e69..605896251927 100644
->> --- a/arch/arm/mach-sunxi/headsmp.S
->> +++ b/arch/arm/mach-sunxi/headsmp.S
->> @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
->>         first: .word sunxi_mc_smp_first_comer - .
->>  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
->>
->> +ENTRY(sunxi_init_cntvoff)
->> +       /*
->> +        * CNTVOFF has to be initialized either from non-secure Hypervisor
->> +        * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
->> +        * then it should be handled by the secure code
->> +        */
->> +       cps     #MON_MODE
->> +       mrc     p15, 0, r1, c1, c1, 0           /* Get Secure Config */
->> +       orr     r0, r1, #1
->> +       mcr     p15, 0, r0, c1, c1, 0           /* Set Non Secure bit */
->> +       instr_sync
->> +       mov     r0, #0
->> +       mcrr    p15, 4, r0, r0, c14             /* CNTVOFF = 0 */
->> +       instr_sync
->> +       mcr     p15, 0, r1, c1, c1, 0           /* Set Secure bit */
->> +       instr_sync
->> +       cps     #SVC_MODE
->> +       ret     lr
->> +ENDPROC(sunxi_init_cntvoff)
-> 
-> There is no need to move all the assembly into a separate file, just
-> to add this function. Everything can be inlined as a naked function.
-> The "instr_sync" macro can be replaced with "isb", which is what it
-> expands to anyway.
-> 
-> I really want to keep everything self-contained without global symbols,
-> and in C files if possible.
-> 
->> +
->>  #ifdef CONFIG_SMP
->>  ENTRY(sunxi_boot)
->>         bl      sunxi_mc_smp_cluster_cache_enable
->> +       bl      sunxi_init_cntvoff
->>         b       secondary_startup
->>  ENDPROC(sunxi_boot)
->>
->> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
->> index 5e9602ce1573..4bb041492b54 100644
->> --- a/arch/arm/mach-sunxi/sunxi.c
->> +++ b/arch/arm/mach-sunxi/sunxi.c
->> @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] = {
->>  };
->>
->>  extern void __init sun6i_reset_init(void);
->> +extern void sunxi_init_cntvoff(void);
->> +
->>  static void __init sun6i_timer_init(void)
->>  {
->> +       sunxi_init_cntvoff();
-> 
-> You should check the enable-method to see if PSCI is set or not,
-> as an indicator whether the kernel is booted secure or non-secure.
-> AFAIK trying to set CNTVOFF under non-secure would be very bad.
-
-Absolutely not. CNTVOFF *is* a non-secure register. The fact that it is
-not accessible from NS-PL1 is another problem. Please don't conflate the
-two things together.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGkgUGhpbCwKCj4gUGhpbCBFbHdlbGwgPHBoaWxAcmFzcGJlcnJ5cGkub3JnPiBoYXQgYW0gNy4g
+TcOkcnogMjAxOCB1bSAwOTowMiBnZXNjaHJpZWJlbjoKPiAKPiAKPiBIaSBFcmljLAo+IAo+IE9u
+IDA2LzAzLzIwMTggMTk6MDIsIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4gU3RlZmFuIFdhaHJlbiA8
+c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4gd3JpdGVzOgo+ID4gCj4gPj4gSGkgRXJpYywKPiA+Pgo+
+ID4+Cj4gPj4gQW0gMDUuMDMuMjAxOCB1bSAyMToyOCBzY2hyaWViIEVyaWMgQW5ob2x0Ogo+ID4+
+PiBUaGlzIHdhcyBqdXN0IGEgd2F5IGZvciB0aGUgRFQtcGFzc2VkIHZhbHVlIHRvIGdldCBvdXQg
+b2Ygc3luYyB3aXRoCj4gPj4+IHdoYXQgTGludXggaGFzIGNvbmZpZ3VyZWQgdGhlIEFSTSBmb3Iu
+Cj4gPj4+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+
+Cj4gPj4+IC0tLQo+ID4+PiAgICAuLi4vaW50ZXJmYWNlL3ZjaGlxX2FybS92Y2hpcV8yODM1X2Fy
+bS5jICAgICAgICAgICB8IDI1ICsrKysrKystLS0tLS0tLS0tLS0tLS0KPiA+Pj4gICAgLi4uL2lu
+dGVyZmFjZS92Y2hpcV9hcm0vdmNoaXFfcGFnZWxpc3QuaCAgICAgICAgICAgfCAgMSAtCj4gPj4+
+ICAgIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKPiA+
+Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy92YzA0X3NlcnZpY2VzL2ludGVy
+ZmFjZS92Y2hpcV9hcm0vdmNoaXFfMjgzNV9hcm0uYyBiL2RyaXZlcnMvc3RhZ2luZy92YzA0X3Nl
+cnZpY2VzL2ludGVyZmFjZS92Y2hpcV9hcm0vdmNoaXFfMjgzNV9hcm0uYwo+ID4+PiBpbmRleCBi
+NTllZjE0ODkwYWEuLmUwZTAxYzgxMjAzNiAxMDA2NDQKPiA+Pj4gLS0tIGEvZHJpdmVycy9zdGFn
+aW5nL3ZjMDRfc2VydmljZXMvaW50ZXJmYWNlL3ZjaGlxX2FybS92Y2hpcV8yODM1X2FybS5jCj4g
+Pj4+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy92YzA0X3NlcnZpY2VzL2ludGVyZmFjZS92Y2hpcV9h
+cm0vdmNoaXFfMjgzNV9hcm0uYwo+ID4+PiBAQCAtNzcsNyArNzcsNiBAQCBzdHJ1Y3QgdmNoaXFf
+cGFnZWxpc3RfaW5mbyB7Cj4gPj4+ICAgIH07Cj4gPj4+ICAgIAo+ID4+PiAgICBzdGF0aWMgdm9p
+ZCBfX2lvbWVtICpnX3JlZ3M7Cj4gPj4+IC1zdGF0aWMgdW5zaWduZWQgaW50IGdfY2FjaGVfbGlu
+ZV9zaXplID0gc2l6ZW9mKENBQ0hFX0xJTkVfU0laRSk7Cj4gPj4+ICAgIHN0YXRpYyB1bnNpZ25l
+ZCBpbnQgZ19mcmFnbWVudHNfc2l6ZTsKPiA+Pj4gICAgc3RhdGljIGNoYXIgKmdfZnJhZ21lbnRz
+X2Jhc2U7Cj4gPj4+ICAgIHN0YXRpYyBjaGFyICpnX2ZyZWVfZnJhZ21lbnRzOwo+ID4+PiBAQCAt
+MTE3LDE1ICsxMTYsNyBAQCBpbnQgdmNoaXFfcGxhdGZvcm1faW5pdChzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2LCBWQ0hJUV9TVEFURV9UICpzdGF0ZSkKPiA+Pj4gICAgCWlmIChlcnIgPCAw
+KQo+ID4+PiAgICAJCXJldHVybiBlcnI7Cj4gPj4+ICAgIAo+ID4+PiAtCWVyciA9IG9mX3Byb3Bl
+cnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgImNhY2hlLWxpbmUtc2l6ZSIsCj4gPj4+IC0JCQkJ
+ICAgJmdfY2FjaGVfbGluZV9zaXplKTsKPiA+Pj4gLQo+ID4+PiAtCWlmIChlcnIpIHsKPiA+Pj4g
+LQkJZGV2X2VycihkZXYsICJNaXNzaW5nIGNhY2hlLWxpbmUtc2l6ZSBwcm9wZXJ0eVxuIik7Cj4g
+Pj4+IC0JCXJldHVybiAtRU5PREVWOwo+ID4+PiAtCX0KPiA+Pj4gLQo+ID4+PiAtCWdfZnJhZ21l
+bnRzX3NpemUgPSAyICogZ19jYWNoZV9saW5lX3NpemU7Cj4gPj4+ICsJZ19mcmFnbWVudHNfc2l6
+ZSA9IDIgKiBjYWNoZV9saW5lX3NpemUoKTsKPiA+Pj4gICAgCj4gPj4+ICAgIAkvKiBBbGxvY2F0
+ZSBzcGFjZSBmb3IgdGhlIGNoYW5uZWxzIGluIGNvaGVyZW50IG1lbW9yeSAqLwo+ID4+PiAgICAJ
+c2xvdF9tZW1fc2l6ZSA9IFBBR0VfQUxJR04oVE9UQUxfU0xPVFMgKiBWQ0hJUV9TTE9UX1NJWkUp
+Owo+ID4+PiBAQCAtNTQ4LDkgKzUzOSw5IEBAIGNyZWF0ZV9wYWdlbGlzdChjaGFyIF9fdXNlciAq
+YnVmLCBzaXplX3QgY291bnQsIHVuc2lnbmVkIHNob3J0IHR5cGUpCj4gPj4+ICAgIAo+ID4+PiAg
+ICAJLyogUGFydGlhbCBjYWNoZSBsaW5lcyAoZnJhZ21lbnRzKSByZXF1aXJlIHNwZWNpYWwgbWVh
+c3VyZXMgKi8KPiA+Pj4gICAgCWlmICgodHlwZSA9PSBQQUdFTElTVF9SRUFEKSAmJgo+ID4+PiAt
+CQkoKHBhZ2VsaXN0LT5vZmZzZXQgJiAoZ19jYWNoZV9saW5lX3NpemUgLSAxKSkgfHwKPiA+Pj4g
+KwkJKChwYWdlbGlzdC0+b2Zmc2V0ICYgKGNhY2hlX2xpbmVfc2l6ZSgpIC0gMSkpIHx8Cj4gPj4+
+ICAgIAkJKChwYWdlbGlzdC0+b2Zmc2V0ICsgcGFnZWxpc3QtPmxlbmd0aCkgJgo+ID4+PiAtCQko
+Z19jYWNoZV9saW5lX3NpemUgLSAxKSkpKSB7Cj4gPj4+ICsJCSAoY2FjaGVfbGluZV9zaXplKCkg
+LSAxKSkpKSB7Cj4gPj4+ICAgIAkJY2hhciAqZnJhZ21lbnRzOwo+ID4+PiAgICAKPiA+Pj4gICAg
+CQlpZiAoZG93bl9pbnRlcnJ1cHRpYmxlKCZnX2ZyZWVfZnJhZ21lbnRzX3NlbWEpICE9IDApIHsK
+PiA+Pj4gQEAgLTU5OCwxMCArNTg5LDEwIEBAIGZyZWVfcGFnZWxpc3Qoc3RydWN0IHZjaGlxX3Bh
+Z2VsaXN0X2luZm8gKnBhZ2VsaXN0aW5mbywKPiA+Pj4gICAgCQkJZ19mcmFnbWVudHNfc2l6ZTsK
+PiA+Pj4gICAgCQlpbnQgaGVhZF9ieXRlcywgdGFpbF9ieXRlczsKPiA+Pj4gICAgCj4gPj4+IC0J
+CWhlYWRfYnl0ZXMgPSAoZ19jYWNoZV9saW5lX3NpemUgLSBwYWdlbGlzdC0+b2Zmc2V0KSAmCj4g
+Pj4+IC0JCQkoZ19jYWNoZV9saW5lX3NpemUgLSAxKTsKPiA+Pj4gKwkJaGVhZF9ieXRlcyA9IChj
+YWNoZV9saW5lX3NpemUoKSAtIHBhZ2VsaXN0LT5vZmZzZXQpICYKPiA+Pj4gKwkJCShjYWNoZV9s
+aW5lX3NpemUoKSAtIDEpOwo+ID4+PiAgICAJCXRhaWxfYnl0ZXMgPSAocGFnZWxpc3QtPm9mZnNl
+dCArIGFjdHVhbCkgJgo+ID4+PiAtCQkJKGdfY2FjaGVfbGluZV9zaXplIC0gMSk7Cj4gPj4+ICsJ
+CQkoY2FjaGVfbGluZV9zaXplKCkgLSAxKTsKPiA+Pgo+ID4+IHNob3VsZCBpdCBiZSBzbyBlYXN5
+PyBCYWNrIGluIDIwMTYgd2Ugc2FpZCB0aGF0IGNhY2hlX2xpbmVfc2l6ZSgpIHdvbid0Cj4gPj4g
+d29yay4gSSBhbHdheXMgdGhvdWdodCB0aGF0IHdlIG5lZWQgdGhlIGNhY2hlIGxpbmUgc2l6ZSBv
+ZiBMMiBub3Qgb2YgdGhlCj4gPj4gTDEgb25lLgo+ID4+Cj4gPj4gRGlkIHlvdSBhbHJlYWR5IHRl
+c3QgdGhlIGJlaGF2aW9yIGZvciB0aGVzZSBjb21iaW5hdGlvbnM/Cj4gPj4gQkNNMjgzNSBBUk0z
+MiwgZXhwZWN0ZWQgY2FjaGUgbGluZSBzaXplID0gMzIKPiA+PiBCQ00yODM2IEFSTTMyLCBleHBl
+Y3RlZCBjYWNoZSBsaW5lIHNpemUgPSA2NAo+ID4+IEJDTTI4MzcgQVJNMzIsIGV4cGVjdGVkIGNh
+Y2hlIGxpbmUgc2l6ZSA9IDY0Cj4gPj4gQkNNMjgzNyBBUk02NCwgZXhwZWN0ZWQgY2FjaGUgbGlu
+ZSBzaXplID0gNjQKPiA+IAo+ID4gSSBkaWRuJ3QgZXhwbGljaXRseSB0ZXN0LCBidXQgd2FzIGdv
+aW5nIGJ5Ogo+ID4gCj4gPiBjb25maWcgQVJNX0wxX0NBQ0hFX1NISUZUXzYKPiA+IAlib29sCj4g
+PiAJZGVmYXVsdCB5IGlmIENQVV9WNwo+ID4gCWhlbHAKPiA+IAkgIFNldHRpbmcgQVJNIEwxIGNh
+Y2hlIGxpbmUgc2l6ZSB0byA2NCBCeXRlcy4KPiA+IAo+ID4gY29uZmlnIEFSTV9MMV9DQUNIRV9T
+SElGVF83Cj4gPiAJYm9vbAo+ID4gCWhlbHAKPiA+IAkgIFNldHRpbmcgQVJNIEwxIGNhY2hlIGxp
+bmUgc2l6ZSB0byAxMjggQnl0ZXMuCj4gPiAKPiA+IGNvbmZpZyBBUk1fTDFfQ0FDSEVfU0hJRlQK
+PiA+IAlpbnQKPiA+IAlkZWZhdWx0IDcgaWYgQVJNX0wxX0NBQ0hFX1NISUZUXzcKPiA+IAlkZWZh
+dWx0IDYgaWYgQVJNX0wxX0NBQ0hFX1NISUZUXzYKPiA+IAlkZWZhdWx0IDUKPiA+IAo+ID4gYW5k
+IG9ubHkgTDFfQ0FDSEVfU0hJRlRfNyBnZXRzIHNlbGVjdGVkIGJ5IFVOSVBISUVSIGFuZCBuZWl0
+aGVyIG9uZSBpcwo+ID4gYWNjZXNzaWJsZSBieSBtZW51cy4KPiA+IAo+ID4gSSB0aGluayB5b3Un
+cmUgdGVjaG5pY2FsbHkgY29ycmVjdCB0aGF0IGl0J3MgdGhlIHNpemUgb2YgTDIgdGhhdCBtYXR0
+ZXJzCj4gPiAob3IsIHNwZWNpZmljYWxseSwgdGhlIGhhcmRjb2RlZCB2YWx1ZSB0aGF0IHRoZSBm
+aXJtd2FyZSBpcyB1c2luZyBvbiBpdHMKPiA+IHNpZGUgZm9yIHRoZSBmcmFnbWVudHMgbGlzdCBo
+YW5kbGluZy4gIEl0IG92ZXJyaWRlcyBhIGNhY2hlLWxpbmUtc2l6ZSBEVAo+ID4gcHJvcGVydHkg
+d2l0aCB0aGF0IG51bWJlciBpZiBwcmVzZW50KS4gIEhvd2V2ZXIsIEkgdGhpbmsgTDE9PUwyIGNh
+Y2hlCj4gPiBsaW5lIHNpemUgdGhpcyBzaG91bGQgYmUgYSBzYWZlIGFzc3VtcHRpb24gZm9yIHVz
+Lgo+ID4gCj4gPiBQaGlsLCBhbnkgb3Bpbmlvbj8KPiAKPiBJdCBpcyB0aGUgTDIgY2FjaGUgbGlu
+ZSBzaXplIHRoYXQgbWF0dGVycywgYnV0IGFzIGxvbmcgYXMgeW91IGVuZCB1cCB3aXRoCj4gdGhl
+IG51bWJlcnMgU3RlZmFuIG1lbnRpb25lZCAtIDMyIG9uIEJDTTI4MzUsIDY0IG9uIEJDTTI4MzYg
+YW5kIEJDTTI4MzcgLQo+IEknbSBub3QgdG9vIGJvdGhlcmVkIGhvdyB5b3UgZ2V0IHRoZXJlLgoK
+aSB0aGluayBhIGtlcm5lbCB3aXRoIGJjbTI4MzVfZGVmY29uZmlnIG9uIFJQaSAyIGNvdWxkIGJl
+IHN1Y2ggYSBjb3JuY2FzZS4KCkFtIGkgcmlnaHQgdGhhdCB0aGUgZmlybXdhcmUgZG9lc24ndCBy
+ZWx5IG9uIHRoZSBleGlzdGVuY2Ugb2YgImNhY2hlLWxpbmUtc2l6ZSI/CgpCdHcgaXQgd291bGQg
+YmUgbmljZSB0byBnZXQgZml4ZWQgdGhlIGNvcnJ1cHRpb24gb24gQVJNNjQgWzFdLgoKU3RlZmFu
+CgpbMV0gLSBodHRwczovL2dpdGh1Yi5jb20vbGF0ZWdvb2RieWUvcnBpLXplcm8vaXNzdWVzLzIz
+Cgo+IAo+IFBoaWwKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
