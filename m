@@ -1,92 +1,76 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v4 2/3] ARM: dts: STi: Fix aliases property name for STi boards
-Date: Wed, 7 Mar 2018 18:35:33 +0100
-Message-ID: <1520444134-30144-3-git-send-email-patrice.chotard@st.com>
-References: <1520444134-30144-1-git-send-email-patrice.chotard@st.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] ASoC: Use proper DT compatible string for
+ Hardkernel Odroid boards
+Date: Wed, 07 Mar 2018 18:46:25 +0100
+Message-ID: <20180307174625.16597-1-s.nawrocki@samsung.com>
+References: <CGME20180307174638epcas2p33f071928807ccaa40ad07922c15be31c@epcas2p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520444134-30144-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org
-Cc: patrice.chotard@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+The Odroid boards are manufactured by Hardkernel, not Samsung. New compatible
+string entries are added, with "hardkernel," instead of "samsung," vendor
+prefix. Support for the old compatible strings is going to be removed after
+some time.
 
-Update serial aliases from "ttyASN" to more common "serialN".
-
-Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
-be lowercase only. This allows to fix following dtc warnings:
-
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
-v4: _ remove bootargs chunks
-v3: _ none
-v2: _ use serialN instead of ttyasN aliases to not break ABI
+ Documentation/devicetree/bindings/sound/samsung,odroid.txt | 6 +++---
+ sound/soc/samsung/odroid.c                                 | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
- arch/arm/boot/dts/stih407-b2120.dts | 2 +-
- arch/arm/boot/dts/stih410-b2120.dts | 2 +-
- arch/arm/boot/dts/stih410-b2260.dts | 2 +-
- arch/arm/boot/dts/stih418-b2199.dts | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-index de3c8bf129b5..00de810a3bcc 100644
---- a/arch/arm/boot/dts/stih407-b2120.dts
-+++ b/arch/arm/boot/dts/stih407-b2120.dts
-@@ -24,7 +24,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index 625b1b18fd02..f35a2694eb04 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -2,8 +2,8 @@ Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
  
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
+ Required properties:
  
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 0a59b7b0f4b2..07d7969923ea 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -24,7 +24,7 @@
- 	};
+- - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
+-		"samsung,odroidxu4-audio" - for Odroid XU4 board
++ - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
++		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board
+  - model - the user-visible name of this sound complex
+  - clocks - should contain entries matching clock names in the clock-names
+     property
+@@ -35,7 +35,7 @@ Required sub-nodes:
+ Example:
  
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
+ sound {
+-	compatible = "samsung,odroidxu3-audio";
++	compatible = "hardkernel,odroid-xu3-audio";
+ 	model = "Odroid-XU3";
+ 	samsung,audio-routing =
+ 		"Headphone Jack", "HPL",
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index 44b6de5a331a..92d750806d1d 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -213,8 +213,10 @@ static int odroid_audio_remove(struct platform_device *pdev)
+ }
  
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index feb8834478fa..0b2129712bef 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -25,7 +25,7 @@
- 	};
- 
- 	aliases {
--		ttyAS1 = &uart1;
-+		serial1 = &uart1;
- 		ethernet0 = &ethernet0;
- 	};
- 
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 39b4db2e3507..f88856c36a3f 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -24,7 +24,7 @@
- 	};
- 
- 	aliases {
--		ttyAS0 = &sbc_serial0;
-+		serial0 = &sbc_serial0;
- 		ethernet0 = &ethernet0;
- 	};
- 
+ static const struct of_device_id odroid_audio_of_match[] = {
++	{ .compatible	= "hardkernel,odroid-xu3-audio" },
++	{ .compatible	= "hardkernel,odroid-xu4-audio" },
+ 	{ .compatible	= "samsung,odroid-xu3-audio" },
+-	{ .compatible	= "samsung,odroid-xu4-audio"},
++	{ .compatible	= "samsung,odroid-xu4-audio" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, odroid_audio_of_match);
 -- 
-1.9.1
+2.14.2
