@@ -1,47 +1,30 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: add binding for MT7622 SoC
-Date: Wed, 7 Mar 2018 17:12:21 +0800
-Message-ID: <1520413941.677.0.camel@mtkswgap22>
-References: <c72262a17332a227aa2db39b682db50e2324821a.1518856935.git.sean.wang@mediatek.com>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] MAINTAINERS: Add linux/of_*.h headers to appropriate
+ subsystems
+Date: Wed, 7 Mar 2018 10:16:51 +0100
+Message-ID: <20180307091651.GA18430@8bytes.org>
+References: <20180306151334.28720-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c72262a17332a227aa2db39b682db50e2324821a.1518856935.git.sean.wang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180306151334.28720-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: rui.zhang@intel.com, edubezval@gmail.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Rui
+On Tue, Mar 06, 2018 at 09:13:34AM -0600, Rob Herring wrote:
+> The DeviceTree support code for specific subsystems are maintained by
+> the respective subsystem maintainers. However, only the DT
+> maintainers are listed for most of the linux/of_*.h headers. Fix this
+> and add the headers to the appropriate subsystem maintainer.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-just a gentle ping to the both patches
-
-	Sean
-
-On Sat, 2018-02-17 at 16:49 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add devicetree bindings for MediaTek MT7622 thermal controller
-> 
-> Changes v1 -> v2: add tag from Rob
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/thermal/mediatek-thermal.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> index 0d73ea5..41d6a44 100644
-> --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> @@ -12,6 +12,7 @@ Required properties:
->    - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
->    - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
->    - "mediatek,mt2712-thermal" : For MT2712 family of SoCs
-> +  - "mediatek,mt7622-thermal" : For MT7622 SoC
->  - reg: Address range of the thermal controller
->  - interrupts: IRQ for the thermal controller
->  - clocks, clock-names: Clocks needed for the thermal controller. required
+Acked-by: Joerg Roedel <jroedel@suse.de>
