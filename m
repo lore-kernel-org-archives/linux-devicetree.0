@@ -1,177 +1,59 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v3 1/2] input: Add RAVE SP Powerbutton driver
-Date: Tue,  6 Mar 2018 18:01:33 -0800
-Message-ID: <20180307020134.26293-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 0/5] drivers: pwm: sun4i: Improve support for
+ A64 and H6 SoCs
+Date: Wed,  7 Mar 2018 02:07:14 +0000
+Message-ID: <20180307020719.6675-1-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBD4U7XKAKGQEEAGTCAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add driver that properly handles input event emitted by RAVE SP
-devices.
+This series adds PWM support for new Allwinner SoCs. Actually the A64 PWM 
+is fully compatible with the A13 and H3 PWM IP, so the driver does not
+need any additional code. But I use this opportunity to provide some
+cleanup and to add optional reset controller support, which will be needed
+for the H6.
+Patch 1 removes a no longer used parameter from our per-SoC data structure,
+to simplify patch 2, which groups SoCs with a compatible PWM controller.
+Patch 3 adds optional reset controller support, the line will be deasserted
+and asserted at the same time we enable and disable the clock. Patch 4 adds
+the new compatible strings to the binding documentation (and just there,
+we expect to use "allwinner,sun5i-a13-pwm" as a fallback compatible string).
+The final patch 5 adds the respective PWM nodes to the A64 .dtsi.
+This eventually does not enable the PWM on any new board at the moment, as
+the PWM pins are either not usable (muxed with Ethernet) or exposed on
+a header pin not dedicated to PWM. But the Pinebook (and Teres I) should be
+able to use the PWM for the LCD backlights, plus users can enable the
+R_PWM on their Pine64 boards, if they like.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
+Tested by manually enabling r_pwm on a Pine64-LTS.
 
-Changes since [v2]:
+Let me know how you like it and what needs to change.
 
-	- Collected Reviewed-by from Lucas
+Cheers,
+Andre.
 
-Changes since [v1]:
+Andre Przywara (5):
+  pwm: sun4i: drop unused .has_rdy member
+  pwm: sun4i: simplify controller mapping
+  pwm: sun4i: Introduce (optional) reset support
+  dt-bindings: pwm: sunxi: add new compatible strings
+  dts: sunxi: A64: Add PWM controllers
 
-	- Removed redundant dev.parent assignment
+ .../devicetree/bindings/pwm/pwm-sun4i.txt          |  6 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 28 +++++++++
+ drivers/pwm/pwm-sun4i.c                            | 66 ++++++++++++----------
+ 3 files changed, 69 insertions(+), 31 deletions(-)
 
-	- Various cosmetic changes
-
-[v2] lkml.kernel.org/r/20180301165527.22274-1-andrew.smirnov@gmail.com
-[v1] lkml.kernel.org/r/20180226154130.25774-1-andrew.smirnov@gmail.com
-
- drivers/input/misc/Kconfig             |  9 ++++
- drivers/input/misc/Makefile            |  1 +
- drivers/input/misc/rave-sp-pwrbutton.c | 94 ++++++++++++++++++++++++++++++++++
- 3 files changed, 104 insertions(+)
- create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
-
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 62a1312a7387..6a3c753b093b 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called hisi_powerkey.
- 
-+config INPUT_RAVE_SP_PWRBUTTON
-+	tristate "RAVE SP Power button Driver"
-+	depends on RAVE_SP_CORE
-+	help
-+	  Say Y here if you want to enable power key reporting from RAVE SP
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called rave-sp-pwrbutton.
-+
- endif
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index a8f61af865aa..8cc58f362bb8 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -60,6 +60,7 @@ obj-$(CONFIG_INPUT_PMIC8XXX_PWRKEY)	+= pmic8xxx-pwrkey.o
- obj-$(CONFIG_INPUT_POWERMATE)		+= powermate.o
- obj-$(CONFIG_INPUT_PWM_BEEPER)		+= pwm-beeper.o
- obj-$(CONFIG_INPUT_PWM_VIBRA)		+= pwm-vibra.o
-+obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)	+= rave-sp-pwrbutton.o
- obj-$(CONFIG_INPUT_RB532_BUTTON)	+= rb532_button.o
- obj-$(CONFIG_INPUT_REGULATOR_HAPTIC)	+= regulator-haptic.o
- obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
-diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
-new file mode 100644
-index 000000000000..bcab3cdb7ebd
---- /dev/null
-+++ b/drivers/input/misc/rave-sp-pwrbutton.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Power Button driver for RAVE SP
-+//
-+// Copyright (C) 2017 Zodiac Inflight Innovations
-+//
-+//
-+
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mfd/rave-sp.h>
-+#include <linux/platform_device.h>
-+
-+#define RAVE_SP_EVNT_BUTTON_PRESS	(RAVE_SP_EVNT_BASE + 0x00)
-+
-+struct rave_sp_power_button {
-+	struct input_dev *idev;
-+	struct notifier_block nb;
-+};
-+
-+static int rave_sp_power_button_event(struct notifier_block *nb,
-+				      unsigned long action, void *data)
-+{
-+	struct rave_sp_power_button *pb =
-+		container_of(nb, struct rave_sp_power_button, nb);
-+	const u8 event = rave_sp_action_unpack_event(action);
-+	const u8 value = rave_sp_action_unpack_value(action);
-+	struct input_dev *idev = pb->idev;
-+
-+	if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
-+		input_report_key(idev, KEY_POWER, value);
-+		input_sync(idev);
-+
-+		return NOTIFY_STOP;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rave_sp_power_button *pb;
-+	struct input_dev *idev;
-+	int error;
-+
-+	pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
-+	if (!pb)
-+		return -ENOMEM;
-+
-+	idev = devm_input_allocate_device(dev);
-+	if (!idev)
-+		return -ENOMEM;
-+
-+	idev->name = pdev->name;
-+
-+	input_set_capability(idev, EV_KEY, KEY_POWER);
-+
-+	error = input_register_device(idev);
-+	if (error)
-+		return error;
-+
-+	pb->idev = idev;
-+	pb->nb.notifier_call = rave_sp_power_button_event;
-+	pb->nb.priority = 128;
-+
-+	error = devm_rave_sp_register_event_notifier(dev, &pb->nb);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rave_sp_pwrbutton_of_match[] = {
-+	{ .compatible = "zii,rave-sp-pwrbutton" },
-+	{}
-+};
-+
-+static struct platform_driver rave_sp_pwrbutton_driver = {
-+	.probe = rave_sp_pwrbutton_probe,
-+	.driver	= {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = rave_sp_pwrbutton_of_match,
-+	},
-+};
-+module_platform_driver(rave_sp_pwrbutton_driver);
-+
-+MODULE_DEVICE_TABLE(of, rave_sp_pwrbutton_of_match);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
-+MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
-+MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
-+MODULE_DESCRIPTION("RAVE SP Power Button driver");
 -- 
-2.14.3
+2.14.1
