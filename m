@@ -1,38 +1,36 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
-Date: Wed, 07 Mar 2018 22:19:51 +0800
-Message-ID: <1520432391.3731.8.camel@flygoat.com>
-References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
-         <20170927151527.25570-4-prasannatsmkumar@gmail.com>
-         <20180306000832.GL4197@saruman>
-         <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] arm: dts: replace 'linux,
+ stdout-path' with 'stdout-path'
+Date: Wed, 7 Mar 2018 15:29:58 +0100
+Message-ID: <CAK8P3a028i+1vRNjA+=ra69wqjFKi4vEtj4rgUoHdB7Nage98A@mail.gmail.com>
+References: <20180228224116.2596-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, James Hogan <jhogan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180228224116.2596-1-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2018-03-07三的 19:14 +0530，PrasannaKumar Muralidharan写道：
-> 
-> I used to get my code tested from Domink but I could not reach him
-> for
-> quite some time. Before buying the development board myself I would
-> like to see if anyone can help me in testing. Do you have any contact
-> with Ingenic who can help in testing this?
-> 
+On Wed, Feb 28, 2018 at 11:41 PM, Rob Herring <robh@kernel.org> wrote:
+> 'linux,stdout-path' has been deprecated for some time in favor of
+> 'stdout-path'. Now dtc will warn on occurrences of 'linux,stdout-path'.
+> Search and replace all the of occurrences with 'stdout-path'.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Hi PrasannaKumar
+Applied now, thanks a lot for the continued cleanup. I see we already
+have the respective dtc update in linux-next, so hopefully we get the
+warnings down again now.
 
-I'm resently working on Ingenic chips too. Ingentic guys have sent me a
-X1000 development broad and it will arrive in about two weeks. I have a
-ejtag debugger also (but not very suit with X1000 because X1000 have
-different ejtag interface with standard MIPS cores, maybe we need some
-modification on openocd). So maybe I can help in testing this after I
-get my broad. Just ask if you need any help.
-Thanks
--- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
+     Arnd
