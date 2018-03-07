@@ -1,135 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] ARM: dts: STi: Fix aliases property name for STi boards
-Date: Wed, 7 Mar 2018 10:15:52 -0600
-Message-ID: <CAL_JsqKBkfCsx4pyjUebwkV0q+S5LhwePWw59-7ibt77qdAGbw@mail.gmail.com>
-References: <1520412597-30545-1-git-send-email-patrice.chotard@st.com> <1520412597-30545-2-git-send-email-patrice.chotard@st.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
+Date: Wed, 7 Mar 2018 21:55:38 +0530
+Message-ID: <CANc+2y42BAF=bZo9WxujMBR-x6y=rKDagA3R68phuAsi1P8BLw@mail.gmail.com>
+References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
+ <20170927151527.25570-4-prasannatsmkumar@gmail.com> <20180306000832.GL4197@saruman>
+ <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
+ <20180307143541.GN4197@saruman> <CANc+2y5wsvGWszu3pePYhs2wb1_AgPdjG+ugfOCzbZVfVHDMvw@mail.gmail.com>
+ <1520437971.3731.22.camel@flygoat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520412597-30545-2-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <1520437971.3731.22.camel@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrice Chotard <patrice.chotard@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 2:49 AM,  <patrice.chotard@st.com> wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
+On 7 March 2018 at 21:22, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> =E5=9C=A8 2018-03-07=E4=B8=89=E7=9A=84 20:35 +0530=EF=BC=8CPrasannaKumar =
+Muralidharan=E5=86=99=E9=81=93=EF=BC=9A
+>> Hi James,
+>>
+>> Seems Jiaxun is interested in the board and is willing to help.
+>>
+>> I have been told that Ingenic is focusing on IoT market and X1000 is
+>> intended for IoT segment. I think that they would be selling several
+>> 100Ks of chip over the coming years. But I feel Ingenic spends time
+>> only on maintaining their Linux port which is usually based on very
+>> old kernel version.
 >
-> Update serial aliases from "ttyASN" to more common "serialN".
+> Ingenic is going to release their XBrust2 core with it's products such
+> as X2000 a few days later. Witch is a pure MIPS64r5 with MXU2(A
+> superset of MIPS's MSA SIMD instruction set). The newest kernel port of
+> X1000 maintain by Ingenic is based on Linux-4.4 [1]. After communicated
+> with Ingenic, they said they are forcusing on China domestic market.
+> But they're looking for partners to enter foriegn market.
 >
-> Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
-> be lowercase only. This allows to fix following dtc warnings:
->
-> arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> ---
->
-> v3: _ none
-> v2: _ use serialN instead of ttyasN aliases to not break ABI
->
->  arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
->  arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
->  arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
->  arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-> index de3c8bf129b5..2c4d6033b448 100644
-> --- a/arch/arm/boot/dts/stih407-b2120.dts
-> +++ b/arch/arm/boot/dts/stih407-b2120.dts
-> @@ -14,7 +14,7 @@
->         compatible = "st,stih407-b2120", "st,stih407";
->
->         chosen {
-> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-> +               bootargs = "console=serial0,115200 clk_ignore_unused";
+> [1] https://pan.baidu.com/s/1o8MeYts (Well you can download from this
+> Chinese website, ingenic have a gerrit but I don't have access to it.
+> As my experience, it's hard to develop on Chinese-made chips wihout
+> reading Chinese documents.)
 
-These hunks for bootargs are still wrong. You wouldn't boot with a
-console if you only apply patch 1. These hunks should be squashed with
-patch 2.
-
->                 stdout-path = &sbc_serial0;
->         };
->
-> @@ -24,7 +24,7 @@
->         };
->
->         aliases {
-> -               ttyAS0 = &sbc_serial0;
-> +               serial0 = &sbc_serial0;
->                 ethernet0 = &ethernet0;
->         };
->
-> diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-> index 0a59b7b0f4b2..5422850641e8 100644
-> --- a/arch/arm/boot/dts/stih410-b2120.dts
-> +++ b/arch/arm/boot/dts/stih410-b2120.dts
-> @@ -14,7 +14,7 @@
->         compatible = "st,stih410-b2120", "st,stih410";
->
->         chosen {
-> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-> +               bootargs = "console=serial0,115200 clk_ignore_unused";
->                 stdout-path = &sbc_serial0;
->         };
->
-> @@ -24,7 +24,7 @@
->         };
->
->         aliases {
-> -               ttyAS0 = &sbc_serial0;
-> +               serial0 = &sbc_serial0;
->                 ethernet0 = &ethernet0;
->         };
->
-> diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-> index feb8834478fa..ca347160e35d 100644
-> --- a/arch/arm/boot/dts/stih410-b2260.dts
-> +++ b/arch/arm/boot/dts/stih410-b2260.dts
-> @@ -15,7 +15,7 @@
->         compatible = "st,stih410-b2260", "st,stih410";
->
->         chosen {
-> -               bootargs = "console=ttyAS1,115200 clk_ignore_unused";
-> +               bootargs = "console=serial1,115200 clk_ignore_unused";
->                 stdout-path = &uart1;
->         };
->
-> @@ -25,7 +25,7 @@
->         };
->
->         aliases {
-> -               ttyAS1 = &uart1;
-> +               serial1 = &uart1;
->                 ethernet0 = &ethernet0;
->         };
->
-> diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-> index 39b4db2e3507..dbf7bb704a1a 100644
-> --- a/arch/arm/boot/dts/stih418-b2199.dts
-> +++ b/arch/arm/boot/dts/stih418-b2199.dts
-> @@ -14,7 +14,7 @@
->         compatible = "st,stih418-b2199", "st,stih418";
->
->         chosen {
-> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-> +               bootargs = "console=serial0,115200 clk_ignore_unused";
->                 stdout-path = &sbc_serial0;
->         };
->
-> @@ -24,7 +24,7 @@
->         };
->
->         aliases {
-> -               ttyAS0 = &sbc_serial0;
-> +               serial0 = &sbc_serial0;
->                 ethernet0 = &ethernet0;
->         };
->
-> --
-> 1.9.1
->
+Can you take a diff and upload it somewhere else? Download speed is a
+couple of bytes per second. Can you put the diff in github or similar
+other service?
+I would like to see if the port uses DT.
