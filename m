@@ -1,103 +1,188 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add support for SAW documentation
-Date: Wed, 7 Mar 2018 14:41:15 -0600
-Message-ID: <20180307204115.mugm7m3egrc73og2@rob-hp-laptop>
-References: <1520166709-554-1-git-send-email-ilialin@codeaurora.org>
- <1520166709-554-3-git-send-email-ilialin@codeaurora.org>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v3 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Wed, 7 Mar 2018 13:54:16 -0700
+Message-ID: <20180307205416.GH4930@codeaurora.org>
+References: <20180302164317.10554-1-ilina@codeaurora.org>
+ <20180302164317.10554-3-ilina@codeaurora.org>
+ <152037541468.218381.12480897609076588560@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520166709-554-3-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <152037541468.218381.12480897609076588560@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 04, 2018 at 02:31:49PM +0200, Ilia Lin wrote:
-> Add support for SAW controlled regulators in 8x96.
-> Document it.
-> 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> ---
->  .../bindings/regulator/qcom,spmi-regulator.txt     | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> index 57d2c65..406f2e5 100644
-> --- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> @@ -110,6 +110,11 @@ Qualcomm SPMI Regulators
->  	Definition: Reference to regulator supplying the input pin, as
->  		    described in the data sheet.
->  
-> +- qcom,saw-reg:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Description: Reference to syscon node defining the SAW registers.
-> +
->  
->  The regulator node houses sub-nodes for each regulator within the device. Each
->  sub-node is identified using the node's name, with valid values listed for each
-> @@ -201,6 +206,17 @@ see regulator.txt - with additional custom properties described below:
->  			2 = 0.55 uA
->  			3 = 0.75 uA
->  
-> +- qcom,saw-slave:
-> +	Usage: optional
-> +	Value type: <boo>
-> +	Description: SAW controlled gang slave. Will not be configured.
-> +
-> +- qcom,saw-leader:
-> +	Usage: optional
-> +	Value type: <boo>
-> +	Description: SAW controlled gang leader. Will be configured as
-> +		     SAW regulator.
-> +
->  Example:
->  
->  	regulators {
-> @@ -221,3 +237,32 @@ Example:
->  
->  		....
->  	};
-> +
-> +Example 2:
-> +
-> +	saw3: syscon@9A10000 {
-> +		compatible = "syscon";
+On Tue, Mar 06 2018 at 15:30 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-03-02 08:43:09)
+>> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+>> driver. The hardware block is used for communicating resource state
+>
+>s/driver/hardware/
+>
+Ok.
 
-syscon should not be used alone. It should have a specific compatible 
-too.
+>> requests for shared resources.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>
+>> Changes in v2:
+>>         - Amend text to describe the registers in reg property
+>>         - Add reg-names for the registers
+>>         - Update examples to use GIC_SPI in interrupts instead of 0
+>>         - Rephrase incorrect description
+>>
+>> Changes in v3:
+>>         - Fix unwanted capitalization
+>>         - Remove clients from the examples, this doc does not describe
+>>           them
+>>         - Rephrase introductory paragraph
+>>         - Remove hardware specifics from DT bindings
+>> ---
+>>  .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 131 +++++++++++++++++++++
+>>  1 file changed, 131 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
+>> new file mode 100644
+>> index 000000000000..afd3817cc615
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
+>
+>Shouldn't this go into bindings/soc/qcom/ ?
+>
+Didn;t realize the location. Thanks for pointing out.
 
-> +		reg = <0x9A10000 0x1000>;
-> +	};
 > +
-> +	...
-> +
-> +	spm-regulators {
-> +		compatible = "qcom,pm8994-regulators";
-> +		qcom,saw-reg = <&saw3>;
+>> +Requests can be made for the state of a resource, when the subsystem is active
+>> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
+>> +will be an aggregate of the sleep votes from each of those subsystem. Drivers
+>
+>s/subsystem/subsystems/
+>s/Drivers/Clients/ ?
+>
+Ok
 
-Why not just a child of the syscon?
+>> +may request a sleep value for their shared resources in addition to the active
+>> +mode requests.
+>> +
+>> +Control requests are instance specific requests that may or may not reach an
+>> +accelerator. Only one platform device in Linux can request a control channel
+>> +on a DRV.
+>
+>Not sure what this last sentence has to do with the DT binding. We
+>generally try to avoid saying 'Linux' or 'driver' in DT binding
+>documents, because they usually document hardware.
+>
+This para can go away.
 
-> +		s8 {
-> +			qcom,saw-slave;
-> +		};
-> +		s9 {
-> +			qcom,saw-slave;
-> +		};
-> +		s10 {
-> +			qcom,saw-slave;
-> +		};
-> +		pm8994_s11_saw: s11 {
-> +			qcom,saw-leader;
-> +			regulator-always-on;
-> +			regulator-min-microvolt = <900000>;
-> +			regulator-max-microvolt = <1140000>;
-> +		};
-> +	};
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+>> +
+>> +Properties:
+>> +
+>> +- compatible:
+>> +       Usage: required
+>> +       Value type: <string>
+>> +       Definition: Should be "qcom,rpmh-rsc".
+>> +
+>> +- reg:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: The first register specifies the base address of the DRV.
+>> +                   The second register specifies the start address of the
+>> +                   TCS.
+>> +
+>> +- reg-names:
+>> +       Usage: required
+>
+>optional?
+>
+No, it is required. Driver has been using the by_name for clarity.
+
+>> +       Value type: <string>
+>> +       Definition: Maps the register specified in the reg property. Must be
+>> +                   "drv" and "tcs".
+>> +
+>> +- interrupts:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-interrupt>
+>> +       Definition: The interrupt that trips when a message complete/response
+>> +                  is received for this DRV from the accelerators.
+>> +
+>> +- qcom,drv-id:
+>> +       Usage: required
+>> +       Value type: <u32>
+>> +       Definition: the id of the DRV in the RSC block.
+>> +
+>> +- qcom,tcs-config:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: the tuple defining the configuration of TCS.
+>> +                   Must have 2 cells which describe each TCS type.
+>> +                   <type number_of_tcs>.
+>> +                   The order of the TCS must match the hardware
+>> +                   configuration.
+>> +       - Cell #1 (TCS Type): TCS types to be specified -
+>> +               SLEEP_TCS
+>> +               WAKE_TCS
+>> +               ACTIVE_TCS
+>> +               CONTROL_TCS
+>> +       - Cell #2 (Number of TCS): <u32>
+>> +
+>> +- label:
+>> +       Usage: optional
+>> +       Value type: <string>
+>> +       Definition: Name for the RSC. The name would be used in trace logs.
+>> +
+>> +Drivers that want to use the RSC to communicate with RPMH must specify their
+>> +bindings as child of the RSC controllers they wish to communicate with.
+>
+>Is that going to work for drivers that want to talk to two or more RSCs?
+>I suppose that they'll have to hook up into some sort of framework like
+>clk or regulator and then drivers that want to use two RSCs for those
+>things would be linked to those sub-device drivers with the normal clk
+>or regulator bindings?
+>
+Correct. This follows the same model as RPM SMD driver.
+
+>> +
+>> +Example 1:
+>> +
+>> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
+>> +register offsets for DRV2 start at 0D00, the register calculations are like
+>> +this -
+>> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
+>> +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
+>> +
+>> +       apps_rsc: rsc@179e000 {
+>> +               label = "apps_rsc";
+>> +               compatible = "qcom,rpmh-rsc";
+>> +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
+>> +               reg-names = "drv", "tcs";
+>> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>> +               qcom,drv-id = <2>;
+>> +               qcom,tcs-config = <SLEEP_TCS   3>,
+>> +                                 <WAKE_TCS    3>,
+>> +                                 <ACTIVE_TCS  2>,
+>> +                                 <CONTROL_TCS 1>;
+>
+>Could qcom,tcs-config become something more like below?
+>
+>	#qcom,sleep-tcs = <3>;
+>	#qcom,wake-tcs = <3>;
+>	#qcom,active-tcs = <2>;
+>	#qcom,control-tcs = <1>;
+>
+>I don't really understand the binding design to have many cells with the
+>*_TCS defines indicating what comes next.
+>
+This format helps preserve the order in which the TCS are designed in
+the firmware. Thats additional information that is described by the
+cells.
+
+Thanks,
+Lina
