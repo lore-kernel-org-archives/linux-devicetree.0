@@ -1,99 +1,51 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2] arm64: dts: msm8916: Add cpu cooling maps
-Date: Wed,  7 Mar 2018 10:30:02 +0530
-Message-ID: <4d134dee2154ae3fa56b375aaed9568e21b1a777.1520398076.git.amit.kucheria@linaro.org>
-References: <9f7199f0027ef2382e5ccc61a5118d0a00fa2e63.1520340931.git.amit.kucheria@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f7199f0027ef2382e5ccc61a5118d0a00fa2e63.1520340931.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1520398076.git.amit.kucheria@linaro.org>
-References: <cover.1520398076.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Wed, 7 Mar 2018 10:36:24 +0530
+Message-ID: <20180307050624.GR23018@vireshk-i7>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-3-jcrouse@codeaurora.org>
+ <20180305044221.GC23018@vireshk-i7>
+ <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
+ <20180306042656.GJ23018@vireshk-i7>
+ <20180306153757.GD15200@jcrouse-lnx.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180306153757.GD15200-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
-
-Add cpu cooling maps for cpu passive trip points. The cpu cooling
-device states are mapped to cpufreq based scaling frequencies.
-
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index e468277..66b318e 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -15,6 +15,7 @@
- #include <dt-bindings/clock/qcom,gcc-msm8916.h>
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM8916";
-@@ -115,6 +116,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 			clocks = <&apcs 0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -126,6 +128,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 			clocks = <&apcs 0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -137,6 +140,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 			clocks = <&apcs 0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -148,6 +152,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 			clocks = <&apcs 0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		L2_0: l2-cache {
-@@ -196,6 +201,13 @@
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal1 {
-@@ -216,6 +228,13 @@
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 	};
--- 
-2.7.4
+T24gMDYtMDMtMTgsIDA4OjM3LCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+IEknbGwgdHJ5IHRvIGV4
+cGxhaW4gYnV0IEkgbWlnaHQgbmVlZCBTdGVwaGVuIG9yIHNvbWUgb2YgdGhlIG90aGVyIGZvbGtz
+IHRvIGp1bXAKPiBpbiBhbmQgc2F2ZSBtZS4KCk1heWJlIHlvdSBzaG91bGQgc3RhcnQgdXNpbmcg
+aGlzIGtlcm5lbC5vcmcgYWRkcmVzcyB0aGVuID8gOikKCj4gT24gc2RtODQ1IHRoZXJlIGFyZSBz
+aGFyZWQgcG93ZXIgcmVzb3VyY2VzIGNvbnRyb2xsZWQgYnkgdGhlIFJQTWggd2hpY2ggaXMKPiBw
+cm9ncmFtZWQgYnkgYSBzZXJpZXMgb2YgY29tbWFuZHMgZnJvbSB0aGUgcmVndWxhdG9yIGRyaXZl
+cjsgYnV0IGluIHRoZSBjYXNlCj4gb2YgdGhlIEdQVSB0aGUgdm90ZXMgYXJlIHBhc3NlZCB0byB0
+aGUgR01VIChncmFwaGljcyBtYW5hZ2VtZW50IHVuaXQpIHdoaWNoCj4gY29tbXVuaWNhdGVzIHdp
+dGggdGhlIFJQTWggb24gYmVoYWxmIG9mIHRoZSBHUFUuCj4gCj4gSW4gb3JkZXIgdG8gY29uc3Ry
+dWN0IHRoZSBSUE1oIHZvdGUgd2UgbmVlZCBmaXJzdCBuZWVkIGEgdm9sdGFnZSBsZXZlbCB0aGF0
+IHdlCj4gY2FuIGxvb2sgdXAgaW4gYSBkYXRhYmFzZS4gcWNvbSxhcmMtbGV2ZWwgaXMgdGhlIHZv
+bHRhZ2UgbGV2ZWwgYXNzb2NpYXRlZCB3aXRoCj4gYSBzcGVjaWZpYyBPUFAuCj4gCj4gSSBoYWQg
+cHJldmlvdXNseSBiZWVuIGFidXNpbmcgdGhpcyB3aXRoIG9wcC1taWNyb3ZvbHQgYnV0IHRoYXQg
+d2FzIHdyb25nIGZvcgo+IG9idmlvdXMgcmVhc29ucyBhbmQgdGhlbiBTdGVwaGVuIHBvaW50ZWQg
+b3V0IHRoYXQgdGhpcyB3b3VsZCBiZSBhIGJldHRlciB3YXkuCgpHbGFkIHRoYXQgeW91IHNoYXJl
+ZCB0aGF0IDopCgpBIHNvbHV0aW9uIGlzIGFscmVhZHkgaW4gcHJvZ3Jlc3MgZm9yIHRoYXQgYW5k
+IGlzIHBhcnRpYWxseSBtZXJnZWQgYXMKd2VsbC4KCkxvb2sgZm9yICJwZXJmb3JtYW5jZV9zdGF0
+ZSIgaW4gZ2VucGQgYW5kIE9QUCBjb3JlcyAoYWxyZWFkeSBtZXJnZWQpLApmb2xsb3dlZCBieSB0
+aGlzIHNlcmllcyBoZXJlOgoKaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci9jb3Zlci4xNTEzOTI2
+MDMzLmdpdC52aXJlc2gua3VtYXJAbGluYXJvLm9yZwoKLS0gCnZpcmVzaApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
