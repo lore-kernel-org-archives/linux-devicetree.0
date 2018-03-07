@@ -1,102 +1,86 @@
-From: musashino.open@gmail.com
-Subject: [PATCH V2] ARM: dts: BCM5301X: add missing LEDs for Buffalo WZR-900DHP
-Date: Wed,  7 Mar 2018 20:33:56 +0900
-Message-ID: <1520422436-9405-1-git-send-email-musashino.open@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: f.fainelli@gmail.com
-Cc: hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, INAGAKI Hiroshi <musashino.open@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
+ connector
+Date: Wed, 7 Mar 2018 12:40:40 +0100
+Message-ID: <9778a303-36b0-2acb-5d15-766ae9f45727@samsung.com>
+References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
+ <20180227071134.28063-1-a.hajda@samsung.com>
+ <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
+ <5A9F4A7D.9020409@samsung.com> <5A9F6F29.5020501@samsung.com>
+ <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
+ <CAJKOXPfWwD-wYOzYacH4j7gfgDGh5MPAhXTR46wbYU=pw3zEhg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAJKOXPfWwD-wYOzYacH4j7gfgDGh5MPAhXTR46wbYU=pw3zEhg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: INAGAKI Hiroshi <musashino.open@gmail.com>
-
-Buffalo WZR-900DHP has 8 LEDs, but there is not LED definitions in the
-dts and cannot configure these LEDs.
-I Added missing LED definitions for WZR-900DHP.
-
-Signed-off-by: INAGAKI Hiroshi <musashino.open@gmail.com>
----
- arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts | 68 +++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts b/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
-index 8bef642..87ea6ba 100644
---- a/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
-+++ b/arch/arm/boot/dts/bcm47081-buffalo-wzr-900dhp.dts
-@@ -35,6 +35,74 @@
- 		       0x88000000 0x08000000>;
- 	};
- 
-+	spi {
-+		compatible = "spi-gpio";
-+		num-chipselects = <1>;
-+		gpio-sck = <&chipcommon 7 0>;
-+		gpio-mosi = <&chipcommon 4 0>;
-+		cs-gpios = <&chipcommon 6 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hc595: gpio_spi@0 {
-+			compatible = "fairchild,74hc595";
-+			reg = <0>;
-+			registers-number = <1>;
-+			spi-max-frequency = <100000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		usb {
-+			label = "bcm53xx:green:usb";
-+			gpios = <&hc595 0 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power0 {
-+			label = "bcm53xx:green:power";
-+			gpios = <&hc595 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		power1 {
-+			label = "bcm53xx:red:power";
-+			gpios = <&hc595 2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		router0 {
-+			label = "bcm53xx:green:router";
-+			gpios = <&hc595 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		router1 {
-+			label = "bcm53xx:amber:router";
-+			gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		wan {
-+			label = "bcm53xx:green:wan";
-+			gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		wireless0 {
-+			label = "bcm53xx:green:wireless";
-+			gpios = <&hc595 6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		wireless1 {
-+			label = "bcm53xx:amber:wireless";
-+			gpios = <&hc595 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		#address-cells = <1>;
--- 
-2.7.4
+T24gMDcuMDMuMjAxOCAxMjoyMiwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBPbiBXZWQs
+IE1hciA3LCAyMDE4IGF0IDEyOjEzIFBNLCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
+Y29tPiB3cm90ZToKPj4gSGkgQ2hhbndvbywgQXJjaGl0LAo+Pgo+PiBPbiAwNy4wMy4yMDE4IDA1
+OjQ4LCBDaGFud29vIENob2kgd3JvdGU6Cj4+PiBPbiAyMDE464WEIDAz7JuUIDA37J28IDExOjEy
+LCBDaGFud29vIENob2kgd3JvdGU6Cj4+Pj4gSGkgUm9iIGFuZCBBbmRyemVqLAo+Pj4+Cj4+Pj4g
+T24gMjAxOOuFhCAwM+yblCAwNuydvCAyMTo1MywgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+Pj4g
+SGkgUm9iLCBDaGFud29vLCBLcnp5c3p0b2YsCj4+Pj4+Cj4+Pj4+Cj4+Pj4+IE9uIDI3LjAyLjIw
+MTggMDg6MTEsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+Pj4+PiBIaSwKPj4+Pj4+Cj4+Pj4+PiBU
+aGFua3MgZm9yIHJldmlld3Mgb2YgcHJldmlvdXMgaXRlcmF0aW9ucy4KPj4+Pj4+Cj4+Pj4+PiBU
+aGlzIHBhdGNoc2V0IGludHJvZHVjZXMgVVNCIHBoeXNpY2FsIGNvbm5lY3RvciBiaW5kaW5ncywg
+dG9nZXRoZXIgd2l0aAo+Pj4+Pj4gd29ya2luZyBleGFtcGxlLgo+Pj4+Pj4gSSBoYXZlIHJlbW92
+ZWQgUkZDIHByZWZpeCAtIHRoZSBwYXRjaHNldCBzZWVtcyB0byBiZSBoZWFkaW5nCj4+Pj4+PiB0
+byBhIGhhcHB5IGVuZCA6KQo+Pj4+Pj4KPj4+Pj4+IHY1OiBmaXhlZCBleHRyYSBwYXJlbnRoZXNp
+cyBpbiBkdHMsIHJlbmFtZWQgZXh0Y29uIGZ1bmN0aW9uLgo+Pj4+Pj4gdjQ6IGltcHJvdmVkIGJp
+bmRpbmcgZGVzY3JpcHRpb25zLCBhZGRlZCBtaXNzaW5nIHJlZyBpbiBkdHMuCj4+Pj4+PiB2Mzog
+U2VwYXJhdGUgYmluZGluZyBmb3IgU2Ftc3VuZyAxMS1waW4gY29ubmVjdG9yLCBhZGRlZCBmdWxs
+LWJsb3duIFVTQi1DCj4+Pj4+PiAgICAgZXhhbXBsZS4KPj4+Pj4+IHYyOiBJIGhhdmUgYWRkcmVz
+c2VkIGNvbW1lbnRzIGJ5IFJvYiBhbmQgTGF1cmVudCwgdGhhbmtzCj4+Pj4+Pgo+Pj4+Pj4gQ2hh
+bmdlcyBpbiBkYXRhaWwgYXJlIGRlc2NyaWJlZCBpbiB0aGUgcGF0Y2hlcy4KPj4+Pj4+Cj4+Pj4+
+PiBSZWdhcmRzCj4+Pj4+PiBBbmRyemVqCj4+Pj4+Pgo+Pj4+Pj4KPj4+Pj4+IEFuZHJ6ZWogSGFq
+ZGEgKDUpOgo+Pj4+Pj4gICBkdC1iaW5kaW5nczogYWRkIGJpbmRpbmdzIGZvciBVU0IgcGh5c2lj
+YWwgY29ubmVjdG9yCj4+Pj4+PiAgIGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZ3MgZm9yIFNhbXN1
+bmcgbWljcm8tVVNCIDExLXBpbiBjb25uZWN0b3IKPj4+Pj4+ICAgYXJtNjQ6IGR0czogZXh5bm9z
+OiBhZGQgbWljcm8tVVNCIGNvbm5lY3RvciBub2RlIHRvIFRNMiBwbGF0Zm9ybXMKPj4+Pj4+ICAg
+YXJtNjQ6IGR0czogZXh5bm9zOiBhZGQgT0YgZ3JhcGggYmV0d2VlbiBNSEwgYW5kIFVTQiBjb25u
+ZWN0b3IKPj4+Pj4+ICAgZXh0Y29uOiBhZGQgcG9zc2liaWxpdHkgdG8gZ2V0IGV4dGNvbiBkZXZp
+Y2UgYnkgT0Ygbm9kZQo+Pj4+Pj4KPj4+Pj4+IE1hY2llaiBQdXJza2kgKDEpOgo+Pj4+Pj4gICBk
+cm0vYnJpZGdlL3NpaTg2MjA6IHVzZSBtaWNyby1VU0IgY2FibGUgZGV0ZWN0aW9uIGxvZ2ljIHRv
+IGRldGVjdCBNSEwKPj4+Pj4gSXQgbG9va3MgbGlrZSBhbGwgcGF0Y2hlcyByZWNlaXZlZCBSLUIg
+b3IgYWNrcyAoSSBmb3Jnb3QgYWRkIEtyenlzenRvZidzCj4+Pj4+IGFja3MgZm9yIGR0cyBwYXJ0
+KS4KPj4+Pj4gTm93IEkgaGF2ZSBhIHF1ZXN0aW9uIGhvdyB0byBtZXJnZSB0aGVtLgo+Pj4+PiBU
+aGUgb25seSBmdW5jdGlvbmFsIGRlcGVuZGVuY3kgaXMgYmV0d2VlbiBicmlkZ2UgYW5kIGV4dGNv
+biwgYW5kIGZyb20KPj4+Pj4gdGhlIGZvcm1hbCBQb1YgYmluZGluZ3Mgc2hvdWxkIGJlIG1lcmdl
+ZCAxc3QuCj4+Pj4+IEkgY2FuIG1lcmdlIGl0Ogo+Pj4+PiAxLiBBbGwgcGF0Y2hlcyB2aWEgZHJt
+LW1pc2MgdHJlZS4KPj4+Pj4gMi4gQWxsIHBhdGNoZXMgZXhjZXB0IGR0cyB2aWEgZHJtLW1pc2Ms
+IGFuZCBLcnp5c3p0b2Ygd2lsbCBtZXJnZSBkdHMgdmlhCj4+Pj4+IHNhbXN1bmctc29jIHRyZWUu
+Cj4+Pj4+Cj4+Pj4+IElzIGl0IE9LLCBmb3IgYWxsPyBCZXR0ZXIgaWRlYXM/Cj4+Pj4gS3J6eXN6
+dG9mIHBpY2tlZCB0aGUgZHRzIHBhdGNoZXMuIEknbGwgbWFrZSB0aGUgaW1tdXRhYmxlIGJyYW5j
+aCBiYXNlZCBvbiB2NC4xNi1yYzEKPj4+PiBhbmQgYXBwbHkgdGhlbSBleGNlcHQgZm9yIGR0cyBw
+YXRjaHMuIEFuZCBJJ2xsIHNlbmQgdGhlIGltbXV0YWJsZSBicmFuY2ggdG8gUm9iIGFuZCBBbmRy
+emVqLgo+Pj4+Cj4+Pj4KPj4+IEkgbWFkZSB0aGUgaW1tdXRhYmxlIGJyYW5jaFsxXSBhcyBmb2xs
+b3dpbmc6IElmIHlvdSBhZ3JlZSwgSSdsbCBzZW5kIHB1bGwgcmVxdWVzdC4KPj4+IFsxXSBodHRw
+czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9jaGFud29vL2V4dGNv
+bi5naXQvbG9nLz9oPWliLWV4dGNvbi1kcm0tZHQtdjQuMTcKPj4+Cj4+PiBPciB5b3UgY2FuIG1h
+a2UgdGhlIGltbXV0YWJsZSBicmFuY2ggYW5kIHNlbmQgcHVsbCByZXF1ZXN0IHRvIFJvYiBhbmQg
+bWUuCj4+Pgo+PiBJdCBzZWVtcyB5b3UgdG9vayB2NSBpbnN0ZWFkIG9mIHY2IHZlcnNpb24gb2Yg
+ZXh0Y29uIHBhdGNoLgo+IEkgYWxzbyB0b29rIHY1Ogo+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
+bC5vcmcvcGF0Y2gvMTAyNDQ0MDcvCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC8xMDI0NDQzMS8KPgo+IFRoZXJlIHdhcyBubyB2NiBpbiBzYW1zdW5nLXNvYyBwYXRjaHdvcmsu
+IElzIGl0IGEgcHJvYmxlbSBmb3IgRFRTPwoKTm8sIHY2IHdhcyBvbmx5IHR5cG8gZml4IGluIGNv
+bW1lbnQsIGFuZCBvbmx5IGV4dGNvbiBwYXRjaCBoYXMgdjYuCgpSZWdhcmRzCkFuZHJ6ZWoKCj4K
+PiBCUiwKPiBLcnp5c3p0b2YKPgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
