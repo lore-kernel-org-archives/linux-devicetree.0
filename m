@@ -1,161 +1,84 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 05/10] dt-bindings: gpio: Add gpio nodes for Actions
- S900 SoC
-Date: Thu, 8 Mar 2018 01:35:43 +0530
-Message-ID: <20180307200543.scpqbh7rb635b7c3@linaro.org>
-References: <20180302035045.14660-1-manivannan.sadhasivam@linaro.org>
- <20180302035045.14660-6-manivannan.sadhasivam@linaro.org>
- <20180307195233.bstixvrmwo4ozino@rob-hp-laptop>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] kbuild: Handle builtin dtb files containing hyphens
+Date: Wed, 7 Mar 2018 12:11:41 -0800
+Message-ID: <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
+References: <20180307140633.26182-1-jhogan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180307195233.bstixvrmwo4ozino@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180307140633.26182-1-jhogan@kernel.org>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>, linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+I initially misread the patch description (and imagined an entirely
+different problem).
 
-Thanks for the review.
 
-On Wed, Mar 07, 2018 at 01:52:33PM -0600, Rob Herring wrote:
-> On Fri, Mar 02, 2018 at 09:20:40AM +0530, Manivannan Sadhasivam wrote:
-> > Add gpio nodes for Actions Semi S900 SoC.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/gpio/actions,owl-gpio.txt  | 95 ++++++++++++++++++++++
-> >  1 file changed, 95 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> > new file mode 100644
-> > index 000000000000..d2939ca6cfaf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> > @@ -0,0 +1,95 @@
-> > +* Actions Semi OWL GPIO controller bindings
-> > +
-> > +The GPIOs are organized as individual banks/ports with variable number
-> > +of GPIOs. Each bank is represented as an individual GPIO controller.
-> > +
-> > +Required properties:
-> > +- compatible            : Should be "actions,s900-gpio"
-> > +- reg                   : Address and range of the GPIO controller registers.
-> > +- gpio-controller       : Marks the device node as a GPIO controller.
-> > +- #gpio-cells           : Should be <2>. The first cell is the gpio number
-> > +                          and the second cell is used to specify optional
-> > +                          parameters.
-> > +- interrupt-controller  : Marks the device node as an interrupt controller.
-> > +- #interrupt-cells      : Specifies the number of cells needed to encode an
-> > +                          interrupt.  Shall be set to 2.  The first cell
-> > +                          defines the interrupt number, the second encodes
-> > +                          the trigger flags described in
-> > +                          bindings/interrupt-controller/interrupts.txt
-> > +
-> > +Optional properties:
-> > +- gpio-ranges           : Mapping between GPIO and pinctrl
-> > +
-> > +Note: Each GPIO port should have an alias correctly numbered in "aliases"
-> > +node.
+On 03/07/18 06:06, James Hogan wrote:
+> On dtb files which contain hyphens, the dt_S_dtb command to build the> dtb.S files (which allow DTB files to be built into the kernel) results> in errors like the following:> > bcm3368-netgear-cvg834g.dtb.S: Assembler messages:> bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section> bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'> bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'> bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'> bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section> bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
+Please replace the following section:
+
+> This is due to the hyphen being used in symbol names. Replace all
+> hyphens 
+> with underscores in the dt_S_dtb command to avoid this problem.
 > 
-> Why? Please don't use aliases for gpios.
+> Quite a lot of dts files have hyphens, but its only a problem on MIPS
+> where such files can be built into the kernel. For example when
+> CONFIG_DT_NETGEAR_CVG834G=y, or on BMIPS kernels when the dtbs target is
+> used (in the latter case it admitedly shouldn't really build all the
+> dtb.o files, but thats a separate issue).
+
+with:
+
+   cmd_dt_S_dtb constructs the assembly source to incorporate a devicetree
+   FDT (that is, the .dtb file) as binary data in the kernel image.
+   This assembly source contains labels before and after the binary data.
+   The label names incorporate the file name of the corresponding .dtb
+   file.  Hyphens are not legal characters in labels, so transform all
+   hyphens from the file name to underscores when constructing the labels.
+
+> 
+> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+> Signed-off-by: James Hogan <jhogan@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Kevin Cernekee <cernekee@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-mips@linux-mips.org
+> Cc: <stable@vger.kernel.org> # 4.9+
+> ---
+>  scripts/Makefile.lib | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 5589bae34af6..a6f538b31ad6 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -297,11 +297,11 @@ cmd_dt_S_dtb=						\
+>  	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
+>  	echo '.section .dtb.init.rodata,"a"';		\
+>  	echo '.balign STRUCT_ALIGNMENT';		\
+> -	echo '.global __dtb_$(*F)_begin';		\
+> -	echo '__dtb_$(*F)_begin:';			\
+> +	echo '.global __dtb_$(subst -,_,$(*F))_begin';	\
+> +	echo '__dtb_$(subst -,_,$(*F))_begin:';		\
+>  	echo '.incbin "$<" ';				\
+> -	echo '__dtb_$(*F)_end:';			\
+> -	echo '.global __dtb_$(*F)_end';			\
+> +	echo '__dtb_$(subst -,_,$(*F))_end:';		\
+> +	echo '.global __dtb_$(subst -,_,$(*F))_end';	\
+>  	echo '.balign STRUCT_ALIGNMENT'; 		\
+>  ) > $@
+>  
 > 
 
-Okay.
-
-> > +
-> > +Examples:
-> > +
-> > +aliases {
-> > +        gpio0 = &gpioa;
-> > +        gpio1 = &gpiob;
-> > +        gpio2 = &gpioc;
-> > +        gpio3 = &gpiod;
-> > +        gpio4 = &gpioe;
-> > +        gpio5 = &gpiof;
-> > +};
-> > +
-> > +       gpioa: gpioa@e01b0000 {
-> 
-> Use generic node names (gpio).
->
-
-Okay. But how about the label? Should it be gpioa... or gpio1...
-In datasheet, the registers are named from gpioa to gpiof.
- 
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 0 32>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > +
-> > +       gpiob: gpiob@e01b0000 {
-> 
-> Ah, but your are duplicating addresses here which you shouldn't do 
-> either. These should be all one node if you can avoid overlapping.
->
-
-Hmmm. Okay. Then I can use the sub address for all nodes. But having a single
-node doesn't makes sense here since each bank has its own interrupt
-domain and somewhat resembles an individual controller.
-
-Thanks,
-Mani
-
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 32 32>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > +
-> > +       gpioc: gpioc@e01b0000 {
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 64 12>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > +
-> > +       gpiod: gpiod@e01b0000 {
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 76 30>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > +
-> > +       gpioe: gpioe@e01b0000 {
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 106 32>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > +
-> > +       gpiof: gpiof@e01b0000 {
-> > +               compatible = "actions,s900-gpio";
-> > +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> > +               gpio-ranges = <&pinctrl 0 138 8>;
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <2>;
-> > +       };
-> > -- 
-> > 2.14.1
-> > 
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
