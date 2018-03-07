@@ -1,58 +1,30 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] DT: display: renesas,
- du: document R8A77970 bindings
-Date: Wed, 07 Mar 2018 19:18:41 +0200
-Message-ID: <3942494.WgSgihLYRZ@avalon>
-References: <20180118211024.314876177@cogentembedded.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next] dt-bindings: net: dsa: marvell: describe
+ compatibility string
+Date: Wed, 07 Mar 2018 12:19:05 -0500 (EST)
+Message-ID: <20180307.121905.1363133433451256877.davem@davemloft.net>
+References: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180118211024.314876177@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: brandon.streiff@ni.com
+Cc: andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTggSmFu
-dWFyeSAyMDE4IDIzOjA1OjU4IEVFVCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6Cj4gRG9jdW1lbnQg
-dGhlIFItQ2FyIFYzTSAoUjhBNzc5NzApIFNvQyBpbiB0aGUgUi1DYXIgRFUgYmluZGluZ3MuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50
-ZW1iZWRkZWQuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGlu
-Y2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCmFuZCBhcHBsaWVkIHRvIG15IHRyZWUgd2l0aCB0aGUg
-c3ViamVjdCBwcmVmaXhlZCBjaGFuZ2VkIHBlciBSb2IncyByZXF1ZXN0LgoKPiAtLS0KPiBDaGFu
-Z2VzIGluIHZlcnNpb24gMjoKPiAtIGRvY3VtZW50ZWQgIFI4QTc3OTcwIERVIHBvcnRzOwo+IC0g
-cGF0Y2ggc3BsaXQgZnJvbSB0aGUgbWFpbiBSOEE3Nzk3MCBEVSBzdXBwb3J0IHBhdGNoLgo+IAo+
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
-dCB8ICAgIDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IEluZGV4
-OiBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
-LGR1LnR4dAo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT0KPiAtLS0gbGludXgub3JpZy9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ICsrKyBsaW51eC9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+IEBAIC0x
-Myw2ICsxMyw3IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4gICAgICAtICJyZW5lc2FzLGR1LXI4
-YTc3OTQiIGZvciBSOEE3Nzk0IChSLUNhciBFMikgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVu
-ZXNhcyxkdS1yOGE3Nzk1IiBmb3IgUjhBNzc5NSAoUi1DYXIgSDMpIGNvbXBhdGlibGUgRFUKPiAg
-ICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NiIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBh
-dGlibGUgRFUKPiArICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NzAiIGZvciBSOEE3Nzk3MCAoUi1D
-YXIgVjNNKSBjb21wYXRpYmxlIERVCj4gCj4gICAgLSByZWc6IEEgbGlzdCBvZiBiYXNlIGFkZHJl
-c3MgYW5kIGxlbmd0aCBvZiBlYWNoIG1lbW9yeSByZXNvdXJjZSwgb25lIGZvcgo+IGVhY2ggZW50
-cnkgaW4gdGhlIHJlZy1uYW1lcyBwcm9wZXJ0eS4KPiBAQCAtNjMsNiArNjQsNyBAQCBjb3JyZXNw
-b25kaW5nIHRvIGVhY2ggRFUgb3V0cHV0Lgo+ICAgUjhBNzc5NCAoUi1DYXIgRTIpICAgRFBBRCAw
-ICAgICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc5NSAoUi1D
-YXIgSDMpICAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgSERNSSAxICAgICAgICAgTFZE
-UyAwCj4gICBSOEE3Nzk2IChSLUNhciBNMy1XKSBEUEFEIDAgICAgICAgICBIRE1JIDAgICAgICAg
-ICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3Nzk3MCAoUi1DYXIgVjNNKSBEUEFEIDAgICAgICAg
-ICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCj4gCj4gCj4gIEV4YW1wbGU6IFI4QTc3
-OTUgKFItQ2FyIEgzKSBFUzIuMCBEVQoKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Brandon Streiff <brandon.streiff@ni.com>
+Date: Mon, 5 Mar 2018 16:05:22 -0600
+
+> There are two compatibility strings for mv88e6xxx, but it isn't clear
+> from the documentation why only those two exist when the mv88e6xxx driver
+> supports more than the 6085 and 6190. Briefly describe how the compatible
+> property is used, and provide guidance on which to use.
+> 
+> The model list comes from looking at port_base_addr values (0x0 vs 0x10)
+> in drivers/net/dsa/mv88e6xxx/chip.c.
+> 
+> Signed-off-by: Brandon Streiff <brandon.streiff@ni.com>
+
+Applied.
