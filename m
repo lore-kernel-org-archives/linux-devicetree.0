@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 6/6] staging: vc04_services: Remove vchiq_queue_bulk_{transmit,receive}.
-Date: Wed,  7 Mar 2018 10:57:16 -0800
-Message-ID: <20180307185716.17449-6-eric@anholt.net>
+Subject: [PATCH v2 4/6] ARM: dts: bcm2835: Add VCHIQ node to the Raspberry Pi boards.
+Date: Wed,  7 Mar 2018 10:57:14 -0800
+Message-ID: <20180307185716.17449-4-eric@anholt.net>
 References: <20180307185716.17449-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
@@ -10,67 +10,39 @@ To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-These are dead code, including in the downstream Raspberry Pi tree.
+The VCHIQ firmware communication channel operates in parallel with our
+other mailbox-based channel.  This is the communication channel that
+exposes the firmware's media decode/encode and ISP interfaces.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
-v2: new patch while I was looking around the code.
 
- .../vc04_services/interface/vchiq_arm/vchiq_arm.c    | 20 --------------------
- .../vc04_services/interface/vchiq_arm/vchiq_if.h     | 10 ----------
- 2 files changed, 30 deletions(-)
+v2: dropped firmware property, added cache-line-size.
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index 8068c0308b34..24d456b0a6f0 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -406,26 +406,6 @@ VCHIQ_STATUS_T vchiq_open_service(
- }
- EXPORT_SYMBOL(vchiq_open_service);
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index e36c392a2b8f..ba6dd25ac93f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -27,6 +27,17 @@
+ 			firmware = <&firmware>;
+ 			#power-domain-cells = <1>;
+ 		};
++
++		vchiq@7e00b840 {
++			compatible = "brcm,bcm2835-vchiq";
++			reg = <0x7e00b840 0xf>;
++			interrupts = <0 2>;
++			/* The VPU firmware will override this DT property
++			 * (if present) with the L2 cache line size value it
++			 * wants to use.
++			 */
++			cache-line-size = <32>;
++		};
+ 	};
+ };
  
--VCHIQ_STATUS_T
--vchiq_queue_bulk_transmit(VCHIQ_SERVICE_HANDLE_T handle,
--	const void *data, unsigned int size, void *userdata)
--{
--	return vchiq_bulk_transfer(handle,
--		VCHI_MEM_HANDLE_INVALID, (void *)data, size, userdata,
--		VCHIQ_BULK_MODE_CALLBACK, VCHIQ_BULK_TRANSMIT);
--}
--EXPORT_SYMBOL(vchiq_queue_bulk_transmit);
--
--VCHIQ_STATUS_T
--vchiq_queue_bulk_receive(VCHIQ_SERVICE_HANDLE_T handle, void *data,
--	unsigned int size, void *userdata)
--{
--	return vchiq_bulk_transfer(handle,
--		VCHI_MEM_HANDLE_INVALID, data, size, userdata,
--		VCHIQ_BULK_MODE_CALLBACK, VCHIQ_BULK_RECEIVE);
--}
--EXPORT_SYMBOL(vchiq_queue_bulk_receive);
--
- VCHIQ_STATUS_T
- vchiq_bulk_transmit(VCHIQ_SERVICE_HANDLE_T handle, const void *data,
- 	unsigned int size, void *userdata, VCHIQ_BULK_MODE_T mode)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-index 0e270852900d..e4109a83e628 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-@@ -149,16 +149,6 @@ vchiq_queue_message(VCHIQ_SERVICE_HANDLE_T handle,
- 		    size_t size);
- extern void           vchiq_release_message(VCHIQ_SERVICE_HANDLE_T service,
- 	VCHIQ_HEADER_T *header);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_transmit(VCHIQ_SERVICE_HANDLE_T service,
--	const void *data, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_receive(VCHIQ_SERVICE_HANDLE_T service,
--	void *data, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_transmit_handle(
--	VCHIQ_SERVICE_HANDLE_T service, VCHI_MEM_HANDLE_T handle,
--	const void *offset, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_receive_handle(
--	VCHIQ_SERVICE_HANDLE_T service, VCHI_MEM_HANDLE_T handle,
--	void *offset, unsigned int size, void *userdata);
- extern VCHIQ_STATUS_T vchiq_bulk_transmit(VCHIQ_SERVICE_HANDLE_T service,
- 	const void *data, unsigned int size, void *userdata,
- 	VCHIQ_BULK_MODE_T mode);
 -- 
 2.16.2
