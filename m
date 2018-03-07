@@ -1,96 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCHv2] reset: ti-rstctrl: use the reset-simple driver
-Date: Wed,  7 Mar 2018 10:21:43 -0800
-Message-ID: <20180307182143.58383-1-tony@atomide.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v2 2/6] staging: vc04_services: Add comments describing g_cache_line_size.
+Date: Wed,  7 Mar 2018 10:57:12 -0800
+Message-ID: <20180307185716.17449-2-eric@anholt.net>
+References: <20180307185716.17449-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-We can support the RSTCTRL reset registers on many TI SoCs with
-reset-simple.
+It's been tempting to replace this with (L1) cache_line_size(), but
+that's really not what the value is about.  It's about coordinating
+the condition for the pagelist fragment behavior between the two
+sides.
 
-Note that some devices will also need to check the RSTST bits
-for reset reason. Support for these could be possibly added to
-the reset controller framework later on.
-
-Cc: Dave Gerlach <d-gerlach@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Nishant Menon <nm@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Suman Anna <s-anna@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
 
-Changes since v1:
-- Update patch description to mention the unhandled RSTST bits
-- Rebase against Linux next
+v2: new patch to replace the cache_line_size() patch.
 
----
- .../devicetree/bindings/reset/ti-rstctrl.txt         | 20 ++++++++++++++++++++
- drivers/reset/Kconfig                                |  3 ++-
- drivers/reset/reset-simple.c                         |  1 +
- 3 files changed, 23 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/reset/ti-rstctrl.txt
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 +++++++++-
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h |  1 -
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/ti-rstctrl.txt b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/ti-rstctrl.txt
-@@ -0,0 +1,20 @@
-+TI RSTCTRL Reset Controller
-+
-+Required properties:
-+- compatible : "ti,rstctrl"
-+- reg : Should contain 1 register ranges(address and length)
-+- #reset-cells: 1
-+
-+Example:
-+	prm_gfx: prm@1100 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1100 0x100>;
-+
-+		gfx_rstctrl: rstctrl@4 {
-+			compatible = "ti,rstctrl";
-+			reg = <0x4 0x4>;
-+			#reset-cells = <1>;
-+		};
-+	};
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -84,7 +84,7 @@ config RESET_PISTACHIO
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index b59ef14890aa..3aeffa189f64 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -77,7 +77,11 @@ struct vchiq_pagelist_info {
+ };
  
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_OMAP2PLUS || ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-@@ -95,6 +95,7 @@ config RESET_SIMPLE
- 	   - ASPEED BMC SoCs
- 	   - RCC reset controller in STM32 MCUs
- 	   - Allwinner SoCs
-+	   - TI SoCs
- 	   - ZTE's zx2967 family
+ static void __iomem *g_regs;
+-static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
++/* This value is the size of the L2 cache lines as understood by the
++ * VPU firmware, which determines the required alignment of the
++ * offsets/sizes in pagelists.
++ */
++static unsigned int g_cache_line_size = 32;
+ static unsigned int g_fragments_size;
+ static char *g_fragments_base;
+ static char *g_free_fragments;
+@@ -117,6 +121,10 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+ 	if (err < 0)
+ 		return err;
  
- config RESET_SUNXI
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -123,6 +123,7 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 	{ .compatible = "st,stm32-rcc", },
- 	{ .compatible = "allwinner,sun6i-a31-clock-reset",
- 		.data = &reset_simple_active_low },
-+	{ .compatible = "ti,rstctrl", },
- 	{ .compatible = "zte,zx296718-reset",
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
++	/* Get the L2 cache-line-size as set by the VPU.  If the
++	 * property is missing, then the firmware assumes an older
++	 * kernel using a 32-byte cache line size for compatibility.
++	 */
+ 	err = of_property_read_u32(dev->of_node, "cache-line-size",
+ 				   &g_cache_line_size);
+ 
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+index a6c5f7cc78f0..bec411061554 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+@@ -34,7 +34,6 @@
+ #ifndef VCHIQ_PAGELIST_H
+ #define VCHIQ_PAGELIST_H
+ 
+-#define CACHE_LINE_SIZE 32
+ #define PAGELIST_WRITE 0
+ #define PAGELIST_READ 1
+ #define PAGELIST_READ_WITH_FRAGMENTS 2
 -- 
 2.16.2
