@@ -1,98 +1,362 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Wed, 7 Mar 2018 11:02:49 -0800
-Message-ID: <20180307190249.GW93895@bjorns-mbp-2.lan>
-References: <20180226175802.20052-1-ilina@codeaurora.org>
- <20180226175802.20052-3-ilina@codeaurora.org>
- <20180305231455.GJ18510@minitux>
- <20180306155703.GA4930@codeaurora.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v2 1/8] [PATCH 1/8] drivers/peci: Add support for PECI bus
+ driver core
+Date: Wed, 7 Mar 2018 11:03:25 -0800
+Message-ID: <1bd83849-50f4-d857-d346-d5a5bd0ca569@linux.intel.com>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+ <20180307031907.GD1924@kryptos.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180306155703.GA4930@codeaurora.org>
+In-Reply-To: <20180307031907.GD1924@kryptos.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+To: Julia Cartwright <juliac@eso.teric.us>
+Cc: joel@jms.id.au, andrew@aj.id.au, arnd@arndb.de, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net, benh@kernel.crashing.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 06 Mar 07:57 PST 2018, Lina Iyer wrote:
+Hi Julia,
 
-> On Mon, Mar 05 2018 at 16:15 -0700, Bjorn Andersson wrote:
-> > On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
-> > 
-> > > From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> > > 
-> > > Command DB provides information on shared resources like clocks,
-> > > regulators etc., probed at boot by the remote subsytem and made
-> > > available in shared memory.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> > > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> > > ---
-> > > 
-> > > Changes in v4:
-> > > 	- Fix unwanted capitalization
-> > > 	- Add reg property
-> > > ---
-> > >  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> > [..]
-> > > +	reserved-memory {
-> > > +		[...]
-> > > +		qcom,cmd-db@c3f000c {
-> > > +			reg = <0x0 0xc3f000c 0x0 0x8>,
-> > > +			      <0x0 0x85fe0000 0x0 0x20000>;
-> > 
-> > I'm still concerned about the use of the redirection mapping here,
-> > the relocation at 0xc3f000c is used a convenience thing so that the
-> > command db can be relocated, but because of how Linux will consume any
-> > non-reserved memory the dts would still need to be manually updated.
-> > 
-> This location is fixed and it is not expected to change between
-> different boards. OEMs may change the actual address of the command db
-> location, but would not change the dictionary location.
+Thanks for sharing your time on reviewing it. Please see my inline answers.
+
+Jae
+
+On 3/6/2018 7:19 PM, Julia Cartwright wrote:
+> On Wed, Feb 21, 2018 at 08:15:59AM -0800, Jae Hyun Yoo wrote:
+>> This commit adds driver implementation for PECI bus into linux
+>> driver framework.
+>>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> ---
+> [..]
+>> +static int peci_locked_xfer(struct peci_adapter *adapter,
+>> +			    struct peci_xfer_msg *msg,
+>> +			    bool do_retry,
+>> +			    bool has_aw_fcs)
+> 
+> _locked generally means that this function is invoked with some critical
+> lock held, what lock does the caller need to acquire before invoking
+> this function?
 > 
 
-Right, dictionary location is fixed. So to pick another range for
-command db one would update the numbers that goes into the dictionary
-and expect all software in the system to use this new range.
+I intended to show that this function has a mutex locking inside for 
+serialization of PECI data transactions from multiple callers, but as 
+you commented out below, the mutex protection scope should be adjusted 
+to make that covers the peci_scan_cmd_mask() function too. I'll rewrite 
+the mutex protection scope then this function will be in the locked scope.
 
-> > As such I think you should just describe only the 0x85fe0000 + 0x20000
-> > region here and to support the dynamic aspect of this from a system
-> > point of view you can have the boot loader read the information at
-> > 0xc3f000c and adjust the reserved memory. (Or just keep the step of
-> > manually update the dts without caring about the indirection)
-> > 
-> It would be incorrect and very board specific to just use the 0x85fe000
-> as the address. It is not how the SoC defines the location. Upon request
-> earlier, this memory location was added in DT and the location is
-> typical reference platform usage only.
+>> +{
+>> +	ktime_t start, end;
+>> +	s64 elapsed_ms;
+>> +	int rc = 0;
+>> +
+>> +	if (!adapter->xfer) {
+> 
+> Is this really an optional feature of an adapter?  If this is not
+> optional, then this check should be in place when the adapter is
+> registered, not here.  (And it should WARN_ON(), because it's a driver
+> developer error).
 > 
 
-The problem is that as the db resides in a chunk of memory in the middle
-of what Linux considers System RAM the DTS must specify this region as
-reserved. Which means that as you, like described above, update the
-dictionary something (in your scheme a person) has to update the
-reserved-memory region as well.
+I agree with you. I'll move this code into the peci_register_adapter() 
+function.
 
-That's why I'm proposing that the appropriate implementation for this
-is to have the boot loader to the dictionary part of this and Linux only
-care about the actual reserved-memory region. This way you would still
-implement the dictionary lookup on a system level, but the Linux
-part no longer depend on a human updating the DTS to match the values of
-the dictionary.
+>> +		dev_dbg(&adapter->dev, "PECI level transfers not supported\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (in_atomic() || irqs_disabled()) {
+> 
+> As Andrew mentioned, this is broken.
+> 
+> You don't even need a might_sleep().  The locking functions you use here
+> will already include a might_sleep() w/ CONFIG_DEBUG_ATOMIC_SLEEP.
+> 
 
+Thanks for letting me know that. I'll drop that checking code and 
+might_sleep() too.
 
-But if we stick with the approach of describing both these and hoping
-that the values in the first region matches the second (or should we add
-a sanity check in probe?). The memory reserve defined as 0xc3f000c + 8
-looks strange, is this system ram as well and what other things resides
-in that same page?
+>> +		rt_mutex_trylock(&adapter->bus_lock);
+>> +		if (!rc)
+>> +			return -EAGAIN; /* PECI activity is ongoing */
+>> +	} else {
+>> +		rt_mutex_lock(&adapter->bus_lock);
+>> +	}
+>> +
+>> +	if (do_retry)
+>> +		start = ktime_get();
+>> +
+>> +	do {
+>> +		rc = adapter->xfer(adapter, msg);
+>> +
+>> +		if (!do_retry)
+>> +			break;
+>> +
+>> +		/* Per the PECI spec, need to retry commands that return 0x8x */
+>> +		if (!(!rc && ((msg->rx_buf[0] & DEV_PECI_CC_RETRY_ERR_MASK) ==
+>> +			      DEV_PECI_CC_TIMEOUT)))
+>> +			break;
+> 
+> This is pretty difficult to parse.  Can you split it into two different
+> conditions?
+> 
 
-Regards,
-Bjorn
+Sure. I'll split it out.
+
+>> +
+>> +		/* Set the retry bit to indicate a retry attempt */
+>> +		msg->tx_buf[1] |= DEV_PECI_RETRY_BIT;
+> 
+> Are you sure this bit is to be set in the _second_ byte of tx_buf?
+> 
+
+Yes, I'm pretty sure. The first byte contains a PECI command value and 
+the second byte contains 'HostID[7:1] & Retry[0]' value.
+
+>> +
+>> +		/* Recalculate the AW FCS if it has one */
+>> +		if (has_aw_fcs)
+>> +			msg->tx_buf[msg->tx_len - 1] = 0x80 ^
+>> +						peci_aw_fcs((u8 *)msg,
+>> +							    2 + msg->tx_len);
+>> +
+>> +		/* Retry for at least 250ms before returning an error */
+>> +		end = ktime_get();
+>> +		elapsed_ms = ktime_to_ms(ktime_sub(end, start));
+>> +		if (elapsed_ms >= DEV_PECI_RETRY_TIME_MS) {
+>> +			dev_dbg(&adapter->dev, "Timeout retrying xfer!\n");
+>> +			break;
+>> +		}
+>> +	} while (true);
+>> +
+>> +	rt_mutex_unlock(&adapter->bus_lock);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int peci_xfer(struct peci_adapter *adapter, struct peci_xfer_msg *msg)
+>> +{
+>> +	return peci_locked_xfer(adapter, msg, false, false);
+>> +}
+>> +
+>> +static int peci_xfer_with_retries(struct peci_adapter *adapter,
+>> +				  struct peci_xfer_msg *msg,
+>> +				  bool has_aw_fcs)
+>> +{
+>> +	return peci_locked_xfer(adapter, msg, true, has_aw_fcs);
+>> +}
+>> +
+>> +static int peci_scan_cmd_mask(struct peci_adapter *adapter)
+>> +{
+>> +	struct peci_xfer_msg msg;
+>> +	u32 dib;
+>> +	int rc = 0;
+>> +
+>> +	/* Update command mask just once */
+>> +	if (adapter->cmd_mask & BIT(PECI_CMD_PING))
+>> +		return 0;
+>> +
+>> +	msg.addr      = PECI_BASE_ADDR;
+>> +	msg.tx_len    = GET_DIB_WR_LEN;
+>> +	msg.rx_len    = GET_DIB_RD_LEN;
+>> +	msg.tx_buf[0] = GET_DIB_PECI_CMD;
+>> +
+>> +	rc = peci_xfer(adapter, &msg);
+>> +	if (rc < 0) {
+>> +		dev_dbg(&adapter->dev, "PECI xfer error, rc : %d\n", rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	dib = msg.rx_buf[0] | (msg.rx_buf[1] << 8) |
+>> +	      (msg.rx_buf[2] << 16) | (msg.rx_buf[3] << 24);
+>> +
+>> +	/* Check special case for Get DIB command */
+>> +	if (dib == 0x00) {
+>> +		dev_dbg(&adapter->dev, "DIB read as 0x00\n");
+>> +		return -1;
+>> +	}
+>> +
+>> +	if (!rc) {
+> 
+> You should change this to:
+> 
+> 	if (rc) {
+> 		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
+> 		return rc;
+> 	}
+> 
+> And then leave the happy path below unindented.
+> 
+
+Agreed. That would be neater. Will rewrite it. Thanks!
+
+>> +		/**
+>> +		 * setting up the supporting commands based on minor rev#
+>> +		 * see PECI Spec Table 3-1
+>> +		 */
+>> +		dib = (dib >> 8) & 0xF;
+>> +
+>> +		if (dib >= 0x1) {
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PKG_CFG);
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PKG_CFG);
+>> +		}
+>> +
+>> +		if (dib >= 0x2)
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_IA_MSR);
+>> +
+>> +		if (dib >= 0x3) {
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG_LOCAL);
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG_LOCAL);
+>> +		}
+>> +
+>> +		if (dib >= 0x4)
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG);
+>> +
+>> +		if (dib >= 0x5)
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG);
+>> +
+>> +		if (dib >= 0x6)
+>> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_IA_MSR);
+>> +
+>> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_TEMP);
+>> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_DIB);
+>> +		adapter->cmd_mask |= BIT(PECI_CMD_PING);
+> 
+> These cmd_mask updates are not done with any locking in mind.  Is this
+> intentional?  Or: is synchronization not necessary because this is
+> always done during enumeration prior to exposing the adapter to users?
+> 
+
+Thanks for the pointing it out. This function should be done in a locked 
+scope as you said. I'll adjust mutex protection scope to make that 
+covers this function as well.
+
+>> +	} else {
+>> +		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
+>> +	}
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int peci_cmd_support(struct peci_adapter *adapter, enum peci_cmd cmd)
+>> +{
+>> +	if (!(adapter->cmd_mask & BIT(PECI_CMD_PING)) &&
+>> +	    peci_scan_cmd_mask(adapter) < 0) {
+>> +		dev_dbg(&adapter->dev, "Failed to scan command mask\n");
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	if (!(adapter->cmd_mask & BIT(cmd))) {
+>> +		dev_dbg(&adapter->dev, "Command %d is not supported\n", cmd);
+>> +		return -EINVAL;
+>> +	}
+> 
+> It would be nicer if you did this check prior to dispatching to the
+> various subfunctions (peci_ioctl_ping, peci_ioctl_get_dib, etc.).  In
+> that way, these functions could just assume the adapter supports them.
+> 
+
+Agreed. I'll drop all individual calls from subfunctions and will call 
+it from peci_command().
+
+> [..]
+>> +static int peci_register_adapter(struct peci_adapter *adapter)
+>> +{
+>> +	int res = -EINVAL;
+>> +
+>> +	/* Can't register until after driver model init */
+>> +	if (WARN_ON(!is_registered)) {
+> 
+> Is this solving a problem you actually ran into?
+> 
+
+Generally, an adapter driver registration will be happened after the 
+PECI bus registration because peci_init uses postcore_initcall, but in 
+case of incorrect implementation of an adapter driver which uses
+a preceding postcore_initcall or a core_initcall as its module init, 
+then an adapter registration would be prior to bus registration. This 
+code is an exceptional case handling for that to warn the incorrect 
+adapter driver implementation.
+
+> [.. skipped review due to fatigue ..]
+> 
+>> +++ b/include/linux/peci.h
+>> @@ -0,0 +1,97 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018 Intel Corporation
+>> +
+>> +#ifndef __LINUX_PECI_H
+>> +#define __LINUX_PECI_H
+>> +
+>> +#include <linux/cdev.h>
+>> +#include <linux/device.h>
+>> +#include <linux/peci-ioctl.h>
+>> +#include <linux/rtmutex.h>
+>> +
+>> +#define PECI_BUFFER_SIZE  32
+>> +#define PECI_NAME_SIZE    32
+>> +
+>> +struct peci_xfer_msg {
+>> +	u8	addr;
+>> +	u8	tx_len;
+>> +	u8	rx_len;
+>> +	u8	tx_buf[PECI_BUFFER_SIZE];
+>> +	u8	rx_buf[PECI_BUFFER_SIZE];
+>> +} __attribute__((__packed__));
+> 
+> The packed attribute has historically caused gcc to emit atrocious code,
+> as it seems to assume packed implies members might not be naturally
+> aligned.  Seeing as you're only working with u8s in this case, though,
+> this shouldn't be a problem.
+> 
+
+It should be a packed struct because it is also being used for CRC8 
+calculation which is treating it as a contiguous byte array.
+
+>> +struct peci_board_info {
+>> +	char			type[PECI_NAME_SIZE];
+>> +	u8			addr;	/* CPU client address */
+>> +	struct device_node	*of_node;
+>> +};
+>> +
+>> +struct peci_adapter {
+>> +	struct module	*owner;
+>> +	struct rt_mutex	bus_lock;
+> 
+> Why an rt_mutex, instead of a regular mutex.  Do you explicitly need PI
+> in mainline?
+> 
+
+Currently this implementation has only a temperature monitoring sideband 
+feature but other sideband features such as CPU error detection and 
+crash dump will be implemented later, and those additional sideband 
+features should have higher priority than the temperature monitoring 
+feature so it is the reason why I used an rt_mutex.
+
+>> +	struct device	dev;
+>> +	struct cdev	cdev;
+>> +	int		nr;
+>> +	char		name[PECI_NAME_SIZE];
+>> +	int		(*xfer)(struct peci_adapter *adapter,
+>> +				struct peci_xfer_msg *msg);
+>> +	uint		cmd_mask;
+>> +};
+>> +
+>> +#define to_peci_adapter(d) container_of(d, struct peci_adapter, dev)
+> 
+> You can also do this with a static inline, which provides a marginally
+> better error when screwed up.
+> 
+
+Agreed. That would be more helpful for debugging in debug build. I'll 
+rewrite the macro to a static inline like below:
+
+static inline struct peci_adapter *to_peci_adapter(void *d)
+{
+	return container_of(d, struct peci_adapter, dev);
+}
+
+>     Julia
+> 
