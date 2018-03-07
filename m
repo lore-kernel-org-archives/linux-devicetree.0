@@ -1,19 +1,20 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH 2/5] staging: vc04_services: Remove cache-line-size
- property.
-Date: Wed, 7 Mar 2018 12:39:56 +0000
-Message-ID: <51dc71d7-e8f5-2785-ad13-a941bc9278ab@raspberrypi.org>
-References: <20180305202806.21219-1-eric@anholt.net>
- <20180305202806.21219-3-eric@anholt.net>
- <a8f369f5-691c-c05f-4c7c-2eadcf4c48c8@i2se.com> <87muzl9ger.fsf@anholt.net>
- <638bd870-bb17-a0e1-d2aa-30a364b53279@raspberrypi.org>
- <1332781939.275857.1520424630939@email.1und1.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Wed, 7 Mar 2018 13:42:48 +0100 (CET)
+Message-ID: <2071508922.276811.1520426568577@email.1und1.de>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <438185389.274708.1520422108782@email.1und1.de>
+ <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1332781939.275857.1520424630939@email.1und1.de>
-Content-Language: en-US
+In-Reply-To: <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,50 +24,94 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/03/2018 12:10, Stefan Wahren wrote:
-> Hi Phil,
-
-<snip>
-
->> It is the L2 cache line size that matters, but as long as you end up with
->> the numbers Stefan mentioned - 32 on BCM2835, 64 on BCM2836 and BCM2837 -
->> I'm not too bothered how you get there.
-> 
-> i think a kernel with bcm2835_defconfig on RPi 2 could be such a corncase.
-> 
-> Am i right that the firmware doesn't rely on the existence of "cache-line-size"?
-
-Because of the way partial cache lines are handled it is more important that the
-two sides agree than that the value is correct. As a result, the firmware treats
-the absence of a "cache_line_size" DT parameter (that sets the "cache-line-size"
-property) in the DTB as an indication that the kernel driver pre-dates the ability
-to switch, and uses the old fixed value of 32 as a fallback. Otherwise it sets the
-parameter and the internal value used by the VPU-side VCHIQ to the correct value.
-
-There are a number of ways to fix this, the easiest of which is to assume that the kernel
-driver will either read the property or be able to work out the correct value, so
-the VPU should always use the correct value regardless of the success of applying
-the parameter/changing the property.
-
-> Btw it would be nice to get fixed the corruption on ARM64 [1].
-
-This is almost certainly due to the logic described above.
-
-> 
-> Stefan
-> 
-> [1] - https://github.com/lategoodbye/rpi-zero/issues/23
-> 
->>
->> Phil
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+SGkgTWFyY2VsLApoaSBMb2ljLAoKPiBNYXJjZWwgSG9sdG1hbm4gPG1hcmNlbEBob2x0bWFubi5v
+cmc+IGhhdCBhbSA3LiBNw6RyeiAyMDE4IHVtIDEzOjEyIGdlc2NocmllYmVuOgo+IAo+IAo+IEhp
+IFN0ZWZhbiwKPiAKPiA+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJkZXYg
+c2xhdmUgZGV2aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPiA+Pj4+PiBUaGlzIGFsbG93
+cyB0byBhdXRvbWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+
+ID4+Pj4+IHN1YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2Ug
+aGVscGVycyAoaGNpYXR0YWNoKS4KPiA+Pj4+PiAKPiA+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEg
+ZGVidWcgVUFSVCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPiA+Pj4+PiAKPiA+Pj4+PiBT
+aWduZWQtb2ZmLWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+
+Pj4+IC0tLQo+ID4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMg
+fCAxNCArKysrKysrKysrKysrLQo+ID4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
+KCspLCAxIGRlbGV0aW9uKC0pCj4gPj4+Pj4gCj4gPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20y
+ODM1LXJwaS16ZXJvLXcuZHRzCj4gPj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAxMDA2NDQK
+PiA+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4g
+Pj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+ID4+
+Pj4+IEBAIC0xMzEsNiArMTMxLDE4IEBACj4gPj4+Pj4gCj4gPj4+Pj4gJnVhcnQwIHsKPiA+Pj4+
+PiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiA+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFy
+dDBfZ3BpbzE0PjsKPiA+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzMyICZ1YXJ0MF9j
+dHNydHNfZ3BpbzMwPjsKPiA+Pj4+PiArCXN0YXR1cyA9ICJva2F5IjsKPiA+Pj4+PiArCj4gPj4+
+Pj4gKwlibHVldG9vdGggewo+ID4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiYnJjbSxiY200MzQzOC1i
+dCI7Cj4gPj4+Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+ID4+Pj4+ICsJCXNodXRkb3du
+LWdwaW9zID0gPCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+Pj4+ICsJfTsKPiA+Pj4+
+PiArfTsKPiA+Pj4+IAo+ID4+Pj4gaXMgdGhlIHNodXRkb3duIEdQSU8gd29ya2luZyBhcyBleHBl
+Y3RlZCB3aXRoIHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9kdWxlIHVubG9hZCBhbmQgcmVsb2Fk
+IHdvcmtzIGZpbmU/Cj4gPj4+IAo+ID4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZp
+bmUuIAo+ID4+PiAKPiA+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1
+MjAwIGRlZmF1bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+ID4+PiAKPiA+Pj4gSSBhc3N1bWUg
+dGhhdCwgYmVjYXVzZSByZWxvYWQgd29ya3MgYXMgZXhwZWN0ZWQuIAo+ID4+IAo+ID4+IGF3ZXNv
+bWUuIFRoYXQgaXMgZ29vZCBuZXdzLgo+ID4+IAo+ID4+IFNpbmNlIHlvdSBzYWlkIHRoYXQgdGhl
+IEdQSU8gZXhwYW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4gYWNjZXB0ZWQsIGRp
+ZCB5b3UgdGVzdCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3b3VsZCBiZSBnb29k
+IHRvIGdldCBhIHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1ncGlvcyBmb3IgUlBp
+IDMuCj4gPiAKPiA+IGFmdGVyIGFwcGx5aW5nIExvaWMncyBwYXRjaCBhbmQgdGhlIG5lY2Vzc2Fy
+eSBwYXRjaCBmb3IgdGhlIFJQaSAzIGR0cyBmaWxlIChzZWUgYmVsb3cpLCBpIHdpbGwgZ2V0IHRo
+aXMgb3V0cHV0Ogo+ID4gCj4gPiBbICAgIDQuODczMjQ2XSBCbHVldG9vdGg6IEhDSSBVQVJUIGRy
+aXZlciB2ZXIgMi4zCj4gPiBbICAgIDQuODczMjYwXSBCbHVldG9vdGg6IEhDSSBVQVJUIHByb3Rv
+Y29sIEg0IHJlZ2lzdGVyZWQKPiA+IFsgICAgNC44NzMyNjVdIEJsdWV0b290aDogSENJIFVBUlQg
+cHJvdG9jb2wgVGhyZWUtd2lyZSAoSDUpIHJlZ2lzdGVyZWQKPiA+IFsgICAgNC44NzM3NTFdIEJs
+dWV0b290aDogSENJIFVBUlQgcHJvdG9jb2wgQnJvYWRjb20gcmVnaXN0ZXJlZAo+ID4gWyAgICA0
+Ljg3NzI3OV0gdWFydC1wbDAxMSAzZjIwMTAwMC5zZXJpYWw6IG5vIERNQSBwbGF0Zm9ybSBkYXRh
+Cj4gPiBbICAgIDYuOTUyMzgyXSBCbHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHhmYzE4IHR4IHRp
+bWVvdXQKPiA+IFsgICAxNS4xOTIyOThdIEJsdWV0b290aDogaGNpMDogQkNNOiBmYWlsZWQgdG8g
+d3JpdGUgdXBkYXRlIGJhdWRyYXRlICgtMTEwKQo+ID4gWyAgIDE1LjE5MjMxMl0gQmx1ZXRvb3Ro
+OiBoY2kwOiBGYWlsZWQgdG8gc2V0IGJhdWRyYXRlCj4gPiBbICAgMTUuMzE2NDE1XSBCbHVldG9v
+dGg6IGhjaTA6IEJDTTogY2hpcCBpZCA5NAo+ID4gWyAgIDE1LjMxODU2N10gQmx1ZXRvb3RoOiBo
+Y2kwOiBCQ006IGZlYXR1cmVzIDB4MmUKPiA+IFsgICAxNS4zNDE1MzhdIEJsdWV0b290aDogaGNp
+MDogQkNNNDM0MzBBMQo+ID4gWyAgIDE1LjM0MTU2MF0gQmx1ZXRvb3RoOiBoY2kwOiBCQ000MzQz
+MEExICgwMDEuMDAyLjAwOSkgYnVpbGQgMDAwMAo+ID4gWyAgIDE5LjExMjY3MF0gQmx1ZXRvb3Ro
+OiBoY2kwOiBCQ00gKDAwMS4wMDIuMDA5KSBidWlsZCAwMzYwCj4gPiBbICAyNzQuNzEzNzMyXSBC
+bHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHgwYzE0IHR4IHRpbWVvdXQKPiA+IFsgIDI3NC43MTQw
+ODVdIEJsdWV0b290aDogaGNpMDogRnJhbWUgcmVhc3NlbWJseSBmYWlsZWQgKC04NCkKPiA+IFsg
+IDMxNy4yNzU5NDFdIEJsdWV0b290aDogaGNpMDogbGFzdCBldmVudCBpcyBub3QgY21kIGNvbXBs
+ZXRlICgweDBmKQo+ID4gCj4gPiBJIGRvbid0IHNlZSB0aGVzZSBlcnJvcnMgb24gUlBpIFplcm8g
+Vy4gTWF5YmUgdGhlIHJlYXNvbiBmb3IgdGhpcyBpcyB0aGUgbGFjayBvZiBoYXJkd2FyZSBmbG93
+Y29udHJvbCBvbiBSUGkgMy4gT3Igc29tZSBvZiB0aGUgZG93bnN0cmVhbSBwYXRjaGVzIG9uIEJs
+dWVaIG11c3QgYmUgYWRhcHRlZCBmb3IgdGhlIGtlcm5lbCBbMV0uCj4gPiAKPiA+IEJ0dyB0aGUg
+YmNtNDM0MzggaXMgZGV0ZWN0ZWQgZXZlbiBhZnRlciB1bmxvYWRpbmcgYW5kIHJlbG9hZGluZyB0
+aGUgZHJpdmVyLiBCdXQgdGhlIHRpbWVvdXQgb2NjdXJzIGFsc28gb24gZHJpdmVyIHJlbG9hZC4g
+UmVkdWNpbmcgdGhlIGJhdWRyYXRlIHRvIDExNTIwMCBkb2Vzbid0IGhlbHAgaGVyZS4KPiAKPiBt
+YXliZSBpdCBuZWVkcyBzb21lIHRpbWUgYWZ0ZXIgc3dpdGNoaW5nIHRoZSBoYXJkd2FyZSBvbi4g
+SGF2ZSB5b3UgdHJpZWQgdG8gc2xlZXAgZm9yIGEgYml0IGF0IHRoZSBlbmQgb2YgYmNtX2dwaW9f
+c2V0X3Bvd2VyPwoKSSB3aWxsIHRyeSwgYnV0IHRoaXMgY291bGQgYWxzbyBiZSBhbiAiaXNzdWUi
+IG9mIHRoZSBncGlvIGV4cGFuZGVyIGRyaXZlci4gQUZBSUsgdGhlIGV4cGFuZGVyIGlzIGNvbm5l
+Y3RlZCB2aWEgSTJDIHRvIHRoZSBHUFUuIEluIGNhc2UgdGhlIG1haWxib3ggcmVwbHkgY29tZSBi
+ZWZvcmUgdGhlIEkyQyBjb21tYW5kIGhhcyBiZWVuIGhhbmRsZWQgYnkgdGhlIEdQSU8gZXhwYW5k
+ZXIsIHdlIGFyZSBydW5uaW5nIG91dCBvZiBzeW5jLgoKPiAKPiBDYW4geW91IGFsc28gZHVtcCB3
+aGVyZSB0aGUgRnJhbWUgcmVhc3NlbWJseSBmYWlscy4gT3IgY29ycmVsYXRlIHRoYXQgd2l0aCB0
+aGUgYnRtb24gdHJhY2Ugb2Ygd2hpY2ggcGFja2V0cyBtYWtlIGl0cyB0aHJvdWdoLiBUaGUgMHgw
+YzE0IGlzIFJlYWQgTG9jYWwgTmFtZSBhbmQgbWF5YmUgd2UgYWN0dWFsbHkgaGF2ZSBiaXQgZXJy
+b3JzIGhlcmUuCj4gCj4gSW4gdGhlb3J5IHdlIGNvdWxkIGFsc28gcnVuIHRoaXMgaGFyZHdhcmUg
+aW4gMy13aXJlIHByb3RvY29sIG1vZGUuIEkganVzdCBkbyBub3Qga25vdyBob3cgdG8gZ2V0IHRo
+YXQgb25lIHN0YXJ0ZWQsIGJ1dCBtYXliZSB0aGF0IHdvdWxkIGJlIGFuIG9wdGlvbiBpZiB0aGVy
+ZSBpcyBzb21lIHNvcnQgb2YgcGFja2V0IGxvc3MuIEhvd2V2ZXIgbWF5YmUgdGhpcyBpcyByZWFs
+bHkganVzdCBzb21lIHRpbWluZyBpc3N1ZSBmb3IgdGhlIGhhcmR3YXJlIHRvIHNldHRsZSBpdHMg
+YmF1ZCByYXRlLiBIb3dldmVyIEkgYXNzdW1lIHRoYXQgdGhlIGZpcm13YXJlIGxvYWRpbmcgaXRz
+ZWxmIHN1Y2NlZWRzIGhlcmUuCgpBY2NvcmRpbmcgdG8gdGhlIGxpbmsgZnJvbSBteSBsYXN0IGVt
+YWlsLCB0aGUgUlBpIDMgaXMgdXNpbmcgMy13aXJlIHByb3RvY29sIG1vZGUuIE1heWJlIHdlIHNo
+b3VsZCBkZXRlY3QgdGhlIHByZXNlbmNlIG9mICJ1YXJ0LWhhcy1ydHNjdHMiIGluIHRoZSBtYXN0
+ZXIgbm9kZT8gSW4gYWJzZW5jZSB3ZSBiZXR0ZXIgdXNlIDMtd2lyZS4KClN0ZWZhbgoKPiAKPiBS
+ZWdhcmRzCj4gCj4gTWFyY2VsCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
