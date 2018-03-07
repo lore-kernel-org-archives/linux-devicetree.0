@@ -1,92 +1,94 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-binding: timer: document NPCM7xx timer DT bindings
-Date: Wed, 7 Mar 2018 12:30:37 +0200
-Message-ID: <CAP6Zq1io9rLytqkyo5BBFw1Hf24c-r9PuH5ORsKu-j2brzbZHQ@mail.gmail.com>
-References: <1519655769-25836-1-git-send-email-tmaimon77@gmail.com>
- <1519655769-25836-2-git-send-email-tmaimon77@gmail.com> <CACPK8Xeb3ryfi+FXr+mdpk2fPtSTwJXkuBjRhW76vx1SxGQfYQ@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 3/4] rtc: isl1208: add support for isl1219 with tamper
+ detection
+Date: Wed, 7 Mar 2018 11:47:14 +0100
+Message-ID: <20180307104714.GL3035@piout.net>
+References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
+ <1520246373-19023-4-git-send-email-Denis.Osterland@diehl.com>
+ <20180306204255.GI3035@piout.net>
+ <1520410754.5976.27.camel@diehl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8Xeb3ryfi+FXr+mdpk2fPtSTwJXkuBjRhW76vx1SxGQfYQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1520410754.5976.27.camel@diehl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+To: Denis OSTERLAND <denis.osterland@diehl.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the late response
+On 07/03/2018 at 08:19:15 +0000, Denis OSTERLAND wrote:
+> > > +/* event section */
+> > > +#define ISL1208_REG_SCT 0x14
+> > > +#define ISL1208_REG_MNT 0x15
+> > > +#define ISL1208_REG_HRT 0x16
+> > > +#define ISL1208_REG_DTT 0x17
+> > > +#define ISL1208_REG_MOT 0x18
+> > > +#define ISL1208_REG_YRT 0x19
+> > > +#define ISL1208_EVT_SECTION_LEN 6
+> > > +
+> > Because they are not available on ISL1208, maybe it would be better to
+> > prefix them with ISL1219.
+> I see. Yes, this would clarify that they are only available on isl1219.
+> Shall we rename isl1208_rtc_event_show_timestamp/isl1208_rtc_event_clear
+> to isl1219_rtc_event_show_timestamp/isl1219_rtc_event_clear, too?
 
-On 2 March 2018 at 03:51, Joel Stanley <joel@jms.id.au> wrote:
-> Hi Tomer,
->
-> On Tue, Feb 27, 2018 at 1:06 AM, Tomer Maimon <tmaimon77@gmail.com> wrote:
->> Added device tree binding documentation for Nuvoton NPCM7xx timer.
->>
->> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
->> ---
->>  .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->>
->> diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->> new file mode 100644
->> index 000000000000..c5150522e618
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->> @@ -0,0 +1,25 @@
->> +Nuvoton NPCM7xx timer
->
-> Would it make more sense to all this Nuvoton NPCM Timer? This way the
-> name stays generic for when you add other systems.
->
-we cant promise the timer will stay the same in the next generation, I
-will leave this for NPCM7xx
->> +
->> +Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
->> +timer counters.
->
->
-> I notice the timer has a register in the middle of it that is used for
-> the watchdog. Should we describe this in the same binding? Even if we
-> just add some text that adds
->
->  ... and one watchdog register.
->
-I'm not sure, because the binding is only for the timer I dont think I
-need to describe what is the
-register contains
->> +
->> +Required properties:
->> +- compatible      : "nuvoton,npcm750-timer" for Poleg NPCM750.
->> +- reg             : Offset and length of the register set for the device.
->> +- interrupts      : Contain the timer interrupt with flags for
->> +                    falling edge.
->> +
->> +Required clocking property, have to be one of:
->> +- clocks          : phandle of timer reference clock.
->> +- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
->> +                    timer (usually 25000000).
->> +
->> +Example:
->> +
->> +timer@f0008000 {
->> +    compatible = "nuvoton,npcm750-timer";
->> +    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> +    reg = <0xf0008000 0x1000>;
->
-> This can probably be <0xf0008000 0x50>, as tthe timer hardware only
-> has registers up to base + 0x50.
-Thanks,
-I will modify it in the next version, waiting fro more comments.
->
->> +    clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +};
->> +
->> --
->> 2.14.1
->>
+That could be done too, yes.
 
-Cheers,
+> > 
+> > > 
+> > > +
+> > > +	tv64.tv_sec = rtc_tm_to_time64(&tm);
+> > Why not using an unsigned long long directly here? time64_t is not the
+> > correct type.
+> Do you mean timespec64 is not the correct type here?
+> Then yes, sould be time64_t.
+> If you mean time64_t is not the correct type here,
+> then can you give me some detail why there is no rtc_tm_to_u64,
+> or something like that?
 
-Tomer
+The rtc subsystem forbids negative times, the proper type should be
+unsigned.
+
+> sprintf(buf, "%lld\n", rtc_tm_to_time64(&tm)) seems correct to me.
+> By the way, is it needed to check for seconds < 0 and return error?
+
+Indeed, you shoud check the tm with rtc_valid_tm before calling
+rtc_tm_to_time64.
+
+> > > -	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
+> > > +	if (id->driver_data == TYPE_ISL1219) {
+> > > +		rc = i2c_smbus_write_byte_data(client, ISL1208_REG_09, 0x10);
+> > > +		if (rc < 0) {
+> > > +			dev_err(&client->dev, "could not enable tamper detection\n");
+> > > +			return rc;
+> > > +		}
+> > > +		isl1208->sysfs_files = &isl1219_rtc_sysfs_files;
+> > > +	} else {
+> > > +		isl1208->sysfs_files = &isl1208_rtc_sysfs_files;
+> > > +	}
+> > > +
+> > I don't think the whole isl1208 is necessary. You should probably use
+> > the .is_visible callback of isl1219_rtc_sysfs_files. This will make the
+> > changelog quite smaller.
+> > 
+> Well, I don´t know how to access i2c_device_id from kobject.
+> rtc_attr_is_visible shows how to convert kobject to device and rtc_device,
+> but how to do (id->driver_data == TYPE_ISL1219) here?
+
+I'd use i2c_set_clientdata/i2c_get_clientdata but I agree that then it
+is basically the same as having isl1208->sysfs_files.
+
+but this makes me realize that the timestamp file doesn't end up at the
+correct location. What you do now is placing it under the i2c device
+while it should be placed under the rtc device (i.e. in
+/sys/class/rtc/rtcX/). This was a mistake made back in 2006.
+
+I guess you'll have to add a new group instead of adding to the current
+one.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
