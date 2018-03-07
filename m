@@ -1,63 +1,77 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v4 0/10] hisi_sas: support x6000 board and some misc changes
-Date: Wed, 7 Mar 2018 20:25:04 +0800
-Message-ID: <1520425514-205565-1-git-send-email-john.garry@huawei.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/7] ARM: dts: dra7: Enable x2 lane mode support
+Date: Wed, 7 Mar 2018 17:57:37 +0530
+Message-ID: <6698a64b-8f4d-53fd-ad93-36c742633d0c@ti.com>
+References: <20171219093133.16565-1-kishon@ti.com>
+ <20180307120824.GC15139@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180307120824.GC15139@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com, hare@suse.de
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, John Garry <john.garry@huawei.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patchset primarily adds support for the Huawei x6000 board,
-which includes hip07 chipset. Unfortunately, due to some board
-layout differences with our development board, we need to set
-a PHY-related register differently for optimal signal quality. As
-such, a signal attenuation property is added to describe the
-differences in the boards and allow the PHY register to be set
-appropriately.
+Hi Lorenzo,
 
-In addition to this above features, some misc changes are added for:
-- PHY linkrate sysfs interface
-- linkrate set function
-- internal abort timer timeout increase
-- add module device id tabe for v3 hw
-- register init setting changes
+On Wednesday 07 March 2018 05:38 PM, Lorenzo Pieralisi wrote:
+> On Tue, Dec 19, 2017 at 03:01:26PM +0530, Kishon Vijay Abraham I wrote:
+>> Add properties to enable PCIe x2 lane mode since all dra7
+>> based SoCs support x2 lane mode.
+>>
+>> However only dra76-evm has a slot which can support x2 lane
+>> cards. Hence only enable x2 lane mode in dra76-evm.
+>> (am571x-idk can support x2 lane mode but that makes usb port
+>> not functional so not including the patch to enable
+>> x2 mode in am571x-idk)
+>>
+>> Also included in this series is patch to enable PCIe configs
+>> (both host and device) in omap2plus_defconfig and
+>> multi_v7_defconfig
+>>
+>> In order to get x2 mode working [1] is required.
+>>
+>> However by keeping the older compatible, this series won't
+>> break functionality if this series is merged before [1]
+>>
+>> [1] -> https://lkml.org/lkml/2017/12/19/175
+>>
+>> Kishon Vijay Abraham I (7):
+>>   ARM: dts: dra7: Add properties to enable PCIe x2 lane mode
+>>   ARM: dts: DRA74x: Use PCIe compatible specific to dra74
+>>   ARM: dts: DRA72x: Use PCIe compatible specific to dra72
+>>   ARM: dts: dra76-evm: Enable x2 PCIe lanes
+>>   ARM: dts: dra7: Remove deprecated PCI compatible string
+>>   ARM: omap2plus_defconfig: Enable CONFIG_PCI_DRA7XX (Host & Device
+>>     modes)
+>>   ARM: multi_v7_defconfig: Enable CONFIG_PCI_DRA7XX (Host & Device
+>>     modes)
+>>
+>>  arch/arm/boot/dts/dra7.dtsi          |  9 +++++----
+>>  arch/arm/boot/dts/dra72x.dtsi        | 12 ++++++++++++
+>>  arch/arm/boot/dts/dra74x.dtsi        | 12 ++++++++++++
+>>  arch/arm/boot/dts/dra76-evm.dts      | 16 ++++++++++++++++
+>>  arch/arm/configs/multi_v7_defconfig  |  6 ++++++
+>>  arch/arm/configs/omap2plus_defconfig |  8 ++++++++
+>>  6 files changed, 59 insertions(+), 4 deletions(-)
+> 
+> Hi Kishon,
+> 
+> I would like to ask you please what are your expectations with this
+> series, which tree these changes are going to be queued through ?
+> 
+> Please let me know, thanks.
 
-Differences to v3:
-- address comments from Hannes on patch #8:
-  https://marc.info/?l=linux-scsi&m=152033924615703&w=2
-- add patch for module Id table and some register
-  setting for v3 HW.
+Rob has given some comments on the dt [1]. I'll post the driver changes and
+once that gets accepted I'll post the dts changes. dts changes are generally
+merged via linux-omap tree maintained by Tony.
 
-Differences to v2:
-- rename dt binding property name to "hisilicon,signal-attenuation"
+Thanks
+Kishon
 
-Differences to v1:
-- rename dt binding property name to include "hisi-" prefix
-
-Xiang Chen (3):
-  scsi: hisi_sas: remove unused variable hisi_sas_devices.running_req
-  scsi: hisi_sas: Code cleanup and minor bug fixes
-  scsi: hisi_sas: add v3 hw MODULE_DEVICE_TABLE()
-
-Xiaofei Tan (7):
-  dt-bindings: scsi: hisi_sas: add an property of signal attenuation
-  scsi: hisi_sas: support the property of signal attenuation for v2 hw
-  scsi: hisi_sas: fix the issue of link rate inconsistency
-  scsi: hisi_sas: fix the issue of setting linkrate register
-  scsi: hisi_sas: increase timer expire of internal abort task
-  scsi: hisi_sas: fix return value of hisi_sas_task_prep()
-  scsi: hisi_sas: modify some register config for hip08
-
- .../devicetree/bindings/scsi/hisilicon-sas.txt     |  7 +++
- drivers/scsi/hisi_sas/hisi_sas.h                   |  1 -
- drivers/scsi/hisi_sas/hisi_sas_main.c              | 34 +++++-----
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c             | 13 ++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c             | 62 ++++++++++++++-----
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             | 72 ++++++++++------------
- 6 files changed, 109 insertions(+), 80 deletions(-)
-
--- 
-1.9.1
+https://lkml.org/lkml/2017/12/20/625
+> 
+> Lorenzo
+> 
