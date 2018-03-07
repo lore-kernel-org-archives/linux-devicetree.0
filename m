@@ -1,70 +1,121 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: [PATCH] kbuild: Handle builtin dtb files containing hyphens
-Date: Wed,  7 Mar 2018 14:06:33 +0000
-Message-ID: <20180307140633.26182-1-jhogan@kernel.org>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2] dmaengine: mv_xor_v2: Fix clock resource by adding a
+ register clock
+Date: Wed,  7 Mar 2018 15:06:10 +0100
+Message-ID: <20180307140610.2601-1-gregory.clement@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Shadi Ammouri <shadi@marvell.com>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On dtb files which contain hyphens, the dt_S_dtb command to build the
-dtb.S files (which allow DTB files to be built into the kernel) results
-in errors like the following:
+On the CP110 components which are present on the Armada 7K/8K SoC we need
+to explicitly enable the clock for the registers. However it is not
+needed for the AP8xx component, that's why this clock is optional.
 
-bcm3368-netgear-cvg834g.dtb.S: Assembler messages:
-bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section
-bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'
-bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'
-bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'
-bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section
-bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
+With this patch both clocks have now a name, but in order to be
+backward compatible, the name of the first clock is not used. It
+allows to still use this clock with a device tree using the old
+binding.
 
-This is due to the hyphen being used in symbol names. Replace all
-hyphens with underscores in the dt_S_dtb command to avoid this problem.
-
-Quite a lot of dts files have hyphens, but its only a problem on MIPS
-where such files can be built into the kernel. For example when
-CONFIG_DT_NETGEAR_CVG834G=y, or on BMIPS kernels when the dtbs target is
-used (in the latter case it admitedly shouldn't really build all the
-dtb.o files, but thats a separate issue).
-
-Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
-Signed-off-by: James Hogan <jhogan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Kevin Cernekee <cernekee@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: <stable@vger.kernel.org> # 4.9+
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- scripts/Makefile.lib | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Changelog:
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 5589bae34af6..a6f538b31ad6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -297,11 +297,11 @@ cmd_dt_S_dtb=						\
- 	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
- 	echo '.section .dtb.init.rodata,"a"';		\
- 	echo '.balign STRUCT_ALIGNMENT';		\
--	echo '.global __dtb_$(*F)_begin';		\
--	echo '__dtb_$(*F)_begin:';			\
-+	echo '.global __dtb_$(subst -,_,$(*F))_begin';	\
-+	echo '__dtb_$(subst -,_,$(*F))_begin:';		\
- 	echo '.incbin "$<" ';				\
--	echo '__dtb_$(*F)_end:';			\
--	echo '.global __dtb_$(*F)_end';			\
-+	echo '__dtb_$(subst -,_,$(*F))_end:';		\
-+	echo '.global __dtb_$(subst -,_,$(*F))_end';	\
- 	echo '.balign STRUCT_ALIGNMENT'; 		\
- ) > $@
+v1 -> v2
+
+ - Fix typos in the commit log
+ - Add more explanation in te commit log
+ - Only skip the reg clock usage if the clock is not presetn in the
+   device tree (-ENOENT)
+ - Add dt list in CC
+
+
+ .../devicetree/bindings/dma/mv-xor-v2.txt          |  6 +++++-
+ drivers/dma/mv_xor_v2.c                            | 25 +++++++++++++++++-----
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+index 217a90eaabe7..9c38bbe7e6d7 100644
+--- a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
++++ b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+@@ -11,7 +11,11 @@ Required properties:
+   interrupts.
+ 
+ Optional properties:
+-- clocks: Optional reference to the clock used by the XOR engine.
++- clocks: Optional reference to the clocks used by the XOR engine.
++- clock-names: mandatory if there is a second clock, in this case the
++   name must be "core" for the first clock and "reg" for the second
++   one
++
+ 
+ Example:
+ 
+diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+index f652a0e0f5a2..e3e854161dd0 100644
+--- a/drivers/dma/mv_xor_v2.c
++++ b/drivers/dma/mv_xor_v2.c
+@@ -163,6 +163,7 @@ struct mv_xor_v2_device {
+ 	void __iomem *dma_base;
+ 	void __iomem *glob_base;
+ 	struct clk *clk;
++	struct clk *reg_clk;
+ 	struct tasklet_struct irq_tasklet;
+ 	struct list_head free_sw_desc;
+ 	struct dma_device dmadev;
+@@ -749,13 +750,26 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	xor_dev->reg_clk = devm_clk_get(&pdev->dev, "reg");
++	if (PTR_ERR(xor_dev->reg_clk) == -ENOENT) {
++		if (!IS_ERR(xor_dev->reg_clk)) {
++			ret = clk_prepare_enable(xor_dev->reg_clk);
++			if (ret)
++				return ret;
++		} else {
++			return PTR_ERR(xor_dev->reg_clk);
++		}
++	}
++
+ 	xor_dev->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(xor_dev->clk) && PTR_ERR(xor_dev->clk) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	if (IS_ERR(xor_dev->clk) && PTR_ERR(xor_dev->clk) == -EPROBE_DEFER) {
++		ret = EPROBE_DEFER;
++		goto disable_reg_clk;
++	}
+ 	if (!IS_ERR(xor_dev->clk)) {
+ 		ret = clk_prepare_enable(xor_dev->clk);
+ 		if (ret)
+-			return ret;
++			goto disable_reg_clk;
+ 	}
+ 
+ 	ret = platform_msi_domain_alloc_irqs(&pdev->dev, 1,
+@@ -866,8 +880,9 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
+ free_msi_irqs:
+ 	platform_msi_domain_free_irqs(&pdev->dev);
+ disable_clk:
+-	if (!IS_ERR(xor_dev->clk))
+-		clk_disable_unprepare(xor_dev->clk);
++	clk_disable_unprepare(xor_dev->clk);
++disable_reg_clk:
++	clk_disable_unprepare(xor_dev->reg_clk);
+ 	return ret;
+ }
  
 -- 
-2.13.6
+2.16.1
