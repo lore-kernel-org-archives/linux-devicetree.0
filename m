@@ -1,57 +1,61 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] dts: sunxi: Add eMMC for NanoPi M1 Plus
-Date: Wed, 7 Mar 2018 09:32:23 +0100
-Message-ID: <20180307083223.7is5ty22gsp65eoz@flea.lan>
-References: <20180302213852.64588-1-manu@freebsd.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
+Date: Wed, 7 Mar 2018 08:35:39 +0000
+Message-ID: <20180307083538.vicxhbu72jex7zi6@dell>
+References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
+ <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yp745zaimxki7m37"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180302213852.64588-1-manu@freebsd.org>
+In-Reply-To: <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mcoquelin.stm32@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 05 Mar 2018, Alexandre Torgue wrote:
 
---yp745zaimxki7m37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Patrice,
+> 
+> On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
+> > From: Patrice Chotard <patrice.chotard@st.com>
+> > 
+> > This series adds :
+> >   _ SDIO pins definition for STM32F7 SoCs family
+> >   _ add sdio1 DT entry for STM32F746 Discovery board
+> >   _ add sdio1 DT entry for STM32F746 Evaluation board
+> >   _ add sdio1 DT entry for STM32F769 Discovery board
+> >   _ add SDMMC2 entry in stm32f7-rcc.h
+> >   _ replace sdio2 hard coded value in stm32f746.dtsi
+> > 
+> > v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
+> >        and update board dts files accordingly.
+> > 
+> > 
+> > Patrice Chotard (6):
+> >    ARM: dts: stm32: Add sdio pins definition for stm32f7
+> >    ARM: dts: stm32: Enable sdio1 for stm32f746-disco
+> >    ARM: dts: stm32: Enable sdio1 for stm32f746-eval
+> >    ARM: dts: stm32: Enable sdio1 for stm32f769-disco
+> >    dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
+> >    ARM: dts: stm32: Fix sdio2 rcc hard coded value
+> > 
+> >   arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
+> >   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
+> >   arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
+> >   arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
+> >   arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
+> >   include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
+> >   6 files changed, 119 insertions(+), 1 deletion(-)
+> > 
+> Series applied on stm32-next.
 
-On Fri, Mar 02, 2018 at 10:38:52PM +0100, Emmanuel Vadot wrote:
-> The NanoPi-M1-Plus have a 8GB eMMC, add a node for it.
-> This eMMC is always powered with 3.3V.
->=20
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+Even the MFD patch?
 
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yp745zaimxki7m37
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqfo5YACgkQ0rTAlCFN
-r3SIyA/+KYdCYDqCoMyjMrk6zS3ZQacum/6g8Qt9KtlWGZuTwqZY9bGWj2qYog2S
-9joZsl86FZcHNhGk4dttPAc6E4sPTA4iONsjx9eF3dEdTLXadGbboYnPnwjg62kw
-QjBMB/layUKmz+em7Wd1F0dzdR9BmQ/5sHyIdigeZSRkxeTR4ElcTRrXrUDVoUez
-HfXYrlwEOoBOEVtlt+dJpRU4N3ta0p6EfW+ehR7DtaDhn4s9KMNMVj2HMenqcSO4
-ie+V4JXGLeH48ZItJfPlE+huiVTIBFHcNbIOzJSjVCqPHcn7/TfqYS7beFFmctHN
-OY88DS89tntW2iZNBYkSCvgWLgKMsV0MfkmXrsJMitCy+bncExFXHK1zxqwpEYS6
-IiuLdupgpUCREeK7PPeAf0Z+QD5nlXGELfEDlxeEcY/Dr9s/xOh2fZ5fWcfMNl9j
-rCN18ziMPvwWerzByN/xhom5NG/SQIkC8WK7oKUCDDiqoxHNqUPm4VlDvdQQHxBP
-JlNNvNm2/PaFhX/ob/gCHvNVWQKA8mh+HaTD02deKcKS6Y+Ig32UGYn+BeQs7qjm
-vDeGVFHxkCLVd5eCY4cXIfdgtTaATuKHXofhNCH5n2cgVWcDGcadu08FQkKLo//V
-SOYtm/bKuMrOpRRWLDtZtkpfiQOKPAwJ8sQax5suuswra82jqCw=
-=iyr8
------END PGP SIGNATURE-----
-
---yp745zaimxki7m37--
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
