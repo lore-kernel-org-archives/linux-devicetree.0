@@ -1,81 +1,62 @@
-Return-Path: <SRS0=7Anx=F3=vger.kernel.org=devicetree-compiler-owner@kernel.org>
-Date: Mon, 5 Mar 2018 17:40:13 +1100
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH/RFC dtc 0/2] Drop unit addresses from overlay fragments
-Message-ID: <20180305064013.GM2650@umbus.fritz.box>
-References: <1519374917-30171-1-git-send-email-geert+renesas@glider.be>
+Return-Path: <jhogan@kernel.org>
+Date: Wed, 7 Mar 2018 14:41:24 +0000
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH 0/3] MIPS: BMIPS: Add Broadcom STB device nodes
+Message-ID: <20180307144122.GO4197@saruman>
+References: <20171117021944.894-1-jaedon.shin@gmail.com>
+ <56e80e5d-8cdd-3b32-c0f5-ac33c45346b8@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="asNXdz5DenlsLVVk"
+	protocol="application/pgp-signature"; boundary="hSZb4FHl1C2xfsUy"
 Content-Disposition: inline
-In-Reply-To: <1519374917-30171-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-compiler-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Jon Loeliger <jdl@jdl.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree-compiler@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <56e80e5d-8cdd-3b32-c0f5-ac33c45346b8@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jaedon Shin <jaedon.shin@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---asNXdz5DenlsLVVk
-Content-Type: text/plain; charset=us-ascii
+--hSZb4FHl1C2xfsUy
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2018 at 09:35:15AM +0100, Geert Uytterhoeven wrote:
-> 	Hi all,
+On Mon, Mar 05, 2018 at 04:06:30PM -0800, Florian Fainelli wrote:
+> On 11/16/2017 06:19 PM, Jaedon Shin wrote:
+> > This series adds power and memory management related devie tree nodes f=
+or
+> > Broadcom STB platforms.
+> >=20
+> > Jaedon Shin (3):
+> >   MIPS: BMIPS: Add Broadcom STB power management nodes
+> >   MIPS: BMIPS: Add Broadcom STB wake-up timer nodes
+> >   MIPS: BMIPS: Add Broadcom STB watchdog nodes
 >=20
-> Using "fragment@N" as node name for overlay fragments violates unit
-> address rules:
->=20
->     <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit =
-name, but no reg property
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Hm, regardless of this patch, that's really a bug in the checks not to
-handle overlays as a different case.
+Thanks, applied for 4.17.
 
-The quick fix would be to just suppress that check if an __overlay__
-subnode exists.  THe more ambitious approach would be to actually
-parse things that look like overlays into their components and apply
-checks separately to each fragment (except for ones that don't make
-sense except on a fully resolved tree).  I had plans for that, but am
-unlikely to get time to work on it any time soon.
+Cheers
+James
 
-> This patch series (for dtc) fixes:
->   1. generation of node names when using overlay sugar syntax,
->   2. all documentation and tests.
->=20
-> If this is accepted, I'll send similar patches for Linux.
->=20
-> Note that I've been using "fragment-N" in hand-written DT overlays for
-> years, so this is known to work fine with Linux.
-
-Existing tools expecting the @ would be my only concern with this.
-You've check Linux is ok, and I've checked libfdt is ok too.  I'm not
-really confident if that's enough to call it everything we care about.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---asNXdz5DenlsLVVk
+--hSZb4FHl1C2xfsUy
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlqc5ksACgkQbDjKyiDZ
-s5KPhA/+PnmpypDdID70zHhD/Cet6BwiZSBITuGRNclWSDLuoQ8fT190BIyCTJpQ
-SNA322mKDSpBETyq0JBgdzVyK2xPDXmFPODB2ZmuKzndzymnBvTuNUKTBIsD92dW
-pT2cB/9qhdIoupFMOLHZohPTs5NyxBDoO43XGVzDOjPj4QGNgxpxJMzYshC6dRaZ
-T+hx0lwzOGVdJJS5OxN6SiHg/A34D9QvhWT8UKPE5OA3gEMlGo4E/a6uBOvH28G+
-YeYjGm/jsE9kNwIjvNdJo61PAfE5GeXTlEVQ8cTGHL1GmLjwp7Jf93D8LH/ec6j4
-RzABXZinuZuaGmktHyI8EgQCzt30E9kt1d0/iFa2oMjNqibUgSN/UEjsBZICGgZE
-eBRyLeRt71dZdJdde9WPG5QoNHvggygGzQJInJadfq+DkHbCJ6+ATxlRKqCT65bd
-kYeoWvbMc/D5ERASBiX/aW5iPq6Edor6+DRSSWAcvvaolCCQAlUaBgYlAB2XY2O0
-JOs45g+T5ugh5zE2lYBqWxm/NjtIn3vUwb0PCumIH6Q7az1PlP6QB8GsQcdUA6cG
-rZ5Wb9Sx7tHILcVInytwOs/jGD3PZbrKwRo7mkz4up+ikfGUYWfxVM/FuxLw/2dR
-uQS9WiE2np5VbHLYsCIslSUtIfqeIdX4sDV+z1j4qO94clK+5+U=
-=rCqq
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqf+hIACgkQbAtpk944
+dnr/dhAAngkxiPO9UX5WhAnkYbdc3TQTUy6Qsz/xe/E7ma6K4OFBy86XHNK/f7k+
+I9vJtO22q3Kj3WWVjV7muEMcVbZK8YFSDBWM2MnxFDOx4dwcncnt0Kl9i7GFoJ+Y
+3vGAMXhJ4ek20Je0XrnMELyHrJ8g63PLeV5OvePS9wKwuzES0QLuUPnjt2riro7o
+TwFvokw1UD3IScJ4+IC8PwBNlW5mGOVW24/UaehmAWuAO6rEwtTyEYUfd4r/Y4KL
+kC7YlNSWLWCqXJQ1OEbXGj2A4tG2dW3092YPuYMfNNgNkoU3Nr8Su6fA4io6RWYI
+FU6D7x0W8fTjZNf7U8qRi8ZXLvi9inv/R2mfcJAmw/GjKdDDaaiAms9zD+cykx1A
+9B/niiWBo/0e6rXRTtjESJvtnj6bSGakLL3R8WpFS7OPjuKn2FVBKLq9Wvv2MEVp
+wnqhI/8ECxMfm/AAqMM0+n7Cg3sBSV/Gt8VIgLZyCjdL0pQXJqBRJnPT2hhTugLj
+oq0cF/yOOw8EvzRgaSDkqFL3Oeep52chxp/VvoLOYXFb/9hvA2f1oc+CanHqebRM
+gFjUOoUwUTqffplvpbXeWOBYas1D/kJht7JwSOQjvqRwmomh58QRb5pAApBCXNwO
+HMNqZfl6NqaX+TyfbN8ZFCfSKBnUxB+c4Pq5sghAXkgDsh0xG2c=
+=3KrG
 -----END PGP SIGNATURE-----
 
---asNXdz5DenlsLVVk--
+--hSZb4FHl1C2xfsUy--
