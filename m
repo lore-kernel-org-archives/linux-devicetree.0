@@ -1,74 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/2] mfd: arizona: Update reset pin to use GPIOD
-Date: Wed, 7 Mar 2018 16:25:37 +0000
-Message-ID: <20180307162537.pryp3qz3lgm7a4zs@dell>
-References: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
- <20180307132812.r5epcs26clpnh72t@dell>
- <20180307141509.e3dpxteodxeoy2k3@localhost.localdomain>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Add support for qcom, smmu-500 variant
+Date: Wed, 7 Mar 2018 10:30:09 -0600
+Message-ID: <CAL_Jsq+WWR5r-RcuE2KGpswdRgwzOV_BZjEOzHj5bAULFD6_Xg@mail.gmail.com>
+References: <20180307063219.14409-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180307141509.e3dpxteodxeoy2k3@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180307063219.14409-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "moderated list:ARM SMMU DRIVERS" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Mar 2018, Charles Keepax wrote:
+On Wed, Mar 7, 2018 at 12:32 AM, Vivek Gautam
+<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Qualcomm's arm-smmu 500 implementation supports runtime pm
+> so enable the same.
 
-> On Wed, Mar 07, 2018 at 01:28:12PM +0000, Lee Jones wrote:
-> > On Tue, 20 Feb 2018, Charles Keepax wrote:
-> > > +	if (IS_ERR(pdata->reset)) {
-> > > +		ret = PTR_ERR(pdata->reset);
-> > > +		switch (ret) {
-> > > +		case -ENOENT:
-> > > +		case -ENOSYS:
-> > > +			break;
-> > > +		case -EPROBE_DEFER:
-> > > +			return ret;
-> > > +		default:
-> > > +			dev_err(arizona->dev, "Reset GPIO malformed: %d\n",
-> > > +				ret);
-> > > +			break;
-> > > +		}
-> > 
-> > I haven't seen a switch statement used in the error handling path
-> > before.  There is probably good reason for that.
-> > 
-> 
-> There are a fair few of them "grep -rI "switch (ret)" | wc -l" ==
-> 205. Although to be fair that has rarely been an argument in
-> somethings favour.
+That's a driver detail unrelated to the binding.
 
-I didn't say "it has never been done", just that I hadn't seen it.
+>
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>
+>  Based on iommu/arm-smmu pm runtime support series [1]:
+>  [PATCH v8 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+>
+>  Tested on sdm845 with necessary support to enable the smmu
+>  and with necessary user.
+>
+>  [1] https://lkml.org/lkml/2018/3/2/325
+>
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 14 ++++++++++++++
 
-Besides, 205 uses is a very small amount in kernel code:
+Please split bindings to separate patches.
 
-`git grep "if (ret" | wc -l` == 74710
+>  drivers/iommu/arm-smmu.c                             |  8 ++++++++
+>  2 files changed, 22 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 6ea27bd4f785..0b5c6d2a9865 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -18,6 +18,7 @@ conditions.
+>                          "arm,mmu-500"
+>                          "cavium,smmu-v2"
+>                          "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
 
-> > What is the 'default' case?  -EINVAL?
-> > 
-> 
-> I would guess most of the time yes, but I would rather not assume
-> that. I can redo this as if's if you prefer it that way? The if is
-> slightly less lines although I do think the switch is much
-> clearer as to intent.
-> 
-> if (ret == -EPROBE_DEFER) {
-> 	return ret;
-> } else if (ret != -ENOENT && ret != -ENOSYS {
-> 	dev_err(arizona->dev, ....);
-> }
+I don't even see this one in the tree yet...
 
-I don't know enough about the API to see why -ENOENT and -ENOSYS do
-not deserve error messages.
+> +                        "qcom,<soc>-smmu-500", "qcom,smmu-500"
 
-What do the other users of the API do?
+IIRC, the mmu-500 is SMMU v2 implementation, right? Having
+qcom,smmu-500 seems kind of pointless.
 
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Given that we're there's only 1 SoC for "qcom,<soc>-smmu-v2" and
+you're already on to a new genericish compatible, just do SoC specific
+compatible strings.
+
+Rob
