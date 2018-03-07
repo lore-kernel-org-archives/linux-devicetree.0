@@ -1,108 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rt5651: Add devicetree-bindings for
-	jack-detect" to the asoc tree
-Date: Wed, 07 Mar 2018 14:14:50 +0000
-Message-ID: <E1etZqE-0001Um-6P@debutante>
-References: <20180304143610.21125-3-hdegoede@redhat.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v3 1/2] mfd: arizona: Update reset pin to use GPIOD
+Date: Wed, 7 Mar 2018 14:15:09 +0000
+Message-ID: <20180307141509.e3dpxteodxeoy2k3@localhost.localdomain>
+References: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
+ <20180307132812.r5epcs26clpnh72t@dell>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5320124451221362825=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180304143610.21125-3-hdegoede@redhat.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180307132812.r5epcs26clpnh72t@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
---===============5320124451221362825==
-Content-Type: text/plain
+On Wed, Mar 07, 2018 at 01:28:12PM +0000, Lee Jones wrote:
+> On Tue, 20 Feb 2018, Charles Keepax wrote:
+> > +	if (IS_ERR(pdata->reset)) {
+> > +		ret = PTR_ERR(pdata->reset);
+> > +		switch (ret) {
+> > +		case -ENOENT:
+> > +		case -ENOSYS:
+> > +			break;
+> > +		case -EPROBE_DEFER:
+> > +			return ret;
+> > +		default:
+> > +			dev_err(arizona->dev, "Reset GPIO malformed: %d\n",
+> > +				ret);
+> > +			break;
+> > +		}
+> 
+> I haven't seen a switch statement used in the error handling path
+> before.  There is probably good reason for that.
+> 
 
-The patch
+There are a fair few of them "grep -rI "switch (ret)" | wc -l" ==
+205. Although to be fair that has rarely been an argument in
+somethings favour.
 
-   ASoC: rt5651: Add devicetree-bindings for jack-detect
+> What is the 'default' case?  -EINVAL?
+> 
 
-has been applied to the asoc tree at
+I would guess most of the time yes, but I would rather not assume
+that. I can redo this as if's if you prefer it that way? The if is
+slightly less lines although I do think the switch is much
+clearer as to intent.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+if (ret == -EPROBE_DEFER) {
+	return ret;
+} else if (ret != -ENOENT && ret != -ENOSYS {
+	dev_err(arizona->dev, ....);
+}
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> > -	if (arizona->pdata.reset) {
+> > +	if (!arizona->pdata.reset) {
+> >  		/* Start out with /RESET low to put the chip into reset */
+> > -		ret = devm_gpio_request_one(arizona->dev, arizona->pdata.reset,
+> > -					    GPIOF_DIR_OUT | GPIOF_INIT_LOW,
+> > -					    "arizona /RESET");
+> > -		if (ret != 0) {
+> > -			dev_err(dev, "Failed to request /RESET: %d\n", ret);
+> > -			goto err_dcvdd;
+> > +		arizona->pdata.reset = devm_gpiod_get(arizona->dev, "reset",
+> > +						      GPIOD_OUT_LOW);
+> > +		if (IS_ERR(arizona->pdata.reset)) {
+> > +			ret = PTR_ERR(arizona->pdata.reset);
+> > +			if (ret == -EPROBE_DEFER)
+> > +				goto err_dcvdd;
+> > +			else
+> > +				dev_err(arizona->dev,
+> > +					"Reset GPIO missing/malformed: %d\n",
+> > +					ret);
+> 
+> You don't need the else.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Happy to drop.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > --- a/include/linux/mfd/arizona/pdata.h
+> > +++ b/include/linux/mfd/arizona/pdata.h
+> > @@ -56,6 +56,7 @@
+> >  #define ARIZONA_MAX_PDM_SPK 2
+> >  
+> >  struct regulator_init_data;
+> > +struct gpio_desc;
+> >  
+> >  struct arizona_micbias {
+> >  	int mV;                    /** Regulated voltage */
+> > @@ -77,7 +78,7 @@ struct arizona_micd_range {
+> >  };
+> >  
+> >  struct arizona_pdata {
+> > -	int reset;      /** GPIO controlling /RESET, if any */
+> > +	struct gpio_desc *reset;      /** GPIO controlling /RESET, if any */
+> >  
+> >  	/** Regulator configuration for MICVDD */
+> >  	struct arizona_micsupp_pdata micvdd;
+> 
+> I know it doesn't have much to do with this patch, but it's probably
+> better to use a Kerneldoc header for this struct.
+> 
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Indeed I would agree that would be better, not sure what the
+commenting style there is about. I should be able to find time to
+make a patch for this soon, but seems unrelated to this series.
 
 Thanks,
-Mark
-
->From 9db7d4b32cbccb5807e2e1f22e2fafc80034ee6d Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Sun, 4 Mar 2018 15:35:50 +0100
-Subject: [PATCH] ASoC: rt5651: Add devicetree-bindings for jack-detect
-
-Add new properties to the rt5651 dt-bindings for configuring the
-jack-detect source and over-current detect settings.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/rt5651.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5651.txt b/Documentation/devicetree/bindings/sound/rt5651.txt
-index 3875233095f5..7890aa9477f8 100644
---- a/Documentation/devicetree/bindings/sound/rt5651.txt
-+++ b/Documentation/devicetree/bindings/sound/rt5651.txt
-@@ -16,6 +16,23 @@ Optional properties:
- - realtek,dmic-en
-   Boolean. true if dmic is used.
- 
-+- realtek,jack-detect-source
-+  u32. Valid values:
-+  1: Use JD1_1 pin for jack-dectect
-+  2: Use JD1_2 pin for jack-dectect
-+  3: Use JD2 pin for jack-dectect
-+
-+- realtek,over-current-threshold-microamp
-+  u32, micbias over-current detection threshold in µA, valid values are
-+  600, 1500 and 2000µA.
-+
-+- realtek,over-current-scale-factor
-+  u32, micbias over-current detection scale-factor, valid values are:
-+  0: Scale current by 0.5
-+  1: Scale current by 0.75
-+  2: Scale current by 1.0
-+  3: Scale current by 1.5
-+
- Pins on the device (for linking into audio routes) for RT5651:
- 
-   * DMIC L1
--- 
-2.16.2
-
-
---===============5320124451221362825==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5320124451221362825==--
+Charles
