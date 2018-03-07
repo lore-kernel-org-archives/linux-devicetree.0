@@ -1,28 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: add support for STM32 USB PHY
- Controller (USBPHYC)
-Date: Wed, 7 Mar 2018 14:29:06 -0600
-Message-ID: <20180307202906.nn2y47f3yzply35s@rob-hp-laptop>
-References: <1520002585-13113-1-git-send-email-amelie.delaunay@st.com>
- <1520002585-13113-2-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v3 4/8] arm64: zynqmp: Add support for Xilinx zcu104-revA
+Date: Wed, 7 Mar 2018 14:31:31 -0600
+Message-ID: <20180307203131.vubpjgh6jootrkyc@rob-hp-laptop>
+References: <cover.1520017397.git.michal.simek@xilinx.com>
+ <409e614b762bd6da24bc26364fcf28c805986eaf.1520017397.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520002585-13113-2-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <409e614b762bd6da24bc26364fcf28c805986eaf.1520017397.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, monstr@monstr.eu, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 03:56:24PM +0100, Amelie Delaunay wrote:
-> This patch adds the device tree bindings description for STM32 USBPHYC
-> (USB PHY Controller).
+On Fri, Mar 02, 2018 at 08:04:30PM +0100, Michal Simek wrote:
+> Xilinx zcu104 is another customer board. It is sort of zcu102 clone
+> with some differences.
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> 
+> Changes in v3:
+> - Use i2c-mux instead of i2cswitch - was done with zcu106
+> - Remove gpio and usb aliases
+> 
+> Changes in v2:
+> - Remove i2c mw u-boot commands
+> - Record compatible string to xilinx.txt
+> 
+>  Documentation/devicetree/bindings/arm/xilinx.txt  |   3 +
+>  arch/arm64/boot/dts/xilinx/Makefile               |   1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 195 ++++++++++++++++++++++
+>  3 files changed, 199 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
 
 Reviewed-by: Rob Herring <robh@kernel.org>
