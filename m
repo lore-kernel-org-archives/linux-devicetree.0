@@ -1,40 +1,36 @@
-Return-Path: <SRS0=MR/7=F4=linaro.org=shawn.guo@kernel.org>
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH v2 0/2] Add HiSilicon Hi3798CV200 specific dw_mmc extension driver
-Date: Tue,  6 Mar 2018 14:58:49 +0800
-Message-Id: <1520319531-24661-1-git-send-email-shawn.guo@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Return-Path: <SRS0=0IKl=F5=davemloft.net=davem@kernel.org>
+Date: Wed, 07 Mar 2018 10:22:50 -0500 (EST)
+Message-Id: <20180307.102250.953694385634641400.davem@davemloft.net>
+Subject: Re: [PATCH v2] dt-bindings: net: renesas-ravb: Make stream buffer
+ optional
+From: David Miller <davem@davemloft.net>
+In-Reply-To: <1520002908-24947-1-git-send-email-geert+renesas@glider.be>
+References: <1520002908-24947-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+To: geert+renesas@glider.be
+Cc: sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-It adds the dt-bindings and driver support for HiSilicon Hi3798CV200
-specific dw_mmc extension.
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Fri,  2 Mar 2018 16:01:48 +0100
 
-Changes for v2:
- - Rebase to v4.16-rc.
- - Use SPDX tag for license.
- - Make ciu-sample and ciu-drive clock be required.
- - Drop deprecated num-slots property from bindings example.
- - Do not show board vs. SoC portion split in bindings example.
- - Use .init hook instead of .parse_dt for initialization.
- - Improve MODULE_DESCRIPTION to make it clear this is Hi3798CV200
-   specific extension.
- - Various style improvements and code cleanups.
+> The Stream Buffer for EtherAVB-IF (STBE) is an optional component, and
+> is not present on all SoCs.
+> 
+> Document this in the DT bindings, including a list of SoCs that do have
+> it.
+> 
+> Fixes: 785ec87483d1e24a ("ravb: document R8A77970 bindings")
+> Fixes: f231c4178a655b09 ("dt-bindings: net: renesas-ravb: Add support for R8A77995 RAVB")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+>   - Add Reviewed-by, Acked-by,
+>   - Add R-Car M3-N.
 
-v1: https://lkml.org/lkml/2017/10/17/1213
-
-tianshuliang (2):
-  dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
-  mmc: dw_mmc: add support for hi3798cv200 specific extensions of
-    dw-mshc
-
- .../bindings/mmc/hi3798cv200-dw-mshc.txt           |  40 +++++
- drivers/mmc/host/Kconfig                           |   9 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/dw_mmc-hi3798cv200.c              | 197 +++++++++++++++++++++
- 4 files changed, 247 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
- create mode 100644 drivers/mmc/host/dw_mmc-hi3798cv200.c
-
--- 
-1.9.1
+Applied, thanks Geert.
