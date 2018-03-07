@@ -1,45 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: mailbox: Add APCS global binding for
- SDM845 SoCs
-Date: Wed, 7 Mar 2018 15:55:41 -0600
-Message-ID: <20180307215541.hs55cfdlrga7p7qo@rob-hp-laptop>
+Subject: Re: [PATCH 4/6] dt-bindings: remoteproc: Add Q6v5 Modem PIL binding
+ for SDM845
+Date: Wed, 7 Mar 2018 15:56:12 -0600
+Message-ID: <20180307215612.pk3igiws37mnoy2p@rob-hp-laptop>
 References: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
- <1520243613-30393-3-git-send-email-sibis@codeaurora.org>
+ <1520243613-30393-5-git-send-email-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520243613-30393-3-git-send-email-sibis@codeaurora.org>
+In-Reply-To: <1520243613-30393-5-git-send-email-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sibis <sibis@codeaurora.org>
 Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 03:23:29PM +0530, sibis wrote:
-> Include SDM845 APCS binding to the list of possible bindings
+On Mon, Mar 05, 2018 at 03:23:31PM +0530, sibis wrote:
+> Add new compatible string for Qualcomm SDM845 SoCs
 > 
 > Signed-off-by: sibis <sibis@codeaurora.org>
 
-Need a full name.
+Full name.
 
 > ---
->  Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> index 16964f0..a60d2b2 100644
-> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> @@ -9,7 +9,8 @@ platforms.
->  	Value type: <string>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 00d3d58..11907db 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -9,8 +9,9 @@ on the Qualcomm Hexagon core.
 >  	Definition: must be one of:
->  		    "qcom,msm8916-apcs-kpss-global",
-> -		    "qcom,msm8996-apcs-hmss-global"
-> +		    "qcom,msm8996-apcs-hmss-global",
-> +		    "qcom,sdm845-apcs-hmss-global"
+>  		    "qcom,q6v5-pil",
+>  		    "qcom,msm8916-mss-pil",
+> -		    "qcom,msm8974-mss-pil"
+> -		    "qcom,msm8996-mss-pil"
+> +		    "qcom,msm8974-mss-pil",
+> +		    "qcom,msm8996-mss-pil",
+> +		    "qcom,sdm845-mss-pil"
 
-Drop the comma so we can have 1 line changes instead of 3 in the 
-future.
+Drop the comma.
 
 >  
 >  - reg:
