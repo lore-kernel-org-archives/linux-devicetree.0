@@ -1,121 +1,108 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2] dmaengine: mv_xor_v2: Fix clock resource by adding a
- register clock
-Date: Wed,  7 Mar 2018 15:06:10 +0100
-Message-ID: <20180307140610.2601-1-gregory.clement@bootlin.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rt5651: Add devicetree-bindings for
+	jack-detect" to the asoc tree
+Date: Wed, 07 Mar 2018 14:14:50 +0000
+Message-ID: <E1etZqE-0001Um-6P@debutante>
+References: <20180304143610.21125-3-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Shadi Ammouri <shadi@marvell.com>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/mixed; boundary="===============5320124451221362825=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180304143610.21125-3-hdegoede@redhat.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On the CP110 components which are present on the Armada 7K/8K SoC we need
-to explicitly enable the clock for the registers. However it is not
-needed for the AP8xx component, that's why this clock is optional.
+--===============5320124451221362825==
+Content-Type: text/plain
 
-With this patch both clocks have now a name, but in order to be
-backward compatible, the name of the first clock is not used. It
-allows to still use this clock with a device tree using the old
-binding.
+The patch
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+   ASoC: rt5651: Add devicetree-bindings for jack-detect
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 9db7d4b32cbccb5807e2e1f22e2fafc80034ee6d Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Sun, 4 Mar 2018 15:35:50 +0100
+Subject: [PATCH] ASoC: rt5651: Add devicetree-bindings for jack-detect
+
+Add new properties to the rt5651 dt-bindings for configuring the
+jack-detect source and over-current detect settings.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Changelog:
+ Documentation/devicetree/bindings/sound/rt5651.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-v1 -> v2
-
- - Fix typos in the commit log
- - Add more explanation in te commit log
- - Only skip the reg clock usage if the clock is not presetn in the
-   device tree (-ENOENT)
- - Add dt list in CC
-
-
- .../devicetree/bindings/dma/mv-xor-v2.txt          |  6 +++++-
- drivers/dma/mv_xor_v2.c                            | 25 +++++++++++++++++-----
- 2 files changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
-index 217a90eaabe7..9c38bbe7e6d7 100644
---- a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
-+++ b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
-@@ -11,7 +11,11 @@ Required properties:
-   interrupts.
+diff --git a/Documentation/devicetree/bindings/sound/rt5651.txt b/Documentation/devicetree/bindings/sound/rt5651.txt
+index 3875233095f5..7890aa9477f8 100644
+--- a/Documentation/devicetree/bindings/sound/rt5651.txt
++++ b/Documentation/devicetree/bindings/sound/rt5651.txt
+@@ -16,6 +16,23 @@ Optional properties:
+ - realtek,dmic-en
+   Boolean. true if dmic is used.
  
- Optional properties:
--- clocks: Optional reference to the clock used by the XOR engine.
-+- clocks: Optional reference to the clocks used by the XOR engine.
-+- clock-names: mandatory if there is a second clock, in this case the
-+   name must be "core" for the first clock and "reg" for the second
-+   one
++- realtek,jack-detect-source
++  u32. Valid values:
++  1: Use JD1_1 pin for jack-dectect
++  2: Use JD1_2 pin for jack-dectect
++  3: Use JD2 pin for jack-dectect
 +
- 
- Example:
- 
-diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
-index f652a0e0f5a2..e3e854161dd0 100644
---- a/drivers/dma/mv_xor_v2.c
-+++ b/drivers/dma/mv_xor_v2.c
-@@ -163,6 +163,7 @@ struct mv_xor_v2_device {
- 	void __iomem *dma_base;
- 	void __iomem *glob_base;
- 	struct clk *clk;
-+	struct clk *reg_clk;
- 	struct tasklet_struct irq_tasklet;
- 	struct list_head free_sw_desc;
- 	struct dma_device dmadev;
-@@ -749,13 +750,26 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	xor_dev->reg_clk = devm_clk_get(&pdev->dev, "reg");
-+	if (PTR_ERR(xor_dev->reg_clk) == -ENOENT) {
-+		if (!IS_ERR(xor_dev->reg_clk)) {
-+			ret = clk_prepare_enable(xor_dev->reg_clk);
-+			if (ret)
-+				return ret;
-+		} else {
-+			return PTR_ERR(xor_dev->reg_clk);
-+		}
-+	}
++- realtek,over-current-threshold-microamp
++  u32, micbias over-current detection threshold in µA, valid values are
++  600, 1500 and 2000µA.
 +
- 	xor_dev->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(xor_dev->clk) && PTR_ERR(xor_dev->clk) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (IS_ERR(xor_dev->clk) && PTR_ERR(xor_dev->clk) == -EPROBE_DEFER) {
-+		ret = EPROBE_DEFER;
-+		goto disable_reg_clk;
-+	}
- 	if (!IS_ERR(xor_dev->clk)) {
- 		ret = clk_prepare_enable(xor_dev->clk);
- 		if (ret)
--			return ret;
-+			goto disable_reg_clk;
- 	}
++- realtek,over-current-scale-factor
++  u32, micbias over-current detection scale-factor, valid values are:
++  0: Scale current by 0.5
++  1: Scale current by 0.75
++  2: Scale current by 1.0
++  3: Scale current by 1.5
++
+ Pins on the device (for linking into audio routes) for RT5651:
  
- 	ret = platform_msi_domain_alloc_irqs(&pdev->dev, 1,
-@@ -866,8 +880,9 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
- free_msi_irqs:
- 	platform_msi_domain_free_irqs(&pdev->dev);
- disable_clk:
--	if (!IS_ERR(xor_dev->clk))
--		clk_disable_unprepare(xor_dev->clk);
-+	clk_disable_unprepare(xor_dev->clk);
-+disable_reg_clk:
-+	clk_disable_unprepare(xor_dev->reg_clk);
- 	return ret;
- }
- 
+   * DMIC L1
 -- 
-2.16.1
+2.16.2
+
+
+--===============5320124451221362825==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5320124451221362825==--
