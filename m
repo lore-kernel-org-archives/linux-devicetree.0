@@ -1,70 +1,61 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Add support for qcom, smmu-500 variant
-Date: Wed, 7 Mar 2018 10:30:09 -0600
-Message-ID: <CAL_Jsq+WWR5r-RcuE2KGpswdRgwzOV_BZjEOzHj5bAULFD6_Xg@mail.gmail.com>
-References: <20180307063219.14409-1-vivek.gautam@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv5 1/5] dt-bindings: mfd: motorola-cpcap:
+ document audio-codec
+Date: Wed, 7 Mar 2018 16:30:45 +0000
+Message-ID: <20180307163045.cwufiv2xhi4fdxo2@dell>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180307063219.14409-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "moderated list:ARM SMMU DRIVERS" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180223200254.25685-2-sebastian.reichel@collabora.co.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 12:32 AM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Qualcomm's arm-smmu 500 implementation supports runtime pm
-> so enable the same.
-
-That's a driver detail unrelated to the binding.
-
->
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->
->  Based on iommu/arm-smmu pm runtime support series [1]:
->  [PATCH v8 0/5] iommu/arm-smmu: Add runtime pm/sleep support
->
->  Tested on sdm845 with necessary support to enable the smmu
->  and with necessary user.
->
->  [1] https://lkml.org/lkml/2018/3/2/325
->
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 14 ++++++++++++++
-
-Please split bindings to separate patches.
-
->  drivers/iommu/arm-smmu.c                             |  8 ++++++++
->  2 files changed, 22 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 6ea27bd4f785..0b5c6d2a9865 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -18,6 +18,7 @@ conditions.
->                          "arm,mmu-500"
->                          "cavium,smmu-v2"
->                          "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
-
-I don't even see this one in the tree yet...
-
-> +                        "qcom,<soc>-smmu-500", "qcom,smmu-500"
-
-IIRC, the mmu-500 is SMMU v2 implementation, right? Having
-qcom,smmu-500 seems kind of pointless.
-
-Given that we're there's only 1 SoC for "qcom,<soc>-smmu-v2" and
-you're already on to a new genericish compatible, just do SoC specific
-compatible strings.
-
-Rob
+T24gRnJpLCAyMyBGZWIgMjAxOCwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cgo+IFRoaXMgYWRk
+cyB0aGUgRFQgYmluZGluZyBmb3IgdGhlIGF1ZGlvLWNvZGVjIHN1Yi1tb2R1bGUgZm91bmQKPiBp
+bnNpZGUgdGhlIE1vdG9yb2xhIENQQ0FQIFBNSUMuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2ViYXN0
+aWFuIFJlaWNoZWwgPHNlYmFzdGlhbi5yZWljaGVsQGNvbGxhYm9yYS5jby51az4KPiAtLS0KPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL21vdG9yb2xhLWNwY2FwLnR4dCAgICAgfCA0MiAr
+KysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCsp
+Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+bW90b3JvbGEtY3BjYXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21m
+ZC9tb3Rvcm9sYS1jcGNhcC50eHQKPiBpbmRleCAxNWJjODg1ZjlkZjQuLjgyYzNhNzE0MDY2MCAx
+MDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL21vdG9y
+b2xhLWNwY2FwLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZmQvbW90b3JvbGEtY3BjYXAudHh0Cj4gQEAgLTEyLDYgKzEyLDMwIEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4gIC0gc3BpLW1heC1mcmVxdWVuY3kJOiBUeXBpY2FsbHkgc2V0IHRvIDMwMDAwMDAK
+PiAgLSBzcGktY3MtaGlnaAkJOiBTUEkgY2hpcCBzZWxlY3QgZGlyZWN0aW9uCj4gIAo+ICtPcHRp
+b25hbCBzdWJub2RlczoKPiArCj4gK1RoZSBzdWItZnVuY3Rpb25zIG9mIENQQ0FQIGdldCB0aGVp
+ciBvd24gbm9kZSB3aXRoIHRoZWlyIG93biBjb21wYXRpYmxlIHZhbHVlcywKPiArd2hpY2ggYXJl
+IGRlc2NyaWJlZCBpbiB0aGUgZm9sbG93aW5nIGZpbGVzOgo+ICsKPiArLSBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvc3VwcGx5L2NwY2FwLWJhdHRlcnkudHh0Cj4gKy0g
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBseS9jcGNhcC1jaGFy
+Z2VyLnR4dAo+ICstIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3Iv
+Y3BjYXAtcmVndWxhdG9yLnR4dAo+ICstIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9waHkvcGh5LWNwY2FwLXVzYi50eHQKPiArLSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaW5wdXQvY3BjYXAtcHdyYnV0dG9uLnR4dAo+ICstIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9ydGMvY3BjYXAtcnRjLnR4dAo+ICstIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9sZWRzL2xlZHMtY3BjYXAudHh0Cj4gKy0gRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvY3BjYXAtYWRjLnR4dAoKTml0OiBCZXN0IHRvIHVzZSBy
+ZWxhdGl2ZSBwYXRoIG5hbWVzIGhlcmUgKGhpbnQ6IERUIGRvY3MgbWlnaHQgbm90CmxpdmUgaW4g
+dGhlcmUga2VybmVsIGZvcmV2ZXIpLgoKT3RoZXIgdGhhbiB0aGF0OgoKRm9yIG15IG93biByZWZl
+cmVuY2U6CiAgQWNrZWQtZm9yLU1GRC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9y
+Zz4KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNlcnZpY2VzIFRlY2huaWNhbCBMZWFkCkxpbmFyby5v
+cmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBG
+YWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1w
+cm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGlu
+Zm8vYWxzYS1kZXZlbAo=
