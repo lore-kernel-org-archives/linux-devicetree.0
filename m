@@ -1,45 +1,49 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 4/6] arm64: dts: stratix10: remove 'num-slots' property
- for dwmmc
-Date: Wed, 7 Mar 2018 08:37:46 -0600
-Message-ID: <94cf9226-27f2-1550-e1c1-2f7dbb873bd1@kernel.org>
-References: <20180223064138.18401-1-jh80.chung@samsung.com>
- <CGME20180223064140epcas2p3804fe3b7d63e4b7975d94a178e94dffb@epcas2p3.samsung.com>
- <20180223064138.18401-4-jh80.chung@samsung.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH v2 0/8] ARTPEC-6 ARM SoC device tree updates
+Date: Wed, 7 Mar 2018 15:40:28 +0100
+Message-ID: <20180307144027.GA17727@axis.com>
+References: <20180221090000.18091-1-niklas.cassel@axis.com>
+ <CAK8P3a0ykwsO40w49TL9xgVKv3wrvx7KXz1o6XD5+qXQ6n8YUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180223064138.18401-4-jh80.chung@samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0ykwsO40w49TL9xgVKv3wrvx7KXz1o6XD5+qXQ6n8YUA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, will.deacon@arm.com, xuwei5@hisilicon.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: arm-soc <arm@kernel.org>, linux-arm-kernel@axis.com, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 06, 2018 at 05:45:30PM +0100, Arnd Bergmann wrote:
+> On Wed, Feb 21, 2018 at 9:59 AM, Niklas Cassel <niklas.cassel@axis.com> wrote:
+> > Hello,
+> >
+> > Here comes some ARTPEC-6 ARM SoC device tree updates.
+> >
+> > Niklas Cassel (8):
+> >   ARM: dts: artpec: disable Accelerator Coherency Port
+> >   ARM: dts: artpec: use 1 GiB RAM
+> >   ARM: dts: artpec: remove 0x prefix from clkctrl unit address
+> >   ARM: dts: artpec: migrate ethernet to stmmac binding
+> >   ARM: dts: artpec: add and utilize artpec6 pin controller
+> >   ARM: dts: artpec: add and utilize nbpfaxi DMA controllers
+> >   ARM: dts: artpec: add disabled node for PCIe endpoint mode
+> >   ARM: dts: artpec: add node for hardware crypto accelerator
+> 
+> For a series eight patches, a pull request would save me some work, but
+> I applied it anyway.
+
+Thank you Arnd.
+You will receive pull requests in the future.
+
+> 
+> Are you sure that the first three patches shouldn't be applied to stable
+> backports?
+
+The only DTS available upstream is for the ARTPEC-6 devboard.
+Considering that ARTPEC-6 devboards are only used in-house,
+I don't see a reason to backport anything from this series.
 
 
-On 02/23/2018 12:41 AM, Jaehoon Chung wrote:
-> Since 'num-slots' had already deprecated, remove the property in
-> device-tree file.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> index a37c46112876..4e146b4e6487 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -88,7 +88,6 @@
->  
->  &mmc {
->  	status = "okay";
-> -	num-slots = <1>;
->  	cap-sd-highspeed;
->  	broken-cd;
->  	bus-width = <4>;
-> 
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+Best regards,
+Niklas
