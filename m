@@ -1,49 +1,98 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 5/6] staging: vc04_services: Mark the "DT bindings" job done.
-Date: Wed,  7 Mar 2018 10:57:15 -0800
-Message-ID: <20180307185716.17449-5-eric@anholt.net>
-References: <20180307185716.17449-1-eric@anholt.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Wed, 7 Mar 2018 11:02:49 -0800
+Message-ID: <20180307190249.GW93895@bjorns-mbp-2.lan>
+References: <20180226175802.20052-1-ilina@codeaurora.org>
+ <20180226175802.20052-3-ilina@codeaurora.org>
+ <20180305231455.GJ18510@minitux>
+ <20180306155703.GA4930@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
+Content-Disposition: inline
+In-Reply-To: <20180306155703.GA4930@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Now we just need to get the other drivers merged and finish the style
-cleanups/garbage collecting so we can get out of staging.
+On Tue 06 Mar 07:57 PST 2018, Lina Iyer wrote:
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+> On Mon, Mar 05 2018 at 16:15 -0700, Bjorn Andersson wrote:
+> > On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
+> > 
+> > > From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> > > 
+> > > Command DB provides information on shared resources like clocks,
+> > > regulators etc., probed at boot by the remote subsytem and made
+> > > available in shared memory.
+> > > 
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> > > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> > > ---
+> > > 
+> > > Changes in v4:
+> > > 	- Fix unwanted capitalization
+> > > 	- Add reg property
+> > > ---
+> > >  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> > [..]
+> > > +	reserved-memory {
+> > > +		[...]
+> > > +		qcom,cmd-db@c3f000c {
+> > > +			reg = <0x0 0xc3f000c 0x0 0x8>,
+> > > +			      <0x0 0x85fe0000 0x0 0x20000>;
+> > 
+> > I'm still concerned about the use of the redirection mapping here,
+> > the relocation at 0xc3f000c is used a convenience thing so that the
+> > command db can be relocated, but because of how Linux will consume any
+> > non-reserved memory the dts would still need to be manually updated.
+> > 
+> This location is fixed and it is not expected to change between
+> different boards. OEMs may change the actual address of the command db
+> location, but would not change the dictionary location.
+> 
 
-v2: no changes
+Right, dictionary location is fixed. So to pick another range for
+command db one would update the numbers that goes into the dictionary
+and expect all software in the system to use this new range.
 
- drivers/staging/vc04_services/interface/vchi/TODO | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+> > As such I think you should just describe only the 0x85fe0000 + 0x20000
+> > region here and to support the dynamic aspect of this from a system
+> > point of view you can have the boot loader read the information at
+> > 0xc3f000c and adjust the reserved memory. (Or just keep the step of
+> > manually update the dts without caring about the indirection)
+> > 
+> It would be incorrect and very board specific to just use the 0x85fe000
+> as the address. It is not how the SoC defines the location. Upon request
+> earlier, this memory location was added in DT and the location is
+> typical reference platform usage only.
+> 
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/TODO b/drivers/staging/vc04_services/interface/vchi/TODO
-index df93154b1aa6..46b20a1961a2 100644
---- a/drivers/staging/vc04_services/interface/vchi/TODO
-+++ b/drivers/staging/vc04_services/interface/vchi/TODO
-@@ -1,9 +1,4 @@
--1) Write a DT binding doc and get the corresponding DT node merged to
--   bcm2835.
--
--This will let the driver probe when enabled.
--
--2) Import drivers using VCHI.
-+1) Import drivers using VCHI.
- 
- VCHI is just a tool to let drivers talk to the firmware.  Here are
- some of the ones we want:
-@@ -26,7 +21,7 @@ some of the ones we want:
-   to manage these buffers as dmabufs so that we can zero-copy import
-   camera images into vc4 for rendering/display.
- 
--3) Garbage-collect unused code
-+2) Garbage-collect unused code
- 
- One of the reasons this driver wasn't upstreamed previously was that
- there's a lot code that got built that's probably unnecessary these
--- 
-2.16.2
+The problem is that as the db resides in a chunk of memory in the middle
+of what Linux considers System RAM the DTS must specify this region as
+reserved. Which means that as you, like described above, update the
+dictionary something (in your scheme a person) has to update the
+reserved-memory region as well.
+
+That's why I'm proposing that the appropriate implementation for this
+is to have the boot loader to the dictionary part of this and Linux only
+care about the actual reserved-memory region. This way you would still
+implement the dictionary lookup on a system level, but the Linux
+part no longer depend on a human updating the DTS to match the values of
+the dictionary.
+
+
+But if we stick with the approach of describing both these and hoping
+that the values in the first region matches the second (or should we add
+a sanity check in probe?). The memory reserve defined as 0xc3f000c + 8
+looks strange, is this system ram as well and what other things resides
+in that same page?
+
+Regards,
+Bjorn
