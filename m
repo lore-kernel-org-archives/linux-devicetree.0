@@ -1,17 +1,19 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 2/5] staging: vc04_services: Remove cache-line-size
- property.
-Date: Wed, 7 Mar 2018 13:10:30 +0100 (CET)
-Message-ID: <1332781939.275857.1520424630939@email.1und1.de>
-References: <20180305202806.21219-1-eric@anholt.net>
- <20180305202806.21219-3-eric@anholt.net>
- <a8f369f5-691c-c05f-4c7c-2eadcf4c48c8@i2se.com> <87muzl9ger.fsf@anholt.net>
- <638bd870-bb17-a0e1-d2aa-30a364b53279@raspberrypi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Wed, 7 Mar 2018 13:12:03 +0100
+Message-ID: <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <438185389.274708.1520422108782@email.1und1.de>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <638bd870-bb17-a0e1-d2aa-30a364b53279@raspberrypi.org>
+In-Reply-To: <438185389.274708.1520422108782@email.1und1.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,100 +23,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbCwKCj4gUGhpbCBFbHdlbGwgPHBoaWxAcmFzcGJlcnJ5cGkub3JnPiBoYXQgYW0gNy4g
-TcOkcnogMjAxOCB1bSAwOTowMiBnZXNjaHJpZWJlbjoKPiAKPiAKPiBIaSBFcmljLAo+IAo+IE9u
-IDA2LzAzLzIwMTggMTk6MDIsIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4gU3RlZmFuIFdhaHJlbiA8
-c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4gd3JpdGVzOgo+ID4gCj4gPj4gSGkgRXJpYywKPiA+Pgo+
-ID4+Cj4gPj4gQW0gMDUuMDMuMjAxOCB1bSAyMToyOCBzY2hyaWViIEVyaWMgQW5ob2x0Ogo+ID4+
-PiBUaGlzIHdhcyBqdXN0IGEgd2F5IGZvciB0aGUgRFQtcGFzc2VkIHZhbHVlIHRvIGdldCBvdXQg
-b2Ygc3luYyB3aXRoCj4gPj4+IHdoYXQgTGludXggaGFzIGNvbmZpZ3VyZWQgdGhlIEFSTSBmb3Iu
-Cj4gPj4+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+
-Cj4gPj4+IC0tLQo+ID4+PiAgICAuLi4vaW50ZXJmYWNlL3ZjaGlxX2FybS92Y2hpcV8yODM1X2Fy
-bS5jICAgICAgICAgICB8IDI1ICsrKysrKystLS0tLS0tLS0tLS0tLS0KPiA+Pj4gICAgLi4uL2lu
-dGVyZmFjZS92Y2hpcV9hcm0vdmNoaXFfcGFnZWxpc3QuaCAgICAgICAgICAgfCAgMSAtCj4gPj4+
-ICAgIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKPiA+
-Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy92YzA0X3NlcnZpY2VzL2ludGVy
-ZmFjZS92Y2hpcV9hcm0vdmNoaXFfMjgzNV9hcm0uYyBiL2RyaXZlcnMvc3RhZ2luZy92YzA0X3Nl
-cnZpY2VzL2ludGVyZmFjZS92Y2hpcV9hcm0vdmNoaXFfMjgzNV9hcm0uYwo+ID4+PiBpbmRleCBi
-NTllZjE0ODkwYWEuLmUwZTAxYzgxMjAzNiAxMDA2NDQKPiA+Pj4gLS0tIGEvZHJpdmVycy9zdGFn
-aW5nL3ZjMDRfc2VydmljZXMvaW50ZXJmYWNlL3ZjaGlxX2FybS92Y2hpcV8yODM1X2FybS5jCj4g
-Pj4+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy92YzA0X3NlcnZpY2VzL2ludGVyZmFjZS92Y2hpcV9h
-cm0vdmNoaXFfMjgzNV9hcm0uYwo+ID4+PiBAQCAtNzcsNyArNzcsNiBAQCBzdHJ1Y3QgdmNoaXFf
-cGFnZWxpc3RfaW5mbyB7Cj4gPj4+ICAgIH07Cj4gPj4+ICAgIAo+ID4+PiAgICBzdGF0aWMgdm9p
-ZCBfX2lvbWVtICpnX3JlZ3M7Cj4gPj4+IC1zdGF0aWMgdW5zaWduZWQgaW50IGdfY2FjaGVfbGlu
-ZV9zaXplID0gc2l6ZW9mKENBQ0hFX0xJTkVfU0laRSk7Cj4gPj4+ICAgIHN0YXRpYyB1bnNpZ25l
-ZCBpbnQgZ19mcmFnbWVudHNfc2l6ZTsKPiA+Pj4gICAgc3RhdGljIGNoYXIgKmdfZnJhZ21lbnRz
-X2Jhc2U7Cj4gPj4+ICAgIHN0YXRpYyBjaGFyICpnX2ZyZWVfZnJhZ21lbnRzOwo+ID4+PiBAQCAt
-MTE3LDE1ICsxMTYsNyBAQCBpbnQgdmNoaXFfcGxhdGZvcm1faW5pdChzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2LCBWQ0hJUV9TVEFURV9UICpzdGF0ZSkKPiA+Pj4gICAgCWlmIChlcnIgPCAw
-KQo+ID4+PiAgICAJCXJldHVybiBlcnI7Cj4gPj4+ICAgIAo+ID4+PiAtCWVyciA9IG9mX3Byb3Bl
-cnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgImNhY2hlLWxpbmUtc2l6ZSIsCj4gPj4+IC0JCQkJ
-ICAgJmdfY2FjaGVfbGluZV9zaXplKTsKPiA+Pj4gLQo+ID4+PiAtCWlmIChlcnIpIHsKPiA+Pj4g
-LQkJZGV2X2VycihkZXYsICJNaXNzaW5nIGNhY2hlLWxpbmUtc2l6ZSBwcm9wZXJ0eVxuIik7Cj4g
-Pj4+IC0JCXJldHVybiAtRU5PREVWOwo+ID4+PiAtCX0KPiA+Pj4gLQo+ID4+PiAtCWdfZnJhZ21l
-bnRzX3NpemUgPSAyICogZ19jYWNoZV9saW5lX3NpemU7Cj4gPj4+ICsJZ19mcmFnbWVudHNfc2l6
-ZSA9IDIgKiBjYWNoZV9saW5lX3NpemUoKTsKPiA+Pj4gICAgCj4gPj4+ICAgIAkvKiBBbGxvY2F0
-ZSBzcGFjZSBmb3IgdGhlIGNoYW5uZWxzIGluIGNvaGVyZW50IG1lbW9yeSAqLwo+ID4+PiAgICAJ
-c2xvdF9tZW1fc2l6ZSA9IFBBR0VfQUxJR04oVE9UQUxfU0xPVFMgKiBWQ0hJUV9TTE9UX1NJWkUp
-Owo+ID4+PiBAQCAtNTQ4LDkgKzUzOSw5IEBAIGNyZWF0ZV9wYWdlbGlzdChjaGFyIF9fdXNlciAq
-YnVmLCBzaXplX3QgY291bnQsIHVuc2lnbmVkIHNob3J0IHR5cGUpCj4gPj4+ICAgIAo+ID4+PiAg
-ICAJLyogUGFydGlhbCBjYWNoZSBsaW5lcyAoZnJhZ21lbnRzKSByZXF1aXJlIHNwZWNpYWwgbWVh
-c3VyZXMgKi8KPiA+Pj4gICAgCWlmICgodHlwZSA9PSBQQUdFTElTVF9SRUFEKSAmJgo+ID4+PiAt
-CQkoKHBhZ2VsaXN0LT5vZmZzZXQgJiAoZ19jYWNoZV9saW5lX3NpemUgLSAxKSkgfHwKPiA+Pj4g
-KwkJKChwYWdlbGlzdC0+b2Zmc2V0ICYgKGNhY2hlX2xpbmVfc2l6ZSgpIC0gMSkpIHx8Cj4gPj4+
-ICAgIAkJKChwYWdlbGlzdC0+b2Zmc2V0ICsgcGFnZWxpc3QtPmxlbmd0aCkgJgo+ID4+PiAtCQko
-Z19jYWNoZV9saW5lX3NpemUgLSAxKSkpKSB7Cj4gPj4+ICsJCSAoY2FjaGVfbGluZV9zaXplKCkg
-LSAxKSkpKSB7Cj4gPj4+ICAgIAkJY2hhciAqZnJhZ21lbnRzOwo+ID4+PiAgICAKPiA+Pj4gICAg
-CQlpZiAoZG93bl9pbnRlcnJ1cHRpYmxlKCZnX2ZyZWVfZnJhZ21lbnRzX3NlbWEpICE9IDApIHsK
-PiA+Pj4gQEAgLTU5OCwxMCArNTg5LDEwIEBAIGZyZWVfcGFnZWxpc3Qoc3RydWN0IHZjaGlxX3Bh
-Z2VsaXN0X2luZm8gKnBhZ2VsaXN0aW5mbywKPiA+Pj4gICAgCQkJZ19mcmFnbWVudHNfc2l6ZTsK
-PiA+Pj4gICAgCQlpbnQgaGVhZF9ieXRlcywgdGFpbF9ieXRlczsKPiA+Pj4gICAgCj4gPj4+IC0J
-CWhlYWRfYnl0ZXMgPSAoZ19jYWNoZV9saW5lX3NpemUgLSBwYWdlbGlzdC0+b2Zmc2V0KSAmCj4g
-Pj4+IC0JCQkoZ19jYWNoZV9saW5lX3NpemUgLSAxKTsKPiA+Pj4gKwkJaGVhZF9ieXRlcyA9IChj
-YWNoZV9saW5lX3NpemUoKSAtIHBhZ2VsaXN0LT5vZmZzZXQpICYKPiA+Pj4gKwkJCShjYWNoZV9s
-aW5lX3NpemUoKSAtIDEpOwo+ID4+PiAgICAJCXRhaWxfYnl0ZXMgPSAocGFnZWxpc3QtPm9mZnNl
-dCArIGFjdHVhbCkgJgo+ID4+PiAtCQkJKGdfY2FjaGVfbGluZV9zaXplIC0gMSk7Cj4gPj4+ICsJ
-CQkoY2FjaGVfbGluZV9zaXplKCkgLSAxKTsKPiA+Pgo+ID4+IHNob3VsZCBpdCBiZSBzbyBlYXN5
-PyBCYWNrIGluIDIwMTYgd2Ugc2FpZCB0aGF0IGNhY2hlX2xpbmVfc2l6ZSgpIHdvbid0Cj4gPj4g
-d29yay4gSSBhbHdheXMgdGhvdWdodCB0aGF0IHdlIG5lZWQgdGhlIGNhY2hlIGxpbmUgc2l6ZSBv
-ZiBMMiBub3Qgb2YgdGhlCj4gPj4gTDEgb25lLgo+ID4+Cj4gPj4gRGlkIHlvdSBhbHJlYWR5IHRl
-c3QgdGhlIGJlaGF2aW9yIGZvciB0aGVzZSBjb21iaW5hdGlvbnM/Cj4gPj4gQkNNMjgzNSBBUk0z
-MiwgZXhwZWN0ZWQgY2FjaGUgbGluZSBzaXplID0gMzIKPiA+PiBCQ00yODM2IEFSTTMyLCBleHBl
-Y3RlZCBjYWNoZSBsaW5lIHNpemUgPSA2NAo+ID4+IEJDTTI4MzcgQVJNMzIsIGV4cGVjdGVkIGNh
-Y2hlIGxpbmUgc2l6ZSA9IDY0Cj4gPj4gQkNNMjgzNyBBUk02NCwgZXhwZWN0ZWQgY2FjaGUgbGlu
-ZSBzaXplID0gNjQKPiA+IAo+ID4gSSBkaWRuJ3QgZXhwbGljaXRseSB0ZXN0LCBidXQgd2FzIGdv
-aW5nIGJ5Ogo+ID4gCj4gPiBjb25maWcgQVJNX0wxX0NBQ0hFX1NISUZUXzYKPiA+IAlib29sCj4g
-PiAJZGVmYXVsdCB5IGlmIENQVV9WNwo+ID4gCWhlbHAKPiA+IAkgIFNldHRpbmcgQVJNIEwxIGNh
-Y2hlIGxpbmUgc2l6ZSB0byA2NCBCeXRlcy4KPiA+IAo+ID4gY29uZmlnIEFSTV9MMV9DQUNIRV9T
-SElGVF83Cj4gPiAJYm9vbAo+ID4gCWhlbHAKPiA+IAkgIFNldHRpbmcgQVJNIEwxIGNhY2hlIGxp
-bmUgc2l6ZSB0byAxMjggQnl0ZXMuCj4gPiAKPiA+IGNvbmZpZyBBUk1fTDFfQ0FDSEVfU0hJRlQK
-PiA+IAlpbnQKPiA+IAlkZWZhdWx0IDcgaWYgQVJNX0wxX0NBQ0hFX1NISUZUXzcKPiA+IAlkZWZh
-dWx0IDYgaWYgQVJNX0wxX0NBQ0hFX1NISUZUXzYKPiA+IAlkZWZhdWx0IDUKPiA+IAo+ID4gYW5k
-IG9ubHkgTDFfQ0FDSEVfU0hJRlRfNyBnZXRzIHNlbGVjdGVkIGJ5IFVOSVBISUVSIGFuZCBuZWl0
-aGVyIG9uZSBpcwo+ID4gYWNjZXNzaWJsZSBieSBtZW51cy4KPiA+IAo+ID4gSSB0aGluayB5b3Un
-cmUgdGVjaG5pY2FsbHkgY29ycmVjdCB0aGF0IGl0J3MgdGhlIHNpemUgb2YgTDIgdGhhdCBtYXR0
-ZXJzCj4gPiAob3IsIHNwZWNpZmljYWxseSwgdGhlIGhhcmRjb2RlZCB2YWx1ZSB0aGF0IHRoZSBm
-aXJtd2FyZSBpcyB1c2luZyBvbiBpdHMKPiA+IHNpZGUgZm9yIHRoZSBmcmFnbWVudHMgbGlzdCBo
-YW5kbGluZy4gIEl0IG92ZXJyaWRlcyBhIGNhY2hlLWxpbmUtc2l6ZSBEVAo+ID4gcHJvcGVydHkg
-d2l0aCB0aGF0IG51bWJlciBpZiBwcmVzZW50KS4gIEhvd2V2ZXIsIEkgdGhpbmsgTDE9PUwyIGNh
-Y2hlCj4gPiBsaW5lIHNpemUgdGhpcyBzaG91bGQgYmUgYSBzYWZlIGFzc3VtcHRpb24gZm9yIHVz
-Lgo+ID4gCj4gPiBQaGlsLCBhbnkgb3Bpbmlvbj8KPiAKPiBJdCBpcyB0aGUgTDIgY2FjaGUgbGlu
-ZSBzaXplIHRoYXQgbWF0dGVycywgYnV0IGFzIGxvbmcgYXMgeW91IGVuZCB1cCB3aXRoCj4gdGhl
-IG51bWJlcnMgU3RlZmFuIG1lbnRpb25lZCAtIDMyIG9uIEJDTTI4MzUsIDY0IG9uIEJDTTI4MzYg
-YW5kIEJDTTI4MzcgLQo+IEknbSBub3QgdG9vIGJvdGhlcmVkIGhvdyB5b3UgZ2V0IHRoZXJlLgoK
-aSB0aGluayBhIGtlcm5lbCB3aXRoIGJjbTI4MzVfZGVmY29uZmlnIG9uIFJQaSAyIGNvdWxkIGJl
-IHN1Y2ggYSBjb3JuY2FzZS4KCkFtIGkgcmlnaHQgdGhhdCB0aGUgZmlybXdhcmUgZG9lc24ndCBy
-ZWx5IG9uIHRoZSBleGlzdGVuY2Ugb2YgImNhY2hlLWxpbmUtc2l6ZSI/CgpCdHcgaXQgd291bGQg
-YmUgbmljZSB0byBnZXQgZml4ZWQgdGhlIGNvcnJ1cHRpb24gb24gQVJNNjQgWzFdLgoKU3RlZmFu
-CgpbMV0gLSBodHRwczovL2dpdGh1Yi5jb20vbGF0ZWdvb2RieWUvcnBpLXplcm8vaXNzdWVzLzIz
-Cgo+IAo+IFBoaWwKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Stefan,
+
+>>>>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/ttyAMA0).
+>>>>> This allows to automatically insert the bcm43438 to the bluetooth
+>>>>> subsystem instead of relying on patched userspace helpers (hciattach).
+>>>>> 
+>>>>> In order to keep a debug UART we need to switch to uart1.
+>>>>> 
+>>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>>> ---
+>>>>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
+>>>>> 1 file changed, 13 insertions(+), 1 deletion(-)
+>>>>> 
+>>>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>> index cf53436..b7f79f1 100644
+>>>>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+>>>>> @@ -131,6 +131,18 @@
+>>>>> 
+>>>>> &uart0 {
+>>>>> 	pinctrl-names = "default";
+>>>>> -	pinctrl-0 = <&uart0_gpio14>;
+>>>>> +	pinctrl-0 = <&uart0_gpio32 &uart0_ctsrts_gpio30>;
+>>>>> +	status = "okay";
+>>>>> +
+>>>>> +	bluetooth {
+>>>>> +		compatible = "brcm,bcm43438-bt";
+>>>>> +		max-speed = <2000000>;
+>>>>> +		shutdown-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
+>>>>> +	};
+>>>>> +};
+>>>> 
+>>>> is the shutdown GPIO working as expected with this hardware. So even module unload and reload works fine?
+>>> 
+>>> Yes, unload and reload works fine. 
+>>> 
+>>>> Meaning we are getting back to the 115200 default baud rate on the UART?
+>>> 
+>>> I assume that, because reload works as expected. 
+>> 
+>> awesome. That is good news.
+>> 
+>> Since you said that the GPIO expander driver for the RPi 3 has been accepted, did you test it there as well? If so, then it would be good to get a patch that also provides shutdown-gpios for RPi 3.
+> 
+> after applying Loic's patch and the necessary patch for the RPi 3 dts file (see below), i will get this output:
+> 
+> [    4.873246] Bluetooth: HCI UART driver ver 2.3
+> [    4.873260] Bluetooth: HCI UART protocol H4 registered
+> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
+> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
+> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
+> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
+> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
+> [   15.192312] Bluetooth: hci0: Failed to set baudrate
+> [   15.316415] Bluetooth: hci0: BCM: chip id 94
+> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
+> [   15.341538] Bluetooth: hci0: BCM43430A1
+> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
+> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
+> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
+> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
+> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
+> 
+> I don't see these errors on RPi Zero W. Maybe the reason for this is the lack of hardware flowcontrol on RPi 3. Or some of the downstream patches on BlueZ must be adapted for the kernel [1].
+> 
+> Btw the bcm43438 is detected even after unloading and reloading the driver. But the timeout occurs also on driver reload. Reducing the baudrate to 115200 doesn't help here.
+
+maybe it needs some time after switching the hardware on. Have you tried to sleep for a bit at the end of bcm_gpio_set_power?
+
+Can you also dump where the Frame reassembly fails. Or correlate that with the btmon trace of which packets make its through. The 0x0c14 is Read Local Name and maybe we actually have bit errors here.
+
+In theory we could also run this hardware in 3-wire protocol mode. I just do not know how to get that one started, but maybe that would be an option if there is some sort of packet loss. However maybe this is really just some timing issue for the hardware to settle its baud rate. However I assume that the firmware loading itself succeeds here.
+
+Regards
+
+Marcel
