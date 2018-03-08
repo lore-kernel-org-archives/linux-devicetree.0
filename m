@@ -1,83 +1,54 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
-Date: Thu,  8 Mar 2018 16:24:03 +0100
-Message-ID: <1520522643-11756-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v5 0/2] clocksource/drivers/npcm: Add NPCM7xx timer driver
+Date: Thu,  8 Mar 2018 17:24:56 +0200
+Message-ID: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The R-Car V3M Eagle board includes a transparent LVDS decoder, connected
-to the on-chip LVDS encoder output on one side and to HDMI encoder
-ADV7511w on the other one.
+Addressed comments from:.
+ - Daniel Lezcano: https://www.spinics.net/lists/kernel/msg2741546.html
+				   https://www.spinics.net/lists/kernel/msg2741548.html
+ - Joel Stanley:   https://www.spinics.net/lists/kernel/msg2736646.html					
 
-As the decoder does not need any configuration it has been so-far
-omitted from DTS. Now that a driver for transparent LVDS decoder is
-available, describe it in DT as well.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 31 ++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-index c0fd144..0d62b40 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -42,6 +42,33 @@
- 			};
- 		};
- 	};
-+
-+	lvds_decoder {
-+		compatible = "thine,thc63lvd1024";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_dec_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1{
-+				reg = <1>;
-+
-+				lvds_dec_out: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+
-+			};
-+
-+		};
-+	};
- };
+Changes since version 4:
+ - Remove clock-frequency option.
+ - Rename driver name.
+ - Enable TIMER_OF_CLOCK flag.
+ - Modify register size in the dt-binding.
  
- &avb {
-@@ -98,7 +125,7 @@
- 			port@0 {
- 				reg = <0>;
- 				adv7511_in: endpoint {
--					remote-endpoint = <&lvds0_out>;
-+					remote-endpoint = <&lvds_dec_out>;
- 				};
- 			};
+Changes since version 3:
+ - Modify prefix to npcm7xx_
+ - Modify licensing to SPDX license format
+
+Changes since version 2:
+ - The shutdown function called oneshot function that can cause a crash in the system,
+   Modify shutdown call to unique shutdown function.
+ - Adding support to resume function
+ - Using timer-of.c API
+ - Modify NPCM750 compatible name.
+
+Changes since version 1:
+ - Rename driver name
+ - Removing unnecessary dependencies in configuration
+ - Adding prefix to the macros
+ - No changes to dt-binding documentation since v1
  
-@@ -153,7 +180,7 @@
- 	ports {
- 		port@1 {
- 			endpoint {
--				remote-endpoint = <&adv7511_in>;
-+				remote-endpoint = <&lvds_dec_in>;
- 			};
- 		};
- 	};
+Modified driver have been tested on the NPCM750 evaluation board.
+
+Tomer Maimon (2):
+  dt-binding: timer: document NPCM7xx timer DT bindings
+  clocksource/drivers/npcm: Add NPCM7xx timer driver
+
+ .../bindings/timer/nuvoton,npcm7xx-timer.txt       |  21 ++
+ drivers/clocksource/Kconfig                        |   8 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-npcm7xx.c                | 215 +++++++++++++++++++++
+ 4 files changed, 245 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+ create mode 100644 drivers/clocksource/timer-npcm7xx.c
+
 -- 
-2.7.4
+2.14.1
