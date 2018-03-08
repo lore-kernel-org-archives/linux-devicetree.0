@@ -1,447 +1,75 @@
-From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH v4 2/2] ARM: dts: imx: Add basic dts support for imx6sll EVK
- board
-Date: Thu,  8 Mar 2018 18:03:44 +0800
-Message-ID: <1520503424-22985-2-git-send-email-ping.bai@nxp.com>
-References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH] kbuild: Handle builtin dtb files containing hyphens
+Date: Thu, 8 Mar 2018 07:09:48 +0000
+Message-ID: <20180308070948.GA5187@saruman>
+References: <20180307140633.26182-1-jhogan@kernel.org>
+ <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
+ <20180307202511.GT4197@saruman>
+ <a6c448df-c026-dafe-6d34-801f69ca64fe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, shawnguo@kernel.org, kernel@pengutronix.de
-Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, jacky.baip@gmail.com, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a6c448df-c026-dafe-6d34-801f69ca64fe@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dts file support for imx6sll EVK board.
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
----
- change v3->v4
- - update the license indentifier
- - remove leading zero of node
- - remove unused pin from hog group
----
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/imx6sll-evk.dts             | 372 ++++++++++++++++++++++++++
- 3 files changed, 378 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index cdb9dd7..8a1baa2 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
- Required root node properties:
-     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
- 
-+i.MX6SLL EVK board
-+Required root node properties:
-+    - compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-+
- Generic i.MX boards
- -------------------
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ade7a38..28bff8b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -505,6 +505,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
-+dtb-$(CONFIG_SOC_IMX6SLL) += \
-+	imx6sll-evk.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-new file mode 100644
-index 0000000..892fbec
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -0,0 +1,372 @@
-+//SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "imx6sll.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6SLL EVK Board";
-+	compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x80000000>;
-+	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	reg_usb_otg1_vbus: reg-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_otg2_vbus: reg-usb-otg2-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg2_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_aud3v: reg-aud3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-3v15";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_aud4v: reg-aud4v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-4v2";
-+		regulator-min-microvolt = <4325000>;
-+		regulator-max-microvolt = <4325000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_lcd: reg-lcd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-pwr";
-+		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_sd1_vmmc: reg-sd1-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+	soc-supply = <&sw1c_reg>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic: pfuze100@8 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>;
-+
-+	pinctrl_hog0: hog0grp {
-+		pinmux = <
-+			MX6SLL_PAD_KEY_ROW7__GPIO4_IO07
-+			MX6SLL_PAD_GPIO4_IO22__GPIO4_IO22
-+			MX6SLL_PAD_KEY_COL3__GPIO3_IO30
-+			MX6SLL_PAD_KEY_COL4__GPIO4_IO00
-+			MX6SLL_PAD_KEY_COL5__GPIO4_IO02
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x3>;
-+		fsl,pin-speed = <0x1>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_hog1: hog1grp {
-+		pinmux = <
-+			/*
-+			 * Must set the LVE of pad SD2_RESET, otherwise current
-+			 * leakage through eMMC chip will pull high the VCCQ to
-+			 * 2.6v, which will impact SD1 and SD3 SD3.0 voltage switch.
-+			 */
-+			MX6SLL_PAD_SD2_RESET__GPIO4_IO27
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x3>;
-+		fsl,pin-speed = <0x1>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+		fsl,low-voltage-enable = <0x1>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		pinmux = <
-+			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX
-+			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x6>;
-+		fsl,pin-speed = <0x2>;
-+		bias-pull-up = <0x2>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_data: usdhc1datagrp {
-+		pinmux = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x4>;
-+		fsl,pin-speed = <0x1>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_clk: usdhc1clkgrp {
-+		pinmux = <MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x4>;
-+		fsl,pin-speed = <0x1>;
-+		bias-pull-down = <0x0>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_data_100mhz: usdhc1datagrp_100mhz {
-+		pinmux = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x4>;
-+		fsl,pin-speed = <0x2>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_clk_100mhz: usdhc1clkgrp_100mhz {
-+		pinmux = < MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x4>;
-+		fsl,pin-speed = <0x2>;
-+		bias-pull-down = <0x0>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_data_200mhz: usdhc1datagrp_200mhz {
-+		pinmux = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x5>;
-+		fsl,pin-speed = <0x3>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usdhc1_clk_200mhz: usdhc1clkgrp_200mhz {
-+		pinmux = <MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x7>;
-+		fsl,pin-speed = <0x3>;
-+		bias-pull-down = <0x0>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		pinmux = <MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x3>;
-+		fsl,pin-speed = <0x1>;
-+		bias-pull-up = <0x1>;
-+		input-schmitt-enable;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		pinmux = <
-+			MX6SLL_PAD_I2C1_SCL__I2C1_SCL
-+			MX6SLL_PAD_I2C1_SDA__I2C1_SDA
-+		>;
-+		slew-rate = <0x1>;
-+		drive-strength = <0x6>;
-+		fsl,pin-speed = <0x2>;
-+		drive-open-drain;
-+		bias-pull-up = <0x2>;
-+		input-schmitt-enable;
-+		input-enable;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1_data>, <&pinctrl_usdhc1_clk>;
-+	pinctrl-1 = <&pinctrl_usdhc1_data_100mhz>, <&pinctrl_usdhc1_clk_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_data_200mhz>, <&pinctrl_usdhc1_clk_200mhz>;
-+	cd-gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_sd1_vmmc>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	vbus-supply = <&reg_usb_otg2_vbus>;
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
--- 
-1.9.1
+On Wed, Mar 07, 2018 at 03:19:11PM -0800, Frank Rowand wrote:
+> On 03/07/18 12:25, James Hogan wrote:
+> > On Wed, Mar 07, 2018 at 12:11:41PM -0800, Frank Rowand wrote:
+> >> On 03/07/18 06:06, James Hogan wrote:
+> >>> Quite a lot of dts files have hyphens, but its only a problem on MIPS
+> >>> where such files can be built into the kernel. For example when
+> >>> CONFIG_DT_NETGEAR_CVG834G=3Dy, or on BMIPS kernels when the dtbs targ=
+et is
+> >>> used (in the latter case it admitedly shouldn't really build all the
+> >>> dtb.o files, but thats a separate issue).
+
+> > I'll keep the paragraph about MIPS and the example configuration though,
+> > as I think its important information to reproduce the problem, and to
+> > justify why it wouldn't be appropriate to just rename the files (which
+> > was my first reaction).
+>=20
+> Other than the part that says "its only a problem on MIPS".  That is
+> pedantically correct because no other architecture (that I am aware
+> of, not that I searched) currently has a devicetree source file name
+> with a hyphen in it, where that file is compiled into the kernel as
+> an asm file.  But it is potentially a problem on any architecture
+> to it is misleading to label it as MIPS only.
+
+Okay I'll reword to make it clearer and do a v2.
+
+Thanks
+James
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIyBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqg4bYACgkQbAtpk944
+dnovAA/4nglpchL1DVTyXHlb/6+dRAHxxUOorst2GnEnlVqVTErOQrKX5SYL6LH9
+w2+Xoa+D/+Yp11Hl1pqigmu3LYJ4uImBaV3Es0hF7gstyyloWyBiL1EcbyMRfxbR
+4e89LgGvVroW2gbkUU0ENy59QRaBQ7+yJtvcpmAfJrzd6jVDnmsmEIr/9ohaxHbQ
+V9JdhtqMYeJ/PWVrGJijj+q4cvQAh5FiGhelYzrvIpa1oh/PNOPRMM7oYLVLyh2k
+Mol4Bsc2mptdGiGB06y+qZ4UbUbRBS5BTMDSiXTHIkG0vCbs5RtkghnBE1asZmJP
+cXVYHA6c1uDkx0zPApccbFUpH/5ySLcEiSHftJV38XL52E+L1BOTqX8QXkl36MNZ
+p9E+55c6cNwgRcbsA9xhAOf5XQLf+3n6EDSZiy1WQj6GF/A1OeQV3S6nJIV9KQ9g
+S0SgJ5SV9CzYay9dL4cU0obY7bK5HJHHaF74jk93tgqrPqcik3gh8/CWjplng5UJ
+vPSH6L0pYltTuc02MEmwbOY9gguYKPZ9t+L4pGjHREqRUYW9XMY9J98K0ZDufFvB
+sXPG9GZPtXtE+YjaKP5cWZVM0vyrQNObGqleQgUXIx/gYhLFcjtHz3t47fMiKOmj
+OJT4JVHONTlaYnAmh/1zB3/HUnJqM/hn6S+VS37UC03kKVKjgA==
+=tjHY
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
