@@ -1,60 +1,67 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
- of the HDMI node
-Date: Thu, 08 Mar 2018 07:29:11 +0100
-Message-ID: <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
-References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
- <20180307171111.14551-1-s.nawrocki@samsung.com>
- <5AA0B59F.3070402@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <5AA0B59F.3070402@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [RFC PATCH] scsi: ufs: Add specific callback for setting DMA mask
+Date: Thu, 08 Mar 2018 14:33:46 +0530
+Message-ID: <1520499826-19352-1-git-send-email-alim.akhtar@samsung.com>
+References: <CGME20180308091429epcas1p24da59df5f8872ee4c851898f78dec85b@epcas1p2.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinholikatti@gmail.com, subhashj@codeaurora.org, devicetree@vger.kernel.org, shaik.ameer@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSW5raSwKCk9uIDIwMTgtMDMtMDggMDU6MDEsIElua2kgRGFlIHdyb3RlOgo+IEhpIFN5bHdl
-c3RlciwKPgo+IDIwMTjrhYQgMDPsm5QgMDjsnbwgMDI6MTHsl5AgU3lsd2VzdGVyIE5hd3JvY2tp
-IOydtCjqsIApIOyTtCDquIA6Cj4+IFRoZSAjc291bmQtZGFpLWNlbGxzIERUIHByb3BlcnR5IGlz
-IHJlcXVpcmVkIHRvIGRlc2NyaWJlIGxpbmsgYmV0d2Vlbgo+PiB0aGUgSERNSSBJUCBibG9jayBh
-bmQgdGhlIFNvQydzIGF1ZGlvIHN1YnN5c3RlbS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU3lsd2Vz
-dGVyIE5hd3JvY2tpIDxzLm5hd3JvY2tpQHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0
-IHwgMyArKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3Mv
-ZXh5bm9zX2hkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvZXh5bm9zL2V4eW5vc19oZG1pLnR4dAo+PiBpbmRleCA4NzE1ZmYwNmM0NTcuLjZiMmE1MjZl
-YzU4NiAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvZXh5bm9zL2V4eW5vc19oZG1pLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0Cj4+IEBAIC01MCw2
-ICs1MCw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIEV4eW5vcyA1NDMzOgo+PiAgIC0gY2xv
-Y2stbmFtZXM6IGFsaWFzZXMgZm9yIGFib3ZlIGNsb2NrIHNwZWNmaWVycy4KPj4gICAtIHNhbXN1
-bmcsc3lzcmVnOiBoYW5kbGUgdG8gc3lzY29uIHVzZWQgdG8gY29udHJvbCB0aGUgc3lzdGVtIHJl
-Z2lzdGVycy4KPj4gICAKPj4gK09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIEV4eW5vcyA0MjEwLCA0
-MjEyLCA1NDIwIGFuZCA1NDMzOgo+PiArIC0gI3NvdW5kLWRhaS1jZWxsczogc2hvdWxkIGJlIDAu
-Cj4+ICsKPiBKdXN0IHRyaXZpYWwgcXVlc3Rpb24uICdzb3VuZC1kYWktY2VsbHMnIHByb3BlcnR5
-IGNvdWxkIGFmZmVjdCBoZG1pIGRyaXZlcj8gSSBsb29rZWQgaW50byBIRE1JIGNvZGVjIGRyaXZl
-ciBidXQgSSBkaWRuJ3QgZmluZCByZWxldmF0IGNvZGUuCj4gSSBtZWFuIHRoYXQgaWYgdGhpcyBw
-cm9wZXJ0eSBuZXZlciBhZmZlY3QgSERNSSBkcml2ZXIgdGhlbiB0aGlzIHByb3BlcnR5IHdvdWxk
-IGJlIGEgZGVhZCB0aGluZyBldmVuIHRocm91Z2ggdGhpcyBjYW4gYmUgZGVjbGFyZWQgb3B0aW9u
-YWxseS4KClRoaXMgcHJvcGVydHkgaXMgdXNlZCBieSBBU29DIGZyYW1ld29yayB3aGVuIGl0IGlz
-IGJ1aWxkaW5nIGNvbm5lY3Rpb25zCmJldHdlZW4gYWxsIGVsZW1lbnRzIG9mIHRoZSB2aXJ0dWFs
-ICdzb3VuZCBjYXJkJy4gSXQgYWxsb3dzIGdlbmVyaWMKY29kZSB0byBmaW5kIHByb3BlciBkcml2
-ZXIgZm9yIHRoZSBkaWdpdGFsIGF1ZGlvIGludGVyZmFjZSAoREFJKSBvYmplY3QuCgpCZXN0IHJl
-Z2FyZHMKLS0gCk1hcmVrIFN6eXByb3dza2ksIFBoRApTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9s
-YW5kCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+Currently DMA mask for UFS HCI is set by reading CAP register's
+[64AS] bit. Some HCI controller like Exynos support 36-bit bus address.
+This works perfectly fine with DMA mask set as 64 in case there is no
+IOMMU attached to HCI.
+In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
+work as HCI has only 36bit addressing and SMMU has created mapping of
+64 bit and as the device truncates the address, its mapping will not
+be found by iommu.
+To resolve such issues, let the variant driver sets its own DMA mask.
+
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ drivers/scsi/ufs/ufshcd.h | 2 ++
+ 2 files changed, 5 insertions(+)
+
+I am not sure if there are other ways available to handle such cases.
+The IOMMU I am talking about is arm-smmu and it DT binding does not
+give much idea about handling such cases.
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index a355d98..9a1374e 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
+  */
+ static int ufshcd_set_dma_mask(struct ufs_hba *hba)
+ {
++	if (hba->vops && hba->vops->set_dam_mask)
++		return bha->vops->set_dma_mask(hba);
++
+ 	if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
+ 		if (!dma_set_mask_and_coherent(hba->dev, DMA_BIT_MASK(64)))
+ 			return 0;
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 1332e54..89c6dae 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
+  * @resume: called during host controller PM callback
+  * @dbg_register_dump: used to dump controller debug information
+  * @phy_initialization: used to initialize phys
++ * @set_dma_mask: used to set variant specific DMA mask
+  */
+ struct ufs_hba_variant_ops {
+ 	const char *name;
+@@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+ 	void	(*dbg_register_dump)(struct ufs_hba *hba);
+ 	int	(*phy_initialization)(struct ufs_hba *);
++	int	(*set_dma_mask)(struct ufs_hba *hba);
+ };
+ 
+ /* clock gating state  */
+-- 
+2.7.4
