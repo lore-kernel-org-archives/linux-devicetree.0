@@ -1,70 +1,77 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
-Date: Thu, 8 Mar 2018 16:38:32 +0100
-Message-ID: <20180308153832.GA28454@botnar.kaiser.cx>
-References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
- <20180308161135.1f3d3d18@karo-electronics.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2] reset: ti-rstctrl: use the reset-simple driver
+Date: Thu, 8 Mar 2018 08:02:49 -0800
+Message-ID: <20180308160249.GI5799@atomide.com>
+References: <20180307182143.58383-1-tony@atomide.com>
+ <20180308024806.vombsjullqw5gpmz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180308161135.1f3d3d18@karo-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180308024806.vombsjullqw5gpmz@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lothar,
+Hi,
 
-Thus wrote Lothar Wa=DFmann (LW@KARO-electronics.de):
+* Rob Herring <robh@kernel.org> [180308 02:49]:
+> On Wed, Mar 07, 2018 at 10:21:43AM -0800, Tony Lindgren wrote:
+> > +TI RSTCTRL Reset Controller
+> > +
+> > +Required properties:
+> > +- compatible : "ti,rstctrl"
+> > +- reg : Should contain 1 register ranges(address and length)
+> > +- #reset-cells: 1
+> > +
+> > +Example:
+> > +	prm_gfx: prm@1100 {
+> > +		compatible = "simple-bus";
+> 
+> What's a PRM?
 
-> > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-> > index 9725705..cf70df2 100644
-> > --- a/arch/arm/boot/dts/imx25.dtsi
-> > +++ b/arch/arm/boot/dts/imx25.dtsi
-> > @@ -269,6 +269,7 @@
-> >  				dmas =3D <&sdma 24 1 0>,
-> >  				       <&sdma 25 1 0>;
-> >  				dma-names =3D "rx", "tx";
-> > +				fsl,fifo-depth =3D <15>;
-> >  				status =3D "disabled";
-> >  			};
+PRM is power and reset manager. There is one instance per
+interconnect instance (clockdomain). PRM shows the status of
+the connected devices in the interconnect, such as device
+context lost and hardware wake-up dependencies. It also
+contains a single reset controller register for external
+accelerators such as DSP. The reset controller instance then
+has 1 - 3 bits for external accelerator sub device resets.
+Then there is a reset status register that shows the reset
+reason for the external accelerator.
 
-> > @@ -329,6 +330,7 @@
-> >  				dmas =3D <&sdma 28 1 0>,
-> >  				       <&sdma 29 1 0>;
-> >  				dma-names =3D "rx", "tx";
-> > +				fsl,fifo-depth =3D <15>;
-> >  				status =3D "disabled";
-> >  			};
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges = <0 0x1100 0x100>;
+> 
+> And what else is in this range?
 
-> You are changing the global .dtsi file. Did you test this change with
-> all devices that are affected by it?
+In PRM, there are also registers for each interconnect device
+context lost and wake-up dependencies. We don't have a driver
+for that yet, it's handled by the SoC init code currently.
 
-I changed the hardware description of the imx25 SSI to match the
-reference manual.
+Unlike the binding for reset controller, the binding for
+wake-up dependencies and context lost should look similar
+binding to the clkctrl clock binding we have. That's because
+there are tons of those registers.
 
-I did test this change on an imx25 board with audio playback. This uses
-the SSI description I modified. I verified that the driver is actually
-taking the modified setting into account and that this causes no
-problems.
+> > +
+> > +		gfx_rstctrl: rstctrl@4 {
+> > +			compatible = "ti,rstctrl";
+> > +			reg = <0x4 0x4>;
+> 
+> Anytime I see a single register in DT I worry about scaling. How many of 
+> these in an SoC?
 
-As of today, this setting is used by the fsl_ssi driver to set the fifo
-water level for dma requests.
+There are not many instances of the reset controller. There
+is one register per interconnect instance for external
+accelerators, so about 3 - 10 reset controller registers
+per SoC.
 
-Of course, I don't have access to the enitre range of supported imx25
-boards and I don't think this is required for submitting patches.
+The reg offset above is wrong BTW, it should be 0x10 instead
+of 0x4. So I need to update this patch for that at least.
 
-Do you have any indication why this patch should not be merged?
+Regards,
 
-Best regards,
-Martin
+Tony
