@@ -1,114 +1,44 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
- legacy DT to create LVDS encoder nodes)
-Date: Tue, 6 Mar 2018 11:51:12 -0800
-Message-ID: <e46f67ff-2900-8500-b1aa-503a9757997f@gmail.com>
-References: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
- <20180306035412.GU2650@umbus.fritz.box>
- <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: RDU2: Add RAVE SP device
+Date: Thu, 8 Mar 2018 16:30:15 +0800
+Message-ID: <20180308083014.GT3217@dragon>
+References: <20180301192007.29278-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMuHMdU54Bb8aObwaOuq6u7HO_LVhpGv9uMjGbt8VcKruop_tA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, David Gibson <david@gibson.dropbear.id.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180301192007.29278-1-andrew.smirnov@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMDYvMTggMDQ6MzAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiBIaSBEYXZpZCwK
-PiAKPiBPbiBUdWUsIE1hciA2LCAyMDE4IGF0IDQ6NTQgQU0sIERhdmlkIEdpYnNvbgo+IDxkYXZp
-ZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyb3RlOgo+PiBPbiBGcmksIEZlYiAyMywgMjAxOCBh
-dCAwOTowNToyNEFNICswMTAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+PiBPbiBGcmks
-IEZlYiAyMywgMjAxOCBhdCAzOjM4IEFNLCBGcmFuayBSb3dhbmQgPGZyb3dhbmQubGlzdEBnbWFp
-bC5jb20+IHdyb3RlOgo+Pj4+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxlIHRvIGNvbnZlcnQgdGhl
-IC5kdHMgZmlsZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+Pj4+IGluc3RlYWQgb2YgaGFuZCBjb2Rp
-bmcgdGhlIGZyYWdtZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4+Pj4gb2Yg
-ZmlsZXMgSSBmYWlsZWQsIHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZlIGJlZW4gcmVx
-dWlyZWQgZG8KPj4+PiBub3QgYWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZpbGVzIHRo
-YXQgdGhhdCBvdmVybGF5cyB3b3VsZCBiZQo+Pj4+IGFwcGxpZWQgYWdhaW5zdC4KPj4+Cj4+PiBJ
-bmRlZWQsIGhlbmNlIHRoZSBmaXh1cCBvdmVybGF5cyB1c2UgInRhcmdldC1wYXRoIi4KPj4+Cj4+
-PiBCVFcsIGlzIHRoZXJlIGFueSBzcGVjaWZpYyByZWFzb24gdGhlcmUgaXMgbm8gc3VnYXIgc3lu
-dGF4IHN1cHBvcnQgaW4gZHRjCj4+PiBmb3IgYWJzb2x1dGUgdGFyZ2V0IHBhdGhzPyBJIGd1ZXNz
-IHRvIHByZXZlbnQgYWRkaW5nIHN0dWZmIHRvIGEgcmFuZG9tCj4+PiBleGlzdGluZyBub2RlLCBh
-bmQgdG8gZW5jb3VyYWdlIHBlb3BsZSB0byB1c2UgYSAiY29ubmVjdG9yIiBBUEkgZGVmaW5lZCBp
-bgo+Pj4gdGVybSBvZiBsYWJlbHM/Cj4+Cj4+IE9ubHkgYmVjYXVzZSBpdCBoYXNuJ3QgYmVlbiBp
-bXBsZW1lbnRlZC4gIFVzaW5nICZ7L3doYXRldmVyfSBzaG91bGQKPj4gSU1PIGdlbmVyYXRlIGEg
-dGFyZ2V0LXBhdGggYW5kIHRoZSBmYWN0IGl0IGRvZXNuJ3QgaXMgYSBidWcuCj4+Cj4+PiBJJ20g
-YWxzbyBpbiB0aGUgcHJvY2VzcyBvZiBjb252ZXJ0aW5nIG15IGNvbGxlY3Rpb24gb2YgRFQgb3Zl
-cmxheXMgdG8gc3VnYXIKPj4+IHN5bnRheCwgYW5kIGxhY2sgb2Ygc3VwcG9ydCBmb3IgInRhcmdl
-dC1wYXRoIiBpcyB0aGUgc29sZSB0aGluZyB0aGF0IGhvbGRzCj4+PiBtZSBiYWNrIGZyb20gY29t
-cGxldGluZyB0aGlzLiBTbyBmb3Igbm93IEkgdXNlIGEgbWl4IG9mIHN1Z2FyIGFuZAo+Pj4gdHJh
-ZGl0aW9uYWwgb3ZlcmxheSBzeW50YXguCj4+Pgo+Pj4gSW4gcGFydGljdWxhciwgSSBuZWVkICJ0
-YXJnZXQtcGF0aCIgZm9yIHR3byB0aGluZ3M6Cj4+PiAgIDEuIFRvIHJlZmVyIHRvIHRoZSByb290
-IG5vZGUsIGZvciBhZGRpbmcgZGV2aWNlcyB0aGF0IHNob3VsZCBsaXZlIGF0Cj4+PiAgICAgIChh
-IGJvYXJkIHN1Ym5vZGUgb2YpIHRoZSByb290IG5vZGUsIGxpa2U6Cj4+PiAgICAgICAgLSBkZXZp
-Y2VzIGNvbm5lY3RlZCB0byBHUElPIGNvbnRyb2xsZXJzIHByb3ZpZGVkIGJ5IG90aGVyIGJhc2Ug
-b3IKPj4+ICAgICAgICAgIG92ZXJsYXkgZGV2aWNlcyAoZS5nLiBMRURzLCBkaXNwbGF5cywgYnV0
-dG9ucywgLi4uKSwKPj4+ICAgICAgICAtIGNsb2NrIHByb3ZpZGVycyBmb3Igb3RoZXIgb3Zlcmxh
-eXMgZGV2aWNlcyAoZS5nLiBmaXhlZC1jbG9jaykuCj4gCj4+PiBUaGUgZm9ybWVyIGlzIHRoZSBy
-ZWFsIGJsb2NrZXIgZm9yIG1lLgo+IAo+PiBCZWxvdyBpcyBkcmFmdCBwYXRjaCBhZGRpbmcgdGFy
-Z2V0LXBhdGggc3VwcG9ydC4gIFRoZSBwcmV0dHkgbWluaW1hbAo+PiB0ZXN0IGV4YW1wbGVzIGRv
-IGluY2x1ZGUgYSBjYXNlIHVzaW5nICZ7L30KPj4KPj4gRnJvbSA4ZjFiMzVmODgzOTVhZGVhMDFj
-ZTExMDBjNWZhYTI3ZGFjYmM4NDEwIE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQo+PiBGcm9tOiBE
-YXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KPj4gRGF0ZTogVHVlLCA2
-IE1hciAyMDE4IDEzOjI3OjUzICsxMTAwCj4+IFN1YmplY3Q6IFtQQVRDSF0gQ29ycmVjdCBvdmVy
-bGF5IHN5bnRhY3RpYyBzdWdhciBmb3IgZ2VuZXJhdGluZyB0YXJnZXQtcGF0aAo+PiAgZnJhZ21l
-bnRzCj4+Cj4+IFdlJ3ZlIHJlY2VudGx5IGFkZGVkICJzeW50YWN0aWMgc3VnYXIiIHN1cHBvcnQg
-dG8gZ2VuZXJhdGUgcnVudGltZSBkdGIKPj4gb3ZlcmxheXMgdXNpbmcgc2ltaWxhciBzeW50YXgg
-dG8gdGhlIGNvbXBpbGUgdGltZSBvdmVybGF5cyB3ZSd2ZSBoYWQgZm9yCj4+IGEgd2hpbGUuICBU
-aGlzIHdvcmtlZCB3aXRoIHRoZSAmbGFiZWwgeyAuLi4gfSBzeW50YXgsIGFkanVzdGluZyBhbiBl
-eGlzdGluZwo+PiBsYWJlbGxlZCBub2RlLCBidXQgd291bGQgZmFpbCB3aXRoIHRoZSAmey9wYXRo
-fSB7IC4uLiB9IHN5bnRheCBhdHRlbXB0aW5nCj4+IHRvIGFkanVzdCBhbiBleGlzdGluZyBub2Rl
-IHJlZmVyZW5jZWQgYnkgaXRzIHBhdGguCj4+Cj4+IFRoZSBwcmV2aW91cyBjb2RlIHdvdWxkIGFs
-d2F5cyB0cnkgdG8gdXNlIHRoZSAidGFyZ2V0IiBwcm9wZXJ0eSBpbiB0aGUKPj4gb3V0cHV0IG92
-ZXJsYXksIHdoaWNoIG5lZWRzIHRvIGJlIGZpeGVkIHVwLCBhbmQgX19maXh1cHNfXyBjYW4gb25s
-eSBlbmNvZGUKPj4gc3ltYm9scywgbm90IHBhdGhzLCBzbyB0aGUgcmVzdWx0IGNvdWxkIG5ldmVy
-IHdvcmsgcHJvcGVybHkuCj4+Cj4+IFRoaXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgJnsvcGF0aH0g
-c3ludGF4IGZvciBvdmVybGF5cywgdHJhbnNsYXRpbmcgaXQgaW50bwo+PiB0aGUgInRhcmdldC1w
-YXRoIiBlbmNvZGluZyBpbiB0aGUgb3V0cHV0LiAgSXQgYWxzbyBjaGFuZ2VzIGV4aXN0aW5nCj4+
-IGJlaGF2aW91ciBhIGxpdHRsZSBiZWNhdXNlIHdlIG5vdyB1bmNvbmRpdGlvbmFsbHkgb25lIGZy
-YWdtZW50IGZvciBlYWNoCj4+IG92ZXJsYXkgc2VjdGlvbiBpbiB0aGUgc291cmNlLiAgUHJldmlv
-dXNseSB3ZSB3b3VsZCBvbmx5IGNyZWF0ZSBhIGZyYWdtZW50Cj4+IGlmIHdlIGNvdWxkbid0IGxv
-Y2FsbHkgcmVzb2x2ZSB0aGUgbm9kZSByZWZlcmVuY2VkLiAgV2UgbmVlZCB0aGlzIGZvcgo+PiBw
-YXRoIHJlZmVyZW5jZXMsIGJlY2F1c2UgdGhlIHBhdGggaXMgc3VwcG9zZWQgdG8gYmUgcmVmZXJl
-bmNpbmcgc29tZXRoaW5nCj4+IGluIHRoZSAobm90IHlldCBrbm93bikgYmFzZSB0cmVlLCByYXRo
-ZXIgdGhhbiB0aGUgb3ZlcmxheSB0cmVlIHdlIGFyZQo+PiB3b3JraW5nIHdpdGggbm93LiAgSW4g
-cGFydGljdWxhciBvbmUgdXNlZnVsIGNhc2UgZm9yIHBhdGggYmFzZWQgb3ZlcmxheXMKPj4gaXMg
-dXNpbmcgJnsvfSAtIGJ1dCB0aGUgY29uc3RydWN0ZWQgb3ZlcmxheSB0cmVlIHdpbGwgYWx3YXlz
-IGhhdmUgYSByb290Cj4+IG5vZGUsIG1lYW5pbmcgdGhhdCB3aXRob3V0IHRoZSBjaGFuZ2UgdGhh
-dCB3b3VsZCBhdHRlbXB0IHRvIHJlc29sdmUgdGhlCj4+IGZyYWdtZW50IGxvY2FsbHksIHdoaWNo
-IGlzIG5vdCB3aGF0IHdlIHdhbnQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIEdpYnNvbiA8
-ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1Pgo+IAo+IFRoYW5rIHlvdSwgc2VlbXMgdG8gd29y
-ayBmaW5lIG9uIGR0Yy5naXQuCgpBbmQgdGhlIHBhdGNoZWQgZHRjIHdvcmtzIGZvciBhIGR0cyBm
-aWxlIHRoYXQgSSB3YXMgdHJ5aW5nIHRvIGNvbnZlcnQKdG8gc3VnYXIgZHRzIHN5bnRheCBpbiB0
-aGUgdGhyZWFkIHRoYXQgR2VlcnQgd2FzIHJlc3BvbmRpbmcgdG8gd2hlbiBoZQpjcmVhdGVkIHRo
-aXMgdGhyZWFkLgoKKExhdXJlbnQgLS0gbm8gbmVlZCB0byB3b3JyeSBhYm91dCB0aGlzIGZvciB5
-b3VyIGN1cnJlbnQgc2VyaWVzLgpDb252ZXJ0aW5nIHlvdXIgZHRzIGZpbGVzIHdpbGwgYmUgYW4g
-ZWFzeSB0YXNrIHRvIGRvIGluIGEgZnV0dXJlCmtlcm5lbCB2ZXJzaW9uIC0tIHJlbWluZCBtZSBp
-ZiBJIGZvcmdldCB0byBzZW5kIGEgcGF0Y2guKQoKLUZyYW5rCgo+IAo+IE5vdGUgdGhhdCB3aGls
-ZSB0aGUgZHRjIHBhcnQgYXBwbGllcyBvbiB0aGUgaW4ta2VybmVsIGNvcHkgb2YgZHRjLCBpdAo+
-IGRvZXNuJ3Qgd29yayB0aGVyZTogIiZ7L30iIGJlaGF2ZXMgdGhlIHNhbWUgYXMgIi8iIChpLmUu
-IG5vIG92ZXJsYXkKPiBmcmFnbWVudCBpcyBnZW5lcmF0ZWQpLCBidXQgIiZ7L2Zvb30iIGRvZXMg
-Y3JlYXRlIHRoZSBvdmVybGF5IGZyYWdtZW50Lgo+IE1lcmdpbmcgaW4gUm9iJ3MgZm9yLW5leHQg
-YnJhbmNoIHRvIHVwZ3JhZGUgTGludXgnIGNvcHkgb2YgZHRjIGZpeGVzIHRoYXQuCj4gCj4gVGhh
-bmtzIGEgbG90IQo+IENvbnZlcnRpbmcgbXkgcmVtYWluaW5nIG92ZXJsYXkgZnJhZ21lbnRzIHRv
-IHN1Z2FyIHN5bnRheC4uLgo+IAo+IEdye29ldGplLGVldGluZ31zLAo+IAo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgIEdlZXJ0Cj4gCj4gLS0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUn
-cyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCj4gCj4g
-SW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBt
-eXNlbGYgYSBoYWNrZXIuIEJ1dAo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBq
-dXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzCj4gLgo+IAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Mar 01, 2018 at 11:20:06AM -0800, Andrey Smirnov wrote:
+> With MFD and watchdog drivers for RAVE SP device support added by
+> 538ee27290fa ("mfd: Add driver for RAVE Supervisory Processor") and
+> c3bb33345721 ("watchdog: Add RAVE SP watchdog driver") add
+> corresponding DT node for RDU2.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+
+Applied both, thanks.
