@@ -1,68 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] kbuild: Handle builtin dtb files containing hyphens
-Date: Wed, 7 Mar 2018 15:19:11 -0800
-Message-ID: <a6c448df-c026-dafe-6d34-801f69ca64fe@gmail.com>
-References: <20180307140633.26182-1-jhogan@kernel.org>
- <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
- <20180307202511.GT4197@saruman>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v6 15/17] arm64: dts: rockchip: add isp0 node for rk3399
+Date: Thu,  8 Mar 2018 17:48:05 +0800
+Message-ID: <20180308094807.9443-16-jacob-chen@iotwrt.com>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180307202511.GT4197@saruman>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: James Hogan <jhogan@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, stable@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/18 12:25, James Hogan wrote:
-> On Wed, Mar 07, 2018 at 12:11:41PM -0800, Frank Rowand wrote:
->> I initially misread the patch description (and imagined an entirely
->> different problem).
->>
->>
->> On 03/07/18 06:06, James Hogan wrote:
->>> On dtb files which contain hyphens, the dt_S_dtb command to build the> dtb.S files (which allow DTB files to be built into the kernel) results> in errors like the following:> > bcm3368-netgear-cvg834g.dtb.S: Assembler messages:> bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section> bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'> bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'> bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'> bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section> bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
->> Please replace the following section:
->>
->>> This is due to the hyphen being used in symbol names. Replace all
->>> hyphens 
->>> with underscores in the dt_S_dtb command to avoid this problem.
->>>
->>> Quite a lot of dts files have hyphens, but its only a problem on MIPS
->>> where such files can be built into the kernel. For example when
->>> CONFIG_DT_NETGEAR_CVG834G=y, or on BMIPS kernels when the dtbs target is
->>> used (in the latter case it admitedly shouldn't really build all the
->>> dtb.o files, but thats a separate issue).
->>
->> with:
->>
->>    cmd_dt_S_dtb constructs the assembly source to incorporate a devicetree
->>    FDT (that is, the .dtb file) as binary data in the kernel image.
->>    This assembly source contains labels before and after the binary data.
->>    The label names incorporate the file name of the corresponding .dtb
->>    file.  Hyphens are not legal characters in labels, so transform all
->>    hyphens from the file name to underscores when constructing the labels.
-> 
-> Thanks, that is clearer.
-> 
-> I'll keep the paragraph about MIPS and the example configuration though,
-> as I think its important information to reproduce the problem, and to
-> justify why it wouldn't be appropriate to just rename the files (which
-> was my first reaction).
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Other than the part that says "its only a problem on MIPS".  That is
-pedantically correct because no other architecture (that I am aware
-of, not that I searched) currently has a devicetree source file name
-with a hyphen in it, where that file is compiled into the kernel as
-an asm file.  But it is potentially a problem on any architecture
-to it is misleading to label it as MIPS only.
+rk3399 have two ISP, but we havn't test isp1, so just add isp0 at present.
 
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> 
->> Reviewed-by: Frank Rowand <frowand.list@gmail.com>
-> 
-> Thanks
-> James
-> 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 2605118d4b4c..14ed016f2fdd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1614,6 +1614,21 @@
+ 		status = "disabled";
+ 	};
+ 
++	isp0: isp0@ff910000 {
++		compatible = "rockchip,rk3399-cif-isp";
++		reg = <0x0 0xff910000 0x0 0x4000>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_ISP0>,
++			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
++			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
++		clock-names = "clk_isp",
++			      "aclk_isp", "aclk_isp_wrap",
++			      "hclk_isp", "hclk_isp_wrap";
++		power-domains = <&power RK3399_PD_ISP0>;
++		iommus = <&isp0_mmu>;
++		status = "disabled";
++	};
++
+ 	isp0_mmu: iommu@ff914000 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+-- 
+2.16.1
