@@ -1,280 +1,88 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v5 2/2] clocksource/drivers/npcm: Add NPCM7xx timer driver
-Date: Thu,  8 Mar 2018 17:24:58 +0200
-Message-ID: <1520522698-16153-3-git-send-email-tmaimon77@gmail.com>
-References: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
+ compatible strings
+Date: Thu, 8 Mar 2018 15:27:08 +0000
+Message-ID: <a86bc0b3-8e99-0b0d-2dd5-be42393b0564@arm.com>
+References: <20180307020719.6675-1-andre.przywara@arm.com>
+ <20180307020719.6675-5-andre.przywara@arm.com>
+ <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
+ <9431a141-8b9c-9743-0907-8f0720df34a2@arm.com>
+ <CAL_Jsq+e8uRm0gi1dn3Ln-b37SC9WGw5aWPaBKoRA2vi-==j6A@mail.gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBV5MQXKQKGQELVJCF7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAL_Jsq+e8uRm0gi1dn3Ln-b37SC9WGw5aWPaBKoRA2vi-==j6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Nuvoton BMC NPCM7xx timer driver.
+Hi,
 
-The clocksource Enable 24-bit TIMER0 and TIMER1 counters,
-while TIMER0 serve as clockevent and TIMER1 serve as clocksource.
+On 08/03/18 14:37, Rob Herring wrote:
+> On Thu, Mar 8, 2018 at 3:09 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 08/03/18 02:08, Rob Herring wrote:
+>>> On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
+>>>> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
+>>>> compatible to the PWM controllers found in the A13 and H3.
+>>>
+>>> If fully compatible, then shouldn't there be a fallback to one of the
+>>> existing compatible strings?
+>>
+>> Yes, that was the idea. I was already wondering how we would
+>> differentiate that from "real" compatible strings, but couldn't find
+>> convincing examples. So should that read:
+>>
+>> - compatible: should at least contain be one of:
+>>     - "allwinner,sun4i-a10-pwm"
+>>     - "allwinner,sun5i-a10s-pwm"
+>>     - "allwinner,sun5i-a13-pwm"
+>>     - "allwinner,sun7i-a20-pwm"
+>>     - "allwinner,sun8i-h3-pwm"
+>>   May in addition contain one of:
+>>     - "allwinner,sun50i-a64-pwm"
+>>     - "allwinner,sun50i-h5-pwm"
+>>     - "allwinner,sun50i-h6-pwm"
+> 
+> I can't validate a dts is correct with it written like this. Just list
+> each valid combination on each line:
+> 
+> "allwinner,sun8i-h3-pwm", "allwinner,sun50i-h6-pwm"
+> 
+> (Assuming "allwinner,sun50i-h6-pwm" was the first implementation and
+> h3 has the same block).
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@xxxxxxxxxx>
----
- drivers/clocksource/Kconfig         |   8 ++
- drivers/clocksource/Makefile        |   1 +
- drivers/clocksource/timer-npcm7xx.c | 215 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/clocksource/timer-npcm7xx.c
+Ah, OK, that's makes some sense. I didn't find too many examples outside
+of root compatible nodes in the binding docs, but I will use that.
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index b3b4ed9b6874..76194bc20bdf 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -130,6 +130,14 @@ config VT8500_TIMER
- 	help
- 	  Enables support for the VT8500 driver.
- 
-+config NPCM7XX_TIMER
-+	bool "NPCM7xx timer driver" if COMPILE_TEST
-+	depends on HAS_IOMEM
-+	select CLKSRC_MMIO
-+	help
-+	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx architecture,
-+	  While TIMER0 serves as clockevent and TIMER1 serves as clocksource.
-+
- config CADENCE_TTC_TIMER
- 	bool "Cadence TTC timer driver" if COMPILE_TEST
- 	depends on COMMON_CLK
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index d6dec4489d66..74387877f7cf 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_CLKSRC_NPS)	+= timer-nps.o
- obj-$(CONFIG_OXNAS_RPS_TIMER)	+= timer-oxnas-rps.o
- obj-$(CONFIG_OWL_TIMER)		+= owl-timer.o
- obj-$(CONFIG_SPRD_TIMER)	+= timer-sprd.o
-+obj-$(CONFIG_NPCM7XX_TIMER)	+= timer-npcm7xx.o
- 
- obj-$(CONFIG_ARC_TIMERS)		+= arc_timer.o
- obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
-diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
-new file mode 100644
-index 000000000000..f98d912bd259
---- /dev/null
-+++ b/drivers/clocksource/timer-npcm7xx.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2014-2018 Nuvoton Technologies tomer.maimon@nuvoton.com
-+ * All rights reserved.
-+ *
-+ * Copyright 2017 Google, Inc.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/err.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/clockchips.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include "timer-of.h"
-+
-+/* Timers registers */
-+#define NPCM7XX_REG_TCSR0	0x0 /* Timer 0 Control and Status Register */
-+#define NPCM7XX_REG_TICR0	0x8 /* Timer 0 Initial Count Register */
-+#define NPCM7XX_REG_TCSR1	0x4 /* Timer 1 Control and Status Register */
-+#define NPCM7XX_REG_TICR1	0xc /* Timer 1 Initial Count Register */
-+#define NPCM7XX_REG_TDR1	0x14 /* Timer 1 Data Register */
-+#define NPCM7XX_REG_TISR	0x18 /* Timer Interrupt Status Register */
-+
-+/* Timers control */
-+#define NPCM7XX_Tx_RESETINT		0x1f
-+#define NPCM7XX_Tx_PERIOD		BIT(27)
-+#define NPCM7XX_Tx_INTEN		BIT(29)
-+#define NPCM7XX_Tx_COUNTEN		BIT(30)
-+#define NPCM7XX_Tx_ONESHOT		0x0
-+#define NPCM7XX_Tx_OPER			GENMASK(3, 27)
-+#define NPCM7XX_Tx_MIN_PRESCALE		0x1
-+#define NPCM7XX_Tx_TDR_MASK_BITS	24
-+#define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
-+#define NPCM7XX_T0_CLR_INT		0x1
-+#define NPCM7XX_Tx_CLR_CSR		0x0
-+
-+/* Timers operating mode */
-+#define NPCM7XX_START_PERIODIC_Tx (NPCM7XX_Tx_PERIOD | NPCM7XX_Tx_COUNTEN | \
-+					NPCM7XX_Tx_INTEN | \
-+					NPCM7XX_Tx_MIN_PRESCALE)
-+
-+#define NPCM7XX_START_ONESHOT_Tx (NPCM7XX_Tx_ONESHOT | NPCM7XX_Tx_COUNTEN | \
-+					NPCM7XX_Tx_INTEN | \
-+					NPCM7XX_Tx_MIN_PRESCALE)
-+
-+#define NPCM7XX_START_Tx (NPCM7XX_Tx_COUNTEN | NPCM7XX_Tx_PERIOD | \
-+				NPCM7XX_Tx_MIN_PRESCALE)
-+
-+#define NPCM7XX_DEFAULT_CSR (NPCM7XX_Tx_CLR_CSR | NPCM7XX_Tx_MIN_PRESCALE)
-+
-+static int npcm7xx_timer_resume(struct clock_event_device *evt)
-+{
-+	struct timer_of *to = to_timer_of(evt);
-+	u32 val;
-+
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val |= NPCM7XX_Tx_COUNTEN;
-+	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_timer_shutdown(struct clock_event_device *evt)
-+{
-+	struct timer_of *to = to_timer_of(evt);
-+	u32 val;
-+
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val &= ~NPCM7XX_Tx_COUNTEN;
-+	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
-+{
-+	struct timer_of *to = to_timer_of(evt);
-+	u32 val;
-+
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val &= ~NPCM7XX_Tx_OPER;
-+
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val |= NPCM7XX_START_ONESHOT_Tx;
-+	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_timer_periodic(struct clock_event_device *evt)
-+{
-+	struct timer_of *to = to_timer_of(evt);
-+	u32 val;
-+
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val &= ~NPCM7XX_Tx_OPER;
-+
-+	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-+	val |= NPCM7XX_START_PERIODIC_Tx;
-+
-+	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_clockevent_set_next_event(unsigned long evt,
-+		struct clock_event_device *clk)
-+{
-+	struct timer_of *to = to_timer_of(clk);
-+	u32 val;
-+
-+	writel(evt, timer_of_base(to) + NPCM7XX_REG_TICR0);
-+	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+	val |= NPCM7XX_START_Tx;
-+	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t npcm7xx_timer0_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *evt = (struct clock_event_device *)dev_id;
-+	struct timer_of *to = to_timer_of(evt);
-+
-+	writel(NPCM7XX_T0_CLR_INT, timer_of_base(to) + NPCM7XX_REG_TISR);
-+
-+	evt->event_handler(evt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct timer_of npcm7xx_to = {
-+	.flags = TIMER_OF_IRQ | TIMER_OF_BASE | TIMER_OF_CLOCK,
-+
-+	.clkevt = {
-+		.name		    = "npcm7xx-timer0",
-+		.features	    = CLOCK_EVT_FEAT_PERIODIC |
-+				      CLOCK_EVT_FEAT_ONESHOT,
-+		.set_next_event	    = npcm7xx_clockevent_set_next_event,
-+		.set_state_shutdown = npcm7xx_timer_shutdown,
-+		.set_state_periodic = npcm7xx_timer_periodic,
-+		.set_state_oneshot  = npcm7xx_timer_oneshot,
-+		.tick_resume	    = npcm7xx_timer_resume,
-+		.rating		    = 300,
-+	},
-+
-+	.of_irq = {
-+		.handler = npcm7xx_timer0_interrupt,
-+		.flags = IRQF_TIMER | IRQF_IRQPOLL,
-+	},
-+};
-+
-+static void __init npcm7xx_clockevents_init(void)
-+{
-+	writel(NPCM7XX_DEFAULT_CSR,
-+		timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TCSR0);
-+
-+	writel(NPCM7XX_Tx_RESETINT,
-+		timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TISR);
-+
-+	npcm7xx_to.clkevt.cpumask = cpumask_of(0);
-+	clockevents_config_and_register(&npcm7xx_to.clkevt,
-+					timer_of_rate(&npcm7xx_to),
-+					0x1, NPCM7XX_Tx_MAX_CNT);
-+}
-+
-+static void __init npcm7xx_clocksource_init(void)
-+{
-+	u32 val;
-+
-+	writel(NPCM7XX_DEFAULT_CSR,
-+		timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TCSR1);
-+	writel(NPCM7XX_Tx_MAX_CNT,
-+		timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TICR1);
-+
-+	val = readl(timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TCSR1);
-+	val |= NPCM7XX_START_Tx;
-+	writel(val, timer_of_base(&npcm7xx_to) + NPCM7XX_REG_TCSR1);
-+
-+	clocksource_mmio_init(timer_of_base(&npcm7xx_to) +
-+				NPCM7XX_REG_TDR1,
-+				"npcm7xx-timer1", timer_of_rate(&npcm7xx_to),
-+				200, (unsigned int)NPCM7XX_Tx_TDR_MASK_BITS,
-+				clocksource_mmio_readl_down);
-+}
-+
-+static int __init npcm7xx_timer_init(struct device_node *np)
-+{
-+	int ret;
-+
-+	ret = timer_of_init(np, &npcm7xx_to);
-+	if (ret)
-+		return ret;
-+
-+	/* Clock input is divided by PRESCALE + 1 before it is fed */
-+	/* to the counter */
-+	npcm7xx_to.of_clk.rate = npcm7xx_to.of_clk.rate /
-+		(NPCM7XX_Tx_MIN_PRESCALE + 1);
-+
-+	npcm7xx_clocksource_init();
-+	npcm7xx_clockevents_init();
-+
-+	pr_info("Enabling NPCM7xx clocksource timer base: 0x%x, IRQ: %d ",
-+		(int)timer_of_base(&npcm7xx_to), timer_of_irq(&npcm7xx_to));
-+
-+	return 0;
-+}
-+
-+TIMER_OF_DECLARE(npcm7xx, "nuvoton,npcm750-timer", npcm7xx_timer_init);
-+
--- 
-2.14.1
+>> And this would possibly need to be amended once we need to actually use
+>> one of those strings (to implement a quirk, for instance)?
+> 
+> The most specific compatible provides that. The driver matches on the
+> least specific one until you have a quirk to implement.
+
+Yeah, I was just wondering how a (non-Linux) driver author would induce
+what strings are actually needed just by reading the binding. But
+enumerating the combinations explicitly should solve this.
+
+Thanks!
+Andre.
+
+>> Or is there some other way of reserving those compatible strings, which
+>> are not expected to be matched in drivers directly?
+> 
+> The binding should just list all that are appropriate from the start
+> and the driver is free to match on which ever string it wants.
+> 
+> Rob
+> 
