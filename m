@@ -1,133 +1,114 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 11/17] dt-bindings: Document the Rockchip MIPI RX D-PHY
- bindings
-Date: Thu,  8 Mar 2018 17:48:01 +0800
-Message-ID: <20180308094807.9443-12-jacob-chen@iotwrt.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
+ connector
+Date: Thu, 08 Mar 2018 10:52:19 +0900
+Message-ID: <5AA09753.7060308@samsung.com>
+References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
+        <20180227071134.28063-1-a.hajda@samsung.com>
+        <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
+        <5A9F4A7D.9020409@samsung.com> <5A9F6F29.5020501@samsung.com>
+        <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180308094807.9443-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Andrzej, Archit,
 
-Add DT bindings documentation for Rockchip MIPI D-PHY RX
+On 2018년 03월 07일 20:13, Andrzej Hajda wrote:
+> Hi Chanwoo, Archit,
+> 
+> On 07.03.2018 05:48, Chanwoo Choi wrote:
+>> On 2018년 03월 07일 11:12, Chanwoo Choi wrote:
+>>> Hi Rob and Andrzej,
+>>>
+>>> On 2018년 03월 06일 21:53, Andrzej Hajda wrote:
+>>>> Hi Rob, Chanwoo, Krzysztof,
+>>>>
+>>>>
+>>>> On 27.02.2018 08:11, Andrzej Hajda wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Thanks for reviews of previous iterations.
+>>>>>
+>>>>> This patchset introduces USB physical connector bindings, together with
+>>>>> working example.
+>>>>> I have removed RFC prefix - the patchset seems to be heading
+>>>>> to a happy end :)
+>>>>>
+>>>>> v5: fixed extra parenthesis in dts, renamed extcon function.
+>>>>> v4: improved binding descriptions, added missing reg in dts.
+>>>>> v3: Separate binding for Samsung 11-pin connector, added full-blown USB-C
+>>>>>     example.
+>>>>> v2: I have addressed comments by Rob and Laurent, thanks 
+>>>>>
+>>>>> Changes in datail are described in the patches.
+>>>>>
+>>>>> Regards
+>>>>> Andrzej
+>>>>>
+>>>>>
+>>>>> Andrzej Hajda (5):
+>>>>>   dt-bindings: add bindings for USB physical connector
+>>>>>   dt-bindings: add bindings for Samsung micro-USB 11-pin connector
+>>>>>   arm64: dts: exynos: add micro-USB connector node to TM2 platforms
+>>>>>   arm64: dts: exynos: add OF graph between MHL and USB connector
+>>>>>   extcon: add possibility to get extcon device by OF node
+>>>>>
+>>>>> Maciej Purski (1):
+>>>>>   drm/bridge/sii8620: use micro-USB cable detection logic to detect MHL
+>>>> It looks like all patches received R-B or acks (I forgot add Krzysztof's
+>>>> acks for dts part).
+>>>> Now I have a question how to merge them.
+>>>> The only functional dependency is between bridge and extcon, and from
+>>>> the formal PoV bindings should be merged 1st.
+>>>> I can merge it:
+>>>> 1. All patches via drm-misc tree.
+>>>> 2. All patches except dts via drm-misc, and Krzysztof will merge dts via
+>>>> samsung-soc tree.
+>>>>
+>>>> Is it OK, for all? Better ideas?
+>>> Krzysztof picked the dts patches. I'll make the immutable branch based on v4.16-rc1
+>>> and apply them except for dts patchs. And I'll send the immutable branch to Rob and Andrzej.
+>>>
+>>>
+>> I made the immutable branch[1] as following: If you agree, I'll send pull request.
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git/log/?h=ib-extcon-drm-dt-v4.17
+>>
+>> Or you can make the immutable branch and send pull request to Rob and me.
+>>
+> 
+> It seems you took v5 instead of v6 version of extcon patch.
 
-Signed-off-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../bindings/media/rockchip-mipi-dphy.txt          | 90 ++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+My mistake. I picked v6 and made the new immutable branch.
+After Archit confirm it, I'll send pull request.
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-new file mode 100644
-index 000000000000..d83700faf4c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-@@ -0,0 +1,90 @@
-+Rockchip SoC MIPI RX D-PHY
-+-------------------------------------------------------------
-+
-+Required properties:
-+- compatible: value should be one of the following
-+	"rockchip,rk3288-mipi-dphy"
-+	"rockchip,rk3399-mipi-dphy"
-+- clocks : list of clock specifiers, corresponding to entries in
-+	clock-names property;
-+- clock-names: required clock name.
-+
-+MIPI RX D-PHY use registers in "general register files", it
-+should be a child of the GRF.
-+MIPI TXRX D-PHY have its own registers, it must have a reg property.
-+
-+Optional properties:
-+- reg: offset and length of the register set for the device.
-+- rockchip,grf: MIPI TX1RX1 D-PHY not only has its own register but also
-+		the GRF, so it is only necessary for MIPI TX1RX1 D-PHY.
-+
-+port node
-+-------------------
-+
-+The device node should contain two 'port' child nodes, according to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+The first port show the sensors connected in this mipi-dphy.
-+- endpoint:
-+	- remote-endpoint: Linked to a sensor with a MIPI CSI-2 video bus.
-+	- data-lanes : (required) an array specifying active physical MIPI-CSI2
-+			data input lanes and their mapping to logical lanes; the
-+			D-PHY can't reroute lanes, so the array's content should
-+			be consecutive and only its length is meaningful.
-+
-+The port node must contain at least one endpoint. It could have multiple endpoints
-+linked to different sensors, but please note that they are not supposed to be
-+activated at the same time.
-+
-+The second port should be connected to isp node.
-+- endpoint:
-+	- remote-endpoint:  Linked to Rockchip ISP1, which is defined
-+		in rockchip-isp1.txt.
-+
-+Device node example
-+-------------------
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3288-grf", "syscon", "simple-mfd";
-+
-+...
-+
-+	mipi_dphy_rx0: mipi-dphy-rx0 {
-+		compatible = "rockchip,rk3399-mipi-dphy";
-+		clocks = <&cru SCLK_MIPIDPHY_REF>,
-+			<&cru SCLK_DPHY_RX0_CFG>,
-+			<&cru PCLK_VIO_GRF>;
-+		clock-names = "dphy-ref", "dphy-cfg", "grf";
-+		power-domains = <&power RK3399_PD_VIO>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				mipi_in_wcam: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&wcam_out>;
-+					data-lanes = <1 2>;
-+				};
-+				mipi_in_ucam: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&ucam_out>;
-+					data-lanes = <1>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				dphy_rx0_out: endpoint {
-+					remote-endpoint = <&isp0_mipi_in>;
-+				};
-+			};
-+		};
-+	};
-+};
+> 
+> Beside it I am OK with your immutable branch, Archit is it OK to do it
+> this way in drm-misc?
+> 
+> 
+> Regards
+> 
+> Andrzej
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+
+
 -- 
-2.16.1
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
