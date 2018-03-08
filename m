@@ -1,60 +1,198 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v2 2/2] ASoC: Add bindings for PCM1789
-Date: Thu, 8 Mar 2018 09:54:40 +0100
-Message-ID: <20180308095440.515458eb@dell-desktop.home>
-References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
- <20180305124817.7421-3-mylene.josserand@bootlin.com>
- <20180307223048.lqnryaazr5egg2m7@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 3/3] USB3/DWC3: Enable undefined length INCR burst type
+Date: Wed, 7 Mar 2018 19:35:05 -0600
+Message-ID: <20180308013505.lyrmkdz54iyghbsf@rob-hp-laptop>
+References: <20180306085911.5930-1-ran.wang_1@nxp.com>
+ <20180306085911.5930-3-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180307223048.lqnryaazr5egg2m7@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180306085911.5930-3-ran.wang_1@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-usb@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Li Yang <leoyang.li@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLAoKVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3LgoKT24gV2VkLCA3IE1hciAyMDE4
-IDE2OjMwOjQ4IC0wNjAwClJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgoKPiBP
-biBNb24sIE1hciAwNSwgMjAxOCBhdCAwMTo0ODoxN1BNICswMTAwLCBNeWzDqG5lIEpvc3NlcmFu
-ZCB3cm90ZToKPiA+IEFkZCBhIGRldmljZS10cmVlIGJpbmRpbmcgZm9yIFRleGFzIEluc3RydW1l
-bnQncyBQQ00xNzg5IGNvZGVjLgo+ID4gRm9yIHRoZSBtb21lbnQsIG9ubHkgSTJDIGJ1cyBpcyBz
-dXBwb3J0ZWQgYnV0IFNQSSBjb3VsZCBiZSBhZGRlZAo+ID4gaW4gZnV0dXJlLgo+ID4gCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGlu
-LmNvbT4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3Vu
-ZC9wY20xNzg5LnR4dCB8IDIxICsrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCAyMSBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9wY20xNzg5LnR4dAo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3BjbTE3ODkudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3BjbTE3ODkudHh0Cj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5hNmNkYzJjODNj
-OTgKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zb3VuZC9wY20xNzg5LnR4dAo+ID4gQEAgLTAsMCArMSwyMSBAQAo+ID4gK1RleGFz
-IEluc3RydW1lbnRzIHBjbTE3ODkgRFQgYmluZGluZ3MgIAo+IAo+IFdoYXQgZnVuY3Rpb24gZG9l
-cyB0aGlzIGRldmljZSBwcm92aWRlPwoKU29ycnksIEkgZm9yZ290IHRvIG1lbnRpb24gdGhpcyBp
-bmZvcm1hdGlvbi4KCj4gCj4gPiArCj4gPiArVGhpcyBkcml2ZXIgc3VwcG9ydHMgdGhlIEkyQyBi
-dXMuICAKPiAKPiBCaW5kaW5ncyBkZXNjcmliZSBoL3csIG5vdCBkcml2ZXJzLgoKVHJ1ZSwgSSB3
-aWxsIHJlZm9ybXVsYXRlIGl0LgoKPiAKPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-ID4gKwo+ID4gKyAtIGNvbXBhdGlibGU6ICJ0aSxwY20xNzg5Igo+ID4gKwo+ID4gK1JlcXVpcmVk
-IHByb3BlcnRpZXMgb24gSTJDOgo+ID4gKwo+ID4gKyAtIHJlZzogdGhlIEkyQyBhZGRyZXNzCj4g
-PiArIC0gcmVzZXQtZ3Bpb3M6IEdQSU8gdG8gY29udHJvbCB0aGUgUkVTRVQgcGluCj4gPiArCj4g
-PiArRXhhbXBsZXM6Cj4gPiArCj4gPiArCWNvZGVjOiBwY20xNzg5QDRjIHsgIAo+IAo+IGF1ZGlv
-LWNvZGVjQDRjCj4gCj4gSWYgdGhhdCdzIHRoZSBmdW5jdGlvbi4uLgoKWWVwLCBJIHdpbGwgY2hh
-bmdlIHRoYXQuCgo+IAo+ID4gKwkJY29tcGF0aWJsZSA9ICJ0aSxwY20xNzg5IjsKPiA+ICsJCXJl
-ZyA9IDwweDRjPjsKPiA+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMiAxNCBHUElPX0FDVElWRV9M
-T1c+Owo+ID4gKwkJI3NvdW5kLWRhaS1jZWxscyA9IDwwPjsKPiA+ICsJfTsKPiA+IC0tIAo+ID4g
-Mi4xMS4wCj4gPiAgIAoKVGhhbmtzLAoKQmVzdCByZWdhcmRzLAoKLS0gCk15bMOobmUgSm9zc2Vy
-YW5kLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRkZWQgTGludXggYW5k
-IEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
-YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+On Tue, Mar 06, 2018 at 04:59:11PM +0800, Ran Wang wrote:
+> Enable the undefined length INCR burst type and set INCRx.
+> Different platform may has the different burst size type.
+> In order to get best performance, we need to tune the burst size to
+> one special value, instead of the default value.
+> 
+> Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Changes in v5:
+>   - no change
+> Changes in v4:
+>   - Modify the codes according to the definition of this property.
+> Changes in v3:
+>   - add new property for INCR burst in usb node to reset GSBUSCFG0.
+> Changes in v2:
+>   - split patch
+>   - create one new function to handle soc bus configuration register.
+> 
+>  drivers/usb/dwc3/core.c |   83 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/dwc3/core.h |    7 ++++
+>  2 files changed, 90 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index f1d838a..8ea2bc8 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -741,6 +741,87 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
+>  static int dwc3_core_get_phy(struct dwc3 *dwc);
+>  static int dwc3_core_ulpi_init(struct dwc3 *dwc);
+>  
+> +/* set global soc bus configuration registers */
+> +static void dwc3_set_soc_bus_cfg(struct dwc3 *dwc)
+> +{
+> +	struct device *dev = dwc->dev;
+> +	u32 *vals;
+> +	u32 cfg;
+> +	int ntype;
+> +	int ret;
+> +	int i;
+> +
+> +	cfg = dwc3_readl(dwc->regs, DWC3_GSBUSCFG0);
+> +
+> +	/*
+> +	 * Handle property "snps,incr-burst-type-adjustment".
+> +	 * Get the number of value from this property:
+> +	 * result <= 0, means this property is not supported.
+> +	 * result = 1, means INCRx burst mode supported.
+> +	 * result > 1, means undefined length burst mode supported.
+> +	 */
+> +	ntype = device_property_read_u32_array(dev,
+> +			"snps,incr-burst-type-adjustment", NULL, 0);
+
+Can't you just do:
+
+if (ntype <= 0)
+    return;
+
+> +	if (ntype > 0) {
+
+And then save a level of indentation.
+
+> +		vals = kcalloc(ntype, sizeof(u32), GFP_KERNEL);
+> +		if (!vals) {
+> +			dev_err(dev, "Error to get memory\n");
+> +			return;
+> +		}
+> +		/* Get INCR burst type, and parse it */
+> +		ret = device_property_read_u32_array(dev,
+> +			"snps,incr-burst-type-adjustment", vals, ntype);
+> +		if (ret) {
+> +			dev_err(dev, "Error to get property\n");
+> +			return;
+> +		}
+> +		*(dwc->incrx_type + 1) = vals[0];
+> +		if (ntype > 1) {
+> +			*dwc->incrx_type = 1;
+> +			for (i = 1; i < ntype; i++) {
+> +				if (vals[i] > *(dwc->incrx_type + 1))
+> +					*(dwc->incrx_type + 1) = vals[i];
+> +			}
+> +		} else
+> +			*dwc->incrx_type = 0;
+
+This code is hard to follow. Why do you have an array to store a boolean 
+(INCR burst enable) and the burst size. 2 elements with more descriptive 
+names would be better.
+
+
+> +
+> +		/* Enable Undefined Length INCR Burst and Enable INCRx Burst */
+> +		cfg &= ~DWC3_GSBUSCFG0_INCRBRST_MASK;
+> +		if (*dwc->incrx_type)
+> +			cfg |= DWC3_GSBUSCFG0_INCRBRSTENA;
+> +		switch (*(dwc->incrx_type + 1)) {
+> +		case 256:
+> +			cfg |= DWC3_GSBUSCFG0_INCR256BRSTENA;
+> +			break;
+> +		case 128:
+> +			cfg |= DWC3_GSBUSCFG0_INCR128BRSTENA;
+> +			break;
+> +		case 64:
+> +			cfg |= DWC3_GSBUSCFG0_INCR64BRSTENA;
+> +			break;
+> +		case 32:
+> +			cfg |= DWC3_GSBUSCFG0_INCR32BRSTENA;
+> +			break;
+> +		case 16:
+> +			cfg |= DWC3_GSBUSCFG0_INCR16BRSTENA;
+> +			break;
+> +		case 8:
+> +			cfg |= DWC3_GSBUSCFG0_INCR8BRSTENA;
+> +			break;
+> +		case 4:
+> +			cfg |= DWC3_GSBUSCFG0_INCR4BRSTENA;
+> +			break;
+> +		case 1:
+> +			break;
+> +		default:
+> +			dev_err(dev, "Invalid property\n");
+> +			break;
+> +		}
+> +	}
+> +
+> +	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
+> +}
+> +
+>  /**
+>   * dwc3_core_init - Low-level initialization of DWC3 Core
+>   * @dwc: Pointer to our controller context structure
+> @@ -803,6 +884,8 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>  	/* Adjust Frame Length */
+>  	dwc3_frame_length_adjustment(dwc);
+>  
+> +	dwc3_set_soc_bus_cfg(dwc);
+> +
+>  	usb_phy_set_suspend(dwc->usb2_phy, 0);
+>  	usb_phy_set_suspend(dwc->usb3_phy, 0);
+>  	ret = phy_power_on(dwc->usb2_generic_phy);
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 8f97f61..565d7ec 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -806,6 +806,7 @@ struct dwc3_scratchpad_array {
+>   * @regs: base address for our registers
+>   * @regs_size: address space size
+>   * @fladj: frame length adjustment
+> + * @incrx_type: INCR burst type adjustment
+>   * @irq_gadget: peripheral controller's IRQ number
+>   * @nr_scratch: number of scratch buffers
+>   * @u1u2: only used on revisions <1.83a for workaround
+> @@ -939,6 +940,12 @@ struct dwc3 {
+>  	enum usb_phy_interface	hsphy_mode;
+>  
+>  	u32			fladj;
+> +	/*
+> +	 * For INCR burst type.
+> +	 * First field: for undefined length INCR burst type enable.
+> +	 * Second field: for INCRx burst type enable
+> +	 */
+> +	u32			incrx_type[2];
+>  	u32			irq_gadget;
+>  	u32			nr_scratch;
+>  	u32			u1u2;
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
