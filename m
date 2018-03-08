@@ -1,165 +1,108 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v6 00/17] Rockchip ISP1 Driver
-Date: Thu, 8 Mar 2018 14:02:00 +0200
-Message-ID: <20180308120200.wpcjnbglf4x32vrp@tarshish>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH v3 3/4] rtc: isl1208: add support for isl1219 with tamper
+ detection
+Date: Thu, 8 Mar 2018 11:53:09 +0000
+Message-ID: <1520509988.5415.17.camel@diehl.com>
+References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
+         <1520246373-19023-4-git-send-email-Denis.Osterland@diehl.com>
+         <20180306204255.GI3035@piout.net> <1520410754.5976.27.camel@diehl.com>
+         <20180307104714.GL3035@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+In-Reply-To: <20180307104714.GL3035@piout.net>
+Content-Language: en-US
+Content-ID: <637C70F0AB4BE240999DCB55B60C6422@diehl.internal>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>
+To: "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
-
-On Thu, Mar 08, 2018 at 05:47:50PM +0800, Jacob Chen wrote:
-> This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 
-> SoC.
-> 
-> Wiki Pages:
-> http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> The deprecated g_mbus_config op is not dropped in  V6 because i am waiting 
-> tomasz's patches.
-
-Which tree is this series based on? On top of v4.16-rc4 I get the build 
-failure below. The V4L2_BUF_TYPE_META_OUTPUT macro, for example, is not even 
-in media_tree.git.
-
-drivers/media/platform/rockchip/isp1/isp_params.c:1321:3: error: ‘const struct v4l2_ioctl_ops’ has no member named ‘vidioc_enum_fmt_meta_out’; did you mean ‘vidioc_enum_fmt_meta_cap’?
-  .vidioc_enum_fmt_meta_out = rkisp1_params_enum_fmt_meta_out,
-   ^~~~~~~~~~~~~~~~~~~~~~~~
-   vidioc_enum_fmt_meta_cap
-drivers/media/platform/rockchip/isp1/isp_params.c:1321:30: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-  .vidioc_enum_fmt_meta_out = rkisp1_params_enum_fmt_meta_out,
-                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/platform/rockchip/isp1/isp_params.c:1321:30: note: (near initialization for ‘rkisp1_params_ioctl.vidioc_g_std’)
-drivers/media/platform/rockchip/isp1/isp_params.c:1322:3: error: ‘const struct v4l2_ioctl_ops’ has no member named ‘vidioc_g_fmt_meta_out’; did you mean ‘vidioc_g_fmt_meta_cap’?
-  .vidioc_g_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-   ^~~~~~~~~~~~~~~~~~~~~
-   vidioc_g_fmt_meta_cap
-drivers/media/platform/rockchip/isp1/isp_params.c:1322:27: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-  .vidioc_g_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/platform/rockchip/isp1/isp_params.c:1322:27: note: (near initialization for ‘rkisp1_params_ioctl.vidioc_s_std’)
-drivers/media/platform/rockchip/isp1/isp_params.c:1323:3: error: ‘const struct v4l2_ioctl_ops’ has no member named ‘vidioc_s_fmt_meta_out’; did you mean ‘vidioc_s_fmt_meta_cap’?
-  .vidioc_s_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-   ^~~~~~~~~~~~~~~~~~~~~
-   vidioc_s_fmt_meta_cap
-drivers/media/platform/rockchip/isp1/isp_params.c:1323:27: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-  .vidioc_s_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/platform/rockchip/isp1/isp_params.c:1323:27: note: (near initialization for ‘rkisp1_params_ioctl.vidioc_querystd’)
-drivers/media/platform/rockchip/isp1/isp_params.c:1324:3: error: ‘const struct v4l2_ioctl_ops’ has no member named ‘vidioc_try_fmt_meta_out’; did you mean ‘vidioc_try_fmt_meta_cap’?
-  .vidioc_try_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-   ^~~~~~~~~~~~~~~~~~~~~~~
-   vidioc_try_fmt_meta_cap
-drivers/media/platform/rockchip/isp1/isp_params.c:1324:29: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
-  .vidioc_try_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
-                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/platform/rockchip/isp1/isp_params.c:1324:29: note: (near initialization for ‘rkisp1_params_ioctl.vidioc_enum_input’)
-drivers/media/platform/rockchip/isp1/isp_params.c: In function ‘rkisp1_params_init_vb2_queue’:
-drivers/media/platform/rockchip/isp1/isp_params.c:1462:12: error: ‘V4L2_BUF_TYPE_META_OUTPUT’ undeclared (first use in this function); did you mean ‘V4L2_BUF_TYPE_SDR_OUTPUT’?
-  q->type = V4L2_BUF_TYPE_META_OUTPUT;
-            ^~~~~~~~~~~~~~~~~~~~~~~~~
-            V4L2_BUF_TYPE_SDR_OUTPUT
-drivers/media/platform/rockchip/isp1/isp_params.c:1462:12: note: each undeclared identifier is reported only once for each function it appears in
-  CC      drivers/media/platform/rockchip/isp1/mipi_dphy_sy.o
-drivers/media/platform/rockchip/isp1/isp_params.c: In function ‘rkisp1_register_params_vdev’:
-drivers/media/platform/rockchip/isp1/isp_params.c:1507:43: error: ‘V4L2_CAP_META_OUTPUT’ undeclared (first use in this function); did you mean ‘V4L2_CAP_VBI_OUTPUT’?
-  vdev->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_META_OUTPUT;
-                                           ^~~~~~~~~~~~~~~~~~~~
-                                           V4L2_CAP_VBI_OUTPUT
-
-Thanks,
-baruch
-
-> Jacob Chen (12):
->   media: doc: add document for rkisp1 meta buffer format
->   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
->   media: rkisp1: add Rockchip ISP1 subdev driver
->   media: rkisp1: add ISP1 statistics driver
->   media: rkisp1: add ISP1 params driver
->   media: rkisp1: add capture device driver
->   media: rkisp1: add rockchip isp1 core driver
->   dt-bindings: Document the Rockchip ISP1 bindings
->   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
->   ARM: dts: rockchip: add isp node for rk3288
->   ARM: dts: rockchip: add rx0 mipi-phy for rk3288
->   MAINTAINERS: add entry for Rockchip ISP1 driver
-> 
-> Jeffy Chen (1):
->   media: rkisp1: Add user space ABI definitions
-> 
-> Shunqian Zheng (3):
->   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
->   arm64: dts: rockchip: add isp0 node for rk3399
->   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-> 
-> Wen Nuan (1):
->   ARM: dts: rockchip: Add dts mipi-dphy TXRX1 node for rk3288
-> 
->  .../devicetree/bindings/media/rockchip-isp1.txt    |   69 +
->  .../bindings/media/rockchip-mipi-dphy.txt          |   90 +
->  Documentation/media/uapi/v4l/meta-formats.rst      |    2 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst   |   20 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst     |   18 +
->  MAINTAINERS                                        |   10 +
->  arch/arm/boot/dts/rk3288.dtsi                      |   33 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   25 +
->  drivers/media/platform/Kconfig                     |   10 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/rockchip/isp1/Makefile      |    8 +
->  drivers/media/platform/rockchip/isp1/capture.c     | 1751 ++++++++++++++++++++
->  drivers/media/platform/rockchip/isp1/capture.h     |  167 ++
->  drivers/media/platform/rockchip/isp1/common.h      |  110 ++
->  drivers/media/platform/rockchip/isp1/dev.c         |  626 +++++++
->  drivers/media/platform/rockchip/isp1/dev.h         |   93 ++
->  drivers/media/platform/rockchip/isp1/isp_params.c  | 1539 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/isp_params.h  |   49 +
->  drivers/media/platform/rockchip/isp1/isp_stats.c   |  508 ++++++
->  drivers/media/platform/rockchip/isp1/isp_stats.h   |   58 +
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  868 ++++++++++
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.h    |   15 +
->  drivers/media/platform/rockchip/isp1/regs.c        |  239 +++
->  drivers/media/platform/rockchip/isp1/regs.h        | 1550 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.c      | 1177 +++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.h      |  105 ++
->  drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
->  include/uapi/linux/rkisp1-config.h                 |  798 +++++++++
->  include/uapi/linux/videodev2.h                     |    4 +
->  29 files changed, 9945 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
->  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
->  create mode 100644 include/uapi/linux/rkisp1-config.h
-> 
-> -- 
-> 2.16.1
-> 
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+QW0gTWl0dHdvY2gsIGRlbiAwNy4wMy4yMDE4LCAxMTo0NyArMDEwMCBzY2hyaWViIEFsZXhh
+bmRyZSBCZWxsb25pOg0KPiA+ID4gPiArDQo+ID4gPiA+ICsJdHY2NC50dl9zZWMgPSBydGNf
+dG1fdG9fdGltZTY0KCZ0bSk7DQo+ID4gPiBXaHkgbm90IHVzaW5nIGFuIHVuc2lnbmVkIGxv
+bmcgbG9uZyBkaXJlY3RseSBoZXJlPyB0aW1lNjRfdCBpcyBub3QgdGhlDQo+ID4gPiBjb3Jy
+ZWN0IHR5cGUuDQo+ID4gRG8geW91IG1lYW4gdGltZXNwZWM2NCBpcyBub3QgdGhlIGNvcnJl
+Y3QgdHlwZSBoZXJlPw0KPiA+IFRoZW4geWVzLCBzb3VsZCBiZSB0aW1lNjRfdC4NCj4gPiBJ
+ZiB5b3UgbWVhbiB0aW1lNjRfdCBpcyBub3QgdGhlIGNvcnJlY3QgdHlwZSBoZXJlLA0KPiA+
+IHRoZW4gY2FuIHlvdSBnaXZlIG1lIHNvbWUgZGV0YWlsIHdoeSB0aGVyZSBpcyBubyBydGNf
+dG1fdG9fdTY0LA0KPiA+IG9yIHNvbWV0aGluZyBsaWtlIHRoYXQ/DQo+IFRoZSBydGMgc3Vi
+c3lzdGVtIGZvcmJpZHMgbmVnYXRpdmUgdGltZXMsIHRoZSBwcm9wZXIgdHlwZSBzaG91bGQg
+YmUNCj4gdW5zaWduZWQuDQpJIHdpbGwgYWRkIHJ0Y192YWlsZF90bSBjaGVjay4NCg0KV2hp
+Y2ggc2VxdWVuY2UgZm9yIHRpbWUgY29udmVyc2lvbiB3b3VsZCB5b3UgZXhwZWN0Pw0KDQp0
+aW1lNjRfdCBzZWNzID0gcnRjX3RtX3RvX3RpbWU2NCgmdG0pOw0KQlVHX09OKHNlY3MgPCAw
+KTsNCnJldHVybiBzcHJpbnRmKGJ1ZiwgIiVsbHVcbiIsICh1bnNpZ25lZCBsb25nIGxvbmcp
+c2Vjcyk7DQoNCm9yDQoNCnJldHVybiBzcHJpbnRmKGJ1ZiwgIiVsbHVcbiIsICh1bnNpZ25l
+ZCBsb25nIGxvbmcpcnRjX3RtX3RvX3RpbWU2NCgmdG0pKTsNCj4gDQo+ID4gDQo+ID4gc3By
+aW50ZihidWYsICIlbGxkXG4iLMKgcnRjX3RtX3RvX3RpbWU2NCgmdG0pKSBzZWVtcyBjb3Jy
+ZWN0IHRvIG1lLg0KPiA+IEJ5IHRoZSB3YXksIGlzIGl0IG5lZWRlZCB0byBjaGVjayBmb3Ig
+c2Vjb25kcyA8IDAgYW5kIHJldHVybiBlcnJvcj8NCj4gSW5kZWVkLCB5b3Ugc2hvdWQgY2hl
+Y2sgdGhlIHRtIHdpdGggcnRjX3ZhbGlkX3RtIGJlZm9yZSBjYWxsaW5nDQo+IHJ0Y190bV90
+b190aW1lNjQuDQo+IA0KPiA+IA0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAtCXJjID0g
+c3lzZnNfY3JlYXRlX2dyb3VwKCZjbGllbnQtPmRldi5rb2JqLCAmaXNsMTIwOF9ydGNfc3lz
+ZnNfZmlsZXMpOw0KPiA+ID4gPiArCWlmIChpZC0+ZHJpdmVyX2RhdGEgPT0gVFlQRV9JU0wx
+MjE5KSB7DQo+ID4gPiA+ICsJCXJjID0gaTJjX3NtYnVzX3dyaXRlX2J5dGVfZGF0YShjbGll
+bnQsIElTTDEyMDhfUkVHXzA5LCAweDEwKTsNCj4gPiA+ID4gKwkJaWYgKHJjIDwgMCkgew0K
+PiA+ID4gPiArCQkJZGV2X2VycigmY2xpZW50LT5kZXYsICJjb3VsZCBub3QgZW5hYmxlIHRh
+bXBlciBkZXRlY3Rpb25cbiIpOw0KPiA+ID4gPiArCQkJcmV0dXJuIHJjOw0KPiA+ID4gPiAr
+CQl9DQo+ID4gPiA+ICsJCWlzbDEyMDgtPnN5c2ZzX2ZpbGVzID0gJmlzbDEyMTlfcnRjX3N5
+c2ZzX2ZpbGVzOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+ICsJCWlzbDEyMDgtPnN5
+c2ZzX2ZpbGVzID0gJmlzbDEyMDhfcnRjX3N5c2ZzX2ZpbGVzOw0KPiA+ID4gPiArCX0NCj4g
+PiA+ID4gKw0KPiA+ID4gSSBkb24ndCB0aGluayB0aGUgd2hvbGUgaXNsMTIwOCBpcyBuZWNl
+c3NhcnkuIFlvdSBzaG91bGQgcHJvYmFibHkgdXNlDQo+ID4gPiB0aGUgLmlzX3Zpc2libGUg
+Y2FsbGJhY2sgb2YgaXNsMTIxOV9ydGNfc3lzZnNfZmlsZXMuIFRoaXMgd2lsbCBtYWtlIHRo
+ZQ0KPiA+ID4gY2hhbmdlbG9nIHF1aXRlIHNtYWxsZXIuDQo+ID4gPiANCj4gPiBXZWxsLCBJ
+IGRvbsK0dCBrbm93IGhvdyB0byBhY2Nlc3MgaTJjX2RldmljZV9pZCBmcm9tIGtvYmplY3Qu
+DQo+ID4gcnRjX2F0dHJfaXNfdmlzaWJsZSBzaG93cyBob3cgdG8gY29udmVydCBrb2JqZWN0
+IHRvIGRldmljZSBhbmQgcnRjX2RldmljZSwNCj4gPiBidXQgaG93IHRvIGRvwqAoaWQtPmRy
+aXZlcl9kYXRhID09IFRZUEVfSVNMMTIxOSkgaGVyZT8NCj4gSSdkIHVzZSBpMmNfc2V0X2Ns
+aWVudGRhdGEvaTJjX2dldF9jbGllbnRkYXRhIGJ1dCBJIGFncmVlIHRoYXQgdGhlbiBpdA0K
+PiBpcyBiYXNpY2FsbHkgdGhlIHNhbWUgYXMgaGF2aW5nIGlzbDEyMDgtPnN5c2ZzX2ZpbGVz
+Lg0KPiANCj4gYnV0IHRoaXMgbWFrZXMgbWUgcmVhbGl6ZSB0aGF0IHRoZSB0aW1lc3RhbXAg
+ZmlsZSBkb2Vzbid0IGVuZCB1cCBhdCB0aGUNCj4gY29ycmVjdCBsb2NhdGlvbi4gV2hhdCB5
+b3UgZG8gbm93IGlzIHBsYWNpbmcgaXQgdW5kZXIgdGhlIGkyYyBkZXZpY2UNCj4gd2hpbGUg
+aXQgc2hvdWxkIGJlIHBsYWNlZCB1bmRlciB0aGUgcnRjIGRldmljZSAoaS5lLiBpbg0KPiAv
+c3lzL2NsYXNzL3J0Yy9ydGNYLykuIFRoaXMgd2FzIGEgbWlzdGFrZSBtYWRlIGJhY2sgaW4g
+MjAwNi4NCj4gDQo+IEkgZ3Vlc3MgeW91J2xsIGhhdmUgdG8gYWRkIGEgbmV3IGdyb3VwIGlu
+c3RlYWQgb2YgYWRkaW5nIHRvIHRoZSBjdXJyZW50DQo+IG9uZS4NCkkgZ3Vlc3MgSSBmb3Vu
+ZCBhIHdheSB0byBkbyBpdC4NCg0Kc3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKmlzbDEyMTlf
+cnRjX2F0dHJzW10gPSB7DQoJJmRldl9hdHRyX3RpbWVzdGFtcDAuYXR0ciwNCglOVUxMDQp9
+Ow0KDQppbiBwcm9iZQ0KCWlmIChpZC0+ZHJpdmVyX2RhdGEgPT0gVFlQRV9JU0wxMjE5KSB7
+DQoJCXN5c2ZzX21lcmdlX2dyb3VwKCZydGMtPmtvYmosICZpc2wxMjE5X3J0Y19zeXNmc19m
+aWxlcyk7DQoNCmluIHJlbW92ZQ0KCXN0cnVjdCBydGNfZGV2aWNlICpydGMgPcKgaTJjX2dl
+dF9jbGllbnRkYXRhKGNsaWVudCk7DQoJc3lzZnNfdW5tZXJnZV9ncm91cCgmcnRjLT5rb2Jq
+LCAmaXNsMTIxOV9ydGNfc3lzZnNfZmlsZXMpOw0KDQpBcyBmYXIgYXMgSSBnb3QgaXQsIEkg
+Y2FuIGNhbGwgdW5tZXJnZSBldmVuIGlmIGdyb3VwIHdhcyBub3QgbWVyZ2VkIGJlZm9yZS4N
+CklmIGl0IHdvcmtzIEkgZG9uwrR0IG5lZWQgc3RydWN0IGlzbDEyMDggYXQgYWxsLg0KPiAN
+CkRpZWhsIEFLTyBTdGlmdHVuZyAmIENvLiBLRywgUGZhbm5lcnN0cmHDn2UgNzUtODMsIDg4
+MjM5IFdhbmdlbiBpbSBBbGxnw6R1DQpCZXJlaWNoc3ZvcnN0YW5kOiBEci4tSW5nLiBNaWNo
+YWVsIFNpZWRlbnRvcCAoU3ByZWNoZXIpLCBKb3NlZiBGZWxsbmVyIChNaXRnbGllZCkNClNp
+dHogZGVyIEdlc2VsbHNjaGFmdDogV2FuZ2VuIGkuQS4g4oCTIFJlZ2lzdGVyZ2VyaWNodDog
+QW10c2dlcmljaHQgVWxtIEhSQSA2MjA2MDkg4oCTIFBlcnPDtm5saWNoIGhhZnRlbmRlIEdl
+c2VsbHNjaGFmdGVyaW46IERpZWhsIFZlcndhbHR1bmdzLVN0aWZ0dW5nIOKAkyBTaXR6OiBO
+w7xybmJlcmcg4oCTIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgTsO8cm5iZXJnIEhS
+QSAxMTc1NiDigJMNClZvcnN0YW5kOiBEci4tSW5nLiBFLmguIFRob21hcyBEaWVobCAo4oCg
+KSAoVm9yc2l0emVuZGVyKSwgSGVyciBEaXBsLi1XaXJ0c2NoLi1JbmcuIFdvbGZnYW5nIFdl
+Z2dlbiAoc3RlbGx2ZXJ0cmV0ZW5kZXIgVm9yc2l0emVuZGVyKSwgRGlwbC4tS2ZtLiBDbGF1
+cyBHw7xudGhlciwgRGlwbC4tS2ZtLiBGcmFuayBHdXR6ZWl0LCBEci4tSW5nLiBIZWlucmlj
+aCBTY2h1bmssIERyLi1JbmcuIE1pY2hhZWwgU2llZGVudG9wICwgRGlwbC4tS2ZtLiBEci4t
+SW5nLiBNYXJ0aW4gU29tbWVyLCBEaXBsLi1JbmcuIChGSCkgUmFpbmVyIHZvbiBCb3JzdGVs
+LCBWb3JzaXR6ZW5kZXIgZGVzIEF1ZnNpY2h0c3JhdGVzOiBEci4gS2xhdXMgTWFpZXINCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KRGVyIEluaGFs
+dCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQu
+IERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNo
+IGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRl
+LCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhh
+YmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4g
+SmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFl
+bmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWls
+IGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
+IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
+Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
+dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
+bCBieSBtaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNhc2UuIEVhY2ggdW5hdXRo
+b3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJhdGlvbiwgZGlzdHJpYnV0
+aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBpcyBzdHJpY3RseSBwcm9o
+aWJpdGVkLg==
