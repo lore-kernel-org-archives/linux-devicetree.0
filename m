@@ -1,62 +1,36 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v6 12/17] ARM: dts: rockchip: add isp node for rk3288
-Date: Thu,  8 Mar 2018 17:48:02 +0800
-Message-ID: <20180308094807.9443-13-jacob-chen@iotwrt.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson: reduce odroid-c2 eMMC maximum rate
+Date: Wed, 07 Mar 2018 17:24:43 -0800
+Message-ID: <7hy3j3fjfo.fsf@baylibre.com>
+References: <20180302134436.18844-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180308094807.9443-1-jacob-chen@iotwrt.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180302134436.18844-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Fri, 2 Mar 2018 14:44:36 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, ellierevves@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-rk3288 have a Embedded 13M ISP
+> Different modules maybe installed by the user on the eMMC connector
+> of the odroid-c2. While the red modules are working without an issue,
+> it seems some black modules (apparently Samsung based) are having
+> issue at 200MHz
+>
+> While the tuning algorithm introduced in v4.14 enables high speed modes
+> on every other tested designs, it seems a problem remains for this
+> particular combination of board and eMMC module.
+>
+> Lowering the maximum frequency of the eMMC on this board until we can
+> figure out a better solution.
+>
+> Fixes: d341ca88eead ("mmc: meson-gx: rework tuning function")
+> Suggested-by: Ellie Reeves <ellierevves@gmail.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Applied to v4.17/dt64 and Cc'd to stable,
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index ad6bda85c85a..6c122aaf06a7 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -962,6 +962,23 @@
- 		status = "disabled";
- 	};
- 
-+	isp: isp@ff910000 {
-+		compatible = "rockchip,rk3288-cif-isp";
-+		reg = <0x0 0xff910000 0x0 0x4000>;
-+		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
-+			 <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
-+			 <&cru SCLK_ISP_JPE>;
-+		clock-names = "clk_isp", "aclk_isp",
-+			      "hclk_isp", "pclk_isp_in",
-+			      "sclk_isp_jpe";
-+		assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
-+		assigned-clock-rates = <400000000>, <400000000>;
-+		power-domains = <&power RK3288_PD_VIO>;
-+		iommus = <&isp_mmu>;
-+		status = "disabled";
-+	};
-+
- 	isp_mmu: iommu@ff914000 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
--- 
-2.16.1
+Kevin
