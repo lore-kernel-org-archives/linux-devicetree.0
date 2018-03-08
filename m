@@ -1,26 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] arm64: dts: mt2712: add pintcrl file
-Date: Wed, 7 Mar 2018 16:28:22 -0600
-Message-ID: <20180307222822.7uxuibviglidhp4j@rob-hp-laptop>
-References: <1520249745-6757-1-git-send-email-zhiyong.tao@mediatek.com>
- <1520249745-6757-2-git-send-email-zhiyong.tao@mediatek.com>
+From: JeffyChen <jeffy.chen@rock-chips.com>
+Subject: Re: [PATCH v4 1/3] Input: gpio-keys - add support for wakeup event
+ action
+Date: Thu, 08 Mar 2018 15:32:09 +0800
+Message-ID: <5AA0E6F9.6060704@rock-chips.com>
+References: <20180306074418.8879-1-jeffy.chen@rock-chips.com> <20180306074418.8879-2-jeffy.chen@rock-chips.com> <CAHp75VcmbHbnD8FnTHXAqGajhs10wA7Z7U_D6SY9=j=y+GLLPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520249745-6757-2-git-send-email-zhiyong.tao@mediatek.com>
+In-Reply-To: <CAHp75VcmbHbnD8FnTHXAqGajhs10wA7Z7U_D6SY9=j=y+GLLPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, briannorris@google.com, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Dmitry Torokhov <dtor@google.com>, Douglas Anderson <dianders@google.com>, devicetree <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>, Joseph Lo <josephl@nvidia.com>, stephen lu <lumotuwe@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-input <linux-input@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Philippe Ombredanne <pombredanne@nexb.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 07:35:42PM +0800, Zhiyong Tao wrote:
-> This patch adds pinctrl file for mt2712.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1123 +++++++++++++++++++++++++
->  1 file changed, 1123 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
+Hi Andy,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for your reply.
+
+On 03/07/2018 07:57 PM, Andy Shevchenko wrote:
+> On Tue, Mar 6, 2018 at 9:44 AM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
+>> Add support for specifying event actions to trigger wakeup when using
+>> the gpio-keys input device as a wakeup source.
+>>
+>> This would allow the device to configure when to wakeup the system. For
+>> example a gpio-keys input device for pen insert, may only want to wakeup
+>> the system when ejecting the pen.
+>
+>> +       bool wakeup_enabled;
+>
+>> +                       if (bdata->wakeup_enabled) {
+>
+> This is redundant. IRQ core keeps track on this information already.
+>
+> Check below as an example
+> aef3ad103a68 ("serial: core: remove unneeded irq_wake flag")
+>
+right, that make sense.
+>
