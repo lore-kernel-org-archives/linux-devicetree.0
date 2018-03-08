@@ -1,44 +1,45 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: RDU2: Add RAVE SP device
-Date: Thu, 8 Mar 2018 16:30:15 +0800
-Message-ID: <20180308083014.GT3217@dragon>
-References: <20180301192007.29278-1-andrew.smirnov@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: add bindings doc for HiSilicon INNO
+ USB2 PHY
+Date: Thu, 8 Mar 2018 09:32:11 +0800
+Message-ID: <20180308013208.GJ28619@dragon>
+References: <1520217605-9312-1-git-send-email-shawn.guo@linaro.org>
+ <1520217605-9312-2-git-send-email-shawn.guo@linaro.org>
+ <20180307211118.su2vyfa4zyfh4w2t@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180301192007.29278-1-andrew.smirnov@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <20180307211118.su2vyfa4zyfh4w2t@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengcheng Li <lpc.li@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2018 at 11:20:06AM -0800, Andrey Smirnov wrote:
-> With MFD and watchdog drivers for RAVE SP device support added by
-> 538ee27290fa ("mfd: Add driver for RAVE Supervisory Processor") and
-> c3bb33345721 ("watchdog: Add RAVE SP watchdog driver") add
-> corresponding DT node for RDU2.
+On Wed, Mar 07, 2018 at 03:11:18PM -0600, Rob Herring wrote:
+> > +Example:
+> > +
+> > +perictrl: peripheral-controller@8a20000 {
+> > +	compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
+> > +		     "simple-mfd";
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Is syscon needed here? Doesn't look like the phys need it.
 
-Applied both, thanks.
+For phys, "syscon" is not needed, but there are other devices to be
+added which will need to access perictrl as syscon.  Anyway, I can drop
+"syscon" from the example in this bindings doc to avoid the confusion.
+
+> Is there no dependency on the peri ctrl probing first for the phys to 
+> probe successfully? If there is some dependency, simple-mfd should not 
+> be used.
+
+No, there is no such dependency.  Right now the perictrl is there only
+for populating the phy devcies.
+
+> As for the phy binding,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks.
+
+Shawn
