@@ -1,239 +1,90 @@
-Return-Path: <SRS0=m4Yk=FX=gmail.com=shubhrajyoti.datta@kernel.org>
+Return-Path: <SRS0=Ax0d=F6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bmailout2.hostsharing.net ([83.223.90.240]:39925 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S934574AbeCHK41 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 8 Mar 2018 05:56:27 -0500
+Date: Thu, 8 Mar 2018 11:56:24 +0100
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Message-ID: <20180308105624.GA2316@wunner.de>
+References: <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <438185389.274708.1520422108782@email.1und1.de>
+ <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
+ <2071508922.276811.1520426568577@email.1und1.de>
+ <87sh9bvh3r.fsf@anholt.net>
+ <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
+ <87muzjfr8l.fsf@anholt.net>
+ <698451580.263856.1520467358497@email.1und1.de>
 MIME-Version: 1.0
-In-Reply-To: <CANk1AXR6aSwyQTW=NeYrRUQo2Oe8BysyOzf6VHvBuXaxKwNp-g@mail.gmail.com>
-References: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1519188826-2047-2-git-send-email-shubhrajyoti.datta@gmail.com>
- <CANk1AXQ1R4dbgDJrUC4pgKtmoCaJhryTnD=bxwwWbEJn0BQcaA@mail.gmail.com>
- <20180227002832.GA24387@tyrael.ni.corp.natinst.com> <CAKfKVtGPhb6Mg4UcX58iknEHAvRhp7NzisEONz8Cj+k9OYcu7A@mail.gmail.com>
- <CANk1AXR6aSwyQTW=NeYrRUQo2Oe8BysyOzf6VHvBuXaxKwNp-g@mail.gmail.com>
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Date: Thu, 1 Mar 2018 16:19:48 +0530
-Message-ID: <CAKfKVtE5u7z_ASmw_f6t6MAybAnoPm+rKm5LQZ_MaYmUEYuOhg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fpga: reset bridge: Add the reset bridge
-Content-Type: text/plain; charset="UTF-8"
-To: Alan Tull <atull@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <698451580.263856.1520467358497@email.1und1.de>
+Sender: devicetree-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, Johan Hedberg <johan.hedberg@gmail.com>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Danis <frederic.danis.oss@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org, Christoph Gysin <christoph.gysin@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Feb 27, 2018 at 10:30 PM, Alan Tull <atull@kernel.org> wrote:
-> On Mon, Feb 26, 2018 at 10:46 PM, Shubhrajyoti Datta
-> <shubhrajyoti.datta@gmail.com> wrote:
->> Hi  Moritz,
->>
->> On Tue, Feb 27, 2018 at 5:58 AM, Moritz Fischer <mdf@kernel.org> wrote:
->>> Hi Shubhrajyoti, Alan
->>>
->>> On Mon, Feb 26, 2018 at 04:53:59PM -0600, Alan Tull wrote:
->>>> On Tue, Feb 20, 2018 at 10:53 PM,  <shubhrajyoti.datta@gmail.com> wrote:
->>>> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->>>> >
->>>> > Adds the reset bridge. After the bitstream load the reset
->>>> > bridge helps in reseting the programable logic. The
->>>> > reset lines depends on the design.
->>>>
->>>> Hi Shubhrajyoti,
->>>>
->>>> OK so adding this 'bridge' will get a reset line to be toggled after
->>>> programming is done.  It looks like it might be generally usable.
->>>> This doesn't look very xilinx specific (i.e. no specific device
->>>> registers, just using a reset), so maybe it is just a 'rst-brige'.
->>>> How is it used?  To hit a reset line on a whole FPGA?
->>>
->>> In zynq-fpga we have the fpga-mgr hit on the reset, which to some
->>> extend I suppose makes sense, since after reload you wanna reset the
->>> entire FPGA space (unless you do PR, where you don't hit on the resets).
->>>
->>> Shubhrajyoti's solution seems more modular I guess, however I don't
->>> really see a good usecase for only hitting a single reset.
->>>
->>> IP that's in the FPGA and needs reset should have their dedicated resets
->>> via normal reset API bindings imho and not rely on bridges to do the
->>> right thing.
->>>
->>> The ZynqMP is fairly complex and I might be missing something here,
->>> so maybe you (Shubhrajyoti) can elaborate a bit more. The paragraph in
->>> the TRM seemed fairly short, and didn't enlighten me as to why it is
->>> required.
->>
->> The FPGA supports both the PR case and independent execution
->> Like  a design can have 2 parts that can have independent execution.
->
-> I want to understand you better here.  What do you mean by
-> 'independent execution'?  Like 2 partial reconfiguration regions that
-> each have a single reset to reset the hardware in their region?  Or
-> something else?
-Yes.
+On Thu, Mar 08, 2018 at 01:02:38AM +0100, Stefan Wahren wrote:
+> > >>>>> after applying Loic's patch and the necessary patch for the
+> > >>>>> RPi 3 dts file (see below), i will get this output:
+> > >>>>> 
+> > >>>>> [    4.873246] Bluetooth: HCI UART driver ver 2.3
+> > >>>>> [    4.873260] Bluetooth: HCI UART protocol H4 registered
+> > >>>>> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
+> > >>>>> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
+> > >>>>> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
+> > >>>>> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
+> > >>>>> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
+> > >>>>> [   15.192312] Bluetooth: hci0: Failed to set baudrate
+> > >>>>> [   15.316415] Bluetooth: hci0: BCM: chip id 94
+> > >>>>> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
+> > >>>>> [   15.341538] Bluetooth: hci0: BCM43430A1
+> > >>>>> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
+> > >>>>> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
+> > >>>>> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
+> > >>>>> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
+> > >>>>> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
+> > >>>>> 
+> > >>>>> I don't see these errors on RPi Zero W. Maybe the reason for
+> > >>>>> this is the lack of hardware flowcontrol on RPi 3.
+> > >>>> 
+> > >>>> maybe it needs some time after switching the hardware on. Have
+> > >>>> you tried to sleep for a bit at the end of bcm_gpio_set_power?
+>  
+> after applying this patch [1] the RPi 3 specific probing errors disappear.
+> 
+> But this is only a quick hack. The proper solution would be to extend
+> hci_h5 in order to support the BCM43438.
+> 
+> [1] - https://github.com/lategoodbye/rpi-zero/commit/ed5900296dfb7aec7f467477440751e7367a1881
 
->
->> In that case they have to have independent resets.
->>
->> There are 4 PS-PL lines that could be used by designs.
->> So in that case we should have  multiple resets.
->
-> Normally, as Moritz is saying, the reset would be handled by the
-> driver for the fabric-based hardware.
-I didnt understand you mean the  platform-fpga.c ?
+Users of the MacBookPro13,1 and MacBookPro14,1 are reporting similar
+timeouts when the Bluetooth controller is reset on ->setup.
 
->
-> Alan
->
->>
->>
->>>
->>> Cheers,
->>>
->>> Moritz
->>>>
->>>> Alan
->>>>
->>>> >
->>>> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->>>> > ---
->>>> >  drivers/fpga/Kconfig             |   8 ++++
->>>> >  drivers/fpga/Makefile            |   1 +
->>>> >  drivers/fpga/xilinx-rst-bridge.c | 100 +++++++++++++++++++++++++++++++++++++++
->>>> >  3 files changed, 109 insertions(+)
->>>> >  create mode 100644 drivers/fpga/xilinx-rst-bridge.c
->>>> >
->>>> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
->>>> > index ad5448f..752a907 100644
->>>> > --- a/drivers/fpga/Kconfig
->>>> > +++ b/drivers/fpga/Kconfig
->>>> > @@ -117,4 +117,12 @@ config XILINX_PR_DECOUPLER
->>>> >           region of the FPGA from the busses while that region is
->>>> >           being reprogrammed during partial reconfig.
->>>> >
->>>> > +config XILINX_RST_BRIDGE
->>>> > +       tristate "Xilinx Reset bridge"
->>>> > +       depends on FPGA_BRIDGE
->>>> > +       help
->>>> > +         Say Y to enable drivers for Xilinx Reset bridge.
->>>> > +         After writing the bitstream there has to be a reset.
->>>> > +         The reset lines are design specific.
->>>> > +
->>>> >  endif # FPGA
->>>> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
->>>> > index f98dcf1..c1b0d13 100644
->>>> > --- a/drivers/fpga/Makefile
->>>> > +++ b/drivers/fpga/Makefile
->>>> > @@ -23,6 +23,7 @@ obj-$(CONFIG_FPGA_BRIDGE)             += fpga-bridge.o
->>>> >  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)      += altera-hps2fpga.o altera-fpga2sdram.o
->>>> >  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)     += altera-freeze-bridge.o
->>>> >  obj-$(CONFIG_XILINX_PR_DECOUPLER)      += xilinx-pr-decoupler.o
->>>> > +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     += xilinx-rst-bridge.o
->>>> >
->>>> >  # High Level Interfaces
->>>> >  obj-$(CONFIG_FPGA_REGION)              += fpga-region.o
->>>> > diff --git a/drivers/fpga/xilinx-rst-bridge.c b/drivers/fpga/xilinx-rst-bridge.c
->>>> > new file mode 100644
->>>> > index 0000000..8062283
->>>> > --- /dev/null
->>>> > +++ b/drivers/fpga/xilinx-rst-bridge.c
->>>> > @@ -0,0 +1,100 @@
->>>> > +// SPDX-License-Identifier: GPL-2.0
->>>> > +/*
->>>> > + * Xilinx FPGA reset bridge.
->>>> > + * Copyright (c) 2018 Xilinx Inc.
->>>> > + *
->>>> > + */
->>>> > +
->>>> > +#include <linux/kernel.h>
->>>> > +#include <linux/module.h>
->>>> > +#include <linux/of_device.h>
->>>> > +#include <linux/fpga/fpga-bridge.h>
->>>> > +#include <linux/reset.h>
->>>> > +
->>>> > +struct xlnx_rst_bridge_priv {
->>>> > +       struct device *dev;
->>>> > +       bool enable;
->>>> > +};
->>>> > +
->>>> > +static int xlnx_rst_bridge_enable_set(struct fpga_bridge *bridge, bool enable)
->>>> > +{
->>>> > +       struct xlnx_rst_bridge_priv *priv = bridge->priv;
->>>> > +       struct device *dev = priv->dev;
->>>> > +       struct reset_control *rstc;
->>>> > +       int ret = 0;
->>>> > +
->>>> > +       if (enable) {
->>>> > +               rstc = of_reset_control_array_get(dev->of_node, false, false);
->>>> > +               if (IS_ERR(rstc))
->>>> > +                       return PTR_ERR(rstc);
->>>> > +
->>>> > +               ret = reset_control_reset(rstc);
->>>> > +
->>>> > +               reset_control_put(rstc);
->>>> > +
->>>> > +               if (ret)
->>>> > +                       dev_err(dev, "Reset failed\n");
->>>> > +       } else {
->>>> > +               dev_dbg(dev, "Bridge disabled\n");
->>>> > +       }
->>>> > +
->>>> > +       if (!ret)
->>>> > +               priv->enable = enable;
->>>> > +
->>>> > +       return ret;
->>>> > +}
->>>> > +
->>>> > +static int xlnx_rst_bridge_enable_show(struct fpga_bridge *bridge)
->>>> > +{
->>>> > +       struct xlnx_rst_bridge_priv *priv = bridge->priv;
->>>> > +
->>>> > +       return priv->enable;
->>>> > +}
->>>> > +
->>>> > +static struct fpga_bridge_ops xlnx_rst_bridge_ops = {
->>>> > +       .enable_set = xlnx_rst_bridge_enable_set,
->>>> > +       .enable_show = xlnx_rst_bridge_enable_show,
->>>> > +};
->>>> > +
->>>> > +static int xlnx_rst_bridge_probe(struct platform_device *pdev)
->>>> > +{
->>>> > +       struct xlnx_rst_bridge_priv *priv;
->>>> > +       struct device *dev = &pdev->dev;
->>>> > +
->>>> > +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>>> > +       if (!priv)
->>>> > +               return -ENOMEM;
->>>> > +
->>>> > +       priv->dev = dev;
->>>> > +
->>>> > +       return fpga_bridge_register(dev, "xlnx_rst_bridge",
->>>> > +                                   &xlnx_rst_bridge_ops, priv);
->>>> > +}
->>>> > +
->>>> > +static int xlnx_rst_bridge_remove(struct platform_device *pdev)
->>>> > +{
->>>> > +       fpga_bridge_unregister(&pdev->dev);
->>>> > +
->>>> > +       return 0;
->>>> > +}
->>>> > +
->>>> > +static const struct of_device_id xlnx_rst_bridge_of_match[] = {
->>>> > +       { .compatible = "xlnx,rst-bridge", },
->>>> > +       {},
->>>> > +};
->>>> > +MODULE_DEVICE_TABLE(of, xlnx_rst_bridge_of_match);
->>>> > +
->>>> > +static struct platform_driver xlnx_rst_bridge_driver = {
->>>> > +       .probe = xlnx_rst_bridge_probe,
->>>> > +       .remove = xlnx_rst_bridge_remove,
->>>> > +       .driver = {
->>>> > +               .name   = "xlnx_rst_bridge",
->>>> > +               .of_match_table = of_match_ptr(xlnx_rst_bridge_of_match),
->>>> > +       },
->>>> > +};
->>>> > +
->>>> > +module_platform_driver(xlnx_rst_bridge_driver);
->>>> > +
->>>> > +MODULE_DESCRIPTION("Xilinx reset Bridge");
->>>> > +MODULE_AUTHOR("Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>");
->>>> > +MODULE_LICENSE("GPL v2");
->>>> > --
->>>> > 2.1.1
->>>> >
->>>> > --
->>>> > To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
->>>> > the body of a message to majordomo@vger.kernel.org
->>>> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These are the models without touchbar.  The models with touchbar
+(MBP13,2, MBP13,3, MBP14,2, MBP14,3) as well as the 12" MacBooks
+(MB8,1, MB9,1, MB10,1) do not suffer from this issue.
+
+Christoph Gysin (+cc) reports that applying your patch on 4.16-rc4 gets
+Bluetooth working on his MBP13,1:
+https://github.com/Dunedan/mbp-2016-linux/issues/29#issuecomment-371434970
+
+For some reason, not toggling the device_wake pin in bcm_gpio_set_power()
+also fixed the issue for those users.  They did complain about stuttering
+audio though.
+
+Users of the touchbar models reported that stuttering audio only occurs
+when the GNOME Bluetooth control panel is open. Closing it made the
+stuttering audio go away.  But apparently on the non-touchbar models,
+the stuttering persisted regardless.  Both the stuttering audio as well as
+the timeouts on ->setup might be explained by a lack of hardware flow
+control on those models.  The chipset (and thus the UART) is identical
+on the touchbar versus non-touchbar models.  It would seem odd if Apple
+did not wire CTS consistently on all models.
+
+Thanks,
+
+Lukas
