@@ -1,138 +1,32 @@
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Thu, 8 Mar 2018 10:14:59 +0100
-Message-ID: <CAMZdPi9mTVFOc_MSg_9btM8h3vaynv247jMWPne+jCV1MMYjcA@mail.gmail.com>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de>
- <87sh9bvh3r.fsf@anholt.net>
- <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
- <87muzjfr8l.fsf@anholt.net> <698451580.263856.1520467358497@email.1und1.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 12/12] thermal: exynos: remove separate thermal_exynos.h
+ header file
+Date: Wed, 7 Mar 2018 20:01:24 -0600
+Message-ID: <20180308020124.trvajkrsnbog5uqj@rob-hp-laptop>
+References: <1520347435-22970-1-git-send-email-b.zolnierkie@samsung.com>
+ <CGME20180306144520epcas2p4950ac2762036882ccd097fd2bf629bbc@epcas2p4.samsung.com>
+ <1520347435-22970-13-git-send-email-b.zolnierkie@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <698451580.263856.1520467358497@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?RnLDqWTDqXJpYyBEYW5pcw==?= <frederic.danis.oss@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1520347435-22970-13-git-send-email-b.zolnierkie@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKT24gOCBNYXJjaCAyMDE4IGF0IDAxOjAyLCBTdGVmYW4gV2FocmVuIDxzdGVm
-YW4ud2FocmVuQGkyc2UuY29tPiB3cm90ZToKPiBIaSwKPgo+PiBFcmljIEFuaG9sdCA8ZXJpY0Bh
-bmhvbHQubmV0PiBoYXQgYW0gNy4gTcOkcnogMjAxOCB1bSAyMzozNiBnZXNjaHJpZWJlbjoKPj4K
-Pj4KPj4gTWFyY2VsIEhvbHRtYW5uIDxtYXJjZWxAaG9sdG1hbm4ub3JnPiB3cml0ZXM6Cj4+Cj4+
-ID4gSGkgRXJpYywKPj4gPgo+PiA+Pj4+Pj4+Pj4gQWRkIEJDTTQzNDM4IChibHVldG9vdGgpIGFz
-IGEgc2VyZGV2IHNsYXZlIGRldmljZSBvZiB1YXJ0MCAocGwwMTEvdHR5QU1BMCkuCj4+ID4+Pj4+
-Pj4+PiBUaGlzIGFsbG93cyB0byBhdXRvbWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8g
-dGhlIGJsdWV0b290aAo+PiA+Pj4+Pj4+Pj4gc3Vic3lzdGVtIGluc3RlYWQgb2YgcmVseWluZyBv
-biBwYXRjaGVkIHVzZXJzcGFjZSBoZWxwZXJzIChoY2lhdHRhY2gpLgo+PiA+Pj4+Pj4+Pj4KPj4g
-Pj4+Pj4+Pj4+IEluIG9yZGVyIHRvIGtlZXAgYSBkZWJ1ZyBVQVJUIHdlIG5lZWQgdG8gc3dpdGNo
-IHRvIHVhcnQxLgo+PiA+Pj4+Pj4+Pj4KPj4gPj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFN0ZWZh
-biBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4+ID4+Pj4+Pj4+PiAtLS0KPj4gPj4+
-Pj4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgfCAxNCArKysr
-KysrKysrKysrLQo+PiA+Pj4+Pj4+Pj4gMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkKPj4gPj4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2JjbTI4MzUtcnBpLXplcm8tdy5kdHMKPj4gPj4+Pj4+Pj4+IGluZGV4IGNmNTM0MzYuLmI3Zjc5
-ZjEgMTAwNjQ0Cj4+ID4+Pj4+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJw
-aS16ZXJvLXcuZHRzCj4+ID4+Pj4+Pj4+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1
-LXJwaS16ZXJvLXcuZHRzCj4+ID4+Pj4+Pj4+PiBAQCAtMTMxLDYgKzEzMSwxOCBAQAo+PiA+Pj4+
-Pj4+Pj4KPj4gPj4+Pj4+Pj4+ICZ1YXJ0MCB7Cj4+ID4+Pj4+Pj4+PiAgICAgcGluY3RybC1uYW1l
-cyA9ICJkZWZhdWx0IjsKPj4gPj4+Pj4+Pj4+IC0gICBwaW5jdHJsLTAgPSA8JnVhcnQwX2dwaW8x
-ND47Cj4+ID4+Pj4+Pj4+PiArICAgcGluY3RybC0wID0gPCZ1YXJ0MF9ncGlvMzIgJnVhcnQwX2N0
-c3J0c19ncGlvMzA+Owo+PiA+Pj4+Pj4+Pj4gKyAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPj4+Pj4+
-Pj4+ICsKPj4gPj4+Pj4+Pj4+ICsgICBibHVldG9vdGggewo+PiA+Pj4+Pj4+Pj4gKyAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJicmNtLGJjbTQzNDM4LWJ0IjsKPj4gPj4+Pj4+Pj4+ICsgICAgICAg
-ICAgIG1heC1zcGVlZCA9IDwyMDAwMDAwPjsKPj4gPj4+Pj4+Pj4+ICsgICAgICAgICAgIHNodXRk
-b3duLWdwaW9zID0gPCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+PiA+Pj4+Pj4+Pj4gKyAg
-IH07Cj4+ID4+Pj4+Pj4+PiArfTsKPj4gPj4+Pj4+Pj4KPj4gPj4+Pj4+Pj4gaXMgdGhlIHNodXRk
-b3duIEdQSU8gd29ya2luZyBhcyBleHBlY3RlZCB3aXRoIHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4g
-bW9kdWxlIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmU/Cj4+ID4+Pj4+Pj4KPj4gPj4+Pj4+
-PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmUuCj4+ID4+Pj4+Pj4KPj4gPj4+Pj4+
-Pj4gTWVhbmluZyB3ZSBhcmUgZ2V0dGluZyBiYWNrIHRvIHRoZSAxMTUyMDAgZGVmYXVsdCBiYXVk
-IHJhdGUgb24gdGhlIFVBUlQ/Cj4+ID4+Pj4+Pj4KPj4gPj4+Pj4+PiBJIGFzc3VtZSB0aGF0LCBi
-ZWNhdXNlIHJlbG9hZCB3b3JrcyBhcyBleHBlY3RlZC4KPj4gPj4+Pj4+Cj4+ID4+Pj4+PiBhd2Vz
-b21lLiBUaGF0IGlzIGdvb2QgbmV3cy4KPj4gPj4+Pj4+Cj4+ID4+Pj4+PiBTaW5jZSB5b3Ugc2Fp
-ZCB0aGF0IHRoZSBHUElPIGV4cGFuZGVyIGRyaXZlciBmb3IgdGhlIFJQaSAzIGhhcyBiZWVuIGFj
-Y2VwdGVkLCBkaWQgeW91IHRlc3QgaXQgdGhlcmUgYXMgd2VsbD8gSWYgc28sIHRoZW4gaXQgd291
-bGQgYmUgZ29vZCB0byBnZXQgYSBwYXRjaCB0aGF0IGFsc28gcHJvdmlkZXMgc2h1dGRvd24tZ3Bp
-b3MgZm9yIFJQaSAzLgo+PiA+Pj4+Pgo+PiA+Pj4+PiBhZnRlciBhcHBseWluZyBMb2ljJ3MgcGF0
-Y2ggYW5kIHRoZSBuZWNlc3NhcnkgcGF0Y2ggZm9yIHRoZSBSUGkgMyBkdHMgZmlsZSAoc2VlIGJl
-bG93KSwgaSB3aWxsIGdldCB0aGlzIG91dHB1dDoKPj4gPj4+Pj4KPj4gPj4+Pj4gWyAgICA0Ljg3
-MzI0Nl0gQmx1ZXRvb3RoOiBIQ0kgVUFSVCBkcml2ZXIgdmVyIDIuMwo+PiA+Pj4+PiBbICAgIDQu
-ODczMjYwXSBCbHVldG9vdGg6IEhDSSBVQVJUIHByb3RvY29sIEg0IHJlZ2lzdGVyZWQKPj4gPj4+
-Pj4gWyAgICA0Ljg3MzI2NV0gQmx1ZXRvb3RoOiBIQ0kgVUFSVCBwcm90b2NvbCBUaHJlZS13aXJl
-IChINSkgcmVnaXN0ZXJlZAo+PiA+Pj4+PiBbICAgIDQuODczNzUxXSBCbHVldG9vdGg6IEhDSSBV
-QVJUIHByb3RvY29sIEJyb2FkY29tIHJlZ2lzdGVyZWQKPj4gPj4+Pj4gWyAgICA0Ljg3NzI3OV0g
-dWFydC1wbDAxMSAzZjIwMTAwMC5zZXJpYWw6IG5vIERNQSBwbGF0Zm9ybSBkYXRhCj4+ID4+Pj4+
-IFsgICAgNi45NTIzODJdIEJsdWV0b290aDogaGNpMDogY29tbWFuZCAweGZjMTggdHggdGltZW91
-dAo+PiA+Pj4+PiBbICAgMTUuMTkyMjk4XSBCbHVldG9vdGg6IGhjaTA6IEJDTTogZmFpbGVkIHRv
-IHdyaXRlIHVwZGF0ZSBiYXVkcmF0ZSAoLTExMCkKPj4gPj4+Pj4gWyAgIDE1LjE5MjMxMl0gQmx1
-ZXRvb3RoOiBoY2kwOiBGYWlsZWQgdG8gc2V0IGJhdWRyYXRlCj4+ID4+Pj4+IFsgICAxNS4zMTY0
-MTVdIEJsdWV0b290aDogaGNpMDogQkNNOiBjaGlwIGlkIDk0Cj4+ID4+Pj4+IFsgICAxNS4zMTg1
-NjddIEJsdWV0b290aDogaGNpMDogQkNNOiBmZWF0dXJlcyAweDJlCj4+ID4+Pj4+IFsgICAxNS4z
-NDE1MzhdIEJsdWV0b290aDogaGNpMDogQkNNNDM0MzBBMQo+PiA+Pj4+PiBbICAgMTUuMzQxNTYw
-XSBCbHVldG9vdGg6IGhjaTA6IEJDTTQzNDMwQTEgKDAwMS4wMDIuMDA5KSBidWlsZCAwMDAwCj4+
-ID4+Pj4+IFsgICAxOS4xMTI2NzBdIEJsdWV0b290aDogaGNpMDogQkNNICgwMDEuMDAyLjAwOSkg
-YnVpbGQgMDM2MAo+PiA+Pj4+PiBbICAyNzQuNzEzNzMyXSBCbHVldG9vdGg6IGhjaTA6IGNvbW1h
-bmQgMHgwYzE0IHR4IHRpbWVvdXQKPj4gPj4+Pj4gWyAgMjc0LjcxNDA4NV0gQmx1ZXRvb3RoOiBo
-Y2kwOiBGcmFtZSByZWFzc2VtYmx5IGZhaWxlZCAoLTg0KQo+PiA+Pj4+PiBbICAzMTcuMjc1OTQx
-XSBCbHVldG9vdGg6IGhjaTA6IGxhc3QgZXZlbnQgaXMgbm90IGNtZCBjb21wbGV0ZSAoMHgwZikK
-Pj4gPj4+Pj4KPj4gPj4+Pj4gSSBkb24ndCBzZWUgdGhlc2UgZXJyb3JzIG9uIFJQaSBaZXJvIFcu
-IE1heWJlIHRoZSByZWFzb24gZm9yIHRoaXMgaXMgdGhlIGxhY2sgb2YgaGFyZHdhcmUgZmxvd2Nv
-bnRyb2wgb24gUlBpIDMuIE9yIHNvbWUgb2YgdGhlIGRvd25zdHJlYW0gcGF0Y2hlcyBvbiBCbHVl
-WiBtdXN0IGJlIGFkYXB0ZWQgZm9yIHRoZSBrZXJuZWwgWzFdLgo+PiA+Pj4+Pgo+PiA+Pj4+PiBC
-dHcgdGhlIGJjbTQzNDM4IGlzIGRldGVjdGVkIGV2ZW4gYWZ0ZXIgdW5sb2FkaW5nIGFuZCByZWxv
-YWRpbmcgdGhlIGRyaXZlci4gQnV0IHRoZSB0aW1lb3V0IG9jY3VycyBhbHNvIG9uIGRyaXZlciBy
-ZWxvYWQuIFJlZHVjaW5nIHRoZSBiYXVkcmF0ZSB0byAxMTUyMDAgZG9lc24ndCBoZWxwIGhlcmUu
-Cj4+ID4+Pj4KPj4gPj4+PiBtYXliZSBpdCBuZWVkcyBzb21lIHRpbWUgYWZ0ZXIgc3dpdGNoaW5n
-IHRoZSBoYXJkd2FyZSBvbi4gSGF2ZSB5b3UgdHJpZWQgdG8gc2xlZXAgZm9yIGEgYml0IGF0IHRo
-ZSBlbmQgb2YgYmNtX2dwaW9fc2V0X3Bvd2VyPwo+PiA+Pj4KPj4gPj4+IEkgd2lsbCB0cnksIGJ1
-dCB0aGlzIGNvdWxkIGFsc28gYmUgYW4gImlzc3VlIiBvZiB0aGUgZ3BpbyBleHBhbmRlcgo+PiA+
-Pj4gZHJpdmVyLiBBRkFJSyB0aGUgZXhwYW5kZXIgaXMgY29ubmVjdGVkIHZpYSBJMkMgdG8gdGhl
-IEdQVS4gSW4gY2FzZQo+PiA+Pj4gdGhlIG1haWxib3ggcmVwbHkgY29tZSBiZWZvcmUgdGhlIEky
-QyBjb21tYW5kIGhhcyBiZWVuIGhhbmRsZWQgYnkgdGhlCj4+ID4+PiBHUElPIGV4cGFuZGVyLCB3
-ZSBhcmUgcnVubmluZyBvdXQgb2Ygc3luYy4KPj4gPj4KPj4gPj4gVGhlIG1haWxib3ggY29tbWFu
-ZCBmb3Igc2V0dGluZyBHUElPIHN0YXRlIGlzIHN5bmNocm9ub3VzIGluIHRlcm1zIG9mCj4+ID4+
-IHNlbmRpbmcgdGhlIGkyYyBjb21tYW5kIHRvIHRoZSBHUElPIGV4cGFuZGVyIEhXLgo+PiA+Cj4+
-ID4gZG9lcyB0aGF0IG1lYW4gdGhlIGRyaXZlciBkb2VzIHRoaXMgY29ycmVjdGx5IGFuZCByZWFs
-bHkgd2FpdHMgZm9yIHRoZQo+PiA+IGNvbXBsZXRpb24uIE9yIGRvZXMgdGhlIEdQSU8gZXhwYW5k
-ZXIgbWlnaHQgcmV0dXJuIHRvIHF1aWNrbHkgYW5kCj4+ID4gcmV0dXJucyBhIGZhbHNlIHNlbnNl
-IG9mIEdQSU8gc3RhdGUuIEkgdGhpbmsgaXQgd291bGQgYmUgZ29vZCBhIHNsZWVwCj4+ID4gb2Yg
-NTBtcyBhZnRlciB0aGUgR1BJTyBtYWtlcyBhIGRpZmZlcmVuY2UuIE1heWJlIHRoZSBHUElPIGV4
-cGFuZGVyCj4+ID4gZHJpdmVyIG5lZWRzIHRvIHRha2UgdGhpcyBpbnRvIGFjY291bnQuCj4+Cj4+
-IEl0IHNlZW1zIHVubGlrZWx5IHRoYXQgeW91IGNhbiBnZXQgdG8gSTJDIHN0b3AgYmVmb3JlIHRo
-ZSBHUElPIGV4cGFuZGVyCj4+IEhXIGhhcyBjaGFuZ2VkIHRoZSBzdGF0ZSBvZiB0aGUgb3V0cHV0
-Lgo+Pgo+PiA+IFJlYWxpdHkgaXMgdGhhdCBvbmNlIHRoZSBCbHVldG9vdGggZHJpdmVyIHRvZ2ds
-ZWQgdGhlIEdQSU8sIGl0IGdvZXMKPj4gPiBvbnRvIGluaXRpYWxpemluZyB0aGUgY2hpcC4gT25l
-IG90aGVyIHJlYXNvbiBtaWdodCBiZSB0aGF0IG5vIGRldmljZQo+PiA+IHdha2V1cCBHUElPIGlz
-IHdpcmVkIGhlcmUsIHRoYXQgdGhlIGNoaXAgYWN0dWFsbHkgbmVlZHMgc29tZSB0aW1lCj4+ID4g
-YmVmb3JlIGl0IGlzIGFsbCBnb29kIHRvIGdvLgo+Pgo+PiBUaGlzIHNlZW1zIG11Y2ggbW9yZSBs
-aWtlbHkgdG8gbWUuICBUaGUgc3BlYyBmb3IgYmNtNDM0MzggaXMgZWFzaWx5Cj4+IGdvb2dsZWFi
-bGUgYW5kIGhhcyBhIHBvd2VyLW9uIHRpbWluZyBkaWFncmFtLgo+Cj4gYWZ0ZXIgYXBwbHlpbmcg
-dGhpcyBwYXRjaCBbMV0gdGhlIFJQaSAzIHNwZWNpZmljIHByb2JpbmcgZXJyb3JzIGRpc2FwcGVh
-ci4KPgo+IEJ1dCB0aGlzIGlzIG9ubHkgYSBxdWljayBoYWNrLiBUaGUgcHJvcGVyIHNvbHV0aW9u
-IHdvdWxkIGJlIHRvIGV4dGVuZCBoY2lfaDUgaW4gb3JkZXIgdG8gc3VwcG9ydCB0aGUgQkNNNDM0
-MzguCj4KPiBbMV0gLSBodHRwczovL2dpdGh1Yi5jb20vbGF0ZWdvb2RieWUvcnBpLXplcm8vY29t
-bWl0L2VkNTkwMDI5NmRmYjdhZWM3ZjQ2NzQ3NzQ0MDc1MWU3MzY3YTE4ODEKCkkgdGhpbmsgdGhp
-cyBwYXRjaCBpcyBwZXJmZWN0bHkgYWNjZXB0YWJsZSwgdGhpcyBpcyBhbiBoYXJkd2FyZSB0aW1p
-bmcKdGhlIGRyaXZlciBoYXMgdG8gaGFuZGxlLiBGb3Igc3VyZSBINSB3b3VsZCBpbXByb3ZlIHJv
-YnVzdG5lc3MuLi4KClJlZ2FyZHMsCkxvaWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Tue, Mar 06, 2018 at 03:43:55PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> thermal_exynos.h is used only by exynos_tmu.c so there is no need
+> for a separate include file. Also while it remove unused defines.
+> 
+> There should be no functional changes caused by this patch.
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  drivers/thermal/samsung/exynos_tmu.c         |  5 +++--
+>  include/dt-bindings/thermal/thermal_exynos.h | 28 ----------------------------
+>  2 files changed, 3 insertions(+), 30 deletions(-)
+>  delete mode 100644 include/dt-bindings/thermal/thermal_exynos.h
+
+Reviewed-by: Rob Herring <robh@kernel.org>
