@@ -1,70 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
- compatible strings
-Date: Thu, 8 Mar 2018 08:37:15 -0600
-Message-ID: <CAL_Jsq+e8uRm0gi1dn3Ln-b37SC9WGw5aWPaBKoRA2vi-==j6A@mail.gmail.com>
-References: <20180307020719.6675-1-andre.przywara@arm.com> <20180307020719.6675-5-andre.przywara@arm.com>
- <20180308020822.35utrgw3ksoldr24@rob-hp-laptop> <9431a141-8b9c-9743-0907-8f0720df34a2@arm.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] soc: qcom: Add GENI based QUP Wrapper driver
+Date: Thu, 8 Mar 2018 15:41:43 +0100
+Message-ID: <20180308144143.GB23266@lst.de>
+References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
+	<1519781889-16117-3-git-send-email-kramasub@codeaurora.org>
+	<152002326567.108663.16836885081217739460@swboyd.mtv.corp.google.com>
+	<4ac213a6-081f-72c1-c9c8-6994786285c9@codeaurora.org>
+	<152037339742.218381.11498404122038956963@swboyd.mtv.corp.google.com>
+	<945b6c00-dde6-6ec7-4577-4cc0d034796b@codeaurora.org>
+	<8567be1b-1431-4f1d-cb41-6a7eaa434438@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBMMVQXKQKGQEQ4DOEOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <9431a141-8b9c-9743-0907-8f0720df34a2-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8567be1b-1431-4f1d-cb41-6a7eaa434438-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Karthik Ramasubramanian <kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Boyd <sboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Girish Mahadevan <girishm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 8, 2018 at 3:09 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
->
-> On 08/03/18 02:08, Rob Herring wrote:
->> On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
->>> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
->>> compatible to the PWM controllers found in the A13 and H3.
->>
->> If fully compatible, then shouldn't there be a fallback to one of the
->> existing compatible strings?
->
-> Yes, that was the idea. I was already wondering how we would
-> differentiate that from "real" compatible strings, but couldn't find
-> convincing examples. So should that read:
->
-> - compatible: should at least contain be one of:
->     - "allwinner,sun4i-a10-pwm"
->     - "allwinner,sun5i-a10s-pwm"
->     - "allwinner,sun5i-a13-pwm"
->     - "allwinner,sun7i-a20-pwm"
->     - "allwinner,sun8i-h3-pwm"
->   May in addition contain one of:
->     - "allwinner,sun50i-a64-pwm"
->     - "allwinner,sun50i-h5-pwm"
->     - "allwinner,sun50i-h6-pwm"
+On Thu, Mar 08, 2018 at 01:24:45PM +0000, Robin Murphy wrote:
+> Implementing dma_map_ops inside a driver for real hardware is almost always 
+> the wrong thing to do.
 
-I can't validate a dts is correct with it written like this. Just list
-each valid combination on each line:
+Agreed.  dma_map_ops should be a platform decision based on the bus.
 
-"allwinner,sun8i-h3-pwm", "allwinner,sun50i-h6-pwm"
-
-(Assuming "allwinner,sun50i-h6-pwm" was the first implementation and
-h3 has the same block).
-
-> And this would possibly need to be amended once we need to actually use
-> one of those strings (to implement a quirk, for instance)?
-
-The most specific compatible provides that. The driver matches on the
-least specific one until you have a quirk to implement.
-
-> Or is there some other way of reserving those compatible strings, which
-> are not expected to be matched in drivers directly?
-
-The binding should just list all that are appropriate from the start
-and the driver is free to match on which ever string it wants.
-
-Rob
+Even our dma_virt_ops basically just works around bad driver layering.
