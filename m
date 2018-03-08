@@ -1,114 +1,118 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 0/6] dt-bindings: add bindings for USB physical
- connector
-Date: Thu, 08 Mar 2018 10:52:19 +0900
-Message-ID: <5AA09753.7060308@samsung.com>
-References: <CGME20180227071137eucas1p104aeeb0fd926fe985e250174d9d65b2e@eucas1p1.samsung.com>
-        <20180227071134.28063-1-a.hajda@samsung.com>
-        <c4a773b6-a24e-4e72-3cc4-ebafeac232c1@samsung.com>
-        <5A9F4A7D.9020409@samsung.com> <5A9F6F29.5020501@samsung.com>
-        <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] PINCTRL: Mediatek pinctrl driver for mt2712
+Date: Thu, 8 Mar 2018 11:08:50 +0800
+Message-ID: <1520478530.4049.3.camel@mtkswgap22>
+References: <1520249745-6757-1-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <b64d77c1-c80f-1bd9-a599-3027424ec667@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1520249745-6757-1-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej, Archit,
+Hi, Zhiyong
 
-On 2018년 03월 07일 20:13, Andrzej Hajda wrote:
-> Hi Chanwoo, Archit,
-> 
-> On 07.03.2018 05:48, Chanwoo Choi wrote:
->> On 2018년 03월 07일 11:12, Chanwoo Choi wrote:
->>> Hi Rob and Andrzej,
->>>
->>> On 2018년 03월 06일 21:53, Andrzej Hajda wrote:
->>>> Hi Rob, Chanwoo, Krzysztof,
->>>>
->>>>
->>>> On 27.02.2018 08:11, Andrzej Hajda wrote:
->>>>> Hi,
->>>>>
->>>>> Thanks for reviews of previous iterations.
->>>>>
->>>>> This patchset introduces USB physical connector bindings, together with
->>>>> working example.
->>>>> I have removed RFC prefix - the patchset seems to be heading
->>>>> to a happy end :)
->>>>>
->>>>> v5: fixed extra parenthesis in dts, renamed extcon function.
->>>>> v4: improved binding descriptions, added missing reg in dts.
->>>>> v3: Separate binding for Samsung 11-pin connector, added full-blown USB-C
->>>>>     example.
->>>>> v2: I have addressed comments by Rob and Laurent, thanks 
->>>>>
->>>>> Changes in datail are described in the patches.
->>>>>
->>>>> Regards
->>>>> Andrzej
->>>>>
->>>>>
->>>>> Andrzej Hajda (5):
->>>>>   dt-bindings: add bindings for USB physical connector
->>>>>   dt-bindings: add bindings for Samsung micro-USB 11-pin connector
->>>>>   arm64: dts: exynos: add micro-USB connector node to TM2 platforms
->>>>>   arm64: dts: exynos: add OF graph between MHL and USB connector
->>>>>   extcon: add possibility to get extcon device by OF node
->>>>>
->>>>> Maciej Purski (1):
->>>>>   drm/bridge/sii8620: use micro-USB cable detection logic to detect MHL
->>>> It looks like all patches received R-B or acks (I forgot add Krzysztof's
->>>> acks for dts part).
->>>> Now I have a question how to merge them.
->>>> The only functional dependency is between bridge and extcon, and from
->>>> the formal PoV bindings should be merged 1st.
->>>> I can merge it:
->>>> 1. All patches via drm-misc tree.
->>>> 2. All patches except dts via drm-misc, and Krzysztof will merge dts via
->>>> samsung-soc tree.
->>>>
->>>> Is it OK, for all? Better ideas?
->>> Krzysztof picked the dts patches. I'll make the immutable branch based on v4.16-rc1
->>> and apply them except for dts patchs. And I'll send the immutable branch to Rob and Andrzej.
->>>
->>>
->> I made the immutable branch[1] as following: If you agree, I'll send pull request.
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git/log/?h=ib-extcon-drm-dt-v4.17
->>
->> Or you can make the immutable branch and send pull request to Rob and me.
->>
-> 
-> It seems you took v5 instead of v6 version of extcon patch.
+you should checkpatch every patch before sending them out
 
-My mistake. I picked v6 and made the new immutable branch.
-After Archit confirm it, I'll send pull request.
+because I saw tons of check messages like below result for scanning v3
+3/4
 
+CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
+#152: FILE: drivers/pinctrl/mediatek/pinctrl-mt2712.c:85:
++static int mt2712_spec_pull_set(struct regmap *regmap, unsigned int
+pin,
++               unsigned char align, bool isup, unsigned int r1r0)
+
+CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
+#353: FILE: drivers/pinctrl/mediatek/pinctrl-mt2712.c:286:
++static int mt2712_ies_smt_set(struct regmap *regmap, unsigned int pin,
++               unsigned char align, int value, enum pin_config_param
+arg)
+
+CHECK:LINE_SPACING: Please don't use multiple blank lines
+#423: FILE: drivers/pinctrl/mediatek/pinctrl-mt2712.c:356:
++
++
+
+CHECK:LINE_SPACING: Please don't use multiple blank lines
+#473: FILE: drivers/pinctrl/mediatek/pinctrl-mt2712.c:406:
++
++
+
+CHECK:OPEN_ENDED_LINE: Lines should not end with a '('
+#719: FILE: drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h:14:
++       MTK_PIN(
+
+CHECK:OPEN_ENDED_LINE: Lines should not end with a '('
+#731: FILE: drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h:26:
++       MTK_PIN(
+
+CHECK:OPEN_ENDED_LINE: Lines should not end with a '('
+#742: FILE: drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h:37:
++       MTK_PIN(
+
+....
+
+total: 0 errors, 1 warnings, 214 checks, 2619 lines checked
+
+
+
+
+On Mon, 2018-03-05 at 19:35 +0800, Zhiyong Tao wrote:
+> This series includes four patches:
+> 1.Add mt2712 pintcrl head file.
+> 2.Add mt2712 pinctrl device node.
+> 3.Add mt2712 pinctrl driver.
+> 4.Support bias-disable of generic and special pins simultaneously.
 > 
-> Beside it I am OK with your immutable branch, Archit is it OK to do it
-> this way in drm-misc?
+> Changes in patch v3:
+> 1)Use SPDX identifiers for all new files.
+> 2)Use right data for Copyright and Author.
+> 3)Correct some spelling mistake.
+> 4)Reusing original logic and change solution to support bias-disable of generic and special pins simultaneously.
+> 5)Add some comments for the speical path of special pins bias-disable.
 > 
+> Changes in patch v2:
+> 1)Separate patch4 for supporting bias-disable of generic and special pins.
+> 2)GPIO16~17 direction setting is changed as generic pins in mt2712 E2,
+>   So remove GPIO16~17 special direction setting and remove apmixedsys node in pinctrl device node.
+> 3)Add pinmux define in "mt2712-pinfunc.h" and "pinctrl-mtk-mt2712.h" for mt2712 E2 design.
 > 
-> Regards
+> Zhiyong Tao (4):
+>   arm64: dts: mt2712: add pintcrl file
+>   arm64: dts: mt2712: add pintcrl device node.
+>   pinctrl: add mt2712 pinctrl driver
+>   pintcrl: support bias-disable of generic and special pins
+>     simultaneously
 > 
-> Andrzej
-> 
-> 
+>  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1123 ++++++++++++++
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |   18 +
+>  drivers/pinctrl/mediatek/Kconfig              |    7 +
+>  drivers/pinctrl/mediatek/Makefile             |    1 +
+>  drivers/pinctrl/mediatek/pinctrl-mt2712.c     |  632 ++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common.c |    6 +
+>  drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h | 1967 +++++++++++++++++++++++++
+>  7 files changed, 3754 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
+>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2712.c
+>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
 > 
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.6.4 
 > 
 > 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
