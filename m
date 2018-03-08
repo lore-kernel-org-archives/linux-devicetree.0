@@ -1,36 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] ASoC: Snow Chromebook DT bindings
-	update
-Date: Wed, 7 Mar 2018 20:40:19 -0600
-Message-ID: <20180308024019.72hy3ffidk4dsyx6@rob-hp-laptop>
-References: <CGME20180307170309epcas1p40ae0381dbd69168307cf23f0d993e8b3@epcas1p4.samsung.com>
- <20180307170249.14057-1-s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Wed, 7 Mar 2018 19:37:45 -0600
+Message-ID: <20180308013745.xaqiwoyaytu56rfq@rob-hp-laptop>
+References: <20180306085911.5930-1-ran.wang_1@nxp.com>
+ <20180306085911.5930-2-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180307170249.14057-1-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, lgirdwood@gmail.com, broonie@kernel.org, m.szyprowski@samsung.com
+In-Reply-To: <20180306085911.5930-2-ran.wang_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 06:02:49PM +0100, Sylwester Nawrocki wrote:
-> The new DT bindings are introduced so sound on the HDMI interface
-> is also supported.
+On Tue, Mar 06, 2018 at 04:59:10PM +0800, Ran Wang wrote:
+> Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0 DWC3.
+> When only one value means INCRx mode with fix burst type.
+> When more than one value, means undefined length burst mode, USB controller
+> can use the length less than or equal to the largest enabled burst length.
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> While enabling undefined length INCR burst type and INCR16 burst type,
+> get better write performance on NXP Layerscape platforms:
+> around 3% improvement (from 364MB/s to 375MB/s).
+> 
+> Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
->  Documentation/devicetree/bindings/sound/snow.txt | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+> Changes in v5:
+>   - add support for ls1021a, ls1012a, ls1046a, ls1088a, ls1021a
+>   - update ls208xa support according to code base change
+> Changes in v4:
+>   - change definition for this property.
+> Changes in v3:
+>   - add new property for INCR burst in usb node.
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++++++
+>  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |    1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    3 +++
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    2 ++
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |    2 ++
+>  7 files changed, 18 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 44e8bab..d1779b2 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -59,6 +59,11 @@ Optional properties:
+>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+>  
+>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+> + - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+> +	register, undefined length INCR burst type enable and INCRx type.
+> +	When just one value, which means INCRX burst mode. When more than one
+> +	value, which means undefined length INCR burst type enabled.
+> +	The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I don't understand the multiple values for undefined length burst. Why 
+do you need burst length if length is undefined? Looking at the driver, 
+it looks like you only care about the largest value.
+
+Rob
