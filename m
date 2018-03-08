@@ -1,65 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/4] ARM: dts: sun9i: Add enable-method for SMP support
- for the A80 SoC
-Date: Thu, 8 Mar 2018 16:09:44 +0100
-Message-ID: <20180308150944.mlkgsrwhsk7hrlcp@flea.lan>
-References: <20180308150012.19045-1-wens@csie.org>
- <20180308150012.19045-4-wens@csie.org>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
+Date: Thu, 8 Mar 2018 16:11:35 +0100
+Message-ID: <20180308161135.1f3d3d18@karo-electronics.de>
+References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="22gesboi3cwo33jg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180308150012.19045-4-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mylene Josserand <mylene.josserand@bootlin.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---22gesboi3cwo33jg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 08, 2018 at 11:00:11PM +0800, Chen-Yu Tsai wrote:
-> Using the enable-method property for SMP support would allow future PSCI
-> implementations to override any in-OS support. This is better than just
-> matching against the machine compatible, and then having to determine
-> whether other methods are available or not.
->=20
-> This adds enable-method properties to all CPU nodes.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---22gesboi3cwo33jg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqhUjcACgkQ0rTAlCFN
-r3RH/Q/+PMF0nKf4Bo592DAtUNM88kk7y2NhRJjfizmMN2gObNoaqG6myczNM0bm
-XMIl5whmglM64iVwd/TOxfqLTq/kaElCQ+YQGRigmPv1/wgo14bMh5zaWJwWqMQX
-YNexhJRMIuKvxkluZIHYgNo0NkWcDhk89vpcQL45hUqPSBhVFt4bSwV6zcfshZA2
-NZE73OKG1A8Ki2r4dLaliESwmJvg5fwbD4U9N2ar70NwAaVP4OAnCNLR97YPa+Bx
-94WnqzlL0MbBc9wFMn6in4ZG/dgMVR4FiNoIJav3d7QY0JQcgSEX7Lm98LvXMEe1
-yYzmGk8szWazJNLOUkKihcjaNse0fafh338rjfF4GHFGJsDYqMaEqXC5ungvLk7r
-Mpr3bYXbmDVzcxcZpq6fAdC3YASJa3+ZLx5NtWXHQMfgm1NC/0uRTnXAFMWvkCAe
-PNlYug7gD7Zqwc3nHeG5Vz3dLN4Zec8tQIdAe4tusbMtV4ikjUeiINuVyYgFmED6
-dm4jvmlvVT+YYB3LXOdLhM+qlK9e4RY9DYXVcTmb0YKzI3TJe+FcM3NaofYFvlyp
-4iXBrTpF6Y74gWbLkR8604UukD0uTqdT6xsfrTSzaZ4xt+G60W22+IVFUiygD1q7
-dGDm8fiRlbwLzFTqYnNZq3/3xdibDzLukws/0oXbQi1lLxsuD/4=
-=mR8N
------END PGP SIGNATURE-----
-
---22gesboi3cwo33jg--
+SGksCgpPbiBUdWUsICA2IE1hciAyMDE4IDIyOjU4OjE5ICswMTAwIE1hcnRpbiBLYWlzZXIgd3Jv
+dGU6Cj4gQWNjb3JkaW5nIHRvIHRoZSBpLk1YMjUgcmVmZXJlbmNlIG1hbnVhbHMsIGVhY2ggU1NJ
+IGhhcyBmb3VyIEZJRk9zLiBBbGwKPiBvZiB0aG9zZSBGSUZPcyBjYW4gc3RvcmUgdXAgdG8gMTUg
+ZW50cmllcy4KPiAKPiBUaGUgZnNsX3NzaSBkcml2ZXIncyBpbnRlcm5hbCBkZWZhdWx0IGZvciB0
+aGUgRklGTyBkZXB0aCBpbiA4LiBTZXQgb3VyCj4gbm9uLWRlZmF1bHQgRklGTyBkZXB0aCBleHBs
+aWNpdGx5IGluIHRoZSBEZXZpY2UgVHJlZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJ0aW4gS2Fp
+c2VyIDxtYXJ0aW5Aa2Fpc2VyLmN4Pgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXgyNS5k
+dHNpIHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9p
+bXgyNS5kdHNpCj4gaW5kZXggOTcyNTcwNS4uY2Y3MGRmMiAxMDA2NDQKPiAtLS0gYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXgyNS5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjUuZHRz
+aQo+IEBAIC0yNjksNiArMjY5LDcgQEAKPiAgCQkJCWRtYXMgPSA8JnNkbWEgMjQgMSAwPiwKPiAg
+CQkJCSAgICAgICA8JnNkbWEgMjUgMSAwPjsKPiAgCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7
+Cj4gKwkJCQlmc2wsZmlmby1kZXB0aCA9IDwxNT47Cj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
+Owo+ICAJCQl9Owo+ICAKPiBAQCAtMzI5LDYgKzMzMCw3IEBACj4gIAkJCQlkbWFzID0gPCZzZG1h
+IDI4IDEgMD4sCj4gIAkJCQkgICAgICAgPCZzZG1hIDI5IDEgMD47Cj4gIAkJCQlkbWEtbmFtZXMg
+PSAicngiLCAidHgiOwo+ICsJCQkJZnNsLGZpZm8tZGVwdGggPSA8MTU+Owo+ICAJCQkJc3RhdHVz
+ID0gImRpc2FibGVkIjsKPiAgCQkJfTsKPiAgCllvdSBhcmUgY2hhbmdpbmcgdGhlIGdsb2JhbCAu
+ZHRzaSBmaWxlLiBEaWQgeW91IHRlc3QgdGhpcyBjaGFuZ2Ugd2l0aAphbGwgZGV2aWNlcyB0aGF0
+IGFyZSBhZmZlY3RlZCBieSBpdD8KCgpMb3RoYXIgV2HDn21hbm4KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
