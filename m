@@ -1,93 +1,82 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
- receiver) power control driver
-Date: Thu, 8 Mar 2018 07:16:44 +0100
-Message-ID: <20180308071459.310d0ba2@aktux>
-References: <cover.1512114576.git.hns@goldelico.com>
-        <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
-        <20171222124427.GI3374@localhost>
-        <20180109184347.28ba0a6e@aktux>
-        <20180112144647.GA5992@localhost>
-        <20180112194022.7da1e726@kemnade.info>
-        <20180118064736.GH3286@localhost>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//GnIge=aWUzMu=J_ndxszsL"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180118064736.GH3286@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+From: James Hogan <jhogan@kernel.org>
+Subject: [PATCH v2] kbuild: Handle builtin dtb file names containing hyphens
+Date: Thu,  8 Mar 2018 11:02:46 +0000
+Message-ID: <20180308110246.16639-1-jhogan@kernel.org>
+References: <CAK7LNARfTxxb0_RNEPvBzuEqP_g-cajZGpaGSuMJBUwDW66yww@mail.gmail.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARfTxxb0_RNEPvBzuEqP_g-cajZGpaGSuMJBUwDW66yww@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kernel@vger.kernel.org, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-mips@linux-mips.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_//GnIge=aWUzMu=J_ndxszsL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+cmd_dt_S_dtb constructs the assembly source to incorporate a devicetree
+FDT (that is, the .dtb file) as binary data in the kernel image. This
+assembly source contains labels before and after the binary data. The
+label names incorporate the file name of the corresponding .dtb file.
+Hyphens are not legal characters in labels, so .dtb files built into the
+kernel with hyphens in the file name result in errors like the
+following:
 
-Hi,
+bcm3368-netgear-cvg834g.dtb.S: Assembler messages:
+bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section
+bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'
+bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'
+bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'
+bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section
+bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
 
-On Thu, 18 Jan 2018 17:47:36 +1100
-Johan Hovold <johan@kernel.org> wrote:
+Fix this by updating cmd_dt_S_dtb to transform all hyphens from the file
+name to underscores when constructing the labels.
 
-[...]
-> >=20
-> > So to avoid having hardware information spread all over the table at le=
-ast
-> > these information would need to be in devicetree. But that also all fee=
-ls
-> > like a hack and hard to maintain. =20
->=20
-> Having the device described in the device tree is certainly desirable,
-> not least for chip identification. And with a GPS framework in the
-> kernel with a well-defined interface, implementing power management
-> would be straight forward.
->=20
-Hmm, devicetree without in-kernel drivers, do we have anything like that
-somewhere? I thought that was a big no-go. But maybe I am wrong.
+As of v4.16-rc2, 1139 .dts files across ARM64, ARM, MIPS and PowerPC
+contain hyphens in their names, but the issue only currently manifests
+on Broadcom MIPS platforms, as that is the only place where such files
+are built into the kernel. For example when CONFIG_DT_NETGEAR_CVG834G=y,
+or on BMIPS kernels when the dtbs target is used (in the latter case it
+admittedly shouldn't really build all the dtb.o files, but thats a
+separate issue).
 
-> I'm just not convinced that the proposed tty interface is the right
-> interface for this. User space would still rely on gpsd for the GPS
-> protocols, and would also ultimately be managing power by killing gpsd
-> or whatever daemon that would otherwise be holding the port open.
->=20
-> Something like the generic power sequences that has been discussed
-> elsewhere might be a better fit for this if all you want to do is power
-> on and off on port open and close (and on suspend/resume). There really
-> isn't anything GPS-specific in the current proposal (besides the
-> suggested tty-device name).
+Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+Signed-off-by: James Hogan <jhogan@kernel.org>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: <stable@vger.kernel.org> # 4.9+
+---
+Changes in v2:
+ - Rewrite commit message (thanks Frank for some improved wording).
+ - Add Franks' reviewed-by.
+---
+ scripts/Makefile.lib | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-So a bit like that mmc-powerseq stuff we already have?
->=20
-> But sure, that wouldn't be sufficient to deal with the
-> unknown-power-state problem with the device in question.
->=20
-Maybe there could be a kind of active flag set by the tty if
-there is traffic, so that active flag could be used in these
-power sequence stuff? But then again the tty layer has to be extended
-which would probably also cause a lot of ruffled feathers.
-
-Regards,
-Andreas
-
---Sig_//GnIge=aWUzMu=J_ndxszsL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlqg1UwACgkQfb1qx03i
-kySUIRAAm+s1rDjwjMbnM/1njhhr3ul5v6ns3xiRWFYUCB9H16i/ts2OheXAj304
-udSxZ1eMoY8mVnl9bvao7MY5k1xPR+tcHHG0cVNlR7ZvIpcfrao/10ljXSe52IlW
-jZvO/9h7caocZT6AzqynwoctjClEj8Ck59FJfVM934utY7GDnPhWkFdADQdkPygB
-zUtzDIj3RiWNKiMxq6QSzPF0PnEPTDKmpgIJjfmDTXxfxT/KfPaQCr2PanXAjI/L
-rKADGmTfpMYF+x3bPcCHDLBytg3NZvYFYEp2EdKyBWzOrA9EVqzCqH8VqJ6cHbFZ
-JePoNdy7bcoFNIG6i17iGCqCeSgG+fyrebXVEIY00f0NEXFiilGk5fdVEw8cZrhe
-EJZHU+KbJFC598cTgZ7sP1btCFfs5Z3O5JDVQKwe4uAdkm0g+FmW+fWhxH8pLWXB
-qMSX1NJ0GSlNBhUfJJ4/5Ud0Ft5RcltsiR4JuVbVixcjc5XFnr89EXm7CXEh1kne
-RqS02zpvKIYUbWD1BQ53mj6l1j1SlTM78/ispS+bKN07aPWq72Q9E7s0Nuy6Xr21
-99Iax7Eos6QmPLD5/CE+8C1Fj/BOKqjIcdDpjk8+jZ4nh2RtI/E500LvaqnlOxg1
-YmQKZB0Epdm9ObZdm0KHtpNCrejTye0xt2BI251wwjg+bnikZHc=
-=PAIm
------END PGP SIGNATURE-----
-
---Sig_//GnIge=aWUzMu=J_ndxszsL--
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 5589bae34af6..a6f538b31ad6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -297,11 +297,11 @@ cmd_dt_S_dtb=						\
+ 	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
+ 	echo '.section .dtb.init.rodata,"a"';		\
+ 	echo '.balign STRUCT_ALIGNMENT';		\
+-	echo '.global __dtb_$(*F)_begin';		\
+-	echo '__dtb_$(*F)_begin:';			\
++	echo '.global __dtb_$(subst -,_,$(*F))_begin';	\
++	echo '__dtb_$(subst -,_,$(*F))_begin:';		\
+ 	echo '.incbin "$<" ';				\
+-	echo '__dtb_$(*F)_end:';			\
+-	echo '.global __dtb_$(*F)_end';			\
++	echo '__dtb_$(subst -,_,$(*F))_end:';		\
++	echo '.global __dtb_$(subst -,_,$(*F))_end';	\
+ 	echo '.balign STRUCT_ALIGNMENT'; 		\
+ ) > $@
+ 
+-- 
+2.13.6
