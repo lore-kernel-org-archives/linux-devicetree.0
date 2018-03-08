@@ -1,199 +1,103 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 03/12] clk: stm32mp1: add MP1 gate for hse/hsi/csi oscillators
-Date: Thu, 8 Mar 2018 17:53:56 +0100
-Message-ID: <1520528045-18330-4-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v2 01/12] dt-bindings: Document STM32MP1 Reset Clock
+ Controller (RCC) bindings
+Date: Thu, 8 Mar 2018 17:53:54 +0100
+Message-ID: <1520528045-18330-2-git-send-email-gabriel.fernandez@st.com>
 References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-MP1 Gate is a gate with a set and a clear register.
+The RCC block is responsible of the management of the clock and reset
+generation for the complete circuit.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32mp1.c | 143 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 143 insertions(+)
+ .../devicetree/bindings/clock/st,stm32mp1-rcc.txt  | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
 
-diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 6261a92..56b738e 100644
---- a/drivers/clk/clk-stm32mp1.c
-+++ b/drivers/clk/clk-stm32mp1.c
-@@ -140,6 +140,11 @@ struct div_cfg {
- 	const struct clk_div_table *table;
- };
- 
-+struct stm32_gate_cfg {
-+	struct gate_cfg		*gate;
-+	const struct clk_ops	*ops;
-+};
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
+new file mode 100644
+index 0000000..fb9495e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
+@@ -0,0 +1,60 @@
++STMicroelectronics STM32 Peripheral Reset Clock Controller
++==========================================================
 +
- static struct clk_hw *
- _clk_hw_register_gate(struct device *dev,
- 		      struct clk_hw_onecell_data *clk_data,
-@@ -191,6 +196,112 @@ struct div_cfg {
- 					     lock);
- }
- 
-+/* MP1 Gate clock with set & clear registers */
++The RCC IP is both a reset and a clock controller.
 +
-+static int mp1_gate_clk_enable(struct clk_hw *hw)
-+{
-+	if (!clk_gate_ops.is_enabled(hw))
-+		clk_gate_ops.enable(hw);
++RCC makes also power management (resume/supend and wakeup interrupt).
 +
-+	return 0;
-+}
++Please also refer to reset.txt for common reset controller binding usage.
 +
-+static void mp1_gate_clk_disable(struct clk_hw *hw)
-+{
-+	struct clk_gate *gate = to_clk_gate(hw);
-+	unsigned long flags = 0;
++Please also refer to clock-bindings.txt for common clock controller
++binding usage.
 +
-+	if (clk_gate_ops.is_enabled(hw)) {
-+		spin_lock_irqsave(gate->lock, flags);
-+		writel_relaxed(BIT(gate->bit_idx), gate->reg + RCC_CLR);
-+		spin_unlock_irqrestore(gate->lock, flags);
-+	}
-+}
 +
-+const struct clk_ops mp1_gate_clk_ops = {
-+	.enable		= mp1_gate_clk_enable,
-+	.disable	= mp1_gate_clk_disable,
-+	.is_enabled	= clk_gate_is_enabled,
-+};
++Required properties:
++- compatible: "st,stm32mp1-rcc", "syscon"
++- reg: should be register base and length as documented in the datasheet
++- #clock-cells: 1, device nodes should specify the clock in their
++  "clocks" property, containing a phandle to the clock device node,
++  an index specifying the clock to use.
++- #reset-cells: Shall be 1
++- interrupts: Should contain a general interrupt line and a interrupt line
++  to the wake-up of processor (CSTOP).
 +
-+static struct clk_hw *
-+_get_stm32_gate(void __iomem *base,
-+		const struct stm32_gate_cfg *cfg, spinlock_t *lock)
-+{
-+	struct clk_gate *gate;
-+	struct clk_hw *gate_hw;
++Example:
++	rcc: rcc@50000000 {
++		compatible = "st,stm32mp1-rcc", "syscon";
++		reg = <0x50000000 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		interrupts = <GIC_SPI 5 IRQ_TYPE_NONE>,
++			     <GIC_SPI 145 IRQ_TYPE_NONE>;
++	};
 +
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
++Specifying clocks
++=================
 +
-+	gate->reg = cfg->gate->reg_off + base;
-+	gate->bit_idx = cfg->gate->bit_idx;
-+	gate->flags = cfg->gate->gate_flags;
-+	gate->lock = lock;
-+	gate_hw = &gate->hw;
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/stm32mp1-clks.h header and can be used in device
++tree sources.
 +
-+	return gate_hw;
-+}
++Specifying softreset control of devices
++=======================================
 +
-+static struct clk_hw *
-+clk_stm32_register_gate_ops(struct device *dev,
-+			    const char *name,
-+			    const char *parent_name,
-+			    unsigned long flags,
-+			    void __iomem *base,
-+			    const struct stm32_gate_cfg *cfg,
-+			    spinlock_t *lock)
-+{
-+	struct clk_init_data init = { NULL };
-+	struct clk_gate *gate;
-+	struct clk_hw *hw;
-+	int ret;
++Device nodes should specify the reset channel required in their "resets"
++property, containing a phandle to the reset device node and an index specifying
++which channel to use.
++The index is the bit number within the RCC registers bank, starting from RCC
++base address.
++It is calculated as: index = register_offset / 4 * 32 + bit_offset.
++Where bit_offset is the bit offset within the register.
 +
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
++For example on STM32MP1, for LTDC reset:
++ ltdc = APB4_RSTSETR_offset / 4 * 32 + LTDC_bit_offset
++      = 0x180 / 4 * 32 + 0 = 3072
 +
-+	init.name = name;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.flags = flags;
++The list of valid indices for STM32MP1 is available in:
++include/dt-bindings/reset-controller/stm32mp1-resets.h
 +
-+	init.ops = &clk_gate_ops;
-+
-+	if (cfg->ops)
-+		init.ops = cfg->ops;
-+
-+	hw = _get_stm32_gate(base, cfg, lock);
-+	if (IS_ERR(hw))
-+		return ERR_PTR(-ENOMEM);
-+
-+	hw->init = &init;
-+
-+	ret = clk_hw_register(dev, hw);
-+	if (ret) {
-+		kfree(gate);
-+		hw = ERR_PTR(ret);
-+	}
-+
-+	return hw;
-+}
-+
-+static struct clk_hw *
-+_clk_stm32_register_gate(struct device *dev,
-+			 struct clk_hw_onecell_data *clk_data,
-+			 void __iomem *base, spinlock_t *lock,
-+			 const struct clock_config *cfg)
-+{
-+	return clk_stm32_register_gate_ops(dev,
-+				    cfg->name,
-+				    cfg->parent_name,
-+				    cfg->flags,
-+				    base,
-+				    cfg->cfg,
-+				    lock);
-+}
-+
- #define GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
- {\
- 	.id		= _id,\
-@@ -239,12 +350,44 @@ struct div_cfg {
- 	DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
- 		  _div_flags, NULL)
- 
-+/* STM32 GATE */
-+#define STM32_GATE(_id, _name, _parent, _flags, _gate)\
-+{\
-+	.id		= _id,\
-+	.name		= _name,\
-+	.parent_name	= _parent,\
-+	.flags		= _flags,\
-+	.cfg		= (struct stm32_gate_cfg *) {_gate},\
-+	.func		= _clk_stm32_register_gate,\
-+}
-+
-+#define _STM32_GATE(_gate_offset, _gate_bit_idx, _gate_flags, _ops)\
-+	(&(struct stm32_gate_cfg) {\
-+		&(struct gate_cfg) {\
-+			.reg_off	= _gate_offset,\
-+			.bit_idx	= _gate_bit_idx,\
-+			.gate_flags	= _gate_flags,\
-+		},\
-+		.ops		= _ops,\
-+	})
-+
-+#define _GATE_MP1(_gate_offset, _gate_bit_idx, _gate_flags)\
-+	_STM32_GATE(_gate_offset, _gate_bit_idx, _gate_flags,\
-+		    &mp1_gate_clk_ops)\
-+
-+#define GATE_MP1(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
-+	STM32_GATE(_id, _name, _parent, _flags,\
-+		   _GATE_MP1(_offset, _bit_idx, _gate_flags))
-+
- static const struct clock_config stm32mp1_clock_cfg[] = {
- 	/* Oscillator divider */
- 	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
- 	    CLK_DIVIDER_READ_ONLY),
- 
- 	/*  External / Internal Oscillators */
-+	GATE_MP1(CK_HSE, "ck_hse", "clk-hse", 0, RCC_OCENSETR, 8, 0),
-+	GATE_MP1(CK_CSI, "ck_csi", "clk-csi", 0, RCC_OCENSETR, 4, 0),
-+	GATE_MP1(CK_HSI, "ck_hsi", "clk-hsi-div", 0, RCC_OCENSETR, 0, 0),
- 	GATE(CK_LSI, "ck_lsi", "clk-lsi", 0, RCC_RDLSICR, 0, 0),
- 	GATE(CK_LSE, "ck_lse", "clk-lse", 0, RCC_BDCR, 0, 0),
- 
++This file implements defines like:
++#define LTDC_R	3072
 -- 
 1.9.1
