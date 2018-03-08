@@ -1,89 +1,47 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCHv2 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
-Date: Thu, 8 Mar 2018 09:32:44 -0600
-Message-ID: <CANk1AXQRsAyFOGnUGcdWa0g0SdWu1PD=osYazj3nXJVq8ErABQ@mail.gmail.com>
-References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
- <1519949975-13548-5-git-send-email-richard.gong@linux.intel.com>
- <20180307194745.657ewa6rtcta6eqm@rob-hp-laptop> <CANk1AXS3gbLLy5fvyxcmeSBEaV2LZY9P=M3sOUHUceTgso5YkQ@mail.gmail.com>
- <CAL_JsqLNxsVaMoefYfLi7ow8BjLkipNJwjvXgpEuXZZF8PT6+A@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: imx: Add basic dts support for imx6sll
+ EVK board
+Date: Thu, 8 Mar 2018 12:35:52 -0300
+Message-ID: <CAOMZO5AgPAgUZfd3NWa5QvyF3DcmeB06pms16aZ34sk6894TWw@mail.gmail.com>
+References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
+ <1520503424-22985-2-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLNxsVaMoefYfLi7ow8BjLkipNJwjvXgpEuXZZF8PT6+A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Richard Gong <richard.gong@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Yves Vandervennet <yves.vandervennet@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1520503424-22985-2-git-send-email-ping.bai@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bai Ping <ping.bai@nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Jacky Bai <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 7:24 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Mar 7, 2018 at 4:20 PM, Alan Tull <atull@kernel.org> wrote:
->> On Wed, Mar 7, 2018 at 1:47 PM, Rob Herring <robh@kernel.org> wrote:
->>> On Thu, Mar 01, 2018 at 06:19:32PM -0600, richard.gong@linux.intel.com wrote:
->>>> From: Alan Tull <atull@kernel.org>
->>>>
->>>> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
->>>>
->>>> Signed-off-by: Alan Tull <atull@kernel.org>
->>>> ---
->>>> v2: this patch is added in patch set version 2
->>>> ---
->>>>  .../devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt  | 10 ++++++++++
->>>>  1 file changed, 10 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->>>> new file mode 100644
->>>> index 0000000..78de689
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->>>> @@ -0,0 +1,10 @@
->>>> +Intel Stratix10 SoC FPGA Manager
->>>> +
->>>> +Required properties:
->>>> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
->>>> +
->>>> +Example:
->>>> +
->>>> +     fpga_mgr: fpga-mgr@0 {
->>>> +             compatible = "intel,stratix10-soc-fpga-mgr";
->>>
->>> No reg or anything else? Is that because it all goes thru the service
->>> layer firmware?
->>
->> Yes.
->>
->> There will be a few more clients of the service layer: QSPI, Crypto
->> and warm reset.
->>
->>> Just get the service layer driver to instantiate a
->>> device for this driver or get rid of the 2 layers if that's all the
->>> firmware interface does. DT is not a Linux driver instantiation
->>> mechanism.
->>
->> Right, this should be describing hardware.
->>
->> I could add this to the service layer binding:
->>
->> firmware {
->>         svc {
->>                 compatible = "intel,stratix10-svc";
->>                 method = "smc";
->>                 memory-region = <&service_reserved>;
->>                 fpga-mgr {
+On Thu, Mar 8, 2018 at 7:03 AM, Bai Ping <ping.bai@nxp.com> wrote:
 
-Actually, add a label.
+> +&iomuxc {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>;
+> +
+> +       pinctrl_hog0: hog0grp {
+> +               pinmux = <
+> +                       MX6SLL_PAD_KEY_ROW7__GPIO4_IO07
+> +                       MX6SLL_PAD_GPIO4_IO22__GPIO4_IO22
+> +                       MX6SLL_PAD_KEY_COL3__GPIO3_IO30
+> +                       MX6SLL_PAD_KEY_COL4__GPIO4_IO00
+> +                       MX6SLL_PAD_KEY_COL5__GPIO4_IO02
+> +               >;
+> +               slew-rate = <0x1>;
+> +               drive-strength = <0x3>;
+> +               fsl,pin-speed = <0x1>;
+> +               bias-pull-up = <0x1>;
+> +               input-schmitt-enable;
+> +       };
 
-                  fpga_mgr: fpga-mgr {
-
->>                         compatible = "intel,stratix10-soc-fpga-mgr";
->
-> Still, why do you need this node? If you don't have any other cross
-> tree connections, then the service layer can instantiate the
-> device(s).
-
-It's used for the FPGA region to know what mgr can program the region.
-
->
-> OTOH, QSPI would need a node because you'll need to describe its bus.
->
-> Rob
+Please use the old style for pinctrl.
