@@ -1,158 +1,64 @@
-Return-Path: <SRS0=UmDz=GC=gmail.com=tossel@kernel.org>
-From: tossel@gmail.com
-Subject: [PATCHv2] arm: dts: zynq: Add support for Z-turn board
-Date: Mon, 12 Mar 2018 21:05:08 +0100
-Message-Id: <20180312200508.14084-1-tossel@gmail.com>
-In-Reply-To: <d61e039f-36c9-5da9-1471-d1bf83e0e578@xilinx.com>
-References: <d61e039f-36c9-5da9-1471-d1bf83e0e578@xilinx.com>
-To: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, michal.simek@xilinx.com, Anton Gerasimov <tossel@gmail.com>
+Return-Path: <SRS0=Ax0d=F6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-dm3nam03on0085.outbound.protection.outlook.com ([104.47.41.85]:3444
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S935242AbeCHGr4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 8 Mar 2018 01:47:56 -0500
+Subject: Re: [PATCH] arm: dts: zynq: Add support for Z-turn board
+References: <20180306213008.32448-1-tossel@gmail.com>
+ <d61e039f-36c9-5da9-1471-d1bf83e0e578@xilinx.com>
+ <9f4e1cb8-1416-58df-398c-d1d3f29c006e@gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Message-ID: <48fbed9d-9cd0-0419-c14c-64ad1a66c23b@xilinx.com>
+Date: Thu, 8 Mar 2018 07:47:42 +0100
+MIME-Version: 1.0
+In-Reply-To: <9f4e1cb8-1416-58df-398c-d1d3f29c006e@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Anton Gerasimov <tossel@gmail.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 List-ID: <devicetree@vger.kernel.org>
 
-From: Anton Gerasimov <tossel@gmail.com>
+On 7.3.2018 20:50, Anton Gerasimov wrote:
+> Hi Michal,
+> 
+> thank you for the detailed review. I'm fixing most of the issues, I've
+> just got one note and one question.
+> 
+>> Do you really wants to have 3 leds doing heartbeat?
+> 
+> Actually it is one RGB package. But it's controlled through programmable
+> logic, so I'll just remove it, my bad.
+> 
+>>> +        };
+>>> +
+>>> +        usr_led1 {
+>>> +            label = "usr_led1";
+>>> +            gpios = <&gpio0 0x0 0x1>;
+>>> +            default-state = "off";
+>>> +            linux,default-trigger = "none";
+>> This is not the part of binding and I think it is useless anyway.
+>>
+>>> +        };
+>>> +
+>>> +        usr_led2 {
+>>> +            label = "usr_led2";
+>>> +            gpios = <&gpio0 0x9 0x1>;
+>>> +            default-state = "off";
+>>> +            linux,default-trigger = "none";
+>> ditto
+> 
+> These two are on the contrary real LEDs that are controlled by hardware
+> GPIO. You mean they don't belong here because user can control them with
+> GPIO interface?
 
-Add a DTS for MYIR Z-turn board and the respective target in the
-Makefile.
+I really meant that linux,default-trigger = "none" shouldn't be there.
+user led description is fine.
+Also I just spot that you should use dashes instead of underscores in
+node name. It means usr-led2 here.
 
-Signed-off-by: Anton Gerasimov <tossel@gmail.com>
----
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/zynq-zturn.dts | 115 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-zturn.dts
+Thanks,
+Michal
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ade7a38543dc..4daa7d5d4db4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1067,6 +1067,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
- 	zynq-zc702.dtb \
- 	zynq-zc706.dtb \
- 	zynq-zed.dtb \
-+	zynq-zturn.dtb \
- 	zynq-zybo.dtb
- dtb-$(CONFIG_MACH_ARMADA_370) += \
- 	armada-370-db.dtb \
-diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
-new file mode 100644
-index 000000000000..713d91fc3917
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zturn.dts
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2015 Andrea Merello <adnrea.merello@gmail.com>
-+ *
-+ *  Based on zynq-zed.dts which is:
-+ *  Copyright (C) 2011 - 2014 Xilinx
-+ *  Copyright (C) 2012 National Instruments Corp.
-+ *
-+ */
-+
-+/dts-v1/;
-+/include/ "zynq-7000.dtsi"
-+
-+/ {
-+	model = "Zynq Z-Turn MYIR Board";
-+	compatible = "myir,zynq-zturn", "xlnx,zynq-7000";
-+
-+	aliases {
-+		ethernet0 = &gem0;
-+		serial0 = &uart1;
-+		serial1 = &uart0;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rootwait";
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		usr-led1 {
-+			label = "usr-led1";
-+			gpios = <&gpio0 0x0 0x1>;
-+			default-state = "off";
-+		};
-+
-+		usr-led2 {
-+			label = "usr-led2";
-+			gpios = <&gpio0 0x9 0x1>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		K1 {
-+			label = "K1";
-+			gpios = <&gpio0 0x32 0x1>;
-+			linux,code = <0x66>;
-+			gpio-key,wakeup;
-+			autorepeat;
-+		};
-+	};
-+};
-+
-+&clkc {
-+	ps-clk-frequency = <33333333>;
-+};
-+
-+&gem0 {
-+	status = "okay";
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethernet_phy>;
-+
-+	ethernet_phy: ethernet-phy@0 {
-+		reg = <0x0>;
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&can0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	stlm75@49 {
-+		status = "okay";
-+		compatible = "lm75";
-+		reg = <0x49>;
-+	};
-+
-+	accelerometer@53 {
-+		compatible = "adi,adxl345", "adxl345";
-+		reg = <0x53>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0x0 0x1e 0x4>;
-+	};
-+};
-+
--- 
-2.16.2
