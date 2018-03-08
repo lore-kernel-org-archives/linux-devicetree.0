@@ -1,56 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dmaengine: mv_xor_v2: Fix clock resource by adding a
- register clock
-Date: Wed, 7 Mar 2018 20:38:29 -0600
-Message-ID: <20180308023829.zullrqsara6epirv@rob-hp-laptop>
-References: <20180307154010.10430-1-gregory.clement@bootlin.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] kbuild: Handle builtin dtb files containing hyphens
+Date: Thu, 8 Mar 2018 17:41:21 +0900
+Message-ID: <CAK7LNARfTxxb0_RNEPvBzuEqP_g-cajZGpaGSuMJBUwDW66yww@mail.gmail.com>
+References: <20180307140633.26182-1-jhogan@kernel.org> <7ecea7ca-2931-16bc-a110-1ecdaf17f0f2@gmail.com>
+ <20180307202511.GT4197@saruman> <a6c448df-c026-dafe-6d34-801f69ca64fe@gmail.com>
+ <20180308070948.GA5187@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180307154010.10430-1-gregory.clement@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Hanna Hawa <hannah@marvell.com>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Shadi Ammouri <shadi@marvell.com>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, dmaengine@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180308070948.GA5187@saruman>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Linux-MIPS <linux-mips@linux-mips.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 04:40:10PM +0100, Gregory CLEMENT wrote:
-> On the CP110 components which are present on the Armada 7K/8K SoC we need
-> to explicitly enable the clock for the registers. However it is not
-> needed for the AP8xx component, that's why this clock is optional.
-> 
-> With this patch both clock have now a name, but in order to be backward
-> compatible, the name of the first clock is not used. It allows to still
-> use this clock with a device tree using the old binding.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
-> Changelog:
-> 
-> v1 -> v2
-> 
->  - Fix typos in the commit log
->  - Add more explanation in te commit log
->  - Only skip the reg clock usage if the clock is not presetn in the
->    device tree (-ENOENT)
->  - Add dt list in CC
-> 
-> v2 -> v3
-> 
->  - Fix the ENOENT test
-> 
->  .../devicetree/bindings/dma/mv-xor-v2.txt          |  6 +++++-
+2018-03-08 16:09 GMT+09:00 James Hogan <jhogan@kernel.org>:
+> On Wed, Mar 07, 2018 at 03:19:11PM -0800, Frank Rowand wrote:
+>> On 03/07/18 12:25, James Hogan wrote:
+>> > On Wed, Mar 07, 2018 at 12:11:41PM -0800, Frank Rowand wrote:
+>> >> On 03/07/18 06:06, James Hogan wrote:
+>> >>> Quite a lot of dts files have hyphens, but its only a problem on MIPS
+>> >>> where such files can be built into the kernel. For example when
+>> >>> CONFIG_DT_NETGEAR_CVG834G=y, or on BMIPS kernels when the dtbs target is
+>> >>> used (in the latter case it admitedly shouldn't really build all the
+>> >>> dtb.o files, but thats a separate issue).
+>
+>> > I'll keep the paragraph about MIPS and the example configuration though,
+>> > as I think its important information to reproduce the problem, and to
+>> > justify why it wouldn't be appropriate to just rename the files (which
+>> > was my first reaction).
+>>
+>> Other than the part that says "its only a problem on MIPS".  That is
+>> pedantically correct because no other architecture (that I am aware
+>> of, not that I searched) currently has a devicetree source file name
+>> with a hyphen in it, where that file is compiled into the kernel as
+>> an asm file.  But it is potentially a problem on any architecture
+>> to it is misleading to label it as MIPS only.
+>
+> Okay I'll reword to make it clearer and do a v2.
+>
+> Thanks
+> James
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 
->  drivers/dma/mv_xor_v2.c                            | 25 +++++++++++++++++-----
->  2 files changed, 25 insertions(+), 6 deletions(-)
+The code looks good.
+If you send v2, I can shortly apply it to the fixes branch.
+
+If possible, I want to send a PR this weekend.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
