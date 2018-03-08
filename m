@@ -1,24 +1,16 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Thu, 8 Mar 2018 01:02:38 +0100 (CET)
-Message-ID: <698451580.263856.1520467358497@email.1und1.de>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de>
- <87sh9bvh3r.fsf@anholt.net>
- <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
- <87muzjfr8l.fsf@anholt.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
+ of the HDMI node
+Date: Wed, 7 Mar 2018 20:41:00 -0600
+Message-ID: <20180308024100.lpfohlwz6dtghpvy@rob-hp-laptop>
+References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
+ <20180307171111.14551-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87muzjfr8l.fsf@anholt.net>
+Content-Disposition: inline
+In-Reply-To: <20180307171111.14551-1-s.nawrocki@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,108 +20,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, inki.dae@samsung.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGksCgo+IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IGhhdCBhbSA3LiBNw6RyeiAyMDE4
-IHVtIDIzOjM2IGdlc2NocmllYmVuOgo+IAo+IAo+IE1hcmNlbCBIb2x0bWFubiA8bWFyY2VsQGhv
-bHRtYW5uLm9yZz4gd3JpdGVzOgo+IAo+ID4gSGkgRXJpYywKPiA+Cj4gPj4+Pj4+Pj4+IEFkZCBC
-Q000MzQzOCAoYmx1ZXRvb3RoKSBhcyBhIHNlcmRldiBzbGF2ZSBkZXZpY2Ugb2YgdWFydDAgKHBs
-MDExL3R0eUFNQTApLgo+ID4+Pj4+Pj4+PiBUaGlzIGFsbG93cyB0byBhdXRvbWF0aWNhbGx5IGlu
-c2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+ID4+Pj4+Pj4+PiBzdWJzeXN0ZW0g
-aW5zdGVhZCBvZiByZWx5aW5nIG9uIHBhdGNoZWQgdXNlcnNwYWNlIGhlbHBlcnMgKGhjaWF0dGFj
-aCkuCj4gPj4+Pj4+Pj4+IAo+ID4+Pj4+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEgZGVidWcgVUFS
-VCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPiA+Pj4+Pj4+Pj4gCj4gPj4+Pj4+Pj4+IFNp
-Z25lZC1vZmYtYnk6IFN0ZWZhbiBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4gPj4+
-Pj4+Pj4+IC0tLQo+ID4+Pj4+Pj4+PiBhcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJv
-LXcuZHRzIHwgMTQgKysrKysrKysrKysrKy0KPiA+Pj4+Pj4+Pj4gMSBmaWxlIGNoYW5nZWQsIDEz
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+Pj4+Pj4+Pj4gCj4gPj4+Pj4+Pj4+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+ID4+Pj4+Pj4+PiBpbmRleCBj
-ZjUzNDM2Li5iN2Y3OWYxIDEwMDY0NAo+ID4+Pj4+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4gPj4+Pj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMKPiA+Pj4+Pj4+Pj4gQEAgLTEzMSw2ICsxMzEsMTgg
-QEAKPiA+Pj4+Pj4+Pj4gCj4gPj4+Pj4+Pj4+ICZ1YXJ0MCB7Cj4gPj4+Pj4+Pj4+IAlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOwo+ID4+Pj4+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3Bp
-bzE0PjsKPiA+Pj4+Pj4+Pj4gKwlwaW5jdHJsLTAgPSA8JnVhcnQwX2dwaW8zMiAmdWFydDBfY3Rz
-cnRzX2dwaW8zMD47Cj4gPj4+Pj4+Pj4+ICsJc3RhdHVzID0gIm9rYXkiOwo+ID4+Pj4+Pj4+PiAr
-Cj4gPj4+Pj4+Pj4+ICsJYmx1ZXRvb3RoIHsKPiA+Pj4+Pj4+Pj4gKwkJY29tcGF0aWJsZSA9ICJi
-cmNtLGJjbTQzNDM4LWJ0IjsKPiA+Pj4+Pj4+Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+
-ID4+Pj4+Pj4+PiArCQlzaHV0ZG93bi1ncGlvcyA9IDwmZ3BpbyA0NSBHUElPX0FDVElWRV9ISUdI
-PjsKPiA+Pj4+Pj4+Pj4gKwl9Owo+ID4+Pj4+Pj4+PiArfTsKPiA+Pj4+Pj4+PiAKPiA+Pj4+Pj4+
-PiBpcyB0aGUgc2h1dGRvd24gR1BJTyB3b3JraW5nIGFzIGV4cGVjdGVkIHdpdGggdGhpcyBoYXJk
-d2FyZS4gU28gZXZlbiBtb2R1bGUgdW5sb2FkIGFuZCByZWxvYWQgd29ya3MgZmluZT8KPiA+Pj4+
-Pj4+IAo+ID4+Pj4+Pj4gWWVzLCB1bmxvYWQgYW5kIHJlbG9hZCB3b3JrcyBmaW5lLiAKPiA+Pj4+
-Pj4+IAo+ID4+Pj4+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1MjAw
-IGRlZmF1bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+ID4+Pj4+Pj4gCj4gPj4+Pj4+PiBJIGFz
-c3VtZSB0aGF0LCBiZWNhdXNlIHJlbG9hZCB3b3JrcyBhcyBleHBlY3RlZC4gCj4gPj4+Pj4+IAo+
-ID4+Pj4+PiBhd2Vzb21lLiBUaGF0IGlzIGdvb2QgbmV3cy4KPiA+Pj4+Pj4gCj4gPj4+Pj4+IFNp
-bmNlIHlvdSBzYWlkIHRoYXQgdGhlIEdQSU8gZXhwYW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMg
-aGFzIGJlZW4gYWNjZXB0ZWQsIGRpZCB5b3UgdGVzdCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywg
-dGhlbiBpdCB3b3VsZCBiZSBnb29kIHRvIGdldCBhIHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBz
-aHV0ZG93bi1ncGlvcyBmb3IgUlBpIDMuCj4gPj4+Pj4gCj4gPj4+Pj4gYWZ0ZXIgYXBwbHlpbmcg
-TG9pYydzIHBhdGNoIGFuZCB0aGUgbmVjZXNzYXJ5IHBhdGNoIGZvciB0aGUgUlBpIDMgZHRzIGZp
-bGUgKHNlZSBiZWxvdyksIGkgd2lsbCBnZXQgdGhpcyBvdXRwdXQ6Cj4gPj4+Pj4gCj4gPj4+Pj4g
-WyAgICA0Ljg3MzI0Nl0gQmx1ZXRvb3RoOiBIQ0kgVUFSVCBkcml2ZXIgdmVyIDIuMwo+ID4+Pj4+
-IFsgICAgNC44NzMyNjBdIEJsdWV0b290aDogSENJIFVBUlQgcHJvdG9jb2wgSDQgcmVnaXN0ZXJl
-ZAo+ID4+Pj4+IFsgICAgNC44NzMyNjVdIEJsdWV0b290aDogSENJIFVBUlQgcHJvdG9jb2wgVGhy
-ZWUtd2lyZSAoSDUpIHJlZ2lzdGVyZWQKPiA+Pj4+PiBbICAgIDQuODczNzUxXSBCbHVldG9vdGg6
-IEhDSSBVQVJUIHByb3RvY29sIEJyb2FkY29tIHJlZ2lzdGVyZWQKPiA+Pj4+PiBbICAgIDQuODc3
-Mjc5XSB1YXJ0LXBsMDExIDNmMjAxMDAwLnNlcmlhbDogbm8gRE1BIHBsYXRmb3JtIGRhdGEKPiA+
-Pj4+PiBbICAgIDYuOTUyMzgyXSBCbHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHhmYzE4IHR4IHRp
-bWVvdXQKPiA+Pj4+PiBbICAgMTUuMTkyMjk4XSBCbHVldG9vdGg6IGhjaTA6IEJDTTogZmFpbGVk
-IHRvIHdyaXRlIHVwZGF0ZSBiYXVkcmF0ZSAoLTExMCkKPiA+Pj4+PiBbICAgMTUuMTkyMzEyXSBC
-bHVldG9vdGg6IGhjaTA6IEZhaWxlZCB0byBzZXQgYmF1ZHJhdGUKPiA+Pj4+PiBbICAgMTUuMzE2
-NDE1XSBCbHVldG9vdGg6IGhjaTA6IEJDTTogY2hpcCBpZCA5NAo+ID4+Pj4+IFsgICAxNS4zMTg1
-NjddIEJsdWV0b290aDogaGNpMDogQkNNOiBmZWF0dXJlcyAweDJlCj4gPj4+Pj4gWyAgIDE1LjM0
-MTUzOF0gQmx1ZXRvb3RoOiBoY2kwOiBCQ000MzQzMEExCj4gPj4+Pj4gWyAgIDE1LjM0MTU2MF0g
-Qmx1ZXRvb3RoOiBoY2kwOiBCQ000MzQzMEExICgwMDEuMDAyLjAwOSkgYnVpbGQgMDAwMAo+ID4+
-Pj4+IFsgICAxOS4xMTI2NzBdIEJsdWV0b290aDogaGNpMDogQkNNICgwMDEuMDAyLjAwOSkgYnVp
-bGQgMDM2MAo+ID4+Pj4+IFsgIDI3NC43MTM3MzJdIEJsdWV0b290aDogaGNpMDogY29tbWFuZCAw
-eDBjMTQgdHggdGltZW91dAo+ID4+Pj4+IFsgIDI3NC43MTQwODVdIEJsdWV0b290aDogaGNpMDog
-RnJhbWUgcmVhc3NlbWJseSBmYWlsZWQgKC04NCkKPiA+Pj4+PiBbICAzMTcuMjc1OTQxXSBCbHVl
-dG9vdGg6IGhjaTA6IGxhc3QgZXZlbnQgaXMgbm90IGNtZCBjb21wbGV0ZSAoMHgwZikKPiA+Pj4+
-PiAKPiA+Pj4+PiBJIGRvbid0IHNlZSB0aGVzZSBlcnJvcnMgb24gUlBpIFplcm8gVy4gTWF5YmUg
-dGhlIHJlYXNvbiBmb3IgdGhpcyBpcyB0aGUgbGFjayBvZiBoYXJkd2FyZSBmbG93Y29udHJvbCBv
-biBSUGkgMy4gT3Igc29tZSBvZiB0aGUgZG93bnN0cmVhbSBwYXRjaGVzIG9uIEJsdWVaIG11c3Qg
-YmUgYWRhcHRlZCBmb3IgdGhlIGtlcm5lbCBbMV0uCj4gPj4+Pj4gCj4gPj4+Pj4gQnR3IHRoZSBi
-Y200MzQzOCBpcyBkZXRlY3RlZCBldmVuIGFmdGVyIHVubG9hZGluZyBhbmQgcmVsb2FkaW5nIHRo
-ZSBkcml2ZXIuIEJ1dCB0aGUgdGltZW91dCBvY2N1cnMgYWxzbyBvbiBkcml2ZXIgcmVsb2FkLiBS
-ZWR1Y2luZyB0aGUgYmF1ZHJhdGUgdG8gMTE1MjAwIGRvZXNuJ3QgaGVscCBoZXJlLgo+ID4+Pj4g
-Cj4gPj4+PiBtYXliZSBpdCBuZWVkcyBzb21lIHRpbWUgYWZ0ZXIgc3dpdGNoaW5nIHRoZSBoYXJk
-d2FyZSBvbi4gSGF2ZSB5b3UgdHJpZWQgdG8gc2xlZXAgZm9yIGEgYml0IGF0IHRoZSBlbmQgb2Yg
-YmNtX2dwaW9fc2V0X3Bvd2VyPwo+ID4+PiAKPiA+Pj4gSSB3aWxsIHRyeSwgYnV0IHRoaXMgY291
-bGQgYWxzbyBiZSBhbiAiaXNzdWUiIG9mIHRoZSBncGlvIGV4cGFuZGVyCj4gPj4+IGRyaXZlci4g
-QUZBSUsgdGhlIGV4cGFuZGVyIGlzIGNvbm5lY3RlZCB2aWEgSTJDIHRvIHRoZSBHUFUuIEluIGNh
-c2UKPiA+Pj4gdGhlIG1haWxib3ggcmVwbHkgY29tZSBiZWZvcmUgdGhlIEkyQyBjb21tYW5kIGhh
-cyBiZWVuIGhhbmRsZWQgYnkgdGhlCj4gPj4+IEdQSU8gZXhwYW5kZXIsIHdlIGFyZSBydW5uaW5n
-IG91dCBvZiBzeW5jLgo+ID4+IAo+ID4+IFRoZSBtYWlsYm94IGNvbW1hbmQgZm9yIHNldHRpbmcg
-R1BJTyBzdGF0ZSBpcyBzeW5jaHJvbm91cyBpbiB0ZXJtcyBvZgo+ID4+IHNlbmRpbmcgdGhlIGky
-YyBjb21tYW5kIHRvIHRoZSBHUElPIGV4cGFuZGVyIEhXLgo+ID4KPiA+IGRvZXMgdGhhdCBtZWFu
-IHRoZSBkcml2ZXIgZG9lcyB0aGlzIGNvcnJlY3RseSBhbmQgcmVhbGx5IHdhaXRzIGZvciB0aGUK
-PiA+IGNvbXBsZXRpb24uIE9yIGRvZXMgdGhlIEdQSU8gZXhwYW5kZXIgbWlnaHQgcmV0dXJuIHRv
-IHF1aWNrbHkgYW5kCj4gPiByZXR1cm5zIGEgZmFsc2Ugc2Vuc2Ugb2YgR1BJTyBzdGF0ZS4gSSB0
-aGluayBpdCB3b3VsZCBiZSBnb29kIGEgc2xlZXAKPiA+IG9mIDUwbXMgYWZ0ZXIgdGhlIEdQSU8g
-bWFrZXMgYSBkaWZmZXJlbmNlLiBNYXliZSB0aGUgR1BJTyBleHBhbmRlcgo+ID4gZHJpdmVyIG5l
-ZWRzIHRvIHRha2UgdGhpcyBpbnRvIGFjY291bnQuCj4gCj4gSXQgc2VlbXMgdW5saWtlbHkgdGhh
-dCB5b3UgY2FuIGdldCB0byBJMkMgc3RvcCBiZWZvcmUgdGhlIEdQSU8gZXhwYW5kZXIKPiBIVyBo
-YXMgY2hhbmdlZCB0aGUgc3RhdGUgb2YgdGhlIG91dHB1dC4KPiAKPiA+IFJlYWxpdHkgaXMgdGhh
-dCBvbmNlIHRoZSBCbHVldG9vdGggZHJpdmVyIHRvZ2dsZWQgdGhlIEdQSU8sIGl0IGdvZXMKPiA+
-IG9udG8gaW5pdGlhbGl6aW5nIHRoZSBjaGlwLiBPbmUgb3RoZXIgcmVhc29uIG1pZ2h0IGJlIHRo
-YXQgbm8gZGV2aWNlCj4gPiB3YWtldXAgR1BJTyBpcyB3aXJlZCBoZXJlLCB0aGF0IHRoZSBjaGlw
-IGFjdHVhbGx5IG5lZWRzIHNvbWUgdGltZQo+ID4gYmVmb3JlIGl0IGlzIGFsbCBnb29kIHRvIGdv
-Lgo+IAo+IFRoaXMgc2VlbXMgbXVjaCBtb3JlIGxpa2VseSB0byBtZS4gIFRoZSBzcGVjIGZvciBi
-Y200MzQzOCBpcyBlYXNpbHkKPiBnb29nbGVhYmxlIGFuZCBoYXMgYSBwb3dlci1vbiB0aW1pbmcg
-ZGlhZ3JhbS4KCmFmdGVyIGFwcGx5aW5nIHRoaXMgcGF0Y2ggWzFdIHRoZSBSUGkgMyBzcGVjaWZp
-YyBwcm9iaW5nIGVycm9ycyBkaXNhcHBlYXIuCgpCdXQgdGhpcyBpcyBvbmx5IGEgcXVpY2sgaGFj
-ay4gVGhlIHByb3BlciBzb2x1dGlvbiB3b3VsZCBiZSB0byBleHRlbmQgaGNpX2g1IGluIG9yZGVy
-IHRvIHN1cHBvcnQgdGhlIEJDTTQzNDM4LgoKWzFdIC0gaHR0cHM6Ly9naXRodWIuY29tL2xhdGVn
-b29kYnllL3JwaS16ZXJvL2NvbW1pdC9lZDU5MDAyOTZkZmI3YWVjN2Y0Njc0Nzc0NDA3NTFlNzM2
-N2ExODgxCgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Mar 07, 2018 at 06:11:11PM +0100, Sylwester Nawrocki wrote:
+> The #sound-dai-cells DT property is required to describe link between
+> the HDMI IP block and the SoC's audio subsystem.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/display/exynos/exynos_hdmi.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
