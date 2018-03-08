@@ -1,31 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: Document the Synopsys DW AXI DMA
- bindings
-Date: Wed, 7 Mar 2018 19:56:36 -0600
-Message-ID: <20180308015636.vqn5t6syuo7kae4r@rob-hp-laptop>
-References: <20180306114615.8895-1-Eugeniy.Paltsev@synopsys.com>
- <20180306114615.8895-3-Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH 3/6] ASoC: max98095: Add #sound-dai-cells
+ property documentation
+Date: Wed, 7 Mar 2018 20:39:09 -0600
+Message-ID: <20180308023909.yxcogcxwxkao5cc4@rob-hp-laptop>
+References: <CGME20180307170216epcas1p353aa2716b06b350231332681fff0c92c@epcas1p3.samsung.com>
+ <20180307170203.13998-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180306114615.8895-3-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: dmaengine@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+In-Reply-To: <20180307170203.13998-1-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, lgirdwood@gmail.com, broonie@kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 06, 2018 at 02:46:15PM +0300, Eugeniy Paltsev wrote:
-> This patch adds documentation of device tree bindings for the Synopsys
-> DesignWare AXI DMA controller.
+On Wed, Mar 07, 2018 at 06:02:03PM +0100, Sylwester Nawrocki wrote:
+> MAX98095 CODEC supports 3 input DAIs, adding the #sound-dai-cells property
+> allows to reference selected DAI in DT.
 > 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
-> Changes v2->v3:
->  * None.
-> 
->  .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+>  Documentation/devicetree/bindings/sound/max98095.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
