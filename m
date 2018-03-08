@@ -1,66 +1,96 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
-Date: Thu, 8 Mar 2018 13:14:38 -0700
-Message-ID: <20180308201438.GA10589@jcrouse-lnx.qualcomm.com>
-References: <20180302215638.6145-1-jcrouse@codeaurora.org>
- <20180302215638.6145-3-jcrouse@codeaurora.org>
- <20180305044221.GC23018@vireshk-i7>
- <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
- <20180306042656.GJ23018@vireshk-i7>
- <20180306153757.GD15200@jcrouse-lnx.qualcomm.com>
- <20180307050624.GR23018@vireshk-i7>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 3/6] dt-bindings: soc: Add a binding for the Broadcom VCHIQ services.
+Date: Thu, 08 Mar 2018 12:15:45 -0800
+Message-ID: <87lgf2fhn2.fsf@anholt.net>
+References: <20180307185716.17449-1-eric@anholt.net> <20180307185716.17449-3-eric@anholt.net> <CAL_Jsq+1-9-RGfzPimYwCokEZx1vef_PX5rkp-c8s6fUchg=ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180307050624.GR23018@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+1-9-RGfzPimYwCokEZx1vef_PX5rkp-c8s6fUchg=ag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMDcsIDIwMTggYXQgMTA6MzY6MjRBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
-b3RlOgo+IE9uIDA2LTAzLTE4LCAwODozNywgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEknbGwg
-dHJ5IHRvIGV4cGxhaW4gYnV0IEkgbWlnaHQgbmVlZCBTdGVwaGVuIG9yIHNvbWUgb2YgdGhlIG90
-aGVyIGZvbGtzIHRvIGp1bXAKPiA+IGluIGFuZCBzYXZlIG1lLgo+IAo+IE1heWJlIHlvdSBzaG91
-bGQgc3RhcnQgdXNpbmcgaGlzIGtlcm5lbC5vcmcgYWRkcmVzcyB0aGVuID8gOikKPiAKPiA+IE9u
-IHNkbTg0NSB0aGVyZSBhcmUgc2hhcmVkIHBvd2VyIHJlc291cmNlcyBjb250cm9sbGVkIGJ5IHRo
-ZSBSUE1oIHdoaWNoIGlzCj4gPiBwcm9ncmFtZWQgYnkgYSBzZXJpZXMgb2YgY29tbWFuZHMgZnJv
-bSB0aGUgcmVndWxhdG9yIGRyaXZlcjsgYnV0IGluIHRoZSBjYXNlCj4gPiBvZiB0aGUgR1BVIHRo
-ZSB2b3RlcyBhcmUgcGFzc2VkIHRvIHRoZSBHTVUgKGdyYXBoaWNzIG1hbmFnZW1lbnQgdW5pdCkg
-d2hpY2gKPiA+IGNvbW11bmljYXRlcyB3aXRoIHRoZSBSUE1oIG9uIGJlaGFsZiBvZiB0aGUgR1BV
-Lgo+ID4gCj4gPiBJbiBvcmRlciB0byBjb25zdHJ1Y3QgdGhlIFJQTWggdm90ZSB3ZSBuZWVkIGZp
-cnN0IG5lZWQgYSB2b2x0YWdlIGxldmVsIHRoYXQgd2UKPiA+IGNhbiBsb29rIHVwIGluIGEgZGF0
-YWJhc2UuIHFjb20sYXJjLWxldmVsIGlzIHRoZSB2b2x0YWdlIGxldmVsIGFzc29jaWF0ZWQgd2l0
-aAo+ID4gYSBzcGVjaWZpYyBPUFAuCj4gPiAKPiA+IEkgaGFkIHByZXZpb3VzbHkgYmVlbiBhYnVz
-aW5nIHRoaXMgd2l0aCBvcHAtbWljcm92b2x0IGJ1dCB0aGF0IHdhcyB3cm9uZyBmb3IKPiA+IG9i
-dmlvdXMgcmVhc29ucyBhbmQgdGhlbiBTdGVwaGVuIHBvaW50ZWQgb3V0IHRoYXQgdGhpcyB3b3Vs
-ZCBiZSBhIGJldHRlciB3YXkuCj4gCj4gR2xhZCB0aGF0IHlvdSBzaGFyZWQgdGhhdCA6KQo+IAo+
-IEEgc29sdXRpb24gaXMgYWxyZWFkeSBpbiBwcm9ncmVzcyBmb3IgdGhhdCBhbmQgaXMgcGFydGlh
-bGx5IG1lcmdlZCBhcwo+IHdlbGwuCj4gCj4gTG9vayBmb3IgInBlcmZvcm1hbmNlX3N0YXRlIiBp
-biBnZW5wZCBhbmQgT1BQIGNvcmVzIChhbHJlYWR5IG1lcmdlZCksCj4gZm9sbG93ZWQgYnkgdGhp
-cyBzZXJpZXMgaGVyZToKPiAKPiBodHRwczovL2xrbWwua2VybmVsLm9yZy9yL2NvdmVyLjE1MTM5
-MjYwMzMuZ2l0LnZpcmVzaC5rdW1hckBsaW5hcm8ub3JnCgpJdCBzZWVtcyB0byBtZSB0aGF0IHBl
-cmZvcm1hbmNlX3N0YXRlIGhhcyBhIGRpcmVjdCByZWxhdGlvbnNoaXAgd2l0aCBnZW5wZAp3aGlj
-aCBpcyBnb29kIGZvciBDUFUgdm90ZXMgYnV0IGluIHRoaXMgY2FzZSwgd2UncmUganVzdCBwYXNz
-aW5nIGFsb25nIHJhdyBkYXRhCnRvIGFuIGluZGVwZW5kZW50IG1pY3JvY29udHJvbGxlci4gVGhl
-ICdxY29tLGFyYy1sZXZlbCcgaXMgdXNlZCB0byBjb25zdHJ1Y3QKdGhlIGFjdHVhbCB2YWx1ZXMg
-dGhhdCB0aGUgR01VIHdpbGwgcHJvZ3JhbSBpbnRvIHRoZSBSUE1oLiBTaW5jZSB0aGVzZSBhcmUK
-aW5mb3JtYXRpb25hbCAoZnJvbSB0aGUgQ1BVIHBlcnNwZWN0aXZlKSByYXRoZXIgdGhhbiBmdW5j
-dGlvbmFsIEkgZmVlbCBsaWtlCnRoYXQgdXNpbmcgcGVyZm9ybWFuY2Vfc3RhdGUgZm9yIHRoaXMg
-d291bGQgYmUgYXMgaGFja3kgYXMgdXNpbmcgb3BwLW1pY3Jvdm9sdApvciBzb21ldGhpbmcgZWxz
-ZS4KCkpvcmRhbgoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9y
-YXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
-bm8K
+--=-=-=
+Content-Type: text/plain
+
+Rob Herring <robh+dt@kernel.org> writes:
+
+> On Wed, Mar 7, 2018 at 12:57 PM, Eric Anholt <eric@anholt.net> wrote:
+>> The VCHIQ communication channel can be provided by BCM283x and Capri
+>> SoCs, to communicate with the VPU-side OS services.
+>>
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> ---
+>>
+>> v2: dropped firmware property, added cache-line-size.
+>>
+>>  .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>> new file mode 100644
+>> index 000000000000..cdef4abc5e47
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>> @@ -0,0 +1,28 @@
+>> +Broadcom VCHIQ firmware services
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:  Should be "brcm,bcm2835-vchiq"
+>> +- reg:         Physical base address and length of the doorbell register pair
+>> +- interrupts:  The interrupt number
+>> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+>> +
+>> +Optional properties:
+>> +
+>> +- cache-line-size:
+>> +               Size of L2 cache lines.  The VPU firmware detects
+>> +                 this property and overrides it with the actual L2
+>> +                 cache line size it's using when loading the
+>> +                 device-tree.  Determines the required alignment of
+>> +                 offsets/sizes of VCHIQ pagelists.  If missing, the
+>> +                 firmware assumes an older kernel using 32-byte
+>> +                 alignment.
+>
+> How is this a VCHIQ property? This is a standard property for cache
+> nodes, but this is not a cache node.
+
+Because the existing firmware code is choosing a value based on the
+property's presence in this node.  This is the DT ABI for the firmware
+that's been shipping for a long time (at least since the 4.9 era).
+
+> Is it really a problem to just use a fixed maximum alignment? That
+> seems to be good enough for all the rest of the kernel.
+
+If we can't have this DT property, then it looks like we need the
+upstream kernel to just use 32, since that's what the firmware will
+assume in its absence.  Maybe the firmware maintainers can give us a new
+arg to the mailbox call for setup where we could pass in the value to
+use (or flag for them to pass their preferred value back to us) so we
+can avoid DT.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqhmfEACgkQtdYpNtH8
+nujgDg//WUpAZuKEvrf/LC3Q/PJvpwU9xsPLOcgNFi8MTG81AFoG+BDc9TXVccZY
+tpUe8WQufeLJqj8DI5DNPt355vOSvr6lCdU5H4RWv6mhA82uAO1TfULpO6DcV1Pi
+8R2IEBqgQPIFdIOBvbggSHr5gvzAOT57ICwRDu802B9lY2Eor4prvpdjINYjMJS0
+a1MQiQM/jtBguU68GQ3OL9EbMar8hhTX+IEUudJ9v8UAw7OQH8RdK1rC2TbY2sOs
+6kEOOrXxJsfRU5czrBKEksgKj3U4+CjZnpx172rtIBbXmT1Q+V51j92RLteNwNZ5
+mF1v2he0DggCgsco9VMwiS5szs5edsWWs+9GoV7qFWfBBcmFDJNZsi2HYrJTyeLA
+VnTmByFC37jf/561Q6rnYcG6CXe4tJxgsz/cVqiIGif6ah+E0dI9PFFKdBE25k++
+CBrQvrM0Qrh6XPHcgEMonUFichkys3eTb0hmUmtSOe8JwDCyqccoSnQpR2XAhEzw
+zFCF2c8N8lymoh2EOdzV/T4w/hTgBLFuwqiBInWJl4XAm/YT2++XGpZJ+Dpv8jov
+BaL7fII7pSWcRPWuhHWjPLtagHUQl/vlsH8FXnDT9mJy/tNxidBxefwWEGdZR963
+eLERHSxsxyk6pdcOYIsqVRIW9zd2PUdZ8L7FPPunylqY/bpYiLw=
+=7AfP
+-----END PGP SIGNATURE-----
+--=-=-=--
