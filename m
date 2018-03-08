@@ -1,42 +1,68 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 00/17] Rockchip ISP1 Driver
-Date: Thu, 8 Mar 2018 19:29:21 +0900
-Message-ID: <CAAFQd5D1FMm4FTugstxk_6bE-QbLeNsMZM6EaVVfN_mu8_RQUA@mail.gmail.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: Use proper DT compatible string for
+ Hardkernel Odroid boards
+Date: Thu, 8 Mar 2018 10:40:54 +0000
+Message-ID: <20180308104054.GA6019@sirena.org.uk>
+References: <CGME20180307174638epcas2p33f071928807ccaa40ad07922c15be31c@epcas2p3.samsung.com>
+ <20180307174625.16597-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180308094807.9443-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6867409056689916381=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180307174625.16597-1-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 8, 2018 at 6:47 PM, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org> wrote:
-> From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> changes in V6:
->   - add mipi txrx phy support
->   - remove bool and enum from uapi header
->   - add buf_prepare op
->   - correct some spelling problems
->   - return all queued buffers when starting stream failed
 
-Thanks Jacob.
+--===============6867409056689916381==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
 
-For anyone planning to review, especially Hans, who pointed it out in
-previous version, g_mbus_config is still there and we're working on
-replacing it with something less controversial.
 
-Best regards,
-Tomasz
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Mar 07, 2018 at 06:46:25PM +0100, Sylwester Nawrocki wrote:
+> The Odroid boards are manufactured by Hardkernel, not Samsung. New compatible
+> string entries are added, with "hardkernel," instead of "samsung," vendor
+> prefix. Support for the old compatible strings is going to be removed after
+> some time.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqhEzIACgkQJNaLcl1U
+h9Bgsgf/V8hGKfUtgONhXn77+UYhFKqAk3/zFF5mJcsU/RV5vsC1A2joXqp9NhRn
+GpsInXIkiIKhXh2nKF7IR7VoWPV74mqiC8g7q2E4iWS9uAKMT0umhhHDSq/H74LY
+8xzQdZktIXu+kvdupO2xkKWN95NThGzZQimI6nrNpG1dLlPtH6LojjdRnWWtLnlU
+azcwW7mJyMI0/abvy7b2n4rSLn1U+xb34lEygxEaTiKJlL7Ad6ZZoQw+358Jl9OC
+k4uejlKqOsbGPoPDbkur9TijUsmCPmHLAY4+23EJQ+QvWq2Jk6m6KsrTfMlh4x7x
+A71CitI7AqZ3Pl6CNYdDgaQ0Be3Fww==
+=v7wv
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
+
+--===============6867409056689916381==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6867409056689916381==--
