@@ -1,24 +1,17 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Thu, 8 Mar 2018 11:41:44 +0100
-Message-ID: <43B700F7-1174-4CE8-B831-D8897A5E1DD5@holtmann.org>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de> <87sh9bvh3r.fsf@anholt.net>
- <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
- <87muzjfr8l.fsf@anholt.net> <698451580.263856.1520467358497@email.1und1.de>
- <CAMZdPi9mTVFOc_MSg_9btM8h3vaynv247jMWPne+jCV1MMYjcA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 11/12] dt-bindings: thermal: remove no longer needed
+ samsung thermal properties
+Date: Wed, 7 Mar 2018 20:00:38 -0600
+Message-ID: <20180308020038.3yhihjqa5m4pugjx@rob-hp-laptop>
+References: <1520347435-22970-1-git-send-email-b.zolnierkie@samsung.com>
+ <CGME20180306144516epcas1p3e951e15e666779c870ad091d65041409@epcas1p3.samsung.com>
+ <1520347435-22970-12-git-send-email-b.zolnierkie@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMZdPi9mTVFOc_MSg_9btM8h3vaynv247jMWPne+jCV1MMYjcA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1520347435-22970-12-git-send-email-b.zolnierkie@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,113 +21,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loic Poulain <loic.poulain@linaro.org>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, devicetree <devicetree@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9pYywKCj4+Pj4+Pj4+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJk
-ZXYgc2xhdmUgZGV2aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPj4+Pj4+Pj4+Pj4+IFRo
-aXMgYWxsb3dzIHRvIGF1dG9tYXRpY2FsbHkgaW5zZXJ0IHRoZSBiY200MzQzOCB0byB0aGUgYmx1
-ZXRvb3RoCj4+Pj4+Pj4+Pj4+PiBzdWJzeXN0ZW0gaW5zdGVhZCBvZiByZWx5aW5nIG9uIHBhdGNo
-ZWQgdXNlcnNwYWNlIGhlbHBlcnMgKGhjaWF0dGFjaCkuCj4+Pj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+
-Pj4+IEluIG9yZGVyIHRvIGtlZXAgYSBkZWJ1ZyBVQVJUIHdlIG5lZWQgdG8gc3dpdGNoIHRvIHVh
-cnQxLgo+Pj4+Pj4+Pj4+Pj4gCj4+Pj4+Pj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gV2Fo
-cmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+Pj4+Pj4+Pj4+Pj4gLS0tCj4+Pj4+Pj4+Pj4+
-PiBhcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzIHwgMTQgKysrKysrKysr
-KysrKy0KPj4+Pj4+Pj4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pCj4+Pj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-MjgzNS1ycGktemVyby13LmR0cwo+Pj4+Pj4+Pj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAx
-MDA2NDQKPj4+Pj4+Pj4+Pj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXpl
-cm8tdy5kdHMKPj4+Pj4+Pj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBp
-LXplcm8tdy5kdHMKPj4+Pj4+Pj4+Pj4+IEBAIC0xMzEsNiArMTMxLDE4IEBACj4+Pj4+Pj4+Pj4+
-PiAKPj4+Pj4+Pj4+Pj4+ICZ1YXJ0MCB7Cj4+Pj4+Pj4+Pj4+PiAgICBwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwo+Pj4+Pj4+Pj4+Pj4gLSAgIHBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzE0PjsK
-Pj4+Pj4+Pj4+Pj4+ICsgICBwaW5jdHJsLTAgPSA8JnVhcnQwX2dwaW8zMiAmdWFydDBfY3RzcnRz
-X2dwaW8zMD47Cj4+Pj4+Pj4+Pj4+PiArICAgc3RhdHVzID0gIm9rYXkiOwo+Pj4+Pj4+Pj4+Pj4g
-Kwo+Pj4+Pj4+Pj4+Pj4gKyAgIGJsdWV0b290aCB7Cj4+Pj4+Pj4+Pj4+PiArICAgICAgICAgICBj
-b21wYXRpYmxlID0gImJyY20sYmNtNDM0MzgtYnQiOwo+Pj4+Pj4+Pj4+Pj4gKyAgICAgICAgICAg
-bWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+Pj4+Pj4+Pj4+Pj4gKyAgICAgICAgICAgc2h1dGRvd24t
-Z3Bpb3MgPSA8JmdwaW8gNDUgR1BJT19BQ1RJVkVfSElHSD47Cj4+Pj4+Pj4+Pj4+PiArICAgfTsK
-Pj4+Pj4+Pj4+Pj4+ICt9Owo+Pj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+Pj4gaXMgdGhlIHNodXRkb3du
-IEdQSU8gd29ya2luZyBhcyBleHBlY3RlZCB3aXRoIHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9k
-dWxlIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmU/Cj4+Pj4+Pj4+Pj4gCj4+Pj4+Pj4+Pj4g
-WWVzLCB1bmxvYWQgYW5kIHJlbG9hZCB3b3JrcyBmaW5lLgo+Pj4+Pj4+Pj4+IAo+Pj4+Pj4+Pj4+
-PiBNZWFuaW5nIHdlIGFyZSBnZXR0aW5nIGJhY2sgdG8gdGhlIDExNTIwMCBkZWZhdWx0IGJhdWQg
-cmF0ZSBvbiB0aGUgVUFSVD8KPj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+PiBJIGFzc3VtZSB0aGF0LCBi
-ZWNhdXNlIHJlbG9hZCB3b3JrcyBhcyBleHBlY3RlZC4KPj4+Pj4+Pj4+IAo+Pj4+Pj4+Pj4gYXdl
-c29tZS4gVGhhdCBpcyBnb29kIG5ld3MuCj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+IFNpbmNlIHlvdSBz
-YWlkIHRoYXQgdGhlIEdQSU8gZXhwYW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4g
-YWNjZXB0ZWQsIGRpZCB5b3UgdGVzdCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3
-b3VsZCBiZSBnb29kIHRvIGdldCBhIHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1n
-cGlvcyBmb3IgUlBpIDMuCj4+Pj4+Pj4+IAo+Pj4+Pj4+PiBhZnRlciBhcHBseWluZyBMb2ljJ3Mg
-cGF0Y2ggYW5kIHRoZSBuZWNlc3NhcnkgcGF0Y2ggZm9yIHRoZSBSUGkgMyBkdHMgZmlsZSAoc2Vl
-IGJlbG93KSwgaSB3aWxsIGdldCB0aGlzIG91dHB1dDoKPj4+Pj4+Pj4gCj4+Pj4+Pj4+IFsgICAg
-NC44NzMyNDZdIEJsdWV0b290aDogSENJIFVBUlQgZHJpdmVyIHZlciAyLjMKPj4+Pj4+Pj4gWyAg
-ICA0Ljg3MzI2MF0gQmx1ZXRvb3RoOiBIQ0kgVUFSVCBwcm90b2NvbCBINCByZWdpc3RlcmVkCj4+
-Pj4+Pj4+IFsgICAgNC44NzMyNjVdIEJsdWV0b290aDogSENJIFVBUlQgcHJvdG9jb2wgVGhyZWUt
-d2lyZSAoSDUpIHJlZ2lzdGVyZWQKPj4+Pj4+Pj4gWyAgICA0Ljg3Mzc1MV0gQmx1ZXRvb3RoOiBI
-Q0kgVUFSVCBwcm90b2NvbCBCcm9hZGNvbSByZWdpc3RlcmVkCj4+Pj4+Pj4+IFsgICAgNC44Nzcy
-NzldIHVhcnQtcGwwMTEgM2YyMDEwMDAuc2VyaWFsOiBubyBETUEgcGxhdGZvcm0gZGF0YQo+Pj4+
-Pj4+PiBbICAgIDYuOTUyMzgyXSBCbHVldG9vdGg6IGhjaTA6IGNvbW1hbmQgMHhmYzE4IHR4IHRp
-bWVvdXQKPj4+Pj4+Pj4gWyAgIDE1LjE5MjI5OF0gQmx1ZXRvb3RoOiBoY2kwOiBCQ006IGZhaWxl
-ZCB0byB3cml0ZSB1cGRhdGUgYmF1ZHJhdGUgKC0xMTApCj4+Pj4+Pj4+IFsgICAxNS4xOTIzMTJd
-IEJsdWV0b290aDogaGNpMDogRmFpbGVkIHRvIHNldCBiYXVkcmF0ZQo+Pj4+Pj4+PiBbICAgMTUu
-MzE2NDE1XSBCbHVldG9vdGg6IGhjaTA6IEJDTTogY2hpcCBpZCA5NAo+Pj4+Pj4+PiBbICAgMTUu
-MzE4NTY3XSBCbHVldG9vdGg6IGhjaTA6IEJDTTogZmVhdHVyZXMgMHgyZQo+Pj4+Pj4+PiBbICAg
-MTUuMzQxNTM4XSBCbHVldG9vdGg6IGhjaTA6IEJDTTQzNDMwQTEKPj4+Pj4+Pj4gWyAgIDE1LjM0
-MTU2MF0gQmx1ZXRvb3RoOiBoY2kwOiBCQ000MzQzMEExICgwMDEuMDAyLjAwOSkgYnVpbGQgMDAw
-MAo+Pj4+Pj4+PiBbICAgMTkuMTEyNjcwXSBCbHVldG9vdGg6IGhjaTA6IEJDTSAoMDAxLjAwMi4w
-MDkpIGJ1aWxkIDAzNjAKPj4+Pj4+Pj4gWyAgMjc0LjcxMzczMl0gQmx1ZXRvb3RoOiBoY2kwOiBj
-b21tYW5kIDB4MGMxNCB0eCB0aW1lb3V0Cj4+Pj4+Pj4+IFsgIDI3NC43MTQwODVdIEJsdWV0b290
-aDogaGNpMDogRnJhbWUgcmVhc3NlbWJseSBmYWlsZWQgKC04NCkKPj4+Pj4+Pj4gWyAgMzE3LjI3
-NTk0MV0gQmx1ZXRvb3RoOiBoY2kwOiBsYXN0IGV2ZW50IGlzIG5vdCBjbWQgY29tcGxldGUgKDB4
-MGYpCj4+Pj4+Pj4+IAo+Pj4+Pj4+PiBJIGRvbid0IHNlZSB0aGVzZSBlcnJvcnMgb24gUlBpIFpl
-cm8gVy4gTWF5YmUgdGhlIHJlYXNvbiBmb3IgdGhpcyBpcyB0aGUgbGFjayBvZiBoYXJkd2FyZSBm
-bG93Y29udHJvbCBvbiBSUGkgMy4gT3Igc29tZSBvZiB0aGUgZG93bnN0cmVhbSBwYXRjaGVzIG9u
-IEJsdWVaIG11c3QgYmUgYWRhcHRlZCBmb3IgdGhlIGtlcm5lbCBbMV0uCj4+Pj4+Pj4+IAo+Pj4+
-Pj4+PiBCdHcgdGhlIGJjbTQzNDM4IGlzIGRldGVjdGVkIGV2ZW4gYWZ0ZXIgdW5sb2FkaW5nIGFu
-ZCByZWxvYWRpbmcgdGhlIGRyaXZlci4gQnV0IHRoZSB0aW1lb3V0IG9jY3VycyBhbHNvIG9uIGRy
-aXZlciByZWxvYWQuIFJlZHVjaW5nIHRoZSBiYXVkcmF0ZSB0byAxMTUyMDAgZG9lc24ndCBoZWxw
-IGhlcmUuCj4+Pj4+Pj4gCj4+Pj4+Pj4gbWF5YmUgaXQgbmVlZHMgc29tZSB0aW1lIGFmdGVyIHN3
-aXRjaGluZyB0aGUgaGFyZHdhcmUgb24uIEhhdmUgeW91IHRyaWVkIHRvIHNsZWVwIGZvciBhIGJp
-dCBhdCB0aGUgZW5kIG9mIGJjbV9ncGlvX3NldF9wb3dlcj8KPj4+Pj4+IAo+Pj4+Pj4gSSB3aWxs
-IHRyeSwgYnV0IHRoaXMgY291bGQgYWxzbyBiZSBhbiAiaXNzdWUiIG9mIHRoZSBncGlvIGV4cGFu
-ZGVyCj4+Pj4+PiBkcml2ZXIuIEFGQUlLIHRoZSBleHBhbmRlciBpcyBjb25uZWN0ZWQgdmlhIEky
-QyB0byB0aGUgR1BVLiBJbiBjYXNlCj4+Pj4+PiB0aGUgbWFpbGJveCByZXBseSBjb21lIGJlZm9y
-ZSB0aGUgSTJDIGNvbW1hbmQgaGFzIGJlZW4gaGFuZGxlZCBieSB0aGUKPj4+Pj4+IEdQSU8gZXhw
-YW5kZXIsIHdlIGFyZSBydW5uaW5nIG91dCBvZiBzeW5jLgo+Pj4+PiAKPj4+Pj4gVGhlIG1haWxi
-b3ggY29tbWFuZCBmb3Igc2V0dGluZyBHUElPIHN0YXRlIGlzIHN5bmNocm9ub3VzIGluIHRlcm1z
-IG9mCj4+Pj4+IHNlbmRpbmcgdGhlIGkyYyBjb21tYW5kIHRvIHRoZSBHUElPIGV4cGFuZGVyIEhX
-Lgo+Pj4+IAo+Pj4+IGRvZXMgdGhhdCBtZWFuIHRoZSBkcml2ZXIgZG9lcyB0aGlzIGNvcnJlY3Rs
-eSBhbmQgcmVhbGx5IHdhaXRzIGZvciB0aGUKPj4+PiBjb21wbGV0aW9uLiBPciBkb2VzIHRoZSBH
-UElPIGV4cGFuZGVyIG1pZ2h0IHJldHVybiB0byBxdWlja2x5IGFuZAo+Pj4+IHJldHVybnMgYSBm
-YWxzZSBzZW5zZSBvZiBHUElPIHN0YXRlLiBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgYSBzbGVl
-cAo+Pj4+IG9mIDUwbXMgYWZ0ZXIgdGhlIEdQSU8gbWFrZXMgYSBkaWZmZXJlbmNlLiBNYXliZSB0
-aGUgR1BJTyBleHBhbmRlcgo+Pj4+IGRyaXZlciBuZWVkcyB0byB0YWtlIHRoaXMgaW50byBhY2Nv
-dW50Lgo+Pj4gCj4+PiBJdCBzZWVtcyB1bmxpa2VseSB0aGF0IHlvdSBjYW4gZ2V0IHRvIEkyQyBz
-dG9wIGJlZm9yZSB0aGUgR1BJTyBleHBhbmRlcgo+Pj4gSFcgaGFzIGNoYW5nZWQgdGhlIHN0YXRl
-IG9mIHRoZSBvdXRwdXQuCj4+PiAKPj4+PiBSZWFsaXR5IGlzIHRoYXQgb25jZSB0aGUgQmx1ZXRv
-b3RoIGRyaXZlciB0b2dnbGVkIHRoZSBHUElPLCBpdCBnb2VzCj4+Pj4gb250byBpbml0aWFsaXpp
-bmcgdGhlIGNoaXAuIE9uZSBvdGhlciByZWFzb24gbWlnaHQgYmUgdGhhdCBubyBkZXZpY2UKPj4+
-PiB3YWtldXAgR1BJTyBpcyB3aXJlZCBoZXJlLCB0aGF0IHRoZSBjaGlwIGFjdHVhbGx5IG5lZWRz
-IHNvbWUgdGltZQo+Pj4+IGJlZm9yZSBpdCBpcyBhbGwgZ29vZCB0byBnby4KPj4+IAo+Pj4gVGhp
-cyBzZWVtcyBtdWNoIG1vcmUgbGlrZWx5IHRvIG1lLiAgVGhlIHNwZWMgZm9yIGJjbTQzNDM4IGlz
-IGVhc2lseQo+Pj4gZ29vZ2xlYWJsZSBhbmQgaGFzIGEgcG93ZXItb24gdGltaW5nIGRpYWdyYW0u
-Cj4+IAo+PiBhZnRlciBhcHBseWluZyB0aGlzIHBhdGNoIFsxXSB0aGUgUlBpIDMgc3BlY2lmaWMg
-cHJvYmluZyBlcnJvcnMgZGlzYXBwZWFyLgo+PiAKPj4gQnV0IHRoaXMgaXMgb25seSBhIHF1aWNr
-IGhhY2suIFRoZSBwcm9wZXIgc29sdXRpb24gd291bGQgYmUgdG8gZXh0ZW5kIGhjaV9oNSBpbiBv
-cmRlciB0byBzdXBwb3J0IHRoZSBCQ000MzQzOC4KPj4gCj4+IFsxXSAtIGh0dHBzOi8vZ2l0aHVi
-LmNvbS9sYXRlZ29vZGJ5ZS9ycGktemVyby9jb21taXQvZWQ1OTAwMjk2ZGZiN2FlYzdmNDY3NDc3
-NDQwNzUxZTczNjdhMTg4MQo+IAo+IEkgdGhpbmsgdGhpcyBwYXRjaCBpcyBwZXJmZWN0bHkgYWNj
-ZXB0YWJsZSwgdGhpcyBpcyBhbiBoYXJkd2FyZSB0aW1pbmcKPiB0aGUgZHJpdmVyIGhhcyB0byBo
-YW5kbGUuIEZvciBzdXJlIEg1IHdvdWxkIGltcHJvdmUgcm9idXN0bmVzc+KApgoKZG9u4oCZdCB3
-ZSBoYXZlIGEgaGVscGVyIGZ1bmN0aW9uIGxpa2Ugd2FpdCBmb3IgMTUgbXNlYyBvciBDVFMgPwoK
-SSBrbm93IGl0IGlzIG5vdCBtdWNoIHRpbWUgdGhhdCB3ZSBzcGVuZCBzbGVlcGluZyBoZXJlLCBi
-dXQgb3RoZXIgaGFyZHdhcmUgZG9lcyBub3QgbmVlZCBpdCBhbmQgdGh1cyB3ZSBtb3N0IGxpa2Vs
-eSBzaG91bGRu4oCZdCBmb3JjZSBhIGRlbGF5IG9uIHRoZW0gYmVjYXVzZSBvZiBvbmUgaGFyZHdh
-cmUgd2l0aG91dCBoYXJkd2FyZSBmbG93IGNvbnRyb2wuCgpSZWdhcmRzCgpNYXJjZWwKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+On Tue, Mar 06, 2018 at 03:43:54PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> Remove documentation for longer needed samsung thermal properties.
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  .../devicetree/bindings/thermal/exynos-thermal.txt | 23 +++++-----------------
+>  1 file changed, 5 insertions(+), 18 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
