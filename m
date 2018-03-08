@@ -1,67 +1,93 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [RFC PATCH] scsi: ufs: Add specific callback for setting DMA mask
-Date: Thu, 08 Mar 2018 14:33:46 +0530
-Message-ID: <1520499826-19352-1-git-send-email-alim.akhtar@samsung.com>
-References: <CGME20180308091429epcas1p24da59df5f8872ee4c851898f78dec85b@epcas1p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinholikatti@gmail.com, subhashj@codeaurora.org, devicetree@vger.kernel.org, shaik.ameer@samsung.com
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
+ compatible strings
+Date: Thu, 8 Mar 2018 09:09:02 +0000
+Message-ID: <9431a141-8b9c-9743-0907-8f0720df34a2@arm.com>
+References: <20180307020719.6675-1-andre.przywara@arm.com>
+ <20180307020719.6675-5-andre.przywara@arm.com>
+ <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBOP3QPKQKGQERIHME2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently DMA mask for UFS HCI is set by reading CAP register's
-[64AS] bit. Some HCI controller like Exynos support 36-bit bus address.
-This works perfectly fine with DMA mask set as 64 in case there is no
-IOMMU attached to HCI.
-In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
-work as HCI has only 36bit addressing and SMMU has created mapping of
-64 bit and as the device truncates the address, its mapping will not
-be found by iommu.
-To resolve such issues, let the variant driver sets its own DMA mask.
+Hi,
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/scsi/ufs/ufshcd.c | 3 +++
- drivers/scsi/ufs/ufshcd.h | 2 ++
- 2 files changed, 5 insertions(+)
+On 08/03/18 02:08, Rob Herring wrote:
+> On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
+>> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
+>> compatible to the PWM controllers found in the A13 and H3.
+> 
+> If fully compatible, then shouldn't there be a fallback to one of the 
+> existing compatible strings?
 
-I am not sure if there are other ways available to handle such cases.
-The IOMMU I am talking about is arm-smmu and it DT binding does not
-give much idea about handling such cases.
+Yes, that was the idea. I was already wondering how we would
+differentiate that from "real" compatible strings, but couldn't find
+convincing examples. So should that read:
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index a355d98..9a1374e 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
-  */
- static int ufshcd_set_dma_mask(struct ufs_hba *hba)
- {
-+	if (hba->vops && hba->vops->set_dam_mask)
-+		return bha->vops->set_dma_mask(hba);
-+
- 	if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
- 		if (!dma_set_mask_and_coherent(hba->dev, DMA_BIT_MASK(64)))
- 			return 0;
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 1332e54..89c6dae 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
-  * @resume: called during host controller PM callback
-  * @dbg_register_dump: used to dump controller debug information
-  * @phy_initialization: used to initialize phys
-+ * @set_dma_mask: used to set variant specific DMA mask
-  */
- struct ufs_hba_variant_ops {
- 	const char *name;
-@@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
- 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
- 	void	(*dbg_register_dump)(struct ufs_hba *hba);
- 	int	(*phy_initialization)(struct ufs_hba *);
-+	int	(*set_dma_mask)(struct ufs_hba *hba);
- };
- 
- /* clock gating state  */
--- 
-2.7.4
+- compatible: should at least contain be one of:
+    - "allwinner,sun4i-a10-pwm"
+    - "allwinner,sun5i-a10s-pwm"
+    - "allwinner,sun5i-a13-pwm"
+    - "allwinner,sun7i-a20-pwm"
+    - "allwinner,sun8i-h3-pwm"
+  May in addition contain one of:
+    - "allwinner,sun50i-a64-pwm"
+    - "allwinner,sun50i-h5-pwm"
+    - "allwinner,sun50i-h6-pwm"
+
+And this would possibly need to be amended once we need to actually use
+one of those strings (to implement a quirk, for instance)?
+Or is there some other way of reserving those compatible strings, which
+are not expected to be matched in drivers directly?
+
+Cheers,
+Andre.
+
+>> Add new compatible strings for those SoCs to the binding document, so
+>> that they can be safely used, together with a fallback string
+>> (preferably "allwinner,sun5i-a13-pwm").
+>> Add add the optionals "resets" property, needed by the H6.
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+>> index 51ff54c8b8ef..b3a127a0e58c 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+>> @@ -7,11 +7,17 @@ Required properties:
+>>      - "allwinner,sun5i-a13-pwm"
+>>      - "allwinner,sun7i-a20-pwm"
+>>      - "allwinner,sun8i-h3-pwm"
+>> +    - "allwinner,sun50i-a64-pwm"
+>> +    - "allwinner,sun50i-h5-pwm"
+>> +    - "allwinner,sun50i-h6-pwm"
+>>    - reg: physical base address and length of the controller's registers
+>>    - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>>      the cells format.
+>>    - clocks: From common clock binding, handle to the parent clock.
+>>  
+>> +Optional properties:
+>> +  - resets: shall be the reset control phandle for the PWM block, if required.
+>> +
+>>  Example:
+>>  
+>>  	pwm: pwm@1c20e00 {
+>> -- 
+>> 2.14.1
+>>
