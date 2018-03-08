@@ -1,46 +1,68 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
-Date: Thu, 8 Mar 2018 16:11:35 +0100
-Message-ID: <20180308161135.1f3d3d18@karo-electronics.de>
-References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: tegra: apalis/colibri updates
+Date: Thu, 8 Mar 2018 16:11:59 +0100
+Message-ID: <20180308151159.GC13814@ulmo>
+References: <20180210013638.28164-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="MnLPg7ZWsaic7Fhd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180210013638.28164-1-marcel@ziswiler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsICA2IE1hciAyMDE4IDIyOjU4OjE5ICswMTAwIE1hcnRpbiBLYWlzZXIgd3Jv
-dGU6Cj4gQWNjb3JkaW5nIHRvIHRoZSBpLk1YMjUgcmVmZXJlbmNlIG1hbnVhbHMsIGVhY2ggU1NJ
-IGhhcyBmb3VyIEZJRk9zLiBBbGwKPiBvZiB0aG9zZSBGSUZPcyBjYW4gc3RvcmUgdXAgdG8gMTUg
-ZW50cmllcy4KPiAKPiBUaGUgZnNsX3NzaSBkcml2ZXIncyBpbnRlcm5hbCBkZWZhdWx0IGZvciB0
-aGUgRklGTyBkZXB0aCBpbiA4LiBTZXQgb3VyCj4gbm9uLWRlZmF1bHQgRklGTyBkZXB0aCBleHBs
-aWNpdGx5IGluIHRoZSBEZXZpY2UgVHJlZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJ0aW4gS2Fp
-c2VyIDxtYXJ0aW5Aa2Fpc2VyLmN4Pgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXgyNS5k
-dHNpIHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXgyNS5kdHNpCj4gaW5kZXggOTcyNTcwNS4uY2Y3MGRmMiAxMDA2NDQKPiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXgyNS5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjUuZHRz
-aQo+IEBAIC0yNjksNiArMjY5LDcgQEAKPiAgCQkJCWRtYXMgPSA8JnNkbWEgMjQgMSAwPiwKPiAg
-CQkJCSAgICAgICA8JnNkbWEgMjUgMSAwPjsKPiAgCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7
-Cj4gKwkJCQlmc2wsZmlmby1kZXB0aCA9IDwxNT47Cj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ICAJCQl9Owo+ICAKPiBAQCAtMzI5LDYgKzMzMCw3IEBACj4gIAkJCQlkbWFzID0gPCZzZG1h
-IDI4IDEgMD4sCj4gIAkJCQkgICAgICAgPCZzZG1hIDI5IDEgMD47Cj4gIAkJCQlkbWEtbmFtZXMg
-PSAicngiLCAidHgiOwo+ICsJCQkJZnNsLGZpZm8tZGVwdGggPSA8MTU+Owo+ICAJCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiAgCQkJfTsKPiAgCllvdSBhcmUgY2hhbmdpbmcgdGhlIGdsb2JhbCAu
-ZHRzaSBmaWxlLiBEaWQgeW91IHRlc3QgdGhpcyBjaGFuZ2Ugd2l0aAphbGwgZGV2aWNlcyB0aGF0
-IGFyZSBhZmZlY3RlZCBieSBpdD8KCgpMb3RoYXIgV2HDn21hbm4KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--MnLPg7ZWsaic7Fhd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Feb 10, 2018 at 02:36:35AM +0100, Marcel Ziswiler wrote:
+>=20
+> This series fixes the I2C bus frequencies, uses the correct compatible
+> for the RTC and removes an unneeded reg property for Tegra based
+> Toradex Apalis and Colibri modules.
+>=20
+>=20
+> Marcel Ziswiler (3):
+>   apalis_t30/tk1, colibri_t20/t30: fix i2c bus frequencies
+>   ARM: dts: tegra: apalis/colibri: use correct compatible for rtc
+>   ARM: dts: tegra: apalis/colibri: remove unneeded reg property
+>=20
+>  arch/arm/boot/dts/tegra124-apalis-eval.dts    |  7 +++----
+>  arch/arm/boot/dts/tegra124-apalis.dtsi        |  2 +-
+>  arch/arm/boot/dts/tegra20-colibri-512.dtsi    | 16 +++++++++++-----
+>  arch/arm/boot/dts/tegra30-apalis-eval.dts     |  4 ++--
+>  arch/arm/boot/dts/tegra30-apalis.dtsi         |  3 +--
+>  arch/arm/boot/dts/tegra30-colibri-eval-v3.dts |  4 ++--
+>  arch/arm/boot/dts/tegra30-colibri.dtsi        |  3 +--
+>  7 files changed, 21 insertions(+), 18 deletions(-)
+
+Applied, thanks.
+
+Thierry
+
+--MnLPg7ZWsaic7Fhd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqhUr8ACgkQ3SOs138+
+s6GusxAAqCyCkcL688gAHUc3s0CGQmJJqeguHAyhM0HFi+z+6z2rtlnSYoJSGq7J
+emp74DisYPJTkQjZV1ZnDf8ZqTXxAaujxHyXeS1uOAnVZC4v8qgUWIl+RsphRu9S
+/P+YTzjeXtTuq8BJSpYGAy/jmzr95j/C10Ko9OHS1tuxgEmS4opXd1QH8VuJZpQI
+SmWNmmjLbrKPzqKeIZJynJUHSMqVVmNTkjbEwmM/4onYWhD4pUzK4j3rooqbAqM6
+IpLFvgkOboC1rJ+eua9ovDjN5FAiUAC/SBCjcB0BgqWiN6NiY+OOP4MFIEsOewmL
+GlJXYHq/V0PFhQFSulfnskG6fyA2QVU/ZnPlnJqrtAXWNYEujSDx9dNEeQa0RNVa
+ilxCp6KtH4XZuD44wiMLeJe7U64D/4B4w0JgDs1DXrpBhf+9ikyDyYl3wJU85L4A
+NMDJvFOBYFAhw12cCEzPUymUeIbbWTbUH03ebqs+2nR//aUbKXgHnkqexQ4UYtUB
+fiusw4dyFvcrx95nQkba64mk7uFXKc6+wuoNPfBcLwf5XlTwZ+ZzwnrMw84R9exN
+G3GgysdJb4wHOL1XPf9xyNGsOjDjBSOSpdEqzVX5+L/cq1bkzBRBOwkTI/MFsQ4y
+MbvXNbUk7Uj8wDCTdsYsItOoXZ4XjhmBG5mGYY0b+2kAKN0lhXw=
+=9g5E
+-----END PGP SIGNATURE-----
+
+--MnLPg7ZWsaic7Fhd--
