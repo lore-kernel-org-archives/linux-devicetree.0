@@ -1,49 +1,134 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 00/12] Introduce STM32MP1 clock driver
-Date: Thu, 8 Mar 2018 17:53:53 +0100
-Message-ID: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v2 04/12] clk: stm32mp1: add Source Clocks for PLLs
+Date: Thu, 8 Mar 2018 17:53:57 +0100
+Message-ID: <1520528045-18330-5-git-send-email-gabriel.fernandez@st.com>
+References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-v2:
-  - Don't use MFD, use existing binding of STM32 RCC.
-  - Rework Peripheral and Kernel clocks
-  - cosmetic changes
+This patch adds source clocks for PLLs
+This patch also introduces MUX clock API.
 
-This patch-set introduces clock driver for STM32MP157 based on Arm Cortex-A7.
-The driver patch is split in several patches (by kind of clock) to facilitate
-code reviewing.
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ drivers/clk/clk-stm32mp1.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Gabriel Fernandez (12):
-  dt-bindings: Document STM32MP1 Reset Clock Controller (RCC) bindings
-  clk: stm32mp1: Introduce STM32MP1 clock driver
-  clk: stm32mp1: add MP1 gate for hse/hsi/csi oscillators
-  clk: stm32mp1: add Source Clocks for PLLs
-  clk: stm32mp1: add PLL clocks
-  clk: stm32mp1: add Post-dividers for PLL
-  clk: stm32mp1: add Sub System clocks
-  clk: stm32mp1: add Kernel timers
-  clk: stm32mp1: add Peripheral & Kernel Clocks
-  clk: stm32mp1: add RTC clock
-  clk: stm32mp1: add MCO clocks
-  clk: stm32mp1: add Debug clocks
-
- .../devicetree/bindings/clock/st,stm32mp1-rcc.txt  |   60 +
- drivers/clk/Kconfig                                |    6 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-stm32mp1.c                         | 2117 ++++++++++++++++++++
- include/dt-bindings/clock/stm32mp1-clks.h          |  254 +++
- 5 files changed, 2438 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
- create mode 100644 drivers/clk/clk-stm32mp1.c
- create mode 100644 include/dt-bindings/clock/stm32mp1-clks.h
-
+diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
+index 56b738e..47984f3 100644
+--- a/drivers/clk/clk-stm32mp1.c
++++ b/drivers/clk/clk-stm32mp1.c
+@@ -103,6 +103,18 @@
+ 
+ #define RCC_CLR	0x4
+ 
++static const char * const ref12_parents[] = {
++	"ck_hsi", "ck_hse"
++};
++
++static const char * const ref3_parents[] = {
++	"ck_hsi", "ck_hse", "ck_csi"
++};
++
++static const char * const ref4_parents[] = {
++	"ck_hsi", "ck_hse", "ck_csi"
++};
++
+ struct clock_config {
+ 	u32 id;
+ 	const char *name;
+@@ -140,6 +152,14 @@ struct div_cfg {
+ 	const struct clk_div_table *table;
+ };
+ 
++struct mux_cfg {
++	u32 reg_off;
++	u8 shift;
++	u8 width;
++	u8 mux_flags;
++	u32 *table;
++};
++
+ struct stm32_gate_cfg {
+ 	struct gate_cfg		*gate;
+ 	const struct clk_ops	*ops;
+@@ -196,6 +216,20 @@ struct stm32_gate_cfg {
+ 					     lock);
+ }
+ 
++static struct clk_hw *
++_clk_hw_register_mux(struct device *dev,
++		     struct clk_hw_onecell_data *clk_data,
++		     void __iomem *base, spinlock_t *lock,
++		     const struct clock_config *cfg)
++{
++	struct mux_cfg *mux_cfg = cfg->cfg;
++
++	return clk_hw_register_mux(dev, cfg->name, cfg->parent_names,
++				   cfg->num_parents, cfg->flags,
++				   mux_cfg->reg_off + base, mux_cfg->shift,
++				   mux_cfg->width, mux_cfg->mux_flags, lock);
++}
++
+ /* MP1 Gate clock with set & clear registers */
+ 
+ static int mp1_gate_clk_enable(struct clk_hw *hw)
+@@ -350,6 +384,22 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
+ 	DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
+ 		  _div_flags, NULL)
+ 
++#define MUX(_id, _name, _parents, _flags, _offset, _shift, _width, _mux_flags)\
++{\
++	.id		= _id,\
++	.name		= _name,\
++	.parent_names	= _parents,\
++	.num_parents	= ARRAY_SIZE(_parents),\
++	.flags		= _flags,\
++	.cfg		=  &(struct mux_cfg) {\
++		.reg_off	= _offset,\
++		.shift		= _shift,\
++		.width		= _width,\
++		.mux_flags	= _mux_flags,\
++	},\
++	.func		= _clk_hw_register_mux,\
++}
++
+ /* STM32 GATE */
+ #define STM32_GATE(_id, _name, _parent, _flags, _gate)\
+ {\
+@@ -392,6 +442,16 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
+ 	GATE(CK_LSE, "ck_lse", "clk-lse", 0, RCC_BDCR, 0, 0),
+ 
+ 	FIXED_FACTOR(CK_HSE_DIV2, "clk-hse-div2", "ck_hse", 0, 1, 2),
++
++	/* ref clock pll */
++	MUX(NO_ID, "ref1", ref12_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK12SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
++
++	MUX(NO_ID, "ref3", ref3_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK3SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
++
++	MUX(NO_ID, "ref4", ref4_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK4SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
+ };
+ 
+ struct stm32_clock_match_data {
 -- 
 1.9.1
