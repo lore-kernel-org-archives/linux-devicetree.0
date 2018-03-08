@@ -1,144 +1,77 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] iommu/arm-smmu: Invoke pm_runtime during probe,
-	add/remove device
-Date: Thu, 8 Mar 2018 13:33:31 +0900
-Message-ID: <CAAFQd5BKkKc2binDe-MCDeP42b6O26Hu9nYjvYRE160EMvi1fA@mail.gmail.com>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
-	<20180302101050.6191-4-vivek.gautam@codeaurora.org>
-	<d0f2b3ed-136d-7704-2aef-1173a342a89c@arm.com>
-	<CAAFQd5BTdF176x5ycatCmCHrMyVX2OZqdXd-JGq06RyDUb0N3g@mail.gmail.com>
-	<30a2fa5e-3d8e-acb6-ab31-bec652f1be99@arm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
+ of the HDMI node
+Date: Thu, 08 Mar 2018 08:36:22 +0100
+Message-ID: <9f1e8619-974d-cd07-79c3-c6d9a4dc0f97@samsung.com>
+References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
+ <20180307171111.14551-1-s.nawrocki@samsung.com>
+ <5AA0B59F.3070402@samsung.com>
+ <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
+ <5AA0DD39.3040108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <30a2fa5e-3d8e-acb6-ab31-bec652f1be99-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5AA0DD39.3040108@samsung.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 8, 2018 at 1:58 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 07/03/18 13:52, Tomasz Figa wrote:
->>
->> On Wed, Mar 7, 2018 at 9:38 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>> On 02/03/18 10:10, Vivek Gautam wrote:
->>>>
->>>>
->>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>
->>>> The smmu device probe/remove and add/remove master device callbacks
->>>> gets called when the smmu is not linked to its master, that is without
->>>> the context of the master device. So calling runtime apis in those
->>>> places
->>>> separately.
->>>>
->>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> [vivek: Cleanup pm runtime calls]
->>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> ---
->>>>    drivers/iommu/arm-smmu.c | 96
->>>> ++++++++++++++++++++++++++++++++++++++++++++----
->>>>    1 file changed, 88 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>>> index c8b16f53f597..3d6a1875431f 100644
->>>> --- a/drivers/iommu/arm-smmu.c
->>>> +++ b/drivers/iommu/arm-smmu.c
->>>> @@ -209,6 +209,8 @@ struct arm_smmu_device {
->>>>          struct clk_bulk_data            *clks;
->>>>          int                             num_clks;
->>>>    +     bool                            rpm_supported;
->>>> +
->>>
->>>
->>>
->>> Can we not automatically infer this from whether clocks and/or power
->>> domains
->>> are specified or not, then just use pm_runtime_enabled() as the fast-path
->>> check as Tomasz originally proposed?
->>
->>
->> I wouldn't tie this to presence of clocks, since as a next step we
->> would want to actually control the clocks separately. (As far as I
->> understand, on QCom SoCs we might want to have runtime PM active for
->> the translation to work, but clocks gated whenever access to SMMU
->> registers is not needed.) Moreover, you might still have some super
->> high scale thousand-core systems that require clocks to be
->> prepare-enabled, but runtime PM would be undesirable for the reasons
->> we discussed before.
->>
->>>
->>> I worry that relying on statically-defined matchdata is just going to
->>> blow
->>> up the driver and DT binding into a maintenance nightmare; I really don't
->>> want to start needing separate definitions for e.g.
->>> "arm,juno-etr-mmu-401"
->>> and "arm,juno-hdlcd-mmu-401" just because one otherwise-identical
->>> instance
->>> within the SoC is in a separate controllable power domain while the
->>> others
->>> aren't.
->>
->>
->> I don't see a reason why both couldn't just have RPM supported
->> regardless of whether there is a real power domain. It would
->> effectively be just a no-op for those that don't have one.
->
->
-> Because you're then effectively defining "compatible" values for the sake of
-> attaching software policy to them, rather than actually describing different
-> hardware implementations.
->
-> The fact that RPM can't do anything meaningful unless relevant clock/power
-> aspects *are* described, however, means that we shouldn't need additional
-> information redundant with that. Much like the fact that we don't *already*
-> have an "arm,juno-hdlcd-mmu-401" compatible to account for those being
-> integrated such that IDR0.CTTW has the wrong value, since the presence or
-> not of the "dma-coherent" property already describes the truth in that
-> regard.
-
-Fair enough.
-
->
->> IMHO the
->> only reason to avoid having the RPM enabled is the scalability issue
->> we discussed before.
->
->
-> Yes, but that's kind of my point; in reality high throughput/minimal latency
-> and aggressive power management are more or less mutually exclusive. Mobile
-> SoCs with fine-grained clock trees and power domains won't have multiple
-> 40GBe/NVMf/whatever links running flat out in parallel; conversely
-> networking/infrastructure/server SoCs aren't designed around saving every
-> last microamp of leakage current - even in the (fairly unlikely) case of the
-> interconnect clocks being software-gateable at all I would be very surprised
-> if that were ever exposed directly to Linux (FWIW I believe ACPI essentially
-> *requires* clocks to be abstracted behind firmware).
->
-> Realistically then, explicit clocks are only expected on systems which care
-> about power management. We can always revisit that assumption if anything
-> crazy where it isn't the case ever becomes non-theoretical, but for now it's
-> one I'm entirely comfortable with. If on the other hand it turns out that we
-> can rely on just a power domain being present wherever we want RPM, making
-> clocks moot, then all the better.
-
-Alright. Since Qcom would be the only user of clock and power handling
-for the time being, I think checking power domain presence could work
-for us. +/- the fact that clocks need to be handled even if power
-domain is not present, but we should normally always have both.
-
-Now we need a way to do the check. Perhaps for the time being it would
-be enough to just check for the power-domains property in DT?
-
-Best regards,
-Tomasz
+SGkgSW5raSwKCk9uIDIwMTgtMDMtMDggMDc6NTAsIElua2kgRGFlIHdyb3RlOgo+IDIwMTjrhYQg
+MDPsm5QgMDjsnbwgMTU6Mjnsl5AgTWFyZWsgU3p5cHJvd3NraSDsnbQo6rCAKSDsk7Qg6riAOgo+
+PiBPbiAyMDE4LTAzLTA4IDA1OjAxLCBJbmtpIERhZSB3cm90ZToKPj4+IDIwMTjrhYQgMDPsm5Qg
+MDjsnbwgMDI6MTHsl5AgU3lsd2VzdGVyIE5hd3JvY2tpIOydtCjqsIApIOyTtCDquIA6Cj4+Pj4g
+VGhlICNzb3VuZC1kYWktY2VsbHMgRFQgcHJvcGVydHkgaXMgcmVxdWlyZWQgdG8gZGVzY3JpYmUg
+bGluayBiZXR3ZWVuCj4+Pj4gdGhlIEhETUkgSVAgYmxvY2sgYW5kIHRoZSBTb0MncyBhdWRpbyBz
+dWJzeXN0ZW0uCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHMu
+bmF3cm9ja2lAc2Ftc3VuZy5jb20+Cj4+Pj4gLS0tCj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19oZG1pLnR4dCB8IDMgKysrCj4+
+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlu
+b3NfaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9l
+eHlub3MvZXh5bm9zX2hkbWkudHh0Cj4+Pj4gaW5kZXggODcxNWZmMDZjNDU3Li42YjJhNTI2ZWM1
+ODYgMTAwNjQ0Cj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvZXh5bm9zL2V4eW5vc19oZG1pLnR4dAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfaGRtaS50eHQKPj4+PiBAQCAt
+NTAsNiArNTAsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBFeHlub3MgNTQzMzoKPj4+PiAg
+ICAtIGNsb2NrLW5hbWVzOiBhbGlhc2VzIGZvciBhYm92ZSBjbG9jayBzcGVjZmllcnMuCj4+Pj4g
+ICAgLSBzYW1zdW5nLHN5c3JlZzogaGFuZGxlIHRvIHN5c2NvbiB1c2VkIHRvIGNvbnRyb2wgdGhl
+IHN5c3RlbSByZWdpc3RlcnMuCj4+Pj4gICAgK09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIEV4eW5v
+cyA0MjEwLCA0MjEyLCA1NDIwIGFuZCA1NDMzOgo+Pj4+ICsgLSAjc291bmQtZGFpLWNlbGxzOiBz
+aG91bGQgYmUgMC4KPj4+PiArCj4+PiBKdXN0IHRyaXZpYWwgcXVlc3Rpb24uICdzb3VuZC1kYWkt
+Y2VsbHMnIHByb3BlcnR5IGNvdWxkIGFmZmVjdCBoZG1pIGRyaXZlcj8gSSBsb29rZWQgaW50byBI
+RE1JIGNvZGVjIGRyaXZlciBidXQgSSBkaWRuJ3QgZmluZCByZWxldmF0IGNvZGUuCj4+PiBJIG1l
+YW4gdGhhdCBpZiB0aGlzIHByb3BlcnR5IG5ldmVyIGFmZmVjdCBIRE1JIGRyaXZlciB0aGVuIHRo
+aXMgcHJvcGVydHkgd291bGQgYmUgYSBkZWFkIHRoaW5nIGV2ZW4gdGhyb3VnaCB0aGlzIGNhbiBi
+ZSBkZWNsYXJlZCBvcHRpb25hbGx5Lgo+PiBUaGlzIHByb3BlcnR5IGlzIHVzZWQgYnkgQVNvQyBm
+cmFtZXdvcmsgd2hlbiBpdCBpcyBidWlsZGluZyBjb25uZWN0aW9ucwo+PiBiZXR3ZWVuIGFsbCBl
+bGVtZW50cyBvZiB0aGUgdmlydHVhbCAnc291bmQgY2FyZCcuIEl0IGFsbG93cyBnZW5lcmljCj4+
+IGNvZGUgdG8gZmluZCBwcm9wZXIgZHJpdmVyIGZvciB0aGUgZGlnaXRhbCBhdWRpbyBpbnRlcmZh
+Y2UgKERBSSkgb2JqZWN0Lgo+IEkgYWxzbyBhc3N1bWVkIHRoYXQgc29tZSBwbGFjZSBvZiBBU29D
+IGZyYW1ld29yayBjaGVja3MgdGhpcyBwcm9wZXJ0eS4gRm9yIHRoaXMgSSBsb29rZWQgaW50byBI
+RE1JIGNvZGVjIGRyaXZlcihzb3VuZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYykgYW5kIHJlbGV2
+YW50IGludGVyZmFjZXMgb2YgQVNvQyBmcmFtZXdvcmsuCj4gQnV0IEkgY291bGRuJ3QgZmluZCBp
+dC4gOiggQ291bGQgeW91IGxldCBtZSBrbm93IHdoaWNoIGNvZGUgb2YgQVNvQyBmcmFtZXdvcmsg
+Y2hlY2tzIHRoaXM/IEkgc2F3IHRoaXMgcHJvcGVydHkgb25seSBpbiAnc25kX3NvY19vZl9nZXRf
+ZGFpX25hbWUnIGFuZCAnc25kX3NvY19vZl9nZXRfZGFpX2xpbmtfY29kZWNzJyBmdW5jdGlvbnMg
+YnV0IHNlZW1zIHRoZXNlIGZ1bmN0aW9ucyBhcmVuJ3QgY2FsbGVkIGJ5IHRoZSBIRE1JIGNvZGVj
+IGRyaXZlci4KCkl0IGlzIHVzZWQgYnkgc25kX3NvY19vZl9nZXRfZGFpX2xpbmtfY29kZWNzKCkg
+ZnVuY3Rpb24sIHdoaWNoIGlzIGNhbGxlZApmcm9tIHJlc3BlY3RpdmUgYm9hcmQvbWFjaGluZSBk
+cml2ZXIuIFNlZSBzb3VuZC9zb2Mvc2Ftc3VuZy9vZHJvaWQuYyBmb3IKZ29vZCBleGFtcGxlLiBJ
+dCBhbGxvd3MgdG8gYXV0b21hdGljYWxseSBjcmVhdGUgY29ubmVjdGlvbiB0byBtYXg5ODA5MCBh
+bmQKaGRtaSBjb2RlYyBkZXZpY2VzLCB3aGljaCBhcmUgc3BlY2lmaWVkIGluICdzb3VuZC9jb2Rl
+Yycgbm9kZSAoc2VlCmV4eW5vczU0MjItb2Ryb2lkeHUzLWF1ZGlvLmR0c2kpLgoKQmVzdCByZWdh
+cmRzCi0tIApNYXJlayBTenlwcm93c2tpLCBQaEQKU2Ftc3VuZyBSJkQgSW5zdGl0dXRlIFBvbGFu
+ZAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
