@@ -1,99 +1,44 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 2/8] [PATCH 2/8] Documentations: dt-bindings: Add a
- document of PECI adapter driver for Aspeed AST24xx/25xx SoCs
-Date: Wed, 7 Mar 2018 23:11:24 +0100
-Message-ID: <20180307221124.GD10438@amd>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
- <20180221161606.32247-3-jae.hyun.yoo@linux.intel.com>
- <20180306124002.GA13950@amd>
- <33bf6563-b220-7ff9-8b04-84e9bd781b3f@linux.intel.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 5/6] dma-mapping: support fsl-mc bus
+Date: Thu, 8 Mar 2018 08:41:15 +0100
+Message-ID: <20180308074115.GB15748@lst.de>
+References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
+ <1520260166-29387-6-git-send-email-nipun.gupta@nxp.com>
+ <20180305150814.GA15918@lst.de>
+ <7b4f9972-6aaa-fc9d-3854-d48b19a8051c@arm.com>
+ <20180305183938.GB20086@lst.de>
+ <1729ae21-d08c-b413-51a3-f22c394b388d@arm.com>
+ <HE1PR0401MB24251E99564CAA526F719ECCE6D90@HE1PR0401MB2425.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0166014956428172138=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <33bf6563-b220-7ff9-8b04-84e9bd781b3f@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: linux-hwmon@vger.kernel.org, andrew@lunn.ch, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <HE1PR0401MB24251E99564CAA526F719ECCE6D90@HE1PR0401MB2425.eurprd04.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Nipun Gupta <nipun.gupta@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stuyoder@gmail.com" <stuyoder@gmail.com>, Bharat Bhushan <bharat.bhushan@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infra>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 06, 2018 at 04:41:56AM +0000, Nipun Gupta wrote:
+> Sorry for asking a trivial question - looking into dma_configure() I see that
+> PCI is used in the start and the end of the API.
+> In the end part pci_put_host_bridge_device() is called.
+> So are two bus callbacks something like 'dma_config_start' & 'dma_config_end'
+> will be required where the former one will return "dma_dev"?
 
---===============0166014956428172138==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
-Content-Disposition: inline
+I'd just use dma_configure as the callback.
 
-
---76DTJ5CE0DCVQemd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >Are these SoCs x86-based?
->=20
-> Yes, these are ARM SoCs. Please see Andrew's answer as well.
-
-Understood, thanks.
-
-> >>+	Read sampling point selection. The whole period of a bit time will be
-> >>+	divided into 16 time frames. This value will determine which time fra=
-me
-> >>+	this controller will sample PECI signal for data read back. Usually in
-> >>+	the middle of a bit time is the best.
-> >
-> >English? "This value will determine when this controller"?
-> >
->=20
-> Could I change it like below?:
->=20
-> "This value will determine in which time frame this controller samples PE=
-CI
-> signal for data read back"
-
-I guess... I'm not native speaker, I guess this could be improved some
-more.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---76DTJ5CE0DCVQemd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlqgY4wACgkQMOfwapXb+vKkpwCgxIl38neoJCtEDSh34sHCjHMb
-QxUAnRhNCAIzVU8cgKZ4g2D+qFLjBZM8
-=gl0E
------END PGP SIGNATURE-----
-
---76DTJ5CE0DCVQemd--
-
-
---===============0166014956428172138==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0166014956428172138==--
+Currently the of_dma_configure and acpi_dma_configure are only used
+for PCI anyway, as no one else sets a non-NULL dma dev.   For fsl-mc
+I suspect only of_dma_configure is relevanet, so just call that directly.
+If at some point we get enough busses with either OF or ACPI we could
+create a helper called from ->dma_configure for that.
