@@ -1,87 +1,66 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: Re: [PATCH v2 0/3] pinctrl: bcm2835: Add brcm,level property
-Date: Thu, 8 Mar 2018 15:47:22 -0400
-Message-ID: <5b3419be-12ca-75d7-6f5e-d3338ddd7f14@castello.eng.br>
-References: <431699005.307231.1520086916739@email.1und1.de>
- <1520216960-19880-1-git-send-email-matheus@castello.eng.br>
- <821312841.275581.1520423887935@email.1und1.de>
- <047e47b4-daf7-2ba2-ea86-0060a59049b7@castello.eng.br>
- <188888639.307907.1520496039100@email.1und1.de>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Thu, 8 Mar 2018 13:14:38 -0700
+Message-ID: <20180308201438.GA10589@jcrouse-lnx.qualcomm.com>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-3-jcrouse@codeaurora.org>
+ <20180305044221.GC23018@vireshk-i7>
+ <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
+ <20180306042656.GJ23018@vireshk-i7>
+ <20180306153757.GD15200@jcrouse-lnx.qualcomm.com>
+ <20180307050624.GR23018@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <188888639.307907.1520496039100@email.1und1.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: linus.walleij@linaro.org, eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180307050624.GR23018@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-
-On 03/08/2018 04:00 AM, Stefan Wahren wrote:
-> Hi Matheus,
-> 
->> Matheus Castello <matheus@castello.eng.br> hat am 8. März 2018 um 01:12 geschrieben:
->>
->>
->> Hi Stefan,
->>
->> On 03/07/2018 07:58 AM, Stefan Wahren wrote:
->>> Hi Matheus,
->>>
->>>> Matheus Castello <matheus@castello.eng.br> hat am 5. März 2018 um 03:29 geschrieben:
->>>>
->>>>
->>>> Hi Linus and Stefan,
->>>>
->>>> thanks for the tips.
->>>>
->>>> This series adds support for generic binding for pinctrl bcm2835 driver,
->>>> and add the code for set output buffer of a pin using the output-low and
->>>> output-high generic properties.
->>>>
->>>> Tested on Raspberry Pi Zero W, based on bcm2835 SoC.
->>>>
->>>> Matheus Castello (3):
->>>
->>> looks like you missed the changes to the dt binding. Please also add Rob Herring and Mark Rutland to CC. We need a ACK from them.
->>
->> are you talking about the .dts files? I add an overlay file for my tests. 
->> I was thinking it would be better to start with this changes in the driver and then in another series to convert to the generic style in the .dts.
->> If you find it better already add the conversion also in this series let me know.
->>
->> I understood that I should put the device tree maintainers in thread only if I were to introduce a new property. As I am using generic properties and not introducing new ones I did not add them.
->> Let me know if it is still necessary I stayed in this doubt.
-> 
-> no this is a misunderstanding. You are changing the DT interface because the driver supports new properties (from driver point of view). The DT users usually look at the binding document [1] not the source code. So you need to extend the binding document before changing the source code within a patch series. At the end we need a DT maintainer's ACK for the binding change. Using the generic properties doesn't allow us to skip this, but it increases the chance of an ACK.
-> 
-> Btw it's okay to keep the DTS files.
-> 
-> Stefan
-> 
-> [1] - https://elixir.bootlin.com/linux/v4.16-rc4/source/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> 
-
-Ok, I got it, thank you, I will work on the patch v3.
-
-Best Regards
-Matheus Castello
-
->>
->> Best Regards
->> Matheus Castello
->>>
->>>>   pinctrl: bcm2835: switch to GENERIC_PINCONF
->>>>   pinctrl: bcm2835: Add support for generic pinctrl binding
->>>>   pinctrl: bcm2835: Add support for output-low output-high properties
->>>>
->>>>  drivers/pinctrl/bcm/Kconfig           |  1 +
->>>>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 88 +++++++++++++++++++++++------------
->>>>  2 files changed, 60 insertions(+), 29 deletions(-)
->>>>
->>>> --
->>>> 2.7.4
->>>>
+T24gV2VkLCBNYXIgMDcsIDIwMTggYXQgMTA6MzY6MjRBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDA2LTAzLTE4LCAwODozNywgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEknbGwg
+dHJ5IHRvIGV4cGxhaW4gYnV0IEkgbWlnaHQgbmVlZCBTdGVwaGVuIG9yIHNvbWUgb2YgdGhlIG90
+aGVyIGZvbGtzIHRvIGp1bXAKPiA+IGluIGFuZCBzYXZlIG1lLgo+IAo+IE1heWJlIHlvdSBzaG91
+bGQgc3RhcnQgdXNpbmcgaGlzIGtlcm5lbC5vcmcgYWRkcmVzcyB0aGVuID8gOikKPiAKPiA+IE9u
+IHNkbTg0NSB0aGVyZSBhcmUgc2hhcmVkIHBvd2VyIHJlc291cmNlcyBjb250cm9sbGVkIGJ5IHRo
+ZSBSUE1oIHdoaWNoIGlzCj4gPiBwcm9ncmFtZWQgYnkgYSBzZXJpZXMgb2YgY29tbWFuZHMgZnJv
+bSB0aGUgcmVndWxhdG9yIGRyaXZlcjsgYnV0IGluIHRoZSBjYXNlCj4gPiBvZiB0aGUgR1BVIHRo
+ZSB2b3RlcyBhcmUgcGFzc2VkIHRvIHRoZSBHTVUgKGdyYXBoaWNzIG1hbmFnZW1lbnQgdW5pdCkg
+d2hpY2gKPiA+IGNvbW11bmljYXRlcyB3aXRoIHRoZSBSUE1oIG9uIGJlaGFsZiBvZiB0aGUgR1BV
+Lgo+ID4gCj4gPiBJbiBvcmRlciB0byBjb25zdHJ1Y3QgdGhlIFJQTWggdm90ZSB3ZSBuZWVkIGZp
+cnN0IG5lZWQgYSB2b2x0YWdlIGxldmVsIHRoYXQgd2UKPiA+IGNhbiBsb29rIHVwIGluIGEgZGF0
+YWJhc2UuIHFjb20sYXJjLWxldmVsIGlzIHRoZSB2b2x0YWdlIGxldmVsIGFzc29jaWF0ZWQgd2l0
+aAo+ID4gYSBzcGVjaWZpYyBPUFAuCj4gPiAKPiA+IEkgaGFkIHByZXZpb3VzbHkgYmVlbiBhYnVz
+aW5nIHRoaXMgd2l0aCBvcHAtbWljcm92b2x0IGJ1dCB0aGF0IHdhcyB3cm9uZyBmb3IKPiA+IG9i
+dmlvdXMgcmVhc29ucyBhbmQgdGhlbiBTdGVwaGVuIHBvaW50ZWQgb3V0IHRoYXQgdGhpcyB3b3Vs
+ZCBiZSBhIGJldHRlciB3YXkuCj4gCj4gR2xhZCB0aGF0IHlvdSBzaGFyZWQgdGhhdCA6KQo+IAo+
+IEEgc29sdXRpb24gaXMgYWxyZWFkeSBpbiBwcm9ncmVzcyBmb3IgdGhhdCBhbmQgaXMgcGFydGlh
+bGx5IG1lcmdlZCBhcwo+IHdlbGwuCj4gCj4gTG9vayBmb3IgInBlcmZvcm1hbmNlX3N0YXRlIiBp
+biBnZW5wZCBhbmQgT1BQIGNvcmVzIChhbHJlYWR5IG1lcmdlZCksCj4gZm9sbG93ZWQgYnkgdGhp
+cyBzZXJpZXMgaGVyZToKPiAKPiBodHRwczovL2xrbWwua2VybmVsLm9yZy9yL2NvdmVyLjE1MTM5
+MjYwMzMuZ2l0LnZpcmVzaC5rdW1hckBsaW5hcm8ub3JnCgpJdCBzZWVtcyB0byBtZSB0aGF0IHBl
+cmZvcm1hbmNlX3N0YXRlIGhhcyBhIGRpcmVjdCByZWxhdGlvbnNoaXAgd2l0aCBnZW5wZAp3aGlj
+aCBpcyBnb29kIGZvciBDUFUgdm90ZXMgYnV0IGluIHRoaXMgY2FzZSwgd2UncmUganVzdCBwYXNz
+aW5nIGFsb25nIHJhdyBkYXRhCnRvIGFuIGluZGVwZW5kZW50IG1pY3JvY29udHJvbGxlci4gVGhl
+ICdxY29tLGFyYy1sZXZlbCcgaXMgdXNlZCB0byBjb25zdHJ1Y3QKdGhlIGFjdHVhbCB2YWx1ZXMg
+dGhhdCB0aGUgR01VIHdpbGwgcHJvZ3JhbSBpbnRvIHRoZSBSUE1oLiBTaW5jZSB0aGVzZSBhcmUK
+aW5mb3JtYXRpb25hbCAoZnJvbSB0aGUgQ1BVIHBlcnNwZWN0aXZlKSByYXRoZXIgdGhhbiBmdW5j
+dGlvbmFsIEkgZmVlbCBsaWtlCnRoYXQgdXNpbmcgcGVyZm9ybWFuY2Vfc3RhdGUgZm9yIHRoaXMg
+d291bGQgYmUgYXMgaGFja3kgYXMgdXNpbmcgb3BwLW1pY3Jvdm9sdApvciBzb21ldGhpbmcgZWxz
+ZS4KCkpvcmRhbgoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
+IG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9y
+YXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
+bm8K
