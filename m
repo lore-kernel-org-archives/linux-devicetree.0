@@ -1,82 +1,111 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: [PATCH v2] kbuild: Handle builtin dtb file names containing hyphens
-Date: Thu,  8 Mar 2018 11:02:46 +0000
-Message-ID: <20180308110246.16639-1-jhogan@kernel.org>
-References: <CAK7LNARfTxxb0_RNEPvBzuEqP_g-cajZGpaGSuMJBUwDW66yww@mail.gmail.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARfTxxb0_RNEPvBzuEqP_g-cajZGpaGSuMJBUwDW66yww@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-kernel@vger.kernel.org, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Marek <michal.lkml@markovi.net>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-mips@linux-mips.org, stable@vger.kernel.org
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: Add the device_link between
+ masters and smmu
+Date: Thu, 8 Mar 2018 10:29:47 +0530
+Message-ID: <CAFp+6iF1oM=fmRCqSG-SxcUVvvOLet_Y0p7pmGn+=B-LdMNiww@mail.gmail.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+ <20180302101050.6191-5-vivek.gautam@codeaurora.org> <f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, jcrouse@codeaurora.org, Stephen Boyd <sboyd@codeaurora.org>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-cmd_dt_S_dtb constructs the assembly source to incorporate a devicetree
-FDT (that is, the .dtb file) as binary data in the kernel image. This
-assembly source contains labels before and after the binary data. The
-label names incorporate the file name of the corresponding .dtb file.
-Hyphens are not legal characters in labels, so .dtb files built into the
-kernel with hyphens in the file name result in errors like the
-following:
+On Wed, Mar 7, 2018 at 6:17 PM, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 02/03/18 10:10, Vivek Gautam wrote:
+>>
+>> From: Sricharan R <sricharan@codeaurora.org>
+>>
+>> Finally add the device link between the master device and
+>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>> master needs it. This is done from add_device callback which gets
+>> called once when the master is added to the smmu.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 3d6a1875431f..bb1ea82c1003 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -217,6 +217,9 @@ struct arm_smmu_device {
+>>         /* IOMMU core code handle */
+>>         struct iommu_device             iommu;
+>> +
+>> +       /* runtime PM link to master */
+>> +       struct device_link *link;
+>
+>
+> Just the one?
+>
+>>   };
+>>     enum arm_smmu_context_fmt {
+>> @@ -1470,10 +1473,26 @@ static int arm_smmu_add_device(struct device *dev)
+>>         iommu_device_link(&smmu->iommu, dev);
+>>   +     /*
+>> +        * Establish the link between smmu and master, so that the
+>> +        * smmu gets runtime enabled/disabled as per the master's
+>> +        * needs.
+>> +        */
+>> +       smmu->link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+>
+>
+> Maybe I've misunderstood how the API works, but AFAICS the second and
+> subsequent devices are all just going to overwrite (and leak) the link of
+> the previous one...
 
-bcm3368-netgear-cvg834g.dtb.S: Assembler messages:
-bcm3368-netgear-cvg834g.dtb.S:5: Error: : no such section
-bcm3368-netgear-cvg834g.dtb.S:5: Error: junk at end of line, first unrecognized character is `-'
-bcm3368-netgear-cvg834g.dtb.S:6: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_begin:'
-bcm3368-netgear-cvg834g.dtb.S:8: Error: unrecognized opcode `__dtb_bcm3368-netgear-cvg834g_end:'
-bcm3368-netgear-cvg834g.dtb.S:9: Error: : no such section
-bcm3368-netgear-cvg834g.dtb.S:9: Error: junk at end of line, first unrecognized character is `-'
+Sorry, my bad. Will take care of this.
 
-Fix this by updating cmd_dt_S_dtb to transform all hyphens from the file
-name to underscores when constructing the labels.
+regards
+Vivek
 
-As of v4.16-rc2, 1139 .dts files across ARM64, ARM, MIPS and PowerPC
-contain hyphens in their names, but the issue only currently manifests
-on Broadcom MIPS platforms, as that is the only place where such files
-are built into the kernel. For example when CONFIG_DT_NETGEAR_CVG834G=y,
-or on BMIPS kernels when the dtbs target is used (in the latter case it
-admittedly shouldn't really build all the dtb.o files, but thats a
-separate issue).
+>
+>> +       if (!smmu->link) {
+>> +               dev_warn(smmu->dev, "Unable to create device link between
+>> %s and %s\n",
+>> +                        dev_name(smmu->dev), dev_name(dev));
+>> +               ret = -ENODEV;
+>> +               goto out_unlink;
+>> +       }
+>> +
+>>         arm_smmu_rpm_put(smmu);
+>>         return 0;
+>>   +out_unlink:
+>> +       iommu_device_unlink(&smmu->iommu, dev);
+>> +       arm_smmu_master_free_smes(fwspec);
+>>   out_rpm_put:
+>>         arm_smmu_rpm_put(smmu);
+>>   out_cfg_free:
+>> @@ -1496,6 +1515,8 @@ static void arm_smmu_remove_device(struct device
+>> *dev)
+>>         cfg  = fwspec->iommu_priv;
+>>         smmu = cfg->smmu;
+>>   +     device_link_del(smmu->link);
+>
+>
+> ...and equivalently you end up with a double-free (or more) here of a link
+> which may not have belonged to dev anyway.
+>
+> Robin.
+>
+>
+>> +
+>>         ret = arm_smmu_rpm_get(smmu);
+>>         if (ret < 0)
+>>                 return;
+>>
+>
 
-Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
-Signed-off-by: James Hogan <jhogan@kernel.org>
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Kevin Cernekee <cernekee@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: <stable@vger.kernel.org> # 4.9+
----
-Changes in v2:
- - Rewrite commit message (thanks Frank for some improved wording).
- - Add Franks' reviewed-by.
----
- scripts/Makefile.lib | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 5589bae34af6..a6f538b31ad6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -297,11 +297,11 @@ cmd_dt_S_dtb=						\
- 	echo '\#include <asm-generic/vmlinux.lds.h>'; 	\
- 	echo '.section .dtb.init.rodata,"a"';		\
- 	echo '.balign STRUCT_ALIGNMENT';		\
--	echo '.global __dtb_$(*F)_begin';		\
--	echo '__dtb_$(*F)_begin:';			\
-+	echo '.global __dtb_$(subst -,_,$(*F))_begin';	\
-+	echo '__dtb_$(subst -,_,$(*F))_begin:';		\
- 	echo '.incbin "$<" ';				\
--	echo '__dtb_$(*F)_end:';			\
--	echo '.global __dtb_$(*F)_end';			\
-+	echo '__dtb_$(subst -,_,$(*F))_end:';		\
-+	echo '.global __dtb_$(subst -,_,$(*F))_end';	\
- 	echo '.balign STRUCT_ALIGNMENT'; 		\
- ) > $@
- 
+
 -- 
-2.13.6
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
