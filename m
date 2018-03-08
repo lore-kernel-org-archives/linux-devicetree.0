@@ -1,70 +1,60 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 0/4] dt/bindings & ARM: dts: tegra: updates
-Date: Thu, 8 Mar 2018 16:07:23 +0100
-Message-ID: <20180308150723.GB13814@ulmo>
-References: <20180210013326.27771-1-marcel@ziswiler.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/4] ARM: sunxi: mc-smp: Fix "lookback" typo
+Date: Thu, 8 Mar 2018 16:08:53 +0100
+Message-ID: <20180308150853.masskeocuyl5mhp2@flea.lan>
+References: <20180308150012.19045-1-wens@csie.org>
+ <20180308150012.19045-2-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
+        protocol="application/pgp-signature"; boundary="ilifn4hdkjc76jvu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180210013326.27771-1-marcel@ziswiler.com>
+In-Reply-To: <20180308150012.19045-2-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mylene Josserand <mylene.josserand@bootlin.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---0ntfKIWw70PvrIHh
+--ilifn4hdkjc76jvu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 10, 2018 at 02:33:21AM +0100, Marcel Ziswiler wrote:
+On Thu, Mar 08, 2018 at 11:00:09PM +0800, Chen-Yu Tsai wrote:
+> The sunxi_mc_smp_lookback function is modeled after the mcpm_loopback
+> function in the MCPM framework. "lookback" was a typo introduced when
+> the new function was added.
 >=20
-> This series fixes the Tegra GMI controller DT/bindings example, a few
-> IRQ type definitions, removes some invalid uses of rsvd1 pin muxes on
-> Beaver and removes a duplicate pcie-1 node on Venice2.
->=20
->=20
-> Marcel Ziswiler (4):
->   dt/bindings: fix binding examples for tegra gmi controller
->   ARM: dts: tegra: use proper irq type definitions
->   ARM: dts: tegra: beaver: remove invalid uses of rsvd1
->   ARM: dts: tegra: venice2: remove duplicate pcie-1 node
->=20
->  .../devicetree/bindings/bus/nvidia,tegra20-gmi.txt |  6 ++--
->  arch/arm/boot/dts/tegra114-dalmore.dts             |  2 +-
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |  2 +-
->  arch/arm/boot/dts/tegra124-venice2.dts             |  9 ++----
->  arch/arm/boot/dts/tegra30-apalis.dtsi              |  4 +--
->  arch/arm/boot/dts/tegra30-beaver.dts               | 32 +++++++++++-----=
-------
->  arch/arm/boot/dts/tegra30-colibri-eval-v3.dts      |  2 +-
->  7 files changed, 25 insertions(+), 32 deletions(-)
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Applied, thanks.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Thierry
+Maxime
 
---0ntfKIWw70PvrIHh
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ilifn4hdkjc76jvu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqhUasACgkQ3SOs138+
-s6H90g//SF56gv/VDQdTnhEJNU6E84br4xcCdQzeH3/nL+wZMv9PwIFsj3NjS8ta
-gKfsTyW9qsmIudsFjZN/R2KShotcqPAi22hb91fkgpmyQqUq/yU2bvlMUnXvl70j
-MV9NbGhP0fVtTqpFG3fufqhZLltw+U8NLZYTXVDS6ieGEMExs7x+AaCECg84sJfH
-tMl8m+yN5SrYyeGcK+KYmLgh4cwk3U9ey+HTmIyGN1glLwa469x4Ty12C0jYmixl
-PMpjF0UAAlYcK7z8IzE5Oa7D9ZzuJz4iJQVAWYhDf5IZtjb0WyEObZiUMDh1gSA1
-SDGhCmMb6vJjgm+8XaP4QeWa9oIQWT37NYQoJjg18DQaqeHz6xgDG8YPKK39KKGI
-o4pKK8Yg6u/xctwH58EoaiQl+7Ko3o0qV+z29wk2iDnferhONpGD2N4ixSaWmI0r
-5ihlk1t1DXituvuikkMrfasLLEUb2mPc2irixtBWoiYoGmSu2F0TJSyXgIrmcGbN
-Nus9+1UBDT20sWpWZpi4UIYtNMu6k8Q/CrpOrw6QU4oQPUvQA5/wjXyXDwufIXlb
-ZHzafhxAamB1fxZyPtkBcc+0zC81q9J4foufUvt4vwRcAOuJMEpbpOT5ca4HlWxm
-Ed78tVZWwpmsu7y/WZXpA8V5iLRNFNSNp/fgMPfXnr5LC4eGuWo=
-=ErrX
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqhUgQACgkQ0rTAlCFN
+r3Q/Yw/+IyPxPudC8lpj1nP040J51aEF2mXJZXfoMbDA7tWVeKKM3YXFQ6ZjKqnl
+6PlTX8T5p8LsJEM5dPiLaZdvjideRQtK/f7L0HRtBuXhfNob6xnN3XCMrC3lfhFF
+sytjr+6MfzYkQymvWpbfwwTy1KT95BrGO0xsrDxDdZExNtatoFDhR5/QeKWUZDCs
+v6OGyOAMcPkqggx7didZl3MPK1ACFXkYTotSfDX8g/TF0Y+m/v8h+if6S7KRXzhH
+RuIgL342VYw3TJK396kKCuptavpHPXPChRx04iv14PIt8bl2yCsFkYLwZWJhMtxc
+GMj8POk0oBnO0113vJPnGQsWz7w9RDyTO+Hx1lOVxiWPXele7LwRZ8sQjHxQsNlz
+UyCBXf73t+FTCJtC6zoy9V3R+ZFSYGw9AJ1+D/MHlZl89z80YcrLpMGZgvjsmCSI
+TGPjQnZfDeNuleTE+1JI2ZHBX6egFHvxk3gRq2rTpZ+vs2Nl3c2bmhi9xMzluhJy
+2UbfFXAYOWiNny1PJXGY9nyFQSlfCr8f6eEUuNV9910BuL2D9d1nAy0kUOgncaVd
+cd/n22PNMA3LFmk7zEq9icL/H0p3LA7h5sB6//BtRZZ7C6GsD9uxvbtQb21heF/P
+b09TbsJXSqIZohygxbLazUkNzpRzmaipAABlqDh8xmE3fmuaM1w=
+=XVcs
 -----END PGP SIGNATURE-----
 
---0ntfKIWw70PvrIHh--
+--ilifn4hdkjc76jvu--
