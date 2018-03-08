@@ -1,32 +1,38 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 1/6] staging: vc04_services: Replace "firmware" node
- with a compatible lookup.
-Date: Thu, 8 Mar 2018 20:30:17 +0100 (CET)
-Message-ID: <1088519723.430987.1520537417525@email.1und1.de>
-References: <20180307185716.17449-1-eric@anholt.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/2] iio: potentiometer: mcp4018: new driver
+Date: Thu,  8 Mar 2018 20:58:28 +0100
+Message-ID: <20180308195830.16348-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+Hi!
 
-> Eric Anholt <eric@anholt.net> hat am 7. März 2018 um 19:57 geschrieben:
-> 
-> 
-> This was requested by Rob Herring in DT bindings review.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+Here's an iio driver for Microchip MCP4018 potentiometers, that
+also covers a few variants (MCP4017 and MCP4019).
 
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+I found no existing potentiometer driver with a compatible
+interface to piggyback on, so I did a new driver.
 
-for Patches V2: #1, #4, #5
+Cheers,
+Peter
 
-I'm okay with #6 as long as it's unused by any new driver.
+Peter Rosin (2):
+  dt-bindings: trivial: add various mcp4017/18/19 potentiometers
+  iio: potentiometer: mcp4018: driver for Microchip digital
+    potentiometers
 
-Stefan
+ .../devicetree/bindings/trivial-devices.txt        |  12 ++
+ MAINTAINERS                                        |   3 +-
+ drivers/iio/potentiometer/Kconfig                  |  11 ++
+ drivers/iio/potentiometer/Makefile                 |   1 +
+ drivers/iio/potentiometer/mcp4018.c                | 194 +++++++++++++++++++++
+ 5 files changed, 220 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iio/potentiometer/mcp4018.c
+
+-- 
+2.11.0
