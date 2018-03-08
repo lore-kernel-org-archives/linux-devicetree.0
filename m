@@ -1,40 +1,123 @@
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: Re: [1/2] net: macb: Add phy-handle DT support
-Date: Thu, 8 Mar 2018 16:00:45 -0600
-Message-ID: <20180308220045.GA57508@artie.amer.corp.natinst.com>
-References: <20180307224257.1959-1-brad.mouring@ni.com>
- <20180308173247.GA22340@lunn.ch>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 03/11] clk: tegra: dfll registration for multiple SoCs
+Date: Thu, 8 Mar 2018 22:15:51 +0000
+Message-ID: <80ee8493-6741-43dd-691a-eade94ec924f@nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-4-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180308173247.GA22340@lunn.ch>
+In-Reply-To: <1517934852-23255-4-git-send-email-pdeschrijver@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2018 at 06:32:47PM +0100, Andrew Lunn wrote:
-> On Wed, Mar 07, 2018 at 04:42:56PM -0600, Brad Mouring wrote:
-> > This optional binding (as described in the ethernet DT bindings doc)
-> > directs the netdev to the phydev to use. This is useful for a phy
-> > chip that has >1 phy in it, and two netdevs are using the same phy
-> > chip (i.e. the second mac's phy lives on the first mac's MDIO bus)
-> > ...
-> Hi Brad
-> 
-> I think it is more logical to do this in macb_mii_probe().
-> 
-> I would probably also move the fixed_link code from macb_mii_init() to
-> macb_mii_probe(). I would probably also move the fallback to standard
-> phy registration. Make macb_mii_init() about registering the MDIO bus,
-> and macb_mii_probe() about probing the MDIO bus to find the PHY to
-> use. At the moment, it is all rather mixed up.
-> 
->      Andrew
 
-Hi Andrew
+On 06/02/18 16:34, Peter De Schrijver wrote:
+> In a future patch, support for the DFLL in Tegra210 will be introduced.
+> This requires support for more than 1 set of CVB and CPU max frequency
+> tables.
+> 
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c | 37 ++++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> index e2dbb79..6486ad9 100644
+> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/err.h>
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <soc/tegra/fuse.h>
+> @@ -29,8 +30,15 @@
+>  #include "clk-dfll.h"
+>  #include "cvb.h"
+>  
+> +struct dfll_fcpu_data {
+> +	const unsigned long *cpu_max_freq_table;
+> +	unsigned int cpu_max_freq_table_size;
+> +	const struct cvb_table *cpu_cvb_tables;
+> +	unsigned int cpu_cvb_tables_size;
+> +};
+> +
+>  /* Maximum CPU frequency, indexed by CPU speedo id */
+> -static const unsigned long cpu_max_freq_table[] = {
+> +static const unsigned long tegra124_cpu_max_freq_table[] = {
+>  	[0] = 2014500000UL,
+>  	[1] = 2320500000UL,
+>  	[2] = 2116500000UL,
+> @@ -80,6 +88,21 @@
+>  	},
+>  };
+>  
+> +static const struct dfll_fcpu_data tegra124_dfll_fcpu_data = {
+> +	.cpu_max_freq_table = tegra124_cpu_max_freq_table,
+> +	.cpu_max_freq_table_size = ARRAY_SIZE(tegra124_cpu_max_freq_table),
+> +	.cpu_cvb_tables = tegra124_cpu_cvb_tables,
+> +	.cpu_cvb_tables_size = ARRAY_SIZE(tegra124_cpu_cvb_tables)
+> +};
+> +
+> +static const struct of_device_id tegra124_dfll_fcpu_of_match[] = {
+> +	{
+> +		.compatible = "nvidia,tegra124-dfll",
+> +		.data = &tegra124_dfll_fcpu_data,
+> +	},
+> +	{ },
+> +};
+> +
+>  static int get_alignment_from_regulator(struct device *dev,
+>  					struct rail_alignment *align)
+>  {
+> @@ -112,12 +135,17 @@ static int tegra124_dfll_fcpu_probe(struct platform_device *pdev)
+>  {
+>  	int process_id, speedo_id, speedo_value, err;
+>  	struct tegra_dfll_soc_data *soc;
+> +	const struct of_device_id *of_id;
+> +	const struct dfll_fcpu_data *fcpu_data;
+> +
+> +	of_id = of_match_device(tegra124_dfll_fcpu_of_match, &pdev->dev);
+> +	fcpu_data = of_id->data;
 
-That makes sense, I'll rework and resend. Thanks for the suggestion.
+Nit-pick, we can use of_device_get_match_data() here.
 
-Brad
+
+>  	process_id = tegra_sku_info.cpu_process_id;
+>  	speedo_id = tegra_sku_info.cpu_speedo_id;
+>  	speedo_value = tegra_sku_info.cpu_speedo_value;
+>  
+> -	if (speedo_id >= ARRAY_SIZE(cpu_max_freq_table)) {
+> +	if (speedo_id >= fcpu_data->cpu_max_freq_table_size) {
+>  		dev_err(&pdev->dev, "unknown max CPU freq for speedo_id=%d\n",
+>  			speedo_id);
+>  		return -ENODEV;
+> @@ -172,11 +200,6 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id tegra124_dfll_fcpu_of_match[] = {
+> -	{ .compatible = "nvidia,tegra124-dfll", },
+> -	{ },
+> -};
+> -
+>  static const struct dev_pm_ops tegra124_dfll_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
+>  			   tegra_dfll_runtime_resume, NULL)
+> 
+
+Otherwise ...
+
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic
