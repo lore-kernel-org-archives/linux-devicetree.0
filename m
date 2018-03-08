@@ -1,57 +1,79 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: fix pwm_AO_cd compatible
-Date: Wed, 07 Mar 2018 17:10:16 -0800
-Message-ID: <7hd10fgyo7.fsf@baylibre.com>
-References: <20180215101031.18934-1-jbrunet@baylibre.com>
- <9a161f47-3e4a-d1ed-f829-d6989191583a@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+Date: Wed, 7 Mar 2018 19:24:52 -0600
+Message-ID: <CAL_JsqLNxsVaMoefYfLi7ow8BjLkipNJwjvXgpEuXZZF8PT6+A@mail.gmail.com>
+References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
+ <1519949975-13548-5-git-send-email-richard.gong@linux.intel.com>
+ <20180307194745.657ewa6rtcta6eqm@rob-hp-laptop> <CANk1AXS3gbLLy5fvyxcmeSBEaV2LZY9P=M3sOUHUceTgso5YkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9a161f47-3e4a-d1ed-f829-d6989191583a@baylibre.com> (Neil
- Armstrong's message of "Thu, 15 Feb 2018 12:55:19 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANk1AXS3gbLLy5fvyxcmeSBEaV2LZY9P=M3sOUHUceTgso5YkQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@kernel.org>
+Cc: Richard Gong <richard.gong@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Yves Vandervennet <yves.vandervennet@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> On 15/02/2018 11:10, Jerome Brunet wrote:
->> The compatible in pwm_AO_cd is wrong and does not match anything.
->> Correct this with the correct compatible string
->> 
->> Fixes: 4a81e5ddfb43 ("ARM64: dts: meson-axg: add PWM DT info for Meson-Axg SoC")
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index a7cc9e401a92..880e25b113c1 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -844,7 +844,7 @@
->>  			};
->>  
->>  			pwm_AO_cd: pwm@2000 {
->> -				compatible = "amlogic,axg-ao-pwm";
->> +				compatible = "amlogic,meson-axg-ao-pwm";
->>  				reg = <0x0 0x02000  0x0 0x20>;
->>  				#pwm-cells = <3>;
->>  				status = "disabled";
->> 
+On Wed, Mar 7, 2018 at 4:20 PM, Alan Tull <atull@kernel.org> wrote:
+> On Wed, Mar 7, 2018 at 1:47 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Mar 01, 2018 at 06:19:32PM -0600, richard.gong@linux.intel.com wrote:
+>>> From: Alan Tull <atull@kernel.org>
+>>>
+>>> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+>>>
+>>> Signed-off-by: Alan Tull <atull@kernel.org>
+>>> ---
+>>> v2: this patch is added in patch set version 2
+>>> ---
+>>>  .../devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt  | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+>>> new file mode 100644
+>>> index 0000000..78de689
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+>>> @@ -0,0 +1,10 @@
+>>> +Intel Stratix10 SoC FPGA Manager
+>>> +
+>>> +Required properties:
+>>> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
+>>> +
+>>> +Example:
+>>> +
+>>> +     fpga_mgr: fpga-mgr@0 {
+>>> +             compatible = "intel,stratix10-soc-fpga-mgr";
+>>
+>> No reg or anything else? Is that because it all goes thru the service
+>> layer firmware?
 >
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Yes.
+>
+> There will be a few more clients of the service layer: QSPI, Crypto
+> and warm reset.
+>
+>> Just get the service layer driver to instantiate a
+>> device for this driver or get rid of the 2 layers if that's all the
+>> firmware interface does. DT is not a Linux driver instantiation
+>> mechanism.
+>
+> Right, this should be describing hardware.
+>
+> I could add this to the service layer binding:
+>
+> firmware {
+>         svc {
+>                 compatible = "intel,stratix10-svc";
+>                 method = "smc";
+>                 memory-region = <&service_reserved>;
+>                 fpga-mgr {
+>                         compatible = "intel,stratix10-soc-fpga-mgr";
 
-Applied to v4.17/dt64,
+Still, why do you need this node? If you don't have any other cross
+tree connections, then the service layer can instantiate the
+device(s).
 
-Kevin
+OTOH, QSPI would need a node because you'll need to describe its bus.
+
+Rob
