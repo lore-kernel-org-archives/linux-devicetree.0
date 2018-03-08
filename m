@@ -1,91 +1,95 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/6] Add mmc support for STM32F7 boards
-Date: Thu, 8 Mar 2018 13:51:23 +0100
-Message-ID: <a835548c-13d6-ffe9-8557-7e288c868308@st.com>
-References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
- <44ed2e2c-83f1-77f5-fa70-29c5525b9ee7@st.com>
- <20180307083538.vicxhbu72jex7zi6@dell>
- <f006750d-1fa9-4bbf-8f4d-32abee21cadd@st.com>
- <20180307105721.yxrun3xztrgun4me@dell>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec support
+Date: Thu, 8 Mar 2018 13:54:08 +0100
+Message-ID: <20180308125408.45jyq2poz7najqze@earth.universe>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
+ <20180307163211.rytfli5tb47yhtug@dell>
+ <20180308094652.qg4atjw5c3hayaz3@earth.universe>
+ <20180308095315.mpcmx2ob6yhsnrm6@dell>
+ <20180308102757.jyi7uo566n6nuct5@earth.universe>
+ <20180308104831.fflq2arj5dxgntia@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6dfljmtajcc6f3jx"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307105721.yxrun3xztrgun4me@dell>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180308104831.fflq2arj5dxgntia@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee
 
-On 03/07/2018 11:57 AM, Lee Jones wrote:
-> On Wed, 07 Mar 2018, Patrice CHOTARD wrote:
-> 
->> Hi Lee
->>
->> On 03/07/2018 09:35 AM, Lee Jones wrote:
->>> On Mon, 05 Mar 2018, Alexandre Torgue wrote:
->>>
->>>> Hi Patrice,
->>>>
->>>> On 03/01/2018 11:53 AM, patrice.chotard@st.com wrote:
->>>>> From: Patrice Chotard <patrice.chotard@st.com>
->>>>>
->>>>> This series adds :
->>>>>     _ SDIO pins definition for STM32F7 SoCs family
->>>>>     _ add sdio1 DT entry for STM32F746 Discovery board
->>>>>     _ add sdio1 DT entry for STM32F746 Evaluation board
->>>>>     _ add sdio1 DT entry for STM32F769 Discovery board
->>>>>     _ add SDMMC2 entry in stm32f7-rcc.h
->>>>>     _ replace sdio2 hard coded value in stm32f746.dtsi
->>>>>
->>>>> v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a
->>>>>          and update board dts files accordingly.
->>>>>
->>>>>
->>>>> Patrice Chotard (6):
->>>>>      ARM: dts: stm32: Add sdio pins definition for stm32f7
->>>>>      ARM: dts: stm32: Enable sdio1 for stm32f746-disco
->>>>>      ARM: dts: stm32: Enable sdio1 for stm32f746-eval
->>>>>      ARM: dts: stm32: Enable sdio1 for stm32f769-disco
->>>>>      dt-bindings: mfd: Add STM32F7 SDMMC2 rcc entry
->>>>>      ARM: dts: stm32: Fix sdio2 rcc hard coded value
->>>>>
->>>>>     arch/arm/boot/dts/stm32746g-eval.dts   | 17 ++++++++++
->>>>>     arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
->>>>>     arch/arm/boot/dts/stm32f746-disco.dts  | 19 +++++++++++
->>>>>     arch/arm/boot/dts/stm32f746.dtsi       |  2 +-
->>>>>     arch/arm/boot/dts/stm32f769-disco.dts  | 19 +++++++++++
->>>>>     include/dt-bindings/mfd/stm32f7-rcc.h  |  1 +
->>>>>     6 files changed, 119 insertions(+), 1 deletion(-)
->>>>>
->>>> Series applied on stm32-next.
->>>
->>> Even the MFD patch?
->>>
->>
->> Yes, the MFD part has been taken by Alex.
-> 
-> You should really wait for all of the appropriate Acks.  This helps to
-> avoid possible merge conflicts when Linus starts pulling branches
-> during the merge-window.
+--6dfljmtajcc6f3jx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I took it maybe too quickly. Sorry for that. As it was only a new define 
-without impact in mfd driver I didn't wait for an "ack". But yes, it is 
-not very "fair" :$. I agree that we need to wait for relevant ack.
+Hi,
 
-cheers
-alex
+On Thu, Mar 08, 2018 at 10:48:31AM +0000, Lee Jones wrote:
+> On Thu, 08 Mar 2018, Sebastian Reichel wrote:
+> > On Thu, Mar 08, 2018 at 09:53:15AM +0000, Lee Jones wrote:
+> > > On Thu, 08 Mar 2018, Sebastian Reichel wrote:
+> > > > On Wed, Mar 07, 2018 at 04:32:11PM +0000, Lee Jones wrote:
+> > > > > On Fri, 23 Feb 2018, Sebastian Reichel wrote:
+> > > > > > +static const struct mfd_cell cpcap_mfd_devices[] =3D {
+> > > >=20
+> > > > [...]
+> > > >=20
+> > > > > > +	}, {
+> > > > > > +		.name          =3D "cpcap-led",
+> > > > > > +		.id            =3D 4,
+> > > > > > +		.of_compatible =3D "motorola,cpcap-led-cp",
+> > > > > > +	}, {
+> > > > > > +		.name          =3D "cpcap-codec",
+> > > > > > +	}
+> > > > > > +};
+> > > > >=20
+> > > > > With none of the entries containing platform_data /me wonders why=
+ you
+> > > > > can't still use devm_of_platform_populate()?
+> > > >=20
+> > > > Because devm_of_platform_populate works with compatible properties =
+and
+> > > > cpcap-codec does not have one after I removed it for Mark.
+> > >=20
+> > > Sorry, I missed that conversation.  Why was it removed?
+> >=20
+> > I had it in PATCHv1-PATCHv4. It was removed, since Mark didn't want
+> > to have it in the DT ABI.
+>=20
+> Right, but why?  Is it not a hardware device?  I think converting from
+> devm_of_platform_populate() for one sub-device is a bit drastic.
 
-> 
-> As it happens, I do not think Alex's tree and MFD will conflict this
-> time, but it's something to bear in mind in the future.
-> 
-> Please add my:
-> 
->    Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-> ... to the patch.
-> 
+This must be answered by Mark. Personally I think it makes more sense
+to have the compatible, since all other cpcap sub-devices have them
+and it should be consistent IMHO. I changed it to avoid bikeshedding.
+
+The previous discussion was here: https://patchwork.kernel.org/patch/102200=
+35/
+
+-- Sebastian
+
+--6dfljmtajcc6f3jx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqhMmwACgkQ2O7X88g7
++prfYg/9FYwcfRW/eU9T8Df/aIaWZ58mBd2CIwpxUSksodKBaSKWJfWIr+p9/Mvp
+kra3a4NVF+DdE7rAn9IyVp5jgbwkf0vdhvzekakHVpT0jhxaZr+bWCa0q96B2FWR
+P3jGB7J1Ic0jnGP0Iwb2yZdub++oTVEBf6tDELzWLBzkVJctQJwGdrlReIMxHYsN
+Rw5LOLd9OiWuWWYNpL5Qu4r7SYWx7flkMC8oD5DlEQyUakvCc8Ls+eciNdrenwnw
+UQTYtkhmorYuWvd+C5sx3OaZmBdUAnuAMBKSjvo9u4pnz9NO+FMrm4MHyLiM3O0m
+MFlA6EdeKZcavff/46HCZvdAMYJqBFSqDRTTqYekPU4mN3G+wHRnn4i39DgIlFI9
++eX7DH8yq/ZALV3QTcyXNADExyAuJqsuBvlCxLgDnVgP78+Ne/3/t3DS5156VJ0O
+/djJRUreDR9W2Bd9KvYB1/c5/aqgqlqnE95GNhZ7m1gYKSzzLvcpLDxX3bRVuPgh
+5OjzNvHY5Wh1f0IXZYJwX3G6eMmDED0v2iUUpqeCvr+CgLqpHwz35SoVRa1ZUl7L
+t4Th3NxxSuTTSJT4xH3wcJ1uFwZ9GRiOEGJ5uxa7YEuCBlZo2ZjTwXO+8zgu329x
+tSUmK/fdqg1YhJR5WHV0HG+Sujh5z/8q7+jRWODvT68jbCqcVTI=
+=Zpsm
+-----END PGP SIGNATURE-----
+
+--6dfljmtajcc6f3jx--
