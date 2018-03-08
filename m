@@ -1,150 +1,177 @@
-Return-Path: <SRS0=BtsV=GC=ni.com=prvs=260901fb48=brad.mouring@kernel.org>
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: [PATCH v4 net-next 1/4] net: macb: Reorganize macb_mii bringup
-Date: Mon, 12 Mar 2018 16:34:32 -0500
-Message-ID: <20180312213435.115174-2-brad.mouring@ni.com>
-In-Reply-To: <20180312213435.115174-1-brad.mouring@ni.com>
-References: <20180312175956.GS27783@lunn.ch>
- <20180312213435.115174-1-brad.mouring@ni.com>
+Return-Path: <atull@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "Michael Grzeschik  <m.grzeschik@pengutronix.de>, Andrew Lunn" <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, "Julia Cartwright  <julia@ni.com>, <devicetree@vger.kernel.org>, Brad Mouring" <brad.mouring@ni.com>
+In-Reply-To: <CANk1AXRzQmVUErPjtXY=idYWmov-ssMJr2DH9A3WbC_nWaTXWg@mail.gmail.com>
+References: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <1519188826-2047-2-git-send-email-shubhrajyoti.datta@gmail.com>
+ <CANk1AXQ1R4dbgDJrUC4pgKtmoCaJhryTnD=bxwwWbEJn0BQcaA@mail.gmail.com>
+ <20180227002832.GA24387@tyrael.ni.corp.natinst.com> <CAKfKVtGPhb6Mg4UcX58iknEHAvRhp7NzisEONz8Cj+k9OYcu7A@mail.gmail.com>
+ <CANk1AXR6aSwyQTW=NeYrRUQo2Oe8BysyOzf6VHvBuXaxKwNp-g@mail.gmail.com>
+ <CAKfKVtE5u7z_ASmw_f6t6MAybAnoPm+rKm5LQZ_MaYmUEYuOhg@mail.gmail.com>
+ <20180302050033.v6dvlppskpzht7tf@derp-derp.lan> <CAKfKVtGc4rn0UWbs3TVzqS_2=UL24gRcQR4+5e4XOnrztOy06A@mail.gmail.com>
+ <CANk1AXSOrfY6YyN+BfFneCPZEwTth8LrGNkKXgZ6kXuxkRT7QA@mail.gmail.com>
+ <20180303032306.ay6hgctyjhy6wdxg@derp-derp.lan> <CANk1AXRzQmVUErPjtXY=idYWmov-ssMJr2DH9A3WbC_nWaTXWg@mail.gmail.com>
+From: Alan Tull <atull@kernel.org>
+Date: Thu, 8 Mar 2018 16:32:20 -0600
+Message-ID: <CANk1AXQyLM4H_uSdVFMHs6LSM7v-+_ZUm3Denrr4OXAzVA63ew@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fpga: reset bridge: Add the reset bridge
+Content-Type: text/plain; charset="UTF-8"
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>, linux-fpga@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Wu Hao <hao.wu@intel.com>, Enno Luebbers <enno.luebbers@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The macb mii setup (mii_probe() and mii_init()) previously was
-somewhat interspersed, likely a result of organic growth and hacking.
+On Fri, Mar 2, 2018 at 9:54 PM, Alan Tull <atull@kernel.org> wrote:
+> On Fri, Mar 2, 2018 at 9:23 PM, Moritz Fischer <mdf@kernel.org> wrote:
+>> Hi Shubhrajyoti, Alan,
+>>
+>> On Fri, Mar 02, 2018 at 08:43:19PM -0600, Alan Tull wrote:
+>>> On Fri, Mar 2, 2018 at 1:24 AM, Shubhrajyoti Datta
+>>> <shubhrajyoti.datta@gmail.com> wrote:
+>>> > Hi Moritz,
+>>> >
+>>> > <snip>
+>>> >>> >
+>>> >>> > Normally, as Moritz is saying, the reset would be handled by the
+>>> >>> > driver for the fabric-based hardware.
+>>> >>> I didnt understand you mean the  platform-fpga.c ?
+>>> >>
+>>> >> I don't understand this sentence ;-) I'll try to re-explain:
+>>> >>
+>>> >> Say you have an AXI DMA engine in there that needs a reset to be toggled
+>>> >> after programming the FPGA then you are in either one of these cases:
+>>> >>
+>>> >> a) You're doing a full reprogram of the entire fabric, at which point
+>>> >> you can reset everything by asserting them in the driver like in
+>>> >> drivers/fpga/zynq-fpga.c
+>>> > That would work however I was thinking the reset technically should be in
+>>> > the region and not the fpga manager as it is more related to the region than
+>>> > the manager.
+>>>
+>>> OK now I understand that this is supporting a reset that is resetting
+>>> all the hardware in a region of fabric.  The region could contain
+>>> multiple devices.  This change isn't meant to support toggling a
+>>> single fpga-based device's reset (that would be handled in the
+>>> device's driver).
+>>
+>> I could see how that could happen in a design, yes.
+>>
+>>>
+>>> > Ofcourse manager could proxy for the region.
+>>>
+>>> Mapping the reset to the region is the more general case.  It will
+>>> support resets that either apply to a single PR region or resetting a
+>>> whole fabric of a FPGA that is doing full reconfig,  i
+>>>
+>>> >
+>>> > how about [1]
+>>>
+>>> [1] makes sense to me now.  That is a better solution than making this
+>>> be a bridge.
+>>
+>> Yeah I think this is the direction to go for what he's trying to achieve.
+>>>
+>>> >
+>>> >>
+>>> >> b) You're doing a partial reconfiguration in which case the regions that
+>>> >> are being reconfigured contain some peripherals you want to selectively
+>>> >> reset. If you need a software reset, the driver for this peripheral can
+>>> >> request a reset through the normal reset API.
+>>> >
+>>> > So if the ip was  written in full bitstream case the fpga manager does
+>>> > the request.
+>>>
+>>> > In PRR case the driver would do it ?
+>>> >
+>>> > I would have preferred to keep that(full or PRR case) agnostic to the driver.
+>>
+>> Yeah, the device driver should not have to worry about whether it's in partial
+>> reconfiguration or full reconfiguration. What I do feel strongly about
+>> is the region reset shouldn't remove the reset handling from the drivers
+>> if they do need it.
+>
+> Yes, I agree totally.
+>
+>>
+>>> >>
+>>> >> Am I missing somehting here? Why do you need the bridge to do the reset?
+>>> >>
+>>> >> - Moritz
+>>> > [1]
+>>> > diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt
+>>> > b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+>>> > index 6db8aed..955a863 100644
+>>> > --- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
+>>> > +++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+>>> > @@ -196,6 +196,7 @@ Optional properties:
+>>> >  - config-complete-timeout-us : The maximum time in microseconds time for the
+>>> >         FPGA to go to operating mode after the region has been programmed.
+>>> >  - child nodes : devices in the FPGA after programming.
+>>> > +- resets       : Phandle and reset specifier for this region
+>>> >
+>>> >  In the example below, when an overlay is applied targeting fpga-region0,
+>>> >  fpga_mgr is used to program the FPGA.  Two bridges are controlled during
+>>> > diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
+>>> > index 58789b9..8c87a6b 100644
+>>> > --- a/drivers/fpga/fpga-region.c
+>>> > +++ b/drivers/fpga/fpga-region.c
+>>> > @@ -25,6 +25,7 @@
+>>> >  #include <linux/of_platform.h>
+>>> >  #include <linux/slab.h>
+>>> >  #include <linux/spinlock.h>
+>>> > +#include <linux/reset.h>
+>>> >
+>>> >  /**
+>>> >   * struct fpga_region - FPGA Region structure
+>>> > @@ -235,6 +236,8 @@ static int fpga_region_program_fpga(struct
+>>> > fpga_region *region,
+>>> >  {
+>>> >         struct fpga_manager *mgr;
+>>> >         int ret;
+>>> > +       struct device *dev = &region->dev;
+>>> > +       struct reset_control *rstc;
+>>> >
+>>> >         region = fpga_region_get(region);
+>>> >         if (IS_ERR(region)) {
+>>> > @@ -273,6 +276,15 @@ static int fpga_region_program_fpga(struct
+>>> > fpga_region *region,
+>>> >                 goto err_put_br;
+>>> >         }
+>>> >
+>>> > +       rstc = of_reset_control_array_get(dev->of_node, false, true);
+>>> > +       if (IS_ERR(rstc)) {
+>>> > +               goto err_put_br;
+>>> > +       }
+>>> > +
+>>> > +       reset_control_reset(rstc);
+>>> > +       reset_control_put(rstc);
+>>> > +
+>>>
+>>> This looks good to me.  This allows there to be a reset that's not
+>>> dedicated to a specific device, but really is resetting a whole PR
+>>> region.  Or resetting the whole FPGA, it handles both cases.  And we
+>>> get that pretty pain-free, just add the reset to the fpga region in
+>>> the device tree, if this device tree is being used, for example.
+>>
+>> One thing to watch out for is to make sure to not re-introduce an DT
+>> dependency into the fpga-region code.
+>
+> Good catch Moritz!  It looks like this example is based on v4.15?
+> Shubhrajyoti, please look at the linux-next repo [2] as I've separated
+> the DT parts of fpga region to a separate file of-fpga-region.c.
 
-This change moves mii bus registration into mii_init and probing the
-bus for devices into mii_probe.
+The rstc can be added to struct fpga_region in fpga-region.h.
+of_reset_control_array_get can be in of-fpga-region.c.  Toggling the
+reset can still happen in fpga_region_program_fpga.
 
-Signed-off-by: Brad Mouring <brad.mouring@ni.com>
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 79 +++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 38 deletions(-)
+Resetting the contents of a FPGA region is something that will be
+useful in general (currently there are now two users with patches on
+this mailing list wanting to do region reset).  The cool thing is that
+reset support for non-DT platforms has recently been added [3].
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index e84afcf1ecb5..9b6195fbbf8e 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -472,8 +472,42 @@ static int macb_mii_probe(struct net_device *dev)
- 	struct macb *bp = netdev_priv(dev);
- 	struct macb_platform_data *pdata;
- 	struct phy_device *phydev;
--	int phy_irq;
--	int ret;
-+	struct device_node *np;
-+	int phy_irq, ret, i;
-+
-+	pdata = dev_get_platdata(&bp->pdev->dev);
-+	np = bp->pdev->dev.of_node;
-+	ret = 0;
-+
-+	if (np) {
-+		if (of_phy_is_fixed_link(np)) {
-+			if (of_phy_register_fixed_link(np) < 0) {
-+				dev_err(&bp->pdev->dev,
-+					"broken fixed-link specification\n");
-+				return -ENODEV;
-+			}
-+			bp->phy_node = of_node_get(np);
-+		} else {
-+			/* fallback to standard phy registration if no phy were
-+			 * found during dt phy registration
-+			 */
-+			if (!phy_find_first(bp->mii_bus)) {
-+				for (i = 0; i < PHY_MAX_ADDR; i++) {
-+					struct phy_device *phydev;
-+
-+					phydev = mdiobus_scan(bp->mii_bus, i);
-+					if (IS_ERR(phydev) &&
-+					    PTR_ERR(phydev) != -ENODEV) {
-+						ret = PTR_ERR(phydev);
-+						break;
-+					}
-+				}
-+
-+				if (ret)
-+					return -ENODEV;
-+			}
-+		}
-+	}
- 
- 	if (bp->phy_node) {
- 		phydev = of_phy_connect(dev, bp->phy_node,
-@@ -488,7 +522,6 @@ static int macb_mii_probe(struct net_device *dev)
- 			return -ENXIO;
- 		}
- 
--		pdata = dev_get_platdata(&bp->pdev->dev);
- 		if (pdata) {
- 			if (gpio_is_valid(pdata->phy_irq_pin)) {
- 				ret = devm_gpio_request(&bp->pdev->dev,
-@@ -533,7 +566,7 @@ static int macb_mii_init(struct macb *bp)
- {
- 	struct macb_platform_data *pdata;
- 	struct device_node *np;
--	int err = -ENXIO, i;
-+	int err;
- 
- 	/* Enable management port */
- 	macb_writel(bp, NCR, MACB_BIT(MPE));
-@@ -556,39 +589,9 @@ static int macb_mii_init(struct macb *bp)
- 	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
- 
- 	np = bp->pdev->dev.of_node;
--	if (np) {
--		if (of_phy_is_fixed_link(np)) {
--			if (of_phy_register_fixed_link(np) < 0) {
--				dev_err(&bp->pdev->dev,
--					"broken fixed-link specification\n");
--				goto err_out_unregister_bus;
--			}
--			bp->phy_node = of_node_get(np);
--
--			err = mdiobus_register(bp->mii_bus);
--		} else {
--			/* try dt phy registration */
--			err = of_mdiobus_register(bp->mii_bus, np);
--
--			/* fallback to standard phy registration if no phy were
--			 * found during dt phy registration
--			 */
--			if (!err && !phy_find_first(bp->mii_bus)) {
--				for (i = 0; i < PHY_MAX_ADDR; i++) {
--					struct phy_device *phydev;
--
--					phydev = mdiobus_scan(bp->mii_bus, i);
--					if (IS_ERR(phydev) &&
--					    PTR_ERR(phydev) != -ENODEV) {
--						err = PTR_ERR(phydev);
--						break;
--					}
--				}
- 
--				if (err)
--					goto err_out_unregister_bus;
--			}
--		}
-+	if (np) {
-+		err = of_mdiobus_register(bp->mii_bus, np);
- 	} else {
- 		for (i = 0; i < PHY_MAX_ADDR; i++)
- 			bp->mii_bus->irq[i] = PHY_POLL;
-@@ -610,10 +613,10 @@ static int macb_mii_init(struct macb *bp)
- 
- err_out_unregister_bus:
- 	mdiobus_unregister(bp->mii_bus);
--err_out_free_mdiobus:
--	of_node_put(bp->phy_node);
- 	if (np && of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
-+err_out_free_mdiobus:
-+	of_node_put(bp->phy_node);
- 	mdiobus_free(bp->mii_bus);
- err_out:
- 	return err;
--- 
-2.16.2
+Alan
+
+>
+> Alan
+>
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/fpga
+
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/reset/core.c?id=940821732839622c22db89b57d3969e76c863e44
