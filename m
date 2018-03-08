@@ -1,109 +1,289 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
-Date: Wed, 7 Mar 2018 16:40:19 -0600
-Message-ID: <20180307224019.oowh74pkbi5izuft@rob-hp-laptop>
-References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
-	<1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
+From: Mikko Perttunen <mperttunen@nvidia.com>
+Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
+ based tachometer
+Date: Thu, 8 Mar 2018 09:57:22 +0200
+Message-ID: <73ca5840-865b-b44e-45e6-703b7749fb6f@nvidia.com>
+References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
+ <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
+ <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
+ <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
+ <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
+ <2628eff2-dd33-34f4-a7e1-cfe46ef88a3f@nvidia.com>
+ <4556a8d2-947d-72c4-2962-3167afb53978@kapsi.fi>
+ <62ba7f67-5a99-51ab-1214-eb68ebb7e642@roeck-us.net>
+ <952cb50e-d9a0-ae5e-d9f6-d1ce268f0384@nvidia.com>
+ <f7818e4c-17b6-c58b-3424-85749bb9c1cc@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1520260166-29387-2-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f7818e4c-17b6-c58b-3424-85749bb9c1cc@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>, Rajkumar Rampelli <rrajk@nvidia.com>, Mikko Perttunen <cyndis@kapsi.fi>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 07:59:21PM +0530, Nipun Gupta wrote:
-> The existing IOMMU bindings cannot be used to specify the relationship
-> between fsl-mc devices and IOMMUs. This patch adds a binding for
-> mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
-> 
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> index 6611a7c..011c7d6 100644
-> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> @@ -9,6 +9,24 @@ blocks that can be used to create functional hardware objects/devices
->  such as network interfaces, crypto accelerator instances, L2 switches,
->  etc.
->  
-> +For an overview of the DPAA2 architecture and fsl-mc bus see:
-> +drivers/staging/fsl-mc/README.txt
-> +
-> +As described in the above overview, all DPAA2 objects in a DPRC share the
-> +same hardware "isolation context" and a 10-bit value called an ICID
-> +(isolation context id) is expressed by the hardware to identify
-> +the requester.
-> +
-> +The generic 'iommus' property is cannot be used to describe the relationship
-> +between fsl-mc and IOMMUs, so an iommu-parent property is used to define
-> +the same.
 
-Why not? It is just a link between 2 nodes.
 
-> +
-> +For generic IOMMU bindings, see
-> +Documentation/devicetree/bindings/iommu/iommu.txt.
-> +
-> +For arm-smmu binding, see:
-> +Documentation/devicetree/bindings/iommu/arm,smmu.txt.
-> +
->  Required properties:
->  
->      - compatible
-> @@ -88,14 +106,27 @@ Sub-nodes:
->                Value type: <phandle>
->                Definition: Specifies the phandle to the PHY device node associated
->                            with the this dpmac.
-> +Optional properties:
-> +
-> +- iommu-parent: Maps the devices on fsl-mc bus to an IOMMU.
-> +  The property specifies the IOMMU behind which the devices on
-> +  fsl-mc bus are residing.
+On 07.03.2018 16:20, Guenter Roeck wrote:
+> On 03/07/2018 01:47 AM, Rajkumar Rampelli wrote:
+>>
+>>
+>> On Wednesday 28 February 2018 07:59 PM, Guenter Roeck wrote:
+>>> On 02/27/2018 11:03 PM, Mikko Perttunen wrote:
+>>>> On 02/28/2018 08:12 AM, Rajkumar Rampelli wrote:
+>>>>>
+>>>>> On Wednesday 28 February 2018 11:28 AM, Guenter Roeck wrote:
+>>>>>> On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
+>>>>>>>
+>>>>>>> On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
+>>>>>>>> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
+>>>>>>>>> Add generic PWM based tachometer driver via HWMON interface
+>>>>>>>>> to report the RPM of motor. This drivers get the period/duty
+>>>>>>>>> cycle from PWM IP which captures the motor PWM output.
+>>>>>>>>>
+>>>>>>>>> This driver implements a simple interface for monitoring the
+>>>>>>>>> speed of
+>>>>>>>>> a fan and exposes it in roatations per minute (RPM) to the user
+>>>>>>>>> space
+>>>>>>>>> by using the hwmon's sysfs interface
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>>>>>>> ---
+>>>>>>>>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+>>>>>>>>>   drivers/hwmon/Kconfig                      |  10 +++
+>>>>>>>>>   drivers/hwmon/Makefile                     |   1 +
+>>>>>>>>>   drivers/hwmon/generic-pwm-tachometer.c     | 112
+>>>>>>>>> +++++++++++++++++++++++++++++
+>>>>>>>>>   4 files changed, 140 insertions(+)
+>>>>>>>>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
+>>>>>>>>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
+>>>>>>>>>
+>>>>>>>>> diff --git a/Documentation/hwmon/generic-pwm-tachometer
+>>>>>>>>> b/Documentation/hwmon/generic-pwm-tachometer
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 0000000..e0713ee
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/Documentation/hwmon/generic-pwm-tachometer
+>>>>>>>>> @@ -0,0 +1,17 @@
+>>>>>>>>> +Kernel driver generic-pwm-tachometer
+>>>>>>>>> +====================================
+>>>>>>>>> +
+>>>>>>>>> +This driver enables the use of a PWM module to monitor a fan.
+>>>>>>>>> It uses the
+>>>>>>>>> +generic PWM interface and can be used on SoCs as along as the
+>>>>>>>>> SoC supports
+>>>>>>>>> +Tachometer controller that moniors the Fan speed in periods.
+>>>>>>>>> +
+>>>>>>>>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>>>>>>> +
+>>>>>>>>> +Description
+>>>>>>>>> +-----------
+>>>>>>>>> +
+>>>>>>>>> +The driver implements a simple interface for monitoring the
+>>>>>>>>> Fan speed using
+>>>>>>>>> +PWM module and Tachometer controller. It requests period value
+>>>>>>>>> through PWM
+>>>>>>>>> +capture interface to Tachometer and measures the Rotations per
+>>>>>>>>> minute using
+>>>>>>>>> +received period value. It exposes the Fan speed in RPM to the
+>>>>>>>>> user space by
+>>>>>>>>> +using the hwmon's sysfs interface.
+>>>>>>>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>>>>>>>>> index ef23553..8912dcb 100644
+>>>>>>>>> --- a/drivers/hwmon/Kconfig
+>>>>>>>>> +++ b/drivers/hwmon/Kconfig
+>>>>>>>>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+>>>>>>>>>         If you say yes here you get support for the temperature
+>>>>>>>>>         and power sensors for APM X-Gene SoC.
+>>>>>>>>>   +config GENERIC_PWM_TACHOMETER
+>>>>>>>>> +    tristate "Generic PWM based tachometer driver"
+>>>>>>>>> +    depends on PWM
+>>>>>>>>> +    help
+>>>>>>>>> +      Enables a driver to use PWM signal from motor to use
+>>>>>>>>> +      for measuring the motor speed. The RPM is captured by
+>>>>>>>>> +      PWM modules which has PWM capture capability and this
+>>>>>>>>> +      drivers reads the captured data from PWM IP to convert
+>>>>>>>>> +      it to speed in RPM.
+>>>>>>>>> +
+>>>>>>>>>   if ACPI
+>>>>>>>>>     comment "ACPI drivers"
+>>>>>>>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>>>>>>>>> index f814b4a..9dcc374 100644
+>>>>>>>>> --- a/drivers/hwmon/Makefile
+>>>>>>>>> +++ b/drivers/hwmon/Makefile
+>>>>>>>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    +=
+>>>>>>>>> wm8350-hwmon.o
+>>>>>>>>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+>>>>>>>>>     obj-$(CONFIG_PMBUS)        += pmbus/
+>>>>>>>>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
+>>>>>>>>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+>>>>>>>>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c
+>>>>>>>>> b/drivers/hwmon/generic-pwm-tachometer.c
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 0000000..9354d43
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
+>>>>>>>>> @@ -0,0 +1,112 @@
+>>>>>>>>> +/*
+>>>>>>>>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights
+>>>>>>>>> reserved.
+>>>>>>>>> + *
+>>>>>>>>> + * This program is free software; you can redistribute it
+>>>>>>>>> and/or modify it
+>>>>>>>>> + * under the terms and conditions of the GNU General Public
+>>>>>>>>> License,
+>>>>>>>>> + * version 2, as published by the Free Software Foundation.
+>>>>>>>>> + *
+>>>>>>>>> + * This program is distributed in the hope it will be useful,
+>>>>>>>>> but WITHOUT
+>>>>>>>>> + * ANY WARRANTY; without even the implied warranty of
+>>>>>>>>> MERCHANTABILITY or
+>>>>>>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+>>>>>>>>> Public License for
+>>>>>>>>> + * more details.
+>>>>>>>>> + *
+>>>>>>>>> + */
+>>>>>>>>> +
+>>>>>>>>> +#include <linux/module.h>
+>>>>>>>>> +#include <linux/platform_device.h>
+>>>>>>>>> +#include <linux/err.h>
+>>>>>>>>> +#include <linux/pwm.h>
+>>>>>>>>> +#include <linux/hwmon.h>
+>>>>>>>>> +#include <linux/hwmon-sysfs.h>
+>>>>>>>>> +
+>>>>>>>>> +struct pwm_hwmon_tach {
+>>>>>>>>> +    struct device        *dev;
+>>>>>>>>> +    struct pwm_device    *pwm;
+>>>>>>>>> +    struct device        *hwmon;
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static ssize_t show_rpm(struct device *dev, struct
+>>>>>>>>> device_attribute *attr,
+>>>>>>>>> +            char *buf)
+>>>>>>>>> +{
+>>>>>>>>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+>>>>>>>>> +    struct pwm_device *pwm = ptt->pwm;
+>>>>>>>>> +    struct pwm_capture result;
+>>>>>>>>> +    int err;
+>>>>>>>>> +    unsigned int rpm = 0;
+>>>>>>>>> +
+>>>>>>>>> +    err = pwm_capture(pwm, &result, 0);
+>>>>>>>>> +    if (err < 0) {
+>>>>>>>>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
+>>>>>>>>> +        return err;
+>>>>>>>>> +    }
+>>>>>>>>> +
+>>>>>>>>> +    if (result.period)
+>>>>>>>>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+>>>>>>>>> +                        result.period);
+>>>>>>>>> +
+>>>>>>>>> +    return sprintf(buf, "%u\n", rpm);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+>>>>>>>>> +
+>>>>>>>>> +static struct attribute *pwm_tach_attrs[] = {
+>>>>>>>>> +    &sensor_dev_attr_rpm.dev_attr.attr,
+>>>>>>>>> +    NULL,
+>>>>>>>>> +};
+>>>>>>>>
+>>>>>>>> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
+>>>>>>>> a single standard hwmon sysfs attribute, having a hwmon driver
+>>>>>>>> is pointless.
+>>>>>>> Guenter Roeck,
+>>>>>>> I will define a new hwmon sysfs attribute node called
+>>>>>>> "hwmon_tachometer_attributes" in hwmon.h like below and update
+>>>>>>> the same in tachometer hwmon driver. Is it fine ?
+>>>>>>> enum hwmon_tachometer_attributes {
+>>>>>>
+>>>>>> Are you kidding me ?
+>>>>>>
+>>>>>> Guenter
+>>>>> Sorry, I just wanted to confirm whether my understanding is correct
+>>>>> or not before implementing it actually.
+>>>>> Or, shall I add this attribute as a part of fan attributes with
+>>>>> "hwmon_fan_rpm" ? or any other way to do it ? I need your inputs in
+>>>>> fixing this.
+>>>>
+>>>> I think he wants the attribute to be named according to the
+>>>> properties in this document:
+>>>> https://www.kernel.org/doc/Documentation/hwmon/sysfs-interface. I
+>>>> guess the attribute would then map to fan1_input, though I'm not
+>>>> sure if that's 100% correct either since this could technically be
+>>>> attached to something other than a fan. But I would think in
+>>>> practice that's not a big concern.
+>>>>
+>>>> Guenter,
+>>>> Please correct me as well if I'm wrong.
+>>>>
+>>> You are absolutely correct.
+>>>
+>>> While I am not opposed to ABI changes, the merits of those would need
+>>> to be
+>>> discussed on the mailing list. But replacing "fan1_input" with "rpm" is
+>>> not an acceptable ABI change, even if it may measure something that
+>>> turns
+>>> but isn't a fan.
+>>>
+>>> If this _is_ in fact supposed to be used for something else but fans, we
+>>> would have to discuss what that might be, and if hwmon is the
+>>> appropriate
+>>> subsystem to measure and report it. This does to some degree lead
+>>> back to
+>>> my concern of having the "fan" part of this patch series in the pwm
+>>> core.
+>>> I am still not sure if that makes sense.
+>>>
+>>> Thanks,
+>>> Guenter
+>> I am planning to add tachometer support in pwm-fan.c driver
+>> (drivers/hwmon/) instead of adding new generic-pwm-tachometer.c
+>> driver. Measuring RPM value will be done in pwm-fan driver itself
+>> using pwm capture feature and will add new sysfs attributes under this
+>> driver to report rpm value of fan.
+>
+> There is an existing attribute to report the RPM of fans. It is called
+> fan[1..n]_input.
+>
+> "replacing "fan1_input" with "rpm" is not an acceptable ABI change"
+>
+> Preemptive NACK.
+>
+> Guenter
+>
 
-If you want a generic property, this should be documented in the common 
-binding.
+I think the idea here (based on personal discussion with Rajkumar) was 
+to add a "new" sysfs attribute the driver exports, but that attribute 
+would be the existing fan[1..n]_input.
 
-Couldn't you have more than 1 IOMMU upstream of a MC?
+Mikko
 
->  
->  Example:
->  
-> +        smmu: iommu@5000000 {
-> +               compatible = "arm,mmu-500";
-> +               #iommu-cells = <1>;
-> +               stream-match-mask = <0x7C00>;
-> +               ...
-> +        };
-> +
->          fsl_mc: fsl-mc@80c000000 {
->                  compatible = "fsl,qoriq-mc";
->                  reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
->                        <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
->                  msi-parent = <&its>;
-> +                iommu-parent = <&smmu>;
->                  #address-cells = <3>;
->                  #size-cells = <1>;
->  
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>
+>>>> Thank you,
+>>>> Mikko
+>>>>
+>>>>>
+>>>>> --
+>>>>> To unsubscribe from this list: send the line "unsubscribe
+>>>>> linux-tegra" in
+>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>> More majordomo info at http://vger.kernel.org/majordomo-info.html
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe
+>>>> linux-hwmon" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at http://vger.kernel.org/majordomo-info.html
+>>>>
+>>>
+>>
+>>
+>
