@@ -1,69 +1,93 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
- of the HDMI node
-Date: Thu, 08 Mar 2018 15:50:33 +0900
-Message-ID: <5AA0DD39.3040108@samsung.com>
-References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
- <20180307171111.14551-1-s.nawrocki@samsung.com>
- <5AA0B59F.3070402@samsung.com>
- <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
+ receiver) power control driver
+Date: Thu, 8 Mar 2018 07:16:44 +0100
+Message-ID: <20180308071459.310d0ba2@aktux>
+References: <cover.1512114576.git.hns@goldelico.com>
+        <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+        <20171222124427.GI3374@localhost>
+        <20180109184347.28ba0a6e@aktux>
+        <20180112144647.GA5992@localhost>
+        <20180112194022.7da1e726@kemnade.info>
+        <20180118064736.GH3286@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//GnIge=aWUzMu=J_ndxszsL"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180118064736.GH3286@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyZWssCgoyMDE464WEIDAz7JuUIDA47J28IDE1OjI57JeQIE1hcmVrIFN6eXByb3dza2kg
-7J20KOqwgCkg7JO0IOq4gDoKPiBIaSBJbmtpLAo+IAo+IE9uIDIwMTgtMDMtMDggMDU6MDEsIElu
-a2kgRGFlIHdyb3RlOgo+PiBIaSBTeWx3ZXN0ZXIsCj4+Cj4+IDIwMTjrhYQgMDPsm5QgMDjsnbwg
-MDI6MTHsl5AgU3lsd2VzdGVyIE5hd3JvY2tpIOydtCjqsIApIOyTtCDquIA6Cj4+PiBUaGUgI3Nv
-dW5kLWRhaS1jZWxscyBEVCBwcm9wZXJ0eSBpcyByZXF1aXJlZCB0byBkZXNjcmliZSBsaW5rIGJl
-dHdlZW4KPj4+IHRoZSBIRE1JIElQIGJsb2NrIGFuZCB0aGUgU29DJ3MgYXVkaW8gc3Vic3lzdGVt
-Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFN5bHdlc3RlciBOYXdyb2NraSA8cy5uYXdyb2NraUBz
-YW1zdW5nLmNvbT4KPj4+IC0tLQo+Pj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0IHwgMyArKysKPj4+ICAgMSBmaWxlIGNo
-YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19oZG1p
-LnR4dAo+Pj4gaW5kZXggODcxNWZmMDZjNDU3Li42YjJhNTI2ZWM1ODYgMTAwNjQ0Cj4+PiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9z
-X2hkbWkudHh0Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0Cj4+PiBAQCAtNTAsNiArNTAsOSBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzIGZvciBFeHlub3MgNTQzMzoKPj4+ICAgLSBjbG9jay1uYW1lczogYWxpYXNl
-cyBmb3IgYWJvdmUgY2xvY2sgc3BlY2ZpZXJzLgo+Pj4gICAtIHNhbXN1bmcsc3lzcmVnOiBoYW5k
-bGUgdG8gc3lzY29uIHVzZWQgdG8gY29udHJvbCB0aGUgc3lzdGVtIHJlZ2lzdGVycy4KPj4+ICAg
-K09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIEV4eW5vcyA0MjEwLCA0MjEyLCA1NDIwIGFuZCA1NDMz
-Ogo+Pj4gKyAtICNzb3VuZC1kYWktY2VsbHM6IHNob3VsZCBiZSAwLgo+Pj4gKwo+PiBKdXN0IHRy
-aXZpYWwgcXVlc3Rpb24uICdzb3VuZC1kYWktY2VsbHMnIHByb3BlcnR5IGNvdWxkIGFmZmVjdCBo
-ZG1pIGRyaXZlcj8gSSBsb29rZWQgaW50byBIRE1JIGNvZGVjIGRyaXZlciBidXQgSSBkaWRuJ3Qg
-ZmluZCByZWxldmF0IGNvZGUuCj4+IEkgbWVhbiB0aGF0IGlmIHRoaXMgcHJvcGVydHkgbmV2ZXIg
-YWZmZWN0IEhETUkgZHJpdmVyIHRoZW4gdGhpcyBwcm9wZXJ0eSB3b3VsZCBiZSBhIGRlYWQgdGhp
-bmcgZXZlbiB0aHJvdWdoIHRoaXMgY2FuIGJlIGRlY2xhcmVkIG9wdGlvbmFsbHkuCj4gCj4gVGhp
-cyBwcm9wZXJ0eSBpcyB1c2VkIGJ5IEFTb0MgZnJhbWV3b3JrIHdoZW4gaXQgaXMgYnVpbGRpbmcg
-Y29ubmVjdGlvbnMKPiBiZXR3ZWVuIGFsbCBlbGVtZW50cyBvZiB0aGUgdmlydHVhbCAnc291bmQg
-Y2FyZCcuIEl0IGFsbG93cyBnZW5lcmljCj4gY29kZSB0byBmaW5kIHByb3BlciBkcml2ZXIgZm9y
-IHRoZSBkaWdpdGFsIGF1ZGlvIGludGVyZmFjZSAoREFJKSBvYmplY3QuCgpJIGFsc28gYXNzdW1l
-ZCB0aGF0IHNvbWUgcGxhY2Ugb2YgQVNvQyBmcmFtZXdvcmsgY2hlY2tzIHRoaXMgcHJvcGVydHku
-IEZvciB0aGlzIEkgbG9va2VkIGludG8gSERNSSBjb2RlYyBkcml2ZXIoc291bmQvc29jL2NvZGVj
-cy9oZG1pLWNvZGVjLmMpIGFuZCByZWxldmFudCBpbnRlcmZhY2VzIG9mIEFTb0MgZnJhbWV3b3Jr
-LgpCdXQgSSBjb3VsZG4ndCBmaW5kIGl0LiA6KCBDb3VsZCB5b3UgbGV0IG1lIGtub3cgd2hpY2gg
-Y29kZSBvZiBBU29DIGZyYW1ld29yayBjaGVja3MgdGhpcz8gSSBzYXcgdGhpcyBwcm9wZXJ0eSBv
-bmx5IGluICdzbmRfc29jX29mX2dldF9kYWlfbmFtZScgYW5kICdzbmRfc29jX29mX2dldF9kYWlf
-bGlua19jb2RlY3MnIGZ1bmN0aW9ucyBidXQgc2VlbXMgdGhlc2UgZnVuY3Rpb25zIGFyZW4ndCBj
-YWxsZWQgYnkgdGhlIEhETUkgY29kZWMgZHJpdmVyLgoKVGhhbmtzLApJbmtpIERhZQoKPiAKPiBC
-ZXN0IHJlZ2FyZHMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+--Sig_//GnIge=aWUzMu=J_ndxszsL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, 18 Jan 2018 17:47:36 +1100
+Johan Hovold <johan@kernel.org> wrote:
+
+[...]
+> >=20
+> > So to avoid having hardware information spread all over the table at le=
+ast
+> > these information would need to be in devicetree. But that also all fee=
+ls
+> > like a hack and hard to maintain. =20
+>=20
+> Having the device described in the device tree is certainly desirable,
+> not least for chip identification. And with a GPS framework in the
+> kernel with a well-defined interface, implementing power management
+> would be straight forward.
+>=20
+Hmm, devicetree without in-kernel drivers, do we have anything like that
+somewhere? I thought that was a big no-go. But maybe I am wrong.
+
+> I'm just not convinced that the proposed tty interface is the right
+> interface for this. User space would still rely on gpsd for the GPS
+> protocols, and would also ultimately be managing power by killing gpsd
+> or whatever daemon that would otherwise be holding the port open.
+>=20
+> Something like the generic power sequences that has been discussed
+> elsewhere might be a better fit for this if all you want to do is power
+> on and off on port open and close (and on suspend/resume). There really
+> isn't anything GPS-specific in the current proposal (besides the
+> suggested tty-device name).
+
+So a bit like that mmc-powerseq stuff we already have?
+>=20
+> But sure, that wouldn't be sufficient to deal with the
+> unknown-power-state problem with the device in question.
+>=20
+Maybe there could be a kind of active flag set by the tty if
+there is traffic, so that active flag could be used in these
+power sequence stuff? But then again the tty layer has to be extended
+which would probably also cause a lot of ruffled feathers.
+
+Regards,
+Andreas
+
+--Sig_//GnIge=aWUzMu=J_ndxszsL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlqg1UwACgkQfb1qx03i
+kySUIRAAm+s1rDjwjMbnM/1njhhr3ul5v6ns3xiRWFYUCB9H16i/ts2OheXAj304
+udSxZ1eMoY8mVnl9bvao7MY5k1xPR+tcHHG0cVNlR7ZvIpcfrao/10ljXSe52IlW
+jZvO/9h7caocZT6AzqynwoctjClEj8Ck59FJfVM934utY7GDnPhWkFdADQdkPygB
+zUtzDIj3RiWNKiMxq6QSzPF0PnEPTDKmpgIJjfmDTXxfxT/KfPaQCr2PanXAjI/L
+rKADGmTfpMYF+x3bPcCHDLBytg3NZvYFYEp2EdKyBWzOrA9EVqzCqH8VqJ6cHbFZ
+JePoNdy7bcoFNIG6i17iGCqCeSgG+fyrebXVEIY00f0NEXFiilGk5fdVEw8cZrhe
+EJZHU+KbJFC598cTgZ7sP1btCFfs5Z3O5JDVQKwe4uAdkm0g+FmW+fWhxH8pLWXB
+qMSX1NJ0GSlNBhUfJJ4/5Ud0Ft5RcltsiR4JuVbVixcjc5XFnr89EXm7CXEh1kne
+RqS02zpvKIYUbWD1BQ53mj6l1j1SlTM78/ispS+bKN07aPWq72Q9E7s0Nuy6Xr21
+99Iax7Eos6QmPLD5/CE+8C1Fj/BOKqjIcdDpjk8+jZ4nh2RtI/E500LvaqnlOxg1
+YmQKZB0Epdm9ObZdm0KHtpNCrejTye0xt2BI251wwjg+bnikZHc=
+=PAIm
+-----END PGP SIGNATURE-----
+
+--Sig_//GnIge=aWUzMu=J_ndxszsL--
