@@ -1,125 +1,184 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH 2/2] dt-bindings: Add support for SAW documentation
-Date: Thu, 8 Mar 2018 14:14:12 +0200
-Message-ID: <09f301d3b6d6$fa79cfe0$ef6d6fa0$@codeaurora.org>
-References: <1520166709-554-1-git-send-email-ilialin@codeaurora.org> <1520166709-554-3-git-send-email-ilialin@codeaurora.org> <20180307204115.mugm7m3egrc73og2@rob-hp-laptop>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 2/4] drivers: firmware: xilinx: Add ZynqMP firmware
+ driver
+Date: Thu, 8 Mar 2018 12:18:52 +0000
+Message-ID: <2fb8ee8c-35ac-b7e6-e691-84464b0c8745@arm.com>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-3-git-send-email-jollys@xilinx.com>
+ <dab419e8-3afe-5bfe-240e-e9ee4f2300f2@arm.com>
+ <DM2PR0201MB076735E33069DC6F0C84EFDCB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307204115.mugm7m3egrc73og2@rob-hp-laptop>
-Content-Language: en-us
+In-Reply-To: <DM2PR0201MB076735E33069DC6F0C84EFDCB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: Jolly Shah <JOLLYS@xilinx.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review, Rob.
 
-I used existing drivers as reference and defined in the same way. Could you
-point me to a reference that is correct from your point of view?
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Wednesday, March 7, 2018 22:41
-> To: Ilia Lin <ilialin@codeaurora.org>
-> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> lgirdwood@gmail.com; broonie@kernel.org; mark.rutland@arm.com;
-> amit.kucheria@linaro.org; nicolas.dechesne@linaro.org;
-> celster@codeaurora.org; tfinkel@codeaurora.org
-> Subject: Re: [PATCH 2/2] dt-bindings: Add support for SAW documentation
+On 07/03/18 00:44, Jolly Shah wrote:
+> Hi Sudeep,
 > 
-> On Sun, Mar 04, 2018 at 02:31:49PM +0200, Ilia Lin wrote:
-> > Add support for SAW controlled regulators in 8x96.
-> > Document it.
-> >
-> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > ---
-> >  .../bindings/regulator/qcom,spmi-regulator.txt     | 45
-> ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > index 57d2c65..406f2e5 100644
-> > ---
-> > a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-
-> regulator.
-> > +++ txt
-> > @@ -110,6 +110,11 @@ Qualcomm SPMI Regulators
-> >  	Definition: Reference to regulator supplying the input pin, as
-> >  		    described in the data sheet.
-> >
-> > +- qcom,saw-reg:
-> > +	Usage: optional
-> > +	Value type: <phandle>
-> > +	Description: Reference to syscon node defining the SAW registers.
-> > +
-> >
-> >  The regulator node houses sub-nodes for each regulator within the
-> > device. Each  sub-node is identified using the node's name, with valid
-> > values listed for each @@ -201,6 +206,17 @@ see regulator.txt - with
-> additional custom properties described below:
-> >  			2 = 0.55 uA
-> >  			3 = 0.75 uA
-> >
-> > +- qcom,saw-slave:
-> > +	Usage: optional
-> > +	Value type: <boo>
-> > +	Description: SAW controlled gang slave. Will not be configured.
-> > +
-> > +- qcom,saw-leader:
-> > +	Usage: optional
-> > +	Value type: <boo>
-> > +	Description: SAW controlled gang leader. Will be configured as
-> > +		     SAW regulator.
-> > +
-> >  Example:
-> >
-> >  	regulators {
-> > @@ -221,3 +237,32 @@ Example:
-> >
-> >  		....
-> >  	};
-> > +
-> > +Example 2:
-> > +
-> > +	saw3: syscon@9A10000 {
-> > +		compatible = "syscon";
+> Thanks for the review,
 > 
-> syscon should not be used alone. It should have a specific compatible too.
+>> -----Original Message-----
+>> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+>> Sent: Thursday, March 01, 2018 6:28 AM
+>> To: Jolly Shah <JOLLYS@xilinx.com>; michal.simek@xilinx.com
+>> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
+>> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
+>> hkallweit1@gmail.com; keescook@chromium.org;
+>> dmitry.torokhov@gmail.com; robh+dt@kernel.org; mark.rutland@arm.com;
+>> Sudeep Holla <sudeep.holla@arm.com>; Rajan Vaja <RAJANV@xilinx.com>;
+>> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; Jolly Shah <JOLLYS@xilinx.com>
+>> Subject: Re: [PATCH v5 2/4] drivers: firmware: xilinx: Add ZynqMP firmware
+>> driver
+>>
+>>
+>>
+>> On 20/02/18 19:21, Jolly Shah wrote:
+>>> This patch is adding communication layer with firmware.
+>>> Firmware driver provides an interface to firmware APIs.
+>>> Interface APIs can be used by any driver to communicate to
+>>> PMUFW(Platform Management Unit). All requests go through ATF.
+>>>
+>>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+>>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>>> ---
+>>>  arch/arm64/Kconfig.platforms                    |    1 +
+>>>  drivers/firmware/Kconfig                        |    1 +
+>>>  drivers/firmware/Makefile                       |    1 +
+>>>  drivers/firmware/xilinx/Kconfig                 |    4 +
+>>>  drivers/firmware/xilinx/Makefile                |    4 +
+>>>  drivers/firmware/xilinx/zynqmp/Kconfig          |   16 +
+>>>  drivers/firmware/xilinx/zynqmp/Makefile         |    4 +
+>>>  drivers/firmware/xilinx/zynqmp/firmware.c       | 1051
+>> +++++++++++++++++++++++
+>>>  include/linux/firmware/xilinx/zynqmp/firmware.h |  590 +++++++++++++
+>>>  9 files changed, 1672 insertions(+)
+>>>  create mode 100644 drivers/firmware/xilinx/Kconfig  create mode
+>>> 100644 drivers/firmware/xilinx/Makefile  create mode 100644
+>>> drivers/firmware/xilinx/zynqmp/Kconfig
+>>>  create mode 100644 drivers/firmware/xilinx/zynqmp/Makefile
+>>>  create mode 100644 drivers/firmware/xilinx/zynqmp/firmware.c
+>>>  create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware.h
+>>>
+>>> +
+>>> +/**
+>>> + * zynqmp_pm_force_powerdown - PM call to request for another PU or
+>> subsystem to
+>>> + *				be powered down forcefully
+>>> + * @target:	Node ID of the targeted PU or subsystem
+>>> + * @ack:	Flag to specify whether acknowledge is requested
+>>> + *
+>>> + * Return:	Returns status, either success or error+reason
+>>> + */
+>>> +static int zynqmp_pm_force_powerdown(const u32 target,
+>>> +				     const enum zynqmp_pm_request_ack ack) {
+>>> +	return zynqmp_pm_invoke_fn(PM_FORCE_POWERDOWN, target, ack,
+>> 0, 0,
+>>> +NULL); }
+>>> +
+>>
+>> [...]
+>>
+>>> +/**
+>>> + * zynqmp_pm_system_shutdown - PM call to request a system shutdown or
+>> restart
+>>> + * @type:	Shutdown or restart? 0 for shutdown, 1 for restart
+>>> + * @subtype:	Specifies which system should be restarted or shut down
+>>> + *
+>>> + * Return:	Returns status, either success or error+reason
+>>> + */
+>>> +static int zynqmp_pm_system_shutdown(const u32 type, const u32
+>>> +subtype) {
+>>> +	return zynqmp_pm_invoke_fn(PM_SYSTEM_SHUTDOWN, type, subtype,
+>>> +				   0, 0, NULL);
+>>> +}
+>>> +
+>>
+>> I can't understand why you need above 2 APIs: PM_FORCE_POWERDOWN and
+>> PM_SYSTEM_SHUTDOWN. You should use PSCI_SYSTEM_OFF and
+>> PSCI_SYSTEM_RESET and drop these two.
+>>
 > 
-> > +		reg = <0x9A10000 0x1000>;
-> > +	};
-> > +
-> > +	...
-> > +
-> > +	spm-regulators {
-> > +		compatible = "qcom,pm8994-regulators";
-> > +		qcom,saw-reg = <&saw3>;
+> FORCE_POWERDOWN allows remote master to force power off other
+> node/domain. SYSTEM_SHUTDOWN provides interface to shutdown/restart
+> the subsystem. It supports system/subsystem restart with argument value.> PSCI doesn’t
+support argument to identify between restart types.
+
+OK, what are the types you are referring here ? or why PSCI is not
+sufficient ? How do you plan to use these APIs in Linux ?
+
+>>
+>>> +static const struct zynqmp_eemi_ops eemi_ops = {
+>>> +	.get_api_version = zynqmp_pm_get_api_version,
+>>> +	.get_chipid = zynqmp_pm_get_chipid,
+>>> +	.reset_assert = zynqmp_pm_reset_assert,
+>>> +	.reset_get_status = zynqmp_pm_reset_get_status,
+>>> +	.fpga_load = zynqmp_pm_fpga_load,
+>>> +	.fpga_get_status = zynqmp_pm_fpga_get_status,
+>>> +	.sha_hash = zynqmp_pm_sha_hash,
+>>> +	.rsa = zynqmp_pm_rsa,
+>>> +	.request_suspend = zynqmp_pm_request_suspend,
+>>> +	.force_powerdown = zynqmp_pm_force_powerdown,
+>>> +	.request_wakeup = zynqmp_pm_request_wakeup,
+>>> +	.set_wakeup_source = zynqmp_pm_set_wakeup_source,
+>>> +	.system_shutdown = zynqmp_pm_system_shutdown,
+>>> +	.request_node = zynqmp_pm_request_node,
+>>> +	.release_node = zynqmp_pm_release_node,
+>>> +	.set_requirement = zynqmp_pm_set_requirement,
+>>> +	.set_max_latency = zynqmp_pm_set_max_latency,
+>>> +	.set_configuration = zynqmp_pm_set_configuration,
+>>> +	.get_node_status = zynqmp_pm_get_node_status,
+>>> +	.get_operating_characteristic =
+>> zynqmp_pm_get_operating_characteristic,
+>>> +	.init_finalize = zynqmp_pm_init_finalize,
+>>> +	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
+>>> +	.ioctl = zynqmp_pm_ioctl,
+>>> +	.query_data = zynqmp_pm_query_data,
+>>> +	.pinctrl_request = zynqmp_pm_pinctrl_request,
+>>> +	.pinctrl_release = zynqmp_pm_pinctrl_release,
+>>> +	.pinctrl_get_function = zynqmp_pm_pinctrl_get_function,
+>>> +	.pinctrl_set_function = zynqmp_pm_pinctrl_set_function,
+>>> +	.pinctrl_get_config = zynqmp_pm_pinctrl_get_config,
+>>> +	.pinctrl_set_config = zynqmp_pm_pinctrl_set_config,
+>>> +	.clock_enable = zynqmp_pm_clock_enable,
+>>> +	.clock_disable = zynqmp_pm_clock_disable,
+>>> +	.clock_getstate = zynqmp_pm_clock_getstate,
+>>> +	.clock_setdivider = zynqmp_pm_clock_setdivider,
+>>> +	.clock_getdivider = zynqmp_pm_clock_getdivider,
+>>> +	.clock_setrate = zynqmp_pm_clock_setrate,
+>>> +	.clock_getrate = zynqmp_pm_clock_getrate,
+>>> +	.clock_setparent = zynqmp_pm_clock_setparent,
+>>> +	.clock_getparent = zynqmp_pm_clock_getparent, };
+>>> +
+>> Instead of introducing all these in oneshot, add them as you have users of it.
+>> IOW, show the users of these functions in the series. Also I asked to split this
+>> into functional changes like clock, pinctrl, power, etc.
 > 
-> Why not just a child of the syscon?
+> It can be split into functional changes in same series but it will be
+> difficult to split between users as there are more than 10 driver
+> users for different EEMI APIs and also multiple driver users using
+> specifc EEMI APIs. They all can't be submitted as single series.
 > 
-> > +		s8 {
-> > +			qcom,saw-slave;
-> > +		};
-> > +		s9 {
-> > +			qcom,saw-slave;
-> > +		};
-> > +		s10 {
-> > +			qcom,saw-slave;
-> > +		};
-> > +		pm8994_s11_saw: s11 {
-> > +			qcom,saw-leader;
-> > +			regulator-always-on;
-> > +			regulator-min-microvolt = <900000>;
-> > +			regulator-max-microvolt = <1140000>;
-> > +		};
-> > +	};
-> > --
-> > Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
-> >
+
+Why ? Start with basic EEMI and one functionality with it's user/client
+driver in one series. Then you can top up with EEMI changes for other
+functionality with it's user. If you introduce API's without the users
+in a series it's hard to review and if there are more such unused APIs
+I will object it in future versions.
+
+To start with add only clock or power APIs and functionality in this
+series, add drivers using then. Drop other functionalities like pinctrl,
+fpga control and other functionalities. IOW start something basic and
+simple.
+
+-- 
+Regards,
+Sudeep
