@@ -1,138 +1,90 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v5 3/4] drivers: firmware: xilinx: Add sysfs interface
-Date: Wed, 7 Mar 2018 22:03:54 +0000
-Message-ID: <CY1PR0201MB0764DDE30E3DFF713FAF0F7BB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
- <1519154467-2896-4-git-send-email-jollys@xilinx.com>
- <573acd04-85c4-829d-a0d6-36b3958ac1ec@arm.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec support
+Date: Thu, 8 Mar 2018 10:46:52 +0100
+Message-ID: <20180308094652.qg4atjw5c3hayaz3@earth.universe>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
+ <20180307163211.rytfli5tb47yhtug@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <573acd04-85c4-829d-a0d6-36b3958ac1ec@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="apgfiynhdwpmzzxl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180307163211.rytfli5tb47yhtug@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
 
+--apgfiynhdwpmzzxl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> Sent: Thursday, March 01, 2018 6:44 AM
-> To: Jolly Shah <JOLLYS@xilinx.com>
-> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
-> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
-> hkallweit1@gmail.com; keescook@chromium.org;
-> dmitry.torokhov@gmail.com; michal.simek@xilinx.com; robh+dt@kernel.org;
-> mark.rutland@arm.com; Sudeep Holla <sudeep.holla@arm.com>; Rajan Vaja
-> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
-> <JOLLYS@xilinx.com>
-> Subject: Re: [PATCH v5 3/4] drivers: firmware: xilinx: Add sysfs interface
-> 
-> 
-> 
-> On 20/02/18 19:21, Jolly Shah wrote:
-> > Add Firmware-ggs sysfs interface which provides read/write interface
-> > to global storage registers.
-> >
-> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> > ---
-> >  .../ABI/stable/sysfs-driver-zynqmp-firmware        |  50 ++++
-> >  drivers/firmware/xilinx/zynqmp/Makefile            |   2 +-
-> >  drivers/firmware/xilinx/zynqmp/firmware-ggs.c      | 297
-> +++++++++++++++++++++
-> >  drivers/firmware/xilinx/zynqmp/firmware.c          |  13 +
-> >  include/linux/firmware/xilinx/zynqmp/firmware.h    |   2 +
-> >  5 files changed, 363 insertions(+), 1 deletion(-)  create mode 100644
-> > Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
-> >  create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-ggs.c
-> >
-> > diff --git a/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
-> > b/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
-> > new file mode 100644
-> > index 0000000..b04727a
-> > --- /dev/null
-> > +++ b/Documentation/ABI/stable/sysfs-driver-zynqmp-firmware
-> > @@ -0,0 +1,50 @@
-> > +What:		/sys/devices/platform/zynqmp-firmware/ggs> +Date:
-> 		January 2018
-> > +KernelVersion:	4.15.0
-> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> > +Description:
-> > +		Read/Write PMU global general storage register value,
-> > +		GLOBAL_GEN_STORAGE{0:3}.
-> > +		Global general storage register that can be used
-> > +		by system to pass information between masters.
-> > +
-> 
-> What kind of information ? Is there any semantics for that ?
-> Why does EEMI lack APIs for that if it's critical, giving access to such information
-> to userspace may not be good idea.
-> 	
+Hi Lee,
 
-These are for general use. Information being passed can be application specific.
-Sysfs call underneath maps to EEMI ioctl call to read/write these registers.
+On Wed, Mar 07, 2018 at 04:32:11PM +0000, Lee Jones wrote:
+> On Fri, 23 Feb 2018, Sebastian Reichel wrote:
+> > +static const struct mfd_cell cpcap_mfd_devices[] =3D {
 
-> > +		The register is reset during system or power-on
-> > +		resets. Three registers are used by the FSBL and
-> > +		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
-> > +
-> 
-> FSBL ?
-> 
-> For what is it used ?
+[...]
 
-There are total 8 such registers. 4 are reserved for customer application. Other 4 are being used by Xilinx sw products like FSBL.
-FSBL is using it to pass handoff information to other master.
+> > +	}, {
+> > +		.name          =3D "cpcap-led",
+> > +		.id            =3D 4,
+> > +		.of_compatible =3D "motorola,cpcap-led-cp",
+> > +	}, {
+> > +		.name          =3D "cpcap-codec",
+> > +	}
+> > +};
+>=20
+> With none of the entries containing platform_data /me wonders why you
+> can't still use devm_of_platform_populate()?
 
-> 
-> > +		Usage:
-> > +		# cat /sys/.../zynqmp-firmware/ggs0
-> > +		# echo <mask> <value> > /sys/.../zynqmp-firmware/ggs0
-> > +
-> > +		Example:
-> > +		# cat /sys/.../zynqmp-firmware/ggs0
-> > +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/.../zynqmp-
-> firmware/ggs0
-> > +
-> > +Users:		Xilinx
-> > +
-> > +What:		/sys/devices/platform/zynqmp-firmware/pggs*
-> > +Date:		January 2018
-> > +KernelVersion:	4.15.0
-> > +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> > +Description:
-> > +		Read/Write PMU persistent global general storage register
-> > +		value, PERS_GLOB_GEN_STORAGE{0:3}.
-> > +		Persistent global general storage register that
-> > +		can be used by system to pass information between
-> > +		masters.
-> > +
-> 
-> Ditto
-> 
-> > +		This register is only reset by the power-on reset
-> > +		and maintains its value through a system reset.
-> > +		Four registers are used by the FSBL and other Xilinx
-> > +		software products: PERS_GLOB_GEN_STORAGE{4:7}.
-> > +		Register is reset only by a POR reset.
-> > +
-> 
-> Ditto
-> 
-> --
-> Regards,
-> Sudeep
+Because devm_of_platform_populate works with compatible properties and
+cpcap-codec does not have one after I removed it for Mark.
+
+-- Sebastian
+
+> >  static int cpcap_probe(struct spi_device *spi)
+> >  {
+> >  	const struct of_device_id *match;
+> > @@ -260,7 +308,8 @@ static int cpcap_probe(struct spi_device *spi)
+> >  	if (ret)
+> >  		return ret;
+> > =20
+> > -	return devm_of_platform_populate(&cpcap->spi->dev);
+> > +	return devm_mfd_add_devices(&spi->dev, 0, cpcap_mfd_devices,
+> > +				    ARRAY_SIZE(cpcap_mfd_devices), NULL, 0, NULL);
+> >  }
+> > =20
+> >  static struct spi_driver cpcap_driver =3D {
+>=20
+> --=20
+> Lee Jones
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+--apgfiynhdwpmzzxl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqhBnsACgkQ2O7X88g7
++pqSmBAAgX8CzEdb4wxp/qgqjQaEcdjL7sz7MkodTGO2PkqWChQCuWYK+IDa2k36
+KcJ+YZ/cEw0QgD1cmMz+swhz9UrvDYriqsBZ0A4Bcu8Tbc0JR12QIQEjVWYrvhQi
+Tj5nMbsF7t70J3Eg6i3Eorkx5ipyON5L/Uu08Mog8xZOK46aAeG5W6K44pg6GJ8v
+ov1EE7ubCZIL1gPXOkjXjbl9uetAAXWDYvKURSELm+EeRtrvcfB8iSQy8IF2QPOh
+Nk1p+eRuOTw2ZCBypqDF8o1TGciKLeS3RRGN4hhCV+j+EDc/tmIY/a70MqaVqywh
+Vw514RImpP6B5X2UZqxZg7SSg1ERx2CYPNE7ctZCDpGg+jIJ5YAHHzyJlcTJQHl2
+AxEQF6sLgFfPp/f2wCAjf5wlp+a2SkWlKfM34JPT1+gUNW8Tw/lUwuAVBmFBTOzp
+1DOGROzoeVwrKINAueyzf3FHyuGZ8f60IKMyU3kOwJRaOK/tww2KcltdilcjVx3V
+ESlbEB0XuLn5mbgC61JuCagsIFIBc9d6OTGHfar/DKU2+oE5Kqg7rW4SSwGThEim
+/ivMveujAR7c9NWgkyukzeiNG1o5XYj74c9AUljqBKdnRWTbIkmNwjlcQgHl7OxR
+lhVfMGJu0EvVbcKBoQXeM0W3YoibCRZwx2Vabzc/d1zIEK+O0Ww=
+=dxXu
+-----END PGP SIGNATURE-----
+
+--apgfiynhdwpmzzxl--
