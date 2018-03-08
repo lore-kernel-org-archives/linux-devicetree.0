@@ -1,84 +1,74 @@
-Return-Path: <SRS0=NaSz=GF=linaro.org=ulf.hansson@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
-References: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org> <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 15 Mar 2018 11:23:47 +0100
-Message-ID: <CAPDyKFqj34cHt2sC9i_Fi72fpP3EDkpAwascp_bt8w9YdP6NOQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
-Content-Type: text/plain; charset="UTF-8"
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Return-Path: <SRS0=iiFe=F6=linaro.org=shawn.guo@kernel.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
+Date: Thu,  8 Mar 2018 09:01:33 +0800
+Message-Id: <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
+In-Reply-To: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org>
+References: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 8 March 2018 at 02:01, Shawn Guo <shawn.guo@linaro.org> wrote:
-> From: tianshuliang <tianshuliang@hisilicon.com>
->
-> Hisilicon hi3798cv200 SoC extends the dw-mshc controller
-> for additional clock control. Add device tree bindings for
-> hi3798cv200-dw-mshc.
->
-> Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+From: tianshuliang <tianshuliang@hisilicon.com>
 
-Thanks, applied for next!
+Hisilicon hi3798cv200 SoC extends the dw-mshc controller
+for additional clock control. Add device tree bindings for
+hi3798cv200-dw-mshc.
 
-Kind regards
-Uffe
+Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
+Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/mmc/hi3798cv200-dw-mshc.txt           | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
 
-> ---
->  .../bindings/mmc/hi3798cv200-dw-mshc.txt           | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
-> new file mode 100644
-> index 000000000000..a0693b7145f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
-> @@ -0,0 +1,40 @@
-> +* Hisilicon Hi3798CV200 specific extensions to the Synopsys Designware Mobile
-> +  Storage Host Controller
-> +
-> +Read synopsys-dw-mshc.txt for more details
-> +
-> +The Synopsys designware mobile storage host controller is used to interface
-> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> +differences between the core Synopsys dw mshc controller properties described
-> +by synopsys-dw-mshc.txt and the properties used by the Hisilicon Hi3798CV200
-> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
-> +
-> +Required Properties:
-> +- compatible: Should contain "hisilicon,hi3798cv200-dw-mshc".
-> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed
-> +  in clock-names.
-> +- clock-names: Should contain the following:
-> +       "ciu" - The ciu clock described in synopsys-dw-mshc.txt.
-> +       "biu" - The biu clock described in synopsys-dw-mshc.txt.
-> +       "ciu-sample" - Hi3798CV200 extended phase clock for ciu sampling.
-> +       "ciu-drive"  - Hi3798CV200 extended phase clock for ciu driving.
-> +
-> +Example:
-> +
-> +       emmc: mmc@9830000 {
-> +               compatible = "hisilicon,hi3798cv200-dw-mshc";
-> +               reg = <0x9830000 0x10000>;
-> +               interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&crg HISTB_MMC_CIU_CLK>,
-> +                        <&crg HISTB_MMC_BIU_CLK>,
-> +                        <&crg HISTB_MMC_SAMPLE_CLK>,
-> +                        <&crg HISTB_MMC_DRV_CLK>;
-> +               clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
-> +               fifo-depth = <256>;
-> +               clock-frequency = <200000000>;
-> +               cap-mmc-highspeed;
-> +               mmc-ddr-1_8v;
-> +               mmc-hs200-1_8v;
-> +               non-removable;
-> +               bus-width = <8>;
-> +       };
-> --
-> 1.9.1
->
+diff --git a/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+new file mode 100644
+index 000000000000..a0693b7145f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+@@ -0,0 +1,40 @@
++* Hisilicon Hi3798CV200 specific extensions to the Synopsys Designware Mobile
++  Storage Host Controller
++
++Read synopsys-dw-mshc.txt for more details
++
++The Synopsys designware mobile storage host controller is used to interface
++a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
++differences between the core Synopsys dw mshc controller properties described
++by synopsys-dw-mshc.txt and the properties used by the Hisilicon Hi3798CV200
++specific extensions to the Synopsys Designware Mobile Storage Host Controller.
++
++Required Properties:
++- compatible: Should contain "hisilicon,hi3798cv200-dw-mshc".
++- clocks: A list of phandle + clock-specifier pairs for the clocks listed
++  in clock-names.
++- clock-names: Should contain the following:
++	"ciu" - The ciu clock described in synopsys-dw-mshc.txt.
++	"biu" - The biu clock described in synopsys-dw-mshc.txt.
++	"ciu-sample" - Hi3798CV200 extended phase clock for ciu sampling.
++	"ciu-drive"  - Hi3798CV200 extended phase clock for ciu driving.
++
++Example:
++
++	emmc: mmc@9830000 {
++		compatible = "hisilicon,hi3798cv200-dw-mshc";
++		reg = <0x9830000 0x10000>;
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&crg HISTB_MMC_CIU_CLK>,
++			 <&crg HISTB_MMC_BIU_CLK>,
++			 <&crg HISTB_MMC_SAMPLE_CLK>,
++			 <&crg HISTB_MMC_DRV_CLK>;
++		clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
++		fifo-depth = <256>;
++		clock-frequency = <200000000>;
++		cap-mmc-highspeed;
++		mmc-ddr-1_8v;
++		mmc-hs200-1_8v;
++		non-removable;
++		bus-width = <8>;
++	};
+-- 
+1.9.1
