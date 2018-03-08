@@ -1,111 +1,56 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: Add the device_link between
- masters and smmu
-Date: Thu, 8 Mar 2018 10:29:47 +0530
-Message-ID: <CAFp+6iF1oM=fmRCqSG-SxcUVvvOLet_Y0p7pmGn+=B-LdMNiww@mail.gmail.com>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
- <20180302101050.6191-5-vivek.gautam@codeaurora.org> <f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] dmaengine: mv_xor_v2: Fix clock resource by adding a
+ register clock
+Date: Wed, 7 Mar 2018 20:38:29 -0600
+Message-ID: <20180308023829.zullrqsara6epirv@rob-hp-laptop>
+References: <20180307154010.10430-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, jcrouse@codeaurora.org, Stephen Boyd <sboyd@codeaurora.org>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180307154010.10430-1-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Hanna Hawa <hannah@marvell.com>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Shadi Ammouri <shadi@marvell.com>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, dmaengine@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 6:17 PM, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 02/03/18 10:10, Vivek Gautam wrote:
->>
->> From: Sricharan R <sricharan@codeaurora.org>
->>
->> Finally add the device link between the master device and
->> smmu, so that the smmu gets runtime enabled/disabled only when the
->> master needs it. This is done from add_device callback which gets
->> called once when the master is added to the smmu.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> ---
->>   drivers/iommu/arm-smmu.c | 21 +++++++++++++++++++++
->>   1 file changed, 21 insertions(+)
->>
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index 3d6a1875431f..bb1ea82c1003 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -217,6 +217,9 @@ struct arm_smmu_device {
->>         /* IOMMU core code handle */
->>         struct iommu_device             iommu;
->> +
->> +       /* runtime PM link to master */
->> +       struct device_link *link;
->
->
-> Just the one?
->
->>   };
->>     enum arm_smmu_context_fmt {
->> @@ -1470,10 +1473,26 @@ static int arm_smmu_add_device(struct device *dev)
->>         iommu_device_link(&smmu->iommu, dev);
->>   +     /*
->> +        * Establish the link between smmu and master, so that the
->> +        * smmu gets runtime enabled/disabled as per the master's
->> +        * needs.
->> +        */
->> +       smmu->link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
->
->
-> Maybe I've misunderstood how the API works, but AFAICS the second and
-> subsequent devices are all just going to overwrite (and leak) the link of
-> the previous one...
+On Wed, Mar 07, 2018 at 04:40:10PM +0100, Gregory CLEMENT wrote:
+> On the CP110 components which are present on the Armada 7K/8K SoC we need
+> to explicitly enable the clock for the registers. However it is not
+> needed for the AP8xx component, that's why this clock is optional.
+> 
+> With this patch both clock have now a name, but in order to be backward
+> compatible, the name of the first clock is not used. It allows to still
+> use this clock with a device tree using the old binding.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+> Changelog:
+> 
+> v1 -> v2
+> 
+>  - Fix typos in the commit log
+>  - Add more explanation in te commit log
+>  - Only skip the reg clock usage if the clock is not presetn in the
+>    device tree (-ENOENT)
+>  - Add dt list in CC
+> 
+> v2 -> v3
+> 
+>  - Fix the ENOENT test
+> 
+>  .../devicetree/bindings/dma/mv-xor-v2.txt          |  6 +++++-
 
-Sorry, my bad. Will take care of this.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-regards
-Vivek
-
->
->> +       if (!smmu->link) {
->> +               dev_warn(smmu->dev, "Unable to create device link between
->> %s and %s\n",
->> +                        dev_name(smmu->dev), dev_name(dev));
->> +               ret = -ENODEV;
->> +               goto out_unlink;
->> +       }
->> +
->>         arm_smmu_rpm_put(smmu);
->>         return 0;
->>   +out_unlink:
->> +       iommu_device_unlink(&smmu->iommu, dev);
->> +       arm_smmu_master_free_smes(fwspec);
->>   out_rpm_put:
->>         arm_smmu_rpm_put(smmu);
->>   out_cfg_free:
->> @@ -1496,6 +1515,8 @@ static void arm_smmu_remove_device(struct device
->> *dev)
->>         cfg  = fwspec->iommu_priv;
->>         smmu = cfg->smmu;
->>   +     device_link_del(smmu->link);
->
->
-> ...and equivalently you end up with a double-free (or more) here of a link
-> which may not have belonged to dev anyway.
->
-> Robin.
->
->
->> +
->>         ret = arm_smmu_rpm_get(smmu);
->>         if (ret < 0)
->>                 return;
->>
->
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>  drivers/dma/mv_xor_v2.c                            | 25 +++++++++++++++++-----
+>  2 files changed, 25 insertions(+), 6 deletions(-)
