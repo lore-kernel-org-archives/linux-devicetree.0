@@ -1,7 +1,7 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 11/12] clk: stm32mp1: add MCO clocks
-Date: Thu, 8 Mar 2018 17:54:04 +0100
-Message-ID: <1520528045-18330-12-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v2 05/12] clk: stm32mp1: add PLL clocks
+Date: Thu, 8 Mar 2018 17:53:58 +0100
+Message-ID: <1520528045-18330-6-git-send-email-gabriel.fernandez@st.com>
 References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,52 +23,253 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Two micro-controller clock output (MCO) pins are available:
-MCO1 and MCO2.
-For each output, it is possible to select a clock source.
-The selected clock can be divided thanks to configurable
-prescaler.
+STMP32MP1 has 4 PLLs.
+PLL supports integer and fractional mode.
+Each PLL has 3 output dividers (p, q, r)
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32mp1.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/clk/clk-stm32mp1.c | 209 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 209 insertions(+)
 
 diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 51e3e76..b3a6ec4 100644
+index 47984f3..d62a3a9 100644
 --- a/drivers/clk/clk-stm32mp1.c
 +++ b/drivers/clk/clk-stm32mp1.c
-@@ -252,6 +252,14 @@
- 	"off", "ck_lse", "ck_lsi", "ck_hse_rtc"
- };
+@@ -7,6 +7,7 @@
  
-+static const char * const mco1_src[] = {
-+	"ck_hsi", "ck_hse", "ck_csi", "ck_lsi", "ck_lse"
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+@@ -321,6 +322,196 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
+ 	return hw;
+ }
+ 
++/* STM32 PLL */
++
++struct stm32_pll_obj {
++	/* lock pll enable/disable registers */
++	spinlock_t *lock;
++	void __iomem *reg;
++	struct clk_hw hw;
 +};
 +
-+static const char * const mco2_src[] = {
-+	"ck_mpu", "ck_axi", "ck_mcu", "pll4_p", "ck_hse", "ck_hsi"
++#define to_pll(_hw) container_of(_hw, struct stm32_pll_obj, hw)
++
++#define PLL_ON		BIT(0)
++#define PLL_RDY		BIT(1)
++#define DIVN_MASK	0x1FF
++#define DIVM_MASK	0x3F
++#define DIVM_SHIFT	16
++#define DIVN_SHIFT	0
++#define FRAC_OFFSET	0xC
++#define FRAC_MASK	0x1FFF
++#define FRAC_SHIFT	3
++#define FRACLE		BIT(16)
++
++static int __pll_is_enabled(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++
++	return readl_relaxed(clk_elem->reg) & PLL_ON;
++}
++
++#define TIMEOUT 5
++
++static int pll_enable(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	u32 reg;
++	unsigned long flags = 0;
++	unsigned int timeout = TIMEOUT;
++	int bit_status = 0;
++
++	spin_lock_irqsave(clk_elem->lock, flags);
++
++	if (__pll_is_enabled(hw))
++		goto unlock;
++
++	reg = readl_relaxed(clk_elem->reg);
++	reg |= PLL_ON;
++	writel_relaxed(reg, clk_elem->reg);
++
++	/* We can't use readl_poll_timeout() because we can be blocked if
++	 * someone enables this clock before clocksource changes.
++	 * Only jiffies counter is available. Jiffies are incremented by
++	 * interruptions and enable op does not allow to be interrupted.
++	 */
++	do {
++		bit_status = !(readl_relaxed(clk_elem->reg) & PLL_RDY);
++
++		if (bit_status)
++			udelay(120);
++
++	} while (bit_status && --timeout);
++
++unlock:
++	spin_unlock_irqrestore(clk_elem->lock, flags);
++
++	return bit_status;
++}
++
++static void pll_disable(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	u32 reg;
++	unsigned long flags = 0;
++
++	spin_lock_irqsave(clk_elem->lock, flags);
++
++	reg = readl_relaxed(clk_elem->reg);
++	reg &= ~PLL_ON;
++	writel_relaxed(reg, clk_elem->reg);
++
++	spin_unlock_irqrestore(clk_elem->lock, flags);
++}
++
++static u32 pll_frac_val(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	u32 reg, frac = 0;
++
++	reg = readl_relaxed(clk_elem->reg + FRAC_OFFSET);
++	if (reg & FRACLE)
++		frac = (reg >> FRAC_SHIFT) & FRAC_MASK;
++
++	return frac;
++}
++
++static unsigned long pll_recalc_rate(struct clk_hw *hw,
++				     unsigned long parent_rate)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	u32 reg;
++	u32 frac, divm, divn;
++	u64 rate, rate_frac = 0;
++
++	reg = readl_relaxed(clk_elem->reg + 4);
++
++	divm = ((reg >> DIVM_SHIFT) & DIVM_MASK) + 1;
++	divn = ((reg >> DIVN_SHIFT) & DIVN_MASK) + 1;
++	rate = (u64)parent_rate * divn;
++
++	do_div(rate, divm);
++
++	frac = pll_frac_val(hw);
++	if (frac) {
++		rate_frac = (u64)parent_rate * (u64)frac;
++		do_div(rate_frac, (divm * 8192));
++	}
++
++	return rate + rate_frac;
++}
++
++static int pll_is_enabled(struct clk_hw *hw)
++{
++	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	unsigned long flags = 0;
++	int ret;
++
++	spin_lock_irqsave(clk_elem->lock, flags);
++	ret = __pll_is_enabled(hw);
++	spin_unlock_irqrestore(clk_elem->lock, flags);
++
++	return ret;
++}
++
++static const struct clk_ops pll_ops = {
++	.enable		= pll_enable,
++	.disable	= pll_disable,
++	.recalc_rate	= pll_recalc_rate,
++	.is_enabled	= pll_is_enabled,
 +};
 +
- static const struct clk_div_table axi_div_table[] = {
- 	{ 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
- 	{ 4, 4 }, { 5, 4 }, { 6, 4 }, { 7, 4 },
-@@ -1960,6 +1968,18 @@ enum {
- 		  _MUX(RCC_BDCR, 16, 2, 0),
- 		  _NO_DIV),
- 
-+	/* MCO clocks */
-+	COMPOSITE(CK_MCO1, "ck_mco1", mco1_src, CLK_OPS_PARENT_ENABLE |
-+		  CLK_SET_RATE_NO_REPARENT,
-+		  _GATE(RCC_MCO1CFGR, 12, 0),
-+		  _MUX(RCC_MCO1CFGR, 0, 3, 0),
-+		  _DIV(RCC_MCO1CFGR, 4, 4, 0, NULL)),
++static struct clk_hw *clk_register_pll(struct device *dev, const char *name,
++				       const char *parent_name,
++				       void __iomem *reg,
++				       unsigned long flags,
++				       spinlock_t *lock)
++{
++	struct stm32_pll_obj *element;
++	struct clk_init_data init;
++	struct clk_hw *hw;
++	int err;
 +
-+	COMPOSITE(CK_MCO2, "ck_mco2", mco2_src, CLK_OPS_PARENT_ENABLE |
-+		  CLK_SET_RATE_NO_REPARENT,
-+		  _GATE(RCC_MCO2CFGR, 12, 0),
-+		  _MUX(RCC_MCO2CFGR, 0, 3, 0),
-+		  _DIV(RCC_MCO2CFGR, 4, 4, 0, NULL)),
++	element = kzalloc(sizeof(*element), GFP_KERNEL);
++	if (!element)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &pll_ops;
++	init.flags = flags;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	element->hw.init = &init;
++	element->reg = reg;
++	element->lock = lock;
++
++	hw = &element->hw;
++	err = clk_hw_register(dev, hw);
++
++	if (err) {
++		kfree(element);
++		return ERR_PTR(err);
++	}
++
++	return hw;
++}
++
++struct stm32_pll_cfg {
++	u32 offset;
++};
++
++struct clk_hw *_clk_register_pll(struct device *dev,
++				 struct clk_hw_onecell_data *clk_data,
++				 void __iomem *base, spinlock_t *lock,
++				 const struct clock_config *cfg)
++{
++	struct stm32_pll_cfg *stm_pll_cfg = cfg->cfg;
++
++	return clk_register_pll(dev, cfg->name, cfg->parent_name,
++				base + stm_pll_cfg->offset, cfg->flags, lock);
++}
++
+ static struct clk_hw *
+ _clk_stm32_register_gate(struct device *dev,
+ 			 struct clk_hw_onecell_data *clk_data,
+@@ -400,6 +591,18 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
+ 	.func		= _clk_hw_register_mux,\
+ }
+ 
++#define PLL(_id, _name, _parent, _flags, _offset)\
++{\
++	.id		= _id,\
++	.name		= _name,\
++	.parent_name	= _parent,\
++	.flags		= _flags,\
++	.cfg		=  &(struct stm32_pll_cfg) {\
++		.offset = _offset,\
++	},\
++	.func		= _clk_register_pll,\
++}
++
+ /* STM32 GATE */
+ #define STM32_GATE(_id, _name, _parent, _flags, _gate)\
+ {\
+@@ -452,6 +655,12 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
+ 
+ 	MUX(NO_ID, "ref4", ref4_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK4SELR,
+ 	    0, 2, CLK_MUX_READ_ONLY),
++
++	/* PLLs */
++	PLL(PLL1, "pll1", "ref1", CLK_IGNORE_UNUSED, RCC_PLL1CR),
++	PLL(PLL2, "pll2", "ref1", CLK_IGNORE_UNUSED, RCC_PLL2CR),
++	PLL(PLL3, "pll3", "ref3", CLK_IGNORE_UNUSED, RCC_PLL3CR),
++	PLL(PLL4, "pll4", "ref4", CLK_IGNORE_UNUSED, RCC_PLL4CR),
  };
  
  struct stm32_clock_match_data {
