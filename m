@@ -1,93 +1,55 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
- compatible strings
-Date: Thu, 8 Mar 2018 09:09:02 +0000
-Message-ID: <9431a141-8b9c-9743-0907-8f0720df34a2@arm.com>
-References: <20180307020719.6675-1-andre.przywara@arm.com>
- <20180307020719.6675-5-andre.przywara@arm.com>
- <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Jacob Chen <jacobchen110@gmail.com>
+Subject: Re: [PATCH v5 03/16] media: rkisp1: Add user space ABI definitions
+Date: Thu, 8 Mar 2018 18:00:45 +0800
+Message-ID: <CAFLEztSsg+EW97AN93gd-rx7A1bNwfHK5e9MpLnem40ATnfsrw@mail.gmail.com>
+References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
+ <1514533978-20408-4-git-send-email-zhengsq@rock-chips.com> <d98ac356-a482-f26f-fd6b-6142281d99c3@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBOP3QPKQKGQERIHME2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
-Content-Language: en-GB
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d98ac356-a482-f26f-fd6b-6142281d99c3@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Shunqian Zheng <zhengsq@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Tomasz Figa <tfiga@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Luis Oliveira <Luis.Oliveira@synopsys>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On 08/03/18 02:08, Rob Herring wrote:
-> On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
->> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
->> compatible to the PWM controllers found in the A13 and H3.
-> 
-> If fully compatible, then shouldn't there be a fallback to one of the 
-> existing compatible strings?
-
-Yes, that was the idea. I was already wondering how we would
-differentiate that from "real" compatible strings, but couldn't find
-convincing examples. So should that read:
-
-- compatible: should at least contain be one of:
-    - "allwinner,sun4i-a10-pwm"
-    - "allwinner,sun5i-a10s-pwm"
-    - "allwinner,sun5i-a13-pwm"
-    - "allwinner,sun7i-a20-pwm"
-    - "allwinner,sun8i-h3-pwm"
-  May in addition contain one of:
-    - "allwinner,sun50i-a64-pwm"
-    - "allwinner,sun50i-h5-pwm"
-    - "allwinner,sun50i-h6-pwm"
-
-And this would possibly need to be amended once we need to actually use
-one of those strings (to implement a quirk, for instance)?
-Or is there some other way of reserving those compatible strings, which
-are not expected to be matched in drivers directly?
-
-Cheers,
-Andre.
-
->> Add new compatible strings for those SoCs to the binding document, so
->> that they can be safely used, together with a fallback string
->> (preferably "allwinner,sun5i-a13-pwm").
->> Add add the optionals "resets" property, needed by the H6.
+2018-02-07 20:00 GMT+08:00 Hans Verkuil <hverkuil@xs4all.nl>:
+> On 12/29/17 08:52, Shunqian Zheng wrote:
+>> From: Jeffy Chen <jeffy.chen@rock-chips.com>
 >>
->> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
->> index 51ff54c8b8ef..b3a127a0e58c 100644
->> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
->> @@ -7,11 +7,17 @@ Required properties:
->>      - "allwinner,sun5i-a13-pwm"
->>      - "allwinner,sun7i-a20-pwm"
->>      - "allwinner,sun8i-h3-pwm"
->> +    - "allwinner,sun50i-a64-pwm"
->> +    - "allwinner,sun50i-h5-pwm"
->> +    - "allwinner,sun50i-h6-pwm"
->>    - reg: physical base address and length of the controller's registers
->>    - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
->>      the cells format.
->>    - clocks: From common clock binding, handle to the parent clock.
->>  
->> +Optional properties:
->> +  - resets: shall be the reset control phandle for the PWM block, if required.
->> +
->>  Example:
->>  
->>  	pwm: pwm@1c20e00 {
->> -- 
->> 2.14.1
->>
+>> Add the header for userspace
+>
+> General note: I saw four cases where this documentation referred to the
+> datasheet. Three comments on that:
+>
+> 1) You don't say which datasheet.
+> 2) I assume the datasheet is under NDA?
+
+This datasheet can't be got by customers, even under NDA.
+
+> 3) You do need to give enough information so a reasonable default can be
+>    used. I mentioned in an earlier review that creating an initial params
+>    struct that can be used as a templete would be helpful (or even
+>    required), and that would be a good place to put such defaults.
+>
+
+It don't need a default config
+For applcation writers, they can just init it with zero data, and only
+set value for the part they concerned.
+
+As for ABI, i have checked there is no mismatches.
+Those structures is 32 bit aligned both in 64bit/32bit env, since
+there is no 64bit value.
+"__attribute__ ((packed))" can avoid mismatches happen when we add a
+64bit value to those structures.
+
+As robin said, enums and bools are not guaranteed to be consistent
+between different compiler, so it's a potential risk.
+I have replace bools with unsigned char and enums with unsigned int.
+
+
+> Regards,
+>
+>         Hans
