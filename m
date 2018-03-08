@@ -1,277 +1,199 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 05/12] clk: stm32mp1: add PLL clocks
-Date: Thu, 8 Mar 2018 17:53:58 +0100
-Message-ID: <1520528045-18330-6-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v2 03/12] clk: stm32mp1: add MP1 gate for hse/hsi/csi oscillators
+Date: Thu, 8 Mar 2018 17:53:56 +0100
+Message-ID: <1520528045-18330-4-git-send-email-gabriel.fernandez@st.com>
 References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-STMP32MP1 has 4 PLLs.
-PLL supports integer and fractional mode.
-Each PLL has 3 output dividers (p, q, r)
+MP1 Gate is a gate with a set and a clear register.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32mp1.c | 209 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 209 insertions(+)
+ drivers/clk/clk-stm32mp1.c | 143 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 143 insertions(+)
 
 diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 47984f3..d62a3a9 100644
+index 6261a92..56b738e 100644
 --- a/drivers/clk/clk-stm32mp1.c
 +++ b/drivers/clk/clk-stm32mp1.c
-@@ -7,6 +7,7 @@
+@@ -140,6 +140,11 @@ struct div_cfg {
+ 	const struct clk_div_table *table;
+ };
  
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -321,6 +322,196 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
- 	return hw;
++struct stm32_gate_cfg {
++	struct gate_cfg		*gate;
++	const struct clk_ops	*ops;
++};
++
+ static struct clk_hw *
+ _clk_hw_register_gate(struct device *dev,
+ 		      struct clk_hw_onecell_data *clk_data,
+@@ -191,6 +196,112 @@ struct div_cfg {
+ 					     lock);
  }
  
-+/* STM32 PLL */
++/* MP1 Gate clock with set & clear registers */
 +
-+struct stm32_pll_obj {
-+	/* lock pll enable/disable registers */
-+	spinlock_t *lock;
-+	void __iomem *reg;
-+	struct clk_hw hw;
++static int mp1_gate_clk_enable(struct clk_hw *hw)
++{
++	if (!clk_gate_ops.is_enabled(hw))
++		clk_gate_ops.enable(hw);
++
++	return 0;
++}
++
++static void mp1_gate_clk_disable(struct clk_hw *hw)
++{
++	struct clk_gate *gate = to_clk_gate(hw);
++	unsigned long flags = 0;
++
++	if (clk_gate_ops.is_enabled(hw)) {
++		spin_lock_irqsave(gate->lock, flags);
++		writel_relaxed(BIT(gate->bit_idx), gate->reg + RCC_CLR);
++		spin_unlock_irqrestore(gate->lock, flags);
++	}
++}
++
++const struct clk_ops mp1_gate_clk_ops = {
++	.enable		= mp1_gate_clk_enable,
++	.disable	= mp1_gate_clk_disable,
++	.is_enabled	= clk_gate_is_enabled,
 +};
 +
-+#define to_pll(_hw) container_of(_hw, struct stm32_pll_obj, hw)
-+
-+#define PLL_ON		BIT(0)
-+#define PLL_RDY		BIT(1)
-+#define DIVN_MASK	0x1FF
-+#define DIVM_MASK	0x3F
-+#define DIVM_SHIFT	16
-+#define DIVN_SHIFT	0
-+#define FRAC_OFFSET	0xC
-+#define FRAC_MASK	0x1FFF
-+#define FRAC_SHIFT	3
-+#define FRACLE		BIT(16)
-+
-+static int __pll_is_enabled(struct clk_hw *hw)
++static struct clk_hw *
++_get_stm32_gate(void __iomem *base,
++		const struct stm32_gate_cfg *cfg, spinlock_t *lock)
 +{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
++	struct clk_gate *gate;
++	struct clk_hw *gate_hw;
 +
-+	return readl_relaxed(clk_elem->reg) & PLL_ON;
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		return ERR_PTR(-ENOMEM);
++
++	gate->reg = cfg->gate->reg_off + base;
++	gate->bit_idx = cfg->gate->bit_idx;
++	gate->flags = cfg->gate->gate_flags;
++	gate->lock = lock;
++	gate_hw = &gate->hw;
++
++	return gate_hw;
 +}
 +
-+#define TIMEOUT 5
-+
-+static int pll_enable(struct clk_hw *hw)
++static struct clk_hw *
++clk_stm32_register_gate_ops(struct device *dev,
++			    const char *name,
++			    const char *parent_name,
++			    unsigned long flags,
++			    void __iomem *base,
++			    const struct stm32_gate_cfg *cfg,
++			    spinlock_t *lock)
 +{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
-+	u32 reg;
-+	unsigned long flags = 0;
-+	unsigned int timeout = TIMEOUT;
-+	int bit_status = 0;
-+
-+	spin_lock_irqsave(clk_elem->lock, flags);
-+
-+	if (__pll_is_enabled(hw))
-+		goto unlock;
-+
-+	reg = readl_relaxed(clk_elem->reg);
-+	reg |= PLL_ON;
-+	writel_relaxed(reg, clk_elem->reg);
-+
-+	/* We can't use readl_poll_timeout() because we can be blocked if
-+	 * someone enables this clock before clocksource changes.
-+	 * Only jiffies counter is available. Jiffies are incremented by
-+	 * interruptions and enable op does not allow to be interrupted.
-+	 */
-+	do {
-+		bit_status = !(readl_relaxed(clk_elem->reg) & PLL_RDY);
-+
-+		if (bit_status)
-+			udelay(120);
-+
-+	} while (bit_status && --timeout);
-+
-+unlock:
-+	spin_unlock_irqrestore(clk_elem->lock, flags);
-+
-+	return bit_status;
-+}
-+
-+static void pll_disable(struct clk_hw *hw)
-+{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
-+	u32 reg;
-+	unsigned long flags = 0;
-+
-+	spin_lock_irqsave(clk_elem->lock, flags);
-+
-+	reg = readl_relaxed(clk_elem->reg);
-+	reg &= ~PLL_ON;
-+	writel_relaxed(reg, clk_elem->reg);
-+
-+	spin_unlock_irqrestore(clk_elem->lock, flags);
-+}
-+
-+static u32 pll_frac_val(struct clk_hw *hw)
-+{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
-+	u32 reg, frac = 0;
-+
-+	reg = readl_relaxed(clk_elem->reg + FRAC_OFFSET);
-+	if (reg & FRACLE)
-+		frac = (reg >> FRAC_SHIFT) & FRAC_MASK;
-+
-+	return frac;
-+}
-+
-+static unsigned long pll_recalc_rate(struct clk_hw *hw,
-+				     unsigned long parent_rate)
-+{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
-+	u32 reg;
-+	u32 frac, divm, divn;
-+	u64 rate, rate_frac = 0;
-+
-+	reg = readl_relaxed(clk_elem->reg + 4);
-+
-+	divm = ((reg >> DIVM_SHIFT) & DIVM_MASK) + 1;
-+	divn = ((reg >> DIVN_SHIFT) & DIVN_MASK) + 1;
-+	rate = (u64)parent_rate * divn;
-+
-+	do_div(rate, divm);
-+
-+	frac = pll_frac_val(hw);
-+	if (frac) {
-+		rate_frac = (u64)parent_rate * (u64)frac;
-+		do_div(rate_frac, (divm * 8192));
-+	}
-+
-+	return rate + rate_frac;
-+}
-+
-+static int pll_is_enabled(struct clk_hw *hw)
-+{
-+	struct stm32_pll_obj *clk_elem = to_pll(hw);
-+	unsigned long flags = 0;
++	struct clk_init_data init = { NULL };
++	struct clk_gate *gate;
++	struct clk_hw *hw;
 +	int ret;
 +
-+	spin_lock_irqsave(clk_elem->lock, flags);
-+	ret = __pll_is_enabled(hw);
-+	spin_unlock_irqrestore(clk_elem->lock, flags);
-+
-+	return ret;
-+}
-+
-+static const struct clk_ops pll_ops = {
-+	.enable		= pll_enable,
-+	.disable	= pll_disable,
-+	.recalc_rate	= pll_recalc_rate,
-+	.is_enabled	= pll_is_enabled,
-+};
-+
-+static struct clk_hw *clk_register_pll(struct device *dev, const char *name,
-+				       const char *parent_name,
-+				       void __iomem *reg,
-+				       unsigned long flags,
-+				       spinlock_t *lock)
-+{
-+	struct stm32_pll_obj *element;
-+	struct clk_init_data init;
-+	struct clk_hw *hw;
-+	int err;
-+
-+	element = kzalloc(sizeof(*element), GFP_KERNEL);
-+	if (!element)
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
 +		return ERR_PTR(-ENOMEM);
 +
 +	init.name = name;
-+	init.ops = &pll_ops;
-+	init.flags = flags;
 +	init.parent_names = &parent_name;
 +	init.num_parents = 1;
++	init.flags = flags;
 +
-+	element->hw.init = &init;
-+	element->reg = reg;
-+	element->lock = lock;
++	init.ops = &clk_gate_ops;
 +
-+	hw = &element->hw;
-+	err = clk_hw_register(dev, hw);
++	if (cfg->ops)
++		init.ops = cfg->ops;
 +
-+	if (err) {
-+		kfree(element);
-+		return ERR_PTR(err);
++	hw = _get_stm32_gate(base, cfg, lock);
++	if (IS_ERR(hw))
++		return ERR_PTR(-ENOMEM);
++
++	hw->init = &init;
++
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		kfree(gate);
++		hw = ERR_PTR(ret);
 +	}
 +
 +	return hw;
 +}
 +
-+struct stm32_pll_cfg {
-+	u32 offset;
-+};
-+
-+struct clk_hw *_clk_register_pll(struct device *dev,
-+				 struct clk_hw_onecell_data *clk_data,
-+				 void __iomem *base, spinlock_t *lock,
-+				 const struct clock_config *cfg)
++static struct clk_hw *
++_clk_stm32_register_gate(struct device *dev,
++			 struct clk_hw_onecell_data *clk_data,
++			 void __iomem *base, spinlock_t *lock,
++			 const struct clock_config *cfg)
 +{
-+	struct stm32_pll_cfg *stm_pll_cfg = cfg->cfg;
-+
-+	return clk_register_pll(dev, cfg->name, cfg->parent_name,
-+				base + stm_pll_cfg->offset, cfg->flags, lock);
++	return clk_stm32_register_gate_ops(dev,
++				    cfg->name,
++				    cfg->parent_name,
++				    cfg->flags,
++				    base,
++				    cfg->cfg,
++				    lock);
 +}
 +
- static struct clk_hw *
- _clk_stm32_register_gate(struct device *dev,
- 			 struct clk_hw_onecell_data *clk_data,
-@@ -400,6 +591,18 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
- 	.func		= _clk_hw_register_mux,\
- }
+ #define GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
+ {\
+ 	.id		= _id,\
+@@ -239,12 +350,44 @@ struct div_cfg {
+ 	DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
+ 		  _div_flags, NULL)
  
-+#define PLL(_id, _name, _parent, _flags, _offset)\
++/* STM32 GATE */
++#define STM32_GATE(_id, _name, _parent, _flags, _gate)\
 +{\
 +	.id		= _id,\
 +	.name		= _name,\
 +	.parent_name	= _parent,\
 +	.flags		= _flags,\
-+	.cfg		=  &(struct stm32_pll_cfg) {\
-+		.offset = _offset,\
-+	},\
-+	.func		= _clk_register_pll,\
++	.cfg		= (struct stm32_gate_cfg *) {_gate},\
++	.func		= _clk_stm32_register_gate,\
 +}
 +
- /* STM32 GATE */
- #define STM32_GATE(_id, _name, _parent, _flags, _gate)\
- {\
-@@ -452,6 +655,12 @@ static void mp1_gate_clk_disable(struct clk_hw *hw)
- 
- 	MUX(NO_ID, "ref4", ref4_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK4SELR,
- 	    0, 2, CLK_MUX_READ_ONLY),
++#define _STM32_GATE(_gate_offset, _gate_bit_idx, _gate_flags, _ops)\
++	(&(struct stm32_gate_cfg) {\
++		&(struct gate_cfg) {\
++			.reg_off	= _gate_offset,\
++			.bit_idx	= _gate_bit_idx,\
++			.gate_flags	= _gate_flags,\
++		},\
++		.ops		= _ops,\
++	})
 +
-+	/* PLLs */
-+	PLL(PLL1, "pll1", "ref1", CLK_IGNORE_UNUSED, RCC_PLL1CR),
-+	PLL(PLL2, "pll2", "ref1", CLK_IGNORE_UNUSED, RCC_PLL2CR),
-+	PLL(PLL3, "pll3", "ref3", CLK_IGNORE_UNUSED, RCC_PLL3CR),
-+	PLL(PLL4, "pll4", "ref4", CLK_IGNORE_UNUSED, RCC_PLL4CR),
- };
++#define _GATE_MP1(_gate_offset, _gate_bit_idx, _gate_flags)\
++	_STM32_GATE(_gate_offset, _gate_bit_idx, _gate_flags,\
++		    &mp1_gate_clk_ops)\
++
++#define GATE_MP1(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
++	STM32_GATE(_id, _name, _parent, _flags,\
++		   _GATE_MP1(_offset, _bit_idx, _gate_flags))
++
+ static const struct clock_config stm32mp1_clock_cfg[] = {
+ 	/* Oscillator divider */
+ 	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
+ 	    CLK_DIVIDER_READ_ONLY),
  
- struct stm32_clock_match_data {
+ 	/*  External / Internal Oscillators */
++	GATE_MP1(CK_HSE, "ck_hse", "clk-hse", 0, RCC_OCENSETR, 8, 0),
++	GATE_MP1(CK_CSI, "ck_csi", "clk-csi", 0, RCC_OCENSETR, 4, 0),
++	GATE_MP1(CK_HSI, "ck_hsi", "clk-hsi-div", 0, RCC_OCENSETR, 0, 0),
+ 	GATE(CK_LSI, "ck_lsi", "clk-lsi", 0, RCC_RDLSICR, 0, 0),
+ 	GATE(CK_LSE, "ck_lse", "clk-lse", 0, RCC_BDCR, 0, 0),
+ 
 -- 
 1.9.1
