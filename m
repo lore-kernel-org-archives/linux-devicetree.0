@@ -1,159 +1,148 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
-Date: Thu, 8 Mar 2018 12:32:28 +0000
-Message-ID: <HE1PR0401MB24257DC948C69C7A9080ED66E6DF0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
-References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
-	<1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
-	<20180307224019.oowh74pkbi5izuft@rob-hp-laptop>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
+Date: Thu, 8 Mar 2018 12:41:19 +0000
+Message-ID: <c80c25a0-46df-7cda-ad77-6a25642a641d@arm.com>
+References: <cover.1520274879.git.amit.kucheria@linaro.org>
+ <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
+ <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com>
+ <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180307224019.oowh74pkbi5izuft@rob-hp-laptop>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Ram Chandrasekar <rkumbako@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, March 08, 2018 4:10
-> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> Cc: will.deacon-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> catalin.marinas-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
-> Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
-> joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Laurentiu
-> Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; hch-jcswGhMUV9g@public.gmane.org; linux-
-> arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-> Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
+
+On 07/03/18 10:59, Amit Kucheria wrote:
+> On Tue, Mar 6, 2018 at 6:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>
+>>
+>> On 05/03/18 18:36, Amit Kucheria wrote:
+>>> From: Ram Chandrasekar <rkumbako@codeaurora.org>
+>>>
+>>> There is currently no way for the governor to be selected for each thermal
+>>> zone in devicetree.
+>>
+>> How is that any different from cpufreq, cpuidle or devfreq subsystems ?
 > 
-> On Mon, Mar 05, 2018 at 07:59:21PM +0530, Nipun Gupta wrote:
-> > The existing IOMMU bindings cannot be used to specify the relationship
-> > between fsl-mc devices and IOMMUs. This patch adds a binding for
-> > mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
-> >
-> > Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 31
-> ++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> > index 6611a7c..011c7d6 100644
-> > --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> > +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> > @@ -9,6 +9,24 @@ blocks that can be used to create functional hardware
-> objects/devices
-> >  such as network interfaces, crypto accelerator instances, L2 switches,
-> >  etc.
-> >
-> > +For an overview of the DPAA2 architecture and fsl-mc bus see:
-> > +drivers/staging/fsl-mc/README.txt
-> > +
-> > +As described in the above overview, all DPAA2 objects in a DPRC share the
-> > +same hardware "isolation context" and a 10-bit value called an ICID
-> > +(isolation context id) is expressed by the hardware to identify
-> > +the requester.
-> > +
-> > +The generic 'iommus' property is cannot be used to describe the relationship
-> > +between fsl-mc and IOMMUs, so an iommu-parent property is used to define
-> > +the same.
+> Cpufreq/cpuidle are designed to control a single parameter while
+> thermal framework is trying to mitigate heat from several disparate
+> sources that are throttled in different ways. Besides, cpufreq/cpuidle
+> have somewhat mature governors. Cpuidle has only one governor (for
+> tickless) - menu governor, cpufreq has ondemand in mainline, replaced
+> by interactive in android and hopefully soon both will be replaced by
+> schedutil.
 > 
-> Why not? It is just a link between 2 nodes.
 
-We have #iommu-cells as '1' i.e. iommu will have one stream ID configured for a device.
-Once USB and other devices start to use IOMMU we will also need this iommu-cells.
+While I agree on the facts, I don't think adding this information to DT
+because thermal governors are not so mature compared to cpufreq/idle is
+acceptable. It's give more reason not to add as new governors may get
+added as things mature.
 
-When #iommu-cells is defined as '1' and we have 'iommus=<&smmu>' compilation
-reports warning about the mismatch.
-In fsl-mc bus case we do not have any stream id associated with the bus.
-
-As suggested by Robin, we can simply use the iommu-map property.
-
+> Badly configured cpufreq/cpuidle/devfreq only leads to wasted power,
+> while badly configured thermal zone leads to the loss of operation
+> e.g. reboots, too hot to touch, etc.
 > 
-> > +
-> > +For generic IOMMU bindings, see
-> > +Documentation/devicetree/bindings/iommu/iommu.txt.
-> > +
-> > +For arm-smmu binding, see:
-> > +Documentation/devicetree/bindings/iommu/arm,smmu.txt.
-> > +
-> >  Required properties:
-> >
-> >      - compatible
-> > @@ -88,14 +106,27 @@ Sub-nodes:
-> >                Value type: <phandle>
-> >                Definition: Specifies the phandle to the PHY device node associated
-> >                            with the this dpmac.
-> > +Optional properties:
-> > +
-> > +- iommu-parent: Maps the devices on fsl-mc bus to an IOMMU.
-> > +  The property specifies the IOMMU behind which the devices on
-> > +  fsl-mc bus are residing.
+
+As Viresh pointed out, if the default hardware or firmware configuration
+causes that then it's no good platform to use. If adding more
+functionality in Linux(like cpufreq and others) causes this then Linux
+needs to deal with it. If default thermal can't help in preventing such
+damage then it shouldn't be default.
+
+>>> This results in the default governor being used for all
+>>> thermal zones even though no such restriction exists in the core code.
+>>>
+>>
+>> What restrictions ?
 > 
-> If you want a generic property, this should be documented in the common
-> binding.
-
-We can use the iommu-map property which is already documented.
-
+> I said "no such restriction exists". IOW, the core code does allow the
+> governor to be changed.
 > 
-> Couldn't you have more than 1 IOMMU upstream of a MC?
 
-There is no such device currently with which fsl-mc bus uses more than one iommu.
-Infact, our current systems have only single IOMMU :).
+Ah ok.
 
-Even in future if such devices are there then we can use iommu-map to specify
-more than one iommu with separate requester ID's (RID's).
+>>> Add support for specifying the thermal governor to be used for a thermal
+>>> zone in the devicetree.
+>>
+>> Then what prevents us from doing the same for other subsystems with so
+>> called /inefficient default/ governors ?
+> 
+> Nothing? :-)
+> 
 
-Thank you for review...
+Cool problem solved, just kidding.
 
+> It depends on how closely we want the board DT to represent a
+> production-ready setup. If a platform maintainer wants to ship a
+> well-tested configuration in DT, is that really a problem?
+>
+
+You mean configuration + policy ? Then yes policy in DT is no-no.
+
+> If however, you are requiring them to ship magic runes for userspace
+> daemons (e.g. per-board thermald config) to tweak the various
+> governors in sysfs, it takes a bit more work to get to a
+> production-ready setup.
+> 
+
+Fair enough.
+
+> We should of course continue to improve our govenors to arrive at the
+> one true governor, but that'll take some time and might never even
+> happen in the case of thermal IMHO.
+> 
+
+I am not sure about "one true governor" as different users have
+different needs.
+
+>>> The devicetree config should specify the governor
+>>> name as a string that matches any available governors. If not specified, we
+>>> maintain the current behaviour of using the default governor.
+>>
+>> If one is specified, can the user change it from sysfs ? If
+>> yes, then why do we need this binding at all ? If no, we are basically
+>> restricting, then what would happen if the DT was shipped with wrong
+>> governor specified because the firmware author didn't know about any
+>> other governor ?
+> 
+> The governor can be changed from sysfs today. So it is all override-able.
+> 
+> I guess your main worry is an unmodifiable DT with this option being
+> shipped in firmware, right? That is a fair point, though that could be
+> worked around from sysfs.
+> 
+
+Yes, and Viresh's point triggered more question to me. If DT has some
+governor like interactive which will not in mainline or not configure in
+the default build what will be done. If in such case default governor is
+good enough to boot without burning or any other issues, why not always?
+
+>> IMO, having this in DT is bad idea as it may cause more issues than
+>> gain. We already have sysfs support like other PM subsystems and
+>> userspace can deal with it.
+> 
+> As mentioned above, I think thermal is a bit special because bad
+> configuration may lead to loss of operation. But iff we're strictly
+> enforcing the rule about no policy in board DTs, then I concede.
+> 
+
+As I said IMO I see more issues with that, so I don't like it.
+
+> Personally, I'd like mainline board DTs to have enough policy to
+> provide a stable system so I don't have to futz around with userspace
+> to set it all up correctly (in 3 different distros).
+> 
+
+Sysfs is more flexible than DT and requires some fuzzing to get the best
+out of the platform if you need.
+
+-- 
 Regards,
-Nipun
-
-> 
-> >
-> >  Example:
-> >
-> > +        smmu: iommu@5000000 {
-> > +               compatible = "arm,mmu-500";
-> > +               #iommu-cells = <1>;
-> > +               stream-match-mask = <0x7C00>;
-> > +               ...
-> > +        };
-> > +
-> >          fsl_mc: fsl-mc@80c000000 {
-> >                  compatible = "fsl,qoriq-mc";
-> >                  reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
-> >                        <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
-> >                  msi-parent = <&its>;
-> > +                iommu-parent = <&smmu>;
-> >                  #address-cells = <3>;
-> >                  #size-cells = <1>;
-> >
-> > --
-> > 1.9.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists.infr
-> adead.org%2Fmailman%2Flistinfo%2Flinux-arm-
-> kernel&data=02%7C01%7Cnipun.gupta%40nxp.com%7Cf64b4fe9c5cf45ce8a9a
-> 08d5847c6919%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636560
-> 592302736942&sdata=iOwv%2Fzd8UTLm7YCapDOWzrtd48VQeYY2vlufck7eYZI
-> %3D&reserved=0
+Sudeep
