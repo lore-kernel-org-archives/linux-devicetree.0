@@ -1,44 +1,69 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] thermal: of: Allow selection of thermal governor in DT
-Date: Thu, 8 Mar 2018 10:19:56 +0530
-Message-ID: <CAOh2x=njFxcwDfQs1g3-Estrun5j=fSYVnG-EaVw0UcRaDKsSg@mail.gmail.com>
-References: <cover.1520274879.git.amit.kucheria@linaro.org>
- <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
- <6d5aeab8-aafe-fa3b-585e-953a34864e7d@arm.com> <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
+ of the HDMI node
+Date: Thu, 08 Mar 2018 15:50:33 +0900
+Message-ID: <5AA0DD39.3040108@samsung.com>
+References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
+ <20180307171111.14551-1-s.nawrocki@samsung.com>
+ <5AA0B59F.3070402@samsung.com>
+ <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP245DVwaY84+fZrbne1RLK9gKsfSTE2TELDAC0RkZGMzFkpWg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Ram Chandrasekar <rkumbako@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 4:29 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> Cpufreq/cpuidle are designed to control a single parameter while
-> thermal framework is trying to mitigate heat from several disparate
-> sources that are throttled in different ways. Besides, cpufreq/cpuidle
-> have somewhat mature governors. Cpuidle has only one governor (for
-> tickless) - menu governor, cpufreq has ondemand in mainline, replaced
-> by interactive in android and hopefully soon both will be replaced by
-
-Interactive and schedfreq are already removed from Android 4.4 and 4.9.
-It used schedutil now.
-
-> schedutil.
->
-> Badly configured cpufreq/cpuidle/devfreq only leads to wasted power,
-> while badly configured thermal zone leads to the loss of operation
-> e.g. reboots, too hot to touch, etc.
-
-I don't think such heat-ups will happen right during boot, where some
-init.rc should
-come up and change the governor.
-
-Over that if we are worried about production images only, then what prevents us
-to select the right default governor in the defconfig ? We shouldn't
-be worried about
-multi-platform kernels for production images.
-
---
-viresh
+SGkgTWFyZWssCgoyMDE464WEIDAz7JuUIDA47J28IDE1OjI57JeQIE1hcmVrIFN6eXByb3dza2kg
+7J20KOqwgCkg7JO0IOq4gDoKPiBIaSBJbmtpLAo+IAo+IE9uIDIwMTgtMDMtMDggMDU6MDEsIElu
+a2kgRGFlIHdyb3RlOgo+PiBIaSBTeWx3ZXN0ZXIsCj4+Cj4+IDIwMTjrhYQgMDPsm5QgMDjsnbwg
+MDI6MTHsl5AgU3lsd2VzdGVyIE5hd3JvY2tpIOydtCjqsIApIOyTtCDquIA6Cj4+PiBUaGUgI3Nv
+dW5kLWRhaS1jZWxscyBEVCBwcm9wZXJ0eSBpcyByZXF1aXJlZCB0byBkZXNjcmliZSBsaW5rIGJl
+dHdlZW4KPj4+IHRoZSBIRE1JIElQIGJsb2NrIGFuZCB0aGUgU29DJ3MgYXVkaW8gc3Vic3lzdGVt
+Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFN5bHdlc3RlciBOYXdyb2NraSA8cy5uYXdyb2NraUBz
+YW1zdW5nLmNvbT4KPj4+IC0tLQo+Pj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0IHwgMyArKysKPj4+ICAgMSBmaWxlIGNo
+YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19oZG1p
+LnR4dAo+Pj4gaW5kZXggODcxNWZmMDZjNDU3Li42YjJhNTI2ZWM1ODYgMTAwNjQ0Cj4+PiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9z
+X2hkbWkudHh0Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9leHlub3MvZXh5bm9zX2hkbWkudHh0Cj4+PiBAQCAtNTAsNiArNTAsOSBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzIGZvciBFeHlub3MgNTQzMzoKPj4+ICAgLSBjbG9jay1uYW1lczogYWxpYXNl
+cyBmb3IgYWJvdmUgY2xvY2sgc3BlY2ZpZXJzLgo+Pj4gICAtIHNhbXN1bmcsc3lzcmVnOiBoYW5k
+bGUgdG8gc3lzY29uIHVzZWQgdG8gY29udHJvbCB0aGUgc3lzdGVtIHJlZ2lzdGVycy4KPj4+ICAg
+K09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIEV4eW5vcyA0MjEwLCA0MjEyLCA1NDIwIGFuZCA1NDMz
+Ogo+Pj4gKyAtICNzb3VuZC1kYWktY2VsbHM6IHNob3VsZCBiZSAwLgo+Pj4gKwo+PiBKdXN0IHRy
+aXZpYWwgcXVlc3Rpb24uICdzb3VuZC1kYWktY2VsbHMnIHByb3BlcnR5IGNvdWxkIGFmZmVjdCBo
+ZG1pIGRyaXZlcj8gSSBsb29rZWQgaW50byBIRE1JIGNvZGVjIGRyaXZlciBidXQgSSBkaWRuJ3Qg
+ZmluZCByZWxldmF0IGNvZGUuCj4+IEkgbWVhbiB0aGF0IGlmIHRoaXMgcHJvcGVydHkgbmV2ZXIg
+YWZmZWN0IEhETUkgZHJpdmVyIHRoZW4gdGhpcyBwcm9wZXJ0eSB3b3VsZCBiZSBhIGRlYWQgdGhp
+bmcgZXZlbiB0aHJvdWdoIHRoaXMgY2FuIGJlIGRlY2xhcmVkIG9wdGlvbmFsbHkuCj4gCj4gVGhp
+cyBwcm9wZXJ0eSBpcyB1c2VkIGJ5IEFTb0MgZnJhbWV3b3JrIHdoZW4gaXQgaXMgYnVpbGRpbmcg
+Y29ubmVjdGlvbnMKPiBiZXR3ZWVuIGFsbCBlbGVtZW50cyBvZiB0aGUgdmlydHVhbCAnc291bmQg
+Y2FyZCcuIEl0IGFsbG93cyBnZW5lcmljCj4gY29kZSB0byBmaW5kIHByb3BlciBkcml2ZXIgZm9y
+IHRoZSBkaWdpdGFsIGF1ZGlvIGludGVyZmFjZSAoREFJKSBvYmplY3QuCgpJIGFsc28gYXNzdW1l
+ZCB0aGF0IHNvbWUgcGxhY2Ugb2YgQVNvQyBmcmFtZXdvcmsgY2hlY2tzIHRoaXMgcHJvcGVydHku
+IEZvciB0aGlzIEkgbG9va2VkIGludG8gSERNSSBjb2RlYyBkcml2ZXIoc291bmQvc29jL2NvZGVj
+cy9oZG1pLWNvZGVjLmMpIGFuZCByZWxldmFudCBpbnRlcmZhY2VzIG9mIEFTb0MgZnJhbWV3b3Jr
+LgpCdXQgSSBjb3VsZG4ndCBmaW5kIGl0LiA6KCBDb3VsZCB5b3UgbGV0IG1lIGtub3cgd2hpY2gg
+Y29kZSBvZiBBU29DIGZyYW1ld29yayBjaGVja3MgdGhpcz8gSSBzYXcgdGhpcyBwcm9wZXJ0eSBv
+bmx5IGluICdzbmRfc29jX29mX2dldF9kYWlfbmFtZScgYW5kICdzbmRfc29jX29mX2dldF9kYWlf
+bGlua19jb2RlY3MnIGZ1bmN0aW9ucyBidXQgc2VlbXMgdGhlc2UgZnVuY3Rpb25zIGFyZW4ndCBj
+YWxsZWQgYnkgdGhlIEhETUkgY29kZWMgZHJpdmVyLgoKVGhhbmtzLApJbmtpIERhZQoKPiAKPiBC
+ZXN0IHJlZ2FyZHMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
