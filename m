@@ -1,108 +1,53 @@
-From: Denis OSTERLAND <denis.osterland@diehl.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Subject: Re: [PATCH v3 3/4] rtc: isl1208: add support for isl1219 with tamper
  detection
-Date: Thu, 8 Mar 2018 11:53:09 +0000
-Message-ID: <1520509988.5415.17.camel@diehl.com>
+Date: Thu, 8 Mar 2018 13:05:49 +0100
+Message-ID: <20180308120549.GG20370@piout.net>
 References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
-         <1520246373-19023-4-git-send-email-Denis.Osterland@diehl.com>
-         <20180306204255.GI3035@piout.net> <1520410754.5976.27.camel@diehl.com>
-         <20180307104714.GL3035@piout.net>
+ <1520246373-19023-4-git-send-email-Denis.Osterland@diehl.com>
+ <20180306204255.GI3035@piout.net>
+ <1520410754.5976.27.camel@diehl.com>
+ <20180307104714.GL3035@piout.net>
+ <1520509988.5415.17.camel@diehl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307104714.GL3035@piout.net>
-Content-Language: en-US
-Content-ID: <637C70F0AB4BE240999DCB55B60C6422@diehl.internal>
+Content-Disposition: inline
+In-Reply-To: <1520509988.5415.17.camel@diehl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>
+To: Denis OSTERLAND <denis.osterland@diehl.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIGRlbiAwNy4wMy4yMDE4LCAxMTo0NyArMDEwMCBzY2hyaWViIEFsZXhh
-bmRyZSBCZWxsb25pOg0KPiA+ID4gPiArDQo+ID4gPiA+ICsJdHY2NC50dl9zZWMgPSBydGNf
-dG1fdG9fdGltZTY0KCZ0bSk7DQo+ID4gPiBXaHkgbm90IHVzaW5nIGFuIHVuc2lnbmVkIGxv
-bmcgbG9uZyBkaXJlY3RseSBoZXJlPyB0aW1lNjRfdCBpcyBub3QgdGhlDQo+ID4gPiBjb3Jy
-ZWN0IHR5cGUuDQo+ID4gRG8geW91IG1lYW4gdGltZXNwZWM2NCBpcyBub3QgdGhlIGNvcnJl
-Y3QgdHlwZSBoZXJlPw0KPiA+IFRoZW4geWVzLCBzb3VsZCBiZSB0aW1lNjRfdC4NCj4gPiBJ
-ZiB5b3UgbWVhbiB0aW1lNjRfdCBpcyBub3QgdGhlIGNvcnJlY3QgdHlwZSBoZXJlLA0KPiA+
-IHRoZW4gY2FuIHlvdSBnaXZlIG1lIHNvbWUgZGV0YWlsIHdoeSB0aGVyZSBpcyBubyBydGNf
-dG1fdG9fdTY0LA0KPiA+IG9yIHNvbWV0aGluZyBsaWtlIHRoYXQ/DQo+IFRoZSBydGMgc3Vi
-c3lzdGVtIGZvcmJpZHMgbmVnYXRpdmUgdGltZXMsIHRoZSBwcm9wZXIgdHlwZSBzaG91bGQg
-YmUNCj4gdW5zaWduZWQuDQpJIHdpbGwgYWRkIHJ0Y192YWlsZF90bSBjaGVjay4NCg0KV2hp
-Y2ggc2VxdWVuY2UgZm9yIHRpbWUgY29udmVyc2lvbiB3b3VsZCB5b3UgZXhwZWN0Pw0KDQp0
-aW1lNjRfdCBzZWNzID0gcnRjX3RtX3RvX3RpbWU2NCgmdG0pOw0KQlVHX09OKHNlY3MgPCAw
-KTsNCnJldHVybiBzcHJpbnRmKGJ1ZiwgIiVsbHVcbiIsICh1bnNpZ25lZCBsb25nIGxvbmcp
-c2Vjcyk7DQoNCm9yDQoNCnJldHVybiBzcHJpbnRmKGJ1ZiwgIiVsbHVcbiIsICh1bnNpZ25l
-ZCBsb25nIGxvbmcpcnRjX3RtX3RvX3RpbWU2NCgmdG0pKTsNCj4gDQo+ID4gDQo+ID4gc3By
-aW50ZihidWYsICIlbGxkXG4iLMKgcnRjX3RtX3RvX3RpbWU2NCgmdG0pKSBzZWVtcyBjb3Jy
-ZWN0IHRvIG1lLg0KPiA+IEJ5IHRoZSB3YXksIGlzIGl0IG5lZWRlZCB0byBjaGVjayBmb3Ig
-c2Vjb25kcyA8IDAgYW5kIHJldHVybiBlcnJvcj8NCj4gSW5kZWVkLCB5b3Ugc2hvdWQgY2hl
-Y2sgdGhlIHRtIHdpdGggcnRjX3ZhbGlkX3RtIGJlZm9yZSBjYWxsaW5nDQo+IHJ0Y190bV90
-b190aW1lNjQuDQo+IA0KPiA+IA0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAtCXJjID0g
-c3lzZnNfY3JlYXRlX2dyb3VwKCZjbGllbnQtPmRldi5rb2JqLCAmaXNsMTIwOF9ydGNfc3lz
-ZnNfZmlsZXMpOw0KPiA+ID4gPiArCWlmIChpZC0+ZHJpdmVyX2RhdGEgPT0gVFlQRV9JU0wx
-MjE5KSB7DQo+ID4gPiA+ICsJCXJjID0gaTJjX3NtYnVzX3dyaXRlX2J5dGVfZGF0YShjbGll
-bnQsIElTTDEyMDhfUkVHXzA5LCAweDEwKTsNCj4gPiA+ID4gKwkJaWYgKHJjIDwgMCkgew0K
-PiA+ID4gPiArCQkJZGV2X2VycigmY2xpZW50LT5kZXYsICJjb3VsZCBub3QgZW5hYmxlIHRh
-bXBlciBkZXRlY3Rpb25cbiIpOw0KPiA+ID4gPiArCQkJcmV0dXJuIHJjOw0KPiA+ID4gPiAr
-CQl9DQo+ID4gPiA+ICsJCWlzbDEyMDgtPnN5c2ZzX2ZpbGVzID0gJmlzbDEyMTlfcnRjX3N5
-c2ZzX2ZpbGVzOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+ICsJCWlzbDEyMDgtPnN5
-c2ZzX2ZpbGVzID0gJmlzbDEyMDhfcnRjX3N5c2ZzX2ZpbGVzOw0KPiA+ID4gPiArCX0NCj4g
-PiA+ID4gKw0KPiA+ID4gSSBkb24ndCB0aGluayB0aGUgd2hvbGUgaXNsMTIwOCBpcyBuZWNl
-c3NhcnkuIFlvdSBzaG91bGQgcHJvYmFibHkgdXNlDQo+ID4gPiB0aGUgLmlzX3Zpc2libGUg
-Y2FsbGJhY2sgb2YgaXNsMTIxOV9ydGNfc3lzZnNfZmlsZXMuIFRoaXMgd2lsbCBtYWtlIHRo
-ZQ0KPiA+ID4gY2hhbmdlbG9nIHF1aXRlIHNtYWxsZXIuDQo+ID4gPiANCj4gPiBXZWxsLCBJ
-IGRvbsK0dCBrbm93IGhvdyB0byBhY2Nlc3MgaTJjX2RldmljZV9pZCBmcm9tIGtvYmplY3Qu
-DQo+ID4gcnRjX2F0dHJfaXNfdmlzaWJsZSBzaG93cyBob3cgdG8gY29udmVydCBrb2JqZWN0
-IHRvIGRldmljZSBhbmQgcnRjX2RldmljZSwNCj4gPiBidXQgaG93IHRvIGRvwqAoaWQtPmRy
-aXZlcl9kYXRhID09IFRZUEVfSVNMMTIxOSkgaGVyZT8NCj4gSSdkIHVzZSBpMmNfc2V0X2Ns
-aWVudGRhdGEvaTJjX2dldF9jbGllbnRkYXRhIGJ1dCBJIGFncmVlIHRoYXQgdGhlbiBpdA0K
-PiBpcyBiYXNpY2FsbHkgdGhlIHNhbWUgYXMgaGF2aW5nIGlzbDEyMDgtPnN5c2ZzX2ZpbGVz
-Lg0KPiANCj4gYnV0IHRoaXMgbWFrZXMgbWUgcmVhbGl6ZSB0aGF0IHRoZSB0aW1lc3RhbXAg
-ZmlsZSBkb2Vzbid0IGVuZCB1cCBhdCB0aGUNCj4gY29ycmVjdCBsb2NhdGlvbi4gV2hhdCB5
-b3UgZG8gbm93IGlzIHBsYWNpbmcgaXQgdW5kZXIgdGhlIGkyYyBkZXZpY2UNCj4gd2hpbGUg
-aXQgc2hvdWxkIGJlIHBsYWNlZCB1bmRlciB0aGUgcnRjIGRldmljZSAoaS5lLiBpbg0KPiAv
-c3lzL2NsYXNzL3J0Yy9ydGNYLykuIFRoaXMgd2FzIGEgbWlzdGFrZSBtYWRlIGJhY2sgaW4g
-MjAwNi4NCj4gDQo+IEkgZ3Vlc3MgeW91J2xsIGhhdmUgdG8gYWRkIGEgbmV3IGdyb3VwIGlu
-c3RlYWQgb2YgYWRkaW5nIHRvIHRoZSBjdXJyZW50DQo+IG9uZS4NCkkgZ3Vlc3MgSSBmb3Vu
-ZCBhIHdheSB0byBkbyBpdC4NCg0Kc3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKmlzbDEyMTlf
-cnRjX2F0dHJzW10gPSB7DQoJJmRldl9hdHRyX3RpbWVzdGFtcDAuYXR0ciwNCglOVUxMDQp9
-Ow0KDQppbiBwcm9iZQ0KCWlmIChpZC0+ZHJpdmVyX2RhdGEgPT0gVFlQRV9JU0wxMjE5KSB7
-DQoJCXN5c2ZzX21lcmdlX2dyb3VwKCZydGMtPmtvYmosICZpc2wxMjE5X3J0Y19zeXNmc19m
-aWxlcyk7DQoNCmluIHJlbW92ZQ0KCXN0cnVjdCBydGNfZGV2aWNlICpydGMgPcKgaTJjX2dl
-dF9jbGllbnRkYXRhKGNsaWVudCk7DQoJc3lzZnNfdW5tZXJnZV9ncm91cCgmcnRjLT5rb2Jq
-LCAmaXNsMTIxOV9ydGNfc3lzZnNfZmlsZXMpOw0KDQpBcyBmYXIgYXMgSSBnb3QgaXQsIEkg
-Y2FuIGNhbGwgdW5tZXJnZSBldmVuIGlmIGdyb3VwIHdhcyBub3QgbWVyZ2VkIGJlZm9yZS4N
-CklmIGl0IHdvcmtzIEkgZG9uwrR0IG5lZWQgc3RydWN0IGlzbDEyMDggYXQgYWxsLg0KPiAN
-CkRpZWhsIEFLTyBTdGlmdHVuZyAmIENvLiBLRywgUGZhbm5lcnN0cmHDn2UgNzUtODMsIDg4
-MjM5IFdhbmdlbiBpbSBBbGxnw6R1DQpCZXJlaWNoc3ZvcnN0YW5kOiBEci4tSW5nLiBNaWNo
-YWVsIFNpZWRlbnRvcCAoU3ByZWNoZXIpLCBKb3NlZiBGZWxsbmVyIChNaXRnbGllZCkNClNp
-dHogZGVyIEdlc2VsbHNjaGFmdDogV2FuZ2VuIGkuQS4g4oCTIFJlZ2lzdGVyZ2VyaWNodDog
-QW10c2dlcmljaHQgVWxtIEhSQSA2MjA2MDkg4oCTIFBlcnPDtm5saWNoIGhhZnRlbmRlIEdl
-c2VsbHNjaGFmdGVyaW46IERpZWhsIFZlcndhbHR1bmdzLVN0aWZ0dW5nIOKAkyBTaXR6OiBO
-w7xybmJlcmcg4oCTIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgTsO8cm5iZXJnIEhS
-QSAxMTc1NiDigJMNClZvcnN0YW5kOiBEci4tSW5nLiBFLmguIFRob21hcyBEaWVobCAo4oCg
-KSAoVm9yc2l0emVuZGVyKSwgSGVyciBEaXBsLi1XaXJ0c2NoLi1JbmcuIFdvbGZnYW5nIFdl
-Z2dlbiAoc3RlbGx2ZXJ0cmV0ZW5kZXIgVm9yc2l0emVuZGVyKSwgRGlwbC4tS2ZtLiBDbGF1
-cyBHw7xudGhlciwgRGlwbC4tS2ZtLiBGcmFuayBHdXR6ZWl0LCBEci4tSW5nLiBIZWlucmlj
-aCBTY2h1bmssIERyLi1JbmcuIE1pY2hhZWwgU2llZGVudG9wICwgRGlwbC4tS2ZtLiBEci4t
-SW5nLiBNYXJ0aW4gU29tbWVyLCBEaXBsLi1JbmcuIChGSCkgUmFpbmVyIHZvbiBCb3JzdGVs
-LCBWb3JzaXR6ZW5kZXIgZGVzIEF1ZnNpY2h0c3JhdGVzOiBEci4gS2xhdXMgTWFpZXINCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KRGVyIEluaGFs
-dCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQu
-IERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNo
-IGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRl
-LCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhh
-YmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4g
-SmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFl
-bmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWls
-IGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
-IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
-Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
-dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
-bCBieSBtaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNhc2UuIEVhY2ggdW5hdXRo
-b3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJhdGlvbiwgZGlzdHJpYnV0
-aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBpcyBzdHJpY3RseSBwcm9o
-aWJpdGVkLg==
+On 08/03/2018 at 11:53:09 +0000, Denis OSTERLAND wrote:
+> Am Mittwoch, den 07.03.2018, 11:47 +0100 schrieb Alexandre Belloni:
+> > > > > +
+> > > > > +	tv64.tv_sec = rtc_tm_to_time64(&tm);
+> > > > Why not using an unsigned long long directly here? time64_t is not the
+> > > > correct type.
+> > > Do you mean timespec64 is not the correct type here?
+> > > Then yes, sould be time64_t.
+> > > If you mean time64_t is not the correct type here,
+> > > then can you give me some detail why there is no rtc_tm_to_u64,
+> > > or something like that?
+> > The rtc subsystem forbids negative times, the proper type should be
+> > unsigned.
+> I will add rtc_vaild_tm check.
+> 
+> Which sequence for time conversion would you expect?
+> 
+> time64_t secs = rtc_tm_to_time64(&tm);
+> BUG_ON(secs < 0);
+> return sprintf(buf, "%llu\n", (unsigned long long)secs);
+> 
+> or
+> 
+> return sprintf(buf, "%llu\n", (unsigned long long)rtc_tm_to_time64(&tm));
+
+rtc_vaild_tm will already return EINVAL in case of negative time so this
+is the one you should use.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
