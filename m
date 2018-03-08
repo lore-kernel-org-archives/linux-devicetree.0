@@ -1,69 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: Add bindings for PCM1789
-Date: Wed, 7 Mar 2018 16:30:48 -0600
-Message-ID: <20180307223048.lqnryaazr5egg2m7@rob-hp-laptop>
-References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
- <20180305124817.7421-3-mylene.josserand@bootlin.com>
+Subject: Re: [PATCH 2/3] dt-bindings: clock: Add bindings for ZynqMP clock driver
+Date: Wed, 7 Mar 2018 19:20:00 -0600
+Message-ID: <CAL_JsqKUC47xB5O2Y6c3efVCjJY=V+XO3xyLTU9rNia40bdZkg@mail.gmail.com>
+References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
+ <1519856861-31384-3-git-send-email-jollys@xilinx.com> <20180306014549.6t3ae5adzc3cpi5v@rob-hp-laptop>
+ <DM2PR0201MB0767031248A9F773620722FDB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180305124817.7421-3-mylene.josserand@bootlin.com>
+In-Reply-To: <DM2PR0201MB0767031248A9F773620722FDB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
+To: Jolly Shah <JOLLYS@xilinx.com>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 01:48:17PM +0100, Mylène Josserand wrote:
-> Add a device-tree binding for Texas Instrument's PCM1789 codec.
-> For the moment, only I2C bus is supported but SPI could be added
-> in future.
-> 
-> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/sound/pcm1789.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/pcm1789.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/pcm1789.txt b/Documentation/devicetree/bindings/sound/pcm1789.txt
-> new file mode 100644
-> index 000000000000..a6cdc2c83c98
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/pcm1789.txt
-> @@ -0,0 +1,21 @@
-> +Texas Instruments pcm1789 DT bindings
+On Wed, Mar 7, 2018 at 4:47 PM, Jolly Shah <JOLLYS@xilinx.com> wrote:
+> Hi Rob,
+>
+>
+>> -----Original Message-----
+>> From: Rob Herring [mailto:robh@kernel.org]
+>> Sent: Monday, March 05, 2018 5:46 PM
+>> To: Jolly Shah <JOLLYS@xilinx.com>
+>> Cc: mturquette@baylibre.com; sboyd@codeaurora.org;
+>> michal.simek@xilinx.com; mark.rutland@arm.com; linux-clk@vger.kernel.org;
+>> devicetree@vger.kernel.org; Shubhrajyoti Datta <shubhraj@xilinx.com>; linux-
+>> kernel@vger.kernel.org; Jolly Shah <JOLLYS@xilinx.com>; Rajan Vaja
+>> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org
+>> Subject: Re: [PATCH 2/3] dt-bindings: clock: Add bindings for ZynqMP clock
+>> driver
+>>
+>> On Wed, Feb 28, 2018 at 02:27:40PM -0800, Jolly Shah wrote:
+>> > Add documentation to describe Xilinx ZynqMP clock driver bindings.
+>> >
+>> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+>> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>> > ---
 
-What function does this device provide?
+>> > +95         dpll_post_src
+>> > +96         vpll_int
+>> > +97         vpll_pre_src
+>> > +98         vpll_half
+>> > +99         vpll_int_mux
+>> > +100                vpll_post_src
+>> > +101                can0_mio
+>> > +102                can1_mio
+>> > +
+>> > +Example:
+>> > +
+>> > +clk: clk {
+>> > +   #clock-cells = <1>;
+>> > +   compatible = "xlnx,zynqmp-clk";
+>>
+>> How do you control the clocks?
+>
+> Clocks are controlled by a dedicated platform management controller. Above clock ids are used to identify clocks between master and PMU.
 
-> +
-> +This driver supports the I2C bus.
+What is the interface to the "platform management controller"? Because
+you have no registers, I'm guessing a firmware interface? If so, then
+just define the firmware node as a clock provider.
 
-Bindings describe h/w, not drivers.
-
-> +
-> +Required properties:
-> +
-> + - compatible: "ti,pcm1789"
-> +
-> +Required properties on I2C:
-> +
-> + - reg: the I2C address
-> + - reset-gpios: GPIO to control the RESET pin
-> +
-> +Examples:
-> +
-> +	codec: pcm1789@4c {
-
-audio-codec@4c
-
-If that's the function...
-
-> +		compatible = "ti,pcm1789";
-> +		reg = <0x4c>;
-> +		reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-> +		#sound-dai-cells = <0>;
-> +	};
-> -- 
-> 2.11.0
-> 
+Rob
