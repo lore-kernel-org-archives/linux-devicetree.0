@@ -1,42 +1,23 @@
-Return-Path: <SRS0=dGTv=GC=nvidia.com=pchandru@kernel.org>
-From: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Subject: [PATCH V8 9/9] ata: change Tegra124 to Tegra
-Date: Mon, 12 Mar 2018 17:10:38 +0530
-Message-ID: <1520854838-21779-10-git-send-email-pchandru@nvidia.com>
-In-Reply-To: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
-References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
+Return-Path: <SRS0=Nufv=F6=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add Renesas R8A77980 PFC driver
+Message-ID: <21306a59-8f20-ad08-fdc1-bcc6333c01d4@cogentembedded.com>
+Date: Thu, 8 Mar 2018 22:10:02 +0300
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com, Preetham Ramchandra <pchandru@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Preetham Ramchandra <pchandru@nvidia.com>
+Hello!
 
-ahci_tegra driver now supports Tegra124, Tegra132 and Tegra210,
-so change Tegra124 to Tegra.
+Here's a set of 2 patches against the 'sh-pfc' branch of Geert Uytterhoeven's
+'renesas-drivers.git' repo. These patches add the basic support for the R8A77980
+PFC.
 
-Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
----
- drivers/ata/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[1/2] pinctrl: sh-pfc: add PORT_GP_CFG_25() helper macro
+[2/2] pinctrl: sh-pfc: add R8A77980 PFC support
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a7120d621154..26b79991ba29 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -211,10 +211,10 @@ config AHCI_SUNXI
- 	  If unsure, say N.
- 
- config AHCI_TEGRA
--	tristate "NVIDIA Tegra124 AHCI SATA support"
-+	tristate "NVIDIA Tegra AHCI SATA support"
- 	depends on ARCH_TEGRA
- 	help
--	  This option enables support for the NVIDIA Tegra124 SoC's
-+	  This option enables support for the NVIDIA Tegra SoC's
- 	  onboard AHCI SATA.
- 
- 	  If unsure, say N.
--- 
-2.7.4
+MBR, Sergei
