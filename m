@@ -1,54 +1,36 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Thu, 8 Mar 2018 11:48:09 +0000
-Message-ID: <f6a416b7-542f-a3c3-538f-8549cf4e96c3@arm.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
- <1519154467-2896-2-git-send-email-jollys@xilinx.com>
- <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
- <CY1PR0201MB0764FB23021F5DC694C7F56DB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 6/6] ASoC: samsung: Add HDMI audio support
+ for Chromebook Snow
+Date: Thu, 08 Mar 2018 12:52:31 +0100
+Message-ID: <fe2fe1cd-b1a7-9f16-5c68-110c0f375dca@samsung.com>
+References: <CGME20180307170502epcas1p187b4623a868daa6045465836903e591f@epcas1p1.samsung.com>
+ <20180307170450.14182-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CY1PR0201MB0764FB23021F5DC694C7F56DB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-reply-to: <20180307170450.14182-1-s.nawrocki@samsung.com>
+Content-language: en-GB
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On 03/07/2018 06:04 PM, Sylwester Nawrocki wrote:
+> +	/* In the multi-codec case codec_dai 0 is HDMI and 1 is MAX98095. */
 
+Oops, it should be the other way around, now it contradicts the DT binding
+documentation. I'm going to post v2.
 
-On 07/03/18 22:25, Jolly Shah wrote:
-> Hi Sudeep,
-> 
-
-[...]
-
->>> +Examples:
->>> +	firmware {
->>> +		zynqmp_firmware: zynqmp-firmware {
->>> +			compatible = "xlnx,zynqmp-firmware";
->>> +			method = "smc";
->>> +		};
->>> +	};
->>>
->>
->> Do you foresee using SMC/HVC for this firmware even on future platforms?
->> If not, I suggest to keep the protocol part separate from the transport i.e.
->> smc/hvc via ATF. It could be replaced with mailbox or some h/w mechanism in
->> future ?
->>
-> 
-> We have PSCI and EEMI interfaces exposed to linux from ATF. PSCI is
-> an EEMI client. We do not have current plans to switch to mailbox as it
-> will require 2 communication channels to PMU as PSCI is through ATF.
-> 
-
-OK, but I just saw some bindings that has mailbox interface, honestly
-it's getting too confusing with multiple series on the same thing
-floating and hence I requested to put it together as one series.
--- 
-Regards,
-Sudeep
+> +	if (rtd->num_codecs > 1)
+> +		codec_dai = rtd->codec_dais[1];
+> +	else
+> +		codec_dai = rtd->codec_dai;
