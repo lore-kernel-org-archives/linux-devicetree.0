@@ -1,51 +1,61 @@
-Return-Path: <SRS0=yM5v=F4=gmail.com=f.fainelli@kernel.org>
-Subject: Re: [PATCH 0/3] MIPS: BMIPS: Add Broadcom STB device nodes
-References: <20171117021944.894-1-jaedon.shin@gmail.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <56e80e5d-8cdd-3b32-c0f5-ac33c45346b8@gmail.com>
-Date: Mon, 5 Mar 2018 16:06:30 -0800
+Return-Path: <SRS0=obxb=F6=linux.intel.com=felipe.balbi@kernel.org>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH usb-next v2 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
+In-Reply-To: <CAFBinCB=8xQcJHcw5bX4z5Y2JOEqU7O-FH02JS4myJ-d487_zQ@mail.gmail.com>
+References: <20180211211517.5846-1-martin.blumenstingl@googlemail.com> <CAFBinCBhOy2J7dgyLg-Oii1iMn0RJyud7ykW=EMBGg+F8X7DpA@mail.gmail.com> <CAFBinCB=8xQcJHcw5bX4z5Y2JOEqU7O-FH02JS4myJ-d487_zQ@mail.gmail.com>
+Date: Thu, 08 Mar 2018 10:49:35 +0200
+Message-ID: <87o9jzuf34.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20171117021944.894-1-jaedon.shin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Jaedon Shin <jaedon.shin@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <james.hogan@mips.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, yixun.lan@amlogic.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 11/16/2017 06:19 PM, Jaedon Shin wrote:
-> This series adds power and memory management related devie tree nodes for
-> Broadcom STB platforms.
-> 
-> Jaedon Shin (3):
->   MIPS: BMIPS: Add Broadcom STB power management nodes
->   MIPS: BMIPS: Add Broadcom STB wake-up timer nodes
->   MIPS: BMIPS: Add Broadcom STB watchdog nodes
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Thanks!
-
-> 
->  arch/mips/boot/dts/brcm/bcm7125.dtsi      |  7 +++
->  arch/mips/boot/dts/brcm/bcm7346.dtsi      | 62 +++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7358.dtsi      | 17 ++++++
->  arch/mips/boot/dts/brcm/bcm7360.dtsi      | 62 +++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7362.dtsi      | 62 +++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7420.dtsi      |  7 +++
->  arch/mips/boot/dts/brcm/bcm7425.dtsi      | 89 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7435.dtsi      | 89 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97125cbmb.dts  |  4 ++
->  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  8 +++
->  arch/mips/boot/dts/brcm/bcm97358svmb.dts  |  8 +++
->  arch/mips/boot/dts/brcm/bcm97360svmb.dts  |  8 +++
->  arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  8 +++
->  arch/mips/boot/dts/brcm/bcm97420c.dts     |  4 ++
->  arch/mips/boot/dts/brcm/bcm97425svmb.dts  |  8 +++
->  arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  8 +++
->  16 files changed, 451 insertions(+)
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
--- 
-Florian
+Hi,
+
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+>>> Martin Blumenstingl (3):
+>>>   dt-bindings: usb: add support for dwc3 controller on Amlogic Meson GX
+>>>   usb: dwc3: of-simple: add support for shared and pulsed reset lines
+>>>   usb: dwc3: of-simple: add support for the Amlogic Meson GXL and AXG
+>>>     SoCs
+>> could you please let me know if you spotted any problems, code-style
+>> issues in v2 or whether you are waiting for feedback from another
+>> maintainer?
+>> in case everything is fine: will you take this series through your tree?
+> could you please let me know how this series is supposed to land in
+> the next kernel release:
+> - Felipe, will you take it through your usb tree (which contains many
+> other dwc2/dwc3 driver changes)?
+
+it'll go through my tree. I'm about to merge it into my testing/next.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlqg+R8ACgkQzL64meEa
+mQZFqw//QEwtrXmLQ5Nx99oV+2D/W/TsD9//XOlvRoPMia3WSCJwAUdN6iQ03GTy
+CmHacJoJCZiy6tp3ZonscbSbxo/shiGx1YRISUYthAaJJ5QM5AfGHdPp22RwBHs1
+VSgppOz5WRViyqY5EbOvBXFUrsY3OjTsb9DHS/6f09IqT/Tgi7UqYhyTziP8XpIn
+jPjS4YFp4X3iXcKoUlTeDNoe0gN6kELveP3QRk0L9F8g3MEMPcczW2pwkz6RPh4I
+wX3HeNEY8WqfXTV7eHwj9dRicHWa8GDjDzCWg57zXBrqlUmtuN2mPaaYb502pkOb
+I8poG4rjyeqQepUnwcohwk9OhMWU+IpXvYrBPpIFN9hSKat1ZNXimHvCdiQX+sps
+b5DUqOppvabXdne7cThwCzZ3Znum5eeZELa/Ijp0k07k8smmBGwZDyKhz02zsyqK
+ci7XaQiyG+cQLICUSZomjT8C69RAMXbGdGV75zAHZXU2PLriDHCnnvYKfOVyXKK8
+tqOaBYse5JDTL6WCUeNCuzcob4MFrsrkLdGpYDJ++8790TDOYYwkv7SIzW9UMi9/
+5WUh0a83tu5poNzkc47zilJguX2p4eiW+W2IAm239xGyS8KmIAVO0RsUy8SgbuCm
+6hW8ILMbWnnmNGrQKVH6OaoJaHYiZg6jR4GxpaD3zB0ghcWopGw=
+=QYpr
+-----END PGP SIGNATURE-----
+--=-=-=--
