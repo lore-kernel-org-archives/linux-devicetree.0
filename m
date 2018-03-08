@@ -1,96 +1,155 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Thu, 8 Mar 2018 13:08:35 +0100
-Message-ID: <1AD61B17-8B07-42A4-9B82-5515C9850C28@holtmann.org>
-References: <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de> <87sh9bvh3r.fsf@anholt.net>
- <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
- <87muzjfr8l.fsf@anholt.net> <698451580.263856.1520467358497@email.1und1.de>
- <20180308105624.GA2316@wunner.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain; charset="us-ascii"
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v8 3/5] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Thu, 8 Mar 2018 12:12:21 +0000
+Message-ID: <6fe36177-a8a5-5f17-bf65-1a53538221a4@arm.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+ <20180302101050.6191-4-vivek.gautam@codeaurora.org>
+ <d0f2b3ed-136d-7704-2aef-1173a342a89c@arm.com>
+ <CAAFQd5BTdF176x5ycatCmCHrMyVX2OZqdXd-JGq06RyDUb0N3g@mail.gmail.com>
+ <30a2fa5e-3d8e-acb6-ab31-bec652f1be99@arm.com>
+ <CAAFQd5BKkKc2binDe-MCDeP42b6O26Hu9nYjvYRE160EMvi1fA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180308105624.GA2316@wunner.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Eric Anholt <eric@anholt.net>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Christoph Gysin <christoph.gysin@gmail.com>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAFQd5BKkKc2binDe-MCDeP42b6O26Hu9nYjvYRE160EMvi1fA@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jcrouse@codeaurora.org, Stephen Boyd <sboyd@codeaurora.org>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukas,
+On 08/03/18 04:33, Tomasz Figa wrote:
+> On Thu, Mar 8, 2018 at 1:58 AM, Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 07/03/18 13:52, Tomasz Figa wrote:
+>>>
+>>> On Wed, Mar 7, 2018 at 9:38 PM, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>
+>>>> On 02/03/18 10:10, Vivek Gautam wrote:
+>>>>>
+>>>>>
+>>>>> From: Sricharan R <sricharan@codeaurora.org>
+>>>>>
+>>>>> The smmu device probe/remove and add/remove master device callbacks
+>>>>> gets called when the smmu is not linked to its master, that is without
+>>>>> the context of the master device. So calling runtime apis in those
+>>>>> places
+>>>>> separately.
+>>>>>
+>>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>>> [vivek: Cleanup pm runtime calls]
+>>>>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>>>>> ---
+>>>>>     drivers/iommu/arm-smmu.c | 96
+>>>>> ++++++++++++++++++++++++++++++++++++++++++++----
+>>>>>     1 file changed, 88 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>>> index c8b16f53f597..3d6a1875431f 100644
+>>>>> --- a/drivers/iommu/arm-smmu.c
+>>>>> +++ b/drivers/iommu/arm-smmu.c
+>>>>> @@ -209,6 +209,8 @@ struct arm_smmu_device {
+>>>>>           struct clk_bulk_data            *clks;
+>>>>>           int                             num_clks;
+>>>>>     +     bool                            rpm_supported;
+>>>>> +
+>>>>
+>>>>
+>>>>
+>>>> Can we not automatically infer this from whether clocks and/or power
+>>>> domains
+>>>> are specified or not, then just use pm_runtime_enabled() as the fast-path
+>>>> check as Tomasz originally proposed?
+>>>
+>>>
+>>> I wouldn't tie this to presence of clocks, since as a next step we
+>>> would want to actually control the clocks separately. (As far as I
+>>> understand, on QCom SoCs we might want to have runtime PM active for
+>>> the translation to work, but clocks gated whenever access to SMMU
+>>> registers is not needed.) Moreover, you might still have some super
+>>> high scale thousand-core systems that require clocks to be
+>>> prepare-enabled, but runtime PM would be undesirable for the reasons
+>>> we discussed before.
+>>>
+>>>>
+>>>> I worry that relying on statically-defined matchdata is just going to
+>>>> blow
+>>>> up the driver and DT binding into a maintenance nightmare; I really don't
+>>>> want to start needing separate definitions for e.g.
+>>>> "arm,juno-etr-mmu-401"
+>>>> and "arm,juno-hdlcd-mmu-401" just because one otherwise-identical
+>>>> instance
+>>>> within the SoC is in a separate controllable power domain while the
+>>>> others
+>>>> aren't.
+>>>
+>>>
+>>> I don't see a reason why both couldn't just have RPM supported
+>>> regardless of whether there is a real power domain. It would
+>>> effectively be just a no-op for those that don't have one.
+>>
+>>
+>> Because you're then effectively defining "compatible" values for the sake of
+>> attaching software policy to them, rather than actually describing different
+>> hardware implementations.
+>>
+>> The fact that RPM can't do anything meaningful unless relevant clock/power
+>> aspects *are* described, however, means that we shouldn't need additional
+>> information redundant with that. Much like the fact that we don't *already*
+>> have an "arm,juno-hdlcd-mmu-401" compatible to account for those being
+>> integrated such that IDR0.CTTW has the wrong value, since the presence or
+>> not of the "dma-coherent" property already describes the truth in that
+>> regard.
+> 
+> Fair enough.
+> 
+>>
+>>> IMHO the
+>>> only reason to avoid having the RPM enabled is the scalability issue
+>>> we discussed before.
+>>
+>>
+>> Yes, but that's kind of my point; in reality high throughput/minimal latency
+>> and aggressive power management are more or less mutually exclusive. Mobile
+>> SoCs with fine-grained clock trees and power domains won't have multiple
+>> 40GBe/NVMf/whatever links running flat out in parallel; conversely
+>> networking/infrastructure/server SoCs aren't designed around saving every
+>> last microamp of leakage current - even in the (fairly unlikely) case of the
+>> interconnect clocks being software-gateable at all I would be very surprised
+>> if that were ever exposed directly to Linux (FWIW I believe ACPI essentially
+>> *requires* clocks to be abstracted behind firmware).
+>>
+>> Realistically then, explicit clocks are only expected on systems which care
+>> about power management. We can always revisit that assumption if anything
+>> crazy where it isn't the case ever becomes non-theoretical, but for now it's
+>> one I'm entirely comfortable with. If on the other hand it turns out that we
+>> can rely on just a power domain being present wherever we want RPM, making
+>> clocks moot, then all the better.
+> 
+> Alright. Since Qcom would be the only user of clock and power handling
+> for the time being, I think checking power domain presence could work
+> for us. +/- the fact that clocks need to be handled even if power
+> domain is not present, but we should normally always have both.
 
->>>>>>>> after applying Loic's patch and the necessary patch for the
->>>>>>>> RPi 3 dts file (see below), i will get this output:
->>>>>>>> 
->>>>>>>> [    4.873246] Bluetooth: HCI UART driver ver 2.3
->>>>>>>> [    4.873260] Bluetooth: HCI UART protocol H4 registered
->>>>>>>> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
->>>>>>>> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
->>>>>>>> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
->>>>>>>> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
->>>>>>>> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
->>>>>>>> [   15.192312] Bluetooth: hci0: Failed to set baudrate
->>>>>>>> [   15.316415] Bluetooth: hci0: BCM: chip id 94
->>>>>>>> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
->>>>>>>> [   15.341538] Bluetooth: hci0: BCM43430A1
->>>>>>>> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
->>>>>>>> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
->>>>>>>> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
->>>>>>>> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
->>>>>>>> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
->>>>>>>> 
->>>>>>>> I don't see these errors on RPi Zero W. Maybe the reason for
->>>>>>>> this is the lack of hardware flowcontrol on RPi 3.
->>>>>>> 
->>>>>>> maybe it needs some time after switching the hardware on. Have
->>>>>>> you tried to sleep for a bit at the end of bcm_gpio_set_power?
->> 
->> after applying this patch [1] the RPi 3 specific probing errors disappear.
->> 
->> But this is only a quick hack. The proper solution would be to extend
->> hci_h5 in order to support the BCM43438.
->> 
->> [1] - https://github.com/lategoodbye/rpi-zero/commit/ed5900296dfb7aec7f467477440751e7367a1881
-> 
-> Users of the MacBookPro13,1 and MacBookPro14,1 are reporting similar
-> timeouts when the Bluetooth controller is reset on ->setup.
-> 
-> These are the models without touchbar.  The models with touchbar
-> (MBP13,2, MBP13,3, MBP14,2, MBP14,3) as well as the 12" MacBooks
-> (MB8,1, MB9,1, MB10,1) do not suffer from this issue.
-> 
-> Christoph Gysin (+cc) reports that applying your patch on 4.16-rc4 gets
-> Bluetooth working on his MBP13,1:
-> https://github.com/Dunedan/mbp-2016-linux/issues/29#issuecomment-371434970
-> 
-> For some reason, not toggling the device_wake pin in bcm_gpio_set_power()
-> also fixed the issue for those users.  They did complain about stuttering
-> audio though.
-> 
-> Users of the touchbar models reported that stuttering audio only occurs
-> when the GNOME Bluetooth control panel is open. Closing it made the
-> stuttering audio go away.  But apparently on the non-touchbar models,
-> the stuttering persisted regardless.  Both the stuttering audio as well as
-> the timeouts on ->setup might be explained by a lack of hardware flow
-> control on those models.  The chipset (and thus the UART) is identical
-> on the touchbar versus non-touchbar models.  It would seem odd if Apple
-> did not wire CTS consistently on all models.
+Great! (the issue of Qcom-specific clock handling is a separate argument 
+which I don't feel like reigniting just now...)
 
-do you know if Apple is actually running H:4 or if they run H:5 (3-Wire) within macOS. I think the Broadcom chips will auto-detect the transport protocol. At least on the RPi3 it seems like that.
+> Now we need a way to do the check. Perhaps for the time being it would
+> be enough to just check for the power-domains property in DT?
 
-Regards
+AFAICS, it might be as simple as arm_smmu_probe() doing this:
 
-Marcel
+	/*
+	 * We want to avoid touching dev->power.lock in fastpaths unless
+	 * it's really going to do something useful - pm_runtime_enabled()
+	 * can serve as an ideal proxy for that decision.
+	 */
+	if (dev->pm_domain)
+		pm_runtime_enable(dev);
+
+or maybe even just gate all the calls with "if (smmu->dev.pm_domain)" 
+directly (like pcie-mediatek does), but I'm not sure which would be 
+conceptually cleaner.
+
+Robin.
