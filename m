@@ -1,45 +1,64 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
- based tachometer
-Date: Thu, 8 Mar 2018 20:51:07 +0530
-Message-ID: <4d00a31b-44cc-d3dc-78a2-1b7f23d777e0@nvidia.com>
-References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
- <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
- <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
- <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
- <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
- <2628eff2-dd33-34f4-a7e1-cfe46ef88a3f@nvidia.com>
- <4556a8d2-947d-72c4-2962-3167afb53978@kapsi.fi>
- <62ba7f67-5a99-51ab-1214-eb68ebb7e642@roeck-us.net>
- <952cb50e-d9a0-ae5e-d9f6-d1ce268f0384@nvidia.com>
- <f7818e4c-17b6-c58b-3424-85749bb9c1cc@roeck-us.net>
- <5bffef40-a4a7-5f7d-a448-b2a381c57822@nvidia.com>
- <d4e745a6-5534-662e-f6d5-a91bf580f550@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 0/3] drm: Add LVDS decoder bridge
+Date: Thu,  8 Mar 2018 16:24:00 +0100
+Message-ID: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d4e745a6-5534-662e-f6d5-a91bf580f550@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rajkumar Rampelli <rrajk@nvidia.com>, Mikko Perttunen <cyndis@kapsi.fi>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
+   this small series add a driver for transparent LVDS decoders, as
+Thine THC63LVD1024 device.
 
+The R-Car Gen3 V3M Eagle board feature such a converter, that has been so far
+not described as part of the display output pipeline. Now that a driver has
+been added, the Eagle DTS file has been updated to include the transparent
+decoder chip.
 
-On Thursday 08 March 2018 08:01 PM, Guenter Roeck wrote:
-> On 03/07/2018 10:06 PM, Laxman Dewangan wrote:
->>
->>
->> The RPM is measured speed via PWM signal capture  which is output 
->> from fan.
->> So should we have the fan[1..n]_output_rpm?
->>
->
-> No. I hear you clearly that you for some reason dislike fan[1..n]_input.
-> While ABIs are not always to our liking, that doesn't mean that we get
-> to change them at our whim. If that is not acceptable for you, I can't
-> help you. And you can't change inX_input to inX_voltage either, sorry.
+So far so good, but currently the current DRM Bridge API do not provide support
+to query a mode from another bridge as it is possible to do on panel devices.
+In our case the LVDS decoder is connected to the output of R-Car DU lvds encoder
+(drivers/gpu/drm/rcar-du/rcar_lvds.c). As its 'mode_set' function shows, LVDS
+modes cannot be propagated from bridge to another bridge, but are instead
+inferred from the bus_format field of the panel's connector.
 
-My opinion is only to not use "input" as this is not really the input to 
-fan.
+It is my intention to propose an API extension to allow formats to be propagated
+through bridges, but knowing the DRM/KMS subsystem very superficially I would
+appreciate any pointer from more experienced developers.
+
+For Renesas side:
+The series is based on Laurent's drm/next/du branch with patches on top for:
+- Sergei: Enable PFC, I2c, GPIOs for r8a77970
+- Sergei: Add support for r8a77970 in DU and add display device nodes in
+  r8a77970 DTSI
+- Niklas: Connect DU LVDS output to HDMI bridge adv7511w in Eagle DTS
+- Sergei: fix video output on R8A77970
+
+A base branch with these patches applied is available at
+git://jmondi.org/linux v3m/v4.16-rc3/base
+
+Tested on Eagle board, making sure DU probes and testing all available output
+modes (of which only a few are actually working, I suspect due to faulty mode
+propagation through DRM bridges).
+
+Thanks
+   j
+
+Jacopo Mondi (3):
+  dt-bindings: display: bridge: Document THC63LVD1024 LVDS decoder
+  drm: bridge: Add LVDS decoder driver
+  arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
+
+ .../bindings/display/bridge/thine,thc63lvd1024.txt |  59 +++++
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts     |  31 ++-
+ drivers/gpu/drm/bridge/Kconfig                     |   8 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/lvds-decoder.c              | 239 +++++++++++++++++++++
+ 5 files changed, 336 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+ create mode 100644 drivers/gpu/drm/bridge/lvds-decoder.c
+
+--
+2.7.4
