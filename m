@@ -1,38 +1,46 @@
-Return-Path: <SRS0=lEEj=F5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from aserp2130.oracle.com ([141.146.126.79]:51832 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750803AbeCGGSU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 7 Mar 2018 01:18:20 -0500
-Date: Wed, 7 Mar 2018 09:18:08 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] of: unittest: fix an error test in of_unittest_overlay_8()
-Message-ID: <20180307061808.GA15765@mwanda>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+Return-Path: <SRS0=iiFe=F6=linaro.org=shawn.guo@kernel.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v3 0/2] Add HiSilicon Hi3798CV200 specific dw_mmc extension driver
+Date: Thu,  8 Mar 2018 09:01:32 +0800
+Message-Id: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-We changed this from of_overlay_apply() to overlay_data_apply().  The 
-overlay_data_apply() function returns 1 on success and 0 on error so
-the check for less than zero needs to be updated.
+It adds the dt-bindings and driver support for HiSilicon Hi3798CV200
+specific dw_mmc extension.
 
-Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Changes for v3:
+ - Update copyright to year 2018.
+ - Move DW-MMC register defines into dw_mmc.h.
+ - Include bit HLE into ALL_INT_CLR define.
+ - Add a custom .remove hook to disable drive_clk and sample_clk.
+ - Collect Rob's Reviewed-by tag on bindings.
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index ca5e86dadae2..b233f170b2ec 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1666,8 +1666,7 @@ static void __init of_unittest_overlay_8(void)
- 
- 		overlay_name = overlay_name_from_nr(overlay_nr + i);
- 
--		ret = overlay_data_apply(overlay_name, &ovcs_id);
--		if (ret < 0)  {
-+		if (!overlay_data_apply(overlay_name, &ovcs_id)) {
- 			unittest(0, "could not apply overlay \"%s\"\n",
- 					overlay_name);
- 			return;
+Changes for v2:
+ - Rebase to v4.16-rc.
+ - Use SPDX tag for license.
+ - Make ciu-sample and ciu-drive clock be required.
+ - Drop deprecated num-slots property from bindings example.
+ - Do not show board vs. SoC portion split in bindings example.
+ - Use .init hook instead of .parse_dt for initialization.
+ - Improve MODULE_DESCRIPTION to make it clear this is Hi3798CV200
+   specific extension.
+ - Various style improvements and code cleanups.
+
+tianshuliang (2):
+  dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
+  mmc: dw_mmc: add support for hi3798cv200 specific extensions of
+    dw-mshc
+
+ .../bindings/mmc/hi3798cv200-dw-mshc.txt           |  40 ++++
+ drivers/mmc/host/Kconfig                           |   9 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/dw_mmc-hi3798cv200.c              | 202 +++++++++++++++++++++
+ drivers/mmc/host/dw_mmc.h                          |   6 +
+ 5 files changed, 258 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-hi3798cv200.c
+
+-- 
+1.9.1
