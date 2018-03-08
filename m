@@ -1,64 +1,190 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
- Tegra210
-Date: Thu, 8 Mar 2018 23:25:04 +0000
-Message-ID: <b7a25613-44b4-5e63-e8c7-91ce2b7cb56e@nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/2] input: Add RAVE SP Powerbutton driver
+Date: Thu, 8 Mar 2018 15:34:19 -0800
+Message-ID: <20180308233419.GB198135@dtor-ws>
+References: <20180307020134.26293-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180307020134.26293-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-
-On 06/02/18 16:34, Peter De Schrijver wrote:
-> Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
-> support in this driver. Also allow for the case where the CPU voltage is
-> controlled directly by the DFLL rather than by a separate regulator object.
+On Tue, Mar 06, 2018 at 06:01:33PM -0800, Andrey Smirnov wrote:
+> Add driver that properly handles input event emitted by RAVE SP
+> devices.
 > 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+
+Applied, thank you.
+
 > ---
->  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-> index 4353025..f8e01a8 100644
-> --- a/drivers/cpufreq/tegra124-cpufreq.c
-> +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
->  {
->  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
->  	clk_disable_unprepare(priv->dfll_clk);
-> -	regulator_sync_voltage(priv->vdd_cpu_reg);
-> +	if (priv->vdd_cpu_reg)
-> +		regulator_sync_voltage(priv->vdd_cpu_reg);
->  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
->  }
+> Changes since [v2]:
+> 
+> 	- Collected Reviewed-by from Lucas
+> 
+> Changes since [v1]:
+> 
+> 	- Removed redundant dev.parent assignment
+> 
+> 	- Various cosmetic changes
+> 
+> [v2] lkml.kernel.org/r/20180301165527.22274-1-andrew.smirnov@gmail.com
+> [v1] lkml.kernel.org/r/20180226154130.25774-1-andrew.smirnov@gmail.com
+> 
+>  drivers/input/misc/Kconfig             |  9 ++++
+>  drivers/input/misc/Makefile            |  1 +
+>  drivers/input/misc/rave-sp-pwrbutton.c | 94 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 104 insertions(+)
+>  create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 62a1312a7387..6a3c753b093b 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called hisi_powerkey.
 >  
-> @@ -89,10 +90,10 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  
->  	priv->vdd_cpu_reg = regulator_get(cpu_dev, "vdd-cpu");
-> -	if (IS_ERR(priv->vdd_cpu_reg)) {
-> -		ret = PTR_ERR(priv->vdd_cpu_reg);
-> -		goto out_put_np;
-> -	}
-> +	if (IS_ERR(priv->vdd_cpu_reg) != -EPROBE_DEFER)
-> +		priv->vdd_cpu_reg = NULL;
-> +	else
-> +		return -EPROBE_DEFER;
-
-I am still not sure that we should rely on the fact that the regulator
-is not present in DT to imply that we do not need it. I think that we
-should be checking if we are using I2C mode here.
-
-Cheers
-Jon
+> +config INPUT_RAVE_SP_PWRBUTTON
+> +	tristate "RAVE SP Power button Driver"
+> +	depends on RAVE_SP_CORE
+> +	help
+> +	  Say Y here if you want to enable power key reporting from RAVE SP
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called rave-sp-pwrbutton.
+> +
+>  endif
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index a8f61af865aa..8cc58f362bb8 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -60,6 +60,7 @@ obj-$(CONFIG_INPUT_PMIC8XXX_PWRKEY)	+= pmic8xxx-pwrkey.o
+>  obj-$(CONFIG_INPUT_POWERMATE)		+= powermate.o
+>  obj-$(CONFIG_INPUT_PWM_BEEPER)		+= pwm-beeper.o
+>  obj-$(CONFIG_INPUT_PWM_VIBRA)		+= pwm-vibra.o
+> +obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)	+= rave-sp-pwrbutton.o
+>  obj-$(CONFIG_INPUT_RB532_BUTTON)	+= rb532_button.o
+>  obj-$(CONFIG_INPUT_REGULATOR_HAPTIC)	+= regulator-haptic.o
+>  obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
+> diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
+> new file mode 100644
+> index 000000000000..bcab3cdb7ebd
+> --- /dev/null
+> +++ b/drivers/input/misc/rave-sp-pwrbutton.c
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// Power Button driver for RAVE SP
+> +//
+> +// Copyright (C) 2017 Zodiac Inflight Innovations
+> +//
+> +//
+> +
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/rave-sp.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define RAVE_SP_EVNT_BUTTON_PRESS	(RAVE_SP_EVNT_BASE + 0x00)
+> +
+> +struct rave_sp_power_button {
+> +	struct input_dev *idev;
+> +	struct notifier_block nb;
+> +};
+> +
+> +static int rave_sp_power_button_event(struct notifier_block *nb,
+> +				      unsigned long action, void *data)
+> +{
+> +	struct rave_sp_power_button *pb =
+> +		container_of(nb, struct rave_sp_power_button, nb);
+> +	const u8 event = rave_sp_action_unpack_event(action);
+> +	const u8 value = rave_sp_action_unpack_value(action);
+> +	struct input_dev *idev = pb->idev;
+> +
+> +	if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
+> +		input_report_key(idev, KEY_POWER, value);
+> +		input_sync(idev);
+> +
+> +		return NOTIFY_STOP;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rave_sp_power_button *pb;
+> +	struct input_dev *idev;
+> +	int error;
+> +
+> +	pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
+> +	if (!pb)
+> +		return -ENOMEM;
+> +
+> +	idev = devm_input_allocate_device(dev);
+> +	if (!idev)
+> +		return -ENOMEM;
+> +
+> +	idev->name = pdev->name;
+> +
+> +	input_set_capability(idev, EV_KEY, KEY_POWER);
+> +
+> +	error = input_register_device(idev);
+> +	if (error)
+> +		return error;
+> +
+> +	pb->idev = idev;
+> +	pb->nb.notifier_call = rave_sp_power_button_event;
+> +	pb->nb.priority = 128;
+> +
+> +	error = devm_rave_sp_register_event_notifier(dev, &pb->nb);
+> +	if (error)
+> +		return error;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id rave_sp_pwrbutton_of_match[] = {
+> +	{ .compatible = "zii,rave-sp-pwrbutton" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver rave_sp_pwrbutton_driver = {
+> +	.probe = rave_sp_pwrbutton_probe,
+> +	.driver	= {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = rave_sp_pwrbutton_of_match,
+> +	},
+> +};
+> +module_platform_driver(rave_sp_pwrbutton_driver);
+> +
+> +MODULE_DEVICE_TABLE(of, rave_sp_pwrbutton_of_match);
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
+> +MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
+> +MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
+> +MODULE_DESCRIPTION("RAVE SP Power Button driver");
+> -- 
+> 2.14.3
+> 
 
 -- 
-nvpublic
+Dmitry
