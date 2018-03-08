@@ -1,63 +1,87 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 08/11] clk: tegra: build clk-dfll.c for Tegra124 and
- Tegra210
-Date: Thu, 8 Mar 2018 23:22:09 +0000
-Message-ID: <6ea88ecd-20bb-31f6-74ad-7f7e3aaecfe1@nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-9-git-send-email-pdeschrijver@nvidia.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/6] dt-bindings: soc: Add a binding for the Broadcom
+ VCHIQ services.
+Date: Thu, 8 Mar 2018 17:23:51 -0600
+Message-ID: <CAL_JsqJTsJfud6a445hu6ENVV6QyBF6f69opTwq1yp_X9oUPAQ@mail.gmail.com>
+References: <20180307185716.17449-1-eric@anholt.net> <20180307185716.17449-3-eric@anholt.net>
+ <CAL_Jsq+1-9-RGfzPimYwCokEZx1vef_PX5rkp-c8s6fUchg=ag@mail.gmail.com> <87lgf2fhn2.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517934852-23255-9-git-send-email-pdeschrijver@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <87lgf2fhn2.fsf@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 8, 2018 at 2:15 PM, Eric Anholt <eric@anholt.net> wrote:
+> Rob Herring <robh+dt@kernel.org> writes:
+>
+>> On Wed, Mar 7, 2018 at 12:57 PM, Eric Anholt <eric@anholt.net> wrote:
+>>> The VCHIQ communication channel can be provided by BCM283x and Capri
+>>> SoCs, to communicate with the VPU-side OS services.
+>>>
+>>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>>> ---
+>>>
+>>> v2: dropped firmware property, added cache-line-size.
+>>>
+>>>  .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        | 28 ++++++++++++++++++++++
+>>>  1 file changed, 28 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>>> new file mode 100644
+>>> index 000000000000..cdef4abc5e47
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>>> @@ -0,0 +1,28 @@
+>>> +Broadcom VCHIQ firmware services
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible:  Should be "brcm,bcm2835-vchiq"
+>>> +- reg:         Physical base address and length of the doorbell register pair
+>>> +- interrupts:  The interrupt number
+>>> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+>>> +
+>>> +Optional properties:
+>>> +
+>>> +- cache-line-size:
+>>> +               Size of L2 cache lines.  The VPU firmware detects
+>>> +                 this property and overrides it with the actual L2
+>>> +                 cache line size it's using when loading the
+>>> +                 device-tree.  Determines the required alignment of
+>>> +                 offsets/sizes of VCHIQ pagelists.  If missing, the
+>>> +                 firmware assumes an older kernel using 32-byte
+>>> +                 alignment.
+>>
+>> How is this a VCHIQ property? This is a standard property for cache
+>> nodes, but this is not a cache node.
+>
+> Because the existing firmware code is choosing a value based on the
+> property's presence in this node.  This is the DT ABI for the firmware
+> that's been shipping for a long time (at least since the 4.9 era).
 
-On 06/02/18 16:34, Peter De Schrijver wrote:
-> Tegra210 has a DFLL as well and can share the majority of the code with
-> the Tegra124 implementation. So build the same code for both platforms.
-> 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
->  drivers/clk/tegra/Kconfig  | 5 +++++
->  drivers/clk/tegra/Makefile | 2 +-
->  2 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/tegra/Kconfig b/drivers/clk/tegra/Kconfig
-> index 7ddacae..57902ab 100644
-> --- a/drivers/clk/tegra/Kconfig
-> +++ b/drivers/clk/tegra/Kconfig
-> @@ -5,3 +5,8 @@ config TEGRA_CLK_EMC
->  config CLK_TEGRA_BPMP
->  	def_bool y
->  	depends on TEGRA_BPMP
-> +
-> +config TEGRA_CLK_DFLL
-> +	depends on (ARCH_TEGRA_124_SOC || ARCH_TEGRA_210_SOC)
-> +	select PM_OPP
-> +	def_bool y
-> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
-> index b716923..fc7f4b4 100644
-> --- a/drivers/clk/tegra/Makefile
-> +++ b/drivers/clk/tegra/Makefile
-> @@ -19,7 +19,7 @@ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
->  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
->  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
->  obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
-> -obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124-dfll-fcpu.o
-> +obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
->  obj-$(CONFIG_ARCH_TEGRA_132_SOC)	+= clk-tegra124.o
->  obj-y					+= cvb.o
->  obj-$(CONFIG_ARCH_TEGRA_210_SOC)	+= clk-tegra210.o
-> 
+It's not an ABI if it is not upstream and documented.
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+>> Is it really a problem to just use a fixed maximum alignment? That
+>> seems to be good enough for all the rest of the kernel.
+>
+> If we can't have this DT property, then it looks like we need the
+> upstream kernel to just use 32, since that's what the firmware will
+> assume in its absence.  Maybe the firmware maintainers can give us a new
+> arg to the mailbox call for setup where we could pass in the value to
+> use (or flag for them to pass their preferred value back to us) so we
+> can avoid DT.
 
-Cheers
-Jon
+I read thru the discussion on the previous version and skimmed thru
+the code, but still don't really have a grasp on things. If the actual
+cache line size is 64 bytes, but you use 32 things would be pretty
+broken I'd think.
 
--- 
-nvpublic
+BTW, I'm pretty sure this line is not doing what you want:
+
+static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
+
+Rob
