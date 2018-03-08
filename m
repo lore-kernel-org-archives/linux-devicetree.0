@@ -1,50 +1,212 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v5 2/3] Input: gpio-keys - allow setting wakeup event action in DT
-Date: Thu,  8 Mar 2018 15:32:12 +0800
-Message-ID: <20180308073213.8419-3-jeffy.chen@rock-chips.com>
-References: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Thu, 8 Mar 2018 16:58:14 +0800
+Message-ID: <20180308085813.GZ3217@dragon>
+References: <20180306085911.5930-1-ran.wang_1@nxp.com>
+ <20180306085911.5930-2-ran.wang_1@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180306085911.5930-2-ran.wang_1@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-usb@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allow specifying event actions to trigger wakeup when using the
-gpio-keys input device as a wakeup source.
+On Tue, Mar 06, 2018 at 04:59:10PM +0800, Ran Wang wrote:
+> Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0 DWC3.
+> When only one value means INCRx mode with fix burst type.
+> When more than one value, means undefined length burst mode, USB controller
+> can use the length less than or equal to the largest enabled burst length.
+> 
+> While enabling undefined length INCR burst type and INCR16 burst type,
+> get better write performance on NXP Layerscape platforms:
+> around 3% improvement (from 364MB/s to 375MB/s).
+> 
+> Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Changes in v5:
+>   - add support for ls1021a, ls1012a, ls1046a, ls1088a, ls1021a
+>   - update ls208xa support according to code base change
+> Changes in v4:
+>   - change definition for this property.
+> Changes in v3:
+>   - add new property for INCR burst in usb node.
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++++++
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+Please do not mix bindings doc with DTS change in one patch, and only
+send DTS patch after bindings and driver changes are accepted.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-Specify wakeup event action instead of irq trigger type as Brian
-suggested.
+Shawn
 
- Documentation/devicetree/bindings/input/gpio-keys.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-index a94940481e55..996ce84352cb 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -26,6 +26,14 @@ Optional subnode-properties:
- 	  If not specified defaults to 5.
- 	- wakeup-source: Boolean, button can wake-up the system.
- 			 (Legacy property supported: "gpio-key,wakeup")
-+	- wakeup-event-action: Specifies whether the key should wake the
-+	  system when asserted, when deasserted, or both. This property is
-+	  only valid for keys that wake up the system (e.g., when the
-+	  "wakeup-source" property is also provided).
-+	  Supported values are defined in linux-event-codes.h:
-+		EV_ACT_ASSERTED		- asserted
-+		EV_ACT_DEASSERTED	- deasserted
-+		EV_ACT_ANY		- both asserted and deasserted
- 	- linux,can-disable: Boolean, indicates that button is connected
- 	  to dedicated (not shared) interrupt which can be disabled to
- 	  suppress events from the button.
--- 
-2.11.0
+>  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |    1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    3 +++
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    2 ++
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |    2 ++
+>  7 files changed, 18 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 44e8bab..d1779b2 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -59,6 +59,11 @@ Optional properties:
+>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+>  
+>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+> + - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+> +	register, undefined length INCR burst type enable and INCRx type.
+> +	When just one value, which means INCRX burst mode. When more than one
+> +	value, which means undefined length INCR burst type enabled.
+> +	The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
+>  
+>   - in addition all properties from usb-xhci.txt from the current directory are
+>     supported as well
+> @@ -71,4 +76,5 @@ dwc3@4a030000 {
+>  	reg = <0x4a030000 0xcfff>;
+>  	interrupts = <0 92 4>
+>  	usb-phy = <&usb2_phy>, <&usb3,phy>;
+> +	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  };
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index c31dad9..b0c3f4f 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -705,6 +705,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		pcie@3400000 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> index 82b272f..4275a8f 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> @@ -464,6 +464,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		sata: sata@3200000 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index 380e7c7..0067567 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -622,6 +622,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		usb1: usb3@3000000 {
+> @@ -631,6 +632,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		usb2: usb3@3100000 {
+> @@ -640,6 +642,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		sata: sata@3200000 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 06b5e12..2bf6756 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -602,6 +602,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		usb1: usb@3000000 {
+> @@ -611,6 +612,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		usb2: usb@3100000 {
+> @@ -620,6 +622,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		sata: sata@3200000 {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 4fc150c..c2b5b45 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -478,6 +478,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -488,6 +489,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  			status = "disabled";
+>  		};
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index f3a40af..d5b25f2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -754,6 +754,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		usb1: usb3@3110000 {
+> @@ -764,6 +765,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+>  		ccn@4000000 {
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
