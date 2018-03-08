@@ -1,66 +1,66 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v5 3/3] arm64: dts: rockchip: kevin: Avoid wakeup when
- inserting the pen
-Date: Thu,  8 Mar 2018 15:42:26 +0800
-Message-ID: <20180308074226.18974-1-jeffy.chen@rock-chips.com>
-References: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] dt-bindings: pwm: sunxi: add new
+ compatible strings
+Date: Wed, 7 Mar 2018 20:08:22 -0600
+Message-ID: <20180308020822.35utrgw3ksoldr24@rob-hp-laptop>
+References: <20180307020719.6675-1-andre.przywara@arm.com>
+ <20180307020719.6675-5-andre.przywara@arm.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, heiko@sntech.de, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, dianders@google.com, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org, briannorris@google.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com, Emil Renner Berthing <kernel@esmil.dk>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBGFWQLKQKGQESMIDG5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180307020719.6675-5-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add wakeup event action for Pen Insert gpio key, to avoid wakeup when
-inserting the pen.
+On Wed, Mar 07, 2018 at 02:07:18AM +0000, Andre Przywara wrote:
+> The PWM controllers found in the Allwinner A64, H5 and H6 SoCs are fully
+> compatible to the PWM controllers found in the A13 and H3.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+If fully compatible, then shouldn't there be a fallback to one of the 
+existing compatible strings?
 
-Changes in v5: None
-Changes in v4:
-Include dt-binding gpio-keys.h
-
-Changes in v3: None
-Changes in v2:
-Specify wakeup event action instead of irq trigger type as Brian
-suggested.
-
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index 191a6bcb1704..89126dbe5d91 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -44,6 +44,7 @@
- 
- /dts-v1/;
- #include "rk3399-gru.dtsi"
-+#include <dt-bindings/input/gpio-keys.h>
- #include <dt-bindings/input/linux-event-codes.h>
- 
- /*
-@@ -134,6 +135,8 @@
- 		gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
- 		linux,code = <SW_PEN_INSERTED>;
- 		linux,input-type = <EV_SW>;
-+		/* Wakeup only when ejecting */
-+		wakeup-event-action = <EV_ACT_DEASSERTED>;
- 		wakeup-source;
- 	};
- };
--- 
-2.11.0
+> Add new compatible strings for those SoCs to the binding document, so
+> that they can be safely used, together with a fallback string
+> (preferably "allwinner,sun5i-a13-pwm").
+> Add add the optionals "resets" property, needed by the H6.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> index 51ff54c8b8ef..b3a127a0e58c 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> @@ -7,11 +7,17 @@ Required properties:
+>      - "allwinner,sun5i-a13-pwm"
+>      - "allwinner,sun7i-a20-pwm"
+>      - "allwinner,sun8i-h3-pwm"
+> +    - "allwinner,sun50i-a64-pwm"
+> +    - "allwinner,sun50i-h5-pwm"
+> +    - "allwinner,sun50i-h6-pwm"
+>    - reg: physical base address and length of the controller's registers
+>    - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>      the cells format.
+>    - clocks: From common clock binding, handle to the parent clock.
+>  
+> +Optional properties:
+> +  - resets: shall be the reset control phandle for the PWM block, if required.
+> +
+>  Example:
+>  
+>  	pwm: pwm@1c20e00 {
+> -- 
+> 2.14.1
+> 
