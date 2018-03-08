@@ -1,71 +1,32 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: backlight: Add binding for RAVE SP backlight driver
-Date: Thu,  8 Mar 2018 11:20:46 -0800
-Message-ID: <20180308192046.27670-2-andrew.smirnov@gmail.com>
-References: <20180308192046.27670-1-andrew.smirnov@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 1/6] staging: vc04_services: Replace "firmware" node
+ with a compatible lookup.
+Date: Thu, 8 Mar 2018 20:30:17 +0100 (CET)
+Message-ID: <1088519723.430987.1520537417525@email.1und1.de>
+References: <20180307185716.17449-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308192046.27670-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20180307185716.17449-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP backlight driver - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+Hi Eric,
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
+> Eric Anholt <eric@anholt.net> hat am 7. März 2018 um 19:57 geschrieben:
+> 
+> 
+> This was requested by Rob Herring in DT bindings review.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 
-Changes since [v1]:
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
- - Fixed typos in commit message and incorrect node name in example section
+for Patches V2: #1, #4, #5
 
-[v1] https://lkml.kernel.org/r/20180307024011.25033-2-andrew.smirnov@gmail.com
+I'm okay with #6 as long as it's unused by any new driver.
 
- .../leds/backlight/zii,rave-sp-backlight.txt       | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
-new file mode 100644
-index 000000000000..ff5c92138650
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
-@@ -0,0 +1,23 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor Backlight Bindings
-+
-+RAVE SP backlight device is a "MFD cell" device corresponding to
-+backlight functionality of RAVE Supervisory Processor. It is expected
-+that its Device Tree node is specified as a child of the node
-+corresponding to the parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Should be "zii,rave-sp-backlight"
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		backlight {
-+			compatible = "zii,rave-sp-backlight";
-+		};
-+	}
-+
--- 
-2.14.3
+Stefan
