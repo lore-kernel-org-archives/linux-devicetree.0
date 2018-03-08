@@ -1,123 +1,81 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 03/11] clk: tegra: dfll registration for multiple SoCs
-Date: Thu, 8 Mar 2018 22:15:51 +0000
-Message-ID: <80ee8493-6741-43dd-691a-eade94ec924f@nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-4-git-send-email-pdeschrijver@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2] reset: ti-rstctrl: use the reset-simple driver
+Date: Thu, 8 Mar 2018 16:25:58 -0600
+Message-ID: <CAL_JsqK4gLh17H+=5qPHB6Zd+s2Nn9mYQHbRsP=7DLFMTcstig@mail.gmail.com>
+References: <20180307182143.58383-1-tony@atomide.com> <20180308024806.vombsjullqw5gpmz@rob-hp-laptop>
+ <20180308160249.GI5799@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517934852-23255-4-git-send-email-pdeschrijver@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20180308160249.GI5799@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 8, 2018 at 10:02 AM, Tony Lindgren <tony@atomide.com> wrote:
+> Hi,
+>
+> * Rob Herring <robh@kernel.org> [180308 02:49]:
+>> On Wed, Mar 07, 2018 at 10:21:43AM -0800, Tony Lindgren wrote:
+>> > +TI RSTCTRL Reset Controller
+>> > +
+>> > +Required properties:
+>> > +- compatible : "ti,rstctrl"
+>> > +- reg : Should contain 1 register ranges(address and length)
+>> > +- #reset-cells: 1
+>> > +
+>> > +Example:
+>> > +   prm_gfx: prm@1100 {
+>> > +           compatible = "simple-bus";
+>>
+>> What's a PRM?
+>
+> PRM is power and reset manager. There is one instance per
+> interconnect instance (clockdomain). PRM shows the status of
+> the connected devices in the interconnect, such as device
+> context lost and hardware wake-up dependencies. It also
+> contains a single reset controller register for external
+> accelerators such as DSP. The reset controller instance then
+> has 1 - 3 bits for external accelerator sub device resets.
+> Then there is a reset status register that shows the reset
+> reason for the external accelerator.
+>
+>> > +           #address-cells = <1>;
+>> > +           #size-cells = <1>;
+>> > +           ranges = <0 0x1100 0x100>;
+>>
+>> And what else is in this range?
+>
+> In PRM, there are also registers for each interconnect device
+> context lost and wake-up dependencies. We don't have a driver
+> for that yet, it's handled by the SoC init code currently.
 
-On 06/02/18 16:34, Peter De Schrijver wrote:
-> In a future patch, support for the DFLL in Tegra210 will be introduced.
-> This requires support for more than 1 set of CVB and CPU max frequency
-> tables.
-> 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c | 37 ++++++++++++++++++++++++------
->  1 file changed, 30 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> index e2dbb79..6486ad9 100644
-> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> @@ -21,6 +21,7 @@
->  #include <linux/err.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
->  #include <soc/tegra/fuse.h>
-> @@ -29,8 +30,15 @@
->  #include "clk-dfll.h"
->  #include "cvb.h"
->  
-> +struct dfll_fcpu_data {
-> +	const unsigned long *cpu_max_freq_table;
-> +	unsigned int cpu_max_freq_table_size;
-> +	const struct cvb_table *cpu_cvb_tables;
-> +	unsigned int cpu_cvb_tables_size;
-> +};
-> +
->  /* Maximum CPU frequency, indexed by CPU speedo id */
-> -static const unsigned long cpu_max_freq_table[] = {
-> +static const unsigned long tegra124_cpu_max_freq_table[] = {
->  	[0] = 2014500000UL,
->  	[1] = 2320500000UL,
->  	[2] = 2116500000UL,
-> @@ -80,6 +88,21 @@
->  	},
->  };
->  
-> +static const struct dfll_fcpu_data tegra124_dfll_fcpu_data = {
-> +	.cpu_max_freq_table = tegra124_cpu_max_freq_table,
-> +	.cpu_max_freq_table_size = ARRAY_SIZE(tegra124_cpu_max_freq_table),
-> +	.cpu_cvb_tables = tegra124_cpu_cvb_tables,
-> +	.cpu_cvb_tables_size = ARRAY_SIZE(tegra124_cpu_cvb_tables)
-> +};
-> +
-> +static const struct of_device_id tegra124_dfll_fcpu_of_match[] = {
-> +	{
-> +		.compatible = "nvidia,tegra124-dfll",
-> +		.data = &tegra124_dfll_fcpu_data,
-> +	},
-> +	{ },
-> +};
-> +
->  static int get_alignment_from_regulator(struct device *dev,
->  					struct rail_alignment *align)
->  {
-> @@ -112,12 +135,17 @@ static int tegra124_dfll_fcpu_probe(struct platform_device *pdev)
->  {
->  	int process_id, speedo_id, speedo_value, err;
->  	struct tegra_dfll_soc_data *soc;
-> +	const struct of_device_id *of_id;
-> +	const struct dfll_fcpu_data *fcpu_data;
-> +
-> +	of_id = of_match_device(tegra124_dfll_fcpu_of_match, &pdev->dev);
-> +	fcpu_data = of_id->data;
+Regardless of having/needing a driver, you should take a stab at doing
+the binding at least. It doesn't make sense to do the binding of the
+child without doing the parent.
 
-Nit-pick, we can use of_device_get_match_data() here.
+> Unlike the binding for reset controller, the binding for
+> wake-up dependencies and context lost should look similar
+> binding to the clkctrl clock binding we have. That's because
+> there are tons of those registers.
+>
+>> > +
+>> > +           gfx_rstctrl: rstctrl@4 {
+>> > +                   compatible = "ti,rstctrl";
+>> > +                   reg = <0x4 0x4>;
+>>
+>> Anytime I see a single register in DT I worry about scaling. How many of
+>> these in an SoC?
+>
+> There are not many instances of the reset controller. There
+> is one register per interconnect instance for external
+> accelerators, so about 3 - 10 reset controller registers
+> per SoC.
 
+Okay, seems a reasonable number.
 
->  	process_id = tegra_sku_info.cpu_process_id;
->  	speedo_id = tegra_sku_info.cpu_speedo_id;
->  	speedo_value = tegra_sku_info.cpu_speedo_value;
->  
-> -	if (speedo_id >= ARRAY_SIZE(cpu_max_freq_table)) {
-> +	if (speedo_id >= fcpu_data->cpu_max_freq_table_size) {
->  		dev_err(&pdev->dev, "unknown max CPU freq for speedo_id=%d\n",
->  			speedo_id);
->  		return -ENODEV;
-> @@ -172,11 +200,6 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id tegra124_dfll_fcpu_of_match[] = {
-> -	{ .compatible = "nvidia,tegra124-dfll", },
-> -	{ },
-> -};
-> -
->  static const struct dev_pm_ops tegra124_dfll_pm_ops = {
->  	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
->  			   tegra_dfll_runtime_resume, NULL)
-> 
+However, couldn't you just have PRM node(s) and have that register as
+a simple reset driver (along with anything else it handles).
 
-Otherwise ...
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+Rob
