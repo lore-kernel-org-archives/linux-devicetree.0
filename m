@@ -1,91 +1,69 @@
-Return-Path: <SRS0=0gim=F7=gmail.com=jacek.anaszewski@kernel.org>
+Return-Path: <SRS0=1I8i=F6=ucw.cz=pavel@kernel.org>
+Date: Thu, 8 Mar 2018 23:54:12 +0100
+From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH v2 1/2] dt-bindings: leds: document Panasonic AN30259A
  bindings
+Message-ID: <20180308225412.GA11646@amd>
 References: <20180307004722.23524-1-simon@lineageos.org>
  <20180307004722.23524-2-simon@lineageos.org>
- <973256fd-8394-1b41-9ca1-846442515f62@gmail.com> <20180308225412.GA11646@amd>
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <0dee75f3-b672-148b-fcea-0926eb0ebaee@gmail.com>
-Date: Fri, 9 Mar 2018 23:33:24 +0100
+ <973256fd-8394-1b41-9ca1-846442515f62@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20180308225412.GA11646@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-To: Pavel Machek <pavel@ucw.cz>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+In-Reply-To: <973256fd-8394-1b41-9ca1-846442515f62@gmail.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Simon Shields <simon@lineageos.org>, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 03/08/2018 11:54 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> +	led@1 {
->>> +		reg = <1>;
->>> +		linux,default-trigger = "heartbeat";
->>> +		label = "an30259a:red:notification";
->>
->> s/an30259a:red:notification/red:notification/
->>
->> Let's drop devicename section from label, and make it a LED class
->> driver responsibility to prepend the label with devicename when
->> composing LED class device name.
-> 
-> Is it good idea?
-> 
-> (Some existing bindings specify three-part label in the label, some do
-> not. Documentation/devicetree/bindings/leds/leds-netxbig.txt
-> vs. Documentation/devicetree/bindings/leds/leds-mt6323.txt :-( We
-> should really solve that somehow).
 
-It looks that we didn't pay enough attention to the label DT property
-format, as long as the resulting LED class device name conformed
-to the three-part LED naming scheme.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We certainly need to fix that, by defining the label format explicitly
-in the common LED bindings. However we have two related issues, that
-have been raised several times throughout last months:
+Hi!
 
-1. label format
+> > +	led@1 {
+> > +		reg =3D <1>;
+> > +		linux,default-trigger =3D "heartbeat";
+> > +		label =3D "an30259a:red:notification";
+>=20
+> s/an30259a:red:notification/red:notification/
+>=20
+> Let's drop devicename section from label, and make it a LED class
+> driver responsibility to prepend the label with devicename when
+> composing LED class device name.
 
-Rob's statement from [0]:
+Is it good idea?
 
-"I really dislike how this naming convention is used for label. label is
- supposed to be the physically identifiable name. Having the devicename
-defeats that. We'd be better off with a color property.
-It seems we're overloading the naming with too many things. Now we're
-adding device association"
+(Some existing bindings specify three-part label in the label, some do
+not. Documentation/devicetree/bindings/leds/leds-netxbig.txt
+vs. Documentation/devicetree/bindings/leds/leds-mt6323.txt :-( We
+should really solve that somehow).
 
-2. LED class device naming
+I'd really like to see input0:white:numlock in the name, so same
+software has a chance to work on PC and ARM notebook. Prepending
+an30259a in the driver will break that...
 
-Rob's statement from [0]:
-
-"I do want to see standard names though. On 96boards for example, there
-are defined LEDs and locations. The function on some are defined (e.g.
-WiFi/BT) and somewhat undefined on others (user{1-4}). I'd like to see
-the same label across all boards."
-
-
-Now, we have to decide if label should map directly to LED class device.
-I requested removing devicename from label to satisfy 1., provided
-that there was no conclusion from the thread [0]. Also some LED class
-drivers already follow this scheme.
-
-Of course I meant it to be only a temporary solution until we unify
-the LED class device naming across all drivers and bindings.
-
-Driving LED controller name can be looked up in sysfs so it doesn't
-need to be a part of the LED class device name.
-
-> I'd really like to see input0:white:numlock in the name, so same
-> software has a chance to work on PC and ARM notebook. Prepending
-> an30259a in the driver will break that...
-
-You have input0 in your example. It does not say too much
-about the device the LED is associated with. I assume that this
-is not a device node name, since in Device Tree you don't know the
-associations between DT nodes and device node numbers.
-
-[0] https://patchwork.kernel.org/patch/9956315/
-
--- 
 Best regards,
-Jacek Anaszewski
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqhvxQACgkQMOfwapXb+vL23QCfTfuDpNLIv6vbtr7mMomcv8XO
+iiwAniu/g4fiXkH9XfWldvXVYueoxXHH
+=Rlmn
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
