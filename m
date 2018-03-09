@@ -1,76 +1,83 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
-Date: Fri, 9 Mar 2018 10:25:39 +0100
-Message-ID: <20180309092539.GA5798@botnar.kaiser.cx>
-References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
- <20180308161135.1f3d3d18@karo-electronics.de>
- <20180308153832.GA28454@botnar.kaiser.cx>
- <20180309093738.7cd5fded@karo-electronics.de>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 1/3] dt-bindings: display: bridge: Document THC63LVD1024
+ LVDS decoder
+Date: Fri, 9 Mar 2018 10:29:45 +0100
+Message-ID: <20180309092945.GE14819@w540>
+References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1520522643-11756-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVQqp7YcoQ6eN5pSznZB4zn7ztv1WFfkcQOzP_3DhG_Vg@mail.gmail.com>
+ <20180309090422.GD14819@w540>
+ <CAMuHMdUaOjJekCK5b1n3vYAt-ZkRvTcu=G9eADhC4+0AD7UD6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180309093738.7cd5fded@karo-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAMuHMdUaOjJekCK5b1n3vYAt-ZkRvTcu=G9eADhC4+0AD7UD6Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lothar,
-
-Thus wrote Lothar Waßmann (LW@KARO-electronics.de):
-
-> On Thu, 8 Mar 2018 16:38:32 +0100 Martin Kaiser wrote:
-> > Hi Lothar,
-
-> > Thus wrote Lothar Waßmann (LW@KARO-electronics.de):
-
-> > > > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-> > > > index 9725705..cf70df2 100644
-> > > > --- a/arch/arm/boot/dts/imx25.dtsi
-> > > > +++ b/arch/arm/boot/dts/imx25.dtsi
-> > > > @@ -269,6 +269,7 @@
-> > > >  				dmas = <&sdma 24 1 0>,
-> > > >  				       <&sdma 25 1 0>;
-> > > >  				dma-names = "rx", "tx";
-> > > > +				fsl,fifo-depth = <15>;
-> > > >  				status = "disabled";
-> > > >  			};
-
-> > > > @@ -329,6 +330,7 @@
-> > > >  				dmas = <&sdma 28 1 0>,
-> > > >  				       <&sdma 29 1 0>;
-> > > >  				dma-names = "rx", "tx";
-> > > > +				fsl,fifo-depth = <15>;
-> > > >  				status = "disabled";
-> > > >  			};
-
-> > > You are changing the global .dtsi file. Did you test this change with
-> > > all devices that are affected by it?
-
-> > I changed the hardware description of the imx25 SSI to match the
-> > reference manual.
-
-> > I did test this change on an imx25 board with audio playback. This uses
-> > the SSI description I modified. I verified that the driver is actually
-> > taking the modified setting into account and that this causes no
-> > problems.
-
-> > As of today, this setting is used by the fsl_ssi driver to set the fifo
-> > water level for dma requests.
-
-> > Of course, I don't have access to the enitre range of supported imx25
-> > boards and I don't think this is required for submitting patches.
-
-> > Do you have any indication why this patch should not be merged?
-
-> Usually patches should not willy-nilly change the behaviour of existing
-> configurations unless they fix any real life bugs.
-
-We both made our points, let the maintainer decide what to do with the
-patch.
-
-Thanks & Best regards,
-
-   Martin
+SGkgR2VlcnQsCgpPbiBGcmksIE1hciAwOSwgMjAxOCBhdCAxMDoyMjozOUFNICswMTAwLCBHZWVy
+dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gSGkgSmFjb3BvLAo+Cj4gT24gRnJpLCBNYXIgOSwgMjAx
+OCBhdCAxMDowNCBBTSwgamFjb3BvIG1vbmRpIDxqYWNvcG9Aam1vbmRpLm9yZz4gd3JvdGU6Cj4g
+PiBPbiBGcmksIE1hciAwOSwgMjAxOCBhdCAwOToxMDo1NUFNICswMTAwLCBHZWVydCBVeXR0ZXJo
+b2V2ZW4gd3JvdGU6Cj4gPj4gT24gVGh1LCBNYXIgOCwgMjAxOCBhdCA0OjI0IFBNLCBKYWNvcG8g
+TW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+IHdyb3RlOgo+ID4+ID4gRG9jdW1lbnQg
+VGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlci4KPiA+PiA+Cj4gPj4gPiBTaWduZWQtb2Zm
+LWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gPj4KPiA+PiBU
+aGFua3MgZm9yIHlvdXIgcGF0Y2ghCj4gPj4KPiA+PiA+IC0tLSAvZGV2L251bGwKPiA+PiA+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGlu
+ZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPj4gPiBAQCAtMCwwICsxLDU5IEBACj4gPj4gPiArVEhpbmUg
+RWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgcmVjZWl2ZXIKPiA+Pgo+ID4+IFRoaW5lCj4g
+Pj4KPiA+PiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
+ID4+ID4gKwo+ID4+ID4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYW4gTFZEUyByZWNlaXZlciBkZXNp
+Z25lZCB0byBjb252ZXJ0IG11bHRpcGxlIExWRFMgc3RyZWFtcwo+ID4+ID4gK3RvIGRpZ2l0YWwg
+Q01PUy9UVEwgcGFyYWxsZWwgZGF0YS4KPiA+PiA+ICsKPiA+PiA+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ID4+ID4gKy0gY29tcGF0aWJsZTogU2hhbGwgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6
+Cj4gPj4gPiArICAidGhpbmUsdGhjNjNsdmQxMDI0IiwKPiA+PiA+ICsgICJsdmRzLWRlY29kZXIi
+Cj4gPj4KPiA+PiBXaGF0J3MgdGhlIHB1cnBvc2Ugb2YgdGhlIHNlY29uZCBjb21wYXRpYmxlIHZh
+bHVlPwo+ID4+IFdoZW4gc2hvdWxkIGl0IGJlIHVzZWQ/Cj4gPgo+ID4gSXQgaXMgcHJvYmFibHkg
+bXkgYmFkIGhhdmluZyBzdGFydGVkIHdpdGggYSBnZW5lcmljIExWRFMgZGVjb2RlciBpbgo+ID4g
+bWluZCBhbmQgaGF2aW5nIHRoZW4gYWRkZWQgcHJvcGVydGllcyBzcGVjaWZpYyB0byBUSEM2M0xW
+RDEwMjQgdG8gdGhlCj4gPiBkcml2ZXIgYW5kIGl0cyBiaW5kaW5ncy4KPiA+Cj4gPiAibHZkcyxk
+ZWNvZGVyIiBjYW4gYmUgdXNlZCB3aGVuIHRoZSBjaGlwIGlzIGNvbXBsZXRlbHkgdHJhbnNwYXJl
+bnQgdG8KPiA+IHRoZSBTb0MgYW5kIG5vbmUgb2YgdGhlIG9wdGlvbmFsIHByb3BlcnRpZXMgSSBo
+YXZlIGRlc2NyaWJlZCBpbiB0aGUKPiA+IGJpbmRpbmdzIGFyZSBzcGVjaWZpZWQgKGEgZ2VuZXJp
+YyAicG93ZXItZ3Bpb3MiIGFwYXJ0LCBzZWUgQW5kcnplago+ID4gY29tbWVudHMgb24gInB3ZG4t
+Z3Bpb3MiIHByb3BlcnR5KS4KPiA+Cj4gPiBBbHNvLCBJIHNob3VsZCBtYWtlIHRoZSBkcml2ZXIg
+YmVoYXZpb3IgZGVwZW5kIG9uIHRoZSBtYXRjaGVkIGNvbXBhdGlibGUKPiA+IHN0cmluZy4gV2hl
+biAibHZkcy1kZWNvZGVyIiBpcyBtYXRjaGVkLCBpdCB3aWxsIGp1c3QgbG9vayBmb3IgYW4KPiA+
+IG9wdGlvbmFsIHBvd2VyIGRvd24gZ3Bpbywgd2hlbiAidGhjNjNsdmQxMDI0IiBpcyBtYXRjaGVk
+LCBhbGwgb2YgaXRzCj4gPiBWY2Mgc3VwcGxpZXMsIHB3ZG4gZ3BpbyBhbmQgb2UgZ3Bpb3Mgd2ls
+bCBiZSBxdWVyaWVkIGFuZCwgaWYgcHJlc2VudCwKPiA+IGV2ZW50dWFsbHkgdXNlZCBpbiBlbmFi
+bGUvZGlzYWJsZSByb3V0aW5lcy4KPiA+Cj4gPiBJJ20ganVzdCBub3Qgc3VyZSBob3cgdG8gZGVz
+Y3JpYmUgdGhhdCBpbiBiaW5kaW5ncy4gV291bGQgc29tZXRoaW5nCj4gPiBsaWtlIHRoZSBmb2xs
+b3dpbmcgd29yaz8KPiA+Cj4gPiBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciAibHZkcyxkZWNvZGVy
+Igo+Cj4gImx2ZHMtZGVjb2RlciI/Cj4KClllcywgc29ycnkKCj4gPiAtIHBvd2VyLWdwaW9zOiBQ
+b3dlciBjb250cm9sIEdQSU9zCj4gPgo+ID4gT3B0aW9uYWwgcHJvcGVydGllcyBmb3IgInRoaW5l
+LHRoYzYzbHZkMTAyNCIKPiA+IC0gcHdkbi1ncGlvczogLi4uCj4gPiAtIG9lLWdwaW9zOiAuLi4K
+PiA+IC0gc3VwcGx5LXZjYzogLi4uCj4gPiAtIHN1cHBseS1jdmNjOiAuLi4KPiA+IC0gc3VwcGx5
+LXB2Y2M6IC4uLgo+ID4gLSBzdXBwbHktbHZjYzogLi4uCj4KPiBTb3VuZHMgbGlrZSB5b3UgbmVl
+ZCBhIChzZXBhcmF0ZSkgZ2VuZXJpYyBsdmRzLWRlY29kZXIgRFQgYmluZGluZ3MgZG9jdW1lbnQs
+Cj4gd2hpY2ggeW91IGNhbiBleHRlbmQvcmVmZXIgdG8gZnJvbSB0aGUgVEhDNjNMVkQxMDI0LXNw
+ZWNpZmljIGJpbmRpbmdzLgoKT2ssIEknbGwgZ28gd2l0aCB0d28gYmluZGluZ3MgZG9jdW1lbnQg
+dGhlbiBhbmQgc2VlIGhvdyBpdCBsb29rcy4KClRoYW5rcwogICBqCgoKCj4KPiBHcntvZXRqZSxl
+ZXRpbmd9cywKPgo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0Cj4KPiAtLQo+IEdlZXJ0
+IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
+cnRAbGludXgtbTY4ay5vcmcKPgo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNo
+bmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQKPiB3aGVuIEknbSB0YWxr
+aW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBs
+aWtlIHRoYXQuCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2
+YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
