@@ -1,144 +1,175 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 0/9] Sunxi-Cedrus driver for the Allwinner Video Engine,
- using the V4L2 request API
-Date: Fri, 09 Mar 2018 11:18:56 +0100
-Message-ID: <1520590736.15946.1.camel@bootlin.com>
-References: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: add bindings for USB physical
+ connector
+Date: Fri, 9 Mar 2018 12:24:44 +0200
+Message-ID: <ed0ce43c-3c81-b027-2eb1-30e49156c3ac@ti.com>
+References: <20180227071134.28063-1-a.hajda@samsung.com>
+ <CGME20180227071138eucas1p17e1e16f13f6d3e3b15a57dc93eb8cf3f@eucas1p1.samsung.com>
+ <20180227071134.28063-2-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-HlJ2Wc3XAxVn/wzc1ex8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20180227071134.28063-2-a.hajda@samsung.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---=-HlJ2Wc3XAxVn/wzc1ex8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 27/02/18 09:11, Andrzej Hajda wrote:
+> These bindings allow to describe most known standard USB connectors
+> and it should be possible to extend it if necessary.
+> USB connectors, beside USB can be used to route other protocols,
+> for example UART, Audio, MHL. In such case every device passing data
+> through the connector should have appropriate graph bindings.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+> v4:
+> - improved 'type' description (Rob),
+> - improved description of 2nd example (Rob).
+> v3:
+> - removed MHL port (samsung connector will have separate bindings),
+> - added 2nd example for USB-C,
+> - improved formatting.
+> v2:
+> - moved connector type(A,B,C) to compatible string (Rob),
+> - renamed size property to type (Rob),
+> - changed type description to be less confusing (Laurent),
+> - removed vendor specific compatibles (implied by graph port number),
+> - added requirement of connector being a child of IC (Rob),
+> - removed max-mode (subtly suggested by Rob, it should be detected anyway
+>   by USB Controller in runtime, downside is that device is not able to
+>   report its real capabilities, maybe better would be to make it optional(?)),
+> - assigned port numbers to data buses (Rob).
+> 
+> Regards
+> Andrzej
+> ---
+>  .../bindings/connector/usb-connector.txt           | 75 ++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> new file mode 100644
+> index 000000000000..e1463f14af38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -0,0 +1,75 @@
+> +USB Connector
+> +=============
+> +
+> +USB connector node represents physical USB connector. It should be
+> +a child of USB interface controller.
+> +
+> +Required properties:
+> +- compatible: describes type of the connector, must be one of:
+> +    "usb-a-connector",
+> +    "usb-b-connector",
+> +    "usb-c-connector".
 
-On Fri, 2018-03-09 at 11:09 +0100, Paul Kocialkowski wrote:
-> This presents a newer version of the Sunxi-Cedrus driver, that
-> supports
-> the Video Engine found in most Allwinner SoCs, starting with the A10.
+compatible should be just "usb-connector"
 
-I had to send this series in two parts (and tried to keep them under the
-original thread) after the mail server rejected one of the emails mid-
-series, causing git-send-email to stop. Sorry for the mess.
+Type should be a property
 
-> The first version of this driver[0] was originally written and
-> submitted
-> by Florent Revest using a previous version of the request API, that is
-> necessary to provide coherency between controls and the buffers they
-> apply
-> to. The driver was since adapted to use the latest version of the
-> request
-> API[1], as submitted by Alexandre Courbot. It is a hard requirement
-> for
-> this driver.
->=20
-> This series also contains fixes for issues encountered with the
-> current
-> version of the request API. If accepted, these should eventually be
-> squashed into the request API series.
->=20
-> The driver itself currently only supports MPEG2 and more codecs will
-> be
-> added to the driver eventually. The output frames provided by the
-> Video Engine are in a multi-planar 32x32-tiled YUV format, with a
-> plane
-> for luminance (Y) and a plane for chrominance (UV). A specific format
-> is
-> introduced in the V4L2 API to describe it.
->=20
-> This implementation is based on the significant work that was
-> conducted
-> by various members of the linux-sunxi community for understanding and
-> documenting the Video Engine's innards.
->=20
-> [0]: https://lkml.org/lkml/2016/8/25/246
-> [1]: https://lkml.org/lkml/2018/2/19/872
->=20
-> Florent Revest (5):
->   v4l: Add sunxi Video Engine pixel format
->   v4l: Add MPEG2 low-level decoder API control
->   media: platform: Add Sunxi Cedrus decoder driver
->   sunxi-cedrus: Add device tree binding document
->   ARM: dts: sun5i: Use video-engine node
->=20
-> Icenowy Zheng (1):
->   ARM: dts: sun8i: add video engine support for A33
->=20
-> Paul Kocialkowski (2):
->   media: vim2m: Try to schedule a m2m device run on request submission
->   media: videobuf2-v4l2: Copy planes when needed in request qbuf
->=20
-> Thomas van Kleef (1):
->   ARM: dts: sun7i: Add video engine support for the A20
->=20
->  .../devicetree/bindings/media/sunxi-cedrus.txt     |  44 ++
->  arch/arm/boot/dts/sun5i-a13.dtsi                   |  30 ++
->  arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 ++
->  arch/arm/boot/dts/sun8i-a33.dtsi                   |  39 ++
->  drivers/media/common/videobuf2/videobuf2-v4l2.c    |  19 +
->  drivers/media/platform/Kconfig                     |  14 +
->  drivers/media/platform/Makefile                    |   1 +
->  drivers/media/platform/sunxi-cedrus/Makefile       |   4 +
->  drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c | 313 ++++++++++++
->  .../platform/sunxi-cedrus/sunxi_cedrus_common.h    | 106 ++++
->  .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.c | 568
-> +++++++++++++++++++++
->  .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.h |  33 ++
->  .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.c  | 185 +++++++
->  .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.h  |  36 ++
->  .../platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c     | 152 ++++++
->  .../platform/sunxi-cedrus/sunxi_cedrus_regs.h      | 170 ++++++
->  drivers/media/platform/vim2m.c                     |  13 +-
->  drivers/media/v4l2-core/v4l2-ctrls.c               |  15 +
->  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
->  include/uapi/linux/v4l2-controls.h                 |  26 +
->  include/uapi/linux/videodev2.h                     |   6 +
->  21 files changed, 1821 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-
-> cedrus.txt
->  create mode 100644 drivers/media/platform/sunxi-cedrus/Makefile
->  create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_common.h
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_dec.c
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_dec.h
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_hw.c
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_hw.h
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_mpeg2.c
->  create mode 100644 drivers/media/platform/sunxi-
-> cedrus/sunxi_cedrus_regs.h
->=20
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-HlJ2Wc3XAxVn/wzc1ex8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+type: type of usb connector "A", "B", "AB", "C"
+AB is for dual-role connectors.
 
------BEGIN PGP SIGNATURE-----
+micro super-speed and high-speed connectors are different. How do you differentiate that?
 
-iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqiX5EACgkQ3cLmz3+f
-v9HHBAf9EI6TZ+OLHWQBSByQgV454Ur83C4+xkcYnjQ8ulQEKZyoTdXi7dOTudX8
-HGF/milN7+lRoVuvgCzwzxdSZsZ+QJdKXIBNFeeuIi4lDHMdMhJQwZA/VVWboNRw
-gHVVOfYiorWtzGaueevgPmwTowOYc6CSrHyEt33XCOdR9dEhFT9ByeIbB4yKAT6K
-k1eujOOLT0vDvTm+8lxJ1YQ3TJuwn1ep89MLnclUeB9+P4ugTRrmMdPgYyzU1v2G
-92gt2pwiXGRQX4tM8xVczHxv5gN1jSLv0tjiuyDFJ+1QdSBEKfegWcWsF2LFpklt
-YrYYYVidGr2n6Sn0t+Pc8IrviVKC9A==
-=JvGE
------END PGP SIGNATURE-----
+> +
+> +Optional properties:
+> +- label: symbolic name for the connector,
 
---=-HlJ2Wc3XAxVn/wzc1ex8--
+Why do you need label? We can't maintain consistency as people will put creative names there.
+Device/bus driver could generate a valid label.
+
+> +- type: size of the connector, should be specified in case of USB-A, USB-B
+> +  non-fullsize connectors: "mini", "micro".
+
+type is misleading. Type is usually A/B/C. It should be size here instead.
+
+size: size of the connector if not standard size. "mini", "micro"
+
+If not specified it is treated as standard sized connector.
+e.g. for Type-C there is no mini/micro. so size doesn't have to be specificed
+
+What about Type-C connector?
+> +
+> +Required nodes:
+> +- any data bus to the connector should be modeled using the OF graph bindings
+
+s/modeled/modelled
+
+> +  specified in bindings/graph.txt, unless the bus is between parent node and
+> +  the connector. Since single connector can have multpile data buses every bus
+
+s/multpile/multiple
+
+> +  has assigned OF graph port number as follows:
+> +    0: High Speed (HS), present in all connectors,
+> +    1: Super Speed (SS), present in SS capable connectors,
+> +    2: Sideband use (SBU), present in USB-C.
+> +
+> +Examples
+> +--------
+> +
+> +1. Micro-USB connector with HS lines routed via controller (MUIC):
+> +
+> +muic-max77843@66 {
+> +	...
+> +	usb_con: connector {
+> +		compatible = "usb-b-connector";
+> +		label = "micro-USB";
+> +		type = "micro";
+> +	};
+> +};
+> +
+> +2. USB-C connector attached to CC controller (s2mm005), HS lines routed
+> +to companion PMIC (max77865), SS lines to USB3 PHY and SBU to DisplayPort.
+> +DisplayPort video lines are routed to the connector via SS mux in USB3 PHY.
+> +
+> +ccic: s2mm005@33 {
+> +	...
+> +	usb_con: connector {
+> +		compatible = "usb-c-connector";
+> +		label = "USB-C";
+
+The label is not consistent with the earlier example.
+
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				usb_con_hs: endpoint {
+> +					remote-endpoint = <&max77865_usbc_hs>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				usb_con_ss: endpoint {
+> +					remote-endpoint = <&usbdrd_phy_ss>;
+> +				};
+> +			};
+> +			port@2 {
+> +				reg = <2>;
+> +				usb_con_sbu: endpoint {
+> +					remote-endpoint = <&dp_aux>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
