@@ -1,53 +1,202 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v3 3/3] pinctrl: bcm2835: Update docs about generic pinctrl bindings support
-Date: Fri,  9 Mar 2018 00:16:14 -0400
-Message-ID: <1520568974-15547-4-git-send-email-matheus@castello.eng.br>
-References: <5b3419be-12ca-75d7-6f5e-d3338ddd7f14@castello.eng.br>
- <1520568974-15547-1-git-send-email-matheus@castello.eng.br>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520568974-15547-1-git-send-email-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stefan.wahren@i2se.com, eric@anholt.net
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] iommu/arm-smmu: Invoke pm_runtime during probe,
+	add/remove device
+Date: Fri, 9 Mar 2018 13:50:32 +0900
+Message-ID: <CAAFQd5BU+hU8aPyq6Rcaiwzu1sf7vcRNwnzt5LZZ+L01DnjqhA@mail.gmail.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+	<20180302101050.6191-4-vivek.gautam@codeaurora.org>
+	<d0f2b3ed-136d-7704-2aef-1173a342a89c@arm.com>
+	<CAAFQd5BTdF176x5ycatCmCHrMyVX2OZqdXd-JGq06RyDUb0N3g@mail.gmail.com>
+	<30a2fa5e-3d8e-acb6-ab31-bec652f1be99@arm.com>
+	<CAAFQd5BKkKc2binDe-MCDeP42b6O26Hu9nYjvYRE160EMvi1fA@mail.gmail.com>
+	<6fe36177-a8a5-5f17-bf65-1a53538221a4@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <6fe36177-a8a5-5f17-bf65-1a53538221a4-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now we have generic pin configuration and multiplexing support,
-ahd shoud be preferred than brcm legacy one.
+On Thu, Mar 8, 2018 at 9:12 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 08/03/18 04:33, Tomasz Figa wrote:
+>>
+>> On Thu, Mar 8, 2018 at 1:58 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>> On 07/03/18 13:52, Tomasz Figa wrote:
+>>>>
+>>>>
+>>>> On Wed, Mar 7, 2018 at 9:38 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>>
+>>>>> On 02/03/18 10:10, Vivek Gautam wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>>
+>>>>>> The smmu device probe/remove and add/remove master device callbacks
+>>>>>> gets called when the smmu is not linked to its master, that is without
+>>>>>> the context of the master device. So calling runtime apis in those
+>>>>>> places
+>>>>>> separately.
+>>>>>>
+>>>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>> [vivek: Cleanup pm runtime calls]
+>>>>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>> ---
+>>>>>>     drivers/iommu/arm-smmu.c | 96
+>>>>>> ++++++++++++++++++++++++++++++++++++++++++++----
+>>>>>>     1 file changed, 88 insertions(+), 8 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>>>> index c8b16f53f597..3d6a1875431f 100644
+>>>>>> --- a/drivers/iommu/arm-smmu.c
+>>>>>> +++ b/drivers/iommu/arm-smmu.c
+>>>>>> @@ -209,6 +209,8 @@ struct arm_smmu_device {
+>>>>>>           struct clk_bulk_data            *clks;
+>>>>>>           int                             num_clks;
+>>>>>>     +     bool                            rpm_supported;
+>>>>>> +
+>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>> Can we not automatically infer this from whether clocks and/or power
+>>>>> domains
+>>>>> are specified or not, then just use pm_runtime_enabled() as the
+>>>>> fast-path
+>>>>> check as Tomasz originally proposed?
+>>>>
+>>>>
+>>>>
+>>>> I wouldn't tie this to presence of clocks, since as a next step we
+>>>> would want to actually control the clocks separately. (As far as I
+>>>> understand, on QCom SoCs we might want to have runtime PM active for
+>>>> the translation to work, but clocks gated whenever access to SMMU
+>>>> registers is not needed.) Moreover, you might still have some super
+>>>> high scale thousand-core systems that require clocks to be
+>>>> prepare-enabled, but runtime PM would be undesirable for the reasons
+>>>> we discussed before.
+>>>>
+>>>>>
+>>>>> I worry that relying on statically-defined matchdata is just going to
+>>>>> blow
+>>>>> up the driver and DT binding into a maintenance nightmare; I really
+>>>>> don't
+>>>>> want to start needing separate definitions for e.g.
+>>>>> "arm,juno-etr-mmu-401"
+>>>>> and "arm,juno-hdlcd-mmu-401" just because one otherwise-identical
+>>>>> instance
+>>>>> within the SoC is in a separate controllable power domain while the
+>>>>> others
+>>>>> aren't.
+>>>>
+>>>>
+>>>>
+>>>> I don't see a reason why both couldn't just have RPM supported
+>>>> regardless of whether there is a real power domain. It would
+>>>> effectively be just a no-op for those that don't have one.
+>>>
+>>>
+>>>
+>>> Because you're then effectively defining "compatible" values for the sake
+>>> of
+>>> attaching software policy to them, rather than actually describing
+>>> different
+>>> hardware implementations.
+>>>
+>>> The fact that RPM can't do anything meaningful unless relevant
+>>> clock/power
+>>> aspects *are* described, however, means that we shouldn't need additional
+>>> information redundant with that. Much like the fact that we don't
+>>> *already*
+>>> have an "arm,juno-hdlcd-mmu-401" compatible to account for those being
+>>> integrated such that IDR0.CTTW has the wrong value, since the presence or
+>>> not of the "dma-coherent" property already describes the truth in that
+>>> regard.
+>>
+>>
+>> Fair enough.
+>>
+>>>
+>>>> IMHO the
+>>>> only reason to avoid having the RPM enabled is the scalability issue
+>>>> we discussed before.
+>>>
+>>>
+>>>
+>>> Yes, but that's kind of my point; in reality high throughput/minimal
+>>> latency
+>>> and aggressive power management are more or less mutually exclusive.
+>>> Mobile
+>>> SoCs with fine-grained clock trees and power domains won't have multiple
+>>> 40GBe/NVMf/whatever links running flat out in parallel; conversely
+>>> networking/infrastructure/server SoCs aren't designed around saving every
+>>> last microamp of leakage current - even in the (fairly unlikely) case of
+>>> the
+>>> interconnect clocks being software-gateable at all I would be very
+>>> surprised
+>>> if that were ever exposed directly to Linux (FWIW I believe ACPI
+>>> essentially
+>>> *requires* clocks to be abstracted behind firmware).
+>>>
+>>> Realistically then, explicit clocks are only expected on systems which
+>>> care
+>>> about power management. We can always revisit that assumption if anything
+>>> crazy where it isn't the case ever becomes non-theoretical, but for now
+>>> it's
+>>> one I'm entirely comfortable with. If on the other hand it turns out that
+>>> we
+>>> can rely on just a power domain being present wherever we want RPM,
+>>> making
+>>> clocks moot, then all the better.
+>>
+>>
+>> Alright. Since Qcom would be the only user of clock and power handling
+>> for the time being, I think checking power domain presence could work
+>> for us. +/- the fact that clocks need to be handled even if power
+>> domain is not present, but we should normally always have both.
+>
+>
+> Great! (the issue of Qcom-specific clock handling is a separate argument
+> which I don't feel like reigniting just now...)
+>
+>> Now we need a way to do the check. Perhaps for the time being it would
+>> be enough to just check for the power-domains property in DT?
+>
+>
+> AFAICS, it might be as simple as arm_smmu_probe() doing this:
+>
+>         /*
+>          * We want to avoid touching dev->power.lock in fastpaths unless
+>          * it's really going to do something useful - pm_runtime_enabled()
+>          * can serve as an ideal proxy for that decision.
+>          */
+>         if (dev->pm_domain)
+>                 pm_runtime_enable(dev);
+>
+> or maybe even just gate all the calls with "if (smmu->dev.pm_domain)"
+> directly (like pcie-mediatek does), but I'm not sure which would be
+> conceptually cleaner.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Okay, that was easier than I expected. Thanks. :)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-index 2569866..58b4720 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-@@ -36,6 +36,25 @@ listed. In other words, a subnode that lists only a mux function implies no
- information about any pull configuration. Similarly, a subnode that lists only
- a pul parameter implies no information about the mux function.
- 
-+This driver supports the generic pin multiplexing and configuration
-+bindings. For details on each properties, you can refer to
-+./pinctrl-bindings.txt.
-+
-+Required sub-node properties:
-+  - pins
-+  - function
-+
-+Optional sub-node properties:
-+  - bias-disable
-+  - bias-pull-up
-+  - bias-pull-down
-+  - output-high
-+  - output-low
-+
-+Legacy pin configuration and multiplexing binding:
-+*** (Its use is deprecated, use generic multiplexing and configuration
-+bindings instead)
-+
- Required subnode-properties:
- - brcm,pins: An array of cells. Each cell contains the ID of a pin. Valid IDs
-   are the integer GPIO IDs; 0==GPIO0, 1==GPIO1, ... 53==GPIO53.
--- 
-2.7.4
+Actually, there is one more thing that might need rechecking. Are you
+sure that dev->pm_domain is NULL for the devices, for which we don't
+want runtime PM to be enabled? I think ACPI was mentioned and ACPI
+includes the concept of PM domains.
+
+Best regards,
+Tomasz
