@@ -1,83 +1,64 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 1/3] dt-bindings: display: bridge: Document THC63LVD1024
- LVDS decoder
-Date: Fri, 9 Mar 2018 10:29:45 +0100
-Message-ID: <20180309092945.GE14819@w540>
-References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
- <1520522643-11756-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVQqp7YcoQ6eN5pSznZB4zn7ztv1WFfkcQOzP_3DhG_Vg@mail.gmail.com>
- <20180309090422.GD14819@w540>
- <CAMuHMdUaOjJekCK5b1n3vYAt-ZkRvTcu=G9eADhC4+0AD7UD6Q@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
+ on Droid 4
+Date: Fri, 9 Mar 2018 10:44:17 +0100
+Message-ID: <20180309094417.GA5970@amd>
+References: <20180309023750.108942-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUaOjJekCK5b1n3vYAt-ZkRvTcu=G9eADhC4+0AD7UD6Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+In-Reply-To: <20180309023750.108942-1-tony@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCgpPbiBGcmksIE1hciAwOSwgMjAxOCBhdCAxMDoyMjozOUFNICswMTAwLCBHZWVy
-dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gSGkgSmFjb3BvLAo+Cj4gT24gRnJpLCBNYXIgOSwgMjAx
-OCBhdCAxMDowNCBBTSwgamFjb3BvIG1vbmRpIDxqYWNvcG9Aam1vbmRpLm9yZz4gd3JvdGU6Cj4g
-PiBPbiBGcmksIE1hciAwOSwgMjAxOCBhdCAwOToxMDo1NUFNICswMTAwLCBHZWVydCBVeXR0ZXJo
-b2V2ZW4gd3JvdGU6Cj4gPj4gT24gVGh1LCBNYXIgOCwgMjAxOCBhdCA0OjI0IFBNLCBKYWNvcG8g
-TW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+IHdyb3RlOgo+ID4+ID4gRG9jdW1lbnQg
-VGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlci4KPiA+PiA+Cj4gPj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gPj4KPiA+PiBU
-aGFua3MgZm9yIHlvdXIgcGF0Y2ghCj4gPj4KPiA+PiA+IC0tLSAvZGV2L251bGwKPiA+PiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGlu
-ZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPj4gPiBAQCAtMCwwICsxLDU5IEBACj4gPj4gPiArVEhpbmUg
-RWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgcmVjZWl2ZXIKPiA+Pgo+ID4+IFRoaW5lCj4g
-Pj4KPiA+PiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-ID4+ID4gKwo+ID4+ID4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYW4gTFZEUyByZWNlaXZlciBkZXNp
-Z25lZCB0byBjb252ZXJ0IG11bHRpcGxlIExWRFMgc3RyZWFtcwo+ID4+ID4gK3RvIGRpZ2l0YWwg
-Q01PUy9UVEwgcGFyYWxsZWwgZGF0YS4KPiA+PiA+ICsKPiA+PiA+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+ID4+ID4gKy0gY29tcGF0aWJsZTogU2hhbGwgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6
-Cj4gPj4gPiArICAidGhpbmUsdGhjNjNsdmQxMDI0IiwKPiA+PiA+ICsgICJsdmRzLWRlY29kZXIi
-Cj4gPj4KPiA+PiBXaGF0J3MgdGhlIHB1cnBvc2Ugb2YgdGhlIHNlY29uZCBjb21wYXRpYmxlIHZh
-bHVlPwo+ID4+IFdoZW4gc2hvdWxkIGl0IGJlIHVzZWQ/Cj4gPgo+ID4gSXQgaXMgcHJvYmFibHkg
-bXkgYmFkIGhhdmluZyBzdGFydGVkIHdpdGggYSBnZW5lcmljIExWRFMgZGVjb2RlciBpbgo+ID4g
-bWluZCBhbmQgaGF2aW5nIHRoZW4gYWRkZWQgcHJvcGVydGllcyBzcGVjaWZpYyB0byBUSEM2M0xW
-RDEwMjQgdG8gdGhlCj4gPiBkcml2ZXIgYW5kIGl0cyBiaW5kaW5ncy4KPiA+Cj4gPiAibHZkcyxk
-ZWNvZGVyIiBjYW4gYmUgdXNlZCB3aGVuIHRoZSBjaGlwIGlzIGNvbXBsZXRlbHkgdHJhbnNwYXJl
-bnQgdG8KPiA+IHRoZSBTb0MgYW5kIG5vbmUgb2YgdGhlIG9wdGlvbmFsIHByb3BlcnRpZXMgSSBo
-YXZlIGRlc2NyaWJlZCBpbiB0aGUKPiA+IGJpbmRpbmdzIGFyZSBzcGVjaWZpZWQgKGEgZ2VuZXJp
-YyAicG93ZXItZ3Bpb3MiIGFwYXJ0LCBzZWUgQW5kcnplago+ID4gY29tbWVudHMgb24gInB3ZG4t
-Z3Bpb3MiIHByb3BlcnR5KS4KPiA+Cj4gPiBBbHNvLCBJIHNob3VsZCBtYWtlIHRoZSBkcml2ZXIg
-YmVoYXZpb3IgZGVwZW5kIG9uIHRoZSBtYXRjaGVkIGNvbXBhdGlibGUKPiA+IHN0cmluZy4gV2hl
-biAibHZkcy1kZWNvZGVyIiBpcyBtYXRjaGVkLCBpdCB3aWxsIGp1c3QgbG9vayBmb3IgYW4KPiA+
-IG9wdGlvbmFsIHBvd2VyIGRvd24gZ3Bpbywgd2hlbiAidGhjNjNsdmQxMDI0IiBpcyBtYXRjaGVk
-LCBhbGwgb2YgaXRzCj4gPiBWY2Mgc3VwcGxpZXMsIHB3ZG4gZ3BpbyBhbmQgb2UgZ3Bpb3Mgd2ls
-bCBiZSBxdWVyaWVkIGFuZCwgaWYgcHJlc2VudCwKPiA+IGV2ZW50dWFsbHkgdXNlZCBpbiBlbmFi
-bGUvZGlzYWJsZSByb3V0aW5lcy4KPiA+Cj4gPiBJJ20ganVzdCBub3Qgc3VyZSBob3cgdG8gZGVz
-Y3JpYmUgdGhhdCBpbiBiaW5kaW5ncy4gV291bGQgc29tZXRoaW5nCj4gPiBsaWtlIHRoZSBmb2xs
-b3dpbmcgd29yaz8KPiA+Cj4gPiBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciAibHZkcyxkZWNvZGVy
-Igo+Cj4gImx2ZHMtZGVjb2RlciI/Cj4KClllcywgc29ycnkKCj4gPiAtIHBvd2VyLWdwaW9zOiBQ
-b3dlciBjb250cm9sIEdQSU9zCj4gPgo+ID4gT3B0aW9uYWwgcHJvcGVydGllcyBmb3IgInRoaW5l
-LHRoYzYzbHZkMTAyNCIKPiA+IC0gcHdkbi1ncGlvczogLi4uCj4gPiAtIG9lLWdwaW9zOiAuLi4K
-PiA+IC0gc3VwcGx5LXZjYzogLi4uCj4gPiAtIHN1cHBseS1jdmNjOiAuLi4KPiA+IC0gc3VwcGx5
-LXB2Y2M6IC4uLgo+ID4gLSBzdXBwbHktbHZjYzogLi4uCj4KPiBTb3VuZHMgbGlrZSB5b3UgbmVl
-ZCBhIChzZXBhcmF0ZSkgZ2VuZXJpYyBsdmRzLWRlY29kZXIgRFQgYmluZGluZ3MgZG9jdW1lbnQs
-Cj4gd2hpY2ggeW91IGNhbiBleHRlbmQvcmVmZXIgdG8gZnJvbSB0aGUgVEhDNjNMVkQxMDI0LXNw
-ZWNpZmljIGJpbmRpbmdzLgoKT2ssIEknbGwgZ28gd2l0aCB0d28gYmluZGluZ3MgZG9jdW1lbnQg
-dGhlbiBhbmQgc2VlIGhvdyBpdCBsb29rcy4KClRoYW5rcwogICBqCgoKCj4KPiBHcntvZXRqZSxl
-ZXRpbmd9cywKPgo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0Cj4KPiAtLQo+IEdlZXJ0
-IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
-cnRAbGludXgtbTY4ay5vcmcKPgo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNo
-bmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQKPiB3aGVuIEknbSB0YWxr
-aW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBs
-aWtlIHRoYXQuCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2
-YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Let's add support for the GPIO controlled USB PHY on the MDM6600 modem.
+> It is used on some Motorola Mapphone series of phones and tablets such
+> as Droid 4.
+=2E..
+> So it seems that MDM6600 is currently not yet idling even with it's
+> radio turned off, but that's something that is beyond the control of
+> this USB PHY driver. This patch does get us to the point where modem
+> data and GPS are usable with libqmi and ModemManager for example.
+> Voice calls need more audio driver work.
+
+Thanks for the good work. Looks like I'll need to get droid
+4... fortunately it is not available in czech republic so I don't get
+excuse to get another toy.
+
+Oh.. no. It is available in Czech republic. Is Motorola Droid 4 XT894
+the right one? Hmm, and LTE modem is useless in Europe, while the GSM
+one does not work, right?
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqiV3EACgkQMOfwapXb+vJWGgCeMrjB8AWDMCJrtuyMHoVPf082
+g+AAnR6pEWfuVoBDuFqtYDwn2yOzK56r
+=GM3i
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
