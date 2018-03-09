@@ -1,68 +1,55 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 03/16] media: rkisp1: Add user space ABI definitions
-Date: Fri, 9 Mar 2018 14:14:00 +0100
-Message-ID: <d1677c06-4e9f-58a9-817d-0a4b8d958285@xs4all.nl>
-References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
- <1514533978-20408-4-git-send-email-zhengsq@rock-chips.com>
- <d98ac356-a482-f26f-fd6b-6142281d99c3@xs4all.nl>
- <CAFLEztSsg+EW97AN93gd-rx7A1bNwfHK5e9MpLnem40ATnfsrw@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 2/2] clocksource/drivers/npcm: Add NPCM7xx timer driver
+Date: Fri, 9 Mar 2018 14:25:03 +0100
+Message-ID: <e2560cb7-8710-88ec-ac94-3e53a8f4b7e8@linaro.org>
+References: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
+ <1520522698-16153-3-git-send-email-tmaimon77@gmail.com>
+ <2a83eb83-10a9-54f3-e0da-bd6cf32b5ac1@linaro.org>
+ <CAP6Zq1gKE0xUGHuwXa7eLEsUisnaaz=QLgs=6uYnUYDGdX5ryw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFLEztSsg+EW97AN93gd-rx7A1bNwfHK5e9MpLnem40ATnfsrw@mail.gmail.com>
+In-Reply-To: <CAP6Zq1gKE0xUGHuwXa7eLEsUisnaaz=QLgs=6uYnUYDGdX5ryw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacobchen110@gmail.com>
-Cc: Shunqian Zheng <zhengsq@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Tomasz Figa <tfiga@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Luis Oliveira <Luis.Oliveira@synopsys>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, venture@google.com, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/18 11:00, Jacob Chen wrote:
-> Hi Hans,
-> 
-> 2018-02-07 20:00 GMT+08:00 Hans Verkuil <hverkuil@xs4all.nl>:
->> On 12/29/17 08:52, Shunqian Zheng wrote:
->>> From: Jeffy Chen <jeffy.chen@rock-chips.com>
+On 08/03/2018 23:37, Tomer Maimon wrote:
+> On 8 March 2018 at 17:33, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>> On 08/03/2018 16:24, Tomer Maimon wrote:
+>>> Add Nuvoton BMC NPCM7xx timer driver.
 >>>
->>> Add the header for userspace
+>>> The clocksource Enable 24-bit TIMER0 and TIMER1 counters,
+>>> while TIMER0 serve as clockevent and TIMER1 serve as clocksource.
+>>>
+>>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>>> Reviewed-by: Brendan Higgins <brendanhiggins@xxxxxxxxxx>
+>>> ---
 >>
->> General note: I saw four cases where this documentation referred to the
->> datasheet. Three comments on that:
+>> [ ... ]
 >>
->> 1) You don't say which datasheet.
->> 2) I assume the datasheet is under NDA?
-> 
-> This datasheet can't be got by customers, even under NDA.
-
-OK. This should be mentioned somewhere.
-
-> 
->> 3) You do need to give enough information so a reasonable default can be
->>    used. I mentioned in an earlier review that creating an initial params
->>    struct that can be used as a templete would be helpful (or even
->>    required), and that would be a good place to put such defaults.
+>>> +
+>>> +     pr_info("Enabling NPCM7xx clocksource timer base: 0x%x, IRQ: %d ",
+>>> +             (int)timer_of_base(&npcm7xx_to), timer_of_irq(&npcm7xx_to));
 >>
-> 
-> It don't need a default config
-> For applcation writers, they can just init it with zero data, and only
-> set value for the part they concerned.
+>> You can use '%p' instead of '0x%x' and remove the (int) cast.
+> I think we need to use in the pr_info %px, if I use %p I get in the
+> kernel boot print "(ptrval)" instead of the address.
+> please refer: https://lwn.net/Articles/740249/
 
-This too should be clearly documented. This is very useful information for
-users of this API.
+Ah yes, right.
 
-> 
-> As for ABI, i have checked there is no mismatches.
-> Those structures is 32 bit aligned both in 64bit/32bit env, since
-> there is no 64bit value.
-> "__attribute__ ((packed))" can avoid mismatches happen when we add a
-> 64bit value to those structures.
-> 
-> As robin said, enums and bools are not guaranteed to be consistent
-> between different compiler, so it's a potential risk.
-> I have replace bools with unsigned char and enums with unsigned int.
+Thanks
 
-Excellent.
+  -- Daniel
 
-Regards,
 
-	Hans
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
