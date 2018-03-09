@@ -1,68 +1,117 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
- of the HDMI node
-Date: Fri, 09 Mar 2018 12:10:45 +0100
-Message-ID: <6e9a0ba4-2997-b7c5-f5c3-461870b7d3e5@samsung.com>
-References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
- <20180307171111.14551-1-s.nawrocki@samsung.com>
- <5AA0B59F.3070402@samsung.com>
- <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
- <5AA0DD39.3040108@samsung.com>
- <9f1e8619-974d-cd07-79c3-c6d9a4dc0f97@samsung.com>
- <5AA0F10D.9010602@samsung.com>
- <e3e1c628-d88f-6fb4-171e-a49c7ee38135@samsung.com>
- <5AA1F30B.8010607@samsung.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec
+	support
+Date: Fri, 9 Mar 2018 12:19:38 +0100
+Message-ID: <20180309111938.irzwypdehuckx35s@earth.universe>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
+ <20180307163211.rytfli5tb47yhtug@dell>
+ <20180308094652.qg4atjw5c3hayaz3@earth.universe>
+ <20180308095315.mpcmx2ob6yhsnrm6@dell>
+ <20180308102757.jyi7uo566n6nuct5@earth.universe>
+ <20180308104831.fflq2arj5dxgntia@dell>
+ <20180308112528.GC6019@sirena.org.uk>
+ <20180309083414.s57eq3kw325magwz@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <5AA1F30B.8010607@samsung.com>
-Content-language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/mixed; boundary="===============6561208670344405679=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180309083414.s57eq3kw325magwz@dell>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMDkvMjAxOCAwMzozNSBBTSwgSW5raSBEYWUgd3JvdGU6Cj4gMjAxOOuFhCAwM+yblCAw
-OOydvCAyMDoyMuyXkCBTeWx3ZXN0ZXIgTmF3cm9ja2kg7J20KOqwgCkg7JO0IOq4gDoKPj4gT24g
-MDMvMDgvMjAxOCAwOToxNSBBTSwgSW5raSBEYWUgd3JvdGU6ClsuLi5dCj4+PiBJcyB0aGVyZSBh
-IHBvc3NpYmlsaXR5IGZvciBvdGhlciBib2FyZHMgYmFzZWQgb24gRXh5bm9zNDIxMC80MjEyLzU0
-MjAvNTQzMyAKPj4+IFNvQyB0byB1c2UgdGhpcyBwcm9wZXJ0eSBsYXRlcj8KPj4KPj4gQWxsIHRo
-ZXNlIFNvQ3MgaGF2ZSB0aGUgSERNSSBJUCBibG9jayB3aGljaCBoYXMgb25lIGlucHV0IERBSSwg
-Y29ubmVjdGVkIAo+PiBpbnRlcm5hbGx5IG92ZXIgSTJTIGJ1cyB3aXRoIHRoZSBJMlMgY29udHJv
-bGxlci4KPj4KPj4gSSB0aGluayB0aGVyZSBpcyBubyBhZHZhbnRhZ2UgaW4gbGltaXRpbmcgb3Vy
-c2VsdmVzIG5vdyBvbmx5IHRvIFNvQydzIAo+PiBmb3Igd2hpY2ggd2UgY3VycmVudGx5IHJlbHkg
-b24gdGhhdCBEVCBwcm9wZXJ0eSBpbiBjdXJyZW50IGtlcm5lbCBjb2RlLCAKPj4ganVzdCB0byB1
-cGRhdGUgdGhpcyBkb2N1bWVudGF0aW9uIGxhdGVyIHdoZW4gd2UgYWN0dWFsbHkgcHV0IHRoZSBw
-cm9wZXJ0eSAKPj4gaW4gZHRzIGZpbGVzLgo+Pgo+PiBJbiBjYXNlIG9mIGV4eW5vczU0MjAgd2Ug
-YWxyZWFkeSByZXF1aXJlICNzb3VuZC1kYWktY2VsbHMgZm9yIE9kcm9pZCBhbmQKPiAKPiBNYXli
-ZSBleHlub3M1NDIyPyBPZHJvaWQgWFUzLzQgdXNlIEV4eW5vczU0MjIuCgpZZXMsIG15IG1pc3Rh
-a2UsIEV4eW5vczU0MjIgZm9yIE9kcm9pZCBhbmQgRXh5bm9zNTQyMCBmb3IgUGVhY2gtUGl0LgpJ
-dCBqdXN0IGhhcHBlbnMgd2UgdXNlICJzYW1zdW5nLGV4eW5vczU0MjAtaGRtaSIgY29tcGF0aWJs
-ZSBmb3IgdGhhdCBib3RoClNvQ3MuCiAKCj4gU2VlbXMgdGhhdCAnI3NvdW5kLWRhaS1jZWxscycg
-aXMgcmVxdWlyZWQgbWFuZGF0b3JpbHkgaW4gY2FzZSBvZiBFeHlub3M1NDIyIAo+IGJlY2F1c2Ug
-T2Ryb2lkIFhVMy80IEF1ZGlvIGRyaXZlciBjaGVja3MgdGhpcyBwcm9wZXJ0eSwgYW5kIHRoZSBk
-cml2ZXIgCj4gcmV0dXJucyBlcnJvciBpZiB0aGUgcHJvcGVydHkgZG9lc24ndCBleGlzdCBpbiBp
-dHMgZGV2aWNlIHRyZWUuCj4gQW5kIGlmIG90aGVyIFNvQ3MgLSBFeHlub3M0MjEwLzQyMTIvNTI1
-MC81NDIwLzU0MzMgLSByZXF1aXJlIHRoaXMgcHJvcGVydHkgCj4gd2l0aCBhZGRpdGlvbmFsIGRy
-aXZlciB3b3JrcyBsYXRlciB0aGVuIHRoaXMgcHJvcGVydHkgd291bGQgYWxzbyBiZSByZXF1aXJl
-ZCAKPiBtYW5kYXRvcmlseSBmb3IgdGhlbSBub3Qgb3B0aW9uYWxseS4gSW4gdGhpcyBjYXNlIHdl
-IG1heSBuZWVkIHRvIG1vZGlmeSB0aGUgCj4gZGVzY3JpcHRpb24gYWdhaW4uCj4gCj4gU28gbXkg
-b3BpbmlvbiBpcyB0byBhZGQgb25seSB0aGUgZGVzY3JpcHRpb24gcmVxdWlyZWQgbWFuZGF0b3Jp
-bHkgaWYgSSAKPiB1bmRlcnN0b29kIGNvcnJlY3RseS4KCllvdSBhcmUgcmlnaHQsIGl0IHdvdWxk
-IGJlIGJldHRlciB0byBtYWtlIHRoaXMgYSBtYW5kYXRvcnkgcHJvcGVydHksIEkgb25seQptYWRl
-IGl0IG9wdGlvbmFsIGJlY2F1c2Ugbm93IHRoaXMgcHJvcGVydHkgaXMgbWlzc2luZyBpbiBtYW55
-IGR0cyBmaWxlcy4KTGV0IG1lIHJlc2VuZCB3aXRoICNzb3VuZC1kYWktY2VsbHMgZGVzY3JpcHRp
-b24gbW92ZWQgdG8gdGhlICJSZXF1aXJlZCAKcHJvcGVydGllcyIgcGFyYWdyYXBoLgoKLS0KVGhh
-bmtzLApTeWx3ZXN0ZXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+
+--===============6561208670344405679==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ivv5fbufhe273ms5"
+Content-Disposition: inline
+
+
+--ivv5fbufhe273ms5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Mar 09, 2018 at 08:34:14AM +0000, Lee Jones wrote:
+> On Thu, 08 Mar 2018, Mark Brown wrote:
+>=20
+> > On Thu, Mar 08, 2018 at 10:48:31AM +0000, Lee Jones wrote:
+> > > On Thu, 08 Mar 2018, Sebastian Reichel wrote:
+> >=20
+> > > > I had it in PATCHv1-PATCHv4. It was removed, since Mark didn't want
+> > > > to have it in the DT ABI.
+> >=20
+> > > Right, but why?  Is it not a hardware device?  I think converting from
+> > > devm_of_platform_populate() for one sub-device is a bit drastic.
+> >=20
+> > It's not a separate physical device or IP and doesn't exist outside of
+> > the MFD, it's just how Linux is currently choosing to divide up the chip
+> > right now but that's totally open to change even in future versions of
+> > Linux.  Clocks are a big issue with audio stuff, right now sections of
+> > the clock tree get handled in the CODEC driver but we're going to want
+> > to push them out to a clock driver so we're not reimplementing handling
+> > for clocks.
+>=20
+> How is the CODEC controlled?  Does it have its own registers?  I guess
+> by "it's not a separate device or IP" you mean that it doesn't.  But
+> that begs the question, how does this then device differ from all the
+> other devices (adc, battery, charger, regulator, rtc, pwrbutton,
+> usb-phy and led)?
+
+The audio codec goes from register 0x0800 - 0x0844, with the next
+register being defined @ 0x0a00. So it definetly has its own register
+range. I should note though, that 0x0800 is the audio regulator
+control. In Linux we handle this one in the regulator driver instead
+of in the audio driver. But this is mostly hidden in DT (the voltage
+ranges for VAUDIO are described in the regulator node now).
+
+> I'm asking, not to be awkward, but to avoid 50 lines of potentially
+> unnecessary static code.  If this is a real (sub-)device, even if it's
+> part of a larger, single device (MFD) then there is no reason why it
+> can't be represented as a single, albeit empty node.
+
+We still have the node, so that it can be used with the ASoC graph
+binding. It just has no compatible value. Instead it is identified
+by the node's name.
+
+-- Sebastian
+
+--ivv5fbufhe273ms5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqibcIACgkQ2O7X88g7
++poGPQ//dQYd94GdQfmyfdDyXAC/omHEGe7FldYHVAVPT6AzxYAOKg4ngjLd7JC1
+07m/jJTSzutPBNkwFvqn5FoTscZOeWobnEQThZpSaCfsyKu+rj6p1NgUUMSXhjCd
+kwQVvMmnqBWSOLVaRYsYsGpCC5wAUTzZR7eSDy0IQ8QJ0yQ/3PVOgclQYkPtgOiY
+PcoKiFKNFXE1jz265Vi5UkHw87iMMJT5i6cbd2jrZX/TZ99cSjRXUXA4op3PRFaa
+3S2UNbcanZfA+hWEdrkM+6v1lPViUSo5paH7zV9Z8Jk8xlc+djfMiBSRyFUfJy/R
+yIgxzrBSzlXio/hnqb0zP2xOkq991keIttFmu6wPDXjqTl9HaeGkliJI0TbV0h44
+9e84idVdlHuxF3kbdws7j99TFiTYzc3C9bC1ma/OFpDUbfV9fRrGTnj4NurRmkCh
+4fcBR7DkGaw1DDtHvLpoCfZlyDymG9sm72iRM8YDZSsWHdU2uXMMrcBEOS1z7qiV
+5gQhF0/VjyA/3nWs4Vxt+f2OeYYzo4AJaHum9il0qu1raxgWSMhpu6yiARH5Kf64
+wpYbF7I278l1Yz/yIXDV5iNSRUVyvlRq8Qmq7OSoDcNWhduqGfeRyzMSnLXiI4Pm
+yjN5jVBQzJ/NJvOAjqFs8OzxVMeyYtYvD4gV/Sy9wBeMCGTXGnU=
+=nLMT
+-----END PGP SIGNATURE-----
+
+--ivv5fbufhe273ms5--
+
+--===============6561208670344405679==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6561208670344405679==--
