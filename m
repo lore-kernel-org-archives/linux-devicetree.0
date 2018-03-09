@@ -1,44 +1,145 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Fri, 9 Mar 2018 06:52:27 -0800
-Message-ID: <20180309145227.GP5799@atomide.com>
-References: <20180309023750.108942-1-tony@atomide.com>
- <20180309094417.GA5970@amd>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH 1/6] reset: qcom: AOSS (Always on subsystem) reset
+ controller
+Date: Fri, 9 Mar 2018 20:25:24 +0530
+Message-ID: <519c6298-0619-d98e-6c45-c70936af93c3@codeaurora.org>
+References: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
+ <1520243613-30393-2-git-send-email-sibis@codeaurora.org>
+ <20180307213514.4sv7ucxo25jpomz3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180309094417.GA5970@amd>
+In-Reply-To: <20180307213514.4sv7ucxo25jpomz3@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [180309 09:45]:
-> Hi!
-> 
-> > Let's add support for the GPIO controlled USB PHY on the MDM6600 modem.
-> > It is used on some Motorola Mapphone series of phones and tablets such
-> > as Droid 4.
-> ...
-> > So it seems that MDM6600 is currently not yet idling even with it's
-> > radio turned off, but that's something that is beyond the control of
-> > this USB PHY driver. This patch does get us to the point where modem
-> > data and GPS are usable with libqmi and ModemManager for example.
-> > Voice calls need more audio driver work.
-> 
-> Thanks for the good work. Looks like I'll need to get droid
-> 4... fortunately it is not available in czech republic so I don't get
-> excuse to get another toy.
-> 
-> Oh.. no. It is available in Czech republic. Is Motorola Droid 4 XT894
-> the right one? Hmm, and LTE modem is useless in Europe, while the GSM
-> one does not work, right?
+Hi Rob,
+Thanks for the review, will add the changes in v3 of the patch series
 
-Yup xt894 is the model number for droid 4.
+On 03/08/2018 03:05 AM, Rob Herring wrote:
+> On Mon, Mar 05, 2018 at 03:23:28PM +0530, sibis wrote:
+>> Add reset controller driver for Qualcomm SDM845 SoC to
+>> control reset signals provided by AOSS for Modem, Venus
+>> ADSP, GPU, Camera, Wireless, Display subsystem
+>>
+>> Signed-off-by: sibis <sibis@codeaurora.org>
+> 
+> Need a full name here.
+> 
 
-Regards,
+Will correct it
 
-Tony
+>> ---
+>>   .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 ++++++++
+> 
+> Separate patch for bindings (with the header) please.
+> 
+
+Will make a separate patch
+
+>>   drivers/reset/Kconfig                              |  10 ++
+>>   drivers/reset/Makefile                             |   1 +
+>>   drivers/reset/reset-qcom-aoss.c                    | 151 +++++++++++++++++++++
+>>   include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
+>>   5 files changed, 233 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>>   create mode 100644 drivers/reset/reset-qcom-aoss.c
+>>   create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> new file mode 100644
+>> index 0000000..5318e14
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> @@ -0,0 +1,54 @@
+>> +Qualcomm AOSS Reset Controller
+>> +======================================
+>> +
+>> +This binding describes a reset-controller found on AOSS (Always on SubSysem)
+>> +for Qualcomm SDM845 SoCs.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be:
+>> +		    "qcom,aoss-reset-sdm845", "syscon"
+> 
+> Someone in QCom needs to go fix the order of all your downstream
+> compatibles or review your bindings before sending upstream. The
+> standard ordering is <vendor>,<soc>-<block>.
+>
+
+Will correct it.
+
+> Why syscon? The description is this is just a reset controller.
+>
+
+syscon was needed in the compatible list due to using
+syscon_node_to_regmap in the reset driver but I guess
+since it is just a reset controller the correct thing to do
+be ioremap the reg space and do devm_regmap_init_mmio on it.
+Will remove syscon.
+
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the
+>> +		    syscon device.
+>> +
+>> +
+>> +- #reset-cells:
+>> +	Usage: required
+>> +	Value type: <uint>
+>> +	Definition: must be 1; cell entry represents the reset index.
+>> +
+>> +example:
+>> +
+>> +aoss_reset: qcom,reset-controller@b2e0100 {
+>> +	compatible = "qcom,aoss-reset-sdm845", "syscon";
+>> +	reg = <0xc2b0000 0x20004>;
+>> +	#reset-cells = <1>;
+>> +};
+>> +
+>> +
+>> +Specifying reset lines connected to IP modules
+>> +==============================================
+>> +
+>> +Device nodes that need access to reset lines should
+>> +specify them as a reset phandle in their corresponding node as
+>> +specified in reset.txt.
+>> +
+>> +Example:
+>> +
+>> +	modem-pil@4080000 {
+>> +		...
+>> +
+>> +		resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
+>> +		reset-names = "mss_restart";
+>> +
+>> +		...
+>> +        };
+>> +
+>> +For list of all valid reset indicies see
+>> +<dt-bindings/reset/qcom,aoss-sdm845.h>
+> 
+> Put this before the example.
+>
+
+ok
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-remoteproc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
