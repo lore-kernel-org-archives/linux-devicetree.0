@@ -1,135 +1,66 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [linux-sunxi] [PATCH 6/9] sunxi-cedrus: Add device tree binding
- document
-Date: Fri, 09 Mar 2018 14:45:46 +0100
-Message-ID: <1520603146.15946.4.camel@bootlin.com>
-References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
-         <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
-         <20180309133857.GA20392@solar>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-jBFEwdL08CFyEyRxDXma"
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 0/3] drm: Add LVDS decoder bridge
+Date: Fri,  9 Mar 2018 14:51:37 +0100
+Message-ID: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309133857.GA20392@solar>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
+   after some discussion on the proposed bindings for generic lvds decoder and
+Thine THC63LVD1024, I decided to drop the THC63 specific part and just live with
+a transparent decoder that does not support any configuration from DT.
 
---=-jBFEwdL08CFyEyRxDXma
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Dropping THC63 support to avoid discussion on how to better implement support
+for a DRM bridge with 2 input ports and focus on LVDS mode propagation through
+bridges as explained in v1 cover letter (for DRM people: please see [1] as why
+I find difficult to implement support for bridges with multiple input endpoints)
 
-Hi,
+Same base branch as v1, with same patches for V3M Eagle applied on top.
+git://jmondi.org/linux v3m/v4.16-rc3/base
 
-Thanks for the review!
+Thanks
+   j
 
-On Fri, 2018-03-09 at 15:38 +0200, Priit Laes wrote:
-> On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
-> > From: Florent Revest <florent.revest@free-electrons.com>
-> >=20
-> > Device Tree bindings for the Allwinner's video engine
-> >=20
-> > Signed-off-by: Florent Revest <florent.revest@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44
-> > ++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/sunxi-
-> > cedrus.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/media/sunxi-
-> > cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-
-> > cedrus.txt
-> > new file mode 100644
-> > index 000000000000..138581113c49
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> > @@ -0,0 +1,44 @@
-> > +Device-Tree bindings for SUNXI video engine found in sunXi SoC
-> > family
-> > +
-> > +Required properties:
-> > +- compatible	    : "allwinner,sun4i-a10-video-engine";
-> > +- memory-region     : DMA pool for buffers allocation;
-> > +- clocks	    : list of clock specifiers, corresponding to
-> > +		      entries in clock-names property;
-> > +- clock-names	    : should contain "ahb", "mod" and "ram"
-> > entries;
-> > +- resets	    : phandle for reset;
-> > +- interrupts	    : should contain VE interrupt number;
-> > +- reg		    : should contain register base and length
-> > of VE.
-> > +
-> > +Example:
-> > +
-> > +reserved-memory {
-> > +	#address-cells =3D <1>;
-> > +	#size-cells =3D <1>;
-> > +	ranges;
-> > +
-> > +	ve_reserved: cma {
-> > +		compatible =3D "shared-dma-pool";
-> > +		reg =3D <0x43d00000 0x9000000>;
-> > +		no-map;
-> > +		linux,cma-default;
-> > +	};
-> > +};
-> > +
-> > +video-engine {
-> > +	compatible =3D "allwinner,sun4i-a10-video-engine";
-> > +	memory-region =3D <&ve_reserved>;
-> > +
-> > +	clocks =3D <&ahb_gates 32>, <&ccu CLK_VE>,
-> > +		 <&dram_gates 0>;
->=20
-> This should be updated to sunxi-ng clocks:
->=20
-> clocks =3D <&ccu CLK_BUS_VE>, <&ccu CLK_VE>, <&ccu CLK_DRAM_VE>;
+v1 -> v2:
+- Drop support for THC63LVD1024
 
-I will definitely keep that in mind and make the change for the next
-revision, thanks!
+[1] I had a quick at how to model a DRM bridge with multiple input
+ports, and I see a blocker in how DRM identifies and matches bridges using
+the devices node in place of the endpoint nodes.
 
-> > +	clock-names =3D "ahb", "mod", "ram";
-> > +
-> > +	assigned-clocks =3D <&ccu CLK_VE>;
-> > +	assigned-clock-rates =3D <320000000>;
-> > +
-> > +	resets =3D <&ccu RST_VE>;
-> > +
-> > +	interrupts =3D <53>;
-> > +
-> > +	reg =3D <0x01c0e000 4096>;
-> > +};
-> > --=20
-> > 2.16.2
-> >=20
-> > --=20
-> > You received this message because you are subscribed to the Google
-> > Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it,
-> > send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > For more options, visit https://groups.google.com/d/optout.
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-jBFEwdL08CFyEyRxDXma
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+As THC63LVD1024 supports up to 2 LVDS inputs and 2 LVDS outputs, I see only
+a few ways to support that:
+ 1) register 2 drm bridges from the same driver (one for each input/output pair)
+    but they would both be matches on the same device node when the preceding
+    bridge calls "of_drm_find_bridge()".
+ 2) register a single bridge with multiple "next bridges", but when the bridge
+    gets attached I don't see a way on how to identify on which next bridge
+    "drm_bridge_attach()" on, as it depends on the endpoint the current bridge
+    has been attached on first, and we don't have that information.
+ 3) Register more instances of the same chip in DTS, one for each input/output
+    pair. They gonna share supplies and gpios, and I don't like that.
 
------BEGIN PGP SIGNATURE-----
+I had a quick look at the currently in mainline bridges and none of them has
+multiple input endpoints, except for HDMI audio endpoint, which I haven't found
+in use in any DTS. I guess the problem has been already debated and maybe solved
+in the past, so feel free to point me to other sources.
 
-iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqikAoACgkQ3cLmz3+f
-v9HzuAf/cGCIRqLDpOtZSF3o4sE1S1meFhiNJLIUc9XDo4MneT3kf1llz9Mu8uoY
-8WOd3dWkcQIQRYz4jb1NiNd6XF8Ky0Wx4896k7+riodO9YMNcjzQk5gcHRaZ5ks/
-2YpjlfziJVrqvJHbs5zlF8Yov5Eu99Px0qvXCRIulPUkj1c67nOO4X7noKF/b11w
-JX628G4zkUskyTgumEhzXXYYaP70YYYTqHFsHxLQRCAK1e/a8VoualH9sWO0mXMI
-pICjSMVDK4DNaf2pLJ+W2tM2IP9Qrvdz0t4GiJiu2V+h6z3OIdhqsxTQDbvLS9ao
-5RKBcy0FqcHBVFRyvKCTohgYOK57mg==
-=7gy8
------END PGP SIGNATURE-----
+Jacopo Mondi (3):
+  dt-bindings: display: bridge: Document LVDS to parallel decoder
+  drm: bridge: Add LVDS decoder driver
+  arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
 
---=-jBFEwdL08CFyEyRxDXma--
+ .../bindings/display/bridge/lvds-decoder.txt       |  42 ++++++
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts     |  31 +++-
+ drivers/gpu/drm/bridge/Kconfig                     |   8 ++
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/lvds-decoder.c              | 157 +++++++++++++++++++++
+ 5 files changed, 237 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-decoder.txt
+ create mode 100644 drivers/gpu/drm/bridge/lvds-decoder.c
+
+--
+2.7.4
