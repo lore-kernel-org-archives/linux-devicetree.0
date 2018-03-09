@@ -1,344 +1,919 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 2/2] watchdog: Add Nuvoton NPCM watchdog driver
-Date: Fri,  9 Mar 2018 15:21:07 +1030
-Message-ID: <20180309045107.8515-3-joel@jms.id.au>
-References: <20180309045107.8515-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309045107.8515-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Fri, 9 Mar 2018 05:04:40 +0000
+Message-ID: <HE1PR04MB3113D640770F0407970CFAB187DE0@HE1PR04MB3113.eurprd04.prod.outlook.com>
+References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
+ <20180309031503.GF3217@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180309031503.GF3217@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Nuvoton NPCM750 has a watchdog implemented as a single register
-inside the timer peripheral.
+> On Thu, Mar 08, 2018 at 06:03:43PM +0800, Bai Ping wrote:
+> > diff --git a/arch/arm/boot/dts/imx6sll.dtsi
+> > b/arch/arm/boot/dts/imx6sll.dtsi new file mode 100644 index
+> > 0000000..3fb1156
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6sll.dtsi
+> > @@ -0,0 +1,806 @@
+> > +//SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> 
+> There should be space right after //
+> 
 
-This driver exposes that watchdog as a standard watchdog device with
-coarse timeout intervals, limited by the combination of prescaler and
-counter that is provided by the hardware. The calculation is taken from
-the Nuvoton vendor tree.
+Thanks for review, will fix all the comment in this patch.
 
-The watchdog is left running if a bootloader had it going. The rate is
-the one specified in the device tree, or the default value (obtained
-from the datasheet).
+Jacky
 
-There is a pre-timeout IRQ that is wired up. This timeout always occurs
-1024 clocks before the timeout.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v2:
- - Make MODULE_LICENCE gpl v2 to match SPDX
- - Remove unused struct device pointer
- - Remove unused setting of drvdata
- - Add linux/bitops.h
- - Sort includes
- - Remove unused fiq include
- - Update timeout with achieved value
-v3:
- - Calculate the time and register value seperately
- - Pass device tree value through set_timeout to ensure it can
-   be represented by hardware
----
- drivers/watchdog/Kconfig    |  11 ++
- drivers/watchdog/Makefile   |   1 +
- drivers/watchdog/npcm_wdt.c | 254 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 266 insertions(+)
- create mode 100644 drivers/watchdog/npcm_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index aff773bcebdb..0c1cc68894e6 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -513,6 +513,17 @@ config COH901327_WATCHDOG
- 	  This watchdog is used to reset the system and thus cannot be
- 	  compiled as a module.
- 
-+config NPCM750_WATCHDOG
-+	bool "NPCM750 watchdog"
-+	depends on ARCH_NPCM || COMPILE_TEST
-+	default y if ARCH_NPCM750
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include Watchdog timer support for the
-+	  watchdog embedded into the NPCM750.
-+	  This watchdog is used to reset the system and thus cannot be
-+	  compiled as a module.
-+
- config TWL4030_WATCHDOG
- 	tristate "TWL4030 Watchdog"
- 	depends on TWL4030_CORE
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 0474d38aa854..97a5afb5cad2 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -61,6 +61,7 @@ obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
- obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
- obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
- obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
-+obj-$(CONFIG_NPCM7XX_WATCHDOG) += npcm_wdt.o
- obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
- obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
- obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
-diff --git a/drivers/watchdog/npcm_wdt.c b/drivers/watchdog/npcm_wdt.c
-new file mode 100644
-index 000000000000..723f80ebf100
---- /dev/null
-+++ b/drivers/watchdog/npcm_wdt.c
-@@ -0,0 +1,254 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018 Nuvoton Technology corporation.
-+// Copyright (c) 2018 IBM Corp.
-+
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/watchdog.h>
-+
-+#define NPCM_WTCR	0x1C
-+
-+#define NPCM_WTCLK	(BIT(10) | BIT(11))	/* Clock divider */
-+#define NPCM_WTE	BIT(7)			/* Enable */
-+#define NPCM_WTIE	BIT(6)			/* Enable irq */
-+#define NPCM_WTIS	(BIT(4) | BIT(5))	/* Interval selection */
-+#define NPCM_WTIF	BIT(3)			/* Interrupt flag*/
-+#define NPCM_WTRF	BIT(2)			/* Reset flag */
-+#define NPCM_WTRE	BIT(1)			/* Reset enable */
-+#define NPCM_WTR	BIT(0)			/* Reset counter */
-+
-+/*
-+ * Watchdog timeouts
-+ *
-+ * 170     msec:    WTCLK=01 WTIS=00     VAL= 0x400
-+ * 670     msec:    WTCLK=01 WTIS=01     VAL= 0x410
-+ * 1360    msec:    WTCLK=10 WTIS=00     VAL= 0x800
-+ * 2700    msec:    WTCLK=01 WTIS=10     VAL= 0x420
-+ * 5360    msec:    WTCLK=10 WTIS=01     VAL= 0x810
-+ * 10700   msec:    WTCLK=01 WTIS=11     VAL= 0x430
-+ * 21600   msec:    WTCLK=10 WTIS=10     VAL= 0x820
-+ * 43000   msec:    WTCLK=11 WTIS=00     VAL= 0xC00
-+ * 85600   msec:    WTCLK=10 WTIS=11     VAL= 0x830
-+ * 172000  msec:    WTCLK=11 WTIS=01     VAL= 0xC10
-+ * 687000  msec:    WTCLK=11 WTIS=10     VAL= 0xC20
-+ * 2750000 msec:    WTCLK=11 WTIS=11     VAL= 0xC30
-+ */
-+
-+struct npcm_wdt {
-+	struct watchdog_device  wdd;
-+	void __iomem		*reg;
-+};
-+
-+static inline struct npcm_wdt *to_npcm_wdt(struct watchdog_device *wdd)
-+{
-+	return container_of(wdd, struct npcm_wdt, wdd);
-+}
-+
-+static int npcm_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
-+	u32 val;
-+
-+	val = readl(wdt->reg);
-+	writel(val | NPCM_WTR, wdt->reg);
-+
-+	return 0;
-+}
-+
-+static int npcm_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
-+	u32 val;
-+
-+	if (wdd->timeout < 2)
-+		val = 0x800;
-+	else if (wdd->timeout < 3)
-+		val = 0x420;
-+	else if (wdd->timeout < 6)
-+		val = 0x810;
-+	else if (wdd->timeout < 11)
-+		val = 0x430;
-+	else if (wdd->timeout < 22)
-+		val = 0x820;
-+	else if (wdd->timeout < 44)
-+		val = 0xC00;
-+	else if (wdd->timeout < 87)
-+		val = 0x830;
-+	else if (wdd->timeout < 173)
-+		val = 0xC10;
-+	else if (wdd->timeout < 688)
-+		val = 0xC20;
-+	else
-+		val = 0xC30;
-+
-+	val |= NPCM_WTRE | NPCM_WTE | NPCM_WTR | NPCM_WTIE;
-+
-+	writel(val, wdt->reg);
-+
-+	return 0;
-+}
-+
-+static int npcm_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
-+
-+	writel(0, wdt->reg);
-+
-+	return 0;
-+}
-+
-+
-+static int npcm_wdt_set_timeout(struct watchdog_device *wdd,
-+				unsigned int timeout)
-+{
-+	if (timeout < 2)
-+		wdd->timeout = 1;
-+	else if (timeout < 3)
-+	      wdd->timeout = 2;
-+	else if (timeout < 6)
-+	      wdd->timeout = 5;
-+	else if (timeout < 11)
-+	      wdd->timeout = 10;
-+	else if (timeout < 22)
-+	      wdd->timeout = 21;
-+	else if (timeout < 44)
-+	      wdd->timeout = 43;
-+	else if (timeout < 87)
-+	      wdd->timeout = 86;
-+	else if (timeout < 173)
-+	      wdd->timeout = 172;
-+	else if (timeout < 688)
-+	      wdd->timeout = 687;
-+	else
-+	      wdd->timeout = 2750;
-+
-+	if (watchdog_active(wdd))
-+		npcm_wdt_start(wdd);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t npcm_wdt_interrupt(int irq, void *data)
-+{
-+	struct npcm_wdt *wdt = data;
-+
-+	watchdog_notify_pretimeout(&wdt->wdd);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int npcm_wdt_restart(struct watchdog_device *wdd,
-+			    unsigned long action, void *data)
-+{
-+	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
-+
-+	writel(NPCM_WTR | NPCM_WTRE | NPCM_WTE, wdt->reg);
-+	udelay(1000);
-+
-+	return 0;
-+}
-+
-+static bool npcm_is_running(struct watchdog_device *wdd)
-+{
-+	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
-+
-+	return readl(wdt->reg) & NPCM_WTE;
-+}
-+
-+static const struct watchdog_info npcm_wdt_info = {
-+	.identity	= KBUILD_MODNAME,
-+	.options	= WDIOF_SETTIMEOUT
-+			| WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE,
-+};
-+
-+static const struct watchdog_ops npcm_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = npcm_wdt_start,
-+	.stop = npcm_wdt_stop,
-+	.ping = npcm_wdt_ping,
-+	.set_timeout = npcm_wdt_set_timeout,
-+	.restart = npcm_wdt_restart,
-+};
-+
-+static int npcm_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct npcm_wdt *wdt;
-+	struct resource *res;
-+	int irq;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->reg = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(wdt->reg))
-+		return PTR_ERR(wdt->reg);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (!irq)
-+		return -EINVAL;
-+
-+	wdt->wdd.info = &npcm_wdt_info;
-+	wdt->wdd.ops = &npcm_wdt_ops;
-+	wdt->wdd.min_timeout = 1;
-+	wdt->wdd.max_timeout = 2750;
-+	wdt->wdd.parent = dev;
-+
-+	wdt->wdd.timeout = 86;
-+	watchdog_init_timeout(&wdt->wdd, 0, dev);
-+
-+	/* Ensure timeout is able to be represented by the hardware */
-+	npcm_wdt_set_timeout(&wdt->wdd, wdt->wdd.timeout);
-+
-+	if (npcm_is_running(&wdt->wdd)) {
-+		/* Restart with the default or device-tree specified timeout */
-+		npcm_wdt_start(&wdt->wdd);
-+		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
-+	}
-+
-+	ret = devm_request_irq(dev, irq, npcm_wdt_interrupt, 0,
-+			"watchdog", wdt);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_watchdog_register_device(dev, &wdt->wdd);
-+	if (ret) {
-+		dev_err(dev, "failed to register watchdog\n");
-+		return ret;
-+	}
-+
-+	dev_info(dev, "NPCM watchdog driver enabled\n");
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id npcm_wdt_match[] = {
-+	{.compatible = "nuvoton,npcm750-wdt"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, npcm_wdt_match);
-+#endif
-+
-+static struct platform_driver npcm_wdt_driver = {
-+	.probe		= npcm_wdt_probe,
-+	.driver		= {
-+		.name	= "npcm-wdt",
-+		.of_match_table = of_match_ptr(npcm_wdt_match),
-+	},
-+};
-+module_platform_driver(npcm_wdt_driver);
-+
-+MODULE_AUTHOR("Joel Stanley");
-+MODULE_DESCRIPTION("Watchdog driver for NPCM");
-+MODULE_LICENSE("GPL v2");
--- 
-2.15.1
+> > +/*
+> > + * Copyright 2016 Freescale Semiconductor, Inc.
+> > + * Copyright 2017-2018 NXP.
+> > + *
+> > + */
+> > +
+> > +#include <dt-bindings/clock/imx6sll-clock.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include "imx6sll-pinfunc.h"
+> > +
+> > +/ {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	aliases {
+> > +		gpio0 = &gpio1;
+> > +		gpio1 = &gpio2;
+> > +		gpio2 = &gpio3;
+> > +		gpio3 = &gpio4;
+> > +		gpio4 = &gpio5;
+> > +		gpio5 = &gpio6;
+> > +		i2c0 = &i2c1;
+> > +		i2c1 = &i2c2;
+> > +		i2c2 = &i2c3;
+> > +		mmc0 = &usdhc1;
+> > +		mmc1 = &usdhc2;
+> > +		mmc2 = &usdhc3;
+> > +		serial0 = &uart1;
+> > +		serial1 = &uart2;
+> > +		serial2 = &uart3;
+> > +		serial3 = &uart4;
+> > +		serial4 = &uart5;
+> > +		spi0 = &ecspi1;
+> > +		spi1 = &ecspi2;
+> > +		spi3 = &ecspi3;
+> > +		spi4 = &ecspi4;
+> > +		usbphy0 = &usbphy1;
+> > +		usbphy1 = &usbphy2;
+> > +	};
+> > +
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu0: cpu@0 {
+> > +			compatible = "arm,cortex-a9";
+> > +			device_type = "cpu";
+> > +			reg = <0>;
+> > +			next-level-cache = <&L2>;
+> > +			operating-points = <
+> > +				/* kHz    uV */
+> > +				996000  1225000
+> > +				792000  1175000
+> > +				396000  1075000
+> > +				198000	975000
+> > +			>;
+> > +			fsl,soc-operating-points = <
+> > +				/* ARM kHz      SOC-PU uV */
+> > +				996000          1225000
+> > +				792000          1175000
+> > +				396000          1175000
+> > +				198000		1175000
+> > +			>;
+> > +			clock-latency = <61036>; /* two CLK32 periods */
+> > +			fsl,low-power-run;
+> 
+> What is this?
+> 
+> > +			clocks = <&clks IMX6SLL_CLK_ARM>,
+> > +				 <&clks IMX6SLL_CLK_PLL2_PFD2>,
+> > +				 <&clks IMX6SLL_CLK_STEP>,
+> > +				 <&clks IMX6SLL_CLK_PLL1_SW>,
+> > +				 <&clks IMX6SLL_CLK_PLL1_SYS>,
+> > +				 <&clks IMX6SLL_CLK_PLL1>,
+> > +				 <&clks IMX6SLL_PLL1_BYPASS>,
+> > +				 <&clks IMX6SLL_PLL1_BYPASS_SRC>;
+> > +			clock-names = "arm", "pll2_pfd2_396m", "step",
+> > +				      "pll1_sw", "pll1_sys", "pll1", "pll1_bypass",
+> > +				      "pll1_bypass_src";
+> > +		};
+> > +	};
+> > +
+> > +	intc: interrupt-controller@a01000 {
+> > +		compatible = "arm,cortex-a9-gic";
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-controller;
+> > +		reg = <0x00a01000 0x1000>,
+> > +		      <0x00a00100 0x100>;
+> > +		interrupt-parent = <&intc>;
+> > +	};
+> > +
+> > +	clocks {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> 
+> As requested by DT maintainer, please drop this container node and give an
+> unique name for each fixed-clock, something like:
+> 
+> 	clock-xxx {
+> 		...
+> 	};
+> 
+> You may want to refer to how Lucas did it for i.MX8QM.
+> 
+> > +
+> > +		ckil: clock@0 {
+> > +			compatible = "fixed-clock";
+> > +			reg = <0>;
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <32768>;
+> > +			clock-output-names = "ckil";
+> > +		};
+> > +
+> > +		osc: clock@1 {
+> > +			compatible = "fixed-clock";
+> > +			reg = <1>;
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <24000000>;
+> > +			clock-output-names = "osc";
+> > +		};
+> > +
+> > +		ipp_di0: clock@2 {
+> > +			compatible = "fixed-clock";
+> > +			reg = <2>;
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <0>;
+> > +			clock-output-names = "ipp_di0";
+> > +		};
+> > +
+> > +		ipp_di1: clock@3 {
+> > +			compatible = "fixed-clock";
+> > +			reg = <3>;
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <0>;
+> > +			clock-output-names = "ipp_di1";
+> > +		};
+> > +	};
+> > +
+> > +	soc {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "simple-bus";
+> > +		interrupt-parent = <&gpc>;
+> > +		ranges;
+> > +
+> > +		ocram: sram@900000 {
+> > +			compatible = "mmio-sram";
+> > +			reg = <0x00900000 0x20000>;
+> > +		};
+> > +
+> > +		L2: l2-cache@a02000 {
+> > +			compatible = "arm,pl310-cache";
+> > +			reg = <0x00a02000 0x1000>;
+> > +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+> > +			cache-unified;
+> > +			cache-level = <2>;
+> > +			arm,tag-latency = <4 2 3>;
+> > +			arm,data-latency = <4 2 3>;
+> > +		};
+> > +
+> > +		aips1: aips-bus@2000000 {
+> > +			compatible = "fsl,aips-bus", "simple-bus";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			reg = <0x02000000 0x100000>;
+> > +			ranges;
+> > +
+> > +			spba: spba-bus@2000000 {
+> > +				compatible = "fsl,spba-bus", "simple-bus";
+> > +				#address-cells = <1>;
+> > +				#size-cells = <1>;
+> > +				reg = <0x02000000 0x40000>;
+> > +				ranges;
+> > +
+> > +				spdif: spdif@2004000 {
+> > +					compatible = "fsl,imx6sl-spdif", "fsl,imx35-spdif";
+> > +					reg = <0x02004000 0x4000>;
+> > +					interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 14 18 0>, <&sdma 15 18 0>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_SPDIF_GCLK>,
+> > +						 <&clks IMX6SLL_CLK_OSC>,
+> > +						 <&clks IMX6SLL_CLK_SPDIF>,
+> > +						 <&clks IMX6SLL_CLK_DUMMY>,
+> > +						 <&clks IMX6SLL_CLK_DUMMY>,
+> > +						 <&clks IMX6SLL_CLK_DUMMY>,
+> > +						 <&clks IMX6SLL_CLK_IPG>,
+> > +						 <&clks IMX6SLL_CLK_DUMMY>,
+> > +						 <&clks IMX6SLL_CLK_DUMMY>,
+> > +						 <&clks IMX6SLL_CLK_SPBA>;
+> > +					clock-names = "core", "rxtx0",
+> > +						      "rxtx1", "rxtx2",
+> > +						      "rxtx3", "rxtx4",
+> > +						      "rxtx5", "rxtx6",
+> > +						      "rxtx7", "dma";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ecspi1: ecspi@2008000 {
+> 
+> s/ecspi/spi for node name.
+> 
+> > +					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+> > +					reg = <0x02008000 0x4000>;
+> > +					interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_ECSPI1>,
+> > +						 <&clks IMX6SLL_CLK_ECSPI1>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ecspi2: ecspi@200c000 {
+> > +					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+> > +					reg = <0x0200c000 0x4000>;
+> > +					interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_ECSPI2>,
+> > +						 <&clks IMX6SLL_CLK_ECSPI2>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ecspi3: ecspi@2010000 {
+> > +					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+> > +					reg = <0x02010000 0x4000>;
+> > +					interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_ECSPI3>,
+> > +						 <&clks IMX6SLL_CLK_ECSPI3>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ecspi4: ecspi@2014000 {
+> > +					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+> > +					reg = <0x02014000 0x4000>;
+> > +					interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_ECSPI4>,
+> > +						 <&clks IMX6SLL_CLK_ECSPI4>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				uart4: serial@2018000 {
+> > +					compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart",
+> "fsl,imx21-uart";
+> > +					reg = <0x02018000 0x4000>;
+> > +					interrupts =<GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 31 4 0>, <&sdma 32 4 0>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_UART4_IPG>,
+> > +						 <&clks IMX6SLL_CLK_UART4_SERIAL>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				uart1: serial@2020000 {
+> > +					compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart",
+> "fsl,imx21-uart";
+> > +					reg = <0x02020000 0x4000>;
+> > +					interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 25 4 0>, <&sdma 26 4 0>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_UART1_IPG>,
+> > +						 <&clks IMX6SLL_CLK_UART1_SERIAL>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				uart2: serial@2024000 {
+> > +					compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart",
+> "fsl,imx21-uart";
+> > +					reg = <0x02024000 0x4000>;
+> > +					interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 27 4 0>, <&sdma 28 4 0>;
+> > +					dma-names = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_UART2_IPG>,
+> > +						 <&clks IMX6SLL_CLK_UART2_SERIAL>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ssi1: ssi@2028000 {
+> 
+> ssi-controller
+> 
+> > +					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+> > +					reg = <0x02028000 0x4000>;
+> > +					interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 37 22 0>, <&sdma 38 22 0>;
+> > +					dma-names = "rx", "tx";
+> > +					fsl,fifo-depth = <15>;
+> > +					clocks = <&clks IMX6SLL_CLK_SSI1_IPG>,
+> > +						 <&clks IMX6SLL_CLK_SSI1>;
+> > +					clock-names = "ipg", "baud";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ssi2: ssi2@202c000 {
+> 
+> Drop 2 from node name.
+> 
+> > +					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+> > +					reg = <0x0202c000 0x4000>;
+> > +					interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 41 22 0>, <&sdma 42 22 0>;
+> > +					dma-names = "rx", "tx";
+> > +					fsl,fifo-depth = <15>;
+> > +					clocks = <&clks IMX6SLL_CLK_SSI2_IPG>,
+> > +						 <&clks IMX6SLL_CLK_SSI2>;
+> > +					clock-names = "ipg", "baud";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				ssi3: ssi@2030000 {
+> > +					compatible = "fsl,imx6sl-ssi", "fsl,imx51-ssi";
+> > +					reg = <0x02030000 0x4000>;
+> > +					interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 45 22 0>, <&sdma 46 22 0>;
+> > +					dma-names = "rx", "tx";
+> > +					fsl,fifo-depth = <15>;
+> > +					clocks = <&clks IMX6SLL_CLK_SSI3_IPG>,
+> > +						 <&clks IMX6SLL_CLK_SSI3>;
+> > +					clock-names = "ipg", "baud";
+> > +					status = "disabled";
+> > +				};
+> > +
+> > +				uart3: serial@2034000 {
+> > +					compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart",
+> "fsl,imx21-uart";
+> > +					reg = <0x02034000 0x4000>;
+> > +					interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> > +					dmas = <&sdma 29 4 0>, <&sdma 30 4 0>;
+> > +					dma-name = "rx", "tx";
+> > +					clocks = <&clks IMX6SLL_CLK_UART3_IPG>,
+> > +						 <&clks IMX6SLL_CLK_UART3_SERIAL>;
+> > +					clock-names = "ipg", "per";
+> > +					status = "disabled";
+> > +				};
+> > +			};
+> > +
+> > +			pwm1: pwm@2080000 {
+> > +				compatible = "fsl,imx6sll-pwm", "fsl,imx27-pwm";
+> > +				reg = <0x02080000 0x4000>;
+> > +				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_PWM1>,
+> > +					 <&clks IMX6SLL_CLK_PWM1>;
+> > +				clock-names = "ipg", "per";
+> > +				#pwm-cells = <2>;
+> > +			};
+> > +
+> > +			pwm2: pwm@2084000 {
+> > +				compatible = "fsl,imx6sll-pwm", "fsl,imx27-pwm";
+> > +				reg = <0x02084000 0x4000>;
+> > +				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_PWM2>,
+> > +					 <&clks IMX6SLL_CLK_PWM2>;
+> > +				clock-names = "ipg", "per";
+> > +				#pwm-cells = <2>;
+> > +			};
+> > +
+> > +			pwm3: pwm@2088000 {
+> > +				compatible = "fsl,imx6sll-pwm", "fsl,imx27-pwm";
+> > +				reg = <0x02088000 0x4000>;
+> > +				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_PWM3>,
+> > +					 <&clks IMX6SLL_CLK_PWM3>;
+> > +				clock-names = "ipg", "per";
+> > +				#pwm-cells = <2>;
+> > +			};
+> > +
+> > +			pwm4: pwm@208c000 {
+> > +				compatible = "fsl,imx6sll-pwm", "fsl,imx27-pwm";
+> > +				reg = <0x0208c000 0x4000>;
+> > +				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_PWM4>,
+> > +					 <&clks IMX6SLL_CLK_PWM4>;
+> > +				clock-names = "ipg", "per";
+> > +				#pwm-cells = <2>;
+> > +			};
+> > +
+> > +			gpt1: gpt@2098000 {
+> 
+> timer
+> 
+> > +				compatible = "fsl,imx6sll-gpt";
+> > +				reg = <0x02098000 0x4000>;
+> > +				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_GPT_BUS>,
+> > +					 <&clks IMX6SLL_CLK_GPT_SERIAL>;
+> > +				clock-names = "ipg", "per";
+> > +			};
+> > +
+> > +			gpio1: gpio@209c000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x0209c000 0x4000>;
+> > +				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			gpio2: gpio@20a0000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x020a0000 0x4000>;
+> > +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			gpio3: gpio@20a4000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x020a4000 0x4000>;
+> > +				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			gpio4: gpio@20a8000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x020a8000 0x4000>;
+> > +				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			gpio5: gpio@20ac000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x020ac000 0x4000>;
+> > +				interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			gpio6: gpio@20b0000 {
+> > +				compatible = "fsl,imx6sll-gpio", "fsl,imx35-gpio";
+> > +				reg = <0x020b0000 0x4000>;
+> > +				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> > +				gpio-controller;
+> > +				#gpio-cells = <2>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <2>;
+> > +			};
+> > +
+> > +			kpp: kpp@20b8000 {
+> 
+> s/kpp/keypad for node name.
+> 
+> > +				compatible = "fsl,imx6sll-kpp", "fsl,imx21-kpp";
+> > +				reg = <0x020b8000 0x4000>;
+> > +				interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_KPP>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			wdog1: wdog@20bc000 {
+> 
+> s/wdog/watchdog for node name.
+> 
+> > +				compatible = "fsl,imx6sll-wdt", "fsl,imx21-wdt";
+> > +				reg = <0x020bc000 0x4000>;
+> > +				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_WDOG1>;
+> > +			};
+> > +
+> > +			wdog2: wdog@20c0000 {
+> > +				compatible = "fsl,imx6sll-wdt", "fsl,imx21-wdt";
+> > +				reg = <0x020c0000 0x4000>;
+> > +				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_WDOG2>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			clks: clock-controller@20c4000 {
+> > +				compatible = "fsl,imx6sll-ccm";
+> > +				reg = <0x020c4000 0x4000>;
+> > +				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> > +				#clock-cells = <1>;
+> > +				clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
+> > +				clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
+> > +
+> > +				assigned-clocks = <&clks IMX6SLL_CLK_PERCLK_SEL>;
+> > +				assigned-clock-parents = <&clks IMX6SLL_CLK_OSC>;
+> > +			};
+> > +
+> > +			anatop: anatop@20c8000 {
+> > +				compatible = "fsl,imx6sll-anatop",
+> > +					     "fsl,imx6q-anatop",
+> > +					     "syscon", "simple-bus";
+> > +				reg = <0x020c8000 0x4000>;
+> > +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +
+> > +				reg_3p0: regulator-3p0@20c8120 {
+> > +					compatible = "fsl,anatop-regulator";
+> > +					reg = <0x20c8120>;
+> > +					regulator-name = "vdd3p0";
+> > +					regulator-min-microvolt = <2625000>;
+> > +					regulator-max-microvolt = <3400000>;
+> > +					anatop-reg-offset = <0x120>;
+> > +					anatop-vol-bit-shift = <8>;
+> > +					anatop-vol-bit-width = <5>;
+> > +					anatop-min-bit-val = <0>;
+> > +					anatop-min-voltage = <2625000>;
+> > +					anatop-max-voltage = <3400000>;
+> > +					anatop-enable-bit = <0>;
+> > +				};
+> > +			};
+> > +
+> > +			tempmon: tempmon {
+> 
+> s/tempmon/temperature-sensor for node name.
+> 
+> > +				compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
+> > +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > +				fsl,tempmon = <&anatop>;
+> > +				fsl,tempmon-data = <&ocotp>;
+> > +				clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usbphy1: usbphy@20c9000 {
+> 
+> s/usbphy/usb-phy for node name.
+> 
+> > +				compatible = "fsl,imx6sll-usbphy", "fsl,imx6ul-usbphy",
+> > +						"fsl,imx23-usbphy";
+> > +				reg = <0x020c9000 0x1000>;
+> > +				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBPHY1>;
+> > +				phy-3p0-supply = <&reg_3p0>;
+> > +				fsl,anatop = <&anatop>;
+> > +			};
+> > +
+> > +			usbphy2: usbphy@20ca000 {
+> > +				compatible = "fsl,imx6sll-usbphy", "fsl,imx6ul-usbphy",
+> > +						"fsl,imx23-usbphy";
+> > +				reg = <0x020ca000 0x1000>;
+> > +				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBPHY2>;
+> > +				phy-reg_3p0-supply = <&reg_3p0>;
+> > +				fsl,anatop = <&anatop>;
+> > +			};
+> > +
+> > +			snvs: snvs@20cc000 {
+> > +				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> > +				reg = <0x020cc000 0x4000>;
+> > +
+> > +				snvs_rtc: snvs-rtc-lp {
+> > +					compatible = "fsl,sec-v4.0-mon-rtc-lp";
+> > +					regmap = <&snvs>;
+> > +					offset = <0x34>;
+> > +					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> > +				};
+> > +
+> > +				snvs_poweroff: snvs-poweroff {
+> > +					compatible = "syscon-poweroff";
+> > +					regmap = <&snvs>;
+> > +					offset = <0x38>;
+> > +					mask = <0x61>;
+> > +				};
+> > +
+> > +				snvs_pwrkey: snvs-powerkey {
+> > +					compatible = "fsl,sec-v4.0-pwrkey";
+> > +					regmap = <&snvs>;
+> > +					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> > +					linux,keycode = <KEY_POWER>;
+> > +					wakeup-source;
+> > +				};
+> > +			};
+> > +
+> > +			epit1: epit@20d0000 {
+> > +				reg = <0x020d0000 0x4000>;
+> > +				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > +			};
+> > +
+> > +			epit2: epit@20d4000 {
+> > +				reg = <0x020d4000 0x4000>;
+> > +				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> > +			};
+> 
+> No compatible, so unused?
+> 
+> > +
+> > +			src: src@20d8000 {
+> 
+> reset-controller
+> 
+> > +				compatible = "fsl,imx6sll-src";
+> > +				reg = <0x020d8000 0x4000>;
+> > +				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> > +				#reset-cells = <1>;
+> > +			};
+> > +
+> > +			gpc: gpc@20dc000 {
+> 
+> interrupt-controller
+> 
+> > +				compatible = "fsl,imx6sll-gpc", "fsl,imx6q-gpc";
+> > +				reg = <0x020dc000 0x4000>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <3>;
+> > +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > +				interrupt-parent = <&intc>;
+> > +				fsl,mf-mix-wakeup-irq = <0x7c00000 0x7d00 0x0
+> 0x1400640>;
+> 
+> What is this?
+> 
+> > +			};
+> > +
+> > +			iomuxc: iomuxc@20e0000 {
+> > +				compatible = "fsl,imx6sll-iomuxc";
+> > +				reg = <0x020e0000 0x4000>;
+> > +			};
+> > +
+> > +			gpr: iomuxc-gpr@20e4000 {
+> > +				compatible = "fsl,imx6sll-iomuxc-gpr",
+> > +					     "fsl,imx6q-iomuxc-gpr", "syscon";
+> > +				reg = <0x020e4000 0x4000>;
+> > +			};
+> > +
+> > +			csi: csi@20e8000 {
+> > +				compatible = "fsl,imx6sll-csi", "fsl,imx6s-csi";
+> > +				reg = <0x020e8000 0x4000>;
+> > +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_DUMMY>,
+> > +					 <&clks IMX6SLL_CLK_CSI>,
+> > +					 <&clks IMX6SLL_CLK_DUMMY>;
+> > +				clock-names = "disp-axi", "csi_mclk", "disp_dcic";
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			sdma: sdma@20ec000 {
+> 
+> dma-controller
+> 
+> > +				compatible = "fsl,imx6sll-sdma", "fsl,imx35-sdma";
+> > +				reg = <0x020ec000 0x4000>;
+> > +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_SDMA>,
+> > +					 <&clks IMX6SLL_CLK_SDMA>;
+> > +				clock-names = "ipg", "ahb";
+> > +				#dma-cells = <3>;
+> > +				iram = <&ocram>;
+> > +				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx6q.bin";
+> > +			};
+> > +
+> > +			lcdif: lcdif@20f8000 {
+> 
+> lcd-controller
+> 
+> > +				compatible = "fsl,imx6sll-lcdif", "fsl,imx28-lcdif";
+> > +				reg = <0x020f8000 0x4000>;
+> > +				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_LCDIF_PIX>,
+> > +					 <&clks IMX6SLL_CLK_LCDIF_APB>,
+> > +					 <&clks IMX6SLL_CLK_DUMMY>;
+> > +				clock-names = "pix", "axi", "disp_axi";
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			dcp: dcp@20fc000 {
+> > +				compatible = "fsl,imx6sl-dcp";
+> > +				reg = <0x020fc000 0x4000>;
+> > +				interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_DCP>;
+> > +				clock-names = "dcp";
+> > +			};
+> > +		};
+> > +
+> > +		aips2: aips-bus@2100000 {
+> > +			compatible = "fsl,aips-bus", "simple-bus";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			reg = <0x02100000 0x100000>;
+> > +			ranges;
+> > +
+> > +			usbotg1: usb@2184000 {
+> > +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-usb",
+> > +						"fsl,imx27-usb";
+> > +				reg = <0x02184000 0x200>;
+> > +				interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> > +				fsl,usbphy = <&usbphy1>;
+> > +				fsl,usbmisc = <&usbmisc 0>;
+> > +				fsl,anatop = <&anatop>;
+> > +				ahb-burst-config = <0x0>;
+> > +				tx-burst-size-dword = <0x10>;
+> > +				rx-burst-size-dword = <0x10>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usbotg2: usb@2184200 {
+> > +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-usb",
+> > +						"fsl,imx27-usb";
+> > +				reg = <0x02184200 0x200>;
+> > +				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> > +				fsl,usbphy = <&usbphy2>;
+> > +				fsl,usbmisc = <&usbmisc 1>;
+> > +				ahb-burst-config = <0x0>;
+> > +				tx-burst-size-dword = <0x10>;
+> > +				rx-burst-size-dword = <0x10>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usbmisc: usbmisc@2184800 {
+> > +				#index-cells = <1>;
+> > +				compatible = "fsl,imx6sll-usbmisc", "fsl,imx6ul-usbmisc",
+> > +						"fsl,imx6q-usbmisc";
+> > +				reg = <0x02184800 0x200>;
+> > +			};
+> > +
+> > +			usdhc1: usdhc@2190000 {
+> 
+> s/usdhc/mmc for node name.
+> 
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
+> > +				reg = <0x02190000 0x4000>;
+> > +				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC1>,
+> > +					 <&clks IMX6SLL_CLK_USDHC1>,
+> > +					 <&clks IMX6SLL_CLK_USDHC1>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usdhc2: usdhc@2194000 {
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
+> > +				reg = <0x02194000 0x4000>;
+> > +				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC2>,
+> > +					 <&clks IMX6SLL_CLK_USDHC2>,
+> > +					 <&clks IMX6SLL_CLK_USDHC2>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usdhc3: usdhc@2198000 {
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
+> > +				reg = <0x02198000 0x4000>;
+> > +				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC3>,
+> > +					 <&clks IMX6SLL_CLK_USDHC3>,
+> > +					 <&clks IMX6SLL_CLK_USDHC3>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c1: i2c@21a0000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fs,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a0000 0x4000>;
+> > +				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C1>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c2: i2c@21a4000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a4000 0x4000>;
+> > +				interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C2>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c3: i2c@21a8000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a8000 0x4000>;
+> > +				interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C3>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			romcp@21ac000 {
+> > +				compatible = "fsl,imx6sll-romcp", "syscon";
+> > +				reg = <0x021ac000 0x4000>;
+> > +			};
+> > +
+> > +			mmdc: mmdc@21b0000 {
+> 
+> memory-controller
+> 
+> Shawn
+> 
+> > +				compatible = "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
+> > +				reg = <0x021b0000 0x4000>;
+> > +			};
+> > +
+> > +			rngb: rngb@21b4000 {
+> > +				reg = <0x021b4000 0x4000>;
+> > +				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks =  <&clks IMX6SLL_CLK_DUMMY>;
+> > +			};
+> > +
+> > +			ocotp: ocotp-ctrl@21bc000 {
+> > +				compatible = "fsl,imx6sll-ocotp", "syscon";
+> > +				reg = <0x021bc000 0x4000>;
+> > +				clocks = <&clks IMX6SLL_CLK_OCOTP>;
+> > +			};
+> > +
+> > +			snvs_gpr: snvs-gpr@21c4000 {
+> > +				reg = <0x021c4000 0x10000>;
+> > +			};
+> > +
+> > +			iomuxc_snvs: iomuxc-snvs@21c8000 {
+> > +				reg = <0x021c8000 0x10000>;
+> > +			};
+> > +
+> > +			audmux: audmux@21d8000 {
+> > +				compatible = "fsl,imx6sll-audmux", "fsl,imx31-audmux";
+> > +				reg = <0x021d8000 0x4000>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			uart5: serial@21f4000 {
+> > +				compatible = "fsl,imx6sll-uart", "fsl,imx6q-uart",
+> "fsl,imx21-uart";
+> > +				reg = <0x021f4000 0x4000>;
+> > +				interrupts =<GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&sdma 33 4 0>, <&sdma 34 4 0>;
+> > +				dma-names = "rx", "tx";
+> > +				clocks = <&clks IMX6SLL_CLK_UART5_IPG>,
+> > +					 <&clks IMX6SLL_CLK_UART5_SERIAL>;
+> > +				clock-names = "ipg", "per";
+> > +				status = "disabled";
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > --
+> > 1.9.1
+> >
