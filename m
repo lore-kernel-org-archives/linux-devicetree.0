@@ -1,119 +1,295 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 2/2] power: reset: gpio-poweroff: Support for timeout
- from device property
-Date: Fri, 9 Mar 2018 17:19:26 +0100
-Message-ID: <20180309161926.hciaq3ok7st3fc7j@earth.universe>
-References: <20180222231714.11843-1-mdf@kernel.org>
- <20180222231714.11843-2-mdf@kernel.org>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH] ASoC: da7219: Add common clock usage for
+	providing DAI clks
+Date: Fri, 9 Mar 2018 16:25:43 +0000
+Message-ID: <20180309162544.783133FB14@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="osw746qlfqyb3xsn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180222231714.11843-2-mdf@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Support Opensource <support.opensource@diasemi.com>, linux-kernel@vger.kernel.org, Akshu Agrawal <akshu.agrawal@amd.com>, Daniel Kurtz <djkurtz@google.com>
 List-Id: devicetree@vger.kernel.org
 
+There is a need to use DA7219 as DAI clock master for other codecs
+within a system, which means that the DAI clocks are required to
+remain, regardless of whether the codec is actually running
+playback/capture. To be able to expose control of the DAI clocking
+the common clock framework has been employed.
 
---osw746qlfqyb3xsn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The current implementation adds a simple clock gate for enabling
+and disabling the DAI clocks, with no rate control supported
+(this is still handled through standard hw_params() functions as
+before). If DT is enabled then the clock is added to the OF
+providers list, otherwise a clkdev lookup is used.
 
-Hi,
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
+ Documentation/devicetree/bindings/sound/da7219.txt |   6 +
+ include/sound/da7219.h                             |   2 +
+ sound/soc/codecs/da7219.c                          | 129 +++++++++++++++++++--
+ sound/soc/codecs/da7219.h                          |   9 ++
+ 4 files changed, 138 insertions(+), 8 deletions(-)
 
-On Thu, Feb 22, 2018 at 03:17:14PM -0800, Moritz Fischer wrote:
-> Add support for reading a timeout value from device property.
-> Fall back to previous default of 3s if nothing is specified.
->=20
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> ---
-
-Thanks, both queued.
-
--- Sebastian
-
-> Changes from v2:
-> - use device_property_read_{bool,u32} instead of of equivalent
->=20
-> Changes from v1:
-> - of_property_read_u32() overwrites the output only if it succeeds,
->   simplify error handling
-> ---
->=20
->  drivers/power/reset/gpio-poweroff.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gp=
-io-poweroff.c
-> index be3d81ff51cc..6273ad3b411d 100644
-> --- a/drivers/power/reset/gpio-poweroff.c
-> +++ b/drivers/power/reset/gpio-poweroff.c
-> @@ -19,11 +19,13 @@
->  #include <linux/of_platform.h>
->  #include <linux/module.h>
-> =20
-> +#define DEFAULT_TIMEOUT_MS 3000
->  /*
->   * Hold configuration here, cannot be more than one instance of the driv=
-er
->   * since pm_power_off itself is global.
->   */
->  static struct gpio_desc *reset_gpio;
-> +static u32 timeout =3D DEFAULT_TIMEOUT_MS;
-> =20
->  static void gpio_poweroff_do_poweroff(void)
->  {
-> @@ -40,7 +42,7 @@ static void gpio_poweroff_do_poweroff(void)
->  	gpiod_set_value(reset_gpio, 1);
-> =20
->  	/* give it some time */
-> -	mdelay(3000);
-> +	mdelay(timeout);
-> =20
->  	WARN_ON(1);
->  }
-> @@ -58,12 +60,14 @@ static int gpio_poweroff_probe(struct platform_device=
- *pdev)
->  		return -EBUSY;
->  	}
-> =20
-> -	input =3D of_property_read_bool(pdev->dev.of_node, "input");
-> +	input =3D device_property_read_bool(&pdev->dev, "input");
->  	if (input)
->  		flags =3D GPIOD_IN;
->  	else
->  		flags =3D GPIOD_OUT_LOW;
-> =20
-> +	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
-> +
->  	reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL, flags);
->  	if (IS_ERR(reset_gpio))
->  		return PTR_ERR(reset_gpio);
-> --=20
-> 2.16.1
->=20
-
---osw746qlfqyb3xsn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqitA0ACgkQ2O7X88g7
-+ppp2Q//YA8TyfLpPaEgOkkQKccxE4UgfbpfLbW5DjwSv45dQGQ3jeiz5LSUQwk3
-JjeOOQTyTZgRbUFtis30DV8x5mqB3QevGexUygVzRDh4Y2QM2CmikCfmbTNqAkYa
-emdrLFXtBacZTeP4GNBizU0Edv5N/iWCzyUfp1MClRmvvoKLJRPg5+QEhOdEpnXE
-5XDwozK7E8qkCvsOMCdJUEIWNrOpDzxuxtz2GR7MlPPUtLUvs8g58AKanmquuzTX
-Sc+wzjLy3bDQSLRw6MGHnc2O5KACsaIkKvO0pzve8iZFo7jBsZQWfFA1icxaFA6c
-YZP3i5k8A2Ldr5LKizB+poSDduvCl0bxRxokitgLFd6+Da9uO2EPSsOJZdmstO+E
-N/EBRU0ntdjgVXZLShITBqlAB4K/PMVZgZ9XmTamZjRH9jmxcEBatl1zIhM2LKi5
-f/mznYvU3LuQOAdb6caw0z+uOYuJxpvuQFe97DJdlEkPwtJcSd5H7aZ8g6WjO37q
-uF6HrOOURYFjcnvDADeknR8QF7/fTrz2zm7fG6N0k2ilPFU0K5lsCHdyBATe9jGT
-QgGV/zOPM5os0XnWP1apyTBrOf6xjk2l8/utuyzSlG3CTU1PPmQXhHUjJ5022Ofn
-XtDDuO8W/f3syBwCOWKfESzXIV/1duTAE0X3n/mRALty1fNoR/o=
-=1IEW
------END PGP SIGNATURE-----
-
---osw746qlfqyb3xsn--
+diff --git a/Documentation/devicetree/bindings/sound/da7219.txt b/Documentation/devicetree/bindings/sound/da7219.txt
+index 5b54d2d..c3df92d 100644
+--- a/Documentation/devicetree/bindings/sound/da7219.txt
++++ b/Documentation/devicetree/bindings/sound/da7219.txt
+@@ -25,6 +25,9 @@ Optional properties:
+   interrupt is to be used to wake system, otherwise "irq" should be used.
+ - wakeup-source: Flag to indicate this device can wake system (suspend/resume).
+ 
++- #clock-cells :  Should be set to '<0>', only one clock source provided;
++- clock-output-names : Name given for DAI clocks output;
++
+ - clocks : phandle and clock specifier for codec MCLK.
+ - clock-names : Clock name string for 'clocks' attribute, should be "mclk".
+ 
+@@ -83,6 +86,9 @@ Example:
+ 		VDDMIC-supply = <&reg_audio>;
+ 		VDDIO-supply = <&reg_audio>;
+ 
++		#clock-cells = <0>;
++		clock-output-names = "dai-clks";
++
+ 		clocks = <&clks 201>;
+ 		clock-names = "mclk";
+ 
+diff --git a/include/sound/da7219.h b/include/sound/da7219.h
+index 409ef139..1bfcb16 100644
+--- a/include/sound/da7219.h
++++ b/include/sound/da7219.h
+@@ -36,6 +36,8 @@ enum da7219_mic_amp_in_sel {
+ struct da7219_pdata {
+ 	bool wakeup_source;
+ 
++	const char *dai_clks_name;
++
+ 	/* Mic */
+ 	enum da7219_micbias_voltage micbias_lvl;
+ 	enum da7219_mic_amp_in_sel mic_amp_in_sel;
+diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
+index 5e043d0..4412159 100644
+--- a/sound/soc/codecs/da7219.c
++++ b/sound/soc/codecs/da7219.c
+@@ -13,6 +13,8 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
+ #include <linux/i2c.h>
+ #include <linux/of_device.h>
+ #include <linux/property.h>
+@@ -772,16 +774,27 @@ static int da7219_dai_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+ 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
+ 	u8 pll_ctrl, pll_status;
+-	int i = 0;
++	int i = 0, ret;
+ 	bool srm_lock = false;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+-		if (da7219->master)
++		if (da7219->master) {
+ 			/* Enable DAI clks for master mode */
+-			snd_soc_component_update_bits(component, DA7219_DAI_CLK_MODE,
+-					    DA7219_DAI_CLK_EN_MASK,
+-					    DA7219_DAI_CLK_EN_MASK);
++			if (da7219->dai_clks) {
++				ret = clk_prepare_enable(da7219->dai_clks);
++				if (ret) {
++					dev_err(component->dev,
++						"Failed to enable dai_clks\n");
++					return ret;
++				}
++			} else {
++				snd_soc_component_update_bits(component,
++							      DA7219_DAI_CLK_MODE,
++							      DA7219_DAI_CLK_EN_MASK,
++							      DA7219_DAI_CLK_EN_MASK);
++			}
++		}
+ 
+ 		/* PC synchronised to DAI */
+ 		snd_soc_component_update_bits(component, DA7219_PC_COUNT,
+@@ -814,9 +827,16 @@ static int da7219_dai_event(struct snd_soc_dapm_widget *w,
+ 				    DA7219_PC_FREERUN_MASK);
+ 
+ 		/* Disable DAI clks if in master mode */
+-		if (da7219->master)
+-			snd_soc_component_update_bits(component, DA7219_DAI_CLK_MODE,
+-					    DA7219_DAI_CLK_EN_MASK, 0);
++		if (da7219->master) {
++			if (da7219->dai_clks)
++				clk_disable_unprepare(da7219->dai_clks);
++			else
++				snd_soc_component_update_bits(component,
++							      DA7219_DAI_CLK_MODE,
++							      DA7219_DAI_CLK_EN_MASK,
++							      0);
++		}
++
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+@@ -1598,6 +1618,12 @@ static struct da7219_pdata *da7219_fw_to_pdata(struct snd_soc_component *compone
+ 
+ 	pdata->wakeup_source = device_property_read_bool(dev, "wakeup-source");
+ 
++	pdata->dai_clks_name = "da7219-dai-clks";
++	if (device_property_read_string(dev, "clock-output-names",
++					&pdata->dai_clks_name))
++		dev_warn(dev, "Using default clk name: %s\n",
++			 pdata->dai_clks_name);
++
+ 	if (device_property_read_u32(dev, "dlg,micbias-lvl", &of_val32) >= 0)
+ 		pdata->micbias_lvl = da7219_fw_micbias_lvl(dev, of_val32);
+ 	else
+@@ -1712,6 +1738,88 @@ static int da7219_handle_supplies(struct snd_soc_component *component)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_COMMON_CLK
++static int da7219_dai_clks_prepare(struct clk_hw *hw)
++{
++	struct da7219_priv *da7219 =
++		container_of(hw, struct da7219_priv, dai_clks_hw);
++	struct snd_soc_component *component = da7219->aad->component;
++
++	snd_soc_component_update_bits(component, DA7219_DAI_CLK_MODE,
++				      DA7219_DAI_CLK_EN_MASK,
++				      DA7219_DAI_CLK_EN_MASK);
++
++	return 0;
++}
++
++static void da7219_dai_clks_unprepare(struct clk_hw *hw)
++{
++	struct da7219_priv *da7219 =
++		container_of(hw, struct da7219_priv, dai_clks_hw);
++	struct snd_soc_component *component = da7219->aad->component;
++
++	snd_soc_component_update_bits(component, DA7219_DAI_CLK_MODE,
++				      DA7219_DAI_CLK_EN_MASK, 0);
++}
++
++static int da7219_dai_clks_is_prepared(struct clk_hw *hw)
++{
++	struct da7219_priv *da7219 =
++		container_of(hw, struct da7219_priv, dai_clks_hw);
++	struct snd_soc_component *component = da7219->aad->component;
++	u8 clk_reg;
++
++	clk_reg = snd_soc_component_read32(component, DA7219_DAI_CLK_MODE);
++
++	return !!(clk_reg & DA7219_DAI_CLK_EN_MASK);
++}
++
++const struct clk_ops da7219_dai_clks_ops = {
++	.prepare = da7219_dai_clks_prepare,
++	.unprepare = da7219_dai_clks_unprepare,
++	.is_prepared = da7219_dai_clks_is_prepared,
++};
++
++static void da7219_register_dai_clks(struct snd_soc_component *component)
++{
++	struct device *dev = component->dev;
++	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
++	struct da7219_pdata *pdata = da7219->pdata;
++	struct clk_init_data init = {};
++	struct clk *dai_clks;
++	struct clk_lookup *dai_clks_lookup;
++
++	init.parent_names = NULL;
++	init.num_parents = 0;
++	init.name = pdata->dai_clks_name;
++	init.ops = &da7219_dai_clks_ops;
++	da7219->dai_clks_hw.init = &init;
++
++	dai_clks = devm_clk_register(dev, &da7219->dai_clks_hw);
++	if (IS_ERR(dai_clks)) {
++		dev_warn(dev, "Failed to register DAI clocks: %ld\n",
++			 PTR_ERR(dai_clks));
++		return;
++	}
++	da7219->dai_clks = dai_clks;
++
++	/* If we're using DT, then register as provider accordingly */
++	if (dev->of_node) {
++		devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
++					    &da7219->dai_clks_hw);
++	} else {
++		dai_clks_lookup = clkdev_create(dai_clks, pdata->dai_clks_name,
++						"%s", dev_name(dev));
++		if (!dai_clks_lookup)
++			dev_warn(dev, "Failed to create DAI clkdev");
++		else
++			da7219->dai_clks_lookup = dai_clks_lookup;
++	}
++}
++#else
++static inline void da7219_register_dai_clks(struct snd_soc_component *component) {}
++#endif /* CONFIG_COMMON_CLK */
++
+ static void da7219_handle_pdata(struct snd_soc_component *component)
+ {
+ 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
+@@ -1722,6 +1830,8 @@ static void da7219_handle_pdata(struct snd_soc_component *component)
+ 
+ 		da7219->wakeup_source = pdata->wakeup_source;
+ 
++		da7219_register_dai_clks(component);
++
+ 		/* Mic Bias voltages */
+ 		switch (pdata->micbias_lvl) {
+ 		case DA7219_MICBIAS_1_6V:
+@@ -1856,6 +1966,9 @@ static void da7219_remove(struct snd_soc_component *component)
+ 
+ 	da7219_aad_exit(component);
+ 
++	if (da7219->dai_clks_lookup)
++		clkdev_drop(da7219->dai_clks_lookup);
++
+ 	/* Supplies */
+ 	regulator_bulk_disable(DA7219_NUM_SUPPLIES, da7219->supplies);
+ }
+diff --git a/sound/soc/codecs/da7219.h b/sound/soc/codecs/da7219.h
+index 1acb34c..1b00023 100644
+--- a/sound/soc/codecs/da7219.h
++++ b/sound/soc/codecs/da7219.h
+@@ -14,6 +14,9 @@
+ #ifndef __DA7219_H
+ #define __DA7219_H
+ 
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <sound/da7219.h>
+@@ -813,6 +816,12 @@ struct da7219_priv {
+ 	struct mutex ctrl_lock;
+ 	struct mutex pll_lock;
+ 
++#ifdef CONFIG_COMMON_CLK
++	struct clk_hw dai_clks_hw;
++#endif
++	struct clk_lookup *dai_clks_lookup;
++	struct clk *dai_clks;
++
+ 	struct clk *mclk;
+ 	unsigned int mclk_rate;
+ 	int clk_src;
+-- 
+1.9.1
