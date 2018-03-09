@@ -1,44 +1,63 @@
-Return-Path: <SRS0=6JBp=GF=retiisi.org.uk=sakari.ailus@kernel.org>
-Date: Thu, 15 Mar 2018 14:31:54 +0200
-From: Sakari Ailus <sakari.ailus@iki.fi>
+Return-Path: <SRS0=AZQn=F7=ragnatech.se=niklas.soderlund@kernel.org>
+Date: Fri, 9 Mar 2018 10:59:33 +0100
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
 Subject: Re: [PATCH] dt-bindings: media: rcar_vin: Use status "okay"
-Message-ID: <20180315123154.fl5y3kzkvtjlqvc3@valkosipuli.retiisi.org.uk>
+Message-ID: <20180309095933.GG2205@bigcity.dyn.berto.se>
 References: <1520588080-31264-1-git-send-email-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <1520588080-31264-1-git-send-email-geert+renesas@glider.be>
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Mar 09, 2018 at 10:34:40AM +0100, Geert Uytterhoeven wrote:
+Hi Geert,
+
+Thanks for your patch.
+
+On 2018-03-09 10:34:40 +0100, Geert Uytterhoeven wrote:
 > According to the Devicetree Specification, "ok" is not a valid status.
 > 
 > Fixes: 47c71bd61b772cd7 ("[media] rcar_vin: add devicetree support")
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
 
-There are a few other matches, too, it'd be nice to fix them as well:
-
-$ git grep 'status.*"ok"' -- Documentation/devicetree/bindings/
-Documentation/devicetree/bindings/ata/apm-xgene.txt:- status            : Shall be "ok" if enabled or "disabled" if disabled.
-Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt:         status = "ok";
-Documentation/devicetree/bindings/display/ti/ti,omap-dss.txt:   status = "ok";
-Documentation/devicetree/bindings/display/ti/ti,omap-dss.txt:   status = "ok";
-Documentation/devicetree/bindings/media/rcar_vin.txt:        status = "ok";
-Documentation/devicetree/bindings/media/rcar_vin.txt:        status = "ok";
-Documentation/devicetree/bindings/net/apm-xgene-enet.txt:- status: Should be "ok" or "disabled" for enabled/disabled. Default is "ok".
-Documentation/devicetree/bindings/net/apm-xgene-enet.txt:               status = "ok";
-Documentation/devicetree/bindings/net/apm-xgene-enet.txt:        status = "ok";
-Documentation/devicetree/bindings/pci/hisilicon-pcie.txt:- status: Either "ok" or "disabled".
-Documentation/devicetree/bindings/pci/xgene-pci.txt:- status: Either "ok" or "disabled".
-Documentation/devicetree/bindings/pci/xgene-pci.txt:            status = "ok";
-Documentation/devicetree/bindings/phy/apm-xgene-phy.txt:- status                : Shall be "ok" if enabled or "disabled" if disabled.
+> ---
+> For the checkpatch TODO list?
+> https://www.devicetree.org/
+> 
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> index 68c5c497b7fa5551..a19517e1c669eb35 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -81,7 +81,7 @@ Board setup example for Gen2 platforms (vin1 composite video input)
+>  -------------------------------------------------------------------
+>  
+>  &i2c2   {
+> -        status = "ok";
+> +        status = "okay";
+>          pinctrl-0 = <&i2c2_pins>;
+>          pinctrl-names = "default";
+>  
+> @@ -104,7 +104,7 @@ Board setup example for Gen2 platforms (vin1 composite video input)
+>          pinctrl-0 = <&vin1_pins>;
+>          pinctrl-names = "default";
+>  
+> -        status = "ok";
+> +        status = "okay";
+>  
+>          port {
+>                  #address-cells = <1>;
+> -- 
+> 2.7.4
+> 
 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Regards,
+Niklas S�derlund
