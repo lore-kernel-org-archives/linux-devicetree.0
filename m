@@ -1,66 +1,79 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec support
-Date: Fri, 9 Mar 2018 07:11:53 -0800
-Message-ID: <20180309151153.GR5799@atomide.com>
-References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
- <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
- <20180307163211.rytfli5tb47yhtug@dell>
- <20180308094652.qg4atjw5c3hayaz3@earth.universe>
- <20180308095315.mpcmx2ob6yhsnrm6@dell>
- <20180308102757.jyi7uo566n6nuct5@earth.universe>
- <20180308104831.fflq2arj5dxgntia@dell>
- <20180308112528.GC6019@sirena.org.uk>
- <20180309083414.s57eq3kw325magwz@dell>
- <20180309124017.GB5252@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor driver
+Date: Fri, 9 Mar 2018 15:29:12 +0000
+Message-ID: <20180309152912.GF5252@sirena.org.uk>
+References: <20180227225128.17815-1-mporter@konsulko.com>
+ <20180227225128.17815-3-mporter@konsulko.com>
+ <20180228110038.GA6722@sirena.org.uk>
+ <20180309143548.xuajwfhiwuua7jg5@bacon.ohporter.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FeAIMMcddNRN4P4/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180309124017.GB5252@sirena.org.uk>
+In-Reply-To: <20180309143548.xuajwfhiwuua7jg5@bacon.ohporter.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Matt Porter <mporter@konsulko.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@kernel.org> [180309 12:41]:
-> On Fri, Mar 09, 2018 at 08:34:14AM +0000, Lee Jones wrote:
-> > On Thu, 08 Mar 2018, Mark Brown wrote:
-> 
-> > > Linux.  Clocks are a big issue with audio stuff, right now sections of
-> > > the clock tree get handled in the CODEC driver but we're going to want
-> > > to push them out to a clock driver so we're not reimplementing handling
-> > > for clocks.
-> 
-> > How is the CODEC controlled?  Does it have its own registers?  I guess
-> > by "it's not a separate device or IP" you mean that it doesn't.  But
-> > that begs the question, how does this then device differ from all the
-> > other devices (adc, battery, charger, regulator, rtc, pwrbutton,
-> > usb-phy and led)?
-> 
-> I'm not convinced that this is a particularly good idea for the other
-> functions but anyway...  the big thing here is that in these devices the
-> CODEC is generally not the level that the IP is created at, it's a
-> collection of interlinked IPs which usually includes not only audio
-> stuff but also some clocking stuff.  The repeatable blocks that could
-> get reused independently are generally a level down from the CODEC
-> level, for example if you look at something like wm8994 there's a couple
-> of identical FLL IPs which could make sense to enumerate individually in
-> the DT.  The top level generally doesn't get reused and is purely an
-> encoding of what Linux is currently doing.
 
-It seems that most of the components in the PMICs are just standard
-components packed into the PMIC with a control interface provided
-over I2C or SPI.
+--FeAIMMcddNRN4P4/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So using compatible for things like ADC, RTC and so on makes sense
-if eventually figure out which ones are shared across various
-drivers.
+On Fri, Mar 09, 2018 at 09:35:48AM -0500, Matt Porter wrote:
+> On Wed, Feb 28, 2018 at 11:00:38AM +0000, Mark Brown wrote:
+> > On Tue, Feb 27, 2018 at 05:51:28PM -0500, Matt Porter wrote:
 
-Sounds like audio is a bit more fuzzy like Mark describes above.
-And by not using a compatible for audio we can have things working
-while not establishing and ABI for something that might change
-in the future.
+> > > +static struct snd_kcontrol_new tda7419_controls[] = {
+> > > +SOC_ENUM("Main Source Select", soc_enum_main_src_sel),
 
-Regards,
+> > Should this be a DAPM route?
 
-Tony
+> Ultimately yes. I initially took the path of ignoring DAPM support in
+> interests of getting some clean done. Is it ok to merge DAPM support
+> later or do you prefer just having it in the intitial driver? For
+> routes, it'll include Main/Second source selects, the Rear Source
+> switch, and Mix enable at least.
+
+You definitely shouldn't be implementing things that should be in DAPM
+as non-DAPM controls.
+
+> > > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_SUB_REG, 0xe0);
+
+> > This looks like it's setting default volumes - just leave those at the
+> > chip defaults and let userspace handle setting them, what works for one
+> > board may be totally inappropriate on another board and using the chip
+> > default means we've got some fixed thing we don't need to discuss.
+
+> This is actually setting the default/cache to the first mute value due
+> to the assumption in my implementation of the tda7419-specific get/set
+> for these registers. It simplified the code a bit to have these
+> initialized like this. e.g. for the attenuator group of registers,
+> x11xxxxx are all mute values, so 0xe0 is setting these regs to that
+> first mute value to simplify things. I'll take another look at
+> eliminating this. As it is, it does not change the fact that the actual
+> reset value of 0xff is also mute from a user POV.
+
+If it is useful it definitely needs a comment explaining what's
+happening and that there's no practical change to the configuration.  It
+would be nicer to be robust against the device getting a wider range of
+values in the register but that seems plausible.
+
+--FeAIMMcddNRN4P4/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqiqEcACgkQJNaLcl1U
+h9DjSwf/QqqpF+vmYV6qsaB0YjTlO0Nh5EAkOzubnQ8tIVazX3xRgK40/kbW+jyI
+7beYEg+CO4znTEZGClm121f1oeWUDc+cZCnPsCBcIDzhUsbgPdJRMIq3Rp/3Cv6a
+6DYqlhjs49h0tHu6OEXvC9rWWdSaNSePF6OQu7S73QpTJ/IMv5KFe3d+3A/nUXLs
+5iyUraQBY1PkC7RdHbUSqHL3iTAzj3oGP9BmL9F50JmbE2ksjmgdIBj8g1Y+yjaP
+AG4n5ZBJdDURjO0GyGADSxqTVX7Crj9mClrj9ZEJ6gncLnETmEk5a74MjmRoOeNd
+/TBQW6/5doDKnhxI9abhGelsvZrG5g==
+=sf3B
+-----END PGP SIGNATURE-----
+
+--FeAIMMcddNRN4P4/--
