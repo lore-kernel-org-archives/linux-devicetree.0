@@ -1,75 +1,74 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: bcm2835: Update docs about generic
- pinctrl bindings support
-Date: Fri, 9 Mar 2018 12:46:44 +0100 (CET)
-Message-ID: <483687035.384686.1520596004410@email.1und1.de>
-References: <5b3419be-12ca-75d7-6f5e-d3338ddd7f14@castello.eng.br>
- <1520568974-15547-1-git-send-email-matheus@castello.eng.br>
- <1520568974-15547-4-git-send-email-matheus@castello.eng.br>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/4] ARM: dts: exynos5250: Add #sound-dai-cells property
+ to hdmi device node
+Date: Fri, 09 Mar 2018 12:52:58 +0100
+Message-ID: <39965bce-a6f2-6202-5c3f-97e4446e97eb@samsung.com>
+References: <CGME20180307172723epcas1p1b8879bb555737cab7406a172b7d13a56@epcas1p1.samsung.com>
+        <20180307172711.15697-1-s.nawrocki@samsung.com>
+        <5AA1F41B.5080104@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520568974-15547-4-git-send-email-matheus@castello.eng.br>
+In-reply-to: <5AA1F41B.5080104@samsung.com>
+Content-language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, eric@anholt.net, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, krzk@kernel.org
+Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Matheus,
+Hi Inki,
 
-> Matheus Castello <matheus@castello.eng.br> hat am 9. März 2018 um 05:16 geschrieben:
+On 03/09/2018 03:40 AM, Inki Dae wrote:
+> 2018년 03월 08일 02:27에 Sylwester Nawrocki 이(가) 쓴 글:
+>> This property is required for specifying link between the HDMI IP block
+>> and the SoC's audio subsystem.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5250.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>> index 56626d1a4235..71d2ede118e3 100644
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -700,6 +700,7 @@
+>>  					"sclk_hdmiphy", "mout_hdmi";
+>>  			samsung,syscon-phandle = <&pmu_system_controller>;
+>>  			phy = <&hdmiphy>;
+>> +			#sound-dai-cells = <0>;
 > 
-> 
-> Now we have generic pin configuration and multiplexing support,
-> ahd shoud be preferred than brcm legacy one.
+> This patch adds this property to hdmi device node which is bound by HDMI driver 
+> of Exynos DRM. As we talked about this at other email thread, seems this property 
+> is required mandatorily for Odroid XU3/4 board which uses Exynos5422.
+> There may be something I'm missing so could you let me know how this property 
+> is required?
 
-i suspect this patch won't get noticed by the DT maintainer because of the wrong subject.
+It is required to properly interpret the list of DAI specified in the 'sound-dai'
+property. If a device supports only one DAI it will have #sound-dai-cells = <0>
+and the sound-dai property values in cpu<->codec link may look like this:
 
-Please try something like this:
+ cpu { ... }
+ codec {
+	 sound-dai = <&max98090>, <&hdmi>;
+ };
 
-dt-bindings: pinctrl: bcm2835-gpio: Add generic pinctrl support
+When the CODEC support more DAIs it will have #sound-dai-cells = <1> and we can
+additionally specify which DAI we exactly refer to, in this case DAI 0:
 
-Even this sounds strange to you, but this patch must be the first patch of series (1/3).
+ cpu { ... }
+ codec {
+	sound-dai = <&max98095 0>, <&hdmi>;
+ };
 
-Stefan
+More details can be found in documentation of of_parse_phandle_with_args()
+function.
 
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> index 2569866..58b4720 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> @@ -36,6 +36,25 @@ listed. In other words, a subnode that lists only a mux function implies no
->  information about any pull configuration. Similarly, a subnode that lists only
->  a pul parameter implies no information about the mux function.
->  
-> +This driver supports the generic pin multiplexing and configuration
-> +bindings. For details on each properties, you can refer to
-> +./pinctrl-bindings.txt.
-> +
-> +Required sub-node properties:
-> +  - pins
-> +  - function
-> +
-> +Optional sub-node properties:
-> +  - bias-disable
-> +  - bias-pull-up
-> +  - bias-pull-down
-> +  - output-high
-> +  - output-low
-> +
-> +Legacy pin configuration and multiplexing binding:
-> +*** (Its use is deprecated, use generic multiplexing and configuration
-> +bindings instead)
-> +
->  Required subnode-properties:
->  - brcm,pins: An array of cells. Each cell contains the ID of a pin. Valid IDs
->    are the integer GPIO IDs; 0==GPIO0, 1==GPIO1, ... 53==GPIO53.
-> -- 
-> 2.7.4
->
+The above refers to cpu/codec mapping like I2S0 -> [max9809x, hdmi], on Exynos5433
+we have I2S0 -> wm5110 and I2S1 -> hdmi.
+
+
+-- 
+Regards,
+Sylwester
