@@ -1,24 +1,21 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Mar 2018 07:48:13 -0500
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=aFH3=F7=verge.net.au=horms@kernel.org>
+Date: Fri, 9 Mar 2018 15:53:17 +0100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] dt-bindings: pwm: renesas,pwm-rcar: add bindings for
  R-Car M3N support
-Message-ID: <20180318124813.6arthsa6rpvbcquy@rob-hp-laptop>
+Message-ID: <20180309145316.umuyypzferjudymh@verge.net.au>
 References: <1520596397-4716-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <1520596397-4716-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 On Fri, Mar 09, 2018 at 08:53:17PM +0900, Yoshihiro Shimoda wrote:
 > This patch adds bindings for R-Car M3N. No driver update is needed.
 > 
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
