@@ -1,64 +1,89 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 1/9] media: vim2m: Try to schedule a m2m device run on request
- submission
-Date: Fri,  9 Mar 2018 11:09:25 +0100
-Message-ID: <20180309100933.15922-2-paul.kocialkowski@bootlin.com>
-References: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 0/9] Sunxi-Cedrus driver for the Allwinner Video Engine, using the V4L2 request API
+Date: Fri,  9 Mar 2018 11:09:24 +0100
+Message-ID: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Alexandre Courbot <acourbot@chromium.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Florent Revest <revestflo@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Icenowy Zheng <icenowy@aosc.xyz>, Sakari Ailus <sakari.ailus@linux.intel.com>, Thomas van Kleef <thomas@vitsch.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-In the most basic use scenario, where only one output and one capture
-buffers are queued and the request is submitted, there is no provision
-to try to schedule a m2m device run.
+This presents a newer version of the Sunxi-Cedrus driver, that supports
+the Video Engine found in most Allwinner SoCs, starting with the A10.
 
-This adds the appropriate call to the vim2m_request_submit so that it
-can start in that scenario.
+The first version of this driver[0] was originally written and submitted
+by Florent Revest using a previous version of the request API, that is
+necessary to provide coherency between controls and the buffers they apply
+to. The driver was since adapted to use the latest version of the request
+API[1], as submitted by Alexandre Courbot. It is a hard requirement for
+this driver.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/media/platform/vim2m.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+This series also contains fixes for issues encountered with the current
+version of the request API. If accepted, these should eventually be
+squashed into the request API series.
 
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index 02793dd9a330..578c9170083c 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -933,9 +933,20 @@ static int vim2m_request_submit(struct media_request *req,
- 				struct media_request_entity_data *_data)
- {
- 	struct v4l2_request_entity_data *data;
-+	struct vim2m_ctx *ctx;
-+	int rc;
- 
- 	data = to_v4l2_entity_data(_data);
--	return vb2_request_submit(data);
-+
-+	ctx = container_of(_data->entity, struct vim2m_ctx, req_entity.base);
-+
-+	rc = vb2_request_submit(data);
-+	if (rc)
-+		return rc;
-+
-+	v4l2_m2m_try_schedule(ctx->fh.m2m_ctx);
-+
-+	return 0;
- }
- 
- static const struct media_request_entity_ops vim2m_request_entity_ops = {
+The driver itself currently only supports MPEG2 and more codecs will be
+added to the driver eventually. The output frames provided by the
+Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+for luminance (Y) and a plane for chrominance (UV). A specific format is
+introduced in the V4L2 API to describe it.
+
+This implementation is based on the significant work that was conducted
+by various members of the linux-sunxi community for understanding and
+documenting the Video Engine's innards.
+
+[0]: https://lkml.org/lkml/2016/8/25/246
+[1]: https://lkml.org/lkml/2018/2/19/872
+
+Florent Revest (5):
+  v4l: Add sunxi Video Engine pixel format
+  v4l: Add MPEG2 low-level decoder API control
+  media: platform: Add Sunxi Cedrus decoder driver
+  sunxi-cedrus: Add device tree binding document
+  ARM: dts: sun5i: Use video-engine node
+
+Icenowy Zheng (1):
+  ARM: dts: sun8i: add video engine support for A33
+
+Paul Kocialkowski (2):
+  media: vim2m: Try to schedule a m2m device run on request submission
+  media: videobuf2-v4l2: Copy planes when needed in request qbuf
+
+Thomas van Kleef (1):
+  ARM: dts: sun7i: Add video engine support for the A20
+
+ .../devicetree/bindings/media/sunxi-cedrus.txt     |  44 ++
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |  30 ++
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 ++
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  39 ++
+ drivers/media/common/videobuf2/videobuf2-v4l2.c    |  19 +
+ drivers/media/platform/Kconfig                     |  14 +
+ drivers/media/platform/Makefile                    |   1 +
+ drivers/media/platform/sunxi-cedrus/Makefile       |   4 +
+ drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c | 313 ++++++++++++
+ .../platform/sunxi-cedrus/sunxi_cedrus_common.h    | 106 ++++
+ .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.c | 568 +++++++++++++++++++++
+ .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.h |  33 ++
+ .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.c  | 185 +++++++
+ .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.h  |  36 ++
+ .../platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c     | 152 ++++++
+ .../platform/sunxi-cedrus/sunxi_cedrus_regs.h      | 170 ++++++
+ drivers/media/platform/vim2m.c                     |  13 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  15 +
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
+ include/uapi/linux/v4l2-controls.h                 |  26 +
+ include/uapi/linux/videodev2.h                     |   6 +
+ 21 files changed, 1821 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+ create mode 100644 drivers/media/platform/sunxi-cedrus/Makefile
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_common.h
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_dec.c
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_dec.h
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_hw.c
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_hw.h
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c
+ create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_regs.h
+
 -- 
 2.16.2
