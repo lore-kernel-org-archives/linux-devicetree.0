@@ -1,48 +1,41 @@
-Return-Path: <SRS0=eYkg=F3=linaro.org=loic.poulain@kernel.org>
+Return-Path: <SRS0=oSLL=F7=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Fri, 9 Mar 2018 09:34:18 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 10/12] dt-bindings: connector: add properties for
+ typec power delivery
+Message-ID: <20180309073418.GF21904@kuha.fi.intel.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+ <CGME20180226120532epcas5p3c4b0258ec0677939f4241b24da5f48bc@epcas5p3.samsung.com>
+ <1519645759-12701-11-git-send-email-jun.li@nxp.com>
+ <20522804-65ab-5d48-716a-c199e4c095fc@samsung.com>
+ <VI1PR0402MB39175D757B94FB52CB5A09F889DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <133b5194-26ff-071a-d3d1-2bfca1375cae@samsung.com>
+ <VI1PR0402MB3917B47072CEC815AB6AE06A89D90@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180306120202.GA4951@kuha.fi.intel.com>
+ <VI1PR0402MB3917083C9CEAA9418D37C80F89DF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <524739BF-BD94-4276-BDAB-31B4944D24C3@holtmann.org>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org> <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org> <395166283.280598.1520200683559@email.1und1.de>
- <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org> <1219888621.198216.1520231304685@email.1und1.de>
- <524739BF-BD94-4276-BDAB-31B4944D24C3@holtmann.org>
-From: Loic Poulain <loic.poulain@linaro.org>
-Date: Mon, 5 Mar 2018 08:55:34 +0100
-Message-ID: <CAMZdPi8ab7n0B9qYyZaJAGf4qRH8eYXcUJ=B8pyvyLWyaNVX+Q@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial slave
-Content-Type: multipart/alternative; boundary="001a113d028806bf620566a5a92b"
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Lukas Wunner <lukas@wunner.de>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, Loic Poulain <loic.poulain@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?B?RnLDqWTDqXJpYyBEYW5pcw==?= <frederic.danis.oss@gmail.com>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3917083C9CEAA9418D37C80F89DF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+To: Jun Li <jun.li@nxp.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113d028806bf620566a5a92b
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Mar 08, 2018 at 01:41:23AM +0000, Jun Li wrote:
+> > If you are asking my opinion, the data role must be handled as separate
+> > capability of the port, i.e. you probable want to have separate properties for
+> > the power role and data role, even if we did not support that yet in the class
+> > code. Don't use "port-type" name, just call them "power-role" and
+> > "data-role" from now on.
+> > 
+> 
+> OK, I will introduce power-role and data-role, meanwhile, I think the class code
+> should be changed accordingly(looks like your attached patch is doing that).
 
-> >>
-> >> that is weird since we should be either in a probe context or in
-hdev->open context and both can sleep as far as I know.
+True. I'll send the patch out now.
 
-Yes but this is an explicit warning in gpiolib based on gpio controller
-capabilities,
-not on current context (WARN_ON(desc->gdev->chip->can_sleep)).
 
-So, since we are always in process/thread context here, it seems safe to
-use the _cansleep version.
+Thanks,
 
-Regards,
-Loic
-
---001a113d028806bf620566a5a92b
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">&gt; &gt;&gt;<br>&gt; &gt;&gt; that is weird since we shou=
-ld be either in a probe context or in hdev-&gt;open context and both can sl=
-eep as far as I know.<br><br>Yes but this is an explicit warning in gpiolib=
- based on gpio controller capabilities,<br>not on current context (WARN_ON(=
-desc-&gt;gdev-&gt;chip-&gt;can_sleep)).<br><br>So, since we are always in p=
-rocess/thread context here, it seems safe to use the _cansleep version.<br>=
-<br>Regards,<br>Loic<br></div>
-
---001a113d028806bf620566a5a92b--
+-- 
+heikki
