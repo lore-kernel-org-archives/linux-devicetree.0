@@ -1,9 +1,11 @@
 From: Maciej Purski <m.purski@samsung.com>
 Subject: [PATCH v6 1/6] regulator: core: Make locks re-entrant
-Date: Fri, 09 Mar 2018 13:19:06 +0100
-Message-ID: <1520597946-11579-1-git-send-email-m.purski@samsung.com>
-References: <CGME20180309121911eucas1p2e096c2f5aed2afd79718b4a52e402b0f@eucas1p2.samsung.com>
+Date: Fri, 09 Mar 2018 13:22:03 +0100
+Message-ID: <1520598128-11768-2-git-send-email-m.purski@samsung.com>
+References: <1520598128-11768-1-git-send-email-m.purski@samsung.com>
+        <CGME20180309122232eucas1p25be5fce6159682ef27cf7aec8c81e539@eucas1p2.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1520598128-11768-1-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Mark Brown <broonie@kernel.org>, Fabio Estevam <festevam@gmail.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
