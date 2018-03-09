@@ -1,76 +1,79 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] dt-bindings: display: bridge: Document THC63LVD1024
- LVDS decoder
-Date: Fri, 9 Mar 2018 10:22:39 +0100
-Message-ID: <CAMuHMdUaOjJekCK5b1n3vYAt-ZkRvTcu=G9eADhC4+0AD7UD6Q@mail.gmail.com>
-References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
- <1520522643-11756-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVQqp7YcoQ6eN5pSznZB4zn7ztv1WFfkcQOzP_3DhG_Vg@mail.gmail.com>
- <20180309090422.GD14819@w540>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
+Date: Fri, 09 Mar 2018 10:27:12 +0100
+Message-ID: <1520587632.19507.3.camel@pengutronix.de>
+References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+         <20180308161135.1f3d3d18@karo-electronics.de>
+         <20180308153832.GA28454@botnar.kaiser.cx>
+         <20180309093738.7cd5fded@karo-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180309090422.GD14819@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309093738.7cd5fded@karo-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Martin Kaiser <martin@kaiser.cx>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gRnJpLCBNYXIgOSwgMjAxOCBhdCAxMDowNCBBTSwgamFjb3BvIG1vbmRp
-IDxqYWNvcG9Aam1vbmRpLm9yZz4gd3JvdGU6Cj4gT24gRnJpLCBNYXIgMDksIDIwMTggYXQgMDk6
-MTA6NTVBTSArMDEwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBPbiBUaHUsIE1hciA4
-LCAyMDE4IGF0IDQ6MjQgUE0sIEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9y
-Zz4gd3JvdGU6Cj4+ID4gRG9jdW1lbnQgVGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlci4K
-Pj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1v
-bmRpLm9yZz4KPj4KPj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQo+Pgo+PiA+IC0tLSAvZGV2L251
-bGwKPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+PiA+IEBAIC0wLDAgKzEsNTkgQEAKPj4gPiAr
-VEhpbmUgRWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgcmVjZWl2ZXIKPj4KPj4gVGhpbmUK
-Pj4KPj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4g
-PiArCj4+ID4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYW4gTFZEUyByZWNlaXZlciBkZXNpZ25lZCB0
-byBjb252ZXJ0IG11bHRpcGxlIExWRFMgc3RyZWFtcwo+PiA+ICt0byBkaWdpdGFsIENNT1MvVFRM
-IHBhcmFsbGVsIGRhdGEuCj4+ID4gKwo+PiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+ICst
-IGNvbXBhdGlibGU6IFNoYWxsIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgo+PiA+ICsgICJ0aGlu
-ZSx0aGM2M2x2ZDEwMjQiLAo+PiA+ICsgICJsdmRzLWRlY29kZXIiCj4+Cj4+IFdoYXQncyB0aGUg
-cHVycG9zZSBvZiB0aGUgc2Vjb25kIGNvbXBhdGlibGUgdmFsdWU/Cj4+IFdoZW4gc2hvdWxkIGl0
-IGJlIHVzZWQ/Cj4KPiBJdCBpcyBwcm9iYWJseSBteSBiYWQgaGF2aW5nIHN0YXJ0ZWQgd2l0aCBh
-IGdlbmVyaWMgTFZEUyBkZWNvZGVyIGluCj4gbWluZCBhbmQgaGF2aW5nIHRoZW4gYWRkZWQgcHJv
-cGVydGllcyBzcGVjaWZpYyB0byBUSEM2M0xWRDEwMjQgdG8gdGhlCj4gZHJpdmVyIGFuZCBpdHMg
-YmluZGluZ3MuCj4KPiAibHZkcyxkZWNvZGVyIiBjYW4gYmUgdXNlZCB3aGVuIHRoZSBjaGlwIGlz
-IGNvbXBsZXRlbHkgdHJhbnNwYXJlbnQgdG8KPiB0aGUgU29DIGFuZCBub25lIG9mIHRoZSBvcHRp
-b25hbCBwcm9wZXJ0aWVzIEkgaGF2ZSBkZXNjcmliZWQgaW4gdGhlCj4gYmluZGluZ3MgYXJlIHNw
-ZWNpZmllZCAoYSBnZW5lcmljICJwb3dlci1ncGlvcyIgYXBhcnQsIHNlZSBBbmRyemVqCj4gY29t
-bWVudHMgb24gInB3ZG4tZ3Bpb3MiIHByb3BlcnR5KS4KPgo+IEFsc28sIEkgc2hvdWxkIG1ha2Ug
-dGhlIGRyaXZlciBiZWhhdmlvciBkZXBlbmQgb24gdGhlIG1hdGNoZWQgY29tcGF0aWJsZQo+IHN0
-cmluZy4gV2hlbiAibHZkcy1kZWNvZGVyIiBpcyBtYXRjaGVkLCBpdCB3aWxsIGp1c3QgbG9vayBm
-b3IgYW4KPiBvcHRpb25hbCBwb3dlciBkb3duIGdwaW8sIHdoZW4gInRoYzYzbHZkMTAyNCIgaXMg
-bWF0Y2hlZCwgYWxsIG9mIGl0cwo+IFZjYyBzdXBwbGllcywgcHdkbiBncGlvIGFuZCBvZSBncGlv
-cyB3aWxsIGJlIHF1ZXJpZWQgYW5kLCBpZiBwcmVzZW50LAo+IGV2ZW50dWFsbHkgdXNlZCBpbiBl
-bmFibGUvZGlzYWJsZSByb3V0aW5lcy4KPgo+IEknbSBqdXN0IG5vdCBzdXJlIGhvdyB0byBkZXNj
-cmliZSB0aGF0IGluIGJpbmRpbmdzLiBXb3VsZCBzb21ldGhpbmcKPiBsaWtlIHRoZSBmb2xsb3dp
-bmcgd29yaz8KPgo+IE9wdGlvbmFsIHByb3BlcnRpZXMgZm9yICJsdmRzLGRlY29kZXIiCgoibHZk
-cy1kZWNvZGVyIj8KCj4gLSBwb3dlci1ncGlvczogUG93ZXIgY29udHJvbCBHUElPcwo+Cj4gT3B0
-aW9uYWwgcHJvcGVydGllcyBmb3IgInRoaW5lLHRoYzYzbHZkMTAyNCIKPiAtIHB3ZG4tZ3Bpb3M6
-IC4uLgo+IC0gb2UtZ3Bpb3M6IC4uLgo+IC0gc3VwcGx5LXZjYzogLi4uCj4gLSBzdXBwbHktY3Zj
-YzogLi4uCj4gLSBzdXBwbHktcHZjYzogLi4uCj4gLSBzdXBwbHktbHZjYzogLi4uCgpTb3VuZHMg
-bGlrZSB5b3UgbmVlZCBhIChzZXBhcmF0ZSkgZ2VuZXJpYyBsdmRzLWRlY29kZXIgRFQgYmluZGlu
-Z3MgZG9jdW1lbnQsCndoaWNoIHlvdSBjYW4gZXh0ZW5kL3JlZmVyIHRvIGZyb20gdGhlIFRIQzYz
-TFZEMTAyNC1zcGVjaWZpYyBiaW5kaW5ncy4KCkdye29ldGplLGVldGluZ31zLAoKICAgICAgICAg
-ICAgICAgICAgICAgICAgR2VlcnQKCi0tCkdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxv
-dHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcKCkluIHBlcnNv
-bmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEg
-aGFja2VyLiBCdXQKd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJw
-cm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0LgogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+Hi Lothar,
+
+Am Freitag, den 09.03.2018, 09:37 +0100 schrieb Lothar Waßmann:
+> Hi,
+> 
+> On Thu, 8 Mar 2018 16:38:32 +0100 Martin Kaiser wrote:
+> > Hi Lothar,
+> > 
+> > > > Thus wrote Lothar Waßmann (LW@KARO-electronics.de):
+> > 
+> > > > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> > > > index 9725705..cf70df2 100644
+> > > > --- a/arch/arm/boot/dts/imx25.dtsi
+> > > > +++ b/arch/arm/boot/dts/imx25.dtsi
+> > > > @@ -269,6 +269,7 @@
+> > > > > > > >  				dmas = <&sdma 24 1 0>,
+> > > > > > > >  				       <&sdma 25 1 0>;
+> > > > > > > >  				dma-names = "rx", "tx";
+> > > > > > > > +				fsl,fifo-depth = <15>;
+> > > > > > > >  				status = "disabled";
+> > > > > > > >  			};
+> > > > @@ -329,6 +330,7 @@
+> > > > > > > >  				dmas = <&sdma 28 1 0>,
+> > > > > > > >  				       <&sdma 29 1 0>;
+> > > > > > > >  				dma-names = "rx", "tx";
+> > > > > > > > +				fsl,fifo-depth = <15>;
+> > > > > > > >  				status = "disabled";
+> > > >  			};
+> > > You are changing the global .dtsi file. Did you test this change with
+> > > all devices that are affected by it?
+> > 
+> > I changed the hardware description of the imx25 SSI to match the
+> > reference manual.
+> > 
+> > I did test this change on an imx25 board with audio playback. This uses
+> > the SSI description I modified. I verified that the driver is actually
+> > taking the modified setting into account and that this causes no
+> > problems.
+> > 
+> > As of today, this setting is used by the fsl_ssi driver to set the fifo
+> > water level for dma requests.
+> > 
+> > Of course, I don't have access to the enitre range of supported imx25
+> > boards and I don't think this is required for submitting patches.
+> > 
+> > Do you have any indication why this patch should not be merged?
+> > 
+> 
+> Usually patches should not willy-nilly change the behaviour of existing
+> configurations unless they fix any real life bugs.
+
+With this logic we wouldn't be able to get most driver changes applied.
+If it is matching the reference manual and has been tested on the
+affected hardware it should be good to go.
+
+If you know about any specific corner cases that might break with this
+change, please speak up now. Don't reject patches based on the
+overarching "it might break something" argument.
+
+Regards,
+Lucas
