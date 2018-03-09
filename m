@@ -1,67 +1,58 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
- Tegra210
-Date: Fri, 9 Mar 2018 10:14:38 +0200
-Message-ID: <20180309081438.GO6190@tbergstrom-lnx.Nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
- <b7a25613-44b4-5e63-e8c7-91ce2b7cb56e@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec support
+Date: Fri, 9 Mar 2018 08:34:14 +0000
+Message-ID: <20180309083414.s57eq3kw325magwz@dell>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
+ <20180307163211.rytfli5tb47yhtug@dell>
+ <20180308094652.qg4atjw5c3hayaz3@earth.universe>
+ <20180308095315.mpcmx2ob6yhsnrm6@dell>
+ <20180308102757.jyi7uo566n6nuct5@earth.universe>
+ <20180308104831.fflq2arj5dxgntia@dell>
+ <20180308112528.GC6019@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b7a25613-44b4-5e63-e8c7-91ce2b7cb56e@nvidia.com>
+In-Reply-To: <20180308112528.GC6019@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2018 at 11:25:04PM +0000, Jon Hunter wrote:
-> 
-> On 06/02/18 16:34, Peter De Schrijver wrote:
-> > Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
-> > support in this driver. Also allow for the case where the CPU voltage is
-> > controlled directly by the DFLL rather than by a separate regulator object.
-> > 
-> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> > ---
-> >  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-> > index 4353025..f8e01a8 100644
-> > --- a/drivers/cpufreq/tegra124-cpufreq.c
-> > +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> > @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
-> >  {
-> >  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
-> >  	clk_disable_unprepare(priv->dfll_clk);
-> > -	regulator_sync_voltage(priv->vdd_cpu_reg);
-> > +	if (priv->vdd_cpu_reg)
-> > +		regulator_sync_voltage(priv->vdd_cpu_reg);
-> >  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
-> >  }
-> >  
-> > @@ -89,10 +90,10 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
-> >  		return -ENODEV;
-> >  
-> >  	priv->vdd_cpu_reg = regulator_get(cpu_dev, "vdd-cpu");
-> > -	if (IS_ERR(priv->vdd_cpu_reg)) {
-> > -		ret = PTR_ERR(priv->vdd_cpu_reg);
-> > -		goto out_put_np;
-> > -	}
-> > +	if (IS_ERR(priv->vdd_cpu_reg) != -EPROBE_DEFER)
-> > +		priv->vdd_cpu_reg = NULL;
-> > +	else
-> > +		return -EPROBE_DEFER;
-> 
-> I am still not sure that we should rely on the fact that the regulator
-> is not present in DT to imply that we do not need it. I think that we
-> should be checking if we are using I2C mode here.
-> 
+On Thu, 08 Mar 2018, Mark Brown wrote:
 
-The cpufreq driver doesn't know this however. Also the current approach of
-setting the same voltage when switching to pll_x is incorrect. The CVB
-tables when using pll_x include more margin than when using the DFLL.
+> On Thu, Mar 08, 2018 at 10:48:31AM +0000, Lee Jones wrote:
+> > On Thu, 08 Mar 2018, Sebastian Reichel wrote:
+> 
+> > > I had it in PATCHv1-PATCHv4. It was removed, since Mark didn't want
+> > > to have it in the DT ABI.
+> 
+> > Right, but why?  Is it not a hardware device?  I think converting from
+> > devm_of_platform_populate() for one sub-device is a bit drastic.
+> 
+> It's not a separate physical device or IP and doesn't exist outside of
+> the MFD, it's just how Linux is currently choosing to divide up the chip
+> right now but that's totally open to change even in future versions of
+> Linux.  Clocks are a big issue with audio stuff, right now sections of
+> the clock tree get handled in the CODEC driver but we're going to want
+> to push them out to a clock driver so we're not reimplementing handling
+> for clocks.
 
-Peter.
+How is the CODEC controlled?  Does it have its own registers?  I guess
+by "it's not a separate device or IP" you mean that it doesn't.  But
+that begs the question, how does this then device differ from all the
+other devices (adc, battery, charger, regulator, rtc, pwrbutton,
+usb-phy and led)?
+
+I'm asking, not to be awkward, but to avoid 50 lines of potentially
+unnecessary static code.  If this is a real (sub-)device, even if it's
+part of a larger, single device (MFD) then there is no reason why it
+can't be represented as a single, albeit empty node.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
