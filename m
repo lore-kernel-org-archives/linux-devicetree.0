@@ -1,28 +1,67 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v5 0/2] clocksource/drivers/npcm: Add NPCM7xx timer driver
-Date: Fri, 9 Mar 2018 14:25:23 +0100
-Message-ID: <e4e32ab8-bdaa-b4ee-a538-a1f03ddcaef3@linaro.org>
-References: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 1/3] dt-bindings: nvmem: add binding for Raspberry Pi OTP
+Date: Fri,  9 Mar 2018 14:32:06 +0100
+Message-ID: <1520602328-28972-2-git-send-email-stefan.wahren@i2se.com>
+References: <1520602328-28972-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520522698-16153-1-git-send-email-tmaimon77@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1520602328-28972-1-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Phil Elwell <phil@raspberrypi.org>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the devicetree binding for Raspberry Pi customer OTP
+driver.
 
-Applied, thanks.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../nvmem/raspberrypi,bcm2835-customer-otp.txt     | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
 
-  -- Daniel
-
-
+diff --git a/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
+new file mode 100644
+index 0000000..3f57744
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
+@@ -0,0 +1,27 @@
++Customer OTP Memory for Raspberry Pi
++
++The VC4 firmware exposes a mailbox interface that allows the ARM core
++to access the customer part of the OTP memory.
++
++The OTP node must be a child node of the Raspberry Pi firmware node.
++
++Required properties :
++- compatible     : Should be "raspberrypi,bcm2835-customer-otp"
++- #address-cells : Should be 1
++- #size-cells    : Should be 1
++
++See nvmem.txt for more information.
++
++Example:
++
++firmware: firmware-rpi {
++	compatible = "raspberrypi,bcm2835-firmware";
++	mboxes = <&mailbox>;
++
++	customer_otp: otp {
++		compatible = "raspberrypi,bcm2835-customer-otp";
++		firmware = <&firmware>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++};
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
