@@ -1,213 +1,177 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: Add Gateworks System Controller
- bindings
-Date: Fri, 9 Mar 2018 17:14:33 -0600
-Message-ID: <20180309231433.tmlfy6vwbkvopmwd@rob-hp-laptop>
-References: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
- <1520287361-12569-2-git-send-email-tharvey@gateworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v4 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
+Date: Fri,  9 Mar 2018 16:25:35 -0700
+Message-ID: <20180309232543.24636-3-ilina@codeaurora.org>
+References: <20180309232543.24636-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520287361-12569-2-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <20180309232543.24636-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 02:02:38PM -0800, Tim Harvey wrote:
-> This patch adds documentation of device-tree bindings for the
-> Gateworks System Controller (GSC).
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  Documentation/devicetree/bindings/mfd/gsc.txt | 159 ++++++++++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/gsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/gsc.txt b/Documentation/devicetree/bindings/mfd/gsc.txt
-> new file mode 100644
-> index 0000000..fe5d114
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/gsc.txt
-> @@ -0,0 +1,159 @@
-> +Gateworks System Controller multi-function device
-> +
-> +The GSC is a Multifunction I2C slave device with the following submodules:
-> +- WDT
-> +- GPIO
-> +- Pushbutton controller
-> +- HWMON
-> +
-> +Required properties:
-> +- compatible : Must be "gw,gsc_v1", "gw,gsc_v2", "gw,gsc_v3"
+Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+driver. The driver is used for communicating resource state requests for
+shared resources.
 
-s/_/-/
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
 
-> +- reg: I2C address of the device
-> +- interrupts: interrupt triggered by GSC_IRQ# signal
-> +- interrupt-parent: Interrupt controller GSC is connected to
-> +- #interrupt-cells: should be <1>, index of the interrupt within the
-> +  controller, in accordance with the "one cell" variant of
-> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
-> +
-> +Optional nodes:
-> +* watchdog:
-> +The GSC provides a Watchdog monitor which can power cycle the board's
-> +primary power supply on most board models when tripped.
-> +
-> +Required properties:
-> +- compatible: must be "gw,gsc-watchdog"
-> +
-> +* input:
-> +The GSC provides an input device capable of dispatching Linux Input events
+Changes in v3:
+	- Move to soc/qcom
+	- Amend text per Stephen's suggestions
 
-Linux details that are not relevant to the binding.
+Changes in v2:
+	- Amend text to describe the registers in reg property
+	- Add reg-names for the registers
+	- Update examples to use GIC_SPI in interrupts instead of 0
+	- Rephrase incorrect description
 
-> +for user pushbutton events, tamper switch events, etc.
-> +
-> +Required properties:
-> +- compatible: must be "gw,gsc-input"
-> +
-> +* hwmon:
-> +The GSC provides a set of Analog to Digitcal Converter (ADC) pins used for
-> +temperature and/or voltage monitoring.
-> +
-> +Required properties:
-> +- compatible: must be "gw,gsc-hwmon"
-> +
-> +Example:
-> +
-> +	gsc: gsc@20 {
-> +		compatible = "gw,gsc_v2";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <4 GPIO_ACTIVE_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +
-> +		gsc_input {
+Changes in v3:
+	- Fix unwanted capitalization
+	- Remove clients from the examples, this doc does not describe
+	  them
+	- Rephrase introductory paragraph
+	- Remove hardware specifics from DT bindings
+---
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 127 +++++++++++++++++++++
+ 1 file changed, 127 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
 
-input {
-
-> +			compatible = "gw,gsc-input";
-> +		};
-> +
-> +		gsc_watchdog {
-
-watchdog {
-
-> +			compatible = "gw,gsc-watchdog";
-> +		};
-> +
-> +		gsc_hwmon {
-
-hwmon {
-
-> +			compatible = "gw,gsc-hwmon";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			hwmon@0 { /* A0: Board Temperature */
-> +				type = <0>;
-
-Not documented.
-
-> +				reg = <0x00>;
-> +				label = "temp";
-> +			};
-> +
-> +			hwmon@1 { /* A1: Input Voltage */
-> +				type = <1>;
-> +				reg = <0x02>;
-> +				label = "Vin";
-> +			};
-> +
-> +			hwmon@2 { /* A2: 5P0 */
-> +				type = <1>;
-> +				reg = <0x0b>;
-> +				label = "5P0";
-> +			};
-> +
-> +			hwmon@4 { /* A4: 0-5V input */
-> +				type = <1>;
-> +				reg = <0x14>;
-> +				label = "ANL0";
-> +			};
-> +
-> +			hwmon@5 { /* A5: 2P5 PCIe/GigE */
-> +				type = <1>;
-> +				reg = <0x23>;
-> +				label = "2P5";
-> +			};
-> +
-> +			hwmon@6 { /* A6: 1P8 Aud/Vid */
-> +				type = <1>;
-> +				reg = <0x1d>;
-> +				label = "1P8";
-> +			};
-> +
-> +			hwmon@7 { /* A7: GPS */
-> +				type = <1>;
-> +				reg = <0x26>;
-> +				label = "GPS";
-> +			};
-> +
-> +			hwmon@12 { /* A12: VDD_CORE */
-> +				type = <1>;
-> +				reg = <0x3>;
-> +				label = "VDD_CORE";
-> +			};
-> +
-> +			hwmon@13 { /* A13: VDD_SOC */
-> +				type = <1>;
-> +				reg = <0x11>;
-> +				label = "VDD_SOC";
-> +			};
-> +
-> +			hwmon@14 { /* A14: 1P0 PCIe SW */
-> +				type = <1>;
-> +				reg = <0x20>;
-> +				label = "1P0";
-> +			};
-> +
-> +			hwmon@15 { /* fan0 */
-> +				type = <2>;
-> +				reg = <0x2c>;
-> +				label = "fan_50p";
-> +			};
-> +
-> +			hwmon@16 { /* fan1 */
-> +				type = <2>;
-> +				reg = <0x2e>;
-> +				label = "fan_60p";
-> +			};
-> +
-> +			hwmon@17 { /* fan2 */
-> +				type = <2>;
-> +				reg = <0x30>;
-> +				label = "fan_70p";
-> +			};
-> +
-> +			hwmon@18 { /* fan3 */
-> +				type = <2>;
-> +				reg = <0x32>;
-> +				label = "fan_80p";
-> +			};
-> +
-> +			hwmon@19 { /* fan4 */
-> +				type = <2>;
-> +				reg = <0x34>;
-> +				label = "fan_90p";
-> +			};
-> +
-> +			hwmon@20 { /* fan5 */
-> +				type = <2>;
-> +				reg = <0x36>;
-> +				label = "fan_100p";
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+new file mode 100644
+index 000000000000..dcf71a5b302f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+@@ -0,0 +1,127 @@
++RPMH RSC:
++------------
++
++Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
++the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
++can be written to the Trigger Command Set (TCS)  registers and using a (addr,
++val) pair and triggered. Messages in the TCS are then sent in sequence over an
++internal bus.
++
++The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
++(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
++active/wake resource requests. Multiple such DRVs can exist in a SoC and can
++be written to from Linux. The structure of each DRV follows the same template
++with a few variations that are captured by the properties here.
++
++A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
++have powered off to facilitate idle power saving. TCS could be classified as -
++
++	SLEEP,  /* Triggered by F/W */
++	WAKE,   /* Triggered by F/W */
++	ACTIVE, /* Triggered by Linux */
++	CONTROL /* Triggered by F/W */
++
++The order in which they are described in the DT, should match the hardware
++configuration.
++
++Requests can be made for the state of a resource, when the subsystem is active
++or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
++will be an aggregate of the sleep votes from each of those subsystems. Clients
++may request a sleep value for their shared resources in addition to the active
++mode requests.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,rpmh-rsc".
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The first register specifies the base address of the DRV.
++	            The second register specifies the start address of the
++	            TCS.
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: Maps the register specified in the reg property. Must be
++	            "drv" and "tcs".
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-interrupt>
++	Definition: The interrupt that trips when a message complete/response
++	           is received for this DRV from the accelerators.
++
++- qcom,drv-id:
++	Usage: required
++	Value type: <u32>
++	Definition: the id of the DRV in the RSC block.
++
++- qcom,tcs-config:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the tuple defining the configuration of TCS.
++	            Must have 2 cells which describe each TCS type.
++	            <type number_of_tcs>.
++	            The order of the TCS must match the hardware
++	            configuration.
++	- Cell #1 (TCS Type): TCS types to be specified -
++	            SLEEP_TCS
++	            WAKE_TCS
++	            ACTIVE_TCS
++	            CONTROL_TCS
++	- Cell #2 (Number of TCS): <u32>
++
++- label:
++	Usage: optional
++	Value type: <string>
++	Definition: Name for the RSC. The name would be used in trace logs.
++
++Drivers that want to use the RSC to communicate with RPMH must specify their
++bindings as child of the RSC controllers they wish to communicate with.
++
++Example 1:
++
++For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
++register offsets for DRV2 start at 0D00, the register calculations are like
++this -
++First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
++Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
++
++	apps_rsc: rsc@179e000 {
++		label = "apps_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
++		reg-names = "drv", "tcs";
++		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <2>;
++		qcom,tcs-config = <SLEEP_TCS   3>,
++				  <WAKE_TCS    3>,
++				  <ACTIVE_TCS  2>,
++				  <CONTROL_TCS 1>;
++	};
++
++Example 2:
++
++For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
++register offsets for DRV0 start at 01C00, the register calculations are like
++this -
++First tuple: 0xAF20000
++Second tuple: 0xAF20000 + 0x1C00 = 0xAF21C00
++
++	disp_rsc: rsc@af20000 {
++		label = "disp_rsc";
++		compatible = "qcom,rpmh-rsc";
++		reg = <0xaf20000 0x10000>, <0xaf21c00 0x3000>;
++		reg-names = "drv", "tcs";
++		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
++		qcom,drv-id = <0>;
++		qcom,tcs-config = <SLEEP_TCS   1>,
++				  <WAKE_TCS    1>,
++				  <ACTIVE_TCS  0>,
++				  <CONTROL_TCS 0>;
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
