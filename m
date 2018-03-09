@@ -1,145 +1,76 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH 1/6] reset: qcom: AOSS (Always on subsystem) reset
- controller
-Date: Fri, 9 Mar 2018 20:25:24 +0530
-Message-ID: <519c6298-0619-d98e-6c45-c70936af93c3@codeaurora.org>
-References: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
- <1520243613-30393-2-git-send-email-sibis@codeaurora.org>
- <20180307213514.4sv7ucxo25jpomz3@rob-hp-laptop>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH v4 1/8] SOC: brcmstb: add memory API
+Date: Fri, 9 Mar 2018 15:07:27 +0000
+Message-ID: <20180309150727.GH24558@saruman>
+References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
+ <1516058925-46522-2-git-send-email-jim2101024@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PW0Eas8rCkcu1VkF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307213514.4sv7ucxo25jpomz3@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1516058925-46522-2-git-send-email-jim2101024@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review, will add the changes in v3 of the patch series
 
-On 03/08/2018 03:05 AM, Rob Herring wrote:
-> On Mon, Mar 05, 2018 at 03:23:28PM +0530, sibis wrote:
->> Add reset controller driver for Qualcomm SDM845 SoC to
->> control reset signals provided by AOSS for Modem, Venus
->> ADSP, GPU, Camera, Wireless, Display subsystem
->>
->> Signed-off-by: sibis <sibis@codeaurora.org>
-> 
-> Need a full name here.
-> 
+--PW0Eas8rCkcu1VkF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will correct it
+On Mon, Jan 15, 2018 at 06:28:38PM -0500, Jim Quinlan wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+>=20
+> This commit adds a memory API suitable for ascertaining the sizes of
+> each of the N memory controllers in a Broadcom STB chip.  Its first
+> user will be the Broadcom STB PCIe root complex driver, which needs
+> to know these sizes to properly set up DMA mappings for inbound
+> regions.
+>=20
+> We cannot use memblock here or anything like what Linux provides
+> because it collapses adjacent regions within a larger block, and here
+> we actually need per-memory controller addresses and sizes, which is
+> why we resort to manual DT parsing.
+>=20
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>=20
+> Conflicts:
+> 	drivers/soc/bcm/brcmstb/Makefile
 
->> ---
->>   .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 ++++++++
-> 
-> Separate patch for bindings (with the header) please.
-> 
+That can go.
 
-Will make a separate patch
+> +++ b/drivers/soc/bcm/brcmstb/memory.c
+=2E..
+> +/* Macro to help extract property data */
+> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(*(u32*)(b + offs)))
 
->>   drivers/reset/Kconfig                              |  10 ++
->>   drivers/reset/Makefile                             |   1 +
->>   drivers/reset/reset-qcom-aoss.c                    | 151 +++++++++++++++++++++
->>   include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
->>   5 files changed, 233 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->>   create mode 100644 drivers/reset/reset-qcom-aoss.c
->>   create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
->>
->> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> new file mode 100644
->> index 0000000..5318e14
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> @@ -0,0 +1,54 @@
->> +Qualcomm AOSS Reset Controller
->> +======================================
->> +
->> +This binding describes a reset-controller found on AOSS (Always on SubSysem)
->> +for Qualcomm SDM845 SoCs.
->> +
->> +Required properties:
->> +- compatible:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: must be:
->> +		    "qcom,aoss-reset-sdm845", "syscon"
-> 
-> Someone in QCom needs to go fix the order of all your downstream
-> compatibles or review your bindings before sending upstream. The
-> standard ordering is <vendor>,<soc>-<block>.
->
+Checkpatch complains about missing whitespace after u32.
 
-Will correct it.
+Cheers
+James
 
-> Why syscon? The description is this is just a reset controller.
->
+--PW0Eas8rCkcu1VkF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-syscon was needed in the compatible list due to using
-syscon_node_to_regmap in the reset driver but I guess
-since it is just a reset controller the correct thing to do
-be ioremap the reg space and do devm_regmap_init_mmio on it.
-Will remove syscon.
+-----BEGIN PGP SIGNATURE-----
 
->> +
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the
->> +		    syscon device.
->> +
->> +
->> +- #reset-cells:
->> +	Usage: required
->> +	Value type: <uint>
->> +	Definition: must be 1; cell entry represents the reset index.
->> +
->> +example:
->> +
->> +aoss_reset: qcom,reset-controller@b2e0100 {
->> +	compatible = "qcom,aoss-reset-sdm845", "syscon";
->> +	reg = <0xc2b0000 0x20004>;
->> +	#reset-cells = <1>;
->> +};
->> +
->> +
->> +Specifying reset lines connected to IP modules
->> +==============================================
->> +
->> +Device nodes that need access to reset lines should
->> +specify them as a reset phandle in their corresponding node as
->> +specified in reset.txt.
->> +
->> +Example:
->> +
->> +	modem-pil@4080000 {
->> +		...
->> +
->> +		resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
->> +		reset-names = "mss_restart";
->> +
->> +		...
->> +        };
->> +
->> +For list of all valid reset indicies see
->> +<dt-bindings/reset/qcom,aoss-sdm845.h>
-> 
-> Put this before the example.
->
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqioy4ACgkQbAtpk944
+dnrGpQ/6A4EcwZ+zoSJZpxuuicPoZib7aq0pGu8F/Ld2nf+Tr48Slxw3kPhcCzc7
+HXPBL24yqKGrJ7jFbqrDnWCLkjTg7zsjokCbehiLzQI66LUsRolxGCLMYQz6XfvN
+noL4iAQ+mRx9qfhpRomyHXA3xcb3DS+TL0o6TxztDgiF5PGz+Iu9AlaYKQ4Zq0cd
+xuEIGfbJo3fivLDU20H/KyuSY3B3Bg1ayXqtBZSQmxgac1Hkyldjee5Spe8bG0j2
+aOUOZRfJY49FjYQ7wW2itTywSE1RpLTHBfqxpYrrQifSB69Ztwl9H0GqWD0PehjI
+uiKHInsJxqYMNQXMssZxMj4vuHq31v+QbD6jNoinnNrmoctjT8dPaSo6h6t051HE
+a0saFvpCEJrOqozZ6PQgJQPSg9Mz95+YUFMmNApBzKfYCw0TNuPHH5vupy9A9LWD
+D1uAyAatlj5Qb8dU0kBXKXCVPu1Ikq4Jbgq/WMkcUh2WTTD4+2T6uKdS+JSnd08X
+RjevevlDWxgSMJ4DzPoQgZbswKiq/A6Dewg/4hx9O8BnamQ/Sj4pbRThTcdWsNqj
+9xC/Gt6QPJQop/pdz0m+Q0ML1lQRNwe1YbUcwt0cMGlVuNzkN45lM7T3HGbz6nXW
+8kjCKcG+L9tMJ/4zywyXKUqb+EAjBMgp1OWJobxtG9r+wwLYHzs=
+=TGmj
+-----END PGP SIGNATURE-----
 
-ok
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-remoteproc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--PW0Eas8rCkcu1VkF--
