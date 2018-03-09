@@ -1,175 +1,129 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: add bindings for USB physical
- connector
-Date: Fri, 9 Mar 2018 12:24:44 +0200
-Message-ID: <ed0ce43c-3c81-b027-2eb1-30e49156c3ac@ti.com>
-References: <20180227071134.28063-1-a.hajda@samsung.com>
- <CGME20180227071138eucas1p17e1e16f13f6d3e3b15a57dc93eb8cf3f@eucas1p1.samsung.com>
- <20180227071134.28063-2-a.hajda@samsung.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Fri, 9 Mar 2018 16:10:15 +0530
+Message-ID: <CAFp+6iEQo+WYDiDufmiEi012C=Vi3n+OZTuRyAs0t+hBiBbS8g@mail.gmail.com>
+References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
+	<20180302101050.6191-5-vivek.gautam@codeaurora.org>
+	<f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227071134.28063-2-a.hajda@samsung.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <f3011ef1-7ffe-8c2b-b9d6-3fb094789656-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Mar 7, 2018 at 6:17 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 02/03/18 10:10, Vivek Gautam wrote:
+>>
+>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>
+>> Finally add the device link between the master device and
+>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>> master needs it. This is done from add_device callback which gets
+>> called once when the master is added to the smmu.
+>>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 3d6a1875431f..bb1ea82c1003 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -217,6 +217,9 @@ struct arm_smmu_device {
+>>         /* IOMMU core code handle */
+>>         struct iommu_device             iommu;
+>> +
+>> +       /* runtime PM link to master */
+>> +       struct device_link *link;
+>
+>
+> Just the one?
+>
+>>   };
+>>     enum arm_smmu_context_fmt {
+>> @@ -1470,10 +1473,26 @@ static int arm_smmu_add_device(struct device *dev)
+>>         iommu_device_link(&smmu->iommu, dev);
+>>   +     /*
+>> +        * Establish the link between smmu and master, so that the
+>> +        * smmu gets runtime enabled/disabled as per the master's
+>> +        * needs.
+>> +        */
+>> +       smmu->link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+>
+>
+> Maybe I've misunderstood how the API works, but AFAICS the second and
+> subsequent devices are all just going to overwrite (and leak) the link of
+> the previous one...
 
-On 27/02/18 09:11, Andrzej Hajda wrote:
-> These bindings allow to describe most known standard USB connectors
-> and it should be possible to extend it if necessary.
-> USB connectors, beside USB can be used to route other protocols,
-> for example UART, Audio, MHL. In such case every device passing data
-> through the connector should have appropriate graph bindings.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
-> v4:
-> - improved 'type' description (Rob),
-> - improved description of 2nd example (Rob).
-> v3:
-> - removed MHL port (samsung connector will have separate bindings),
-> - added 2nd example for USB-C,
-> - improved formatting.
-> v2:
-> - moved connector type(A,B,C) to compatible string (Rob),
-> - renamed size property to type (Rob),
-> - changed type description to be less confusing (Laurent),
-> - removed vendor specific compatibles (implied by graph port number),
-> - added requirement of connector being a child of IC (Rob),
-> - removed max-mode (subtly suggested by Rob, it should be detected anyway
->   by USB Controller in runtime, downside is that device is not able to
->   report its real capabilities, maybe better would be to make it optional(?)),
-> - assigned port numbers to data buses (Rob).
-> 
-> Regards
-> Andrzej
-> ---
->  .../bindings/connector/usb-connector.txt           | 75 ++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> new file mode 100644
-> index 000000000000..e1463f14af38
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> @@ -0,0 +1,75 @@
-> +USB Connector
-> +=============
-> +
-> +USB connector node represents physical USB connector. It should be
-> +a child of USB interface controller.
-> +
-> +Required properties:
-> +- compatible: describes type of the connector, must be one of:
-> +    "usb-a-connector",
-> +    "usb-b-connector",
-> +    "usb-c-connector".
+Also, noticed one more thing while testing on sdm845. When we are
+conditionally enabling the runtime pm, we should create the device
+link too conditionally, i.e. only in the case the smmu->dev has
+runtime pm_enabled we can create this device link between smmu and the
+master device.
+Otherwise when the master tries to do a pm_runtime_get() over itself,
+the device link will ensure that pm_runtime_get() for smmu is done
+first. But that will fail when we don't have pm runtime enabled over
+smmu, and so the master device's pm_runtime_get() will fail too.
+Will fix this in the next version.
 
-compatible should be just "usb-connector"
+Thanks
+Vivek
 
-Type should be a property
+>
+>> +       if (!smmu->link) {
+>> +               dev_warn(smmu->dev, "Unable to create device link between
+>> %s and %s\n",
+>> +                        dev_name(smmu->dev), dev_name(dev));
+>> +               ret = -ENODEV;
+>> +               goto out_unlink;
+>> +       }
+>> +
+>>         arm_smmu_rpm_put(smmu);
+>>         return 0;
+>>   +out_unlink:
+>> +       iommu_device_unlink(&smmu->iommu, dev);
+>> +       arm_smmu_master_free_smes(fwspec);
+>>   out_rpm_put:
+>>         arm_smmu_rpm_put(smmu);
+>>   out_cfg_free:
+>> @@ -1496,6 +1515,8 @@ static void arm_smmu_remove_device(struct device
+>> *dev)
+>>         cfg  = fwspec->iommu_priv;
+>>         smmu = cfg->smmu;
+>>   +     device_link_del(smmu->link);
+>
+>
+> ...and equivalently you end up with a double-free (or more) here of a link
+> which may not have belonged to dev anyway.
+>
+> Robin.
+>
+>
+>> +
+>>         ret = arm_smmu_rpm_get(smmu);
+>>         if (ret < 0)
+>>                 return;
+>>
+>
 
-type: type of usb connector "A", "B", "AB", "C"
-AB is for dual-role connectors.
 
-micro super-speed and high-speed connectors are different. How do you differentiate that?
-
-> +
-> +Optional properties:
-> +- label: symbolic name for the connector,
-
-Why do you need label? We can't maintain consistency as people will put creative names there.
-Device/bus driver could generate a valid label.
-
-> +- type: size of the connector, should be specified in case of USB-A, USB-B
-> +  non-fullsize connectors: "mini", "micro".
-
-type is misleading. Type is usually A/B/C. It should be size here instead.
-
-size: size of the connector if not standard size. "mini", "micro"
-
-If not specified it is treated as standard sized connector.
-e.g. for Type-C there is no mini/micro. so size doesn't have to be specificed
-
-What about Type-C connector?
-> +
-> +Required nodes:
-> +- any data bus to the connector should be modeled using the OF graph bindings
-
-s/modeled/modelled
-
-> +  specified in bindings/graph.txt, unless the bus is between parent node and
-> +  the connector. Since single connector can have multpile data buses every bus
-
-s/multpile/multiple
-
-> +  has assigned OF graph port number as follows:
-> +    0: High Speed (HS), present in all connectors,
-> +    1: Super Speed (SS), present in SS capable connectors,
-> +    2: Sideband use (SBU), present in USB-C.
-> +
-> +Examples
-> +--------
-> +
-> +1. Micro-USB connector with HS lines routed via controller (MUIC):
-> +
-> +muic-max77843@66 {
-> +	...
-> +	usb_con: connector {
-> +		compatible = "usb-b-connector";
-> +		label = "micro-USB";
-> +		type = "micro";
-> +	};
-> +};
-> +
-> +2. USB-C connector attached to CC controller (s2mm005), HS lines routed
-> +to companion PMIC (max77865), SS lines to USB3 PHY and SBU to DisplayPort.
-> +DisplayPort video lines are routed to the connector via SS mux in USB3 PHY.
-> +
-> +ccic: s2mm005@33 {
-> +	...
-> +	usb_con: connector {
-> +		compatible = "usb-c-connector";
-> +		label = "USB-C";
-
-The label is not consistent with the earlier example.
-
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				usb_con_hs: endpoint {
-> +					remote-endpoint = <&max77865_usbc_hs>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				usb_con_ss: endpoint {
-> +					remote-endpoint = <&usbdrd_phy_ss>;
-> +				};
-> +			};
-> +			port@2 {
-> +				reg = <2>;
-> +				usb_con_sbu: endpoint {
-> +					remote-endpoint = <&dp_aux>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> 
 
 -- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
