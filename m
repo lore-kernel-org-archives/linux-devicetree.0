@@ -1,74 +1,34 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 1/4] ARM: dts: exynos5250: Add #sound-dai-cells property
- to hdmi device node
-Date: Fri, 09 Mar 2018 12:52:58 +0100
-Message-ID: <39965bce-a6f2-6202-5c3f-97e4446e97eb@samsung.com>
-References: <CGME20180307172723epcas1p1b8879bb555737cab7406a172b7d13a56@epcas1p1.samsung.com>
-        <20180307172711.15697-1-s.nawrocki@samsung.com>
-        <5AA1F41B.5080104@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/3] Add R8A77980/Condor PFC support
+Date: Fri, 9 Mar 2018 15:04:56 +0300
+Message-ID: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5AA1F41B.5080104@samsung.com>
-Content-language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, krzk@kernel.org
-Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Inki,
+Hello!
 
-On 03/09/2018 03:40 AM, Inki Dae wrote:
-> 2018년 03월 08일 02:27에 Sylwester Nawrocki 이(가) 쓴 글:
->> This property is required for specifying link between the HDMI IP block
->> and the SoC's audio subsystem.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 56626d1a4235..71d2ede118e3 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -700,6 +700,7 @@
->>  					"sclk_hdmiphy", "mout_hdmi";
->>  			samsung,syscon-phandle = <&pmu_system_controller>;
->>  			phy = <&hdmiphy>;
->> +			#sound-dai-cells = <0>;
-> 
-> This patch adds this property to hdmi device node which is bound by HDMI driver 
-> of Exynos DRM. As we talked about this at other email thread, seems this property 
-> is required mandatorily for Odroid XU3/4 board which uses Exynos5422.
-> There may be something I'm missing so could you let me know how this property 
-> is required?
+Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180308-v4.16-rc4' tag.  We're adding the R8A77980 PFC node
+and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
+These patches depend on the R8A77980 PFC support in order to work properly.
 
-It is required to properly interpret the list of DAI specified in the 'sound-dai'
-property. If a device supports only one DAI it will have #sound-dai-cells = <0>
-and the sound-dai property values in cpu<->codec link may look like this:
+[1/3] arm64: dts: renesas: r8a77980: add PFC support
+[2/3] arm64: dts: renesas: condor: add SCIF0 pins
+[3/3] arm64: dts: renesas: condor: add EtherAVB pins
 
- cpu { ... }
- codec {
-	 sound-dai = <&max98090>, <&hdmi>;
- };
-
-When the CODEC support more DAIs it will have #sound-dai-cells = <1> and we can
-additionally specify which DAI we exactly refer to, in this case DAI 0:
-
- cpu { ... }
- codec {
-	sound-dai = <&max98095 0>, <&hdmi>;
- };
-
-More details can be found in documentation of of_parse_phandle_with_args()
-function.
-
-The above refers to cpu/codec mapping like I2S0 -> [max9809x, hdmi], on Exynos5433
-we have I2S0 -> wm5110 and I2S1 -> hdmi.
-
-
--- 
-Regards,
-Sylwester
+WBR, Sergei
