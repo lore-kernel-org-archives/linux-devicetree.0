@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 5/6] staging: vc04_services: Mark the "DT bindings" job done.
-Date: Fri,  9 Mar 2018 10:44:16 -0800
-Message-ID: <20180309184417.23368-5-eric@anholt.net>
+Subject: [PATCH v3 2/6] staging: vc04_services: Remove cache-line-size property (v3)
+Date: Fri,  9 Mar 2018 10:44:13 -0800
+Message-ID: <20180309184417.23368-2-eric@anholt.net>
 References: <20180309184417.23368-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180309184417.23368-1-eric@anholt.net>
@@ -10,41 +10,71 @@ To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Now we just need to get the other drivers merged and finish the style
-cleanups/garbage collecting so we can get out of staging.
+It's been tempting to replace this with (L1) cache_line_size(), but
+that's really not what the value is about.  It's about coordinating
+the condition for the pagelist fragment behavior between the two
+sides.  However, the property was not accepted for the upstream DT
+binding, so we have to use the firmware's fallback value.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
 
-v2-3: no changes
+v2: Kept the property but added documentation.
+v3: Remove the DT property again, more documentation.
 
- drivers/staging/vc04_services/interface/vchi/TODO | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ .../interface/vchiq_arm/vchiq_2835_arm.c             | 20 +++++++++++---------
+ .../interface/vchiq_arm/vchiq_pagelist.h             |  1 -
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/TODO b/drivers/staging/vc04_services/interface/vchi/TODO
-index df93154b1aa6..46b20a1961a2 100644
---- a/drivers/staging/vc04_services/interface/vchi/TODO
-+++ b/drivers/staging/vc04_services/interface/vchi/TODO
-@@ -1,9 +1,4 @@
--1) Write a DT binding doc and get the corresponding DT node merged to
--   bcm2835.
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index b59ef14890aa..afdd3e944f3f 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -77,7 +77,17 @@ struct vchiq_pagelist_info {
+ };
+ 
+ static void __iomem *g_regs;
+-static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
++/* This value is the size of the L2 cache lines as understood by the
++ * VPU firmware, which determines the required alignment of the
++ * offsets/sizes in pagelists.
++ *
++ * Modern VPU firmware looks for a DT "cache-line-size" property in
++ * the VCHIQ node and will overwrite it with the actual L2 cache size,
++ * which the kernel must then respect.  That property was rejected
++ * upstream, so we have to use the VPU firmware's compatibility value
++ * of 32.
++ */
++static unsigned int g_cache_line_size = 32;
+ static unsigned int g_fragments_size;
+ static char *g_fragments_base;
+ static char *g_free_fragments;
+@@ -117,14 +127,6 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+ 	if (err < 0)
+ 		return err;
+ 
+-	err = of_property_read_u32(dev->of_node, "cache-line-size",
+-				   &g_cache_line_size);
 -
--This will let the driver probe when enabled.
+-	if (err) {
+-		dev_err(dev, "Missing cache-line-size property\n");
+-		return -ENODEV;
+-	}
 -
--2) Import drivers using VCHI.
-+1) Import drivers using VCHI.
+ 	g_fragments_size = 2 * g_cache_line_size;
  
- VCHI is just a tool to let drivers talk to the firmware.  Here are
- some of the ones we want:
-@@ -26,7 +21,7 @@ some of the ones we want:
-   to manage these buffers as dmabufs so that we can zero-copy import
-   camera images into vc4 for rendering/display.
+ 	/* Allocate space for the channels in coherent memory */
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+index a6c5f7cc78f0..bec411061554 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
+@@ -34,7 +34,6 @@
+ #ifndef VCHIQ_PAGELIST_H
+ #define VCHIQ_PAGELIST_H
  
--3) Garbage-collect unused code
-+2) Garbage-collect unused code
- 
- One of the reasons this driver wasn't upstreamed previously was that
- there's a lot code that got built that's probably unnecessary these
+-#define CACHE_LINE_SIZE 32
+ #define PAGELIST_WRITE 0
+ #define PAGELIST_READ 1
+ #define PAGELIST_READ_WITH_FRAGMENTS 2
 -- 
 2.16.2
