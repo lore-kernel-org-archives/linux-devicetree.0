@@ -1,35 +1,68 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/3] of: Documentation: Fix forgotten reference to of_overlay_apply()
-Date: Fri,  9 Mar 2018 11:44:46 +0100
-Message-ID: <1520592288-7680-2-git-send-email-geert+renesas@glider.be>
-References: <1520592288-7680-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520592288-7680-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] dt-bindings: exynos: Document #sound-dai-cells property
+ of the HDMI node
+Date: Fri, 09 Mar 2018 12:10:45 +0100
+Message-ID: <6e9a0ba4-2997-b7c5-f5c3-461870b7d3e5@samsung.com>
+References: <CGME20180307171131epcas1p4687ef394d1a0a6d0eb2de2691c977c3f@epcas1p4.samsung.com>
+ <20180307171111.14551-1-s.nawrocki@samsung.com>
+ <5AA0B59F.3070402@samsung.com>
+ <3c68c3da-a0c3-4e4e-da6b-3e4b1af6d19d@samsung.com>
+ <5AA0DD39.3040108@samsung.com>
+ <9f1e8619-974d-cd07-79c3-c6d9a4dc0f97@samsung.com>
+ <5AA0F10D.9010602@samsung.com>
+ <e3e1c628-d88f-6fb4-171e-a49c7ee38135@samsung.com>
+ <5AA1F30B.8010607@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5AA1F30B.8010607@samsung.com>
+Content-language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Fixes: 93a6039000b5acab ("of: Documentation: of_overlay_apply() replaced by of_overlay_fdt_apply()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/overlay-notes.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-index 5175a24d387ec1a1..a4feb6dde8cd08e8 100644
---- a/Documentation/devicetree/overlay-notes.txt
-+++ b/Documentation/devicetree/overlay-notes.txt
-@@ -91,8 +91,8 @@ The API is quite easy to use.
- return value is an error or a cookie identifying this overlay.
- 
- 2. Call of_overlay_remove() to remove and cleanup the overlay changeset
--previously created via the call to of_overlay_apply(). Removal of an overlay
--changeset that is stacked by another will not be permitted.
-+previously created via the call to of_overlay_fdt_apply(). Removal of an
-+overlay changeset that is stacked by another will not be permitted.
- 
- Finally, if you need to remove all overlays in one-go, just call
- of_overlay_remove_all() which will remove every single one in the correct
--- 
-2.7.4
+T24gMDMvMDkvMjAxOCAwMzozNSBBTSwgSW5raSBEYWUgd3JvdGU6Cj4gMjAxOOuFhCAwM+yblCAw
+OOydvCAyMDoyMuyXkCBTeWx3ZXN0ZXIgTmF3cm9ja2kg7J20KOqwgCkg7JO0IOq4gDoKPj4gT24g
+MDMvMDgvMjAxOCAwOToxNSBBTSwgSW5raSBEYWUgd3JvdGU6ClsuLi5dCj4+PiBJcyB0aGVyZSBh
+IHBvc3NpYmlsaXR5IGZvciBvdGhlciBib2FyZHMgYmFzZWQgb24gRXh5bm9zNDIxMC80MjEyLzU0
+MjAvNTQzMyAKPj4+IFNvQyB0byB1c2UgdGhpcyBwcm9wZXJ0eSBsYXRlcj8KPj4KPj4gQWxsIHRo
+ZXNlIFNvQ3MgaGF2ZSB0aGUgSERNSSBJUCBibG9jayB3aGljaCBoYXMgb25lIGlucHV0IERBSSwg
+Y29ubmVjdGVkIAo+PiBpbnRlcm5hbGx5IG92ZXIgSTJTIGJ1cyB3aXRoIHRoZSBJMlMgY29udHJv
+bGxlci4KPj4KPj4gSSB0aGluayB0aGVyZSBpcyBubyBhZHZhbnRhZ2UgaW4gbGltaXRpbmcgb3Vy
+c2VsdmVzIG5vdyBvbmx5IHRvIFNvQydzIAo+PiBmb3Igd2hpY2ggd2UgY3VycmVudGx5IHJlbHkg
+b24gdGhhdCBEVCBwcm9wZXJ0eSBpbiBjdXJyZW50IGtlcm5lbCBjb2RlLCAKPj4ganVzdCB0byB1
+cGRhdGUgdGhpcyBkb2N1bWVudGF0aW9uIGxhdGVyIHdoZW4gd2UgYWN0dWFsbHkgcHV0IHRoZSBw
+cm9wZXJ0eSAKPj4gaW4gZHRzIGZpbGVzLgo+Pgo+PiBJbiBjYXNlIG9mIGV4eW5vczU0MjAgd2Ug
+YWxyZWFkeSByZXF1aXJlICNzb3VuZC1kYWktY2VsbHMgZm9yIE9kcm9pZCBhbmQKPiAKPiBNYXli
+ZSBleHlub3M1NDIyPyBPZHJvaWQgWFUzLzQgdXNlIEV4eW5vczU0MjIuCgpZZXMsIG15IG1pc3Rh
+a2UsIEV4eW5vczU0MjIgZm9yIE9kcm9pZCBhbmQgRXh5bm9zNTQyMCBmb3IgUGVhY2gtUGl0LgpJ
+dCBqdXN0IGhhcHBlbnMgd2UgdXNlICJzYW1zdW5nLGV4eW5vczU0MjAtaGRtaSIgY29tcGF0aWJs
+ZSBmb3IgdGhhdCBib3RoClNvQ3MuCiAKCj4gU2VlbXMgdGhhdCAnI3NvdW5kLWRhaS1jZWxscycg
+aXMgcmVxdWlyZWQgbWFuZGF0b3JpbHkgaW4gY2FzZSBvZiBFeHlub3M1NDIyIAo+IGJlY2F1c2Ug
+T2Ryb2lkIFhVMy80IEF1ZGlvIGRyaXZlciBjaGVja3MgdGhpcyBwcm9wZXJ0eSwgYW5kIHRoZSBk
+cml2ZXIgCj4gcmV0dXJucyBlcnJvciBpZiB0aGUgcHJvcGVydHkgZG9lc24ndCBleGlzdCBpbiBp
+dHMgZGV2aWNlIHRyZWUuCj4gQW5kIGlmIG90aGVyIFNvQ3MgLSBFeHlub3M0MjEwLzQyMTIvNTI1
+MC81NDIwLzU0MzMgLSByZXF1aXJlIHRoaXMgcHJvcGVydHkgCj4gd2l0aCBhZGRpdGlvbmFsIGRy
+aXZlciB3b3JrcyBsYXRlciB0aGVuIHRoaXMgcHJvcGVydHkgd291bGQgYWxzbyBiZSByZXF1aXJl
+ZCAKPiBtYW5kYXRvcmlseSBmb3IgdGhlbSBub3Qgb3B0aW9uYWxseS4gSW4gdGhpcyBjYXNlIHdl
+IG1heSBuZWVkIHRvIG1vZGlmeSB0aGUgCj4gZGVzY3JpcHRpb24gYWdhaW4uCj4gCj4gU28gbXkg
+b3BpbmlvbiBpcyB0byBhZGQgb25seSB0aGUgZGVzY3JpcHRpb24gcmVxdWlyZWQgbWFuZGF0b3Jp
+bHkgaWYgSSAKPiB1bmRlcnN0b29kIGNvcnJlY3RseS4KCllvdSBhcmUgcmlnaHQsIGl0IHdvdWxk
+IGJlIGJldHRlciB0byBtYWtlIHRoaXMgYSBtYW5kYXRvcnkgcHJvcGVydHksIEkgb25seQptYWRl
+IGl0IG9wdGlvbmFsIGJlY2F1c2Ugbm93IHRoaXMgcHJvcGVydHkgaXMgbWlzc2luZyBpbiBtYW55
+IGR0cyBmaWxlcy4KTGV0IG1lIHJlc2VuZCB3aXRoICNzb3VuZC1kYWktY2VsbHMgZGVzY3JpcHRp
+b24gbW92ZWQgdG8gdGhlICJSZXF1aXJlZCAKcHJvcGVydGllcyIgcGFyYWdyYXBoLgoKLS0KVGhh
+bmtzLApTeWx3ZXN0ZXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
