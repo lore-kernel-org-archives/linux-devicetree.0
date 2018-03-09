@@ -1,235 +1,73 @@
-Return-Path: <SRS0=rZ29=GD=codeaurora.org=kramasub@kernel.org>
+Return-Path: <SRS0=20ow=F7=codeaurora.org=kramasub@kernel.org>
 Subject: Re: [PATCH v3 4/4] tty: serial: msm_geni_serial: Add serial driver
  support for GENI based QUP
 References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
  <1519781889-16117-5-git-send-email-kramasub@codeaurora.org>
- <CAE=gft4Hwqq2gx+b9AmiX1ZZBrSt1Ca2E48JV77wpcQQT0060w@mail.gmail.com>
+ <152002870571.108663.443363731684218377@swboyd.mtv.corp.google.com>
+ <f900dc96-0150-079d-bcd6-9d2e05f8fde1@codeaurora.org>
+ <152037270430.218381.11080419743809466427@swboyd.mtv.corp.google.com>
+ <d8089e60-9344-8a7e-502d-3e04e357811b@codeaurora.org>
+ <152054835314.219802.7795128053459733073@swboyd.mtv.corp.google.com>
 From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Message-ID: <9a12ffe5-5168-8d73-82c9-93914c50de51@codeaurora.org>
-Date: Tue, 13 Mar 2018 14:16:40 -0600
+Message-ID: <d762f656-65d3-8b4a-2200-4b8a45de8ba9@codeaurora.org>
+Date: Thu, 8 Mar 2018 21:57:23 -0700
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft4Hwqq2gx+b9AmiX1ZZBrSt1Ca2E48JV77wpcQQT0060w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <152054835314.219802.7795128053459733073@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Evan Green <evgreen@chromium.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, acourbot@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
+To: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, corbet@lwn.net, david.brown@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
+Cc: linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
 
 
-On 3/2/2018 5:11 PM, Evan Green wrote:
->> +
->> +#ifdef CONFIG_CONSOLE_POLL
->> +#define RX_BYTES_PW 1
->> +#else
->> +#define RX_BYTES_PW 4
->> +#endif
+On 3/8/2018 3:32 PM, Stephen Boyd wrote:
+> Quoting Karthik Ramasubramanian (2018-03-07 22:06:29)
+>>
+>>
+>> On 3/6/2018 2:45 PM, Stephen Boyd wrote:
+>>> Quoting Karthik Ramasubramanian (2018-03-05 16:51:23)
+>>>> On 3/2/2018 3:11 PM, Stephen Boyd wrote:
+>>>
+>>> Ok. I've seen similar designs in some mmc drivers. For example, you can
+>>> look at drivers/mmc/host/meson-gx-mmc.c and see that they register a
+>>> clk_ops and then just start using that clk directly from the driver.
+>>> There are also some helper functions for dividers that would hopefully
+>>> make the job of calculating the best divider easier.
+>> Thanks for the pointers. I will take a look at it. In the meanwhile I
+>> had discussions with our clock team. They pointed out that the register
+>> to write the divider value here is outside the scope of clock controller
+>> which makes it trickier to implement your suggestion. They are already
+>> in the mailing list and we will discuss further and get back to you in
+>> this regard.
 > 
-> This seems fishy to me. Does either setting work? If so, why not just
-> have one value?
-Yes, either one works. In the interrupt driven mode, sometimes due to
-increased interrupt latency the RX FIFO may overflow if we use only 1
-byte per FIFO word - given there are no flow control lines in the debug
-uart. Hence using 4 bytes in the FIFO word will help to prevent the FIFO
-overflow - especially in the case where commands are executed through
-scripts.
+> Ok. Let me know if I can help answer any questions.
+Ok.
+> 
+>>>>>
+>>>>> Why are these noirq variants? Please add a comment.
+>>>> The intention is to enable the console UART port usage as late as
+>>>> possible in the suspend cycle. Hence noirq variants. I will add this as
+>>>> a comment. Please let me know if the usage does not match the intention.
+>>>
+>>> Hm.. Does no_console_suspend not work? Or not work well enough?
+>> It works. When console suspend is disabled, the suspend operation does
+>> not get triggered and the resume operation checks if the console suspend
+>> is disabled and performs the needed thing.
+> 
+> Ok so then do we need the noirq variants? Or console suspend is special
+> enough for this to not matter?
+I am a little confused as to whether you prefer the console to not 
+suspend at all or you prefer the console suspend at an earlier stage 
+than no_irq stage.
 
-In polling mode, using 1 byte per word helps to use the hardware to
-buffer the data instead of software buffering especially when the
-framework keeps reading one byte at a time.
-> 
->> +static bool qcom_geni_serial_poll_bit(struct uart_port *uport,
->> +                               int offset, int bit_field, bool set)
->> +{
->> +       u32 reg;
->> +       struct qcom_geni_serial_port *port;
->> +       unsigned int baud;
->> +       unsigned int fifo_bits;
->> +       unsigned long timeout_us = 20000;
->> +
->> +       /* Ensure polling is not re-ordered before the prior writes/reads */
->> +       mb();
->> +
->> +       if (uport->private_data) {
->> +               port = to_dev_port(uport, uport);
->> +               baud = port->cur_baud;
->> +               if (!baud)
->> +                       baud = 115200;
->> +               fifo_bits = port->tx_fifo_depth * port->tx_fifo_width;
->> +               /*
->> +                * Total polling iterations based on FIFO worth of bytes to be
->> +                * sent at current baud .Add a little fluff to the wait.
->> +                */
->> +               timeout_us = ((fifo_bits * USEC_PER_SEC) / baud) + 500;
-> 
-> This fluff is a little mysterious, can it be explained at all? Do you
-> think the fluff factor is in units of time (as you have it) or bits?
-> Time makes sense I guess if we're worried about clock source
-> differences.
-The fluff is in micro-seconds and can help with unforeseen delays in
-emulation platforms.
-> 
->> +
->> +static void qcom_geni_serial_console_write(struct console *co, const char *s,
->> +                             unsigned int count)
->> +{
->> +       struct uart_port *uport;
->> +       struct qcom_geni_serial_port *port;
->> +       bool locked = true;
->> +       unsigned long flags;
->> +
->> +       WARN_ON(co->index < 0 || co->index >= GENI_UART_CONS_PORTS);
->> +
->> +       port = get_port_from_line(co->index);
->> +       if (IS_ERR(port))
->> +               return;
->> +
->> +       uport = &port->uport;
->> +       if (oops_in_progress)
->> +               locked = spin_trylock_irqsave(&uport->lock, flags);
->> +       else
->> +               spin_lock_irqsave(&uport->lock, flags);
->> +
->> +       if (locked) {
->> +               __qcom_geni_serial_console_write(uport, s, count);
->> +               spin_unlock_irqrestore(&uport->lock, flags);
-> 
-> I too am a little lost on the locking here. What exactly is the lock
-> protecting? Looks like for the most part it's trying to synchronize
-> with the ISR? What specifically in the ISR? I just wanted to go
-> through and check to make sure whatever the shared resource is is
-> appropriately protected.
-The lock protects 2 simultaneous writers from putting the hardware in
-the bad state. The output of the command entered in a shell can trigger
-a write in the interrupt context while logging activity can trigger a
-simultaneous write.
-> 
->> +       }
->> +}
->> +
->> +static int handle_rx_console(struct uart_port *uport, u32 rx_bytes, bool drop)
->> +{
->> +       u32 i = rx_bytes;
->> +       u32 rx_fifo;
->> +       unsigned char *buf;
->> +       struct tty_port *tport;
->> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
->> +
->> +       tport = &uport->state->port;
->> +       while (i > 0) {
->> +               int c;
->> +               int bytes = i > port->rx_bytes_pw ? port->rx_bytes_pw : i;
-> 
-> Please replace this with a min macro.
-Ok.
-> 
->> +static int qcom_geni_serial_handle_tx(struct uart_port *uport)
->> +{
->> +       int ret = 0;
->> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
->> +       struct circ_buf *xmit = &uport->state->xmit;
->> +       size_t avail;
->> +       size_t remaining;
->> +       int i = 0;
->> +       u32 status;
->> +       unsigned int chunk;
->> +       int tail;
->> +
->> +       chunk = uart_circ_chars_pending(xmit);
->> +       status = readl_relaxed(uport->membase + SE_GENI_TX_FIFO_STATUS);
->> +       /* Both FIFO and framework buffer are drained */
->> +       if ((chunk == port->xmit_size) && !status) {
->> +               port->xmit_size = 0;
->> +               uart_circ_clear(xmit);
->> +               qcom_geni_serial_stop_tx(uport);
->> +               goto out_write_wakeup;
->> +       }
->> +       chunk -= port->xmit_size;
->> +
->> +       avail = (port->tx_fifo_depth - port->tx_wm) * port->tx_bytes_pw;
->> +       tail = (xmit->tail + port->xmit_size) & (UART_XMIT_SIZE - 1);
->> +       if (chunk > (UART_XMIT_SIZE - tail))
->> +               chunk = UART_XMIT_SIZE - tail;
->> +       if (chunk > avail)
->> +               chunk = avail;
->> +
->> +       if (!chunk)
->> +               goto out_write_wakeup;
->> +
->> +       qcom_geni_serial_setup_tx(uport, chunk);
->> +
->> +       remaining = chunk;
->> +       while (i < chunk) {
->> +               unsigned int tx_bytes;
->> +               unsigned int buf = 0;
->> +               int c;
->> +
->> +               tx_bytes = min_t(size_t, remaining, (size_t)port->tx_bytes_pw);
->> +               for (c = 0; c < tx_bytes ; c++)
->> +                       buf |= (xmit->buf[tail + c] << (c * BITS_PER_BYTE));
->> +
->> +               writel_relaxed(buf, uport->membase + SE_GENI_TX_FIFOn);
->> +
->> +               i += tx_bytes;
->> +               tail = (tail + tx_bytes) & (UART_XMIT_SIZE - 1);
->> +               uport->icount.tx += tx_bytes;
->> +               remaining -= tx_bytes;
->> +       }
->> +       qcom_geni_serial_poll_tx_done(uport);
->> +       port->xmit_size += chunk;
->> +out_write_wakeup:
->> +       uart_write_wakeup(uport);
->> +       return ret;
->> +}
-> 
-> This function can't fail, please change the return type to void.
-Ok.
-> 
->> +
->> +static void qcom_geni_serial_shutdown(struct uart_port *uport)
->> +{
->> +       unsigned long flags;
->> +
->> +       /* Stop the console before stopping the current tx */
->> +       console_stop(uport->cons);
->> +
->> +       disable_irq(uport->irq);
->> +       free_irq(uport->irq, uport);
->> +       spin_lock_irqsave(&uport->lock, flags);
->> +       qcom_geni_serial_stop_tx(uport);
->> +       qcom_geni_serial_stop_rx(uport);
->> +       spin_unlock_irqrestore(&uport->lock, flags);
-> 
-> This is one part of where I'm confused. What are we protecting here
-> with the lock? disable_irq waits for any pending ISRs to finish
-> according to its comment, so you know you're not racing with the ISR.
-In android, console shutdown can be invoked while console write happens.
-This lock prevents shutdown from not interfering with the write and
-vice-versa.
-> 
->> +static void geni_serial_write_term_regs(struct uart_port *uport,
->> +               u32 tx_trans_cfg, u32 tx_parity_cfg, u32 rx_trans_cfg,
->> +               u32 rx_parity_cfg, u32 bits_per_char, u32 stop_bit_len,
->> +               u32 s_clk_cfg)
->> +{
->> +       writel_relaxed(tx_trans_cfg, uport->membase + SE_UART_TX_TRANS_CFG);
->> +       writel_relaxed(tx_parity_cfg, uport->membase + SE_UART_TX_PARITY_CFG);
->> +       writel_relaxed(rx_trans_cfg, uport->membase + SE_UART_RX_TRANS_CFG);
->> +       writel_relaxed(rx_parity_cfg, uport->membase + SE_UART_RX_PARITY_CFG);
->> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
->> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_RX_WORD_LEN);
->> +       writel_relaxed(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
->> +       writel_relaxed(s_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
->> +       writel_relaxed(s_clk_cfg, uport->membase + GENI_SER_S_CLK_CFG);
->> +}
->> +
-> 
-> I agree with Stephen's comment, this should be inlined into the single
-> place it's called from.
-> 
-> Thanks Karthik!
-> -Evan
+If it is former, then with the console_suspend_enabled flag set by 
+default this seems the right thing to do. Atleast my understanding is 
+that console is expecting the serial port to suspend as well.
+
+If it is latter, then I will check the stage at which suspend_console() 
+is initiated and can suspend the serial port after that.
 > 
 Regards,
 Karthik.
