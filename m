@@ -1,49 +1,50 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 3/6] dt-bindings: soc: Add a binding for the Broadcom VCHIQ services. (v3)
-Date: Fri,  9 Mar 2018 10:44:14 -0800
-Message-ID: <20180309184417.23368-3-eric@anholt.net>
-References: <20180309184417.23368-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309184417.23368-1-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 1/6] staging: vc04_services: Replace "firmware" node with a
+ compatible lookup.
+Date: Fri,  9 Mar 2018 10:44:12 -0800
+Message-ID: <20180309184417.23368-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The VCHIQ communication channel can be provided by BCM283x and Capri
-SoCs, to communicate with the VPU-side OS services.
+This was requested by Rob Herring in DT bindings review.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
 
-v2: VCHI->VCHIQ, dropped firmware property, added cache-line-size
-v3: Dropped cache-line-size, s/vchi@/mailbox@/
+v2: new patch
+v3: no changes
 
- .../devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt   | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
-new file mode 100644
-index 000000000000..8dd7b3a7de65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
-@@ -0,0 +1,16 @@
-+Broadcom VCHIQ firmware services
-+
-+Required properties:
-+
-+- compatible:	Should be "brcm,bcm2835-vchiq"
-+- reg:		Physical base address and length of the doorbell register pair
-+- interrupts:	The interrupt number
-+		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+
-+Example:
-+
-+mailbox@7e00b840 {
-+	compatible = "brcm,bcm2835-vchiq";
-+	reg = <0x7e00b840 0xf>;
-+	interrupts = <0 2>;
-+};
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index f5cefda49b22..8068c0308b34 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -3594,7 +3594,8 @@ static int vchiq_probe(struct platform_device *pdev)
+ 	struct rpi_firmware *fw;
+ 	int err;
+ 
+-	fw_node = of_parse_phandle(pdev->dev.of_node, "firmware", 0);
++	fw_node = of_find_compatible_node(NULL, NULL,
++					  "raspberrypi,bcm2835-firmware");
+ 	if (!fw_node) {
+ 		dev_err(&pdev->dev, "Missing firmware node\n");
+ 		return -ENOENT;
 -- 
 2.16.2
