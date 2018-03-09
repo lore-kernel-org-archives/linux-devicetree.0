@@ -1,61 +1,70 @@
-Return-Path: <SRS0=8mwe=GA=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: Fix the unit address format in the examples
-Date: Sat, 10 Mar 2018 11:25:40 -0300
-Message-Id: <1520691940-27935-1-git-send-email-festevam@gmail.com>
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=Pv+M=F7=ni.com=prvs=26060a5556=brad.mouring@kernel.org>
+From: Brad Mouring <brad.mouring@ni.com>
+Subject: [PATCH v2 net-next 2/3] net: macb: Add phy-handle DT support
+Date: Fri, 9 Mar 2018 16:12:32 -0600
+Message-ID: <20180309221233.71202-2-brad.mouring@ni.com>
+In-Reply-To: <20180309221233.71202-1-brad.mouring@ni.com>
+References: <20180308173247.GA22340@lunn.ch>
+ <20180309221233.71202-1-brad.mouring@ni.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "Michael Grzeschik  <m.grzeschik@pengutronix.de>, Andrew Lunn" <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, "Julia Cartwright  <julia@ni.com>, <devicetree@vger.kernel.org>, Brad Mouring" <brad.mouring@ni.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+This optional binding (as described in the ethernet DT bindings doc)
+directs the netdev to the phydev to use. This is useful for a phy
+chip that has >1 phy in it, and two netdevs are using the same phy
+chip (i.e. the second mac's phy lives on the first mac's MDIO bus)
 
-DTC warnings will be seen if these examples are used in a real dts file 
-due to a mismatch in the unit address notation.
+The devicetree snippet would look something like this:
 
-Align the unit address notation to what is done in the real dts files
-as per commit f81d7af79575 ("arm64: dts: fsl: fix ifc simple-bus unit
-address format warnings")
+ethernet@feedf00d {
+	...
+	phy-handle = <&phy0> // the first netdev is physically wired to phy0
+	...
+	phy0: phy@0 {
+		...
+		reg = <0x0> // MDIO address 0
+		...
+	}
+	phy1: phy@1 {
+		...
+		reg = <0x1> // MDIO address 1
+		...
+	}
+...
+}
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+ethernet@deadbeef {
+	...
+	phy-handle = <&phy1> // tells the driver to use phy1 on the
+						 // first mac's mdio bus (it's wired thusly)
+	...
+}
+
+The work done to add the phy_node in the first place (dacdbb4dfc1a1:
+"net: macb: add fixed-link node support") will consume the
+device_node (if found).
+
+Signed-off-by: Brad Mouring <brad.mouring@ni.com>
 ---
-Hi,
+ drivers/net/ethernet/cadence/macb_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Commit f81d7af79575 ("arm64: dts: fsl: fix ifc simple-bus unit address
-format warnings") is present in Shawn Guo's tree.
-
- Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-index 89427b0..a4d4b6a 100644
---- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-@@ -43,7 +43,7 @@ Example:
- 			  0x1 0x0 0x0 0xffa00000 0x00010000
- 			  0x3 0x0 0x0 0xffb00000 0x00020000>;
- 
--		flash@0,0 {
-+		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "cfi-flash";
-@@ -58,7 +58,7 @@ Example:
- 			};
- 		};
- 
--		flash@1,0 {
-+		flash@100000000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "fsl,ifc-nand";
-@@ -73,7 +73,7 @@ Example:
- 			};
- 		};
- 
--		cpld@3,0 {
-+		cpld@@300000000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "fsl,p1010rdb-cpld";
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 7b69a291ab7a..af458ab62601 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -485,6 +485,9 @@ static int macb_mii_probe(struct net_device *dev)
+ 			}
+ 			bp->phy_node = of_node_get(np);
+ 		} else {
++			/* attempt to find a phy-handle */
++			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
++
+ 			/* fallback to standard phy registration if no phy were
+ 			 * found during dt phy registration
+ 			 */
 -- 
-2.7.4
+2.16.2
