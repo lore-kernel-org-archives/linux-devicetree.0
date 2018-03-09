@@ -1,48 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M
- Eagle
-Date: Fri, 9 Mar 2018 11:43:32 +0300
-Message-ID: <fd5245a5-5a65-f5f4-6d25-fc5b70060fbe@cogentembedded.com>
-References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
- <1520522643-11756-4-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1520522643-11756-4-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [RESEND PATCH v4 0/4] Set name of regmap_config
+Date: Fri,  9 Mar 2018 16:43:47 +0800
+Message-ID: <20180309084351.32009-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com
+Cc: Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>, linux-arm-ke
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hCgpPbiAzLzgvMjAxOCA2OjI0IFBNLCBKYWNvcG8gTW9uZGkgd3JvdGU6Cgo+IFRoZSBS
-LUNhciBWM00gRWFnbGUgYm9hcmQgaW5jbHVkZXMgYSB0cmFuc3BhcmVudCBMVkRTIGRlY29kZXIs
-IGNvbm5lY3RlZAo+IHRvIHRoZSBvbi1jaGlwIExWRFMgZW5jb2RlciBvdXRwdXQgb24gb25lIHNp
-ZGUgYW5kIHRvIEhETUkgZW5jb2Rlcgo+IEFEVjc1MTF3IG9uIHRoZSBvdGhlciBvbmUuCj4gCj4g
-QXMgdGhlIGRlY29kZXIgZG9lcyBub3QgbmVlZCBhbnkgY29uZmlndXJhdGlvbiBpdCBoYXMgYmVl
-biBzby1mYXIKPiBvbWl0dGVkIGZyb20gRFRTLiBOb3cgdGhhdCBhIGRyaXZlciBmb3IgdHJhbnNw
-YXJlbnQgTFZEUyBkZWNvZGVyIGlzCj4gYXZhaWxhYmxlLCBkZXNjcmliZSBpdCBpbiBEVCBhcyB3
-ZWxsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1v
-bmRpLm9yZz4KPiAtLS0KPiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1l
-YWdsZS5kdHMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKystLQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDI5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAtZWFnbGUuZHRzCj4gaW5kZXggYzBmZDE0NC4uMGQ2
-MmI0MCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAt
-ZWFnbGUuZHRzCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVh
-Z2xlLmR0cwo+IEBAIC00Miw2ICs0MiwzMyBAQAo+ICAgCQkJfTsKPiAgIAkJfTsKPiAgIAl9Owo+
-ICsKPiArCWx2ZHNfZGVjb2RlciB7CgogICAgSHlwaGVucyBhcmUgcHJlZmVycmVkIHRvIHVuZGVy
-c2NvcmVkIGluIHRoZSBub2RlIG5hbWVzLgoKPiArCQljb21wYXRpYmxlID0gInRoaW5lLHRoYzYz
-bHZkMTAyNCI7ClsuLi5dCgpNQlIsIFNlcmdlaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+
+After 9b947a13e7f6 ("regmap: use debugfs even when no device"), we are
+allowing regmap to create debugfs without a valid device. Some of them
+would end up using "dummy*" as debugfs name.
+
+This series try to set names in some regmap_config to avoid that.
+
+
+Changes in v4:
+Not to use rtc dev to init regmap, the gpbr is not directly related to
+the rtc.
+
+Changes in v3:
+Modify commit message.
+
+Jeffy Chen (4):
+  mfd: syscon: Set name of regmap_config
+  rtc: at91sam9: Set name of regmap_config
+  clk: lpc32xx: Set name of regmap_config
+  ARM: rockchip: Set name of regmap_config
+
+ arch/arm/mach-rockchip/platsmp.c | 1 +
+ drivers/clk/nxp/clk-lpc32xx.c    | 1 +
+ drivers/mfd/syscon.c             | 1 +
+ drivers/rtc/rtc-at91sam9.c       | 1 +
+ 4 files changed, 4 insertions(+)
+
+-- 
+2.11.0
