@@ -1,36 +1,91 @@
-Return-Path: <SRS0=BtsV=GC=ni.com=prvs=260901fb48=brad.mouring@kernel.org>
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: [PATCH v3 net-next 4/4] Documentation: macb: Document phy-handle binding
-Date: Mon, 12 Mar 2018 12:10:01 -0500
-Message-ID: <20180312171001.129209-5-brad.mouring@ni.com>
-In-Reply-To: <20180312171001.129209-1-brad.mouring@ni.com>
-References: <20180310161718.GC29174@lunn.ch>
- <20180312171001.129209-1-brad.mouring@ni.com>
+Return-Path: <SRS0=0gim=F7=gmail.com=jacek.anaszewski@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: document Panasonic AN30259A
+ bindings
+References: <20180307004722.23524-1-simon@lineageos.org>
+ <20180307004722.23524-2-simon@lineageos.org>
+ <973256fd-8394-1b41-9ca1-846442515f62@gmail.com> <20180308225412.GA11646@amd>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <0dee75f3-b672-148b-fcea-0926eb0ebaee@gmail.com>
+Date: Fri, 9 Mar 2018 23:33:24 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "Michael Grzeschik  <m.grzeschik@pengutronix.de>, Andrew Lunn" <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, "Julia Cartwright  <julia@ni.com>, <devicetree@vger.kernel.org>, Brad Mouring" <brad.mouring@ni.com>
+In-Reply-To: <20180308225412.GA11646@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Simon Shields <simon@lineageos.org>, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the existance of the optional binding, directing to the
-general ethernet document that describes this binding.
+On 03/08/2018 11:54 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>> +	led@1 {
+>>> +		reg = <1>;
+>>> +		linux,default-trigger = "heartbeat";
+>>> +		label = "an30259a:red:notification";
+>>
+>> s/an30259a:red:notification/red:notification/
+>>
+>> Let's drop devicename section from label, and make it a LED class
+>> driver responsibility to prepend the label with devicename when
+>> composing LED class device name.
+> 
+> Is it good idea?
+> 
+> (Some existing bindings specify three-part label in the label, some do
+> not. Documentation/devicetree/bindings/leds/leds-netxbig.txt
+> vs. Documentation/devicetree/bindings/leds/leds-mt6323.txt :-( We
+> should really solve that somehow).
 
-Signed-off-by: Brad Mouring <brad.mouring@ni.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 1 +
- 1 file changed, 1 insertion(+)
+It looks that we didn't pay enough attention to the label DT property
+format, as long as the resulting LED class device name conformed
+to the three-part LED naming scheme.
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 27966ae741e0..457d5ae16f23 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -29,6 +29,7 @@ Optional properties for PHY child node:
- - reset-gpios : Should specify the gpio for phy reset
- - magic-packet : If present, indicates that the hardware supports waking
-   up via magic packet.
-+- phy-handle : see ethernet.txt file in the same directory
- 
- Examples:
- 
+We certainly need to fix that, by defining the label format explicitly
+in the common LED bindings. However we have two related issues, that
+have been raised several times throughout last months:
+
+1. label format
+
+Rob's statement from [0]:
+
+"I really dislike how this naming convention is used for label. label is
+ supposed to be the physically identifiable name. Having the devicename
+defeats that. We'd be better off with a color property.
+It seems we're overloading the naming with too many things. Now we're
+adding device association"
+
+2. LED class device naming
+
+Rob's statement from [0]:
+
+"I do want to see standard names though. On 96boards for example, there
+are defined LEDs and locations. The function on some are defined (e.g.
+WiFi/BT) and somewhat undefined on others (user{1-4}). I'd like to see
+the same label across all boards."
+
+
+Now, we have to decide if label should map directly to LED class device.
+I requested removing devicename from label to satisfy 1., provided
+that there was no conclusion from the thread [0]. Also some LED class
+drivers already follow this scheme.
+
+Of course I meant it to be only a temporary solution until we unify
+the LED class device naming across all drivers and bindings.
+
+Driving LED controller name can be looked up in sysfs so it doesn't
+need to be a part of the LED class device name.
+
+> I'd really like to see input0:white:numlock in the name, so same
+> software has a chance to work on PC and ARM notebook. Prepending
+> an30259a in the driver will break that...
+
+You have input0 in your example. It does not say too much
+about the device the LED is associated with. I assume that this
+is not a device node name, since in Device Tree you don't know the
+associations between DT nodes and device node numbers.
+
+[0] https://patchwork.kernel.org/patch/9956315/
+
 -- 
-2.16.2
+Best regards,
+Jacek Anaszewski
