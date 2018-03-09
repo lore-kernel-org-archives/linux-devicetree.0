@@ -1,104 +1,96 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 02/17] media: doc: add document for rkisp1 meta buffer
- format
-Date: Fri, 9 Mar 2018 14:37:03 +0100
-Message-ID: <036c8bbe-c17f-b6fa-8432-fd7419adeda9@xs4all.nl>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
- <20180308094807.9443-3-jacob-chen@iotwrt.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH 6/9] sunxi-cedrus: Add device tree binding document
+Date: Fri, 9 Mar 2018 15:38:57 +0200
+Message-ID: <20180309133857.GA20392@solar>
+References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
+ <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308094807.9443-3-jacob-chen@iotwrt.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, Jacob Chen <jacob-chen@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDB4J47M7YERB5M4RLKQKGQEQPBEGEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180309101445.16190-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Florent Revest <revestflo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas van Kleef <thomas-XCRq7eEM0/pmR6Xm/wNWPw@public.gmane.org>, "Signed-off-by : Bob Ham" <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/18 10:47, Jacob Chen wrote:
-> From: Jacob Chen <jacob2.chen@rock-chips.com>
+On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
+> From: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > 
-> This commit add docuemnt for rkisp1 meta buffer format
+> Device Tree bindings for the Allwinner's video engine
 > 
-> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  Documentation/media/uapi/v4l/meta-formats.rst        |  2 ++
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst     | 20 ++++++++++++++++++++
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst       | 18 ++++++++++++++++++
->  3 files changed, 40 insertions(+)
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+>  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
 > 
-> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
-> index 0c4e1ecf5879..44e7edbf1dae 100644
-> --- a/Documentation/media/uapi/v4l/meta-formats.rst
-> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
-> @@ -15,3 +15,5 @@ These formats are used for the :ref:`metadata` interface only.
->      pixfmt-meta-uvc
->      pixfmt-meta-vsp1-hgo
->      pixfmt-meta-vsp1-hgt
-> +    pixfmt-meta-rkisp1-params
-> +    pixfmt-meta-rkisp1-stat
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
 > new file mode 100644
-> index 000000000000..2ff4f4309795
+> index 000000000000..138581113c49
 > --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-> @@ -0,0 +1,20 @@
-> +.. -*- coding: utf-8; mode: rst -*-
+> +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> @@ -0,0 +1,44 @@
+> +Device-Tree bindings for SUNXI video engine found in sunXi SoC family
 > +
-> +.. _v4l2-meta-fmt-rkisp1-params:
+> +Required properties:
+> +- compatible	    : "allwinner,sun4i-a10-video-engine";
+> +- memory-region     : DMA pool for buffers allocation;
+> +- clocks	    : list of clock specifiers, corresponding to
+> +		      entries in clock-names property;
+> +- clock-names	    : should contain "ahb", "mod" and "ram" entries;
+> +- resets	    : phandle for reset;
+> +- interrupts	    : should contain VE interrupt number;
+> +- reg		    : should contain register base and length of VE.
 > +
-> +*******************************
-> +V4L2_META_FMT_RK_ISP1_PARAMS
-> +*******************************
+> +Example:
 > +
-> +Rockchip ISP1 Parameters Data
+> +reserved-memory {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
 > +
-> +Description
-> +===========
+> +	ve_reserved: cma {
+> +		compatible = "shared-dma-pool";
+> +		reg = <0x43d00000 0x9000000>;
+> +		no-map;
+> +		linux,cma-default;
+> +	};
+> +};
 > +
-> +This format describes input parameters for the Rockchip ISP1.
+> +video-engine {
+> +	compatible = "allwinner,sun4i-a10-video-engine";
+> +	memory-region = <&ve_reserved>;
 > +
-> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
-> +the ``linux/rkisp1-config.h`` header file, see it for details.
-> +
-> +The parameters consist of multiple modules.
-> +The module won't be updated if the correspond bit was not set in module_*_update.
+> +	clocks = <&ahb_gates 32>, <&ccu CLK_VE>,
+> +		 <&dram_gates 0>;
 
-correspond -> corresponding
+This should be updated to sunxi-ng clocks:
 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> new file mode 100644
-> index 000000000000..dca8befe58f1
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> @@ -0,0 +1,18 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _v4l2-meta-fmt-rkisp1-stat:
-> +
-> +*******************************
-> +V4L2_META_FMT_RK_ISP1_STAT_3A
-> +*******************************
-> +
-> +Rockchip ISP1 Statistics Data
-> +
-> +Description
-> +===========
-> +
-> +This format describes image color statistics information generated by the Rockchip
-> +ISP1.
-> +
-> +It use c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>, <&ccu CLK_DRAM_VE>;
 
-use -> uses
-
-> +the ``linux/cifisp_stat.h`` header file, see it for details.
+> +	clock-names = "ahb", "mod", "ram";
+> +
+> +	assigned-clocks = <&ccu CLK_VE>;
+> +	assigned-clock-rates = <320000000>;
+> +
+> +	resets = <&ccu RST_VE>;
+> +
+> +	interrupts = <53>;
+> +
+> +	reg = <0x01c0e000 4096>;
+> +};
+> -- 
+> 2.16.2
 > 
-
-Regards,
-
-	Hans
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
