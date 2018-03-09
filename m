@@ -1,50 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] Input: gpio-keys - add support for wakeup event
- action
-Date: Fri, 9 Mar 2018 17:27:21 -0600
-Message-ID: <20180309232720.pmqaulifiqa5czul@rob-hp-laptop>
-References: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
- <20180308073213.8419-2-jeffy.chen@rock-chips.com>
+From: "Milton Miller II" <miltonm@us.ibm.com>
+Subject: Re: [PATCH v2 2/8] [PATCH 2/8] Documentations: dt-bindings: Add a document
+ of PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Fri, 9 Mar 2018 23:41:00 +0000
+Message-ID: <OF08D8261E.8F72E5DC-ON0025824B.008218BB-0025824B.008218C6@notes.na.collabserv.com>
+References: <20180307221124.GD10438@amd>,<20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-3-jae.hyun.yoo@linux.intel.com>
+ <20180306124002.GA13950@amd>
+ <33bf6563-b220-7ff9-8b04-84e9bd781b3f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180308073213.8419-2-jeffy.chen@rock-chips.com>
+In-Reply-To: <20180307221124.GD10438@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>, Joseph Lo <josephl@nvidia.com>, stephen lu <lumotuwe@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Philippe Ombredanne <pombredanne@nexb.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-hwmon@vger.kernel.org, andrew@lunn.ch, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2018 at 03:32:11PM +0800, Jeffy Chen wrote:
-> Add support for specifying event actions to trigger wakeup when using
-> the gpio-keys input device as a wakeup source.
-> 
-> This would allow the device to configure when to wakeup the system. For
-> example a gpio-keys input device for pen insert, may only want to wakeup
-> the system when ejecting the pen.
-> 
-> Suggested-by: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> ---
-> 
-> Changes in v5:
-> Remove unneeded irq_wake flag as Andy suggested.
-> 
-> Changes in v4:
-> Add dt-binding gpio-keys.h, stop saving irq trigger type, add enable/disable wakeup helpers as Dmitry suggested.
-> 
-> Changes in v3:
-> Adding more comments as Brian suggested.
-> 
-> Changes in v2:
-> Specify wakeup event action instead of irq trigger type as Brian
-> suggested.
-> 
->  drivers/input/keyboard/gpio_keys.c    | 63 +++++++++++++++++++++++++++++++++--
->  include/dt-bindings/input/gpio-keys.h | 13 ++++++++
+About  03/07/2018 04:12PM in some time zone, Pavel Machek wrote:
+>Subject: Re: [PATCH v2 2/8] [PATCH 2/8] Documentations: dt-bindings:
+>Add a document of PECI adapter driver for Aspeed AST24xx/25xx SoCs
+>
+>Hi!
+>
+>> >Are these SoCs x86-based?
+>> 
+>> Yes, these are ARM SoCs. Please see Andrew's answer as well.
+>
+>Understood, thanks.
+>
+>> >>+	Read sampling point selection. The whole period of a bit time
+>will be
+>> >>+	divided into 16 time frames. This value will determine which
+>time frame
+>> >>+	this controller will sample PECI signal for data read back.
+>Usually in
+>> >>+	the middle of a bit time is the best.
+>> >
+>> >English? "This value will determine when this controller"?
+>> >
+>> 
+>> Could I change it like below?:
+>> 
+>> "This value will determine in which time frame this controller
+>samples PECI
+>> signal for data read back"
+>
+>I guess... I'm not native speaker, I guess this could be improved
+>some
+>more.
+>
 
-This file should be in the binding patch.
+I agree this wording is still confusing. 
 
->  include/linux/gpio_keys.h             |  2 ++
->  3 files changed, 75 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/input/gpio-keys.h
+The problem is that the key subject, the time of the sampling, is in the descriptive clause "in which time frame".
+
+"This value will determine the time frame in which the controller will sample"
+
+or perhaps phrase it as saving a specific sample from the over-clock, or a phase of the clock.
+
+>Best regards,
+>									Pavel
+>
+>-- 
+>(english) http://www.livejournal.com/~pavelmachek
+>(cesky, pictures)
+>http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+>
+
+milton
+--
+Speaking for myself not IBM.
