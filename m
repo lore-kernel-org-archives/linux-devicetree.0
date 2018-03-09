@@ -1,130 +1,119 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] power: supply: axp20x_battery: add
- support for AXP813
-Date: Fri, 9 Mar 2018 17:09:42 +0100
-Message-ID: <20180309160942.fp6vrjnvis3kiarb@earth.universe>
-References: <cover.07d02d245f44e63775b331815e9bf584598d2e9f.1519813976.git-series.quentin.schulz@bootlin.com>
- <3969fa859a80afba1fe3c9b71cf3147111582520.1519813976.git-series.quentin.schulz@bootlin.com>
-Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3 2/2] power: reset: gpio-poweroff: Support for timeout
+ from device property
+Date: Fri, 9 Mar 2018 17:19:26 +0100
+Message-ID: <20180309161926.hciaq3ok7st3fc7j@earth.universe>
+References: <20180222231714.11843-1-mdf@kernel.org>
+ <20180222231714.11843-2-mdf@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ftaiz767pliwrnwg"
-Return-path: <linux-sunxi+bncBDXMLNOH5ANRBSXDRLKQKGQE6PSQWNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="osw746qlfqyb3xsn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3969fa859a80afba1fe3c9b71cf3147111582520.1519813976.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180222231714.11843-2-mdf@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---ftaiz767pliwrnwg
-Content-Type: text/plain; charset="UTF-8"
+--osw746qlfqyb3xsn
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Wed, Feb 28, 2018 at 11:36:00AM +0100, Quentin Schulz wrote:
-> The X-Powers AXP813 PMIC has got some slight differences from
-> AXP20X/AXP22X PMICs:
->  - the maximum voltage supplied by the PMIC is 4.35 instead of 4.36/4.24
->  for AXP20X/AXP22X,
->  - the constant charge current formula is different,
-> 
-> It also has a bit to tell whether the battery percentage returned by the
-> PMIC is valid.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Thu, Feb 22, 2018 at 03:17:14PM -0800, Moritz Fischer wrote:
+> Add support for reading a timeout value from device property.
+> Fall back to previous default of 3s if nothing is specified.
+>=20
+> Signed-off-by: Moritz Fischer <mdf@kernel.org>
 > ---
 
-Thanks, queued.
+Thanks, both queued.
 
 -- Sebastian
 
->  drivers/power/supply/axp20x_battery.c | 42 ++++++++++++++++++++++++++++-
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply/axp20x_battery.c
-> index 04a0d91..4f69c0e 100644
-> --- a/drivers/power/supply/axp20x_battery.c
-> +++ b/drivers/power/supply/axp20x_battery.c
-> @@ -49,6 +49,8 @@
->  #define AXP22X_CHRG_CTRL1_TGT_4_22V	(1 << 5)
->  #define AXP22X_CHRG_CTRL1_TGT_4_24V	(3 << 5)
->  
-> +#define AXP813_CHRG_CTRL1_TGT_4_35V	(3 << 5)
-> +
->  #define AXP20X_CHRG_CTRL1_TGT_CURR	GENMASK(3, 0)
->  
->  #define AXP20X_V_OFF_MASK		GENMASK(2, 0)
-> @@ -133,6 +135,35 @@ static int axp22x_battery_get_max_voltage(struct axp20x_batt_ps *axp20x_batt,
->  	return 0;
->  }
->  
-> +static int axp813_battery_get_max_voltage(struct axp20x_batt_ps *axp20x_batt,
-> +					  int *val)
-> +{
-> +	int ret, reg;
-> +
-> +	ret = regmap_read(axp20x_batt->regmap, AXP20X_CHRG_CTRL1, &reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (reg & AXP20X_CHRG_CTRL1_TGT_VOLT) {
-> +	case AXP20X_CHRG_CTRL1_TGT_4_1V:
-> +		*val = 4100000;
-> +		break;
-> +	case AXP20X_CHRG_CTRL1_TGT_4_15V:
-> +		*val = 4150000;
-> +		break;
-> +	case AXP20X_CHRG_CTRL1_TGT_4_2V:
-> +		*val = 4200000;
-> +		break;
-> +	case AXP813_CHRG_CTRL1_TGT_4_35V:
-> +		*val = 4350000;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int axp20x_get_constant_charge_current(struct axp20x_batt_ps *axp,
->  					      int *val)
+> Changes from v2:
+> - use device_property_read_{bool,u32} instead of of equivalent
+>=20
+> Changes from v1:
+> - of_property_read_u32() overwrites the output only if it succeeds,
+>   simplify error handling
+> ---
+>=20
+>  drivers/power/reset/gpio-poweroff.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gp=
+io-poweroff.c
+> index be3d81ff51cc..6273ad3b411d 100644
+> --- a/drivers/power/reset/gpio-poweroff.c
+> +++ b/drivers/power/reset/gpio-poweroff.c
+> @@ -19,11 +19,13 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/module.h>
+> =20
+> +#define DEFAULT_TIMEOUT_MS 3000
+>  /*
+>   * Hold configuration here, cannot be more than one instance of the driv=
+er
+>   * since pm_power_off itself is global.
+>   */
+>  static struct gpio_desc *reset_gpio;
+> +static u32 timeout =3D DEFAULT_TIMEOUT_MS;
+> =20
+>  static void gpio_poweroff_do_poweroff(void)
 >  {
-> @@ -491,6 +522,14 @@ static const struct axp_data axp221_data = {
->  	.set_max_voltage = axp22x_battery_set_max_voltage,
->  };
->  
-> +static const struct axp_data axp813_data = {
-> +	.ccc_scale = 200000,
-> +	.ccc_offset = 200000,
-> +	.has_fg_valid = true,
-> +	.get_max_voltage = axp813_battery_get_max_voltage,
-> +	.set_max_voltage = axp20x_battery_set_max_voltage,
-> +};
+> @@ -40,7 +42,7 @@ static void gpio_poweroff_do_poweroff(void)
+>  	gpiod_set_value(reset_gpio, 1);
+> =20
+>  	/* give it some time */
+> -	mdelay(3000);
+> +	mdelay(timeout);
+> =20
+>  	WARN_ON(1);
+>  }
+> @@ -58,12 +60,14 @@ static int gpio_poweroff_probe(struct platform_device=
+ *pdev)
+>  		return -EBUSY;
+>  	}
+> =20
+> -	input =3D of_property_read_bool(pdev->dev.of_node, "input");
+> +	input =3D device_property_read_bool(&pdev->dev, "input");
+>  	if (input)
+>  		flags =3D GPIOD_IN;
+>  	else
+>  		flags =3D GPIOD_OUT_LOW;
+> =20
+> +	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
 > +
->  static const struct of_device_id axp20x_battery_ps_id[] = {
->  	{
->  		.compatible = "x-powers,axp209-battery-power-supply",
-> @@ -498,6 +537,9 @@ static const struct of_device_id axp20x_battery_ps_id[] = {
->  	}, {
->  		.compatible = "x-powers,axp221-battery-power-supply",
->  		.data = (void *)&axp221_data,
-> +	}, {
-> +		.compatible = "x-powers,axp813-battery-power-supply",
-> +		.data = (void *)&axp813_data,
->  	}, { /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, axp20x_battery_ps_id);
-> -- 
-> git-series 0.9.1
---ftaiz767pliwrnwg--
+>  	reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL, flags);
+>  	if (IS_ERR(reset_gpio))
+>  		return PTR_ERR(reset_gpio);
+> --=20
+> 2.16.1
+>=20
+
+--osw746qlfqyb3xsn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqitA0ACgkQ2O7X88g7
++ppp2Q//YA8TyfLpPaEgOkkQKccxE4UgfbpfLbW5DjwSv45dQGQ3jeiz5LSUQwk3
+JjeOOQTyTZgRbUFtis30DV8x5mqB3QevGexUygVzRDh4Y2QM2CmikCfmbTNqAkYa
+emdrLFXtBacZTeP4GNBizU0Edv5N/iWCzyUfp1MClRmvvoKLJRPg5+QEhOdEpnXE
+5XDwozK7E8qkCvsOMCdJUEIWNrOpDzxuxtz2GR7MlPPUtLUvs8g58AKanmquuzTX
+Sc+wzjLy3bDQSLRw6MGHnc2O5KACsaIkKvO0pzve8iZFo7jBsZQWfFA1icxaFA6c
+YZP3i5k8A2Ldr5LKizB+poSDduvCl0bxRxokitgLFd6+Da9uO2EPSsOJZdmstO+E
+N/EBRU0ntdjgVXZLShITBqlAB4K/PMVZgZ9XmTamZjRH9jmxcEBatl1zIhM2LKi5
+f/mznYvU3LuQOAdb6caw0z+uOYuJxpvuQFe97DJdlEkPwtJcSd5H7aZ8g6WjO37q
+uF6HrOOURYFjcnvDADeknR8QF7/fTrz2zm7fG6N0k2ilPFU0K5lsCHdyBATe9jGT
+QgGV/zOPM5os0XnWP1apyTBrOf6xjk2l8/utuyzSlG3CTU1PPmQXhHUjJ5022Ofn
+XtDDuO8W/f3syBwCOWKfESzXIV/1duTAE0X3n/mRALty1fNoR/o=
+=1IEW
+-----END PGP SIGNATURE-----
+
+--osw746qlfqyb3xsn--
