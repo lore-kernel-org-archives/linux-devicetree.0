@@ -1,96 +1,135 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 6/9] sunxi-cedrus: Add device tree binding document
-Date: Fri, 9 Mar 2018 15:38:57 +0200
-Message-ID: <20180309133857.GA20392@solar>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH 6/9] sunxi-cedrus: Add device tree binding
+ document
+Date: Fri, 09 Mar 2018 14:45:46 +0100
+Message-ID: <1520603146.15946.4.camel@bootlin.com>
 References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
- <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+         <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
+         <20180309133857.GA20392@solar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERB5M4RLKQKGQEQPBEGEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180309101445.16190-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Florent Revest <revestflo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas van Kleef <thomas-XCRq7eEM0/pmR6Xm/wNWPw@public.gmane.org>, "Signed-off-by : Bob Ham" <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-jBFEwdL08CFyEyRxDXma"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309133857.GA20392@solar>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
-> From: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> Device Tree bindings for the Allwinner's video engine
-> 
-> Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> new file mode 100644
-> index 000000000000..138581113c49
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> @@ -0,0 +1,44 @@
-> +Device-Tree bindings for SUNXI video engine found in sunXi SoC family
-> +
-> +Required properties:
-> +- compatible	    : "allwinner,sun4i-a10-video-engine";
-> +- memory-region     : DMA pool for buffers allocation;
-> +- clocks	    : list of clock specifiers, corresponding to
-> +		      entries in clock-names property;
-> +- clock-names	    : should contain "ahb", "mod" and "ram" entries;
-> +- resets	    : phandle for reset;
-> +- interrupts	    : should contain VE interrupt number;
-> +- reg		    : should contain register base and length of VE.
-> +
-> +Example:
-> +
-> +reserved-memory {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +
-> +	ve_reserved: cma {
-> +		compatible = "shared-dma-pool";
-> +		reg = <0x43d00000 0x9000000>;
-> +		no-map;
-> +		linux,cma-default;
-> +	};
-> +};
-> +
-> +video-engine {
-> +	compatible = "allwinner,sun4i-a10-video-engine";
-> +	memory-region = <&ve_reserved>;
-> +
-> +	clocks = <&ahb_gates 32>, <&ccu CLK_VE>,
-> +		 <&dram_gates 0>;
 
-This should be updated to sunxi-ng clocks:
+--=-jBFEwdL08CFyEyRxDXma
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>, <&ccu CLK_DRAM_VE>;
+Hi,
 
-> +	clock-names = "ahb", "mod", "ram";
-> +
-> +	assigned-clocks = <&ccu CLK_VE>;
-> +	assigned-clock-rates = <320000000>;
-> +
-> +	resets = <&ccu RST_VE>;
-> +
-> +	interrupts = <53>;
-> +
-> +	reg = <0x01c0e000 4096>;
-> +};
-> -- 
-> 2.16.2
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Thanks for the review!
+
+On Fri, 2018-03-09 at 15:38 +0200, Priit Laes wrote:
+> On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
+> > From: Florent Revest <florent.revest@free-electrons.com>
+> >=20
+> > Device Tree bindings for the Allwinner's video engine
+> >=20
+> > Signed-off-by: Florent Revest <florent.revest@free-electrons.com>
+> > ---
+> >  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44
+> > ++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/sunxi-
+> > cedrus.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/media/sunxi-
+> > cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-
+> > cedrus.txt
+> > new file mode 100644
+> > index 000000000000..138581113c49
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> > @@ -0,0 +1,44 @@
+> > +Device-Tree bindings for SUNXI video engine found in sunXi SoC
+> > family
+> > +
+> > +Required properties:
+> > +- compatible	    : "allwinner,sun4i-a10-video-engine";
+> > +- memory-region     : DMA pool for buffers allocation;
+> > +- clocks	    : list of clock specifiers, corresponding to
+> > +		      entries in clock-names property;
+> > +- clock-names	    : should contain "ahb", "mod" and "ram"
+> > entries;
+> > +- resets	    : phandle for reset;
+> > +- interrupts	    : should contain VE interrupt number;
+> > +- reg		    : should contain register base and length
+> > of VE.
+> > +
+> > +Example:
+> > +
+> > +reserved-memory {
+> > +	#address-cells =3D <1>;
+> > +	#size-cells =3D <1>;
+> > +	ranges;
+> > +
+> > +	ve_reserved: cma {
+> > +		compatible =3D "shared-dma-pool";
+> > +		reg =3D <0x43d00000 0x9000000>;
+> > +		no-map;
+> > +		linux,cma-default;
+> > +	};
+> > +};
+> > +
+> > +video-engine {
+> > +	compatible =3D "allwinner,sun4i-a10-video-engine";
+> > +	memory-region =3D <&ve_reserved>;
+> > +
+> > +	clocks =3D <&ahb_gates 32>, <&ccu CLK_VE>,
+> > +		 <&dram_gates 0>;
+>=20
+> This should be updated to sunxi-ng clocks:
+>=20
+> clocks =3D <&ccu CLK_BUS_VE>, <&ccu CLK_VE>, <&ccu CLK_DRAM_VE>;
+
+I will definitely keep that in mind and make the change for the next
+revision, thanks!
+
+> > +	clock-names =3D "ahb", "mod", "ram";
+> > +
+> > +	assigned-clocks =3D <&ccu CLK_VE>;
+> > +	assigned-clock-rates =3D <320000000>;
+> > +
+> > +	resets =3D <&ccu RST_VE>;
+> > +
+> > +	interrupts =3D <53>;
+> > +
+> > +	reg =3D <0x01c0e000 4096>;
+> > +};
+> > --=20
+> > 2.16.2
+> >=20
+> > --=20
+> > You received this message because you are subscribed to the Google
+> > Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it,
+> > send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > For more options, visit https://groups.google.com/d/optout.
+--=20
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-jBFEwdL08CFyEyRxDXma
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqikAoACgkQ3cLmz3+f
+v9HzuAf/cGCIRqLDpOtZSF3o4sE1S1meFhiNJLIUc9XDo4MneT3kf1llz9Mu8uoY
+8WOd3dWkcQIQRYz4jb1NiNd6XF8Ky0Wx4896k7+riodO9YMNcjzQk5gcHRaZ5ks/
+2YpjlfziJVrqvJHbs5zlF8Yov5Eu99Px0qvXCRIulPUkj1c67nOO4X7noKF/b11w
+JX628G4zkUskyTgumEhzXXYYaP70YYYTqHFsHxLQRCAK1e/a8VoualH9sWO0mXMI
+pICjSMVDK4DNaf2pLJ+W2tM2IP9Qrvdz0t4GiJiu2V+h6z3OIdhqsxTQDbvLS9ao
+5RKBcy0FqcHBVFRyvKCTohgYOK57mg==
+=7gy8
+-----END PGP SIGNATURE-----
+
+--=-jBFEwdL08CFyEyRxDXma--
