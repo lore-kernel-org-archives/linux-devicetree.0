@@ -1,58 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec support
-Date: Fri, 9 Mar 2018 08:34:14 +0000
-Message-ID: <20180309083414.s57eq3kw325magwz@dell>
-References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
- <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
- <20180307163211.rytfli5tb47yhtug@dell>
- <20180308094652.qg4atjw5c3hayaz3@earth.universe>
- <20180308095315.mpcmx2ob6yhsnrm6@dell>
- <20180308102757.jyi7uo566n6nuct5@earth.universe>
- <20180308104831.fflq2arj5dxgntia@dell>
- <20180308112528.GC6019@sirena.org.uk>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
+Date: Fri, 9 Mar 2018 09:37:38 +0100
+Message-ID: <20180309093738.7cd5fded@karo-electronics.de>
+References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+        <20180308161135.1f3d3d18@karo-electronics.de>
+        <20180308153832.GA28454@botnar.kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180308112528.GC6019@sirena.org.uk>
+In-Reply-To: <20180308153832.GA28454@botnar.kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 08 Mar 2018, Mark Brown wrote:
+Hi,
 
-> On Thu, Mar 08, 2018 at 10:48:31AM +0000, Lee Jones wrote:
-> > On Thu, 08 Mar 2018, Sebastian Reichel wrote:
+On Thu, 8 Mar 2018 16:38:32 +0100 Martin Kaiser wrote:
+> Hi Lothar,
 > 
-> > > I had it in PATCHv1-PATCHv4. It was removed, since Mark didn't want
-> > > to have it in the DT ABI.
+> Thus wrote Lothar Waßmann (LW@KARO-electronics.de):
 > 
-> > Right, but why?  Is it not a hardware device?  I think converting from
-> > devm_of_platform_populate() for one sub-device is a bit drastic.
+> > > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> > > index 9725705..cf70df2 100644
+> > > --- a/arch/arm/boot/dts/imx25.dtsi
+> > > +++ b/arch/arm/boot/dts/imx25.dtsi
+> > > @@ -269,6 +269,7 @@
+> > >  				dmas = <&sdma 24 1 0>,
+> > >  				       <&sdma 25 1 0>;
+> > >  				dma-names = "rx", "tx";
+> > > +				fsl,fifo-depth = <15>;
+> > >  				status = "disabled";
+> > >  			};
 > 
-> It's not a separate physical device or IP and doesn't exist outside of
-> the MFD, it's just how Linux is currently choosing to divide up the chip
-> right now but that's totally open to change even in future versions of
-> Linux.  Clocks are a big issue with audio stuff, right now sections of
-> the clock tree get handled in the CODEC driver but we're going to want
-> to push them out to a clock driver so we're not reimplementing handling
-> for clocks.
+> > > @@ -329,6 +330,7 @@
+> > >  				dmas = <&sdma 28 1 0>,
+> > >  				       <&sdma 29 1 0>;
+> > >  				dma-names = "rx", "tx";
+> > > +				fsl,fifo-depth = <15>;
+> > >  				status = "disabled";
+> > >  			};
+> 
+> > You are changing the global .dtsi file. Did you test this change with
+> > all devices that are affected by it?
+> 
+> I changed the hardware description of the imx25 SSI to match the
+> reference manual.
+> 
+> I did test this change on an imx25 board with audio playback. This uses
+> the SSI description I modified. I verified that the driver is actually
+> taking the modified setting into account and that this causes no
+> problems.
+> 
+> As of today, this setting is used by the fsl_ssi driver to set the fifo
+> water level for dma requests.
+> 
+> Of course, I don't have access to the enitre range of supported imx25
+> boards and I don't think this is required for submitting patches.
+> 
+> Do you have any indication why this patch should not be merged?
+> 
+Usually patches should not willy-nilly change the behaviour of existing
+configurations unless they fix any real life bugs.
 
-How is the CODEC controlled?  Does it have its own registers?  I guess
-by "it's not a separate device or IP" you mean that it doesn't.  But
-that begs the question, how does this then device differ from all the
-other devices (adc, battery, charger, regulator, rtc, pwrbutton,
-usb-phy and led)?
 
-I'm asking, not to be awkward, but to avoid 50 lines of potentially
-unnecessary static code.  If this is a real (sub-)device, even if it's
-part of a larger, single device (MFD) then there is no reason why it
-can't be represented as a single, albeit empty node.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Lothar Waßmann
