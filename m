@@ -1,268 +1,164 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 00/17] Rockchip ISP1 Driver
-Date: Fri, 9 Mar 2018 15:12:03 +0100
-Message-ID: <e92343b5-6b02-2c38-6dc3-dc5d9af160c6@xs4all.nl>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 5/9] media: platform: Add Sunxi Cedrus decoder driver
+Date: Fri, 09 Mar 2018 15:25:22 +0100
+Message-ID: <1520605522.15946.14.camel@bootlin.com>
+References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
+         <20180309101445.16190-3-paul.kocialkowski@bootlin.com>
+         <20180309135702.pk4webt7xnj7lrza@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pZHdMQqkI16B0Hm/jNZ1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308094807.9443-1-jacob-chen@iotwrt.com>
-Content-Language: en-US
+In-Reply-To: <20180309135702.pk4webt7xnj7lrza@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
 
-This is getting very close. Besides this round of review comments the main
-blocker is mbus_config. But Thomasz is looking at that, so I will wait until
-that is resolved.
+--=-pZHdMQqkI16B0Hm/jNZ1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Also for your v7 include the patches from Sakari that add Meta Output support.
+Hi,
 
-This patch series relies on those, so it is easiest to review if they are part
-of the patch series.
+On Fri, 2018-03-09 at 14:57 +0100, Maxime Ripard wrote:
+> Hi,
+>=20
+> On Fri, Mar 09, 2018 at 11:14:41AM +0100, Paul Kocialkowski wrote:
+> > +/*
+> > + * mem2mem callbacks
+> > + */
+> > +
+> > +void job_abort(void *priv)
+> > +{}
+>=20
+> Is that still needed?
 
-Regards,
+It looks like we need a dummy callback here, the v4l2_m2m_init function
+puts a hard requirement on it.
 
-	Hans
+The feature is definitely not used for now, but maybe this could be
+hooked to aborting the matching request? It was probably designed for
+the case where the driver handles a queue of jobs on its own (that's how
+it's used in vim2m) and such an internal queue is perhaps irrelevant
+when using the request API (and fences later).
 
-On 08/03/18 10:47, Jacob Chen wrote:
-> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> 
-> changes in V6:
->   - add mipi txrx phy support
->   - remove bool and enum from uapi header
->   - add buf_prepare op
->   - correct some spelling problems
->   - return all queued buffers when starting stream failed
-> 
-> changes in V5: Sync with local changes,
->   - fix the SP height limit
->   - speed up the second stream capture
->   - the second stream can't force sync for rsz when start/stop streaming
->   - add frame id to param vb2 buf
->   - enable luminance maximum threshold
-> 
-> changes in V4:
->   - fix some bugs during development
->   - move quantization settings to rkisp1 subdev
->   - correct some spelling problems
->   - describe ports in dt-binding documents
-> 
-> changes in V3:
->   - add some comments
->   - fix wrong use of v4l2_async_subdev_notifier_register
->   - optimize two paths capture at a time
->   - remove compose
->   - re-struct headers
->   - add a tmp wiki page: http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> changes in V2:
->   mipi-phy:
->     - use async probing
->     - make it be a child device of the GRF
->   isp:
->     - add dummy buffer
->     - change the way to get bus configuration, which make it possible to
->             add parallel sensor support in the future(without mipi-phy driver).
-> 
-> This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 SoC.
-> 
-> Wiki Pages:
-> http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> The deprecated g_mbus_config op is not dropped in  V6 because i am waiting tomasz's patches.
-> 
-> v4l2-compliance for V6(isp params/stats nodes are passed):
-> 
->     v4l2-compliance SHA   : 93dc5f20727fede5097d67f8b9adabe4b8046d5b
-> 
->     Compliance test for device /dev/video0:
-> 
->     Driver Info:
->             Driver name      : rkisp1
->             Card type        : rkisp1
->             Bus info         : platform:ff910000.isp
->             Driver version   : 4.16.0
->             Capabilities     : 0x84201000
->                     Video Capture Multiplanar
->                     Streaming
->                     Extended Pix Format
->                     Device Capabilities
->             Device Caps      : 0x04201000
->                     Video Capture Multiplanar
->                     Streaming
->                     Extended Pix Format
->     Media Driver Info:
->             Driver name      : rkisp1
->             Model            : rkisp1
->             Serial           : 
->             Bus info         : 
->             Media version    : 4.16.0
->             Hardware revision: 0x00000000 (0)
->             Driver version   : 4.16.0
->     Interface Info:
->             ID               : 0x03000007
->             Type             : V4L Video
->     Entity Info:
->             ID               : 0x00000006 (6)
->             Name             : rkisp1_selfpath
->             Function         : V4L2 I/O
->             Pad 0x01000009   : Sink
->               Link 0x02000021: from remote pad 0x1000004 of entity 'rkisp1-isp-subdev': Data, Enabled
-> 
->     Required ioctls:
->             test MC information (see 'Media Driver Info' above): OK
->             test VIDIOC_QUERYCAP: OK
-> 
->     Allow for multiple opens:
->             test second /dev/video0 open: OK
->             test VIDIOC_QUERYCAP: OK
->             test VIDIOC_G/S_PRIORITY: OK
->             test for unlimited opens: OK
-> 
->     Debug ioctls:
->             test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->             test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
->     Input ioctls:
->             test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->             test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->             test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->             test VIDIOC_ENUMAUDIO: OK (Not Supported)
->             test VIDIOC_G/S/ENUMINPUT: OK
->             test VIDIOC_G/S_AUDIO: OK (Not Supported)
->             Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
->     Output ioctls:
->             test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->             test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->             test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->             test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->             test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->             Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
->     Input/Output configuration ioctls:
->             test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->             test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->             test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->             test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->     Control ioctls (Input 0):
->             test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->             test VIDIOC_QUERYCTRL: OK
->             test VIDIOC_G/S_CTRL: OK
->             test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->             test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->             test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->             Standard Controls: 9 Private Controls: 0
-> 
->     Format ioctls (Input 0):
->             test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->             test VIDIOC_G/S_PARM: OK (Not Supported)
->             test VIDIOC_G_FBUF: OK (Not Supported)
->                     fail: v4l2-test-formats.cpp(330): !colorspace
->                     fail: v4l2-test-formats.cpp(454): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_m
->     p.quantization)
->             test VIDIOC_G_FMT: FAIL
->             test VIDIOC_TRY_FMT: OK (Not Supported)
->             test VIDIOC_S_FMT: OK (Not Supported)
->             test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                     fail: v4l2-test-formats.cpp(1288): doioctl(node, VIDIOC_G_SELECTION, &sel) != EINVAL
->             test Cropping: FAIL
->             test Composing: OK (Not Supported)
->             test Scaling: OK
-> 
->     Codec ioctls (Input 0):
->             test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->             test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->             test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->     Buffer ioctls (Input 0):
->             test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                     fail: v4l2-test-buffers.cpp(525): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, prob
->     ably due to earlier failing format tests.
->             test VIDIOC_EXPBUF: OK (Not Supported)
-> 
->     Total: 44, Succeeded: 42, Failed: 2, Warnings: 0
-> 
-> Jacob Chen (12):
->   media: doc: add document for rkisp1 meta buffer format
->   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
->   media: rkisp1: add Rockchip ISP1 subdev driver
->   media: rkisp1: add ISP1 statistics driver
->   media: rkisp1: add ISP1 params driver
->   media: rkisp1: add capture device driver
->   media: rkisp1: add rockchip isp1 core driver
->   dt-bindings: Document the Rockchip ISP1 bindings
->   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
->   ARM: dts: rockchip: add isp node for rk3288
->   ARM: dts: rockchip: add rx0 mipi-phy for rk3288
->   MAINTAINERS: add entry for Rockchip ISP1 driver
-> 
-> Jeffy Chen (1):
->   media: rkisp1: Add user space ABI definitions
-> 
-> Shunqian Zheng (3):
->   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
->   arm64: dts: rockchip: add isp0 node for rk3399
->   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-> 
-> Wen Nuan (1):
->   ARM: dts: rockchip: Add dts mipi-dphy TXRX1 node for rk3288
-> 
->  .../devicetree/bindings/media/rockchip-isp1.txt    |   69 +
->  .../bindings/media/rockchip-mipi-dphy.txt          |   90 +
->  Documentation/media/uapi/v4l/meta-formats.rst      |    2 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst   |   20 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst     |   18 +
->  MAINTAINERS                                        |   10 +
->  arch/arm/boot/dts/rk3288.dtsi                      |   33 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   25 +
->  drivers/media/platform/Kconfig                     |   10 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/rockchip/isp1/Makefile      |    8 +
->  drivers/media/platform/rockchip/isp1/capture.c     | 1751 ++++++++++++++++++++
->  drivers/media/platform/rockchip/isp1/capture.h     |  167 ++
->  drivers/media/platform/rockchip/isp1/common.h      |  110 ++
->  drivers/media/platform/rockchip/isp1/dev.c         |  626 +++++++
->  drivers/media/platform/rockchip/isp1/dev.h         |   93 ++
->  drivers/media/platform/rockchip/isp1/isp_params.c  | 1539 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/isp_params.h  |   49 +
->  drivers/media/platform/rockchip/isp1/isp_stats.c   |  508 ++++++
->  drivers/media/platform/rockchip/isp1/isp_stats.h   |   58 +
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  868 ++++++++++
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.h    |   15 +
->  drivers/media/platform/rockchip/isp1/regs.c        |  239 +++
->  drivers/media/platform/rockchip/isp1/regs.h        | 1550 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.c      | 1177 +++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.h      |  105 ++
->  drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
->  include/uapi/linux/rkisp1-config.h                 |  798 +++++++++
->  include/uapi/linux/videodev2.h                     |    4 +
->  29 files changed, 9945 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
->  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
->  create mode 100644 include/uapi/linux/rkisp1-config.h
-> 
+> > +/*
+> > + * device_run() - prepares and starts processing
+> > + */
+> > +void device_run(void *priv)
+> > +{
+>=20
+> This function (and the one above) should probably made static. Or at
+> least if you can't, they should have a much more specific name in
+> order not to conflict with anything from the core.
+
+Good point, let's go for static. Since these are passed as function
+pointers, it shouldn't be a problem.
+
+> > +	/*
+> > +	 * The VPU is only able to handle bus addresses so we have
+> > to subtract
+> > +	 * the RAM offset to the physcal addresses
+> > +	 */
+> > +	in_buf     -=3D PHYS_OFFSET;
+> > +	out_luma   -=3D PHYS_OFFSET;
+> > +	out_chroma -=3D PHYS_OFFSET;
+>=20
+> You should take care of that by putting it in the dma_pfn_offset field
+> of the struct device (at least before we come up with something
+> better).
+>=20
+> You'll then be able to use the dma_addr_t directly without modifying
+> it.
+
+Definitely!
+
+> > +	vpu->syscon =3D syscon_regmap_lookup_by_phandle(vpu->dev-
+> > >of_node,
+> > +						      "syscon");
+> > +	if (IS_ERR(vpu->syscon)) {
+> > +		vpu->syscon =3D NULL;
+> > +	} else {
+> > +		regmap_write_bits(vpu->syscon,
+> > SYSCON_SRAM_CTRL_REG0,
+> > +				  SYSCON_SRAM_C1_MAP_VE,
+> > +				  SYSCON_SRAM_C1_MAP_VE);
+> > +	}
+>=20
+> This should be using our SRAM controller driver (and API), see
+> Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> include/linux/soc/sunxi/sunxi_sram.h
+
+I'll look into that.
+
+> > +	ret =3D clk_prepare_enable(vpu->ahb_clk);
+> > +	if (ret) {
+> > +		dev_err(vpu->dev, "could not enable ahb clock\n");
+> > +		return -EFAULT;
+> > +	}
+> > +	ret =3D clk_prepare_enable(vpu->mod_clk);
+> > +	if (ret) {
+> > +		clk_disable_unprepare(vpu->ahb_clk);
+> > +		dev_err(vpu->dev, "could not enable mod clock\n");
+> > +		return -EFAULT;
+> > +	}
+> > +	ret =3D clk_prepare_enable(vpu->ram_clk);
+> > +	if (ret) {
+> > +		clk_disable_unprepare(vpu->mod_clk);
+> > +		clk_disable_unprepare(vpu->ahb_clk);
+> > +		dev_err(vpu->dev, "could not enable ram clock\n");
+> > +		return -EFAULT;
+> > +	}
+>=20
+> Ideally, this should be using runtime_pm to manage the device power
+> state, and disable it when not used.
+
+I'll add that to my tasks list. I suppose we shouldn't make this a
+priority for now, but this is definitely good to have.
+
+> > +	reset_control_assert(vpu->rstc);
+> > +	reset_control_deassert(vpu->rstc);
+>=20
+> You can use reset_control_reset here
+
+Noted!
+
+> > +	return 0;
+> > +}
+> > +
+> > +void sunxi_cedrus_hw_remove(struct sunxi_cedrus_dev *vpu)
+> > +{
+> > +	clk_disable_unprepare(vpu->ram_clk);
+> > +	clk_disable_unprepare(vpu->mod_clk);
+> > +	clk_disable_unprepare(vpu->ahb_clk);
+>=20
+> The device is not put back into reset here
+
+Good catch, thanks!
+
+Cheers,
+
+--=20
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-pZHdMQqkI16B0Hm/jNZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqimVIACgkQ3cLmz3+f
+v9FiKgf/UE8Ui3Gq1AIlGByqBTacl4xT8gXFdGs2y6Ko+YXNAJE50p8MSDzax7h2
+AThhNOY3Skg/dUZcHht40LLs0WaXjbqt69bFacEG1XA9ByS5atGMuHo92NNeloyZ
+ljg7ErPz108P0r1hYWSpXfp0Bzd+/9t2gKthSkMh/PDfGfReZhAiRjtgki958u7j
+l0tyb9jdMTlnpjM+9U45kJJcqKicGhJJcXopsFhBcNqbaOCCtCUCa/H62k0PpGtU
+lJzMI9GLIosmP0gMQxsSQx0PDn2uut5xHFMsC1dog7J+CpXcWj48fwvi50AuHD44
+dbbotmx6UuXhCaiIbtFzPA9E81UlUw==
+=uGjD
+-----END PGP SIGNATURE-----
+
+--=-pZHdMQqkI16B0Hm/jNZ1--
