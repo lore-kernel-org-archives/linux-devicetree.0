@@ -1,493 +1,107 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v4 2/2] ARM: dts: imx: Add basic dts support for imx6sll
- EVK board
-Date: Fri, 9 Mar 2018 05:06:19 +0000
-Message-ID: <HE1PR04MB31131B0A4F35D6C8E0CCA53387DE0@HE1PR04MB3113.eurprd04.prod.outlook.com>
-References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
- <1520503424-22985-2-git-send-email-ping.bai@nxp.com>
- <20180309033612.GH3217@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180309033612.GH3217@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v5 0/9] Add Actions Semi S900 pinctrl and gpio support
+Date: Fri,  9 Mar 2018 10:43:36 +0530
+Message-ID: <20180309051345.1011-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v4 2/2] ARM: dts: imx: Add basic dts support for imx6sll EVK
-> board
-> 
-> On Thu, Mar 08, 2018 at 06:03:44PM +0800, Bai Ping wrote:
-> > Add dts file support for imx6sll EVK board.
-> >
-> > Signed-off-by: Bai Ping <ping.bai@nxp.com>
-> > ---
-> >  change v3->v4
-> >  - update the license indentifier
-> >  - remove leading zero of node
-> >  - remove unused pin from hog group
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
-> >  arch/arm/boot/dts/Makefile                    |   2 +
-> >  arch/arm/boot/dts/imx6sll-evk.dts             | 372
-> ++++++++++++++++++++++++++
-> >  3 files changed, 378 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> > b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index cdb9dd7..8a1baa2 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> > @@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board  Required root
-> > node properties:
-> >      - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
-> >
-> > +i.MX6SLL EVK board
-> > +Required root node properties:
-> > +    - compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-> > +
-> >  Generic i.MX boards
-> >  -------------------
-> >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index ade7a38..28bff8b 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -505,6 +505,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
-> >  dtb-$(CONFIG_SOC_IMX6SL) += \
-> >  	imx6sl-evk.dtb \
-> >  	imx6sl-warp.dtb
-> > +dtb-$(CONFIG_SOC_IMX6SLL) += \
-> > +	imx6sll-evk.dtb
-> >  dtb-$(CONFIG_SOC_IMX6SX) += \
-> >  	imx6sx-nitrogen6sx.dtb \
-> >  	imx6sx-sabreauto.dtb \
-> > diff --git a/arch/arm/boot/dts/imx6sll-evk.dts
-> > b/arch/arm/boot/dts/imx6sll-evk.dts
-> > new file mode 100644
-> > index 0000000..892fbec
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx6sll-evk.dts
-> > @@ -0,0 +1,372 @@
-> > +//SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> 
-> Missing space after //.
-> 
+This patchset adds pinctrl and gpio support for Actions Semi S900 SoC.
+Pinctrl and gpio subsystems share the common set of register range but
+implemented as individual drivers for making it less complex.
 
-OK, will fix the comments of this patch in V5.
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-Jacky
-> > +/*
-> > + * Copyright 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2017-2018 NXP.
-> > + *
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include "imx6sll.dtsi"
-> > +
-> > +/ {
-> > +	model = "Freescale i.MX6SLL EVK Board";
-> > +	compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-> > +
-> > +	memory@80000000 {
-> > +		reg = <0x80000000 0x80000000>;
-> > +	};
-> > +
-> > +	backlight {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&pwm1 0 5000000>;
-> > +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +		default-brightness-level = <6>;
-> > +		status = "okay";
-> > +	};
-> > +
-> > +	reg_usb_otg1_vbus: reg-usb-otg1-vbus {
-> 
-> regulator-xxx for node name.
-> 
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "usb_otg1_vbus";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +		gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	reg_usb_otg2_vbus: reg-usb-otg2-vbus {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "usb_otg2_vbus";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +		gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	reg_aud3v: reg-aud3v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "wm8962-supply-3v15";
-> > +		regulator-min-microvolt = <3150000>;
-> > +		regulator-max-microvolt = <3150000>;
-> > +		regulator-boot-on;
-> > +	};
-> > +
-> > +	reg_aud4v: reg-aud4v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "wm8962-supply-4v2";
-> > +		regulator-min-microvolt = <4325000>;
-> > +		regulator-max-microvolt = <4325000>;
-> > +		regulator-boot-on;
-> > +	};
-> > +
-> > +	reg_lcd: reg-lcd {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "lcd-pwr";
-> > +		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	reg_sd1_vmmc: reg-sd1-vmmc {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "SD1_SPWR";
-> > +		regulator-min-microvolt = <3000000>;
-> > +		regulator-max-microvolt = <3000000>;
-> > +		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +};
-> > +
-> > +&cpu0 {
-> > +	arm-supply = <&sw1a_reg>;
-> > +	soc-supply = <&sw1c_reg>;
-> > +};
-> > +
-> > +&i2c1 {
-> > +	clock-frequency = <100000>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_i2c1>;
-> > +	status = "okay";
-> > +
-> > +	pmic: pfuze100@8 {
-> 
-> pfuze100: pmic
-> 
-> > +		compatible = "fsl,pfuze100";
-> > +		reg = <0x08>;
-> > +
-> > +		regulators {
-> > +			sw1a_reg: sw1ab {
-> > +				regulator-min-microvolt = <300000>;
-> > +				regulator-max-microvolt = <1875000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +				regulator-ramp-delay = <6250>;
-> > +			};
-> > +
-> > +			sw1c_reg: sw1c {
-> > +				regulator-min-microvolt = <300000>;
-> > +				regulator-max-microvolt = <1875000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +				regulator-ramp-delay = <6250>;
-> > +			};
-> > +
-> > +			sw2_reg: sw2 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw3a_reg: sw3a {
-> > +				regulator-min-microvolt = <400000>;
-> > +				regulator-max-microvolt = <1975000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw3b_reg: sw3b {
-> > +				regulator-min-microvolt = <400000>;
-> > +				regulator-max-microvolt = <1975000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw4_reg: sw4 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +			};
-> > +
-> > +			swbst_reg: swbst {
-> > +				regulator-min-microvolt = <5000000>;
-> > +				regulator-max-microvolt = <5150000>;
-> > +			};
-> > +
-> > +			snvs_reg: vsnvs {
-> > +				regulator-min-microvolt = <1000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vref_reg: vrefddr {
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen1_reg: vgen1 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <1550000>;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen2_reg: vgen2 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <1550000>;
-> > +			};
-> > +
-> > +			vgen3_reg: vgen3 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +			};
-> > +
-> > +			vgen4_reg: vgen4 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen5_reg: vgen5 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen6_reg: vgen6 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&iomuxc {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>;
-> > +
-> > +	pinctrl_hog0: hog0grp {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_KEY_ROW7__GPIO4_IO07
-> > +			MX6SLL_PAD_GPIO4_IO22__GPIO4_IO22
-> > +			MX6SLL_PAD_KEY_COL3__GPIO3_IO30
-> > +			MX6SLL_PAD_KEY_COL4__GPIO4_IO00
-> > +			MX6SLL_PAD_KEY_COL5__GPIO4_IO02
-> 
-> I don't think these GPIOs should be in hog group, as they are used by particular
-> client device, and should be in pinctrl entries for the client devices.
-> 
-> Shawn
-> 
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x3>;
-> > +		fsl,pin-speed = <0x1>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_hog1: hog1grp {
-> > +		pinmux = <
-> > +			/*
-> > +			 * Must set the LVE of pad SD2_RESET, otherwise current
-> > +			 * leakage through eMMC chip will pull high the VCCQ to
-> > +			 * 2.6v, which will impact SD1 and SD3 SD3.0 voltage switch.
-> > +			 */
-> > +			MX6SLL_PAD_SD2_RESET__GPIO4_IO27
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x3>;
-> > +		fsl,pin-speed = <0x1>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +		fsl,low-voltage-enable = <0x1>;
-> > +	};
-> > +
-> > +	pinctrl_uart1: uart1grp {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX
-> > +			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x6>;
-> > +		fsl,pin-speed = <0x2>;
-> > +		bias-pull-up = <0x2>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_data: usdhc1datagrp {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_SD1_CMD__SD1_CMD
-> > +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-> > +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-> > +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-> > +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x4>;
-> > +		fsl,pin-speed = <0x1>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_clk: usdhc1clkgrp {
-> > +		pinmux = <MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x4>;
-> > +		fsl,pin-speed = <0x1>;
-> > +		bias-pull-down = <0x0>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_data_100mhz: usdhc1datagrp_100mhz {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_SD1_CMD__SD1_CMD
-> > +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-> > +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-> > +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-> > +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x4>;
-> > +		fsl,pin-speed = <0x2>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_clk_100mhz: usdhc1clkgrp_100mhz {
-> > +		pinmux = < MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x4>;
-> > +		fsl,pin-speed = <0x2>;
-> > +		bias-pull-down = <0x0>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_data_200mhz: usdhc1datagrp_200mhz {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_SD1_CMD__SD1_CMD
-> > +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
-> > +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
-> > +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
-> > +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x5>;
-> > +		fsl,pin-speed = <0x3>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usdhc1_clk_200mhz: usdhc1clkgrp_200mhz {
-> > +		pinmux = <MX6SLL_PAD_SD1_CLK__SD1_CLK>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x7>;
-> > +		fsl,pin-speed = <0x3>;
-> > +		bias-pull-down = <0x0>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_usbotg1: usbotg1grp {
-> > +		pinmux = <MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x3>;
-> > +		fsl,pin-speed = <0x1>;
-> > +		bias-pull-up = <0x1>;
-> > +		input-schmitt-enable;
-> > +	};
-> > +
-> > +	pinctrl_i2c1: i2c1grp {
-> > +		pinmux = <
-> > +			MX6SLL_PAD_I2C1_SCL__I2C1_SCL
-> > +			MX6SLL_PAD_I2C1_SDA__I2C1_SDA
-> > +		>;
-> > +		slew-rate = <0x1>;
-> > +		drive-strength = <0x6>;
-> > +		fsl,pin-speed = <0x2>;
-> > +		drive-open-drain;
-> > +		bias-pull-up = <0x2>;
-> > +		input-schmitt-enable;
-> > +		input-enable;
-> > +	};
-> > +};
-> > +
-> > +&uart1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart1>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usdhc1 {
-> > +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> > +	pinctrl-0 = <&pinctrl_usdhc1_data>, <&pinctrl_usdhc1_clk>;
-> > +	pinctrl-1 = <&pinctrl_usdhc1_data_100mhz>,
-> <&pinctrl_usdhc1_clk_100mhz>;
-> > +	pinctrl-2 = <&pinctrl_usdhc1_data_200mhz>,
-> <&pinctrl_usdhc1_clk_200mhz>;
-> > +	cd-gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
-> > +	wp-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-> > +	keep-power-in-suspend;
-> > +	wakeup-source;
-> > +	vmmc-supply = <&reg_sd1_vmmc>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usbotg1 {
-> > +	vbus-supply = <&reg_usb_otg1_vbus>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_usbotg1>;
-> > +	disable-over-current;
-> > +	srp-disable;
-> > +	hnp-disable;
-> > +	adp-disable;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usbotg2 {
-> > +	vbus-supply = <&reg_usb_otg2_vbus>;
-> > +	dr_mode = "host";
-> > +	disable-over-current;
-> > +	status = "okay";
-> > +};
-> > --
-> > 1.9.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flist
-> >
-> s.infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&data=02%7C01%7
-> >
-> Cping.bai%40nxp.com%7Ccc2d554875244f40801108d5856f03b5%7C686ea1d3
-> bc2b4
-> >
-> c6fa92cd99c5c301635%7C0%7C0%7C636561634214012078&sdata=maWc00%
-> 2BYifMKn
-> > oiD8rVmQFIWsHDgcIfN58UuarYqfCQ%3D&reserved=0
+gpio-line-names has been added for the Bubblegum-96 board matching the
+96Boards CE specification v1.0.
+
+Both pinctrl and gpio drivers are verified using the Bubblegum-96 board.
+
+This patchset depends on the clock driver which is still under review:
+https://lkml.org/lkml/2018/2/9/831
+
+There is also S500 pinctrl and gpio driver developed by Andreas Farber
+independently to this patchset.
+https://github.com/afaerber/linux/commits/bg96-next
+
+If this patchseries seems to be good enough to add base OWL pinctrl and
+gpio support. Then, we may decide on adding S500 support on top of this later
+by reusing the pinctrl definitions from Andreas.
+
+Thanks,
+Mani
+
+Changes in v5:
+
+* Removed alias for gpio nodes
+* Removed duplicate address from gpio nodes and modified the driver accordingly
+* Used ngpios property for specifying number of gpios per bank
+* Used generic gpio node name in DT and binding
+* Modified pinctrl driver to save space
+* Dropped pinctrl bindings patch since it got applied
+* Added Reviewed-by tags from Linus for DT and platform Kconfig changes
+
+Changes in v4:
+
+* Incorporated Andy's review for pinctrl driver
+* Used _relaxed functions for pinctrl driver
+* Added Andy's Reviewed-by tag for gpio driver
+* Added (back) Rob's Reviewed-by tag for pinctrl bindings
+
+Changes in v3:
+
+* Simplified owl_gpio_set_reg() with _relaxed functions
+* Added interrupt controller properties to gpio node bindings as suggested
+  by Rob
+* Minor code cleanups
+
+Changes in v2:
+
+* Implemented each GPIO bank as its own gpio-controller
+* Added gpio-ranges property
+* Modified pin group to follow pad names instead of register names
+* Incorporated review comments from Andy
+* Incorporated review comments from Andreas
+* Fixed the MODULE_LICENSE with respect to SPDX tag
+* Added Reviewed by tag from Rob for pinctrl binding
+
+Manivannan Sadhasivam (9):
+  arm64: dts: actions: Add pinctrl node for S900
+  arm64: actions: Enable PINCTRL in platforms Kconfig
+  pinctrl: actions: Add Actions S900 pinctrl driver
+  dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+  arm64: dts: actions: Add S900 gpio nodes
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  gpio: Add gpio driver for Actions OWL S900 SoC
+  MAINTAINERS: Add reviewer for ACTIONS platforms
+  MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
+
+ .../devicetree/bindings/gpio/actions,owl-gpio.txt  |   90 +
+ MAINTAINERS                                        |    5 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  |  195 ++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   60 +
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-owl.c                            |  172 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/actions/Kconfig                    |   12 +
+ drivers/pinctrl/actions/Makefile                   |    2 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |  579 ++++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  142 ++
+ drivers/pinctrl/actions/pinctrl-s900.c             | 1861 ++++++++++++++++++++
+ 15 files changed, 3130 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+ create mode 100644 drivers/gpio/gpio-owl.c
+ create mode 100644 drivers/pinctrl/actions/Kconfig
+ create mode 100644 drivers/pinctrl/actions/Makefile
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
+
+-- 
+2.14.1
