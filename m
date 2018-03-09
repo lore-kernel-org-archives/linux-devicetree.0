@@ -1,109 +1,68 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Fri, 9 Mar 2018 12:27:51 -0600
-Message-ID: <20180309182751.GC31988@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 5/6] dma-mapping: support fsl-mc bus
+Date: Fri, 9 Mar 2018 18:29:41 +0000
+Message-ID: <HE1PR0401MB2425871215B13AD0EFDCA5C3E6DE0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
+References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
+	<1520260166-29387-6-git-send-email-nipun.gupta@nxp.com>
+	<20180305150814.GA15918@lst.de>
+	<7b4f9972-6aaa-fc9d-3854-d48b19a8051c@arm.com>
+	<20180305183938.GB20086@lst.de>
+	<1729ae21-d08c-b413-51a3-f22c394b388d@arm.com>
+	<HE1PR0401MB24251E99564CAA526F719ECCE6D90@HE1PR0401MB2425.eurprd04.prod.outlook.com>
+	<20180308074115.GB15748@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180308074115.GB15748-jcswGhMUV9g@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JvdGUgb24gRnJpIFsyMDE4LU1hci0w
-MiAxMzoxOToxMyAtMDYwMF06Cj4gT24gRnJpLCBNYXIgMiwgMjAxOCBhdCA3OjQ4IEFNLCBCZW5v
-aXQgUGFycm90IDxicGFycm90QHRpLmNvbT4gd3JvdGU6Cj4gPiBBZGQgJ3BsYW5lJyBjaGlsZCBu
-b2RlIHRvIGdlbmVyaWMgRElTUEMgbm9kZSBhcyBhbiBvcHRpb25hbAo+ID4gcHJvcGVydHkuCj4g
-Cj4gV2h5PyBXaGF0IHByb2JsZW0gYXJlIHlvdSBzb2x2aW5nPwoKQWggeWVzLCBJIGd1ZXNzIG9u
-IGl0cyBvd24gaXQgZG9lcyBub3QgbWVhbiBtdWNoLi4uCgpIb3cgYWJvdXQ6CgpDdXJyZW50bHkg
-YWxsIGF2YWlsYWJsZSBkaXNwbGF5IHBpcGVsaW5lcyAoaS5lLiBwbGFuZSkgYW5kIG91dHB1dApw
-b3J0IHJlc291cmNlcyBhcmUgZXhwb3NlZCB0byB1c2VyLXNwYWNlLgpJbiBzb21lIGNhc2VzIGl0
-IGlzIG5lZWRlZCB0byBiZSBhYmxlIHJlc3RyaWN0IHdoaWNoIHJlc291cmNlcyBhcmUKYWN0dWFs
-bHkgdmlzaWJsZSBmcm9tIHVzZXItc3BhY2UuIEFsc28gaW4gY2FzZXMgd2hlcmUgYSBkaXNwbGF5
-IHdpZGVyCnRoYW4gMjA0OCBwaXhlbHMgaXMgdG8gYmUgc3VwcG9ydGVkIG1vcmUgdGhhbiBvbmUg
-dmlkZW8gcGlwZWxpbmUgaXMKbmVlZGVkLiBJbiB0aGlzIGNhc2UgdGhlIDJuZCBoYXJkd2FyZSBw
-aXBlbGluZSBuZWVkZWQgaXMgbm90IHZpc2libGUKdG8gdXNlciBzcGFjZSBhcHBsaWNhdGlvbnMu
-CgpUaGVzZSB2aWRlbyBwaXBlbGluZSBkZWZpbml0aW9ucyBtdXN0IGJlIHN0YXRpY2FsbHkgZGVm
-aW5lZCBzbyB0aGF0CnRoZSBudW1iZXIgb2YgdmlzaWJsZSBwaXBlbGluZXMgZG9lcyBub3QgY2hh
-bmdlIGZyb20gdGhlIHVzZXItc3BhY2UKcGVyc3BlY3RpdmUuCgpJbiBvcmRlciB0byBhbGxvdyB0
-aGlzIHdlIGFyZSBhZGRpbmcgYW4gb3B0aW9uYWwgc3ViLW5vZGUgdG8gdGhlIGdlbmVyaWMKRElT
-UEMgbm9kZS4gCgo+IAo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEJlbm9pdCBQYXJyb3QgPGJwYXJy
-b3RAdGkuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90
-aS90aSxvbWFwLWRzcy50eHQgfCA2MyArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0
-Cj4gPiBpbmRleCAyNDllNTg4ZDc4NjUuLmNiMTAxNTI1YjgwNSAxMDA2NDQKPiA+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAtZHNzLnR4
-dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkv
-dGksb21hcC1kc3MudHh0Cj4gPiBAQCAtMjcsNiArMjcsMzQgQEAgRElTUEMKPiA+ICBPcHRpb25h
-bCBwcm9wZXJ0aWVzOgo+ID4gIC0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAo
-ZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0Cj4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICBpbiBieXRlcyBwZXIgc2Vjb25kCj4gPiArLSBwbGFuZTogQ2hpbGQgbm9k
-ZShzKSB3aGljaCBkZWZpbmVzIHdoaWNoIGxvZ2ljYWwgcGxhbmUgYXJlIGF2YWlsYWJsZSB0bwo+
-IAo+IFRoaXMgaXMgdGhlICJPcHRpb25hbCBwcm9wZXJ0aWVzIiBzZWN0aW9uIGFuZCBwbGFuZSBp
-cyBub3QgYSBwcm9wZXJ0eS4KClJpZ2h0LCBJJ2xsIGNvcnJlY3QgdGhhdCB0byBhbiBvcHRpb25h
-bCBzdWItbm9kZSB3aGljaCBoYXMgcmVxdWlyZWQgYW5kCm9wdGlvbmFsIHByb3BlcnRpZXMuCgo+
-IAo+ID4gKyAgICAgICB0aGUgc3lzdGVtLiBJZiBhdCBsZWFzdCBvbmUgcGxhbmUgY2hpbGQgbm9k
-ZSBpcyBkZWZpbmVkIHRoZW4KPiA+ICsgICAgICAgb25seSBwbGFuZXMgZGVmaW5lZCBieSB0aGVz
-ZSBub2RlcyB3aWxsIGJlIGF2YWlsYWJsZSB0byB0aGUgc3lzdGVtLgo+ID4gKyAgICAgICBQbGFu
-ZSBub2RlcyBtdXN0IGJlIHNlcXVlbnRpYWwgc3RhcnRpbmcgd2l0aCByZWcgPSA8MD4gYXMgRFQg
-cGFyc2luZwo+ID4gKyAgICAgICB3aWxsIHN0b3Agb24gdGhlIGZpcnN0IG1pc3NpbmcgbnVtYmVy
-ZWQgbm9kZS4KPiA+ICsgICAgICAgVGhpcyBtZWFucyBpZiBwbGFuZSAjMSBpcyBkZWZpbmVkIGJ1
-dCBwbGFuZSAjMCBpcyBub3QgdGhlbiBpdCB3aWxsCj4gPiArICAgICAgIGJlIGFzIGlmIG5vbmUg
-b2YgdGhlIHBsYW5lIG5vZGVzIHdlcmUgZGVmaW5lZC4KPiA+ICsKPiA+ICsgICAgICAgRWFjaCBw
-bGFuZSBub2RlIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKPiA+ICsgICAgICAg
-UmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICsgICAgICAgLSByZWc6ICAgICAgIFVzZWQgdG8gbnVt
-YmVyIHRoZSBsb2dpY2FsIHBsYW5lCj4gCj4gSXMgbG9naWNhbCBwbGFuZSBhIGgvdyBjb25jZXB0
-PwoKSXQgZG9lcyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNvdXJjZS4KCj4gCj4gPiArICAgICAg
-IC0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5lIG51bWJlcihzKS4KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgIFdoZW4gMiBudW1iZXJzIGFyZSBwcmVzZW50IHRoaXMgaW5kaWNhdGVzIGEg
-dmlydHVhbCBwbGFuZQo+ID4gKyAgICAgICAgICAgICAgICAgICAgY29tcG9zZWQgb2YgdHdvIHBo
-eXNpY2FsIHBsYW5lcyBpbnRlbmRlZCB0byBiZSB1c2VkCj4gPiArICAgICAgICAgICAgICAgICAg
-ICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVuIHRoZSBjYXBhY2l0eSBvZiBhCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICBzaW5nbGUgcGxhbmUgaS5lLiB3aWRlciB0aGFuIDIwNDggcGl4
-ZWxzLgo+ID4gKyAgICAgICAgICAgICAgICAgICAgVGhlIGZpcnN0IG51bWJlciBpbiB0aGUgcGFp
-ciB3aWxsIGRpY3RhdGUgdGhlIGNhcGFiaWxpdGllcwo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-b2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMgbWVhbnMgdGhhdCBmb3IgcHJvcGVyCj4gPiArICAg
-ICAgICAgICAgICAgICAgICBvcGVyYXRpb24gdGhlIHZpcnR1YWwgcGxhbmUgc2hvdWxkIGJlIGNv
-bXBvc2VkIG9mIEhXCj4gPiArICAgICAgICAgICAgICAgICAgICBwbGFuZXMgb2YgdGhlIHNhbWUg
-Y2FwYWJpbGl0aWVzLgo+ID4gKyAgICAgICAgICAgICAgICAgICAgSWYgR0ZYIHBsYW5lIGlzIHVz
-ZWQgaW4gYSB2aXJ0dWFsIHBsYW5lIGl0IHNob3VsZCBiZQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgc3BlY2lmaWVkIGZpcnN0LCBvdGhlcndpc2UgdW5leHBlY3RlZCBiZWhhdmlvciB3b3VsZAo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgYmUgZW5jb3VudGVyZWQuCj4gPiArICAgICAgIE9wdGlv
-bmFsIHByb3BlcnR5Ogo+ID4gKyAgICAgICAtIGh3LWNydGNzOiAgT25lIG9yIG1vcmUgSFcgY3J0
-YyBudW1iZXIocykuCj4gPiArICAgICAgICAgICAgICAgICAgICBEZXNjcmliZSB0aGUgbGlzdCBv
-ZiBDUlRDcyBvbiB3aGljaCB0aGlzIHBsYW5lIGlzCj4gPiArICAgICAgICAgICAgICAgICAgICBh
-dmFpbGFibGUuIElmIHRoaXMgbm9kZSBpcyBub3QgcHJlc2VudCB0aGVuIHRoZQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgb24gYWxsIGF2YWlsYWJsZSBD
-UlRDcy4KPiAKPiBMZXQncyBub3QgY29weSBhcmNoYWljIHRlcm1zIGZyb20gRFJNIGludG8gYmlu
-ZGluZ3MuCgpPaywgSSBjYW4gcmVuYW1lIHRoZW0gdG8gdXNlIHRoZSBUUk0gdGVybWlub2xvZ3kg
-aW5zdGVhZC4KSSBjaG9zZSBEUk0gdGVybSBiZWNhdXNlIHRoZXkgYXJlIHdlbGwga25vd24uClNv
-IHdlJ2xsIGhhdmUKCnZpZGVvLXBpcGVsaW5lIGluc3RlYWQgb2YgaHctcGxhbmVzCnZpZGVvLW91
-dHB1dCBpbnN0ZWFkIG9mIGh3LWNydGNzCgpBbnkgY29tbWVudHMgb24gdGhlIHN1Yi1ub2RlIG5h
-bWUgaXRzZWxmPwpPciBjYW4gd2Uga2VlcCAncGxhbmUnPwoKPiAKPiBSZWFsbHksIEknbSBza2Vw
-dGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxvbmdzIGluIERULiBGb3IgZXhhbXBsZSwKPiBjYW4n
-dCB5b3UgZmlndXJlIG91dCB5b3UgbmVlZCAyIHBoeXNpY2FsIHBsYW5lcyB3aGVuZXZlciB5b3Vy
-Cj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhhbiAyMDQ4PwoKQXMgc3RhdGVkIGlu
-IHRoZSBkZXNjcmlwdGlvbiBJIGFkZGVkIGFib3ZlLCB3ZSBjYW5ub3QgaGF2ZSByZXNvdXJjZXMK
-ZXhwb3NlZCB0byB1c2VyLXNwYWNlIHdoaWNoIGNhbiAiZGlzYXBwZWFyIiBkeW5hbWljYWxseS4K
-RG9pbmcgc28gd291bGQgYnJlYWsgdXNlci1zcGFjZSBhcHBsaWNhdGlvbnMgd2hpY2ggcmVseSBv
-biB0aGVzZQpyZXNvdXJjZXMuCgpCZW5vaXQKCj4gCj4gUm9iCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+> -----Original Message-----
+> From: Christoph Hellwig [mailto:hch-jcswGhMUV9g@public.gmane.org]
+> Sent: Thursday, March 08, 2018 13:11
+> 
+> On Tue, Mar 06, 2018 at 04:41:56AM +0000, Nipun Gupta wrote:
+> > Sorry for asking a trivial question - looking into dma_configure() I see that
+> > PCI is used in the start and the end of the API.
+> > In the end part pci_put_host_bridge_device() is called.
+> > So are two bus callbacks something like 'dma_config_start' &
+> 'dma_config_end'
+> > will be required where the former one will return "dma_dev"?
+> 
+> I'd just use dma_configure as the callback.
+
+This would be a decent stuff.
+
+> 
+> Currently the of_dma_configure and acpi_dma_configure are only used
+> for PCI anyway, as no one else sets a non-NULL dma dev.
+
+My understanding is that even the platform bus uses the of_dma_configure
+and probably acpi_dma_configure too. So platform bus may also need the
+callback implemented. Please correct me if my understanding is wrong.
+
+I will submit the patch with 'dma_configure' callback implemented for
+the busses shortly.
+
+> For fsl-mc I suspect only of_dma_configure is relevanet, so just call that directly.
+> If at some point we get enough busses with either OF or ACPI we could
+> create a helper called from ->dma_configure for that.
+
+Totally agree with this.
+
+Thanks,
+Nipun
