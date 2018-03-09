@@ -1,37 +1,25 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: stm32: add RS485 optional
- properties
-Date: Fri, 9 Mar 2018 10:58:13 -0800
-Message-ID: <20180309185813.GA25626@kroah.com>
-References: <1519815373-22940-1-git-send-email-bich.hemon@st.com>
- <1519815373-22940-2-git-send-email-bich.hemon@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: BCM5301X: add missing LEDs for Buffalo WZR-900DHP
+Date: Fri,  9 Mar 2018 11:07:28 -0800
+Message-ID: <20180309190728.31034-1-f.fainelli@gmail.com>
+References: <1520422436-9405-1-git-send-email-musashino.open@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519815373-22940-2-git-send-email-bich.hemon@st.com>
+In-Reply-To: <1520422436-9405-1-git-send-email-musashino.open@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: bcm-kernel-feedback-list@broadcom.com, musashino.open@gmail.com
+Cc: hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 10:56:18AM +0000, Bich HEMON wrote:
-> Add options for enabling RS485 hardware control and configuring
-> Driver Enable signal:
-> - rs485-rts-delay
-> - rs485-rx-during-tx
-> - rs485-rts-active-low
-> - linux,rs485-enabled-at-boot-time
+On Wed,  7 Mar 2018 20:33:56 +0900, musashino.open@gmail.com wrote:
+> From: INAGAKI Hiroshi <musashino.open@gmail.com>
 > 
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Buffalo WZR-900DHP has 8 LEDs, but there is not LED definitions in the
+> dts and cannot configure these LEDs.
+> I Added missing LED definitions for WZR-900DHP.
+> 
+> Signed-off-by: INAGAKI Hiroshi <musashino.open@gmail.com>
 > ---
->  Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 2 ++
->  1 file changed, 2 insertions(+)
 
-This series does not apply to my tty-next tree at all.  Can you rebase
-and resend?
-
-thanks,
-
-greg k-h
+Applied to devicetree/next, thanks!
+--
+Florian
