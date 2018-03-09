@@ -1,37 +1,39 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: Re: [PATCH v6 0/5] Add coupled regulators mechanism
-Date: Fri, 09 Mar 2018 13:50:20 +0100
-Message-ID: <5cf960c5-73ab-fd53-fb68-b6f7f92ca3e7@samsung.com>
-References: <CGME20180309122231eucas1p1b8e0a85a73b31aa07eac08f809face6e@eucas1p1.samsung.com>
-        <1520598128-11768-1-git-send-email-m.purski@samsung.com>
-        <20180309124234.GC5252@sirena.org.uk>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/4] ARM: dts: exynos5250: Add #sound-dai-cells property
+ to hdmi device node
+Date: Fri, 9 Mar 2018 13:54:26 +0100
+Message-ID: <CAJKOXPdgsNwcVQ0FZLDR_q8Dz1AkSEBaG-1Mij7TKSLpSRJLpw@mail.gmail.com>
+References: <CGME20180307172723epcas1p1b8879bb555737cab7406a172b7d13a56@epcas1p1.samsung.com>
+ <20180307172711.15697-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180309124234.GC5252@sirena.org.uk>
-Content-language: en-US
+In-Reply-To: <20180307172711.15697-1-s.nawrocki@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 7, 2018 at 6:27 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> This property is required for specifying link between the HDMI IP block
+> and the SoC's audio subsystem.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
+Subject prefix:
+ARM: dts: exynos: Add..... to Exynos5250
 
-On 03/09/2018 01:42 PM, Mark Brown wrote:
-> On Fri, Mar 09, 2018 at 01:22:02PM +0100, Maciej Purski wrote:
-> 
->> I would like to kindly ask Fabio Estevam and Tony Lindgren to test the patch
->> series on their boards.
-> 
-> That'd be great, yeah - I can run some tests with kernelci as well,
-> though the latency is relatively high there.
-> 
-> Is it possible to respin this in terms of the test/coupled branch in my
-> git tree?  There were a bunch of build fixes that got sent and I don't
-> want to loose any of those.
-> 
+Please fix it here and in other places. For arm64 prefix is slightly
+different (arm64: dts: exynos:). I did not notice that in your last
+patches and applied them but please take care about this in future.
 
-I have included those build fixes in my new patchset. I can extract the newest 
-changes and rebase them against your test/coupled branch, if that's what you're 
-asking for.
+In case you forget how the prefix should look like - run "git log
+--oneline -- arch/arm/boot/dts/exynos*" or "git log --oneline --
+arch/arm64/boot/dts/exynos/".
+
+BR,
+Krzysztof
