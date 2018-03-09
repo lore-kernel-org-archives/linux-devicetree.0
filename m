@@ -1,79 +1,86 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor driver
-Date: Fri, 9 Mar 2018 15:29:12 +0000
-Message-ID: <20180309152912.GF5252@sirena.org.uk>
-References: <20180227225128.17815-1-mporter@konsulko.com>
- <20180227225128.17815-3-mporter@konsulko.com>
- <20180228110038.GA6722@sirena.org.uk>
- <20180309143548.xuajwfhiwuua7jg5@bacon.ohporter.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: i.MX25: define SSI FIFO depth
+Date: Fri, 9 Mar 2018 16:40:08 +0100
+Message-ID: <20180309164008.52d41dd5@karo-electronics.de>
+References: <1520373499-13623-1-git-send-email-martin@kaiser.cx>
+        <20180308161135.1f3d3d18@karo-electronics.de>
+        <20180308153832.GA28454@botnar.kaiser.cx>
+        <20180309093738.7cd5fded@karo-electronics.de>
+        <1520587632.19507.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FeAIMMcddNRN4P4/"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180309143548.xuajwfhiwuua7jg5@bacon.ohporter.com>
+In-Reply-To: <1520587632.19507.3.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Martin Kaiser <martin@kaiser.cx>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---FeAIMMcddNRN4P4/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, 09 Mar 2018 10:27:12 +0100 Lucas Stach wrote:
+> Hi Lothar,
+> 
+> Am Freitag, den 09.03.2018, 09:37 +0100 schrieb Lothar Waßmann:
+> > Hi,
+> > 
+> > On Thu, 8 Mar 2018 16:38:32 +0100 Martin Kaiser wrote:
+> > > Hi Lothar,
+> > > 
+> > > > > Thus wrote Lothar Waßmann (LW@KARO-electronics.de):
+> > > 
+> > > > > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> > > > > index 9725705..cf70df2 100644
+> > > > > --- a/arch/arm/boot/dts/imx25.dtsi
+> > > > > +++ b/arch/arm/boot/dts/imx25.dtsi
+> > > > > @@ -269,6 +269,7 @@
+> > > > > > > > >  				dmas = <&sdma 24 1 0>,
+> > > > > > > > >  				       <&sdma 25 1 0>;
+> > > > > > > > >  				dma-names = "rx", "tx";
+> > > > > > > > > +				fsl,fifo-depth = <15>;
+> > > > > > > > >  				status = "disabled";
+> > > > > > > > >  			};
+> > > > > @@ -329,6 +330,7 @@
+> > > > > > > > >  				dmas = <&sdma 28 1 0>,
+> > > > > > > > >  				       <&sdma 29 1 0>;
+> > > > > > > > >  				dma-names = "rx", "tx";
+> > > > > > > > > +				fsl,fifo-depth = <15>;
+> > > > > > > > >  				status = "disabled";
+> > > > >  			};
+> > > > You are changing the global .dtsi file. Did you test this change with
+> > > > all devices that are affected by it?
+> > > 
+> > > I changed the hardware description of the imx25 SSI to match the
+> > > reference manual.
+> > > 
+> > > I did test this change on an imx25 board with audio playback. This uses
+> > > the SSI description I modified. I verified that the driver is actually
+> > > taking the modified setting into account and that this causes no
+> > > problems.
+> > > 
+> > > As of today, this setting is used by the fsl_ssi driver to set the fifo
+> > > water level for dma requests.
+> > > 
+> > > Of course, I don't have access to the enitre range of supported imx25
+> > > boards and I don't think this is required for submitting patches.
+> > > 
+> > > Do you have any indication why this patch should not be merged?
+> > > 
+> > 
+> > Usually patches should not willy-nilly change the behaviour of existing
+> > configurations unless they fix any real life bugs.
+> 
+> With this logic we wouldn't be able to get most driver changes applied.
+> If it is matching the reference manual and has been tested on the
+> affected hardware it should be good to go.
+> 
+> If you know about any specific corner cases that might break with this
+> change, please speak up now. Don't reject patches based on the
+> overarching "it might break something" argument.
+> 
+I didn't reject anything, I just wanted to make sure, that the
+implications of this patch were sufficiently considered.
 
-On Fri, Mar 09, 2018 at 09:35:48AM -0500, Matt Porter wrote:
-> On Wed, Feb 28, 2018 at 11:00:38AM +0000, Mark Brown wrote:
-> > On Tue, Feb 27, 2018 at 05:51:28PM -0500, Matt Porter wrote:
 
-> > > +static struct snd_kcontrol_new tda7419_controls[] = {
-> > > +SOC_ENUM("Main Source Select", soc_enum_main_src_sel),
-
-> > Should this be a DAPM route?
-
-> Ultimately yes. I initially took the path of ignoring DAPM support in
-> interests of getting some clean done. Is it ok to merge DAPM support
-> later or do you prefer just having it in the intitial driver? For
-> routes, it'll include Main/Second source selects, the Rear Source
-> switch, and Mix enable at least.
-
-You definitely shouldn't be implementing things that should be in DAPM
-as non-DAPM controls.
-
-> > > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_SUB_REG, 0xe0);
-
-> > This looks like it's setting default volumes - just leave those at the
-> > chip defaults and let userspace handle setting them, what works for one
-> > board may be totally inappropriate on another board and using the chip
-> > default means we've got some fixed thing we don't need to discuss.
-
-> This is actually setting the default/cache to the first mute value due
-> to the assumption in my implementation of the tda7419-specific get/set
-> for these registers. It simplified the code a bit to have these
-> initialized like this. e.g. for the attenuator group of registers,
-> x11xxxxx are all mute values, so 0xe0 is setting these regs to that
-> first mute value to simplify things. I'll take another look at
-> eliminating this. As it is, it does not change the fact that the actual
-> reset value of 0xff is also mute from a user POV.
-
-If it is useful it definitely needs a comment explaining what's
-happening and that there's no practical change to the configuration.  It
-would be nicer to be robust against the device getting a wider range of
-values in the register but that seems plausible.
-
---FeAIMMcddNRN4P4/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqiqEcACgkQJNaLcl1U
-h9DjSwf/QqqpF+vmYV6qsaB0YjTlO0Nh5EAkOzubnQ8tIVazX3xRgK40/kbW+jyI
-7beYEg+CO4znTEZGClm121f1oeWUDc+cZCnPsCBcIDzhUsbgPdJRMIq3Rp/3Cv6a
-6DYqlhjs49h0tHu6OEXvC9rWWdSaNSePF6OQu7S73QpTJ/IMv5KFe3d+3A/nUXLs
-5iyUraQBY1PkC7RdHbUSqHL3iTAzj3oGP9BmL9F50JmbE2ksjmgdIBj8g1Y+yjaP
-AG4n5ZBJdDURjO0GyGADSxqTVX7Crj9mClrj9ZEJ6gncLnETmEk5a74MjmRoOeNd
-/TBQW6/5doDKnhxI9abhGelsvZrG5g==
-=sf3B
------END PGP SIGNATURE-----
-
---FeAIMMcddNRN4P4/--
+Lothar Waßmann
