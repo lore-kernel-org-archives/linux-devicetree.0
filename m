@@ -1,39 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/4] ARM: dts: exynos5250: Add #sound-dai-cells property
- to hdmi device node
-Date: Fri, 9 Mar 2018 13:54:26 +0100
-Message-ID: <CAJKOXPdgsNwcVQ0FZLDR_q8Dz1AkSEBaG-1Mij7TKSLpSRJLpw@mail.gmail.com>
-References: <CGME20180307172723epcas1p1b8879bb555737cab7406a172b7d13a56@epcas1p1.samsung.com>
- <20180307172711.15697-1-s.nawrocki@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 0/5] Add coupled regulators mechanism
+Date: Fri, 9 Mar 2018 12:56:59 +0000
+Message-ID: <20180309125659.GE5252@sirena.org.uk>
+References: <CGME20180309122231eucas1p1b8e0a85a73b31aa07eac08f809face6e@eucas1p1.samsung.com>
+ <1520598128-11768-1-git-send-email-m.purski@samsung.com>
+ <20180309124234.GC5252@sirena.org.uk>
+ <5cf960c5-73ab-fd53-fb68-b6f7f92ca3e7@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CGDBiGfvSTbxKZlW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307172711.15697-1-s.nawrocki@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <5cf960c5-73ab-fd53-fb68-b6f7f92ca3e7@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Maciej Purski <m.purski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 7, 2018 at 6:27 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> This property is required for specifying link between the HDMI IP block
-> and the SoC's audio subsystem.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi | 1 +
->  1 file changed, 1 insertion(+)
 
-Subject prefix:
-ARM: dts: exynos: Add..... to Exynos5250
+--CGDBiGfvSTbxKZlW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please fix it here and in other places. For arm64 prefix is slightly
-different (arm64: dts: exynos:). I did not notice that in your last
-patches and applied them but please take care about this in future.
+On Fri, Mar 09, 2018 at 01:50:20PM +0100, Maciej Purski wrote:
+> On 03/09/2018 01:42 PM, Mark Brown wrote:
 
-In case you forget how the prefix should look like - run "git log
---oneline -- arch/arm/boot/dts/exynos*" or "git log --oneline --
-arch/arm64/boot/dts/exynos/".
+> > Is it possible to respin this in terms of the test/coupled branch in my
+> > git tree?  There were a bunch of build fixes that got sent and I don't
+> > want to loose any of those.
 
-BR,
-Krzysztof
+> I have included those build fixes in my new patchset. I can extract the
+> newest changes and rebase them against your test/coupled branch, if that's
+> what you're asking for.
+
+That was what I was asking for, yeah (though it can wait till people
+manage to test).  It would also be helpful from a review point of view
+to see what the fix is.
+
+--CGDBiGfvSTbxKZlW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqihJsACgkQJNaLcl1U
+h9D2ZAf/dv5w6RfzbQD/mCwS9DehbZ/Lwp+FsupWsCKuYLkxNg0xdLQ5GpxY+DE4
+7O63T7K4iqUguJOH6kKbrs49hLm1kfeQCWtPz+P8CC17NfhnbvHKYX+2HDn3w/m3
+GvvJpOhZ7sgiIgzy2qNT3c8FLtuhwSF/183ZW0nSaEYKfkQYChoOPtzw6Crf+Hm5
+T+4dQ3rDukS1PpQZqvcdoG1N1v3Ksp4F5mBeAdxj42XpTH01jiqk9nPhwicE5Sh0
+zc/WyUC3D9hZ+ljTbrXZ1h/bKYrLxxd3cA5qAxMdOO2abtCQO+SkeOJRA9mWoq9Q
+WypHqcPXKFwuY2tw2PVfF6n3zMBv2Q==
+=lUJC
+-----END PGP SIGNATURE-----
+
+--CGDBiGfvSTbxKZlW--
