@@ -1,90 +1,59 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 4/5] iommu/arm-smmu: Add the device_link between
-	masters and smmu
-Date: Fri, 9 Mar 2018 12:34:42 +0000
-Message-ID: <f6822915-8921-c9cc-218a-f094ac5ed032@arm.com>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
-	<20180302101050.6191-5-vivek.gautam@codeaurora.org>
-	<f3011ef1-7ffe-8c2b-b9d6-3fb094789656@arm.com>
-	<CAFp+6iF1oM=fmRCqSG-SxcUVvvOLet_Y0p7pmGn+=B-LdMNiww@mail.gmail.com>
-	<CAFp+6iFzGYWZMLkNrN1ZJJ2xH4CxQsiU6oYboHDzL0jDwm+4VQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a77980: add PFC support
+Date: Fri, 9 Mar 2018 13:36:19 +0100
+Message-ID: <CAMuHMdW_Ub-iVGbgmHzp6QqUCUXL0X8bYaa=yZP=1GQkLWDr=w@mail.gmail.com>
+References: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
+ <e1130d4e-7c70-fe3d-1a09-349e95ad1b33@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAFp+6iFzGYWZMLkNrN1ZJJ2xH4CxQsiU6oYboHDzL0jDwm+4VQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e1130d4e-7c70-fe3d-1a09-349e95ad1b33@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/18 07:11, Vivek Gautam wrote:
-> On Thu, Mar 8, 2018 at 10:29 AM, Vivek Gautam
-> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> On Wed, Mar 7, 2018 at 6:17 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On 02/03/18 10:10, Vivek Gautam wrote:
->>>>
->>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>
->>>> Finally add the device link between the master device and
->>>> smmu, so that the smmu gets runtime enabled/disabled only when the
->>>> master needs it. This is done from add_device callback which gets
->>>> called once when the master is added to the smmu.
->>>>
->>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> ---
->>>>    drivers/iommu/arm-smmu.c | 21 +++++++++++++++++++++
->>>>    1 file changed, 21 insertions(+)
->>>>
->>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>>> index 3d6a1875431f..bb1ea82c1003 100644
->>>> --- a/drivers/iommu/arm-smmu.c
->>>> +++ b/drivers/iommu/arm-smmu.c
->>>> @@ -217,6 +217,9 @@ struct arm_smmu_device {
->>>>          /* IOMMU core code handle */
->>>>          struct iommu_device             iommu;
->>>> +
->>>> +       /* runtime PM link to master */
->>>> +       struct device_link *link;
->>>
->>>
->>> Just the one?
-> 
-> we will either have to count all the devices that are present on the
-> iommu bus, or
-> maintain a list to which all the links can be added.
-> But to add the list, we will have to initialize a LIST_HEAD in struct
-> device_link
-> as well.
-> 
-> Or, I think we don't even need to maintain a pointer to link with smmu.
-> In arm_smmu_remove_device(), we can find out the correct link, and delete it.
-> 
->          list_for_each_entry(link, &dev->links.suppliers, c_node)
->                  if (link->supplier == smmu->dev);
->                             device_link_del(link);
-> 
-> Should that be fine?
-> 
-> Rafael, does the above snippet looks right to you? Context: smmu->dev
-> is the supplier, and dev is the consumer. We want to find the link,
-> and delete it.
+On Fri, Mar 9, 2018 at 1:06 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A77980 part of the PFC device node.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Actually, looking at the existing code, it seems like device_link_add() 
-will in fact look up and return any existing link between a given 
-supplier and consumer - is that intentional API behaviour that users may 
-rely on to avoid keeping track of explicit link pointers? (or 
-conversely, might it be reasonable to factor out a device_link_find() 
-function?)
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -71,6 +71,11 @@
+>                 #size-cells = <2>;
+>                 ranges;
+>
+> +               pfc: pin-controller@e6060000 {
+> +                       compatible = "renesas,pfc-r8a77980";
+> +                       reg = <0 0xe6060000 0 0x50c>;
 
-Robin.
+0x50c is an odd number, given the last register is at offset 0x500, just like
+on V3M ;-)
+
+> +               };
+> +
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
