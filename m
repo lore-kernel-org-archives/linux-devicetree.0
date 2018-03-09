@@ -1,89 +1,83 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 0/9] Sunxi-Cedrus driver for the Allwinner Video Engine, using the V4L2 request API
-Date: Fri,  9 Mar 2018 11:09:24 +0100
-Message-ID: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [RESEND PATCH v5 2/5] dt-bindings: pwm-backlight: add PWM delay proprieties.
+Date: Fri, 9 Mar 2018 11:14:36 +0100
+Message-ID: <CAFqH_51EGNzMx76WrjEr9Ss7QoU8FSHAhUf2OeencUC-XXtSWQ@mail.gmail.com>
+References: <20180216174034.15936-1-enric.balletbo@collabora.com>
+ <20180216174034.15936-2-enric.balletbo@collabora.com> <20180219111136.jpv4wtcm6h2hfwac@oak.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180219111136.jpv4wtcm6h2hfwac@oak.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-fbdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, kernel@collabora.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This presents a newer version of the Sunxi-Cedrus driver, that supports
-the Video Engine found in most Allwinner SoCs, starting with the A10.
+Hi Rob,
 
-The first version of this driver[0] was originally written and submitted
-by Florent Revest using a previous version of the request API, that is
-necessary to provide coherency between controls and the buffers they apply
-to. The driver was since adapted to use the latest version of the request
-API[1], as submitted by Alexandre Courbot. It is a hard requirement for
-this driver.
+oh, devicetree mailing list is not added, sorry, so cc'ing ...
 
-This series also contains fixes for issues encountered with the current
-version of the request API. If accepted, these should eventually be
-squashed into the request API series.
+2018-02-19 12:11 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> On Fri, Feb 16, 2018 at 06:40:31PM +0100, Enric Balletbo i Serra wrote:
+>> Hardware needs a delay between setting an initial (non-zero) PWM and
+>> enabling the backlight using GPIO. The post-pwm-on-delay-ms specifies
+>> this delay in milli seconds. Hardware also needs a delay between disabing
+>> the backlight using GPIO and setting PWM value to 0. The pwm-off-delay-ms
+>> is this delay in milli seconds.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>
 
-The driver itself currently only supports MPEG2 and more codecs will be
-added to the driver eventually. The output frames provided by the
-Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
-for luminance (Y) and a plane for chrominance (UV). A specific format is
-introduced in the V4L2 API to describe it.
+Lee, I guess that after Daniel ack the only ack missing here is one
+from Rob Herring?
 
-This implementation is based on the significant work that was conducted
-by various members of the linux-sunxi community for understanding and
-documenting the Video Engine's innards.
+Rob, if you have a chance to look at this I'd appreciate.
 
-[0]: https://lkml.org/lkml/2016/8/25/246
-[1]: https://lkml.org/lkml/2018/2/19/872
+Thanks,
+  Enric
 
-Florent Revest (5):
-  v4l: Add sunxi Video Engine pixel format
-  v4l: Add MPEG2 low-level decoder API control
-  media: platform: Add Sunxi Cedrus decoder driver
-  sunxi-cedrus: Add device tree binding document
-  ARM: dts: sun5i: Use video-engine node
-
-Icenowy Zheng (1):
-  ARM: dts: sun8i: add video engine support for A33
-
-Paul Kocialkowski (2):
-  media: vim2m: Try to schedule a m2m device run on request submission
-  media: videobuf2-v4l2: Copy planes when needed in request qbuf
-
-Thomas van Kleef (1):
-  ARM: dts: sun7i: Add video engine support for the A20
-
- .../devicetree/bindings/media/sunxi-cedrus.txt     |  44 ++
- arch/arm/boot/dts/sun5i-a13.dtsi                   |  30 ++
- arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 ++
- arch/arm/boot/dts/sun8i-a33.dtsi                   |  39 ++
- drivers/media/common/videobuf2/videobuf2-v4l2.c    |  19 +
- drivers/media/platform/Kconfig                     |  14 +
- drivers/media/platform/Makefile                    |   1 +
- drivers/media/platform/sunxi-cedrus/Makefile       |   4 +
- drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c | 313 ++++++++++++
- .../platform/sunxi-cedrus/sunxi_cedrus_common.h    | 106 ++++
- .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.c | 568 +++++++++++++++++++++
- .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.h |  33 ++
- .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.c  | 185 +++++++
- .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.h  |  36 ++
- .../platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c     | 152 ++++++
- .../platform/sunxi-cedrus/sunxi_cedrus_regs.h      | 170 ++++++
- drivers/media/platform/vim2m.c                     |  13 +-
- drivers/media/v4l2-core/v4l2-ctrls.c               |  15 +
- drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
- include/uapi/linux/v4l2-controls.h                 |  26 +
- include/uapi/linux/videodev2.h                     |   6 +
- 21 files changed, 1821 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
- create mode 100644 drivers/media/platform/sunxi-cedrus/Makefile
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_common.h
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_dec.c
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_dec.h
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_hw.c
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_hw.h
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c
- create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus_regs.h
-
--- 
-2.16.2
+>> ---
+>> Based on the original Huang Lin <hl@rock-chips.com> work.
+>>
+>> Changes since v4:
+>>  - Rebase on top of mainline.
+>> Changes since v3:
+>>  - Replace us for ms.
+>>  - Add Acked-by: Pavel Machek <pavel@ucw.cz>
+>> Changes since v2:
+>>  - Use separate properties (Rob Herring)
+>> Changes since v1:
+>>  - As suggested by Daniel Thompson
+>>    - Do not assume power-on delay and power-off delay will be the same
+>>
+>>  Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> index 764db86d441a..310810906613 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> @@ -17,6 +17,10 @@ Optional properties:
+>>                 "pwms" property (see PWM binding[0])
+>>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>>                    and disables the backlight (see GPIO binding[1])
+>> +  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
+>> +                          and enabling the backlight using GPIO.
+>> +  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+>> +                      and setting PWM value to 0.
+>>
+>>  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+>>  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+>> @@ -32,4 +36,6 @@ Example:
+>>
+>>               power-supply = <&vdd_bl_reg>;
+>>               enable-gpios = <&gpio 58 0>;
+>> +             post-pwm-on-delay-ms = <10>;
+>> +             pwm-off-delay-ms = <10>;
+>>       };
+>> --
+>> 2.15.1
+>>
