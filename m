@@ -1,88 +1,47 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v3 6/6] ARM: dts: exynos: Enable HDMI audio support on
- exynos5800-peach-pi
-Date: Fri, 09 Mar 2018 18:22:50 +0100
-Message-ID: <20180309172250.23019-6-s.nawrocki@samsung.com>
-References: <20180309172250.23019-1-s.nawrocki@samsung.com>
-        <CGME20180309172450epcas1p2b845a521afbadc81da991330bdbc588c@epcas1p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180309172250.23019-1-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: kgene@kernel.org, devicetree@vger.kernel.org, javierm@redhat.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M
+ Eagle
+Date: Fri, 9 Mar 2018 20:30:36 +0300
+Message-ID: <e0ff40be-f134-5a86-6d00-9506d9829364@cogentembedded.com>
+References: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1520603500-15218-4-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1520603500-15218-4-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-MW
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new cpu, codec subnodes according to the updated
-"google,snow-audio-max98091" DT bindings and the I2S clock tree
-configuration so sound on the HDMI interface can be also supported.
-
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-NOTE:
-I couldn't test this patch as I have no access to Peach-pi Chromebook.
-I think it shouldn't be applied unless someone actually tests it.
-
-Changes since v1:
- - edited commit summary line.
----
- arch/arm/boot/dts/exynos5800-peach-pi.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 0029ec27819c..0a4766e0484e 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -14,6 +14,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/clock/maxim,max77802.h>
- #include <dt-bindings/regulator/maxim,max77802.h>
-+#include <dt-bindings/sound/samsung-i2s.h>
- #include "exynos5800.dtsi"
- #include "exynos5420-cpus.dtsi"
- 
-@@ -89,6 +90,14 @@
- 		samsung,model = "Peach-Pi-I2S-MAX98091";
- 		samsung,i2s-controller = <&i2s0>;
- 		samsung,audio-codec = <&max98091>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98091>, <&hdmi>;
-+		};
- 	};
- 
- 	usb300_vbus_reg: regulator-usb300 {
-@@ -145,6 +154,11 @@
- 	vdd-supply = <&ldo9_reg>;
- };
- 
-+&clock_audss {
-+	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>;
-+	assigned-clock-parents = <&clock CLK_FOUT_EPLL>;
-+};
-+
- &cpu0 {
- 	cpu-supply = <&buck2_reg>;
- };
-@@ -609,6 +623,7 @@
- 		pinctrl-0 = <&max98091_irq>;
- 		clocks = <&pmu_system_controller 0>;
- 		clock-names = "mclk";
-+		#sound-dai-cells = <0>;
- 	};
- 
- 	light-sensor@44 {
-@@ -661,6 +676,8 @@
- };
- 
- &i2s0 {
-+	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
-+	assigned-clock-parents = <&clock_audss EXYNOS_I2S_BUS>;
- 	status = "okay";
- };
- 
--- 
-2.14.2
+T24gMDMvMDkvMjAxOCAwNDo1MSBQTSwgSmFjb3BvIE1vbmRpIHdyb3RlOgoKPiBUaGUgUi1DYXIg
+VjNNIEVhZ2xlIGJvYXJkIGluY2x1ZGVzIGEgdHJhbnNwYXJlbnQgTFZEUyBkZWNvZGVyLCBjb25u
+ZWN0ZWQKPiB0byB0aGUgb24tY2hpcCBMVkRTIGVuY29kZXIgb3V0cHV0IG9uIG9uZSBzaWRlIGFu
+ZCB0byBIRE1JIGVuY29kZXIKPiBBRFY3NTExdyBvbiB0aGUgb3RoZXIgb25lLgo+IAo+IEFzIHRo
+ZSBkZWNvZGVyIGRvZXMgbm90IG5lZWQgYW55IGNvbmZpZ3VyYXRpb24gaXQgaGFzIGJlZW4gc28t
+ZmFyCj4gb21pdHRlZCBmcm9tIERUUy4gTm93IHRoYXQgYSBkcml2ZXIgZm9yIHRyYW5zcGFyZW50
+IExWRFMgZGVjb2RlciBpcwo+IGF2YWlsYWJsZSwgZGVzY3JpYmUgaXQgaW4gRFQgYXMgd2VsbC4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5v
+cmc+Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5k
+dHMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjkg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
+NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMKPiBpbmRleCBjMGZkMTQ0Li4wYTk1YzIwIDEw
+MDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5k
+dHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAtZWFnbGUuZHRz
+Cj4gQEAgLTQyLDYgKzQyLDMzIEBACj4gIAkJCX07Cj4gIAkJfTsKPiAgCX07Cj4gKwo+ICsJbHZk
+cyxkZWNvZGVyIHsKCiAgIEkgc2FpZCBoeXBoZW4gKC0pLCBub3QgY29tbWEgKCwpISA6LSkKClsu
+Li5dCgpNQlIsIFNlcmdlaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
