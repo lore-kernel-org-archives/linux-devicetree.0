@@ -1,76 +1,53 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: Re: [PATCH v4 1/8] SOC: brcmstb: add memory API
-Date: Fri, 9 Mar 2018 15:07:27 +0000
-Message-ID: <20180309150727.GH24558@saruman>
-References: <1516058925-46522-1-git-send-email-jim2101024@gmail.com>
- <1516058925-46522-2-git-send-email-jim2101024@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: Enable HDMI audio on Snow Chromebook
+Date: Fri, 09 Mar 2018 16:09:47 +0100
+Message-ID: <7be21210-edc4-bfa7-6e77-ee23fae141da@samsung.com>
+References: <CGME20180308162609epcas1p45458c1671c38b389e047f17804690eb9@epcas1p4.samsung.com>
+        <20180307172711.15697-4-s.nawrocki@samsung.com>
+        <20180308162559.391-1-s.nawrocki@samsung.com>
+        <CAJKOXPemC09mmjt9AKa9Qfhy14=CdUampi3=x957=NNEzq7LqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PW0Eas8rCkcu1VkF"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516058925-46522-2-git-send-email-jim2101024@gmail.com>
+In-reply-to: <CAJKOXPemC09mmjt9AKa9Qfhy14=CdUampi3=x957=NNEzq7LqQ@mail.gmail.com>
+Content-language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: kgene@kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On 03/09/2018 02:01 PM, Krzysztof Kozlowski wrote:
+>> diff --git a/arch/arm/boot/dts/exynos5250-snow-common.dtsi b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
+>> index bdf59dd3654b..932a00cfd716 100644
+>> --- a/arch/arm/boot/dts/exynos5250-snow-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
+>> @@ -9,6 +9,7 @@
+>>  #include <dt-bindings/clock/maxim,max77686.h>
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>  #include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/sound/samsung-i2s.h>
+>>  #include "exynos5250.dtsi"
+>>
+>>  / {
+>> @@ -523,6 +524,9 @@
+>>  };
+>>
+>>  &i2s0 {
+>> +       assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
+>> +       assigned-clock-parents = <&clock_audss EXYNOS_I2S_BUS>;
+>> +       #clock-cells = <1>;
+>
+> Shouldn't this be property of exynos5250.dtsi? Along with clock-output-names?
 
---PW0Eas8rCkcu1VkF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm, it should be safe to move it there. By specifying this property or not
+we can control whether the I2S clocks are exposed or not. If we move it to 
+exynos5250.dtsi the clocks we always be exposed. But should be the right thing
+to do anyway. I will post v3.
 
-On Mon, Jan 15, 2018 at 06:28:38PM -0500, Jim Quinlan wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
->=20
-> This commit adds a memory API suitable for ascertaining the sizes of
-> each of the N memory controllers in a Broadcom STB chip.  Its first
-> user will be the Broadcom STB PCIe root complex driver, which needs
-> to know these sizes to properly set up DMA mappings for inbound
-> regions.
->=20
-> We cannot use memblock here or anything like what Linux provides
-> because it collapses adjacent regions within a larger block, and here
-> we actually need per-memory controller addresses and sizes, which is
-> why we resort to manual DT parsing.
->=20
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->=20
-> Conflicts:
-> 	drivers/soc/bcm/brcmstb/Makefile
+Of course we recently made the clock-output-names property deprecated, it will
+not bee needed any more. It was there just to ensure the clk names are unique.
 
-That can go.
-
-> +++ b/drivers/soc/bcm/brcmstb/memory.c
-=2E..
-> +/* Macro to help extract property data */
-> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(*(u32*)(b + offs)))
-
-Checkpatch complains about missing whitespace after u32.
-
-Cheers
-James
-
---PW0Eas8rCkcu1VkF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqioy4ACgkQbAtpk944
-dnrGpQ/6A4EcwZ+zoSJZpxuuicPoZib7aq0pGu8F/Ld2nf+Tr48Slxw3kPhcCzc7
-HXPBL24yqKGrJ7jFbqrDnWCLkjTg7zsjokCbehiLzQI66LUsRolxGCLMYQz6XfvN
-noL4iAQ+mRx9qfhpRomyHXA3xcb3DS+TL0o6TxztDgiF5PGz+Iu9AlaYKQ4Zq0cd
-xuEIGfbJo3fivLDU20H/KyuSY3B3Bg1ayXqtBZSQmxgac1Hkyldjee5Spe8bG0j2
-aOUOZRfJY49FjYQ7wW2itTywSE1RpLTHBfqxpYrrQifSB69Ztwl9H0GqWD0PehjI
-uiKHInsJxqYMNQXMssZxMj4vuHq31v+QbD6jNoinnNrmoctjT8dPaSo6h6t051HE
-a0saFvpCEJrOqozZ6PQgJQPSg9Mz95+YUFMmNApBzKfYCw0TNuPHH5vupy9A9LWD
-D1uAyAatlj5Qb8dU0kBXKXCVPu1Ikq4Jbgq/WMkcUh2WTTD4+2T6uKdS+JSnd08X
-RjevevlDWxgSMJ4DzPoQgZbswKiq/A6Dewg/4hx9O8BnamQ/Sj4pbRThTcdWsNqj
-9xC/Gt6QPJQop/pdz0m+Q0ML1lQRNwe1YbUcwt0cMGlVuNzkN45lM7T3HGbz6nXW
-8kjCKcG+L9tMJ/4zywyXKUqb+EAjBMgp1OWJobxtG9r+wwLYHzs=
-=TGmj
------END PGP SIGNATURE-----
-
---PW0Eas8rCkcu1VkF--
+-- 
+Regards,
+Sylwester
