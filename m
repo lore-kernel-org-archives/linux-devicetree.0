@@ -1,164 +1,141 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 5/9] media: platform: Add Sunxi Cedrus decoder driver
-Date: Fri, 09 Mar 2018 15:25:22 +0100
-Message-ID: <1520605522.15946.14.camel@bootlin.com>
-References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
-         <20180309101445.16190-3-paul.kocialkowski@bootlin.com>
-         <20180309135702.pk4webt7xnj7lrza@flea>
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor
+	driver
+Date: Fri, 9 Mar 2018 09:35:48 -0500
+Message-ID: <20180309143548.xuajwfhiwuua7jg5@bacon.ohporter.com>
+References: <20180227225128.17815-1-mporter@konsulko.com>
+ <20180227225128.17815-3-mporter@konsulko.com>
+ <20180228110038.GA6722@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-pZHdMQqkI16B0Hm/jNZ1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309135702.pk4webt7xnj7lrza@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180228110038.GA6722@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---=-pZHdMQqkI16B0Hm/jNZ1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, 2018-03-09 at 14:57 +0100, Maxime Ripard wrote:
-> Hi,
->=20
-> On Fri, Mar 09, 2018 at 11:14:41AM +0100, Paul Kocialkowski wrote:
-> > +/*
-> > + * mem2mem callbacks
-> > + */
-> > +
-> > +void job_abort(void *priv)
-> > +{}
->=20
-> Is that still needed?
-
-It looks like we need a dummy callback here, the v4l2_m2m_init function
-puts a hard requirement on it.
-
-The feature is definitely not used for now, but maybe this could be
-hooked to aborting the matching request? It was probably designed for
-the case where the driver handles a queue of jobs on its own (that's how
-it's used in vim2m) and such an internal queue is perhaps irrelevant
-when using the request API (and fences later).
-
-> > +/*
-> > + * device_run() - prepares and starts processing
-> > + */
-> > +void device_run(void *priv)
+On Wed, Feb 28, 2018 at 11:00:38AM +0000, Mark Brown wrote:
+> On Tue, Feb 27, 2018 at 05:51:28PM -0500, Matt Porter wrote:
+> 
+> > +static bool tda7419_writeable_reg(struct device *dev, unsigned int reg)
 > > +{
->=20
-> This function (and the one above) should probably made static. Or at
-> least if you can't, they should have a much more specific name in
-> order not to conflict with anything from the core.
-
-Good point, let's go for static. Since these are passed as function
-pointers, it shouldn't be a problem.
-
-> > +	/*
-> > +	 * The VPU is only able to handle bus addresses so we have
-> > to subtract
-> > +	 * the RAM offset to the physcal addresses
-> > +	 */
-> > +	in_buf     -=3D PHYS_OFFSET;
-> > +	out_luma   -=3D PHYS_OFFSET;
-> > +	out_chroma -=3D PHYS_OFFSET;
->=20
-> You should take care of that by putting it in the dma_pfn_offset field
-> of the struct device (at least before we come up with something
-> better).
->=20
-> You'll then be able to use the dma_addr_t directly without modifying
-> it.
-
-Definitely!
-
-> > +	vpu->syscon =3D syscon_regmap_lookup_by_phandle(vpu->dev-
-> > >of_node,
-> > +						      "syscon");
-> > +	if (IS_ERR(vpu->syscon)) {
-> > +		vpu->syscon =3D NULL;
-> > +	} else {
-> > +		regmap_write_bits(vpu->syscon,
-> > SYSCON_SRAM_CTRL_REG0,
-> > +				  SYSCON_SRAM_C1_MAP_VE,
-> > +				  SYSCON_SRAM_C1_MAP_VE);
-> > +	}
->=20
-> This should be using our SRAM controller driver (and API), see
-> Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> include/linux/soc/sunxi/sunxi_sram.h
-
-I'll look into that.
-
-> > +	ret =3D clk_prepare_enable(vpu->ahb_clk);
-> > +	if (ret) {
-> > +		dev_err(vpu->dev, "could not enable ahb clock\n");
-> > +		return -EFAULT;
-> > +	}
-> > +	ret =3D clk_prepare_enable(vpu->mod_clk);
-> > +	if (ret) {
-> > +		clk_disable_unprepare(vpu->ahb_clk);
-> > +		dev_err(vpu->dev, "could not enable mod clock\n");
-> > +		return -EFAULT;
-> > +	}
-> > +	ret =3D clk_prepare_enable(vpu->ram_clk);
-> > +	if (ret) {
-> > +		clk_disable_unprepare(vpu->mod_clk);
-> > +		clk_disable_unprepare(vpu->ahb_clk);
-> > +		dev_err(vpu->dev, "could not enable ram clock\n");
-> > +		return -EFAULT;
-> > +	}
->=20
-> Ideally, this should be using runtime_pm to manage the device power
-> state, and disable it when not used.
-
-I'll add that to my tasks list. I suppose we shouldn't make this a
-priority for now, but this is definitely good to have.
-
-> > +	reset_control_assert(vpu->rstc);
-> > +	reset_control_deassert(vpu->rstc);
->=20
-> You can use reset_control_reset here
-
-Noted!
-
-> > +	return 0;
+> > +	return true;
 > > +}
-> > +
-> > +void sunxi_cedrus_hw_remove(struct sunxi_cedrus_dev *vpu)
+> 
+> This is the default behaviour, may as well omit it (but equally it does
+> no harm).
+
+Ok.
+
+> 
+> > +static inline int tda7419_vol_get_value(int val, unsigned int mask,
+> > +					int thresh, unsigned int invert)
 > > +{
-> > +	clk_disable_unprepare(vpu->ram_clk);
-> > +	clk_disable_unprepare(vpu->mod_clk);
-> > +	clk_disable_unprepare(vpu->ahb_clk);
->=20
-> The device is not put back into reset here
+> > +	val &= mask;
+> > +	if (val < thresh) {
+> > +		if (invert)
+> > +			val = 0 - val;
+> > +	} else if (val > thresh) {
+> 
+> This feels like something some other device might want to use so might
+> warrant pulling out into a general control at some point but I'd not
+> insist on doing it now.
 
-Good catch, thanks!
+Ok, yeah, I was also thinking it should be moved to a general helper
+when the next user shows up. The most likely case is another part in
+this family may have a similar register layout.
 
-Cheers,
+> > +static struct snd_kcontrol_new tda7419_controls[] = {
+> > +SOC_ENUM("Main Source Select", soc_enum_main_src_sel),
+> 
+> Should this be a DAPM route?
 
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-pZHdMQqkI16B0Hm/jNZ1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Ultimately yes. I initially took the path of ignoring DAPM support in
+interests of getting some clean done. Is it ok to merge DAPM support
+later or do you prefer just having it in the intitial driver? For
+routes, it'll include Main/Second source selects, the Rear Source
+switch, and Mix enable at least.
 
------BEGIN PGP SIGNATURE-----
+> > +SOC_SINGLE("Main Source AutoZero", TDA7419_MAIN_SRC_REG,
+> > +	   TDA7419_MAIN_SRC_AUTOZERO, 1, 1),
+> 
+> There's a lot of on/off switches for various things in here - these
+> should all have Switch at the end of their names so that userspace can
+> see how it's expected to display them.  Most of the controls with a max
+> value of 1 probably fall into this category.
 
-iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqimVIACgkQ3cLmz3+f
-v9FiKgf/UE8Ui3Gq1AIlGByqBTacl4xT8gXFdGs2y6Ko+YXNAJE50p8MSDzax7h2
-AThhNOY3Skg/dUZcHht40LLs0WaXjbqt69bFacEG1XA9ByS5atGMuHo92NNeloyZ
-ljg7ErPz108P0r1hYWSpXfp0Bzd+/9t2gKthSkMh/PDfGfReZhAiRjtgki958u7j
-l0tyb9jdMTlnpjM+9U45kJJcqKicGhJJcXopsFhBcNqbaOCCtCUCa/H62k0PpGtU
-lJzMI9GLIosmP0gMQxsSQx0PDn2uut5xHFMsC1dog7J+CpXcWj48fwvi50AuHD44
-dbbotmx6UuXhCaiIbtFzPA9E81UlUw==
-=uGjD
------END PGP SIGNATURE-----
+I see. I'll fix that.
 
---=-pZHdMQqkI16B0Hm/jNZ1--
+> > +SOC_SINGLE("Clock Fast Mode", TDA7419_MUTE_CLK_REG,
+> > +	   TDA7419_CLK_FAST_MODE, 1, 1),
+> 
+> What does this do - should it be in set_sysclk() or something?
+
+This is where things get hazy, unfortunately. The datasheet is partially
+garbage. So there's no description or guidance on clock management at
+all. It's not clear what clock this is or what specifically "fast" does.
+Because there's no concept of an external clock, the sysclk is clearly
+internally generated. Because of the register labeling of clock
+generator, it's probably sysclk but I'm not 100% sure what the relevance
+is of fast mode. The working settings were divined from trial and error
+as well a couple microcontroller projects scattered across the
+interwebs.
+
+On second look at this, I think I should at least remove this switch
+and hard code it for now or move to set_sysclk(). I'm hesistant of the
+latter because of the lack of information on this setting.
+
+> > +	/* Configure registers */
+> > +	regmap_write(tda7419->regmap, TDA7419_VOLUME_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_MIXING_GAIN_REG, 0x0f);
+> > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LF_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RF_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LR_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RR_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_MIXING_LEVEL_REG, 0xe0);
+> > +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_SUB_REG, 0xe0);
+> 
+> This looks like it's setting default volumes - just leave those at the
+> chip defaults and let userspace handle setting them, what works for one
+> board may be totally inappropriate on another board and using the chip
+> default means we've got some fixed thing we don't need to discuss.
+
+This is actually setting the default/cache to the first mute value due
+to the assumption in my implementation of the tda7419-specific get/set
+for these registers. It simplified the code a bit to have these
+initialized like this. e.g. for the attenuator group of registers,
+x11xxxxx are all mute values, so 0xe0 is setting these regs to that
+first mute value to simplify things. I'll take another look at
+eliminating this. As it is, it does not change the fact that the actual
+reset value of 0xff is also mute from a user POV.
+
+> > +static int tda7419_remove(struct i2c_client *i2c)
+> > +{
+> > +	int i;
+> > +	struct tda7419_data *tda7419 = i2c_get_clientdata(i2c);
+> > +
+> > +	/* Reset registers to defaults */
+> > +	for (i = 0; i < ARRAY_SIZE(tda7419_regmap_defaults); i++)
+> > +		regmap_write(tda7419->regmap,
+> > +			     tda7419_regmap_defaults[i].reg,
+> > +			     tda7419_regmap_defaults[i].def);
+> 
+> Why are we doing this?  Other drivers don't do it...  if anything I'd
+> expect a reset on probe in case the bootloader or something left the
+> chip configured.
+
+Good point, I'll move this into probe. The part doesn't have a soft
+reset provision so we need to do it manually like this.
+
+-Matt
