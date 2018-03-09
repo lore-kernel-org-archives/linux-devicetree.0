@@ -1,65 +1,67 @@
-Return-Path: <SRS0=TUNP=F3=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 03/12] staging: typec: tcpci: support port config
- passed via dt
-Date: Mon, 5 Mar 2018 08:53:00 +0000
-Message-ID: <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
- <1519645759-12701-4-git-send-email-jun.li@nxp.com>
- <20180226140604.GD25535@kuha.fi.intel.com>
- <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
- <20180227110302.GE25535@kuha.fi.intel.com>
-In-Reply-To: <20180227110302.GE25535@kuha.fi.intel.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=aH0K=F7=bootlin.com=maxime.ripard@kernel.org>
+Date: Fri, 9 Mar 2018 16:36:39 +0100
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 0/2] media: v4l: Add support for the Cadence MIPI-CSI2
+ RX
+Message-ID: <20180309153639.f2oauh5gvlgagc5v@flea>
+References: <20180215133335.9335-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="76sdo5dsk34ofwrl"
+Content-Disposition: inline
+In-Reply-To: <20180215133335.9335-1-maxime.ripard@bootlin.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIZWlra2kgS3JvZ2Vy
-dXMgW21haWx0bzpoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE4
-xOoy1MIyN8jVIDE5OjAzDQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogZ3Jl
-Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbGludXhAcm9lY2st
-dXMubmV0Ow0KPiBhLmhhamRhQHNhbXN1bmcuY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgeXVl
-eWFvQGdvb2dsZS5jb207DQo+IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdhcnNp
-bHZhQGVtYmVkZGVkb3IuY29tOw0KPiBvX2xldmVxdWVAb3JhbmdlLmZyOyBzaHVmYW5fbGVlQHJp
-Y2h0ZWsuY29tOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2MiAwMy8xMl0gc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBzdXBwb3J0IHBvcnQg
-Y29uZmlnDQo+IHBhc3NlZCB2aWEgZHQNCj4gDQo+IEhpLA0KPiANCj4gT24gTW9uLCBGZWIgMjYs
-IDIwMTggYXQgMDI6MzA6NTNQTSArMDAwMCwgSnVuIExpIHdyb3RlOg0KPiA+ID4gPiArCWNoaWxk
-ID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUodGNwY2ktPmRldi0+b2Zfbm9kZSwgImNvbm5lY3RvciIp
-Ow0KPiA+ID4gPiArCWlmICghY2hpbGQpIHsNCj4gPiA+ID4gKwkJZGV2X2Vycih0Y3BjaS0+ZGV2
-LCAiZmFpbGVkIHRvIGdldCBjb25uZWN0b3Igbm9kZS5cbiIpOw0KPiA+ID4gPiArCQlyZXR1cm4g
-LUVJTlZBTDsNCj4gPiA+ID4gKwl9DQo+ID4gPg0KPiA+ID4gV2h5IGRvIHlvdSBuZWVkIHNlcGFy
-YXRlIGNoaWxkIG5vZGUgZm9yIHRoZSBjb25uZWN0b3I/IFlvdSB3aWxsDQo+ID4gPiBhbHdheXMg
-aGF2ZSBvbmx5IG9uZSBjb25uZWN0b3IgcGVyIHRjcGMsIGkuZS4gdGhlIHRjcGNpIGFscmVhZHkN
-Cj4gPiA+IHJlcHJlc2VudHMgdGhlIGNvbm5lY3RvciBhbmQgYWxsIGl0cyBjYXBhYmlsaXRpZXMu
-DQo+ID4gPg0KPiA+IFRoaXMgaXMgbXkgb3JpZ2luYWwgaWRlYSwgbXkgdW5kZXJzdGFuZGluZyBp
-cyBSb2IgZXhwZWN0cyB0aG9zZQ0KPiA+IHByb3BlcnRpZXMgc2hvdWxkIGFwcGx5IGZvciBhIGNv
-bW1vbiB1c2IgY29ubmVjdG9yIG5vZGVbMV0sIHRoYXQgd2F5IEkNCj4gPiBuZWVkIGFkZCBhIGNo
-aWxkIG5vZGUgZm9yIGl0LCBzb3JyeSBJIGRpZG4ndCBtYWtlIHRoZSBkdC1iaW5kaW5nDQo+ID4g
-cGF0Y2hlcyBjb21lIGZpcnN0IGluIHRoaXMgc2VyaWVzLCBwbGVhc2Ugc2VlIHBhdGNoIDEwLDEx
-Lg0KPiA+DQo+ID4gWzFdDQo+ID4NCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rp
-b24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnBhdA0KPiA+DQo+IGNod29yay5rZXJu
-ZWwub3JnJTJGcGF0Y2glMkYxMDIzMTQ0NyUyRiZkYXRhPTAyJTdDMDElN0NqdW4ubGklNDANCj4g
-bnhwLmNvDQo+ID4NCj4gbSU3Q2UzN2VkOGIwODQzNzRlMjQxZDJlMDhkNTdkZDFiMDJhJTdDNjg2
-ZWExZDNiYzJiNGM2ZmE5MmNkOQ0KPiA5YzVjMzAxNjMNCj4gPg0KPiA1JTdDMCU3QzAlN0M2MzY1
-NTMyNjE5NzIyMTIzNzYmc2RhdGE9aFNOaUFmWG9UVHpLM1RqamtqV283T0pMNw0KPiAlMkIzZ0RI
-VA0KPiA+IEk4Tk8wRlF2aURkNCUzRCZyZXNlcnZlZD0wDQo+IA0KPiBCdXQgd2FzIHRoZSBpZGVh
-IHJlYWxseSB0byBwdXQgcHJvcGVydGllcyBsaWtlIHRoZSBUQ1BDIGNhcGFiaWxpdGllcyB1bmRl
-ciB0aGUNCj4gdXNiIGNvbm5lY3RvciBjaGlsZCBub2RlPyBUaGF0IHdpbGwgZm9yY2UgdXMgdG8g
-ZXh0cmFjdCB0aGUgc2FtZSBwcm9wZXJ0aWVzDQo+IGluIHR3byBkaWZmZXJlbnQgbWV0aG9kcyBp
-biBldmVyeSBVU0IgVHlwZS1DIGRyaXZlci4gT25lIGV4dHJhY3RpbmcgdGhlbQ0KPiBmcm9tIERU
-LCBhbmQgYW5vdGhlciBmcm9tIG90aGVyIEZXIGludGVyZmFjZXMgYW5kIGJ1aWxkLWluIHByb3Bl
-cnRpZXMuDQo+IA0KPiBUbyBhdm9pZCB0aGF0LCBsZXQncyBqdXN0IGV4cGVjdCB0byBnZXQgdGhl
-c2UgcHJvcGVydGllcyBpbiB0aGUgbm9kZSBmb3IgdGNwYywNCj4gbm90IHRoZSB1c2IgY29ubmVj
-dG9yIGNoaWxkLg0KDQpJIG1pc3VuZGVyc3Rvb2QgaXQncyBiZXR0ZXIgdG8gcHV0IHR5cGVjIHBy
-b3BzIHVuZGVyIGNvbm5lY3RvciBub2RlIGluIGFsbCBjYXNlcw0Kc28gd2UgY2FuIGhhdmUgYSB1
-bmlmaWVkIHR5cGVjIGRlc2NyaXB0aW9uLiBBcyBSb2IgY29tbWVudHMgdGhhdCdzIG9ubHkgcmVx
-dWlyZWQNCmZvciBtdWx0aXBsZSBjb25uZWN0b3JzIGZvciBvbmUgY29udHJvbGxlciwgbm90IGZv
-ciBzaW1wbGUgY29ubmVjdG9yIGxpa2UgbXkgY2FzZSwNCkkgd2lsbCBwdXQgdGhvc2UgcHJvcHMg
-dW5kZXIgdGNwYyBub2RlLg0KDQpKdW4gTGkNCj4gDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLQ0K
-PiBoZWlra2kNCg==
+
+--76sdo5dsk34ofwrl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 15, 2018 at 02:33:33PM +0100, Maxime Ripard wrote:
+> Hi,
+>=20
+> Here is another attempt at supporting the MIPI-CSI2 RX block from
+> Cadence.
+>=20
+> This IP block is able to receive CSI data over up to 4 lanes, and
+> split it to over 4 streams. Those streams are basically the interfaces
+> to the video grabbers that will perform the capture.
+>=20
+> It is able to map streams to both CSI datatypes and virtual channels,
+> dynamically. This is unclear at this point what the right way to
+> support it would be, so the driver only uses a static mapping between
+> the virtual channels and streams, and ignores the data types.
+
+Ping?
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--76sdo5dsk34ofwrl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqiqgYACgkQ0rTAlCFN
+r3R3aRAAkUsN9bD09gOZaSnrfBzNr1sDXkzoj+EZqYggMh+mnl2hl7mTy9/CtVLY
+vS3TFy17W0XzdiT76k0s+3ENp8pqpQ1uAVk+eHfbG4soX2BaE/nc53YJMIb9U2if
+xc9i+HK/MqP8M+jZwcfGoBFbTcMxYazrSOdGI6kqCl8XYAzSyQDuIg8qP/z1CD0f
+tML0k/WKBa5LcRJuaDIFPahhHaHjBXSXRJeJgUeuvjfsR/5kXNdmfD8RZnrH06t0
+IxChnuv+doNwFCSHyyF8boKHZyb3vx8XepjBCox87YiclKsf8xdfC4km/J27y4G3
+0yGXiVsI0wUwCBv6lEcWy+OoRGkxzMXroztPONqUNcWNXZTtvDd46BGh3vsRPuM/
+xPyNLWKYawXc8qYj+IugVEhgdMAOh9FWXnIttrH+dfk/gpRMC6ylup3xKKBAcH9d
+wqlCgV+iXGtmvlx6gi7absH9wKSfv4hcC7aJDC/MLegcQZGSOnV5XPEF2FP14Rpq
+cj0FUei68iszb6Grc4wgooIRJ709CTyC+MLQHjn9j8YabelGe1aSeFQAVMDrZgZA
+t/9QznRkeOXA4dy7gytyikpTTlMBkYtLphcH6j7Tvo+10bN5A1p+dsmWULFETnDr
+dA9pOsnEvfjzw7PYDhKpqa1IkRep/G6ccUlrTMda6pr7X7QTvwM=
+=QBSz
+-----END PGP SIGNATURE-----
+
+--76sdo5dsk34ofwrl--
