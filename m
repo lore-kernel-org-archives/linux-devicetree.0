@@ -1,65 +1,144 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
-Date: Fri, 9 Mar 2018 15:49:00 +0530
-Message-ID: <4fd61bd2-757b-ef30-a07f-ed74af031ff5@codeaurora.org>
-References: <20180302215638.6145-1-jcrouse@codeaurora.org>
- <20180302215638.6145-3-jcrouse@codeaurora.org>
- <20180305044221.GC23018@vireshk-i7>
- <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
- <20180306042656.GJ23018@vireshk-i7>
- <20180306153757.GD15200@jcrouse-lnx.qualcomm.com>
- <20180307050624.GR23018@vireshk-i7>
- <20180308201438.GA10589@jcrouse-lnx.qualcomm.com>
- <20180309034332.GO6842@vireshk-i7>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 0/9] Sunxi-Cedrus driver for the Allwinner Video Engine,
+ using the V4L2 request API
+Date: Fri, 09 Mar 2018 11:18:56 +0100
+Message-ID: <1520590736.15946.1.camel@bootlin.com>
+References: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180309034332.GO6842@vireshk-i7>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>, freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, vireshk@kernel.org, nm@ti.com, sboyd@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, linux-arm-kernel@lists.infradead.org, sboyd@kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-HlJ2Wc3XAxVn/wzc1ex8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309100933.15922-1-paul.kocialkowski@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-SGV5IEpvcmRhbi9WaXJlc2gsCgpPbiAwMy8wOS8yMDE4IDA5OjEzIEFNLCBWaXJlc2ggS3VtYXIg
-d3JvdGU6Cj4gT24gMDgtMDMtMTgsIDEzOjE0LCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+PiBJdCBz
-ZWVtcyB0byBtZSB0aGF0IHBlcmZvcm1hbmNlX3N0YXRlIGhhcyBhIGRpcmVjdCByZWxhdGlvbnNo
-aXAgd2l0aCBnZW5wZAo+PiB3aGljaCBpcyBnb29kIGZvciBDUFUgdm90ZXMgYnV0IGluIHRoaXMg
-Y2FzZSwgd2UncmUganVzdCBwYXNzaW5nIGFsb25nIHJhdyBkYXRhCj4+IHRvIGFuIGluZGVwZW5k
-ZW50IG1pY3JvY29udHJvbGxlci4gVGhlICdxY29tLGFyYy1sZXZlbCcgaXMgdXNlZCB0byBjb25z
-dHJ1Y3QKPj4gdGhlIGFjdHVhbCB2YWx1ZXMgdGhhdCB0aGUgR01VIHdpbGwgcHJvZ3JhbSBpbnRv
-IHRoZSBSUE1oLiBTaW5jZSB0aGVzZSBhcmUKPiAKPiBUaGUgImdlbnBkIiBoZXJlIGlzIGNyZWF0
-ZWQgc3BlY2lhbGx5IGZvciB0aGlzIFJQTS4gVGhlIHBlcmZvcm1hbmNlLXN0YXRlIHRoaW5nCj4g
-aXMgZGVzaWduZWQgdG8gc29sdmUgdGhpcyB2ZXJ5IHNwZWNpZmljIHByb2JsZW0gb2YgcXVhbGNv
-bW0gU29DcyBhbmQgdGhlcmUgaXMgbm8KPiB3YXkgd2UgYXJlIGdvaW5nIHRvIGFkZCBhbm90aGVy
-IHByb3BlcnR5IGZvciB0aGlzIG5vdy4KPiAKPj4gaW5mb3JtYXRpb25hbCAoZnJvbSB0aGUgQ1BV
-IHBlcnNwZWN0aXZlKSByYXRoZXIgdGhhbiBmdW5jdGlvbmFsIEkgZmVlbCBsaWtlCj4+IHRoYXQg
-dXNpbmcgcGVyZm9ybWFuY2Vfc3RhdGUgZm9yIHRoaXMgd291bGQgYmUgYXMgaGFja3kgYXMgdXNp
-bmcgb3BwLW1pY3Jvdm9sdAo+PiBvciBzb21ldGhpbmcgZWxzZS4KPiAKPiBUaGVyZSBpcyBzb21l
-IFdJUCBzdHVmZiBoZXJlIFJhamVuZHJhIGlzIHRlc3RpbmcgY3VycmVudGx5LgoKV2hhdCBJIGFt
-IGRvaW5nIGlzIGEgcG93ZXJkb21haW4gZHJpdmVyIHRvIGNvbW11bmljYXRlIG1hZ2ljIHZhbHVl
-cyBmcm9tCkNQVSB0byBycG1oLCBsb29rcyBsaWtlIHdlIG5lZWQgYW5vdGhlciBvbmUgdG8gY29t
-bXVuaWNhdGUgZnJvbSBDUFUgdG8KR01VIG5vdyA6KQoKQSBmZXcgdGhpbmdzLAoqIHNvbWVvbmUg
-d2lsbCBuZWVkIHRvIG1hcCB0aGVzZSBsYXJnZXIgbWFnaWMgdmFsdWVzIGludG8gc29tZXRoaW5n
-IHRoYXQKcnBtaCB3b3VsZCB1bmRlcnN0YW5kIChiZXR3ZWVuIDAgdG8gMTUgb24gdGhlIHNkbTg0
-NSksIHRoYXRzIGRvbmUgYnkKcmVhZGluZyB0aGUgY29tbWFuZCBkYiBsZXZlbCBtYXBzLiBJcyB0
-aGlzIGRvbmUgYnkgR01VPwoKKiBhcmUgdGhlc2UgY29tbXVuaWNhdGVkIGp1c3Qgb25jZSBmb3Ig
-ZXZlcnkgT1BQIGF0IGluaXQvYm9vdCwgb3IgZm9yCmV2ZXJ5IE9QUCBzd2l0Y2g/CgoqIHdoYXRz
-IHRoZSBjb21tdW5pY2F0aW9uIG1lY2hhbmlzbSB3ZSB1c2UgYmV0d2VlbiBDUFUgYW5kIEdNVT8g
-CgpyZWdhcmRzClJhamVuZHJhCgo+IAo+IHNzaDovL2dpdEBnaXQubGluYXJvLm9yZy9wZW9wbGUv
-dmlyZXNoLmt1bWFyL215bGludXguZ2l0IG9wcC9nZW5wZC9xY29tCj4gCj4gUGxlYXNlIGhhdmUg
-YSB0YWxrIHdpdGggUmFqZW5kcmEgd2hvIGNhbiBoZWxwIHlvdSB1bmRlcnN0YW5kIG9uIGhvdyB0
-aGlzIGNhbiBiZQo+IHVzZWQgZm9yIEdQVXMuCj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBD
-ZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmhvc3RlZCBieSBU
-aGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+
+--=-HlJ2Wc3XAxVn/wzc1ex8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2018-03-09 at 11:09 +0100, Paul Kocialkowski wrote:
+> This presents a newer version of the Sunxi-Cedrus driver, that
+> supports
+> the Video Engine found in most Allwinner SoCs, starting with the A10.
+
+I had to send this series in two parts (and tried to keep them under the
+original thread) after the mail server rejected one of the emails mid-
+series, causing git-send-email to stop. Sorry for the mess.
+
+> The first version of this driver[0] was originally written and
+> submitted
+> by Florent Revest using a previous version of the request API, that is
+> necessary to provide coherency between controls and the buffers they
+> apply
+> to. The driver was since adapted to use the latest version of the
+> request
+> API[1], as submitted by Alexandre Courbot. It is a hard requirement
+> for
+> this driver.
+>=20
+> This series also contains fixes for issues encountered with the
+> current
+> version of the request API. If accepted, these should eventually be
+> squashed into the request API series.
+>=20
+> The driver itself currently only supports MPEG2 and more codecs will
+> be
+> added to the driver eventually. The output frames provided by the
+> Video Engine are in a multi-planar 32x32-tiled YUV format, with a
+> plane
+> for luminance (Y) and a plane for chrominance (UV). A specific format
+> is
+> introduced in the V4L2 API to describe it.
+>=20
+> This implementation is based on the significant work that was
+> conducted
+> by various members of the linux-sunxi community for understanding and
+> documenting the Video Engine's innards.
+>=20
+> [0]: https://lkml.org/lkml/2016/8/25/246
+> [1]: https://lkml.org/lkml/2018/2/19/872
+>=20
+> Florent Revest (5):
+>   v4l: Add sunxi Video Engine pixel format
+>   v4l: Add MPEG2 low-level decoder API control
+>   media: platform: Add Sunxi Cedrus decoder driver
+>   sunxi-cedrus: Add device tree binding document
+>   ARM: dts: sun5i: Use video-engine node
+>=20
+> Icenowy Zheng (1):
+>   ARM: dts: sun8i: add video engine support for A33
+>=20
+> Paul Kocialkowski (2):
+>   media: vim2m: Try to schedule a m2m device run on request submission
+>   media: videobuf2-v4l2: Copy planes when needed in request qbuf
+>=20
+> Thomas van Kleef (1):
+>   ARM: dts: sun7i: Add video engine support for the A20
+>=20
+>  .../devicetree/bindings/media/sunxi-cedrus.txt     |  44 ++
+>  arch/arm/boot/dts/sun5i-a13.dtsi                   |  30 ++
+>  arch/arm/boot/dts/sun7i-a20.dtsi                   |  47 ++
+>  arch/arm/boot/dts/sun8i-a33.dtsi                   |  39 ++
+>  drivers/media/common/videobuf2/videobuf2-v4l2.c    |  19 +
+>  drivers/media/platform/Kconfig                     |  14 +
+>  drivers/media/platform/Makefile                    |   1 +
+>  drivers/media/platform/sunxi-cedrus/Makefile       |   4 +
+>  drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c | 313 ++++++++++++
+>  .../platform/sunxi-cedrus/sunxi_cedrus_common.h    | 106 ++++
+>  .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.c | 568
+> +++++++++++++++++++++
+>  .../media/platform/sunxi-cedrus/sunxi_cedrus_dec.h |  33 ++
+>  .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.c  | 185 +++++++
+>  .../media/platform/sunxi-cedrus/sunxi_cedrus_hw.h  |  36 ++
+>  .../platform/sunxi-cedrus/sunxi_cedrus_mpeg2.c     | 152 ++++++
+>  .../platform/sunxi-cedrus/sunxi_cedrus_regs.h      | 170 ++++++
+>  drivers/media/platform/vim2m.c                     |  13 +-
+>  drivers/media/v4l2-core/v4l2-ctrls.c               |  15 +
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +
+>  include/uapi/linux/v4l2-controls.h                 |  26 +
+>  include/uapi/linux/videodev2.h                     |   6 +
+>  21 files changed, 1821 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-
+> cedrus.txt
+>  create mode 100644 drivers/media/platform/sunxi-cedrus/Makefile
+>  create mode 100644 drivers/media/platform/sunxi-cedrus/sunxi_cedrus.c
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_common.h
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_dec.c
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_dec.h
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_hw.c
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_hw.h
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_mpeg2.c
+>  create mode 100644 drivers/media/platform/sunxi-
+> cedrus/sunxi_cedrus_regs.h
+>=20
+--=20
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-HlJ2Wc3XAxVn/wzc1ex8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlqiX5EACgkQ3cLmz3+f
+v9HHBAf9EI6TZ+OLHWQBSByQgV454Ur83C4+xkcYnjQ8ulQEKZyoTdXi7dOTudX8
+HGF/milN7+lRoVuvgCzwzxdSZsZ+QJdKXIBNFeeuIi4lDHMdMhJQwZA/VVWboNRw
+gHVVOfYiorWtzGaueevgPmwTowOYc6CSrHyEt33XCOdR9dEhFT9ByeIbB4yKAT6K
+k1eujOOLT0vDvTm+8lxJ1YQ3TJuwn1ep89MLnclUeB9+P4ugTRrmMdPgYyzU1v2G
+92gt2pwiXGRQX4tM8xVczHxv5gN1jSLv0tjiuyDFJ+1QdSBEKfegWcWsF2LFpklt
+YrYYYVidGr2n6Sn0t+Pc8IrviVKC9A==
+=JvGE
+-----END PGP SIGNATURE-----
+
+--=-HlJ2Wc3XAxVn/wzc1ex8--
