@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 6/6] staging: vc04_services: Remove vchiq_queue_bulk_{transmit,receive}.
-Date: Fri,  9 Mar 2018 10:44:17 -0800
-Message-ID: <20180309184417.23368-6-eric@anholt.net>
+Subject: [PATCH v3 3/6] dt-bindings: soc: Add a binding for the Broadcom VCHIQ services. (v3)
+Date: Fri,  9 Mar 2018 10:44:14 -0800
+Message-ID: <20180309184417.23368-3-eric@anholt.net>
 References: <20180309184417.23368-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180309184417.23368-1-eric@anholt.net>
@@ -10,68 +10,40 @@ To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-These are dead code, including in the downstream Raspberry Pi tree.
+The VCHIQ communication channel can be provided by BCM283x and Capri
+SoCs, to communicate with the VPU-side OS services.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
 
-v2-3: no changes
+v2: VCHI->VCHIQ, dropped firmware property, added cache-line-size
+v3: Dropped cache-line-size, s/vchi@/mailbox@/
 
- .../vc04_services/interface/vchiq_arm/vchiq_arm.c    | 20 --------------------
- .../vc04_services/interface/vchiq_arm/vchiq_if.h     | 10 ----------
- 2 files changed, 30 deletions(-)
+ .../devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt   | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index 8068c0308b34..24d456b0a6f0 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -406,26 +406,6 @@ VCHIQ_STATUS_T vchiq_open_service(
- }
- EXPORT_SYMBOL(vchiq_open_service);
- 
--VCHIQ_STATUS_T
--vchiq_queue_bulk_transmit(VCHIQ_SERVICE_HANDLE_T handle,
--	const void *data, unsigned int size, void *userdata)
--{
--	return vchiq_bulk_transfer(handle,
--		VCHI_MEM_HANDLE_INVALID, (void *)data, size, userdata,
--		VCHIQ_BULK_MODE_CALLBACK, VCHIQ_BULK_TRANSMIT);
--}
--EXPORT_SYMBOL(vchiq_queue_bulk_transmit);
--
--VCHIQ_STATUS_T
--vchiq_queue_bulk_receive(VCHIQ_SERVICE_HANDLE_T handle, void *data,
--	unsigned int size, void *userdata)
--{
--	return vchiq_bulk_transfer(handle,
--		VCHI_MEM_HANDLE_INVALID, data, size, userdata,
--		VCHIQ_BULK_MODE_CALLBACK, VCHIQ_BULK_RECEIVE);
--}
--EXPORT_SYMBOL(vchiq_queue_bulk_receive);
--
- VCHIQ_STATUS_T
- vchiq_bulk_transmit(VCHIQ_SERVICE_HANDLE_T handle, const void *data,
- 	unsigned int size, void *userdata, VCHIQ_BULK_MODE_T mode)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-index 0e270852900d..e4109a83e628 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-@@ -149,16 +149,6 @@ vchiq_queue_message(VCHIQ_SERVICE_HANDLE_T handle,
- 		    size_t size);
- extern void           vchiq_release_message(VCHIQ_SERVICE_HANDLE_T service,
- 	VCHIQ_HEADER_T *header);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_transmit(VCHIQ_SERVICE_HANDLE_T service,
--	const void *data, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_receive(VCHIQ_SERVICE_HANDLE_T service,
--	void *data, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_transmit_handle(
--	VCHIQ_SERVICE_HANDLE_T service, VCHI_MEM_HANDLE_T handle,
--	const void *offset, unsigned int size, void *userdata);
--extern VCHIQ_STATUS_T vchiq_queue_bulk_receive_handle(
--	VCHIQ_SERVICE_HANDLE_T service, VCHI_MEM_HANDLE_T handle,
--	void *offset, unsigned int size, void *userdata);
- extern VCHIQ_STATUS_T vchiq_bulk_transmit(VCHIQ_SERVICE_HANDLE_T service,
- 	const void *data, unsigned int size, void *userdata,
- 	VCHIQ_BULK_MODE_T mode);
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+new file mode 100644
+index 000000000000..8dd7b3a7de65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+@@ -0,0 +1,16 @@
++Broadcom VCHIQ firmware services
++
++Required properties:
++
++- compatible:	Should be "brcm,bcm2835-vchiq"
++- reg:		Physical base address and length of the doorbell register pair
++- interrupts:	The interrupt number
++		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++
++Example:
++
++mailbox@7e00b840 {
++	compatible = "brcm,bcm2835-vchiq";
++	reg = <0x7e00b840 0xf>;
++	interrupts = <0 2>;
++};
 -- 
 2.16.2
