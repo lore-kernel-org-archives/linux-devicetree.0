@@ -1,216 +1,109 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: 88pg86x: new i2c dual regulator chip" to the regulator tree
-Date: Fri, 09 Mar 2018 18:04:40 +0000
-Message-ID: <E1euMNk-00027i-No@debutante>
-References: <20180308225303.329-2-amonakov@ispras.ru>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308225303.329-2-amonakov@ispras.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Monakov <amonakov@ispras.ru>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>Jisheng Zhang <Jisheng.Zhang@synaptics.com>linux-kernel@vger.kernel.org
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Fri, 9 Mar 2018 12:27:51 -0600
+Message-ID: <20180309182751.GC31988@ti.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   regulator: 88pg86x: new i2c dual regulator chip
-
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From a265b03bd29a745d85237f47739d92cb43d214b9 Mon Sep 17 00:00:00 2001
-From: Alexander Monakov <amonakov@ispras.ru>
-Date: Fri, 9 Mar 2018 01:53:03 +0300
-Subject: [PATCH] regulator: 88pg86x: new i2c dual regulator chip
-
-This chip is found on Google Chromecast and Valve Steam Link devices.
-It provides two DC regulators with I2C voltage control, separate GPIO
-enable pins and one sleep mode pin.
-
-This driver does not expose GPIO functionality, but supports voltage
-control in 1.0-2.2V range, based on I2C register information given in
-Chromecast kernel driver by Jisheng Zhang.
-
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/88pg86x.c | 114 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/regulator/Kconfig   |   9 ++++
- drivers/regulator/Makefile  |   1 +
- 3 files changed, 124 insertions(+)
- create mode 100644 drivers/regulator/88pg86x.c
-
-diff --git a/drivers/regulator/88pg86x.c b/drivers/regulator/88pg86x.c
-new file mode 100644
-index 000000000000..d5ef55c81185
---- /dev/null
-+++ b/drivers/regulator/88pg86x.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/of.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regmap.h>
-+
-+static const struct regulator_ops pg86x_ops = {
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.list_voltage = regulator_list_voltage_linear_range,
-+};
-+
-+static const struct regulator_linear_range pg86x_buck1_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(      0,  0, 10,     0),
-+	REGULATOR_LINEAR_RANGE(1000000, 11, 34, 25000),
-+	REGULATOR_LINEAR_RANGE(1600000, 35, 47, 50000),
-+};
-+
-+static const struct regulator_linear_range pg86x_buck2_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(      0,  0, 15,     0),
-+	REGULATOR_LINEAR_RANGE(1000000, 16, 39, 25000),
-+	REGULATOR_LINEAR_RANGE(1600000, 40, 52, 50000),
-+};
-+
-+static const struct regulator_desc pg86x_regulators[] = {
-+	{
-+		.id = 0,
-+		.type = REGULATOR_VOLTAGE,
-+		.name = "buck1",
-+		.of_match = of_match_ptr("buck1"),
-+		.n_voltages = 11 + 24 + 13,
-+		.linear_ranges = pg86x_buck1_ranges,
-+		.n_linear_ranges = 3,
-+		.vsel_reg  = 0x24,
-+		.vsel_mask = 0xff,
-+		.ops = &pg86x_ops,
-+		.owner = THIS_MODULE
-+	},
-+	{
-+		.id = 1,
-+		.type = REGULATOR_VOLTAGE,
-+		.name = "buck2",
-+		.of_match = of_match_ptr("buck2"),
-+		.n_voltages = 16 + 24 + 13,
-+		.linear_ranges = pg86x_buck2_ranges,
-+		.n_linear_ranges = 3,
-+		.vsel_reg  = 0x13,
-+		.vsel_mask = 0xff,
-+		.ops = &pg86x_ops,
-+		.owner = THIS_MODULE
-+	},
-+};
-+
-+static const struct regmap_config pg86x_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int pg86x_i2c_probe(struct i2c_client *i2c)
-+{
-+	int id, ret;
-+	struct regulator_config config = {.dev = &i2c->dev};
-+	struct regmap *regmap = devm_regmap_init_i2c(i2c, &pg86x_regmap);
-+
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	for (id = 0; id < ARRAY_SIZE(pg86x_regulators); id++) {
-+		struct regulator_dev *rdev;
-+		rdev = devm_regulator_register(&i2c->dev,
-+					       &pg86x_regulators[id],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret = PTR_ERR(rdev);
-+			dev_err(&i2c->dev, "failed to register %s: %d\n",
-+				pg86x_regulators[id].name, ret);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static const struct of_device_id pg86x_dt_ids [] = {
-+	{ .compatible = "marvell,88pg867" },
-+	{ .compatible = "marvell,88pg868" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pg86x_dt_ids);
-+
-+static const struct i2c_device_id pg86x_i2c_id[] = {
-+	{ "88pg867", },
-+	{ "88pg868", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pg86x_i2c_id);
-+
-+static struct i2c_driver pg86x_regulator_driver = {
-+	.driver = {
-+		.name = "88pg86x",
-+		.of_match_table = of_match_ptr(pg86x_dt_ids),
-+	},
-+	.probe_new = pg86x_i2c_probe,
-+	.id_table = pg86x_i2c_id,
-+};
-+
-+module_i2c_driver(pg86x_regulator_driver);
-+
-+MODULE_DESCRIPTION("Marvell 88PG86X voltage regulator");
-+MODULE_AUTHOR("Alexander Monakov <amonakov@gmail.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index b27417ca188a..097f61784a7d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -54,6 +54,15 @@ config REGULATOR_USERSPACE_CONSUMER
- 
- 	  If unsure, say no.
- 
-+config REGULATOR_88PG86X
-+	tristate "Marvell 88PG86X voltage regulators"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  This driver supports Marvell 88PG867 and 88PG868 voltage regulators.
-+	  They provide two I2C-controlled DC/DC step-down converters with
-+	  sleep mode and separate enable pins.
-+
- config REGULATOR_88PM800
- 	tristate "Marvell 88PM800 Power regulators"
- 	depends on MFD_88PM800
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 19fea09ba10a..590674fbecd7 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_REGULATOR_FIXED_VOLTAGE) += fixed.o
- obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
- obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
- 
-+obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
- obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
- obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
- obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
--- 
-2.16.2
+Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JvdGUgb24gRnJpIFsyMDE4LU1hci0w
+MiAxMzoxOToxMyAtMDYwMF06Cj4gT24gRnJpLCBNYXIgMiwgMjAxOCBhdCA3OjQ4IEFNLCBCZW5v
+aXQgUGFycm90IDxicGFycm90QHRpLmNvbT4gd3JvdGU6Cj4gPiBBZGQgJ3BsYW5lJyBjaGlsZCBu
+b2RlIHRvIGdlbmVyaWMgRElTUEMgbm9kZSBhcyBhbiBvcHRpb25hbAo+ID4gcHJvcGVydHkuCj4g
+Cj4gV2h5PyBXaGF0IHByb2JsZW0gYXJlIHlvdSBzb2x2aW5nPwoKQWggeWVzLCBJIGd1ZXNzIG9u
+IGl0cyBvd24gaXQgZG9lcyBub3QgbWVhbiBtdWNoLi4uCgpIb3cgYWJvdXQ6CgpDdXJyZW50bHkg
+YWxsIGF2YWlsYWJsZSBkaXNwbGF5IHBpcGVsaW5lcyAoaS5lLiBwbGFuZSkgYW5kIG91dHB1dApw
+b3J0IHJlc291cmNlcyBhcmUgZXhwb3NlZCB0byB1c2VyLXNwYWNlLgpJbiBzb21lIGNhc2VzIGl0
+IGlzIG5lZWRlZCB0byBiZSBhYmxlIHJlc3RyaWN0IHdoaWNoIHJlc291cmNlcyBhcmUKYWN0dWFs
+bHkgdmlzaWJsZSBmcm9tIHVzZXItc3BhY2UuIEFsc28gaW4gY2FzZXMgd2hlcmUgYSBkaXNwbGF5
+IHdpZGVyCnRoYW4gMjA0OCBwaXhlbHMgaXMgdG8gYmUgc3VwcG9ydGVkIG1vcmUgdGhhbiBvbmUg
+dmlkZW8gcGlwZWxpbmUgaXMKbmVlZGVkLiBJbiB0aGlzIGNhc2UgdGhlIDJuZCBoYXJkd2FyZSBw
+aXBlbGluZSBuZWVkZWQgaXMgbm90IHZpc2libGUKdG8gdXNlciBzcGFjZSBhcHBsaWNhdGlvbnMu
+CgpUaGVzZSB2aWRlbyBwaXBlbGluZSBkZWZpbml0aW9ucyBtdXN0IGJlIHN0YXRpY2FsbHkgZGVm
+aW5lZCBzbyB0aGF0CnRoZSBudW1iZXIgb2YgdmlzaWJsZSBwaXBlbGluZXMgZG9lcyBub3QgY2hh
+bmdlIGZyb20gdGhlIHVzZXItc3BhY2UKcGVyc3BlY3RpdmUuCgpJbiBvcmRlciB0byBhbGxvdyB0
+aGlzIHdlIGFyZSBhZGRpbmcgYW4gb3B0aW9uYWwgc3ViLW5vZGUgdG8gdGhlIGdlbmVyaWMKRElT
+UEMgbm9kZS4gCgo+IAo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEJlbm9pdCBQYXJyb3QgPGJwYXJy
+b3RAdGkuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90
+aS90aSxvbWFwLWRzcy50eHQgfCA2MyArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0
+Cj4gPiBpbmRleCAyNDllNTg4ZDc4NjUuLmNiMTAxNTI1YjgwNSAxMDA2NDQKPiA+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAtZHNzLnR4
+dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkv
+dGksb21hcC1kc3MudHh0Cj4gPiBAQCAtMjcsNiArMjcsMzQgQEAgRElTUEMKPiA+ICBPcHRpb25h
+bCBwcm9wZXJ0aWVzOgo+ID4gIC0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAo
+ZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0Cj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICBpbiBieXRlcyBwZXIgc2Vjb25kCj4gPiArLSBwbGFuZTogQ2hpbGQgbm9k
+ZShzKSB3aGljaCBkZWZpbmVzIHdoaWNoIGxvZ2ljYWwgcGxhbmUgYXJlIGF2YWlsYWJsZSB0bwo+
+IAo+IFRoaXMgaXMgdGhlICJPcHRpb25hbCBwcm9wZXJ0aWVzIiBzZWN0aW9uIGFuZCBwbGFuZSBp
+cyBub3QgYSBwcm9wZXJ0eS4KClJpZ2h0LCBJJ2xsIGNvcnJlY3QgdGhhdCB0byBhbiBvcHRpb25h
+bCBzdWItbm9kZSB3aGljaCBoYXMgcmVxdWlyZWQgYW5kCm9wdGlvbmFsIHByb3BlcnRpZXMuCgo+
+IAo+ID4gKyAgICAgICB0aGUgc3lzdGVtLiBJZiBhdCBsZWFzdCBvbmUgcGxhbmUgY2hpbGQgbm9k
+ZSBpcyBkZWZpbmVkIHRoZW4KPiA+ICsgICAgICAgb25seSBwbGFuZXMgZGVmaW5lZCBieSB0aGVz
+ZSBub2RlcyB3aWxsIGJlIGF2YWlsYWJsZSB0byB0aGUgc3lzdGVtLgo+ID4gKyAgICAgICBQbGFu
+ZSBub2RlcyBtdXN0IGJlIHNlcXVlbnRpYWwgc3RhcnRpbmcgd2l0aCByZWcgPSA8MD4gYXMgRFQg
+cGFyc2luZwo+ID4gKyAgICAgICB3aWxsIHN0b3Agb24gdGhlIGZpcnN0IG1pc3NpbmcgbnVtYmVy
+ZWQgbm9kZS4KPiA+ICsgICAgICAgVGhpcyBtZWFucyBpZiBwbGFuZSAjMSBpcyBkZWZpbmVkIGJ1
+dCBwbGFuZSAjMCBpcyBub3QgdGhlbiBpdCB3aWxsCj4gPiArICAgICAgIGJlIGFzIGlmIG5vbmUg
+b2YgdGhlIHBsYW5lIG5vZGVzIHdlcmUgZGVmaW5lZC4KPiA+ICsKPiA+ICsgICAgICAgRWFjaCBw
+bGFuZSBub2RlIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKPiA+ICsgICAgICAg
+UmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICsgICAgICAgLSByZWc6ICAgICAgIFVzZWQgdG8gbnVt
+YmVyIHRoZSBsb2dpY2FsIHBsYW5lCj4gCj4gSXMgbG9naWNhbCBwbGFuZSBhIGgvdyBjb25jZXB0
+PwoKSXQgZG9lcyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNvdXJjZS4KCj4gCj4gPiArICAgICAg
+IC0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5lIG51bWJlcihzKS4KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgIFdoZW4gMiBudW1iZXJzIGFyZSBwcmVzZW50IHRoaXMgaW5kaWNhdGVzIGEg
+dmlydHVhbCBwbGFuZQo+ID4gKyAgICAgICAgICAgICAgICAgICAgY29tcG9zZWQgb2YgdHdvIHBo
+eXNpY2FsIHBsYW5lcyBpbnRlbmRlZCB0byBiZSB1c2VkCj4gPiArICAgICAgICAgICAgICAgICAg
+ICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVuIHRoZSBjYXBhY2l0eSBvZiBhCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICBzaW5nbGUgcGxhbmUgaS5lLiB3aWRlciB0aGFuIDIwNDggcGl4
+ZWxzLgo+ID4gKyAgICAgICAgICAgICAgICAgICAgVGhlIGZpcnN0IG51bWJlciBpbiB0aGUgcGFp
+ciB3aWxsIGRpY3RhdGUgdGhlIGNhcGFiaWxpdGllcwo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+b2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMgbWVhbnMgdGhhdCBmb3IgcHJvcGVyCj4gPiArICAg
+ICAgICAgICAgICAgICAgICBvcGVyYXRpb24gdGhlIHZpcnR1YWwgcGxhbmUgc2hvdWxkIGJlIGNv
+bXBvc2VkIG9mIEhXCj4gPiArICAgICAgICAgICAgICAgICAgICBwbGFuZXMgb2YgdGhlIHNhbWUg
+Y2FwYWJpbGl0aWVzLgo+ID4gKyAgICAgICAgICAgICAgICAgICAgSWYgR0ZYIHBsYW5lIGlzIHVz
+ZWQgaW4gYSB2aXJ0dWFsIHBsYW5lIGl0IHNob3VsZCBiZQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgc3BlY2lmaWVkIGZpcnN0LCBvdGhlcndpc2UgdW5leHBlY3RlZCBiZWhhdmlvciB3b3VsZAo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgYmUgZW5jb3VudGVyZWQuCj4gPiArICAgICAgIE9wdGlv
+bmFsIHByb3BlcnR5Ogo+ID4gKyAgICAgICAtIGh3LWNydGNzOiAgT25lIG9yIG1vcmUgSFcgY3J0
+YyBudW1iZXIocykuCj4gPiArICAgICAgICAgICAgICAgICAgICBEZXNjcmliZSB0aGUgbGlzdCBv
+ZiBDUlRDcyBvbiB3aGljaCB0aGlzIHBsYW5lIGlzCj4gPiArICAgICAgICAgICAgICAgICAgICBh
+dmFpbGFibGUuIElmIHRoaXMgbm9kZSBpcyBub3QgcHJlc2VudCB0aGVuIHRoZQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgb24gYWxsIGF2YWlsYWJsZSBD
+UlRDcy4KPiAKPiBMZXQncyBub3QgY29weSBhcmNoYWljIHRlcm1zIGZyb20gRFJNIGludG8gYmlu
+ZGluZ3MuCgpPaywgSSBjYW4gcmVuYW1lIHRoZW0gdG8gdXNlIHRoZSBUUk0gdGVybWlub2xvZ3kg
+aW5zdGVhZC4KSSBjaG9zZSBEUk0gdGVybSBiZWNhdXNlIHRoZXkgYXJlIHdlbGwga25vd24uClNv
+IHdlJ2xsIGhhdmUKCnZpZGVvLXBpcGVsaW5lIGluc3RlYWQgb2YgaHctcGxhbmVzCnZpZGVvLW91
+dHB1dCBpbnN0ZWFkIG9mIGh3LWNydGNzCgpBbnkgY29tbWVudHMgb24gdGhlIHN1Yi1ub2RlIG5h
+bWUgaXRzZWxmPwpPciBjYW4gd2Uga2VlcCAncGxhbmUnPwoKPiAKPiBSZWFsbHksIEknbSBza2Vw
+dGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxvbmdzIGluIERULiBGb3IgZXhhbXBsZSwKPiBjYW4n
+dCB5b3UgZmlndXJlIG91dCB5b3UgbmVlZCAyIHBoeXNpY2FsIHBsYW5lcyB3aGVuZXZlciB5b3Vy
+Cj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhhbiAyMDQ4PwoKQXMgc3RhdGVkIGlu
+IHRoZSBkZXNjcmlwdGlvbiBJIGFkZGVkIGFib3ZlLCB3ZSBjYW5ub3QgaGF2ZSByZXNvdXJjZXMK
+ZXhwb3NlZCB0byB1c2VyLXNwYWNlIHdoaWNoIGNhbiAiZGlzYXBwZWFyIiBkeW5hbWljYWxseS4K
+RG9pbmcgc28gd291bGQgYnJlYWsgdXNlci1zcGFjZSBhcHBsaWNhdGlvbnMgd2hpY2ggcmVseSBv
+biB0aGVzZQpyZXNvdXJjZXMuCgpCZW5vaXQKCj4gCj4gUm9iCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
