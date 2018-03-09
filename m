@@ -1,7 +1,7 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 8/9] ARM: dts: sun8i: add video engine support for A33
-Date: Fri,  9 Mar 2018 11:14:44 +0100
-Message-ID: <20180309101445.16190-6-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 7/9] ARM: dts: sun5i: Use video-engine node
+Date: Fri,  9 Mar 2018 11:14:43 +0100
+Message-ID: <20180309101445.16190-5-paul.kocialkowski@bootlin.com>
 References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
@@ -10,24 +10,29 @@ To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@li
 Cc: Icenowy Zheng <icenowy@aosc.xyz>, Florent Revest <revestflo@gmail.com>, Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thomas van Kleef <thomas@vitsch.nl>, "Signed-off-by : Bob Ham" <rah@settrans.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.xyz>
+From: Florent Revest <florent.revest@free-electrons.com>
 
-A33 has a video engine just like the one in A10.
+Now that we have a driver matching "allwinner,sun4i-a10-video-engine" we
+can load it.
 
-Add the support for it in the device tree.
+The "video-engine" node depends on the new sunxi-ng's CCU clock and
+reset bindings. This patch also includes a ve_reserved DMA pool for
+videobuf2 buffer allocations in sunxi-cedrus.
 
+Signed-off-by: Florent Revest <florent.revest@free-electrons.com>
+[Icenowy: beautify the node name]
 Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 ---
- arch/arm/boot/dts/sun8i-a33.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm/boot/dts/sun5i-a13.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 50eb84fa246a..253a71851b77 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -181,6 +181,21 @@
- 		reg = <0x40000000 0x80000000>;
- 	};
+diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
+index 4e830f5cb7f1..18bc8d739cd0 100644
+--- a/arch/arm/boot/dts/sun5i-a13.dtsi
++++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+@@ -51,6 +51,19 @@
+ / {
+ 	interrupt-parent = <&intc>;
  
 +	reserved-memory {
 +		#address-cells = <1>;
@@ -36,54 +41,38 @@ index 50eb84fa246a..253a71851b77 100644
 +
 +		ve_reserved: cma {
 +			compatible = "shared-dma-pool";
++			reg = <0x43d00000 0x9000000>;
 +			no-map;
-+			size = <0x4000000>;
-+			alignment = <0x2000>;
-+			alloc-ranges = <0x40000000 0x10000000>;
 +			linux,cma-default;
 +		};
 +	};
 +
- 	sound: sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "sun8i-a33-audio";
-@@ -204,6 +219,11 @@
- 	};
- 
- 	soc@1c00000 {
-+		syscon: system-controller@01c00000 {
-+			compatible = "allwinner,sun8i-a33-syscon", "syscon";
-+			reg = <0x01c00000 0x1000>;
-+		};
-+
- 		tcon0: lcd-controller@1c0c000 {
- 			compatible = "allwinner,sun8i-a33-tcon";
- 			reg = <0x01c0c000 0x1000>;
-@@ -240,6 +260,25 @@
- 			};
+ 	thermal-zones {
+ 		cpu_thermal {
+ 			/* milliseconds */
+@@ -97,6 +110,23 @@
+ 			status = "disabled";
  		};
  
 +		ve: video-engine@01c0e000 {
 +			compatible = "allwinner,sun4i-a10-video-engine";
 +			memory-region = <&ve_reserved>;
-+			syscon = <&syscon>;
 +
-+			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
++			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
 +				 <&ccu CLK_DRAM_VE>;
 +			clock-names = "ahb", "mod", "ram";
 +
 +			assigned-clocks = <&ccu CLK_VE>;
 +			assigned-clock-rates = <320000000>;
 +
-+			resets = <&ccu RST_BUS_VE>;
++			resets = <&ccu RST_VE>;
 +
-+			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <53>;
 +
 +			reg = <0x01c0e000 0x1000>;
 +		};
-+
- 		crypto: crypto-engine@1c15000 {
- 			compatible = "allwinner,sun4i-a10-crypto";
- 			reg = <0x01c15000 0x1000>;
+ 	};
+ };
+ 
 -- 
 2.16.2
