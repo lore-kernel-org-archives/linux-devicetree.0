@@ -1,9 +1,9 @@
 From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v6 4/6] regulator: core: Resolve coupled regulators
-Date: Fri, 09 Mar 2018 13:22:06 +0100
-Message-ID: <1520598128-11768-5-git-send-email-m.purski@samsung.com>
+Subject: [PATCH v6 3/6] regulator: core: Parse coupled regulators properties
+Date: Fri, 09 Mar 2018 13:22:05 +0100
+Message-ID: <1520598128-11768-4-git-send-email-m.purski@samsung.com>
 References: <1520598128-11768-1-git-send-email-m.purski@samsung.com>
-        <CGME20180309122234eucas1p1a5c9e939848191de36a9daa06e785ae7@eucas1p1.samsung.com>
+        <CGME20180309122233eucas1p2c64ed26c56a0c5f4ef1c268ae381743f@eucas1p2.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1520598128-11768-1-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -15,144 +15,309 @@ On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
 different devices on the board are supplied by different regulators
 with non-fixed voltages. If one of these devices temporarily requires
 higher voltage, there might occur a situation that the spread between
-two devices' voltages is so high, that there is a risk of changing
+devices' voltages is so high, that there is a risk of changing
 'high' and 'low' states on the interconnection between devices powered
 by those regulators.
 
-Fill coupling descriptor with data obtained from DTS using previously
-defined of_functions. Fail to register a regulator, if some data
-inconsistency occurs. If some coupled regulators are not yet registered,
-don't fail to register, but try to resolve them in late init call.
+Add new structure "coupling_desc" to regulator_dev, which contains
+pointers to all coupled regulators including the owner of the structure,
+number of coupled regulators and counter of currently resolved
+regulators.
+
+Add of_functions to parse all data needed in regulator coupling.
+Provide method to check DTS data consistency. Check if each coupled
+regulator's max_spread is equal and if their lists of regulators match.
 
 Signed-off-by: Maciej Purski <m.purski@samsung.com>
 ---
- drivers/regulator/core.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+ drivers/regulator/internal.h      |  28 ++++++-
+ drivers/regulator/of_regulator.c  | 151 ++++++++++++++++++++++++++++++++++++++
+ include/linux/regulator/driver.h  |  18 +++++
+ include/linux/regulator/machine.h |   4 +
+ 4 files changed, 199 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index f6e784c..60fb05d 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4117,6 +4117,96 @@ static int regulator_register_resolve_supply(struct device *dev, void *data)
- 	return 0;
+diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
+index abfd56e..485db15 100644
+--- a/drivers/regulator/internal.h
++++ b/drivers/regulator/internal.h
+@@ -63,6 +63,14 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 			         const struct regulator_desc *desc,
+ 				 struct regulator_config *config,
+ 				 struct device_node **node);
++
++struct regulator_dev *of_parse_coupled_regulator(struct regulator_dev *rdev,
++						 int index);
++
++int of_get_n_coupled(struct regulator_dev *rdev);
++
++bool of_check_coupling_data(struct regulator_dev *rdev);
++
+ #else
+ static inline struct regulator_init_data *
+ regulator_of_get_init_data(struct device *dev,
+@@ -72,8 +80,25 @@ regulator_of_get_init_data(struct device *dev,
+ {
+ 	return NULL;
  }
+-#endif
  
-+static int regulator_fill_coupling_array(struct regulator_dev *rdev)
++static inline struct regulator_dev *
++of_parse_coupled_regulator(struct regulator_dev *rdev,
++			   int index)
 +{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	struct regulator_dev *c_rdev;
-+	int i;
-+
-+	for (i = 1; i < n_coupled; i++) {
-+		/* already resolved */
-+		if (c_desc->coupled_rdevs[i])
-+			continue;
-+
-+		c_rdev = of_parse_coupled_regulator(rdev, i - 1);
-+
-+		if (c_rdev) {
-+			c_desc->coupled_rdevs[i] = c_rdev;
-+			c_desc->n_resolved++;
-+		}
-+	}
-+
-+	if (rdev->coupling_desc.n_resolved < n_coupled)
-+		return -1;
-+	else
-+		return 0;
++	return NULL;
 +}
 +
-+static int regulator_register_fill_coupling_array(struct device *dev,
-+						  void *data)
++static inline int of_get_n_coupled(struct regulator_dev *rdev)
 +{
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
-+
-+	if (!IS_ENABLED(CONFIG_OF))
-+		return 0;
-+
-+	if (regulator_fill_coupling_array(rdev))
-+		rdev_dbg(rdev, "unable to resolve coupling\n");
-+
 +	return 0;
 +}
 +
-+static int regulator_resolve_coupling(struct regulator_dev *rdev)
++static inline bool of_check_coupling_data(struct regulator_dev *rdev)
 +{
++	return false;
++}
++
++#endif
+ enum regulator_get_type {
+ 	NORMAL_GET,
+ 	EXCLUSIVE_GET,
+@@ -83,5 +108,4 @@ enum regulator_get_type {
+ 
+ struct regulator *_regulator_get(struct device *dev, const char *id,
+ 				 enum regulator_get_type get_type);
+-
+ #endif
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index f47264f..c6e61c7 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -138,6 +138,10 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	if (!of_property_read_u32(np, "regulator-system-load", &pval))
+ 		constraints->system_load = pval;
+ 
++	if (!of_property_read_u32(np, "regulator-coupled-max-spread",
++				  &pval))
++		constraints->max_spread = pval;
++
+ 	constraints->over_current_protection = of_property_read_bool(np,
+ 					"regulator-over-current-protection");
+ 
+@@ -407,3 +411,150 @@ struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
+ 
+ 	return dev ? dev_to_rdev(dev) : NULL;
+ }
++
++/*
++ * Returns number of regulators coupled with rdev.
++ */
++int of_get_n_coupled(struct regulator_dev *rdev)
++{
++	struct device_node *node = rdev->dev.of_node;
 +	int n_phandles;
 +
-+	if (!IS_ENABLED(CONFIG_OF))
-+		return 0;
++	n_phandles = of_count_phandle_with_args(node,
++						"regulator-coupled-with",
++						NULL);
 +
-+	n_phandles = of_get_n_coupled(rdev);
-+
-+	if (n_phandles + 1 > MAX_COUPLED) {
-+		rdev_err(rdev, "too many regulators coupled\n");
-+		return -EPERM;
-+	}
-+
-+	/*
-+	 * Every regulator should always have coupling descriptor filled with
-+	 * at least pointer to itself.
-+	 */
-+	rdev->coupling_desc.coupled_rdevs[0] = rdev;
-+	rdev->coupling_desc.n_coupled = n_phandles + 1;
-+	rdev->coupling_desc.n_resolved++;
-+
-+	/* regulator isn't coupled */
-+	if (n_phandles == 0)
-+		return 0;
-+
-+	/* regulator, which can't change its voltage, can't be coupled */
-+	if (!regulator_ops_is_valid(rdev, REGULATOR_CHANGE_VOLTAGE)) {
-+		rdev_err(rdev, "voltage operation not allowed\n");
-+		return -EPERM;
-+	}
-+
-+	if (rdev->constraints->max_spread <= 0) {
-+		rdev_err(rdev, "wrong max_spread value\n");
-+		return -EPERM;
-+	}
-+
-+	if (!of_check_coupling_data(rdev))
-+		return -EPERM;
-+
-+	/*
-+	 * After everything has been checked, try to fill rdevs array
-+	 * with pointers to regulators parsed from device tree. If some
-+	 * regulators are not registered yet, retry in late init call
-+	 */
-+	regulator_fill_coupling_array(rdev);
-+
-+	return 0;
++	return (n_phandles > 0) ? n_phandles : 0;
 +}
 +
- /**
-  * regulator_register - register regulator
-  * @regulator_desc: regulator to register
-@@ -4250,6 +4340,13 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	if (ret < 0)
- 		goto wash;
++/* Looks for "to_find" device_node in src's "regulator-coupled-with" property */
++static bool of_coupling_find_node(struct device_node *src,
++				  struct device_node *to_find)
++{
++	int n_phandles, i;
++	bool found = false;
++
++	n_phandles = of_count_phandle_with_args(src,
++						"regulator-coupled-with",
++						NULL);
++
++	for (i = 0; i < n_phandles; i++) {
++		struct device_node *tmp = of_parse_phandle(src,
++					   "regulator-coupled-with", i);
++
++		if (!tmp)
++			break;
++
++		/* found */
++		if (tmp == to_find)
++			found = true;
++
++		of_node_put(tmp);
++
++		if (found)
++			break;
++	}
++
++	return found;
++}
++
++/**
++ * of_check_coupling_data - Parse rdev's coupling properties and check data
++ *			    consistency
++ * @rdev - pointer to regulator_dev whose data is checked
++ *
++ * Function checks if all the following conditions are met:
++ * - rdev's max_spread is greater than 0
++ * - all coupled regulators have the same max_spread
++ * - all coupled regulators have the same number of regulator_dev phandles
++ * - all regulators are linked to each other
++ *
++ * Returns true if all conditions are met.
++ */
++bool of_check_coupling_data(struct regulator_dev *rdev)
++{
++	int max_spread = rdev->constraints->max_spread;
++	struct device_node *node = rdev->dev.of_node;
++	int n_phandles = of_get_n_coupled(rdev);
++	struct device_node *c_node;
++	int i;
++	bool ret = true;
++
++	if (max_spread <= 0) {
++		dev_err(&rdev->dev, "max_spread value invalid\n");
++		return false;
++	}
++
++	/* iterate over rdev's phandles */
++	for (i = 0; i < n_phandles; i++) {
++		int c_max_spread, c_n_phandles;
++
++		c_node = of_parse_phandle(node,
++					  "regulator-coupled-with", i);
++
++		if (!c_node)
++			ret = false;
++
++		c_n_phandles = of_count_phandle_with_args(c_node,
++							  "regulator-coupled-with",
++							  NULL);
++
++		if (c_n_phandles != n_phandles) {
++			dev_err(&rdev->dev, "number of couped reg phandles mismatch\n");
++			ret = false;
++			goto clean;
++		}
++
++		if (of_property_read_u32(c_node, "regulator-coupled-max-spread",
++					 &c_max_spread)) {
++			ret = false;
++			goto clean;
++		}
++
++		if (c_max_spread != max_spread) {
++			dev_err(&rdev->dev,
++				"coupled regulators max_spread mismatch\n");
++			ret = false;
++			goto clean;
++		}
++
++		if (!of_coupling_find_node(c_node, node)) {
++			dev_err(&rdev->dev, "missing 2-way linking for coupled regulators\n");
++			ret = false;
++		}
++
++clean:
++		of_node_put(c_node);
++		if (!ret)
++			break;
++	}
++
++	return ret;
++}
++
++/**
++ * of_parse_coupled regulator - Get regulator_dev pointer from rdev's property
++ * @rdev: Pointer to regulator_dev, whose DTS is used as a source to parse
++ *	  "regulator-coupled-with" property
++ * @index: Index in phandles array
++ *
++ * Returns the regulator_dev pointer parsed from DTS. If it has not been yet
++ * registered, returns NULL
++ */
++struct regulator_dev *of_parse_coupled_regulator(struct regulator_dev *rdev,
++						 int index)
++{
++	struct device_node *node = rdev->dev.of_node;
++	struct device_node *c_node;
++	struct regulator_dev *c_rdev;
++
++	c_node = of_parse_phandle(node, "regulator-coupled-with", index);
++	if (!c_node)
++		return NULL;
++
++	c_rdev = of_find_regulator_by_node(c_node);
++
++	of_node_put(c_node);
++
++	return c_rdev;
++}
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 659a031..8928fd6 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -15,6 +15,8 @@
+ #ifndef __LINUX_REGULATOR_DRIVER_H_
+ #define __LINUX_REGULATOR_DRIVER_H_
  
-+	mutex_lock(&regulator_list_mutex);
-+	ret = regulator_resolve_coupling(rdev);
-+	mutex_unlock(&regulator_list_mutex);
++#define MAX_COUPLED		10
 +
-+	if (ret != 0)
-+		goto wash;
-+
- 	/* add consumers devices */
- 	if (init_data) {
- 		mutex_lock(&regulator_list_mutex);
-@@ -4743,6 +4840,9 @@ static int __init regulator_init_complete(void)
- 	class_for_each_device(&regulator_class, NULL, NULL,
- 			      regulator_late_cleanup);
+ #include <linux/device.h>
+ #include <linux/notifier.h>
+ #include <linux/regulator/consumer.h>
+@@ -407,6 +409,20 @@ struct regulator_config {
+ };
  
-+	class_for_each_device(&regulator_class, NULL, NULL,
-+			      regulator_register_fill_coupling_array);
+ /*
++ * struct coupling_desc
++ *
++ * Describes coupling of regulators. Each regulator should have
++ * at least a pointer to itself in coupled_rdevs array.
++ * When a new coupled regulator is resolved, n_resolved is
++ * incremented.
++ */
++struct coupling_desc {
++	struct regulator_dev *coupled_rdevs[MAX_COUPLED];
++	int n_resolved;
++	int n_coupled;
++};
 +
- 	return 0;
- }
- late_initcall_sync(regulator_init_complete);
++/*
+  * struct regulator_dev
+  *
+  * Voltage / Current regulator class device. One for each
+@@ -429,6 +445,8 @@ struct regulator_dev {
+ 	/* lists we own */
+ 	struct list_head consumer_list; /* consumers we supply */
+ 
++	struct coupling_desc coupling_desc;
++
+ 	struct blocking_notifier_head notifier;
+ 	struct mutex mutex; /* consumer lock */
+ 	struct task_struct *mutex_owner;
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index 93a0489..3468703 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -103,6 +103,7 @@ struct regulator_state {
+  * @ilim_uA: Maximum input current.
+  * @system_load: Load that isn't captured by any consumer requests.
+  *
++ * @max_spread: Max possible spread between coupled regulators
+  * @valid_modes_mask: Mask of modes which may be configured by consumers.
+  * @valid_ops_mask: Operations which may be performed by consumers.
+  *
+@@ -154,6 +155,9 @@ struct regulation_constraints {
+ 
+ 	int system_load;
+ 
++	/* used for coupled regulators */
++	int max_spread;
++
+ 	/* valid regulator operating modes for this machine */
+ 	unsigned int valid_modes_mask;
+ 
 -- 
 2.7.4
