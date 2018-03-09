@@ -1,71 +1,165 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 1/3] dt-bindings: display: bridge: Document THC63LVD1024
- LVDS decoder
-Date: Fri, 9 Mar 2018 10:04:22 +0100
-Message-ID: <20180309090422.GD14819@w540>
-References: <1520522643-11756-1-git-send-email-jacopo+renesas@jmondi.org>
- <1520522643-11756-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVQqp7YcoQ6eN5pSznZB4zn7ztv1WFfkcQOzP_3DhG_Vg@mail.gmail.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH 2/4] usb: dwc3: add dwc3 glue layer for UniPhier SoCs
+Date: Fri, 09 Mar 2018 11:04:58 +0200
+Message-ID: <87y3j1aabp.fsf@linux.intel.com>
+References: <1516712454-2915-3-git-send-email-hayashi.kunihiko@socionext.com> <87o9lklnwb.fsf@linux.intel.com> <20180124215228.ED43.4A936039@socionext.com> <87a7x3l8gr.fsf@linux.intel.com> <CAK7LNARE0YT8HQ-shz=Kg9eaB0pZzaefoqMe-ZnE=eqSQWFp-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVQqp7YcoQ6eN5pSznZB4zn7ztv1WFfkcQOzP_3DhG_Vg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARE0YT8HQ-shz=Kg9eaB0pZzaefoqMe-ZnE=eqSQWFp-w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCiAgIHRoYW5rcyBmb3IgcmV2aWV3CgpPbiBGcmksIE1hciAwOSwgMjAxOCBhdCAw
-OToxMDo1NUFNICswMTAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gSGkgSmFjb3BvLAo+
-Cj4gT24gVGh1LCBNYXIgOCwgMjAxOCBhdCA0OjI0IFBNLCBKYWNvcG8gTW9uZGkgPGphY29wbyty
-ZW5lc2FzQGptb25kaS5vcmc+IHdyb3RlOgo+ID4gRG9jdW1lbnQgVGhpbmUgVEhDNjNMVkQxMDI0
-IExWRFMgZGVjb2Rlci4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29w
-bytyZW5lc2FzQGptb25kaS5vcmc+Cj4KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghCj4KPiA+IC0t
-LSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPiBAQCAtMCwwICsxLDU5IEBA
-Cj4gPiArVEhpbmUgRWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgcmVjZWl2ZXIKPgo+IFRo
-aW5lCj4KPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-ID4gKwo+ID4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYW4gTFZEUyByZWNlaXZlciBkZXNpZ25lZCB0
-byBjb252ZXJ0IG11bHRpcGxlIExWRFMgc3RyZWFtcwo+ID4gK3RvIGRpZ2l0YWwgQ01PUy9UVEwg
-cGFyYWxsZWwgZGF0YS4KPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29t
-cGF0aWJsZTogU2hhbGwgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gPiArICAidGhpbmUsdGhj
-NjNsdmQxMDI0IiwKPiA+ICsgICJsdmRzLWRlY29kZXIiCj4KPiBXaGF0J3MgdGhlIHB1cnBvc2Ug
-b2YgdGhlIHNlY29uZCBjb21wYXRpYmxlIHZhbHVlPwo+IFdoZW4gc2hvdWxkIGl0IGJlIHVzZWQ/
-CgpJdCBpcyBwcm9iYWJseSBteSBiYWQgaGF2aW5nIHN0YXJ0ZWQgd2l0aCBhIGdlbmVyaWMgTFZE
-UyBkZWNvZGVyIGluCm1pbmQgYW5kIGhhdmluZyB0aGVuIGFkZGVkIHByb3BlcnRpZXMgc3BlY2lm
-aWMgdG8gVEhDNjNMVkQxMDI0IHRvIHRoZQpkcml2ZXIgYW5kIGl0cyBiaW5kaW5ncy4KCiJsdmRz
-LGRlY29kZXIiIGNhbiBiZSB1c2VkIHdoZW4gdGhlIGNoaXAgaXMgY29tcGxldGVseSB0cmFuc3Bh
-cmVudCB0bwp0aGUgU29DIGFuZCBub25lIG9mIHRoZSBvcHRpb25hbCBwcm9wZXJ0aWVzIEkgaGF2
-ZSBkZXNjcmliZWQgaW4gdGhlCmJpbmRpbmdzIGFyZSBzcGVjaWZpZWQgKGEgZ2VuZXJpYyAicG93
-ZXItZ3Bpb3MiIGFwYXJ0LCBzZWUgQW5kcnplagpjb21tZW50cyBvbiAicHdkbi1ncGlvcyIgcHJv
-cGVydHkpLgoKQWxzbywgSSBzaG91bGQgbWFrZSB0aGUgZHJpdmVyIGJlaGF2aW9yIGRlcGVuZCBv
-biB0aGUgbWF0Y2hlZCBjb21wYXRpYmxlCnN0cmluZy4gV2hlbiAibHZkcy1kZWNvZGVyIiBpcyBt
-YXRjaGVkLCBpdCB3aWxsIGp1c3QgbG9vayBmb3IgYW4Kb3B0aW9uYWwgcG93ZXIgZG93biBncGlv
-LCB3aGVuICJ0aGM2M2x2ZDEwMjQiIGlzIG1hdGNoZWQsIGFsbCBvZiBpdHMKVmNjIHN1cHBsaWVz
-LCBwd2RuIGdwaW8gYW5kIG9lIGdwaW9zIHdpbGwgYmUgcXVlcmllZCBhbmQsIGlmIHByZXNlbnQs
-CmV2ZW50dWFsbHkgdXNlZCBpbiBlbmFibGUvZGlzYWJsZSByb3V0aW5lcy4KCkknbSBqdXN0IG5v
-dCBzdXJlIGhvdyB0byBkZXNjcmliZSB0aGF0IGluIGJpbmRpbmdzLiBXb3VsZCBzb21ldGhpbmcK
-bGlrZSB0aGUgZm9sbG93aW5nIHdvcms/CgpPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciAibHZkcyxk
-ZWNvZGVyIgotIHBvd2VyLWdwaW9zOiBQb3dlciBjb250cm9sIEdQSU9zCgpPcHRpb25hbCBwcm9w
-ZXJ0aWVzIGZvciAidGhpbmUsdGhjNjNsdmQxMDI0IgotIHB3ZG4tZ3Bpb3M6IC4uLgotIG9lLWdw
-aW9zOiAuLi4KLSBzdXBwbHktdmNjOiAuLi4KLSBzdXBwbHktY3ZjYzogLi4uCi0gc3VwcGx5LXB2
-Y2M6IC4uLgotIHN1cHBseS1sdmNjOiAuLi4KClRoYW5rcwogICBqCgo+Cj4gR3J7b2V0amUsZWV0
-aW5nfXMsCj4KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydAo+Cj4gLS0KPiBHZWVydCBV
-eXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0
-QGxpbnV4LW02OGsub3JnCj4KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5p
-Y2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0Cj4gd2hlbiBJJ20gdGFsa2lu
-ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
-ZSB0aGF0Lgo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFs
-ZHMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>>>> > +static void dwc3u_reset_init(struct dwc3u_priv *priv)
+>>>> > +{
+>>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+>>>> > +  usleep_range(1000, 2000);
+>>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, LINK_RESET);
+>>>> > +}
+>>>> > +
+>>>> > +static void dwc3u_reset_clear(struct dwc3u_priv *priv)
+>>>> > +{
+>>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+>>>> > +}
+>>>>
+>>>> drivers/reset ?
+>>>
+>>> The reset driver manages "sysctrl" IO map area in our SoC.
+>>>
+>>> RESET_CTL register belongs to "dwc3-glue" IO map area,
+>>> and the kernel can't access this area until enabling usb clocks and
+>>> deasserting usb resets in "sysctrl".
+>>>
+>>> I think that "dwc3-glue" register control should be separated from
+>>> "sysctrl".
+>>
+>> Just split your address space and treat your glue as a device with
+>> several children:
+>>
+>> glue@65b00000 {
+>>         compatible =3D "foo"
+>>
+>>         phy@bar {
+>>                 ...
+>>         };
+>>
+>>         sysctrl@baz {
+>>                 ...
+>>         };
+>>
+>>         dwc3@foo {
+>>                 compatible =3D "snps, dwc3";
+>>                 ...
+>>         };
+>> };
+>>
+>> Then you know that you can let dwc3/core.c handle the PHY for you. If we
+>> need to teach dwc3/core.c about regulators, we can do that. But we don't
+>> need SoC-specific hacks ;-)
+>>
+>> --
+>> balbi
+>
+>
+> Slightly related question.
+>
+>
+> Why don't we put clocks and resets to dwc3/core.c?
+
+We can do that for the simpler platforms, no worries.
+
+> dwc3-of-simple.c only handles clocks and resets.
+> This is generic enough to be added to dwc3/core.c, I think.
+>
+>
+> I checked the two instances of dwc3-of-simple.
+>
+> "qcom,dwc3"
+> https://github.com/torvalds/linux/blob/v4.16-rc3/arch/arm64/boot/dts/qcom=
+/msm8996.dtsi#L780
+>
+> "rockchip,rk3399-dwc3"
+> https://github.com/torvalds/linux/blob/v4.16-rc3/arch/arm64/boot/dts/rock=
+chip/rk3399.dtsi#L395
+>
+>
+> They just contain clocks, resets, and "snps,dwc3" sub-node.
+>
+>
+> If we do that,
+>
+> usb@7600000 {
+>         compatible =3D "qcom,dwc3";
+>         clocks =3D ...;
+>
+>         dwc3@7600000 {
+>                 compatible =3D "snps,dwc3";
+>                 reg =3D ...;
+>                 interrupts =3D ...;
+>                 phys =3D ...;
+>         }
+> };
+>
+>
+> will be turned into
+>
+>
+> dwc3@7600000 {
+>         compatible =3D "qcom,dwc3", "snps,dwc3";
+>         reg =3D ...;
+>         clocks =3D ...;
+>         interrupts =3D ...;
+>         phys =3D ...;
+> };
+>
+>
+> This looks simpler.
+
+yup. This will only work for the simpler platforms, though. TI platforms
+and PCI-based platforms, this really won't work :-)
+
+> Also, dwc3/core.c and dwc3-of-simple.c
+> duplicate runtime PM.
+
+they "kinda" duplicate :-) Some platforms have platform-specific clocks
+which are not generic enough to be stuffed into dwc3/core.c. Some of
+those clocks may need special handling of some sorts. It's best to keep
+the option for peculiar clock tree setups available.
+
+If your platform is simple enough that you can get away without a glue
+layer, sure thing. More power for you :-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlqiTjoACgkQzL64meEa
+mQYPCA/+P7rcXMx5aWldt2WPSal5A+KgDrwM7Bmw35toDIEgnMGzSHyuxVMEofIU
+tNiCKsZtmbk8X5NtZbXpjKHkKkCQp1fflFL0m4Lo901NJTB1oDTz5JdhlF8Bqjl4
+ok7i6Ir7qG/hIgMqeR99EsXW+78VNN5AM96HNYRxZ9ZIQx4Fs+55Z6Q3U/z1UbMh
+ACQoXr9M+Bsk/bN9YMhoRJbyz4BMzm1UPFXutPsqgaMjXXJHCiiXDaQ1shn/ZDUd
+Z91KIF+KQCEB1RuSh/euU4x/JroeyJw39egeDXfGZjbGZAYnIJuwLEo7J9TJGQc2
+Vzs0c4QYYOZZaGBdgNfX1Fp3Tu6qQb2CDhQLkRwACkD0ro2mlYHxM8zqy1c0jdVO
+ocW62XBWgPAXoGTtcr8G1f3QP/4Cmc5fKOeukAQ60nJ11NPzAZ9h0o0IEwlGllrp
+T/SDeGox+SdQ83tIhZ8fKwWJ+/N9uAQYbdffCzouL/nE5VIcpoG9x1LMspzVW7PM
+3QdZGTs2ToQO5OpDTLlhwkZJwDrInLst8OWra1LpigIY0P06bLgG1Iakuta3BD+q
+bNKSa4/tGbdKcYQR0Z91p2QnLoGWjrymrZNWM5tecGlna7cbazhy3QgOvFckYSBE
+9Y6IlyMOXvpq8J+2l9dF2+vFxl6h+4gPjlC2hCuOj6ccPb484KM=
+=kNAK
+-----END PGP SIGNATURE-----
+--=-=-=--
