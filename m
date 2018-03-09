@@ -1,36 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] ARM: sunxi: mc-smp: Use DT enable-method for sun9i
- A80 SMP
-Date: Fri, 9 Mar 2018 17:50:35 -0600
-Message-ID: <20180309235035.htaeyerfbiz2vijl@rob-hp-laptop>
-References: <20180308150012.19045-1-wens@csie.org>
- <20180308150012.19045-3-wens@csie.org>
+Subject: Re: [PATCH v2 01/12] dt-bindings: Document STM32MP1 Reset Clock
+ Controller (RCC) bindings
+Date: Fri, 9 Mar 2018 17:53:56 -0600
+Message-ID: <20180309235356.qd2wx6teeuxkwwjz@rob-hp-laptop>
+References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
+ <1520528045-18330-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180308150012.19045-3-wens@csie.org>
+In-Reply-To: <1520528045-18330-2-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mylene Josserand <mylene.josserand@bootlin.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: gabriel.fernandez@st.com
+Cc: sboyd@kernel.org, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2018 at 11:00:10PM +0800, Chen-Yu Tsai wrote:
-> Instead of having an early init function check the machine compatible
-> and installing multi-cluster SMP support for the A80 if it matches,
-> use a new cpu enable-method string. This makes the platform support
-> future proof in case anyone manages to add PSCI support.
+On Thu, Mar 08, 2018 at 05:53:54PM +0100, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> The original init code for the SMP support is changed into the
-> .prepare_cpus callback in the smp_operations structure. Instead of
-> panicing when resources are missing like on some platforms, our code
-> merely guards against engaging SMP or CPU hotplug and returns an error.
+> The RCC block is responsible of the management of the clock and reset
+> generation for the complete circuit.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.txt |  1 +
+>  .../devicetree/bindings/clock/st,stm32mp1-rcc.txt  | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
->  arch/arm/mach-sunxi/mc_smp.c                   | 21 ++++++++++++++++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
