@@ -1,28 +1,56 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: Add Gateworks System Controller bindings
-Date: Sat, 10 Mar 2018 10:57:43 -0300
-Message-ID: <CAOMZO5Cw+XW_G_euCL5itmuvfxDDnWWHqg2EjPTCVkuTzqXHug@mail.gmail.com>
-References: <1520287361-12569-1-git-send-email-tharvey@gateworks.com> <1520287361-12569-2-git-send-email-tharvey@gateworks.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v5 0/2] add support for Socionext SynQuacer I2C controller
+Date: Sat, 10 Mar 2018 15:01:14 +0000
+Message-ID: <CAKv+Gu_hRsJGT-inrzXmAmabaZiUTL7BowdUrxwSWHJecjeVsg@mail.gmail.com>
+References: <20180302083123.7259-1-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520287361-12569-2-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <20180302083123.7259-1-ard.biesheuvel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
+On 2 March 2018 at 08:31, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> Add a binding and a driver for the I2C IP found in the Socionext SynQuacer
+> SoC, which is essentially a rebranded version of the Fujitsu F_I2C controller.
+>
+> I think this is good to go now. Wolfram?
+>
 
-On Mon, Mar 5, 2018 at 7:02 PM, Tim Harvey <tharvey@gateworks.com> wrote:
+Ping?
 
-> +
-> +                       hwmon@1 { /* A1: Input Voltage */
-> +                               type = <1>;
-> +                               reg = <0x02>;
-
-Unit address (@1) does not match the 'reg' value.
-
-If someone build this example with W=1 a warning will be shown.
-
-Same problem happens in other places of this example.
+> v5:
+> - add Rob's ack to #1
+> - drop unnecessary 'platform_set_drvdata(pdev, NULL)' in remove path (#2)
+>
+> v4:
+> - clarify binding that only a single interrupt specifier is expected (#1)
+> - check return value of clk_prepare_enable() on probe path (#2)
+> - add Andy's R-b to patch #2
+>
+> v3:
+> - incorporate more of Andy's review comments (#2), especially regarding the
+>   bus speed and clock source handling for ACPI
+> - patch #1 unchanged.
+>
+> v2:
+> - incorporate Andy's review comments (#2)
+> - patch #1 unchanged.
+>
+> Ard Biesheuvel (2):
+>   dt-bindings: i2c: add binding for Socionext SynQuacer I2C
+>   i2c: add support for Socionext SynQuacer I2C controller
+>
+>  Documentation/devicetree/bindings/i2c/i2c-synquacer.txt |  29 +
+>  drivers/i2c/busses/Kconfig                              |  10 +
+>  drivers/i2c/busses/Makefile                             |   1 +
+>  drivers/i2c/busses/i2c-synquacer.c                      | 791 ++++++++++++++++++++
+>  4 files changed, 831 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-synquacer.txt
+>  create mode 100644 drivers/i2c/busses/i2c-synquacer.c
+>
+> --
+> 2.11.0
+>
