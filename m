@@ -1,96 +1,151 @@
-Return-Path: <SRS0=V1wh=F7=flygoat.com=jiaxun.yang@kernel.org>
-Message-Id: <20180309035233.qVBm8aIa@smtp4p.mail.yandex.net>
-Date: Fri, 09 Mar 2018 08:52:22 +0800
-Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
-In-Reply-To: <CANc+2y42BAF=bZo9WxujMBR-x6y=rKDagA3R68phuAsi1P8BLw@mail.gmail.com>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Return-Path: <SRS0=i9YJ=GA=gmail.com=tanurelinux@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="--_com.samsung.android.email_5988424235328260"
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-MIPS" <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Dominik Peklo <dom.peklo@gmail.com>
+In-Reply-To: <CAL_JsqLhyuwa8J+PTBMmbgZto3uy8aa9io9QUraX13JiE=PO1Q@mail.gmail.com>
+References: <52dae8af-e2a7-0141-61a0-b016dbcb25e3@linux.com> <CAL_JsqLhyuwa8J+PTBMmbgZto3uy8aa9io9QUraX13JiE=PO1Q@mail.gmail.com>
+From: Lucas Tanure <tanure@linux.com>
+Date: Sat, 10 Mar 2018 21:10:21 +0000
+Message-ID: <CAJX_Q+07aOxAzsN2oTwfpX+BHxK6TUDxfuJx9EE=pTdPJx6B1g@mail.gmail.com>
+Subject: Re: Device tree overlay properties order issue
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-----_com.samsung.android.email_5988424235328260
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Hi,
 
-U29ycnkgZm9yIHRoZSBkZWxheS5XZSd2ZSB1cGxvYWRlZCB0aGUgYnNwIDQuNCBrZXJuZWwgaGVy
-ZS4KCmh0dHBzOi8vZ2l0aHViLmNvbS9JbmdlbmljLWNvbW11bml0eS9saW51eC14YnVyc3QtYnNw
-ClRoYW5rcy4KQmVzdCBSZWdhcmRzSmlheHVuIFlhbmcKCueUse+8miBQcmFzYW5uYUt1bWFyIE11
-cmFsaWRoYXJhbiA8cHJhc2FubmF0c21rdW1hckBnbWFpbC5jb20+IOaXpeacnzogMjAxOC8zLzgg
-IDAwOjI1ICAoR01UKzA4OjAwKeS4u+mimO+8miBSZTogW1JGQyAzLzRdIE1JUFM6IEluZ2VuaWM6
-IEluaXRpYWwgWDEwMDAgU29DIHN1cHBvcnQgCk9uIDcgTWFyY2ggMjAxOCBhdCAyMToyMiwgSmlh
-eHVuIFlhbmcgPGppYXh1bi55YW5nQGZseWdvYXQuY29tPiB3cm90ZToKPiDlnKggMjAxOC0wMy0w
-N+S4ieeahCAyMDozNSArMDUzMO+8jFByYXNhbm5hS3VtYXIgTXVyYWxpZGhhcmFu5YaZ6YGT77ya
-Cj4+IEhpIEphbWVzLAo+Pgo+PiBTZWVtcyBKaWF4dW4gaXMgaW50ZXJlc3RlZCBpbiB0aGUgYm9h
-cmQgYW5kIGlzIHdpbGxpbmcgdG8gaGVscC4KPj4KPj4gSSBoYXZlIGJlZW4gdG9sZCB0aGF0IElu
-Z2VuaWMgaXMgZm9jdXNpbmcgb24gSW9UIG1hcmtldCBhbmQgWDEwMDAgaXMKPj4gaW50ZW5kZWQg
-Zm9yIElvVCBzZWdtZW50LiBJIHRoaW5rIHRoYXQgdGhleSB3b3VsZCBiZSBzZWxsaW5nIHNldmVy
-YWwKPj4gMTAwS3Mgb2YgY2hpcCBvdmVyIHRoZSBjb21pbmcgeWVhcnMuIEJ1dCBJIGZlZWwgSW5n
-ZW5pYyBzcGVuZHMgdGltZQo+PiBvbmx5IG9uIG1haW50YWluaW5nIHRoZWlyIExpbnV4IHBvcnQg
-d2hpY2ggaXMgdXN1YWxseSBiYXNlZCBvbiB2ZXJ5Cj4+IG9sZCBrZXJuZWwgdmVyc2lvbi4KPgo+
-IEluZ2VuaWMgaXMgZ29pbmcgdG8gcmVsZWFzZSB0aGVpciBYQnJ1c3QyIGNvcmUgd2l0aCBpdCdz
-IHByb2R1Y3RzIHN1Y2gKPiBhcyBYMjAwMCBhIGZldyBkYXlzIGxhdGVyLiBXaXRjaCBpcyBhIHB1
-cmUgTUlQUzY0cjUgd2l0aCBNWFUyKEEKPiBzdXBlcnNldCBvZiBNSVBTJ3MgTVNBIFNJTUQgaW5z
-dHJ1Y3Rpb24gc2V0KS4gVGhlIG5ld2VzdCBrZXJuZWwgcG9ydCBvZgo+IFgxMDAwIG1haW50YWlu
-IGJ5IEluZ2VuaWMgaXMgYmFzZWQgb24gTGludXgtNC40IFsxXS4gQWZ0ZXIgY29tbXVuaWNhdGVk
-Cj4gd2l0aCBJbmdlbmljLCB0aGV5IHNhaWQgdGhleSBhcmUgZm9yY3VzaW5nIG9uIENoaW5hIGRv
-bWVzdGljIG1hcmtldC4KPiBCdXQgdGhleSdyZSBsb29raW5nIGZvciBwYXJ0bmVycyB0byBlbnRl
-ciBmb3JpZWduIG1hcmtldC4KPgo+IFsxXSBodHRwczovL3Bhbi5iYWlkdS5jb20vcy8xbzhNZVl0
-cyAoV2VsbCB5b3UgY2FuIGRvd25sb2FkIGZyb20gdGhpcwo+IENoaW5lc2Ugd2Vic2l0ZSwgaW5n
-ZW5pYyBoYXZlIGEgZ2Vycml0IGJ1dCBJIGRvbid0IGhhdmUgYWNjZXNzIHRvIGl0Lgo+IEFzIG15
-IGV4cGVyaWVuY2UsIGl0J3MgaGFyZCB0byBkZXZlbG9wIG9uIENoaW5lc2UtbWFkZSBjaGlwcyB3
-aWhvdXQKPiByZWFkaW5nIENoaW5lc2UgZG9jdW1lbnRzLikKCkNhbiB5b3UgdGFrZSBhIGRpZmYg
-YW5kIHVwbG9hZCBpdCBzb21ld2hlcmUgZWxzZT8gRG93bmxvYWQgc3BlZWQgaXMgYQpjb3VwbGUg
-b2YgYnl0ZXMgcGVyIHNlY29uZC4gQ2FuIHlvdSBwdXQgdGhlIGRpZmYgaW4gZ2l0aHViIG9yIHNp
-bWlsYXIKb3RoZXIgc2VydmljZT8KSSB3b3VsZCBsaWtlIHRvIHNlZSBpZiB0aGUgcG9ydCB1c2Vz
-IERULgo=
+Thanks for the help. I got my answer on the raspberry pi github issue :
+https://github.com/raspberrypi/linux/issues/2416
 
-----_com.samsung.android.email_5988424235328260
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+It's a feature of libfdt, the Open Source library for manipulating
+Flattened Device Trees. The firmware, the Pi-specific dtmerge utility
+and the (new) standard fdtoverlay utility all use a function called
+fdt_add_subnode(*) to add each node. The documentation says:
 
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPjwvaGVhZD48Ym9keT48ZGl2PlNvcnJ5IGZvciB0aGUgZGVs
-YXkuPC9kaXY+PGRpdj5XZSd2ZSB1cGxvYWRlZCB0aGUgYnNwIDQuNCBrZXJuZWwgaGVyZS48L2Rp
-dj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pmh0dHBzOi8vZ2l0aHViLmNvbS9J
-bmdlbmljLWNvbW11bml0eS9saW51eC14YnVyc3QtYnNwPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp
-dj5UaGFua3MuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdiBpZD0iY29tcG9zZXJfc2lnbmF0dXJl
-Ij48bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hh
-cnNldD1VVEYtOCI+QmVzdCBSZWdhcmRzPGRpdj5KaWF4dW4gWWFuZzwvZGl2PjwvZGl2PjxkaXY+
-PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMDAlO2NvbG9yOiMwMDAwMDAiPjwhLS0g
-b3JpZ2luYWxNZXNzYWdlIC0tPjxkaXY+PGJyPjwvZGl2PjxkaXY+55Sx77yaIFByYXNhbm5hS3Vt
-YXIgTXVyYWxpZGhhcmFuICZsdDtwcmFzYW5uYXRzbWt1bWFyQGdtYWlsLmNvbSZndDsgPC9kaXY+
-PGRpdj7ml6XmnJ86IDIwMTgvMy84ICAwMDoyNSAgKEdNVCswODowMCk8L2Rpdj48ZGl2PuS4u+mi
-mO+8miBSZTogW1JGQyAzLzRdIE1JUFM6IEluZ2VuaWM6IEluaXRpYWwgWDEwMDAgU29DIHN1cHBv
-cnQgPC9kaXY+PGRpdj48YnI+PC9kaXY+PC9kaXY+T24gNyBNYXJjaCAyMDE4IGF0IDIxOjIyLCBK
-aWF4dW4gWWFuZyAmbHQ7amlheHVuLnlhbmdAZmx5Z29hdC5jb20mZ3Q7IHdyb3RlOjxicj4mZ3Q7
-IOWcqCAyMDE4LTAzLTA35LiJ55qEIDIwOjM1ICswNTMw77yMUHJhc2FubmFLdW1hciBNdXJhbGlk
-aGFyYW7lhpnpgZPvvJo8YnI+Jmd0OyZndDsgSGkgSmFtZXMsPGJyPiZndDsmZ3Q7PGJyPiZndDsm
-Z3Q7IFNlZW1zIEppYXh1biBpcyBpbnRlcmVzdGVkIGluIHRoZSBib2FyZCBhbmQgaXMgd2lsbGlu
-ZyB0byBoZWxwLjxicj4mZ3Q7Jmd0Ozxicj4mZ3Q7Jmd0OyBJIGhhdmUgYmVlbiB0b2xkIHRoYXQg
-SW5nZW5pYyBpcyBmb2N1c2luZyBvbiBJb1QgbWFya2V0IGFuZCBYMTAwMCBpczxicj4mZ3Q7Jmd0
-OyBpbnRlbmRlZCBmb3IgSW9UIHNlZ21lbnQuIEkgdGhpbmsgdGhhdCB0aGV5IHdvdWxkIGJlIHNl
-bGxpbmcgc2V2ZXJhbDxicj4mZ3Q7Jmd0OyAxMDBLcyBvZiBjaGlwIG92ZXIgdGhlIGNvbWluZyB5
-ZWFycy4gQnV0IEkgZmVlbCBJbmdlbmljIHNwZW5kcyB0aW1lPGJyPiZndDsmZ3Q7IG9ubHkgb24g
-bWFpbnRhaW5pbmcgdGhlaXIgTGludXggcG9ydCB3aGljaCBpcyB1c3VhbGx5IGJhc2VkIG9uIHZl
-cnk8YnI+Jmd0OyZndDsgb2xkIGtlcm5lbCB2ZXJzaW9uLjxicj4mZ3Q7PGJyPiZndDsgSW5nZW5p
-YyBpcyBnb2luZyB0byByZWxlYXNlIHRoZWlyIFhCcnVzdDIgY29yZSB3aXRoIGl0J3MgcHJvZHVj
-dHMgc3VjaDxicj4mZ3Q7IGFzIFgyMDAwIGEgZmV3IGRheXMgbGF0ZXIuIFdpdGNoIGlzIGEgcHVy
-ZSBNSVBTNjRyNSB3aXRoIE1YVTIoQTxicj4mZ3Q7IHN1cGVyc2V0IG9mIE1JUFMncyBNU0EgU0lN
-RCBpbnN0cnVjdGlvbiBzZXQpLiBUaGUgbmV3ZXN0IGtlcm5lbCBwb3J0IG9mPGJyPiZndDsgWDEw
-MDAgbWFpbnRhaW4gYnkgSW5nZW5pYyBpcyBiYXNlZCBvbiBMaW51eC00LjQgWzFdLiBBZnRlciBj
-b21tdW5pY2F0ZWQ8YnI+Jmd0OyB3aXRoIEluZ2VuaWMsIHRoZXkgc2FpZCB0aGV5IGFyZSBmb3Jj
-dXNpbmcgb24gQ2hpbmEgZG9tZXN0aWMgbWFya2V0Ljxicj4mZ3Q7IEJ1dCB0aGV5J3JlIGxvb2tp
-bmcgZm9yIHBhcnRuZXJzIHRvIGVudGVyIGZvcmllZ24gbWFya2V0Ljxicj4mZ3Q7PGJyPiZndDsg
-WzFdIGh0dHBzOi8vcGFuLmJhaWR1LmNvbS9zLzFvOE1lWXRzIChXZWxsIHlvdSBjYW4gZG93bmxv
-YWQgZnJvbSB0aGlzPGJyPiZndDsgQ2hpbmVzZSB3ZWJzaXRlLCBpbmdlbmljIGhhdmUgYSBnZXJy
-aXQgYnV0IEkgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gaXQuPGJyPiZndDsgQXMgbXkgZXhwZXJpZW5j
-ZSwgaXQncyBoYXJkIHRvIGRldmVsb3Agb24gQ2hpbmVzZS1tYWRlIGNoaXBzIHdpaG91dDxicj4m
-Z3Q7IHJlYWRpbmcgQ2hpbmVzZSBkb2N1bWVudHMuKTxicj48YnI+Q2FuIHlvdSB0YWtlIGEgZGlm
-ZiBhbmQgdXBsb2FkIGl0IHNvbWV3aGVyZSBlbHNlPyBEb3dubG9hZCBzcGVlZCBpcyBhPGJyPmNv
-dXBsZSBvZiBieXRlcyBwZXIgc2Vjb25kLiBDYW4geW91IHB1dCB0aGUgZGlmZiBpbiBnaXRodWIg
-b3Igc2ltaWxhcjxicj5vdGhlciBzZXJ2aWNlPzxicj5JIHdvdWxkIGxpa2UgdG8gc2VlIGlmIHRo
-ZSBwb3J0IHVzZXMgRFQuPGJyPjwvYm9keT48L2h0bWw+
+ * fdt_add_subnode() creates a new node as a subnode of the node at
+ * structure block offset parentoffset, with the given name (which
+ * should include the unit address, if any).
 
-----_com.samsung.android.email_5988424235328260--
+What it doesn't say is where the subnode should be added. A comment in
+the code makes it clearer:
+
+/* Try to place the new node after the parent's properties */
+
+Since FDT stores the subnodes after the properties, this has the
+effect of inserting the new subnode before any others. And since the
+source nodes are enumerated in the order they appear, the end result
+is a reversal.
+
+As fdtoverlay behaves the same way, I see this as an unexpected but
+harmless quirk.
+
+(*) Actually the fdt_add_subnode_namelen variant, but they are the
+same for the purposes of this explanation.
+
+Thanks
+
+On Mon, Mar 5, 2018 at 6:04 PM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Mar 5, 2018 at 10:50 AM, Lucas Tanure <tanure@linux.com> wrote:
+>> Hi,
+>>
+>> I'm working with Raspberry Pi 3 and overlays.
+>> I'm seeing one issue with overlays, that I don't see with normal device
+>> trees.
+>>
+>> Using the attached patch with Rpi 4.9 kernel and loading
+>> dts-test-overlay.dts,
+>> the order that my machine driver reads properties "cpu-codec" is the
+>> opposite
+>> of what I is specified on dts.
+>
+> What about mainline?
+>
+>>
+>> [    4.558259] dts-test-order soc:sound: dts_test_probe
+>> [    4.558275] dts-test-order soc:sound: Dai Name cpu-codec1
+>> [    4.558284] dts-test-order soc:sound: Dai Name cpu-codec0
+>
+>> Just for testing, commenting out drivers/of/fdt.c , line 451, did make the
+>> order be
+>> the same as dts file.
+>
+> Depending on the order within the DT should mostly be solved with
+> deferred probe, but that does require awareness in drivers and
+> subsystems.
+>
+>> Looking at the history of the code in that area it appears that it was
+>> actually trying
+>> to preserve the order of sub-nodes, but for some reason it no longer works
+>> for
+>> overlays on raspberry pi.
+>
+> Yes, only to not change current behavior on existing DTs. However, one
+> should not rely on a certain order.
+>
+>>
+>>     /*
+>>      * Reverse the child list. Some drivers assumes node order matches .dts
+>>      * node order
+>>      */
+>>     if (!dryrun)
+>>         reverse_nodes(root);
+>>
+>> This is a issue with overlays or I'm missing something ?
+>>
+>> Thanks
+>> Lucas
+>>
+>> Signed-off-by: Lucas Tanure <tanure@linux.com>
+>> ---
+>>  arch/arm/boot/dts/overlays/Makefile             |  1 +
+>>  arch/arm/boot/dts/overlays/dts-test-overlay.dts | 19 ++++++++++++
+>>  arch/arm/configs/bcm2709_defconfig              |  1 +
+>>  sound/soc/cirrus/Kconfig                        |  3 ++
+>>  sound/soc/cirrus/Makefile                       |  3 ++
+>>  sound/soc/cirrus/dts-test.c                     | 40
+>> +++++++++++++++++++++++++
+>>  6 files changed, 67 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/overlays/dts-test-overlay.dts
+>>  create mode 100644 sound/soc/cirrus/dts-test.c
+>>
+>> diff --git a/arch/arm/boot/dts/overlays/Makefile
+>> b/arch/arm/boot/dts/overlays/Makefile
+>> index e99392ca95f9..a6b78c3a513c 100644
+>> --- a/arch/arm/boot/dts/overlays/Makefile
+>> +++ b/arch/arm/boot/dts/overlays/Makefile
+>> @@ -17,6 +17,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
+>>      audioinjector-wm8731-audio.dtbo \
+>>      audremap.dtbo \
+>>      bmp085_i2c-sensor.dtbo \
+>> +    dts-test.dtbo \
+>>      dht11.dtbo \
+>>      dionaudio-loco.dtbo \
+>>      dionaudio-loco-v2.dtbo \
+>> diff --git a/arch/arm/boot/dts/overlays/dts-test-overlay.dts
+>> b/arch/arm/boot/dts/overlays/dts-test-overlay.dts
+>> new file mode 100644
+>> index 000000000000..e6c91c1fc5a4
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/overlays/dts-test-overlay.dts
+>> @@ -0,0 +1,19 @@
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +/{
+>> +    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+>> +
+>> +    fragment@0 {
+>> +        target = <&sound>;
+>> +        __overlay__ {
+>> +            status = "okay";
+>> +            compatible = "dts,test-order";
+>> +
+>> +            cpu-codec0 {
+>> +            };
+>> +            cpu-codec1 {
+>> +            };
+>
+> Does one of these nodes already exist in the base DT? That's the only
+> think I can think of. That's allowed and I don't think we sort nodes
+> once we apply them.
+>
+> Rob
