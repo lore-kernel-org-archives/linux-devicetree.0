@@ -1,87 +1,45 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 0/3] drm: Add LVDS decoder bridge
-Date: Sat, 10 Mar 2018 11:23:19 +0530
-Message-ID: <b0eec899-424f-f71d-8c1f-9ff8f0211f7f@codeaurora.org>
-References: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 0/4] ARM: sunxi: Clean and improvements for multi-cluster SMP
+Date: Sat, 10 Mar 2018 16:16:02 +0800
+Message-ID: <CAGb2v67WVY0zPUhqy0nZOhKEfZskZvKcvUrUA_wghw=37Eq3sA@mail.gmail.com>
+References: <20180308150012.19045-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180308150012.19045-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Mylene Josserand <mylene.josserand@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmlkYXkgMDkgTWFyY2ggMjAxOCAwNzoyMSBQTSwgSmFjb3BvIE1vbmRpIHdyb3Rl
-Ogo+IEhlbGxvLAo+ICAgICBhZnRlciBzb21lIGRpc2N1c3Npb24gb24gdGhlIHByb3Bvc2VkIGJp
-bmRpbmdzIGZvciBnZW5lcmljIGx2ZHMgZGVjb2RlciBhbmQKPiBUaGluZSBUSEM2M0xWRDEwMjQs
-IEkgZGVjaWRlZCB0byBkcm9wIHRoZSBUSEM2MyBzcGVjaWZpYyBwYXJ0IGFuZCBqdXN0IGxpdmUg
-d2l0aAo+IGEgdHJhbnNwYXJlbnQgZGVjb2RlciB0aGF0IGRvZXMgbm90IHN1cHBvcnQgYW55IGNv
-bmZpZ3VyYXRpb24gZnJvbSBEVC4KPiAKPiBEcm9wcGluZyBUSEM2MyBzdXBwb3J0IHRvIGF2b2lk
-IGRpc2N1c3Npb24gb24gaG93IHRvIGJldHRlciBpbXBsZW1lbnQgc3VwcG9ydAo+IGZvciBhIERS
-TSBicmlkZ2Ugd2l0aCAyIGlucHV0IHBvcnRzIGFuZCBmb2N1cyBvbiBMVkRTIG1vZGUgcHJvcGFn
-YXRpb24gdGhyb3VnaAo+IGJyaWRnZXMgYXMgZXhwbGFpbmVkIGluIHYxIGNvdmVyIGxldHRlciAo
-Zm9yIERSTSBwZW9wbGU6IHBsZWFzZSBzZWUgWzFdIGFzIHdoeQo+IEkgZmluZCBkaWZmaWN1bHQg
-dG8gaW1wbGVtZW50IHN1cHBvcnQgZm9yIGJyaWRnZXMgd2l0aCBtdWx0aXBsZSBpbnB1dCBlbmRw
-b2ludHMpCj4gCj4gU2FtZSBiYXNlIGJyYW5jaCBhcyB2MSwgd2l0aCBzYW1lIHBhdGNoZXMgZm9y
-IFYzTSBFYWdsZSBhcHBsaWVkIG9uIHRvcC4KPiBnaXQ6Ly9qbW9uZGkub3JnL2xpbnV4IHYzbS92
-NC4xNi1yYzMvYmFzZQo+IAo+IFRoYW5rcwo+ICAgICBqCj4gCj4gdjEgLT4gdjI6Cj4gLSBEcm9w
-IHN1cHBvcnQgZm9yIFRIQzYzTFZEMTAyNAo+IAo+IFsxXSBJIGhhZCBhIHF1aWNrIGF0IGhvdyB0
-byBtb2RlbCBhIERSTSBicmlkZ2Ugd2l0aCBtdWx0aXBsZSBpbnB1dAo+IHBvcnRzLCBhbmQgSSBz
-ZWUgYSBibG9ja2VyIGluIGhvdyBEUk0gaWRlbnRpZmllcyBhbmQgbWF0Y2hlcyBicmlkZ2VzIHVz
-aW5nCj4gdGhlIGRldmljZXMgbm9kZSBpbiBwbGFjZSBvZiB0aGUgZW5kcG9pbnQgbm9kZXMuCj4g
-Cj4gQXMgVEhDNjNMVkQxMDI0IHN1cHBvcnRzIHVwIHRvIDIgTFZEUyBpbnB1dHMgYW5kIDIgTFZE
-UyBvdXRwdXRzLCBJIHNlZSBvbmx5Cj4gYSBmZXcgd2F5cyB0byBzdXBwb3J0IHRoYXQ6Cj4gICAx
-KSByZWdpc3RlciAyIGRybSBicmlkZ2VzIGZyb20gdGhlIHNhbWUgZHJpdmVyIChvbmUgZm9yIGVh
-Y2ggaW5wdXQvb3V0cHV0IHBhaXIpCj4gICAgICBidXQgdGhleSB3b3VsZCBib3RoIGJlIG1hdGNo
-ZXMgb24gdGhlIHNhbWUgZGV2aWNlIG5vZGUgd2hlbiB0aGUgcHJlY2VkaW5nCj4gICAgICBicmlk
-Z2UgY2FsbHMgIm9mX2RybV9maW5kX2JyaWRnZSgpIi4KCkkgdGhpbmsgdGhpcyBpcyB0aGUgd2F5
-IHRvIGdvLiBEUk0gZG9lc24ndCBzYXkgYW55d2hlcmUgdGhhdCB3ZSBjYW4ndCAKaGF2ZSAyIGRy
-bV9icmlkZ2UtcyBjb250YWluZWQgaW4gYSBzaW5nbGUgZGV2aWNlLiBBYm91dCB0aGUgaXNzdWUg
-d2l0aApvZl9kcm1fZmluZF9icmlkZ2UoKSwgaWYgeW91IHNldCB0aGUgMiBicmlkZ2UncyAnb2Zf
-bm9kZScgZmllbGQgdG8KdGhlIGJyaWRnZTEgYW5kIGJyaWRnZTIgbm9kZXMgYXMgc2hvd24gYmVs
-b3csIHdvdWxkbid0IHRoYXQgc3VmZmljZS4gCiBGcm9tIHdoYXQgSSBrbm93LCB3ZSBkb24ndCBu
-ZWNlc3NhcmlseSBuZWVkIHRvIHNldCB0aGUgYnJpZGdlJ3Mgb2Zfbm9kZQp0byB0aGUgZGV2aWNl
-IChpLmUsIHRoc2NoaXApIGl0c2VsZi4KCnRoc2NoaXAgewoJLi4uCglwb3J0cyB7CgkJYnJpZGdl
-MTogcG9ydEAwIHsKCQkJLi4uCgkJfTsKCgkJYnJpZGdlMjogcG9ydEAxIHsKCQkJLi4uCgkJfTsK
-CX07Cn07CgoKVGhhbmtzLApBcmNoaXQKCj4gICAyKSByZWdpc3RlciBhIHNpbmdsZSBicmlkZ2Ug
-d2l0aCBtdWx0aXBsZSAibmV4dCBicmlkZ2VzIiwgYnV0IHdoZW4gdGhlIGJyaWRnZQo+ICAgICAg
-Z2V0cyBhdHRhY2hlZCBJIGRvbid0IHNlZSBhIHdheSBvbiBob3cgdG8gaWRlbnRpZnkgb24gd2hp
-Y2ggbmV4dCBicmlkZ2UKPiAgICAgICJkcm1fYnJpZGdlX2F0dGFjaCgpIiBvbiwgYXMgaXQgZGVw
-ZW5kcyBvbiB0aGUgZW5kcG9pbnQgdGhlIGN1cnJlbnQgYnJpZGdlCj4gICAgICBoYXMgYmVlbiBh
-dHRhY2hlZCBvbiBmaXJzdCwgYW5kIHdlIGRvbid0IGhhdmUgdGhhdCBpbmZvcm1hdGlvbi4KPiAg
-IDMpIFJlZ2lzdGVyIG1vcmUgaW5zdGFuY2VzIG9mIHRoZSBzYW1lIGNoaXAgaW4gRFRTLCBvbmUg
-Zm9yIGVhY2ggaW5wdXQvb3V0cHV0Cj4gICAgICBwYWlyLiBUaGV5IGdvbm5hIHNoYXJlIHN1cHBs
-aWVzIGFuZCBncGlvcywgYW5kIEkgZG9uJ3QgbGlrZSB0aGF0Lgo+IAo+IEkgaGFkIGEgcXVpY2sg
-bG9vayBhdCB0aGUgY3VycmVudGx5IGluIG1haW5saW5lIGJyaWRnZXMgYW5kIG5vbmUgb2YgdGhl
-bSBoYXMKPiBtdWx0aXBsZSBpbnB1dCBlbmRwb2ludHMsIGV4Y2VwdCBmb3IgSERNSSBhdWRpbyBl
-bmRwb2ludCwgd2hpY2ggSSBoYXZlbid0IGZvdW5kCj4gaW4gdXNlIGluIGFueSBEVFMuIEkgZ3Vl
-c3MgdGhlIHByb2JsZW0gaGFzIGJlZW4gYWxyZWFkeSBkZWJhdGVkIGFuZCBtYXliZSBzb2x2ZWQK
-PiBpbiB0aGUgcGFzdCwgc28gZmVlbCBmcmVlIHRvIHBvaW50IG1lIHRvIG90aGVyIHNvdXJjZXMu
-Cj4gCj4gSmFjb3BvIE1vbmRpICgzKToKPiAgICBkdC1iaW5kaW5nczogZGlzcGxheTogYnJpZGdl
-OiBEb2N1bWVudCBMVkRTIHRvIHBhcmFsbGVsIGRlY29kZXIKPiAgICBkcm06IGJyaWRnZTogQWRk
-IExWRFMgZGVjb2RlciBkcml2ZXIKPiAgICBhcm02NDogZHRzOiByZW5lc2FzOiBBZGQgTFZEUyBk
-ZWNvZGVyIHRvIFItQ2FyIFYzTSBFYWdsZQo+IAo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL2x2ZHMtZGVjb2Rlci50eHQgICAgICAgfCAgNDIgKysrKysrCj4gICBhcmNoL2FybTY0L2Jv
-b3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAtZWFnbGUuZHRzICAgICB8ICAzMSArKystCj4gICBkcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgOCArKwo+
-ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAg
-IDEgKwo+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYyAgICAgICAgICAg
-ICAgfCAxNTcgKysrKysrKysrKysrKysrKysrKysrCj4gICA1IGZpbGVzIGNoYW5nZWQsIDIzNyBp
-bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLWRlY29kZXIu
-dHh0Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRl
-Y29kZXIuYwo+IAo+IC0tCj4gMi43LjQKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Thu, Mar 8, 2018 at 11:00 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> Hi,
+>
+> This series is a bit of cleanup and improvement for the new
+> multi-cluster SMP code for Allwinner A80 and A83T (soon) SoCs.
+>
+> The first patch is just a typo fix.
+>
+> The second and third patch add the use of the "enable-method" cpu
+> property to enable SMP, instead of matching against the machine
+> compatible. However, due to how init calls are sequenced, we still
+> need to use a platform early_init call.
+>
+> The last patch splits out parts of the SoC-specific init code, i.e.
+> the device node matching parts. This should help with Mylene's work
+> on adding support for the A83T.
+>
+> Please have a look.
+>
+> Regards
+> ChenYu
+>
+> Chen-Yu Tsai (4):
+>   ARM: sunxi: mc-smp: Fix "lookback" typo
+>   ARM: sunxi: mc-smp: Use DT enable-method for sun9i A80 SMP
+>   ARM: dts: sun9i: Add enable-method for SMP support for the A80 SoC
+>   ARM: sunxi: mc-smp: Split out SoC-specific device node lookup sequence
+
+Merged all 4 patches.
+
+ChenYu
