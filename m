@@ -1,60 +1,60 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524 and pcal9555a
-Date: Sat, 10 Mar 2018 12:00:01 +0100
-Message-ID: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH 1/2] ASoC: Add DT bindings documentation
+	for max9759 amplifier
+Date: Sat, 10 Mar 2018 12:05:15 +0100
+Message-ID: <1520679916-13517-2-git-send-email-narmstrong@baylibre.com>
+References: <1520679916-13517-1-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1520679916-13517-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The Pyra-Handheld originally used the tca6424 but recently we have
-replaced it by the pin and package compatible pcal6524. So let's
-add this to the bindings and the driver.
+This patch adds DT bindings documentation for Maxim MAX9759
+speaker amplifier.
 
-And while we are at it, the pcal9555a does not have a compatible entry
-either but is already supported by the device id table.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 2 ++
- drivers/gpio/gpio-pca953x.c                             | 4 ++++
- 2 files changed, 6 insertions(+)
+ .../devicetree/bindings/sound/maxim,max9759.txt        | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/maxim,max9759.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index 0d0158728f89..d2a937682836 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -16,6 +16,8 @@ Required properties:
- 	nxp,pca9574
- 	nxp,pca9575
- 	nxp,pca9698
-+	nxp,pcal6524
-+	nxp,pcal9555a
- 	maxim,max7310
- 	maxim,max7312
- 	maxim,max7313
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index a0a5f9730aa7..d2ead4b1cf61 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -70,6 +70,7 @@ static const struct i2c_device_id pca953x_id[] = {
- 	{ "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
- 	{ "pca9698", 40 | PCA953X_TYPE, },
- 
-+	{ "pcal6524", 24 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
- 	{ "pcal9555a", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
- 
- 	{ "max7310", 8  | PCA953X_TYPE, },
-@@ -935,6 +936,9 @@ static const struct of_device_id pca953x_dt_ids[] = {
- 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
- 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
- 
-+	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
-+	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
+diff --git a/Documentation/devicetree/bindings/sound/maxim,max9759.txt b/Documentation/devicetree/bindings/sound/maxim,max9759.txt
+new file mode 100644
+index 0000000..737a996
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/maxim,max9759.txt
+@@ -0,0 +1,18 @@
++Maxim MAX9759 Speaker Amplifier
++===============================
 +
- 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
- 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
- 	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT), },
++Required properties:
++- compatible : "maxim,max9759"
++- shutdown-gpios : the gpio connected to the shutdown pin
++- mute-gpios : the gpio connected to the mute pin
++- gain-gpios : the 2 gpios connected to the g1 and g2 pins
++
++Example:
++
++max9759: analog-amplifier {
++	compatible = "maxim,max9759";
++	shutdown-gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
++	mute-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
++	gain-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>,
++		     <&gpio3 25 GPIO_ACTIVE_LOW>;
++};
 -- 
-2.12.2
+2.7.4
