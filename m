@@ -1,45 +1,60 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 0/4] ARM: sunxi: Clean and improvements for multi-cluster SMP
-Date: Sat, 10 Mar 2018 16:16:02 +0800
-Message-ID: <CAGb2v67WVY0zPUhqy0nZOhKEfZskZvKcvUrUA_wghw=37Eq3sA@mail.gmail.com>
-References: <20180308150012.19045-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524 and pcal9555a
+Date: Sat, 10 Mar 2018 12:00:01 +0100
+Message-ID: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308150012.19045-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mylene Josserand <mylene.josserand@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 8, 2018 at 11:00 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> Hi,
->
-> This series is a bit of cleanup and improvement for the new
-> multi-cluster SMP code for Allwinner A80 and A83T (soon) SoCs.
->
-> The first patch is just a typo fix.
->
-> The second and third patch add the use of the "enable-method" cpu
-> property to enable SMP, instead of matching against the machine
-> compatible. However, due to how init calls are sequenced, we still
-> need to use a platform early_init call.
->
-> The last patch splits out parts of the SoC-specific init code, i.e.
-> the device node matching parts. This should help with Mylene's work
-> on adding support for the A83T.
->
-> Please have a look.
->
-> Regards
-> ChenYu
->
-> Chen-Yu Tsai (4):
->   ARM: sunxi: mc-smp: Fix "lookback" typo
->   ARM: sunxi: mc-smp: Use DT enable-method for sun9i A80 SMP
->   ARM: dts: sun9i: Add enable-method for SMP support for the A80 SoC
->   ARM: sunxi: mc-smp: Split out SoC-specific device node lookup sequence
+The Pyra-Handheld originally used the tca6424 but recently we have
+replaced it by the pin and package compatible pcal6524. So let's
+add this to the bindings and the driver.
 
-Merged all 4 patches.
+And while we are at it, the pcal9555a does not have a compatible entry
+either but is already supported by the device id table.
 
-ChenYu
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 2 ++
+ drivers/gpio/gpio-pca953x.c                             | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+index 0d0158728f89..d2a937682836 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+@@ -16,6 +16,8 @@ Required properties:
+ 	nxp,pca9574
+ 	nxp,pca9575
+ 	nxp,pca9698
++	nxp,pcal6524
++	nxp,pcal9555a
+ 	maxim,max7310
+ 	maxim,max7312
+ 	maxim,max7313
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index a0a5f9730aa7..d2ead4b1cf61 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -70,6 +70,7 @@ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
+ 	{ "pca9698", 40 | PCA953X_TYPE, },
+ 
++	{ "pcal6524", 24 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+ 	{ "pcal9555a", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+ 
+ 	{ "max7310", 8  | PCA953X_TYPE, },
+@@ -935,6 +936,9 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
+ 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
+ 
++	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
++	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
++
+ 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
+ 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT), },
+-- 
+2.12.2
