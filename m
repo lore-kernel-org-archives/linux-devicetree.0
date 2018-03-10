@@ -1,111 +1,62 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 0/3] drm: Add LVDS decoder bridge
-Date: Sat, 10 Mar 2018 19:00:31 +0100
-Message-ID: <20180310180031.GJ4023@w540>
-References: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
- <b0eec899-424f-f71d-8c1f-9ff8f0211f7f@codeaurora.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 1/3] Input: gpio-keys - add support for wakeup event
+ action
+Date: Sat, 10 Mar 2018 10:11:59 -0800
+Message-ID: <20180310181159.GA260013@dtor-ws>
+References: <20180308073213.8419-1-jeffy.chen@rock-chips.com>
+ <20180308073213.8419-2-jeffy.chen@rock-chips.com>
+ <20180309232720.pmqaulifiqa5czul@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b0eec899-424f-f71d-8c1f-9ff8f0211f7f@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
+In-Reply-To: <20180309232720.pmqaulifiqa5czul@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, briannorris@google.com, heiko@sntech.de, dtor@google.com, dianders@google.com, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>, Joseph Lo <josephl@nvidia.com>, stephen lu <lumotuwe@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Philippe Ombredanne <pombredanne@nexb.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQXJjaGl0LAoKT24gU2F0LCBNYXIgMTAsIDIwMTggYXQgMTE6MjM6MTlBTSArMDUzMCwg
-QXJjaGl0IFRhbmVqYSB3cm90ZToKPiBIaSwKPgo+IE9uIEZyaWRheSAwOSBNYXJjaCAyMDE4IDA3
-OjIxIFBNLCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4gPkhlbGxvLAo+ID4gICAgYWZ0ZXIgc29tZSBk
-aXNjdXNzaW9uIG9uIHRoZSBwcm9wb3NlZCBiaW5kaW5ncyBmb3IgZ2VuZXJpYyBsdmRzIGRlY29k
-ZXIgYW5kCj4gPlRoaW5lIFRIQzYzTFZEMTAyNCwgSSBkZWNpZGVkIHRvIGRyb3AgdGhlIFRIQzYz
-IHNwZWNpZmljIHBhcnQgYW5kIGp1c3QgbGl2ZSB3aXRoCj4gPmEgdHJhbnNwYXJlbnQgZGVjb2Rl
-ciB0aGF0IGRvZXMgbm90IHN1cHBvcnQgYW55IGNvbmZpZ3VyYXRpb24gZnJvbSBEVC4KPiA+Cj4g
-PkRyb3BwaW5nIFRIQzYzIHN1cHBvcnQgdG8gYXZvaWQgZGlzY3Vzc2lvbiBvbiBob3cgdG8gYmV0
-dGVyIGltcGxlbWVudCBzdXBwb3J0Cj4gPmZvciBhIERSTSBicmlkZ2Ugd2l0aCAyIGlucHV0IHBv
-cnRzIGFuZCBmb2N1cyBvbiBMVkRTIG1vZGUgcHJvcGFnYXRpb24gdGhyb3VnaAo+ID5icmlkZ2Vz
-IGFzIGV4cGxhaW5lZCBpbiB2MSBjb3ZlciBsZXR0ZXIgKGZvciBEUk0gcGVvcGxlOiBwbGVhc2Ug
-c2VlIFsxXSBhcyB3aHkKPiA+SSBmaW5kIGRpZmZpY3VsdCB0byBpbXBsZW1lbnQgc3VwcG9ydCBm
-b3IgYnJpZGdlcyB3aXRoIG11bHRpcGxlIGlucHV0IGVuZHBvaW50cykKPiA+Cj4gPlNhbWUgYmFz
-ZSBicmFuY2ggYXMgdjEsIHdpdGggc2FtZSBwYXRjaGVzIGZvciBWM00gRWFnbGUgYXBwbGllZCBv
-biB0b3AuCj4gPmdpdDovL2ptb25kaS5vcmcvbGludXggdjNtL3Y0LjE2LXJjMy9iYXNlCj4gPgo+
-ID5UaGFua3MKPiA+ICAgIGoKPiA+Cj4gPnYxIC0+IHYyOgo+ID4tIERyb3Agc3VwcG9ydCBmb3Ig
-VEhDNjNMVkQxMDI0Cj4gPgo+ID5bMV0gSSBoYWQgYSBxdWljayBhdCBob3cgdG8gbW9kZWwgYSBE
-Uk0gYnJpZGdlIHdpdGggbXVsdGlwbGUgaW5wdXQKPiA+cG9ydHMsIGFuZCBJIHNlZSBhIGJsb2Nr
-ZXIgaW4gaG93IERSTSBpZGVudGlmaWVzIGFuZCBtYXRjaGVzIGJyaWRnZXMgdXNpbmcKPiA+dGhl
-IGRldmljZXMgbm9kZSBpbiBwbGFjZSBvZiB0aGUgZW5kcG9pbnQgbm9kZXMuCj4gPgo+ID5BcyBU
-SEM2M0xWRDEwMjQgc3VwcG9ydHMgdXAgdG8gMiBMVkRTIGlucHV0cyBhbmQgMiBMVkRTIG91dHB1
-dHMsIEkgc2VlIG9ubHkKPiA+YSBmZXcgd2F5cyB0byBzdXBwb3J0IHRoYXQ6Cj4gPiAgMSkgcmVn
-aXN0ZXIgMiBkcm0gYnJpZGdlcyBmcm9tIHRoZSBzYW1lIGRyaXZlciAob25lIGZvciBlYWNoIGlu
-cHV0L291dHB1dCBwYWlyKQo+ID4gICAgIGJ1dCB0aGV5IHdvdWxkIGJvdGggYmUgbWF0Y2hlcyBv
-biB0aGUgc2FtZSBkZXZpY2Ugbm9kZSB3aGVuIHRoZSBwcmVjZWRpbmcKPiA+ICAgICBicmlkZ2Ug
-Y2FsbHMgIm9mX2RybV9maW5kX2JyaWRnZSgpIi4KPgo+IEkgdGhpbmsgdGhpcyBpcyB0aGUgd2F5
-IHRvIGdvLiBEUk0gZG9lc24ndCBzYXkgYW55d2hlcmUgdGhhdCB3ZSBjYW4ndCBoYXZlIDIKPiBk
-cm1fYnJpZGdlLXMgY29udGFpbmVkIGluIGEgc2luZ2xlIGRldmljZS4gQWJvdXQgdGhlIGlzc3Vl
-IHdpdGgKPiBvZl9kcm1fZmluZF9icmlkZ2UoKSwgaWYgeW91IHNldCB0aGUgMiBicmlkZ2UncyAn
-b2Zfbm9kZScgZmllbGQgdG8KPiB0aGUgYnJpZGdlMSBhbmQgYnJpZGdlMiBub2RlcyBhcyBzaG93
-biBiZWxvdywgd291bGRuJ3QgdGhhdCBzdWZmaWNlLiBGcm9tCj4gd2hhdCBJIGtub3csIHdlIGRv
-bid0IG5lY2Vzc2FyaWx5IG5lZWQgdG8gc2V0IHRoZSBicmlkZ2UncyBvZl9ub2RlCj4gdG8gdGhl
-IGRldmljZSAoaS5lLCB0aHNjaGlwKSBpdHNlbGYuCgpUaGF0J3MgZmluZSwgYnV0IHRoaXMgaW1w
-bGllcyB0aGF0IHRoZSBwcmVjZWRpbmcgYnJpZGdlIChvciBlbmNvZGVyKSBpbiB0aGUKRFJNIHBp
-cGVsaW5lIGhhcyB0aGVuIHRvIGNvbGxlY3QgdGhlICJwb3J0IiBub2RlIGFuZCBtYXRjaCBvbiBp
-dApzcGVjaWZpY2FsbHkgd2hlbiBpdCBhdHRhY2hlcyB0aGlzIGRyaXZlci4gVGhpcyBpbnRyb2R1
-Y2VzIGFuIGFkLWhvYwpwb2xpY3kgdGhhdCBwcmV2ZW50cyB0aGlzIGRyaXZlciBmcm9tIGJlaW5n
-IGVhc2lseSBpbnRlZ3JhdGVkIGluCmV4aXN0aW5nIHBpcGVsaW5lcyAod2hlcmUgYnJpZGdlcyBh
-cmUgbWF0Y2hlZCBvbiB0aGUgZGV2aWNlIG5vZGUpLgoKQWxzbywgSSBkb24ndCBrbm93IG11Y2gg
-YWJvdXQgdGhlIERSTSBmcmFtZXdvcmssIGJ1dCBpdCBzZWVtcyB0byBtZQp0aGF0IHRoZSBoZWxw
-ZXIgZnVuY3Rpb24gZGVzaWduZWQgdG8gZmluZCB0aGUgbmV4dCBjb21wb25lbnQgdG8gYXR0YWNo
-CnRvIGluIHRoZSBEUk0gcGlwZWxpbmUgaXM6Cgpkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2Uo
-KToKICAgICAgICByZW1vdGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUoKTsKICAgICAgICAg
-ICAgICAgIGVwID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoKTsKICAgICAgICAgICAg
-ICAgIHJldHVybiBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KCk7ICA8LS0gVGhpcyBy
-ZXR1cm5zIHRoZSBkZXZpY2Ugbm9kZQogICAgICAgIG9mX2RybV9maW5kX3BhbmVsKHJlbW90ZSk7
-CiAgICAgICAgb2ZfZHJtX2ZpbmRfYnJpZGdlKHJlbW90ZSk7CgpJIHNvIGRhcmUgdG8gc2F5IG1h
-dGNoaW5nIG9uIGRldmljZSBub2RlIGlzIGtpbmQgb2YgdGhlIGludGVuZGVkIHdheQp0byBkbyB0
-aGluZ3MgaW4gRFJNLCBhbmQgdGhpcyBkcml2ZXIgd2l0aCB0d28gZW5kcG9pbnRzIHRoYXQgd2Fu
-dHMgdG8KYmUgbWF0Y2hlZCBvbiBwb3J0IG5vZGVzIHdvdWxkIGJlIGtpbmQgb2Ygc3BlY2lhbCBv
-bmUgdGhhdCBkb2VzIG5vdAp3b3JrIGFzIG90aGVyIGRyaXZlciBleHBlY3RzIHRvLgoKSXMgbXkg
-dW5kZXJzdGFuZGluZyBjb3JyZWN0LCBvciBoYXZlIEkgbWlzaW50ZXJwcmV0ZWQgc29tZXRoaW5n
-PwoKVGhhbmtzCiAgIGoKCj4KPiB0aHNjaGlwIHsKPiAJLi4uCj4gCXBvcnRzIHsKPiAJCWJyaWRn
-ZTE6IHBvcnRAMCB7Cj4gCQkJLi4uCj4gCQl9Owo+Cj4gCQlicmlkZ2UyOiBwb3J0QDEgewo+IAkJ
-CS4uLgo+IAkJfTsKPiAJfTsKPiB9Owo+Cj4KPiBUaGFua3MsCj4gQXJjaGl0Cj4KPiA+ICAyKSBy
-ZWdpc3RlciBhIHNpbmdsZSBicmlkZ2Ugd2l0aCBtdWx0aXBsZSAibmV4dCBicmlkZ2VzIiwgYnV0
-IHdoZW4gdGhlIGJyaWRnZQo+ID4gICAgIGdldHMgYXR0YWNoZWQgSSBkb24ndCBzZWUgYSB3YXkg
-b24gaG93IHRvIGlkZW50aWZ5IG9uIHdoaWNoIG5leHQgYnJpZGdlCj4gPiAgICAgImRybV9icmlk
-Z2VfYXR0YWNoKCkiIG9uLCBhcyBpdCBkZXBlbmRzIG9uIHRoZSBlbmRwb2ludCB0aGUgY3VycmVu
-dCBicmlkZ2UKPiA+ICAgICBoYXMgYmVlbiBhdHRhY2hlZCBvbiBmaXJzdCwgYW5kIHdlIGRvbid0
-IGhhdmUgdGhhdCBpbmZvcm1hdGlvbi4KPiA+ICAzKSBSZWdpc3RlciBtb3JlIGluc3RhbmNlcyBv
-ZiB0aGUgc2FtZSBjaGlwIGluIERUUywgb25lIGZvciBlYWNoIGlucHV0L291dHB1dAo+ID4gICAg
-IHBhaXIuIFRoZXkgZ29ubmEgc2hhcmUgc3VwcGxpZXMgYW5kIGdwaW9zLCBhbmQgSSBkb24ndCBs
-aWtlIHRoYXQuCj4gPgo+ID5JIGhhZCBhIHF1aWNrIGxvb2sgYXQgdGhlIGN1cnJlbnRseSBpbiBt
-YWlubGluZSBicmlkZ2VzIGFuZCBub25lIG9mIHRoZW0gaGFzCj4gPm11bHRpcGxlIGlucHV0IGVu
-ZHBvaW50cywgZXhjZXB0IGZvciBIRE1JIGF1ZGlvIGVuZHBvaW50LCB3aGljaCBJIGhhdmVuJ3Qg
-Zm91bmQKPiA+aW4gdXNlIGluIGFueSBEVFMuIEkgZ3Vlc3MgdGhlIHByb2JsZW0gaGFzIGJlZW4g
-YWxyZWFkeSBkZWJhdGVkIGFuZCBtYXliZSBzb2x2ZWQKPiA+aW4gdGhlIHBhc3QsIHNvIGZlZWwg
-ZnJlZSB0byBwb2ludCBtZSB0byBvdGhlciBzb3VyY2VzLgo+ID4KPiA+SmFjb3BvIE1vbmRpICgz
-KToKPiA+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGJyaWRnZTogRG9jdW1lbnQgTFZEUyB0byBw
-YXJhbGxlbCBkZWNvZGVyCj4gPiAgIGRybTogYnJpZGdlOiBBZGQgTFZEUyBkZWNvZGVyIGRyaXZl
-cgo+ID4gICBhcm02NDogZHRzOiByZW5lc2FzOiBBZGQgTFZEUyBkZWNvZGVyIHRvIFItQ2FyIFYz
-TSBFYWdsZQo+ID4KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy1kZWNvZGVy
-LnR4dCAgICAgICB8ICA0MiArKysrKysKPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-cjhhNzc5NzAtZWFnbGUuZHRzICAgICB8ICAzMSArKystCj4gPiAgZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDggKysKPiA+ICBkcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gPiAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYyAgICAgICAgICAgICAgfCAxNTcgKysr
-KysrKysrKysrKysrKysrKysrCj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCAyMzcgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtZGVjb2Rlci50eHQKPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYwo+
-ID4KPiA+LS0KPiA+Mi43LjQKPiA+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Fri, Mar 09, 2018 at 05:27:21PM -0600, Rob Herring wrote:
+> On Thu, Mar 08, 2018 at 03:32:11PM +0800, Jeffy Chen wrote:
+> > Add support for specifying event actions to trigger wakeup when using
+> > the gpio-keys input device as a wakeup source.
+> > 
+> > This would allow the device to configure when to wakeup the system. For
+> > example a gpio-keys input device for pen insert, may only want to wakeup
+> > the system when ejecting the pen.
+> > 
+> > Suggested-by: Brian Norris <briannorris@chromium.org>
+> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> > ---
+> > 
+> > Changes in v5:
+> > Remove unneeded irq_wake flag as Andy suggested.
+> > 
+> > Changes in v4:
+> > Add dt-binding gpio-keys.h, stop saving irq trigger type, add enable/disable wakeup helpers as Dmitry suggested.
+> > 
+> > Changes in v3:
+> > Adding more comments as Brian suggested.
+> > 
+> > Changes in v2:
+> > Specify wakeup event action instead of irq trigger type as Brian
+> > suggested.
+> > 
+> >  drivers/input/keyboard/gpio_keys.c    | 63 +++++++++++++++++++++++++++++++++--
+> >  include/dt-bindings/input/gpio-keys.h | 13 ++++++++
+> 
+> This file should be in the binding patch.
+
+No, this is a folly. Both the header, along with the documentation (i.e.
+binding doc) should be together with the patch that introduces the
+changes. The patches are supposed to be self contained and sufficient to
+stand on their own. Neither this header, not the binding doc make
+sense without the change to the driver itself.
+
+Next we'll start adding #defines in a separate patch before using
+them...
+
+Thanks.
+
+-- 
+Dmitry
