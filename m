@@ -1,139 +1,64 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 4/4] input: misc: Add Gateworks System Controller
- support
-Date: Sat, 10 Mar 2018 10:45:02 -0800
-Message-ID: <20180310184502.GE260013@dtor-ws>
-References: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
- <1520287361-12569-5-git-send-email-tharvey@gateworks.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
+Date: Sun, 11 Mar 2018 03:05:11 +0800
+Message-ID: <1520708711.24016.27.camel@flygoat.com>
+References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
+         <20170927151527.25570-4-prasannatsmkumar@gmail.com>
+         <20180306000832.GL4197@saruman>
+         <CANc+2y5_R5xYQuLbW7NAjO4mcW5RNn3Da77tAhYU5zj=0rkBDQ@mail.gmail.com>
+         <20180307143541.GN4197@saruman>
+         <CANc+2y5wsvGWszu3pePYhs2wb1_AgPdjG+ugfOCzbZVfVHDMvw@mail.gmail.com>
+         <1520437971.3731.22.camel@flygoat.com>
+         <CANc+2y42BAF=bZo9WxujMBR-x6y=rKDagA3R68phuAsi1P8BLw@mail.gmail.com>
+         <CA+7wUsyTrHZ=yk7EObc4ZaeXFcdgxVZL=9v2Mtz9=1_5dBz6Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520287361-12569-5-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <CA+7wUsyTrHZ=yk7EObc4ZaeXFcdgxVZL=9v2Mtz9=1_5dBz6Hg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-clk@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>, Dominik Peklo <dom.peklo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 02:02:41PM -0800, Tim Harvey wrote:
-> Add support for dispatching Linux Input events for the various interrupts
-> the Gateworks System Controller provides.
+在 2018-03-07三的 19:13 +0100，Mathieu Malaterre写道：
+> > > [1] https://pan.baidu.com/s/1o8MeYts (Well you can download from
+> > > this
+> > > Chinese website, ingenic have a gerrit but I don't have access to
+> > > it.
+> > > As my experience, it's hard to develop on Chinese-made chips
+> > > wihout
+> > > reading Chinese documents.)
+> > 
+> > Can you take a diff and upload it somewhere else? Download speed is
+> > a
+> > couple of bytes per second. Can you put the diff in github or
+> > similar
+> > other service?
+> > I would like to see if the port uses DT.
 > 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v2:
-> - reword Kconfig
-> - revise license comment block
-> - remove unnecessary read of status register
-> - remove unnecessary setting of input->dev.parent
-> - use dt bindings for irq to keycode mapping
-> - add support for platform-data
-> - remove work-queue
+> Technically this was documented here:
+Well that's only Technically for the English world. Most Ingeinc
+costumers are Chinese so they're providing detailed support for Chinese
+world.
+According Ingenic's announcement, the ftp have been deprecated for a
+long time and it's only exsiting for archive reason.
+
 > 
->  drivers/input/misc/Kconfig              |   9 ++
->  drivers/input/misc/Makefile             |   1 +
->  drivers/input/misc/gsc-input.c          | 180 ++++++++++++++++++++++++++++++++
->  include/linux/platform_data/gsc_input.h |  30 ++++++
->  4 files changed, 220 insertions(+)
->  create mode 100644 drivers/input/misc/gsc-input.c
->  create mode 100644 include/linux/platform_data/gsc_input.h
+> ftp://ftp.ingenic.cn/DevSupport/Linux/Linux-3.0.8/JZ4780/JZ4780_linux
+> _development_guide_EN.pdf
 > 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 9f082a3..e05f4fe 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -117,6 +117,15 @@ config INPUT_E3X0_BUTTON
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called e3x0_button.
->  
-> +config INPUT_GSC
-> +	tristate "Gateworks System Controller input support"
-> +	depends on MFD_GSC
-> +	help
-> +	  Support GSC events as Linux input events.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called gsc_input.
-> +
->  config INPUT_PCSPKR
->  	tristate "PC Speaker support"
->  	depends on PCSPKR_PLATFORM
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 4b6118d..969debe 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -38,6 +38,7 @@ obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
->  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
->  obj-$(CONFIG_INPUT_GPIO_TILT_POLLED)	+= gpio_tilt_polled.o
->  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
-> +obj-$(CONFIG_INPUT_GSC)			+= gsc-input.o
->  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
->  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
->  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-> diff --git a/drivers/input/misc/gsc-input.c b/drivers/input/misc/gsc-input.c
-> new file mode 100644
-> index 0000000..27b5e93
-> --- /dev/null
-> +++ b/drivers/input/misc/gsc-input.c
-> @@ -0,0 +1,180 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Copyright (C) 2018 Gateworks Corporation
-> + *
-> + * This driver dispatches Linux input events for GSC interrupt events
-> + */
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/mfd/gsc.h>
-> +#include <linux/platform_data/gsc_input.h>
-> +
-> +struct gsc_input_button_priv {
-> +	struct input_dev *input;
-> +	const struct gsc_input_button *button;
-> +};
-> +
-> +struct gsc_input_data {
-> +	struct gsc_dev *gsc;
-> +	struct gsc_input_platform_data *pdata;
-> +	struct input_dev *input;
-> +	struct gsc_input_button_priv *buttons;
-> +	int nbuttons;
-> +	unsigned int irqs[];
-> +#if 0
-> +	int irq;
-> +	struct work_struct irq_work;
-> +	struct mutex mutex;
-> +#endif
-> +};
-> +
-> +static irqreturn_t gsc_input_irq(int irq, void *data)
-> +{
-> +	const struct gsc_input_button_priv *button_priv = data;
-> +	struct input_dev *input = button_priv->input;
-> +
-> +	dev_dbg(&input->dev, "irq%d code=%d\n", irq, button_priv->button->code);
-> +	input_report_key(input, button_priv->button->code, 1);
-> +	input_sync(input);
-> +	input_report_key(input, button_priv->button->code, 0);
-> +	input_sync(input);
-> +
-> +	return IRQ_HANDLED;
+> Go to §2.1 Download Source Code:
+> 
+> 1) Download repo a) $ mkdir b) $ cd c) $ wget
+> http://git.ingenic.cn:8082/bj/repo d) $ chmod +x repo
+> 
+Repo is a sourcecode managing system used by Android. The gerrit is
+still here but need extra premission to reach. Now ingenic release
+there soucecode by "Baidu Netdisk". It's hard to access by foreign
+users. So we put the shourcecode here: https://github.com/Ingenic-commu
+nity/linux-xburst-bsp
 
-Hmm, so in the end this is just a bunch of buttons connected to
-interrupt lines. We already have a driver for that, called gpio-keys. It
-can work in pure interrupt mode (i.e. do not need real GPIO pin, just
-interrupt, and it will generate key down and up events when interrupt
-arrives, with possible delay for the up event).
-
-Thanks.
-
+Thanks
 -- 
-Dmitry
+Jiaxun Yang <jiaxun.yang@flygoat.com>
