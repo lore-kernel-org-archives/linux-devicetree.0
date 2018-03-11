@@ -1,44 +1,50 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v6 09/17] media: rkisp1: add rockchip isp1 core driver
-Date: Sun, 11 Mar 2018 08:58:05 +0200
-Message-ID: <20180311065805.ezrjm4wn5mnorvgg@sapphire.tkos.co.il>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
- <20180308094807.9443-10-jacob-chen@iotwrt.com>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: Re: [PATCH] ARM: BCM5301X: Fix NAND ECC parameters for Linksys
+ Panamera
+Date: Sun, 11 Mar 2018 06:03:13 -0400
+Message-ID: <20180311100313.znonhesgh462rz65@osboxes>
+References: <20180310171244.70299-1-npcomplete13@gmail.com>
+ <CACna6rz1TeRbPq-60HkHz9A0TDn+iXtmXniE6FCiANpUmV-qrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180308094807.9443-10-jacob-chen@iotwrt.com>
+In-Reply-To: <CACna6rz1TeRbPq-60HkHz9A0TDn+iXtmXniE6FCiANpUmV-qrw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, Jacob Chen <cc@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: florian.fainelli@broadcom.com, Hauke Mehrtens <hauke@hauke-m.de>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
+Hi Rafał,
 
-On Thu, Mar 08, 2018 at 05:47:59PM +0800, Jacob Chen wrote:
-> +config VIDEO_ROCKCHIP_ISP1
-> +	tristate "Rockchip Image Signal Processing v1 Unit driver"
-> +	depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> +	select VIDEOBUF2_DMA_CONTIG
-> +	select V4L2_FWNODE
-> +	default n
-> +	---help---
-> +	  Support for ISP1 on the rockchip SoC.
+On Sat, Mar 10, 2018 at 10:41:04PM +0100, Rafał Miłecki wrote:
+> On 10 March 2018 at 18:12, Vivek Unune <npcomplete13@gmail.com> wrote:
+> > Using BCH8 gives ecc errors and makes the router unsuable.
+> > Switching to BCH1 fixes these errors.
+> 
+> Can you provide CFE's log messages starting with
+> "Decompressing...done" and up to the "Press Ctrl+C to stop in CFE"
+> please? I'd like to see what NAND info CFE prints there.
 
-I added 'select VIDEOBUF2_VMALLOC' here to fix link failure:
+See below. It does say BCH-8, however I can't get it to work.
 
-drivers/media/platform/rockchip/isp1/isp_stats.o: In function `rkisp1_register_stats_vdev':
-isp_stats.c:(.text+0x80c): undefined reference to `vb2_vmalloc_memops'
-isp_stats.c:(.text+0x814): undefined reference to `vb2_vmalloc_memops'
-drivers/media/platform/rockchip/isp1/isp_params.o: In function `rkisp1_register_params_vdev':
-isp_params.c:(.text+0x29b4): undefined reference to `vb2_vmalloc_memops'
-isp_params.c:(.text+0x29bc): undefined reference to `vb2_vmalloc_memops'
+CFE log:
 
-baruch
+Decompressing...done
+Found a Toshiba NAND flash:
+Total size:  128MB
+Block size:  128KB
+Page Size:   2048B
+OOB Size:    64B
+Sector size: 512B
+Spare size:  16B
+ECC level:   8 (8-bit)
+Device ID: 0x98 0xf1 0x80 0x15 0xf2 0x16
+find_devinfo: devinfo block found at 0x00180000!
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+Press Ctrl+C to stop in CFE
+
+Thanks,
+
+Vivek
