@@ -1,55 +1,73 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 1/4] mfd: syscon: Set name of regmap_config
-Date: Mon, 12 Mar 2018 14:06:52 +0000
-Message-ID: <20180312140652.7ffdls4pccih32vk@dell>
-References: <20180312095142.30854-1-jeffy.chen@rock-chips.com>
- <20180312095142.30854-2-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v7 0/3] Add DTS for SDM845 SoC and MTP
+Date: Mon, 12 Mar 2018 19:42:21 +0530
+Message-ID: <20180312141224.11907-1-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180312095142.30854-2-jeffy.chen@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.>
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, swboyd@chromium.org, evgreen@chromium.org, bjorn.andersson@linaro.org, dianders@chromium.org, marc.zyngier@arm.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Mar 2018, Jeffy Chen wrote:
+These are basic device tree files needed to boot a SDM845 MTP
+board to a ramfs based serial console shell
 
-> We are now allowing to register debugfs without a valid device, and not
-> having a valid name will end up using "dummy*" to create debugfs dir.
-> 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> ---
-> 
-> Changes in v5:
-> CC lee.jones@linaro.org
-> 
-> Changes in v4: None
-> Changes in v3:
-> Modify commit message.
-> 
->  drivers/mfd/syscon.c | 1 +
->  1 file changed, 1 insertion(+)
+Bindings are based on whats proposed for pinctrl/serial/clock
+drivers for SDM845 SoC
+pinctrl: https://patchwork.kernel.org/patch/10157143/ (This is now pulled
+in by Linus Walleij for 4.17)
+clocks: https://lkml.org/lkml/2018/1/31/209 (under review)
 
-Looks okay.  Applied, thanks.
+I have dropped the patch that adds the serial/geni nodes from v6/7, as that
+will be reposted along with the geni patch series by Karthik
 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index fc9ba0ea4e44..b6d05cd934e6 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -110,6 +110,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
->  	syscon_config.reg_stride = reg_io_width;
->  	syscon_config.val_bits = reg_io_width * 8;
->  	syscon_config.max_register = resource_size(&res) - reg_io_width;
-> +	syscon_config.name = of_node_full_name(np);
->  
->  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
->  	if (IS_ERR(regmap)) {
+Since 'PATCH 3/3' also adds an ITS node and keeps it disabled, we also depend
+on https://lkml.org/lkml/2018/1/29/383
+
+Andy, since we aren't adding anything new for clocks (gcc) and pinctrl,
+do these look good to be pulled in for 4.17?
+
+changes in v7:
+* Dropped redistributor-stride and #redistributor-regions as suggested
+by Marc Zyngier
+
+changes in v6:
+* added the missing power-domain-cells property for gcc as reported
+by Doug Anderson 
+* Dropped the patch which added geni/serial nodes in dts. Karthik has
+agreed to carry that patch along with his GENI series. 
+
+changes in v5:
+* Removed all instances of IRQ_TYPE_NONE
+
+changes in v4:
+* pull config changes to uart pins
+* License in device tree files is still GPL-2.0
+
+changes in v3:
+* split the pinmux/pinconf nodes across SoC/Board files
+* Fixes for issues reported with 'make dtbs W=2'
+* other minor fixes based on review
+ 
+changes in v2:
+* dropped cpu-map
+* dropped GIC_CPU_MASK_SIMPLE()
+* Added new cpu compatible for kryo385
+* added ITS node, marked as disabled
+
+Rajendra Nayak (3):
+  dt-bindings: arm: Document kryo385 cpu
+  dt-bindings: qcom: Add SDM845 bindings
+  arm64: dts: sdm845: Add minimal dts/dtsi files for sdm845 SoC and MTP
+
+ Documentation/devicetree/bindings/arm/cpus.txt |   1 +
+ Documentation/devicetree/bindings/arm/qcom.txt |   1 +
+ arch/arm64/boot/dts/qcom/Makefile              |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts        |  15 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi           | 276 +++++++++++++++++++++++++
+ 5 files changed, 294 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
