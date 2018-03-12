@@ -1,31 +1,57 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH] ARM: dts: msm8974: castor: Correct typo in touchscreen compatible string
-Date: Mon, 12 Mar 2018 16:07:34 +0000
-Message-ID: <20180312160734.5606-1-ctatlor97@gmail.com>
+From: Harald Geyer <harald@ccbib.org>
+Subject: [PATCH 3/5] arm64: dts: allwinner: a64: add simplefb for A64 SoC
+Date: Mon, 12 Mar 2018 16:10:48 +0000
+Message-ID: <20180312161050.7647-4-harald@ccbib.org>
+References: <20180312161050.7647-1-harald@ccbib.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180312161050.7647-1-harald@ccbib.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com, Harald Geyer <harald@ccbib.org>
 List-Id: devicetree@vger.kernel.org
 
-This was mistakenly pulled from the downstream tree.
+The A64 SoC features two display pipelines, one has a LCD output, the
+other has a HDMI output.
 
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+Add support for simplefb for the LCD output. Tested on Teres I.
+
+This patch was inspired by work of Icenowy Zheng.
+
+Signed-off-by: Harald Geyer <harald@ccbib.org>
 ---
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-index e87f2c99060d..d85311a0422c 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-@@ -491,7 +491,7 @@
- 		pinctrl-0 = <&i2c8_pins>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index ca1b365bc722..05d5e8def68a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -52,6 +52,26 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
  
- 		synaptics@2c {
--			compatible = "syna,rmi-i2c";
-+			compatible = "syna,rmi4-i2c";
- 			reg = <0x2c>;
- 
- 			interrupt-parent = <&msmgpio>;
++	chosen {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++/*
++ * The pipeline mixer0-lcd0 depends on clock CLK_MIXER0 from DE2 CCU.
++ * However there is no support for this clock on A64 yet, so we depend
++ * on the upstream clocks here to keep them (and thus CLK_MIXER0) up.
++ */
++		simplefb_lcd: framebuffer-lcd {
++			compatible = "allwinner,simple-framebuffer",
++				     "simple-framebuffer";
++			allwinner,pipeline = "mixer0-lcd0";
++			clocks = <&ccu CLK_TCON0>,
++				 <&ccu CLK_DE>, <&ccu CLK_BUS_DE>;
++			status = "disabled";
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
-2.16.1
+2.11.0
