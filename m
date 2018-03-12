@@ -1,102 +1,27 @@
-Return-Path: <SRS0=b15J=GN=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v5 5/5] arm64: dts: sdm845: Add support for an instance of I2C controller
-Date: Fri, 23 Mar 2018 14:21:01 -0600
-Message-Id: <1521836461-6515-6-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
-References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org
+Return-Path: <SRS0=cvpp=GC=gmail.com=f.fainelli@kernel.org>
+Subject: Re: [PATCH v3 net-next 4/4] Documentation: macb: Document phy-handle
+ binding
+References: <20180310161718.GC29174@lunn.ch>
+ <20180312171001.129209-1-brad.mouring@ni.com>
+ <20180312171001.129209-5-brad.mouring@ni.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <8fa45867-7144-96f9-3615-ec7a2eb0a7e6@gmail.com>
+Date: Mon, 12 Mar 2018 10:18:38 -0700
+MIME-Version: 1.0
+In-Reply-To: <20180312171001.129209-5-brad.mouring@ni.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Brad Mouring <brad.mouring@ni.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add one instance of GENI based I2C master controller to enable testing
-I2C driver using EEPROM slave.
+On 03/12/2018 10:10 AM, Brad Mouring wrote:
+> Document the existance of the optional binding, directing to the
+> general ethernet document that describes this binding.
+> 
+> Signed-off-by: Brad Mouring <brad.mouring@ni.com>
 
-Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 18 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 29 +++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 17b2fb0..e82c98d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -29,9 +29,27 @@
- 		serial@a84000 {
- 			status = "okay";
- 		};
-+
-+		i2c@a88000 {
-+			status = "okay";
-+		};
- 	};
- 
- 	pinctrl@3400000 {
-+		qup-i2c10-default {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		qup-i2c10-sleep {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+			};
-+		};
-+
- 		qup-uart2-default {
- 			pinconf_tx {
- 				pins = "gpio4";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 71801b9..a13836f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -196,6 +196,20 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 
-+			qup_i2c10_default: qup-i2c10-default {
-+				pinmux {
-+					function = "qup10";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
-+
-+			qup_i2c10_sleep: qup-i2c10-sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
-+
- 			qup_uart2_default: qup-uart2-default {
- 				pinmux {
- 					function = "qup9";
-@@ -310,6 +324,21 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
-+
-+			i2c10: i2c@a88000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0xa88000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_i2c10_default>;
-+				pinctrl-1 = <&qup_i2c10_sleep>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <400000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Florian
