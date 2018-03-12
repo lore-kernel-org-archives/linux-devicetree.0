@@ -1,31 +1,69 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH] arm/dts: Correct typo in touchscreen compatible string
-Date: Mon, 12 Mar 2018 15:54:30 +0000
-Message-ID: <20180312155430.3860-1-ctatlor97@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v2 0/2] drm/panel: Add support for Raydium RM68200 panel
+Date: Mon, 12 Mar 2018 15:59:59 +0000
+Message-ID: <e98e915d-373c-06df-f5b0-d11e00bc87ed@st.com>
+References: <20180302153222.4377-1-philippe.cornu@st.com>
+ <20180312080404.GE23060@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180312080404.GE23060@ulmo>
+Content-Language: en-US
+Content-ID: <0CFB7451E2AADD4BAD2D20AD3F1A7288@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Vincent ABRIOU <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This was mistakenly pulled from the downstream driver
-
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
----
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-index e87f2c99060d..d85311a0422c 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-@@ -491,7 +491,7 @@
- 		pinctrl-0 = <&i2c8_pins>;
- 
- 		synaptics@2c {
--			compatible = "syna,rmi-i2c";
-+			compatible = "syna,rmi4-i2c";
- 			reg = <0x2c>;
- 
- 			interrupt-parent = <&msmgpio>;
--- 
-2.16.1
+SGkgVGhpZXJyeSwKCk9uIDAzLzEyLzIwMTggMDk6MDQgQU0sIFRoaWVycnkgUmVkaW5nIHdyb3Rl
+Ogo+IE9uIEZyaSwgTWFyIDAyLCAyMDE4IGF0IDA0OjMyOjIwUE0gKzAxMDAsIFBoaWxpcHBlIENv
+cm51IHdyb3RlOgo+PiBUaGUgUmF5ZGl1bSBTZW1pY29uZHVjdG9yIENvcnBvcmF0aW9uIFJNNjgy
+MDAgaXMgYSA1LjUiIDcyMHgxMjgwCj4+IFRGVCBMQ0QgcGFuZWwgY29ubmVjdGVkIHVzaW5nIGEg
+TUlQSS1EU0kgdmlkZW8gaW50ZXJmYWNlLgo+Pgo+PiBWZXJzaW9uIDI6Cj4+IC0gQWRkIFJvYiBI
+ZXJyaW5nIFJldmlld2VkLWJ5IG9uIGR0LWJpbmRpbmdzLgo+PiAtIFVwZGF0ZSBLY29uZmlnICYg
+ZHJpdmVyIHRoYW5rcyB0byBUaGllcnJ5IFJlZGluZyBjb21tZW50czogbm8gbW9yZQo+PiAgICBE
+UlZfTkFNRSwgRFJNX1dBUk5fT05DRSBpbnN0ZWFkIG9mIERSVl9OQU1FIHdoZXJlIGFwcGxpY2Fi
+bGUsIHVzZQo+PiAgICBiYWNrbGlnaHRfZW5hYmxlL2Rpc2FibGUoKSAmIGRldm1fb2ZfZmluZF9i
+YWNrbGlnaHQoKSwgbm8gZXh0cmEKPj4gICAgZ3BpbyByZXNldCB0byAwLCBubyBtb3JlIG1zZyBp
+ZiBzdWNjZXNzZnVsLCB1c2UgUk02ODIwMCBpbnN0ZWFkIG9mCj4+ICAgIHJtNjgyMDAgd2hlcmUg
+bmVjZXNzYXJ5Lgo+Pgo+PiBWZXJzaW9uIDE6Cj4+IC0gSW5pdGlhbCBjb21taXQKPj4KPj4gUGhp
+bGlwcGUgQ29ybnUgKDIpOgo+PiAgICBkdC1iaW5kaW5ncy9kaXNwbGF5L3BhbmVsOiBBZGQgc3Vw
+cG9ydCBmb3IgUmF5ZGl1bSBybTY4MjAwIGRzaSBwYW5lbAo+PiAgICBkcm0vcGFuZWw6IEFkZCBz
+dXBwb3J0IGZvciBSYXlkaXVtIFJNNjgyMDAgcGFuZWwgZHJpdmVyCj4+Cj4+ICAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY4MjAwLnR4dCAgICAgfCAgMjUgKysKPj4gICBk
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICB8ICAgOCAr
+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
+fCAgIDEgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXlkaXVtLXJtNjgyMDAu
+YyAgICAgIHwgNDM3ICsrKysrKysrKysrKysrKysrKysrKwo+PiAgIDQgZmlsZXMgY2hhbmdlZCwg
+NDcxIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY4MjAwLnR4dAo+PiAg
+IGNyZWF0ZSBtb2RlIDEwMDc1NSBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmF5ZGl1bS1y
+bTY4MjAwLmMKPiAKPiBBcHBsaWVkLCB0aGFua3MuIFRoZXJlIHdlcmUgYSBmZXcgdGlueSB0aGlu
+Z3MgSSB3YXNuJ3QgZW50aXJlbHkgaGFwcHkKPiBhYm91dCwgYnV0IEkgZml4ZWQgdGhvc2UgdXAg
+bXlzZWxmLgo+IAo+IE1vc3Qgbm90YWJsZSB3YXMgdGhlIHVzZSBvZiBEUk1fV0FSTl9PTkNFKCks
+IHdoaWNoIGlzIGJhZCBpbiB0aGlzIGNhc2UKPiBiZWNhdXNlIGl0IHdvbid0IHNob3cgYW55IHN1
+YnNlcXVlbnQgZXJyb3JzLCBldmVyIGFnYWluLiBJIHRoaW5rIGluIHRoaXMKPiBjYXNlIHRoZSBw
+cm9wZXIgc29sdXRpb24gaXMgRFJNX0VSUk9SX1JBVEVMSU1JVEVEKCksIG9yIGVycm9yaW5nIG91
+dCBvbgo+IHRoZSBmaXJzdCBlcnJvciwgYXNzdW1pbmcgdGhhdCBzdWJzZXF1ZW50IG9wZXJhdGlv
+bnMgd29uJ3Qgc3VjY2VlZAo+IGVpdGhlci4gSSB3ZW50IHdpdGggdGhlIHJhdGUgbGltaXRhdGlv
+bi4KCkJpZyB0aGFuayB5b3UgZm9yIHlvdXIgbmljZSBjbGVhbnVwcyBhbmQgcmV3b3JrcywgSSB3
+aWxsIGZvbGxvdyB0aG9zZSBpbiAKdGhlIGZ1dHVyZSA6LSkKCkkgdGFrZSB0aGUgb3Bwb3J0dW5p
+dHkgdG8gdGhhbmsgeW91IGFsc28gZm9yIHRoZSBtZXJnZSBvZiB0aGUgMiBvdG04MDA5YSAKcGF0
+Y2hlcy4KCk1vcmVvdmVyLCBpZiB5b3UgdGhpbmsgSSBuZWVkIHRvIHVwZGF0ZSBvdG04MDA5YSBk
+cml2ZXIgd2l0aCB0aGUgc2FtZSAKcmV3b3JrcyAoaW5jbHVkZSBvcmRlciwgRFJNX0VSUk9SX1JB
+VEVMSU1JVEVELCBlcnJvciBtc2csIHJlbW92ZSBtc2cgaWYgCnN1Y2Nlc3NmdWxsLCBzdHJ1Y3Qg
+ZGF0YSBhbGlnbm1lbnQuLi4pLCBwbGVhc2UgdGVsbCBtZSA6KQpOb3RlOiBJIHBsYW4gdG8gdXBk
+YXRlIGl0IHNvb24gd2l0aCBuZXcgYmFja2xpZ2h0X2VuYWJsZS9kaXNhYmxlIGFwaS4uLgoKVGhh
+bmsgeW91IGFnYWluLApQaGlsaXBwZSA6LSkKCj4gCj4gVGhpZXJyeQo+IApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
