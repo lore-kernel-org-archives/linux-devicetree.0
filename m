@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 3/4] ARM: dts: sun8i: a33: Enable PMIC power supplies on A33-OLinuXino
-Date: Mon, 12 Mar 2018 12:23:55 +0800
-Message-ID: <20180312042356.18625-4-wens@csie.org>
+Subject: [PATCH 2/4] ARM: dts: sun8i: a33: Drop sunxi-common-regulators.dtsi for A33-OLinuXino
+Date: Mon, 12 Mar 2018 12:23:54 +0800
+Message-ID: <20180312042356.18625-3-wens@csie.org>
 References: <20180312042356.18625-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180312042356.18625-1-wens@csie.org>
@@ -10,34 +10,27 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The A33-OLinuXino has a DC jack wired to the onboard PMIC's ACIN pins.
-There is also a battery connector, wired to the PMIC's battery charger.
+None of the common regulators defined in sunxi-common-regulators.dtsi
+are used for the A33-OLinuXino.
 
-Enable the power supplies for both these components.
+Drop the include.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-index 925a5339711f..7f8a481af570 100644
+index 6349e0bec9a3..925a5339711f 100644
 --- a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
 +++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-@@ -101,6 +101,14 @@
+@@ -43,7 +43,6 @@
  
- #include "axp223.dtsi"
+ /dts-v1/;
+ #include "sun8i-a33.dtsi"
+-#include "sunxi-common-regulators.dtsi"
  
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
- &reg_aldo1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <3300000>;
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
 -- 
 2.16.2
