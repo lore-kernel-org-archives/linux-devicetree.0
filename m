@@ -1,103 +1,53 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: sdm845: Add minimal dts/dtsi files for
- sdm845 SoC and MTP
-Date: Mon, 12 Mar 2018 11:29:51 +0000
-Message-ID: <96fac632-8fb8-0933-cc1f-627acb38a595@arm.com>
-References: <20180312080656.13247-1-rnayak@codeaurora.org>
- <20180312080656.13247-4-rnayak@codeaurora.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
+ Tegra210
+Date: Mon, 12 Mar 2018 12:15:22 +0000
+Message-ID: <85edea04-6aaf-3609-1da9-0d542ac98e7d@nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312080656.13247-4-rnayak@codeaurora.org>
-Content-Language: en-GB
+In-Reply-To: <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, evgreen@chromium.org, bjorn.andersson@linaro.org, dianders@chromium.org, swboyd@chromium.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/18 08:06, Rajendra Nayak wrote:
-> Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
+
+On 06/02/18 16:34, Peter De Schrijver wrote:
+> Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
+> support in this driver. Also allow for the case where the CPU voltage is
+> controlled directly by the DFLL rather than by a separate regulator object.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 > ---
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  15 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 278 ++++++++++++++++++++++++++++++++
->  3 files changed, 294 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
+>  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 55ec5ee7f7e8..9319e74b8906 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -6,3 +6,4 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> new file mode 100644
-> index 000000000000..979ab49913f1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SDM845 MTP board device tree source
-> + *
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm845.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SDM845 MTP";
-> +	compatible = "qcom,sdm845-mtp";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> new file mode 100644
-> index 000000000000..d2407cd7a561
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+> index 4353025..f8e01a8 100644
+> --- a/drivers/cpufreq/tegra124-cpufreq.c
+> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
+>  {
+>  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+>  	clk_disable_unprepare(priv->dfll_clk);
+> -	regulator_sync_voltage(priv->vdd_cpu_reg);
+> +	if (priv->vdd_cpu_reg)
+> +		regulator_sync_voltage(priv->vdd_cpu_reg);
+>  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
+>  }
 
-[...]
+OK, so this bit does not make sense to me. In the above we are switching
+from the DFLL to the PLL (ie. disabling the DFLL) and so to ensure we
+are operating at the correct voltage after disabling the DFLL we need to
+sync the voltage. Seems we would need to do this for all devices, no?
+How is the different between Tegra124 and Tegra210?
 
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			#redistributor-regions = <1>;
-> +			redistributor-stride = <0x0 0x20000>;
+Cheers
+Jon
 
-You shouldn't need redistributor-stride here, unless your GIC
-implementation is not compliant with the architecture (i.e. really
-buggy). I only know of one such implementation, and I'd rather you
-remove this property unless your GIC is indeed non-compliant. If that's
-the case, you should also document it.
-
-> +			reg = <0x17a00000 0x10000>,     /* GICD */
-> +			      <0x17a60000 0x100000>;    /* GICR * 8 */
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			gic-its@17a40000 {
-> +				compatible = "arm,gic-v3-its";
-> +				msi-controller;
-> +				#msi-cells = <1>;
-> +				reg = <0x17a40000 0x20000>;
-> +				status = "disabled";
-> +			};
-> +		};
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+nvpublic
