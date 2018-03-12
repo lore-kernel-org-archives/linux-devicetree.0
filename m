@@ -1,66 +1,103 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v2 00/12] Introduce STM32MP1 clock driver
-Date: Mon, 12 Mar 2018 08:34:11 +0000
-Message-ID: <13f327c2-5777-8425-9611-b9ef96f9d185@st.com>
-References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
- <1520808064.5otv3fo1pe.astroid@resonance.none>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 0/6] drm/panel: simple: Add mode support to devicetree
+Date: Mon, 12 Mar 2018 09:35:08 +0100
+Message-ID: <20180312083508.GG23060@ulmo>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1520808064.5otv3fo1pe.astroid@resonance.none>
-Content-Language: en-US
-Content-ID: <89D1CC6CE5D1014DBF8EA79E13E714BF@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob
- Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "sboyd@kernel.org" <sboyd@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, Olivier BIDEAU <olivier.bideau@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0637515178=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-1-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-TWFueSBUaGFua3MgTWlrZSAhDQoNCkJlc3QgUmVnYXJkcw0KDQpHYWJyaWVsLg0KDQoNCk9uIDAz
-LzExLzIwMTggMTE6NDIgUE0sIE1pY2hhZWwgVHVycXVldHRlIHdyb3RlOg0KPiBFeGNlcnB0cyBm
-cm9tIGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbSdzIG1lc3NhZ2Ugb2YgTWFyY2ggOCwgMjAxOCA4
-OjUzIA0KPiBhbToNCj4+IEZyb206IEdhYnJpZWwgRmVybmFuZGV6IDxnYWJyaWVsLmZlcm5hbmRl
-ekBzdC5jb20+DQo+Pg0KPj4gdjI6DQo+PiDCoCAtIERvbid0IHVzZSBNRkQsIHVzZSBleGlzdGlu
-ZyBiaW5kaW5nIG9mIFNUTTMyIFJDQy4NCj4+IMKgIC0gUmV3b3JrIFBlcmlwaGVyYWwgYW5kIEtl
-cm5lbCBjbG9ja3MNCj4+IMKgIC0gY29zbWV0aWMgY2hhbmdlcw0KPj4NCj4+IFRoaXMgcGF0Y2gt
-c2V0IGludHJvZHVjZXMgY2xvY2sgZHJpdmVyIGZvciBTVE0zMk1QMTU3IGJhc2VkIG9uIEFybSAN
-Cj4+IENvcnRleC1BNy4NCj4+IFRoZSBkcml2ZXIgcGF0Y2ggaXMgc3BsaXQgaW4gc2V2ZXJhbCBw
-YXRjaGVzIChieSBraW5kIG9mIGNsb2NrKSB0byANCj4+IGZhY2lsaXRhdGUNCj4+IGNvZGUgcmV2
-aWV3aW5nLg0KPg0KPiBBcHBsaWVkIHRvIGNsay1zdG0zMm1wMSB0b3dhcmRzIHY0LjE3Lg0KPg0K
-PiBSZWdhcmRzLA0KPiBNaWtlDQo+DQo+Pg0KPj4gR2FicmllbCBGZXJuYW5kZXogKDEyKToNCj4+
-IMKgIGR0LWJpbmRpbmdzOiBEb2N1bWVudCBTVE0zMk1QMSBSZXNldCBDbG9jayBDb250cm9sbGVy
-IChSQ0MpIGJpbmRpbmdzDQo+PiDCoCBjbGs6IHN0bTMybXAxOiBJbnRyb2R1Y2UgU1RNMzJNUDEg
-Y2xvY2sgZHJpdmVyDQo+PiDCoCBjbGs6IHN0bTMybXAxOiBhZGQgTVAxIGdhdGUgZm9yIGhzZS9o
-c2kvY3NpIG9zY2lsbGF0b3JzDQo+PiDCoCBjbGs6IHN0bTMybXAxOiBhZGQgU291cmNlIENsb2Nr
-cyBmb3IgUExMcw0KPj4gwqAgY2xrOiBzdG0zMm1wMTogYWRkIFBMTCBjbG9ja3MNCj4+IMKgIGNs
-azogc3RtMzJtcDE6IGFkZCBQb3N0LWRpdmlkZXJzIGZvciBQTEwNCj4+IMKgIGNsazogc3RtMzJt
-cDE6IGFkZCBTdWIgU3lzdGVtIGNsb2Nrcw0KPj4gwqAgY2xrOiBzdG0zMm1wMTogYWRkIEtlcm5l
-bCB0aW1lcnMNCj4+IMKgIGNsazogc3RtMzJtcDE6IGFkZCBQZXJpcGhlcmFsICYgS2VybmVsIENs
-b2Nrcw0KPj4gwqAgY2xrOiBzdG0zMm1wMTogYWRkIFJUQyBjbG9jaw0KPj4gwqAgY2xrOiBzdG0z
-Mm1wMTogYWRkIE1DTyBjbG9ja3MNCj4+IMKgIGNsazogc3RtMzJtcDE6IGFkZCBEZWJ1ZyBjbG9j
-a3MNCj4+DQo+PiDCoC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N0LHN0bTMybXAxLXJj
-Yy50eHTCoCB8wqDCoCA2MCArDQo+PiDCoGRyaXZlcnMvY2xrL0tjb25maWfCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKg
-IDYgKw0KPj4gwqBkcml2ZXJzL2Nsay9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDEgKw0KPj4gwqBkcml2
-ZXJzL2Nsay9jbGstc3RtMzJtcDEuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCB8IDIxMTcgDQo+PiArKysrKysrKysrKysrKysrKysrKw0KPj4gwqBpbmNs
-dWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N0bTMybXAxLWNsa3MuaMKgwqDCoMKgwqDCoMKgwqDCoCB8
-wqAgMjU0ICsrKw0KPj4gwqA1IGZpbGVzIGNoYW5nZWQsIDI0MzggaW5zZXJ0aW9ucygrKQ0KPj4g
-wqBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svc3Qsc3RtMzJtcDEtcmNjLnR4dA0KPj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9jbGsvY2xrLXN0bTMybXAxLmMNCj4+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUv
-ZHQtYmluZGluZ3MvY2xvY2svc3RtMzJtcDEtY2xrcy5oDQo+Pg0KPj4gLS0gDQo+PiAxLjkuMQ0K
-Pj4NCj4+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+
+--===============0637515178==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
+Content-Disposition: inline
+
+
+--w/VI3ydZO+RcZ3Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 08, 2018 at 12:48:47PM -0500, Sean Paul wrote:
+> Hello!
+>=20
+> Here's v3 of the set. I've reintroduced the single display timing node
+> in the dt binding from v1, and left the improved docs and patch split
+> from v2. I've also added a patch to clarify that a single display timing
+> node should always be named panel-timing, which was feedback from v1.
+>=20
+> Cover letter from v1 (was the same in v2) is here:
+> https://lists.freedesktop.org/archives/dri-devel/2018-February/164886.html
+>=20
+> Thanks for the reviews so far,
+>=20
+> Sean
+>=20
+>=20
+> Sean Paul (6):
+>   dt-bindings: Clarify timing subnode use as panel-timing
+>   dt-bindings: Add headings to simple-panel bindings
+>   dt-bindings: Add panel-timing subnode to simple-panel
+>   drm/panel: simple: Add ability to override typical timing
+>   drm/panel: simple: Use display_timing for lq123p1jx31
+>   arm64: dts: rockchip: Specify override mode for kevin panel
+>=20
+>  .../bindings/display/panel/display-timing.txt      |  5 ++
+>  .../bindings/display/panel/simple-panel.txt        | 34 ++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  | 14 ++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 94 ++++++++++++++++=
+++----
+>  4 files changed, 132 insertions(+), 15 deletions(-)
+
+I've applied patches 1, 2 and 5 of the series, 3 and 4 had comments and
+6 will need to go through the Rockchip tree.
+
+Thierry
+
+--w/VI3ydZO+RcZ3Ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmO7kACgkQ3SOs138+
+s6GNaQ/+KExPzrDIOtSeVBQUpZgLqAss7b5TkdE+d9uJ19GJWNPYzvpf0WwDg4DW
+r2YIShadalmD3Z85qQpi4RaydU0V9wlw6CKPSF3PZ8fgWom78ceKjmQfVSQmLZaf
+9wPInSOmNdQIDFoM9eCOcE8Y6B1XGHZEzD4gqbuJhO/JkDjTXEaHumFW9V2yfBis
+s4Op/dJbRLD5SK6NU3EY4mj6JmtLTpi3elEDF03y8fohw6s0Gwb2eG4aXFmU9lUc
+L/UjS1cPlb2XKwn3oMnewj/zGoCL5ADfYJ9R6dxVOkquh1iPYCQk1xwxsTvgJKEK
+946/9dfowKB0mL+5vJ4JcXTY8DDph7okxnOvrY75kas15SncNuecp5cNVQtoCTMd
+bXiWinbp4HfWNCOkgNfiJMsfmIqAc0O9R2Nqaxxkh+RlEvzscR+IW4ytoxzg+/2M
+lmIkq0aT76WZU8OE5zF/aMi6ac5LLhxSw/Gc6xMmf5BMHfX42oIJoF0zt9J63OWH
+jz4r4ZUJjOfwd9pjzHm706TH8SeXBp6jQsYp3Z37w9oaF2viO5nQaz9JkHo8FuvZ
+8hSs0pkwbKtl/agwaPZ/CuLuvf69DhSGzM+VMMZc/EbFWSKNN4I00d4G+YBd3mL6
+L49WuMUg1ER9nmVHuCW4+v7yj8rV36NuXnlPwh4XGClnaR3UCW0=
+=PmFI
+-----END PGP SIGNATURE-----
+
+--w/VI3ydZO+RcZ3Ux--
+
+--===============0637515178==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0637515178==--
