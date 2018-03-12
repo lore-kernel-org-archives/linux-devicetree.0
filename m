@@ -1,60 +1,50 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v3 07/11] dt-bindings: tegra: Update DFLL binding for PWM
- regulator
-Date: Mon, 12 Mar 2018 11:10:36 +0200
-Message-ID: <20180312091036.GR6190@tbergstrom-lnx.Nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-8-git-send-email-pdeschrijver@nvidia.com>
- <c747bc00-8c04-c297-e945-784e45655421@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v5 2/5] dt-bindings: pwm-backlight: add PWM delay
+ proprieties.
+Date: Mon, 12 Mar 2018 09:10:41 +0000
+Message-ID: <20180312091041.5sk3t27n5tryikie@dell>
+References: <20180216174034.15936-1-enric.balletbo@collabora.com>
+ <20180216174034.15936-2-enric.balletbo@collabora.com>
+ <20180219111136.jpv4wtcm6h2hfwac@oak.lan>
+ <CAFqH_51EGNzMx76WrjEr9Ss7QoU8FSHAhUf2OeencUC-XXtSWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c747bc00-8c04-c297-e945-784e45655421@nvidia.com>
+In-Reply-To: <CAFqH_51EGNzMx76WrjEr9Ss7QoU8FSHAhUf2OeencUC-XXtSWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-fbdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, kernel@collabora.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2018 at 11:21:40PM +0000, Jon Hunter wrote:
-> 
-> On 06/02/18 16:34, Peter De Schrijver wrote:
-> > Add new properties to configure the DFLL PWM regulator support. Also
-> > add an example and make the I2C clock only required when I2C support is
-> > used.
-> > 
-> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> > ---
-> >  .../bindings/clock/nvidia,tegra124-dfll.txt        | 76 +++++++++++++++++++++-
-> >  1 file changed, 74 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > index dff236f..a4903f7 100644
-> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > @@ -23,7 +23,8 @@ Required properties:
-> >  - clock-names: Must include the following entries:
-> >    - soc: Clock source for the DFLL control logic.
-> >    - ref: The closed loop reference clock
-> > -  - i2c: Clock source for the integrated I2C master.
-> > +  - i2c: Clock source for the integrated I2C master (only required when
-> > +	 using I2C mode).
-> >  - resets: Must contain an entry for each entry in reset-names.
-> >    See ../reset/reset.txt for details.
-> >  - reset-names: Must include the following entries:
-> > @@ -45,10 +46,28 @@ Required properties for the control loop parameters:
-> >  Optional properties for the control loop parameters:
-> >  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
-> >  
-> > +Optional properties for mode selection:
-> > +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> > +
-> 
-> Do we need this property? Seems that we should be able to detect if it
-> is I2C or PWM based upon the other properties.
-> 
+FAO Thierry,
 
-I guess we could look for nvidia,pwm-period and switch to PWM mode if this is
-found, but I think it's more clear to have explicit property.
+> oh, devicetree mailing list is not added, sorry, so cc'ing ...
+> 
+> 2018-02-19 12:11 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> > On Fri, Feb 16, 2018 at 06:40:31PM +0100, Enric Balletbo i Serra wrote:
+> >> Hardware needs a delay between setting an initial (non-zero) PWM and
+> >> enabling the backlight using GPIO. The post-pwm-on-delay-ms specifies
+> >> this delay in milli seconds. Hardware also needs a delay between disabing
+> >> the backlight using GPIO and setting PWM value to 0. The pwm-off-delay-ms
+> >> is this delay in milli seconds.
+> >>
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >> Acked-by: Pavel Machek <pavel@ucw.cz>
+> >
+> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> >
+> 
+> Lee, I guess that after Daniel ack the only ack missing here is one
+> from Rob Herring?
 
-Peter.
+I'd also like an ACK from the PWM Maintainer if possible.
+
+> Rob, if you have a chance to look at this I'd appreciate.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
