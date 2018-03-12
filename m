@@ -1,58 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: unittest: remove unneeded local return value variables
-Date: Mon, 12 Mar 2018 10:27:16 -0500
-Message-ID: <CABGGisx3taqjc26Y1r16Y6WxOfXbxn8R_Bu3754GQA-FM8ZzpQ@mail.gmail.com>
-References: <1520548745-25021-1-git-send-email-frowand.list@gmail.com>
- <20180310000213.tonovc6n7jtknycj@rob-hp-laptop> <7f0ab50a-8a57-799d-e620-4e7f4fdf039d@gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v5 2/2] mfd: arizona: Update DT doc to support more standard reset binding
+Date: Mon, 12 Mar 2018 15:52:01 +0000
+Message-ID: <20180312155201.30108-2-ckeepax@opensource.cirrus.com>
+References: <20180312155201.30108-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f0ab50a-8a57-799d-e620-4e7f4fdf039d@gmail.com>
+In-Reply-To: <20180312155201.30108-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 9, 2018 at 7:28 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 03/09/18 16:02, Rob Herring wrote:
->> On Thu, Mar 08, 2018 at 02:39:04PM -0800, frowand.list@gmail.com wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> A common pattern in many unittest functions is to save the return
->>> value of a function in a local variable, then test the value of
->>> the local variable, without using that return value for any further
->>> purpose.  Remove the local return value variable for these cases.
->>>
->>> A second common pattern is:
->>>
->>>    ret = some_test_function(many, parameters, ...);
->>>    if (unittest(ret == 0, "error message format", ...))
->>>       return;
->>>
->>> This pattern is more clear when the local variable 'ret' is used, due
->>> to the long lines caused by the parameters to the test function and
->>> the long format and data parameters of unittest().  The local
->>> variable is retained in these cases.
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>> ---
->>>  drivers/of/unittest.c | 89 ++++++++++++++-------------------------------------
->>>  1 file changed, 24 insertions(+), 65 deletions(-)
->>
->> Doesn't apply. What's it based on?
->>
->> Rob
->>
->
-> Sorry, I guess I should have mentioned that.
->
-> Based on top of of_overlay_fdt_apply() v7 for 4.17.
->
-> It applies with or without Dan's "[PATCH] of: unittest: fix
-> an error test in of_unittest_overlay_8()", which made me notice
-> the common pattern.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
 
-That's what I figured, but I was not on the right branch... Now both
-are applied.
+No changes since v4.
 
-Rob
+ Documentation/devicetree/bindings/mfd/arizona.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index bdd017686ea5a..a014afb079023 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -50,7 +50,7 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
++  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
+ 
+   - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
+   - clock-names: Should contains two strings:
+@@ -70,6 +70,10 @@ Optional properties:
+     Documentation/devicetree/bindings/regulator/regulator.txt
+     (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
+ 
++Deprecated properties:
++
++  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
++
+ Also see child specific device properties:
+   Regulator - ../regulator/arizona-regulator.txt
+   Extcon    - ../extcon/extcon-arizona.txt
+-- 
+2.11.0
