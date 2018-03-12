@@ -1,107 +1,69 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/2] drm/panel: Add support for Raydium RM68200 panel
-Date: Mon, 12 Mar 2018 09:04:04 +0100
-Message-ID: <20180312080404.GE23060@ulmo>
-References: <20180302153222.4377-1-philippe.cornu@st.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0414327520=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180302153222.4377-1-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe Cornu <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Yannick Fertre <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Vincent Abriou <vincent.abriou@st.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v6 0/3] Add DTS for SDM845 SoC and MTP
+Date: Mon, 12 Mar 2018 13:36:53 +0530
+Message-ID: <20180312080656.13247-1-rnayak@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, evgreen@chromium.org, bjorn.andersson@linaro.org, dianders@chromium.org, marc.zyngier@arm.com, swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+These are basic device tree files needed to boot a SDM845 MTP
+board to a ramfs based serial console shell
 
---===============0414327520==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
-Content-Disposition: inline
+Bindings are based on whats proposed for pinctrl/serial/clock
+drivers for SDM845 SoC
+pinctrl: https://patchwork.kernel.org/patch/10157143/ (This is now pulled
+in by Linus Walleij for 4.17)
+clocks: https://lkml.org/lkml/2018/1/31/209 (under review)
 
+I have dropped the patch that adds the serial/geni nodes from v6, as that
+will be reposted along with the geni patch series by Karthik
 
---sfyO1m2EN8ZOtJL6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since 'PATCH 3/3' also adds an ITS node and keeps it disabled, we also depend
+on https://lkml.org/lkml/2018/1/29/383
 
-On Fri, Mar 02, 2018 at 04:32:20PM +0100, Philippe Cornu wrote:
-> The Raydium Semiconductor Corporation RM68200 is a 5.5" 720x1280
-> TFT LCD panel connected using a MIPI-DSI video interface.
->=20
-> Version 2:
-> - Add Rob Herring Reviewed-by on dt-bindings.
-> - Update Kconfig & driver thanks to Thierry Reding comments: no more
->   DRV_NAME, DRM_WARN_ONCE instead of DRV_NAME where applicable, use
->   backlight_enable/disable() & devm_of_find_backlight(), no extra
->   gpio reset to 0, no more msg if successful, use RM68200 instead of
->   rm68200 where necessary.
->=20
-> Version 1:
-> - Initial commit
->=20
-> Philippe Cornu (2):
->   dt-bindings/display/panel: Add support for Raydium rm68200 dsi panel
->   drm/panel: Add support for Raydium RM68200 panel driver
->=20
->  .../bindings/display/panel/raydium,rm68200.txt     |  25 ++
->  drivers/gpu/drm/panel/Kconfig                      |   8 +
->  drivers/gpu/drm/panel/Makefile                     |   1 +
->  drivers/gpu/drm/panel/panel-raydium-rm68200.c      | 437 +++++++++++++++=
-++++++
->  4 files changed, 471 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/raydi=
-um,rm68200.txt
->  create mode 100755 drivers/gpu/drm/panel/panel-raydium-rm68200.c
+Andy, since we aren't adding anything new for clocks (gcc) and pinctrl,
+do these look good to be pulled in for 4.17?
 
-Applied, thanks. There were a few tiny things I wasn't entirely happy
-about, but I fixed those up myself.
+changes in v6:
+* added the missing power-domain-cells property for gcc as reported
+by Doug Anderson 
+* Dropped the patch which added geni/serial nodes in dts. Karthik has
+agreed to carry that patch along with his GENI series. 
 
-Most notable was the use of DRM_WARN_ONCE(), which is bad in this case
-because it won't show any subsequent errors, ever again. I think in this
-case the proper solution is DRM_ERROR_RATELIMITED(), or erroring out on
-the first error, assuming that subsequent operations won't succeed
-either. I went with the rate limitation.
+changes in v5:
+* Removed all instances of IRQ_TYPE_NONE
 
-Thierry
+changes in v4:
+* pull config changes to uart pins
+* License in device tree files is still GPL-2.0
 
---sfyO1m2EN8ZOtJL6
-Content-Type: application/pgp-signature; name="signature.asc"
+changes in v3:
+* split the pinmux/pinconf nodes across SoC/Board files
+* Fixes for issues reported with 'make dtbs W=2'
+* other minor fixes based on review
+ 
+changes in v2:
+* dropped cpu-map
+* dropped GIC_CPU_MASK_SIMPLE()
+* Added new cpu compatible for kryo385
+* added ITS node, marked as disabled
 
------BEGIN PGP SIGNATURE-----
+Rajendra Nayak (3):
+  dt-bindings: arm: Document kryo385 cpu
+  dt-bindings: qcom: Add SDM845 bindings
+  arm64: dts: sdm845: Add minimal dts/dtsi files for sdm845 SoC and MTP
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmNHAACgkQ3SOs138+
-s6FJPxAAkcVyNFgq6clEHSv/FUN5JRrV8NAYLAomWppOAD46e/9EekeQEPiPJ1zS
-UWcUDu/xySAH+FlkIgecDeO6v+V2F56qBEkrRyxqXTGtBffv2Q/p/jDioDGUniMA
-63eSn4OUeHv4FEAyx1k92gdCxKdNwGMFINMkMvAOha3MryXGp4UpRfkiv3jFDJdG
-6XQyUSV4UCtw33GA32kkCMSINNFZZHtxGuav6MUe4ZV32wYNca3dNnuBDTb7Ucu6
-oJyZvyiX56ZrHd1mWW3ehR5ilt+5fobZjzNwnUiipdVLO3j+aWjHzm5xxNrw0C3a
-HPiQuN2oCF5Y7umnMpLVX/0jJPMKzCNV51nZJsWU3s1AoZ9jA5eqrrisVWGnlZC8
-f5Wkms/1zjX8pIgsejD/QEZinKHr0SaX899MOPG4nbfBdtx52gNFVRiYereicmRe
-YBvzDVxpQPlsKHR0N8vVCm+jjXcdi2UeFMgTlCmm7WIyExvU/MDzXB6hPquWW6zN
-A9VF6lOUKIBw0q5dsg4VMa533p2LDvmeW0akXtL+nO6IZqJfAHKj2+wb6KZkayUV
-J6iiDwvYPw2Q6ovmCtvcytH+S88CEiYMzt50g8B32H7SGSkeBIUlfIpBifiNwQT4
-sn7l1ieNAEThrOkv4mLL20g2PYdDBARFp+VaGoCMpT7as96zcD4=
-=w22k
------END PGP SIGNATURE-----
+ Documentation/devicetree/bindings/arm/cpus.txt |   1 +
+ Documentation/devicetree/bindings/arm/qcom.txt |   1 +
+ arch/arm64/boot/dts/qcom/Makefile              |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts        |  15 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi           | 278 +++++++++++++++++++++++++
+ 5 files changed, 296 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
 
---sfyO1m2EN8ZOtJL6--
-
---===============0414327520==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0414327520==--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
