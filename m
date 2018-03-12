@@ -1,64 +1,130 @@
-Return-Path: <SRS0=wf0n=GC=gmail.com=thierry.reding@kernel.org>
-Date: Mon, 12 Mar 2018 13:14:48 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V8 5/9] ata: ahci_tegra: initialize regulators from soc
- struct
-Message-ID: <20180312121448.GF15972@ulmo>
+Return-Path: <SRS0=dGTv=GC=nvidia.com=pchandru@kernel.org>
+From: Preetham Chandru Ramchandra <pchandru@nvidia.com>
+Subject: [PATCH V8 5/9] ata: ahci_tegra: initialize regulators from soc struct
+Date: Mon, 12 Mar 2018 17:10:34 +0530
+Message-ID: <1520854838-21779-6-git-send-email-pchandru@nvidia.com>
+In-Reply-To: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
 References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
- <1520854838-21779-6-git-send-email-pchandru@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
-Content-Disposition: inline
-In-Reply-To: <1520854838-21779-6-git-send-email-pchandru@nvidia.com>
-To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Cc: tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com, preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
+Content-Type: text/plain
+To: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com, Preetham Ramchandra <pchandru@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Preetham Ramchandra <pchandru@nvidia.com>
 
---oPmsXEqKQNHCSXW7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Get the regulator names to be initialized from soc structure
+and initialize them.
 
-On Mon, Mar 12, 2018 at 05:10:34PM +0530, Preetham Chandru Ramchandra wrote:
-> From: Preetham Ramchandra <pchandru@nvidia.com>
->=20
-> Get the regulator names to be initialized from soc structure
-> and initialize them.
->=20
-> Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
-> ---
-> v8:
-> * renamed tegra->soc_data to tegra->soc
-> v7:
-> * moved tegra124_supply_names definition to just above
->    the tegra124_ahci_soc_data structure.
-> ---
->  drivers/ata/ahci_tegra.c | 33 +++++++++++++++++++++++----------
->  1 file changed, 23 insertions(+), 10 deletions(-)
+Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+---
+v8:
+* renamed tegra->soc_data to tegra->soc
+v7:
+* moved tegra124_supply_names definition to just above
+   the tegra124_ahci_soc_data structure.
+---
+ drivers/ata/ahci_tegra.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---oPmsXEqKQNHCSXW7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmbzgACgkQ3SOs138+
-s6G2aRAArEZ4JG0I/4g9cyUAHlF+RZnESH4r9iCOrm/Y6PqBoNLKS27cBRdCHQP9
-SB0OuZnKHA8iEXitxiQcOuSOrvsCxtack+aiSdG6r84K1LrcShl/jvcGOtIX1zMQ
-sM+lGv1PoVAUQjj1RGK6hmMC0ZnwYzujPCUSBH67PqusqfYplAZ4lSSOf/zFg0eC
-2Yr8vhLPg3pi33wr1Oip0+iJDpu8ipV0BjR/z1V2t8lC8XjQQB4wtGVWzuXjY2Tp
-XTqoburvnZn9XqGi1oAOHZ5OJCRc6YqEVsFkoSDnDZFiOB4vRkTyd3b9anJcrWO6
-iDo7rjIVvpyTGe3JzFhvT6defvOGQWdrY+PciXCzj3MWe/FqRuqeMaV2KtQmEC/d
-btWKG9u51L/xIoL1wbNufWnxm83BXypUbZaJLkAf6QuxPt7W/6XMczcsBWLTD8dB
-BwBq3LK9Z/8MKmYtLk4wf8RWRrSuOuPd0X2dCGZCoYB3J4oL2Cbm3SajKyLLu4dJ
-JUTr417RCp+HAP2qSmohQdtXYRyYqUiFeoDDI0jqiV0uC0eK5piXGtKWx1UuBNzX
-89bDNG9xTvlRsVGSJ9wJXhxeRcAenLnxQK+Fue/Ew5H7Z16ti2smZfhwtR2whMkH
-hvZc2tYx9CgWLL8bbH6nBWz/iWoPaE35P2SO4qRKJlae2jvguQY=
-=bPT7
------END PGP SIGNATURE-----
-
---oPmsXEqKQNHCSXW7--
+diff --git a/drivers/ata/ahci_tegra.c b/drivers/ata/ahci_tegra.c
+index 055c65082a93..547a6f93922c 100644
+--- a/drivers/ata/ahci_tegra.c
++++ b/drivers/ata/ahci_tegra.c
+@@ -164,6 +164,8 @@ struct tegra_ahci_ops {
+ };
+ 
+ struct tegra_ahci_soc {
++	const char *const		*supply_names;
++	u32				num_supplies;
+ 	const struct tegra_ahci_ops	*ops;
+ };
+ 
+@@ -175,7 +177,7 @@ struct tegra_ahci_priv {
+ 	struct reset_control	   *sata_cold_rst;
+ 	/* Needs special handling, cannot use ahci_platform */
+ 	struct clk		   *sata_clk;
+-	struct regulator_bulk_data supplies[5];
++	struct regulator_bulk_data *supplies;
+ 	const struct tegra_ahci_soc *soc;
+ };
+ 
+@@ -228,7 +230,7 @@ static int tegra_ahci_power_on(struct ahci_host_priv *hpriv)
+ 	struct tegra_ahci_priv *tegra = hpriv->plat_data;
+ 	int ret;
+ 
+-	ret = regulator_bulk_enable(ARRAY_SIZE(tegra->supplies),
++	ret = regulator_bulk_enable(tegra->soc->num_supplies,
+ 				    tegra->supplies);
+ 	if (ret)
+ 		return ret;
+@@ -257,7 +259,7 @@ static int tegra_ahci_power_on(struct ahci_host_priv *hpriv)
+ 	tegra_powergate_power_off(TEGRA_POWERGATE_SATA);
+ 
+ disable_regulators:
+-	regulator_bulk_disable(ARRAY_SIZE(tegra->supplies), tegra->supplies);
++	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
+ 
+ 	return ret;
+ }
+@@ -275,7 +277,7 @@ static void tegra_ahci_power_off(struct ahci_host_priv *hpriv)
+ 	clk_disable_unprepare(tegra->sata_clk);
+ 	tegra_powergate_power_off(TEGRA_POWERGATE_SATA);
+ 
+-	regulator_bulk_disable(ARRAY_SIZE(tegra->supplies), tegra->supplies);
++	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
+ }
+ 
+ static int tegra_ahci_controller_init(struct ahci_host_priv *hpriv)
+@@ -433,11 +435,17 @@ static const struct ata_port_info ahci_tegra_port_info = {
+ 	.port_ops	= &ahci_tegra_port_ops,
+ };
+ 
++static const char *const tegra124_supply_names[] = {
++	"avdd", "hvdd", "vddio", "target-5v", "target-12v"
++};
++
+ static const struct tegra_ahci_ops tegra124_ahci_ops = {
+ 	.init = tegra124_ahci_init,
+ };
+ 
+ static const struct tegra_ahci_soc tegra124_ahci_soc = {
++	.supply_names = tegra124_supply_names,
++	.num_supplies = ARRAY_SIZE(tegra124_supply_names),
+ 	.ops = &tegra124_ahci_ops,
+ };
+ 
+@@ -460,6 +468,7 @@ static int tegra_ahci_probe(struct platform_device *pdev)
+ 	struct tegra_ahci_priv *tegra;
+ 	struct resource *res;
+ 	int ret;
++	unsigned int i;
+ 
+ 	hpriv = ahci_platform_get_resources(pdev);
+ 	if (IS_ERR(hpriv))
+@@ -503,13 +512,17 @@ static int tegra_ahci_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tegra->sata_clk);
+ 	}
+ 
+-	tegra->supplies[0].supply = "avdd";
+-	tegra->supplies[1].supply = "hvdd";
+-	tegra->supplies[2].supply = "vddio";
+-	tegra->supplies[3].supply = "target-5v";
+-	tegra->supplies[4].supply = "target-12v";
++	tegra->supplies = devm_kcalloc(&pdev->dev,
++				       tegra->soc->num_supplies,
++				       sizeof(*tegra->supplies), GFP_KERNEL);
++	if (!tegra->supplies)
++		return -ENOMEM;
++
++	for (i = 0; i < tegra->soc->num_supplies; i++)
++		tegra->supplies[i].supply = tegra->soc->supply_names[i];
+ 
+-	ret = devm_regulator_bulk_get(&pdev->dev, ARRAY_SIZE(tegra->supplies),
++	ret = devm_regulator_bulk_get(&pdev->dev,
++				      tegra->soc->num_supplies,
+ 				      tegra->supplies);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to get regulators\n");
+-- 
+2.7.4
