@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 4/4] ARM: dts: sun8i: a33: Enable A33 internal audio codec on A33-OLinuXino
-Date: Mon, 12 Mar 2018 12:23:56 +0800
-Message-ID: <20180312042356.18625-5-wens@csie.org>
+Subject: [PATCH 3/4] ARM: dts: sun8i: a33: Enable PMIC power supplies on A33-OLinuXino
+Date: Mon, 12 Mar 2018 12:23:55 +0800
+Message-ID: <20180312042356.18625-4-wens@csie.org>
 References: <20180312042356.18625-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180312042356.18625-1-wens@csie.org>
@@ -10,62 +10,34 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The A33-OLinuXino routes the SoC's headphone output to a headphone jack,
-and the microphone input to a microphone jack. Power to the microphone
-is provided by MBIAS.
+The A33-OLinuXino has a DC jack wired to the onboard PMIC's ACIN pins.
+There is also a battery connector, wired to the PMIC's battery charger.
 
-This patch enables the various parts of the codec, and adds widgets and
-routes for simple-card.
-
-HBIAS is connected to the microphone jack as well, but in a manner that
-is confusing and likely does not provide power. This part is left out
-of this patch.
+Enable the power supplies for both these components.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-index 7f8a481af570..a1a1eb64caeb 100644
+index 925a5339711f..7f8a481af570 100644
 --- a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
 +++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-@@ -69,6 +69,14 @@
- 	};
- };
+@@ -101,6 +101,14 @@
  
-+&codec {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -182,6 +190,21 @@
- 	vcc-lcd-supply = <&reg_dc1sw>;
- };
+ #include "axp223.dtsi"
  
-+&sound {
-+	/* Board level jack widgets */
-+	simple-audio-card,widgets = "Microphone", "Microphone Jack",
-+				    "Headphone", "Headphone Jack";
-+	/* Board level routing. First 2 routes copied from SoC level */
-+	simple-audio-card,routing =
-+		"Left DAC", "AIF1 Slot 0 Left",
-+		"Right DAC", "AIF1 Slot 0 Right",
-+		"HP", "HPCOM",
-+		"Headphone Jack", "HP",
-+		"MIC1", "Microphone Jack",
-+		"Microphone Jack", "MBIAS";
++&ac_power_supply {
 +	status = "okay";
 +};
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_b>;
++&battery_power_supply {
++	status = "okay";
++};
++
+ &reg_aldo1 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <3300000>;
 -- 
 2.16.2
