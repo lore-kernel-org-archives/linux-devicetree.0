@@ -1,64 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec
-	support
-Date: Mon, 12 Mar 2018 09:08:38 +0000
-Message-ID: <20180312090838.ubqvlqnqzv6g4cxr@dell>
-References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
- <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
- <20180307163211.rytfli5tb47yhtug@dell>
- <20180308094652.qg4atjw5c3hayaz3@earth.universe>
- <20180308170736.GN5799@atomide.com>
- <20180309112915.bjnqi7tddgucdqjl@earth.universe>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v3 07/11] dt-bindings: tegra: Update DFLL binding for PWM
+ regulator
+Date: Mon, 12 Mar 2018 11:10:36 +0200
+Message-ID: <20180312091036.GR6190@tbergstrom-lnx.Nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-8-git-send-email-pdeschrijver@nvidia.com>
+ <c747bc00-8c04-c297-e945-784e45655421@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180309112915.bjnqi7tddgucdqjl@earth.universe>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <c747bc00-8c04-c297-e945-784e45655421@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAwOSBNYXIgMjAxOCwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cgo+IEhpLAo+IAo+
-IE9uIFRodSwgTWFyIDA4LCAyMDE4IGF0IDA5OjA3OjM2QU0gLTA4MDAsIFRvbnkgTGluZGdyZW4g
-d3JvdGU6Cj4gPiAqIFNlYmFzdGlhbiBSZWljaGVsIDxzZWJhc3RpYW4ucmVpY2hlbEBjb2xsYWJv
-cmEuY28udWs+IFsxODAzMDggMDk6NDddOgo+ID4gPiBIaSBMZWUsCj4gPiA+IAo+ID4gPiBPbiBX
-ZWQsIE1hciAwNywgMjAxOCBhdCAwNDozMjoxMVBNICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6Cj4g
-PiA+ID4gT24gRnJpLCAyMyBGZWIgMjAxOCwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cj4gPiA+
-ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRfY2VsbCBjcGNhcF9tZmRfZGV2aWNlc1tdID0g
-ewo+ID4gPiAKPiA+ID4gWy4uLl0KPiA+ID4gCj4gPiA+ID4gPiArCX0sIHsKPiA+ID4gPiA+ICsJ
-CS5uYW1lICAgICAgICAgID0gImNwY2FwLWxlZCIsCj4gPiA+ID4gPiArCQkuaWQgICAgICAgICAg
-ICA9IDQsCj4gPiA+ID4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJtb3Rvcm9sYSxjcGNhcC1sZWQt
-Y3AiLAo+ID4gPiA+ID4gKwl9LCB7Cj4gPiA+ID4gPiArCQkubmFtZSAgICAgICAgICA9ICJjcGNh
-cC1jb2RlYyIsCj4gPiA+ID4gPiArCX0KPiA+ID4gPiA+ICt9Owo+ID4gPiA+IAo+ID4gPiA+IFdp
-dGggbm9uZSBvZiB0aGUgZW50cmllcyBjb250YWluaW5nIHBsYXRmb3JtX2RhdGEgL21lIHdvbmRl
-cnMgd2h5IHlvdQo+ID4gPiA+IGNhbid0IHN0aWxsIHVzZSBkZXZtX29mX3BsYXRmb3JtX3BvcHVs
-YXRlKCk/Cj4gPiA+IAo+ID4gPiBCZWNhdXNlIGRldm1fb2ZfcGxhdGZvcm1fcG9wdWxhdGUgd29y
-a3Mgd2l0aCBjb21wYXRpYmxlIHByb3BlcnRpZXMgYW5kCj4gPiA+IGNwY2FwLWNvZGVjIGRvZXMg
-bm90IGhhdmUgb25lIGFmdGVyIEkgcmVtb3ZlZCBpdCBmb3IgTWFyay4KPiA+IAo+ID4gSG93IGFi
-b3V0IGtlZXAgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIGZvciB0aGUgb25lcyB0aGF0Cj4g
-PiBhbHJlYWR5IGhhdmUgY29tcGF0aWJsZS4gVGhlbiBhZGQgYSB0YWJsZSBlbnRyeSBmb3IgY3Bj
-YXAtY29kZWMKPiA+IG9ubHkgYW5kIGNhbGwgZGV2bV9tZmRfYWRkX2RldmljZXMoKT8KPiAKPiBU
-aGlzIHNob3VsZCB3b3JrLiBJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIHdhaXQgZm9yIFJvYiBI
-ZXJyaW5nJ3MKPiBmZWVkYmFjayBvbiB0aGUgYmluZGluZy4gTXkgdW5kZXJzdGFuZGluZyBpcywg
-dGhhdCBoZSBoYXMgdGhlIGxhc3QKPiB3b3JkIG9uIGJpbmRpbmcgcXVlc3Rpb25zIGFuZCBJIHdv
-dWxkIGxpa2UgdG8gYXZvaWQgY2hhbmdpbmcgdGhpcwo+IGJhY2sgYW5kIGZvcnRoLgoKSSd2ZSBi
-ZWVuIGF2b2lkaW5nIG1peC1hbmQtbWF0Y2hpbmcgbWZkXyooKSBhbmQgb2ZfcGxhdGZvcm1fKigp
-IEFQSXMsCmVsc2UgaXQgZ2V0cyB0b28gY29uZnVzaW5nIGZvciBuZXcgZGV2ZWxvcGVycy4KCipJ
-ZiogeW91IG1ha2UgdGhlIHN3aXRjaCB0byBtZmRfKigpIEFQSXMgKG5vdCBwcmVmZXJhYmxlKSwg
-dGhlbiBJCndvdWxkIGxpa2UgdG8gc2VlIG9mX3BsYXRmb3JtXyooKSByZW1vdmVkLgoKLS0gCkxl
-ZSBKb25lcyBb5p2O55C85pavXQpMaW5hcm8gU2VydmljZXMgVGVjaG5pY2FsIExlYWQKTGluYXJv
-Lm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86
-IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNh
-LXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9hbHNhLWRldmVsCg==
+On Thu, Mar 08, 2018 at 11:21:40PM +0000, Jon Hunter wrote:
+> 
+> On 06/02/18 16:34, Peter De Schrijver wrote:
+> > Add new properties to configure the DFLL PWM regulator support. Also
+> > add an example and make the I2C clock only required when I2C support is
+> > used.
+> > 
+> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> > ---
+> >  .../bindings/clock/nvidia,tegra124-dfll.txt        | 76 +++++++++++++++++++++-
+> >  1 file changed, 74 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > index dff236f..a4903f7 100644
+> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > @@ -23,7 +23,8 @@ Required properties:
+> >  - clock-names: Must include the following entries:
+> >    - soc: Clock source for the DFLL control logic.
+> >    - ref: The closed loop reference clock
+> > -  - i2c: Clock source for the integrated I2C master.
+> > +  - i2c: Clock source for the integrated I2C master (only required when
+> > +	 using I2C mode).
+> >  - resets: Must contain an entry for each entry in reset-names.
+> >    See ../reset/reset.txt for details.
+> >  - reset-names: Must include the following entries:
+> > @@ -45,10 +46,28 @@ Required properties for the control loop parameters:
+> >  Optional properties for the control loop parameters:
+> >  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+> >  
+> > +Optional properties for mode selection:
+> > +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+> > +
+> 
+> Do we need this property? Seems that we should be able to detect if it
+> is I2C or PWM based upon the other properties.
+> 
+
+I guess we could look for nvidia,pwm-period and switch to PWM mode if this is
+found, but I think it's more clear to have explicit property.
+
+Peter.
