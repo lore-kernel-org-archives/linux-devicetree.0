@@ -1,73 +1,82 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: soc: add SCPSYS binding for MT7623
- and MT7623A SoC
-Date: Sun, 11 Mar 2018 23:44:39 +0100
-Message-ID: <25eceb5d-7f5e-8bac-0bfd-ad547520a9b5@gmail.com>
-References: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
- <1520414224.677.2.camel@mtkswgap22>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 1/4] ARM: dts: exynos5250: Add #sound-dai-cells property
+ to hdmi device node
+Date: Mon, 12 Mar 2018 09:48:15 +0900
+Message-ID: <5AA5CE4F.6050807@samsung.com>
+References: <CGME20180307172723epcas1p1b8879bb555737cab7406a172b7d13a56@epcas1p1.samsung.com>
+        <20180307172711.15697-1-s.nawrocki@samsung.com>
+        <5AA1F41B.5080104@samsung.com>
+        <39965bce-a6f2-6202-5c3f-97e4446e97eb@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520414224.677.2.camel@mtkswgap22>
-Content-Language: en-US
+In-reply-to: <39965bce-a6f2-6202-5c3f-97e4446e97eb@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>, robh+dt@kernel.org
-Cc: rjw@rjwysocki.net, khilman@baylibre.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, krzk@kernel.org
+Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
-
-On 03/07/2018 10:17 AM, Sean Wang wrote:
-> Hi, Matthias
+2018년 03월 09일 20:52에 Sylwester Nawrocki 이(가) 쓴 글:
+> Hi Inki,
 > 
-> just a gentle ping to the four related patches
+> On 03/09/2018 03:40 AM, Inki Dae wrote:
+>> 2018년 03월 08일 02:27에 Sylwester Nawrocki 이(가) 쓴 글:
+>>> This property is required for specifying link between the HDMI IP block
+>>> and the SoC's audio subsystem.
+>>>
+>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5250.dtsi | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>>> index 56626d1a4235..71d2ede118e3 100644
+>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>> @@ -700,6 +700,7 @@
+>>>  					"sclk_hdmiphy", "mout_hdmi";
+>>>  			samsung,syscon-phandle = <&pmu_system_controller>;
+>>>  			phy = <&hdmiphy>;
+>>> +			#sound-dai-cells = <0>;
+>>
+>> This patch adds this property to hdmi device node which is bound by HDMI driver 
+>> of Exynos DRM. As we talked about this at other email thread, seems this property 
+>> is required mandatorily for Odroid XU3/4 board which uses Exynos5422.
+>> There may be something I'm missing so could you let me know how this property 
+>> is required?
 > 
-
-All four pushed with Ulf's reviewed-by to v4.16-next/soc
-
-Thanks a lot!
-
-> 	Sean
+> It is required to properly interpret the list of DAI specified in the 'sound-dai'
+> property. If a device supports only one DAI it will have #sound-dai-cells = <0>
+> and the sound-dai property values in cpu<->codec link may look like this:
 > 
-> On Wed, 2018-02-07 at 18:22 +0800, sean.wang@mediatek.com wrote:
->> From: Sean Wang <sean.wang@mediatek.com>
->>
->> document the binding for enabling SCPSYS on MediaTek MT7623 and MT7623A
->> SoC. Where MT7623 SoC has the same definition about power domains with
->> MT2701, so it's fine to using MT2701 ones as MT7623's fallback.
->>
->> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>  Documentation/devicetree/bindings/soc/mediatek/scpsys.txt | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
->> index 76bf45b..d6fe16f 100644
->> --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
->> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
->> @@ -21,6 +21,8 @@ Required properties:
->>  	- "mediatek,mt2712-scpsys"
->>  	- "mediatek,mt6797-scpsys"
->>  	- "mediatek,mt7622-scpsys"
->> +	- "mediatek,mt7623-scpsys", "mediatek,mt2701-scpsys": For MT7623 SoC
->> +	- "mediatek,mt7623a-scpsys": For MT7623A SoC
->>  	- "mediatek,mt8173-scpsys"
->>  - #power-domain-cells: Must be 1
->>  - reg: Address range of the SCPSYS unit
->> @@ -28,10 +30,11 @@ Required properties:
->>  - clock, clock-names: clocks according to the common clock binding.
->>                        These are clocks which hardware needs to be
->>                        enabled before enabling certain power domains.
->> -	Required clocks for MT2701: "mm", "mfg", "ethif"
->> +	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
->>  	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
->>  	Required clocks for MT6797: "mm", "mfg", "vdec"
->>  	Required clocks for MT7622: "hif_sel"
->> +	Required clocks for MT7622A: "ethif"
->>  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
->>  
->>  Optional properties:
+>  cpu { ... }
+>  codec {
+> 	 sound-dai = <&max98090>, <&hdmi>;
+>  };
+> 
+> When the CODEC support more DAIs it will have #sound-dai-cells = <1> and we can
+> additionally specify which DAI we exactly refer to, in this case DAI 0:
+> 
+>  cpu { ... }
+>  codec {
+> 	sound-dai = <&max98095 0>, <&hdmi>;
+>  };
+> 
+> More details can be found in documentation of of_parse_phandle_with_args()
+> function.
+> 
+> The above refers to cpu/codec mapping like I2S0 -> [max9809x, hdmi], on Exynos5433
+> we have I2S0 -> wm5110 and I2S1 -> hdmi.
+
+Thanks for explanation. By the way, who binds '#sound-dai-cells' property?.
+This patch adds this property to hdmi device node which will be bound by HDMI driver fo Exynos DRM but I don't see any place to bind '#sound-dai-cells' property in this driver.
+So I think some driver like Odroid XU3/4 audio driver(sound/soc/samsung/odroid.c) or ASoC simple audio card driver(sound/soc/generic/simple-card.c) should exist and this property should be placed to such device node.
+
+Thanks,
+Inki Dae
+
 > 
 > 
