@@ -1,95 +1,239 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 4/7] drm/panel: simple: Add support for KEO
- TX31D200VM0BAA
-Date: Mon, 12 Mar 2018 09:51:20 +0100
-Message-ID: <20180312085120.GI23060@ulmo>
-References: <1517766571-409-1-git-send-email-jagan@amarulasolutions.com>
- <1517766571-409-5-git-send-email-jagan@amarulasolutions.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: allwinner: H5: Add Xunlong Orange Pi Zero Plus
+Date: Mon, 12 Mar 2018 10:02:08 +0100
+Message-ID: <20180312090208.jjssbgf5t5y5dj7o@flea>
+References: <20180311155932.20945-1-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1361642366=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1517766571-409-5-git-send-email-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4968625937168459571=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180311155932.20945-1-hauke@hauke-m.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: devicetree@vger.kernel.org, wens@csie.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1361642366==
+--===============4968625937168459571==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cVp8NMj01v+Em8Se"
+	protocol="application/pgp-signature"; boundary="foz7uz6ci36t7tfy"
 Content-Disposition: inline
 
 
---cVp8NMj01v+Em8Se
+--foz7uz6ci36t7tfy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 04, 2018 at 11:19:28PM +0530, Jagan Teki wrote:
-> This adds support for the Kaohsiung Opto-Electronics.,
-> TX31D200VM0BAA 12.3" HSXGA LVDS panel, which can be
-> supported by the simple panel driver.
+Hi,
+
+On Sun, Mar 11, 2018 at 04:59:32PM +0100, Hauke Mehrtens wrote:
+> The Xunlong Orange Pi Zero Plus is single board computer.
+> - H5 Quad-core 64-bit Cortex-A53
+> - 512MB DDR3
+> - microSD slot
+> - Debug TTL UART
+> - 1000M/100M/10M Ethernet RJ45
+> - Realtek RTL8189FTV
+> - Spi flash (2MB)
+> - One USB 2.0 HOST, One USB 2.0 OTG
 >=20
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> This is based on a patch from armbian:
+> https://github.com/armbian/build/blob/master/patch/kernel/sunxi-next/sunx=
+i-add-orangepi-zero-plus.patch
+>=20
+> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 > ---
-> Changes for v3:
-> - collect Rob reiew tag=20
-> Changes for v2:
-> - Updated binding info about optional properties, node and example
->=20
->  .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 ++++++++++++++++=
-++++
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++=
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  .../dts/allwinner/sun50i-h5-orangepi-zero-plus.dts | 192 +++++++++++++++=
 ++++++
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/koe,t=
-x31d200vm0baa.txt
+>  2 files changed, 193 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero=
+-plus.dts
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+> index f505227b0250..d9d239affbcf 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -8,5 +8,6 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-sopine-baseboard=
+=2Edtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
 
-The koe vendor prefix is undocumented, please send a patch to add it to
-Documentation/devicetree/bindings/vendor-prefixes.txt.
+Putting it before the Plus2 would make more sense
 
-Thierry
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-nanopi-neo2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-nanopi-neo-plus2.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.d=
+ts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+> new file mode 100644
+> index 000000000000..52b29f3706a7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
+> @@ -0,0 +1,192 @@
+> +/*
+> + * Copyright (C) 2016 ARM Ltd.
 
---cVp8NMj01v+Em8Se
+Is it?
+
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+
+Also, please use an SPDX tag instead of the full license description.
+
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun50i-h5.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model =3D "Xunlong Orange Pi Zero Plus";
+> +	compatible =3D "xunlong,orangepi-zero-plus", "allwinner,sun50i-h5";
+> +
+> +	reg_vcc3v3: vcc3v3 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc3v3";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +	};
+> +
+> +	aliases {
+> +		ethernet0 =3D &emac;
+> +		ethernet1 =3D &rtl8189ftv;
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		pwr {
+> +			label =3D "orangepi:green:pwr";
+> +			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+> +			default-state =3D "on";
+> +		};
+> +
+> +		status {
+> +			label =3D "orangepi:red:status";
+> +			gpios =3D <&pio 0 17 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	reg_gmac_3v3: gmac-3v3 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "gmac-3v3";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		startup-delay-us =3D <100000>;
+> +		enable-active-high;
+> +		gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	reg_usb0_vbus: usb0-vbus {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "usb0-vbus";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		enable-active-high;
+> +		gpio =3D <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
+
+It doesn't look to be right judging from the schematics. That pin
+doesn't control whether VBUS is enabled or not, it doesn't seem to be
+enabled at all.
+
+Looks good otherwise, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--foz7uz6ci36t7tfy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmP4gACgkQ3SOs138+
-s6GLcBAAhNvdehaUZ21MnpGeyuwXRUkis+3CuWKTZG+yE5Ou7dng/5qQp23l32Fz
-G5sMPkjhp8IHAwoR9Lx/VX7sBF82X4nobVL04nNjwbmPFYYrqgwMu20MrorgHcOs
-cjOBBa4lw5ilTzxbcU3rq0hzLM0TQseQXirAsx6Gc7X7WmjGupD5eaiVbR7w+0aT
-ZvNKgUkOFsP9wXIKlYd4CycRIlTmv3bD1f23FGM5KVHS7zH2mG1SfEcCt1hxPpIJ
-5RUdcgfroiuE+Mceu8HWmwynDDiaDDn+sDZ0qqh1sNYuuD98mMU2RDf0WBNwOtdb
-X5Dnz7DW4C8N5528xe08WJhgsQM6ez2j/qqCXsWF2MW/9+8srkikOXZygyFOatLc
-fESPDZnHRyeUvjMxvAyu3jFeuxYCfTYquhV1ZGzLPnxbzrJ32VERJp7DZYhIhSfO
-Gqm7zeo99YYe5IN1z/16DqK/F9vBcg2gNA7lHg+V7+IwfS6I1SVIqisGu4E+sLqU
-ZI/RG/Bfoqm4QR597wF3Otb3rkJnc1zQKLdmZYqf8skXlyS/1Bn69LkqNheERWVw
-wLbh1OcROWUSeDHdtOzPOuotPZNoS4Ku6WgSFvLL/J3dOJRRGuZPl6fGubX5c4br
-yyAUScOV1FWuarKsz/uyC46zhP5QydKIYR7cAzm60KzWqdglIsc=
-=kLks
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqmQg8ACgkQ0rTAlCFN
+r3QD2w/+JrykA7h4X1kcQ2iXP66ILioaoIbKbz2KsqZPvktsz8D+tOgL6XP6SHj0
+gnmQUtlf2FaxKbETxL5jCcEbFizEZbjE2r1CN0cWZgB34Hv0XkDiv5rtMM+SWNHN
+KTWmyU9K1tjCd25MOxKHulNpqga8ssvJaf0JpSE+IffqOKBTSWgfd/2lx/NE3Tr7
+DTnnzRDA7NBrFgRC1lT46x9mdqoJobaxrAG2t8p3VbwBPriR/QiI77DdcSXxGelW
+DcwbJ40J4igvAKWBEybv0RJmVCnoGGTsMOL5seUsvUoSIYwP4oa6YuC/2YevzPsx
+EXIg+4Iihfm4zn1lFPwZ4yr2n8IsKTeXYKx8W5//gX62ibACbDa+FxVACfAOiqYG
+GACubB41taIDtjSRtb1027bjo1P+kyC2leLxRg7+rhotYyZGafUbhR0bYgfvdPCD
+fik0EpDPws6bBLwJY6z9dtThZtLNGcRtk+lZOIP9+T1n2LPHwwibY/AidaGnlFGr
+nZmbWSqHUuvncw+z1iOvHjuMftO8kioWcbNb1uxeO83/Vr5eg8ZOpbm9fx5v1e8r
+c9HRszYSl+yQd4H/NeYY5VMw4RlaGtNBvEhGm7D180iOICjroz7ltiIeTu/xwFSj
+EEVKL9XInzz2ffPKaFpXr2DXve4zO9Cte9ytXa6w28wmVp8Cofc=
+=1X12
 -----END PGP SIGNATURE-----
 
---cVp8NMj01v+Em8Se--
+--foz7uz6ci36t7tfy--
 
---===============1361642366==
-Content-Type: text/plain; charset="utf-8"
+
+--===============4968625937168459571==
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1361642366==--
+--===============4968625937168459571==--
