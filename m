@@ -1,54 +1,46 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 2/3] pinctrl: bcm2835: Add support for generic pinctrl binding
-Date: Mon, 12 Mar 2018 11:03:33 -0700
-Message-ID: <87h8plxjbe.fsf@anholt.net>
-References: <483687035.384686.1520596004410@email.1und1.de> <1520615640-9153-1-git-send-email-matheus@castello.eng.br> <1520615640-9153-3-git-send-email-matheus@castello.eng.br>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 7/7] ASoC: samsung: Add HDMI audio
+ support for Chromebook Snow
+Date: Mon, 12 Mar 2018 19:04:10 +0100
+Message-ID: <20180312180410.ehbbrdu4gvkgx4zi@kozik-lap>
+References: <CGME20180309175019epcas2p34a7fd706117cb18d31109dbc9c8cf60b@epcas2p3.samsung.com>
+ <20180309174858.24017-1-s.nawrocki@samsung.com>
+ <20180309174858.24017-7-s.nawrocki@samsung.com>
+ <CAJKOXPddtARqmHAfYYp80pfnz8t_2ctT5bnf89bQw95LDUKQOw@mail.gmail.com>
+ <a9f9a02c-128c-0414-cd90-6ecaf731cb8d@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520615640-9153-3-git-send-email-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stefan.wahren@i2se.com
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <a9f9a02c-128c-0414-cd90-6ecaf731cb8d@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, broonie@kernel.org, lgirdwood@gmail.com, javierm@redhat.com, robh+dt@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Mar 12, 2018 at 05:21:03PM +0100, Sylwester Nawrocki wrote:
+> On 03/12/2018 08:39 AM, Krzysztof Kozlowski wrote:
+> >> -#define FIN_PLL_RATE           24000000
+> >> +#define FIN_PLL_RATE           24000000UL
+> >
+> > This change looks unrelated so how about making it separate patch?
+> 
+> I knew you will find this! ;P I don't want to be making this kind
+> of funny patches :), I can repost v3 in a few days with this bit removed.
 
-Matheus Castello <matheus@castello.eng.br> writes:
+Ah, you know, after working with crappy code and crappy history, I find
+very useful to have strict approach around changes.  This one might be
+harmless... or you might be fixing some warning caught by your
+compiler thus it looks like nice candidate for seaprate patch.
 
-> To keep driver up to date we add generic pinctrl binding support, which covers
-> the features used in this driver and has additional node properties that this
-> SoC has compatibility, so enabling future implementations of these properties
-> without the need to create new node properties in the device trees.
->
-> The logic of this change maintain the old brcm legacy binding support in order
-> to keep the ABI stable.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-
-2-3 are:
-
-Reviewed-by: Eric Anholt <eric@anholt.net>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqmwPUACgkQtdYpNtH8
-nui7oA/7BSwZ7qOWiwCgJLj0lE13Ym7zgzizCgHnadNzkNGHGlKrcTLcZQjwH4L3
-IFztyPWlGrjg/Sx9MiRLJDLtGU/Pq8MJsYeYXC3bEqS29DythwSW1wU5OZj0fxrR
-2kevNt/hPhuPTPihh4XsofEK4XvK93KMQmtbQu210UaLf9uxNp35OgiPuDdYAsoQ
-/kgHrU1rENU87VW3mqZY/RQ0CBn+KL7V6Uv9N3PgwvoLskpXFggHdWl51lRq/Xyt
-TgxjkeZVByvTWbSvW+PDGG/KGznc+9GK1Ddg/NpS2mTKa0zYQLTbJgdBrhkzIpnG
-6Q7Shzic/i4Uus6KZZkQH7jjLZAmmbZA3yi3JuAgUzzZYiyZ4tFz5JXbFkFvRtRY
-Mn/qW4Dd54VyaiuWxFN4rI5OmraIGNpo+yp2/LRVY3iQIw3WXHfdD+2ExGwH2phL
-rrUwe2hvJXrq/dK1wawkTGa+4xBzfEGt9ZVX6U80YTVkdAQQykzr5AMqADusjCbo
-fgEueKOuRefkbL8kL7fN+YD4ceT8doLv2BY9BpOjUbqmkv0MWN6r54SoNy+FCBDZ
-b4eKZ0DqmXGpzrT6XiOYBWoJnHIgIUlW1mV0EzoHZBYkJzN/vpSp5qzgkCqUfNCu
-jK5/9VHNqlQybWQy/fSnmq0LR/fMpG9lp3h36gLgoMvH5/ACTMU=
-=V9Wi
------END PGP SIGNATURE-----
---=-=-=--
+Best regards,
+Krzysztof
