@@ -1,37 +1,53 @@
-From: JeffyChen <jeffy.chen@rock-chips.com>
-Subject: Re: [RESEND PATCH v4 1/4] mfd: syscon: Set name of regmap_config
-Date: Mon, 12 Mar 2018 17:47:14 +0800
-Message-ID: <5AA64CA2.1080309@rock-chips.com>
-References: <20180309084351.32009-1-jeffy.chen@rock-chips.com> <20180309084351.32009-2-jeffy.chen@rock-chips.com> <20180312091214.f6dwq6q3eqqblfnf@dell>
+From: Bich HEMON <bich.hemon@st.com>
+Subject: [PATCH v2 1/2] dt-bindings: serial: stm32: add RS485 optional
+ properties
+Date: Mon, 12 Mar 2018 09:50:04 +0000
+Message-ID: <1520848188-7343-2-git-send-email-bich.hemon@st.com>
+References: <1520848188-7343-1-git-send-email-bich.hemon@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312091214.f6dwq6q3eqqblfnf@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1520848188-7343-1-git-send-email-bich.hemon@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Bich HEMON <bich.hemon@st.com>, Yves COPPEAUX <Yves.COPPEAUX@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Add options for enabling RS485 hardware control and configuring
+Driver Enable signal:
+- rs485-rts-delay
+- rs485-rx-during-tx
+- rs485-rts-active-low
+- linux,rs485-enabled-at-boot-time
 
-On 03/12/2018 05:12 PM, Lee Jones wrote:
-> On Fri, 09 Mar 2018, Jeffy Chen wrote:
->
->> >We are now allowing to register debugfs without a valid device, and not
->> >having a valid name will end up using "dummy*" to create debugfs dir.
->> >
->> >Signed-off-by: Jeffy Chen<jeffy.chen@rock-chips.com>
->> >---
->> >
->> >Changes in v4: None
->> >Changes in v3:
->> >Modify commit message.
->> >
->> >  drivers/mfd/syscon.c | 1 +
->> >  1 file changed, 1 insertion(+)
-> Is this the RESEND I requested?  I can still only see this patch.
->
-oops, sorry, i was using patman, and i force it to CC everyone in the 
-cover letter's CC list, but that doesn't contain your mail address..i'll 
-try another way :)
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+index d150b04..9d3efed 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
++++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+@@ -15,6 +15,8 @@ Required properties:
+ Optional properties:
+ - pinctrl: The reference on the pins configuration
+ - st,hw-flow-ctrl: bool flag to enable hardware flow control.
++- rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
++  linux,rs485-enabled-at-boot-time: see rs485.txt.
+ - dmas: phandle(s) to DMA controller node(s). Refer to stm32-dma.txt
+ - dma-names: "rx" and/or "tx"
+ 
+-- 
+1.9.1
