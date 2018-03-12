@@ -1,66 +1,60 @@
-Return-Path: <SRS0=NcRe=GD=ni.com=prvs=261051e907=brad.mouring@kernel.org>
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: [PATCH v5 net-next 0/4] net: macb: Introduce phy-handle DT functionality
-Date: Tue, 13 Mar 2018 16:32:12 -0500
-Message-ID: <20180313213216.109153-1-brad.mouring@ni.com>
-In-Reply-To: <88aa8148-bf57-86a0-8f0d-fae7191865a6@gmail.com>
-References: <88aa8148-bf57-86a0-8f0d-fae7191865a6@gmail.com>
+Return-Path: <SRS0=wf0n=GC=gmail.com=thierry.reding@kernel.org>
+Date: Mon, 12 Mar 2018 13:15:16 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V8 6/9] ata: ahci_tegra: disable devslp for Tegra124
+Message-ID: <20180312121516.GG15972@ulmo>
+References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
+ <1520854838-21779-7-git-send-email-pchandru@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
+Content-Disposition: inline
+In-Reply-To: <1520854838-21779-7-git-send-email-pchandru@nvidia.com>
+To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
+Cc: tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com, preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
 
-Consider the situation where a macb netdev is connected through
-a phydev that sits on a mii bus other than the one provided to
-this particular netdev. This situation is what this patchset aims
-to accomplish through the existing phy-handle optional binding.
+--I3tAPq1Rm2pUxvsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This optional binding (as described in the ethernet DT bindings doc)
-directs the netdev to the phydev to use. This is precisely the
-situation this patchset aims to solve, so it makes sense to introduce
-the functionality to this driver (where the physical layout discussed
-was encountered).
+On Mon, Mar 12, 2018 at 05:10:35PM +0530, Preetham Chandru Ramchandra wrote:
+> From: Preetham Ramchandra <pchandru@nvidia.com>
+>=20
+> Tegra124 does not support devslp and it should be disabled.
+>=20
+> Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+> ---
+> v8:
+> * spelled out t124 as Tegra124
+> * changed u32 quirks to boolean supports_devslp
+> * moved the aux register comments above platform_get_resource()
+> ---
+>  drivers/ata/ahci_tegra.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 
-The devicetree snippet would look something like this:
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-...
-   ethernet@feedf00d {
-           ...
-           phy-handle = <&phy0> // the first netdev is physically wired to phy0
-           ...
-           phy0: phy@0 {
-                   ...
-                   reg = <0x0> // MDIO address 0
-                   ...
-           }
-           phy1: phy@1 {
-                   ...
-                   reg = <0x1> // MDIO address 1
-                   ...
-           }
-           ...
-   }
+--I3tAPq1Rm2pUxvsp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   ethernet@deadbeef {
-           ...
-           phy-handle = <&phy1> // tells the driver to use phy1 on the
-                                // first mac's mdio bus (it's wired thusly)
-           ...
-   }
-...
+-----BEGIN PGP SIGNATURE-----
 
-The work done to add the phy_node in the first place (dacdbb4dfc1a1:
-"net: macb: add fixed-link node support") will consume the
-device_node (if found).
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmb1QACgkQ3SOs138+
+s6Graw/+KGrsgaognjrVyfr0dtcTbSWoIXxH/O1Z7p3nIayKgvoC6rBHc+b6lXwG
+RxYV3YKtsIIDk8siznK44Y9FUpy6lPg75rL2ESCBU9hmOUXE5DqbuYLtaWH2bhnp
+gx3oIRhYoTMB3VkIf5uyH7+sg5hNuzc1HST5G9EjQIr1+uMFiohDTyXa2C0i/mud
+pCsyOx8tID+Ke46wXoksdF6q7VM254Bb6Q1ec6FZ07qyTWXK4ZCehv0XCg+HaUMD
+BkXWizzrZzyITOZqiNnJpOc6ggT9Bs5rxxaXhfI21ppxlhF8lhAoem/2EldSywsY
+G/uvGXCs4Gvo6Ap+fPAJJzvul5d1ui5uaAq06UrzxKlUY6tFx3hfZZtu2WHz+VMv
+8nqsdYMlhSmnMA774QEFYocaLSHXC8e5KLbijcr/eyFFI8CTGbRt1w0nrpTZfjC4
+7Lx9c9W+O3I3DJI+z+lCuz/eszxXAj+I5jh47/o5JyMXROuqPL24wNd4Z+qBFio9
+N/5m4utjvSHj1RdNrnlVCk0aO+i6yVVMOuZicryT2rZ5MXamhQ4FEcNXTkeUh3YQ
+GkaQVCfGOIoxgg0tgPIVmZcueAPXFvAei7AUsRSdpxqJTnHQ68BhGmeQbB+yStaM
+Upi+TuOD+uHaVZgBOrPGmVY3EYZKDkgu3EgJ5h0XkSfJSbHtvkk=
+=QXEt
+-----END PGP SIGNATURE-----
 
-v2: Reorganization of mii probe/init functions, suggested by Andrew Lunn
-v3: Moved some of the bus init code back into init (erroneously moved to probe)
-    some style issues, and an unintialized variable warning addressed.
-v4: Add Reviewed-by: tags
-    Skip fallback code if phy-handle phandle is found
-v5: Cleanup formatting issues
-    Fix compile failure introduced in 1/4 "net: macb: Reorganize macb_mii
-        bringup"
-    Fix typo in "Documentation: macb: Document phy-handle binding"
+--I3tAPq1Rm2pUxvsp--
