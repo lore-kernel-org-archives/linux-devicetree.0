@@ -1,40 +1,41 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 04/19] dt-bindings: arm: mediatek: add support for more
- mt7623 reference boards
-Date: Mon, 12 Mar 2018 12:03:45 +0100
-Message-ID: <adeee56f-97c6-1999-4f1c-d420ce24ee13@gmail.com>
+Subject: Re: [PATCH v1 06/19] arm: dts: mt7623: fix USB initialization fails
+ on bananapi-r2
+Date: Mon, 12 Mar 2018 12:03:57 +0100
+Message-ID: <81aab78c-a921-3d80-1636-fc4b797b4517@gmail.com>
 References: <cover.1519378871.git.sean.wang@mediatek.com>
- <e77690ea7f7332e9e1ee64204a4e72c759c41aa9.1519378871.git.sean.wang@mediatek.com>
- <20180302160022.ub6vinw6br3l2dyb@rob-hp-laptop>
+ <bcb9dbeb1389e71f4eaba0c2def1c991703e10c4.1519378872.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302160022.ub6vinw6br3l2dyb@rob-hp-laptop>
+In-Reply-To: <bcb9dbeb1389e71f4eaba0c2def1c991703e10c4.1519378872.git.sean.wang@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 03/02/2018 05:00 PM, Rob Herring wrote:
-> On Fri, Feb 23, 2018 at 06:16:24PM +0800, sean.wang@mediatek.com wrote:
->> From: Sean Wang <sean.wang@mediatek.com>
->>
->> Update binding document for more mt7623[A,N] reference boards being
->> supported.
->>
->> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/arm/mediatek.txt | 9 +++++++++
->>  1 file changed, 9 insertions(+)
+On 02/23/2018 11:16 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Fix that USB initialization fails as below runtime log is present during
+> booting on bananapi-r2 board by adding missing regulators the USB device
+> requires. Current regulators USB device uses are being updated with the
+> correct ones to reflect real configurations which are all from fixed
+> regulators rather than MT6323 one's output.
+> 
+> [    6.473958] xhci-mtk 1a1c0000.usb: fail to get vbus
+> [    6.479313] xhci-mtk 1a240000.usb: fail to get vbus
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: f4ff257cd160 ("arm: dts: mt7623: add support for Bananapi R2 (BPI-R2) board")
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
 > 
 
 Pushed to v4.16-next/dts32
