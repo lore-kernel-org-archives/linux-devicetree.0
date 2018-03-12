@@ -1,14 +1,14 @@
-Return-Path: <SRS0=tMPn=GD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.220.in.ua ([89.184.67.205]:55204 "EHLO smtp.220.in.ua"
+Return-Path: <SRS0=O2+a=GC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:49742 "EHLO smtp.220.in.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750860AbeCMMqG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 13 Mar 2018 08:46:06 -0400
+        id S932600AbeCLP6j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 12 Mar 2018 11:58:39 -0400
 From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v3] leds: add LED driver for CR0014114 board
-Date: Tue, 13 Mar 2018 14:45:48 +0200
-Message-Id: <20180313124548.12074-1-oleg@kaa.org.ua>
-In-Reply-To: <20180312155829.12365-1-oleg@kaa.org.ua>
-References: <20180312155829.12365-1-oleg@kaa.org.ua>
+Subject: [PATCH v2] leds: add LED driver for CR0014114 board
+Date: Mon, 12 Mar 2018 17:58:29 +0200
+Message-Id: <20180312155829.12365-1-oleg@kaa.org.ua>
+In-Reply-To: <026d9ec2-f2bd-18b9-d5fa-f593d40e2f57@kaa.org.ua>
+References: <026d9ec2-f2bd-18b9-d5fa-f593d40e2f57@kaa.org.ua>
 Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 Cc: Oleh Kravchenko <oleg@kaa.org.ua>
@@ -23,8 +23,8 @@ Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
  drivers/leds/Kconfig                               |  13 +
  drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-cr0014114.c                      | 292 +++++++++++++++++++++
- 5 files changed, 353 insertions(+)
+ drivers/leds/leds-cr0014114.c                      | 282 +++++++++++++++++++++
+ 5 files changed, 343 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
  create mode 100644 drivers/leds/leds-cr0014114.c
 
@@ -130,20 +130,10 @@ index 91eca81cae82..0176e7335994 100644
  # LED Userspace Drivers
 diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
 new file mode 100644
-index 000000000000..ef536a67dceb
+index 000000000000..1cbe8aef2f5f
 --- /dev/null
 +++ b/drivers/leds/leds-cr0014114.c
-@@ -0,0 +1,292 @@
-+/*
-+ * LEDs driver for Crane CR0014114
-+ *
-+ * Copyright (C) 2018 Oleh Kravchenko <oleg@kaa.org.ua>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
+@@ -0,0 +1,282 @@
 +#include <linux/delay.h>
 +#include <linux/leds.h>
 +#include <linux/module.h>
