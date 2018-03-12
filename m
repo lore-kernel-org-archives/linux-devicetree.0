@@ -1,58 +1,58 @@
-From: Jeremy McNicoll <jeremymc@redhat.com>
-Subject: [PATCH] arm64: dts: msm8992: add pstore-ramoops support
-Date: Mon, 12 Mar 2018 01:36:57 -0700
-Message-ID: <1520843817-9667-1-git-send-email-jeremymc@redhat.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/4] ARM: dts: sun8i: a33: Improvements for A33-OLinuXino
+Date: Mon, 12 Mar 2018 09:44:27 +0100
+Message-ID: <20180312084427.r75ko3jgmukmuls4@flea>
+References: <20180312042356.18625-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: keescook@chromium.org, linux-arm-msm@vger.kernel.org, jeremymc@redhat.com, dianders@chromium.org, robh+dt@kernel.org, zhuoweizhang@yahoo.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cv73grxaoujzzehz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180312042356.18625-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With the addition of this ramoops node it enables post mortem
-analysis if a debug cable is not attached and/or not available.
 
-All addresses and values were extracted from CAF AOSP marshmallow
-DR 1.6.
+--cv73grxaoujzzehz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
----
- arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Mon, Mar 12, 2018 at 12:23:52PM +0800, Chen-Yu Tsai wrote:
+> Hi,
+>=20
+> Here are some cleanup and improvements for the A33-OLinuXino device
+> tree. The first two patches drop some unneeded bits. The latter two
+> enable peripherals that we now support.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-index 4542133..d1b62ef 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -38,4 +38,19 @@
- 			pinctrl-1 = <&blsp1_uart2_sleep>;
- 		};
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops@1ff00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x1ff00000 0x0 0x40000>;
-+			console-size = <0x10000>;
-+			record-size = <0x10000>;
-+			ftrace-size = <0x10000>;
-+			pmsg-size = <0x20000>;
-+		};
-+	};
- };
--- 
-2.6.1
+Applied all four, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cv73grxaoujzzehz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqmPeoACgkQ0rTAlCFN
+r3QzNQ//Q5jZqfzFS0aHoJz+hg2vw5EN/HRR427q07Va48IFo2PU5kqDyM20gVIH
+Rtq1tKnG9kVDZZwSQFwsh6dUUXdUpHxXW/3zMUb5/TlWfPJbiIk/whiD5zbCSJw+
+AYn6hRSz6jRLhQnIlwXsKZkUlRVp4fpsmKCooaBW7BUuiWp43CoXvbQ5VvmGV4XD
+qlYpPCwmoKu6lem3GqzFny1QWU5MRsMa83u73EBadJDzoWuWJQ4tEdO+eQxxizdZ
+1QFV8H0CQyva4SDC9W2TlUpMnBuuAE//vCsN3RfbzFK3luNOMATwMXNsUij1kGeD
+YrETSMfSB+QhqQ5APTvGqzFZ8NmbPEAeGesgjMHXnb9LTtJ0BnDLmDX9o1H/3FJB
+IZ4V6C8hrDXgoUHgF5C6b+190jQgkVugw5Od3U3XiiDPSVfDN9kSMkEaCsaa2nKs
+kMbJ5PfyutjDm7jyMo7m1iUBSZPJoO049noohhlspuvy4u9x4vNf8d9tfnNN+pVh
+25FbtMSB1cZAX/mC0T/SleZauSHSPqJky61Dsnn6+V8nUuZ6KplAHUMLNl0J6cIG
+QYB/qmG5JF4okyECzul3KSvOEqA/iwndT4AVYLEuvmr97ZkKHCNrbyto4Ru24ygO
+CtHCsNe7v8RCjrKI/iw5Q6QLGUn3HszCX2s9TXK5Z7txs1nIWwo=
+=mJi2
+-----END PGP SIGNATURE-----
+
+--cv73grxaoujzzehz--
