@@ -1,44 +1,55 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] arm: dts: rk3288: Add missing #sound-dai-cells
-Date: Mon, 12 Mar 2018 15:02:01 +0100
-Message-ID: <18111539.xZD6rPs4DF@diego>
-References: <20180301202537.30571-3-robh@kernel.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/4] mfd: syscon: Set name of regmap_config
+Date: Mon, 12 Mar 2018 14:06:52 +0000
+Message-ID: <20180312140652.7ffdls4pccih32vk@dell>
+References: <20180312095142.30854-1-jeffy.chen@rock-chips.com>
+ <20180312095142.30854-2-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180301202537.30571-3-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180312095142.30854-2-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 1. M=E4rz 2018, 21:25:35 CET schrieb Rob Herring:
-> dtc now gives the following warning:
-> =
+On Mon, 12 Mar 2018, Jeffy Chen wrote:
 
-> arch/arm/boot/dts/rk3288-tinker.dtb: Warning (sound_dai_property):
-> /sound/simple-audio-card,codec: Missing property '#sound-dai-cells' in no=
-de
-> /hdmi@ff980000 or bad phandle (referred from sound-dai[0])
-> =
+> We are now allowing to register debugfs without a valid device, and not
+> having a valid name will end up using "dummy*" to create debugfs dir.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> ---
+> 
+> Changes in v5:
+> CC lee.jones@linaro.org
+> 
+> Changes in v4: None
+> Changes in v3:
+> Modify commit message.
+> 
+>  drivers/mfd/syscon.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-> Add the missing #sound-dai-cells property.
-> =
+Looks okay.  Applied, thanks.
 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index fc9ba0ea4e44..b6d05cd934e6 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -110,6 +110,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>  	syscon_config.reg_stride = reg_io_width;
+>  	syscon_config.val_bits = reg_io_width * 8;
+>  	syscon_config.max_register = resource_size(&res) - reg_io_width;
+> +	syscon_config.name = of_node_full_name(np);
+>  
+>  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>  	if (IS_ERR(regmap)) {
 
-applied as fix for 4.16 (on 2018-03-05 already)
-
-Thanks for the catch
-Heiko
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
