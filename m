@@ -1,33 +1,39 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: assign clock rate for ACLK_VIO
-Date: Sun, 11 Mar 2018 19:14:42 -0700
-Message-ID: <CAD=FV=VG0CSaLGyyfHAdvn4Ud0D3tab0c3pMEvqcFxAJ+5c7Zg@mail.gmail.com>
-References: <1520819448-8316-1-git-send-email-zhengsq@rock-chips.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 3/3] phy: phy-mtk-tphy: add properties for U2 slew rate calibrate
+Date: Mon, 12 Mar 2018 11:39:08 +0800
+Message-ID: <49dff54ceb0c2f4b820af48a87818e935e23447a.1520824899.git.chunfeng.yun@mediatek.com>
+References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520824899.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520819448-8316-1-git-send-email-zhengsq@rock-chips.com>
+In-Reply-To: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520824899.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add two properties of ref_clk and coefficient used by U2 slew rate
+calibrate which may vary on different SoCs
 
-On Sun, Mar 11, 2018 at 6:50 PM, Shunqian Zheng <zhengsq@rock-chips.com> wrote:
-> The ACLK_VIO is a parent clock used by a several children,
-> its suggested clock rate is 400MHz. Right now it gets 400MHz
-> because it sources from CPLL(800M) and divides by 2 after reset.
-> It's good not to rely on default values like this, so let's
-> explicitly set it.
-> NOTE: it's expected that at least one board may override cru node and
-> set the CPLL to 1.6 GHz. On that board it will be very important to be
-> explicit about aclk-vio being 400 MHz.
->
-> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 6 ++++--
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi     | 6 ++++--
->  2 files changed, 8 insertions(+), 4 deletions(-)
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+index 41e09ed..0d34b2b 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+@@ -27,6 +27,10 @@ Optional properties (controller (parent) node):
+  - reg		: offset and length of register shared by multiple ports,
+ 		  exclude port's private register. It is needed on mt2701
+ 		  and mt8173, but not on mt2712.
++ - mediatek,src-ref-clk-mhz	: frequency of reference clock for slew rate
++		  calibrate
++ - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
++		  SoC process
+ 
+ Required properties (port (child) node):
+ - reg		: address and length of the register set for the port.
+-- 
+1.9.1
