@@ -1,75 +1,41 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/3] phy: phy-mtk-tphy: add configurable parameters for slew rate calibrate
-Date: Mon, 12 Mar 2018 11:39:07 +0800
-Message-ID: <123d1a24659be168d0b040de4a67612acacf66f1.1520824899.git.chunfeng.yun@mediatek.com>
-References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520824899.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] ARM: dts: sun8i: reference tablet design: Enable PMIC power supplies
+Date: Mon, 12 Mar 2018 12:21:16 +0800
+Message-ID: <20180312042116.18513-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520824899.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There are two parameters, ref_clk and coefficient, for U2 slew rate
-calibrate which may vary on different SoCs, here allow them to be
-configurable
+The A23/A33 reference tablet design has a DC barrel tied to the ACIN
+of the PMIC. And being a tablet, it has a Li-Po battery.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Enable both power supplies in the device tree.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/phy/mediatek/phy-mtk-tphy.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 6073c25..38c281b 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -306,6 +306,8 @@ struct mtk_tphy {
- 	const struct mtk_phy_pdata *pdata;
- 	struct mtk_phy_instance **phys;
- 	int nphys;
-+	int src_ref_clk; /* MHZ, reference clock for slew rate calibrate */
-+	int src_coef; /* coefficient for slew rate calibrate */
- };
+diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+index f51f37cc721d..880096c7e252 100644
+--- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+@@ -124,6 +124,14 @@
  
- static void hs_slew_rate_calibrate(struct mtk_tphy *tphy,
-@@ -360,16 +362,17 @@ static void hs_slew_rate_calibrate(struct mtk_tphy *tphy,
- 	writel(tmp, fmreg + U3P_U2FREQ_FMMONR1);
+ #include "axp223.dtsi"
  
- 	if (fm_out) {
--		/* ( 1024 / FM_OUT ) x reference clock frequency x 0.028 */
--		tmp = U3P_FM_DET_CYCLE_CNT * U3P_REF_CLK * U3P_SLEW_RATE_COEF;
--		tmp /= fm_out;
-+		/* ( 1024 / FM_OUT ) x reference clock frequency x coef */
-+		tmp = tphy->src_ref_clk * tphy->src_coef;
-+		tmp = (tmp * U3P_FM_DET_CYCLE_CNT) / fm_out;
- 		calibration_val = DIV_ROUND_CLOSEST(tmp, U3P_SR_COEF_DIVISOR);
- 	} else {
- 		/* if FM detection fail, set default value */
- 		calibration_val = 4;
- 	}
--	dev_dbg(tphy->dev, "phy:%d, fm_out:%d, calib:%d\n",
--		instance->index, fm_out, calibration_val);
-+	dev_dbg(tphy->dev, "phy:%d, fm_out:%d, calib:%d (clk:%d, coef:%d)\n",
-+		instance->index, fm_out, calibration_val,
-+		tphy->src_ref_clk, tphy->src_coef);
- 
- 	/* set HS slew rate */
- 	tmp = readl(com + U3P_USBPHYACR5);
-@@ -1041,6 +1044,13 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		tphy->u3phya_ref = NULL;
- 	}
- 
-+	tphy->src_ref_clk = U3P_REF_CLK;
-+	tphy->src_coef = U3P_SLEW_RATE_COEF;
-+	/* update parameters of slew rate calibrate if exist */
-+	device_property_read_u32(dev, "mediatek,src-ref-clk-mhz",
-+		&tphy->src_ref_clk);
-+	device_property_read_u32(dev, "mediatek,src-coef", &tphy->src_coef);
++&ac_power_supply {
++	status = "okay";
++};
 +
- 	port = 0;
- 	for_each_child_of_node(np, child_np) {
- 		struct mtk_phy_instance *instance;
++&battery_power_supply {
++	status = "okay";
++};
++
+ &reg_aldo1 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <3000000>;
 -- 
-1.9.1
+2.16.2
