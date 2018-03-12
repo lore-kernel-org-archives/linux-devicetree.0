@@ -1,160 +1,90 @@
-Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH net-next RFC V1 4/5] net: Use the generic MII time stamper when available.
-Date: Wed, 21 Mar 2018 11:58:17 -0700
-Message-Id: <461dff568dba6ea8c98582c79d16c3155e662cf5.1521656774.git.richardcochran@gmail.com>
-In-Reply-To: <cover.1521656774.git.richardcochran@gmail.com>
-References: <cover.1521656774.git.richardcochran@gmail.com>
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Return-Path: <SRS0=Fxpb=GC=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v5 0/2] Meson GXL USB3 PHY driver
+Date: Mon, 12 Mar 2018 22:11:11 +0100
+Message-Id: <20180312211113.26784-1-martin.blumenstingl@googlemail.com>
+To: kishon@ti.com, linux-amlogic@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Now that the infrastructure is in place, convert the PHY time stamping
-logic to use the generic MII device.  This change has the added benefit
-of simplifying the code somewhat.
+Amlogic Meson GXL SoCs use a dwc3 controller with two USB2 ports,
+Meson GXM SoCs use the same dwc3 controller but with three USB3
+ports enabled. Neither of these SoCs has any USB3 port enabled in
+the dwc3 registers.
+The second USB2 port on both SoCs supports host and peripheral
+(also called "device") mode.
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/phy/phy.c   |  6 ++++--
- net/Kconfig             |  8 ++++----
- net/core/ethtool.c      |  5 ++---
- net/core/timestamping.c | 36 ++++++++++--------------------------
- 4 files changed, 20 insertions(+), 35 deletions(-)
+The dwc3 controller supports host mode only. Peripheral mode is
+implemented through an additional dwc2 controller (which only enables
+device mode). The USB3 PHY has register bits which allow a driver to
+detect the current mode - however this is currently not implemented
+as the dwc2 controller seems to hang during reset (and I do not have
+a use-case where I need peripheral/device mode).
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 466bf88053ce..df80c6b14478 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -397,6 +397,7 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
- 	struct mii_ioctl_data *mii_data = if_mii(ifr);
- 	u16 val = mii_data->val_in;
- 	bool change_autoneg = false;
-+	struct net_device *netdev;
- 
- 	switch (cmd) {
- 	case SIOCGMIIPHY:
-@@ -457,8 +458,9 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
- 		return 0;
- 
- 	case SIOCSHWTSTAMP:
--		if (phydev->mdio.hwtstamp)
--			return phydev->mdio.hwtstamp(&phydev->mdio, ifr);
-+		netdev = phydev->attached_dev;
-+		if (netdev->mdiots->hwtstamp)
-+			return netdev->mdiots->hwtstamp(netdev->mdiots, ifr);
- 		/* fall through */
- 
- 	default:
-diff --git a/net/Kconfig b/net/Kconfig
-index 0428f12c25c2..e38403cd010c 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -102,12 +102,12 @@ config NET_PTP_CLASSIFY
- 	def_bool n
- 
- config NETWORK_PHY_TIMESTAMPING
--	bool "Timestamping in PHY devices"
-+	bool "Timestamping in PHY and MII bus devices"
- 	select NET_PTP_CLASSIFY
- 	help
--	  This allows timestamping of network packets by PHYs with
--	  hardware timestamping capabilities. This option adds some
--	  overhead in the transmit and receive paths.
-+	  This allows timestamping of network packets by PHYs or other
-+	  MII bus devices with hardware timestamping capabilities. This
-+	  option adds some overhead in the transmit and receive paths.
- 
- 	  If you are unsure how to answer this question, answer N.
- 
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index b4b81eaa15a9..507e56abecb7 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -2213,13 +2213,12 @@ static int ethtool_get_ts_info(struct net_device *dev, void __user *useraddr)
- 	int err = 0;
- 	struct ethtool_ts_info info;
- 	const struct ethtool_ops *ops = dev->ethtool_ops;
--	struct phy_device *phydev = dev->phydev;
- 
- 	memset(&info, 0, sizeof(info));
- 	info.cmd = ETHTOOL_GET_TS_INFO;
- 
--	if (phydev && phydev->mdio.ts_info) {
--		err = phydev->mdio.ts_info(&phydev->mdio, &info);
-+	if (dev->mdiots && dev->mdiots->ts_info) {
-+		err = dev->mdiots->ts_info(dev->mdiots, &info);
- 	} else if (ops->get_ts_info) {
- 		err = ops->get_ts_info(dev, &info);
- 	} else {
-diff --git a/net/core/timestamping.c b/net/core/timestamping.c
-index b8857028e652..ecb0ecb03740 100644
---- a/net/core/timestamping.c
-+++ b/net/core/timestamping.c
-@@ -23,44 +23,32 @@
- #include <linux/skbuff.h>
- #include <linux/export.h>
- 
--static unsigned int classify(const struct sk_buff *skb)
--{
--	if (likely(skb->dev && skb->dev->phydev &&
--		   skb->dev->phydev->drv))
--		return ptp_classify_raw(skb);
--	else
--		return PTP_CLASS_NONE;
--}
--
- void skb_clone_tx_timestamp(struct sk_buff *skb)
- {
--	struct phy_device *phydev;
- 	struct sk_buff *clone;
- 	unsigned int type;
- 
--	if (!skb->sk)
-+	if (!skb->sk || !skb->dev || !skb->dev->mdiots)
- 		return;
- 
--	type = classify(skb);
-+	type = ptp_classify_raw(skb);
-+
- 	if (type == PTP_CLASS_NONE)
- 		return;
- 
--	phydev = skb->dev->phydev;
--	if (likely(phydev->mdio.txtstamp)) {
--		clone = skb_clone_sk(skb);
--		if (!clone)
--			return;
--		phydev->mdio.txtstamp(&phydev->mdio, clone, type);
--	}
-+	clone = skb_clone_sk(skb);
-+	if (!clone)
-+		return;
-+
-+	skb->dev->mdiots->txtstamp(skb->dev->mdiots, clone, type);
- }
- EXPORT_SYMBOL_GPL(skb_clone_tx_timestamp);
- 
- bool skb_defer_rx_timestamp(struct sk_buff *skb)
- {
--	struct phy_device *phydev;
- 	unsigned int type;
- 
--	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->drv)
-+	if (!skb->dev || !skb->dev->mdiots)
- 		return false;
- 
- 	if (skb_headroom(skb) < ETH_HLEN)
-@@ -75,10 +63,6 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
- 	if (type == PTP_CLASS_NONE)
- 		return false;
- 
--	phydev = skb->dev->phydev;
--	if (likely(phydev->mdio.rxtstamp))
--		return phydev->mdio.rxtstamp(&phydev->mdio, skb, type);
--
--	return false;
-+	return skb->dev->mdiots->rxtstamp(skb->dev->mdiots, skb, type);
- }
- EXPORT_SYMBOL_GPL(skb_defer_rx_timestamp);
+While the dwc3 controller has no USB3 port enabled we still need the
+USB3 PHY to be initialized, otherwise some boards (probably those where
+the bootloader does not initialize the USB3 PHY) show errors with
+high-speed USB devices connected to any of the USB2 ports. Configuring
+the USB_R1_U3H_FLADJ_30MHZ_REG_MASK register as it's done by Amlogic's
+vendor GPL kernel sources makes these error go away.
+
+Thanks to Jerome Brunet for reporting the errors and Neil Armstrong
+for discovering that initializing the USB3 PHY fixes these USB errors!
+
+
+changes since v4 at [3]:
+- rebased on top of Kishon's linux-phy next branch (commit:
+  d7119224bfe6e8 "phy: allwinner: sun4i-usb: poll vbus changes on
+  A23/A33 when driving VBUS")
+- added Neil's Tested-by (many thanks)
+
+changes since v3 at [2]:
+- rebased on top of Kishon's linux-phy next branch (commit:
+  1f846be367fba4 "phy: allwinner: sun4i-usb: poll vbus changes on
+  A23/A33 when driving VBUS")
+- use SPDX-License-Identifier instead of the full license text
+
+changes since v2 at [1]:
+- collected Rob's Reviewed-by on patch #1 and Yixun's Tested-by
+- rebased on top of v4.16-rc1 (no changes were required though)
+
+changes since v1 at [0]:
+- document the interrupt in the dt-bindings patch (we don't use it in
+  the driver yet, but this interrupt is there so it should be
+  documented)
+- added the clock and reset lines, thank to Yixun Lan who gave me the
+  hints that these are needed (it's not clear when reading the Amlogic
+  GPL kernel sources, because the clock for example is always enabled
+  by hardware default, bootrom, etc..)
+- implemented the .set_mode callback
+- NOTE: I chose *NOT* to add Jerome's and Neil's Tested-by's as well as
+  Rob's Acked-by on the dt-bindings patch since I made changes that I
+  want to have reviewed again
+
+
+@Kishon: it would be great if you could queue this for v4.17
+this is the last missing piece in the GXL/GXM/AXG USB (host mode) puzzle.
+after this only the .dts changes are missing (which obviously depend on
+this series)
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/004780.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006290.html
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2018-February/006449.html
+[3] http://lists.infradead.org/pipermail/linux-amlogic/2018-March/006596.html
+
+Martin Blumenstingl (2):
+  dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL
+    SoCs
+  phy: amlogic: add USB3 PHY support for Meson GXL and GXM
+
+ .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  31 +++
+ drivers/phy/amlogic/Kconfig                        |  12 +
+ drivers/phy/amlogic/Makefile                       |   1 +
+ drivers/phy/amlogic/phy-meson-gxl-usb3.c           | 282 +++++++++++++++++++++
+ 4 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+ create mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
+
 -- 
-2.11.0
+2.16.2
