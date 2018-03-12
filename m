@@ -1,48 +1,89 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v2 01/12] dt-bindings: Document STM32MP1 Reset Clock
- Controller (RCC) bindings
-Date: Mon, 12 Mar 2018 09:06:11 +0000
-Message-ID: <7d552f25-a7b8-c99a-8f28-eb9beb455724@st.com>
-References: <1520528045-18330-1-git-send-email-gabriel.fernandez@st.com>
- <1520528045-18330-2-git-send-email-gabriel.fernandez@st.com>
- <20180309235356.qd2wx6teeuxkwwjz@rob-hp-laptop>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 0/3] drm: Add LVDS decoder bridge
+Date: Mon, 12 Mar 2018 10:07:27 +0100
+Message-ID: <81b25fde-63fa-aacc-1bf4-f2a7b60b19ef@samsung.com>
+References: <CGME20180309135207epcas3p32a7d3a0e9c9dae5af8fc855ff3c0e03b@epcas3p3.samsung.com>
+ <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180309235356.qd2wx6teeuxkwwjz@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
 Content-Language: en-US
-Content-ID: <8D139A43B588564B91C9154FD6C33D94@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Loic PALLARDY <loic.pallardy@st.com>, Olivier BIDEAU <olivier.bideau@st.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob !
-
-Best Regards
-
-Gabriel
-
-
-On 03/10/2018 12:53 AM, Rob Herring wrote:
-> On Thu, Mar 08, 2018 at 05:53:54PM +0100, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> The RCC block is responsible of the management of the clock and reset
->> generation for the complete circuit.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> ---
->>   .../devicetree/bindings/clock/st,stm32mp1-rcc.txt  | 60 ++++++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
-> Reviewed-by: Rob Herring <robh@kernel.org>
+T24gMDkuMDMuMjAxOCAxNDo1MSwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IEhlbGxvLAo+ICAgIGFm
+dGVyIHNvbWUgZGlzY3Vzc2lvbiBvbiB0aGUgcHJvcG9zZWQgYmluZGluZ3MgZm9yIGdlbmVyaWMg
+bHZkcyBkZWNvZGVyIGFuZAo+IFRoaW5lIFRIQzYzTFZEMTAyNCwgSSBkZWNpZGVkIHRvIGRyb3Ag
+dGhlIFRIQzYzIHNwZWNpZmljIHBhcnQgYW5kIGp1c3QgbGl2ZSB3aXRoCj4gYSB0cmFuc3BhcmVu
+dCBkZWNvZGVyIHRoYXQgZG9lcyBub3Qgc3VwcG9ydCBhbnkgY29uZmlndXJhdGlvbiBmcm9tIERU
+Lgo+Cj4gRHJvcHBpbmcgVEhDNjMgc3VwcG9ydCB0byBhdm9pZCBkaXNjdXNzaW9uIG9uIGhvdyB0
+byBiZXR0ZXIgaW1wbGVtZW50IHN1cHBvcnQKPiBmb3IgYSBEUk0gYnJpZGdlIHdpdGggMiBpbnB1
+dCBwb3J0cyBhbmQgZm9jdXMgb24gTFZEUyBtb2RlIHByb3BhZ2F0aW9uIHRocm91Z2gKPiBicmlk
+Z2VzIGFzIGV4cGxhaW5lZCBpbiB2MSBjb3ZlciBsZXR0ZXIgKGZvciBEUk0gcGVvcGxlOiBwbGVh
+c2Ugc2VlIFsxXSBhcyB3aHkKPiBJIGZpbmQgZGlmZmljdWx0IHRvIGltcGxlbWVudCBzdXBwb3J0
+IGZvciBicmlkZ2VzIHdpdGggbXVsdGlwbGUgaW5wdXQgZW5kcG9pbnRzKQo+Cj4gU2FtZSBiYXNl
+IGJyYW5jaCBhcyB2MSwgd2l0aCBzYW1lIHBhdGNoZXMgZm9yIFYzTSBFYWdsZSBhcHBsaWVkIG9u
+IHRvcC4KPiBnaXQ6Ly9qbW9uZGkub3JnL2xpbnV4IHYzbS92NC4xNi1yYzMvYmFzZQo+Cj4gVGhh
+bmtzCj4gICAgago+Cj4gdjEgLT4gdjI6Cj4gLSBEcm9wIHN1cHBvcnQgZm9yIFRIQzYzTFZEMTAy
+NAo+Cj4gWzFdIEkgaGFkIGEgcXVpY2sgYXQgaG93IHRvIG1vZGVsIGEgRFJNIGJyaWRnZSB3aXRo
+IG11bHRpcGxlIGlucHV0Cj4gcG9ydHMsIGFuZCBJIHNlZSBhIGJsb2NrZXIgaW4gaG93IERSTSBp
+ZGVudGlmaWVzIGFuZCBtYXRjaGVzIGJyaWRnZXMgdXNpbmcKPiB0aGUgZGV2aWNlcyBub2RlIGlu
+IHBsYWNlIG9mIHRoZSBlbmRwb2ludCBub2Rlcy4KPgo+IEFzIFRIQzYzTFZEMTAyNCBzdXBwb3J0
+cyB1cCB0byAyIExWRFMgaW5wdXRzIGFuZCAyIExWRFMgb3V0cHV0cywgSSBzZWUgb25seQo+IGEg
+ZmV3IHdheXMgdG8gc3VwcG9ydCB0aGF0Ogo+ICAxKSByZWdpc3RlciAyIGRybSBicmlkZ2VzIGZy
+b20gdGhlIHNhbWUgZHJpdmVyIChvbmUgZm9yIGVhY2ggaW5wdXQvb3V0cHV0IHBhaXIpCj4gICAg
+IGJ1dCB0aGV5IHdvdWxkIGJvdGggYmUgbWF0Y2hlcyBvbiB0aGUgc2FtZSBkZXZpY2Ugbm9kZSB3
+aGVuIHRoZSBwcmVjZWRpbmcKPiAgICAgYnJpZGdlIGNhbGxzICJvZl9kcm1fZmluZF9icmlkZ2Uo
+KSIuCj4gIDIpIHJlZ2lzdGVyIGEgc2luZ2xlIGJyaWRnZSB3aXRoIG11bHRpcGxlICJuZXh0IGJy
+aWRnZXMiLCBidXQgd2hlbiB0aGUgYnJpZGdlCj4gICAgIGdldHMgYXR0YWNoZWQgSSBkb24ndCBz
+ZWUgYSB3YXkgb24gaG93IHRvIGlkZW50aWZ5IG9uIHdoaWNoIG5leHQgYnJpZGdlCj4gICAgICJk
+cm1fYnJpZGdlX2F0dGFjaCgpIiBvbiwgYXMgaXQgZGVwZW5kcyBvbiB0aGUgZW5kcG9pbnQgdGhl
+IGN1cnJlbnQgYnJpZGdlCj4gICAgIGhhcyBiZWVuIGF0dGFjaGVkIG9uIGZpcnN0LCBhbmQgd2Ug
+ZG9uJ3QgaGF2ZSB0aGF0IGluZm9ybWF0aW9uLgo+ICAzKSBSZWdpc3RlciBtb3JlIGluc3RhbmNl
+cyBvZiB0aGUgc2FtZSBjaGlwIGluIERUUywgb25lIGZvciBlYWNoIGlucHV0L291dHB1dAo+ICAg
+ICBwYWlyLiBUaGV5IGdvbm5hIHNoYXJlIHN1cHBsaWVzIGFuZCBncGlvcywgYW5kIEkgZG9uJ3Qg
+bGlrZSB0aGF0Lgo+Cj4gSSBoYWQgYSBxdWljayBsb29rIGF0IHRoZSBjdXJyZW50bHkgaW4gbWFp
+bmxpbmUgYnJpZGdlcyBhbmQgbm9uZSBvZiB0aGVtIGhhcwo+IG11bHRpcGxlIGlucHV0IGVuZHBv
+aW50cywgZXhjZXB0IGZvciBIRE1JIGF1ZGlvIGVuZHBvaW50LCB3aGljaCBJIGhhdmVuJ3QgZm91
+bmQKPiBpbiB1c2UgaW4gYW55IERUUy4gSSBndWVzcyB0aGUgcHJvYmxlbSBoYXMgYmVlbiBhbHJl
+YWR5IGRlYmF0ZWQgYW5kIG1heWJlIHNvbHZlZAo+IGluIHRoZSBwYXN0LCBzbyBmZWVsIGZyZWUg
+dG8gcG9pbnQgbWUgdG8gb3RoZXIgc291cmNlcy4KCkkgdGhpbmsgdGhpcyBpcyBpcyBhIHN0ZXAg
+aW4gd3JvbmcgZGlyZWN0aW9uLCBJTUhPLiBZb3VyIHByZXZpb3VzCnBhdGNoc2V0IHdhcyBxdWl0
+ZSBPSywgYXQgbGVhc3QgYmluZGluZ3MsIElNSE8uIEZldyB0aGluZ3MgbmVlZGVkIG9ubHkKcG9s
+aXNoaW5nLgpIZXJlIHdlIGhhdmUgdW5tYW5hZ2VkL3RyYW5zcGFyZW50IGJyaWRnZSwgd2hpY2gg
+aXMgdG90YWxseSBkaWZmZXJlbnQsCndoYXQgaGFwcGVuZWQgdG8gcmVndWxhdG9ycyBhbmQgZ3Bp
+b3MgZnJvbSBwcmV2aW91cyBpdGVyYXRpb24uCkkgZG8gbm90IGhhdmUgc2NoZW1hdGljcyBvZiB0
+aGUgYm9hcmQsIGJ1dCBJIGd1ZXNzIHJlc3BlY3RpdmUgcGlucyBvZgp0aGUgYnJpZGdlIG11c3Qg
+YmUgY29ubmVjdGVkIHNvbWVob3cuCkkgdGhpbmsgdGhlIHByb2JsZW0geW91IHdhbnQgdG8gYXZv
+aWQgKGRvdWJsZSBicmlkZ2UpIHNob3VsZCBub3QgYmUgYQpwcm9ibGVtIGF0IGFsbC4KSSBzdXBw
+b3NlIHRoZSBtb3N0IGltcG9ydGFudCBpcyB0byBoYXZlIGNvcnJlY3QgYmluZGluZ3MgLSBhcyB0
+aGV5IG5lZWQKdG8gYmUgc3RhYmxlLgpJZiB5b3UgcmVhbGx5IG11c3QgdG8gZG8gaGFja3MgYmV0
+dGVyIGlzIHRvIHB1dCB0aGVtIGludG8gZHJpdmVyLgoKUmVnYXJkcwpBbmRyemVqCgo+Cj4gSmFj
+b3BvIE1vbmRpICgzKToKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBicmlkZ2U6IERvY3VtZW50
+IExWRFMgdG8gcGFyYWxsZWwgZGVjb2Rlcgo+ICAgZHJtOiBicmlkZ2U6IEFkZCBMVkRTIGRlY29k
+ZXIgZHJpdmVyCj4gICBhcm02NDogZHRzOiByZW5lc2FzOiBBZGQgTFZEUyBkZWNvZGVyIHRvIFIt
+Q2FyIFYzTSBFYWdsZQo+Cj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLWRlY29k
+ZXIudHh0ICAgICAgIHwgIDQyICsrKysrKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
+cjhhNzc5NzAtZWFnbGUuZHRzICAgICB8ICAzMSArKystCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA4ICsrCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYyAgICAgICAgICAgICAgfCAxNTcgKysrKysrKysr
+KysrKysrKysrKysrCj4gIDUgZmlsZXMgY2hhbmdlZCwgMjM3IGluc2VydGlvbnMoKyksIDIgZGVs
+ZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy1kZWNvZGVyLnR4dAo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYwo+Cj4gLS0KPiAyLjcu
+NAo+Cj4KPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
