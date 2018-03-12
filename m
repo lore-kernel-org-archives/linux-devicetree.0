@@ -1,47 +1,42 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v7 2/3] dt-bindings: qcom: Add SDM845 bindings
-Date: Mon, 12 Mar 2018 19:42:23 +0530
-Message-ID: <20180312141224.11907-3-rnayak@codeaurora.org>
-References: <20180312141224.11907-1-rnayak@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/2] iio: potentiometer: mcp4018: driver for Microchip
+ digital potentiometers
+Date: Mon, 12 Mar 2018 15:32:53 +0100
+Message-ID: <89822e7a-569a-43b9-46bd-d9b65b895cab@axentia.se>
+References: <20180308195830.16348-1-peda@axentia.se>
+ <20180308195830.16348-3-peda@axentia.se> <20180310161511.66d2ef97@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180312141224.11907-1-rnayak@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180310161511.66d2ef97@archlinux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a SoC string 'sdm845' for the qualcomm SDM845 SoC
+On 2018-03-10 17:15, Jonathan Cameron wrote:
+> On Thu,  8 Mar 2018 20:58:30 +0100
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> Add support for Microchip digital potentiometers and rheostats
+>> 	MCP4017, MCP4018, MCP4019
+>>
+>> They all have one wiper with 128 steps and come in 5, 10, 50 and 100 kOhm
+>> variations.
+>>
+>> Datasheet: http://www.microchip.com/downloads/en/DeviceDoc/22147a.pdf
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Nice little driver.
+> 
+> Applied to the togreg branch of iio.git and pushed out as testing
+> for the autobuilders to play with it.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/qcom.txt | 1 +
- 1 file changed, 1 insertion(+)
+Thanks, and thanks for taking it quickly before the bike-shedding got
+started. I worried a bit about that, when the driver is so small and
+trivial... :-)
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-index 0ed4d39d7fe1..ee532e705d6c 100644
---- a/Documentation/devicetree/bindings/arm/qcom.txt
-+++ b/Documentation/devicetree/bindings/arm/qcom.txt
-@@ -26,6 +26,7 @@ The 'SoC' element must be one of the following strings:
- 	msm8996
- 	mdm9615
- 	ipq8074
-+	sdm845
- 
- The 'board' element must be one of the following strings:
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers,
+Peter
