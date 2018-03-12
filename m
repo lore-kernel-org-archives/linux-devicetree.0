@@ -1,91 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] drm/panel: Add support for AUO G104SN02 V2 panel
-Date: Mon, 12 Mar 2018 10:08:43 +0100
-Message-ID: <20180312090843.GB15972@ulmo>
-References: <1513173656.2322.16.camel@googlemail.com>
- <20171215230754.cnepbs34t5gp2rsf@rob-hp-laptop>
- <1513430016.1930.4.camel@googlemail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv5 3/5] mfd: motorola-cpcap: Add audio-codec
+	support
+Date: Mon, 12 Mar 2018 09:08:38 +0000
+Message-ID: <20180312090838.ubqvlqnqzv6g4cxr@dell>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-4-sebastian.reichel@collabora.co.uk>
+ <20180307163211.rytfli5tb47yhtug@dell>
+ <20180308094652.qg4atjw5c3hayaz3@earth.universe>
+ <20180308170736.GN5799@atomide.com>
+ <20180309112915.bjnqi7tddgucdqjl@earth.universe>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1177335203=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1513430016.1930.4.camel@googlemail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stefan =?utf-8?Q?Riedm=C3=BCller?= <S.Riedmueller@phytec.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180309112915.bjnqi7tddgucdqjl@earth.universe>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1177335203==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
-Content-Disposition: inline
-
-
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Dec 16, 2017 at 02:13:36PM +0100, Christoph Fritz wrote:
-> This patch adds support for AUO G104SN02 V2 800x600 10.4" panel to DRM
-> simple panel driver.
->=20
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> ---
-> Changes since v1:
->  - be explicit as to which properties apply
->  - adapt indenting
->=20
->  .../bindings/display/panel/auo,g104sn02.txt        | 12 ++++++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++=
-++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g=
-104sn02.txt
-
-Applied, thanks.
-
-Thierry
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqmQ5sACgkQ3SOs138+
-s6Hx+Q/+OwpvwJswgUj/5Bd+Ac1+I356IFYJ1ER3hXrXru05GCV7zucxqLFPZYDv
-eAgnsBfXr143NgMJEGc6Qrcfd5Vwj2ngDdN3LlwPcZl+GfWG2u5ks2ZtjUKgJu1A
-ZWu5+pP83HUxvXsX7O6xZiGmH5Qw+IPS2uTNCxRByv6NWhiOacm/4TaenYfmbB74
-yVjXL+HpAJuMUsUZ1xRIe9HXNVyoyvto8TpgJqDeHFkloL77IMRSTc13iBNuZYPI
-LpOjtC7eozphSsH6oq1awd2saL99aQ70vY6oe8Y2j0jcF4ZExbBZxdCostoF39wB
-BVsLppo1JA8q27bYkRuIDTXazz52cnfvP2boSxf58zBwo99AdtU73zkcS1UDxwvH
-J17YwBciz6fDgPW1fk1O27bX5Dt7YpwBafLMlXKVq2xf1NQy+qNcisRvzYjaGN41
-9xF86yT/F5Ddc73f+cePsXQCBb5lAUh+2lVDllxuv4THCjQJnHtRuCYdAXyRimM5
-ge27jttrT3XNQRUy5Y+FSD7Ot0ukjbETYozbiW38oWktqLMbkBUUgYRmvPGQSgxq
-IWJ+3NRNKaSEVIY+8KVI4luPHHagbBuVEvjNwrt+qwDjt4AtkM1OZM9bSAmy0cGN
-vzSS8mtw6E/iMriSXqvqLikDyBbpR6uYCYdece4Ui4aCQXU6qNQ=
-=PDY2
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
-
---===============1177335203==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1177335203==--
+T24gRnJpLCAwOSBNYXIgMjAxOCwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cgo+IEhpLAo+IAo+
+IE9uIFRodSwgTWFyIDA4LCAyMDE4IGF0IDA5OjA3OjM2QU0gLTA4MDAsIFRvbnkgTGluZGdyZW4g
+d3JvdGU6Cj4gPiAqIFNlYmFzdGlhbiBSZWljaGVsIDxzZWJhc3RpYW4ucmVpY2hlbEBjb2xsYWJv
+cmEuY28udWs+IFsxODAzMDggMDk6NDddOgo+ID4gPiBIaSBMZWUsCj4gPiA+IAo+ID4gPiBPbiBX
+ZWQsIE1hciAwNywgMjAxOCBhdCAwNDozMjoxMVBNICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6Cj4g
+PiA+ID4gT24gRnJpLCAyMyBGZWIgMjAxOCwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cj4gPiA+
+ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRfY2VsbCBjcGNhcF9tZmRfZGV2aWNlc1tdID0g
+ewo+ID4gPiAKPiA+ID4gWy4uLl0KPiA+ID4gCj4gPiA+ID4gPiArCX0sIHsKPiA+ID4gPiA+ICsJ
+CS5uYW1lICAgICAgICAgID0gImNwY2FwLWxlZCIsCj4gPiA+ID4gPiArCQkuaWQgICAgICAgICAg
+ICA9IDQsCj4gPiA+ID4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJtb3Rvcm9sYSxjcGNhcC1sZWQt
+Y3AiLAo+ID4gPiA+ID4gKwl9LCB7Cj4gPiA+ID4gPiArCQkubmFtZSAgICAgICAgICA9ICJjcGNh
+cC1jb2RlYyIsCj4gPiA+ID4gPiArCX0KPiA+ID4gPiA+ICt9Owo+ID4gPiA+IAo+ID4gPiA+IFdp
+dGggbm9uZSBvZiB0aGUgZW50cmllcyBjb250YWluaW5nIHBsYXRmb3JtX2RhdGEgL21lIHdvbmRl
+cnMgd2h5IHlvdQo+ID4gPiA+IGNhbid0IHN0aWxsIHVzZSBkZXZtX29mX3BsYXRmb3JtX3BvcHVs
+YXRlKCk/Cj4gPiA+IAo+ID4gPiBCZWNhdXNlIGRldm1fb2ZfcGxhdGZvcm1fcG9wdWxhdGUgd29y
+a3Mgd2l0aCBjb21wYXRpYmxlIHByb3BlcnRpZXMgYW5kCj4gPiA+IGNwY2FwLWNvZGVjIGRvZXMg
+bm90IGhhdmUgb25lIGFmdGVyIEkgcmVtb3ZlZCBpdCBmb3IgTWFyay4KPiA+IAo+ID4gSG93IGFi
+b3V0IGtlZXAgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIGZvciB0aGUgb25lcyB0aGF0Cj4g
+PiBhbHJlYWR5IGhhdmUgY29tcGF0aWJsZS4gVGhlbiBhZGQgYSB0YWJsZSBlbnRyeSBmb3IgY3Bj
+YXAtY29kZWMKPiA+IG9ubHkgYW5kIGNhbGwgZGV2bV9tZmRfYWRkX2RldmljZXMoKT8KPiAKPiBU
+aGlzIHNob3VsZCB3b3JrLiBJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIHdhaXQgZm9yIFJvYiBI
+ZXJyaW5nJ3MKPiBmZWVkYmFjayBvbiB0aGUgYmluZGluZy4gTXkgdW5kZXJzdGFuZGluZyBpcywg
+dGhhdCBoZSBoYXMgdGhlIGxhc3QKPiB3b3JkIG9uIGJpbmRpbmcgcXVlc3Rpb25zIGFuZCBJIHdv
+dWxkIGxpa2UgdG8gYXZvaWQgY2hhbmdpbmcgdGhpcwo+IGJhY2sgYW5kIGZvcnRoLgoKSSd2ZSBi
+ZWVuIGF2b2lkaW5nIG1peC1hbmQtbWF0Y2hpbmcgbWZkXyooKSBhbmQgb2ZfcGxhdGZvcm1fKigp
+IEFQSXMsCmVsc2UgaXQgZ2V0cyB0b28gY29uZnVzaW5nIGZvciBuZXcgZGV2ZWxvcGVycy4KCipJ
+ZiogeW91IG1ha2UgdGhlIHN3aXRjaCB0byBtZmRfKigpIEFQSXMgKG5vdCBwcmVmZXJhYmxlKSwg
+dGhlbiBJCndvdWxkIGxpa2UgdG8gc2VlIG9mX3BsYXRmb3JtXyooKSByZW1vdmVkLgoKLS0gCkxl
+ZSBKb25lcyBb5p2O55C85pavXQpMaW5hcm8gU2VydmljZXMgVGVjaG5pY2FsIExlYWQKTGluYXJv
+Lm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86
+IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNh
+LXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9hbHNhLWRldmVsCg==
