@@ -1,79 +1,70 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/4] ARM: dts: sun8i: a33: Drop GPIO pinmux settings for A33-OLinuXino
-Date: Mon, 12 Mar 2018 12:23:53 +0800
-Message-ID: <20180312042356.18625-2-wens@csie.org>
-References: <20180312042356.18625-1-wens@csie.org>
+From: "Tobin C. Harding" <me@tobin.cc>
+Subject: [PATCH] of: unittest: Remove VLA stack usage
+Date: Mon, 12 Mar 2018 15:27:23 +1100
+Message-ID: <1520828843-22289-1-git-send-email-me@tobin.cc>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312042356.18625-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: "Tobin C. Harding" <me@tobin.cc>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com, Tycho Andersen <tycho@tycho.ws>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Normal GPIO usage does not need an additional pinmix setting. Exclusive
-usage of the pin will be guaranteed by the driver.
+The kernel would like to have all stack VLA usage removed[1].  This is a
+test function so the execution speed is not critical.  We can allocate
+memory for this buffer instead of using a VLA.  If kmalloc() fails just
+return.
 
-Drop the extra pinmux settings.
+Allocate buffer with kmalloc().
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+[1]: https://lkml.org/lkml/2018/3/7/621
+
+Signed-off-by: Tobin C. Harding <me@tobin.cc>
 ---
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-index 9757265c58d4..6349e0bec9a3 100644
---- a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-@@ -62,8 +62,6 @@
+Kees is this annoying you, CC'ing you an all my VLA patches?
+
+ drivers/of/unittest.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 1991fe4319f5..38cbc343b7da 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -254,12 +254,18 @@ static void __init of_unittest_check_tree_linkage(void)
+ static void __init of_unittest_printf_one(struct device_node *np, const char *fmt,
+ 					  const char *expected)
+ {
+-	unsigned char buf[strlen(expected)+10];
++	unsigned char *buf;
++	int buf_size;
+ 	int size, i;
  
- 	leds {
- 		compatible = "gpio-leds";
--		pinctrl-names = "default";
--		pinctrl-0 = <&led_pin_olinuxino>;
++	buf_size = strlen(expected) + 10;
++	buf = kmalloc(buf_size, GFP_KERNEL);
++	if (!buf)
++		return;
++
+ 	/* Baseline; check conversion with a large size limit */
+-	memset(buf, 0xff, sizeof(buf));
+-	size = snprintf(buf, sizeof(buf) - 2, fmt, np);
++	memset(buf, 0xff, buf_size);
++	size = snprintf(buf, buf_size - 2, fmt, np);
  
- 		green {
- 			label = "a33-olinuxino:green:usr";
-@@ -78,7 +76,7 @@
+ 	/* use strcmp() instead of strncmp() here to be absolutely sure strings match */
+ 	unittest((strcmp(buf, expected) == 0) && (buf[size+1] == 0xff),
+@@ -270,12 +276,13 @@ static void __init of_unittest_printf_one(struct device_node *np, const char *fm
+ 	size++;
+ 	for (i = 0; i < 2; i++, size--) {
+ 		/* Clear the buffer, and make sure it works correctly still */
+-		memset(buf, 0xff, sizeof(buf));
++		memset(buf, 0xff, buf_size);
+ 		snprintf(buf, size+1, fmt, np);
+ 		unittest(strncmp(buf, expected, size) == 0 && (buf[size+1] == 0xff),
+ 			"snprintf failed; size=%i fmt='%s' expected='%s' rslt='%s'\n",
+ 			size, fmt, expected, buf);
+ 	}
++	kfree(buf);
+ }
  
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_LOW>; /* PB4 */
-@@ -89,23 +87,6 @@
- 	status = "okay";
- };
- 
--&pio {
--	led_pin_olinuxino: led_pins@0 {
--		pins = "PB7";
--		function = "gpio_out";
--	};
--
--	mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
--		pins = "PB4";
--		function = "gpio_in";
--	};
--
--	usb0_id_detect_pin: usb0_id_detect_pin@0 {
--		pins = "PB3";
--		function = "gpio_in";
--	};
--};
--
- &r_rsb {
- 	status = "okay";
- 
-@@ -210,8 +191,6 @@
- };
- 
- &usbphy {
--	pinctrl-names = "default";
--	pinctrl-0 = <&usb0_id_detect_pin>;
- 	usb0_id_det-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
- 	usb0_vbus_power-supply = <&usb_power_supply>;
- 	usb0_vbus-supply = <&reg_drivevbus>;
+ static void __init of_unittest_printf(void)
 -- 
-2.16.2
+2.7.4
