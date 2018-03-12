@@ -1,75 +1,132 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 2/2][v6] driver: mtd: update struct map_info's swap as per map
- requirement
-Date: Mon, 12 Mar 2018 13:42:21 +0530
-Message-ID: <20180312081221.8246-1-prabhakar.kushwaha@nxp.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 2/3] drm: bridge: Add LVDS decoder driver
+Date: Mon, 12 Mar 2018 09:26:33 +0100
+Message-ID: <c698987c-5fec-da8a-c2a0-80bf11b579a8@samsung.com>
+References: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180309135214epcas5p26c0b31def45b1fb5a41c7adcc9a45f92@epcas5p2.samsung.com>
+ <1520603500-15218-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1520603500-15218-3-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
-Maps device can be Big endian or little endian.
-
-Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
-CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
-
-Now update struct map_info's swap field based on device characteristics
-defined in device tree.
-
-Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
----
-Changes for v2: Incorporated review comments from Boris Brezillon
-http://patchwork.ozlabs.org/patch/758381/
-Changes for v3: None
-Changes for v4: Updated code as per new defined binding of physmap.txt
-Changes for v5: Avoid map.swap set in case of endiannes not defined in dts file
-Changes for v6: Sending as it is
-
- drivers/mtd/maps/physmap_of_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-index b1bd4faecfb2..527b1682381f 100644
---- a/drivers/mtd/maps/physmap_of_core.c
-+++ b/drivers/mtd/maps/physmap_of_core.c
-@@ -20,6 +20,7 @@
- #include <linux/mtd/map.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/concat.h>
-+#include <linux/mtd/cfi_endian.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
-@@ -233,6 +234,11 @@ static int of_flash_probe(struct platform_device *dev)
- 		info->list[i].map.bankwidth = be32_to_cpup(width);
- 		info->list[i].map.device_node = dp;
- 
-+		if (of_property_read_bool(dp, "big-endian"))
-+			info->list[i].map.swap = CFI_BIG_ENDIAN;
-+		else if (of_property_read_bool(dp, "little-endian"))
-+			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-+
- 		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
- 		if (err)
- 			goto err_out;
--- 
-2.14.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+T24gMDkuMDMuMjAxOCAxNDo1MSwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IEFkZCB0cmFuc3BhcmVu
+dCBMVkRTIGRlY29kZXIgZHJpdmVyLgo+Cj4gQSB0cmFuc3BhcmVudCBMVkRTIGRlY29kZXIgaXMg
+YSBEUk0gYnJpZGdlIGRldmljZSB0aGF0IGRvZXMgbm90IHJlcXVpcmUKPiBhbnkgY29uZmlndXJh
+dGlvbiBhbmQgY29udmVydHMgTFZEUyBpbnB1dCB0byBkaWdpdGFsIENNT1MvVFRMIHBhcmFsbGVs
+Cj4gZGF0YSBvdXRwdXQuCgpOZWl0aGVyIGNvZGUsIG5laXRoZXIgYmluZGluZ3MgYXJlIExWRFMg
+c3BlY2lmaWMsIHRoaXMgaXMgZHJpdmVyIGZvciBhbnkKYnJpZGdlIHcvbyBjb25maWd1cmF0aW9u
+LgpJwqAgYW0gbm90IHN1cmUgaG93IG1hbnkgYnJpZGdlcyBkb2VzIG5vdCBuZWVkIGNvbmZpZ3Vy
+YXRpb24sIHVzdWFsbHkKdGhleSBuZWVkIHRvIGJlIHBvd2VyZWQgYXQgbGVhc3QuCkkgZ3Vlc3Mg
+aW4gbWFueSBjYXNlcyBwb3dlciBsaW5lIGlzIGFsd2F5cyBvbiwgYnV0IHRoaXMgaXMgYm9hcmQK
+c3BlY2lmaWMgbm90IGRldmljZSBzcGVjaWZpYy4KCkxvb2tpbmcgYXQgcHJldmlvdXMgdmVyc2lv
+biBvZiB0aGUgcGF0Y2hzZXQgaXQgbG9va3MgbGl0dGxlIGJpdCBhcyBhCmhhY2ssIGFuZCBjZXJ0
+YWlubHkgaXQgd2lsbCBiZSBhIGhhY2sgaW4gY2FzZSBvZiBSLUNhciBHZW4zIFYzTSBFYWdsZSwK
+d2hpY2ggSSBndWVzcyB5b3Ugd2FudCB0byB1c2UgaXQuCgo+IFNpZ25lZC1vZmYtYnk6IEphY29w
+byBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICB8ICAgOCArKysKPiAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9NYWtlZmlsZSAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbHZk
+cy1kZWNvZGVyLmMgfCAxMjkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAz
+IGZpbGVzIGNoYW5nZWQsIDEzOCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtZGVjb2Rlci5jCj4KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29u
+ZmlnCj4gaW5kZXggM2I5OWQ1YS4uZTUyYTVhZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcK
+PiBAQCAtMzIsNiArMzIsMTQgQEAgY29uZmlnIERSTV9EVU1CX1ZHQV9EQUMKPiAgCWhlbHAKPiAg
+CSAgU3VwcG9ydCBmb3IgUkdCIHRvIFZHQSBEQUMgYmFzZWQgYnJpZGdlcwo+Cj4gK2NvbmZpZyBE
+Uk1fTFZEU19ERUNPREVSCj4gKwl0cmlzdGF0ZSAiVHJhbnNwYXJlbnQgTFZEUyB0byBwYXJhbGxl
+bCBkZWNvZGVyIHN1cHBvcnQiCj4gKwlkZXBlbmRzIG9uIE9GCj4gKwlzZWxlY3QgRFJNX1BBTkVM
+X0JSSURHRQo+ICsJaGVscAo+ICsJICBTdXBwb3J0IGZvciB0cmFuc3BhcmVudCBMVkRTIHRvIHBh
+cmFsbGVsIGRlY29kZXJzIHRoYXQgZG9uJ3QgcmVxdWlyZQo+ICsJICBhbnkgY29uZmlndXJhdGlv
+bi4KPiArCj4gIGNvbmZpZyBEUk1fTFZEU19FTkNPREVSCj4gIAl0cmlzdGF0ZSAiVHJhbnNwYXJl
+bnQgcGFyYWxsZWwgdG8gTFZEUyBlbmNvZGVyIHN1cHBvcnQiCj4gIAlkZXBlbmRzIG9uIE9GCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgYi9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gaW5kZXggMzczZWIyOC4uZWRjMjMzMiAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9NYWtlZmlsZQo+IEBAIC0xLDYgKzEsNyBAQAo+ICAjIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wCj4gIG9iai0kKENPTkZJR19EUk1fQU5BTE9HSVhfQU5YNzhYWCkg
+Kz0gYW5hbG9naXgtYW54Nzh4eC5vCj4gIG9iai0kKENPTkZJR19EUk1fRFVNQl9WR0FfREFDKSAr
+PSBkdW1iLXZnYS1kYWMubwo+ICtvYmotJChDT05GSUdfRFJNX0xWRFNfREVDT0RFUikgKz0gbHZk
+cy1kZWNvZGVyLm8KPiAgb2JqLSQoQ09ORklHX0RSTV9MVkRTX0VOQ09ERVIpICs9IGx2ZHMtZW5j
+b2Rlci5vCj4gIG9iai0kKENPTkZJR19EUk1fTUVHQUNISVBTX1NURFBYWFhYX0dFX0I4NTBWM19G
+VykgKz0gbWVnYWNoaXBzLXN0ZHB4eHh4LWdlLWI4NTB2My1mdy5vCj4gIG9iai0kKENPTkZJR19E
+Uk1fTlhQX1BUTjM0NjApICs9IG54cC1wdG4zNDYwLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9sdmRzLWRlY29kZXIuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbHZk
+cy1kZWNvZGVyLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjMxOWY0
+ZDUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWRl
+Y29kZXIuYwo+IEBAIC0wLDAgKzEsMTI5IEBACj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
+OiBHUEwtMi4wCj4gKy8qCj4gKyAqIExWRFMgdG8gcGFyYWxsZWwgZGF0YSBEUk0gYnJpZGdlIGRy
+aXZlci4KPiArICoKPiArICogQ29weXJpZ2h0IChDKSAyMDE4IEphY29wbyBNb25kaSA8amFjb3Bv
+K3JlbmVzYXNAam1vbmRpLm9yZz4KPiArICovCj4gKwo+ICsjaW5jbHVkZSA8ZHJtL2RybVAuaD4K
+PiArI2luY2x1ZGUgPGRybS9kcm1fYnJpZGdlLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVs
+Lmg+Cj4gKwo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiArCj4gK3N0cnVjdCBsdmRz
+X2RlY29kZXIgewo+ICsJc3RydWN0IGRldmljZSAqZGV2Owo+ICsKPiArCXN0cnVjdCBkcm1fYnJp
+ZGdlIGJyaWRnZTsKPiArCXN0cnVjdCBkcm1fYnJpZGdlICpuZXh0Owo+ICsJc3RydWN0IGRybV9l
+bmNvZGVyICpicmlkZ2VfZW5jb2RlcjsKClVudXNlZCBmaWVsZC4KCgpSZWdhcmRzCkFuZHJ6ZWoK
+Cj4gK307Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBsdmRzX2RlY29kZXIgKnRvX2x2ZHNf
+ZGVjb2RlcihzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlyZXR1cm4gY29udGFp
+bmVyX29mKGJyaWRnZSwgc3RydWN0IGx2ZHNfZGVjb2RlciwgYnJpZGdlKTsKPiArfQo+ICsKPiAr
+c3RhdGljIGludCBsdmRzX2RlY29kZXJfYXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Up
+Cj4gK3sKPiArCXN0cnVjdCBsdmRzX2RlY29kZXIgKmx2ZHMgPSB0b19sdmRzX2RlY29kZXIoYnJp
+ZGdlKTsKPiArCj4gKwlyZXR1cm4gZHJtX2JyaWRnZV9hdHRhY2goYnJpZGdlLT5lbmNvZGVyLCBs
+dmRzLT5uZXh0LCBicmlkZ2UpOwo+ICt9Cj4gKwo+ICtzdHJ1Y3QgZHJtX2JyaWRnZV9mdW5jcyBs
+dmRzX2RlY19icmlkZ2VfZnVuYyA9IHsKPiArCS5hdHRhY2gJPSBsdmRzX2RlY29kZXJfYXR0YWNo
+LAo+ICt9Owo+ICsKPiArc3RhdGljIGludCBsdmRzX2RlY29kZXJfcGFyc2VfZHQoc3RydWN0IGx2
+ZHNfZGVjb2RlciAqbHZkcykKPiArewo+ICsJc3RydWN0IGRldmljZV9ub2RlICpsdmRzX291dHB1
+dDsKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcmVtb3RlOwo+ICsJaW50IHJldCA9IDA7Cj4gKwo+
+ICsJbHZkc19vdXRwdXQgPSBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyhsdmRzLT5kZXYt
+Pm9mX25vZGUsIDEsIC0xKTsKPiArCWlmICghbHZkc19vdXRwdXQpIHsKPiArCQlkZXZfZXJyKGx2
+ZHMtPmRldiwgIk1pc3NpbmcgZW5kcG9pbnQgaW4gUG9ydEAxXG4iKTsKPiArCQlyZXR1cm4gLUVO
+T0RFVjsKPiArCX0KPiArCj4gKwlyZW1vdGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFy
+ZW50KGx2ZHNfb3V0cHV0KTsKPiArCWlmICghcmVtb3RlKSB7Cj4gKwkJZGV2X2VycihsdmRzLT5k
+ZXYsICJFbmRwb2ludCBpbiBQb3J0QDEgdW5jb25uZWN0ZWRcbiIpOwo+ICsJCXJldCA9IC1FTk9E
+RVY7Cj4gKwkJZ290byBlcnJvcl9wdXRfbHZkc19ub2RlOwo+ICsJfQo+ICsKPiArCWlmICghb2Zf
+ZGV2aWNlX2lzX2F2YWlsYWJsZShyZW1vdGUpKSB7Cj4gKwkJZGV2X2VycihsdmRzLT5kZXYsICJQ
+b3J0QDEgcmVtb3RlIGVuZHBvaW50IGlzIGRpc2FibGVkXG4iKTsKPiArCQlyZXQgPSAtRU5PREVW
+Owo+ICsJCWdvdG8gZXJyb3JfcHV0X3JlbW90ZV9ub2RlOwo+ICsJfQo+ICsKPiArCWx2ZHMtPm5l
+eHQgPSBvZl9kcm1fZmluZF9icmlkZ2UocmVtb3RlKTsKPiArCWlmICghbHZkcy0+bmV4dCkKPiAr
+CQlyZXQgPSAtRVBST0JFX0RFRkVSOwo+ICsKPiArZXJyb3JfcHV0X3JlbW90ZV9ub2RlOgo+ICsJ
+b2Zfbm9kZV9wdXQocmVtb3RlKTsKPiArZXJyb3JfcHV0X2x2ZHNfbm9kZToKPiArCW9mX25vZGVf
+cHV0KGx2ZHNfb3V0cHV0KTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMg
+aW50IGx2ZHNfZGVjb2Rlcl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7
+Cj4gKwlzdHJ1Y3QgbHZkc19kZWNvZGVyICpsdmRzOwo+ICsJaW50IHJldDsKPiArCj4gKwlsdmRz
+ID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqbHZkcyksIEdGUF9LRVJORUwpOwo+
+ICsJaWYgKCFsdmRzKQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsKPiArCWx2ZHMtPmRldiA9ICZw
+ZGV2LT5kZXY7Cj4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBsdmRzKTsKPiArCj4gKwly
+ZXQgPSBsdmRzX2RlY29kZXJfcGFyc2VfZHQobHZkcyk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVy
+biByZXQ7Cj4gKwo+ICsJbHZkcy0+YnJpZGdlLmRyaXZlcl9wcml2YXRlID0gbHZkczsKPiArCWx2
+ZHMtPmJyaWRnZS5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gKwlsdmRzLT5icmlkZ2Uu
+ZnVuY3MgPSAmbHZkc19kZWNfYnJpZGdlX2Z1bmM7Cj4gKwo+ICsJZHJtX2JyaWRnZV9hZGQoJmx2
+ZHMtPmJyaWRnZSk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgbHZk
+c19kZWNvZGVyX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gKwlz
+dHJ1Y3QgbHZkc19kZWNvZGVyICpsdmRzID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7Cj4g
+Kwo+ICsJZHJtX2JyaWRnZV9yZW1vdmUoJmx2ZHMtPmJyaWRnZSk7Cj4gKwo+ICsJcmV0dXJuIDA7
+Cj4gK30KPiArCj4gKyNpZmRlZiBDT05GSUdfT0YKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgbHZkc19kZWNvZGVyX21hdGNoW10gPSB7Cj4gKwl7IC5jb21wYXRpYmxlID0gImx2
+ZHMtZGVjb2RlciIsIH0sCj4gKwl7IH0sCj4gK307Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2Ys
+IGx2ZHNfZGVjb2Rlcl9tYXRjaCk7Cj4gKyNlbmRpZgo+ICsKPiArc3RhdGljIHN0cnVjdCBwbGF0
+Zm9ybV9kcml2ZXIgbHZkc19kZWNvZGVyX2RyaXZlciA9IHsKPiArCS5wcm9iZQk9IGx2ZHNfZGVj
+b2Rlcl9wcm9iZSwKPiArCS5yZW1vdmUJPSBsdmRzX2RlY29kZXJfcmVtb3ZlLAo+ICsJLmRyaXZl
+cgk9IHsKPiArCQkubmFtZQkJPSAibHZkc19kZWNvZGVyIiwKPiArCQkub2ZfbWF0Y2hfdGFibGUJ
+PSBsdmRzX2RlY29kZXJfbWF0Y2gsCj4gKwl9LAo+ICt9Owo+ICttb2R1bGVfcGxhdGZvcm1fZHJp
+dmVyKGx2ZHNfZGVjb2Rlcl9kcml2ZXIpOwo+ICsKPiArTU9EVUxFX0FVVEhPUigiSmFjb3BvIE1v
+bmRpIDxqYWNvcG9Aam1vbmRpLm9yZz4iKTsKPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJUcmFuc3Bh
+cmVudCBMVkRTIHRvIHBhcmFsbGVsIGRhdGEgZGVjb2RlciIpOwo+ICtNT0RVTEVfTElDRU5TRSgi
+R1BMIHYyIik7Cj4gLS0KPiAyLjcuNAo+Cj4KPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
