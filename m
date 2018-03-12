@@ -1,132 +1,60 @@
-Return-Path: <SRS0=1M28=GE=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v6 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-Date: Wed, 14 Mar 2018 14:16:01 +0100
-Message-Id: <20180314131602.1531-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20180314131602.1531-1-maxime.ripard@bootlin.com>
-References: <20180314131602.1531-1-maxime.ripard@bootlin.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=zhyx=GC=ti.com=t-kristo@kernel.org>
+Subject: Re: [PATCH] dt-bindings: memory: ti-emif: add edac support under emif
+References: <1518542129-25813-1-git-send-email-t-kristo@ti.com>
+ <20180219031009.wduweeg53lnncntd@rob-hp-laptop>
+ <186b6e13-be1d-e8e8-38db-efa5e3496dd8@ti.com>
+ <CAL_JsqJTv+QH8xMGv6L7Dd-iF=mBZL+j4F0bVUWKipcMfY3zOQ@mail.gmail.com>
+ <e36fc21f-8dc7-733a-9c43-789c99d9cb36@ti.com>
+ <99ed2643-b01d-9e44-daf5-27860b963c27@oracle.com>
+ <3cc1537c-a103-2a53-05d9-6e1233715331@ti.com>
+ <f98eb356-a21b-2aed-0da0-ccc94acfcd17@oracle.com>
+ <e3e07cf4-024b-ce3f-d75b-a73484302178@ti.com>
+ <045a94dc-f129-4b22-c952-cb08c87b995c@oracle.com>
+From: Tero Kristo <t-kristo@ti.com>
+Message-ID: <e1099941-2675-9070-bccf-d78e22949627@ti.com>
+Date: Mon, 12 Mar 2018 09:13:04 +0200
+MIME-Version: 1.0
+In-Reply-To: <045a94dc-f129-4b22-c952-cb08c87b995c@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
-video streams and can output on up to 4 CSI-2 lanes, depending on the
-hardware implementation.
+On 09/03/18 21:37, Santosh Shilimkar wrote:
+> On 3/9/2018 1:15 AM, Tero Kristo wrote:
+>> On 08/03/18 19:48, Santosh Shilimkar wrote:
+>>> On 3/8/2018 1:32 AM, Tero Kristo wrote:
+>>>> On 26/02/18 01:40, Santosh Shilimkar wrote:
+>>>>>
+>>>
+>>> [...]
+>>>
+>>>>>> Yeah, I will post patches for those, thanks for review.
+>>>>>>
+>>>>> Let me know if you have already posted the follow up series ?
+>>>>
+>>>> Anybody planning to pick this patch for merge? Tony/Santosh?
+>>>>
+>>> I already did and its part of the pull request [1] I sent
+>>> out on 3/5
+>>
+>> Oh ok thanks Santosh, just didn't get notified of that.
+>>
+>> How about the corresponding DTS patch for keystone?
+>>
+>> https://patchwork.kernel.org/patch/10219339/
+>>
+> Looks like I missed that one. Would have been nice to have both patches
+> posted in one series. Could you please repost the patch with my ack and
+> will request Arnd to apply it dierctly to arm-soc dts branch.
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+Sent it. The patches were split around this time due to some 
+interdependencies between different subsystems; the dt-binding is needed 
+for OMAP family parts also. However, the J6+ support for ddr-ecc is 
+pushed to next merge window so its fine the binding goes in via your tree.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-new file mode 100644
-index 000000000000..459c6e332f52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -0,0 +1,98 @@
-+Cadence MIPI-CSI2 TX controller
-+===============================
-+
-+The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-+4 CSI lanes in output, and up to 4 different pixel streams in input.
-+
-+Required properties:
-+  - compatible: must be set to "cdns,csi2tx"
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * esc_clk: escape mode clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties
-+  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-+  - phy-names: must contain "dphy"
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes are numbered as follows.
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 output
-+           1    Stream 0 input
-+           2    Stream 1 input
-+           3    Stream 2 input
-+           4    Stream 3 input
-+
-+           The stream input port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design. Since there is only one endpoint per port,
-+           the endpoints are not numbered.
-+
-+Example:
-+
-+csi2tx: csi-bridge@0d0e1000 {
-+	compatible = "cdns,csi2tx";
-+	reg = <0x0d0e1000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>,
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "p_clk", "esc_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2tx_out: endpoint {
-+				remote-endpoint = <&remote_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2tx_in_stream0: endpoint {
-+				remote-endpoint = <&stream0_out>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2tx_in_stream1: endpoint {
-+				remote-endpoint = <&stream1_out>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2tx_in_stream2: endpoint {
-+				remote-endpoint = <&stream2_out>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2tx_in_stream3: endpoint {
-+				remote-endpoint = <&stream3_out>;
-+			};
-+		};
-+	};
-+};
--- 
-2.14.3
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
