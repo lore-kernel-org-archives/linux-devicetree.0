@@ -1,87 +1,52 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: [PATCH v9 0/9] Add support for Cirrus Logic CS47L35/L85/L90/L91 codecs
-Date: Tue, 13 Mar 2018 13:18:55 +0000
-Message-ID: <20180313131904.13700-1-rf@opensource.cirrus.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v12 0/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Tue, 13 Mar 2018 15:32:08 +0200
+Message-ID: <1520947931-15426-1-git-send-email-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org
-Cc: patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, brendanhiggins@google.com, avifishman70@gmail.com, julien.thierry@arm.com, pombredanne@nexb.com, arnd@arndb.de, olof@lixom.net, khilman@kernel.org, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-NOTE: Compared to older versions of this chain I have removed patches at the
-end of the chain that were being ignored until the earlier patches had been
-merged - an impossible circular dependency. There were too many moving targets
-to keep the whole chain up-to-date and so patches that were already acked were
-getting stale. The subset of patches here are all acked or close-to-acked, and
-can be built and used as they are to produce a working pinctrl and gpio.
+Addressed comments from:
+ - Arnd: https://www.spinics.net/lists/arm-kernel/msg639249.html
 
-The Cirrus Logic CS47L35, CS47L85, CS47L90/91 codecs are complex audio SoC
-devices. In addition to the core audio capability they have onboard GPIO,
-regulators, DSPs and interrupt controller and a large register map space
-accessed over SPI or I2C. This family of codecs is based around common IP
-blocks and they are managed by a set of common drivers referred to as "Madera".
+Summary of changes since previous update:
+ - Modify mach-npcm Kconfig to support all NPCM7XX family.
+ - Modify mach-npcm Makefile.
+ - Adding NPCM730 chip support.
+ - Adding L2 Cache values to initialize the L2 Cache.
 
-Richard Fitzgerald (9):
-  mfd: madera: Add register definitions for Cirrus Logic Madera codecs
-  mfd: madera: Add DT bindings for Cirrus Logic Madera codecs
-  mfd: madera: Add common support for Cirrus Logic Madera codecs
-  mfd: madera: Register map tables for Cirrus Logic CS47L35
-  mfd: madera: Register map tables for Cirrus Logic CS47L85
-  mfd: madera: Register map tables for Cirrus Logic CS47L90/91
-  pinctrl: madera: Add DT bindings for Cirrus Logic Madera codecs
-  pinctrl: madera: Add driver for Cirrus Logic Madera codecs
-  gpio: madera: Support Cirrus Logic Madera class codecs
+All changes tested on Nuvoton NPCM750 EVB.
 
- Documentation/devicetree/bindings/mfd/madera.txt   |  102 +
- .../bindings/pinctrl/cirrus,madera-pinctrl.txt     |   99 +
- MAINTAINERS                                        |   16 +
- drivers/gpio/Kconfig                               |    6 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-madera.c                         |  206 +
- drivers/mfd/Kconfig                                |   50 +
- drivers/mfd/Makefile                               |   14 +
- drivers/mfd/cs47l35-tables.c                       | 1609 ++++++++
- drivers/mfd/cs47l85-tables.c                       | 3009 +++++++++++++++
- drivers/mfd/cs47l90-tables.c                       | 2674 +++++++++++++
- drivers/mfd/madera-core.c                          |  600 +++
- drivers/mfd/madera-i2c.c                           |  139 +
- drivers/mfd/madera-spi.c                           |  138 +
- drivers/mfd/madera.h                               |   44 +
- drivers/pinctrl/Kconfig                            |    1 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/cirrus/Kconfig                     |   15 +
- drivers/pinctrl/cirrus/Makefile                    |   13 +
- drivers/pinctrl/cirrus/pinctrl-cs47l35.c           |   45 +
- drivers/pinctrl/cirrus/pinctrl-cs47l85.c           |   59 +
- drivers/pinctrl/cirrus/pinctrl-cs47l90.c           |   57 +
- drivers/pinctrl/cirrus/pinctrl-madera-core.c       | 1074 ++++++
- drivers/pinctrl/cirrus/pinctrl-madera.h            |   41 +
- include/linux/mfd/madera/core.h                    |  187 +
- include/linux/mfd/madera/pdata.h                   |   63 +
- include/linux/mfd/madera/registers.h               | 3917 ++++++++++++++++++++
- 27 files changed, 14180 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
- create mode 100644 drivers/gpio/gpio-madera.c
- create mode 100644 drivers/mfd/cs47l35-tables.c
- create mode 100644 drivers/mfd/cs47l85-tables.c
- create mode 100644 drivers/mfd/cs47l90-tables.c
- create mode 100644 drivers/mfd/madera-core.c
- create mode 100644 drivers/mfd/madera-i2c.c
- create mode 100644 drivers/mfd/madera-spi.c
- create mode 100644 drivers/mfd/madera.h
- create mode 100644 drivers/pinctrl/cirrus/Kconfig
- create mode 100644 drivers/pinctrl/cirrus/Makefile
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l35.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l85.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l90.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera-core.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera.h
- create mode 100644 include/linux/mfd/madera/core.h
- create mode 100644 include/linux/mfd/madera/pdata.h
- create mode 100644 include/linux/mfd/madera/registers.h
+Tomer Maimon (3):
+  arm: npcm: add basic support for Nuvoton BMCs
+  arm: dts: add Nuvoton NPCM750 device tree
+  MAINTAINERS: Add entry for the Nuvoton NPCM architecture
+
+ .../arm/cpu-enable-method/nuvoton,npcm750-smp      |  42 ++++++
+ .../devicetree/bindings/arm/npcm/npcm.txt          |   6 +
+ MAINTAINERS                                        |  14 ++
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/nuvoton-npcm750-evb.dts          |  35 +++++
+ arch/arm/boot/dts/nuvoton-npcm750.dtsi             | 165 +++++++++++++++++++++
+ arch/arm/mach-npcm/Kconfig                         |  30 ++++
+ arch/arm/mach-npcm/Makefile                        |   6 +
+ arch/arm/mach-npcm/headsmp.S                       |  17 +++
+ arch/arm/mach-npcm/npcm7xx.c                       |  23 +++
+ arch/arm/mach-npcm/platsmp.c                       |  81 ++++++++++
+ 13 files changed, 424 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm750-smp
+ create mode 100644 Documentation/devicetree/bindings/arm/npcm/npcm.txt
+ create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-evb.dts
+ create mode 100644 arch/arm/boot/dts/nuvoton-npcm750.dtsi
+ create mode 100644 arch/arm/mach-npcm/Kconfig
+ create mode 100644 arch/arm/mach-npcm/Makefile
+ create mode 100644 arch/arm/mach-npcm/headsmp.S
+ create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+ create mode 100644 arch/arm/mach-npcm/platsmp.c
 
 -- 
-2.11.0
+2.14.1
