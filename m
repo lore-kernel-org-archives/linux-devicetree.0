@@ -1,34 +1,53 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two devices
-Date: Tue, 13 Mar 2018 19:15:08 +0900
-Message-ID: <CAAFQd5DXvnjaFw4Ct1Xn90nQZ4F4dLtov0ymG-tycQt5oLNpiQ@mail.gmail.com>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org> <20180313085534.11650-2-vivek.gautam@codeaurora.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
+ firmware
+Date: Tue, 13 Mar 2018 10:16:03 +0000
+Message-ID: <755770ba-d110-8b2e-3c1f-9b65686dc51f@arm.com>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-2-git-send-email-jollys@xilinx.com>
+ <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
+ <CY1PR0201MB0764FB23021F5DC694C7F56DB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
+ <f6a416b7-542f-a3c3-538f-8549cf4e96c3@arm.com>
+ <DM2PR0201MB07678A47B5380DC14E6F6126B8D30@DM2PR0201MB0767.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313085534.11650-2-vivek.gautam@codeaurora.org>
+In-Reply-To: <DM2PR0201MB07678A47B5380DC14E6F6126B8D30@DM2PR0201MB0767.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jolly Shah <JOLLYS@xilinx.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
 
-Thanks for the patch.
 
-On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> The lists managing the device-links can be traversed to
-> find the link between two devices. The device_link_add() APIs
-> does traverse these lists to check if there's already a link
-> setup between the two devices.
-> So, add a new APIs, device_link_find(), to find an existing
-> device link between two devices - suppliers and consumers.
+On 12/03/18 23:07, Jolly Shah wrote:
+> Hi Sudeep,
 
-I'm wondering if this API would be useful for anything else that the
-problem we're trying to solve with deleting links without storing them
-anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
-better alternative?
+>>>> Do you foresee using SMC/HVC for this firmware even on future platforms?
+>>>> If not, I suggest to keep the protocol part separate from the transport i.e.
+>>>> smc/hvc via ATF. It could be replaced with mailbox or some h/w
+>>>> mechanism in future ?
+>>>>
+>>>
+>>> We have PSCI and EEMI interfaces exposed to linux from ATF. PSCI is an
+>>> EEMI client. We do not have current plans to switch to mailbox as it
+>>> will require 2 communication channels to PMU as PSCI is through ATF.
+>>>
+>>
+>> OK, but I just saw some bindings that has mailbox interface, honestly it's getting
+>> too confusing with multiple series on the same thing floating and hence I
+>> requested to put it together as one series.
+> 
+> Mailbox binding is used for power management driver. Mailbox is only
+> used for PMU->APU communication. APU->PMU communication is always
+> through EEMI firmware interface which is using SMC/HVC.
+> 
 
-Best regards,
-Tomasz
+Ah OK, is it because there's no non-secure mailbox or to avoid races,
+all non-secure EEMI is channeled through SMC ?
+
+-- 
+Regards,
+Sudeep
