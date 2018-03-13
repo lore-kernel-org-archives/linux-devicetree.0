@@ -1,61 +1,94 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [RFC 1/2] pci: dwc: pci-exynos: modify the Kconfig dependency
-Date: Tue, 13 Mar 2018 20:54:46 +0900
-Message-ID: <39521cb5-07a5-24b5-b545-a01c730f1985@samsung.com>
-References: <CGME20171221121409epcas1p2af291857b9df115d2dec9a3d3300e0aa@epcas1p2.samsung.com>
-        <20171221121408.22636-1-jh80.chung@samsung.com>
-        <20180313111211.GA15480@e107981-ln.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] arm64: dts: qcom: rename qcom,pcie devices to pcie
+Date: Tue, 13 Mar 2018 13:13:09 +0100
+Message-ID: <20180313121345.2749183-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180313111211.GA15480@e107981-ln.cambridge.arm.com>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, krzk@kernel.org, jingoohan1@gmail.com, kgene@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Lorenzo,
+The node name for a PCIe host bridge must be "pcie" as required by
+the binging. dtc now warns about it:
 
-On 03/13/2018 08:12 PM, Lorenzo Pieralisi wrote:
-> Hi Jaehoon,
-> 
-> On Thu, Dec 21, 2017 at 09:14:06PM +0900, Jaehoon Chung wrote:
->> PCI_EXYNOS has the dependency with SOC_EXYNOS5440.
->> It's modified to ARCH_EXYNOS from SOC_EXYNOS5440, because other
->> SoCs needs to use this driver.
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> ---
->>  drivers/pci/dwc/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->> index 113e09440f85..0ff9795df8e8 100644
->> --- a/drivers/pci/dwc/Kconfig
->> +++ b/drivers/pci/dwc/Kconfig
->> @@ -65,7 +65,7 @@ config PCIE_DW_PLAT
->>  config PCI_EXYNOS
->>  	bool "Samsung Exynos PCIe controller"
->>  	depends on PCI
->> -	depends on SOC_EXYNOS5440
->> +	depends on ARCH_EXYNOS
->>  	depends on PCI_MSI_IRQ_DOMAIN
->>  	select PCIEPORTBUS
->>  	select PCIE_DW_HOST
-> 
-> This patch fell through the cracks, is it still needed ? Please let
-> me know and I will apply it if it is, thank you very much.
+arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
+arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
+arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
+arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
 
-I will resend the patches for supporting exynos5433(TM2 board) without RFC.
-I have already prepared the patches. now i'm doing some more test and cleaning code.
+This renames the nodes as appropriate.
 
-Best Regards,
-Jaehoon Chung
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 6 +++---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi        | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> 
-> Lorenzo
-> 
-> 
-> 
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 1c8f1b86472d..e82f821a4e0e 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -140,16 +140,16 @@
+ 		};
+ 
+ 		agnoc@0 {
+-			qcom,pcie@600000 {
++			pcie@600000 {
+ 				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+ 			};
+ 
+-			qcom,pcie@608000 {
++			pcie@608000 {
+ 				status = "okay";
+ 				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
+ 			};
+ 
+-			qcom,pcie@610000 {
++			pcie@610000 {
+ 				status = "okay";
+ 				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
+ 			};
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 410ae787ebb4..cd08c8c5248e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -851,7 +851,7 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
+-			pcie0: qcom,pcie@600000 {
++			pcie0: pcie@600000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				status = "disabled";
+ 				power-domains = <&gcc PCIE0_GDSC>;
+@@ -904,7 +904,7 @@
+ 
+ 			};
+ 
+-			pcie1: qcom,pcie@608000 {
++			pcie1: pcie@608000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				power-domains = <&gcc PCIE1_GDSC>;
+ 				bus-range = <0x00 0xff>;
+@@ -957,7 +957,7 @@
+ 						"bus_slave";
+ 			};
+ 
+-			pcie2: qcom,pcie@610000 {
++			pcie2: pcie@610000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				power-domains = <&gcc PCIE2_GDSC>;
+ 				bus-range = <0x00 0xff>;
+-- 
+2.9.0
