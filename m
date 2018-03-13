@@ -1,89 +1,247 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v16 0/9] LPC: legacy ISA I/O support
-Date: Tue, 13 Mar 2018 10:42:22 +0000
-Message-ID: <fb457950-b0d7-0d77-02c5-f9531ea71d90@huawei.com>
-References: <1520333268-82754-1-git-send-email-john.garry@huawei.com>
- <1520335317.10722.416.camel@linux.intel.com>
- <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
- <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com>
- <3ef757ff-8430-017f-59d3-ff67f49f5a80@huawei.com>
- <CAJZ5v0jTJ-LwyPUO7mbS47KyZ35pZeBfqkjxqubZjEGC=OJ82Q@mail.gmail.com>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH 5/5] arm64: allwinner: a64: Add support for TERES I laptop
+Date: Tue, 13 Mar 2018 12:07:36 +0100
+Message-ID: <E1evhmK-0000OI-Nw@stardust.g4.wien.funkfeuer.at>
+References: <20180312161050.7647-1-harald@ccbib.org> <20180312161050.7647-6-harald@ccbib.org> <20180313084108.uh3ui5jwin2knvuu@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0jTJ-LwyPUO7mbS47KyZ35pZeBfqkjxqubZjEGC=OJ82Q@mail.gmail.com>
+In-reply-to: <20180313084108.uh3ui5jwin2knvuu@flea>
+Content-ID: <1504.1520939256.1@stardust.g4.wien.funkfeuer.at>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>Linux
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-On 13/03/2018 10:22, Rafael J. Wysocki wrote:
-> On Tue, Mar 6, 2018 at 5:22 PM, John Garry <john.garry@huawei.com> wrote:
->>>>>>
->>>>>> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
->>>>>> peripherals can
->>>>>> be supported without any changes on the existing ipmi-si driver.
->>>>>>
->>>>>> The whole patchset has been tested on Hip07 D05 board both using DTB
->>>>>> and ACPI.
->>>>>>
->>>>>
->>>>>> V15 thread here: https://lkml.org/lkml/2018/2/26/584
->>>>>
->>>>>
->>>>>
->>>>> Thanks for an update.
->>>>> Though I answered to previous thread.
->>>>>
->>>>> Summary: I'm fine with the series as long as maintainers are fine
->>>>> (Rafael et al.). On personal side I think that the handler approach is
->>>>> better. Details are in v15 thread.
->>>>
->>>>
->>>>
->>>> Hi Andy,
->>>>
->>>> Thanks for your input and continued support. As I mentioned in reply in
->>>> v15,
->>>> the handler support would (or has) faced issues. And Rafael seems fine
->>>> with
->>>> deferring the probe to the LLDD in Patch #7/9
->>>
->>>
->>
->> Hi Rafael,
->>
->>> Well, the only sort-of concern is that these devices may not be
->>> "serial bus slaves" in general, so the naming is slightly confusing.
->>>
->>
->> Right, the name.
->>
->> The key point is that we model the bus the same as other serial buses like
->> I2C or SPI, so require the same treatment from the ACPI scan.
->>
->> Would you prefer acpi_is_serial_bus_slave() and
->> acpi_device_flags.serial_bus_slave symbols be modified also?
->
-> Yeah, preferably.
->
-> You can rename them to acpi_device_enumeration_by_parent() and
-> acpi_device_flags.enumeration_by_parent, respectively, as far as I'm
-> concerned.
->
-> At least the names would match the purpose then. :-)
->
-> And please update the comment in acpi_default_enumeration() while at it.
+Hi,
 
-Hi Rafael,
+> Maxime Ripard writes:
+> 
+> Hi,
+> 
+> On Mon, Mar 12, 2018 at 04:10:50PM +0000, Harald Geyer wrote:
+>> The TERES I is an open hardware laptop built by Olimex using the
+>> Allwinner A64 SoC.
+>> 
+>> Add the board specific .dts file, which includes the A64 .dtsi and
+>> enables the peripherals that we support so far.
+>> 
+>> Signed-off-by: Harald Geyer <harald@ccbib.org>
+>> ---
+>>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>>  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 308 +++++++++++++++++++++
+>>  2 files changed, 309 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+>> 
+>> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+>> index f505227b0250..5f073f7423b7 100644
+>> --- a/arch/arm64/boot/dts/allwinner/Makefile
+>> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+>> @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+>> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+>>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+>> new file mode 100644
+>> index 000000000000..0d42b5111f0f
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+>> @@ -0,0 +1,308 @@
+>> +/*
+>> + * Copyright (C) Harald Geyer <harald@ccbib.org>
+>> + * based on sun50i-a64-olinuxino.dts by Jagan Teki <jteki@openedev.com>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This library is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This library is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+> 
+> you should use an SPDX header here to define the license
 
-That should be ok. I can just add this mentioned modification to my 
-series and send for review.
+Ok, I will strip the actual text then. Nice.
 
-All the best,
-John
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "sun50i-a64.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/pwm/pwm.h>
+>> +
+>> +/ {
+>> +	model = "Olimex Teres I A64";
+> 
+> It's called the Teres-I, there's no need for the A64 here
 
->
-> .
->
+Olimex said in the past they want the Teres to be very modular, with
+boards for different SoCs compatible with each other on the level of
+external pins. The PCBs we have right now are labled like
+TERES_PCB1-A64-MAIN, TERES-PCB2-IO, etc. - I wouldn't be surprised if
+they start selling TERES_PCB1-x86-MAIN to be put into your average Teres I,
+so I felt this naming was safer.
+
+However I specifically CCed them on this series, so they can comment on
+issues such as this one...
+
+>> +	compatible = "olimex,a64-teres-i", "allwinner,sun50i-a64";
+> 
+> Or in the compatible
+> 
+>> +
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +	};
+>> +
+>> +	backlight: backlight {
+>> +		compatible = "pwm-backlight";
+>> +		pwms = <&pwm 0 50000 0>;
+>> +		brightness-levels = <0 10 20 30 40 50 60 70 100>;
+>> +		default-brightness-level = <3>;
+>> +		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* PD23 */
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +
+>> +		framebuffer-lcd {
+>> +			eDP25-supply = <&reg_dldo2>;
+>> +			eDP12-supply = <&reg_dldo3>;
+>> +		};
+>> +	};
+>> +
+>> +	gpio-keys {
+>> +		compatible = "gpio-keys";
+>> +
+>> +		lid-switch {
+>> +			label = "Lid Switch";
+>> +			gpios = <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
+>> +			linux,input-type = <EV_SW>;
+>> +			linux,code = <SW_LID>;
+>> +		};
+>> +	};
+>> +
+>> +	leds: leds {
+> 
+> Do you need a label?
+
+Here probably not.
+
+>> +		compatible = "gpio-leds";
+>> +
+>> +		led_capslock: capslock {
+> 
+> Same thing here
+
+I was kind of hoping I could use it to link the led to the keyboard,
+so that it goes on when the capslock key is pressed. But no such luck:
+1) There seems to be no binding for external leds in the input subsystem.
+2) The keyboard is a usb one and get enumerated automatically, so not DT
+   node by default.
+
+I guess I can remove it, but then I guess labels for the leds might be
+helpful when further customizing the DT locally, so why not just keep them?
+
+>> +			gpios = <&pio 2 7 GPIO_ACTIVE_HIGH>; /* PC7 */
+> 
+> Ideally you should have LED labels here, following the scheme
+> devicename:colour:function
+
+Okay.
+
+>> +		};
+>> +
+>> +		led_numlock: numlock {
+>> +			gpios = <&pio 2 4 GPIO_ACTIVE_HIGH>; /* PC4 */
+>> +		};
+>> +	};
+>> +
+>> +	reg_usb1_vbus: usb1-vbus {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "usb1-vbus";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		enable-active-high;
+>> +		gpio = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
+>> +		status = "okay";
+> 
+> I guess this one has a parent regulator too?
+
+Unless I failed to read the schematic correctly: No.
+The step-up converter providing 5V power for the usb1-vbus is connected
+directly to the IPS (intelligent power source) output of the PMIC and
+enabled directly by the 3.3V supply. So technically of course there is
+a parent regulator, but nothing we can control from software.
+
+>> +	};
+>> +
+>> +	wifi_pwrseq: wifi_pwrseq {
+>> +		compatible = "mmc-pwrseq-simple";
+>> +		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+>> +	};
+>> +};
+>> +
+>> +&ehci1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +	clock-frequency = <100000>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&i2c0_pins>;
+>> +	status = "okay";
+>> +};
+> 
+> What is this used for?
+
+As explained in the other message in more detail: The ANX6345 eDP-bridge.
+
+Thanks for the review,
+Harald
+
+> Looks good otherwise, thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
