@@ -1,132 +1,86 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
-	devices
-Date: Tue, 13 Mar 2018 15:28:47 +0530
-Message-ID: <CAFp+6iH5E3qZNS65AHWEAypMwy7bfRg62_TFc3dBEYu_H-K0mg@mail.gmail.com>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
-	<20180313085534.11650-2-vivek.gautam@codeaurora.org>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH 2/5] arm64: dts: allwinner: a64: Add watchdog
+Date: Tue, 13 Mar 2018 11:03:33 +0100
+Message-ID: <E1evgmL-0000KW-JP@stardust.g4.wien.funkfeuer.at>
+References: <20180312161050.7647-1-harald@ccbib.org> <20180312161050.7647-3-harald@ccbib.org> <29bb31fc-dd3d-e9c5-c78e-f8e80f7a95fa@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180313085534.11650-2-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>"list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>,
-	" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <29bb31fc-dd3d-e9c5-c78e-f8e80f7a95fa@arm.com>
+Content-ID: <1270.1520935413.1@stardust.g4.wien.funkfeuer.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2018 at 2:25 PM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> The lists managing the device-links can be traversed to
-> find the link between two devices. The device_link_add() APIs
-> does traverse these lists to check if there's already a link
-> setup between the two devices.
-> So, add a new APIs, device_link_find(), to find an existing
-> device link between two devices - suppliers and consumers.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> ---
->
->  * New patch added to this series.
->
->  drivers/base/core.c    | 30 +++++++++++++++++++++++++++---
->  include/linux/device.h |  2 ++
->  2 files changed, 29 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 5847364f25d9..e8c9774e4ba2 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -144,6 +144,30 @@ static int device_reorder_to_tail(struct device *dev, void *not_used)
->         return 0;
->  }
->
-> +/**
-> + * device_link_find - find any existing link between two devices.
-> + * @consumer: Consumer end of the link.
-> + * @supplier: Supplier end of the link.
-> + *
-> + * Returns pointer to the existing link between a supplier and
-> + * and consumer devices, or NULL if no link exists.
-> + */
-> +struct device_link *device_link_find(struct device *consumer,
-> +                                    struct device *supplier)
-> +{
-> +       struct device_link *link = NULL;
-> +
-> +       if (!consumer || !supplier)
-> +               return NULL;
-> +
-> +       list_for_each_entry(link, &supplier->links.consumers, s_node)
-> +               if (link->consumer == consumer)
-> +                       break;
-> +
-> +       return link;
+Hi,
 
-My bad, this too needs fixing (didn't add the changes to the patch :( )
+André Przywara writes:
+> On 12/03/18 16:10, Harald Geyer wrote:
+> > Add a watchdog node for the A64, automatically enabled on all boards.
+> > Tested on Olimex Teres I.
+> > 
+> > Signed-off-by: Harald Geyer <harald@ccbib.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > index 64e452a758fa..ca1b365bc722 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > @@ -665,5 +665,11 @@
+> >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >  		};
+> > +
+> > +		wdt0: watchdog@1c20ca0 {
+> > +			compatible = "allwinner,sun6i-a31-wdt";
+> 
+> Please use the recommended way, adding a specific compatible first:
+> 
+> 			compatible = "allwinner,sun50i-a64-wdt",
+> 				     "allwinner,sun6i-a31-wdt";
 
-           list_for_each_entry(link, &supplier->links.consumers, s_node)
-                   if (link->consumer == consumer)
-                           return link;
+I tried to follow the style most commonly used in the rest of the file,
+but I can add the new string to the binding documentation and use it here.
 
-           return NULL;
+> The rest looks correct.
+> 
+> I am just a bit puzzled what's the use of a watchdog on a laptop?
 
-> +}
-> +EXPORT_SYMBOL_GPL(device_link_find);
-> +
->  /**
->   * device_link_add - Create a link between two devices.
->   * @consumer: Consumer end of the link.
-> @@ -195,9 +219,9 @@ struct device_link *device_link_add(struct device *consumer,
->                 goto out;
->         }
->
-> -       list_for_each_entry(link, &supplier->links.consumers, s_node)
-> -               if (link->consumer == consumer)
-> -                       goto out;
-> +       link = device_link_find(consumer, supplier);
-> +       if (link)
-> +               goto out;
->
->         link = kzalloc(sizeof(*link), GFP_KERNEL);
->         if (!link)
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index b093405ed525..13bc1884c3eb 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1278,6 +1278,8 @@ extern const char *dev_driver_string(const struct device *dev);
->  struct device_link *device_link_add(struct device *consumer,
->                                     struct device *supplier, u32 flags);
->  void device_link_del(struct device_link *link);
-> +struct device_link *device_link_find(struct device *consumer,
-> +                                    struct device *supplier);
->
->  #ifdef CONFIG_PRINTK
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess the same as the watchdog on my x86 PC - debugging/testing software
+using watchdogs. ;)
 
+> I
+> would expect it being more used in embedded systems? Or is that patch
+> here actually independent from the Teres I?
 
+Yes, I could have sent it as independent patch, but I figured merging
+is easier if there aren't independent patches touching the same file at
+the same time.
+
+I mostly added support for the watchdog because it was listed in the
+wiki as untested and it cost me virtually no time to run a few tests while
+working on the teres.
+
+Thanks,
+Harald
+
+> Cheers,
+> Andre.
+> 
+> > +			reg = <0x01c20ca0 0x20>;
+> > +			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> > +		};
+> >  	};
+> >  };
+> > 
+> 
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+If you want to support my work:
+see http://friends.ccbib.org/harald/supporting/
+or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
+or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
