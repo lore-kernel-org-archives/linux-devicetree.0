@@ -1,70 +1,72 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
- Tegra210
-Date: Tue, 13 Mar 2018 10:20:52 +0000
-Message-ID: <f50eaa7b-3ce3-c18f-ca8c-e035a4f6aa7d@nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
- <85edea04-6aaf-3609-1da9-0d542ac98e7d@nvidia.com>
- <20180313095117.GX6190@tbergstrom-lnx.Nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v16 0/9] LPC: legacy ISA I/O support
+Date: Tue, 13 Mar 2018 11:22:47 +0100
+Message-ID: <CAJZ5v0jTJ-LwyPUO7mbS47KyZ35pZeBfqkjxqubZjEGC=OJ82Q@mail.gmail.com>
+References: <1520333268-82754-1-git-send-email-john.garry@huawei.com>
+ <1520335317.10722.416.camel@linux.intel.com> <b4459d98-ebd4-7b13-07ec-613845579558@huawei.com>
+ <CAJZ5v0gnf6rDYtKLBNfKjC=g3W=2XUed_R=AO+GeGYuubP_zWw@mail.gmail.com> <3ef757ff-8430-017f-59d3-ff67f49f5a80@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313095117.GX6190@tbergstrom-lnx.Nvidia.com>
-Content-Language: en-US
+In-Reply-To: <3ef757ff-8430-017f-59d3-ff67f49f5a80@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI
 List-Id: devicetree@vger.kernel.org
 
-
-On 13/03/18 09:51, Peter De Schrijver wrote:
-> On Mon, Mar 12, 2018 at 12:15:22PM +0000, Jon Hunter wrote:
->>
->> On 06/02/18 16:34, Peter De Schrijver wrote:
->>> Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
->>> support in this driver. Also allow for the case where the CPU voltage is
->>> controlled directly by the DFLL rather than by a separate regulator object.
+On Tue, Mar 6, 2018 at 5:22 PM, John Garry <john.garry@huawei.com> wrote:
+>>>>>
+>>>>> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
+>>>>> peripherals can
+>>>>> be supported without any changes on the existing ipmi-si driver.
+>>>>>
+>>>>> The whole patchset has been tested on Hip07 D05 board both using DTB
+>>>>> and ACPI.
+>>>>>
+>>>>
+>>>>> V15 thread here: https://lkml.org/lkml/2018/2/26/584
+>>>>
+>>>>
+>>>>
+>>>> Thanks for an update.
+>>>> Though I answered to previous thread.
+>>>>
+>>>> Summary: I'm fine with the series as long as maintainers are fine
+>>>> (Rafael et al.). On personal side I think that the handler approach is
+>>>> better. Details are in v15 thread.
 >>>
->>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>> ---
->>>  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
->>>  1 file changed, 8 insertions(+), 7 deletions(-)
 >>>
->>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
->>> index 4353025..f8e01a8 100644
->>> --- a/drivers/cpufreq/tegra124-cpufreq.c
->>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
->>> @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
->>>  {
->>>  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
->>>  	clk_disable_unprepare(priv->dfll_clk);
->>> -	regulator_sync_voltage(priv->vdd_cpu_reg);
->>> +	if (priv->vdd_cpu_reg)
->>> +		regulator_sync_voltage(priv->vdd_cpu_reg);
->>>  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
->>>  }
+>>>
+>>> Hi Andy,
+>>>
+>>> Thanks for your input and continued support. As I mentioned in reply in
+>>> v15,
+>>> the handler support would (or has) faced issues. And Rafael seems fine
+>>> with
+>>> deferring the probe to the LLDD in Patch #7/9
 >>
->> OK, so this bit does not make sense to me. In the above we are switching
->> from the DFLL to the PLL (ie. disabling the DFLL) and so to ensure we
->> are operating at the correct voltage after disabling the DFLL we need to
->> sync the voltage. Seems we would need to do this for all devices, no?
->> How is the different between Tegra124 and Tegra210?
-> 
-> Yes. So in case of i2c the regulator framework will reapply the voltage it
-> knows which in our case is the boot voltage for VDD_CPU because noone else
-> from a regulator framework pov has ever changed the voltage. In case of PWM
-> putting the PWM output pad in tri state will cause the OVR regulator to output
-> a hardware defined voltage. This is done as part of the dfll_clk_disable()
-> function. To summarize:
+>>
+>
+> Hi Rafael,
+>
+>> Well, the only sort-of concern is that these devices may not be
+>> "serial bus slaves" in general, so the naming is slightly confusing.
+>>
+>
+> Right, the name.
+>
+> The key point is that we model the bus the same as other serial buses like
+> I2C or SPI, so require the same treatment from the ACPI scan.
+>
+> Would you prefer acpi_is_serial_bus_slave() and
+> acpi_device_flags.serial_bus_slave symbols be modified also?
 
-So this is the piece of information I was missing. Maybe add this to the
-changelog so it is clear why we do not need to handle the cpu rail in
-the case of PWM.
+Yeah, preferably.
 
-Cheers
-Jon
+You can rename them to acpi_device_enumeration_by_parent() and
+acpi_device_flags.enumeration_by_parent, respectively, as far as I'm
+concerned.
 
--- 
-nvpublic
+At least the names would match the purpose then. :-)
+
+And please update the comment in acpi_default_enumeration() while at it.
