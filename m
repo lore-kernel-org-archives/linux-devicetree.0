@@ -1,278 +1,48 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH] arm64: allwinner: H5: Add Xunlong Orange Pi Zero Plus
-Date: Tue, 13 Mar 2018 23:47:16 +0100
-Message-ID: <7d1f77ce-a171-0fc8-b0af-12a47a2d1077@hauke-m.de>
-References: <20180311155932.20945-1-hauke@hauke-m.de>
- <20180312090208.jjssbgf5t5y5dj7o@flea>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: phy-mtk-tphy: add properties for U2
+ slew rate calibrate
+Date: Wed, 14 Mar 2018 00:21:16 +0100
+Message-ID: <6810b7b4-3023-2e76-5fbf-7e442067cbc4@gmail.com>
+References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520832210.git.chunfeng.yun@mediatek.com>
+ <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1207966185225001774=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180312090208.jjssbgf5t5y5dj7o@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, wens@csie.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============1207966185225001774==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="nFKRd2kjkwlNRVJvkLnUetZplvCcgVS6l"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---nFKRd2kjkwlNRVJvkLnUetZplvCcgVS6l
-Content-Type: multipart/mixed; boundary="OBYYpR5w8EFwYyriAadtP3nG47tGnyrX5";
- protected-headers="v1"
-From: Hauke Mehrtens <hauke@hauke-m.de>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: wens@csie.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org
-Message-ID: <7d1f77ce-a171-0fc8-b0af-12a47a2d1077@hauke-m.de>
-Subject: Re: [PATCH] arm64: allwinner: H5: Add Xunlong Orange Pi Zero Plus
-References: <20180311155932.20945-1-hauke@hauke-m.de>
- <20180312090208.jjssbgf5t5y5dj7o@flea>
-In-Reply-To: <20180312090208.jjssbgf5t5y5dj7o@flea>
-
---OBYYpR5w8EFwYyriAadtP3nG47tGnyrX5
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 03/12/2018 10:02 AM, Maxime Ripard wrote:
-> Hi,
->=20
-> On Sun, Mar 11, 2018 at 04:59:32PM +0100, Hauke Mehrtens wrote:
->> The Xunlong Orange Pi Zero Plus is single board computer.
->> - H5 Quad-core 64-bit Cortex-A53
->> - 512MB DDR3
->> - microSD slot
->> - Debug TTL UART
->> - 1000M/100M/10M Ethernet RJ45
->> - Realtek RTL8189FTV
->> - Spi flash (2MB)
->> - One USB 2.0 HOST, One USB 2.0 OTG
->>
->> This is based on a patch from armbian:
->> https://github.com/armbian/build/blob/master/patch/kernel/sunxi-next/s=
-unxi-add-orangepi-zero-plus.patch
->>
->> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
->> ---
->>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
->>  .../dts/allwinner/sun50i-h5-orangepi-zero-plus.dts | 192 ++++++++++++=
-+++++++++
->>  2 files changed, 193 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-z=
-ero-plus.dts
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/=
-dts/allwinner/Makefile
->> index f505227b0250..d9d239affbcf 100644
->> --- a/arch/arm64/boot/dts/allwinner/Makefile
->> +++ b/arch/arm64/boot/dts/allwinner/Makefile
->> @@ -8,5 +8,6 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-sopine-basebo=
-ard.dtb
->>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
->>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
->> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->=20
-> Putting it before the Plus2 would make more sense
-
-Ok I will change this.
-
->>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-nanopi-neo2.dtb
->>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-nanopi-neo-plus2.dtb
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plu=
-s.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
->> new file mode 100644
->> index 000000000000..52b29f3706a7
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
->> @@ -0,0 +1,192 @@
->> +/*
->> + * Copyright (C) 2016 ARM Ltd.
->=20
-> Is it?
-
-This device tree file is based on a different one, there is probably a
-longer chain and the first was created by ARM. I can add my copyright in
-addition.
-
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual=
-
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as=
-
->> + *     published by the Free Software Foundation; either version 2 of=
- the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of=
-
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation=
-
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the=
-
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be=
-
->> + *     included in all copies or substantial portions of the Software=
-=2E
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND=
-,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIE=
-S
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->=20
-> Also, please use an SPDX tag instead of the full license description.
-
-Ok will do that.
-
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun50i-h5.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->> +
->> +/ {
->> +	model =3D "Xunlong Orange Pi Zero Plus";
->> +	compatible =3D "xunlong,orangepi-zero-plus", "allwinner,sun50i-h5";
->> +
->> +	reg_vcc3v3: vcc3v3 {
->> +		compatible =3D "regulator-fixed";
->> +		regulator-name =3D "vcc3v3";
->> +		regulator-min-microvolt =3D <3300000>;
->> +		regulator-max-microvolt =3D <3300000>;
->> +	};
->> +
->> +	aliases {
->> +		ethernet0 =3D &emac;
->> +		ethernet1 =3D &rtl8189ftv;
->> +		serial0 =3D &uart0;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +
->> +	leds {
->> +		compatible =3D "gpio-leds";
->> +
->> +		pwr {
->> +			label =3D "orangepi:green:pwr";
->> +			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
->> +			default-state =3D "on";
->> +		};
->> +
->> +		status {
->> +			label =3D "orangepi:red:status";
->> +			gpios =3D <&pio 0 17 GPIO_ACTIVE_HIGH>;
->> +		};
->> +	};
->> +
->> +	reg_gmac_3v3: gmac-3v3 {
->> +		compatible =3D "regulator-fixed";
->> +		regulator-name =3D "gmac-3v3";
->> +		regulator-min-microvolt =3D <3300000>;
->> +		regulator-max-microvolt =3D <3300000>;
->> +		startup-delay-us =3D <100000>;
->> +		enable-active-high;
->> +		gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	reg_usb0_vbus: usb0-vbus {
->> +		compatible =3D "regulator-fixed";
->> +		regulator-name =3D "usb0-vbus";
->> +		regulator-min-microvolt =3D <5000000>;
->> +		regulator-max-microvolt =3D <5000000>;
->> +		enable-active-high;
->> +		gpio =3D <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
->=20
-> It doesn't look to be right judging from the schematics. That pin
-> doesn't control whether VBUS is enabled or not, it doesn't seem to be
-> enabled at all.
-
-I will have a closer look at this.
-
->=20
-> Looks good otherwise, thanks!
-> Maxime
->=20
 
 
+On 03/12/2018 06:25 AM, Chunfeng Yun wrote:
+> Add two properties of ref_clk and coefficient used by U2 slew rate
+> calibrate which may vary on different SoCs
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
---OBYYpR5w8EFwYyriAadtP3nG47tGnyrX5--
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
---nFKRd2kjkwlNRVJvkLnUetZplvCcgVS6l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJFBAEBCAAvFiEEyByTt/kEznHNdZethnSnH1g9EzIFAlqoVPsRHGhhdWtlQGhh
-dWtlLW0uZGUACgkQhnSnH1g9EzKJqBAAltiBthskKzvlYLSnli+nVZol6ssnMR4T
-6+CPzwshcszZ09t6qzD6DuxCZP0+N3ZvJLZb8NEeRjCzioh5mBJwxB+aP8oxESj7
-33d1vFFoNC4hqxeLJBC14wh55BIERkpgT6tau+Q0P8RVKSlAKhHB9gh3wdVwB4MB
-2yF8KHS2H9+wUcc7W1mGg0mv9rvRbEDf8ePHmepC6v/IQXiU+22Xcjy43ugRPQ/D
-2vutbePNHZvHOyfUzfEy39tp2owsa2kXegNclK0Xxzbi1nFIlUG+fNdudUV2ZkZR
-/jPl8DybvJqcoFc0zhLVFOZmJuWJ24mxr4J8QjNCs5V4q6uE/5lQiIprHuwctl1o
-kf5szCNKOFtPoE3lLsEHtrBQhfzfO/vM6qLLKDK/cZJtak34cpp6qaQZWhv4Yc5p
-uuvf1fIiISPNuVe2ZlpJHWgdTER2RtT6HkbeScaegMqyk+RUcY9GRIiix5jIkxcY
-kSjt6TyECusGGlE0jZK2YGKpPht0815Et15h1vAA1/NGEKKkeYxZzK4WXimHQ1xP
-AQIal4Rt9JysK6ImyJF8vuRMg6BQj075PUVhbiHS0YlVD9dGq/XqL3HAJWzhyP4O
-HEa/PnOveO5dACwkRhk+0wmvpfYao2cFKhoAqfmY3dK1+9gdYUiLhafDWn/P9mb7
-+gdIrVxKSNg=
-=mZxS
------END PGP SIGNATURE-----
-
---nFKRd2kjkwlNRVJvkLnUetZplvCcgVS6l--
-
-
---===============1207966185225001774==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1207966185225001774==--
+> ---
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> index 41e09ed..0d34b2b 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> @@ -27,6 +27,10 @@ Optional properties (controller (parent) node):
+>   - reg		: offset and length of register shared by multiple ports,
+>  		  exclude port's private register. It is needed on mt2701
+>  		  and mt8173, but not on mt2712.
+> + - mediatek,src-ref-clk-mhz	: frequency of reference clock for slew rate
+> +		  calibrate
+> + - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
+> +		  SoC process
+>  
+>  Required properties (port (child) node):
+>  - reg		: address and length of the register set for the port.
+> 
