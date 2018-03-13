@@ -1,71 +1,65 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 6/8] dmaengine: stm32-dma: properly mask irq bits
-Date: Tue, 13 Mar 2018 17:42:05 +0100
-Message-ID: <1520959327-25760-7-git-send-email-pierre-yves.mordret@st.com>
-References: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v2 2/3] dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+Date: Tue, 13 Mar 2018 17:44:43 +0100
+Message-ID: <20180313164444.19881-3-thierry.escande@linaro.org>
+References: <20180313164444.19881-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <20180313164444.19881-1-thierry.escande@linaro.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A single register of the controller holds the information for four dma
-channels.
-The functions stm32_dma_irq_status() don't mask the relevant bits after
-the shift, thus adjacent channel's status is also reported in the returned
-value.
-Fixed by masking the value before returning it.
+Add binding document for serial bluetooth chips using Qualcomm protocol.
 
-Similarly, the function stm32_dma_irq_clear() don't mask the input value
-before shifting it, thus an incorrect input value could disable the
-interrupts of adjacent channels.
-Fixed by masking the input value before using it.
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+---
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
----
-  Version history:
-    v1:
-       * Initial
----
----
- drivers/dma/stm32-dma.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index f9d3c84..a11cbee 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -38,6 +38,10 @@
- #define STM32_DMA_TEI			BIT(3) /* Transfer Error Interrupt */
- #define STM32_DMA_DMEI			BIT(2) /* Direct Mode Error Interrupt */
- #define STM32_DMA_FEI			BIT(0) /* FIFO Error Interrupt */
-+#define STM32_DMA_MASKI			(STM32_DMA_TCI \
-+					 | STM32_DMA_TEI \
-+					 | STM32_DMA_DMEI \
-+					 | STM32_DMA_FEI)
- 
- /* DMA Stream x Configuration Register */
- #define STM32_DMA_SCR(x)		(0x0010 + 0x18 * (x)) /* x = 0..7 */
-@@ -404,7 +408,7 @@ static u32 stm32_dma_irq_status(struct stm32_dma_chan *chan)
- 
- 	flags = dma_isr >> (((chan->id & 2) << 3) | ((chan->id & 1) * 6));
- 
--	return flags;
-+	return flags & STM32_DMA_MASKI;
- }
- 
- static void stm32_dma_irq_clear(struct stm32_dma_chan *chan, u32 flags)
-@@ -419,6 +423,7 @@ static void stm32_dma_irq_clear(struct stm32_dma_chan *chan, u32 flags)
- 	 * If (ch % 4) is 2 or 3, left shift the mask by 16 bits.
- 	 * If (ch % 4) is 1 or 3, additionally left shift the mask by 6 bits.
- 	 */
-+	flags &= STM32_DMA_MASKI;
- 	dma_ifcr = flags << (((chan->id & 2) << 3) | ((chan->id & 1) * 6));
- 
- 	if (chan->id & 4)
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+new file mode 100644
+index 000000000000..288cf062e906
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -0,0 +1,34 @@
++Qualcomm Bluetooth Chips
++---------------------
++
++This documents the binding structure and common properties for serial
++attached Qualcomm devices.
++
++Serial attached Qualcomm devices shall be a child node of the host UART
++device the slave device is attached to.
++
++Required properties:
++
++ - compatible: should contain one of the following:
++   * "qcom,qca6174-bt"
++
++Optional properties:
++
++ - bt-disable-n-gpios: GPIO specifier, used to enable chip during probe
++
++Example:
++
++serial@7570000 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&blsp1_uart1_default>;
++	pinctrl-1 = <&blsp1_uart1_sleep>;
++
++	bluetooth {
++		compatible = "qcom,qca6174-bt";
++
++		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_en_pin_a>, <&divclk4_pin_a>;
++	};
++};
 -- 
-2.7.4
+2.14.1
