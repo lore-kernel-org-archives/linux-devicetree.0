@@ -1,7 +1,7 @@
 From: Thierry Escande <thierry.escande@linaro.org>
-Subject: [PATCH v2 3/3] Bluetooth: hci_qca: Add serdev support
-Date: Tue, 13 Mar 2018 17:44:44 +0100
-Message-ID: <20180313164444.19881-4-thierry.escande@linaro.org>
+Subject: [PATCH v2 1/3] arm64: dts: apq8096-db820c: enable bluetooth node
+Date: Tue, 13 Mar 2018 17:44:42 +0100
+Message-ID: <20180313164444.19881-2-thierry.escande@linaro.org>
 References: <20180313164444.19881-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset = "utf-8"
@@ -13,217 +13,140 @@ To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for Qualcomm serial slave devices. Probe the serial device,
-retrieve its maximum speed and register a new hci uart device.
+Add a new serial node for the Qualcomm BT controller QCA6174. This
+allows automatic probing and hci registration through the serdev
+framework instead of relying on the userspace helpers.
 
 Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
 ---
- drivers/bluetooth/Kconfig   |   2 +-
- drivers/bluetooth/hci_qca.c | 102 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 101 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  | 14 ++++++++++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    | 17 ++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 32 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 10 +++++++
+ 4 files changed, 73 insertions(+)
 
-diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-index 07e55cd8f8c8..c2a6a7ebd14b 100644
---- a/drivers/bluetooth/Kconfig
-+++ b/drivers/bluetooth/Kconfig
-@@ -195,7 +195,7 @@ config BT_HCIUART_BCM
- 
- config BT_HCIUART_QCA
- 	bool "Qualcomm Atheros protocol support"
--	depends on BT_HCIUART
-+	depends on BT_HCIUART_SERDEV
- 	select BT_HCIUART_H4
- 	select BT_QCA
- 	help
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 05ec530b8a3a..ca5428898702 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -29,7 +29,11 @@
-  */
- 
- #include <linux/kernel.h>
-+#include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of.h>
-+#include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -50,6 +54,9 @@
- #define IBS_TX_IDLE_TIMEOUT_MS		2000
- #define BAUDRATE_SETTLE_TIMEOUT_MS	300
- 
-+/* divclk4 rate */
-+#define DIVCLK4_RATE_32KHZ	32768
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+index 24552f19b3fa..172165d84669 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+@@ -36,4 +36,18 @@
+ 			drive-strength = <2>;	/* 2 MA */
+ 		};
+ 	};
 +
- /* HCI_IBS transmit side sleep protocol states */
- enum tx_ibs_states {
- 	HCI_IBS_TX_ASLEEP,
-@@ -111,6 +118,12 @@ struct qca_data {
- 	u64 votes_off;
++	blsp1_uart1_default: blsp1_uart1_default {
++		function = "blsp_uart2";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	blsp1_uart1_sleep: blsp1_uart1_sleep {
++		function = "gpio";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <2>;
++		bias-disable;
++	};
  };
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+index 59b29ddfb6e9..f8d2a3b10b1f 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+@@ -26,6 +26,23 @@
+ 		};
+ 	};
  
-+struct qca_serdev {
-+	struct hci_uart	 serdev_hu;
-+	struct gpio_desc *bt_en;
-+	struct clk	 *divclk4;
-+};
++	divclk4_pin_a: divclk4 {
++		pins = "gpio18";
++		function = "func2";
 +
- static void __serial_clock_on(struct tty_struct *tty)
- {
- 	/* TODO: Some chipset requires to enable UART clock on client
-@@ -386,6 +399,7 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
- /* Initialize protocol */
- static int qca_open(struct hci_uart *hu)
- {
-+	struct qca_serdev *qcadev;
- 	struct qca_data *qca;
++		bias-disable;
++		power-source = <PM8994_GPIO_S4>;
++	};
++
++	bt_en_pin_a: bt-en-active {
++		pins = "gpio19";
++		function = "normal";
++
++		output-low;
++		power-source = <PM8994_GPIO_S4>;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++
+ 	usb3_vbus_det_gpio: pm8996_gpio22 {
+ 		pinconf {
+ 			pins = "gpio22";
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 1c8f1b86472d..b05d6bc0b856 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -23,6 +23,7 @@
+ 	aliases {
+ 		serial0 = &blsp2_uart1;
+ 		serial1 = &blsp2_uart2;
++		serial2 = &blsp1_uart1;
+ 		i2c0	= &blsp1_i2c2;
+ 		i2c1	= &blsp2_i2c1;
+ 		i2c2	= &blsp2_i2c0;
+@@ -34,7 +35,38 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- 	BT_DBG("hu %p qca_open", hu);
-@@ -444,6 +458,13 @@ static int qca_open(struct hci_uart *hu)
- 	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
- 	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
++	clocks {
++		divclk4: divclk4 {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++			clock-output-names = "divclk4";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&divclk4_pin_a>;
++		};
++	};
++
+ 	soc {
++		serial@7570000 {
++			label = "BT-UART";
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart1_default>;
++			pinctrl-1 = <&blsp1_uart1_sleep>;
++
++			bluetooth {
++				compatible = "qcom,qca6174-bt";
++
++				bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&bt_en_pin_a>;
++
++				clocks = <&divclk4>;
++			};
++		};
++
+ 		serial@75b0000 {
+ 			label = "LS-UART1";
+ 			status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 0a6f7952bbb1..2d54a86a027f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -408,6 +408,16 @@
+ 			#clock-cells = <1>;
+ 		};
  
-+	if (hu->serdev) {
-+		serdev_device_open(hu->serdev);
++		blsp1_uart1: serial@7570000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07570000 0x1000>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
 +
-+		qcadev = serdev_device_get_drvdata(hu->serdev);
-+		gpiod_set_value(qcadev->bt_en, 1);
-+	}
-+
- 	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
- 	       qca->tx_idle_delay, qca->wake_retrans);
- 
-@@ -512,6 +533,7 @@ static int qca_flush(struct hci_uart *hu)
- /* Close protocol */
- static int qca_close(struct hci_uart *hu)
- {
-+	struct qca_serdev *qcadev;
- 	struct qca_data *qca = hu->priv;
- 
- 	BT_DBG("hu %p qca close", hu);
-@@ -525,6 +547,13 @@ static int qca_close(struct hci_uart *hu)
- 	destroy_workqueue(qca->workqueue);
- 	qca->hu = NULL;
- 
-+	if (hu->serdev) {
-+		serdev_device_close(hu->serdev);
-+
-+		qcadev = serdev_device_get_drvdata(hu->serdev);
-+		gpiod_set_value(qcadev->bt_en, 0);
-+	}
-+
- 	kfree_skb(qca->rx_skb);
- 
- 	hu->priv = NULL;
-@@ -885,6 +914,14 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
- 	return 0;
- }
- 
-+static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
-+{
-+	if (hu->serdev)
-+		serdev_device_set_baudrate(hu->serdev, speed);
-+	else
-+		hci_uart_set_baudrate(hu, speed);
-+}
-+
- static int qca_setup(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev = hu->hdev;
-@@ -905,7 +942,7 @@ static int qca_setup(struct hci_uart *hu)
- 		speed = hu->proto->init_speed;
- 
- 	if (speed)
--		hci_uart_set_baudrate(hu, speed);
-+		host_set_baudrate(hu, speed);
- 
- 	/* Setup user speed if needed */
- 	speed = 0;
-@@ -924,7 +961,7 @@ static int qca_setup(struct hci_uart *hu)
- 				   ret);
- 			return ret;
- 		}
--		hci_uart_set_baudrate(hu, speed);
-+		host_set_baudrate(hu, speed);
- 	}
- 
- 	/* Setup patch / NVM configurations */
-@@ -958,12 +995,73 @@ static struct hci_uart_proto qca_proto = {
- 	.dequeue	= qca_dequeue,
- };
- 
-+static int qca_serdev_probe(struct serdev_device *serdev)
-+{
-+	struct qca_serdev *qcadev;
-+
-+	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
-+	if (!qcadev)
-+		return -ENOMEM;
-+
-+	qcadev->serdev_hu.serdev = serdev;
-+	serdev_device_set_drvdata(serdev, qcadev);
-+
-+	qcadev->bt_en = devm_gpiod_get(&serdev->dev, "bt-disable-n",
-+				       GPIOD_OUT_LOW);
-+	if (IS_ERR(qcadev->bt_en)) {
-+		dev_err(&serdev->dev, "failed to acquire bt-disable-n gpio\n");
-+		return PTR_ERR(qcadev->bt_en);
-+	}
-+
-+	gpiod_set_value(qcadev->bt_en, 0);
-+
-+	qcadev->divclk4 = devm_clk_get(&serdev->dev, NULL);
-+	if (IS_ERR(qcadev->divclk4)) {
-+		dev_err(&serdev->dev, "failed to acquire divclk4\n");
-+		return PTR_ERR(qcadev->divclk4);
-+	}
-+
-+	clk_set_rate(qcadev->divclk4, DIVCLK4_RATE_32KHZ);
-+	clk_prepare_enable(qcadev->divclk4);
-+
-+	return hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
-+}
-+
-+static void qca_serdev_remove(struct serdev_device *serdev)
-+{
-+	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&qcadev->serdev_hu);
-+
-+	clk_disable(qcadev->divclk4);
-+	clk_unprepare(qcadev->divclk4);
-+}
-+
-+static const struct of_device_id qca_bluetooth_of_match[] = {
-+	{ .compatible = "qcom,qca6174-bt" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
-+
-+static struct serdev_device_driver qca_serdev_driver = {
-+	.probe = qca_serdev_probe,
-+	.remove = qca_serdev_remove,
-+	.driver = {
-+		.name = "hci_uart_qca",
-+		.of_match_table = qca_bluetooth_of_match,
-+	},
-+};
-+
- int __init qca_init(void)
- {
-+	serdev_device_driver_register(&qca_serdev_driver);
-+
- 	return hci_uart_register_proto(&qca_proto);
- }
- 
- int __exit qca_deinit(void)
- {
-+	serdev_device_driver_unregister(&qca_serdev_driver);
-+
- 	return hci_uart_unregister_proto(&qca_proto);
- }
+ 		blsp1_spi0: spi@7575000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x07575000 0x600>;
 -- 
 2.14.1
