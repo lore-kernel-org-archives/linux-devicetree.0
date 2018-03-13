@@ -1,27 +1,37 @@
-Return-Path: <SRS0=HlUo=GE=xilinx.com=michal.simek@kernel.org>
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Automatic EDA output to DTS
-Message-ID: <3d391844-6f9d-4d20-b95b-5c88afc7c749@xilinx.com>
-Date: Wed, 14 Mar 2018 15:39:08 +0100
+Return-Path: <SRS0=NcRe=GD=ni.com=prvs=261051e907=brad.mouring@kernel.org>
+From: Brad Mouring <brad.mouring@ni.com>
+Subject: [PATCH v5 net-next 4/4] Documentation: macb: Document phy-handle binding
+Date: Tue, 13 Mar 2018 16:32:16 -0500
+Message-ID: <20180313213216.109153-5-brad.mouring@ni.com>
+In-Reply-To: <20180313213216.109153-1-brad.mouring@ni.com>
+References: <88aa8148-bf57-86a0-8f0d-fae7191865a6@gmail.com>
+ <20180313213216.109153-1-brad.mouring@ni.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Sakis Panou <sakisp@xilinx.com>
+Content-Type: text/plain
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "Michael Grzeschik  <m.grzeschik@pengutronix.de>, Andrew Lunn" <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, "Julia Cartwright  <julia@ni.com>, <devicetree@vger.kernel.org>, Brad Mouring" <brad.mouring@ni.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi guys,
+Document the existence of the optional binding, directing to the
+general ethernet document that describes this binding.
 
-Are you aware about any activity or any plan for taking the output of an
-EDA tool such as Protel, Orcad, Cadence Allegro, KiCad, (other) and
-converting it to a full blow DTS(I) file(s) to describe to the board
-device level topology?
+Signed-off-by: Brad Mouring <brad.mouring@ni.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/devicetree/bindings/net/macb.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Michal
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 27966ae741e0..457d5ae16f23 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -29,6 +29,7 @@ Optional properties for PHY child node:
+ - reset-gpios : Should specify the gpio for phy reset
+ - magic-packet : If present, indicates that the hardware supports waking
+   up via magic packet.
++- phy-handle : see ethernet.txt file in the same directory
+ 
+ Examples:
+ 
+-- 
+2.16.2
