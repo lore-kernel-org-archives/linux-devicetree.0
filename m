@@ -1,47 +1,71 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v12 3/3] MAINTAINERS: Add entry for the Nuvoton NPCM architecture
-Date: Tue, 13 Mar 2018 15:32:11 +0200
-Message-ID: <1520947931-15426-4-git-send-email-tmaimon77@gmail.com>
-References: <1520947931-15426-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520947931-15426-1-git-send-email-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, brendanhiggins@google.com, avifishman70@gmail.com, julien.thierry@arm.com, pombredanne@nexb.com, arnd@arndb.de, olof@lixom.net, khilman@kernel.org, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tomer Maimon <tmaimon77@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
+Date: Tue, 13 Mar 2018 14:43:52 +0100
+Message-ID: <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
+References: <CAMuHMdUx3A_8MeZmrwiBRqUS0oGjwrg13fy1QMsA2SUw+dR0Hg@mail.gmail.com>
+ <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainers and reviewers for the Nuvoton NPCM architecture.
+Hi Fabrizio,
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Reviewed-by: Avi Fishman <avifishman70@gmail.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Wed, Feb 28, 2018 at 6:40 PM, Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
+> boot CPUs run a routine designed to bring up SMP and deal with hot plug.
+> The value contained in the SBAR registers is not initialized by a WDT
+> triggered reset, which means that after a WDT triggered reset we jump
+> to the SMP bring up routine, preventing the system from executing the
+> bootrom code.
+>
+> The purpose of this patch is to jump to the bootrom code in case of a
+> WDT triggered reset, and keep the SMP functionality untouched.
+> In order to tell if the code had been called due to the WDT overflowing
+> we are testing WOVF from register RWTCSRA.
+>
+> The new function shmobile_boot_vector_gen2 isn't replacing
+> shmobile_boot_vector for backward compatibility reasons. The kernel
+> will install the best option (either shmobile_boot_vector or
+> shmobile_boot_vector_gen2) to ICRAM1 after parsing the device tree,
+> according to the amount of memory available.
+>
+> Since shmobile_boot_vector has become bigger, "reg" property of nodes
+> compatible with "renesas,smp-sram" now need to be set to a value
+> greater or equal to "<0 0x60>".
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v5->v6:
+> * taken ifdefs out as per Geert's suggestion.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 93a12af4f180..71cccfd9e26f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1700,6 +1700,20 @@ F:	Documentation/devicetree/bindings/arm/ste-*
- F:	Documentation/devicetree/bindings/arm/ux500/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
- 
-+ARM/NUVOTON NPCM ARCHITECTURE
-+M:	Avi Fishman <avifishman70@gmail.com>
-+M:	Tomer Maimon <tmaimon77@gmail.com>
-+R:	Patrick Venture <venture@google.com>
-+R:	Nancy Yuen <yuenn@google.com>
-+R:	Brendan Higgins <brendanhiggins@google.com>
-+L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
-+S:	Supported
-+F:	arch/arm/mach-npcm/
-+F:	arch/arm/boot/dts/nuvoton-npcm*
-+F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-+F:	drivers/*/*npcm*
-+F:	Documentation/*/*npcm*
-+
- ARM/NUVOTON W90X900 ARM ARCHITECTURE
- M:	Wan ZongShun <mcuos.com@gmail.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.14.1
+My intention was to remove the #ifdefs from the header file only, not
+from arch/arm/mach-shmobile/headsmp.S, as the latter is used for
+other SoC families, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
