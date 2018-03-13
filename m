@@ -1,154 +1,218 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: [PATCH 1/3] arm64: dts: apq8096-db820c: enable bluetooth node
-Date: Tue, 13 Mar 2018 17:03:24 +0100
-Message-ID: <20180313160326.18180-2-thierry.escande@linaro.org>
-References: <20180313160326.18180-1-thierry.escande@linaro.org>
+From: Olivier Moysan <olivier.moysan@st.com>
+Subject: [PATCH 1/3] ALSA: pcm: add IEC958 channel status
+	control helper
+Date: Tue, 13 Mar 2018 17:27:06 +0100
+Message-ID: <1520958428-10930-2-git-send-email-olivier.moysan@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset = "utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313160326.18180-1-thierry.escande@linaro.org>
-Content-Transfert-Encoding: 8bit
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Cc: jsarha@ti.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, rmk@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Escande <thierry.escande@collabora.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-Add a new serial node for the Qualcomm BT controller QCA6174. This
-allows automatic probing and hci registration through the serdev
-framework instead of relying on the userspace helpers.
+Add IEC958 channel status helper that creates control to handle the
+IEC60958 status bits.
 
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  | 14 ++++++++++
- .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    | 17 ++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 32 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi              | 10 +++++++
- 4 files changed, 73 insertions(+)
+ include/sound/pcm_iec958.h |  19 ++++++++
+ sound/core/pcm_iec958.c    | 113 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-index 24552f19b3fa..172165d84669 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-@@ -36,4 +36,18 @@
- 			drive-strength = <2>;	/* 2 MA */
- 		};
- 	};
-+
-+	blsp1_uart1_default: blsp1_uart1_default {
-+		function = "blsp_uart2";
-+		pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	blsp1_uart1_sleep: blsp1_uart1_sleep {
-+		function = "gpio";
-+		pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-index 59b29ddfb6e9..f8d2a3b10b1f 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-@@ -26,6 +26,23 @@
- 		};
- 	};
+diff --git a/include/sound/pcm_iec958.h b/include/sound/pcm_iec958.h
+index 0939aa45e2fe..3c9701a9b1b0 100644
+--- a/include/sound/pcm_iec958.h
++++ b/include/sound/pcm_iec958.h
+@@ -4,9 +4,28 @@
  
-+	divclk4_pin_a: divclk4 {
-+		pins = "gpio18";
-+		function = "func2";
-+
-+		bias-disable;
-+		power-source = <PM8994_GPIO_S4>;
-+	};
-+
-+	bt_en_pin_a: bt-en-active {
-+		pins = "gpio19";
-+		function = "normal";
-+
-+		output-low;
-+		power-source = <PM8994_GPIO_S4>;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+	};
-+
- 	usb3_vbus_det_gpio: pm8996_gpio22 {
- 		pinconf {
- 			pins = "gpio22";
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 1c8f1b86472d..b05d6bc0b856 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -23,6 +23,7 @@
- 	aliases {
- 		serial0 = &blsp2_uart1;
- 		serial1 = &blsp2_uart2;
-+		serial2 = &blsp1_uart1;
- 		i2c0	= &blsp1_i2c2;
- 		i2c1	= &blsp2_i2c1;
- 		i2c2	= &blsp2_i2c0;
-@@ -34,7 +35,38 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+ #include <linux/types.h>
  
-+	clocks {
-+		divclk4: divclk4 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+			clock-output-names = "divclk4";
++/**
++ * struct snd_pcm_iec958_params: IEC 60958 controls parameters
++ * @ctrl_set: control set callback
++ * This callback is optional and shall be used to set associated driver
++ * configuration.
++ * @iec: Mandatory pointer to iec958 structure.
++ * @cs: Mandatory pointer to AES/IEC958  channel status bits.
++ * @cs_len: size in byte of the AES/IEC958  channel status bits.
++ * @private_data: Optional private pointer to driver context.
++ */
++struct snd_pcm_iec958_params {
++	int (*ctrl_set)(struct snd_pcm_iec958_params *iec_param);
++	unsigned char *cs;
++	unsigned char cs_len;
++	void *private_data;
++};
 +
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&divclk4_pin_a>;
-+		};
-+	};
-+
- 	soc {
-+		serial@7570000 {
-+			label = "BT-UART";
-+			status = "okay";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp1_uart1_default>;
-+			pinctrl-1 = <&blsp1_uart1_sleep>;
-+
-+			bluetooth {
-+				compatible = "qcom,qca6174-bt";
-+
-+				bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&bt_en_pin_a>;
-+
-+				clocks = <&divclk4>;
-+			};
-+		};
-+
- 		serial@75b0000 {
- 			label = "LS-UART1";
- 			status = "okay";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 0a6f7952bbb1..2d54a86a027f 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -408,6 +408,16 @@
- 			#clock-cells = <1>;
- 		};
+ int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+ 	size_t len);
  
-+		blsp1_uart1: serial@7570000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x07570000 0x1000>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			status = "disabled";
-+		};
+ int snd_pcm_create_iec958_consumer_hw_params(struct snd_pcm_hw_params *params,
+ 					     u8 *cs, size_t len);
++int snd_pcm_add_iec958_ctl(struct snd_pcm *pcm, int subdevice, int stream,
++			   struct snd_pcm_iec958_params *params);
+ #endif
+diff --git a/sound/core/pcm_iec958.c b/sound/core/pcm_iec958.c
+index 5e6aed64f451..aba1f522e98a 100644
+--- a/sound/core/pcm_iec958.c
++++ b/sound/core/pcm_iec958.c
+@@ -7,11 +7,88 @@
+  */
+ #include <linux/export.h>
+ #include <linux/types.h>
++#include <linux/wait.h>
+ #include <sound/asoundef.h>
++#include <sound/control.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/pcm_iec958.h>
+ 
++static int snd_pcm_iec958_info(struct snd_kcontrol *kcontrol,
++			       struct snd_ctl_elem_info *uinfo)
++{
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_IEC958;
++	uinfo->count = 1;
++	return 0;
++}
 +
- 		blsp1_spi0: spi@7575000 {
- 			compatible = "qcom,spi-qup-v2.2.1";
- 			reg = <0x07575000 0x600>;
++/*
++ * IEC958 channel status default controls callbacks
++ */
++static int snd_pcm_iec958_get(struct snd_kcontrol *kcontrol,
++			      struct snd_ctl_elem_value *uctl)
++{
++	struct snd_pcm_iec958_params *params = snd_kcontrol_chip(kcontrol);
++	int i;
++
++	for (i = 0; i < params->cs_len; i++)
++		uctl->value.iec958.status[i] = params->cs[i];
++
++	return 0;
++}
++
++static int snd_pcm_iec958_put(struct snd_kcontrol *kcontrol,
++			      struct snd_ctl_elem_value *uctl)
++{
++	struct snd_pcm_iec958_params *params = snd_kcontrol_chip(kcontrol);
++	int err = 0;
++	unsigned int i, updated = 0;
++	unsigned char old_status[5];
++
++	for (i = 0; i < params->cs_len; i++) {
++		if (params->cs[i] != uctl->value.iec958.status[i])
++			updated = 1;
++	}
++
++	if (!updated)
++		return 0;
++
++	/* Store current status to restore them in error case */
++	for (i = 0; i < params->cs_len; i++) {
++		old_status[i] = params->cs[i];
++		params->cs[i] = uctl->value.iec958.status[i];
++	}
++
++	if (params->ctrl_set)
++		err = params->ctrl_set(params);
++	if (err < 0) {
++		for (i = 0; i < params->cs_len; i++)
++			params->cs[i] = old_status[i];
++	}
++
++	return err;
++}
++
++static const struct snd_kcontrol_new iec958_ctls[] = {
++	{
++		.access = (SNDRV_CTL_ELEM_ACCESS_READWRITE |
++			   SNDRV_CTL_ELEM_ACCESS_VOLATILE),
++		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
++		.name = SNDRV_CTL_NAME_IEC958("", PLAYBACK, DEFAULT),
++		.info = snd_pcm_iec958_info,
++		.get = snd_pcm_iec958_get,
++		.put = snd_pcm_iec958_put,
++	},
++	{
++		.access = (SNDRV_CTL_ELEM_ACCESS_READ |
++			   SNDRV_CTL_ELEM_ACCESS_VOLATILE),
++		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
++		.name = SNDRV_CTL_NAME_IEC958("", CAPTURE, DEFAULT),
++		.info = snd_pcm_iec958_info,
++		.get = snd_pcm_iec958_get,
++	},
++};
++
+ static int create_iec958_consumer(uint rate, uint sample_width,
+ 				  u8 *cs, size_t len)
+ {
+@@ -21,6 +98,9 @@ static int create_iec958_consumer(uint rate, uint sample_width,
+ 		return -EINVAL;
+ 
+ 	switch (rate) {
++	case 0:
++		fs = IEC958_AES3_CON_FS_NOTID;
++		break;
+ 	case 32000:
+ 		fs = IEC958_AES3_CON_FS_32000;
+ 		break;
+@@ -48,6 +128,9 @@ static int create_iec958_consumer(uint rate, uint sample_width,
+ 
+ 	if (len > 4) {
+ 		switch (sample_width) {
++		case 0:
++			ws = IEC958_AES4_CON_WORDLEN_NOTID;
++			break;
+ 		case 16:
+ 			ws = IEC958_AES4_CON_WORDLEN_20_16;
+ 			break;
+@@ -124,3 +207,33 @@ int snd_pcm_create_iec958_consumer_hw_params(struct snd_pcm_hw_params *params,
+ 				      cs, len);
+ }
+ EXPORT_SYMBOL(snd_pcm_create_iec958_consumer_hw_params);
++
++/**
++ * snd_pcm_add_iec958_ctl - Add a IEC958 control associated to the pcm device
++ * @pcm: pcm device to associate to the control.
++ * @subdevice: subdevice index.Must be set to 0 if unused
++ * @iec958: snd_pcm_iec958_params structure that contains callbacks
++ *          and channel status buffer.
++ * @stream: stream type SNDRV_PCM_STREAM_PLAYBACK or SNDRV_PCM_STREAM_CATURE.
++ * Returns:  negative error code if something failed.
++ */
++int snd_pcm_add_iec958_ctl(struct snd_pcm *pcm, int subdevice, int stream,
++			   struct snd_pcm_iec958_params *params)
++{
++	struct snd_kcontrol_new knew;
++
++	if (stream > SNDRV_PCM_STREAM_LAST)
++		return -EINVAL;
++	if (!params->cs)
++		return -EINVAL;
++	if (params->cs_len < 4)
++		return -EINVAL;
++
++	create_iec958_consumer(0, 0, params->cs, params->cs_len);
++	knew = iec958_ctls[stream];
++	knew.device = pcm->device;
++	knew.subdevice = subdevice;
++
++	return snd_ctl_add(pcm->card, snd_ctl_new1(&knew, params));
++}
++EXPORT_SYMBOL(snd_pcm_add_iec958_ctl);
 -- 
-2.14.1
+1.9.1
