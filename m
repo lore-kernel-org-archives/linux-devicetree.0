@@ -1,71 +1,83 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
-Date: Tue, 13 Mar 2018 14:43:52 +0100
-Message-ID: <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
-References: <CAMuHMdUx3A_8MeZmrwiBRqUS0oGjwrg13fy1QMsA2SUw+dR0Hg@mail.gmail.com>
- <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 07/24] ASoC: qdsp6: q6afe: Add q6afe
+ driver
+Date: Tue, 13 Mar 2018 13:51:28 +0000
+Message-ID: <e2c668dd-aad5-db06-cc92-e27c57cf598e@linaro.org>
+References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
+ <20180310022456.26739-8-srinivas.kandagatla@linaro.org>
+ <3d750b29-d341-af4d-41b3-30260f8296b7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <3d750b29-d341-af4d-41b3-30260f8296b7@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rohit Kumar <rohitkr@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+Thanks Rohit for the review,
 
-On Wed, Feb 28, 2018 at 6:40 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
-> boot CPUs run a routine designed to bring up SMP and deal with hot plug.
-> The value contained in the SBAR registers is not initialized by a WDT
-> triggered reset, which means that after a WDT triggered reset we jump
-> to the SMP bring up routine, preventing the system from executing the
-> bootrom code.
->
-> The purpose of this patch is to jump to the bootrom code in case of a
-> WDT triggered reset, and keep the SMP functionality untouched.
-> In order to tell if the code had been called due to the WDT overflowing
-> we are testing WOVF from register RWTCSRA.
->
-> The new function shmobile_boot_vector_gen2 isn't replacing
-> shmobile_boot_vector for backward compatibility reasons. The kernel
-> will install the best option (either shmobile_boot_vector or
-> shmobile_boot_vector_gen2) to ICRAM1 after parsing the device tree,
-> according to the amount of memory available.
->
-> Since shmobile_boot_vector has become bigger, "reg" property of nodes
-> compatible with "renesas,smp-sram" now need to be set to a value
-> greater or equal to "<0 0x60>".
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v5->v6:
-> * taken ifdefs out as per Geert's suggestion.
+On 13/03/18 11:29, Rohit Kumar wrote:
+> 
+> 
+> On 3/10/2018 7:54 AM, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> This patch adds support to Q6AFE (Audio Front End) module on Q6DSP.
+>>
+> [..]
+>> +        if (res->status) {
+>> +            dev_err(afe->dev, "cmd = 0x%x returned error = 0x%x\n",
+>> +                res->opcode, res->status);
+>> +        }
+>> +        switch (res->opcode) {
+>> +        case AFE_PORT_CMD_SET_PARAM_V2:
+>> +        case AFE_PORT_CMD_DEVICE_STOP:
+>> +        case AFE_PORT_CMD_DEVICE_START:
+> 
+> case AFE_SVC_CMD_SET_PARAM: needs to be added
+thanks for spotting this, Will add this back
 
-My intention was to remove the #ifdefs from the header file only, not
-from arch/arm/mach-shmobile/headsmp.S, as the latter is used for
-other SoC families, too.
+>> +            port = afe_find_port(afe, data->token);
+>> +            if (port) {
+>> +                port->result = *res;
+>> +                wake_up(&port->wait);
+>> +            }
+> [..]
+>> +
+>> +static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
+>> +                   int param_id, int psize)
+>> +{
 
-Gr{oetje,eeting}s,
+...
+>> +    ret = afe_apr_send_pkt(afe, data, port);
+>> +    if (ret)
+>> +        dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+> 
+> we should add %s to distinguish different functions with similar error 
+> logs. Also, q6afe_port_set_param_v2() can be called for different 
+> purpose.  AFE enable for port 0x%x failed is suitable only for port 
+> start failure. Error message needs to be updated here.
+> 
+q6afe_callback already has a extra level of error message which shows 
+the opcode and error code in failure cases.
 
-                        Geert
+thanks,
+srini
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> +               port_id, ret);
+>> +
+>> +
+>> +    return ret;
+>> +}
+>> +
