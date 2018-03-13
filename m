@@ -1,70 +1,54 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 1/2] media: ov2680: dt: Add bindings for OV2680
-Date: Tue, 13 Mar 2018 11:33:10 +0000
-Message-ID: <20180313113311.8617-2-rui.silva@linaro.org>
-References: <20180313113311.8617-1-rui.silva@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313113311.8617-1-rui.silva@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v4 15/24] ASoC: qdsp6: q6core: Add q6core
+ driver
+Date: Tue, 13 Mar 2018 17:16:33 +0530
+Message-ID: <21207441-4e81-284e-343c-bdeb01c9d06f@codeaurora.org>
+References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
+ <20180310022456.26739-16-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180310022456.26739-16-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the OV2680 camera sensor.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../devicetree/bindings/media/i2c/ov2680.txt       | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-new file mode 100644
-index 000000000000..0e29f1a113c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-@@ -0,0 +1,40 @@
-+* Omnivision OV2680 MIPI CSI-2 sensor
-+
-+Required Properties:
-+- compatible: should be "ovti,ov2680".
-+- clocks: reference to the xvclk input clock.
-+- clock-names: should be "xvclk".
-+
-+Optional Properties:
-+- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-+		     if any. This is an active high signal to the OV2680.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, and this port must have a single endpoint in accordance with
-+ the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Endpoint node required properties for CSI-2 connection are:
-+- remote-endpoint: a phandle to the bus receiver's endpoint node.
-+- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
-+- data-lanes: should be set to <1> (one CSI-2 lane supported).
-+ 
-+Example:
-+
-+&i2c2 {
-+	ov2680: camera-sensor@36 {
-+		compatible = "ovti,ov2680";
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			ov2680_mipi_ep: endpoint {
-+				remote-endpoint = <&mipi_sensor_ep>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
-+};
--- 
-2.16.2
+On 3/10/2018 7:54 AM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+[..]
+> +static int q6core_get_svc_versions(struct q6core *core)
+> +{
+> +	struct apr_device *adev = core->adev;
+> +	struct apr_hdr hdr = {0};
+> +	int rc;
+> +
+> +	core->get_version_supported = true;
+
+core->get_version_supported should be set to true only after we get proper response from adsp in callback(). In case,we get wrong response from adsp, memory for g_core->svc_version
+  will not get allocated and there will be NULL pointer dereference in  q6core_get_svc_api_info() in below statement
++	} else if (g_core->get_version_supported) {
++		for (i = 0; i < g_core->svc_version->num_services; i++) {
+  
+
+> +	hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
+> +				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
+> +	hdr.pkt_size = APR_HDR_SIZE;
+> +	hdr.opcode = AVCS_GET_VERSIONS;
+> +
+> +	rc = apr_send_pkt(adev, &hdr);
+> +	if (rc < 0)
+> +		return rc;
+> +
