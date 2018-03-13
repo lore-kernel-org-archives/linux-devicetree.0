@@ -1,76 +1,78 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a64: add simplefb for A64 SoC
-Date: Tue, 13 Mar 2018 10:18:22 +0100
-Message-ID: <E1evg4e-0000Qj-2w@stardust.g4.wien.funkfeuer.at>
-References: <20180312161050.7647-1-harald@ccbib.org> <20180312161050.7647-4-harald@ccbib.org> <20180313082724.7optc2xwgqoiibtx@flea>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
+ Tegra210
+Date: Tue, 13 Mar 2018 11:28:16 +0200
+Message-ID: <20180313092816.GW6190@tbergstrom-lnx.Nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
+ <b7a25613-44b4-5e63-e8c7-91ce2b7cb56e@nvidia.com>
+ <20180309081438.GO6190@tbergstrom-lnx.Nvidia.com>
+ <50b05dda-4577-0c86-a8e5-eb7095ee1f59@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180313082724.7optc2xwgqoiibtx@flea>
-Content-ID: <1655.1520932701.1@stardust.g4.wien.funkfeuer.at>
+Content-Disposition: inline
+In-Reply-To: <50b05dda-4577-0c86-a8e5-eb7095ee1f59@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard writes:
-> On Mon, Mar 12, 2018 at 04:10:48PM +0000, Harald Geyer wrote:
->> The A64 SoC features two display pipelines, one has a LCD output, the
->> other has a HDMI output.
->>
->> Add support for simplefb for the LCD output. Tested on Teres I.
->>
->> This patch was inspired by work of Icenowy Zheng.
->>
->> Signed-off-by: Harald Geyer <harald@ccbib.org>
->> ---
->> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 ++++++++++++++++++++
->> 1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> index ca1b365bc722..05d5e8def68a 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> @@ -52,6 +52,26 @@
->> 	#address-cells = <1>;
->> 	#size-cells = <1>;
->>
->> +	chosen {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +/*
->> + * The pipeline mixer0-lcd0 depends on clock CLK_MIXER0 from DE2 CCU.
->> + * However there is no support for this clock on A64 yet, so we depend
->> + * on the upstream clocks here to keep them (and thus CLK_MIXER0) up.
->> + */
+On Mon, Mar 12, 2018 at 10:14:17AM +0000, Jon Hunter wrote:
 > 
-> There's definitely support for the CLK_MIXER0 clock in the DE2 CCU
-> driver, so I guess this would need to be amended / fixed
-
-AFAIK on the A64 a special sram quirk is necessary, that never got merged:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574303.html
-
-I asked Icenowy if I should resubmit her patch as part of this series,
-but was told further discussion is necessary. I'm sure she can better
-explain the details than me.
-
-Actually if it wasn't for the sram quirk, there is a simplefb patch by
-her, that could have been merged long ago:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574304.html
-
-Hope that explains,
-Harald
-
-> -- Maxime Ripard, Bootlin (formerly Free Electrons) Embedded Linux and
-> Kernel engineering https://bootlin.com
+> On 09/03/18 08:14, Peter De Schrijver wrote:
+> > On Thu, Mar 08, 2018 at 11:25:04PM +0000, Jon Hunter wrote:
+> >>
+> >> On 06/02/18 16:34, Peter De Schrijver wrote:
+> >>> Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
+> >>> support in this driver. Also allow for the case where the CPU voltage is
+> >>> controlled directly by the DFLL rather than by a separate regulator object.
+> >>>
+> >>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> >>> ---
+> >>>  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
+> >>>  1 file changed, 8 insertions(+), 7 deletions(-)
+> >>>
+> >>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+> >>> index 4353025..f8e01a8 100644
+> >>> --- a/drivers/cpufreq/tegra124-cpufreq.c
+> >>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> >>> @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
+> >>>  {
+> >>>  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+> >>>  	clk_disable_unprepare(priv->dfll_clk);
+> >>> -	regulator_sync_voltage(priv->vdd_cpu_reg);
+> >>> +	if (priv->vdd_cpu_reg)
+> >>> +		regulator_sync_voltage(priv->vdd_cpu_reg);
+> >>>  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
+> >>>  }
+> >>>  
+> >>> @@ -89,10 +90,10 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
+> >>>  		return -ENODEV;
+> >>>  
+> >>>  	priv->vdd_cpu_reg = regulator_get(cpu_dev, "vdd-cpu");
+> >>> -	if (IS_ERR(priv->vdd_cpu_reg)) {
+> >>> -		ret = PTR_ERR(priv->vdd_cpu_reg);
+> >>> -		goto out_put_np;
+> >>> -	}
+> >>> +	if (IS_ERR(priv->vdd_cpu_reg) != -EPROBE_DEFER)
+> >>> +		priv->vdd_cpu_reg = NULL;
+> >>> +	else
+> >>> +		return -EPROBE_DEFER;
+> >>
+> >> I am still not sure that we should rely on the fact that the regulator
+> >> is not present in DT to imply that we do not need it. I think that we
+> >> should be checking if we are using I2C mode here.
+> >>
+> > 
+> > The cpufreq driver doesn't know this however. Also the current approach of
+> > setting the same voltage when switching to pll_x is incorrect. The CVB
+> > tables when using pll_x include more margin than when using the DFLL.
 > 
->>> application/pgp-signature attachment
+> Ah yes I see now. However, we are going to need to update the DT doc,
+> because 'vdd-cpu-supply' is listed as required.
+> 
 
--- 
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
-or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+Ok.
+
+Peter.
