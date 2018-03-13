@@ -1,89 +1,40 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a64: add simplefb for A64 SoC
-Date: Tue, 13 Mar 2018 17:51:29 +0100
-Message-ID: <E1evn97-0000U0-Fp@stardust.g4.wien.funkfeuer.at>
-References: <20180312161050.7647-1-harald@ccbib.org> <20180312161050.7647-4-harald@ccbib.org> <20180313082724.7optc2xwgqoiibtx@flea> <E1evg4e-0000Qj-2w@stardust.g4.wien.funkfeuer.at> <20180313153522.haeemlqbtuei5zb3@flea>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524
+ and pcal9555a
+Date: Tue, 13 Mar 2018 18:56:16 +0200
+Message-ID: <CAHp75Ve8Y2AOm36KwuVUhssLR7Q82KS1SzB1tcKw57_LdqkKhQ@mail.gmail.com>
+References: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180313153522.haeemlqbtuei5zb3@flea>
-Content-ID: <1858.1520959889.1@stardust.g4.wien.funkfeuer.at>
+In-Reply-To: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard writes:
-> Hi,
-> 
-> On Tue, Mar 13, 2018 at 10:18:22AM +0100, Harald Geyer wrote:
->> Maxime Ripard writes:
->>> On Mon, Mar 12, 2018 at 04:10:48PM +0000, Harald Geyer wrote:
->>>> The A64 SoC features two display pipelines, one has a LCD output, the
->>>> other has a HDMI output.
->>>>
->>>> Add support for simplefb for the LCD output. Tested on Teres I.
->>>>
->>>> This patch was inspired by work of Icenowy Zheng.
->>>>
->>>> Signed-off-by: Harald Geyer <harald@ccbib.org>
->>>> ---
->>>> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 ++++++++++++++++++++
->>>> 1 file changed, 20 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> index ca1b365bc722..05d5e8def68a 100644
->>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->>>> @@ -52,6 +52,26 @@
->>>> 	#address-cells = <1>;
->>>> 	#size-cells = <1>;
->>>>
->>>> +	chosen {
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <1>;
->>>> +		ranges;
->>>> +
->>>> +/*
->>>> + * The pipeline mixer0-lcd0 depends on clock CLK_MIXER0 from DE2 CCU.
->>>> + * However there is no support for this clock on A64 yet, so we depend
->>>> + * on the upstream clocks here to keep them (and thus CLK_MIXER0) up.
->>>> + */
->>> 
->>> There's definitely support for the CLK_MIXER0 clock in the DE2 CCU
->>> driver, so I guess this would need to be amended / fixed
->> 
->> AFAIK on the A64 a special sram quirk is necessary, that never got merged:
->> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574303.html
->> 
->> I asked Icenowy if I should resubmit her patch as part of this series,
->> but was told further discussion is necessary. I'm sure she can better
->> explain the details than me.
->> 
->> Actually if it wasn't for the sram quirk, there is a simplefb patch by
->> her, that could have been merged long ago:
->> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574304.html
-> 
-> The issue with your patch is that, as soon as that clock is
-> functional, the DT with the node you were introducing here will no
-> longer be.
-> 
-> And since people use their firmware DT or put them in NOR these days,
-> you can't really expect them to update them every release either.
+On Sat, Mar 10, 2018 at 1:00 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> The Pyra-Handheld originally used the tca6424 but recently we have
+> replaced it by the pin and package compatible pcal6524. So let's
+> add this to the bindings and the driver.
+>
+> And while we are at it, the pcal9555a does not have a compatible entry
+> either but is already supported by the device id table.
 
-How is this a problem? - The clock can't be functional without adding
-a DT node for it's driver. So the breakage can only happen on DT update,
-which means we can avoid it, by moving the clocks to the proper places
-when we add the node actually using them for real.
 
-> I guess a proper solution would be to respin that patch.
+> +       { "pcal6524", 24 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>         { "pcal9555a", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
 
-Sure, but as mentioned above I offered to do that and was told not to.
+So, from your description I can get that PCA_PCAL is redundant for
+6524. Is it correct? What does L means in the model code?
+Perhaps we need to rename PCA_PCAL to be more specific?
 
-As a compromise I could also move the simple framebuffer node from the
-A64 dtsi to the teres-i dts, where we know that the DT can be updated
-easily?
 
-Thanks for your consideration,
-Harald
+> +       { .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
+> +       { .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
+
+Other way around, you missed PCA_PCAL in the second case.
+
+-- 
+With Best Regards,
+Andy Shevchenko
