@@ -1,43 +1,73 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH v2] ARM: dts: msm8974: castor: Fix typo and add startup delay in touchscreen node
-Date: Tue, 13 Mar 2018 16:46:38 +0000
-Message-ID: <20180313164638.7211-1-ctatlor97@gmail.com>
-References: <20180312160734.5606-1-ctatlor97@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 1/2] dt-bindings: watchdog: Add Nuvoton NPCM
+ description
+Date: Tue, 13 Mar 2018 09:48:09 -0700
+Message-ID: <20180313164809.GA13835@roeck-us.net>
+References: <20180313061726.21601-1-joel@jms.id.au>
+ <20180313061726.21601-2-joel@jms.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312160734.5606-1-ctatlor97@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180313061726.21601-2-joel@jms.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcus Folkesson <marcus.folkesson@gmail.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-The compatible string was mistakenly pulled from the downstream tree and the
-startup delay property is needed to prevent io errors on initial page select.
+On Tue, Mar 13, 2018 at 04:47:25PM +1030, Joel Stanley wrote:
+> These bindings describe the watchdog IP as used by the Nuvoton NPCM750
+> (Poleg) BMC SoC.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
----
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-index e87f2c99060d..701b396719c7 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-@@ -491,7 +491,7 @@
- 		pinctrl-0 = <&i2c8_pins>;
- 
- 		synaptics@2c {
--			compatible = "syna,rmi-i2c";
-+			compatible = "syna,rmi4-i2c";
- 			reg = <0x2c>;
- 
- 			interrupt-parent = <&msmgpio>;
-@@ -506,6 +506,8 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ts_int_pin>;
- 
-+			syna,startup-delay-ms = <10>;
-+
- 			rmi-f01@1 {
- 				reg = <0x1>;
- 				syna,nosleep = <1>;
--- 
-2.16.1
+> ---
+> V2: Add optional timeout property
+> v3:
+>  - Fix address in example
+>  - Add Rob's reviewed-by
+> ---
+>  .../bindings/watchdog/nuvoton,npcm-wdt.txt         | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> new file mode 100644
+> index 000000000000..6d593003c933
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> @@ -0,0 +1,28 @@
+> +Nuvoton NPCM Watchdog
+> +
+> +Nuvoton NPCM timer module provides five 24-bit timer counters, and a watchdog.
+> +The watchdog supports a pre-timeout interrupt that fires 10ms before the
+> +expiry.
+> +
+> +Required properties:
+> +- compatible      : "nuvoton,npcm750-wdt" for NPCM750 (Poleg).
+> +- reg             : Offset and length of the register set for the device.
+> +- interrupts      : Contain the timer interrupt with flags for
+> +                    falling edge.
+> +
+> +Required clocking property, have to be one of:
+> +- clocks          : phandle of timer reference clock.
+> +- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
+> +                    timer (usually 25000000).
+> +
+> +Optional properties:
+> +- timeout-sec : Contains the watchdog timeout in seconds
+> +
+> +Example:
+> +
+> +timer@f000801c {
+> +    compatible = "nuvoton,npcm750-wdt";
+> +    interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> +    reg = <0xf000801c 0x4>;
+> +    clocks = <&clk NPCM7XX_CLK_TIMER>;
+> +};
+> -- 
+> 2.15.1
+> 
