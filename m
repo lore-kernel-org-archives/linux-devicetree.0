@@ -1,94 +1,124 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] arm64: dts: qcom: rename qcom,pcie devices to pcie
-Date: Tue, 13 Mar 2018 13:13:09 +0100
-Message-ID: <20180313121345.2749183-1-arnd@arndb.de>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
+	devices
+Date: Tue, 13 Mar 2018 12:49:37 +0000
+Message-ID: <4eaf2006-ea68-d9e9-a0db-89acec0ea299@arm.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-2-vivek.gautam@codeaurora.org>
+	<8903307.QazHKW0JrR@aspire.rjw.lan>
+	<CAFp+6iE=0PD6fZZVd+bC1Z95Lkt=X-F4YOXz8EtdiXL=jsC1RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAFp+6iE=0PD6fZZVd+bC1Z95Lkt=X-F4YOXz8EtdiXL=jsC1RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The node name for a PCIe host bridge must be "pcie" as required by
-the binging. dtc now warns about it:
+On 13/03/18 09:55, Vivek Gautam wrote:
+> On Tue, Mar 13, 2018 at 3:10 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+>> On Tuesday, March 13, 2018 9:55:30 AM CET Vivek Gautam wrote:
+>>> The lists managing the device-links can be traversed to
+>>> find the link between two devices. The device_link_add() APIs
+>>> does traverse these lists to check if there's already a link
+>>> setup between the two devices.
+>>> So, add a new APIs, device_link_find(), to find an existing
+>>> device link between two devices - suppliers and consumers.
+>>>
+>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> Cc: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+>>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>>> ---
+>>>
+>>>   * New patch added to this series.
+>>>
+>>>   drivers/base/core.c    | 30 +++++++++++++++++++++++++++---
+>>>   include/linux/device.h |  2 ++
+>>>   2 files changed, 29 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>> index 5847364f25d9..e8c9774e4ba2 100644
+>>> --- a/drivers/base/core.c
+>>> +++ b/drivers/base/core.c
+>>> @@ -144,6 +144,30 @@ static int device_reorder_to_tail(struct device *dev, void *not_used)
+>>>        return 0;
+>>>   }
+>>>
+>>> +/**
+>>> + * device_link_find - find any existing link between two devices.
+>>> + * @consumer: Consumer end of the link.
+>>> + * @supplier: Supplier end of the link.
+>>> + *
+>>> + * Returns pointer to the existing link between a supplier and
+>>> + * and consumer devices, or NULL if no link exists.
+>>> + */
+>>> +struct device_link *device_link_find(struct device *consumer,
+>>> +                                  struct device *supplier)
+>>> +{
+>>> +     struct device_link *link = NULL;
+>>> +
+>>> +     if (!consumer || !supplier)
+>>> +             return NULL;
+>>> +
+>>> +     list_for_each_entry(link, &supplier->links.consumers, s_node)
+>>> +             if (link->consumer == consumer)
+>>> +                     break;
+>>> +
+>>
+>> Any mutual exclusion?
+>>
+>> Or is the caller expected to take care of it?  And if so, then how?
+> 
+> I think it's better that we take care of lock here in the code rather
+> than depending
+> on the caller.
+> But i can't take device_links_write_lock() since device_link_add()
+> already takes that.
 
-arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
-arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
-arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
-arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
+Well, the normal pattern is to break out the internal helper function 
+as-is, then add a public wrapper which validates inputs, handles 
+locking, etc., equivalently to existing caller(s). See what 
+device_link_del() and others do, e.g.:
 
-This renames the nodes as appropriate.
+static struct device_link *__device_link_find(struct device *consumer,
+		struct device *supplier)
+{
+	list_for_each_entry(link, &supplier->links.consumers, s_node)
+		if (link->consumer == consumer)
+			return link;
+	return NULL;
+}
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 6 +++---
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+struct device_link *device_link_find(struct device *consumer,
+		struct device *supplier)
+{
+	struct device_link *link;
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 1c8f1b86472d..e82f821a4e0e 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -140,16 +140,16 @@
- 		};
- 
- 		agnoc@0 {
--			qcom,pcie@600000 {
-+			pcie@600000 {
- 				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
- 			};
- 
--			qcom,pcie@608000 {
-+			pcie@608000 {
- 				status = "okay";
- 				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
- 			};
- 
--			qcom,pcie@610000 {
-+			pcie@610000 {
- 				status = "okay";
- 				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
- 			};
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 410ae787ebb4..cd08c8c5248e 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -851,7 +851,7 @@
- 			#size-cells = <1>;
- 			ranges;
- 
--			pcie0: qcom,pcie@600000 {
-+			pcie0: pcie@600000 {
- 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
- 				status = "disabled";
- 				power-domains = <&gcc PCIE0_GDSC>;
-@@ -904,7 +904,7 @@
- 
- 			};
- 
--			pcie1: qcom,pcie@608000 {
-+			pcie1: pcie@608000 {
- 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
- 				power-domains = <&gcc PCIE1_GDSC>;
- 				bus-range = <0x00 0xff>;
-@@ -957,7 +957,7 @@
- 						"bus_slave";
- 			};
- 
--			pcie2: qcom,pcie@610000 {
-+			pcie2: pcie@610000 {
- 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
- 				power-domains = <&gcc PCIE2_GDSC>;
- 				bus-range = <0x00 0xff>;
--- 
-2.9.0
+	if (!consumer || !supplier)
+		return NULL;
+
+	device_links_write_lock();
+	link = __device_link_find(consumer, supplier);	
+	device_links_write_unlock();
+	return link;
+}
+
+where device_link_add() would call __device_link_find() directly.
+
+However, as Tomasz points out (and I hadn't really considered), if the 
+only reasonable thing to with a link once you've found it is to delete 
+it, then in terms of the public API it may well make more sense to just 
+implement something like a device_link_remove() which does both in one go.
+
+Robin.
