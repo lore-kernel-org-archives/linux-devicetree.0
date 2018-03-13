@@ -1,518 +1,186 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] clk: Add driver for the si544 clock generator chip
-Date: Tue, 13 Mar 2018 09:43:59 +0100
-Message-ID: <1520930639-11642-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v9 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Tue, 13 Mar 2018 14:25:29 +0530
+Message-ID: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the driver and devicetree documentation for the
-Silicon Labs SI544 clock generator chip. This is an I2C controlled
-oscillator capable of generating clock signals ranging from 200kHz
-to 1500MHz.
+This series provides the support for turning on the arm-smmu's
+clocks/power domains using runtime pm. This is done using the
+recently introduced device links patches, which lets the smmu's
+runtime to follow the master's runtime pm, so the smmu remains
+powered only when the masters use it.
+As not all implementations support clock/power gating, we are checking
+for a valid 'smmu->dev's pm_domain' to conditionally enable the runtime
+power management for such smmu implementations that can support it.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../devicetree/bindings/clock/silabs,si544.txt     |  25 ++
- drivers/clk/Kconfig                                |  10 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-si544.c                            | 421 +++++++++++++++++++++
- 4 files changed, 457 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/silabs,si544.txt
- create mode 100644 drivers/clk/clk-si544.c
+This series also adds support for Qcom's arm-smmu-v2 variant that
+has different clocks and power requirements.
 
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si544.txt b/Documentation/devicetree/bindings/clock/silabs,si544.txt
-new file mode 100644
-index 0000000..eec1787
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/silabs,si544.txt
-@@ -0,0 +1,25 @@
-+Binding for Silicon Labs 544 programmable I2C clock generator.
-+
-+Reference
-+This binding uses the common clock binding[1]. Details about the device can be
-+found in the datasheet[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Si544 datasheet
-+    https://www.silabs.com/documents/public/data-sheets/si544-datasheet.pdf
-+
-+Required properties:
-+ - compatible: One of "silabs,si514a", "silabs,si514b" "silabs,si514c" according
-+               to the speed grade of the chip.
-+ - reg: I2C device address.
-+ - #clock-cells: From common clock bindings: Shall be 0.
-+
-+Optional properties:
-+ - clock-output-names: From common clock bindings. Recommended to be "si544".
-+
-+Example:
-+	si544: clock-generator@55 {
-+		reg = <0x55>;
-+		#clock-cells = <0>;
-+		compatible = "silabs,si544b";
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 98ce9fc..5c7dc8e 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -91,6 +91,16 @@ config COMMON_CLK_SI514
- 	  This driver supports the Silicon Labs 514 programmable clock
- 	  generator.
- 
-+config COMMON_CLK_SI544
-+	tristate "Clock driver for SiLabs 544 devices"
-+	depends on I2C
-+	depends on OF
-+	select REGMAP_I2C
-+	help
-+	---help---
-+	  This driver supports the Silicon Labs 544 programmable clock
-+	  generator.
-+
- config COMMON_CLK_SI570
- 	tristate "Clock driver for SiLabs 570 and compatible devices"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 71ec41e..bde614a 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SCPI)           += clk-scpi.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_SI514)		+= clk-si514.o
-+obj-$(CONFIG_COMMON_CLK_SI544)		+= clk-si544.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
- obj-$(CONFIG_ARCH_STM32)		+= clk-stm32f4.o
- obj-$(CONFIG_ARCH_STM32)		+= clk-stm32h7.o
-diff --git a/drivers/clk/clk-si544.c b/drivers/clk/clk-si544.c
-new file mode 100644
-index 0000000..1947e48
---- /dev/null
-+++ b/drivers/clk/clk-si544.c
-@@ -0,0 +1,421 @@
-+/*
-+ * Driver for Silicon Labs Si544 Programmable Oscillator
-+ *
-+ * Copyright (C) 2018 Topic Embedded Products
-+ *
-+ * Author: Mike Looijmans <mike.looijmans@topic.nl>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+/* I2C registers (decimal as in datasheet) */
-+#define SI544_REG_CONTROL	7
-+#define SI544_REG_OE_STATE	17
-+#define SI544_REG_HS_DIV	23
-+#define SI544_REG_LS_HS_DIV	24
-+#define SI544_REG_FBDIV0	26
-+#define SI544_REG_FBDIV8	27
-+#define SI544_REG_FBDIV16	28
-+#define SI544_REG_FBDIV24	29
-+#define SI544_REG_FBDIV32	30
-+#define SI544_REG_FBDIV40	31
-+#define SI544_REG_FCAL_OVR	69
-+#define SI544_REG_ADPLL_DELTA_M0	231
-+#define SI544_REG_ADPLL_DELTA_M8	232
-+#define SI544_REG_ADPLL_DELTA_M16	233
-+#define SI544_REG_PAGE_SELECT	255
-+
-+/* Register values */
-+#define SI544_CONTROL_RESET	BIT(7)
-+#define SI544_CONTROL_MS_ICAL2	BIT(3)
-+
-+#define SI544_OE_STATE_ODC_OE	BIT(0)
-+
-+/* Max freq depends on speed grade */
-+#define SI544_MIN_FREQ	    200000U
-+
-+/* Si544 Internal oscilator runs at 55.05 MHz */
-+#define FXO		  55050000U
-+
-+/* VCO range is 10.8 .. 12.1 GHz, max depends on speed grade */
-+#define FVCO_MIN       10800000000ULL
-+
-+#define HS_DIV_MAX	2046
-+#define HS_DIV_MAX_ODD	33
-+
-+enum si544_speed_grade {
-+	si544a,
-+	si544b,
-+	si544c,
-+};
-+
-+struct clk_si544 {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	struct i2c_client *i2c_client;
-+	enum si544_speed_grade speed_grade;
-+};
-+#define to_clk_si544(_hw)	container_of(_hw, struct clk_si544, hw)
-+
-+/* Multiplier/divider settings */
-+struct clk_si544_muldiv {
-+	u32 fb_div_frac;  /* Integer part of feedback divider (32 bits) */
-+	u16 fb_div_int;  /* Fractional part of feedback divider (11 bits) */
-+	u16 hs_div; /* 1st divider, 5..2046, must be even when >33 */
-+	u8 ls_div_bits; /* 2nd divider, as 2^x, range 0..5 */
-+};
-+
-+/* Enables or disables the output driver */
-+static int si544_enable_output(struct clk_si544 *data, bool enable)
-+{
-+	return regmap_update_bits(data->regmap, SI544_REG_OE_STATE,
-+		SI544_OE_STATE_ODC_OE, enable ? SI544_OE_STATE_ODC_OE : 0);
-+}
-+
-+/* Retrieve clock multiplier and dividers from hardware */
-+static int si544_get_muldiv(struct clk_si544 *data,
-+	struct clk_si544_muldiv *settings)
-+{
-+	int err;
-+	u8 reg[6];
-+
-+	err = regmap_bulk_read(data->regmap, SI544_REG_HS_DIV, reg, 2);
-+	if (err)
-+		return err;
-+
-+	settings->ls_div_bits = (reg[1] >> 4) & 0x07;
-+	settings->hs_div = (reg[1] & 0x07) << 8 | reg[0];
-+
-+	err = regmap_bulk_read(data->regmap, SI544_REG_FBDIV0, reg, 6);
-+	if (err)
-+		return err;
-+
-+	settings->fb_div_int = reg[4] | (reg[5] & 0x07) << 8;
-+	settings->fb_div_frac = reg[0] | reg[1] << 8 | reg[2] << 16 |
-+				reg[3] << 24;
-+	return 0;
-+}
-+
-+static int si544_set_muldiv(struct clk_si544 *data,
-+	struct clk_si544_muldiv *settings)
-+{
-+	int err;
-+	u8 reg[6];
-+
-+	reg[0] = settings->hs_div;
-+	reg[1] = settings->hs_div >> 8 | settings->ls_div_bits << 4;
-+
-+	err = regmap_bulk_write(data->regmap, SI544_REG_HS_DIV, reg, 2);
-+	if (err < 0)
-+		return err;
-+
-+	reg[0] = settings->fb_div_frac;
-+	reg[1] = settings->fb_div_frac >> 8;
-+	reg[2] = settings->fb_div_frac >> 16;
-+	reg[3] = settings->fb_div_frac >> 24;
-+	reg[4] = settings->fb_div_int;
-+	reg[5] = settings->fb_div_int >> 8;
-+
-+	/*
-+	 * Writing to SI544_REG_FBDIV40 triggers the clock change, so that
-+	 * must be written last
-+	 */
-+	return regmap_bulk_write(data->regmap, SI544_REG_FBDIV0, reg, 6);
-+}
-+
-+static bool is_valid_frequency(const struct clk_si544 *data,
-+	unsigned long frequency)
-+{
-+	unsigned long max_freq;
-+
-+	if (frequency < SI544_MIN_FREQ)
-+		return false;
-+
-+	switch (data->speed_grade) {
-+	case si544a:
-+		max_freq = 1500000000;
-+		break;
-+	case si544b:
-+		max_freq = 800000000;
-+		break;
-+	case si544c:
-+		max_freq = 350000000;
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	if (frequency > max_freq)
-+		return false;
-+
-+	return true;
-+}
-+
-+/* Calculate divider settings for a given frequency */
-+static int si544_calc_muldiv(struct clk_si544_muldiv *settings,
-+	unsigned long frequency)
-+{
-+	u64 vco;
-+	u32 ls_freq;
-+	u32 tmp;
-+	u8 res;
-+
-+	/* Determine the minimum value of LS_DIV and resulting target freq. */
-+	ls_freq = frequency;
-+	settings->ls_div_bits = 0;
-+
-+	if (frequency >= (FVCO_MIN / HS_DIV_MAX))
-+		settings->ls_div_bits = 0;
-+	else {
-+		res = 1;
-+		tmp = 2 * HS_DIV_MAX;
-+		while (tmp <= (HS_DIV_MAX * 32)) {
-+			if ((frequency * tmp) >= FVCO_MIN)
-+				break;
-+			++res;
-+			tmp <<= 1;
-+		}
-+		settings->ls_div_bits = res;
-+		ls_freq = frequency << res;
-+	}
-+
-+	/* Determine minimum HS_DIV by rounding up */
-+	vco = FVCO_MIN + ls_freq - 1;
-+	do_div(vco, ls_freq);
-+	settings->hs_div = vco;
-+	/* round up to even number if needed */
-+	if ((settings->hs_div > HS_DIV_MAX_ODD) && (settings->hs_div & 1))
-+		++settings->hs_div;
-+	/* Calculate VCO frequency (in 10..12GHz range) */
-+	vco = (u64)ls_freq * settings->hs_div;
-+	/* Calculate the integer part of the feedback divider */
-+	tmp = do_div(vco, FXO);
-+	settings->fb_div_int = vco;
-+	/* And the fractional bits using the remainder */
-+	vco = (u64)tmp << 32;
-+	do_div(vco, FXO);
-+	settings->fb_div_frac = vco;
-+
-+	return 0;
-+}
-+
-+/* Calculate resulting frequency given the register settings */
-+static unsigned long si544_calc_rate(struct clk_si544_muldiv *settings)
-+{
-+	u32 d = settings->hs_div * BIT(settings->ls_div_bits);
-+	u64 vco;
-+
-+	/* Calculate VCO while preventing overflow */
-+	vco = (u64)settings->fb_div_int * FXO;
-+	vco += (((u64)settings->fb_div_frac * FXO) + (FXO / 2)) >> 32;
-+
-+	do_div(vco, d);
-+
-+	return vco;
-+}
-+
-+static unsigned long si544_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct clk_si544 *data = to_clk_si544(hw);
-+	struct clk_si544_muldiv settings;
-+	int err;
-+
-+	err = si544_get_muldiv(data, &settings);
-+	if (err) {
-+		dev_err(&data->i2c_client->dev, "unable to retrieve settings\n");
-+		return 0;
-+	}
-+
-+	return si544_calc_rate(&settings);
-+}
-+
-+static long si544_round_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long *parent_rate)
-+{
-+	struct clk_si544 *data = to_clk_si544(hw);
-+	struct clk_si544_muldiv settings;
-+	int err;
-+
-+	if (!rate)
-+		return 0;
-+
-+	if (!is_valid_frequency(data, rate))
-+		return -EINVAL;
-+
-+	err = si544_calc_muldiv(&settings, rate);
-+	if (err)
-+		return err;
-+
-+	return si544_calc_rate(&settings);
-+}
-+
-+/*
-+ * Update output frequency for "big" frequency changes
-+ */
-+static int si544_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_si544 *data = to_clk_si544(hw);
-+	struct clk_si544_muldiv settings;
-+	int err;
-+
-+	if (!is_valid_frequency(data, rate))
-+		return -EINVAL;
-+
-+	err = si544_calc_muldiv(&settings, rate);
-+	if (err)
-+		return err;
-+
-+	si544_enable_output(data, false);
-+
-+	/* Allow FCAL for this frequency update */
-+	err = regmap_write(data->regmap, SI544_REG_FCAL_OVR, 0);
-+	if (err < 0)
-+		return err;
-+
-+
-+	err = si544_set_muldiv(data, &settings);
-+	if (err < 0)
-+		return err; /* Undefined state now, best to leave disabled */
-+
-+	/* Trigger calibration */
-+	err = regmap_write(data->regmap, SI544_REG_CONTROL,
-+			   SI544_CONTROL_MS_ICAL2);
-+	if (err < 0)
-+		return err;
-+
-+	/* Applying a new frequency can take up to 10ms */
-+	usleep_range(10000, 12000);
-+
-+	si544_enable_output(data, true);
-+
-+	return err;
-+}
-+
-+static const struct clk_ops si544_clk_ops = {
-+	.recalc_rate = si544_recalc_rate,
-+	.round_rate = si544_round_rate,
-+	.set_rate = si544_set_rate,
-+};
-+
-+static bool si544_regmap_is_volatile(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SI544_REG_CONTROL:
-+	case SI544_REG_FCAL_OVR:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config si544_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_RBTREE,
-+	.max_register = SI544_REG_PAGE_SELECT,
-+	.volatile_reg = si544_regmap_is_volatile,
-+};
-+
-+static int si544_probe(struct i2c_client *client,
-+		const struct i2c_device_id *id)
-+{
-+	struct clk_si544 *data;
-+	struct clk_init_data init;
-+	int err;
-+
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	init.ops = &si544_clk_ops;
-+	init.flags = 0;
-+	init.num_parents = 0;
-+	data->hw.init = &init;
-+	data->i2c_client = client;
-+	data->speed_grade = id->driver_data;
-+
-+	if (of_property_read_string(client->dev.of_node, "clock-output-names",
-+			&init.name))
-+		init.name = client->dev.of_node->name;
-+
-+	data->regmap = devm_regmap_init_i2c(client, &si544_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		dev_err(&client->dev, "failed to allocate register map\n");
-+		return PTR_ERR(data->regmap);
-+	}
-+
-+	i2c_set_clientdata(client, data);
-+
-+	/* Select page 0, just to be sure, there appear to be no more */
-+	err = regmap_write(data->regmap, SI544_REG_PAGE_SELECT, 0);
-+	if (err < 0)
-+		return err;
-+
-+	err = devm_clk_hw_register(&client->dev, &data->hw);
-+	if (err) {
-+		dev_err(&client->dev, "clock registration failed\n");
-+		return err;
-+	}
-+	err = of_clk_add_hw_provider(client->dev.of_node, of_clk_hw_simple_get,
-+				     &data->hw);
-+	if (err) {
-+		dev_err(&client->dev, "unable to add clk provider\n");
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int si544_remove(struct i2c_client *client)
-+{
-+	of_clk_del_provider(client->dev.of_node);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id si544_id[] = {
-+	{ "si544a", si544a },
-+	{ "si544b", si544b },
-+	{ "si544c", si544c },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, si544_id);
-+
-+static const struct of_device_id clk_si544_of_match[] = {
-+	{ .compatible = "silabs,si544a" },
-+	{ .compatible = "silabs,si544b" },
-+	{ .compatible = "silabs,si544c" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, clk_si544_of_match);
-+
-+static struct i2c_driver si544_driver = {
-+	.driver = {
-+		.name = "si544",
-+		.of_match_table = clk_si544_of_match,
-+	},
-+	.probe		= si544_probe,
-+	.remove		= si544_remove,
-+	.id_table	= si544_id,
-+};
-+module_i2c_driver(si544_driver);
-+
-+MODULE_AUTHOR("Mike Looijmans <mike.looijmans@topic.nl>");
-+MODULE_DESCRIPTION("Si544 driver");
-+MODULE_LICENSE("GPL");
+Took some reference from the exynos runtime patches [1].
+
+With conditional runtime pm now, we avoid touching dev->power.lock
+in fastpaths for smmu implementations that don't need to do anything
+useful with pm_runtime.
+This lets us to use the much-argued pm_runtime_get_sync/put_sync()
+calls in map/unmap callbacks so that the clients do not have to
+worry about handling any of the arm-smmu's power.
+
+Previous version of this patch series is @ [5].
+
+[v9]
+   * Removed 'rpm_supported' flag, instead checking on pm_domain
+     to enable runtime pm.
+   * Creating device link only when the runtime pm is enabled, as we
+     don't need a device link besides managing the power dependency
+     between supplier and consumer devices.
+   * Introducing a patch to add device_link_find() API that finds
+     and existing link between supplier and consumer devices.
+     Also, made necessary change to device_link_add() to use this API.
+   * arm_smmu_remove_device() now uses this device_link_find() to find
+     the device link between smmu device and the master device, and then
+     delete this link.
+   * Dropped the destroy_domain_context() fix [8] as it was rather,
+     introducing catastrophically bad problem by destroying
+     'good dev's domain context.
+   * Added 'Reviwed-by' tag for Tomasz's review.
+
+[v8]
+   * Major change -
+     - Added a flag 'rpm_supported' which each platform that supports
+       runtime pm, can enable, and we enable runtime_pm over arm-smmu
+       only when this flag is set.
+     - Adding the conditional pm_runtime_get/put() calls to .map, .unmap
+       and .attach_dev ops.
+     - Dropped the patch [6] that exported pm_runtim_get/put_suupliers(),
+       and also dropped the user driver patch [7] for these APIs.
+
+   * Clock code further cleanup
+     - doing only clk_bulk_enable() and clk_bulk_disable() in runtime pm
+       callbacks. We shouldn't be taking a slow path (clk_prepare/unprepare())
+       from these runtime pm callbacks. Thereby, moved clk_bulk_prepare() to
+       arm_smmu_device_probe(), and clk_bulk_unprepare() to
+       arm_smmu_device_remove().
+     - clk data filling to a common method arm_smmu_fill_clk_data() that
+       fills the clock ids and number of clocks.
+
+   * Addressed other nits and comments
+     - device_link_add() error path fixed.
+     - Fix for checking negative error value from pm_runtime_get_sync().
+     - Documentation redo.
+
+   * Added another patch fixing the error path in arm_smmu_attach_dev()
+     to destroy allocated domain context.
+
+[v7]
+   * Addressed review comments given by Robin Murphy -
+     - Added device_link_del() in .remove_device path.
+     - Error path cleanup in arm_smmu_add_device().
+     - Added pm_runtime_get/put_sync() in .remove path, and replaced
+        pm_runtime_force_suspend() with pm_runtime_disable().
+     - clk_names cleanup in arm_smmu_init_clks()
+   * Added 'Reviewed-by' given by Rob H.
+
+[V6]
+   * Added Ack given by Rafael to first patch in the series.
+   * Addressed Rob Herring's comment for adding soc specific compatible
+     string as well besides 'qcom,smmu-v2'.
+
+[V5]
+   * Dropped runtime pm calls from "arm_smmu_unmap" op as discussed over
+     the list [3] for the last patch series.
+   * Added a patch to export pm_runtime_get/put_suppliers() APIs to the
+     series as agreed with Rafael [4].
+   * Added the related patch for msm drm iommu layer to use
+     pm_runtime_get/put_suppliers() APIs in msm_mmu_funcs.
+   * Dropped arm-mmu500 clock patch since that would break existing
+     platforms.
+   * Changed compatible 'qcom,msm8996-smmu-v2' to 'qcom,smmu-v2' to reflect
+     the IP version rather than the platform on which it is used.
+     The same IP is used across multiple platforms including msm8996,
+     and sdm845 etc.
+   * Using clock bulk APIs to handle the clocks available to the IP as
+     suggested by Stephen Boyd.
+   * The first patch in v4 version of the patch-series:
+     ("iommu/arm-smmu: Fix the error path in arm_smmu_add_device") has
+     already made it to mainline.
+
+[V4]
+   * Reworked the clock handling part. We now take clock names as data
+     in the driver for supported compatible versions, and loop over them
+     to get, enable, and disable the clocks.
+   * Using qcom,msm8996 based compatibles for bindings instead of a generic
+     qcom compatible.
+   * Refactor MMU500 patch to just add the necessary clock names data and
+     corresponding bindings.
+   * Added the pm_runtime_get/put() calls in .unmap iommu op (fix added by
+     Stanimir on top of previous patch version.
+   * Added a patch to fix error path in arm_smmu_add_device()
+   * Removed patch 3/5 of V3 patch series that added qcom,smmu-v2 bindings.
+
+[V3]
+   * Reworked the patches to keep the clocks init/enabling function
+     separately for each compatible.
+
+   * Added clocks bindings for MMU40x/500.
+
+   * Added a new compatible for qcom,smmu-v2 implementation and
+     the clock bindings for the same.
+
+   * Rebased on top of 4.11-rc1
+
+[V2]
+   * Split the patches little differently.
+
+   * Addressed comments.
+
+   * Removed the patch #4 [2] from previous post
+     for arm-smmu context save restore. Planning to
+     post this separately after reworking/addressing Robin's
+     feedback.
+
+   * Reversed the sequence to disable clocks than enabling.
+     This was required for those cases where the
+     clocks are populated in a dependent order from DT.
+
+[1] https://lkml.org/lkml/2016/10/20/70
+[2] https://patchwork.kernel.org/patch/9389717/
+[3] https://patchwork.kernel.org/patch/10204925/
+[4] https://patchwork.kernel.org/patch/10102445/
+[5] https://lkml.org/lkml/2018/3/2/325
+[6] https://patchwork.kernel.org/patch/10204945/
+[7] https://patchwork.kernel.org/patch/10204925/
+[8] https://patchwork.kernel.org/patch/10254105/
+
+Sricharan R (3):
+  iommu/arm-smmu: Add pm_runtime/sleep ops
+  iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+  iommu/arm-smmu: Add the device_link between masters and smmu
+
+Vivek Gautam (2):
+  driver core: Find an existing link between two devices
+  iommu/arm-smmu: Add support for qcom,smmu-v2 variant
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  42 +++++
+ drivers/base/core.c                                |  30 +++-
+ drivers/iommu/arm-smmu.c                           | 198 +++++++++++++++++++--
+ include/linux/device.h                             |   2 +
+ 4 files changed, 259 insertions(+), 13 deletions(-)
+
 -- 
-1.9.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
