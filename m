@@ -1,60 +1,70 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH] ARM: dts: sun8i-h3: Add Mali node
-Date: Tue, 13 Mar 2018 11:16:45 +0100
-Message-ID: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
+ Tegra210
+Date: Tue, 13 Mar 2018 10:20:52 +0000
+Message-ID: <f50eaa7b-3ce3-c18f-ca8c-e035a4f6aa7d@nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
+ <85edea04-6aaf-3609-1da9-0d542ac98e7d@nvidia.com>
+ <20180313095117.GX6190@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Giulio Benetti <giulio.benetti@micronovasrl.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180313095117.GX6190@tbergstrom-lnx.Nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEgzIGhhcyBhbiBBUk0gTWFsaSA0MDAgR1BVLCBzbyBhZGQgYmluZGluZyB0byBvdXIgRFQu
-CgpTaWduZWQtb2ZmLWJ5OiBHaXVsaW8gQmVuZXR0aSA8Z2l1bGlvLmJlbmV0dGlAbWljcm9ub3Zh
-c3JsLmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJk
-LnR4dCAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgzLmR0c2kgICAgICAgICAg
-ICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAy
-OCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQudHh0CmluZGV4IGFkODc2NTQuLmMxZjY1ZDEg
-MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1h
-bGktdXRnYXJkLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1
-L2FybSxtYWxpLXV0Z2FyZC50eHQKQEAgLTEwLDYgKzEwLDcgQEAgUmVxdWlyZWQgcHJvcGVydGll
-czoKICAgICAqIEFuZCwgb3B0aW9uYWxseSwgb25lIG9mIHRoZSB2ZW5kb3Igc3BlY2lmaWMgY29t
-cGF0aWJsZToKICAgICAgICsgYWxsd2lubmVyLHN1bjRpLWExMC1tYWxpCiAgICAgICArIGFsbHdp
-bm5lcixzdW43aS1hMjAtbWFsaQorICAgICAgKyBhbGx3aW5uZXIsc3VuOGktaDMtbWFsaQogICAg
-ICAgKyBhbGx3aW5uZXIsc3VuNTBpLWg1LW1hbGkKICAgICAgICsgYW1sb2dpYyxtZXNvbi1neGJi
-LW1hbGkKICAgICAgICsgYW1sb2dpYyxtZXNvbi1neGwtbWFsaQpkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgzLmR0
-c2kKaW5kZXggODQ5NWRlZS4uMTBkYThlZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuOGktaDMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMy5kdHNpCkBAIC03
-OSw2ICs3OSwzMyBAQAogCQkJICAgICA8R0lDX1BQSSAxMSAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0
-KSB8IElSUV9UWVBFX0xFVkVMX0xPVyk+LAogCQkJICAgICA8R0lDX1BQSSAxMCAoR0lDX0NQVV9N
-QVNLX1NJTVBMRSg0KSB8IElSUV9UWVBFX0xFVkVMX0xPVyk+OwogCX07CisKKwlzb2MgeworCQlt
-YWxpOiBncHVAMWM0MDAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1oMy1t
-YWxpIiwgImFybSxtYWxpLTQwMCI7CisJCQlyZWcgPSA8MHgwMWM0MDAwMCAweDEwMDAwPjsKKwkJ
-CWludGVycnVwdHMgPSA8R0lDX1NQSSA5NyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQkgICAg
-IDxHSUNfU1BJIDk4IElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJCSAgICAgPEdJQ19TUEkgOTkg
-SVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSAxMDAgSVJRX1RZUEVfTEVW
-RUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSAxMDIgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJ
-CQkJICAgICA8R0lDX1NQSSAxMDMgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lD
-X1NQSSAxMDEgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQlpbnRlcnJ1cHQtbmFtZXMgPSAiZ3Ai
-LAorCQkJCQkgICJncG1tdSIsCisJCQkJCSAgInBwMCIsCisJCQkJCSAgInBwbW11MCIsCisJCQkJ
-CSAgInBwMSIsCisJCQkJCSAgInBwbW11MSIsCisJCQkJCSAgInBtdSI7CisJCQljbG9ja3MgPSA8
-JmNjdSBDTEtfQlVTX0dQVT4sIDwmY2N1IENMS19HUFU+OworCQkJY2xvY2stbmFtZXMgPSAiYnVz
-IiwgImNvcmUiOworCQkJcmVzZXRzID0gPCZjY3UgUlNUX0JVU19HUFU+OworCisJCQlhc3NpZ25l
-ZC1jbG9ja3MgPSA8JmNjdSBDTEtfR1BVPjsKKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDM4
-NDAwMDAwMD47CisJCX07CisJfTsKIH07CiAKICZjY3UgewotLSAKMi43LjQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+On 13/03/18 09:51, Peter De Schrijver wrote:
+> On Mon, Mar 12, 2018 at 12:15:22PM +0000, Jon Hunter wrote:
+>>
+>> On 06/02/18 16:34, Peter De Schrijver wrote:
+>>> Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
+>>> support in this driver. Also allow for the case where the CPU voltage is
+>>> controlled directly by the DFLL rather than by a separate regulator object.
+>>>
+>>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>> ---
+>>>  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
+>>>  1 file changed, 8 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+>>> index 4353025..f8e01a8 100644
+>>> --- a/drivers/cpufreq/tegra124-cpufreq.c
+>>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+>>> @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
+>>>  {
+>>>  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+>>>  	clk_disable_unprepare(priv->dfll_clk);
+>>> -	regulator_sync_voltage(priv->vdd_cpu_reg);
+>>> +	if (priv->vdd_cpu_reg)
+>>> +		regulator_sync_voltage(priv->vdd_cpu_reg);
+>>>  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
+>>>  }
+>>
+>> OK, so this bit does not make sense to me. In the above we are switching
+>> from the DFLL to the PLL (ie. disabling the DFLL) and so to ensure we
+>> are operating at the correct voltage after disabling the DFLL we need to
+>> sync the voltage. Seems we would need to do this for all devices, no?
+>> How is the different between Tegra124 and Tegra210?
+> 
+> Yes. So in case of i2c the regulator framework will reapply the voltage it
+> knows which in our case is the boot voltage for VDD_CPU because noone else
+> from a regulator framework pov has ever changed the voltage. In case of PWM
+> putting the PWM output pad in tri state will cause the OVR regulator to output
+> a hardware defined voltage. This is done as part of the dfll_clk_disable()
+> function. To summarize:
+
+So this is the piece of information I was missing. Maybe add this to the
+changelog so it is clear why we do not need to handle the cpu rail in
+the case of PWM.
+
+Cheers
+Jon
+
+-- 
+nvpublic
