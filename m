@@ -1,65 +1,140 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
-	devices
-Date: Tue, 13 Mar 2018 16:04:09 +0530
-Message-ID: <CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
-	<20180313085534.11650-2-vivek.gautam@codeaurora.org>
-	<CAAFQd5DXvnjaFw4Ct1Xn90nQZ4F4dLtov0ymG-tycQt5oLNpiQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5DXvnjaFw4Ct1Xn90nQZ4F4dLtov0ymG-tycQt5oLNpiQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH v1 1/2] dt-bindings: usb: Update documentation for Qualcomm DWC3 driver
+Date: Tue, 13 Mar 2018 16:06:00 +0530
+Message-ID: <1520937362-28777-1-git-send-email-mgautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Existing documentation has lot of incorrect information as it
+was originally added for a driver that no longer exists.
 
-On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Vivek,
->
-> Thanks for the patch.
->
-> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
-> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> The lists managing the device-links can be traversed to
->> find the link between two devices. The device_link_add() APIs
->> does traverse these lists to check if there's already a link
->> setup between the two devices.
->> So, add a new APIs, device_link_find(), to find an existing
->> device link between two devices - suppliers and consumers.
->
-> I'm wondering if this API would be useful for anything else that the
-> problem we're trying to solve with deleting links without storing them
-> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
-> better alternative?
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+---
+ .../devicetree/bindings/usb/qcom,dwc3.txt          | 87 +++++++++++++++-------
+ 1 file changed, 59 insertions(+), 28 deletions(-)
 
-Yea, that sounds simpler i think. Will add this API instead of
-find_link(). Thanks.
-
-regards
-vivek
->
-> Best regards,
-> Tomasz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+index bc8a2fa..df312f7 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -1,54 +1,85 @@
+ Qualcomm SuperSpeed DWC3 USB SoC controller
+ 
+ Required properties:
+-- compatible:	should contain "qcom,dwc3"
+-- clocks:		A list of phandle + clock-specifier pairs for the
+-				clocks listed in clock-names
+-- clock-names:	Should contain the following:
+-  "core"		Master/Core clock, have to be >= 125 MHz for SS
+-				operation and >= 60MHz for HS operation
+-
+-Optional clocks:
+-  "iface"		System bus AXI clock.  Not present on all platforms
+-  "sleep"		Sleep clock, used when USB3 core goes into low
+-				power mode (U3).
++- compatible:		should contain "qcom,dwc3"
++- reg:			offset and length of register set for QSCRATCH wrapper
++- reg-names:		should be "qscratch"
++- power-domains:	specifies a phandle to PM domain provider node
++- clocks:		list of phandle + clock-specifier pairs
++- assigned-clocks:	should be:
++				MOCK_UTMI_CLK
++				MASTER_CLK
++- assigned-clock-rates: should be:
++                                19.2Mhz (192000000) for MOCK_UTMI_CLK
++                                >=125Mhz (125000000) for MASTER_CLK in SS mode
++                                >=60Mhz (60000000) for MASTER_CLK in HS mode
++
++Optional properties:
++- resets:		list of phandle and reset specifier pairs
++- interrupts:		specifies interrupts from controller wrapper used
++			to wakeup from low power/susepnd state.	Must contain
++			one or more entry for interrupt-names property
++- interrupt-names:	Must include the following entries:
++			- "hs_phy_irq": The interrupt that is asserted when a
++			   wakeup event is received on USB2 bus
++			- "ss_phy_irq": The interrupt that is asserted when a
++			   wakeup event is received on USB3 bus
++			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
++			   interrupts for any wakeup event on DM and DP lines
++- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
++				Used when dwc3 operates without SSPHY and only
++				HS/FS/LS modes are supported.
+ 
+ Required child node:
+ A child node must exist to represent the core DWC3 IP block. The name of
+ the node is not important. The content of the node is defined in dwc3.txt.
+ 
+ Phy documentation is provided in the following places:
+-Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
++Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
++Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+ 
+ Example device nodes:
+ 
+ 		hs_phy: phy@100f8800 {
+-			compatible = "qcom,dwc3-hs-usb-phy";
+-			reg = <0x100f8800 0x30>;
+-			clocks = <&gcc USB30_0_UTMI_CLK>;
+-			clock-names = "ref";
+-			#phy-cells = <0>;
+-
++			compatible = "qcom,qusb2-v2-phy";
++			...
+ 		};
+ 
+ 		ss_phy: phy@100f8830 {
+-			compatible = "qcom,dwc3-ss-usb-phy";
+-			reg = <0x100f8830 0x30>;
+-			clocks = <&gcc USB30_0_MASTER_CLK>;
+-			clock-names = "ref";
+-			#phy-cells = <0>;
+-
++			compatible = "qcom,qmp-v3-usb3-phy";
++			...
+ 		};
+ 
+-		usb3_0: usb30@0 {
++		usb3_0: usb30@a6f8800 {
+ 			compatible = "qcom,dwc3";
++			reg = <0xa6f8800 0x400>;
++			reg-names = "qscratch";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			clocks = <&gcc USB30_0_MASTER_CLK>;
+-			clock-names = "core";
+-
+ 			ranges;
+ 
++			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++				  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			clocks = <&clock_gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
++				<&clock_gcc GCC_USB30_PRIM_MASTER_CLK>,
++				<&clock_gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
++				<&clock_gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++				<&clock_gcc GCC_USB30_PRIM_SLEEP_CLK>,
++				<&clock_gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				<&clock_gcc GCC_USB3_PRIM_CLKREF_CLK>;
++			clock-names = "cfg_noc", "core", "aggr_noc", "utmi",
++					"sleep", "cfg_ahb", "ref";
++
++			assigned-clocks = <&clock_gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++					  <&clock_gcc GCC_USB30_PRIM_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <133000000>;
++
++			resets = <&clock_gcc GCC_USB30_PRIM_BCR>;
++			reset-names = "core_reset";
++			power-domains = <&clock_gcc USB30_PRIM_GDSC>;
++			qcom,select-utmi-as-pipe-clk;
+ 
+ 			dwc3@10000000 {
+ 				compatible = "snps,dwc3";
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
