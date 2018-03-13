@@ -1,35 +1,30 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Add R8A77980/Condor PFC support
-Date: Tue, 13 Mar 2018 19:46:12 +0100
-Message-ID: <20180313184612.e4z3dkmsjbmnh252@verge.net.au>
-References: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
+Subject: Re: [PATCH v3 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car
+ V3M Eagle
+Date: Tue, 13 Mar 2018 19:47:19 +0100
+Message-ID: <20180313184719.rkcaae7th4lhgd6o@verge.net.au>
+References: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1520951425-13843-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <88e52531-e538-8685-110a-1a2e79a3fe49@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1520951425-13843-4-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 03:04:56PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On Tue, Mar 13, 2018 at 03:30:25PM +0100, Jacopo Mondi wrote:
+> The R-Car V3M Eagle board includes a transparent THC63LVD1024 LVDS
+> decoder, connected to the on-chip LVDS encoder output on one side
+> and to HDMI encoder ADV7511w on the other one.
 > 
-> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20180308-v4.16-rc4' tag.  We're adding the R8A77980 PFC node
-> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
-> These patches depend on the R8A77980 PFC support in order to work properly.
+> As the decoder does not need any configuration it has been so-far
+> omitted from DTS. Now that a driver is available, describe it in DT
+> as well.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-I have marked these patches as Deferred. Please repost or ping me
-once the dependencies are in an RC release. If looser dependency handling
-is appropriate please let me know.
+I have marked this as deferred pending acceptance of the new binding.
+Please repost or ping me once that has happened.
