@@ -1,54 +1,90 @@
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v1 0/8] Append several fixes and improvements in STM32 DMA
-Date: Tue, 13 Mar 2018 17:41:59 +0100
-Message-ID: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
+Subject: [PATCH v1 2/8] dmaengine: stm32-dma: threshold manages with bitfield feature
+Date: Tue, 13 Mar 2018 17:42:01 +0100
+Message-ID: <1520959327-25760-3-git-send-email-pierre-yves.mordret@st.com>
+References: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset appends several fixes and some improvements for STM32 DMAv2.
-This includes:
-        * Introduce DMA features bitfield
-        * Threshold manages with bitfield feature
-        * Improve memory burst management
-        * Improve DMA IRQ status handling
-        * Fix max items per transfer to match FIFO Size
-        * Properly mask irq bits to avoid overlaping
-        * Fix incomplete configuration in cyclic mode
-        * Fix typo and reported checkpatch warnings
+>From now on, DMA bitfield is to manage DMA FIFO Threshold.
 
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
   Version history:
     v1:
-        * Initial
+       * Initial
 ---
+---
+ drivers/dma/stm32-dma.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-Pierre-Yves MORDRET (8):
-  dt-bindings: stm32-dma: introduce DMA features bitfield
-  dmaengine: stm32-dma: threshold manages with bitfield feature
-  dmaengine: stm32-dma: Improve memory burst management
-  dmaengine: stm32-dma: fix DMA IRQ status handling
-  dmaengine: stm32-dma: fix max items per transfer
-  dmaengine: stm32-dma: properly mask irq bits
-  dmaengine: stm32-dma: fix incomplete configuration in cyclic mode
-  dmaengine: stm32-dma: fix typo and reported checkpatch warnings
-
- .../devicetree/bindings/dma/stm32-dma.txt          |   6 +-
- drivers/dma/stm32-dma.c                            | 287 +++++++++++++++++----
- 2 files changed, 243 insertions(+), 50 deletions(-)
-
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 786fc8f..4099948 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -116,6 +116,10 @@
+ #define STM32_DMA_MAX_DATA_PARAM	0x03
+ #define STM32_DMA_MAX_BURST		16
+ 
++/* DMA Features */
++#define STM32_DMA_THRESHOLD_FTR_MASK	GENMASK(1, 0)
++#define STM32_DMA_THRESHOLD_FTR_GET(n)	((n) & STM32_DMA_THRESHOLD_FTR_MASK)
++
+ enum stm32_dma_width {
+ 	STM32_DMA_BYTE,
+ 	STM32_DMA_HALF_WORD,
+@@ -129,11 +133,18 @@ enum stm32_dma_burst_size {
+ 	STM32_DMA_BURST_INCR16,
+ };
+ 
++/**
++ * struct stm32_dma_cfg - STM32 DMA custom configuration
++ * @channel_id: channel ID
++ * @request_line: DMA request
++ * @stream_config: 32bit mask specifying the DMA channel configuration
++ * @features: 32bit mask specifying the DMA Feature list
++ */
+ struct stm32_dma_cfg {
+ 	u32 channel_id;
+ 	u32 request_line;
+ 	u32 stream_config;
+-	u32 threshold;
++	u32 features;
+ };
+ 
+ struct stm32_dma_chan_reg {
+@@ -171,6 +182,7 @@ struct stm32_dma_chan {
+ 	u32 next_sg;
+ 	struct dma_slave_config	dma_sconfig;
+ 	struct stm32_dma_chan_reg chan_reg;
++	u32 threshold;
+ };
+ 
+ struct stm32_dma_device {
+@@ -976,7 +988,8 @@ static void stm32_dma_set_config(struct stm32_dma_chan *chan,
+ 	/* Enable Interrupts  */
+ 	chan->chan_reg.dma_scr |= STM32_DMA_SCR_TEIE | STM32_DMA_SCR_TCIE;
+ 
+-	chan->chan_reg.dma_sfcr = cfg->threshold & STM32_DMA_SFCR_FTH_MASK;
++	chan->threshold = STM32_DMA_THRESHOLD_FTR_GET(cfg->features);
++	chan->chan_reg.dma_sfcr = STM32_DMA_SFCR_FTH(chan->threshold);
+ }
+ 
+ static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
+@@ -996,7 +1009,7 @@ static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
+ 	cfg.channel_id = dma_spec->args[0];
+ 	cfg.request_line = dma_spec->args[1];
+ 	cfg.stream_config = dma_spec->args[2];
+-	cfg.threshold = dma_spec->args[3];
++	cfg.features = dma_spec->args[3];
+ 
+ 	if ((cfg.channel_id >= STM32_DMA_MAX_CHANNELS) ||
+ 	    (cfg.request_line >= STM32_DMA_MAX_REQUEST_ID)) {
 -- 
 2.7.4
