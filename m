@@ -1,53 +1,60 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Tue, 13 Mar 2018 10:16:03 +0000
-Message-ID: <755770ba-d110-8b2e-3c1f-9b65686dc51f@arm.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
- <1519154467-2896-2-git-send-email-jollys@xilinx.com>
- <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
- <CY1PR0201MB0764FB23021F5DC694C7F56DB8D80@CY1PR0201MB0764.namprd02.prod.outlook.com>
- <f6a416b7-542f-a3c3-538f-8549cf4e96c3@arm.com>
- <DM2PR0201MB07678A47B5380DC14E6F6126B8D30@DM2PR0201MB0767.namprd02.prod.outlook.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH] ARM: dts: sun8i-h3: Add Mali node
+Date: Tue, 13 Mar 2018 11:16:45 +0100
+Message-ID: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DM2PR0201MB07678A47B5380DC14E6F6126B8D30@DM2PR0201MB0767.namprd02.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Giulio Benetti <giulio.benetti@micronovasrl.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/03/18 23:07, Jolly Shah wrote:
-> Hi Sudeep,
-
->>>> Do you foresee using SMC/HVC for this firmware even on future platforms?
->>>> If not, I suggest to keep the protocol part separate from the transport i.e.
->>>> smc/hvc via ATF. It could be replaced with mailbox or some h/w
->>>> mechanism in future ?
->>>>
->>>
->>> We have PSCI and EEMI interfaces exposed to linux from ATF. PSCI is an
->>> EEMI client. We do not have current plans to switch to mailbox as it
->>> will require 2 communication channels to PMU as PSCI is through ATF.
->>>
->>
->> OK, but I just saw some bindings that has mailbox interface, honestly it's getting
->> too confusing with multiple series on the same thing floating and hence I
->> requested to put it together as one series.
-> 
-> Mailbox binding is used for power management driver. Mailbox is only
-> used for PMU->APU communication. APU->PMU communication is always
-> through EEMI firmware interface which is using SMC/HVC.
-> 
-
-Ah OK, is it because there's no non-secure mailbox or to avoid races,
-all non-secure EEMI is channeled through SMC ?
-
--- 
-Regards,
-Sudeep
+VGhlIEgzIGhhcyBhbiBBUk0gTWFsaSA0MDAgR1BVLCBzbyBhZGQgYmluZGluZyB0byBvdXIgRFQu
+CgpTaWduZWQtb2ZmLWJ5OiBHaXVsaW8gQmVuZXR0aSA8Z2l1bGlvLmJlbmV0dGlAbWljcm9ub3Zh
+c3JsLmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJk
+LnR4dCAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgzLmR0c2kgICAgICAgICAg
+ICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAy
+OCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQudHh0CmluZGV4IGFkODc2NTQuLmMxZjY1ZDEg
+MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1h
+bGktdXRnYXJkLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1
+L2FybSxtYWxpLXV0Z2FyZC50eHQKQEAgLTEwLDYgKzEwLDcgQEAgUmVxdWlyZWQgcHJvcGVydGll
+czoKICAgICAqIEFuZCwgb3B0aW9uYWxseSwgb25lIG9mIHRoZSB2ZW5kb3Igc3BlY2lmaWMgY29t
+cGF0aWJsZToKICAgICAgICsgYWxsd2lubmVyLHN1bjRpLWExMC1tYWxpCiAgICAgICArIGFsbHdp
+bm5lcixzdW43aS1hMjAtbWFsaQorICAgICAgKyBhbGx3aW5uZXIsc3VuOGktaDMtbWFsaQogICAg
+ICAgKyBhbGx3aW5uZXIsc3VuNTBpLWg1LW1hbGkKICAgICAgICsgYW1sb2dpYyxtZXNvbi1neGJi
+LW1hbGkKICAgICAgICsgYW1sb2dpYyxtZXNvbi1neGwtbWFsaQpkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgzLmR0
+c2kKaW5kZXggODQ5NWRlZS4uMTBkYThlZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuOGktaDMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMy5kdHNpCkBAIC03
+OSw2ICs3OSwzMyBAQAogCQkJICAgICA8R0lDX1BQSSAxMSAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0
+KSB8IElSUV9UWVBFX0xFVkVMX0xPVyk+LAogCQkJICAgICA8R0lDX1BQSSAxMCAoR0lDX0NQVV9N
+QVNLX1NJTVBMRSg0KSB8IElSUV9UWVBFX0xFVkVMX0xPVyk+OwogCX07CisKKwlzb2MgeworCQlt
+YWxpOiBncHVAMWM0MDAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1oMy1t
+YWxpIiwgImFybSxtYWxpLTQwMCI7CisJCQlyZWcgPSA8MHgwMWM0MDAwMCAweDEwMDAwPjsKKwkJ
+CWludGVycnVwdHMgPSA8R0lDX1NQSSA5NyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQkgICAg
+IDxHSUNfU1BJIDk4IElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJCSAgICAgPEdJQ19TUEkgOTkg
+SVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSAxMDAgSVJRX1RZUEVfTEVW
+RUxfSElHSD4sCisJCQkJICAgICA8R0lDX1NQSSAxMDIgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJ
+CQkJICAgICA8R0lDX1NQSSAxMDMgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8R0lD
+X1NQSSAxMDEgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQlpbnRlcnJ1cHQtbmFtZXMgPSAiZ3Ai
+LAorCQkJCQkgICJncG1tdSIsCisJCQkJCSAgInBwMCIsCisJCQkJCSAgInBwbW11MCIsCisJCQkJ
+CSAgInBwMSIsCisJCQkJCSAgInBwbW11MSIsCisJCQkJCSAgInBtdSI7CisJCQljbG9ja3MgPSA8
+JmNjdSBDTEtfQlVTX0dQVT4sIDwmY2N1IENMS19HUFU+OworCQkJY2xvY2stbmFtZXMgPSAiYnVz
+IiwgImNvcmUiOworCQkJcmVzZXRzID0gPCZjY3UgUlNUX0JVU19HUFU+OworCisJCQlhc3NpZ25l
+ZC1jbG9ja3MgPSA8JmNjdSBDTEtfR1BVPjsKKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDM4
+NDAwMDAwMD47CisJCX07CisJfTsKIH07CiAKICZjY3UgewotLSAKMi43LjQKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
