@@ -1,37 +1,150 @@
-Return-Path: <SRS0=dgl5=GR=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] spi: sh-msiof: Document R-Car M3-N support
-Date: Tue, 27 Mar 2018 15:04:25 +0200
-Message-Id: <1522155865-1129-1-git-send-email-geert+renesas@glider.be>
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=NcRe=GD=ni.com=prvs=261051e907=brad.mouring@kernel.org>
+From: Brad Mouring <brad.mouring@ni.com>
+Subject: [PATCH v5 net-next 1/4] net: macb: Reorganize macb_mii bringup
+Date: Tue, 13 Mar 2018 16:32:13 -0500
+Message-ID: <20180313213216.109153-2-brad.mouring@ni.com>
+In-Reply-To: <20180313213216.109153-1-brad.mouring@ni.com>
+References: <88aa8148-bf57-86a0-8f0d-fae7191865a6@gmail.com>
+ <20180313213216.109153-1-brad.mouring@ni.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org, Brad Mouring <brad.mouring@ni.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for the MSIOF module in the Renesas M3-N (r8a77965) SoC.
+The macb mii setup (mii_probe() and mii_init()) previously was
+somewhat interspersed, likely a result of organic growth and hacking.
 
-No driver update is needed.
+This change moves mii bus registration into mii_init and probing the
+bus for devices into mii_probe.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Brad Mouring <brad.mouring@ni.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-v2:
-  - Add Reviewed-by.
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/cadence/macb_main.c | 79 +++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index 80710f0f04489174..39806329c19396f6 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -10,6 +10,7 @@ Required properties:
- 			 "renesas,msiof-r8a7794" (R-Car E2)
- 			 "renesas,msiof-r8a7795" (R-Car H3)
- 			 "renesas,msiof-r8a7796" (R-Car M3-W)
-+			 "renesas,msiof-r8a77965" (R-Car M3-N)
- 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
- 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
- 			 "renesas,rcar-gen2-msiof" (generic R-Car Gen2 and RZ/G1 compatible device)
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index e84afcf1ecb5..4b514c705e57 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -472,8 +472,42 @@ static int macb_mii_probe(struct net_device *dev)
+ 	struct macb *bp = netdev_priv(dev);
+ 	struct macb_platform_data *pdata;
+ 	struct phy_device *phydev;
+-	int phy_irq;
+-	int ret;
++	struct device_node *np;
++	int phy_irq, ret, i;
++
++	pdata = dev_get_platdata(&bp->pdev->dev);
++	np = bp->pdev->dev.of_node;
++	ret = 0;
++
++	if (np) {
++		if (of_phy_is_fixed_link(np)) {
++			if (of_phy_register_fixed_link(np) < 0) {
++				dev_err(&bp->pdev->dev,
++					"broken fixed-link specification\n");
++				return -ENODEV;
++			}
++			bp->phy_node = of_node_get(np);
++		} else {
++			/* fallback to standard phy registration if no phy were
++			 * found during dt phy registration
++			 */
++			if (!phy_find_first(bp->mii_bus)) {
++				for (i = 0; i < PHY_MAX_ADDR; i++) {
++					struct phy_device *phydev;
++
++					phydev = mdiobus_scan(bp->mii_bus, i);
++					if (IS_ERR(phydev) &&
++					    PTR_ERR(phydev) != -ENODEV) {
++						ret = PTR_ERR(phydev);
++						break;
++					}
++				}
++
++				if (ret)
++					return -ENODEV;
++			}
++		}
++	}
+ 
+ 	if (bp->phy_node) {
+ 		phydev = of_phy_connect(dev, bp->phy_node,
+@@ -488,7 +522,6 @@ static int macb_mii_probe(struct net_device *dev)
+ 			return -ENXIO;
+ 		}
+ 
+-		pdata = dev_get_platdata(&bp->pdev->dev);
+ 		if (pdata) {
+ 			if (gpio_is_valid(pdata->phy_irq_pin)) {
+ 				ret = devm_gpio_request(&bp->pdev->dev,
+@@ -533,7 +566,7 @@ static int macb_mii_init(struct macb *bp)
+ {
+ 	struct macb_platform_data *pdata;
+ 	struct device_node *np;
+-	int err = -ENXIO, i;
++	int err, i;
+ 
+ 	/* Enable management port */
+ 	macb_writel(bp, NCR, MACB_BIT(MPE));
+@@ -556,39 +589,9 @@ static int macb_mii_init(struct macb *bp)
+ 	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+ 
+ 	np = bp->pdev->dev.of_node;
+-	if (np) {
+-		if (of_phy_is_fixed_link(np)) {
+-			if (of_phy_register_fixed_link(np) < 0) {
+-				dev_err(&bp->pdev->dev,
+-					"broken fixed-link specification\n");
+-				goto err_out_unregister_bus;
+-			}
+-			bp->phy_node = of_node_get(np);
+-
+-			err = mdiobus_register(bp->mii_bus);
+-		} else {
+-			/* try dt phy registration */
+-			err = of_mdiobus_register(bp->mii_bus, np);
+-
+-			/* fallback to standard phy registration if no phy were
+-			 * found during dt phy registration
+-			 */
+-			if (!err && !phy_find_first(bp->mii_bus)) {
+-				for (i = 0; i < PHY_MAX_ADDR; i++) {
+-					struct phy_device *phydev;
+ 
+-					phydev = mdiobus_scan(bp->mii_bus, i);
+-					if (IS_ERR(phydev) &&
+-					    PTR_ERR(phydev) != -ENODEV) {
+-						err = PTR_ERR(phydev);
+-						break;
+-					}
+-				}
+-
+-				if (err)
+-					goto err_out_unregister_bus;
+-			}
+-		}
++	if (np) {
++		err = of_mdiobus_register(bp->mii_bus, np);
+ 	} else {
+ 		for (i = 0; i < PHY_MAX_ADDR; i++)
+ 			bp->mii_bus->irq[i] = PHY_POLL;
+@@ -610,10 +613,10 @@ static int macb_mii_init(struct macb *bp)
+ 
+ err_out_unregister_bus:
+ 	mdiobus_unregister(bp->mii_bus);
+-err_out_free_mdiobus:
+-	of_node_put(bp->phy_node);
+ 	if (np && of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
++err_out_free_mdiobus:
++	of_node_put(bp->phy_node);
+ 	mdiobus_free(bp->mii_bus);
+ err_out:
+ 	return err;
 -- 
-2.7.4
+2.16.2
