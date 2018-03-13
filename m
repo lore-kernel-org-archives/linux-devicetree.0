@@ -1,71 +1,152 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 2/3] dt-bindings: clock: Add bindings for ZynqMP clock
- driver
-Date: Tue, 13 Mar 2018 18:39:13 +0000
-Message-ID: <DM2PR0201MB0767FFBAECF3A0B30251DBB8B8D20@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
- <1519856861-31384-3-git-send-email-jollys@xilinx.com>
- <20180306014549.6t3ae5adzc3cpi5v@rob-hp-laptop>
- <DM2PR0201MB0767031248A9F773620722FDB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
- <CAL_JsqKUC47xB5O2Y6c3efVCjJY=V+XO3xyLTU9rNia40bdZkg@mail.gmail.com>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v3 1/3] arm64: dts: apq8096-db820c: enable bluetooth node
+Date: Tue, 13 Mar 2018 19:38:05 +0100
+Message-ID: <20180313183807.6701-2-thierry.escande@linaro.org>
+References: <20180313183807.6701-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKUC47xB5O2Y6c3efVCjJY=V+XO3xyLTU9rNia40bdZkg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180313183807.6701-1-thierry.escande@linaro.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIE1hcmNoIDA3
-LCAyMDE4IDU6MjAgUE0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0KPiBD
-YzogbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207IHNib3lkQGNvZGVhdXJvcmEub3JnOw0KPiBtaWNo
-YWwuc2ltZWtAeGlsaW54LmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWNsa0B2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBTaHViaHJhanlvdGkg
-RGF0dGEgPHNodWJocmFqQHhpbGlueC5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgUmFqYW4gVmFqYSA8UkFKQU5WQHhpbGlueC5jb20+OyBsaW51eC1hcm0tDQo+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8zXSBkdC1iaW5k
-aW5nczogY2xvY2s6IEFkZCBiaW5kaW5ncyBmb3IgWnlucU1QIGNsb2NrDQo+IGRyaXZlcg0KPiAN
-Cj4gT24gV2VkLCBNYXIgNywgMjAxOCBhdCA0OjQ3IFBNLCBKb2xseSBTaGFoIDxKT0xMWVNAeGls
-aW54LmNvbT4gd3JvdGU6DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5l
-bC5vcmddDQo+ID4+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMDUsIDIwMTggNTo0NiBQTQ0KPiA+PiBU
-bzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+ID4+IENjOiBtdHVycXVldHRlQGJh
-eWxpYnJlLmNvbTsgc2JveWRAY29kZWF1cm9yYS5vcmc7DQo+ID4+IG1pY2hhbC5zaW1la0B4aWxp
-bnguY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPj4gbGludXgtY2xrQHZnZXIua2VybmVs
-Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFNodWJocmFqeW90aQ0KPiA+PiBEYXR0
-YSA8c2h1YmhyYWpAeGlsaW54LmNvbT47IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBK
-b2xseQ0KPiA+PiBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT47IFJhamFuIFZhamEgPFJBSkFOVkB4
-aWxpbnguY29tPjsNCj4gPj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
-ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8zXSBkdC1iaW5kaW5nczogY2xvY2s6IEFkZCBiaW5k
-aW5ncyBmb3IgWnlucU1QDQo+ID4+IGNsb2NrIGRyaXZlcg0KPiA+Pg0KPiA+PiBPbiBXZWQsIEZl
-YiAyOCwgMjAxOCBhdCAwMjoyNzo0MFBNIC0wODAwLCBKb2xseSBTaGFoIHdyb3RlOg0KPiA+PiA+
-IEFkZCBkb2N1bWVudGF0aW9uIHRvIGRlc2NyaWJlIFhpbGlueCBaeW5xTVAgY2xvY2sgZHJpdmVy
-IGJpbmRpbmdzLg0KPiA+PiA+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9s
-bHlzQHhpbGlueC5jb20+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogUmFqYW4gVmFqYSA8cmFqYW52
-QHhpbGlueC5jb20+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogU2h1YmhyYWp5b3RpIERhdHRhIDxz
-aHViaHJhanlvdGkuZGF0dGFAeGlsaW54LmNvbT4NCj4gPj4gPiAtLS0NCj4gDQo+ID4+ID4gKzk1
-ICAgICAgICAgZHBsbF9wb3N0X3NyYw0KPiA+PiA+ICs5NiAgICAgICAgIHZwbGxfaW50DQo+ID4+
-ID4gKzk3ICAgICAgICAgdnBsbF9wcmVfc3JjDQo+ID4+ID4gKzk4ICAgICAgICAgdnBsbF9oYWxm
-DQo+ID4+ID4gKzk5ICAgICAgICAgdnBsbF9pbnRfbXV4DQo+ID4+ID4gKzEwMCAgICAgICAgICAg
-ICAgICB2cGxsX3Bvc3Rfc3JjDQo+ID4+ID4gKzEwMSAgICAgICAgICAgICAgICBjYW4wX21pbw0K
-PiA+PiA+ICsxMDIgICAgICAgICAgICAgICAgY2FuMV9taW8NCj4gPj4gPiArDQo+ID4+ID4gK0V4
-YW1wbGU6DQo+ID4+ID4gKw0KPiA+PiA+ICtjbGs6IGNsayB7DQo+ID4+ID4gKyAgICNjbG9jay1j
-ZWxscyA9IDwxPjsNCj4gPj4gPiArICAgY29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1jbGsiOw0K
-PiA+Pg0KPiA+PiBIb3cgZG8geW91IGNvbnRyb2wgdGhlIGNsb2Nrcz8NCj4gPg0KPiA+IENsb2Nr
-cyBhcmUgY29udHJvbGxlZCBieSBhIGRlZGljYXRlZCBwbGF0Zm9ybSBtYW5hZ2VtZW50IGNvbnRy
-b2xsZXIuIEFib3ZlDQo+IGNsb2NrIGlkcyBhcmUgdXNlZCB0byBpZGVudGlmeSBjbG9ja3MgYmV0
-d2VlbiBtYXN0ZXIgYW5kIFBNVS4NCj4gDQo+IFdoYXQgaXMgdGhlIGludGVyZmFjZSB0byB0aGUg
-InBsYXRmb3JtIG1hbmFnZW1lbnQgY29udHJvbGxlciI/IEJlY2F1c2UgeW91DQo+IGhhdmUgbm8g
-cmVnaXN0ZXJzLCBJJ20gZ3Vlc3NpbmcgYSBmaXJtd2FyZSBpbnRlcmZhY2U/IElmIHNvLCB0aGVu
-IGp1c3QgZGVmaW5lIHRoZQ0KPiBmaXJtd2FyZSBub2RlIGFzIGEgY2xvY2sgcHJvdmlkZXIuDQoN
-ClllcyBpdCBpcyBmaXJtd2FyZSBpbnRlcmZhY2UuIEFsb25nIHdpdGggY2xvY2tzLCBmaXJtd2Fy
-ZSBpbnRlcmZhY2UgYWxzbyBjb250cm9scyBwb3dlciBhbmQgcGluY3RybCBvcGVyYXRpb25zIGFz
-IG1ham9yLg0KSSBhbSBub3Qgc3VyZSBpZiBJIHVuZGVyc3RhbmQgeW91IGNvcnJlY3RseS4gRG8g
-eW91IHN1Z2dlc3QgdG8gcmVnaXN0ZXIgY2xvY2tzIHRocm91Z2ggRmlybXdhcmUgZHJpdmVyIG9y
-IGp1c3QgdXNlIGZpcm13YXJlIERUIG5vZGUgYXMgY2xvY2sgcHJvdmlkZXIgYW5kIGNsb2NrIGRy
-aXZlciBEVCBub2RlIGNhbiByZWZlcmVuY2UgY2xvY2tzIGZyb20gRlcgbm9kZSB0byByZWdpc3Rl
-ciBzYW1lPw0KIA0KPiANCj4gUm9iDQo=
+Add a new serial node for the Qualcomm BT controller QCA6174. This
+allows automatic probing and hci registration through the serdev
+framework instead of relying on the userspace helpers.
+
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  | 14 ++++++++++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    | 17 ++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 32 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 10 +++++++
+ 4 files changed, 73 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+index 24552f19b3fa..172165d84669 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+@@ -36,4 +36,18 @@
+ 			drive-strength = <2>;	/* 2 MA */
+ 		};
+ 	};
++
++	blsp1_uart1_default: blsp1_uart1_default {
++		function = "blsp_uart2";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	blsp1_uart1_sleep: blsp1_uart1_sleep {
++		function = "gpio";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <2>;
++		bias-disable;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+index 59b29ddfb6e9..f8d2a3b10b1f 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+@@ -26,6 +26,23 @@
+ 		};
+ 	};
+ 
++	divclk4_pin_a: divclk4 {
++		pins = "gpio18";
++		function = "func2";
++
++		bias-disable;
++		power-source = <PM8994_GPIO_S4>;
++	};
++
++	bt_en_pin_a: bt-en-active {
++		pins = "gpio19";
++		function = "normal";
++
++		output-low;
++		power-source = <PM8994_GPIO_S4>;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++
+ 	usb3_vbus_det_gpio: pm8996_gpio22 {
+ 		pinconf {
+ 			pins = "gpio22";
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 1c8f1b86472d..b05d6bc0b856 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -23,6 +23,7 @@
+ 	aliases {
+ 		serial0 = &blsp2_uart1;
+ 		serial1 = &blsp2_uart2;
++		serial2 = &blsp1_uart1;
+ 		i2c0	= &blsp1_i2c2;
+ 		i2c1	= &blsp2_i2c1;
+ 		i2c2	= &blsp2_i2c0;
+@@ -34,7 +35,38 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	clocks {
++		divclk4: divclk4 {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++			clock-output-names = "divclk4";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&divclk4_pin_a>;
++		};
++	};
++
+ 	soc {
++		serial@7570000 {
++			label = "BT-UART";
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart1_default>;
++			pinctrl-1 = <&blsp1_uart1_sleep>;
++
++			bluetooth {
++				compatible = "qcom,qca6174-bt";
++
++				bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&bt_en_pin_a>;
++
++				clocks = <&divclk4>;
++			};
++		};
++
+ 		serial@75b0000 {
+ 			label = "LS-UART1";
+ 			status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 0a6f7952bbb1..2d54a86a027f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -408,6 +408,16 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		blsp1_uart1: serial@7570000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07570000 0x1000>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
+ 		blsp1_spi0: spi@7575000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x07575000 0x600>;
+-- 
+2.14.1
