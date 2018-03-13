@@ -1,101 +1,100 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two devices
-Date: Tue, 13 Mar 2018 10:40:26 +0100
-Message-ID: <8903307.QazHKW0JrR@aspire.rjw.lan>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org> <20180313085534.11650-2-vivek.gautam@codeaurora.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v3 09/11] cpufreq: tegra124-cpufreq: extend to support
+ Tegra210
+Date: Tue, 13 Mar 2018 11:51:17 +0200
+Message-ID: <20180313095117.GX6190@tbergstrom-lnx.Nvidia.com>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-10-git-send-email-pdeschrijver@nvidia.com>
+ <85edea04-6aaf-3609-1da9-0d542ac98e7d@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313085534.11650-2-vivek.gautam@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <85edea04-6aaf-3609-1da9-0d542ac98e7d@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: joro@8bytes.org, robh+dt@kernel.org, robin.murphy@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, robdclark@gmail.com, tfiga@chromium.org, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, March 13, 2018 9:55:30 AM CET Vivek Gautam wrote:
-> The lists managing the device-links can be traversed to
-> find the link between two devices. The device_link_add() APIs
-> does traverse these lists to check if there's already a link
-> setup between the two devices.
-> So, add a new APIs, device_link_find(), to find an existing
-> device link between two devices - suppliers and consumers.
+On Mon, Mar 12, 2018 at 12:15:22PM +0000, Jon Hunter wrote:
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
+> On 06/02/18 16:34, Peter De Schrijver wrote:
+> > Tegra210 has a very similar CPU clocking scheme than Tegra124. So add
+> > support in this driver. Also allow for the case where the CPU voltage is
+> > controlled directly by the DFLL rather than by a separate regulator object.
+> > 
+> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> > ---
+> >  drivers/cpufreq/tegra124-cpufreq.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+> > index 4353025..f8e01a8 100644
+> > --- a/drivers/cpufreq/tegra124-cpufreq.c
+> > +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> > @@ -64,7 +64,8 @@ static void tegra124_cpu_switch_to_pllx(struct tegra124_cpufreq_priv *priv)
+> >  {
+> >  	clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+> >  	clk_disable_unprepare(priv->dfll_clk);
+> > -	regulator_sync_voltage(priv->vdd_cpu_reg);
+> > +	if (priv->vdd_cpu_reg)
+> > +		regulator_sync_voltage(priv->vdd_cpu_reg);
+> >  	clk_set_parent(priv->cpu_clk, priv->pllx_clk);
+> >  }
 > 
->  * New patch added to this series.
-> 
->  drivers/base/core.c    | 30 +++++++++++++++++++++++++++---
->  include/linux/device.h |  2 ++
->  2 files changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 5847364f25d9..e8c9774e4ba2 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -144,6 +144,30 @@ static int device_reorder_to_tail(struct device *dev, void *not_used)
->  	return 0;
->  }
->  
-> +/**
-> + * device_link_find - find any existing link between two devices.
-> + * @consumer: Consumer end of the link.
-> + * @supplier: Supplier end of the link.
-> + *
-> + * Returns pointer to the existing link between a supplier and
-> + * and consumer devices, or NULL if no link exists.
-> + */
-> +struct device_link *device_link_find(struct device *consumer,
-> +				     struct device *supplier)
-> +{
-> +	struct device_link *link = NULL;
-> +
-> +	if (!consumer || !supplier)
-> +		return NULL;
-> +
-> +	list_for_each_entry(link, &supplier->links.consumers, s_node)
-> +		if (link->consumer == consumer)
-> +			break;
-> +
+> OK, so this bit does not make sense to me. In the above we are switching
+> from the DFLL to the PLL (ie. disabling the DFLL) and so to ensure we
+> are operating at the correct voltage after disabling the DFLL we need to
+> sync the voltage. Seems we would need to do this for all devices, no?
+> How is the different between Tegra124 and Tegra210?
 
-Any mutual exclusion?
+Yes. So in case of i2c the regulator framework will reapply the voltage it
+knows which in our case is the boot voltage for VDD_CPU because noone else
+from a regulator framework pov has ever changed the voltage. In case of PWM
+putting the PWM output pad in tri state will cause the OVR regulator to output
+a hardware defined voltage. This is done as part of the dfll_clk_disable()
+function. To summarize:
 
-Or is the caller expected to take care of it?  And if so, then how?
+switch from pll_x to DFLL for i2c regulator:
 
-> +	return link;
-> +}
-> +EXPORT_SYMBOL_GPL(device_link_find);
-> +
->  /**
->   * device_link_add - Create a link between two devices.
->   * @consumer: Consumer end of the link.
-> @@ -195,9 +219,9 @@ struct device_link *device_link_add(struct device *consumer,
->  		goto out;
->  	}
->  
-> -	list_for_each_entry(link, &supplier->links.consumers, s_node)
-> -		if (link->consumer == consumer)
-> -			goto out;
-> +	link = device_link_find(consumer, supplier);
-> +	if (link)
-> +		goto out;
->  
->  	link = kzalloc(sizeof(*link), GFP_KERNEL);
->  	if (!link)
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index b093405ed525..13bc1884c3eb 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1278,6 +1278,8 @@ extern const char *dev_driver_string(const struct device *dev);
->  struct device_link *device_link_add(struct device *consumer,
->  				    struct device *supplier, u32 flags);
->  void device_link_del(struct device_link *link);
-> +struct device_link *device_link_find(struct device *consumer,
-> +				     struct device *supplier);
->  
->  #ifdef CONFIG_PRINTK
->  
-> 
+entry: voltage is boot voltage set bootloader
+1) set dfll rate to pll_x rate
+2) set parent to pll_p so we run at 408MHz which is below Fmax@Vmin when
+   running from PLL
+3) enable DFLL this will switch to closed loop mode and start controlling
+   the voltage via i2c, however because we are below Fmax@Vmin there's no
+   V/f curve violation.
+4) change parent from pll_x to DFLL
+
+switch from DFLL to pll_x for i2c regulator:
+
+entry: voltage is whatever the DFLL has programmed but not lower than Vmin
+1) set parent to pll_p so we run at 408MHz (below Fmax@Vmin)
+2) disable DFLL, this will cause the voltage to be the last value programmed
+   by the DFLL.
+3) go back to the voltage as programmed by the boot loader using
+   regulator_sync_voltage().
+4) change parent from DFLL to pll_x. Because pll_x is still programmed at
+   the bootloader frequency, we're within the V/f curve.
+
+switch from pll_x to DFLL for PWM regulator:
+
+entry: voltage is boot voltage set by hardware because PWM pin is in tristate
+1) set dfll rate to pll_x rate
+2) set parent to pll_p so we run at 408MHz which is below Fmax@Vmin when
+   running from PLL
+3) enable DFLL this will set the PWM pad to output, switch to closed loop mode
+   and start controlling the voltage via PWM, however because we are below
+   Fmax@Vmin there's no V/f curve violation.
+4) change parent from pll_x to DFLL
+
+switch from DFLL to pll_x for PWM regulator:
+
+entry: voltage is whatever the DFLL has programmed but not lower than Vmin
+1) set parent to pll_p so we run at 408MHz (below Fmax@Vmin)
+2) disable DFLL, this will cause the PWM pad to be programmed to tristate
+   and the voltage to change back to the hardware defined voltage.
+3) change parent from DFLL to pll_x. Because pll_x is still programmed at
+   the bootloader frequency, we're within the V/f curve.
+
+Peter.
