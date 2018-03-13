@@ -1,46 +1,48 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC 1/2] pci: dwc: pci-exynos: modify the Kconfig dependency
-Date: Tue, 13 Mar 2018 11:12:11 +0000
-Message-ID: <20180313111211.GA15480@e107981-ln.cambridge.arm.com>
-References: <CGME20171221121409epcas1p2af291857b9df115d2dec9a3d3300e0aa@epcas1p2.samsung.com>
- <20171221121408.22636-1-jh80.chung@samsung.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two devices
+Date: Tue, 13 Mar 2018 20:23:34 +0900
+Message-ID: <CAAFQd5A5Rj1KAZjUc5ZUKuKnbkA5Q6aLw9z0H3_kfyBQOOF-gw@mail.gmail.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+ <20180313085534.11650-2-vivek.gautam@codeaurora.org> <CAAFQd5DXvnjaFw4Ct1Xn90nQZ4F4dLtov0ymG-tycQt5oLNpiQ@mail.gmail.com>
+ <CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171221121408.22636-1-jh80.chung@samsung.com>
+In-Reply-To: <CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, krzk@kernel.org, jingoohan1@gmail.com, kgene@kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lukas Wunner <lukas@wunner.de>
+Cc: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> Hi Tomasz,
+>
+> On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga@chromium.org> wrote:
+>> Hi Vivek,
+>>
+>> Thanks for the patch.
+>>
+>> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
+>> <vivek.gautam@codeaurora.org> wrote:
+>>> The lists managing the device-links can be traversed to
+>>> find the link between two devices. The device_link_add() APIs
+>>> does traverse these lists to check if there's already a link
+>>> setup between the two devices.
+>>> So, add a new APIs, device_link_find(), to find an existing
+>>> device link between two devices - suppliers and consumers.
+>>
+>> I'm wondering if this API would be useful for anything else that the
+>> problem we're trying to solve with deleting links without storing them
+>> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
+>> better alternative?
+>
+> Yea, that sounds simpler i think. Will add this API instead of
+> find_link(). Thanks.
 
-On Thu, Dec 21, 2017 at 09:14:06PM +0900, Jaehoon Chung wrote:
-> PCI_EXYNOS has the dependency with SOC_EXYNOS5440.
-> It's modified to ARCH_EXYNOS from SOC_EXYNOS5440, because other
-> SoCs needs to use this driver.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
->  drivers/pci/dwc/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-> index 113e09440f85..0ff9795df8e8 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -65,7 +65,7 @@ config PCIE_DW_PLAT
->  config PCI_EXYNOS
->  	bool "Samsung Exynos PCIe controller"
->  	depends on PCI
-> -	depends on SOC_EXYNOS5440
-> +	depends on ARCH_EXYNOS
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIEPORTBUS
->  	select PCIE_DW_HOST
+Perhaps let's wait for a moment to see if there are other opinions. :)
 
-This patch fell through the cracks, is it still needed ? Please let
-me know and I will apply it if it is, thank you very much.
+Rafael, Lucas, any thoughts?
 
-Lorenzo
+Best regards,
+Tomasz
