@@ -1,101 +1,173 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a64: Add pwm device
-Date: Tue, 13 Mar 2018 09:29:09 +0100
-Message-ID: <20180313082909.236etgyrtkr3o432@flea>
-References: <20180312161050.7647-1-harald@ccbib.org>
- <20180312161050.7647-5-harald@ccbib.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5nittou4ns7ssr2s"
+From: Tirupathi Reddy <tirupath@codeaurora.org>
+Subject: [PATCH V2] Input: pm8941-pwrkey: add resin key capabilities
+Date: Tue, 13 Mar 2018 14:05:58 +0530
+Message-ID: <1520930158-5854-1-git-send-email-tirupath@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180312161050.7647-5-harald@ccbib.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: tirupath@codeaurora.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add resin key support to handle different types of key events
+defined in different platforms.
 
---5nittou4ns7ssr2s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+---
+ .../bindings/input/qcom,pm8941-pwrkey.txt          | 20 ++++++-
+ drivers/input/misc/pm8941-pwrkey.c                 | 65 +++++++++++++++++++++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
 
-On Mon, Mar 12, 2018 at 04:10:49PM +0000, Harald Geyer wrote:
-> This device is compatible with A13, so no new driver is needed.
->=20
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
-> ---
-> I saw that Andre Przywara has been working on A64 pwm too and has
-> submitted some patches a few days ago. I think his patches are functional=
-ly
-> equivalent to this one here, but clean up things a bit and thus are
-> preferable. See:
->=20
-> https://groups.google.com/forum/#!topic/linux-sunxi/hQFeteP591k
->=20
-> I'm including my patch here mostly to have a consistent series for others
-> to test. OTOH you might merge the device tree changes here and pick up
-> the cleanup patches from him. Either way should work fine.
->=20
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index 05d5e8def68a..95d52f6aa07f 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -364,6 +364,11 @@
->  				bias-pull-up;
->  			};
-> =20
-> +			pwm_pin: pwm_pin {
-> +				pins =3D "PD22";
-> +				function =3D "pwm";
-> +			};
-> +
->  			rmii_pins: rmii_pins {
->  				pins =3D "PD10", "PD11", "PD13", "PD14", "PD17",
->  				       "PD18", "PD19", "PD20", "PD22", "PD23";
-> @@ -629,6 +634,14 @@
->  			#interrupt-cells =3D <3>;
->  		};
-> =20
-> +		pwm: pwm@1c21400 {
-> +			compatible =3D "allwinner,sun5i-a13-pwm";
-
-Just like for the watchdog, you should have an A64 compatible there.
-
-> +			reg =3D <0x01c21400 0x8>;
-
-And you should use the full memory range here.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---5nittou4ns7ssr2s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqni9QACgkQ0rTAlCFN
-r3TaOA/+NMl2EJf1U/fQit6/vBRkc5av7js2OXfOliGiIiRvewBM7GySnhatF/Cm
-kF6OQG8xN9JxYv1RorMkpyuSz4V+bNK+c5aW89ibkIjtWNJYiNhnwCQCTCUGdsVg
-2wg3OydNf3rMUb4BMTM6R9EGYvguULh6D1/YaJEqrzkkKLnq7bk6Bav8BEanDRle
-KAfq9HeSfSGoAn11YUHeDc5CDCCUQb7wQqxknw73wch4LTkNNmLzXaU3fqMSjFZm
-ZNlPaOdGU7MWIsfkZKN36MMmuiRdmjkYPWbLcjVSFYbB5sUFrohzqgDsLvOviwVN
-7ddY0hJK9NNKlgZddubKdIE9+uxg4Z/n19l2OYxWbrFjjKh4Uhg7f8/cFvuyLam9
-AzMeqztYo8/3xlqFFPw6rB0a6lEWZxf0YqeSGkeyxeGzDAgcUzzY/oDyIf7VX8jt
-seMWrt5NtW9poKFB6e/NVYVjT8YqpwceYYd+PH0df78TpOYgV4GS2DHpGMnTlZ4O
-QxjPUy5jccazi3nmJyfCNm3rzfZSsyE42BD69cE0uUl+8IMZGu/Pt53//m+wPSgl
-krk946KenJnGLVpo6q/tUK2249nMNaVuseyZ9szUJOsjns0g4KnK4Obgv2W/4ass
-NokXA0sgXZWGlHrTs/mNx8Y5FyUlj0lNX5wEfSbhFFigaFAJnsQ=
-=/sjq
------END PGP SIGNATURE-----
-
---5nittou4ns7ssr2s--
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+index 07bf55f..f499cf8 100644
+--- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
++++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+@@ -20,6 +20,14 @@ PROPERTIES
+ 		    defined by the binding document describing the node's
+ 		    interrupt parent.
+ 
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Interrupt names.  This list must match up 1-to-1 with the
++		    interrupts specified in the 'interrupts' property. "kpdpwr"
++		    must be specified and should be the first entry of the list.
++		    "resin" may be specified for some platforms.
++
+ - debounce:
+ 	Usage: optional
+ 	Value type: <u32>
+@@ -32,12 +40,22 @@ PROPERTIES
+ 	Definition: presence of this property indicates that the KPDPWR_N pin
+ 		    should be configured for pull up.
+ 
++- linux,code:
++	Usage: required for "resin" key
++	Value type: <u32>
++	Definition: The input key-code associated with the resin key.
++		    Use the linux event codes defined in
++		    include/dt-bindings/input/linux-event-codes.h
++
+ EXAMPLE
+ 
+ 	pwrkey@800 {
+ 		compatible = "qcom,pm8941-pwrkey";
+ 		reg = <0x800>;
+-		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>,
++			     <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++		interrupt-names = "kpdpwr", "resin";
+ 		debounce = <15625>;
+ 		bias-pull-up;
++		linux,code = <KEY_VOLUMEDOWN>;
+ 	};
+diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+index 18ad956..2fffc7c 100644
+--- a/drivers/input/misc/pm8941-pwrkey.c
++++ b/drivers/input/misc/pm8941-pwrkey.c
+@@ -28,6 +28,7 @@
+ 
+ #define PON_RT_STS			0x10
+ #define  PON_KPDPWR_N_SET		BIT(0)
++#define  PON_RESIN_N_SET		BIT(1)
+ 
+ #define PON_PS_HOLD_RST_CTL		0x5a
+ #define PON_PS_HOLD_RST_CTL2		0x5b
+@@ -46,6 +47,7 @@
+ struct pm8941_pwrkey {
+ 	struct device *dev;
+ 	int irq;
++	u32 resin_key_code;
+ 	u32 baseaddr;
+ 	struct regmap *regmap;
+ 	struct input_dev *input;
+@@ -130,6 +132,24 @@ static irqreturn_t pm8941_pwrkey_irq(int irq, void *_data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t pm8941_resinkey_irq(int irq, void *_data)
++{
++	struct pm8941_pwrkey *pwrkey = _data;
++	unsigned int sts;
++	int error;
++
++	error = regmap_read(pwrkey->regmap,
++			    pwrkey->baseaddr + PON_RT_STS, &sts);
++	if (error)
++		return IRQ_HANDLED;
++
++	input_report_key(pwrkey->input, pwrkey->resin_key_code,
++			 !!(sts & PON_RESIN_N_SET));
++	input_sync(pwrkey->input);
++
++	return IRQ_HANDLED;
++}
++
+ static int __maybe_unused pm8941_pwrkey_suspend(struct device *dev)
+ {
+ 	struct pm8941_pwrkey *pwrkey = dev_get_drvdata(dev);
+@@ -153,12 +173,40 @@ static int __maybe_unused pm8941_pwrkey_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(pm8941_pwr_key_pm_ops,
+ 			 pm8941_pwrkey_suspend, pm8941_pwrkey_resume);
+ 
++static int pm8941_resin_key_init(struct pm8941_pwrkey *pwrkey, int irq)
++{
++	int error;
++
++	/*
++	 * Get the standard-key parameters. This might not be
++	 * specified if there is no key mapping on the reset line.
++	 */
++	error = of_property_read_u32(pwrkey->dev->of_node, "linux,code",
++			&pwrkey->resin_key_code);
++	if (error) {
++		dev_err(pwrkey->dev, "failed to read key-code for resin key\n");
++		return error;
++	}
++
++	/* Register key configuration */
++	input_set_capability(pwrkey->input, EV_KEY, pwrkey->resin_key_code);
++
++	error = devm_request_threaded_irq(pwrkey->dev, irq, NULL,
++					  pm8941_resinkey_irq, IRQF_ONESHOT,
++					  "pm8941_resinkey", pwrkey);
++	if (error)
++		dev_err(pwrkey->dev, "failed requesting resin key IRQ: %d\n",
++			error);
++
++	return error;
++}
++
+ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+ {
+ 	struct pm8941_pwrkey *pwrkey;
+ 	bool pull_up;
+ 	u32 req_delay;
+-	int error;
++	int error, resin_irq;
+ 
+ 	if (of_property_read_u32(pdev->dev.of_node, "debounce", &req_delay))
+ 		req_delay = 15625;
+@@ -241,6 +289,21 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
++	resin_irq = platform_get_irq_byname(pdev, "resin");
++	if (resin_irq < 0 && resin_irq != -ENXIO) {
++		if (resin_irq != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get resin irq\n");
++		return resin_irq;
++	} else if (resin_irq >= 0) {
++		/* resin key capabilities are defined in device node */
++		error = pm8941_resin_key_init(pwrkey, resin_irq);
++		if (error) {
++			dev_err(&pdev->dev, "failed resin key initialization: %d\n",
++				error);
++			return error;
++		}
++	}
++
+ 	error = input_register_device(pwrkey->input);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to register input device: %d\n",
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
