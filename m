@@ -1,67 +1,70 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH v4 07/24] ASoC: qdsp6: q6afe: Add q6afe
- driver
-Date: Tue, 13 Mar 2018 16:59:27 +0530
-Message-ID: <3d750b29-d341-af4d-41b3-30260f8296b7@codeaurora.org>
-References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
- <20180310022456.26739-8-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180310022456.26739-8-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v3 1/2] media: ov2680: dt: Add bindings for OV2680
+Date: Tue, 13 Mar 2018 11:33:10 +0000
+Message-ID: <20180313113311.8617-2-rui.silva@linaro.org>
+References: <20180313113311.8617-1-rui.silva@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180313113311.8617-1-rui.silva@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAzLzEwLzIwMTggNzo1NCBBTSwgc3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnIHdy
-b3RlOgo+IEZyb206IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRhZ2F0bGFAbGlu
-YXJvLm9yZz4KPgo+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IHRvIFE2QUZFIChBdWRpbyBGcm9u
-dCBFbmQpIG1vZHVsZSBvbiBRNkRTUC4KPgpbLi5dCj4gKwkJaWYgKHJlcy0+c3RhdHVzKSB7Cj4g
-KwkJCWRldl9lcnIoYWZlLT5kZXYsICJjbWQgPSAweCV4IHJldHVybmVkIGVycm9yID0gMHgleFxu
-IiwKPiArCQkJCXJlcy0+b3Bjb2RlLCByZXMtPnN0YXR1cyk7Cj4gKwkJfQo+ICsJCXN3aXRjaCAo
-cmVzLT5vcGNvZGUpIHsKPiArCQljYXNlIEFGRV9QT1JUX0NNRF9TRVRfUEFSQU1fVjI6Cj4gKwkJ
-Y2FzZSBBRkVfUE9SVF9DTURfREVWSUNFX1NUT1A6Cj4gKwkJY2FzZSBBRkVfUE9SVF9DTURfREVW
-SUNFX1NUQVJUOgoKY2FzZSBBRkVfU1ZDX0NNRF9TRVRfUEFSQU06IG5lZWRzIHRvIGJlIGFkZGVk
-Cj4gKwkJCXBvcnQgPSBhZmVfZmluZF9wb3J0KGFmZSwgZGF0YS0+dG9rZW4pOwo+ICsJCQlpZiAo
-cG9ydCkgewo+ICsJCQkJcG9ydC0+cmVzdWx0ID0gKnJlczsKPiArCQkJCXdha2VfdXAoJnBvcnQt
-PndhaXQpOwo+ICsJCQl9ClsuLl0KPiArCj4gK3N0YXRpYyBpbnQgcTZhZmVfcG9ydF9zZXRfcGFy
-YW1fdjIoc3RydWN0IHE2YWZlX3BvcnQgKnBvcnQsIHZvaWQgKmRhdGEsCj4gKwkJCQkgICBpbnQg
-cGFyYW1faWQsIGludCBwc2l6ZSkKPiArewo+ICsJc3RydWN0IGFwcl9oZHIgKmhkcjsKPiArCXN0
-cnVjdCBhZmVfcG9ydF9jbWRfc2V0X3BhcmFtX3YyICpwYXJhbTsKPiArCXN0cnVjdCBhZmVfcG9y
-dF9wYXJhbV9kYXRhX3YyICpwZGF0YTsKPiArCXN0cnVjdCBxNmFmZSAqYWZlID0gcG9ydC0+YWZl
-Owo+ICsJdTE2IHBvcnRfaWQgPSBwb3J0LT5pZDsKPiArCWludCByZXQ7Cj4gKwo+ICsJaGRyID0g
-ZGF0YTsKPiArCXBhcmFtID0gZGF0YSArIHNpemVvZigqaGRyKTsKPiArCXBkYXRhID0gZGF0YSAr
-IHNpemVvZigqaGRyKSArIHNpemVvZigqcGFyYW0pOwo+ICsKPiArCWhkci0+aGRyX2ZpZWxkID0g
-QVBSX0hEUl9GSUVMRChBUFJfTVNHX1RZUEVfU0VRX0NNRCwKPiArCQkJCQkgICAgICBBUFJfSERS
-X0xFTihBUFJfSERSX1NJWkUpLAo+ICsJCQkJCSAgICAgIEFQUl9QS1RfVkVSKTsKPiArCWhkci0+
-cGt0X3NpemUgPSBzaXplb2YoKmhkcikgKyBzaXplb2YoKnBhcmFtKSArCj4gKwkJCXNpemVvZigq
-cGRhdGEpICsgcHNpemU7Cj4gKwloZHItPnNyY19wb3J0ID0gMDsKPiArCWhkci0+ZGVzdF9wb3J0
-ID0gMDsKPiArCWhkci0+dG9rZW4gPSBwb3J0LT50b2tlbjsKPiArCWhkci0+b3Bjb2RlID0gQUZF
-X1BPUlRfQ01EX1NFVF9QQVJBTV9WMjsKPiArCXBhcmFtLT5wb3J0X2lkID0gcG9ydF9pZDsKPiAr
-CXBhcmFtLT5wYXlsb2FkX3NpemUgPSBzaXplb2YoKnBkYXRhKSArIHBzaXplOwo+ICsJcGFyYW0t
-PnBheWxvYWRfYWRkcmVzc19sc3cgPSAweDAwOwo+ICsJcGFyYW0tPnBheWxvYWRfYWRkcmVzc19t
-c3cgPSAweDAwOwo+ICsJcGFyYW0tPm1lbV9tYXBfaGFuZGxlID0gMHgwMDsKPiArCXBkYXRhLT5t
-b2R1bGVfaWQgPSBBRkVfTU9EVUxFX0FVRElPX0RFVl9JTlRFUkZBQ0U7Cj4gKwlwZGF0YS0+cGFy
-YW1faWQgPSBwYXJhbV9pZDsKPiArCXBkYXRhLT5wYXJhbV9zaXplID0gcHNpemU7Cj4gKwo+ICsJ
-cmV0ID0gYWZlX2Fwcl9zZW5kX3BrdChhZmUsIGRhdGEsIHBvcnQpOwo+ICsJaWYgKHJldCkKPiAr
-CQlkZXZfZXJyKGFmZS0+ZGV2LCAiQUZFIGVuYWJsZSBmb3IgcG9ydCAweCV4IGZhaWxlZCAlZFxu
-IiwKCndlIHNob3VsZCBhZGQgJXMgdG8gZGlzdGluZ3Vpc2ggZGlmZmVyZW50IGZ1bmN0aW9ucyB3
-aXRoIHNpbWlsYXIgZXJyb3IgCmxvZ3MuIEFsc28sIHE2YWZlX3BvcnRfc2V0X3BhcmFtX3YyKCkg
-Y2FuIGJlIGNhbGxlZCBmb3IgZGlmZmVyZW50IApwdXJwb3NlLsKgIEFGRSBlbmFibGUgZm9yIHBv
-cnQgMHgleCBmYWlsZWQgaXMgc3VpdGFibGUgb25seSBmb3IgcG9ydCAKc3RhcnQgZmFpbHVyZS4g
-RXJyb3IgbWVzc2FnZSBuZWVkcyB0byBiZSB1cGRhdGVkIGhlcmUuCgo+ICsJCSAgICAgICBwb3J0
-X2lkLCByZXQpOwo+ICsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlz
-dApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+Add device tree binding documentation for the OV2680 camera sensor.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ .../devicetree/bindings/media/i2c/ov2680.txt       | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+new file mode 100644
+index 000000000000..0e29f1a113c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+@@ -0,0 +1,40 @@
++* Omnivision OV2680 MIPI CSI-2 sensor
++
++Required Properties:
++- compatible: should be "ovti,ov2680".
++- clocks: reference to the xvclk input clock.
++- clock-names: should be "xvclk".
++
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
++		     if any. This is an active high signal to the OV2680.
++
++The device node must contain one 'port' child node for its digital output
++video port, and this port must have a single endpoint in accordance with
++ the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Endpoint node required properties for CSI-2 connection are:
++- remote-endpoint: a phandle to the bus receiver's endpoint node.
++- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
++- data-lanes: should be set to <1> (one CSI-2 lane supported).
++ 
++Example:
++
++&i2c2 {
++	ov2680: camera-sensor@36 {
++		compatible = "ovti,ov2680";
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++
++		port {
++			ov2680_mipi_ep: endpoint {
++				remote-endpoint = <&mipi_sensor_ep>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
++};
+-- 
+2.16.2
