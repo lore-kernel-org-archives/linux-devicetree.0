@@ -1,15 +1,15 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/5] pwm: sun4i: Introduce (optional) reset support
-Date: Tue, 13 Mar 2018 16:32:35 +0100
-Message-ID: <20180313153235.zyuelfcmayc6s73z@flea>
-References: <20180307020719.6675-1-andre.przywara@arm.com>
- <20180307020719.6675-4-andre.przywara@arm.com>
- <20180307074516.dbak7ztkua4p7mr5@flea.lan>
- <f001134a-987d-2491-a22e-d1d634f7b024@arm.com>
+Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a64: add simplefb for A64 SoC
+Date: Tue, 13 Mar 2018 16:35:22 +0100
+Message-ID: <20180313153522.haeemlqbtuei5zb3@flea>
+References: <20180312161050.7647-1-harald@ccbib.org>
+ <20180312161050.7647-4-harald@ccbib.org>
+ <20180313082724.7optc2xwgqoiibtx@flea>
+ <E1evg4e-0000Qj-2w@stardust.g4.wien.funkfeuer.at>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4868719150356676472=="
+Content-Type: multipart/mixed; boundary="===============4108538066635702095=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f001134a-987d-2491-a22e-d1d634f7b024@arm.com>
+In-Reply-To: <E1evg4e-0000Qj-2w@stardust.g4.wien.funkfeuer.at>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,55 +19,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---===============4868719150356676472==
+--===============4108538066635702095==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="brldrkr34ipq6igk"
+	protocol="application/pgp-signature"; boundary="ku77t5fsink4ymvn"
 Content-Disposition: inline
 
 
---brldrkr34ipq6igk
+--ku77t5fsink4ymvn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 13, 2018 at 02:05:34PM +0000, Andre Przywara wrote:
-> Hi Maxime,
->=20
-> thanks for looking into this and for the Acks!
->=20
-> On 07/03/18 07:45, Maxime Ripard wrote:
-> > On Wed, Mar 07, 2018 at 02:07:17AM +0000, Andre Przywara wrote:
-> >> While the PWM IP in the Allwinner H6 SoC is fully compatible to those
-> >> used in older SoCs (H3, A64), it features a dedicated reset line which
-> >> needs to be de-asserted.
-> >> Add support for an optional "resets" DT property in our pwm-sun4i probe
-> >> routine, and assert and de-assert the reset line, where needed.
-> >> This allows to enable PWM support on the H6.
+Hi,
+
+On Tue, Mar 13, 2018 at 10:18:22AM +0100, Harald Geyer wrote:
+> Maxime Ripard writes:
+> > On Mon, Mar 12, 2018 at 04:10:48PM +0000, Harald Geyer wrote:
+> >> The A64 SoC features two display pipelines, one has a LCD output, the
+> >> other has a HDMI output.
+> >>
+> >> Add support for simplefb for the LCD output. Tested on Teres I.
+> >>
+> >> This patch was inspired by work of Icenowy Zheng.
+> >>
+> >> Signed-off-by: Harald Geyer <harald@ccbib.org>
+> >> ---
+> >> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 ++++++++++++++++++++
+> >> 1 file changed, 20 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index ca1b365bc722..05d5e8def68a 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -52,6 +52,26 @@
+> >> 	#address-cells =3D <1>;
+> >> 	#size-cells =3D <1>;
+> >>
+> >> +	chosen {
+> >> +		#address-cells =3D <1>;
+> >> +		#size-cells =3D <1>;
+> >> +		ranges;
+> >> +
+> >> +/*
+> >> + * The pipeline mixer0-lcd0 depends on clock CLK_MIXER0 from DE2 CCU.
+> >> + * However there is no support for this clock on A64 yet, so we depend
+> >> + * on the upstream clocks here to keep them (and thus CLK_MIXER0) up.
+> >> + */
 > >=20
-> > This isn't optional then. It's mandatory on the H6, and unneeded on
-> > everything else. This is what we should have.
+> > There's definitely support for the CLK_MIXER0 clock in the DE2 CCU
+> > driver, so I guess this would need to be amended / fixed
 >=20
-> So are you aiming at:
-> 	if (of_device_is_compatible(np, "allwinner,sun50i-h6-pwm")) {
-> 		... devm_reset_control_get() ...
+> AFAIK on the A64 a special sram quirk is necessary, that never got merged:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574303.html
 >=20
-> I guess this is preferable over coding something based on a new member
-> in struct sun4i_pwm_data?
+> I asked Icenowy if I should resubmit her patch as part of this series,
+> but was told further discussion is necessary. I'm sure she can better
+> explain the details than me.
+>=20
+> Actually if it wasn't for the sram quirk, there is a simplefb patch by
+> her, that could have been merged long ago:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1574304.html
 
-It's basically a long term vs short term debate :)
+The issue with your patch is that, as soon as that clock is
+functional, the DT with the node you were introducing here will no
+longer be.
 
-If we're thinking short term, then yes, sure it would make
-sense. However, if we start having more and more SoCs, we'll have a
-longer and longer condition.
+And since people use their firmware DT or put them in NOR these days,
+you can't really expect them to update them every release either.
 
-Since we already have a structure available, I'd still prefer to go
-for the structure flag. This is faster (no string comparison), it'll
-be easier to extend, and the patch size is pretty much the same.
+I guess a proper solution would be to respin that patch.
 
 Maxime
 
@@ -76,30 +102,30 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---brldrkr34ipq6igk
+--ku77t5fsink4ymvn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqn7xIACgkQ0rTAlCFN
-r3SvEQ//U42v6hNTxLugEFv1QTsbpIwgqK9nr/AvEEIBZvoUVjtfh+WA7qNra0tF
-GlJHvYIF/U+y3UHgUtMfRy9u7ElVTtzB3mdO+L26SW3MTaHyAwlmR58zBj8D1uO5
-uNoVcWDPwBm9GvgUPntiKPAEM2PNh39VMYheadCQoeDc1YTCBpxxkzcN1Wpsg3x6
-qBHoNnbrm32OxzTT0RY7FHeyNfIT+kSdVejeV2ycJDa5OVScswO0gdJ1gXmcLlru
-SXcftKF3HcBQj+2YkUTDPTNMN6J6nM5wfJh1mIlg6kjzrLuLS2x2wRHrWdEsfl/f
-kc9/yfCu4EhiI9N30ZKKNwl2iN5YTI6ziIUr9cVozC8iu13nj0V0p+eWBVIvq1So
-v7xE9t4vGzDfqWShf8Fns0FHKe4a4jrpOxKct7gzKbSTDnV036kzBEVc0CCG+Qlg
-8uIj9MLRGzP1sYTegzF5+BqBnEbR9A4b8pw4rg2QZf5NSgJd3LqWli63MqxVTKtP
-Sx2YnjSH0dyZFxfYS+E5cy60Rb8scCzJS1gzQbadVkJcO2JZuJHyD/dasdV8JnG6
-xb+1U+53yyeO5QYgxmhthKJrQkUFNvEJW1QufNt8dCyf0NT4U8g0shXn9fb7Jc89
-kxvFXKb2HkLaOoUziFPEyUSC5+yoPN7vvSOmbWDt6uBW9fRSJKk=
-=0o2Y
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqn77kACgkQ0rTAlCFN
+r3Shjw/+NpX/NkKxJFJG0MdVnCvHjms5XDB/izbk/MNgzVBOtIAO9Wr39VxZXS0k
+h1OuISa/GLitGXjW6LTxO6RzivfzuLhY/wOooorJtpNBUiTDL8hrwTTjrVj6ga/7
+X1pTWNv6YKS05uzHr4X68KZekEhsPXiJB7UIRz2ny4vjXHoMyeWlkelIcYdWfZ8Y
+cL+IPhOXw4dWg0zyINM7hTgIYQtngCt3FyLKhewwAfz4mJU+jqcp0YWSzCgeRZDj
+AARc84qAjegL2kYaEPG717ya3sYt5Jljrzt59WAtHyphyOCCkcFGPFuknxpGsVV1
+frVmfxXksFvHoUolEJWPXDYbOgGOEy5VKBf1rCRDGm/s0x8OOmLLxt34wZyJeY4g
+CJM79t6ZhoL1i39UFG+IJhzki3dV7HAWMf2KbgfF0VplZwJvOKKMRspCKbZ/J0Tr
+eouICwDYCxQHva5QAlGN91WYcglzwyc25WhnoCX4TGbQmxBJJokmUQ4JOhrrRdcN
+Yq5wSkN9drDlhb8ZfjpGyqh7wfTeZjl8vrYo7cIuBgrEoyd1dV6noVcudF/hmGDd
+mu6z99WUnYDtZtFsLvznd1ACPFyfNVgyAfx05FSf7trPRkK/gVe7+3/f7F6IncAI
+dXakAvntGg1rMoZRlytbO+9bUxcYBRFxWe2Y7JNgYdJRHiZHylM=
+=Nbua
 -----END PGP SIGNATURE-----
 
---brldrkr34ipq6igk--
+--ku77t5fsink4ymvn--
 
 
---===============4868719150356676472==
+--===============4108538066635702095==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -110,4 +136,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============4868719150356676472==--
+--===============4108538066635702095==--
