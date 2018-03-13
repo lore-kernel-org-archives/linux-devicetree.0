@@ -1,54 +1,61 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH v4 15/24] ASoC: qdsp6: q6core: Add q6core
- driver
-Date: Tue, 13 Mar 2018 17:16:33 +0530
-Message-ID: <21207441-4e81-284e-343c-bdeb01c9d06f@codeaurora.org>
-References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
- <20180310022456.26739-16-srinivas.kandagatla@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [RFC 1/2] pci: dwc: pci-exynos: modify the Kconfig dependency
+Date: Tue, 13 Mar 2018 20:54:46 +0900
+Message-ID: <39521cb5-07a5-24b5-b545-a01c730f1985@samsung.com>
+References: <CGME20171221121409epcas1p2af291857b9df115d2dec9a3d3300e0aa@epcas1p2.samsung.com>
+        <20171221121408.22636-1-jh80.chung@samsung.com>
+        <20180313111211.GA15480@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180310022456.26739-16-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20180313111211.GA15480@e107981-ln.cambridge.arm.com>
+Content-language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, krzk@kernel.org, jingoohan1@gmail.com, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Lorenzo,
 
+On 03/13/2018 08:12 PM, Lorenzo Pieralisi wrote:
+> Hi Jaehoon,
+> 
+> On Thu, Dec 21, 2017 at 09:14:06PM +0900, Jaehoon Chung wrote:
+>> PCI_EXYNOS has the dependency with SOC_EXYNOS5440.
+>> It's modified to ARCH_EXYNOS from SOC_EXYNOS5440, because other
+>> SoCs needs to use this driver.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  drivers/pci/dwc/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+>> index 113e09440f85..0ff9795df8e8 100644
+>> --- a/drivers/pci/dwc/Kconfig
+>> +++ b/drivers/pci/dwc/Kconfig
+>> @@ -65,7 +65,7 @@ config PCIE_DW_PLAT
+>>  config PCI_EXYNOS
+>>  	bool "Samsung Exynos PCIe controller"
+>>  	depends on PCI
+>> -	depends on SOC_EXYNOS5440
+>> +	depends on ARCH_EXYNOS
+>>  	depends on PCI_MSI_IRQ_DOMAIN
+>>  	select PCIEPORTBUS
+>>  	select PCIE_DW_HOST
+> 
+> This patch fell through the cracks, is it still needed ? Please let
+> me know and I will apply it if it is, thank you very much.
 
-On 3/10/2018 7:54 AM, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-[..]
-> +static int q6core_get_svc_versions(struct q6core *core)
-> +{
-> +	struct apr_device *adev = core->adev;
-> +	struct apr_hdr hdr = {0};
-> +	int rc;
-> +
-> +	core->get_version_supported = true;
+I will resend the patches for supporting exynos5433(TM2 board) without RFC.
+I have already prepared the patches. now i'm doing some more test and cleaning code.
 
-core->get_version_supported should be set to true only after we get proper response from adsp in callback(). In case,we get wrong response from adsp, memory for g_core->svc_version
-  will not get allocated and there will be NULL pointer dereference in  q6core_get_svc_api_info() in below statement
-+	} else if (g_core->get_version_supported) {
-+		for (i = 0; i < g_core->svc_version->num_services; i++) {
-  
+Best Regards,
+Jaehoon Chung
 
-> +	hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-> +				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-> +	hdr.pkt_size = APR_HDR_SIZE;
-> +	hdr.opcode = AVCS_GET_VERSIONS;
-> +
-> +	rc = apr_send_pkt(adev, &hdr);
-> +	if (rc < 0)
-> +		return rc;
-> +
+> 
+> Lorenzo
+> 
+> 
+> 
