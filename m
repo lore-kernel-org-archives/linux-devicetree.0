@@ -1,60 +1,40 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 113/140] dt-bindings: Document mti,mips-cpc binding
-Date: Tue, 13 Mar 2018 16:25:16 +0100
-Message-ID: <20180313152505.770942823@linuxfoundation.org>
-References: <20180313152458.201155692@linuxfoundation.org>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH 0/3] Bluetooth: hci_qca: Add serdev support
+Date: Tue, 13 Mar 2018 17:03:23 +0100
+Message-ID: <20180313160326.18180-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180313152458.201155692@linuxfoundation.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>, Aleksandar Markovic <aleksandar.markovic@mips.com>, Rob Herring <robh@kernel.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+Hi,
 
-------------------
+This patchset enables the Qualcomm BT controller QCA6174 node in the
+device tree of the db820c board. This allows the bluetooth chipset to
+be probed and registered against the hci layer by using the serdev
+framework.
 
-From: Paul Burton <paul.burton@mips.com>
+This patchset also contains the documentation for the compatible
+string "qcom,qca6174-bt" related to this chipset.
 
-commit aece34cd576c7625181b0488a8129c1e165355f7 upstream.
+Thierry Escande (3):
+  arm64: dts: apq8096-db820c: enable bluetooth node
+  dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+  Bluetooth: hci_qca: Add serdev support
 
-Document a binding for the MIPS Cluster Power Controller (CPC) that
-allows the device tree to specify where the CPC registers are located.
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt |  34 +++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  14 +++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  17 ++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  32 +++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
+ drivers/bluetooth/Kconfig                          |   2 +-
+ drivers/bluetooth/hci_qca.c                        | 102 ++++++++++++++++++++-
+ 7 files changed, 208 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic@mips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Patchwork: https://patchwork.linux-mips.org/patch/18512/
-Signed-off-by: James Hogan <jhogan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/devicetree/bindings/power/mti,mips-cpc.txt |    8 ++++++++
- MAINTAINERS                                              |    1 +
- 2 files changed, 9 insertions(+)
-
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-@@ -0,0 +1,8 @@
-+Binding for MIPS Cluster Power Controller (CPC).
-+
-+This binding allows a system to specify where the CPC registers are
-+located.
-+
-+Required properties:
-+compatible : Should be "mti,mips-cpc".
-+regs: Should describe the address & size of the CPC register region.
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9001,6 +9001,7 @@ MIPS GENERIC PLATFORM
- M:	Paul Burton <paul.burton@mips.com>
- L:	linux-mips@linux-mips.org
- S:	Supported
-+F:	Documentation/devicetree/bindings/power/mti,mips-cpc.txt
- F:	arch/mips/generic/
- F:	arch/mips/tools/generic-board-config.sh
- 
+-- 
+2.14.1
