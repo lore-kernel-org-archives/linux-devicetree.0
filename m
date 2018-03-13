@@ -1,35 +1,63 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: rename qcom,pcie devices to pcie
-Date: Tue, 13 Mar 2018 11:19:10 -0700
-Message-ID: <20180313181910.GW18510@minitux>
-References: <20180313121345.2749183-1-arnd@arndb.de>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: Re: [PATCH 3/3] Bluetooth: hci_qca: Add serdev support
+Date: Tue, 13 Mar 2018 19:18:57 +0100
+Message-ID: <CAMZdPi-hoqhX_S-nFeE6ABUOZAp6oPtZqpLbpXoe5jDqmiFozA@mail.gmail.com>
+References: <20180313160326.18180-1-thierry.escande@linaro.org> <20180313160326.18180-4-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180313121345.2749183-1-arnd@arndb.de>
+In-Reply-To: <20180313160326.18180-4-thierry.escande@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Thierry Escande <thierry.escande@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 13 Mar 05:13 PDT 2018, Arnd Bergmann wrote:
+On 13 March 2018 at 17:03, Thierry Escande <thierry.escande@linaro.org> wrote:
+> From: Thierry Escande <thierry.escande@collabora.com>
+>
+> Add support for Qualcomm serial slave devices. Probe the serial device,
+> retrieve its maximum speed and register a new hci uart device.
+>
+> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+> ---
+>  drivers/bluetooth/Kconfig   |   2 +-
+>  drivers/bluetooth/hci_qca.c | 102 +++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 101 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
+> index 07e55cd8f8c8..c2a6a7ebd14b 100644
+> --- a/drivers/bluetooth/Kconfig
+> +++ b/drivers/bluetooth/Kconfig
+> @@ -195,7 +195,7 @@ config BT_HCIUART_BCM
+>
+>  config BT_HCIUART_QCA
+>         bool "Qualcomm Atheros protocol support"
+> -       depends on BT_HCIUART
+> +       depends on BT_HCIUART_SERDEV
 
-> The node name for a PCIe host bridge must be "pcie" as required by
-> the binging. dtc now warns about it:
-> 
+Driver depends on both BT_HCIUART and BT_HCIUART_SERDEV.
 
-"binding", I presume...
+> @@ -386,6 +399,7 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
+>  /* Initialize protocol */
+>  static int qca_open(struct hci_uart *hu)
+>  {
+> +       struct qca_serdev *qcadev;
+>         struct qca_data *qca;
+>
+>         BT_DBG("hu %p qca_open", hu);
+> @@ -444,6 +458,13 @@ static int qca_open(struct hci_uart *hu)
+>         timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
+>         qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
+>
+> +       if (hu->serdev) {
+> +               serdev_device_open(hu->serdev);
+> +
+> +               qcadev = serdev_device_get_drvdata(hu->serdev);
+> +               gpiod_set_value(qcadev->bt_en, 1);
 
-> arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
-> arch/arm64/boot/dts/qcom/apq8096-db820c.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
-> arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_bridge): /soc/agnoc@0/qcom,pcie@610000: node name is not "pci" or "pcie"
-> arch/arm64/boot/dts/qcom/msm8996-mtp.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
-> 
-> This renames the nodes as appropriate.
-> 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I suggest to replace gpiod_set_value calls with the _cansleep version.
+You always set gpio value from sleepable context and this should avoid
+any further issue with different gpio controller.
 
 Regards,
-Bjorn
+Loic
