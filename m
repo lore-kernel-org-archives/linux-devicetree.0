@@ -1,85 +1,57 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
-Date: Tue, 13 Mar 2018 15:30:25 +0100
-Message-ID: <1520951425-13843-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 0/3] drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Tue, 13 Mar 2018 15:30:22 +0100
+Message-ID: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The R-Car V3M Eagle board includes a transparent THC63LVD1024 LVDS
-decoder, connected to the on-chip LVDS encoder output on one side
-and to HDMI encoder ADV7511w on the other one.
+Hello,
+   opposed to v2, this version drops the "transparent LVDS decoder" and provides
+support for the Thine THC63LVD1024 chip only.
 
-As the decoder does not need any configuration it has been so-far
-omitted from DTS. Now that a driver is available, describe it in DT
-as well.
+I removed all references to "lvds-decoder" and made driver and bindings
+specific for the above mentioned chip.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 33 +++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+Andrzej: Bindings now describe 2 available inputs (Port@0 mandatory, Port@1
+optional) and 2 possible outputs (Port@2 mandatory, Port@3 optional). The driver
+still takes only Port@0 and Port@2 into account. This leaves out discussions
+on how support bridges with multiple input streams within the DRM framework from
+this series.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-index c0fd144..69f43b8 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -42,6 +42,33 @@
- 			};
- 		};
- 	};
-+
-+	thc63lvd1024: lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				thc63lvd1024_in_0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@2{
-+				reg = <2>;
-+
-+				thc63lvd1024_out_2: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+
-+			};
-+
-+		};
-+	};
- };
- 
- &avb {
-@@ -98,7 +125,7 @@
- 			port@0 {
- 				reg = <0>;
- 				adv7511_in: endpoint {
--					remote-endpoint = <&lvds0_out>;
-+					remote-endpoint = <&thc63lvd1024_out_2>;
- 				};
- 			};
- 
-@@ -152,8 +179,8 @@
- 
- 	ports {
- 		port@1 {
--			endpoint {
--				remote-endpoint = <&adv7511_in>;
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in_0>;
- 			};
- 		};
- 	};
--- 
+Simon: Please drop the previous bindings proposal you marked as "deferred" as
+that one is superseded by this new one.
+
+I still plan to use this series to propose an API to propagate formats through
+bridges, which is not possible at the moment, if I got things right.
+
+Thanks
+   j
+
+v2 -> v3:
+- Drop support for "lvds-decoder" and make the driver THC63LVD1024 specific
+-- Rework bindings to describe multiple input/output ports
+-- Rename driver and remove "lvds-decoder" references
+-- Rework Eagle DTS to use new bindings
+
+v1 -> v2:
+- Drop support for THC63LVD1024
+
+Jacopo Mondi (3):
+  dt-bindings: display: bridge: Document THC63LVD1024 LVDS decoder
+  drm: bridge: Add thc63lvd1024 LVDS decoder driver
+  arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
+
+ .../bindings/display/bridge/thine,thc63lvd1024.txt |  63 ++++++
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts     |  31 ++-
+ drivers/gpu/drm/bridge/Kconfig                     |  10 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/thc63lvd1024.c              | 239 +++++++++++++++++++++
+ 5 files changed, 342 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+ create mode 100644 drivers/gpu/drm/bridge/thc63lvd1024.c
+
+--
 2.7.4
