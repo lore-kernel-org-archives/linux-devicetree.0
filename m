@@ -1,14 +1,14 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 2/3] ASoC: stm32: sai: add iec958 controls
-	support
-Date: Tue, 13 Mar 2018 17:27:07 +0100
-Message-ID: <1520958428-10930-3-git-send-email-olivier.moysan@st.com>
-References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: samsung: Add HDMI audio support for
+	Snow" to the asoc tree
+Date: Tue, 13 Mar 2018 16:31:23 +0000 (GMT)
+Message-ID: <20180313163123.D701B440079@finisterre.ee.mobilebroadband>
+References: <20180312184939.11327-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <20180312184939.11327-2-s.nawrocki@samsung.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -18,224 +18,340 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: jsarha@ti.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, rmk@arm.linux.org.uk
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add support of iec958 controls for STM32 SAI.
+The patch
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+   ASoC: samsung: Add HDMI audio support for Snow
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From aff8d2bed9e5a33f40611063de62003c0f3abe9f Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Mon, 12 Mar 2018 19:49:39 +0100
+Subject: [PATCH] ASoC: samsung: Add HDMI audio support for Snow
+
+This patch updates the driver so, in addition to current DT bindings, it
+also can also use the new DT bindings with cpu, codec subnodes which allow
+to support sound on the HDMI interface.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/core/pcm_iec958.c       |   1 +
- sound/soc/stm/Kconfig         |   1 +
- sound/soc/stm/stm32_sai_sub.c | 101 +++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 91 insertions(+), 12 deletions(-)
+ sound/soc/samsung/snow.c | 224 +++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 177 insertions(+), 47 deletions(-)
 
-diff --git a/sound/core/pcm_iec958.c b/sound/core/pcm_iec958.c
-index aba1f522e98a..c34735ac3c48 100644
---- a/sound/core/pcm_iec958.c
-+++ b/sound/core/pcm_iec958.c
-@@ -19,6 +19,7 @@ static int snd_pcm_iec958_info(struct snd_kcontrol *kcontrol,
- {
- 	uinfo->type = SNDRV_CTL_ELEM_TYPE_IEC958;
- 	uinfo->count = 1;
-+
- 	return 0;
- }
- 
-diff --git a/sound/soc/stm/Kconfig b/sound/soc/stm/Kconfig
-index 48f9ddd94016..9b2681397dba 100644
---- a/sound/soc/stm/Kconfig
-+++ b/sound/soc/stm/Kconfig
-@@ -6,6 +6,7 @@ config SND_SOC_STM32_SAI
- 	depends on SND_SOC
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
- 	select REGMAP_MMIO
-+	select SND_PCM_IEC958
- 	help
- 	  Say Y if you want to enable SAI for STM32
- 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index cfeb219e1d78..c2e487e133aa 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -26,6 +26,7 @@
- #include <sound/asoundef.h>
- #include <sound/core.h>
- #include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_iec958.h>
- #include <sound/pcm_params.h>
- 
- #include "stm32_sai.h"
-@@ -96,7 +97,7 @@
-  * @slot_mask: rx or tx active slots mask. set at init or at runtime
-  * @data_size: PCM data width. corresponds to PCM substream width.
-  * @spdif_frm_cnt: S/PDIF playback frame counter
-- * @spdif_status_bits: S/PDIF status bits
-+ * @snd_aes_iec958: iec958 data
+diff --git a/sound/soc/samsung/snow.c b/sound/soc/samsung/snow.c
+index fc62110f500f..5d8efc2d5c38 100644
+--- a/sound/soc/samsung/snow.c
++++ b/sound/soc/samsung/snow.c
+@@ -11,92 +11,207 @@
+  * General Public License for more details.
   */
- struct stm32_sai_sub_data {
- 	struct platform_device *pdev;
-@@ -125,7 +126,7 @@ struct stm32_sai_sub_data {
- 	int slot_mask;
- 	int data_size;
- 	unsigned int spdif_frm_cnt;
--	unsigned char spdif_status_bits[SAI_IEC60958_STATUS_BYTES];
-+	struct snd_aes_iec958 iec958;
- };
  
- enum stm32_sai_fifo_th {
-@@ -184,10 +185,6 @@ static bool stm32_sai_sub_writeable_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static const unsigned char default_status_bits[SAI_IEC60958_STATUS_BYTES] = {
--	0, 0, 0, IEC958_AES3_CON_FS_48000,
--};
++#include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
 -
- static const struct regmap_config stm32_sai_sub_regmap_config_f4 = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -619,6 +616,59 @@ static void stm32_sai_set_frame(struct snd_soc_dai *cpu_dai)
- 	}
- }
++#include <sound/pcm_params.h>
+ #include <sound/soc.h>
  
-+static void stm32_sai_set_channel_status(struct stm32_sai_sub_data *sai,
-+					 struct snd_pcm_runtime *runtime)
-+{
-+	if (!runtime)
-+		return;
+ #include "i2s.h"
+ 
+ #define FIN_PLL_RATE		24000000
+ 
+-static struct snd_soc_dai_link snow_dai[] = {
+-	{
+-		.name = "Primary",
+-		.stream_name = "Primary",
+-		.codec_dai_name = "HiFi",
+-		.dai_fmt = SND_SOC_DAIFMT_I2S |
+-				SND_SOC_DAIFMT_NB_NF |
+-				SND_SOC_DAIFMT_CBS_CFS,
+-	},
++struct snow_priv {
++	struct snd_soc_dai_link dai_link;
++	struct clk *clk_i2s_bus;
++};
 +
-+	/* Force the sample rate according to runtime rate */
-+	switch (runtime->rate) {
++static int snow_card_hw_params(struct snd_pcm_substream *substream,
++				      struct snd_pcm_hw_params *params)
++{
++	static const unsigned int pll_rate[] = {
++		73728000U, 67737602U, 49152000U, 45158401U, 32768001U
++	};
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snow_priv *priv = snd_soc_card_get_drvdata(rtd->card);
++	int bfs, psr, rfs, bitwidth;
++	unsigned long int rclk;
++	long int freq = -EINVAL;
++	int ret, i;
++
++	bitwidth = snd_pcm_format_width(params_format(params));
++	if (bitwidth < 0) {
++		dev_err(rtd->card->dev, "Invalid bit-width: %d\n", bitwidth);
++		return bitwidth;
++	}
++
++	if (bitwidth != 16 && bitwidth != 24) {
++		dev_err(rtd->card->dev, "Unsupported bit-width: %d\n", bitwidth);
++		return -EINVAL;
++	}
++
++	bfs = 2 * bitwidth;
++
++	switch (params_rate(params)) {
++	case 16000:
 +	case 22050:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_22050;
-+		break;
-+	case 44100:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_44100;
-+		break;
-+	case 88200:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_88200;
-+		break;
-+	case 176400:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_176400;
-+		break;
 +	case 24000:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_24000;
-+		break;
-+	case 48000:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_48000;
-+		break;
-+	case 96000:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_96000;
-+		break;
-+	case 192000:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_192000;
-+		break;
 +	case 32000:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_32000;
++	case 44100:
++	case 48000:
++	case 88200:
++	case 96000:
++		rfs = 8 * bfs;
++		break;
++	case 64000:
++		rfs = 384;
++		break;
++	case 8000:
++	case 11025:
++	case 12000:
++		rfs = 16 * bfs;
 +		break;
 +	default:
-+		sai->iec958.status[3] = IEC958_AES3_CON_FS_NOTID;
-+		break;
++		return -EINVAL;
 +	}
-+}
 +
-+static int stm32_sai_iec958_set(struct snd_pcm_iec958_params *iec_param)
-+{
-+	struct stm32_sai_sub_data *sai = iec_param->private_data;
++	rclk = params_rate(params) * rfs;
 +
-+	if (!sai->substream)
-+		return 0;
++	for (psr = 8; psr > 0; psr /= 2) {
++		for (i = 0; i < ARRAY_SIZE(pll_rate); i++) {
++			if ((pll_rate[i] - rclk * psr) <= 2) {
++				freq = pll_rate[i];
++				break;
++			}
++		}
++	}
++	if (freq < 0) {
++		dev_err(rtd->card->dev, "Unsupported RCLK rate: %lu\n", rclk);
++		return -EINVAL;
++	}
 +
-+	stm32_sai_set_channel_status(sai, sai->substream->runtime);
++	ret = clk_set_rate(priv->clk_i2s_bus, freq);
++	if (ret < 0) {
++		dev_err(rtd->card->dev, "I2S bus clock rate set failed\n");
++		return ret;
++	}
 +
 +	return 0;
 +}
 +
- static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 				     struct snd_pcm_hw_params *params)
++static const struct snd_soc_ops snow_card_ops = {
++	.hw_params = snow_card_hw_params,
+ };
+ 
+ static int snow_late_probe(struct snd_soc_card *card)
  {
-@@ -709,7 +759,11 @@ static int stm32_sai_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_pcm_runtime *rtd;
+ 	struct snd_soc_dai *codec_dai;
+-	struct snd_soc_dai *cpu_dai;
+-	int ret;
  
- 	sai->data_size = params_width(params);
+ 	rtd = snd_soc_get_pcm_runtime(card, card->dai_link[0].name);
+-	codec_dai = rtd->codec_dai;
+-	cpu_dai = rtd->cpu_dai;
+-
+-	/* Set the MCLK rate for the codec */
+-	ret = snd_soc_dai_set_sysclk(codec_dai, 0,
+-					FIN_PLL_RATE, SND_SOC_CLOCK_IN);
+-	if (ret < 0)
+-		return ret;
  
--	if (!STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		/* Rate not already set in runtime structure */
-+		substream->runtime->rate = params_rate(params);
-+		stm32_sai_set_channel_status(sai, substream->runtime);
-+	} else {
- 		ret = stm32_sai_set_slots(cpu_dai);
- 		if (ret < 0)
- 			return ret;
-@@ -789,6 +843,28 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
- 	sai->substream = NULL;
++	/* In the multi-codec case codec_dais 0 is MAX98095 and 1 is HDMI. */
++	if (rtd->num_codecs > 1)
++		codec_dai = rtd->codec_dais[0];
++	else
++		codec_dai = rtd->codec_dai;
+ 
+-	return 0;
++	/* Set the MCLK rate for the codec */
++	return snd_soc_dai_set_sysclk(codec_dai, 0,
++				FIN_PLL_RATE, SND_SOC_CLOCK_IN);
  }
  
-+static int stm32_sai_pcm_new(struct snd_soc_pcm_runtime *rtd,
-+			     struct snd_soc_dai *cpu_dai)
-+{
-+	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-+	struct snd_pcm_iec958_params *iec_param;
+ static struct snd_soc_card snow_snd = {
+ 	.name = "Snow-I2S",
+ 	.owner = THIS_MODULE,
+-	.dai_link = snow_dai,
+-	.num_links = ARRAY_SIZE(snow_dai),
+-
+ 	.late_probe = snow_late_probe,
+ };
+ 
+ static int snow_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct snd_soc_card *card = &snow_snd;
+-	struct device_node *i2s_node, *codec_node;
+-	int i, ret;
+-
+-	i2s_node = of_parse_phandle(pdev->dev.of_node,
+-				    "samsung,i2s-controller", 0);
+-	if (!i2s_node) {
+-		dev_err(&pdev->dev,
+-			"Property 'i2s-controller' missing or invalid\n");
+-		return -EINVAL;
+-	}
++	struct device_node *cpu, *codec;
++	struct snd_soc_dai_link *link;
++	struct snow_priv *priv;
++	int ret;
+ 
+-	codec_node = of_parse_phandle(pdev->dev.of_node,
+-				      "samsung,audio-codec", 0);
+-	if (!codec_node) {
+-		dev_err(&pdev->dev,
+-			"Property 'audio-codec' missing or invalid\n");
+-		return -EINVAL;
+-	}
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		dev_dbg(&sai->pdev->dev, "%s: register iec controls", __func__);
-+		iec_param = devm_kzalloc(&sai->pdev->dev, sizeof(*iec_param),
-+					 GFP_KERNEL);
-+		iec_param->ctrl_set = stm32_sai_iec958_set;
-+		iec_param->private_data = sai;
-+		iec_param->cs = sai->iec958.status;
-+		iec_param->cs_len = 5;
-+		return snd_pcm_add_iec958_ctl(rtd->pcm, 0,
-+					      SNDRV_PCM_STREAM_PLAYBACK,
-+					      iec_param);
-+	}
++	link = &priv->dai_link;
++
++	link->dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++			SND_SOC_DAIFMT_CBS_CFS;
++
++	link->name = "Primary";
++	link->stream_name = link->name;
++
++	card->dai_link = link;
++	card->num_links = 1;
++	card->dev = dev;
++
++	/* Try new DT bindings with HDMI support first. */
++	cpu = of_get_child_by_name(dev->of_node, "cpu");
++
++	if (cpu) {
++		link->ops = &snow_card_ops;
+ 
+-	for (i = 0; i < ARRAY_SIZE(snow_dai); i++) {
+-		snow_dai[i].codec_of_node = codec_node;
+-		snow_dai[i].cpu_of_node = i2s_node;
+-		snow_dai[i].platform_of_node = i2s_node;
++		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
++		of_node_put(cpu);
++
++		if (!link->cpu_of_node) {
++			dev_err(dev, "Failed parsing cpu/sound-dai property\n");
++			return -EINVAL;
++		}
++
++		codec = of_get_child_by_name(dev->of_node, "codec");
++		ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
++		of_node_put(codec);
++
++		if (ret < 0) {
++			of_node_put(link->cpu_of_node);
++			dev_err(dev, "Failed parsing codec node\n");
++			return ret;
++		}
++
++		priv->clk_i2s_bus = of_clk_get_by_name(link->cpu_of_node,
++						       "i2s_opclk0");
++		if (IS_ERR(priv->clk_i2s_bus)) {
++			snd_soc_of_put_dai_link_codecs(link);
++			of_node_put(link->cpu_of_node);
++			return PTR_ERR(priv->clk_i2s_bus);
++		}
++	} else {
++		link->codec_dai_name = "HiFi",
++
++		link->cpu_of_node = of_parse_phandle(dev->of_node,
++						"samsung,i2s-controller", 0);
++		if (!link->cpu_of_node) {
++			dev_err(dev, "i2s-controller property parse error\n");
++			return -EINVAL;
++		}
++
++		link->codec_of_node = of_parse_phandle(dev->of_node,
++						"samsung,audio-codec", 0);
++		if (!link->codec_of_node) {
++			of_node_put(link->cpu_of_node);
++			dev_err(dev, "audio-codec property parse error\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+-	card->dev = &pdev->dev;
++	link->platform_of_node = link->cpu_of_node;
+ 
+ 	/* Update card-name if provided through DT, else use default name */
+ 	snd_soc_of_parse_card_name(card, "samsung,model");
+ 
+-	ret = devm_snd_soc_register_card(&pdev->dev, card);
++	snd_soc_card_set_drvdata(card, priv);
++
++	ret = devm_snd_soc_register_card(dev, card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+ 		return ret;
+@@ -105,6 +220,20 @@ static int snow_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int snow_remove(struct platform_device *pdev)
++{
++	struct snow_priv *priv = platform_get_drvdata(pdev);
++	struct snd_soc_dai_link *link = &priv->dai_link;
++
++	of_node_put(link->cpu_of_node);
++	of_node_put(link->codec_of_node);
++	snd_soc_of_put_dai_link_codecs(link);
++
++	clk_put(priv->clk_i2s_bus);
 +
 +	return 0;
 +}
 +
- static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-@@ -809,6 +885,10 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- 	else
- 		snd_soc_dai_init_dma_data(cpu_dai, NULL, &sai->dma_params);
+ static const struct of_device_id snow_of_match[] = {
+ 	{ .compatible = "google,snow-audio-max98090", },
+ 	{ .compatible = "google,snow-audio-max98091", },
+@@ -120,6 +249,7 @@ static struct platform_driver snow_driver = {
+ 		.of_match_table = snow_of_match,
+ 	},
+ 	.probe = snow_probe,
++	.remove = snow_remove,
+ };
  
-+	/* Next settings are not relevant for spdif mode */
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		return 0;
-+
- 	cr1_mask = SAI_XCR1_RX_TX;
- 	if (STM_SAI_IS_CAPTURE(sai))
- 		cr1 |= SAI_XCR1_RX_TX;
-@@ -820,10 +900,6 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- 				     sai->synco, sai->synci);
- 	}
- 
--	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
--		memcpy(sai->spdif_status_bits, default_status_bits,
--		       sizeof(default_status_bits));
--
- 	cr1_mask |= SAI_XCR1_SYNCEN_MASK;
- 	cr1 |= SAI_XCR1_SYNCEN_SET(sai->sync);
- 
-@@ -861,7 +937,7 @@ static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
- 		/* Set channel status bit */
- 		byte = frm_cnt >> 3;
- 		mask = 1 << (frm_cnt - (byte << 3));
--		if (sai->spdif_status_bits[byte] & mask)
-+		if (sai->iec958.status[byte] & mask)
- 			*ptr |= 0x04000000;
- 		ptr++;
- 
-@@ -888,6 +964,7 @@ static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
- static struct snd_soc_dai_driver stm32_sai_playback_dai[] = {
- {
- 		.probe = stm32_sai_dai_probe,
-+		.pcm_new = stm32_sai_pcm_new,
- 		.id = 1, /* avoid call to fmt_single_name() */
- 		.playback = {
- 			.channels_min = 1,
+ module_platform_driver(snow_driver);
 -- 
-1.9.1
+2.16.2
