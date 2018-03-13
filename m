@@ -1,48 +1,67 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two devices
-Date: Tue, 13 Mar 2018 20:23:34 +0900
-Message-ID: <CAAFQd5A5Rj1KAZjUc5ZUKuKnbkA5Q6aLw9z0H3_kfyBQOOF-gw@mail.gmail.com>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
- <20180313085534.11650-2-vivek.gautam@codeaurora.org> <CAAFQd5DXvnjaFw4Ct1Xn90nQZ4F4dLtov0ymG-tycQt5oLNpiQ@mail.gmail.com>
- <CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v4 07/24] ASoC: qdsp6: q6afe: Add q6afe
+ driver
+Date: Tue, 13 Mar 2018 16:59:27 +0530
+Message-ID: <3d750b29-d341-af4d-41b3-30260f8296b7@codeaurora.org>
+References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
+ <20180310022456.26739-8-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lukas Wunner <lukas@wunner.de>
-Cc: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180310022456.26739-8-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, spatakok@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> Hi Tomasz,
->
-> On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga@chromium.org> wrote:
->> Hi Vivek,
->>
->> Thanks for the patch.
->>
->> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
->> <vivek.gautam@codeaurora.org> wrote:
->>> The lists managing the device-links can be traversed to
->>> find the link between two devices. The device_link_add() APIs
->>> does traverse these lists to check if there's already a link
->>> setup between the two devices.
->>> So, add a new APIs, device_link_find(), to find an existing
->>> device link between two devices - suppliers and consumers.
->>
->> I'm wondering if this API would be useful for anything else that the
->> problem we're trying to solve with deleting links without storing them
->> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
->> better alternative?
->
-> Yea, that sounds simpler i think. Will add this API instead of
-> find_link(). Thanks.
-
-Perhaps let's wait for a moment to see if there are other opinions. :)
-
-Rafael, Lucas, any thoughts?
-
-Best regards,
-Tomasz
+CgpPbiAzLzEwLzIwMTggNzo1NCBBTSwgc3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnIHdy
+b3RlOgo+IEZyb206IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRhZ2F0bGFAbGlu
+YXJvLm9yZz4KPgo+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IHRvIFE2QUZFIChBdWRpbyBGcm9u
+dCBFbmQpIG1vZHVsZSBvbiBRNkRTUC4KPgpbLi5dCj4gKwkJaWYgKHJlcy0+c3RhdHVzKSB7Cj4g
+KwkJCWRldl9lcnIoYWZlLT5kZXYsICJjbWQgPSAweCV4IHJldHVybmVkIGVycm9yID0gMHgleFxu
+IiwKPiArCQkJCXJlcy0+b3Bjb2RlLCByZXMtPnN0YXR1cyk7Cj4gKwkJfQo+ICsJCXN3aXRjaCAo
+cmVzLT5vcGNvZGUpIHsKPiArCQljYXNlIEFGRV9QT1JUX0NNRF9TRVRfUEFSQU1fVjI6Cj4gKwkJ
+Y2FzZSBBRkVfUE9SVF9DTURfREVWSUNFX1NUT1A6Cj4gKwkJY2FzZSBBRkVfUE9SVF9DTURfREVW
+SUNFX1NUQVJUOgoKY2FzZSBBRkVfU1ZDX0NNRF9TRVRfUEFSQU06IG5lZWRzIHRvIGJlIGFkZGVk
+Cj4gKwkJCXBvcnQgPSBhZmVfZmluZF9wb3J0KGFmZSwgZGF0YS0+dG9rZW4pOwo+ICsJCQlpZiAo
+cG9ydCkgewo+ICsJCQkJcG9ydC0+cmVzdWx0ID0gKnJlczsKPiArCQkJCXdha2VfdXAoJnBvcnQt
+PndhaXQpOwo+ICsJCQl9ClsuLl0KPiArCj4gK3N0YXRpYyBpbnQgcTZhZmVfcG9ydF9zZXRfcGFy
+YW1fdjIoc3RydWN0IHE2YWZlX3BvcnQgKnBvcnQsIHZvaWQgKmRhdGEsCj4gKwkJCQkgICBpbnQg
+cGFyYW1faWQsIGludCBwc2l6ZSkKPiArewo+ICsJc3RydWN0IGFwcl9oZHIgKmhkcjsKPiArCXN0
+cnVjdCBhZmVfcG9ydF9jbWRfc2V0X3BhcmFtX3YyICpwYXJhbTsKPiArCXN0cnVjdCBhZmVfcG9y
+dF9wYXJhbV9kYXRhX3YyICpwZGF0YTsKPiArCXN0cnVjdCBxNmFmZSAqYWZlID0gcG9ydC0+YWZl
+Owo+ICsJdTE2IHBvcnRfaWQgPSBwb3J0LT5pZDsKPiArCWludCByZXQ7Cj4gKwo+ICsJaGRyID0g
+ZGF0YTsKPiArCXBhcmFtID0gZGF0YSArIHNpemVvZigqaGRyKTsKPiArCXBkYXRhID0gZGF0YSAr
+IHNpemVvZigqaGRyKSArIHNpemVvZigqcGFyYW0pOwo+ICsKPiArCWhkci0+aGRyX2ZpZWxkID0g
+QVBSX0hEUl9GSUVMRChBUFJfTVNHX1RZUEVfU0VRX0NNRCwKPiArCQkJCQkgICAgICBBUFJfSERS
+X0xFTihBUFJfSERSX1NJWkUpLAo+ICsJCQkJCSAgICAgIEFQUl9QS1RfVkVSKTsKPiArCWhkci0+
+cGt0X3NpemUgPSBzaXplb2YoKmhkcikgKyBzaXplb2YoKnBhcmFtKSArCj4gKwkJCXNpemVvZigq
+cGRhdGEpICsgcHNpemU7Cj4gKwloZHItPnNyY19wb3J0ID0gMDsKPiArCWhkci0+ZGVzdF9wb3J0
+ID0gMDsKPiArCWhkci0+dG9rZW4gPSBwb3J0LT50b2tlbjsKPiArCWhkci0+b3Bjb2RlID0gQUZF
+X1BPUlRfQ01EX1NFVF9QQVJBTV9WMjsKPiArCXBhcmFtLT5wb3J0X2lkID0gcG9ydF9pZDsKPiAr
+CXBhcmFtLT5wYXlsb2FkX3NpemUgPSBzaXplb2YoKnBkYXRhKSArIHBzaXplOwo+ICsJcGFyYW0t
+PnBheWxvYWRfYWRkcmVzc19sc3cgPSAweDAwOwo+ICsJcGFyYW0tPnBheWxvYWRfYWRkcmVzc19t
+c3cgPSAweDAwOwo+ICsJcGFyYW0tPm1lbV9tYXBfaGFuZGxlID0gMHgwMDsKPiArCXBkYXRhLT5t
+b2R1bGVfaWQgPSBBRkVfTU9EVUxFX0FVRElPX0RFVl9JTlRFUkZBQ0U7Cj4gKwlwZGF0YS0+cGFy
+YW1faWQgPSBwYXJhbV9pZDsKPiArCXBkYXRhLT5wYXJhbV9zaXplID0gcHNpemU7Cj4gKwo+ICsJ
+cmV0ID0gYWZlX2Fwcl9zZW5kX3BrdChhZmUsIGRhdGEsIHBvcnQpOwo+ICsJaWYgKHJldCkKPiAr
+CQlkZXZfZXJyKGFmZS0+ZGV2LCAiQUZFIGVuYWJsZSBmb3IgcG9ydCAweCV4IGZhaWxlZCAlZFxu
+IiwKCndlIHNob3VsZCBhZGQgJXMgdG8gZGlzdGluZ3Vpc2ggZGlmZmVyZW50IGZ1bmN0aW9ucyB3
+aXRoIHNpbWlsYXIgZXJyb3IgCmxvZ3MuIEFsc28sIHE2YWZlX3BvcnRfc2V0X3BhcmFtX3YyKCkg
+Y2FuIGJlIGNhbGxlZCBmb3IgZGlmZmVyZW50IApwdXJwb3NlLsKgIEFGRSBlbmFibGUgZm9yIHBv
+cnQgMHgleCBmYWlsZWQgaXMgc3VpdGFibGUgb25seSBmb3IgcG9ydCAKc3RhcnQgZmFpbHVyZS4g
+RXJyb3IgbWVzc2FnZSBuZWVkcyB0byBiZSB1cGRhdGVkIGhlcmUuCgo+ICsJCSAgICAgICBwb3J0
+X2lkLCByZXQpOwo+ICsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlz
+dApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
