@@ -1,18 +1,16 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v4 3/3] ARM: dts: STi: Remove "console=ttyASN" from
- bootargs for STi boards
-Date: Wed, 14 Mar 2018 14:53:17 +0000
-Message-ID: <55befee5-dd68-c175-6d20-29ccda6f323f@st.com>
-References: <1520444134-30144-1-git-send-email-patrice.chotard@st.com>
- <1520444134-30144-4-git-send-email-patrice.chotard@st.com>
- <20180314135701.GA20286@kroah.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: renesas: salvator-common: Configure
+ PMIC for DDR Backup Power
+Date: Wed, 14 Mar 2018 18:17:17 +0300
+Message-ID: <9c6289e4-23dd-c79b-bd1f-058d843739d2@cogentembedded.com>
+References: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
+ <1521029386-29975-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180314135701.GA20286@kroah.com>
-Content-Language: en-US
-Content-ID: <59513823E431AF4CA47FCC14B24FF83F@st.com>
+In-Reply-To: <1521029386-29975-3-git-send-email-geert+renesas@glider.be>
+Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,39 +20,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg
+Hello!
 
-On 03/14/2018 02:57 PM, Greg KH wrote:
-> On Wed, Mar 07, 2018 at 06:35:34PM +0100, patrice.chotard@st.com wrote:
->> From: Patrice Chotard <patrice.chotard@st.com>
->>
->> As serial interface is already specified into stdout-path property,
->> "console=ttyASN,115200" from bootargs can be removed.
->>
->> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
->> ---
->> v4: _ none
->> v3: _ remove "console=serialN,115200" from bootargs and use prefered
->>        stdout-path property
->> v2: _ none
->>
-> 
-> This patch does not apply at all, are you sure you made it correctly?
-> 
-> Can you please fix it up and resend?
+On 03/14/2018 03:09 PM, Geert Uytterhoeven wrote:
 
-No problem, the patch has just been sent.
-
-Thanks
-
-Patrice
-
+> On Salvator-X(S), all of the DDR0, DDR1, DDR0C, and DDR1C power rails
+> need to be kept powered when backup mode is enabled.  Reflect this in
+> the "rohm,ddr-backup-power" property for the BD9571MWV PMIC node.
 > 
-> thanks,
+> The accessory power switch (SW23) is a toggle switch, hense specify
+> "rohm,rstbmode-level".
 > 
-> greg k-h
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Add rohm,rstbmode-level.
+> ---
+>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> index 2a7f36abd2dd85c6..80794c38c2669d75 100644
+> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> @@ -376,6 +376,8 @@
+>  		#interrupt-cells = <2>;
+>  		gpio-controller;
+>  		#gpio-cells = <2>;
+> +		rohm,ddr-backup-power = <15>;
+
+  Why not 0xf if those are all bit flags?
+
+[...]
+
+MBR, Sergei
