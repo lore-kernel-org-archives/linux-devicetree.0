@@ -1,185 +1,44 @@
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Subject: [PATCH] ARM: dts: uniphier: add sound node for UniPhier PXs2
-Date: Wed, 14 Mar 2018 14:26:58 +0900
-Message-ID: <20180314052658.6244-1-suzuki.katsuhiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
-Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+From: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [DPU PATCH 0/2] Add hardware catalog information in
+ driver source for SDM845
+Date: Wed, 14 Mar 2018 11:21:36 +0530
+Message-ID: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds audio controller, external codec and simple card node
-of UniPhier AIO sound system for PXs2 SoCs.
-
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
----
- arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 24 +++++++++++++
- arch/arm/boot/dts/uniphier-pxs2-vodka.dts  | 37 ++++++++++++++++++++
- arch/arm/boot/dts/uniphier-pxs2.dtsi       | 54 ++++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
-
-diff --git a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-index d09acb8e59a1..782962749bbf 100644
---- a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-+++ b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-@@ -34,6 +34,12 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
-+
-+	sound {
-+		compatible = "audio-graph-card";
-+		label = "UniPhier PXs2";
-+		dais = <&i2s_port2>;
-+	};
- };
- 
- &serial2 {
-@@ -52,6 +58,19 @@
- 
- &i2c2 {
- 	status = "okay";
-+
-+	wm8960@1a {
-+		compatible = "wlf,wm8960";
-+		reg = <0x1a>;
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			wm_speaker: endpoint {
-+				dai-format = "i2s";
-+				remote-endpoint = <&i2s_aux>;
-+			};
-+		};
-+	};
- };
- 
- &eth {
-@@ -64,3 +83,8 @@
- 		reg = <1>;
- 	};
- };
-+
-+&i2s_aux {
-+	dai-format = "i2s";
-+	remote-endpoint = <&wm_speaker>;
-+};
-diff --git a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-index 6f13a25b935f..33bcd98c8653 100644
---- a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-+++ b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-@@ -32,6 +32,35 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
-+
-+	sound {
-+		compatible = "audio-graph-card";
-+		label = "UniPhier PXs2";
-+		dais = <&spdif_port0
-+			&comp_spdif_port0>;
-+	};
-+
-+	spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			spdif_tx: endpoint {
-+				remote-endpoint = <&spdif_hiecout1>;
-+			};
-+		};
-+	};
-+
-+	comp-spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			comp_spdif_tx: endpoint {
-+				remote-endpoint = <&comp_spdif_hiecout1>;
-+			};
-+		};
-+	};
- };
- 
- &serial2 {
-@@ -52,3 +81,11 @@
- 		reg = <1>;
- 	};
- };
-+
-+&spdif_hiecout1 {
-+	remote-endpoint = <&spdif_tx>;
-+};
-+
-+&comp_spdif_hiecout1 {
-+	remote-endpoint = <&comp_spdif_tx>;
-+};
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 18f336e64036..d64ca9d0aef1 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -227,6 +227,60 @@
- 						     <21 217 3>;
- 		};
- 
-+		audio@56000000 {
-+			compatible = "socionext,uniphier-pxs2-aio";
-+			reg = <0x56000000 0x80000>;
-+			interrupts = <0 144 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_ain1>,
-+				    <&pinctrl_ain2>,
-+				    <&pinctrl_ainiec1>,
-+				    <&pinctrl_aout2>,
-+				    <&pinctrl_aout3>,
-+				    <&pinctrl_aoutiec1>,
-+				    <&pinctrl_aoutiec2>;
-+			clock-names = "aio";
-+			clocks = <&sys_clk 40>;
-+			reset-names = "aio";
-+			resets = <&sys_rst 40>;
-+			#sound-dai-cells = <1>;
-+
-+			i2s_port0: port@0 {
-+				i2s_hdmi: endpoint {
-+				};
-+			};
-+
-+			i2s_port1: port@1 {
-+				i2s_line: endpoint {
-+				};
-+			};
-+
-+			i2s_port2: port@2 {
-+				i2s_aux: endpoint {
-+				};
-+			};
-+
-+			spdif_port0: port@3 {
-+				spdif_hiecout1: endpoint {
-+				};
-+			};
-+
-+			spdif_port1: port@4 {
-+				spdif_iecout1: endpoint {
-+				};
-+			};
-+
-+			comp_spdif_port0: port@5 {
-+				comp_spdif_hiecout1: endpoint {
-+				};
-+			};
-+
-+			comp_spdif_port1: port@6 {
-+				comp_spdif_iecout1: endpoint {
-+				};
-+			};
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
--- 
-2.16.1
+VGhpcyBwYXRjaCBzZXJpZXMgYWltcyBhdCBhZGRpbmcgdGhlIHRhcmdldCBzcGVjaWZpYyBoYXJk
+d2FyZQpjYXRhbG9nIGluZm9ybWF0aW9uIGluIGRyaXZlciBzb3VyY2UuCkFzIGEgcmVzdWx0LCB0
+aGUgY3VycmVudCBsb2dpYyBvZiBkdCBiYXNlZCBwYXJzaW5nIGlzIHJlbW92ZWQuCgpUaGUgRFQg
+Y2xlYW4gdXAgcGF0Y2ggY29ycmVzcG9uZGluZyB0byB0aGlzIGRyaXZlciBjaGFuZ2Ugd2lsbApi
+ZSBwb3N0ZWQgc2VwYXJhdGVseS4KClNyYXZhbnRoaSBLb2xsdWt1ZHVydSAoMik6CiAgZHQtYmlu
+ZGluZ3M6IG1zbS9kaXNwOiBSZW1vdmUgaHcgYmxvY2sgb2Zmc2V0IERUIGVudHJpZXMgZm9yIFNE
+TTg0NQogIGRybS9tc206IEFkZCBoYXJkd2FyZSBjYXRhbG9nIGZpbGUgZm9yIFNETTg0NQoKIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQgICAgICAgIHwgIDUzMCAt
+LS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuYyAg
+ICAgfCAzMDcxICstLS0tLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
+ZHB1MS9kcHVfaHdfY2F0YWxvZy5oICAgICB8ICAgMTcgKy0KIC4uLi9ncHUvZHJtL21zbS9kaXNw
+L2RwdTEvZHB1X2h3X2NhdGFsb2dfc2RtODQ1LmMgIHwgIDc0NCArKysrKwogZHJpdmVycy9ncHUv
+ZHJtL21zbS9kaXNwL2RwdTEvZHB1X2ttcy5jICAgICAgICAgICAgfCAgICAyICstCiA2IGZpbGVz
+IGNoYW5nZWQsIDc2NyBpbnNlcnRpb25zKCspLCAzNTk4IGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3Nk
+bTg0NS5jCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVt
+YmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9y
+YXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
+ZW5vCg==
