@@ -1,111 +1,40 @@
-From: "dbasehore ." <dbasehore@chromium.org>
-Subject: Re: [PATCH v7 1/3] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Wed, 14 Mar 2018 14:44:57 -0700
-Message-ID: <CAGAzgspNsybYfxwKOERJCU9oFvEjxOA41KT+4L5f6Zr=+WXO9w@mail.gmail.com>
-References: <20180301054820.42847-1-dbasehore@chromium.org>
- <20180301054820.42847-2-dbasehore@chromium.org> <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
- <0a74f87a-027a-df7d-ca2d-fc164ec9cdf7@arm.com> <CAGAzgsqLgujex--HCo3dRGvOPXG0zu-RwkbuGhgNhBTc3sURJA@mail.gmail.com>
- <6a5b5723-85bb-e46f-f621-eab17a01f1f0@arm.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 00/12] thermal: exynos: sanitize DeviceTree support
+Date: Wed, 14 Mar 2018 16:42:31 -0700
+Message-ID: <20180314234230.GA9784@localhost.localdomain>
+References: <CGME20180306144427epcas1p3bd260e382c61ab5176a50aa95084b542@epcas1p3.samsung.com>
+ <1520347435-22970-1-git-send-email-b.zolnierkie@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a5b5723-85bb-e46f-f621-eab17a01f1f0@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1520347435-22970-1-git-send-email-b.zolnierkie@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Soby Mathew <Soby.Mathew@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, Linux-pm mailing list <linux-pm@vger.kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Brian Norris <briannorris@chromium.org>
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 3:22 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 02/03/18 02:08, dbasehore . wrote:
->> On Thu, Mar 1, 2018 at 4:29 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>> Hi Mark,
->>>
->>> On 01/03/18 11:41, Mark Rutland wrote:
->>>> On Wed, Feb 28, 2018 at 09:48:18PM -0800, Derek Basehore wrote:
->>>>> Some platforms power off GIC logic in suspend, so we need to
->>>>> save/restore state. The distributor and redistributor registers need
->>>>> to be handled in platform code due to access permissions on those
->>>>> registers, but the ITS registers can be restored in the kernel.
->>>>>
->>>>> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
->>>>
->>>> How much state do we have to save/restore?
->>>>
->>>> Given we can apparently read all this state, couldn't we *always* save
->>>> the state, then upon resume detect if the state has been lost, restoring
->>>> it if so?
->>>>
->>>> That way, we don't need a property in FW tables for DT or ACPI.
->>>
->>> That's a good point. I guess that we could just compare the saved
->>> GITS_CTLR register and restore the full state only if the ITS comes back
->>> as disabled.
->>>
->>> I'm just a bit worried that it makes it an implicit convention between
->>> kernel an FW, which could change in funny ways. Importantly, the PSCI
->>> spec says states FW should restore *the whole state*. Obviously, it
->>> cannot to that on HW that doesn't allow you to read out the state, hence
->>> the DT flag that outlines the departure from the expected behaviour.
->>>
->>> I'm happy to go either way, but then I have the feeling that we should
->>> go back to quirking it on the actual implementation (GIC500 in this
->>> case) if we're to from the property.
->>>
->>>>
->>>> [...]
->>>>
->>>>> @@ -3261,6 +3363,9 @@ static int __init its_probe_one(struct resource *res,
->>>>>              ctlr |= GITS_CTLR_ImDe;
->>>>>      writel_relaxed(ctlr, its->base + GITS_CTLR);
->>>>>
->>>>> +    if (fwnode_property_present(handle, "reset-on-suspend"))
->>>>> +            its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
->>>>
->>>> Does this allow this property on an ACPI system?
->>>>
->>>> If we need this on ACPI, we need a spec update to handle this properly,
->>>> and shouldn't use device properties like this.
->>>
->>> Well spotted. I guess that dropping the property would fix that
->>> altogether, assuming we feel that the above is safe enough.
->>>
->>> Thoughts?
->>
->> I'm fine changing it to get rid of the devicetree property.
->>
->> What's the reason for quirking the behavior though? It's not that much
->> code + data and nothing else relies on the state of the ITS getting
->> disabled across suspend/resume. Even if something did, we'd have to
->> resolve it with this feature anyways.
->
-> The reason we do this is to cope with GIC500 having the collection state
-> in registers instead of memory. If we didn't have this extraordinary
-> misfeature, FW could do a full save/restore of the ITS, and we wouldn't
-> have to do anything (which is what the driver currently expects).
->
-> A middle ground approach is to limit the feature to systems where
-> GITS_TYPER.HCC is non-zero instead of limiting it to GIC500. Pretty easy
-> to fix. This should have the same effect, as GIC500 is the only
-> implementation I'm aware of with HCC!=0.
->
-> Given that we're already at -rc5 and that I'd like to queue things for
-> 4.17, I've made this change myself and queued patches 1 and 3 here[1].
->
-> Can you please have a look at let me know if that works for you?
->
+Hello,
 
-Assuming that your fine with only having the GIC500 implementations
-that have HCC as non-zero getting ITS registers restored in the
-kernel. As far as I can tell, this can happen in firmware for all
-implementations. It's only the code to resend that MAPC on resume that
-needs to be in the kernel.
+On Tue, Mar 06, 2018 at 03:43:43PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> Hi,
+> 
+> Values passed through DT properties specific to Exynos thermal
+> driver ("samsung,*") are SoC (not platform) specific so just
+> define them in struct exynos_tmu_data instance (or just use
+> constants where values are identical for all SoCs) and remove
+> "samsung," DT properties altogether.
+> 
+> The patchset should not cause any functionality changes.  This
+> means that unless there are some bugs in the patches itself there
+> should be no behavior changes for the driver (this also includes
+> lack of changes in the way hardware is accessed by the driver).
+> 
+> Tested on Exynos5422 based Odroid-XU3 Lite board.
 
-> Thanks,
->
->         M.
->
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
-> irq/irqchip-next
-> --
-> Jazz is not dead. It just smells funny...
+applied this series. except for patch 10, which should go through your
+arch tree.
+
+Thanks.
+
+> 1.9.1
