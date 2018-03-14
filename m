@@ -1,217 +1,91 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1] arm: dts: mt7623: add PCIe related nodes
-Date: Wed, 14 Mar 2018 09:41:49 +0800
-Message-ID: <1520991709.12028.3.camel@mtkswgap22>
-References: <4e567be2546f90ef62a5df0e957e8a014e460cde.1518576282.git.ryder.lee@mediatek.com>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjggMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZz?=
+ =?utf-8?Q?:_add_document_for_hisi-ufs?=
+Date: Wed, 14 Mar 2018 02:17:51 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA57B80@DGGEMM506-MBS.china.huawei.com>
+References: <20180213101412.5717-1-liwei213@huawei.com>
+ <20180213101412.5717-3-liwei213@huawei.com>
+ <CAK8P3a2b3rLHyM+vMppCkAR3VYbhw-b0LpuWfLCqjs7z9n+hyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4e567be2546f90ef62a5df0e957e8a014e460cde.1518576282.git.ryder.lee@mediatek.com>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "liwei (CM)" <liwei213@huawei.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@li>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-Just a gentle ping on this patch.
-
-Thanks
-
-On Wed, 2018-02-14 at 11:27 +0800, Ryder Lee (李庚諺) wrote:
-> This patch adds some device nodes for the PCIe function block and updates
-> related pinmux.
-> 
-> Moreover, we add interrupt-map properties in both parent and children as
-> the chip only has one IRQ per slot that is connected to all INTx and get
-> propagated through the bridges and it also represents the root ports own
-> interrupts.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> ---
-> 
-> Sorry to send v1 in such a rush. Somehow I forgot to add something in previous version.
-> 
-> changes since v1:
->  - enable device nodes - pcie0_phy & pcie2_phy
->  - fix dtc warning: Warning (pci_bridge): Node /pcie-controller@1a140000 node name is not "pci" or "pcie"
-> ---
->  arch/arm/boot/dts/mt7623.dtsi                 | 105 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  30 ++++++++
->  2 files changed, 135 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index 629c92b..137ce99 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -667,6 +667,111 @@
->                 #reset-cells = <1>;
->         };
-> 
-> +       pcie: pcie@1a140000 {
-> +               compatible = "mediatek,mt7623-pcie";
-> +               device_type = "pci";
-> +               reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
-> +                     <0 0x1a142000 0 0x1000>, /* Port0 registers */
-> +                     <0 0x1a143000 0 0x1000>, /* Port1 registers */
-> +                     <0 0x1a144000 0 0x1000>; /* Port2 registers */
-> +               reg-names = "subsys", "port0", "port1", "port2";
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0xf800 0 0 0>;
-> +               interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
-> +                               <0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
-> +                               <0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-> +                        <&hifsys CLK_HIFSYS_PCIE0>,
-> +                        <&hifsys CLK_HIFSYS_PCIE1>,
-> +                        <&hifsys CLK_HIFSYS_PCIE2>;
-> +               clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
-> +               resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
-> +                        <&hifsys MT2701_HIFSYS_PCIE1_RST>,
-> +                        <&hifsys MT2701_HIFSYS_PCIE2_RST>;
-> +               reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
-> +               phys = <&pcie0_port PHY_TYPE_PCIE>,
-> +                      <&pcie1_port PHY_TYPE_PCIE>,
-> +                      <&u3port1 PHY_TYPE_PCIE>;
-> +               phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-> +               power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-> +               bus-range = <0x00 0xff>;
-> +               status = "disabled";
-> +               ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000
-> +                         0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;
-> +
-> +               pcie@0,0 {
-> +                       reg = <0x0000 0 0 0 0>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0>;
-> +                       interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
-> +                       ranges;
-> +                       num-lanes = <1>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@1,0 {
-> +                       reg = <0x0800 0 0 0 0>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0>;
-> +                       interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +                       ranges;
-> +                       num-lanes = <1>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie@2,0 {
-> +                       reg = <0x1000 0 0 0 0>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0>;
-> +                       interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-> +                       ranges;
-> +                       num-lanes = <1>;
-> +                       status = "disabled";
-> +               };
-> +       };
-> +
-> +       pcie0_phy: pcie-phy@1a149000 {
-> +               compatible = "mediatek,generic-tphy-v1";
-> +               reg = <0 0x1a149000 0 0x0700>;
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +               status = "disabled";
-> +
-> +               pcie0_port: pcie-phy@1a149900 {
-> +                       reg = <0 0x1a149900 0 0x0700>;
-> +                       clocks = <&clk26m>;
-> +                       clock-names = "ref";
-> +                       #phy-cells = <1>;
-> +                       status = "okay";
-> +               };
-> +       };
-> +
-> +       pcie1_phy: pcie-phy@1a14a000 {
-> +               compatible = "mediatek,generic-tphy-v1";
-> +               reg = <0 0x1a14a000 0 0x0700>;
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +               status = "disabled";
-> +
-> +               pcie1_port: pcie-phy@1a14a900 {
-> +                       reg = <0 0x1a14a900 0 0x0700>;
-> +                       clocks = <&clk26m>;
-> +                       clock-names = "ref";
-> +                       #phy-cells = <1>;
-> +                       status = "okay";
-> +               };
-> +       };
-> +
->         usb1: usb@1a1c0000 {
->                 compatible = "mediatek,mt7623-xhci",
->                              "mediatek,mt8173-xhci";
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 7bf5aa2..3efecc5 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -209,6 +209,28 @@
->         vqmmc-supply = <&mt6323_vio18_reg>;
->  };
-> 
-> +&pcie {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pcie_default>;
-> +       status = "okay";
-> +
-> +       pcie@0,0 {
-> +               status = "okay";
-> +       };
-> +
-> +       pcie@1,0 {
-> +               status = "okay";
-> +       };
-> +};
-> +
-> +&pcie0_phy {
-> +       status = "okay";
-> +};
-> +
-> +&pcie1_phy {
-> +       status = "okay";
-> +};
-> +
->  &pio {
->         cir_pins_a:cir@0 {
->                 pins_cir {
-> @@ -376,6 +398,14 @@
->                 };
->         };
-> 
-> +       pcie_default: pcie_pin_default {
-> +               pins_cmd_dat {
-> +                       pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
-> +                                <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
-> +                       bias-disable;
-> +               };
-> +       };
-> +
->         pwm_pins_a: pwm@0 {
->                 pins_pwm {
->                         pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
-> --
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+SGnvvIxBcm5kDQoNClNvcnJ5IHRvIGJvdGhlciB5b3UgYWdhaW4sIHBsZWFzZSB0YWtlIHRoZSB0
+aW1lIHRvIHJldmlldyB0aGUgcGF0Y2guIEFyZSB0aGVyZSBhbnkgb3RoZXIgc3VnZ2VzdGlvbnM/
+DQpMb29raW5nIGZvcndhcmQgdG8geW91ciByZXBseS4NCg0KVGhhbmtzIQ0KDQoNCg0KLS0tLS3p
+gq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBsaXdlaSAoQ00pIA0K5Y+R6YCB5pe26Ze0OiAy
+MDE45bm0MuaciDIz5pelIDE2OjM2DQrmlLbku7bkuro6ICdBcm5kIEJlcmdtYW5uJw0K5oqE6YCB
+OiBSb2IgSGVycmluZzsgTWFyayBSdXRsYW5kOyB4dXdlaSAoTyk7IENhdGFsaW4gTWFyaW5hczsg
+V2lsbCBEZWFjb247IFZpbmF5YWsgSG9saWthdHRpOyBKYW1lcyBFLkouIEJvdHRvbWxleTsgTWFy
+dGluIEsuIFBldGVyc2VuOyBLZXZpbiBIaWxtYW47IEdyZWdvcnkgQ0xFTUVOVDsgVGhvbWFzIFBl
+dGF6em9uaTsgTWFzYWhpcm8gWWFtYWRhOyBSaWt1IFZvaXBpbzsgVGhpZXJyeSBSZWRpbmc7IEty
+enlzenRvZiBLb3psb3dza2k7IERUTUw7IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7IExpbnV4
+IEFSTTsgbGludXgtc2NzaTsgemFuZ2xlaWdhbmc7IEdlbmdqaWFuZmVuZzsgR3VvZG9uZyBYdTsg
+WmhhbmdmZWkgR2FvOyBGZW5nYmFvcGVuZyAoa2V2aW4sIEtpcmluIFNvbHV0aW9uIERlcHQpDQrk
+uLvpopg6IOetlOWkjTogW1BBVENIIHY4IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRk
+IGRvY3VtZW50IGZvciBoaXNpLXVmcw0KDQpIaSwgQXJuZA0KDQpTb3JyeSBsYXRlIGZvciB5b3Uu
+DQpUaGUgZm9sbG93aW5nIHR3byBzdWdnZXN0aW9ucyB3ZSBoYXZlIHJlYWxseSBkaXNjdXNzZWQN
+Cmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzExLzMwLzEwNzcNCg0KLS0tLS3pgq7ku7bljp/k
+u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBhcm5kYmVyZ21hbm5AZ21haWwuY29tIFttYWlsdG86YXJuZGJl
+cmdtYW5uQGdtYWlsLmNvbV0g5Luj6KGoIEFybmQgQmVyZ21hbm4NCuWPkemAgeaXtumXtDogMjAx
+OOW5tDLmnIgxOeaXpSAxNzo1OA0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pDQrmioTpgIE6IFJvYiBI
+ZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IHh1d2VpIChPKTsgQ2F0YWxpbiBNYXJpbmFzOyBXaWxsIERl
+YWNvbjsgVmluYXlhayBIb2xpa2F0dGk7IEphbWVzIEUuSi4gQm90dG9tbGV5OyBNYXJ0aW4gSy4g
+UGV0ZXJzZW47IEtldmluIEhpbG1hbjsgR3JlZ29yeSBDTEVNRU5UOyBUaG9tYXMgUGV0YXp6b25p
+OyBNYXNhaGlybyBZYW1hZGE7IFJpa3UgVm9pcGlvOyBUaGllcnJ5IFJlZGluZzsgS3J6eXN6dG9m
+IEtvemxvd3NraTsgRXJpYyBBbmhvbHQ7IERUTUw7IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7
+IExpbnV4IEFSTTsgbGludXgtc2NzaTsgemFuZ2xlaWdhbmc7IEdlbmdqaWFuZmVuZzsgR3VvZG9u
+ZyBYdTsgWmhhbmdmZWkgR2FvOyBGZW5nYmFvcGVuZyAoa2V2aW4sIEtpcmluIFNvbHV0aW9uIERl
+cHQpDQrkuLvpopg6IFJlOiBbUEFUQ0ggdjggMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBh
+ZGQgZG9jdW1lbnQgZm9yIGhpc2ktdWZzDQoNCk9uIFR1ZSwgRmViIDEzLCAyMDE4IGF0IDExOjE0
+IEFNLCBMaSBXZWkgPGxpd2VpMjEzQGh1YXdlaS5jb20+IHdyb3RlOg0KPiBhZGQgdWZzIG5vZGUg
+ZG9jdW1lbnQgZm9yIEhpc2lsaWNvbi4NCj4NCj4gU2lnbmVkLW9mZi1ieTogTGkgV2VpIDxsaXdl
+aTIxM0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy91ZnMvdWZzLWhpc2kudHh0IHwgMzcgDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQNCg0KDQpJ
+J20gcHJldHR5IHN1cmUgd2UndmUgZGlzY3Vzc2VkIGl0IGJlZm9yZSwgYnV0IGNhbiB5b3UgbWFr
+ZSB0aGlzIHNvIHRoYXQgdGhlIGdlbmVyaWMgcHJvcGVydGllcyBhcmUgcGFydCBvZiB0aGUgdWZz
+aGNkIGJpbmRpbmcsIGFuZCB5b3UgcmVmZXIgdG8gaXQgZnJvbSBoZXJlLCBvbmx5IGRlc2NyaWJp
+bmcgaW4gd2hhdCB3YXlzIHRoZSBoaXNpIHVmcyBiaW5kaW5nIGRpZmZlcnMgZnJvbSB0aGUgc3Rh
+bmRhcmQ/DQoNCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy91ZnMvdWZzLWhpc2kudHh0IA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy91ZnMvdWZzLWhpc2kudHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAw
+MDAwMDAwMC4uMGQyMWI1NzQ5NmNmDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQNCj4gQEAgLTAsMCArMSwz
+NyBAQA0KPiArKiBIaXNpbGljb24gVW5pdmVyc2FsIEZsYXNoIFN0b3JhZ2UgKFVGUykgSG9zdCBD
+b250cm9sbGVyDQo+ICsNCj4gK1VGUyBub2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmliZSBvbi1j
+aGlwIFVGUyBoYXJkd2FyZSBtYWNyby4NCj4gK0VhY2ggVUZTIEhvc3QgQ29udHJvbGxlciBzaG91
+bGQgaGF2ZSBpdHMgb3duIG5vZGUuDQo+ICsNCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICst
+IGNvbXBhdGlibGUgICAgICAgIDogY29tcGF0aWJsZSBsaXN0LCBjb250YWlucyBvbmUgb2YgdGhl
+IGZvbGxvd2luZyAtDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
+aGlzaWxpY29uLGhpMzY2MC11ZnMiLCAiamVkZWMsdWZzLTEuMSIgZm9yIGhpc2kgdWZzDQo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBob3N0IGNvbnRyb2xsZXIgcHJl
+c2VudCBvbiBIaTM2eHggY2hpcHNldC4NCj4gKy0gcmVnICAgICAgICAgICAgICAgOiBzaG91bGQg
+Y29udGFpbiBVRlMgcmVnaXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBTWVMgQ1RSTCByZWdpc3Rl
+ciBhZGRyZXNzLA0KPiArLSBpbnRlcnJ1cHQtcGFyZW50ICA6IGludGVycnVwdCBkZXZpY2UNCj4g
+Ky0gaW50ZXJydXB0cyAgICAgICAgOiBpbnRlcnJ1cHQgbnVtYmVyDQo+ICstIGNsb2NrcyAgICAg
+ICAgICAgICAgIDogTGlzdCBvZiBwaGFuZGxlIGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMNCj4g
+Ky0gY2xvY2stbmFtZXMgICAgICAgOiBMaXN0IG9mIGNsb2NrIGlucHV0IG5hbWUgc3RyaW5ncyBz
+b3J0ZWQgaW4gdGhlIHNhbWUNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIG9yZGVyIGFzIHRoZSBjbG9ja3MgcHJvcGVydHkuIA0KPiArInJlZl9jbGsiLCAicGh5X2Ns
+ayIgaXMgb3B0aW9uYWwNCg0KVGhlIGNsb2NrIG5hbWVzIHNvdW5kIGdlbmVyaWMgZW5vdWdoLCBz
+aG91bGQgd2UgaGF2ZSBib3RoIGluIHRoZSBnZW5lcmljIGJpbmRpbmc/DQoNCiJyZWZfY2xrIiBp
+cyBpbiB0aGUgdWZzaGNkLXBsdGZybSBiaW5kaW5nLCBidXQgInBoeV9jbGsiIGlzIG5vdDsgd2hh
+dCBkbyB5b3UgbWVhbiBpcyB0aGF0IHRoZXNlIHR3byBkb24ndCBuZWVkIHRvIGRvY3VtZW50IGhl
+cmU/DQoNCj4gKy0gcmVzZXRzICAgICAgICAgICAgOiByZXNldCBub2RlIHJlZ2lzdGVyLCBvbmUg
+cmVzZXQgdGhlIGNsayBhbmQgdGhlIG90aGVyIHJlc2V0IHRoZSBjb250cm9sbGVyDQo+ICstIHJl
+c2V0LW5hbWVzICAgICAgIDogZGVzY3JpYmUgcmVzZXQgbm9kZSByZWdpc3Rlcg0KDQpUaGlzIGxv
+b2tzIGluY29tcGxldGUuIFdoYXQgaXMgdGhlIG5hbWUgb2YgdGhlIHJlc2V0IGxpbmUgc3VwcG9z
+ZWQgdG8gYmU/DQpJJ2QgYWxzbyBzdWdnZXN0IHlvdSBkb2N1bWVudCBpdCBpbiB0aGUgdWZzaGNk
+IGJpbmRpbmcgaW5zdGVhZC4NCg0KQXMgZGlzY3Vzc2VkIGluIGh0dHBzOi8vbGttbC5vcmcvbGtt
+bC8yMDE3LzExLzMwLzEwNzc7DQpJZiBkb2N1bWVudCBpdCBpbiB0aGUgdWZzaGNkIGJpbmRpbmcs
+IEkgdGhpbmsgaXQgbmVlZHMgc29tZSBjb2RlcyB0byBwYXJzZSB0aGVtIGluIHVmc2hjZC5jL3Vm
+c2hjZC1wbHRmcm0uYywgYnV0IEkgdGhpbmsgdGhlc2UgY29kZXMgbWF5IG5vdCBiZSBhcHBsaWNh
+YmxlIHRvIG90aGVyIFNPQyBtYW51ZmFjdHVyZXJzLg0KDQogICAgICBBcm5kDQo=
