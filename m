@@ -1,38 +1,36 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: STi: Remove "console=ttyASN" from
- bootargs for STi boards
-Date: Wed, 14 Mar 2018 14:57:01 +0100
-Message-ID: <20180314135701.GA20286@kroah.com>
-References: <1520444134-30144-1-git-send-email-patrice.chotard@st.com>
- <1520444134-30144-4-git-send-email-patrice.chotard@st.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH v4 02/24] soc: qcom: Add APR bus driver
+Date: Wed, 14 Mar 2018 19:42:01 +0530
+Message-ID: <d9e92aeb-8d74-554e-4390-4117571806a9@codeaurora.org>
+References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
+ <20180310022456.26739-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1520444134-30144-4-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <20180310022456.26739-3-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: patrice.chotard@st.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jslaby@suse.com, linux-serial@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 06:35:34PM +0100, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
-> 
-> As serial interface is already specified into stdout-path property,
-> "console=ttyASN,115200" from bootargs can be removed.
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> ---
-> v4: _ none
-> v3: _ remove "console=serialN,115200" from bootargs and use prefered 
->       stdout-path property
-> v2: _ none
-> 
 
-This patch does not apply at all, are you sure you made it correctly?
 
-Can you please fix it up and resend?
+On 3/10/2018 7:54 AM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+[..]
+> +struct bus_type aprbus_type = {
+> +	.name		= "aprbus",
+> +	.match		= apr_device_match,
+> +	.probe		= apr_device_probe,
+> +	.remove		= apr_device_remove,
+> +	.force_dma	= true,
 
-thanks,
-
-greg k-h
+There is no need of force_dma now as machine driver is not child of apr. 
+Please remove it.
+> +};
+> +EXPORT_SYMBOL_GPL(aprbus_type);
+> +
+>
