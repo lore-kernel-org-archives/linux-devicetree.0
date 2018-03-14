@@ -1,146 +1,105 @@
-Return-Path: <SRS0=V/2P=GG=google.com=dianders@kernel.org>
-MIME-Version: 1.0
-Sender: dianders@google.com
-In-Reply-To: <1521071931-9294-7-git-send-email-kramasub@codeaurora.org>
-References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org> <1521071931-9294-7-git-send-email-kramasub@codeaurora.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 16 Mar 2018 16:54:33 -0700
-Message-ID: <CAD=FV=Wk5apkO9ro+PkLGDS7poJgvTkDA4uSKnMXmK=GMzuMcQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add I2C controller support
-Content-Type: text/plain; charset="UTF-8"
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
+Return-Path: <SRS0=EV7f=GE=codeaurora.org=kramasub@kernel.org>
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v4 6/6] arm64: dts: sdm845: Add I2C controller support
+Date: Wed, 14 Mar 2018 17:58:51 -0600
+Message-Id: <1521071931-9294-7-git-send-email-kramasub@codeaurora.org>
+In-Reply-To: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
+References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
+To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Add I2C master controller support for a built-in test I2C slave.
 
-On Wed, Mar 14, 2018 at 4:58 PM, Karthikeyan Ramasubramanian
-<kramasub@codeaurora.org> wrote:
-> Add I2C master controller support for a built-in test I2C slave.
->
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 19 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 29 +++++++++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index ea3efc5..69445f1 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -27,6 +27,10 @@
->                 serial@a84000 {
->                         status = "okay";
->                 };
-> +
-> +               i2c@a88000 {
-> +                       status = "okay";
+Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 19 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi    | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-Any idea what clock frequency is appropriate for MTP?  You've got some
-pretty beefy 2.2K external pulls I think, so presumably 400 KHz is
-what you're aiming for?  It would be nice to specify one so you don't
-end up the the spam in the log "Bus frequency not specified ..."
-
-
-> +               };
->         };
->
->         pinctrl@3400000 {
-> @@ -50,5 +54,20 @@
->                                 bias-pull-down;
->                         };
->                 };
-> +
-> +               qup-i2c10-default {
-
-nit: probably in the pinctrl section we want to sort alphabetically?
-We could try to sort by "lowest numbered pin", but IMHO alphabetical
-makes the most sense.
-
-
-> +                       pinconf {
-> +                               pins = "gpio55", "gpio56";
-> +                               drive-strength = <2>;
-> +                               bias-disable;
-> +                       };
-> +               };
-> +
-> +               qup-i2c10-sleep {
-> +                       pinconf {
-> +                               pins = "gpio55", "gpio56";
-> +                               bias-pull-up;
-
-Are you sure that you want pullups enabled for sleep here?  There are
-external pulls on this line (as there are on many i2c busses) so doing
-this will double-enable pulls.  It probably won't hurt, but I'm
-curious if there's some sort of reason here.
-
-
-> +                       };
-> +               };
->         };
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 59334d9..9ef056f 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -209,6 +209,21 @@
->                                         pins = "gpio4", "gpio5";
->                                 };
->                         };
-> +
-> +                       qup_i2c10_default: qup-i2c10-default {
-> +                               pinmux {
-> +                                       function = "qup10";
-> +                                       pins = "gpio55", "gpio56";
-> +                               };
-> +                       };
-> +
-> +                       qup_i2c10_sleep: qup-i2c10-sleep {
-> +                               pinmux {
-> +                                       function = "gpio";
-> +                                       pins = "gpio55", "gpio56";
-> +                               };
-> +                       };
-> +
->                 };
->
->                 timer@17c90000 {
-> @@ -309,6 +324,20 @@
->                                 interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
->                                 status = "disabled";
->                         };
-> +
-> +                       i2c10: i2c@a88000 {
-
-Seems like it might be nice to add all the i2c busses into the main
-sdm845.dtsi file.  Sure, most won't be enabled, but it seems like it
-would avoid churn later.
-
-...if you're sure you want to add only one i2c controller, subject of
-this patch should indicate that.
-
-
-> +                               compatible = "qcom,geni-i2c";
-> +                               reg = <0xa88000 0x4000>;
-> +                               clock-names = "se";
-> +                               clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-> +                               pinctrl-names = "default", "sleep";
-> +                               pinctrl-0 = <&qup_i2c10_default>;
-> +                               pinctrl-1 = <&qup_i2c10_sleep>;
-> +                               interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               status = "disabled";
-> +                       };
->                 };
->         };
->  };
-> --
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index ea3efc5..69445f1 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -27,6 +27,10 @@
+ 		serial@a84000 {
+ 			status = "okay";
+ 		};
++
++		i2c@a88000 {
++			status = "okay";
++		};
+ 	};
+ 
+ 	pinctrl@3400000 {
+@@ -50,5 +54,20 @@
+ 				bias-pull-down;
+ 			};
+ 		};
++
++		qup-i2c10-default {
++			pinconf {
++				pins = "gpio55", "gpio56";
++				drive-strength = <2>;
++				bias-disable;
++			};
++		};
++
++		qup-i2c10-sleep {
++			pinconf {
++				pins = "gpio55", "gpio56";
++				bias-pull-up;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 59334d9..9ef056f 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -209,6 +209,21 @@
+ 					pins = "gpio4", "gpio5";
+ 				};
+ 			};
++
++			qup_i2c10_default: qup-i2c10-default {
++				pinmux {
++					function = "qup10";
++					pins = "gpio55", "gpio56";
++				};
++			};
++
++			qup_i2c10_sleep: qup-i2c10-sleep {
++				pinmux {
++					function = "gpio";
++					pins = "gpio55", "gpio56";
++				};
++			};
++
+ 		};
+ 
+ 		timer@17c90000 {
+@@ -309,6 +324,20 @@
+ 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
++
++			i2c10: i2c@a88000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa88000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c10_default>;
++				pinctrl-1 = <&qup_i2c10_sleep>;
++				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
