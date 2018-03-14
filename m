@@ -1,88 +1,102 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
-Date: Wed, 14 Mar 2018 11:02:06 +0000
-Message-ID: <TY1PR01MB1770D3BF20F440AAD9A1E5E5C0D10@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <CAMuHMdUx3A_8MeZmrwiBRqUS0oGjwrg13fy1QMsA2SUw+dR0Hg@mail.gmail.com>
- <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/4] regulator: bd9571mwv: Add support for DDR backup mode
+Date: Wed, 14 Mar 2018 12:08:38 +0100
+Message-ID: <1521025722-24205-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut+renesas@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+	Hi all,
 
-> Subject: Re: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
->
-> Hi Fabrizio,
->
-> On Wed, Feb 28, 2018 at 6:40 PM, Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com> wrote:
-> > On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
-> > boot CPUs run a routine designed to bring up SMP and deal with hot plug.
-> > The value contained in the SBAR registers is not initialized by a WDT
-> > triggered reset, which means that after a WDT triggered reset we jump
-> > to the SMP bring up routine, preventing the system from executing the
-> > bootrom code.
-> >
-> > The purpose of this patch is to jump to the bootrom code in case of a
-> > WDT triggered reset, and keep the SMP functionality untouched.
-> > In order to tell if the code had been called due to the WDT overflowing
-> > we are testing WOVF from register RWTCSRA.
-> >
-> > The new function shmobile_boot_vector_gen2 isn't replacing
-> > shmobile_boot_vector for backward compatibility reasons. The kernel
-> > will install the best option (either shmobile_boot_vector or
-> > shmobile_boot_vector_gen2) to ICRAM1 after parsing the device tree,
-> > according to the amount of memory available.
-> >
-> > Since shmobile_boot_vector has become bigger, "reg" property of nodes
-> > compatible with "renesas,smp-sram" now need to be set to a value
-> > greater or equal to "<0 0x60>".
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v5->v6:
-> > * taken ifdefs out as per Geert's suggestion.
->
-> My intention was to remove the #ifdefs from the header file only, not
-> from arch/arm/mach-shmobile/headsmp.S, as the latter is used for
-> other SoC families, too.
+The ROHM BD9571MWV PMIC on the Renesas Salvator-X(S) and ULCB
+development boards supports DDR Backup Power, which means that the DDR
+power rails can be kept powered while the main SoC is powered down.
 
-Ah ok, I'll send another version to restore the ifdef within headsmp.S then.
+Currently performing a system suspend/resume cycle involves several
+manual steps:
+  1. Configure the PMIC for Backup Mode, using
+     "i2cset -f -y 7 0x30 0x20 0x0f", which changes the role of the
+     power switch to a wake-up switch,
+  2. Switch off SW23 (the ACC toggle switch) to prepare for suspend
+     (only on Salvator-X(S)),
+  3. Suspend to RAM, using "echo mem > /sys/power/state",
+  4. Switch on SW23 (on Salvator-X(S)) or push momentary switch SW8 (on
+     ULCB) to resume.
+Note the need for step 2 on systems equipped with a toggle instead of
+momentary power switch.
 
-Thanks,
-Fab
+Especially the first and second steps are cumbersome, as they rely on
+  1. Intimate knowledge about the PMIC and actual board design,
+  2. Direct i2c access,
+  3. Having the i2cset utility available,
+  4. A manual togle switch operation (on Salvator-X(S)).
+In addition, all of this has to be redone after system resume.
 
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+This patch series integrates Backup Mode configuration into the PMIC
+driver, using the "wakeup" sysfs virtual file.  I.e. it can be enabled
+or disabled by writing "enabled" or "disabled" to e.g.
 
+    /sys/devices/platform/soc/e60b0000.i2c/i2c-7/7-0030/bd9571mwv-regulator.2.auto/power/wakeup
 
+Which DDR rails are to be kept powered is board-specific, and controlled
+using the optional "rohm,ddr-backup-power" property in the board DTS
+file.
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+As the power switch type is board-specific, and cannot be determined
+automatically, it is obtained from the presence of one of the
+"rohm,rstbmode-{pulse,level}" properties in DT.
+
+For now only momentary power switches are supported, and wake-up is
+enabled by default, as it doesn't have any run-time side-effects.
+Support for toggle switches will be added in a follow-up series.
+
+Changes compared to v1:
+  - Improve DT property description,
+  - Add DT properties for power switch type,
+  - Add Acked-by,
+  - Use normal "wakeup" sysfs virtual file instead of adding our own
+    "backup_mode" file,
+  - Differentiate between momentary and toggle power switches:
+      - Support for momentary switches is enabled automatically,
+      - Toggle switches are not yet supported (but still work when
+	backup mode is enabled using i2set from userspace).
+  - Split off DTS part into its own series.
+
+This has been tested on M3ULCB (thanks Jacopo!), and on Salvator-X(S)
+(still using i2set from userspace).
+
+For testing, driver and DTS patches are available in the
+topic/bd9571-ddr-backup-mode-driver-v2 and
+topic/bd9571-ddr-backup-mode-dt-v2 branches of my renesas-drivers git
+repository at
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (4):
+  dt-bindings: mfd: bd9571mwv: Document DDR Backup Mode properties
+  mfd: bd9571mwv: Add DDR Backup Power register bit definitions
+  mfd: bd9571mwv: Allow DDR Backup Power register access
+  regulator: bd9571mwv: Add support for DDR backup mode
+
+ .../devicetree/bindings/mfd/bd9571mwv.txt          |  21 ++++
+ drivers/mfd/bd9571mwv.c                            |   2 +
+ drivers/regulator/bd9571mwv-regulator.c            | 127 ++++++++++++++++++++-
+ include/linux/mfd/bd9571mwv.h                      |   5 +
+ 4 files changed, 154 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
