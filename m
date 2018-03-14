@@ -1,195 +1,72 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 2/2] reset: stm32mp1: Enable stm32mp1 reset driver
-Date: Wed, 14 Mar 2018 17:30:01 +0100
-Message-ID: <1521045001-30788-3-git-send-email-gabriel.fernandez@st.com>
-References: <1521045001-30788-1-git-send-email-gabriel.fernandez@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: [PATCH] of: Respect CONFIG_CMDLINE{,_EXTENED,_FORCE) with no chosen node
+Date: Wed, 14 Mar 2018 09:31:05 -0700
+Message-ID: <20180314163105.8638-1-palmer@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521045001-30788-1-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gabriel.fernandez.st@gmail.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Gabriel Fernandez <gabriel.fernandez@st.com>
+To: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Palmer Dabbelt <palmer@sifive.com>, Michael J Clark <mjc@sifive.com>, Trung Tran <trung.tran@ettus.com>, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Systems that boot without a chosen node in the device tree should still
+respect the command lines that are built into the kernel.  This patch
+avoids bailing out of the command line argument parsing code when there
+is no chosen node in the device tree.  This is necessary to boot
+straight to a root file system (ie, without an initramfs)
 
-stm32mp1 RCC IP 1 has a reset SET register and a reset CLEAR register.
+The intent here is that the only functional change is to copy
+CONFIG_CMDLINE into data if both of them are valid (ie, CONFIG_CMDLINE
+is defined and data is non-null) on systems where there is no chosen
+device tree node.  I don't actually know what the return values do so I
+just preserved them.
 
-Writing '0' on reset SET register has no effect
-Writing '1' on reset SET register
-	activates the reset of the corresponding peripheral
+Thanks to Trung and Moritz for finding the bug during our ELC hackathon
+(and providing the first fix), and Michal for suggesting this fix (which
+is cleaner than what I was doing).  I've given this very minimal
+testing: it fixes the RISC-V bug (in conjunction with a patch to move
+from COMMANDLINE_OVERRIDE to COMMANDLINE_FORCE), still works on systems
+with and without the chosen node, and builds on ARM64.
 
-Writing '0' on reset CLEAR register	has no effect
-Writing '1' on reset CLEAR register
-	releases the reset of the corresponding peripheral
-
-See Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+CC: Michael J Clark <mjc@sifive.com>
+CC: Trung Tran <trung.tran@ettus.com>
+CC: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 ---
- drivers/reset/Kconfig          |   6 ++
- drivers/reset/Makefile         |   1 +
- drivers/reset/reset-stm32mp1.c | 122 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100644 drivers/reset/reset-stm32mp1.c
+ drivers/of/fdt.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 1efbc6c..c0b292b 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -97,6 +97,12 @@ config RESET_SIMPLE
- 	   - Allwinner SoCs
- 	   - ZTE's zx2967 family
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 84aa9d676375..60241b1cb024 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1084,9 +1084,12 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  
-+config RESET_STM32MP157
-+	bool "STM32MP157 Reset Driver" if COMPILE_TEST
-+	default MACH_STM32MP157
-+	help
-+	  This enables the RCC reset controller driver for STM32 MPUs.
-+
- config RESET_SUNXI
- 	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
- 	default ARCH_SUNXI
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 132c24f..c1261dc 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_RESET_MESON) += reset-meson.o
- obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
- obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
-+obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
- obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
- obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
-diff --git a/drivers/reset/reset-stm32mp1.c b/drivers/reset/reset-stm32mp1.c
-new file mode 100644
-index 0000000..5e25388
---- /dev/null
-+++ b/drivers/reset/reset-stm32mp1.c
-@@ -0,0 +1,122 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-+ * Author: Gabriel Fernandez <gabriel.fernandez@st.com> for STMicroelectronics.
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+#define CLR_OFFSET 0x4
-+
-+struct stm32_reset_data {
-+	struct reset_controller_dev	rcdev;
-+	void __iomem			*membase;
-+};
-+
-+static inline struct stm32_reset_data *
-+to_stm32_reset_data(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct stm32_reset_data, rcdev);
-+}
-+
-+static int stm32_reset_update(struct reset_controller_dev *rcdev,
-+			      unsigned long id, bool assert)
-+{
-+	struct stm32_reset_data *data = to_stm32_reset_data(rcdev);
-+	int reg_width = sizeof(u32);
-+	int bank = id / (reg_width * BITS_PER_BYTE);
-+	int offset = id % (reg_width * BITS_PER_BYTE);
-+	void __iomem *addr;
-+
-+	addr = data->membase + (bank * reg_width);
-+	if (!assert)
-+		addr += CLR_OFFSET;
-+
-+	writel(BIT(offset), addr);
-+
-+	return 0;
-+}
-+
-+static int stm32_reset_assert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	return stm32_reset_update(rcdev, id, true);
-+}
-+
-+static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	return stm32_reset_update(rcdev, id, false);
-+}
-+
-+static int stm32_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct stm32_reset_data *data = to_stm32_reset_data(rcdev);
-+	int reg_width = sizeof(u32);
-+	int bank = id / (reg_width * BITS_PER_BYTE);
-+	int offset = id % (reg_width * BITS_PER_BYTE);
-+	u32 reg;
-+
-+	reg = readl(data->membase + (bank * reg_width));
-+
-+	return !(reg & BIT(offset));
-+}
-+
-+const struct reset_control_ops stm32_reset_ops = {
-+	.assert		= stm32_reset_assert,
-+	.deassert	= stm32_reset_deassert,
-+	.status		= stm32_reset_status,
-+};
-+
-+static const struct of_device_id stm32_reset_dt_ids[] = {
-+	{ .compatible = "st,stm32mp1-rcc"},
-+	{ /* sentinel */ },
-+};
-+
-+static int stm32_reset_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stm32_reset_data *data;
-+	void __iomem *membase;
-+	struct resource *res;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ 
+-	if (depth != 1 || !data ||
 +	if (!data)
-+		return -ENOMEM;
++		goto no_data;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	membase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(membase))
-+		return PTR_ERR(membase);
++	if (depth != 1 ||
+ 	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
+-		return 0;
++		goto no_chosen;
+ 
+ 	early_init_dt_check_for_initrd(node);
+ 
+@@ -1117,6 +1120,13 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	/* break now */
+ 	return 1;
 +
-+	data->membase = membase;
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.nr_resets = resource_size(res) * BITS_PER_BYTE;
-+	data->rcdev.ops = &stm32_reset_ops;
-+	data->rcdev.of_node = dev->of_node;
-+
-+	return devm_reset_controller_register(dev, &data->rcdev);
-+}
-+
-+static struct platform_driver stm32_reset_driver = {
-+	.probe	= stm32_reset_probe,
-+	.driver = {
-+		.name		= "stm32mp1-reset",
-+		.of_match_table	= stm32_reset_dt_ids,
-+	},
-+};
-+
-+static int __init stm32_reset_init(void)
-+{
-+	return platform_driver_register(&stm32_reset_driver);
-+}
-+
-+postcore_initcall(stm32_reset_init);
++no_chosen:
++#ifdef CONFIG_CMDLINE
++	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++#endif
++no_data:
++	return 0;
+ }
+ 
+ #ifdef CONFIG_HAVE_MEMBLOCK
 -- 
-1.9.1
+2.16.1
