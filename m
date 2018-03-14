@@ -1,226 +1,61 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/4] regulator: bd9571mwv: Add support for DDR backup mode
-Date: Wed, 14 Mar 2018 12:08:42 +0100
-Message-ID: <1521025722-24205-5-git-send-email-geert+renesas@glider.be>
-References: <1521025722-24205-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521025722-24205-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut+renesas@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
+	devices
+Date: Wed, 14 Mar 2018 12:12:05 +0100
+Message-ID: <2217404.A2W3Iek6du@aspire.rjw.lan>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
+	<CAAFQd5A5Rj1KAZjUc5ZUKuKnbkA5Q6aLw9z0H3_kfyBQOOF-gw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5A5Rj1KAZjUc5ZUKuKnbkA5Q6aLw9z0H3_kfyBQOOF-gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BD9571MWV PMIC supports DDR backup mode, which keeps one or more DDR
-rails powered while the main SoC is powered down.
+On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
+> On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
+> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > Hi Tomasz,
+> >
+> > On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> >> Hi Vivek,
+> >>
+> >> Thanks for the patch.
+> >>
+> >> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
+> >> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> >>> The lists managing the device-links can be traversed to
+> >>> find the link between two devices. The device_link_add() APIs
+> >>> does traverse these lists to check if there's already a link
+> >>> setup between the two devices.
+> >>> So, add a new APIs, device_link_find(), to find an existing
+> >>> device link between two devices - suppliers and consumers.
+> >>
+> >> I'm wondering if this API would be useful for anything else that the
+> >> problem we're trying to solve with deleting links without storing them
+> >> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
+> >> better alternative?
+> >
+> > Yea, that sounds simpler i think. Will add this API instead of
+> > find_link(). Thanks.
+> 
+> Perhaps let's wait for a moment to see if there are other opinions. :)
+> 
+> Rafael, Lucas, any thoughts?
 
-Which DDR rails are to be kept powered is board-specific, and controlled
-using the optional "rohm,ddr-backup-power" DT property.  In the absence
-of this property, backup mode is not available.
+It is not clear to me what the device_link_del_dev(consumer, supplier) would do.
 
-Backup mode can be enabled or disabled by the user using the standard
-"wakeup" virtual file in sysfs, e.g. to enable:
-
-    echo enabled > /sys/devices/platform/soc/e60b0000.i2c/i2c-7/7-0030/bd9571mwv-regulator.2.auto/power/wakeup
-
-When the PMIC is configured for backup mode, the role of the accessory
-power switch changes from a power switch to a wake-up switch.
-Two types of switches (or signals) can be used:
-  A. With a momentary power switch (or pulse signal), the PMIC is
-     configured for backup mode in the PMIC driver's suspend callback,
-     during system suspend.
-     Backup mode is enabled by default, as there is no further impact
-     during normal system operation.
-
-  B. With a toggle power switch (or level signal), the following steps
-     must be followed exactly:
-       1. Configure PMIC for backup mode,
-       2. Switch accessory power switch off, to prepare for system
-          suspend, which is a manual step not controlled by software,
-       3. Suspend system.
-     This mode is not yet supported by the driver.
-
-As the switch type is board-specific, and cannot be determined
-automatically, it is obtained from the presence of one of the
-"rohm,rstbmode-*" properties in DT.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Use normal "wakeup" sysfs virtual file instead of adding our own
-    "backup_mode" file,
-  - Differentiate between momentary and toggle power switches:
-      - Support for momentary switches is enabled automatically,
-      - Toggle switches are not yet supported (but still work when
-	backup mode is enabled using i2set from userspace).
----
- drivers/regulator/bd9571mwv-regulator.c | 127 +++++++++++++++++++++++++++++++-
- 1 file changed, 126 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/bd9571mwv-regulator.c b/drivers/regulator/bd9571mwv-regulator.c
-index c67a83d53c4cb76b..be574eb444ebda97 100644
---- a/drivers/regulator/bd9571mwv-regulator.c
-+++ b/drivers/regulator/bd9571mwv-regulator.c
-@@ -24,6 +24,18 @@
- 
- #include <linux/mfd/bd9571mwv.h>
- 
-+struct bd9571mwv_reg {
-+	struct bd9571mwv *bd;
-+
-+	/* DDR Backup Power */
-+	u8 bkup_mode_cnt_keepon;	/* from "rohm,ddr-backup-power" */
-+	u8 bkup_mode_cnt_saved;
-+
-+	/* Power switch type */
-+	bool rstbmode_level;
-+	bool rstbmode_pulse;
-+};
-+
- enum bd9571mwv_regulators { VD09, VD18, VD25, VD33, DVFS };
- 
- #define BD9571MWV_REG(_name, _of, _id, _ops, _vr, _vm, _nv, _min, _step, _lmin)\
-@@ -131,14 +143,99 @@ static struct regulator_desc regulators[] = {
- 		      0x80, 600000, 10000, 0x3c),
- };
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int bd9571mwv_bkup_mode_read(struct bd9571mwv *bd, unsigned int *mode)
-+{
-+	int ret;
-+
-+	ret = regmap_read(bd->regmap, BD9571MWV_BKUP_MODE_CNT, mode);
-+	if (ret) {
-+		dev_err(bd->dev, "failed to read backup mode (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_bkup_mode_write(struct bd9571mwv *bd, unsigned int mode)
-+{
-+	int ret;
-+
-+	ret = regmap_write(bd->regmap, BD9571MWV_BKUP_MODE_CNT, mode);
-+	if (ret) {
-+		dev_err(bd->dev, "failed to configure backup mode 0x%x (%d)\n",
-+			mode, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_suspend(struct device *dev)
-+{
-+	struct bd9571mwv_reg *bdreg = dev_get_drvdata(dev);
-+	unsigned int mode;
-+	int ret;
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	/* Save DDR Backup Mode */
-+	ret = bd9571mwv_bkup_mode_read(bdreg->bd, &mode);
-+	if (ret)
-+		return ret;
-+
-+	bdreg->bkup_mode_cnt_saved = mode;
-+
-+	if (!bdreg->rstbmode_pulse)
-+		return 0;
-+
-+	/* Enable DDR Backup Mode */
-+	mode &= ~BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK;
-+	mode |= bdreg->bkup_mode_cnt_keepon;
-+
-+	if (mode != bdreg->bkup_mode_cnt_saved)
-+		return bd9571mwv_bkup_mode_write(bdreg->bd, mode);
-+
-+	return 0;
-+}
-+
-+static int bd9571mwv_resume(struct device *dev)
-+{
-+	struct bd9571mwv_reg *bdreg = dev_get_drvdata(dev);
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	/* Restore DDR Backup Mode */
-+	return bd9571mwv_bkup_mode_write(bdreg->bd, bdreg->bkup_mode_cnt_saved);
-+}
-+
-+static const struct dev_pm_ops bd9571mwv_pm  = {
-+	SET_SYSTEM_SLEEP_PM_OPS(bd9571mwv_suspend, bd9571mwv_resume)
-+};
-+
-+#define DEV_PM_OPS	&bd9571mwv_pm
-+#else
-+#define DEV_PM_OPS	NULL
-+#endif /* CONFIG_PM_SLEEP */
-+
- static int bd9571mwv_regulator_probe(struct platform_device *pdev)
- {
- 	struct bd9571mwv *bd = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
-+	struct bd9571mwv_reg *bdreg;
- 	struct regulator_dev *rdev;
-+	unsigned int val;
- 	int i;
- 
--	platform_set_drvdata(pdev, bd);
-+	bdreg = devm_kzalloc(&pdev->dev, sizeof(*bdreg), GFP_KERNEL);
-+	if (!bdreg)
-+		return -ENOMEM;
-+
-+	bdreg->bd = bd;
-+
-+	platform_set_drvdata(pdev, bdreg);
- 
- 	config.dev = &pdev->dev;
- 	config.dev->of_node = bd->dev->of_node;
-@@ -155,6 +252,33 @@ static int bd9571mwv_regulator_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	val = 0;
-+	of_property_read_u32(bd->dev->of_node, "rohm,ddr-backup-power", &val);
-+	if (val & ~BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK) {
-+		dev_err(bd->dev, "invalid %s mode %u\n",
-+			"rohm,ddr-backup-power", val);
-+		return -EINVAL;
-+	}
-+	bdreg->bkup_mode_cnt_keepon = val;
-+
-+	bdreg->rstbmode_level = of_property_read_bool(bd->dev->of_node,
-+						      "rohm,rstbmode-level");
-+	bdreg->rstbmode_pulse = of_property_read_bool(bd->dev->of_node,
-+						      "rohm,rstbmode-pulse");
-+	if (bdreg->rstbmode_level && bdreg->rstbmode_pulse) {
-+		dev_err(bd->dev, "only one rohm,rstbmode-* may be specified");
-+		return -EINVAL;
-+	}
-+
-+	if (bdreg->bkup_mode_cnt_keepon) {
-+		device_set_wakeup_capable(&pdev->dev, true);
-+		/*
-+		 * Wakeup is enabled by default in pulse mode, but needs
-+		 * explicit user setup in level mode.
-+		 */
-+		device_set_wakeup_enable(&pdev->dev, bdreg->rstbmode_pulse);
-+	}
-+
- 	return 0;
- }
- 
-@@ -167,6 +291,7 @@ MODULE_DEVICE_TABLE(platform, bd9571mwv_regulator_id_table);
- static struct platform_driver bd9571mwv_regulator_driver = {
- 	.driver = {
- 		.name = "bd9571mwv-regulator",
-+		.pm = DEV_PM_OPS,
- 	},
- 	.probe = bd9571mwv_regulator_probe,
- 	.id_table = bd9571mwv_regulator_id_table,
--- 
-2.7.4
+Thanks,
+Rafael
