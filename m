@@ -1,236 +1,73 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: [PATCH v3 7/7] remoteproc: qcom: Always assert and deassert reset signals in SDM845
-Date: Wed, 14 Mar 2018 14:51:23 +0530
-Message-ID: <1521019283-32212-8-git-send-email-sibis@codeaurora.org>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 0/2] Introduce STM32MP1 Reset driver
+Date: Wed, 14 Mar 2018 09:42:26 +0000
+Message-ID: <12ba9cee-f703-8fc7-75da-de213f5c8aa2@st.com>
+References: <1520958859-27911-1-git-send-email-gabriel.fernandez@st.com>
+ <1521018722.4490.1.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1521018722.4490.1.camel@pengutronix.de>
+Content-Language: en-US
+Content-ID: <401DE63C1C05764D961C4CB5B5609FDB@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 brings a new reset signal ALT_RESET which is a part of the MSS
-subsystem hence requires some of the active clks to be enabled before
-assert/deassert
-
-Reset the modem if the BOOT FSM does timeout
-
-Reset assert/deassert sequence vary across SoCs adding reset, adding
-start/stop helper functions to handle SoC specific reset sequences
-
-Signed-off-by: Sibi S <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_pil.c | 100 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 94 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-index 92bf125..bd8c397 100644
---- a/drivers/remoteproc/qcom_q6v5_pil.c
-+++ b/drivers/remoteproc/qcom_q6v5_pil.c
-@@ -130,11 +130,14 @@ struct rproc_hexagon_res {
- 	struct qcom_mss_reg_res *proxy_supply;
- 	struct qcom_mss_reg_res *active_supply;
- 	char **proxy_clk_names;
-+	char **reset_clk_names;
- 	char **active_clk_names;
- 	int version;
- 	bool need_mem_protection;
- };
- 
-+struct q6v5_reset_ops;
-+
- struct q6v5 {
- 	struct device *dev;
- 	struct rproc *rproc;
-@@ -153,8 +156,10 @@ struct q6v5 {
- 	unsigned stop_bit;
- 
- 	struct clk *active_clks[8];
-+	struct clk *reset_clks[4];
- 	struct clk *proxy_clks[4];
- 	int active_clk_count;
-+	int reset_clk_count;
- 	int proxy_clk_count;
- 
- 	struct reg_info active_regs[1];
-@@ -175,6 +180,7 @@ struct q6v5 {
- 	void *mpss_region;
- 	size_t mpss_size;
- 
-+	const struct q6v5_reset_ops *ops;
- 	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_subdev smd_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
-@@ -184,6 +190,11 @@ struct q6v5 {
- 	int version;
- };
- 
-+struct q6v5_reset_ops {
-+	int (*reset_start)(struct q6v5 *qproc);
-+	int (*reset_stop)(struct q6v5 *qproc);
-+};
-+
- enum {
- 	MSS_MSM8916,
- 	MSS_MSM8974,
-@@ -343,6 +354,52 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
- 	return 0;
- }
- 
-+static void alt_reset_restart(struct q6v5 *qproc, u32 restart)
-+{
-+	writel(restart, qproc->rmb_base + RMB_MBA_ALT_RESET);
-+}
-+
-+static int q6v5_msm_reset_stop(struct q6v5 *qproc)
-+{
-+	return reset_control_assert(qproc->mss_restart);
-+}
-+
-+static int q6v5_msm_reset_start(struct q6v5 *qproc)
-+{
-+	return reset_control_deassert(qproc->mss_restart);
-+}
-+
-+static int q6v5_sdm_reset_stop(struct q6v5 *qproc)
-+{
-+	return reset_control_reset(qproc->mss_restart);
-+}
-+
-+static int q6v5_sdm_reset_start(struct q6v5 *qproc)
-+{
-+	int ret;
-+
-+	alt_reset_restart(qproc, 1);
-+	/* Ensure alt reset is written before restart reg */
-+	udelay(100);
-+
-+	ret = reset_control_reset(qproc->mss_restart);
-+
-+	udelay(100);
-+	alt_reset_restart(qproc, 0);
-+
-+	return ret;
-+}
-+
-+static const struct q6v5_reset_ops q6v5_msm_ops = {
-+	.reset_stop = q6v5_msm_reset_stop,
-+	.reset_start = q6v5_msm_reset_start,
-+};
-+
-+static const struct q6v5_reset_ops q6v5_sdm_ops = {
-+	.reset_stop = q6v5_sdm_reset_stop,
-+	.reset_start = q6v5_sdm_reset_start,
-+};
-+
- static int q6v5_rmb_pbl_wait(struct q6v5 *qproc, int ms)
- {
- 	unsigned long timeout;
-@@ -418,6 +475,8 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 				val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
- 		if (ret) {
- 			dev_err(qproc->dev, "Boot FSM failed to complete.\n");
-+			/* Reset the modem so that boot FSM is in reset state */
-+			qproc->ops->reset_start(qproc);
- 			return ret;
- 		}
- 
-@@ -785,10 +844,18 @@ static int q6v5_start(struct rproc *rproc)
- 		dev_err(qproc->dev, "failed to enable supplies\n");
- 		goto disable_proxy_clk;
- 	}
--	ret = reset_control_deassert(qproc->mss_restart);
-+
-+	ret = q6v5_clk_enable(qproc->dev, qproc->reset_clks,
-+			      qproc->reset_clk_count);
-+	if (ret) {
-+		dev_err(qproc->dev, "failed to enable reset clocks\n");
-+		goto disable_vdd;
-+	}
-+
-+	ret = qproc->ops->reset_start(qproc);
- 	if (ret) {
- 		dev_err(qproc->dev, "failed to deassert mss restart\n");
--		goto disable_vdd;
-+		goto disable_reset_clks;
- 	}
- 
- 	ret = q6v5_clk_enable(qproc->dev, qproc->active_clks,
-@@ -880,7 +947,10 @@ static int q6v5_start(struct rproc *rproc)
- 			 qproc->active_clk_count);
- 
- assert_reset:
--	reset_control_assert(qproc->mss_restart);
-+	qproc->ops->reset_stop(qproc);
-+disable_reset_clks:
-+	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-+			 qproc->reset_clk_count);
- disable_vdd:
- 	q6v5_regulator_disable(qproc, qproc->active_regs,
- 			       qproc->active_reg_count);
-@@ -930,9 +1000,11 @@ static int q6v5_stop(struct rproc *rproc)
- 				      qproc->mpss_phys, qproc->mpss_size);
- 	WARN_ON(ret);
- 
--	reset_control_assert(qproc->mss_restart);
-+	qproc->ops->reset_stop(qproc);
- 	q6v5_clk_disable(qproc->dev, qproc->active_clks,
- 			 qproc->active_clk_count);
-+	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-+			 qproc->reset_clk_count);
- 	q6v5_regulator_disable(qproc, qproc->active_regs,
- 			       qproc->active_reg_count);
- 
-@@ -1179,6 +1251,12 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qproc->dev = &pdev->dev;
- 	qproc->rproc = rproc;
- 	platform_set_drvdata(pdev, qproc);
-+	qproc->version = desc->version;
-+
-+	if (qproc->version == MSS_SDM845)
-+		qproc->ops = &q6v5_sdm_ops;
-+	else
-+		qproc->ops = &q6v5_msm_ops;
- 
- 	init_completion(&qproc->start_done);
- 	init_completion(&qproc->stop_done);
-@@ -1199,6 +1277,14 @@ static int q6v5_probe(struct platform_device *pdev)
- 	}
- 	qproc->proxy_clk_count = ret;
- 
-+	ret = q6v5_init_clocks(&pdev->dev, qproc->reset_clks,
-+			       desc->reset_clk_names);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to get reset clocks.\n");
-+		goto free_rproc;
-+	}
-+	qproc->reset_clk_count = ret;
-+
- 	ret = q6v5_init_clocks(&pdev->dev, qproc->active_clks,
- 			       desc->active_clk_names);
- 	if (ret < 0) {
-@@ -1227,7 +1313,6 @@ static int q6v5_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	qproc->version = desc->version;
- 	qproc->need_mem_protection = desc->need_mem_protection;
- 	ret = q6v5_request_irq(qproc, pdev, "wdog", q6v5_wdog_interrupt);
- 	if (ret < 0)
-@@ -1290,8 +1375,11 @@ static int q6v5_remove(struct platform_device *pdev)
- 			"prng",
- 			NULL
- 	},
--	.active_clk_names = (char*[]){
-+	.reset_clk_names = (char*[]){
- 			"iface",
-+			NULL
-+	},
-+	.active_clk_names = (char*[]){
- 			"bus",
- 			"mem",
- 			"gpll0_mss",
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgUGhpbGlwcCwNCg0KT2theSwgaSB0b28gc3VwcG9ydCB0aGUgaWRlYSB0byBhZGQgY3VzdG9t
+wqAgcmVzZXQgZHJpdmVyLg0KDQpNYW55IFRoYW5rcyBQaGlsaXBwLg0KDQpCZXN0IHJlZ2FyZHMN
+Cg0KR2FicmllbA0KDQoNCk9uIDAzLzE0LzIwMTggMTA6MTIgQU0sIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6DQo+IEhpIEdhYnJpZWwsDQo+DQo+IE9uIFR1ZSwgMjAxOC0wMy0xMyBhdCAxNzozNCArMDEw
+MCwgZ2FicmllbC5mZXJuYW5kZXpAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogR2FicmllbCBGZXJu
+YW5kZXogPGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4+DQo+PiBUaGlzIHBhdGNoLXNldCBl
+bmFibGVzIHRoZSByZXNldCBvZiBTVE0zMk1QMS4NCj4+IEl0IHVzZXMgdGhlIHJlc2V0IHNpbXBs
+ZSBkcml2ZXIgYnkgaW50cm9kdWNpbmcgdGhlIGNsZWFyIHJlZ2lzdGVyIG9mZnNldA0KPj4gcGFy
+YW1ldGVyLg0KPj4gU1RNMzJNUDEgcmVzZXQgSVAgaGFzIGEgcmVnaXN0ZXIgdG8gYXNzZXJ0IGJ5
+IHdyaXRpbmcgJzEnIGFuZCBhbm90aGVyDQo+PiByZWdpc3RlciB0byBkZS1hc3NlcnQgYnkgd3Jp
+dGluZyAnMScuDQo+PiBUaGUgb2Zmc2V0IGJldHdlZW4gdGhpcyB0d28gcmVnaXN0ZXJzIGlzICcw
+eDQnLg0KPiBJIHdvcnJ5IGEgYml0IGFib3V0IGZlYXR1cmUgY3JlZXAgaW4gdGhlIHNpbXBsZS1y
+ZXNldCBkcml2ZXIuDQo+IFlvdXIgcGF0Y2ggb24gaXRzIG93biBpcyBzaW1wbGUgZW5vdWdoLCBh
+bmQgSSdtIG5vdCBvcHBvc2VkIHRvIGFkZCBhDQo+IFNFVC9DTFIgZmVhdHVyZSBvbiBwcmluY2lw
+bGUsIGJ1dCB0aGVyZSBhcmUgYSBmZXcgaXNzdWVzOg0KPg0KPiBUaGUgUkVTRVRfU0lNUExFIEtj
+b25maWcgZGVzY3JpcHRpb24gY3VycmVudGx5IHNheXM6DQo+ICDCoMKgIlRoaXMgZW5hYmxlcyBh
+IHNpbXBsZSByZXNldCBjb250cm9sbGVyIGRyaXZlciBmb3IgcmVzZXQgbGluZXMgdGhhdA0KPiAg
+wqDCoMKgdGhhdCBjYW4gYmUgYXNzZXJ0ZWQgYW5kIGRlYXNzZXJ0ZWQgYnkgdG9nZ2xpbmcgYml0
+cyBpbiBhIGNvbnRpZ3VvdXMsDQo+ICDCoMKgwqBleGNsdXNpdmUgcmVnaXN0ZXIgc3BhY2UuIg0K
+PiBUaGF0IHdvdWxkIGhhdmUgdG8gYmUgZXh0ZW5kZWQgdG8gbWVudGlvbiBTRVQvQ0xSIHJlZ2lz
+dGVyIHBhaXJzIGFzIGFuDQo+IGFsdGVybmF0aXZlLg0KPg0KPiBXaGF0IGFib3V0IHN0YXR1cyAo
+cmVzZXRfc2ltcGxlX3N0YXR1cyk/IENhbiBjdXJyZW50IHJlc2V0IGxpbmUgc3RhdHVzDQo+IGJl
+IHJlYWQgYmFjayBmcm9tIHRoZSBTRVQgcmVnaXN0ZXIsIGFzIGlzIGN1cnJlbnRseSB0cmllZD8g
+SWYgbm90LCBpcw0KPiB0aGVyZSBhIHdheSB0byByZWFkIGN1cnJlbnQgcmVzZXQgbGluZSBzdGF0
+dXMgYmFjayBhdCBhbGw/DQo+DQo+IFRoZSBkYXRhLT5sb2NrIHNwaW5sb2NrIGlzIG9ubHkgbmVl
+ZGVkIHRvIHByb3RlY3QgdGhlIHJlYWQtbW9kaWZ5LXdyaXRlDQo+IGN5Y2xlIG9uIGEgdG9nZ2xl
+IHJlZ2lzdGVyLCBmb3Igc2VwYXJhdGUgU0VUL0NMUiByZWdpc3RlciBhY2Nlc3MgdGhlDQo+IGxv
+Y2tpbmcgaXMgbm90IG5lY2Vzc2FyeS4NCj4NCj4gQXQgdGhpcyBwb2ludCwgaXQgbWF5IG9yIG1h
+eSBub3QgYmUgZWFzaWVyIHRvIGFkZCBhIGN1c3RvbSByZXNldCBkcml2ZXIuDQo+IEVpdGhlciB3
+YXkgeW91IGdvLCB0aGlzIGlzIG1pc3NpbmcgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUN
+Cj4gc3Qsc3RtMzJtcDEtcmNjIGNvbXBhdGlibGUgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Jlc2V0Lg0KPg0KPj4gVGhlIHBhdGNoICdkdC1iaW5kaW5nczogcmVzZXQ6IGFk
+ZCBTVE0zMk1QMSByZXNldHMnIGNvdWxkIGJlIHNxdWFzaGVkDQo+PiB3aXRoIHRoZSBwYXRjaDoN
+Cj4+ICdkdC1iaW5kaW5nczogRG9jdW1lbnQgU1RNMzJNUDEgUmVzZXQgQ2xvY2sgQ29udHJvbGxl
+ciAoUkNDKSBiaW5kaW5ncycNCj4+IGNvbW1pdCAzODMwNjgxZDM1NGYNCj4+DQo+PiBHYWJyaWVs
+IEZlcm5hbmRleiAoMik6DQo+PiAgICBkdC1iaW5kaW5nczogcmVzZXQ6IGFkZCBTVE0zMk1QMSBy
+ZXNldHMNCj4+ICAgIHJlc2V0OiBzaW1wbGU6IEVuYWJsZSBzdG0zMm1wMSByZXNldCBkcml2ZXIN
+Cj4+DQo+PiAgIGRyaXZlcnMvcmVzZXQvcmVzZXQtc2ltcGxlLmMgICAgICAgICAgICAgICAgfCAg
+MjcgKysrKystLQ0KPj4gICBkcml2ZXJzL3Jlc2V0L3Jlc2V0LXNpbXBsZS5oICAgICAgICAgICAg
+ICAgIHwgICAxICsNCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC9zdG0zMm1wMS1yZXNl
+dHMuaCB8IDEwOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDMgZmlsZXMgY2hh
+bmdlZCwgMTMwIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+PiAgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0L3N0bTMybXAxLXJlc2V0cy5oDQo+IHJl
+Z2FyZHMNCj4gUGhpbGlwcA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
