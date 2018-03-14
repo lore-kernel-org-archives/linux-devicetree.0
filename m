@@ -1,59 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Wed, 14 Mar 2018 13:23:37 +0200
-Message-ID: <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
- <20180309182751.GC31988@ti.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
+	devices
+Date: Wed, 14 Mar 2018 20:50:54 +0900
+Message-ID: <CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<CAFp+6iH3R2j0_vboSV6-0k7vQFaZ66iNiTcV3_qSbBGXdM=S_A@mail.gmail.com>
+	<CAAFQd5A5Rj1KAZjUc5ZUKuKnbkA5Q6aLw9z0H3_kfyBQOOF-gw@mail.gmail.com>
+	<2217404.A2W3Iek6du@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180309182751.GC31988@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2217404.A2W3Iek6du-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMDMvMTggMjA6MjcsIEJlbm9pdCBQYXJyb3Qgd3JvdGU6Cgo+PiBJcyBsb2dpY2FsIHBs
-YW5lIGEgaC93IGNvbmNlcHQ/Cj4gCj4gSXQgZG9lcyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNv
-dXJjZS4KCkxvZ2ljYWwgcGxhbmUgaXMgbm90IGEgaHcgY29uY2VwdCwgaXQganVzdCBkZXNjcmli
-ZXMgYSBncm91cCBvZiBvbmUgb3IKdHdvIEhXIHBsYW5lcy4gVGhlbiBhZ2FpbiwgaW4gdGhlIGNv
-bnRleHQgb2YgMmsrIGRpc3BsYXlzLCB0d28gSFcgcGxhbmVzCm11c3QgYWx3YXlzIGJlIHVzZWQg
-dG9nZXRoZXIsIHNvIHRoYXQgd2F5IGl0IGNvdWxkIGJlIGNvbnNpZGVyZWQgYQpzaW5nbGUgSFcg
-cmVzb3VyY2UuCgo+PiBSZWFsbHksIEknbSBza2VwdGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxv
-bmdzIGluIERULiBGb3IgZXhhbXBsZSwKPj4gY2FuJ3QgeW91IGZpZ3VyZSBvdXQgeW91IG5lZWQg
-MiBwaHlzaWNhbCBwbGFuZXMgd2hlbmV2ZXIgeW91cgo+PiBwYW5lbC90aW1pbmcgd2lkdGggaXMg
-Z3JlYXRlciB0aGFuIDIwNDg/Cj4gCj4gQXMgc3RhdGVkIGluIHRoZSBkZXNjcmlwdGlvbiBJIGFk
-ZGVkIGFib3ZlLCB3ZSBjYW5ub3QgaGF2ZSByZXNvdXJjZXMKPiBleHBvc2VkIHRvIHVzZXItc3Bh
-Y2Ugd2hpY2ggY2FuICJkaXNhcHBlYXIiIGR5bmFtaWNhbGx5Lgo+IERvaW5nIHNvIHdvdWxkIGJy
-ZWFrIHVzZXItc3BhY2UgYXBwbGljYXRpb25zIHdoaWNoIHJlbHkgb24gdGhlc2UKPiByZXNvdXJj
-ZXMuCgpUaGUgcXVlc3Rpb24gaXMsIGlmIG5vdCBpbiBEVCwgdGhlbiB3aGVyZT8gSSBhZ3JlZSB0
-aGF0IHRoaXMgaXMgbm90CmV4YWN0bHkgZGVzY3JpYmluZyB0aGUgSFcuIEJ1dCBpdCBjYW4ndCBi
-ZSBkb25lIGR5bmFtaWNhbGx5IGVpdGhlciAob3IKYXQgbGVhc3Qgd2UgaGF2ZSBub3QgZmlndXJl
-ZCBvdXQgYSB3YXkpLiBBbmQgaXQgbXVzdCBiZSB1c2VyIGNvbmZpZ3VyYWJsZS4KCk1vZHVsZSBw
-YXJhbWV0ZXJzIGFyZSBhbiBvcHRpb24sIGJ1dCBpdCB3b3VsZCBiZSBzb21ld2hhdCBkaWZmaWN1
-bHQgdG8KZ2l2ZSBhbGwgdGhpcyBpbmZvcm1hdGlvbiB0aGVyZS4gQW5kIGFsc28sIGlmIHlvdXIg
-Ym9hcmQgaGFzIGEgMmsrCmRpc3BsYXksIHlvdSBtdXN0IGhhdmUgdGhlc2UgY29uZmlndXJhdGlv
-bnMgZ2l2ZW4gdG8gdGhlIGRyaXZlciwgaXQncwpub3Qgb3B0aW9uYWwuCgpBbmQgd2hpbGUgaXQn
-cyBwZXJoYXBzIHN0cmV0Y2hpbmcgdGhlIGRlZmluaXRpb25zIGEgYml0LCBJIGd1ZXNzIG9uZQpj
-b3VsZCBhcmd1ZSB0aGF0IHRoaXMgZGVzY3JpYmVzIHRoZSBIVyBpbiBhIHdheTogaXQgZGVzY3Jp
-YmVzIGhvdyB0aGUgSFcKcmVzb3VyY2VzIG11c3QgYmUgdXNlZCBpZiB5b3UgaGF2ZSBhIGRpc3Bs
-YXkgb2YgMmsrIHdpZHRoLCBhbmQgaXMgbm90IGFzCnN1Y2ggcmVsYXRlZCB0byBMaW51eCBvciBE
-Uk0uCgogVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmth
-dHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBL
-b3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+> On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
+>> On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
+>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> > Hi Tomasz,
+>> >
+>> > On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> >> Hi Vivek,
+>> >>
+>> >> Thanks for the patch.
+>> >>
+>> >> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
+>> >> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> >>> The lists managing the device-links can be traversed to
+>> >>> find the link between two devices. The device_link_add() APIs
+>> >>> does traverse these lists to check if there's already a link
+>> >>> setup between the two devices.
+>> >>> So, add a new APIs, device_link_find(), to find an existing
+>> >>> device link between two devices - suppliers and consumers.
+>> >>
+>> >> I'm wondering if this API would be useful for anything else that the
+>> >> problem we're trying to solve with deleting links without storing them
+>> >> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
+>> >> better alternative?
+>> >
+>> > Yea, that sounds simpler i think. Will add this API instead of
+>> > find_link(). Thanks.
+>>
+>> Perhaps let's wait for a moment to see if there are other opinions. :)
+>>
+>> Rafael, Lucas, any thoughts?
+>
+> It is not clear to me what the device_link_del_dev(consumer, supplier) would do.
+
+It would delete a link between consumer and supplier.
+
+Best regards,
+Tomasz
