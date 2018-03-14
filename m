@@ -1,50 +1,79 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: phy-mtk-tphy: add properties for U2
- slew rate calibrate
-Date: Wed, 14 Mar 2018 14:09:44 +0800
-Message-ID: <1521007784.3717.17.camel@mhfsdcap03>
-References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520832210.git.chunfeng.yun@mediatek.com>
-         <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
-         <6810b7b4-3023-2e76-5fbf-7e442067cbc4@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Subject: [PATCH] arm64: dts: uniphier: divide I2S and S/PDIF audio out pin-mux group
+Date: Wed, 14 Mar 2018 15:37:00 +0900
+Message-ID: <20180314063700.13365-1-suzuki.katsuhiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6810b7b4-3023-2e76-5fbf-7e442067cbc4@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-03-14 at 00:21 +0100, Matthias Brugger wrote:
-> 
-> On 03/12/2018 06:25 AM, Chunfeng Yun wrote:
-> > Add two properties of ref_clk and coefficient used by U2 slew rate
-> > calibrate which may vary on different SoCs
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> 
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> 
-Thanks again
+This patch divides large pin-mux group 'aio' of UniPhier LD11/LD20
+audio system as following:
+  aout1   : 8ch I2S output: AO1DACCK, AO1BCK, AO1LRCK, AO1D[0-2]
+  aoutiec1: S/PDIF output : AO1IEC, AO1ARC
 
-> > ---
-> >  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index 41e09ed..0d34b2b 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -27,6 +27,10 @@ Optional properties (controller (parent) node):
-> >   - reg		: offset and length of register shared by multiple ports,
-> >  		  exclude port's private register. It is needed on mt2701
-> >  		  and mt8173, but not on mt2712.
-> > + - mediatek,src-ref-clk-mhz	: frequency of reference clock for slew rate
-> > +		  calibrate
-> > + - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
-> > +		  SoC process
-> >  
-> >  Required properties (port (child) node):
-> >  - reg		: address and length of the register set for the port.
-> > 
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+---
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 5 +++--
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 9 +++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index c17b77091129..e64b03fc0cae 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -192,7 +192,8 @@
+ 			reg = <0x56000000 0x80000>;
+ 			interrupts = <0 144 4>;
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_aout>;
++			pinctrl-0 = <&pinctrl_aout1>,
++				    <&pinctrl_aoutiec1>;
+ 			clock-names = "aio";
+ 			clocks = <&sys_clk 40>;
+ 			reset-names = "aio";
+@@ -578,7 +579,7 @@
+ 
+ #include "uniphier-pinctrl.dtsi"
+ 
+-&pinctrl_aout {
++&pinctrl_aoutiec1 {
+ 	drive-strength = <4>;	/* default: 4mA */
+ 
+ 	ao1arc {
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index c85e790fd00d..9a5df24059a2 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -292,7 +292,8 @@
+ 			reg = <0x56000000 0x80000>;
+ 			interrupts = <0 144 4>;
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_aout>;
++			pinctrl-0 = <&pinctrl_aout1>,
++				    <&pinctrl_aoutiec1>;
+ 			clock-names = "aio";
+ 			clocks = <&sys_clk 40>;
+ 			reset-names = "aio";
+@@ -633,13 +634,17 @@
+ 
+ #include "uniphier-pinctrl.dtsi"
+ 
+-&pinctrl_aout {
++&pinctrl_aout1 {
+ 	drive-strength = <4>;	/* default: 3.5mA */
+ 
+ 	ao1dacck {
+ 		pins = "AO1DACCK";
+ 		drive-strength = <5>;	/* 5mA */
+ 	};
++};
++
++&pinctrl_aoutiec1 {
++	drive-strength = <4>;	/* default: 3.5mA */
+ 
+ 	ao1arc {
+ 		pins = "AO1ARC";
+-- 
+2.16.1
