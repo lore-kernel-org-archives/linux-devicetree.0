@@ -1,70 +1,89 @@
-Return-Path: <SRS0=BtsV=GC=ni.com=prvs=260901fb48=brad.mouring@kernel.org>
-From: Brad Mouring <brad.mouring@ni.com>
-Subject: [PATCH v3 net-next 3/4] net: macb: Add phy-handle DT support
-Date: Mon, 12 Mar 2018 12:10:00 -0500
-Message-ID: <20180312171001.129209-4-brad.mouring@ni.com>
-In-Reply-To: <20180312171001.129209-1-brad.mouring@ni.com>
-References: <20180310161718.GC29174@lunn.ch>
- <20180312171001.129209-1-brad.mouring@ni.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Michael Grzeschik <m.grzeschik@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Julia Cartwright <julia@ni.com>, devicetree@vger.kernel.org, Brad Mouring <brad.mouring@ni.com>
+Return-Path: <SRS0=1M28=GE=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v6 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
+Date: Wed, 14 Mar 2018 14:16:00 +0100
+Message-Id: <20180314131602.1531-1-maxime.ripard@bootlin.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This optional binding (as described in the ethernet DT bindings doc)
-directs the netdev to the phydev to use. This is useful for a phy
-chip that has >1 phy in it, and two netdevs are using the same phy
-chip (i.e. the second mac's phy lives on the first mac's MDIO bus)
+Hi,
 
-The devicetree snippet would look something like this:
+Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
 
-ethernet@feedf00d {
-	...
-	phy-handle = <&phy0> // the first netdev is physically wired to phy0
-	...
-	phy0: phy@0 {
-		...
-		reg = <0x0> // MDIO address 0
-		...
-	}
-	phy1: phy@1 {
-		...
-		reg = <0x1> // MDIO address 1
-		...
-	}
-...
-}
+This IP block is able to receive 4 video streams and stream them over
+a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
+interfaces to controllers generating some video signals, like a camera
+or a pattern generator.
 
-ethernet@deadbeef {
-	...
-	phy-handle = <&phy1> // tells the driver to use phy1 on the
-						 // first mac's mdio bus (it's wired thusly)
-	...
-}
+It is able to map input streams to CSI2 virtual channels and datatypes
+dynamically. The streaming devices choose their virtual channels
+through an additional signal that is transparent to the CSI2-TX. The
+datatypes however are yet another additional input signal, and can be
+mapped to any CSI2 datatypes.
 
-The work done to add the phy_node in the first place (dacdbb4dfc1a1:
-"net: macb: add fixed-link node support") will consume the
-device_node (if found).
+Since v4l2 doesn't really allow for that setup at the moment, this
+preliminary version is a rather dumb one in order to start the
+discussion on how to address this properly.
 
-Signed-off-by: Brad Mouring <brad.mouring@ni.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+Let me know what you think!
+Maxime
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index db1dc301bed3..b0700a531f3e 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -488,6 +488,9 @@ static int macb_mii_probe(struct net_device *dev)
- 			}
- 			bp->phy_node = of_node_get(np);
- 		} else {
-+			/* attempt to find a phy-handle */
-+			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
-+
- 			/* fallback to standard phy registration if no phy were
- 			 * found during dt phy registration
- 			 */
+Changes from v5:
+  - Changed the return type to void for csi2tx_stop
+  - Checked for the pad index in get/set_pad_format
+  - Made a comment that the DPHY registers are for the DPHY *interface*
+    register
+
+Changes from v4:
+  - After playing a bit with the pad multiplexing patches, found that it
+    was making much more sense to have the subdev notifiers for the source
+    subdev rather for the sink that might even be outside of Linux control.
+    Removed the notifier for now.
+
+Changes from v3:
+  - Added a comment about entity links walk concurrency
+  - Changed the default resolution to 1280x720
+  - Changed usleep_range calls to udelay
+  - Reworked the reference counting mechanism to remove a race
+    condition by adding a mutex instead of an atomic count
+  - Changed the entity function to MEDIA_ENT_F_VID_IF_BRIDGE
+  - Changed the name of the reg variable in _get_resources to dev_cfg
+  - Removed the redundant error message in the devm_ioremap_resource
+    error path
+  - Moved the subdev s_stream call before enabling the TX bridge
+  - Changed some int types to unsigned
+  - Init'd the pad formats properly
+  - Fixed typo in the CSI2TX_LANES_MAX define name
+  - Added Sakari Acked-by
+
+Changes from v2:
+  - Use SPDX license header
+  - Use the lane mapping from DT
+
+Changes from v1:
+  - Add a subdev notifier and start our downstream subdevice in
+    s_stream  
+  - Based the decision to enable the stream or not on the link state
+    instead of whether a format was being set on the pad
+  - Put the controller back in reset when stopping the pipeline
+  - Clarified the enpoints number in the DT binding
+  - Added a default format for the pads
+  - Added some missing const
+  - Added more explicit comments
+  - Rebased on 4.15
+
+Maxime Ripard (2):
+  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+
+ .../devicetree/bindings/media/cdns,csi2tx.txt      |  98 ++++
+ drivers/media/platform/cadence/Kconfig             |  11 +
+ drivers/media/platform/cadence/Makefile            |   1 +
+ drivers/media/platform/cadence/cdns-csi2tx.c       | 528 +++++++++++++++++++++
+ 4 files changed, 638 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+
 -- 
-2.16.2
+2.14.3
