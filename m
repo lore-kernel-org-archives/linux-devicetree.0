@@ -1,80 +1,65 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Wed, 14 Mar 2018 20:51:02 +0100
-Message-ID: <494C4C44-1949-405E-91DA-1B40100ED2E6@holtmann.org>
-References: <20180314155514.3374-1-thierry.escande@linaro.org>
- <20180314155514.3374-3-thierry.escande@linaro.org>
- <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
- <20180314183043.GX18510@minitux>
- <D999852D-E9A7-41D2-9878-A93CB4D43D0C@holtmann.org>
- <20180314190522.GY18510@minitux>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180314190522.GY18510@minitux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] arm64: dts: renesas: eagle: add EtherAVB pins
+Date: Wed, 14 Mar 2018 22:58:33 +0300
+Message-ID: <382aeecb-c484-ec27-1ef1-8da1673c2c14@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Add the (previously omitted) EtherAVB pin data to the Eagle board's
+device tree.
 
->>>>> +		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->>>> 
->>>> can we use a common name here. I think that Nokia and Broadcom drivers
->>>> define one. And if this is the enable/shutdown GPIO, we should name it
->>>> consistently across all manufacturers. It essentially does the same on
->>>> Bluetooth UART chips no matter what chip is behind them.
->>>> 
->>> 
->>> Broadcomm has a device-wakup-gpios and Nokia has bluetooth-wakup-gpios.
->>> It might be that these behave in the same way, but from the description
->>> they only trigger the wakeup.
->> 
->> that is something that we might need to start fixing. I really prefer
->> if we name the GPIOs a bit more consistent.
->> 
->>> The reason for the proposed naming here is that the pin is named
->>> "BT_DISABLE_N" in the datasheet.
->> 
->> That is not a reason I buy. So the next board comes around that labels
->> it in the data sheet BT_DISABLE_YEAH_SUPER_GREAT and you send me a
->> patch to the driver to look for that name. If the GPIO does the same
->> thing, I couldn’t care less what the data sheet says. That might be
->> a comment in the DT file, but it should not pollute the driver code.
->> 
-> 
-> BT_DISABLE_N is the name of this pin in the datasheet of the QCA chip,
-> not on the board, so this name is the same regardless of what you name
-> the line or gpio your board connect it to.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-and QCA chip v1 and QCA chip v2 will use the same driver and same firmware loading mechanism. So why do we have to add a new GPIO naming if they decide to change the name in the data sheet. With Bluetooth it is pretty much all the same. Every UART chip has a shutdown/reset GPIO to enable/disable the chip behind the UART.
+---
+The patch is against the 'renesas-devel-20180314-v4.16-rc5' tag of Simon's
+'renesas.git repo. It depends on the R8A77970 PFC driver patch adding EtherAVB
+pin groups (posted yesterday) in order to work properly...
 
->> A new board should not require driver changes, you just ship a new DT
->> for that board and an existing driver hopefully just does the job. No
->> matter how someone named a GPIO in a piece of paper.
->> 
-> 
-> I totally agree with the fact that the board should not affect the
-> naming of the gpio in the driver. But I do enjoy when we refer to pins
-> by their real name - instead of having to guess which pin in the _chip_
-> specification the driver actually refer to.
-> 
-> 
-> That said, what name would you prefer for this?
-> 
-> Afaict this is not "wakeup" and there are a few extra steps between the
-> disabled state and "bluetooth is enabled", so "enable" feels slightly
-> wrong. And it probably should be "bluetooth" and not just "device" as
-> this refers to a pin on a WiFi/BT combo chip.
+Changes in version 2:
+- updated the pin groups according to the recent PFC driver patch;
+- updated due to  the patch reordering.
 
-The Broadcom side called it shutdown GPIO, it is essentially the shutdown/reset GPIO or power on/off GPIO. Personally I do not care what it is named, but it will be all the same for all Bluetooth chips. Take a poll from Broadcom, Intel, Realtek and Qualcomm and you can pick a reasonable common name.
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-For the wakeup GPIOs, these are different and depend on if there is some low-power mode provided. You would need to check the data sheet to see if they provide more advanced low-power state handling.
-
-Regards
-
-Marcel
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+@@ -34,6 +34,9 @@
+ };
+ 
+ &avb {
++	pinctrl-0 = <&avb_pins>;
++	pinctrl-names = "default";
++
+ 	renesas,no-ether-link;
+ 	phy-handle = <&phy0>;
+ 	phy-mode = "rgmii-id";
+@@ -71,6 +74,11 @@
+ };
+ 
+ &pfc {
++	avb_pins: avb0 {
++		groups = "avb0_mdio", "avb0_rgmii", "avb0_txcrefclk";
++		function = "avb0";
++	};
++
+ 	i2c0_pins: i2c0 {
+ 		groups = "i2c0";
+ 		function = "i2c0";
