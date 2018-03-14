@@ -1,53 +1,108 @@
 From: Sibi S <sibis@codeaurora.org>
-Subject: [PATCH v3 0/7] Add support for remoteproc modem-pil on SDM845 SoCs
-Date: Wed, 14 Mar 2018 14:51:16 +0530
-Message-ID: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
+Subject: [PATCH v3 1/7] dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
+Date: Wed, 14 Mar 2018 14:51:17 +0530
+Message-ID: <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
+References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
 Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series add support for remoteproc Q6v5 modem-pil on Qualcomm
-SDM845 SoC. The second patch adds AOSS (Always on subsystem) reset driver
-to provide for mss reset line. The fourth patch adds the APCS offset for
-SDM845. The last couple of patches add the resets sequence for Q6 on
-SDM845 and adds helper functions for arbitrary reset assert/deassert
-sequences.
+Add SDM845 AOSS (always on subsystem) reset controller binding
 
-V3:
-   Removed syscon dependency for the aoss reset driver
-   Split dt-bindings and the aoss reset driver into separate patches
-   Corrected few typos and replaced misconfigured author name
-
-V2:
-   Addressed reset-qcom-aoss review suggestions and reworked
-   re-ordering of the active clk and reset sequence in
-   qcom_q6v5_pil
-
-Sibi S (7):
-  dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
-  reset: qcom: AOSS (always on subsystem) reset controller
-  dt-bindings: mailbox: Add APCS global binding for SDM845 SoCs
-  mailbox: Add support for Qualcomm SDM845 SoCs
-  dt-bindings: remoteproc: Add Q6v5 Modem PIL binding for SDM845
-  remoteproc: qcom: Add support for mss remoteproc on SDM845
-  remoteproc: qcom: Always assert and deassert reset signals in SDM845
-
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   1 +
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
- .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
- drivers/mailbox/qcom-apcs-ipc-mailbox.c            |   1 +
- drivers/remoteproc/qcom_q6v5_pil.c                 | 163 ++++++++++++++++++++-
- drivers/reset/Kconfig                              |  10 ++
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-qcom-aoss.c                    | 156 ++++++++++++++++++++
- include/dt-bindings/reset/qcom,sdm845-aoss.h       |  17 +++
- 9 files changed, 398 insertions(+), 6 deletions(-)
+Signed-off-by: Sibi S <sibis@codeaurora.org>
+---
+ .../devicetree/bindings/reset/qcom,aoss-reset.txt  | 54 ++++++++++++++++++++++
+ include/dt-bindings/reset/qcom,sdm845-aoss.h       | 17 +++++++
+ 2 files changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
- create mode 100644 drivers/reset/reset-qcom-aoss.c
  create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
 
+diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+new file mode 100644
+index 0000000..04dca76
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+@@ -0,0 +1,54 @@
++Qualcomm AOSS Reset Controller
++======================================
++
++This binding describes a reset-controller found on AOSS (always on subsystem)
++for Qualcomm SDM845 SoCs.
++
++Required properties:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be:
++		    "qcom,sdm845-aoss-reset"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the register
++	            space.
++
++
++- #reset-cells:
++	Usage: required
++	Value type: <uint>
++	Definition: must be 1; cell entry represents the reset index.
++
++example:
++
++aoss_reset: qcom,reset-controller@b2e0100 {
++	compatible = "qcom,sdm845-aoss-reset";
++	reg = <0xc2b0000 0x20004>;
++	#reset-cells = <1>;
++};
++
++
++Specifying reset lines connected to IP modules
++==============================================
++
++Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
++
++For list of all valid reset indicies see
++<dt-bindings/reset/qcom,sdm845-aoss.h>
++
++Example:
++
++modem-pil@4080000 {
++	...
++
++	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
++	reset-names = "mss_restart";
++
++	...
++};
+diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+new file mode 100644
+index 0000000..e9b38fc
+--- /dev/null
++++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2018 The Linux Foundation. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
++#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
++
++#define AOSS_CC_MSS_RESTART	0
++#define AOSS_CC_CAMSS_RESTART	1
++#define AOSS_CC_VENUS_RESTART	2
++#define AOSS_CC_GPU_RESTART	3
++#define AOSS_CC_DISPSS_RESTART	4
++#define AOSS_CC_WCSS_RESTART	5
++#define AOSS_CC_LPASS_RESTART	6
++
++#endif
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
