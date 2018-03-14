@@ -1,37 +1,71 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: msm8992: add pstore-ramoops support
-Date: Tue, 13 Mar 2018 19:44:39 -0700
-Message-ID: <20180314024439.GC11034@tuxbook-pro>
-References: <1520843817-9667-1-git-send-email-jeremymc@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1520843817-9667-1-git-send-email-jeremymc@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jeremy McNicoll <jeremymc@redhat.com>
-Cc: devicetree@vger.kernel.org, keescook@chromium.org, linux-arm-msm@vger.kernel.org, dianders@chromium.org, robh+dt@kernel.org, zhuoweizhang@yahoo.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Subject: [PATCH] ARM: dts: uniphier: add audio in/out pin-mux node
+Date: Wed, 14 Mar 2018 14:17:32 +0900
+Message-ID: <20180314051732.6177-1-suzuki.katsuhiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 12 Mar 01:36 PDT 2018, Jeremy McNicoll wrote:
+The UniPhier AIO audio system needs I2S data in/out lines
+and clock signal pins to connect external codec chip.
 
-> With the addition of this ramoops node it enables post mortem
-> analysis if a debug cable is not attached and/or not available.
-> 
-> All addresses and values were extracted from CAF AOSP marshmallow
-> DR 1.6.
-> 
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+---
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi | 40 +++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index de481c372467..c213f17a12ca 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -13,6 +13,46 @@
+ 		function = "aout";
+ 	};
+ 
++	pinctrl_ain1: ain1 {
++		groups = "ain1";
++		function = "ain1";
++	};
++
++	pinctrl_ain2: ain2 {
++		groups = "ain2";
++		function = "ain2";
++	};
++
++	pinctrl_ainiec1: ainiec1 {
++		groups = "ainiec1";
++		function = "ainiec1";
++	};
++
++	pinctrl_aout1: aout1 {
++		groups = "aout1";
++		function = "aout1";
++	};
++
++	pinctrl_aout2: aout2 {
++		groups = "aout2";
++		function = "aout2";
++	};
++
++	pinctrl_aout3: aout3 {
++		groups = "aout3";
++		function = "aout3";
++	};
++
++	pinctrl_aoutiec1: aoutiec1 {
++		groups = "aoutiec1";
++		function = "aoutiec1";
++	};
++
++	pinctrl_aoutiec2: aoutiec2 {
++		groups = "aoutiec2";
++		function = "aoutiec2";
++	};
++
+ 	pinctrl_emmc: emmc {
+ 		groups = "emmc", "emmc_dat8";
+ 		function = "emmc";
+-- 
+2.16.1
