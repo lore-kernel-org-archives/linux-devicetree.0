@@ -1,53 +1,36 @@
-Return-Path: <SRS0=gCQM=GE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-dm3nam03on0058.outbound.protection.outlook.com ([104.47.41.58]:25007
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932372AbeCNRDi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Mar 2018 13:03:38 -0400
-From: Sakis Panou <sakisp@xilinx.com>
-Subject: RE: Automatic EDA output to DTS
-Date: Wed, 14 Mar 2018 17:03:35 +0000
-Message-ID: <BN6PR02MB24513C9AAF2227E542FCE992A4D10@BN6PR02MB2451.namprd02.prod.outlook.com>
-References: <3d391844-6f9d-4d20-b95b-5c88afc7c749@xilinx.com>
- <CACxGe6sC4AKzdGxFCzjKhN5yYpKwPbPOUTxajvs4SQmSwneJyw@mail.gmail.com>
-In-Reply-To: <CACxGe6sC4AKzdGxFCzjKhN5yYpKwPbPOUTxajvs4SQmSwneJyw@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=g2yf=GE=secretlab.ca=glikely@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Michal Simek <michal.simek@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Sender: glikely@secretlab.ca
+In-Reply-To: <3d391844-6f9d-4d20-b95b-5c88afc7c749@xilinx.com>
+References: <3d391844-6f9d-4d20-b95b-5c88afc7c749@xilinx.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Wed, 14 Mar 2018 14:44:07 +0000
+Message-ID: <CACxGe6sC4AKzdGxFCzjKhN5yYpKwPbPOUTxajvs4SQmSwneJyw@mail.gmail.com>
+Subject: Re: Automatic EDA output to DTS
+Content-Type: text/plain; charset="UTF-8"
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sakis Panou <sakisp@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-R2VudHMsICB0aGFua3MgZm9yIHRoZSBsaW5rIGFuZCB0aGUgZmVlZGJhY2suIE11Y2ggYXBwcmVj
-aWF0ZWQuIA0KDQpJIHRoaW5rIHRvIGF2b2lkIGdldHRpbmcgImRyb3duZWQiIGluIHRoZSBub2lz
-ZSBvZiB0aGUgdmVyeSBsb3cgbGV2ZWwgc2NoZW1hdGljIGluZm8sIHBlcmhhcHMgdGhpcyBjYW4g
-YmUgaGFuZGxlZCBieSBmb2N1c2luZyBvbiBzcGVjaWZpYyB3ZWxsIGRlZmluZWQgYnVzc2VzIHRv
-IHN0YXJ0IHdpdGggLSBub3QgaWRlYWwgYnV0IHN0aWxsLiAgV2UgaGF2ZSBzb21ldGhpbmcgYXQg
-WGlsaW54IHRoYXQgd29ya3MgYXQgYmxvY2sgZGlhZ3JhbSBsZXZlbCBidXQgdG9kYXkgaXQgaXMg
-bGltaXRlZC4gIEd1bXN0aXggc2VlbXMgdG8gaGF2ZSBhIHZlcnkgaW50ZXJlc3RpbmcgY29uY2Vw
-dC4gQWdhaW4gdGhhbmtzIGZvciB0aGUgaW5mbyEgDQoNCkNoZWVycywNClNha2lzDQoNCi0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBnbGlrZWx5QHNlY3JldGxhYi5jYSBbbWFpbHRv
-OmdsaWtlbHlAc2VjcmV0bGFiLmNhXSBPbiBCZWhhbGYgT2YgR3JhbnQgTGlrZWx5DQpTZW50OiBX
-ZWRuZXNkYXksIE1hcmNoIDE0LCAyMDE4IDc6NDQgQU0NClRvOiBNaWNoYWwgU2ltZWsgPG1pY2hh
-bC5zaW1la0B4aWxpbnguY29tPg0KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBSb2Ig
-SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgRnJhbmsgUm93YW5kIDxmcm93YW5kLmxpc3RA
-Z21haWwuY29tPjsgU2FraXMgUGFub3UgPHNha2lzcEB4aWxpbnguY29tPg0KU3ViamVjdDogUmU6
-IEF1dG9tYXRpYyBFREEgb3V0cHV0IHRvIERUUw0KDQpPbiBXZWQsIE1hciAxNCwgMjAxOCBhdCAy
-OjM5IFBNLCBNaWNoYWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPiB3cm90ZToNCj4g
-SGkgZ3V5cywNCj4NCj4gQXJlIHlvdSBhd2FyZSBhYm91dCBhbnkgYWN0aXZpdHkgb3IgYW55IHBs
-YW4gZm9yIHRha2luZyB0aGUgb3V0cHV0IG9mIA0KPiBhbiBFREEgdG9vbCBzdWNoIGFzIFByb3Rl
-bCwgT3JjYWQsIENhZGVuY2UgQWxsZWdybywgS2lDYWQsIChvdGhlcikgYW5kIA0KPiBjb252ZXJ0
-aW5nIGl0IHRvIGEgZnVsbCBibG93IERUUyhJKSBmaWxlKHMpIHRvIGRlc2NyaWJlIHRvIHRoZSBi
-b2FyZCANCj4gZGV2aWNlIGxldmVsIHRvcG9sb2d5Pw0KDQpJIGtub3cgdGhhdCBHdW1zdGl4IGhh
-cyBhIHRvb2wgdGhhdCBvdXRwdXRzIGEgLmR0cyBmb3IgYSBib2FyZCBkZXNpZ24uDQpNb3N0bHkg
-dGhleSBkbyBjdXN0b20gY2FycmllciBib2FyZHMgZm9yIGV4aXN0aW5nIG1vZHVsZXMsIHNvIHRo
-ZSBuZXcgRFRTIGJ1aWxkcyBvbiB0b3Agb2YgdGhlIGJhc2Vib2FyZCBkdHMuDQoNCkkgaGF2ZW4n
-dCBoZWFyZCBvZiBhbnkgb3RoZXIgcHJvamVjdHMuIFRyYWRpdGlvbmFsIHNjaGVtYXRpYyBjYXB0
-dXJlIG9wZXJhdGVzIGF0IGEgcHJldHR5IGxvdyBsZXZlbCwgc28gaXQgbWF5IGJlIGRpZmZpY3Vs
-dCB0byBnZW5lcmF0ZSB1c2VmdWwgLmR0cyBmaWxlcyBmcm9tIHRoYXQuIEl0IHdvdWxkIGJlIGlu
-dGVyZXN0aW5nIHRvIGhhdmUgYSB0b29sIHRoYXQgc3RhcnRzIGZyb20gYSBibG9jayBkaWFncmFt
-IGFzIGlucHV0IHRvIHRoZSBzY2hlbWF0aWMgY2FwdHVyZSBhbmQgdGhhdCBjb3VsZCBhbHNvIG91
-dHB1dCAuZHRzIGRlc2NyaXB0aW9ucy4NCg0KaHR0cHM6Ly93d3cuZ3Vtc3RpeC5jb20vZ2VwcGV0
-dG8vb3ZlcnZpZXcvI2Rlc2lnbg0KDQpDaGVlcnMsDQpnLg0K
+On Wed, Mar 14, 2018 at 2:39 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+> Hi guys,
+>
+> Are you aware about any activity or any plan for taking the output of an
+> EDA tool such as Protel, Orcad, Cadence Allegro, KiCad, (other) and
+> converting it to a full blow DTS(I) file(s) to describe to the board
+> device level topology?
+
+I know that Gumstix has a tool that outputs a .dts for a board design.
+Mostly they do custom carrier boards for existing modules, so the new
+DTS builds on top of the baseboard dts.
+
+I haven't heard of any other projects. Traditional schematic capture
+operates at a pretty low level, so it may be difficult to generate
+useful .dts files from that. It would be interesting to have a tool
+that starts from a block diagram as input to the schematic capture and
+that could also output .dts descriptions.
+
+https://www.gumstix.com/geppetto/overview/#design
+
+Cheers,
+g.
