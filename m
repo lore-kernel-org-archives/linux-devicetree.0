@@ -1,67 +1,53 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 0/2] Introduce STM32MP1 Reset driver
-Date: Wed, 14 Mar 2018 10:12:02 +0100
-Message-ID: <1521018722.4490.1.camel@pengutronix.de>
-References: <1520958859-27911-1-git-send-email-gabriel.fernandez@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Sibi S <sibis@codeaurora.org>
+Subject: [PATCH v3 0/7] Add support for remoteproc modem-pil on SDM845 SoCs
+Date: Wed, 14 Mar 2018 14:51:16 +0530
+Message-ID: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520958859-27911-1-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gabriel.fernandez.st@gmail.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org
+To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+This patch series add support for remoteproc Q6v5 modem-pil on Qualcomm
+SDM845 SoC. The second patch adds AOSS (Always on subsystem) reset driver
+to provide for mss reset line. The fourth patch adds the APCS offset for
+SDM845. The last couple of patches add the resets sequence for Q6 on
+SDM845 and adds helper functions for arbitrary reset assert/deassert
+sequences.
 
-On Tue, 2018-03-13 at 17:34 +0100, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> This patch-set enables the reset of STM32MP1.
-> It uses the reset simple driver by introducing the clear register offset
-> parameter.
-> STM32MP1 reset IP has a register to assert by writing '1' and another
-> register to de-assert by writing '1'.
-> The offset between this two registers is '0x4'.
+V3:
+   Removed syscon dependency for the aoss reset driver
+   Split dt-bindings and the aoss reset driver into separate patches
+   Corrected few typos and replaced misconfigured author name
 
-I worry a bit about feature creep in the simple-reset driver.
-Your patch on its own is simple enough, and I'm not opposed to add a
-SET/CLR feature on principle, but there are a few issues:
+V2:
+   Addressed reset-qcom-aoss review suggestions and reworked
+   re-ordering of the active clk and reset sequence in
+   qcom_q6v5_pil
 
-The RESET_SIMPLE Kconfig description currently says:
-  "This enables a simple reset controller driver for reset lines that
-   that can be asserted and deasserted by toggling bits in a contiguous,
-   exclusive register space."
-That would have to be extended to mention SET/CLR register pairs as an
-alternative.
+Sibi S (7):
+  dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
+  reset: qcom: AOSS (always on subsystem) reset controller
+  dt-bindings: mailbox: Add APCS global binding for SDM845 SoCs
+  mailbox: Add support for Qualcomm SDM845 SoCs
+  dt-bindings: remoteproc: Add Q6v5 Modem PIL binding for SDM845
+  remoteproc: qcom: Add support for mss remoteproc on SDM845
+  remoteproc: qcom: Always assert and deassert reset signals in SDM845
 
-What about status (reset_simple_status)? Can current reset line status
-be read back from the SET register, as is currently tried? If not, is
-there a way to read current reset line status back at all?
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   1 +
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
+ .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |   1 +
+ drivers/remoteproc/qcom_q6v5_pil.c                 | 163 ++++++++++++++++++++-
+ drivers/reset/Kconfig                              |  10 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-qcom-aoss.c                    | 156 ++++++++++++++++++++
+ include/dt-bindings/reset/qcom,sdm845-aoss.h       |  17 +++
+ 9 files changed, 398 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 drivers/reset/reset-qcom-aoss.c
+ create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
 
-The data->lock spinlock is only needed to protect the read-modify-write
-cycle on a toggle register, for separate SET/CLR register access the
-locking is not necessary.
-
-At this point, it may or may not be easier to add a custom reset driver.
-Either way you go, this is missing binding documentation for the
-st,stm32mp1-rcc compatible in Documentation/devicetree/bindings/reset.
-
-> The patch 'dt-bindings: reset: add STM32MP1 resets' could be squashed
-> with the patch:
-> 'dt-bindings: Document STM32MP1 Reset Clock Controller (RCC) bindings'
-> commit 3830681d354f
->
-> Gabriel Fernandez (2):
->   dt-bindings: reset: add STM32MP1 resets
->   reset: simple: Enable stm32mp1 reset driver
-> 
->  drivers/reset/reset-simple.c                |  27 +++++--
->  drivers/reset/reset-simple.h                |   1 +
->  include/dt-bindings/reset/stm32mp1-resets.h | 108 ++++++++++++++++++++++++++++
->  3 files changed, 130 insertions(+), 6 deletions(-)
->  create mode 100644 include/dt-bindings/reset/stm32mp1-resets.h
-
-regards
-Philipp
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
