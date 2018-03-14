@@ -1,156 +1,86 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v10 5/5] iommu/arm-smmu: Add support for qcom,smmu-v2 variant
-Date: Wed, 14 Mar 2018 13:44:34 +0530
-Message-ID: <20180314081434.30875-6-vivek.gautam@codeaurora.org>
-References: <20180314081434.30875-1-vivek.gautam@codeaurora.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Wed, 14 Mar 2018 09:15:42 +0100
+Message-ID: <ebe90ad4-60f4-4ac1-c337-df840b754d53@samsung.com>
+References: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180313143056epcas4p28ad52892b943d0800c6f77337a40f5f0@epcas4p2.samsung.com>
+ <1520951425-13843-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180314081434.30875-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1520951425-13843-2-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
-clock and power requirements. This smmu core is used with
-multiple masters on msm8996, viz. mdss, video, etc.
-Add bindings for the same.
-
-Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-
- - No change since v9.
-
- .../devicetree/bindings/iommu/arm,smmu.txt         | 42 ++++++++++++++++++++++
- drivers/iommu/arm-smmu.c                           | 14 ++++++++
- 2 files changed, 56 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-index 8a6ffce12af5..7c71a6ed465a 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-@@ -17,10 +17,19 @@ conditions.
-                         "arm,mmu-401"
-                         "arm,mmu-500"
-                         "cavium,smmu-v2"
-+                        "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
- 
-                   depending on the particular implementation and/or the
-                   version of the architecture implemented.
- 
-+                  A number of Qcom SoCs use qcom,smmu-v2 version of the IP.
-+                  "qcom,<soc>-smmu-v2" represents a soc specific compatible
-+                  string that should be present along with the "qcom,smmu-v2"
-+                  to facilitate SoC specific clocks/power connections and to
-+                  address specific bug fixes.
-+                  An example string would be -
-+                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2".
-+
- - reg           : Base address and size of the SMMU.
- 
- - #global-interrupts : The number of global interrupts exposed by the
-@@ -71,6 +80,22 @@ conditions.
-                   or using stream matching with #iommu-cells = <2>, and
-                   may be ignored if present in such cases.
- 
-+- clock-names:    List of the names of clocks input to the device. The
-+                  required list depends on particular implementation and
-+                  is as follows:
-+                  - for "qcom,smmu-v2":
-+                    - "bus": clock required for downstream bus access and
-+                             for the smmu ptw,
-+                    - "iface": clock required to access smmu's registers
-+                               through the TCU's programming interface.
-+                  - unspecified for other implementations.
-+
-+- clocks:         Specifiers for all clocks listed in the clock-names property,
-+                  as per generic clock bindings.
-+
-+- power-domains:  Specifiers for power domains required to be powered on for
-+                  the SMMU to operate, as per generic power domain bindings.
-+
- ** Deprecated properties:
- 
- - mmu-masters (deprecated in favour of the generic "iommus" binding) :
-@@ -137,3 +162,20 @@ conditions.
-                 iommu-map = <0 &smmu3 0 0x400>;
-                 ...
-         };
-+
-+	/* Qcom's arm,smmu-v2 implementation */
-+	smmu4: iommu {
-+		compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
-+		reg = <0xd00000 0x10000>;
-+
-+		#global-interrupts = <1>;
-+		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
-+		#iommu-cells = <1>;
-+		power-domains = <&mmcc MDSS_GDSC>;
-+
-+		clocks = <&mmcc SMMU_MDP_AXI_CLK>,
-+			 <&mmcc SMMU_MDP_AHB_CLK>;
-+		clock-names = "bus", "iface";
-+	};
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 4cf270ffd449..03750ba15224 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -119,6 +119,7 @@ enum arm_smmu_implementation {
- 	GENERIC_SMMU,
- 	ARM_MMU500,
- 	CAVIUM_SMMUV2,
-+	QCOM_SMMUV2,
- };
- 
- struct arm_smmu_s2cr {
-@@ -1995,6 +1996,17 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
- ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
- 
-+static const char * const qcom_smmuv2_clks[] = {
-+	"bus", "iface",
-+};
-+
-+static const struct arm_smmu_match_data qcom_smmuv2 = {
-+	.version = ARM_SMMU_V2,
-+	.model = QCOM_SMMUV2,
-+	.clks = qcom_smmuv2_clks,
-+	.num_clks = ARRAY_SIZE(qcom_smmuv2_clks),
-+};
-+
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
- 	{ .compatible = "arm,smmu-v2", .data = &smmu_generic_v2 },
-@@ -2002,6 +2014,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
-+	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
-@@ -2376,6 +2389,7 @@ IOMMU_OF_DECLARE(arm_mmu400, "arm,mmu-400");
- IOMMU_OF_DECLARE(arm_mmu401, "arm,mmu-401");
- IOMMU_OF_DECLARE(arm_mmu500, "arm,mmu-500");
- IOMMU_OF_DECLARE(cavium_smmuv2, "cavium,smmu-v2");
-+IOMMU_OF_DECLARE(qcom_smmuv2, "qcom,smmu-v2");
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>");
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T24gMTMuMDMuMjAxOCAxNTozMCwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IERvY3VtZW50IFRoaW5l
+IFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gLS0t
+Cj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0IHwg
+NjMgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNjMgaW5zZXJ0aW9u
+cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPgo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUs
+dGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+PiBpbmRleCAwMDAwMDAwLi41YjVhZmNkCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEw
+MjQudHh0Cj4gQEAgLTAsMCArMSw2MyBAQAo+ICtUaGluZSBFbGVjdHJvbmljcyBUSEM2M0xWRDEw
+MjQgTFZEUyBkZWNvZGVyCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPiArCj4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYSBkdWFsIGxpbmsgTFZEUyByZWNlaXZl
+ciBkZXNpZ25lZCB0byBjb252ZXJ0IExWRFMgc3RyZWFtcwo+ICt0byBwYXJhbGxlbCBkYXRhIG91
+dHB1dHMuIFRoZSBjaGlwIHN1cHBvcnRzIHNpbmdsZS9kdWFsIGlucHV0L291dHB1dCBtb2RlcywK
+PiAraGFuZGxpbmcgdXAgdG8gdHdvIHR3byBpbnB1dCBMVkRTIHN0cmVhbSBhbmQgdXAgdG8gdHdv
+IGRpZ2l0YWwgQ01PUy9UVEwgb3V0cHV0cy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+Ky0gY29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYzbHZkMTAyNCIsCj4gKwo+ICtPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ICstIHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgVFRMIG91
+dHB1dCBhbmQgZGlnaXRhbCBjaXJjdWl0cnkKPiArLSBjdmNjLXN1cHBseTogUG93ZXIgc3VwcGx5
+IGZvciBUVEwgQ0xPQ0tPVVQgc2lnbmFsCj4gKy0gbHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBm
+b3IgTFZEUyBpbnB1dHMKPiArLSBwdmNjLXN1cHBseTogUG93ZXIgc3VwcGx5IGZvciBQTEwgY2ly
+Y3VpdHJ5CgpJIHdvbmRlciBpZiBpdCB3b3VsZG4ndCBiZSBiZXR0ZXIgdG8gbWFrZSB0aGVtIHJl
+cXVpcmVkIChhdCBsZWFzdCBWQ0MpIC0KaXQgaXMgY2xvc2VyIHRvIHJlYWxpdHkuCgo+ICstIHB3
+bmQtZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwuIEFjdGl2ZSBsb3cuCgpBcyBJIHNhaWQg
+YmVmb3JlLCBzcGVjc1sxXSBzYXlzIGFib3V0ICIvUERXTiIgcGluLiBJcyBpdCB5b3VyIHR5cG8s
+IG9yCmRpZmZlcmVudCBkb2NzPwpNb3Jlb3ZlciB0aGVyZSBhcmUgYWxyZWFkeSBiaW5kaW5ncyBm
+b3IgVEhDNjNMVkRNODNEIHdpdGggdGhlIHNhbWUKZGljaG90b215IFsyXS4KCk91dCBvZiBjdXJp
+b3NpdHkgSSBoYXZlIGdvb2dsZWQgZm9yICJwd25kIHBpbiIgYW5kIGl0IGxvb2tzIGxpa2Ugc29t
+ZQp2ZW5kb3JzIHVzZSB0aGlzIGZvcm0uCkZvciBtZSBib3RoIGZvcm1zIGFyZSBxdWl0ZSBtaXNs
+ZWFkaW5nOiBwb3dlciBkb3duIHNpZ25hbCwgYWN0aXZlIGxvdywKd2h5IHRoZXkgY291bGRuJ3Qg
+Y2FsbCBpdCBqdXN0ICdlbmFibGUsIGFjdGl2ZSBoaWdoJy4KClsxXTogaHR0cDovL3d3dy50aGlu
+ZS5jby5qcC9maWxlcy90b3BpY3MvMTc5X2V4dF8xMl8wLnBkZgpbMl06Cmh0dHBzOi8vZWxpeGly
+LmJvb3RsaW4uY29tL2xpbnV4L3Y0LjE2LXJjNS9zb3VyY2UvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkbTgzZC50eHQKCj4gKy0g
+b2UtZ3Bpb3M6IE91dHB1dCBlbmFibGUgR1BJTyBzaWduYWwuIEFjdGl2ZSBoaWdoLgo+ICsKPiAr
+VGhlIFRIQzYzTFZEMTAyNCB2aWRlbyBwb3J0IGNvbm5lY3Rpb25zIGFyZSBtb2RlbGVkIGFjY29y
+ZGluZwo+ICt0byBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgYnkgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ICsKPiArUmVxdWlyZWQgdmlkZW8gcG9ydCBu
+b2RlczoKPiArLSBQb3J0QDA6IEZpcnN0IExWRFMgaW5wdXQgcG9ydAo+ICstIFBvcnRAMjogRmly
+c3QgZGlnaXRhbCBDTU9TL1RUTCBwYXJhbGxlbCBvdXRwdXQKPiArCj4gK09wdGlvbmFsIHZpZGVv
+IHBvcnQgbm9kZXM6Cj4gKy0gUG9ydEAxOiBTZWNvbmQgTFZEUyBpbnB1dCBwb3J0Cj4gKy0gUG9y
+dEAzOiBTZWNvbmQgZGlnaXRhbCBDTU9TL1RUTCBwYXJhbGxlbCBvdXRwdXQKPiArCj4gK0V4YW1w
+bGU6Cj4gKy0tLS0tLS0tCj4gKwo+ICsJdGhjNjNsdmQxMDI0OiBsdmRzLWRlY29kZXIgewo+ICsJ
+CWNvbXBhdGlibGUgPSAidGhpbmUsdGhjNjNsdmQxMDI0IjsKPiArCj4gKwkJdmNjLXN1cHBseSA9
+IDwmcmVnX2x2ZHNfdmNjPjsKPiArCQlsdmNjLXN1cHBseSA9IDwmcmVnX2x2ZHNfbHZjYz47Cj4g
+Kwo+ICsJCXB3ZG4tZ3BpbyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsKQW5kIGhlcmUg
+YW5vdGhlciB2YXJpYXRpb24gOiksIHNob3VsZCBiZSBwZHduLWdwaW9zLgoKPiArCj4gKwkJcG9y
+dHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MD47
+Cj4gKwo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJCWx2ZHNfZGVj
+X2luXzA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0PjsK
+PiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0QDJ7Cj4gKwkJCQlyZWcgPSA8Mj47Cj4g
+Kwo+ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9p
+bnQgPSA8JmFkdjc1MTFfaW4+Owo+ICsJCQkJfTsKPiArCj4gKwkJCX07Cj4gKwo+ICsJCX07Cj4g
+Kwl9OwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
