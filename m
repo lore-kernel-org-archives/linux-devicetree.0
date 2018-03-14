@@ -1,76 +1,50 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add #sound-dai-cells property to
- exynos5250 i2s nodes
-Date: Wed, 14 Mar 2018 11:10:48 +0100
-Message-ID: <4258f14d-ee0e-48b5-9674-e8e93d2aff69@samsung.com>
-References: <CGME20180313171232epcas1p4425993ba6042b06051cc7590d3dbeab4@epcas1p4.samsung.com>
- <20180313171220.26333-1-s.nawrocki@samsung.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add Mali node
+Date: Wed, 14 Mar 2018 11:16:32 +0100
+Message-ID: <1269750b-5190-a167-8d34-91794e6d0a8c@micronovasrl.com>
+References: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180314080500.whywwskhp5546z7m@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20180313171220.26333-1-s.nawrocki@samsung.com>
-Content-language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180314080500.whywwskhp5546z7m@flea>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2018 06:12 PM, Sylwester Nawrocki wrote:
-> The #sound-dai-cells property may be required to reference the CPU DAI
-> properly. This change is required for Snow HDMI audio.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
-There is
-
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-tag missing here.
-
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index ebc79114b0ce..45283a6c5eee 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -499,6 +499,7 @@
->  			pinctrl-0 = <&i2s0_bus>;
->  			power-domains = <&pd_mau>;
->  			#clock-cells = <1>;
-> +			#sound-dai-cells = <1>;
->  		};
->  
->  		i2s1: i2s@12d60000 {
-> @@ -513,6 +514,7 @@
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&i2s1_bus>;
->  			power-domains = <&pd_mau>;
-> +			#sound-dai-cells = <1>;
->  		};
->  
->  		i2s2: i2s@12d70000 {
-> @@ -527,6 +529,7 @@
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&i2s2_bus>;
->  			power-domains = <&pd_mau>;
-> +			#sound-dai-cells = <1>;
->  		};
->  
->  		usb_dwc3 {
-> 
-
-
--- 
-Sylwester Nawrocki
-Samsung R&D Institute Poland
+SGksCgpJbCAxNC8wMy8yMDE4IDA5OjA1LCBNYXhpbWUgUmlwYXJkIGhhIHNjcml0dG86Cj4gT24g
+VHVlLCBNYXIgMTMsIDIwMTggYXQgMTE6MTY6NDVBTSArMDEwMCwgR2l1bGlvIEJlbmV0dGkgd3Jv
+dGU6Cj4+IFRoZSBIMyBoYXMgYW4gQVJNIE1hbGkgNDAwIEdQVSwgc28gYWRkIGJpbmRpbmcgdG8g
+b3VyIERULgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBHaXVsaW8gQmVuZXR0aSA8Z2l1bGlvLmJlbmV0
+dGlAbWljcm9ub3Zhc3JsLmNvbT4KPiAKPiBIb3cgd2FzIHRoaXMgdGVzdGVkPwoKSSB3YW50ZWQg
+eW91IGFza2VkIG1lIGFib3V0IHRoaXMgdG8gYXNrIHlvdToKaWYgSSBjYW4ndCB0ZXN0IGl0IG9u
+IEhXLCBidXQgb3RoZXJzIHRlc3RlZCBpdCBhbGwgYXJvdW5kLApmb3IgZXhhbXBsZSB1c2luZyB0
+aGlzIHBhdGNoOgpodHRwczovL2dpdGh1Yi5jb20vYXJtYmlhbi9idWlsZC9ibG9iL21hc3Rlci9w
+YXRjaC9rZXJuZWwvc3VueGktbmV4dC8zMi1oMy1EVC1hZGQtbWFsaS1ub2RlLnBhdGNoCgpJcyBp
+dCBlbm91Z2g/IE9yIGRvIEkgaGF2ZSB0byB0ZXN0IGl0IGRpcmVjdGx5PwpPciBtYXliZSBJIGNh
+biBpbnZpdGUgdGhvc2UgcGVvcGxlIHRvIHRhZyB0aGlzIHBhdGNoIGFzIHRlc3RlZC1ieSA/Cgo+
+IAo+IElzIHRoZXJlIGFueSBzcGVjaWZpYyByZWFzb24gbm90IHRvIHNoYXJlIGl0IHdpdGggdGhl
+IEg1PwoKWWVzLCBINSBoYXMgZHVhbCBHUFUgYnV0IHF1YWQgUFAgYW5kIG9uIElSUSB5b3UgY2Fu
+IGNsZWFybHkgc2VlOgotIEdQVV9HUAotIEdQVV9HUE1NVQotIEdQVV9QTVUKLSBHUFVfUFAKLSBH
+UFVfUFAwCi0gR1BVX1BQTU1VMAotIEdQVV9QUDEKLSBHUFVfUFBNTVUxCi0gR1BVX1BQMgotIEdQ
+VV9QUE1NVTIKLSBHUFVfUFAzCi0gR1BVX1BQTU1VMwoKU28gSSB0aGluayB0aGV5IHNob3VsZCBi
+ZSBwbGFjZWQgaW4gc3BlY2lmaWMgZHRzIGZpbGVzLgpXaGF0IGRvIHlvdSB0aGluaz8KClRoYW5r
+cwoKPiAKPiBNYXhpbWUKPiAKCgotLSAKR2l1bGlvIEJlbmV0dGkKQ1RPCgpNSUNST05PVkEgU1JM
+ClNlZGU6IFZpYSBBLiBOaWVkZGEgMyAtIDM1MDEwIFZpZ29uemEgKFBEKQpUZWwuIDA0OS84OTMx
+NTYzIC0gRmF4IDA0OS84OTMxMzQ2CkNvZC5GaXNjYWxlIC0gUC5JVkEgMDI2NjM0MjAyODUKQ2Fw
+aXRhbGUgU29jaWFsZSDigqwgMjYuMDAwIGkudi4KSXNjcml0dGEgYWwgUmVnLiBJbXByZXNlIGRp
+IFBhZG92YSBOLiAwMjY2MzQyMDI4NQpOdW1lcm8gUi5FLkEuIDI1ODY0MgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
