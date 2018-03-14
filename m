@@ -1,91 +1,115 @@
-Return-Path: <SRS0=EV7f=GE=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v4 0/6] Introduce GENI SE Controller Driver
-Date: Wed, 14 Mar 2018 17:58:45 -0600
-Message-Id: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
+Return-Path: <SRS0=yC7f=GE=linaro.org=bjorn.andersson@kernel.org>
+Date: Tue, 13 Mar 2018 19:52:44 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V4 4/6] arm64: dts: smem enablement for msm8992
+Message-ID: <20180314025244.GD11034@tuxbook-pro>
+References: <20170127195831.GH8801@codeaurora.org>
+ <1485755073-6416-1-git-send-email-jeremymc@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1485755073-6416-1-git-send-email-jeremymc@redhat.com>
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, andy.gross@linaro.org, robh@kernel.org, arnd@arndb.de, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
 List-ID: <devicetree@vger.kernel.org>
 
-Generic Interface (GENI) firmware based Qualcomm Universal Peripheral (QUP)
-Wrapper is a next generation programmable module for supporting a wide
-range of serial interfaces like UART, SPI, I2C, I3C, etc. A single QUP
-module can provide upto 8 Serial Interfaces using its internal Serial
-Engines (SE). The protocol supported by each interface is determined by
-the firmware loaded to the Serial Engine.
+On Sun 29 Jan 21:44 PST 2017, Jeremy McNicoll wrote:
 
-This patch series introduces GENI SE Driver to manage the GENI based QUP
-Wrapper and the common aspects of all SEs inside the QUP Wrapper. This
-patch series also introduces the UART and I2C Controller drivers to
-drive the SEs that are programmed with the respective protocols.
+> SMEM allows various subsystems/processors to share
+> memory/data (heap format) in order to enable various
+> peripherals.
+> 
 
-[v4]
- * Add SPI controller information in device tree binding
- * Add support for debug UART & I2C controllers in SDM845 device tree
- * Remove any unnecessary parenthesis & casting
- * Identify break character in UART line and pass it to the framework
- * Transmit data from fault handler reliably in debug UART
- * Map the register block when the UART port is requested
- * Move concise exported functions as macros or inlines in public header
- * Move the clock performance table from the wrapper to serial engines
- * Add a lock to synchronize between IRQ & error handling in I2C controller
- * Remove any compiler optimization hints like likely/unlikely
- * Update documentation to clarify tables and hardware blocks
+Fyi, the sfpb_mutex is actually called tcsr_mutex, but downstream kept
+the old name...
 
-[v3]
- * Update the driver dependencies
- * Use the SPDX License Expression
- * Squash all the controller device tree bindings together
- * Use kernel doc format for documentation
- * Add additional documentation for packing configuration
- * Use clk_bulk_* API for related clocks
- * Remove driver references to pinctrl and their states
- * Replace magic numbers with appropriate macros
- * Update memory barrier usage and associated comments
- * Reduce interlacing of register reads/writes
- * Fix poll_get_char() operation in console UART driver under polling mode
- * Address other comments from Bjorn Andersson to improve code readability
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[v2]
- * Updated device tree bindings to describe the hardware
- * Updated SE DT node as child node of QUP Wrapper DT node
- * Moved common AHB clocks to QUP Wrapper DT node
- * Use the standard "clock-frequency" I2C property
- * Update compatible field in UART Controller to reflect hardware manual
- * Addressed other device tree binding specific comments from Rob Herring
+Regards,
+Bjorn
 
-Karthikeyan Ramasubramanian (5):
-  dt-bindings: soc: qcom: Add device tree binding for GENI SE
-  soc: qcom: Add GENI based QUP Wrapper driver
-  i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C
-    controller
-  tty: serial: msm_geni_serial: Add serial driver support for GENI based
-    QUP
-  arm64: dts: sdm845: Add I2C controller support
-
-Rajendra Nayak (1):
-  arm64: dts: sdm845: Add serial console support
-
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  123 +++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |   58 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi               |   67 ++
- drivers/i2c/busses/Kconfig                         |   13 +
- drivers/i2c/busses/Makefile                        |    1 +
- drivers/i2c/busses/i2c-qcom-geni.c                 |  648 +++++++++++
- drivers/soc/qcom/Kconfig                           |    9 +
- drivers/soc/qcom/Makefile                          |    1 +
- drivers/soc/qcom/qcom-geni-se.c                    |  748 +++++++++++++
- drivers/tty/serial/Kconfig                         |   15 +
- drivers/tty/serial/Makefile                        |    1 +
- drivers/tty/serial/qcom_geni_serial.c              | 1158 ++++++++++++++++++++
- include/linux/qcom-geni-se.h                       |  425 +++++++
- 13 files changed, 3267 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
- create mode 100644 drivers/i2c/busses/i2c-qcom-geni.c
- create mode 100644 drivers/soc/qcom/qcom-geni-se.c
- create mode 100644 drivers/tty/serial/qcom_geni_serial.c
- create mode 100644 include/linux/qcom-geni-se.h
-
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
+> 
+>  [ Moved sfpb_mutex and smem outside sock as they didn't have
+>   'reg' entries.  Everything else is exactly the same. ]
+> 
+>  arch/arm64/boot/dts/qcom/msm8992.dtsi | 42 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> index 13fb6f7..1715787 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> @@ -79,6 +79,19 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	sfpb_mutex: hwmutex {
+> +		compatible = "qcom,sfpb-mutex";
+> +		syscon = <&sfpb_mutex_regs 0x0 0x100>;
+> +		#hwlock-cells = <1>;
+> +	};
+> +
+> +	smem {
+> +		compatible = "qcom,smem";
+> +		memory-region = <&smem_region>;
+> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +		hwlocks = <&sfpb_mutex 3>;
+> +	};
+> +
+>  	soc {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> @@ -93,6 +106,11 @@
+>  				<0xf9002000 0x1000>;
+>  		};
+>  
+> +		apcs: syscon@f900d000 {
+> +			compatible = "syscon";
+> +			reg = <0xf900d000 0x2000>;
+> +		};
+> +
+>  		timer@f9020000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> @@ -183,12 +201,36 @@
+>  			#power-domain-cells = <1>;
+>  			reg = <0xfc400000 0x2000>;
+>  		};
+> +
+> +		rpm_msg_ram: memory@fc428000 {
+> +			compatible = "qcom,rpm-msg-ram";
+> +			reg = <0xfc428000 0x4000>;
+> +		};
+> +
+> +		sfpb_mutex_regs: syscon@fd484000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "syscon";
+> +			reg = <0xfd484000 0x400>;
+> +		};
+>  	};
+>  
+>  	memory {
+>  		device_type = "memory";
+>  		reg = <0 0 0 0>; // bootloader will update
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		smem_region: smem@6a00000 {
+> +			reg = <0x0 0x6a00000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+>  };
+>  
+>  
+> -- 
+> 2.6.1
+> 
