@@ -1,113 +1,62 @@
-Return-Path: <SRS0=v9aX=F4=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v4] dt-bindings: pwm: rcar: Document r8a774[35] PWM
- bindings
-Date: Tue, 6 Mar 2018 16:49:54 +0000
-Message-ID: <TY1PR01MB1770084635548C8981CF8C83C0D90@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1513768543-7943-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <SG2PR06MB0886D203D3F529D4AD3B07B6C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-In-Reply-To: <SG2PR06MB0886D203D3F529D4AD3B07B6C0E20@SG2PR06MB0886.apcprd06.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=F6gC=GE=gmail.com=thierry.reding@kernel.org>
+Date: Wed, 14 Mar 2018 17:38:40 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V8 0/9] Refactor and add AHCI support for Tegra210
+Message-ID: <20180314163840.GB9201@ulmo>
+References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
+ <20180313210633.GP2943022@devbig577.frc2.facebook.com>
+ <20180313224258.GA23414@mithrandir>
+ <20180314152513.GW2943022@devbig577.frc2.facebook.com>
 MIME-Version: 1.0
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "Chris Paterson  <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <20180314152513.GW2943022@devbig577.frc2.facebook.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Preetham Chandru Ramchandra <pchandru@nvidia.com>, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com, preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
-Dear All,
 
-I am very sorry to bother you, just wondering if someone can take this patc=
-h?
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 14, 2018 at 08:25:13AM -0700, Tejun Heo wrote:
+> Hello,
+>=20
+> On Tue, Mar 13, 2018 at 11:42:59PM +0100, Thierry Reding wrote:
+> > My suggestion would be that I pick up the arm64 patches (2 and 3) into
+> > the Tegra tree and you take the rest (dt-bindings and driver changes)
+> > through libata? There are no dependencies between the two sets, other
+> > than maybe checkpatch.pl complaining about using an undocumented
+> > compatible string until both get merged into v4.17-rc1.
+>=20
+> Applied 1, 4-9 to libata/for-4.17.
+
+Patches 2 and 3 applied to for-4.17/arm64/dt.
 
 Thanks,
-Fab
+Thierry
 
-> -----Original Message-----
-> From: Fabrizio Castro
-> Sent: 24 January 2018 17:14
-> To: Thierry Reding <thierry.reding@gmail.com>
-> Cc: linux-pwm@vger.kernel.org; devicetree@vger.kernel.org; Simon Horman <=
-horms@verge.net.au>; Geert Uytterhoeven
-> <geert+renesas@glider.be>; Chris Paterson <Chris.Paterson2@renesas.com>; =
-Biju Das <biju.das@bp.renesas.com>; linux-renesas-
-> soc@vger.kernel.org; Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Ro=
-b Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>
-> Subject: RE: [PATCH v4] dt-bindings: pwm: rcar: Document r8a774[35] PWM b=
-indings
->
-> Hello Thierry,
->
-> I am sorry to bother you,  just wondering if this patch has any chance to=
- end up in v4.16?
->
-> Thanks,
-> Fabrizio
->
-> > Subject: [PATCH v4] dt-bindings: pwm: rcar: Document r8a774[35] PWM bin=
-dings
-> >
-> > This patch adds compatible strings specific to r8a774[35], no driver
-> > change is needed as the fallback compatible string will activate the
-> > right code.
-> >
-> > Also, this patch replaces the example with a DT snippet used
-> > for adding PWM0 support to an r8a7743 based platform as the r8a7743 is
-> > now the first platform fully compatible with this driver and its PWM DT
-> > nodes refer to up-to-date code.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v3->v4:
-> > * The changelog now explains why the patch is replacing the example.
-> >
-> >  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 10 ++++++=
-+---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> > b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> > index 74c1180..f3bba59 100644
-> > --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> > @@ -2,6 +2,8 @@
-> >
-> >  Required Properties:
-> >  - compatible: should be "renesas,pwm-rcar" and one of the following.
-> > + - "renesas,pwm-r8a7743": for RZ/G1M
-> > + - "renesas,pwm-r8a7745": for RZ/G1E
-> >   - "renesas,pwm-r8a7778": for R-Car M1A
-> >   - "renesas,pwm-r8a7779": for R-Car H1
-> >   - "renesas,pwm-r8a7790": for R-Car H2
-> > @@ -17,13 +19,15 @@ Required Properties:
-> >  - pinctrl-0: phandle, referring to a default pin configuration node.
-> >  - pinctrl-names: Set to "default".
-> >
-> > -Example: R8A7790 (R-Car H2) PWM Timer node
-> > +Example: R8A7743 (RZ/G1M) PWM Timer node
-> >
-> >  pwm0: pwm@e6e30000 {
-> > -compatible =3D "renesas,pwm-r8a7790", "renesas,pwm-rcar";
-> > +compatible =3D "renesas,pwm-r8a7743", "renesas,pwm-rcar";
-> >  reg =3D <0 0xe6e30000 0 0x8>;
-> > +clocks =3D <&cpg CPG_MOD 523>;
-> > +power-domains =3D <&sysc R8A7743_PD_ALWAYS_ON>;
-> > +resets =3D <&cpg 523>;
-> >  #pwm-cells =3D <2>;
-> > -clocks =3D <&mstp5_clks R8A7790_CLK_PWM>;
-> >  pinctrl-0 =3D <&pwm0_pins>;
-> >  pinctrl-names =3D "default";
-> >  };
-> > --
-> > 2.7.4
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqpUBAACgkQ3SOs138+
+s6E/+RAAsZf9DQiSevPSRDjw+9058dRsmkZ8qqjIaaEH+b9mwWch/kF1uXA/rJG7
+DX6qKp8EZrxyyBusGhU5NcBJbTyH8PiODPtwwy0GIjFkp5tVeoeCMKbA8i9JyrLL
+NT4fIuOEb81hMG7lpFpsyUIzGop7AVrg9gKk53HeqthBprMiwBSUcJCYOplLZb7O
+2kgRGpK1tsxiEwofjYFHkXxpnyTxptLXnJYrdtH6yT/4v9i2DKoY5pQ0tq9MVUdz
+FVJ7CumbxUqXZbvP5sxOfVXDxzVhwQwZHMAoAHoXAuvmj4JG1k3gtMFLCvtFHU1H
+dNpTNbqs/XRit06JMPjcDvG/UAwtdL3+VJX3YhZuV2RrolrGBFj7gKQh9+J2QzpC
+qLi+1whqIyI7/4QKw01NOaBIXGHcE56n4DzZdl9froy47cwHV21D4lb8HZ8Kx3tl
+93w6iKOuFxgX1dUbU6jm6zFax6t0VxkpfdXnj2IKryKp/x2x73BVYVxDO0UM+u9Z
+fWCGshEuJfb/964/UylGIHUZkWQ/jWDkKawQCxjIBtWStGVSwn3UxNkINvqUrAy9
+AOM5jhz5l7qy7M26t+ByvuM+5XSRrG7G9uChbAAzg4LtTeV3Fk/+TRVAXDsKMswx
+4d55fLECVlm1vc6pOX9O8Qg+jPtwSW8QXhHInO7dMaihL+e4Euc=
+=QM+j
+-----END PGP SIGNATURE-----
 
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+--oLBj+sq0vYjzfsbl--
