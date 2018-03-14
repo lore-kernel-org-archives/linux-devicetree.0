@@ -1,61 +1,110 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
- devices
-Date: Wed, 14 Mar 2018 13:27:59 +0100
-Message-ID: <20180314122759.GB19651@wunner.de>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
- <2217404.A2W3Iek6du@aspire.rjw.lan>
- <CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
- <2705105.V6KYPvoJqj@aspire.rjw.lan>
- <11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524 and pcal9555a
+Date: Wed, 14 Mar 2018 13:39:30 +0100
+Message-ID: <0BF8A237-1EB9-465A-9A7C-75163F093F18@goldelico.com>
+References: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com> <CAHp75Ve8Y2AOm36KwuVUhssLR7Q82KS1SzB1tcKw57_LdqkKhQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
+In-Reply-To: <CAHp75Ve8Y2AOm36KwuVUhssLR7Q82KS1SzB1tcKw57_LdqkKhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Tomasz Figa <tfiga@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Yong Li <yong.b.li@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 12:14:15PM +0000, Robin Murphy wrote:
-> >>On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >>>On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
-> >>>>On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam <vivek.gautam@codeaurora.org> wrote:
-> >>>>>On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga@chromium.org> wrote:
-> >>>>>>On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam <vivek.gautam@codeaurora.org> wrote:
-> >>>>>>>The lists managing the device-links can be traversed to
-> >>>>>>>find the link between two devices. The device_link_add() APIs
-> >>>>>>>does traverse these lists to check if there's already a link
-> >>>>>>>setup between the two devices.
-> >>>>>>>So, add a new APIs, device_link_find(), to find an existing
-> >>>>>>>device link between two devices - suppliers and consumers.
-> >>>>>>
-> >>>>>>I'm wondering if this API would be useful for anything else that the
-> >>>>>>problem we're trying to solve with deleting links without storing them
-> >>>>>>anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
-> >>>>>>better alternative?
-> >>>>>
-> >>>>>Yea, that sounds simpler i think. Will add this API instead of
-> >>>>>find_link(). Thanks.
-> >>>>
-> >>>>Perhaps let's wait for a moment to see if there are other opinions. :)
-> >>>>
-> >>>>Rafael, Lucas, any thoughts?
-> >>>
-> >>>It is not clear to me what the device_link_del_dev(consumer, supplier)
-> >>>would do.
-> 
-> Not quite - the issue here is that we have one supplier with an arbitrarily
-> large number of consumers, and would prefer that supplier not to have to
-> spend a whole bunch of memory to store all the struct device_link pointers
-> for the sole reason of having something to give to device_link_del() at the
-> end, given that the device links code is already keeping track of everything
-> internally anyway.
+Hi Andy,
 
-Makes sense to me.  How about an additional flag which autoremoves the
-link on provider unbind?
+> Am 13.03.2018 um 17:56 schrieb Andy Shevchenko =
+<andy.shevchenko@gmail.com>:
+>=20
+> On Sat, Mar 10, 2018 at 1:00 PM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>> The Pyra-Handheld originally used the tca6424 but recently we have
+>> replaced it by the pin and package compatible pcal6524. So let's
+>> add this to the bindings and the driver.
+>>=20
+>> And while we are at it, the pcal9555a does not have a compatible =
+entry
+>> either but is already supported by the device id table.
+>=20
+>=20
+>> +       { "pcal6524", 24 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>>        { "pcal9555a", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>=20
+> So, from your description I can get that PCA_PCAL is redundant for
+> 6524. Is it correct?
 
-Thanks,
+We might not be using all features of the 6524 and therefore our test
+coverage is not 100%. So I would not draw the conclusion that PCA_PCAL
+is *not* needed. The data sheet should tell.
 
-Lukas
+> What does L means in the model code?
+
+Good question. The data sheets don't tell. But 6424 and 6524 are not =
+identical
+from register set and overall functions, although quite similar.
+Only for pin and package.
+
+As far as I understand the 6524 (and all PCAL) have additional interrupt
+latch mechanisms and registers so that it is possible to disable each
+I/O pin individually as an interrupt while for the 6424 they are always
+enabled. Maybe this is the "L" designator.
+
+But we aren't using interrupts yet.
+
+> Perhaps we need to rename PCA_PCAL to be more specific?
+
+My assumption is that it should be there for all PCAL variants,
+but I think the original author who introduced this constant should =
+know.
+
+Hm. git blame tells that you have introduced it :) But this seems to
+be a false alarm because you have just changed formatting.
+
+It was introduced by
+
+commit 44896beae605b93f2232301befccb7ef42953198
+Author: Yong Li <yong.b.li@intel.com>
+Date:   Thu Apr 7 12:56:32 2016 +0800
+
+    gpio: pca953x: add PCAL9535 interrupt support for Galileo Gen2
+   =20
+    Galileo Gen2 board uses the PCAL9535 as the GPIO expansion,
+    it is different from PCA9535 and includes interrupt mask/status =
+registers,
+    The current driver does not support the interrupt registers =
+configuration,
+    it causes some gpio pins cannot trigger interrupt events,
+    this patch fix this issue.
+   =20
+    The original patch was submitted by
+    Josef Ahmad <josef.ahmad@linux.intel.com>
+    =
+http://git.yoctoproject.org/cgit/cgit.cgi/meta-intel-quark/tree/recipes-ke=
+rnel/linux/files/0015-Quark-GPIO-1-2-quark.patch
+   =20
+    Signed-off-by: Yong Li <yong.b.li@intel.com>
+    Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+>=20
+>=20
+>> +       { .compatible =3D "nxp,pcal6524", .data =3D OF_953X(24, =
+PCA_INT), },
+>> +       { .compatible =3D "nxp,pcal9555a", .data =3D OF_953X(16, =
+PCA_INT), },
+>=20
+> Other way around, you missed PCA_PCAL in the second case.
+
+Ah, ok. It wasn't clear how these flag relate to the i2c table because =
+they
+are hidden by a macro here. I'd assume that PCA_PCAL is missing for =
+both.
+
+So it might be that we run the pcal6524 in non-PCAL mode because we use =
+DT.
+I can do a test as soon as I have access to the hardware.=20
+
+BR and thanks,
+Nikolaus
