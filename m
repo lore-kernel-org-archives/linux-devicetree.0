@@ -1,48 +1,142 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 5/5] ASoC: samsung: Add compatible strings for
- Odroid X, X2, U3 boards
-Date: Wed, 14 Mar 2018 17:42:42 +0100
-Message-ID: <20180314164242.22927-2-s.nawrocki@samsung.com>
-References: <20180314164242.22927-1-s.nawrocki@samsung.com>
- <CGME20180314164310epcas2p30b434dfadb7e5a2edffe97451d70ab03@epcas2p3.samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V2] Input: pm8941-pwrkey: add resin key capabilities
+Date: Wed, 14 Mar 2018 09:43:46 -0700
+Message-ID: <20180314164346.GA74407@dtor-ws>
+References: <1520930158-5854-1-git-send-email-tirupath@codeaurora.org>
+ <20180314024048.GA11034@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-reply-to: <20180314164242.22927-1-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180314024048.GA11034@tuxbook-pro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Tirupathi Reddy <tirupath@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The driver can also support Odroid X/X2 and Odroid U3 without further
-modifications so related compatible strings are added to the list.
+On Tue, Mar 13, 2018 at 07:40:48PM -0700, Bjorn Andersson wrote:
+> On Tue 13 Mar 01:35 PDT 2018, Tirupathi Reddy wrote:
+> 
+> > Add resin key support to handle different types of key events
+> > defined in different platforms.
+> > 
+> > Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> > ---
+> >  .../bindings/input/qcom,pm8941-pwrkey.txt          | 20 ++++++-
+> >  drivers/input/misc/pm8941-pwrkey.c                 | 65 +++++++++++++++++++++-
+> >  2 files changed, 83 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > index 07bf55f..f499cf8 100644
+> > --- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > @@ -20,6 +20,14 @@ PROPERTIES
+> >  		    defined by the binding document describing the node's
+> >  		    interrupt parent.
+> >  
+> > +- interrupt-names:
+> > +	Usage: required
+> > +	Value type: <stringlist>
+> > +	Definition: Interrupt names.  This list must match up 1-to-1 with the
+> > +		    interrupts specified in the 'interrupts' property. "kpdpwr"
+> > +		    must be specified and should be the first entry of the list.
+> > +		    "resin" may be specified for some platforms.
+> > +
+> >  - debounce:
+> >  	Usage: optional
+> >  	Value type: <u32>
+> > @@ -32,12 +40,22 @@ PROPERTIES
+> >  	Definition: presence of this property indicates that the KPDPWR_N pin
+> >  		    should be configured for pull up.
+> >  
+> > +- linux,code:
+> > +	Usage: required for "resin" key
+> > +	Value type: <u32>
+> > +	Definition: The input key-code associated with the resin key.
+> > +		    Use the linux event codes defined in
+> > +		    include/dt-bindings/input/linux-event-codes.h
+> 
+> For completeness sake I think this should list both the key code for the
+> power key and for the RESIN key.
+> 
+> > +
+> >  EXAMPLE
+> >  
+> >  	pwrkey@800 {
+> >  		compatible = "qcom,pm8941-pwrkey";
+> >  		reg = <0x800>;
+> > -		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> > +		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>,
+> > +			     <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> > +		interrupt-names = "kpdpwr", "resin";
+> >  		debounce = <15625>;
+> >  		bias-pull-up;
+> 
+> Do we need to support defining the bias for the resin as well?
+> 
+> Perhaps it makes more sense to describe the RESIN key with a separate
+> compatible and define that in a node of its own (we can still implement
+> this in the same driver - if there's any chance of reuse...).
+> 
+> > +		linux,code = <KEY_VOLUMEDOWN>;
+> >  	};
+> > diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+> > index 18ad956..2fffc7c 100644
+> > --- a/drivers/input/misc/pm8941-pwrkey.c
+> > +++ b/drivers/input/misc/pm8941-pwrkey.c
+> > @@ -28,6 +28,7 @@
+> >  
+> >  #define PON_RT_STS			0x10
+> >  #define  PON_KPDPWR_N_SET		BIT(0)
+> > +#define  PON_RESIN_N_SET		BIT(1)
+> >  
+> >  #define PON_PS_HOLD_RST_CTL		0x5a
+> >  #define PON_PS_HOLD_RST_CTL2		0x5b
+> > @@ -46,6 +47,7 @@
+> >  struct pm8941_pwrkey {
+> >  	struct device *dev;
+> >  	int irq;
+> > +	u32 resin_key_code;
+> >  	u32 baseaddr;
+> >  	struct regmap *regmap;
+> >  	struct input_dev *input;
+> > @@ -130,6 +132,24 @@ static irqreturn_t pm8941_pwrkey_irq(int irq, void *_data)
+> >  	return IRQ_HANDLED;
+> >  }
+> >  
+> > +static irqreturn_t pm8941_resinkey_irq(int irq, void *_data)
+> > +{
+> > +	struct pm8941_pwrkey *pwrkey = _data;
+> > +	unsigned int sts;
+> > +	int error;
+> > +
+> > +	error = regmap_read(pwrkey->regmap,
+> > +			    pwrkey->baseaddr + PON_RT_STS, &sts);
+> 
+> This needs to be broken because the line is 81 chars long, if you use a
+> shorter name for the return value (e.g. "ret") you don't need to do
+> this.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- sound/soc/samsung/odroid.c | 2 ++
- 1 file changed, 2 insertions(+)
+I prefer keeping it as "error" please.
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index e7b371b07230..f4fa0312e8c8 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -202,6 +202,8 @@ static int odroid_audio_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id odroid_audio_of_match[] = {
-+	{ .compatible	= "hardkernel,odroid-x-audio" },
-+	{ .compatible	= "hardkernel,odroid-u3-audio" },
- 	{ .compatible	= "hardkernel,odroid-xu3-audio" },
- 	{ .compatible	= "hardkernel,odroid-xu4-audio" },
- 	{ .compatible	= "samsung,odroid-xu3-audio" },
+> 
+> > +	if (error)
+> > +		return IRQ_HANDLED;
+> > +
+> > +	input_report_key(pwrkey->input, pwrkey->resin_key_code,
+> > +			 !!(sts & PON_RESIN_N_SET));
+> 
+> Put pwrkey->resin_key_code in a local variable named "key" (or even
+> key_code) and you don't need to line wrap this one.
+> 
+> > +	input_sync(pwrkey->input);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> 
+> Regards,
+> Bjorn
+
 -- 
-2.14.2
+Dmitry
