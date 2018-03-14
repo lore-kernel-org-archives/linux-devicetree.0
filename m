@@ -1,50 +1,106 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add Mali node
-Date: Wed, 14 Mar 2018 11:16:32 +0100
-Message-ID: <1269750b-5190-a167-8d34-91794e6d0a8c@micronovasrl.com>
-References: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20180314080500.whywwskhp5546z7m@flea>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7 1/3] irqchip/gic-v3-its: add ability to save/restore
+ ITS state
+Date: Wed, 14 Mar 2018 10:22:30 +0000
+Message-ID: <6a5b5723-85bb-e46f-f621-eab17a01f1f0@arm.com>
+References: <20180301054820.42847-1-dbasehore@chromium.org>
+ <20180301054820.42847-2-dbasehore@chromium.org>
+ <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
+ <0a74f87a-027a-df7d-ca2d-fc164ec9cdf7@arm.com>
+ <CAGAzgsqLgujex--HCo3dRGvOPXG0zu-RwkbuGhgNhBTc3sURJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180314080500.whywwskhp5546z7m@flea>
-Content-Language: it
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGAzgsqLgujex--HCo3dRGvOPXG0zu-RwkbuGhgNhBTc3sURJA@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Soby Mathew <Soby.Mathew@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, Linux-pm mailing list <linux-pm@vger.kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpJbCAxNC8wMy8yMDE4IDA5OjA1LCBNYXhpbWUgUmlwYXJkIGhhIHNjcml0dG86Cj4gT24g
-VHVlLCBNYXIgMTMsIDIwMTggYXQgMTE6MTY6NDVBTSArMDEwMCwgR2l1bGlvIEJlbmV0dGkgd3Jv
-dGU6Cj4+IFRoZSBIMyBoYXMgYW4gQVJNIE1hbGkgNDAwIEdQVSwgc28gYWRkIGJpbmRpbmcgdG8g
-b3VyIERULgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBHaXVsaW8gQmVuZXR0aSA8Z2l1bGlvLmJlbmV0
-dGlAbWljcm9ub3Zhc3JsLmNvbT4KPiAKPiBIb3cgd2FzIHRoaXMgdGVzdGVkPwoKSSB3YW50ZWQg
-eW91IGFza2VkIG1lIGFib3V0IHRoaXMgdG8gYXNrIHlvdToKaWYgSSBjYW4ndCB0ZXN0IGl0IG9u
-IEhXLCBidXQgb3RoZXJzIHRlc3RlZCBpdCBhbGwgYXJvdW5kLApmb3IgZXhhbXBsZSB1c2luZyB0
-aGlzIHBhdGNoOgpodHRwczovL2dpdGh1Yi5jb20vYXJtYmlhbi9idWlsZC9ibG9iL21hc3Rlci9w
-YXRjaC9rZXJuZWwvc3VueGktbmV4dC8zMi1oMy1EVC1hZGQtbWFsaS1ub2RlLnBhdGNoCgpJcyBp
-dCBlbm91Z2g/IE9yIGRvIEkgaGF2ZSB0byB0ZXN0IGl0IGRpcmVjdGx5PwpPciBtYXliZSBJIGNh
-biBpbnZpdGUgdGhvc2UgcGVvcGxlIHRvIHRhZyB0aGlzIHBhdGNoIGFzIHRlc3RlZC1ieSA/Cgo+
-IAo+IElzIHRoZXJlIGFueSBzcGVjaWZpYyByZWFzb24gbm90IHRvIHNoYXJlIGl0IHdpdGggdGhl
-IEg1PwoKWWVzLCBINSBoYXMgZHVhbCBHUFUgYnV0IHF1YWQgUFAgYW5kIG9uIElSUSB5b3UgY2Fu
-IGNsZWFybHkgc2VlOgotIEdQVV9HUAotIEdQVV9HUE1NVQotIEdQVV9QTVUKLSBHUFVfUFAKLSBH
-UFVfUFAwCi0gR1BVX1BQTU1VMAotIEdQVV9QUDEKLSBHUFVfUFBNTVUxCi0gR1BVX1BQMgotIEdQ
-VV9QUE1NVTIKLSBHUFVfUFAzCi0gR1BVX1BQTU1VMwoKU28gSSB0aGluayB0aGV5IHNob3VsZCBi
-ZSBwbGFjZWQgaW4gc3BlY2lmaWMgZHRzIGZpbGVzLgpXaGF0IGRvIHlvdSB0aGluaz8KClRoYW5r
-cwoKPiAKPiBNYXhpbWUKPiAKCgotLSAKR2l1bGlvIEJlbmV0dGkKQ1RPCgpNSUNST05PVkEgU1JM
-ClNlZGU6IFZpYSBBLiBOaWVkZGEgMyAtIDM1MDEwIFZpZ29uemEgKFBEKQpUZWwuIDA0OS84OTMx
-NTYzIC0gRmF4IDA0OS84OTMxMzQ2CkNvZC5GaXNjYWxlIC0gUC5JVkEgMDI2NjM0MjAyODUKQ2Fw
-aXRhbGUgU29jaWFsZSDigqwgMjYuMDAwIGkudi4KSXNjcml0dGEgYWwgUmVnLiBJbXByZXNlIGRp
-IFBhZG92YSBOLiAwMjY2MzQyMDI4NQpOdW1lcm8gUi5FLkEuIDI1ODY0MgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 02/03/18 02:08, dbasehore . wrote:
+> On Thu, Mar 1, 2018 at 4:29 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> Hi Mark,
+>>
+>> On 01/03/18 11:41, Mark Rutland wrote:
+>>> On Wed, Feb 28, 2018 at 09:48:18PM -0800, Derek Basehore wrote:
+>>>> Some platforms power off GIC logic in suspend, so we need to
+>>>> save/restore state. The distributor and redistributor registers need
+>>>> to be handled in platform code due to access permissions on those
+>>>> registers, but the ITS registers can be restored in the kernel.
+>>>>
+>>>> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+>>>
+>>> How much state do we have to save/restore?
+>>>
+>>> Given we can apparently read all this state, couldn't we *always* save
+>>> the state, then upon resume detect if the state has been lost, restoring
+>>> it if so?
+>>>
+>>> That way, we don't need a property in FW tables for DT or ACPI.
+>>
+>> That's a good point. I guess that we could just compare the saved
+>> GITS_CTLR register and restore the full state only if the ITS comes back
+>> as disabled.
+>>
+>> I'm just a bit worried that it makes it an implicit convention between
+>> kernel an FW, which could change in funny ways. Importantly, the PSCI
+>> spec says states FW should restore *the whole state*. Obviously, it
+>> cannot to that on HW that doesn't allow you to read out the state, hence
+>> the DT flag that outlines the departure from the expected behaviour.
+>>
+>> I'm happy to go either way, but then I have the feeling that we should
+>> go back to quirking it on the actual implementation (GIC500 in this
+>> case) if we're to from the property.
+>>
+>>>
+>>> [...]
+>>>
+>>>> @@ -3261,6 +3363,9 @@ static int __init its_probe_one(struct resource *res,
+>>>>              ctlr |= GITS_CTLR_ImDe;
+>>>>      writel_relaxed(ctlr, its->base + GITS_CTLR);
+>>>>
+>>>> +    if (fwnode_property_present(handle, "reset-on-suspend"))
+>>>> +            its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
+>>>
+>>> Does this allow this property on an ACPI system?
+>>>
+>>> If we need this on ACPI, we need a spec update to handle this properly,
+>>> and shouldn't use device properties like this.
+>>
+>> Well spotted. I guess that dropping the property would fix that
+>> altogether, assuming we feel that the above is safe enough.
+>>
+>> Thoughts?
+> 
+> I'm fine changing it to get rid of the devicetree property.
+> 
+> What's the reason for quirking the behavior though? It's not that much
+> code + data and nothing else relies on the state of the ITS getting
+> disabled across suspend/resume. Even if something did, we'd have to
+> resolve it with this feature anyways.
+
+The reason we do this is to cope with GIC500 having the collection state
+in registers instead of memory. If we didn't have this extraordinary
+misfeature, FW could do a full save/restore of the ITS, and we wouldn't
+have to do anything (which is what the driver currently expects).
+
+A middle ground approach is to limit the feature to systems where
+GITS_TYPER.HCC is non-zero instead of limiting it to GIC500. Pretty easy
+to fix. This should have the same effect, as GIC500 is the only
+implementation I'm aware of with HCC!=0.
+
+Given that we're already at -rc5 and that I'd like to queue things for
+4.17, I've made this change myself and queued patches 1 and 3 here[1].
+
+Can you please have a look at let me know if that works for you?
+
+Thanks,
+
+	M.
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
+irq/irqchip-next
+-- 
+Jazz is not dead. It just smells funny...
