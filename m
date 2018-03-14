@@ -1,75 +1,52 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Wed, 14 Mar 2018 17:13:47 +0100
-Message-ID: <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
-References: <20180314155514.3374-1-thierry.escande@linaro.org>
- <20180314155514.3374-3-thierry.escande@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180314155514.3374-3-thierry.escande@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v2 0/2] Introduce STM32MP1 Reset driver
+Date: Wed, 14 Mar 2018 17:29:59 +0100
+Message-ID: <1521045001-30788-1-git-send-email-gabriel.fernandez@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-> Add binding document for serial bluetooth chips using Qualcomm protocol.
-> 
-> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-> ---
-> 
-> v4:
-> - Move bt-disable-n-gpios to required properties section
-> - Add clocks and pinctrl-0 as required properties
-> 
-> v3: no change
-> v2: no change
-> 
-> .../devicetree/bindings/net/qualcomm-bluetooth.txt | 34 ++++++++++++++++++++++
-> 1 file changed, 34 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> new file mode 100644
-> index 000000000000..cdb14b96c229
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -0,0 +1,34 @@
-> +Qualcomm Bluetooth Chips
-> +---------------------
-> +
-> +This documents the binding structure and common properties for serial
-> +attached Qualcomm devices.
-> +
-> +Serial attached Qualcomm devices shall be a child node of the host UART
-> +device the slave device is attached to.
-> +
-> +Required properties:
-> + - compatible: should contain one of the following:
-> +   * "qcom,qca6174-bt"
-> + - bt-disable-n-gpios: gpio specifier, used to enable chip during probe
-> + - pinctrl-0: pin phandle for bt_en gpio
-> + - clocks: clock phandle for SUSCLK_32KHZ
-> +
-> +Example:
-> +
-> +serial@7570000 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&blsp1_uart1_default>;
-> +	pinctrl-1 = <&blsp1_uart1_sleep>;
-> +
-> +	bluetooth {
-> +		compatible = "qcom,qca6174-bt";
-> +
-> +		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+v2:
+Don't use reset-simple driver but a custom reset driver.
+add dt-binding documentation.
 
-can we use a common name here. I think that Nokia and Broadcom drivers define one. And if this is the enable/shutdown GPIO, we should name it consistently across all manufacturers. It essentially does the same on Bluetooth UART chips no matter what chip is behind them.
+This patch-set enables the reset of STM32MP1.
+STM32MP1 reset IP has a register to assert by writing '1' and another
+register to de-assert by writing '1'.
 
-Regards
+The patch 'dt-bindings: reset: add STM32MP1 resets' could be squashed
+with the patch:
+'dt-bindings: Document STM32MP1 Reset Clock Controller (RCC) bindings'
+commit 3830681d354f
 
-Marcel
+Gabriel Fernandez (2):
+  dt-bindings: reset: add STM32MP1 resets
+  reset: stm32mp1: Enable stm32mp1 reset driver
+
+ .../devicetree/bindings/reset/st,stm32mp1-rcc.txt  |   6 +
+ drivers/reset/Kconfig                              |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-stm32mp1.c                     | 122 +++++++++++++++++++++
+ include/dt-bindings/reset/stm32mp1-resets.h        | 108 ++++++++++++++++++
+ 5 files changed, 243 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/st,stm32mp1-rcc.txt
+ create mode 100644 drivers/reset/reset-stm32mp1.c
+ create mode 100644 include/dt-bindings/reset/stm32mp1-resets.h
+
+-- 
+1.9.1
