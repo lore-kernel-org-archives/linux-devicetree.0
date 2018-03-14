@@ -1,42 +1,36 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v17 02/10] PCI: Remove unused __weak attribute in pci_register_io_range()
-Date: Thu, 15 Mar 2018 02:15:51 +0800
-Message-ID: <1521051359-34473-3-git-send-email-john.garry@huawei.com>
-References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: net: bluetooth: Add
+ qualcomm-bluetooth
+Date: Wed, 14 Mar 2018 11:30:43 -0700
+Message-ID: <20180314183043.GX18510@minitux>
+References: <20180314155514.3374-1-thierry.escande@linaro.org>
+ <20180314155514.3374-3-thierry.escande@linaro.org>
+ <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com
-Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+On Wed 14 Mar 09:13 PDT 2018, Marcel Holtmann wrote:
+> > +		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+> 
+> can we use a common name here. I think that Nokia and Broadcom drivers
+> define one. And if this is the enable/shutdown GPIO, we should name it
+> consistently across all manufacturers. It essentially does the same on
+> Bluetooth UART chips no matter what chip is behind them.
+> 
 
-Currently pci_register_io_range() has only one definition;
-therefore there is no use of the __weak attribute.
+Broadcomm has a device-wakup-gpios and Nokia has bluetooth-wakup-gpios.
+It might be that these behave in the same way, but from the description
+they only trigger the wakeup.
 
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The reason for the proposed naming here is that the pin is named
+"BT_DISABLE_N" in the datasheet.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ae654e2..ff41a64 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3451,7 +3451,7 @@ struct io_range {
-  * Record the PCI IO range (expressed as CPU physical address + size).
-  * Return a negative value if an error has occured, zero otherwise
-  */
--int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-+int pci_register_io_range(phys_addr_t addr, resource_size_t size)
- {
- 	int err = 0;
- 
--- 
-1.9.1
+Regards,
+Bjorn
