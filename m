@@ -1,65 +1,41 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] arm64: dts: renesas: eagle: add EtherAVB pins
-Date: Wed, 14 Mar 2018 22:58:33 +0300
-Message-ID: <382aeecb-c484-ec27-1ef1-8da1673c2c14@cogentembedded.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] of: unittest: fix an error code in
+ of_unittest_apply_overlay()
+Date: Wed, 14 Mar 2018 23:08:28 +0300
+Message-ID: <20180314200828.GA10588@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the (previously omitted) EtherAVB pin data to the Eagle board's
-device tree.
+We accidentally return zero on failure instead of a negative error code.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
----
-The patch is against the 'renesas-devel-20180314-v4.16-rc5' tag of Simon's
-'renesas.git repo. It depends on the R8A77970 PFC driver patch adding EtherAVB
-pin groups (posted yesterday) in order to work properly...
-
-Changes in version 2:
-- updated the pin groups according to the recent PFC driver patch;
-- updated due to  the patch reordering.
-
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -34,6 +34,9 @@
- };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index dede77a79820..bc03902693b7 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1417,15 +1417,13 @@ static int __init of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
+ 		int *overlay_id)
+ {
+ 	const char *overlay_name;
+-	int ret;
  
- &avb {
-+	pinctrl-0 = <&avb_pins>;
-+	pinctrl-names = "default";
-+
- 	renesas,no-ether-link;
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
-@@ -71,6 +74,11 @@
- };
+ 	overlay_name = overlay_name_from_nr(overlay_nr);
  
- &pfc {
-+	avb_pins: avb0 {
-+		groups = "avb0_mdio", "avb0_rgmii", "avb0_txcrefclk";
-+		function = "avb0";
-+	};
-+
- 	i2c0_pins: i2c0 {
- 		groups = "i2c0";
- 		function = "i2c0";
+-	ret = overlay_data_apply(overlay_name, overlay_id);
+-	if (!ret) {
++	if (!overlay_data_apply(overlay_name, overlay_id)) {
+ 		unittest(0, "could not apply overlay \"%s\"\n",
+ 				overlay_name);
+-		return ret;
++		return -EFAULT;
+ 	}
+ 	of_unittest_track_overlay(*overlay_id);
+ 
