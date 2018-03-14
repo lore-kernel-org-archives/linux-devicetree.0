@@ -1,71 +1,55 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
-	devices
-Date: Wed, 14 Mar 2018 12:57:11 +0100
-Message-ID: <2705105.V6KYPvoJqj@aspire.rjw.lan>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
-	<2217404.A2W3Iek6du@aspire.rjw.lan>
-	<CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 3/3] arm64: dts: renesas: ulcb: Configure PMIC for DDR
+ Backup Power
+Date: Wed, 14 Mar 2018 13:09:46 +0100
+Message-ID: <1521029386-29975-4-git-send-email-geert+renesas@glider.be>
+References: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 14, 2018 12:50:54 PM CET Tomasz Figa wrote:
-> On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
-> > On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
-> >> On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
-> >> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >> > Hi Tomasz,
-> >> >
-> >> > On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> >> >> Hi Vivek,
-> >> >>
-> >> >> Thanks for the patch.
-> >> >>
-> >> >> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
-> >> >> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >> >>> The lists managing the device-links can be traversed to
-> >> >>> find the link between two devices. The device_link_add() APIs
-> >> >>> does traverse these lists to check if there's already a link
-> >> >>> setup between the two devices.
-> >> >>> So, add a new APIs, device_link_find(), to find an existing
-> >> >>> device link between two devices - suppliers and consumers.
-> >> >>
-> >> >> I'm wondering if this API would be useful for anything else that the
-> >> >> problem we're trying to solve with deleting links without storing them
-> >> >> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
-> >> >> better alternative?
-> >> >
-> >> > Yea, that sounds simpler i think. Will add this API instead of
-> >> > find_link(). Thanks.
-> >>
-> >> Perhaps let's wait for a moment to see if there are other opinions. :)
-> >>
-> >> Rafael, Lucas, any thoughts?
-> >
-> > It is not clear to me what the device_link_del_dev(consumer, supplier) would do.
-> 
-> It would delete a link between consumer and supplier.
+On the R-Car Starter Kit Premier/Pro, all of the DDR0, DDR1, DDR0C, and
+DDR1C power rails need to be kept powered when backup mode is enabled.
+Reflect this in the "rohm,ddr-backup-power" property for the BD9571MWV
+PMIC node.
 
-If there's one I suppose.
+The accessory power switch (SW8) is a momentary switch, hense specify
+"rohm,rstbmode-pulse".
 
-I'm wondering if you are somehow trying to address the same problem as the
-device links reference counting patch from Lukas that has been queued up for 4.17
-already.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - New.
+---
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Rafael
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index bb21ae335e8b8489..6caf2e4b776faf40 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -256,6 +256,8 @@
+ 		#interrupt-cells = <2>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		rohm,ddr-backup-power = <15>;
++		rohm,rstbmode-pulse;
+ 
+ 		regulators {
+ 			dvfs: dvfs {
+-- 
+2.7.4
