@@ -1,118 +1,129 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v6 11/25] of: base: Add of_get_cpu_state_node() to get idle states for a CPU node
-Date: Wed, 14 Mar 2018 17:58:21 +0100
-Message-ID: <1521046715-30683-12-git-send-email-ulf.hansson@linaro.org>
-References: <1521046715-30683-1-git-send-email-ulf.hansson@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Wed, 14 Mar 2018 20:09:52 +0300
+Message-ID: <a893a17c-367d-4f61-f835-4b6b420dc597@cogentembedded.com>
+References: <1520951425-13843-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1520951425-13843-3-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521046715-30683-1-git-send-email-ulf.hansson@linaro.org>
+In-Reply-To: <1520951425-13843-3-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, linux-pm@vger.kernel.org
-Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Juri Lelli <juri.lelli@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CPU's idle state nodes are currently parsed at the common cpuidle DT
-library, but also when initializing back-end data for the arch specific CPU
-operations, as in the PSCI driver case.
+On 03/13/2018 05:30 PM, Jacopo Mondi wrote:
 
-To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-the device node for the CPU and the index to the requested idle state node,
-as in-parameters. In case a corresponding idle state node is found, it
-returns the node with the refcount incremented for it, else it returns
-NULL.
+> Add DRM bridge driver for Thine THC63LVD1024 LVDS to digital parallel
+> output decoder.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+[...]
+> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> new file mode 100644
+> index 0000000..4b059c0
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
+> @@ -0,0 +1,241 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * THC63LVD1024 LVDS to parallel data DRM bridge driver.
+> + *
+> + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#include <drm/drmP.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +static const char * const thc63_reg_names[] = {
+> +	"vcc", "lvcc", "pvcc", "cvcc", };
 
-Moreover, for ARM, there are two generic methods, to describe the CPU's
-idle states, either via the flattened description through the
-"cpu-idle-states" binding [1] or via the hierarchical layout, using the
-"power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-take both options into account.
+   Your bracing style is pretty strange -- neither here nor there. Please place };
+on the next line...
 
-[1]
-Documentation/devicetree/bindings/arm/idle-states.txt
-[2]
-Documentation/devicetree/bindings/arm/psci.txt
+[...]
+> +static void thc63_enable(struct drm_bridge *bridge)
+> +{
+> +	struct thc63_dev *thc63 = to_thc63(bridge);
+> +	struct regulator *vcc;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(thc63->vccs); i++) {
+> +		vcc = thc63->vccs[i];
+> +		if (vcc) {
+> +			ret = regulator_enable(vcc);
+> +			if (ret)
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Lina Iyer <ilina@codeaurora.org>
-Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of.h |  8 ++++++++
- 2 files changed, 43 insertions(+)
+   You hardly need this variable, could do a call right in this *if*.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ad28de9..88d36a3 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -338,6 +338,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
- EXPORT_SYMBOL(of_cpu_node_to_id);
+[...]
+> +error_vcc_enable:
+> +	dev_err(thc63->dev, "Failed to enable regulator %u\n", i);
+> +}
+> +
+
+   Why not do this instead of *goto* before?
  
- /**
-+ * of_get_cpu_state_node - Get CPU's idle state node at the given index
-+ *
-+ * @cpu_node: The device node for the CPU
-+ * @index: The index in the list of the idle states
-+ *
-+ * Two generic methods can be used to describe a CPU's idle states, either via
-+ * a flattened description through the "cpu-idle-states" binding or via the
-+ * hierarchical layout, using the "power-domains" and the "domain-idle-states"
-+ * bindings. This function check for both and returns the idle state node for
-+ * the requested index.
-+ *
-+ * In case and idle state node is found at index, the refcount incremented for
-+ * it, so call of_node_put() on it when done. Returns NULL if not found.
-+ */
-+struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					  int index)
-+{
-+	struct of_phandle_args args;
-+	int err;
-+
-+	err = of_parse_phandle_with_args(cpu_node, "power-domains",
-+					"#power-domain-cells", 0, &args);
-+	if (!err) {
-+		struct device_node *state_node =
-+			of_parse_phandle(args.np, "domain-idle-states", index);
-+
-+		of_node_put(args.np);
-+		return state_node;
-+	}
-+
-+	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
-+}
-+EXPORT_SYMBOL(of_get_cpu_state_node);
-+
-+/**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-  * @compat: required compatible string, NULL or "" for any match
-diff --git a/include/linux/of.h b/include/linux/of.h
-index da1ee95..288233c 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -348,6 +348,8 @@ extern const void *of_get_property(const struct device_node *node,
- 				const char *name,
- 				int *lenp);
- extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
-+extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+						 int index);
- #define for_each_property_of_node(dn, pp) \
- 	for (pp = dn->properties; pp != NULL; pp = pp->next)
- 
-@@ -730,6 +732,12 @@ static inline struct device_node *of_get_cpu_node(int cpu,
- 	return NULL;
- }
- 
-+static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					int index)
-+{
-+	return NULL;
-+}
-+
- static inline int of_n_addr_cells(struct device_node *np)
- {
- 	return 0;
--- 
-2.7.4
+> +static void thc63_disable(struct drm_bridge *bridge)
+> +{
+> +	struct thc63_dev *thc63 = to_thc63(bridge);
+> +	struct regulator *vcc;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(thc63->vccs); i++) {
+> +		vcc = thc63->vccs[i];
+> +		if (vcc) {
+> +			ret = regulator_disable(vcc);
+> +			if (ret)
+
+   Again, no need for 'ret' whatsoever...
+
+> +				goto error_vcc_disable;
+> +		}
+> +	}
+> +
+> +	if (thc63->pwdn)
+> +		gpiod_set_value(thc63->pwdn, 1);
+> +
+> +	if (thc63->oe)
+> +		gpiod_set_value(thc63->oe, 0);
+> +
+> +	return;
+> +
+> +error_vcc_disable:
+> +	dev_err(thc63->dev, "Failed to disable regulator %u\n", i);
+
+   Again, why not do it instead of *goto*?
+
+[...]
+> +static int thc63_gpio_init(struct thc63_dev *thc63)
+> +{
+> +	thc63->pwdn = devm_gpiod_get_optional(thc63->dev, "pwdn",
+> +					      GPIOD_OUT_LOW);
+> +	if (IS_ERR(thc63->pwdn)) {
+> +		dev_err(thc63->dev, "Unable to get GPIO \"pwdn\"\n");
+
+   "pwdn-gpios" maybe?
+
+> +		return PTR_ERR(thc63->pwdn);
+> +	}
+> +
+> +	thc63->oe = devm_gpiod_get_optional(thc63->dev, "oe", GPIOD_OUT_LOW);
+> +	if (IS_ERR(thc63->oe)) {
+> +		dev_err(thc63->dev, "Unable to get GPIO \"oe\"\n");
+
+   "oe-gpios" maybe?
+
+[...]
+
+MBR, Sergei
