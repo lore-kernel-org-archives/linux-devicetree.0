@@ -1,74 +1,45 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Wed, 14 Mar 2018 12:05:22 -0700
-Message-ID: <20180314190522.GY18510@minitux>
-References: <20180314155514.3374-1-thierry.escande@linaro.org>
- <20180314155514.3374-3-thierry.escande@linaro.org>
- <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
- <20180314183043.GX18510@minitux>
- <D999852D-E9A7-41D2-9878-A93CB4D43D0C@holtmann.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add #sound-dai-cells property to
+ exynos5250 i2s nodes
+Date: Wed, 14 Mar 2018 20:15:19 +0100
+Message-ID: <20180314191519.53tror6r2cdgy5le@kozik-lap>
+References: <CGME20180313171232epcas1p4425993ba6042b06051cc7590d3dbeab4@epcas1p4.samsung.com>
+ <20180313171220.26333-1-s.nawrocki@samsung.com>
+ <4258f14d-ee0e-48b5-9674-e8e93d2aff69@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <D999852D-E9A7-41D2-9878-A93CB4D43D0C@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <4258f14d-ee0e-48b5-9674-e8e93d2aff69@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Mar 11:42 PDT 2018, Marcel Holtmann wrote:
-
-> Hi Bjoern,
-> 
-> >>> +		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-> >> 
-> >> can we use a common name here. I think that Nokia and Broadcom drivers
-> >> define one. And if this is the enable/shutdown GPIO, we should name it
-> >> consistently across all manufacturers. It essentially does the same on
-> >> Bluetooth UART chips no matter what chip is behind them.
-> >> 
+On Wed, Mar 14, 2018 at 11:10:48AM +0100, Sylwester Nawrocki wrote:
+> On 03/13/2018 06:12 PM, Sylwester Nawrocki wrote:
+> > The #sound-dai-cells property may be required to reference the CPU DAI
+> > properly. This change is required for Snow HDMI audio.
 > > 
-> > Broadcomm has a device-wakup-gpios and Nokia has bluetooth-wakup-gpios.
-> > It might be that these behave in the same way, but from the description
-> > they only trigger the wakeup.
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > 
-> that is something that we might need to start fixing. I really prefer
-> if we name the GPIOs a bit more consistent.
+> There is
 > 
-> > The reason for the proposed naming here is that the pin is named
-> > "BT_DISABLE_N" in the datasheet.
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > 
-> That is not a reason I buy. So the next board comes around that labels
-> it in the data sheet BT_DISABLE_YEAH_SUPER_GREAT and you send me a
-> patch to the driver to look for that name. If the GPIO does the same
-> thing, I couldn’t care less what the data sheet says. That might be
-> a comment in the DT file, but it should not pollute the driver code.
+> tag missing here.
 > 
 
-BT_DISABLE_N is the name of this pin in the datasheet of the QCA chip,
-not on the board, so this name is the same regardless of what you name
-the line or gpio your board connect it to.
+Thanks, applied with Marek's tag.
 
-> A new board should not require driver changes, you just ship a new DT
-> for that board and an existing driver hopefully just does the job. No
-> matter how someone named a GPIO in a piece of paper.
-> 
-
-I totally agree with the fact that the board should not affect the
-naming of the gpio in the driver. But I do enjoy when we refer to pins
-by their real name - instead of having to guess which pin in the _chip_
-specification the driver actually refer to.
-
-
-That said, what name would you prefer for this?
-
-Afaict this is not "wakeup" and there are a few extra steps between the
-disabled state and "bluetooth is enabled", so "enable" feels slightly
-wrong. And it probably should be "bluetooth" and not just "device" as
-this refers to a pin on a WiFi/BT combo chip.
-
-Regards,
-Bjorn
+Best regards,
+Krzysztof
