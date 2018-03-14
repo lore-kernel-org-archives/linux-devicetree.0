@@ -1,241 +1,88 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 2/7] reset: qcom: AOSS (always on subsystem) reset
- controller
-Date: Wed, 14 Mar 2018 16:18:40 +0530
-Message-ID: <a36216b8-07b5-c334-095e-e873aa3becb2@codeaurora.org>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-3-git-send-email-sibis@codeaurora.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
+Date: Wed, 14 Mar 2018 11:02:06 +0000
+Message-ID: <TY1PR01MB1770D3BF20F440AAD9A1E5E5C0D10@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <CAMuHMdUx3A_8MeZmrwiBRqUS0oGjwrg13fy1QMsA2SUw+dR0Hg@mail.gmail.com>
+ <1519839622-6109-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521019283-32212-3-git-send-email-sibis@codeaurora.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdVRxTCG0vCEEmhHm4XsZeJaPM1b_LOeZxqNdhRqsH0oZw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi S <sibis@codeaurora.org>, bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sibi,
+Hi Geert,
 
-
-On 3/14/2018 2:51 PM, Sibi S wrote:
-> Add reset controller driver for Qualcomm SDM845 SoC to
-> control reset signals provided by AOSS for Modem, Venus
-> ADSP, GPU, Camera, Wireless, Display subsystem
+> Subject: Re: [PATCH v6 01/26] ARM: shmobile: Add watchdog support
 >
-> Signed-off-by: Sibi S <sibis@codeaurora.org>
-> ---
->   drivers/reset/Kconfig           |  10 +++
->   drivers/reset/Makefile          |   1 +
->   drivers/reset/reset-qcom-aoss.c | 156 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 167 insertions(+)
->   create mode 100644 drivers/reset/reset-qcom-aoss.c
+> Hi Fabrizio,
 >
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 7fc7769..d06bd1d 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -81,6 +81,16 @@ config RESET_PISTACHIO
->   	help
->   	  This enables the reset driver for ImgTec Pistachio SoCs.
->   
-> +config RESET_QCOM_AOSS
-> +	bool "Qcom AOSS Reset Driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	select MFD_SYSCON
+> On Wed, Feb 28, 2018 at 6:40 PM, Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
+> > boot CPUs run a routine designed to bring up SMP and deal with hot plug.
+> > The value contained in the SBAR registers is not initialized by a WDT
+> > triggered reset, which means that after a WDT triggered reset we jump
+> > to the SMP bring up routine, preventing the system from executing the
+> > bootrom code.
+> >
+> > The purpose of this patch is to jump to the bootrom code in case of a
+> > WDT triggered reset, and keep the SMP functionality untouched.
+> > In order to tell if the code had been called due to the WDT overflowing
+> > we are testing WOVF from register RWTCSRA.
+> >
+> > The new function shmobile_boot_vector_gen2 isn't replacing
+> > shmobile_boot_vector for backward compatibility reasons. The kernel
+> > will install the best option (either shmobile_boot_vector or
+> > shmobile_boot_vector_gen2) to ICRAM1 after parsing the device tree,
+> > according to the amount of memory available.
+> >
+> > Since shmobile_boot_vector has become bigger, "reg" property of nodes
+> > compatible with "renesas,smp-sram" now need to be set to a value
+> > greater or equal to "<0 0x60>".
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v5->v6:
+> > * taken ifdefs out as per Geert's suggestion.
+>
+> My intention was to remove the #ifdefs from the header file only, not
+> from arch/arm/mach-shmobile/headsmp.S, as the latter is used for
+> other SoC families, too.
 
-I think we don't need this after we moved away from syscon?
+Ah ok, I'll send another version to restore the ifdef within headsmp.S then.
 
-> +	help
-> +	  This enables the AOSS (always on subsystem) reset driver
-> +	  for Qualcomm SDM845 SoCs. Say Y if you want to control
-> +	  reset signals provided by AOSS for Modem, Venus, ADSP,
-> +	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
-> +
->   config RESET_SIMPLE
->   	bool "Simple Reset Controller Driver" if COMPILE_TEST
->   	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 132c24f..c30044a 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->   obj-$(CONFIG_RESET_MESON) += reset-meson.o
->   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->   obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
-> +obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
->   obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
->   obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->   obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
-> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-> new file mode 100644
-> index 0000000..e70fb37
-> --- /dev/null
-> +++ b/drivers/reset/reset-qcom-aoss.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_device.h>
-> +#include <dt-bindings/reset/qcom,sdm845-aoss.h>
-> +
-> +struct qcom_aoss_reset_map {
-> +	unsigned int reg;
-> +	u8 bit;
-> +};
-> +
-> +struct qcom_aoss_desc {
-> +	const struct regmap_config *config;
-> +	const struct qcom_aoss_reset_map *resets;
-> +	int delay;
-> +	size_t num_resets;
-> +};
-> +
-> +struct qcom_aoss_reset_data {
-> +	struct reset_controller_dev rcdev;
-> +	struct regmap *regmap;
-> +	const struct qcom_aoss_desc *desc;
-> +};
-> +
-> +static const struct regmap_config sdm845_aoss_regmap_config = {
-> +	.name		= "aoss-reset",
-> +	.reg_bits	= 32,
-> +	.reg_stride	= 4,
-> +	.val_bits	= 32,
-> +	.max_register	= 0x20000,
-> +	.fast_io	= true,
-> +};
-> +
-> +static const struct qcom_aoss_reset_map sdm845_aoss_resets[] = {
-> +	[AOSS_CC_MSS_RESTART] = { 0x0, 0 },
-> +	[AOSS_CC_CAMSS_RESTART] = { 0x1000, 0 },
-> +	[AOSS_CC_VENUS_RESTART] = { 0x2000, 0 },
-> +	[AOSS_CC_GPU_RESTART] = { 0x3000, 0 },
-> +	[AOSS_CC_DISPSS_RESTART] = { 0x4000, 0 },
-> +	[AOSS_CC_WCSS_RESTART] = { 0x10000, 0 },
-> +	[AOSS_CC_LPASS_RESTART] = { 0x20000, 0 },
-> +};
-> +
-> +static const struct qcom_aoss_desc sdm845_aoss_desc = {
-> +	.config = &sdm845_aoss_regmap_config,
-> +	.resets = sdm845_aoss_resets,
-> +	/* Wait 6 32kHz sleep cycles for reset */
-> +	.delay = 200,
-> +	.num_resets = ARRAY_SIZE(sdm845_aoss_resets),
-> +};
-> +
-> +static struct qcom_aoss_reset_data *to_qcom_aoss_reset_data(
-> +				struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct qcom_aoss_reset_data, rcdev);
-> +}
+Thanks,
+Fab
 
-Either a macro for such definition or 'inline'?
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-> +
-> +static int qcom_aoss_control_assert(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
-> +
-> +	return regmap_update_bits(data->regmap, map->reg,
-> +					BIT(map->bit), BIT(map->bit));
-> +}
-> +
-> +static int qcom_aoss_control_deassert(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
-> +
-> +	return regmap_update_bits(data->regmap, map->reg, BIT(map->bit), 0);
-> +}
-> +
-> +static int qcom_aoss_control_reset(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	int ret;
-> +
-> +	ret = qcom_aoss_control_assert(rcdev, idx);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(data->desc->delay);
-> +
-> +	return qcom_aoss_control_deassert(rcdev, idx);
-> +}
-> +
-> +static const struct reset_control_ops qcom_aoss_reset_ops = {
-> +	.reset = qcom_aoss_control_reset,
-> +	.assert = qcom_aoss_control_assert,
-> +	.deassert = qcom_aoss_control_deassert,
-> +};
-> +
-> +static int qcom_aoss_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_aoss_reset_data *data;
-> +	struct device *dev = &pdev->dev;
-> +	const struct qcom_aoss_desc *desc;
-> +	void __iomem *base;
-> +	struct resource *res;
-> +
-> +	desc = of_device_get_match_data(dev);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->desc = desc;
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	data->regmap = devm_regmap_init_mmio(dev, base, desc->config);
-> +	if (IS_ERR(data->regmap)) {
-> +		dev_err(dev, "Unable to get aoss-reset regmap");
-> +		return PTR_ERR(data->regmap);
-> +	}
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.ops = &qcom_aoss_reset_ops;
-> +	data->rcdev.nr_resets = desc->num_resets;
-> +	data->rcdev.of_node = dev->of_node;
-> +
-> +	return devm_reset_controller_register(dev, &data->rcdev);
-> +}
-> +
-> +static const struct of_device_id qcom_aoss_reset_of_match[] = {
-> +	{ .compatible = "qcom,sdm845-aoss-reset", .data = &sdm845_aoss_desc },
-> +	{}
-> +};
-> +
-> +static struct platform_driver qcom_aoss_reset_driver = {
-> +	.probe = qcom_aoss_reset_probe,
-> +	.driver  = {
-> +		.name = "qcom_aoss_reset",
-> +		.of_match_table = qcom_aoss_reset_of_match,
-> +	},
-> +};
-> +
-> +builtin_platform_driver(qcom_aoss_reset_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm AOSS Reset Driver");
-> +MODULE_LICENSE("GPL v2");
 
-Rest looks good to me. After taking above changes -
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-regards
-Vivek
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
