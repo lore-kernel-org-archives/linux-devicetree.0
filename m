@@ -1,51 +1,105 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V10 3/3] mtd: ofpart: add of_match_table with
- "fixed-partitions"
-Date: Wed, 14 Mar 2018 13:10:44 +0100
-Message-ID: <20180314121044.12033-4-zajec5@gmail.com>
-References: <20180130201059.4424-1-zajec5@gmail.com>
- <20180314121044.12033-1-zajec5@gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
+	devices
+Date: Wed, 14 Mar 2018 12:14:15 +0000
+Message-ID: <11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<2217404.A2W3Iek6du@aspire.rjw.lan>
+	<CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
+	<2705105.V6KYPvoJqj@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180314121044.12033-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, John Crispin <john@phrozen.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Frank Rowand <frowand.list@gmail.com>, Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2705105.V6KYPvoJqj-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBhbGxvd3MgdXNp
-bmcgdGhpcyBwYXJzZXIgd2l0aCBhbnkgZmxhc2ggZHJpdmVyIHRoYXQgdGFrZXMgY2FyZSBvZgpz
-ZXR0aW5nIG9mX25vZGUgKHVzaW5nIG10ZF9zZXRfb2Zfbm9kZSBoZWxwZXIpIGNvcnJlY3RseS4g
-VXAgdG8gbm93CnN1cHBvcnQgZm9yICJmaXhlZC1wYXJ0aXRpb25zIiBEVCBjb21wYXRpYmlsaXR5
-IHN0cmluZyB3YXMgd29ya2luZyBvbmx5CndpdGggZmxhc2ggZHJpdmVycyB0aGF0IHdlcmUgc3Bl
-Y2lmeWluZyAib2ZwYXJ0IiAobWFudWFsbHkgb3IgYnkgbGV0dGluZwptdGQgdXNlIHRoZSBkZWZh
-dWx0IHNldCBvZiBwYXJzZXJzKS4KClRoaXMgbWF0Y2hlcyBleGlzdGluZyBiaW5kaW5ncyBkb2N1
-bWVudGF0aW9uLgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgpSZXZpZXdlZC1ieTogQnJpYW4gTm9ycmlzIDxjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5j
-b20+ClRlc3RlZC1ieTogQnJpYW4gTm9ycmlzIDxjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20+
-Ci0tLQogZHJpdmVycy9tdGQvb2ZwYXJ0LmMgfCA3ICsrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA3
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9vZnBhcnQuYyBiL2RyaXZl
-cnMvbXRkL29mcGFydC5jCmluZGV4IDlmNDk3MzE1ZTY1ZC4uNjE1ZjhjMTczMTYyIDEwMDY0NAot
-LS0gYS9kcml2ZXJzL210ZC9vZnBhcnQuYworKysgYi9kcml2ZXJzL210ZC9vZnBhcnQuYwpAQCAt
-MTQwLDkgKzE0MCwxNiBAQCBzdGF0aWMgaW50IHBhcnNlX2ZpeGVkX3BhcnRpdGlvbnMoc3RydWN0
-IG10ZF9pbmZvICptYXN0ZXIsCiAJcmV0dXJuIHJldDsKIH0KIAorc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgcGFyc2Vfb2ZwYXJ0X21hdGNoX3RhYmxlW10gPSB7CisJeyAuY29tcGF0
-aWJsZSA9ICJmaXhlZC1wYXJ0aXRpb25zIiB9LAorCXt9LAorfTsKK01PRFVMRV9ERVZJQ0VfVEFC
-TEUob2YsIHBhcnNlX29mcGFydF9tYXRjaF90YWJsZSk7CisKIHN0YXRpYyBzdHJ1Y3QgbXRkX3Bh
-cnRfcGFyc2VyIG9mcGFydF9wYXJzZXIgPSB7CiAJLnBhcnNlX2ZuID0gcGFyc2VfZml4ZWRfcGFy
-dGl0aW9ucywKIAkubmFtZSA9ICJmaXhlZC1wYXJ0aXRpb25zIiwKKwkub2ZfbWF0Y2hfdGFibGUg
-PSBwYXJzZV9vZnBhcnRfbWF0Y2hfdGFibGUsCiB9OwogCiBzdGF0aWMgaW50IHBhcnNlX29mb2xk
-cGFydF9wYXJ0aXRpb25zKHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAotLSAKMi4xMS4wCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
-IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+Hi Rafael,
+
+On 14/03/18 11:57, Rafael J. Wysocki wrote:
+> On Wednesday, March 14, 2018 12:50:54 PM CET Tomasz Figa wrote:
+>> On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+>>> On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
+>>>> On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam
+>>>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>> Hi Tomasz,
+>>>>>
+>>>>> On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>>>> Hi Vivek,
+>>>>>>
+>>>>>> Thanks for the patch.
+>>>>>>
+>>>>>> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam
+>>>>>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>>>> The lists managing the device-links can be traversed to
+>>>>>>> find the link between two devices. The device_link_add() APIs
+>>>>>>> does traverse these lists to check if there's already a link
+>>>>>>> setup between the two devices.
+>>>>>>> So, add a new APIs, device_link_find(), to find an existing
+>>>>>>> device link between two devices - suppliers and consumers.
+>>>>>>
+>>>>>> I'm wondering if this API would be useful for anything else that the
+>>>>>> problem we're trying to solve with deleting links without storing them
+>>>>>> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
+>>>>>> better alternative?
+>>>>>
+>>>>> Yea, that sounds simpler i think. Will add this API instead of
+>>>>> find_link(). Thanks.
+>>>>
+>>>> Perhaps let's wait for a moment to see if there are other opinions. :)
+>>>>
+>>>> Rafael, Lucas, any thoughts?
+>>>
+>>> It is not clear to me what the device_link_del_dev(consumer, supplier) would do.
+>>
+>> It would delete a link between consumer and supplier.
+> 
+> If there's one I suppose.
+> 
+> I'm wondering if you are somehow trying to address the same problem as the
+> device links reference counting patch from Lukas that has been queued up for 4.17
+> already.
+
+Not quite - the issue here is that we have one supplier with an 
+arbitrarily large number of consumers, and would prefer that supplier 
+not to have to spend a whole bunch of memory to store all the struct 
+device_link pointers for the sole reason of having something to give to 
+device_link_del() at the end, given that the device links code is 
+already keeping track of everything internally anyway.
+
+The current API would permit doing this:
+
+	iommu_attach(dev) {
+		...
+		if (!device_link_add(dev, iommu, IOMMU_LINK_FLAGS))
+			return -ENODEV;
+		...
+	}
+
+	iommu_detach(dev) {
+		...
+		// Will return the existing link from earlier
+		link = device_link_add(dev, iommu, IOMMU_LINK_FLAGS);
+		device_link_del(link);
+		// Needed once refcounting is in place
+		//device_link_del(link);
+		...
+	}
+
+but it looks so wacky and non-obvious that we'd like to encapsulate the 
+same behaviour into a more formal interface (my personal naming 
+preference would be device_link_remove(consumer, supplier)).
+
+Robin.
