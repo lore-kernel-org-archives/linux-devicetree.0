@@ -1,72 +1,92 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: [PATCH] of: Respect CONFIG_CMDLINE{,_EXTENED,_FORCE) with no chosen node
-Date: Wed, 14 Mar 2018 09:31:05 -0700
-Message-ID: <20180314163105.8638-1-palmer@sifive.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@sifive.com>, Michael J Clark <mjc@sifive.com>, Trung Tran <trung.tran@ettus.com>, Moritz Fischer <mdf@kernel.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 1/5] ASoC: samsung: odroid: Fix 32000 sample
+	rate handling
+Date: Wed, 14 Mar 2018 17:41:13 +0100
+Message-ID: <20180314164115.22736-1-s.nawrocki@samsung.com>
+References: <CGME20180314164131epcas2p426aa34f4503ff12fa041a817cdd3eed9@epcas2p4.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Systems that boot without a chosen node in the device tree should still
-respect the command lines that are built into the kernel.  This patch
-avoids bailing out of the command line argument parsing code when there
-is no chosen node in the device tree.  This is necessary to boot
-straight to a root file system (ie, without an initramfs)
+In case of sample rates lower than 44100 currently there is too low MCLK
+frequency set for the CODEC. Playback fails with following errors:
 
-The intent here is that the only functional change is to copy
-CONFIG_CMDLINE into data if both of them are valid (ie, CONFIG_CMDLINE
-is defined and data is non-null) on systems where there is no chosen
-device tree node.  I don't actually know what the return values do so I
-just preserved them.
+$ speaker-test -c2 -t sine -f 1500 -l2 -r 32000
 
-Thanks to Trung and Moritz for finding the bug during our ELC hackathon
-(and providing the first fix), and Michal for suggesting this fix (which
-is cleaner than what I was doing).  I've given this very minimal
-testing: it fixes the RISC-V bug (in conjunction with a patch to move
-from COMMANDLINE_OVERRIDE to COMMANDLINE_FORCE), still works on systems
-with and without the chosen node, and builds on ARM64.
+Sine wave rate is 1500.0000Hz
+Rate set to 32000Hz (requested 32000Hz)
+Buffer size range from 128 to 131072
+Period size range from 64 to 65536
+Using max buffer size 131072
+Periods = 4
+Unable to set hw params for playback: Invalid argument
+Setting of hwparams failed: Invalid argument
 
-CC: Michael J Clark <mjc@sifive.com>
-CC: Trung Tran <trung.tran@ettus.com>
-CC: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+[  497.883700] max98090 1-0010: Invalid master clock frequency
+
+To fix this the I2S root clock's frequency is increased, depending
+on sampling rate.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- drivers/of/fdt.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ sound/soc/samsung/odroid.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 84aa9d676375..60241b1cb024 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1084,9 +1084,12 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index 92d750806d1d..e698e67f5f84 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -36,23 +36,26 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct odroid_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+-	unsigned int pll_freq, rclk_freq;
++	unsigned int pll_freq, rclk_freq, rfs;
+ 	int ret;
  
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ 	switch (params_rate(params)) {
+-	case 32000:
+ 	case 64000:
+-		pll_freq = 131072006U;
++		pll_freq = 196608001U;
++		rfs = 384;
+ 		break;
+ 	case 44100:
+ 	case 88200:
+ 	case 176400:
+ 		pll_freq = 180633609U;
++		rfs = 512;
+ 		break;
++	case 32000:
+ 	case 48000:
+ 	case 96000:
+ 	case 192000:
+ 		pll_freq = 196608001U;
++		rfs = 512;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -67,7 +70,7 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
+ 	 *  frequency values due to the EPLL output frequency not being exact
+ 	 *  multiple of the audio sampling rate.
+ 	 */
+-	rclk_freq = params_rate(params) * 256 + 1;
++	rclk_freq = params_rate(params) * rfs + 1;
  
--	if (depth != 1 || !data ||
-+	if (!data)
-+		goto no_data;
-+
-+	if (depth != 1 ||
- 	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
--		return 0;
-+		goto no_chosen;
- 
- 	early_init_dt_check_for_initrd(node);
- 
-@@ -1117,6 +1120,13 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	/* break now */
- 	return 1;
-+
-+no_chosen:
-+#ifdef CONFIG_CMDLINE
-+	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-+#endif
-+no_data:
-+	return 0;
- }
- 
- #ifdef CONFIG_HAVE_MEMBLOCK
+ 	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
+ 	if (ret < 0)
 -- 
-2.16.1
+2.14.2
