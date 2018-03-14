@@ -1,73 +1,61 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V10 2/3] mtd: rename "ofpart" parser to "fixed-partitions" as
- it fits it better
-Date: Wed, 14 Mar 2018 13:10:43 +0100
-Message-ID: <20180314121044.12033-3-zajec5@gmail.com>
-References: <20180130201059.4424-1-zajec5@gmail.com>
- <20180314121044.12033-1-zajec5@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
+ devices
+Date: Wed, 14 Mar 2018 13:27:59 +0100
+Message-ID: <20180314122759.GB19651@wunner.de>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+ <2217404.A2W3Iek6du@aspire.rjw.lan>
+ <CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
+ <2705105.V6KYPvoJqj@aspire.rjw.lan>
+ <11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180314121044.12033-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, John Crispin <john@phrozen.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Frank Rowand <frowand.list@gmail.com>, Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Tomasz Figa <tfiga@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>, Sricharan R <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVHlwZSAib2ZwYXJ0IiBt
-ZWFucyB0aGF0IE9GIHNob3VsZCBiZSB1c2VkIHRvIGdldCBwYXJ0aXRpb25pbmcgaW5mbyBhbmQK
-dGhpcyBkcml2ZXIgc3VwcG9ydHMgImZpeGVkLXBhcnRpdGlvbnMiIGJpbmRpbmcgb25seS4gUmVu
-YW1pbmcgaXQgc2hvdWxkCmxlYWQgdG8gbGVzcyBjb25mdXNpb24gZXNwZWNpYWxseSB3aGVuIHBh
-cnNlcnMgZm9yIG5ldyBjb21wYXRpYmlsaXR5CnN0cmluZ3Mgc3RhcnQgdG8gYXBwZWFyLgoKU2ln
-bmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KIGRyaXZl
-cnMvbXRkL210ZHBhcnQuYyB8ICA0ICsrLS0KIGRyaXZlcnMvbXRkL29mcGFydC5jICB8IDExICsr
-KysrKy0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9tdGRwYXJ0LmMgYi9kcml2ZXJzL210ZC9tdGRw
-YXJ0LmMKaW5kZXggMTA1ZmUyYzc3MjljLi5jZGIxZjQ5NmFiOTUgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvbXRkL210ZHBhcnQuYworKysgYi9kcml2ZXJzL210ZC9tdGRwYXJ0LmMKQEAgLTkwNyw3ICs5
-MDcsNyBAQCBzdGF0aWMgaW50IG10ZF9wYXJ0X29mX3BhcnNlKHN0cnVjdCBtdGRfaW5mbyAqbWFz
-dGVyLAogCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CiAJc3RydWN0IHByb3BlcnR5ICpwcm9wOwog
-CWNvbnN0IGNoYXIgKmNvbXBhdDsKLQljb25zdCBjaGFyICpmaXhlZCA9ICJvZnBhcnQiOworCWNv
-bnN0IGNoYXIgKmZpeGVkID0gImZpeGVkLXBhcnRpdGlvbnMiOwogCWludCByZXQsIGVyciA9IDA7
-CiAKIAlucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpLCAi
-cGFydGl0aW9ucyIpOwpAQCAtOTI3LDcgKzkyNyw3IEBAIHN0YXRpYyBpbnQgbXRkX3BhcnRfb2Zf
-cGFyc2Uoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsCiAJb2Zfbm9kZV9wdXQobnApOwogCiAJLyoK
-LQkgKiBGb3IgYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3ZSBoYXZlIHRvIHRyeSB0aGUgIm9mcGFy
-dCIKKwkgKiBGb3IgYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3ZSBoYXZlIHRvIHRyeSB0aGUgImZp
-eGVkLXBhcnRpdGlvbnMiCiAJICogcGFyc2VyLiBJdCBzdXBwb3J0cyBvbGQgRFQgZm9ybWF0IHdp
-dGggcGFydGl0aW9ucyBzcGVjaWZpZWQgYXMgYQogCSAqIGRpcmVjdCBzdWJub2RlcyBvZiBhIGZs
-YXNoIGRldmljZSBEVCBub2RlIHdpdGhvdXQgYW55IGNvbXBhdGliaWxpdHkKIAkgKiBzcGVjaWZp
-ZWQgd2UgY291bGQgbWF0Y2guCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9vZnBhcnQuYyBiL2Ry
-aXZlcnMvbXRkL29mcGFydC5jCmluZGV4IDZiZGY0ZTUyNTY3Ny4uOWY0OTczMTVlNjVkIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL210ZC9vZnBhcnQuYworKysgYi9kcml2ZXJzL210ZC9vZnBhcnQuYwpA
-QCAtMjUsOSArMjUsOSBAQCBzdGF0aWMgYm9vbCBub2RlX2hhc19jb21wYXRpYmxlKHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqcHApCiAJcmV0dXJuIG9mX2dldF9wcm9wZXJ0eShwcCwgImNvbXBhdGlibGUi
-LCBOVUxMKTsKIH0KIAotc3RhdGljIGludCBwYXJzZV9vZnBhcnRfcGFydGl0aW9ucyhzdHJ1Y3Qg
-bXRkX2luZm8gKm1hc3RlciwKLQkJCQkgICBjb25zdCBzdHJ1Y3QgbXRkX3BhcnRpdGlvbiAqKnBw
-YXJ0cywKLQkJCQkgICBzdHJ1Y3QgbXRkX3BhcnRfcGFyc2VyX2RhdGEgKmRhdGEpCitzdGF0aWMg
-aW50IHBhcnNlX2ZpeGVkX3BhcnRpdGlvbnMoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsCisJCQkJ
-ICBjb25zdCBzdHJ1Y3QgbXRkX3BhcnRpdGlvbiAqKnBwYXJ0cywKKwkJCQkgIHN0cnVjdCBtdGRf
-cGFydF9wYXJzZXJfZGF0YSAqZGF0YSkKIHsKIAlzdHJ1Y3QgbXRkX3BhcnRpdGlvbiAqcGFydHM7
-CiAJc3RydWN0IGRldmljZV9ub2RlICptdGRfbm9kZTsKQEAgLTE0MSw4ICsxNDEsOCBAQCBzdGF0
-aWMgaW50IHBhcnNlX29mcGFydF9wYXJ0aXRpb25zKHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAog
-fQogCiBzdGF0aWMgc3RydWN0IG10ZF9wYXJ0X3BhcnNlciBvZnBhcnRfcGFyc2VyID0gewotCS5w
-YXJzZV9mbiA9IHBhcnNlX29mcGFydF9wYXJ0aXRpb25zLAotCS5uYW1lID0gIm9mcGFydCIsCisJ
-LnBhcnNlX2ZuID0gcGFyc2VfZml4ZWRfcGFydGl0aW9ucywKKwkubmFtZSA9ICJmaXhlZC1wYXJ0
-aXRpb25zIiwKIH07CiAKIHN0YXRpYyBpbnQgcGFyc2Vfb2ZvbGRwYXJ0X3BhcnRpdGlvbnMoc3Ry
-dWN0IG10ZF9pbmZvICptYXN0ZXIsCkBAIC0yMjksNCArMjI5LDUgQEAgTU9EVUxFX0FVVEhPUigi
-Vml0YWx5IFdvb2wsIERhdmlkIEdpYnNvbiIpOwogICogd2l0aCB0aGUgc2FtZSBuYW1lLiBTaW5j
-ZSB3ZSBwcm92aWRlIHRoZSBvZm9sZHBhcnQgcGFyc2VyLCB3ZSBzaG91bGQgaGF2ZQogICogdGhl
-IGNvcnJlc3BvbmRpbmcgYWxpYXMuCiAgKi8KK01PRFVMRV9BTElBUygiZml4ZWQtcGFydGl0aW9u
-cyIpOwogTU9EVUxFX0FMSUFTKCJvZm9sZHBhcnQiKTsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlz
-Y3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1tdGQvCg==
+On Wed, Mar 14, 2018 at 12:14:15PM +0000, Robin Murphy wrote:
+> >>On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >>>On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
+> >>>>On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam <vivek.gautam@codeaurora.org> wrote:
+> >>>>>On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga@chromium.org> wrote:
+> >>>>>>On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam <vivek.gautam@codeaurora.org> wrote:
+> >>>>>>>The lists managing the device-links can be traversed to
+> >>>>>>>find the link between two devices. The device_link_add() APIs
+> >>>>>>>does traverse these lists to check if there's already a link
+> >>>>>>>setup between the two devices.
+> >>>>>>>So, add a new APIs, device_link_find(), to find an existing
+> >>>>>>>device link between two devices - suppliers and consumers.
+> >>>>>>
+> >>>>>>I'm wondering if this API would be useful for anything else that the
+> >>>>>>problem we're trying to solve with deleting links without storing them
+> >>>>>>anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
+> >>>>>>better alternative?
+> >>>>>
+> >>>>>Yea, that sounds simpler i think. Will add this API instead of
+> >>>>>find_link(). Thanks.
+> >>>>
+> >>>>Perhaps let's wait for a moment to see if there are other opinions. :)
+> >>>>
+> >>>>Rafael, Lucas, any thoughts?
+> >>>
+> >>>It is not clear to me what the device_link_del_dev(consumer, supplier)
+> >>>would do.
+> 
+> Not quite - the issue here is that we have one supplier with an arbitrarily
+> large number of consumers, and would prefer that supplier not to have to
+> spend a whole bunch of memory to store all the struct device_link pointers
+> for the sole reason of having something to give to device_link_del() at the
+> end, given that the device links code is already keeping track of everything
+> internally anyway.
+
+Makes sense to me.  How about an additional flag which autoremoves the
+link on provider unbind?
+
+Thanks,
+
+Lukas
