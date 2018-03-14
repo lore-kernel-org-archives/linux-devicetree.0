@@ -1,78 +1,161 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/3] arm64: dts: renesas: salvator-x(s)/ulcb: Configure
- PMIC for DDR Backup Power
-Date: Wed, 14 Mar 2018 13:09:43 +0100
-Message-ID: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V10 1/3] mtd: partitions: add of_match_table parser matching
+ for the "ofpart" type
+Date: Wed, 14 Mar 2018 13:10:42 +0100
+Message-ID: <20180314121044.12033-2-zajec5@gmail.com>
+References: <20180130201059.4424-1-zajec5@gmail.com>
+ <20180314121044.12033-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180314121044.12033-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, John Crispin <john@phrozen.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Frank Rowand <frowand.list@gmail.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
-
-The ROHM BD9571MWV PMIC on the Renesas Salvator-X(S) and ULCB
-development boards supports DDR Backup Power, which means that the DDR
-power rails can be kept powered while the main SoC is powered down.
-
-This patch series is the DT counterpart of the series "[PATCH v2 0/4]
-regulator: bd9571mwv: Add support for DDR backup mode" [1] and
-"[PATCH/RFC 0/2] regulator: bd9571mwv: Add support for toggle power
-switches" [2].
-
-The first patch adds the missing device node for the BD9571 PMIC on the
-ULCB boards, and can be applied immediately.
-The last two patches add DDR Backup Mode configuration, and depend on
-the DT bindings in the driver patch being accepted.
-
-Changes compared to v2:
-  - Add support for ULCB,
-  - Add "rohm,rstbmode-level" for Salvator-X(S).
-
-This has been tested on M3ULCB (thanks Jacopo!), and on Salvator-X(S).
-
-For testing, driver and DTS patches are available in the
-topic/bd9571-ddr-backup-mode-driver-v2 and
-topic/bd9571-ddr-backup-mode-dt-v2 branches of my renesas-drivers git
-repository at
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
-
-Thanks for your comments!
-
-[1] https://lkml.org/lkml/2018/3/14/302
-[2] https://lkml.org/lkml/2018/3/14/324
-
-Geert Uytterhoeven (3):
-  arm64: dts: renesas: ulcb: Add BD9571 PMIC
-  arm64: dts: renesas: salvator-common: Configure PMIC for DDR Backup
-    Power
-  arm64: dts: renesas: ulcb: Configure PMIC for DDR Backup Power
-
- arch/arm64/boot/dts/renesas/salvator-common.dtsi |  2 ++
- arch/arm64/boot/dts/renesas/ulcb.dtsi            | 31 ++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
-
--- 
-2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKSW4gb3JkZXIgdG8gcHJv
+cGVybHkgc3VwcG9ydCBjb21wYXRpYmlsaXR5IHN0cmluZ3MgYXMgZGVzY3JpYmVkIGluIHRoZQpi
+aW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCAib2ZwYXJ0IiB0eXBlIHNob3VsZCBiZSB0cmVhdGVk
+IGFzIGFuCmluZGljYXRpb24gZm9yIGxvb2tpbmcgaW50byBPRi4gTVREIHNob3VsZCBjaGVjayAi
+Y29tcGF0aWJsZSIgcHJvcGVydHkKYW5kIHNlYXJjaCBmb3IgYSBtYXRjaGluZyBwYXJzZXIgcmF0
+aGVyIHRoYW4gYmxpbmRseSB0cnlpbmcgdGhlIG9uZQpzdXBwb3J0aW5nICJmaXhlZC1wYXJ0aXRp
+b25zIi4KCkl0IGFsc28gbWVhbnMgdGhhdCBleGlzdGluZyAiZml4ZWQtcGFydGl0aW9ucyIgcGFy
+c2VyIHNob3VsZCBnZXQgcmVuYW1lZAp0byB1c2UgYSBtb3JlIG1lYW5pbmdmdWwgbmFtZS4KClRo
+aXMgY29tbWl0IGFjaGlldmllcyB0aGF0IGFpbSBieSBpbnRyb2R1Y2luZyBhIG5ldyBtdGRfcGFy
+dF9vZl9wYXJzZSgpLgpJdCB3b3JrcyBieSBsb29raW5nIGZvciBhIG1hdGNoaW5nIHBhcnNlciBm
+b3IgZXZlcnkgc3RyaW5nIGluIHRoZQoiY29tcGF0aWJpbGl0eSIgcHJvcGVydHkgKHN0YXJ0aW5n
+IHdpdGggdGhlIG1vc3Qgc3BlY2lmaWMgb25lKS4KClBsZWFzZSBub3RlIHRoYXQgZHJpdmVyLXNw
+ZWNpZmllZCBwYXJzZXJzIHN0aWxsIHRha2UgYSBwcmVjZWRlbmNlLiBJdCdzCmFzc3VtZWQgdGhh
+dCBkcml2ZXIgcHJvdmlkaW5nIGEgcGFyc2VyIHR5cGUgaGFzIGEgZ29vZCByZWFzb24gZm9yIHRo
+YXQKKGUuZy4gaGF2aW5nIHBsYXRmb3JtIGRhdGEgd2l0aCBkZXZpY2Utc3BlY2lmaWMgaW5mbyku
+IEFsc28gZG9pbmcKb3RoZXJ3aXNlIGNvdWxkIGJyZWFrIGV4aXN0aW5nIHNldHVwcy4gVGhlIHNh
+bWUgYXBwbGllcyB0byB1c2luZyBkZWZhdWx0CnBhcnNlcnMgKGluY2x1ZGluZyAiY21kbGluZXBh
+cnQiKSBhcyBzb21lIG92ZXJ3cml0ZSBEVCBkYXRhIHdpdGggY21kbGluZQphcmd1bWVudC4KClBh
+cnRpdGlvbiBwYXJzZXJzIGNhbiBub3cgcHJvdmlkZSBhbiBvZl9tYXRjaF90YWJsZSB0byBlbmFi
+bGUKZmxhc2g8LS0+cGFyc2VyIG1hdGNoaW5nIHZpYSBkZXZpY2UgdHJlZSBhcyBkb2N1bWVudGVk
+IGluIHRoZQptdGQvcGFydGl0aW9uLnR4dC4KClRoaXMgc3VwcG9ydCBpcyBjdXJyZW50bHkgbGlt
+aXRlZCB0byBidWlsdC1pbiBwYXJzZXJzIGFzIGl0IHVzZXMKcmVxdWVzdF9tb2R1bGUoKSBhbmQg
+ZnJpZW5kcy4gVGhpcyBzaG91bGQgYmUgc3VmZmljaWVudCBmb3IgbW9zdCBjYXNlcwp0aG91Z2gg
+YXMgY29tcGlsaW5nIHBhcnNlcnMgYXMgbW9kdWxlcyBpc24ndCBhIGNvbW1vbiBjaG9pY2UuCgpT
+aWduZWQtb2ZmLWJ5OiBCcmlhbiBOb3JyaXMgPGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbT4K
+U2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgpUZXN0ZWQt
+Ynk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Ci0tLQpUaGlzIGlzIGJhc2VkIG9uIEJy
+aWFuJ3MgcGF0Y2hlczoKW1JGQyBQQVRDSCA0LzddIG10ZDogYWRkIG9mX21hdGNoX210ZF9wYXJz
+ZXIoKSBhbmQgb2ZfbXRkX21hdGNoX210ZF9wYXJzZXIoKSBoZWxwZXJzCltSRkMgUEFUQ0ggNi83
+XSBSRkM6IG10ZDogcGFydGl0aW9uczogZW5hYmxlIG9mX21hdGNoX3RhYmxlIG1hdGNoaW5nCgpW
+MTogUHV0IGhlbHBlcnMgaW4gbXRkcGFydC5jIGluc3RlYWQgb2YgZHJpdmVycy9vZi9vZl9tdGQu
+YwogICAgTWVyZ2UgaGVscGVycyBpbnRvIGEgc2luZ2xlIG9mX210ZF9tYXRjaF9tdGRfcGFyc2Vy
+ClYzOiBBZGQgYSBzaW1wbGUgY29tbWVudCB0byBub3RlIHdlIHdpbGwgbmVlZCB0aGUgYmVzdCBt
+YXRjaCBpbiB0aGUgZnV0dXJlClY0OiBSZXdvcmsgbmV3IGZ1bmN0aW9ucyB0byBwaWNrIHBhcnNl
+ciB3aXRoIHRoZSBiZXN0IG1hdGNoCiAgICBNb3ZlIG5ldyBjb2RlIGluIHBhcnNlX210ZF9wYXJ0
+aXRpb25zIHVwIHNvIGl0IGhhcyBwcmVjZWRlbmNlIG92ZXIgZmxhc2gKICAgIGRyaXZlciBkZWZh
+dWx0cyBhbmQgTVREIGRlZmF1bHRzClY1OiBSZXdvcmsgbWF0Y2hpbmcgY29kZSB0byBzdGFydCBj
+aGVja2luZyB3aXRoIHRoZSBtb3N0IHNwZWNpZmljIHN0cmluZyBpbiB0aGUKICAgICJjb21wYXRp
+YmlsaXR5IiBwcm9wZXJ0eS4KVjY6IEluaXRpYWxpemUgInJldCIgdmFyaWFibGUgaW4gbXRkX3Bh
+cnRfZ2V0X3BhcnNlcl9ieV9jcCB0byBOVUxMClY3OiBSZW5hbWUgZnVuY3Rpb24gIm10ZF9wYXJ0
+X2dldF9wYXJzZXJfYnlfY3AiIHRvIHVzZSAiX2NvbXBhdGlibGVfIgogICAgUmVuYW1lICJjcCIg
+dmFyaWFibGUgdG8gImNvbXBhdCIKICAgIERyb3AgdW5uZWVkZWQgaWYgKG5wKSBjaGVjayBmcm9t
+IHRoZSBwYXJzZV9tdGRfcGFydGl0aW9ucwpWODogTW92ZSBuZXcgT0YgY29kZSBpbiBwYXJzZV9t
+dGRfcGFydGl0aW9ucygpIGxvd2VyIHNvIGRyaXZlci1zcGVjaWZpZWQgcGFyc2VycwogICAgdGFr
+ZSBhIHByZWNlZGVuY2UuIFVwZGF0ZSBjb21taXQgbWVzc2FnZSB0byBtYWtlIHRoYXQgY2xlYXIu
+ClY5OiBVcGRhdGUgdG8gbW9kaWZ5IG10ZF9wYXJ0X29mX3BhcnNlKCkgaW5zdGVhZCBvZiBwYXJz
+ZV9tdGRfcGFydGl0aW9ucygpClYxMDogQ29tbWl0IGFkZGluZyBzdXBwb3J0IGZvciAib2ZwYXJ0
+IiBnb3Qgc3F1YXNoZWQgaW50byB0aGlzIG9uZS4KLS0tCiBkcml2ZXJzL210ZC9tdGRwYXJ0LmMg
+ICAgICAgICAgfCAxMTYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0K
+IGluY2x1ZGUvbGludXgvbXRkL3BhcnRpdGlvbnMuaCB8ICAgMSArCiAyIGZpbGVzIGNoYW5nZWQs
+IDEwOCBpbnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bXRkL210ZHBhcnQuYyBiL2RyaXZlcnMvbXRkL210ZHBhcnQuYwppbmRleCA3NmNkMjFkMTE3MWIu
+LjEwNWZlMmM3NzI5YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbXRkcGFydC5jCisrKyBiL2Ry
+aXZlcnMvbXRkL210ZHBhcnQuYwpAQCAtMzAsNiArMzAsNyBAQAogI2luY2x1ZGUgPGxpbnV4L210
+ZC9tdGQuaD4KICNpbmNsdWRlIDxsaW51eC9tdGQvcGFydGl0aW9ucy5oPgogI2luY2x1ZGUgPGxp
+bnV4L2Vyci5oPgorI2luY2x1ZGUgPGxpbnV4L29mLmg+CiAKICNpbmNsdWRlICJtdGRjb3JlLmgi
+CiAKQEAgLTg2MSw2ICs4NjIsOTIgQEAgc3RhdGljIGludCBtdGRfcGFydF9kb19wYXJzZShzdHJ1
+Y3QgbXRkX3BhcnRfcGFyc2VyICpwYXJzZXIsCiB9CiAKIC8qKgorICogbXRkX3BhcnRfZ2V0X2Nv
+bXBhdGlibGVfcGFyc2VyIC0gZmluZCBNVEQgcGFyc2VyIGJ5IGEgY29tcGF0aWJsZSBzdHJpbmcK
+KyAqCisgKiBAY29tcGF0OiBjb21wYXRpYmxlIHN0cmluZyBkZXNjcmliaW5nIHBhcnRpdGlvbnMg
+aW4gYSBkZXZpY2UgdHJlZQorICoKKyAqIE1URCBwYXJzZXJzIGNhbiBzcGVjaWZ5IHN1cHBvcnRl
+ZCBwYXJ0aXRpb25zIGJ5IHByb3ZpZGluZyBhIHRhYmxlIG9mCisgKiBjb21wYXRpYmlsaXR5IHN0
+cmluZ3MuIFRoaXMgZnVuY3Rpb24gZmluZHMgYSBwYXJzZXIgdGhhdCBhZHZlcnRpc2VzIHN1cHBv
+cnQKKyAqIGZvciBhIHBhc3NlZCB2YWx1ZSBvZiAiY29tcGF0aWJsZSIuCisgKi8KK3N0YXRpYyBz
+dHJ1Y3QgbXRkX3BhcnRfcGFyc2VyICptdGRfcGFydF9nZXRfY29tcGF0aWJsZV9wYXJzZXIoY29u
+c3QgY2hhciAqY29tcGF0KQoreworCXN0cnVjdCBtdGRfcGFydF9wYXJzZXIgKnAsICpyZXQgPSBO
+VUxMOworCisJc3Bpbl9sb2NrKCZwYXJ0X3BhcnNlcl9sb2NrKTsKKworCWxpc3RfZm9yX2VhY2hf
+ZW50cnkocCwgJnBhcnRfcGFyc2VycywgbGlzdCkgeworCQljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkICptYXRjaGVzOworCisJCW1hdGNoZXMgPSBwLT5vZl9tYXRjaF90YWJsZTsKKwkJaWYgKCFt
+YXRjaGVzKQorCQkJY29udGludWU7CisKKwkJZm9yICg7IG1hdGNoZXMtPmNvbXBhdGlibGVbMF07
+IG1hdGNoZXMrKykgeworCQkJaWYgKCFzdHJjbXAobWF0Y2hlcy0+Y29tcGF0aWJsZSwgY29tcGF0
+KSAmJgorCQkJICAgIHRyeV9tb2R1bGVfZ2V0KHAtPm93bmVyKSkgeworCQkJCXJldCA9IHA7CisJ
+CQkJYnJlYWs7CisJCQl9CisJCX0KKworCQlpZiAocmV0KQorCQkJYnJlYWs7CisJfQorCisJc3Bp
+bl91bmxvY2soJnBhcnRfcGFyc2VyX2xvY2spOworCisJcmV0dXJuIHJldDsKK30KKworc3RhdGlj
+IGludCBtdGRfcGFydF9vZl9wYXJzZShzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKKwkJCSAgICAg
+c3RydWN0IG10ZF9wYXJ0aXRpb25zICpwcGFydHMpCit7CisJc3RydWN0IG10ZF9wYXJ0X3BhcnNl
+ciAqcGFyc2VyOworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CisJc3RydWN0IHByb3BlcnR5ICpw
+cm9wOworCWNvbnN0IGNoYXIgKmNvbXBhdDsKKwljb25zdCBjaGFyICpmaXhlZCA9ICJvZnBhcnQi
+OworCWludCByZXQsIGVyciA9IDA7CisKKwlucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKG10ZF9n
+ZXRfb2Zfbm9kZShtYXN0ZXIpLCAicGFydGl0aW9ucyIpOworCW9mX3Byb3BlcnR5X2Zvcl9lYWNo
+X3N0cmluZyhucCwgImNvbXBhdGlibGUiLCBwcm9wLCBjb21wYXQpIHsKKwkJcGFyc2VyID0gbXRk
+X3BhcnRfZ2V0X2NvbXBhdGlibGVfcGFyc2VyKGNvbXBhdCk7CisJCWlmICghcGFyc2VyKQorCQkJ
+Y29udGludWU7CisJCXJldCA9IG10ZF9wYXJ0X2RvX3BhcnNlKHBhcnNlciwgbWFzdGVyLCBwcGFy
+dHMsIE5VTEwpOworCQlpZiAocmV0ID4gMCkgeworCQkJb2Zfbm9kZV9wdXQobnApOworCQkJcmV0
+dXJuIHJldDsKKwkJfQorCQltdGRfcGFydF9wYXJzZXJfcHV0KHBhcnNlcik7CisJCWlmIChyZXQg
+PCAwICYmICFlcnIpCisJCQllcnIgPSByZXQ7CisJfQorCW9mX25vZGVfcHV0KG5wKTsKKworCS8q
+CisJICogRm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2UgaGF2ZSB0byB0cnkgdGhlICJvZnBh
+cnQiCisJICogcGFyc2VyLiBJdCBzdXBwb3J0cyBvbGQgRFQgZm9ybWF0IHdpdGggcGFydGl0aW9u
+cyBzcGVjaWZpZWQgYXMgYQorCSAqIGRpcmVjdCBzdWJub2RlcyBvZiBhIGZsYXNoIGRldmljZSBE
+VCBub2RlIHdpdGhvdXQgYW55IGNvbXBhdGliaWxpdHkKKwkgKiBzcGVjaWZpZWQgd2UgY291bGQg
+bWF0Y2guCisJICovCisJcGFyc2VyID0gbXRkX3BhcnRfcGFyc2VyX2dldChmaXhlZCk7CisJaWYg
+KCFwYXJzZXIgJiYgIXJlcXVlc3RfbW9kdWxlKCIlcyIsIGZpeGVkKSkKKwkJcGFyc2VyID0gbXRk
+X3BhcnRfcGFyc2VyX2dldChmaXhlZCk7CisJaWYgKHBhcnNlcikgeworCQlyZXQgPSBtdGRfcGFy
+dF9kb19wYXJzZShwYXJzZXIsIG1hc3RlciwgcHBhcnRzLCBOVUxMKTsKKwkJaWYgKHJldCA+IDAp
+CisJCQlyZXR1cm4gcmV0OworCQltdGRfcGFydF9wYXJzZXJfcHV0KHBhcnNlcik7CisJCWlmIChy
+ZXQgPCAwICYmICFlcnIpCisJCQllcnIgPSByZXQ7CisJfQorCisJcmV0dXJuIGVycjsKK30KKwor
+LyoqCiAgKiBwYXJzZV9tdGRfcGFydGl0aW9ucyAtIHBhcnNlIE1URCBwYXJ0aXRpb25zCiAgKiBA
+bWFzdGVyOiB0aGUgbWFzdGVyIHBhcnRpdGlvbiAoZGVzY3JpYmVzIHdob2xlIE1URCBkZXZpY2Up
+CiAgKiBAdHlwZXM6IG5hbWVzIG9mIHBhcnRpdGlvbiBwYXJzZXJzIHRvIHRyeSBvciAlTlVMTApA
+QCAtODkyLDE5ICs5NzksMzAgQEAgaW50IHBhcnNlX210ZF9wYXJ0aXRpb25zKHN0cnVjdCBtdGRf
+aW5mbyAqbWFzdGVyLCBjb25zdCBjaGFyICpjb25zdCAqdHlwZXMsCiAJCXR5cGVzID0gZGVmYXVs
+dF9tdGRfcGFydF90eXBlczsKIAogCWZvciAoIDsgKnR5cGVzOyB0eXBlcysrKSB7Ci0JCXByX2Rl
+YnVnKCIlczogcGFyc2luZyBwYXJ0aXRpb25zICVzXG4iLCBtYXN0ZXItPm5hbWUsICp0eXBlcyk7
+Ci0JCXBhcnNlciA9IG10ZF9wYXJ0X3BhcnNlcl9nZXQoKnR5cGVzKTsKLQkJaWYgKCFwYXJzZXIg
+JiYgIXJlcXVlc3RfbW9kdWxlKCIlcyIsICp0eXBlcykpCisJCS8qCisJCSAqIG9mcGFydCBpcyBh
+IHNwZWNpYWwgdHlwZSB0aGF0IG1lYW5zIE9GIHBhcnRpdGlvbmluZyBpbmZvCisJCSAqIHNob3Vs
+ZCBiZSB1c2VkLiBJdCByZXF1aXJlcyBhIGJpdCBkaWZmZXJlbnQgbG9naWMgc28gaXQgaXMKKwkJ
+ICogaGFuZGxlZCBpbiBhIHNlcGFyYXRlZCBmdW5jdGlvbi4KKwkJICovCisJCWlmICghc3RyY21w
+KCp0eXBlcywgIm9mcGFydCIpKSB7CisJCQlyZXQgPSBtdGRfcGFydF9vZl9wYXJzZShtYXN0ZXIs
+IHBwYXJ0cyk7CisJCX0gZWxzZSB7CisJCQlwcl9kZWJ1ZygiJXM6IHBhcnNpbmcgcGFydGl0aW9u
+cyAlc1xuIiwgbWFzdGVyLT5uYW1lLAorCQkJCSAqdHlwZXMpOwogCQkJcGFyc2VyID0gbXRkX3Bh
+cnRfcGFyc2VyX2dldCgqdHlwZXMpOwotCQlwcl9kZWJ1ZygiJXM6IGdvdCBwYXJzZXIgJXNcbiIs
+IG1hc3Rlci0+bmFtZSwKLQkJCSBwYXJzZXIgPyBwYXJzZXItPm5hbWUgOiBOVUxMKTsKLQkJaWYg
+KCFwYXJzZXIpCi0JCQljb250aW51ZTsKLQkJcmV0ID0gbXRkX3BhcnRfZG9fcGFyc2UocGFyc2Vy
+LCBtYXN0ZXIsIHBwYXJ0cywgZGF0YSk7CisJCQlpZiAoIXBhcnNlciAmJiAhcmVxdWVzdF9tb2R1
+bGUoIiVzIiwgKnR5cGVzKSkKKwkJCQlwYXJzZXIgPSBtdGRfcGFydF9wYXJzZXJfZ2V0KCp0eXBl
+cyk7CisJCQlwcl9kZWJ1ZygiJXM6IGdvdCBwYXJzZXIgJXNcbiIsIG1hc3Rlci0+bmFtZSwKKwkJ
+CQlwYXJzZXIgPyBwYXJzZXItPm5hbWUgOiBOVUxMKTsKKwkJCWlmICghcGFyc2VyKQorCQkJCWNv
+bnRpbnVlOworCQkJcmV0ID0gbXRkX3BhcnRfZG9fcGFyc2UocGFyc2VyLCBtYXN0ZXIsIHBwYXJ0
+cywgZGF0YSk7CisJCQlpZiAocmV0IDw9IDApCisJCQkJbXRkX3BhcnRfcGFyc2VyX3B1dChwYXJz
+ZXIpOworCQl9CiAJCS8qIEZvdW5kIHBhcnRpdGlvbnMhICovCiAJCWlmIChyZXQgPiAwKQogCQkJ
+cmV0dXJuIDA7Ci0JCW10ZF9wYXJ0X3BhcnNlcl9wdXQocGFyc2VyKTsKIAkJLyoKIAkJICogU3Rh
+c2ggdGhlIGZpcnN0IGVycm9yIHdlIHNlZTsgb25seSByZXBvcnQgaXQgaWYgbm8gcGFyc2VyCiAJ
+CSAqIHN1Y2NlZWRzCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L210ZC9wYXJ0aXRpb25zLmgg
+Yi9pbmNsdWRlL2xpbnV4L210ZC9wYXJ0aXRpb25zLmgKaW5kZXggYzRiZWI3MGRhY2JkLi4xMWNi
+MGM1MGNkODQgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvbXRkL3BhcnRpdGlvbnMuaAorKysg
+Yi9pbmNsdWRlL2xpbnV4L210ZC9wYXJ0aXRpb25zLmgKQEAgLTc3LDYgKzc3LDcgQEAgc3RydWN0
+IG10ZF9wYXJ0X3BhcnNlciB7CiAJc3RydWN0IGxpc3RfaGVhZCBsaXN0OwogCXN0cnVjdCBtb2R1
+bGUgKm93bmVyOwogCWNvbnN0IGNoYXIgKm5hbWU7CisJY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCAqb2ZfbWF0Y2hfdGFibGU7CiAJaW50ICgqcGFyc2VfZm4pKHN0cnVjdCBtdGRfaW5mbyAqLCBj
+b25zdCBzdHJ1Y3QgbXRkX3BhcnRpdGlvbiAqKiwKIAkJCXN0cnVjdCBtdGRfcGFydF9wYXJzZXJf
+ZGF0YSAqKTsKIAl2b2lkICgqY2xlYW51cCkoY29uc3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBw
+YXJ0cywgaW50IG5yX3BhcnRzKTsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWls
+aW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1tdGQvCg==
