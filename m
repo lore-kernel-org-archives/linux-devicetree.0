@@ -1,67 +1,159 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524
- and pcal9555a
-Date: Wed, 14 Mar 2018 17:25:52 +0200
-Message-ID: <CAHp75VeD_2W-psRxz=MkWpUpUGoX7xx=9O9NM2a3YQ3yzhmN7A@mail.gmail.com>
-References: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
- <CAHp75Ve8Y2AOm36KwuVUhssLR7Q82KS1SzB1tcKw57_LdqkKhQ@mail.gmail.com> <0BF8A237-1EB9-465A-9A7C-75163F093F18@goldelico.com>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v4 1/3] arm64: dts: apq8096-db820c: enable bluetooth node
+Date: Wed, 14 Mar 2018 16:55:12 +0100
+Message-ID: <20180314155514.3374-2-thierry.escande@linaro.org>
+References: <20180314155514.3374-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0BF8A237-1EB9-465A-9A7C-75163F093F18@goldelico.com>
+In-Reply-To: <20180314155514.3374-1-thierry.escande@linaro.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Yong Li <yong.b.li@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 2:39 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->> Am 13.03.2018 um 17:56 schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
->> On Sat, Mar 10, 2018 at 1:00 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Add a new serial node for the Qualcomm BT controller QCA6174. This
+allows automatic probing and hci registration through the serdev
+framework instead of relying on the userspace helpers.
 
->> What does L means in the model code?
->
-> Good question. The data sheets don't tell. But 6424 and 6524 are not identical
-> from register set and overall functions, although quite similar.
-> Only for pin and package.
->
-> As far as I understand the 6524 (and all PCAL) have additional interrupt
-> latch mechanisms and registers so that it is possible to disable each
-> I/O pin individually as an interrupt while for the 6424 they are always
-> enabled. Maybe this is the "L" designator.
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+---
 
-IIRC "L" stands for the "Latch" as you correctly described above.
+v4: no change
+v3: no change
 
-> But we aren't using interrupts yet.
+v2:
+- Fix author email
 
-Are you planning? Or let's put it this way: does the hardware support it?
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  | 14 ++++++++++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    | 17 ++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 32 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 10 +++++++
+ 4 files changed, 73 insertions(+)
 
->> Perhaps we need to rename PCA_PCAL to be more specific?
->
-> My assumption is that it should be there for all PCAL variants,
-> but I think the original author who introduced this constant should know.
-
->     The original patch was submitted by
->     Josef Ahmad <josef.ahmad@linux.intel.com>
->     http://git.yoctoproject.org/cgit/cgit.cgi/meta-intel-quark/tree/recipes-kernel/linux/files/0015-Quark-GPIO-1-2-quark.patch
-
-I'm not sure we can reach to Josef (at least easily). So, better to
-rely on official datasheets.
-
->>> +       { .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
->>> +       { .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
->>
->> Other way around, you missed PCA_PCAL in the second case.
->
-> Ah, ok. It wasn't clear how these flag relate to the i2c table because they
-> are hidden by a macro here. I'd assume that PCA_PCAL is missing for both.
-
-Yep, if HW supports it.
-
-> So it might be that we run the pcal6524 in non-PCAL mode because we use DT.
-> I can do a test as soon as I have access to the hardware.
-
-Please, do.
-
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+index 24552f19b3fa..172165d84669 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+@@ -36,4 +36,18 @@
+ 			drive-strength = <2>;	/* 2 MA */
+ 		};
+ 	};
++
++	blsp1_uart1_default: blsp1_uart1_default {
++		function = "blsp_uart2";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	blsp1_uart1_sleep: blsp1_uart1_sleep {
++		function = "gpio";
++		pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		drive-strength = <2>;
++		bias-disable;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+index 59b29ddfb6e9..f8d2a3b10b1f 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+@@ -26,6 +26,23 @@
+ 		};
+ 	};
+ 
++	divclk4_pin_a: divclk4 {
++		pins = "gpio18";
++		function = "func2";
++
++		bias-disable;
++		power-source = <PM8994_GPIO_S4>;
++	};
++
++	bt_en_pin_a: bt-en-active {
++		pins = "gpio19";
++		function = "normal";
++
++		output-low;
++		power-source = <PM8994_GPIO_S4>;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++
+ 	usb3_vbus_det_gpio: pm8996_gpio22 {
+ 		pinconf {
+ 			pins = "gpio22";
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 1c8f1b86472d..b05d6bc0b856 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -23,6 +23,7 @@
+ 	aliases {
+ 		serial0 = &blsp2_uart1;
+ 		serial1 = &blsp2_uart2;
++		serial2 = &blsp1_uart1;
+ 		i2c0	= &blsp1_i2c2;
+ 		i2c1	= &blsp2_i2c1;
+ 		i2c2	= &blsp2_i2c0;
+@@ -34,7 +35,38 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	clocks {
++		divclk4: divclk4 {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++			clock-output-names = "divclk4";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&divclk4_pin_a>;
++		};
++	};
++
+ 	soc {
++		serial@7570000 {
++			label = "BT-UART";
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart1_default>;
++			pinctrl-1 = <&blsp1_uart1_sleep>;
++
++			bluetooth {
++				compatible = "qcom,qca6174-bt";
++
++				bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&bt_en_pin_a>;
++
++				clocks = <&divclk4>;
++			};
++		};
++
+ 		serial@75b0000 {
+ 			label = "LS-UART1";
+ 			status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 0a6f7952bbb1..2d54a86a027f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -408,6 +408,16 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		blsp1_uart1: serial@7570000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07570000 0x1000>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
+ 		blsp1_spi0: spi@7575000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x07575000 0x600>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.14.1
