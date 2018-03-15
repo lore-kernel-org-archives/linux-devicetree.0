@@ -1,42 +1,66 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v7 3/3] dts: arm64: Add mailbox binding for hi3660
-Date: Fri, 16 Mar 2018 00:07:38 +0800
-Message-ID: <1521130058-24796-4-git-send-email-leo.yan@linaro.org>
-References: <1521130058-24796-1-git-send-email-leo.yan@linaro.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v5 0/3] drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Thu, 15 Mar 2018 17:11:53 +0100
+Message-ID: <1521130316-1221-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521130058-24796-1-git-send-email-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kaihua Zhong <zhongkaihua@huawei.com>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Ruyi Wang <wangruyi@huawei.com>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kaihua Zhong <zhongkaihua@huawei.com>
+Hi,
+   v5 with a few small changes compared to v4 and with Andrzej tag added to
+all patches in the series.
 
-Add DT binding for mailbox driver.
+I fixed punctuation in the bindings and added a statement to clarify
+the chip does not expose any control bus but it is instead configured by input
+signals.
 
-Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
-Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Minor changes in the driver, with the regulator name printed out in error path
+of enable/disable routines instead of its index.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 63d4f9d..3788448 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -298,6 +298,14 @@
- 			#reset-cells = <2>;
- 		};
- 
-+		mailbox: mailbox@e896b000 {
-+			compatible = "hisilicon,hi3660-mbox";
-+			reg = <0x0 0xe896b000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <3>;
-+		};
-+
- 		dual_timer0: timer@fff14000 {
- 			compatible = "arm,sp804", "arm,primecell";
- 			reg = <0x0 0xfff14000 0x0 0x1000>;
--- 
-1.9.1
+Branch for testing available at
+git://jmondi.org v3m/v4.16-rc3/lvds-bridge-v5
+
+Thanks
+   j
+
+v4 -> v5:
+- Fix punctuation in bindings documentation
+- Add small statement to bindings document to clarify the chip has no
+  control bus
+- Print regulator name in enable/disable routines error path
+- Add Andrzej Reviewed-by tag
+
+v3 -> v4:
+- Rename permutations of "pdwn" to just "pdwn" everywhere in the series
+- Improve power enable/disable routines as suggested by Andrzej and Sergei
+- Change "pdwn" gpio initialization to use the logical output level
+- Change Kconfig description
+
+v2 -> v3:
+- Drop support for "lvds-decoder" and make the driver THC63LVD1024 specific
+-- Rework bindings to describe multiple input/output ports
+-- Rename driver and remove "lvds-decoder" references
+-- Rework Eagle DTS to use new bindings
+
+v1 -> v2:
+- Drop support for THC63LVD1024
+
+
+Jacopo Mondi (3):
+  dt-bindings: display: bridge: Document THC63LVD1024 LVDS decoder
+  drm: bridge: Add thc63lvd1024 LVDS decoder driver
+  arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
+
+ .../bindings/display/bridge/thine,thc63lvd1024.txt |  66 ++++++
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts     |  33 ++-
+ drivers/gpu/drm/bridge/Kconfig                     |   6 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/thc63lvd1024.c              | 257 +++++++++++++++++++++
+ 5 files changed, 360 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+ create mode 100644 drivers/gpu/drm/bridge/thc63lvd1024.c
+
+--
+2.7.4
