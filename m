@@ -1,265 +1,96 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH] ARM: dts: stm32: Enable stm32mp1 clock driver on stm32mp157c
-Date: Thu, 15 Mar 2018 08:18:47 +0100
-Message-ID: <1521098327-13958-1-git-send-email-gabriel.fernandez@st.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v7 0/3] add support for Mediatek High-Speed DMA controller on MT7622 and MT7623 SoC
+Date: Thu, 15 Mar 2018 15:40:34 +0800
+Message-ID: <cover.1521098171.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gabriel.fernandez@st.com
+To: vinod.koul@intel.com, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-This patch enables stm32mp1 clock driver.
+Changes since v6:
+- add Reviewed-by tag from Rob to patch 1
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 24 ++++++++--------
- arch/arm/boot/dts/stm32mp157c.dtsi        | 48 +++++++++++--------------------
- 2 files changed, 28 insertions(+), 44 deletions(-)
+Changes since v5:
+- use C99 style comments at the first two lines
+- remove unused header includes
+- use directly KBUILD_MODNAME as a driver name
+- use DMA_SLAVE_BUSWIDTH_4_BYTES to reflect the real bus width
+- refine comments
+- refine code style aligning with 80 chars and wrap
+- use GFP_NOWAIT as the flag for memory allocations for DMA
+- changing flow for it should be returning 0 instead of -ENOSPC for all
+  successful descriptor issuing either in part or in full
+- refine ISR with a fail-safe loop, and having a status check at the start
+- remove a few unused code
+- refine callback device_terminate_all, which does it should be freeing
+  all descriptors
+- refine callback device_free_chan_resources, which does it should be
+  freeing all descriptors before freeing physical channel
+- remove unnecessary callback device_synchronize
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index c0743305..6f044100 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -20,7 +20,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x0 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOA>;
- 				st,bank-name = "GPIOA";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 0 16>;
-@@ -32,7 +32,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x1000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOB>;
- 				st,bank-name = "GPIOB";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 16 16>;
-@@ -44,7 +44,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x2000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOC>;
- 				st,bank-name = "GPIOC";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 32 16>;
-@@ -56,7 +56,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x3000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOD>;
- 				st,bank-name = "GPIOD";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 48 16>;
-@@ -68,7 +68,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x4000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOE>;
- 				st,bank-name = "GPIOE";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 64 16>;
-@@ -80,7 +80,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x5000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOF>;
- 				st,bank-name = "GPIOF";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 80 16>;
-@@ -92,7 +92,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x6000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOG>;
- 				st,bank-name = "GPIOG";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 96 16>;
-@@ -104,7 +104,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x7000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOH>;
- 				st,bank-name = "GPIOH";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 112 16>;
-@@ -116,7 +116,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x8000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOI>;
- 				st,bank-name = "GPIOI";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 128 16>;
-@@ -128,7 +128,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0x9000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOJ>;
- 				st,bank-name = "GPIOJ";
- 				ngpios = <16>;
- 				gpio-ranges = <&pinctrl 0 144 16>;
-@@ -140,7 +140,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0xa000 0x400>;
--				clocks = <&clk_pll3_p>;
-+				clocks = <&rcc GPIOK>;
- 				st,bank-name = "GPIOK";
- 				ngpios = <8>;
- 				gpio-ranges = <&pinctrl 0 160 8>;
-@@ -174,7 +174,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				reg = <0 0x400>;
--				clocks = <&clk_pll2_p>;
-+				clocks = <&rcc GPIOZ>;
- 				st,bank-name = "GPIOZ";
- 				st,bank-ioport = <11>;
- 				ngpios = <8>;
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9e17e42..bc3eddc 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -4,6 +4,7 @@
-  * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
-  */
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/stm32mp1-clks.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -71,12 +72,6 @@
- 			clock-frequency = <24000000>;
- 		};
- 
--		clk_pll_per: clk-pll-per {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <64000000>;
--		};
--
- 		clk_hsi: clk-hsi {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
-@@ -100,24 +95,6 @@
- 			compatible = "fixed-clock";
- 			clock-frequency = <4000000>;
- 		};
--
--		clk_pclk1: clk-pclk1 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <86000000>;
--		};
--
--		clk_pll3_p: clk-pll3_p {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <172000000>;
--		};
--
--		clk_pll2_p: clk-pll2_p {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <264000000>;
--		};
- 	};
- 
- 	soc {
-@@ -131,7 +108,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x4000e000 0x400>;
- 			interrupts = <GIC_SPI 38 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc USART2_K>;
- 			status = "disabled";
- 		};
- 
-@@ -139,7 +116,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x4000f000 0x400>;
- 			interrupts = <GIC_SPI 39 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc USART3_K>;
- 			status = "disabled";
- 		};
- 
-@@ -147,7 +124,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40010000 0x400>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc UART4_K>;
- 			status = "disabled";
- 		};
- 
-@@ -155,7 +132,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <GIC_SPI 53 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc UART5_K>;
- 			status = "disabled";
- 		};
- 
-@@ -163,7 +140,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40018000 0x400>;
- 			interrupts = <GIC_SPI 82 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc UART7_K>;
- 			status = "disabled";
- 		};
- 
-@@ -171,7 +148,7 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x40019000 0x400>;
- 			interrupts = <GIC_SPI 83 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc UART8_K>;
- 			status = "disabled";
- 		};
- 
-@@ -179,15 +156,22 @@
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x44003000 0x400>;
- 			interrupts = <GIC_SPI 71 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc USART6_K>;
- 			status = "disabled";
- 		};
- 
-+		rcc: rcc@50000000 {
-+			compatible = "st,stm32mp1-rcc", "syscon";
-+			reg = <0x50000000 0x1000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		usart1: serial@5c000000 {
- 			compatible = "st,stm32h7-uart";
- 			reg = <0x5c000000 0x400>;
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_NONE>;
--			clocks = <&clk_pclk1>;
-+			clocks = <&rcc USART1_K>;
- 			status = "disabled";
- 		};
- 	};
+Changes since v4:
+- rebase to 4.16-rc1
+- fold back patch 4 and 5 in v4 into the original commit
+- add the missing header included
+- fix typo and add more explanation in existing comments
+- fix the comments with kernel-doc style which uses /** as the begin
+- begin the multi-line comments with /*
+
+Changes since v3:
+- enhance dt-binding documents based on Rob's comments
+- make consistent among all comments
+- perfer ordering declarations longest to shortest
+- fix warning reported from kbuild test robot
+- add patch 4 and 5 to keep Fengguang and Julia's effort
+
+Changes since v2:
+- remove extra tasklets and refactor driver for letting descriptors being processed ASAP.
+- add more comments stating the relevant logic
+- remove unused macro and variables
+- change to use the disclaimer with SPDX identifier
+- add mt7622 support
+- refine hardware initialization sequence
+- add tx_status support for DMA_RESIDUE_GRANULARITY_SEGMENT
+- refine remove handler with killing vc's tasklet
+
+Changes since v1:
+- fix typo in the commit message.
+- delete status shown in the dt-binding example.
+
+This patchset introduces support for MediaTek High-Speed DMA controller
+(MTK-HSDMA) Currently, the driver is already tested successfully with
+dmatest module on MT7622 and MT7623 SoC. 
+
+MTK-HSDMA on MT7622/23 SoC has a single ring which is dedicated for
+doing memory-to-memory transfer through ring-based descriptor management.
+Even though there is only a single ring available inside HSDMA, the
+driver is being extended to the support for multiple virtual channels
+processing simultaneously by means of DMA_VIRTUAL_CHANNELS.
+
+Sean Wang (3):
+  dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller
+    bindings
+  dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622
+    and MT7623 SoC
+  dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
+
+ .../devicetree/bindings/dma/mtk-hsdma.txt          |   33 +
+ MAINTAINERS                                        |    9 +
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/mediatek/Kconfig                       |   13 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-hsdma.c                   | 1056 ++++++++++++++++++++
+ 7 files changed, 1115 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+ create mode 100644 drivers/dma/mediatek/Kconfig
+ create mode 100644 drivers/dma/mediatek/Makefile
+ create mode 100644 drivers/dma/mediatek/mtk-hsdma.c
+
 -- 
-1.9.1
+2.7.4
