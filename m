@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v7 1/3] dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller bindings
-Date: Thu, 15 Mar 2018 15:40:35 +0800
-Message-ID: <59f25e9e710c129c4aec98ccc8d2d4661e593112.1521098171.git.sean.wang@mediatek.com>
+Subject: [PATCH v7 3/3] dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
+Date: Thu, 15 Mar 2018 15:40:37 +0800
+Message-ID: <d63a1d2ca458fd74d5ca188d44b753aa234dd738.1521098171.git.sean.wang@mediatek.com>
 References: <cover.1521098171.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,54 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Document the devicetree bindings for MediaTek High-Speed DMA controller
-which could be found on MT7623 SoC or other similar Mediatek SoCs.
+I work for MediaTek and maintain SoC targeting to home gateway and
+also will keep extending and testing the function.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/dma/mtk-hsdma.txt          | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-new file mode 100644
-index 0000000..4bb31735
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-@@ -0,0 +1,33 @@
-+MediaTek High-Speed DMA Controller
-+==================================
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3bdc260..d3c33d7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8785,6 +8785,15 @@ M:	Sean Wang <sean.wang@mediatek.com>
+ S:	Maintained
+ F:	drivers/media/rc/mtk-cir.c
+ 
++MEDIATEK DMA DRIVER
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	dmaengine@vger.kernel.org
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/mtk-*
++F:	drivers/dma/mediatek/
 +
-+This device follows the generic DMA bindings defined in dma/dma.txt.
-+
-+Required properties:
-+
-+- compatible:	Must be one of
-+		  "mediatek,mt7622-hsdma": for MT7622 SoC
-+		  "mediatek,mt7623-hsdma": for MT7623 SoC
-+- reg:		Should contain the register's base address and length.
-+- interrupts:	Should contain a reference to the interrupt used by this
-+		device.
-+- clocks:	Should be the clock specifiers corresponding to the entry in
-+		clock-names property.
-+- clock-names:	Should contain "hsdma" entries.
-+- power-domains: Phandle to the power domain that the device is part of
-+- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
-+		in dmas property of a client device represents the channel
-+		number.
-+Example:
-+
-+        hsdma: dma-controller@1b007000 {
-+		compatible = "mediatek,mt7623-hsdma";
-+		reg = <0 0x1b007000 0 0x1000>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
-+		clock-names = "hsdma";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+		#dma-cells = <1>;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt file.
+ MEDIATEK PMIC LED DRIVER
+ M:	Sean Wang <sean.wang@mediatek.com>
+ S:	Maintained
 -- 
 2.7.4
