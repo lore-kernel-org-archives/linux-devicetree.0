@@ -1,82 +1,137 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH] clk: qcom: rpmcc: Add support to XO buffered clocks
-Date: Thu, 15 Mar 2018 18:04:42 +0000
-Message-ID: <256371b1-82aa-4fe4-b767-4025395082fd@linaro.org>
-References: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
- <152113633637.107923.1559162375425599621@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] ARM: dts: qcom: Add apq8064 Dragon Board 600c support
+Date: Thu, 15 Mar 2018 11:57:22 -0700
+Message-ID: <152114024246.111154.2712387658941057310@swboyd.mtv.corp.google.com>
+References: <20180315144841.16144-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152113633637.107923.1559162375425599621@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20180315144841.16144-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review comments,
+Quoting srinivas.kandagatla@linaro.org (2018-03-15 07:48:41)
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-db600c.dts
+> new file mode 100644
+> index 000000000000..6a3250151038
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-apq8064-db600c.dts
+> @@ -0,0 +1,547 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "qcom-apq8064-v2.0.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+> +#include <dt-bindings/mfd/qcom-rpm.h>
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. DB600c";
+> +       compatible = "arrow,apq8064-db600c", "qcom,apq8064";
+> +
+> +       aliases {
+> +               serial0 = &gsbi7_serial;
+> +               serial1 = &gsbi1_serial;
+> +               i2c0 = &gsbi2_i2c;
+> +               i2c1 = &gsbi3_i2c;
+> +               i2c2 = &gsbi4_i2c;
+> +               i2c3 = &gsbi7_i2c;
+> +               spi0 = &gsbi5_spi;
+> +       };
 
-On 15/03/18 17:52, Stephen Boyd wrote:
-> Quoting srinivas.kandagatla@linaro.org (2018-03-15 07:37:24)
->> diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
->> index c60f61b10c7f..261f5505e714 100644
->> --- a/drivers/clk/qcom/clk-rpm.c
->> +++ b/drivers/clk/qcom/clk-rpm.c
->> @@ -56,6 +57,19 @@
->>                  },                                                            \
->>          }
->>   
->> +#define DEFINE_CLK_RPM_XO_BUFFER(_platform, _name, _active, offset)          \
->> +       static struct clk_rpm _platform##_##_name = {                         \
->> +               .rpm_clk_id = QCOM_RPM_CXO_BUFFERS,                           \
->> +               .xo_offset = (offset),                                        \
->> +               .rate = 19200000,                                             \
-> 
-> Shouldn't these rates also come from parent, i.e. pxo_board? So drop
-> this line?
-Yep, will remove this.
-> 
->> +               .hw.init = &(struct clk_init_data){                           \
->> +                       .ops = &clk_rpm_fixed_ops,                            \
->> +                       .name = #_name,                                       \
->> +                       .parent_names = (const char *[]){ "pxo_board" },      \
->> +                       .num_parents = 1,                                     \
->> +               },                                                            \
->> +       }
->> +
->>   #define DEFINE_CLK_RPM_FIXED(_platform, _name, _active, r_id, r)             \
->>          static struct clk_rpm _platform##_##_name = {                         \
->>                  .rpm_clk_id = (r_id),                                         \
->> @@ -128,6 +142,8 @@
->>   
->>   struct clk_rpm {
->>          const int rpm_clk_id;
->> +       const int xo_offset;
->> +       u32 xo_buffer_value;
->>          const bool active_only;
->>          unsigned long rate;
->>          bool enabled;
->> @@ -308,6 +330,11 @@ static void clk_rpm_fixed_unprepare(struct clk_hw *hw)
->>          u32 value = 0;
->>          int ret;
->>   
->> +       if (r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS) {
->> +               r->xo_buffer_value &= ~(QCOM_RPM_XO_MODE_ON << r->xo_offset);
->> +               value = r->xo_buffer_value;
->> +       }
->> +
-> 
-> I seem to recall that the xo buffers are within the same "word" or
-> something like that for each of the buffers. So we would need to make
-> sure we don't overwrite the bits in there between clks that are
-Code as it is will not work.
-> enabling/disabling stuff. Maybe make some sort of shared variable they
-> all point to and then put a mutex around it? May also be worth making
-> more clk_ops at that point to not conflate with the simpler on/off code.
-Yep, I will give something like that a try in next version.
+Can you also add a chosen node for the stdout-path? Or maybe
+that's contentious because there are two serial ports that could
+possibly be used for serial console?
 
+> +
+> +       regulators {
+> +               compatible = "simple-bus";
+> +               vph: regulator-fixed@1 {
 
--srini
+Drop @1?
 
-> 
+> +                       compatible = "regulator-fixed";
+> +                       regulator-min-microvolt = <4500000>;
+> +                       regulator-max-microvolt = <4500000>;
+> +                       regulator-name = "VPH";
+> +                       regulator-type = "voltage";
+> +                       regulator-boot-on;
+> +               };
+> +
+> +               /* on board fixed 3.3v supply */
+> +               vcc3v3: vcc3v3 {
+> +                       compatible = "regulator-fixed";
+> +                       regulator-name = "VCC3V3";
+> +                       regulator-min-microvolt = <3300000>;
+> +                       regulator-max-microvolt = <3300000>;
+> +                       regulator-always-on;
+> +               };
+> +
+> +       };
+> +
+> +       hdmi-out {
+> +               compatible = "hdmi-connector";
+> +               type = "a";
+> +
+> +               port {
+> +                       hdmi_con: endpoint {
+> +                               remote-endpoint = <&hdmi_out>;
+> +                       };
+> +               };
+> +       };
+
+Cool!
+
+> +
+> +       soc {
+> +               pinctrl@800000 {
+> +                       card_detect: card_detect {
+> +                               mux {
+> +                                       pins = "gpio26";
+> +                                       function = "gpio";
+> +                                       bias-disable;
+> +                               };
+> +                       };
+[...]
+> +                                       regulator-min-microvolt = <1000000>;
+> +                                       regulator-max-microvolt = <1800000>;
+> +                                       bias-pull-down;
+> +                               };
+> +
+> +                               l5 {
+> +                                       regulator-min-microvolt = <2750000>;
+> +                                       regulator-max-microvolt = <3000000>;
+> +                                       bias-pull-down;
+> +                                       regulator-boot-on;
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               l6 {
+> +                                       regulator-min-microvolt = <2950000>;
+> +                                       regulator-max-microvolt = <2950000>;
+> +                                       bias-pull-down;
+> +                               };
+> +
+> +                               l7 {
+> +                                       regulator-min-microvolt = <2950000>;
+> +                                       regulator-max-microvolt = <2950000>;
+> +                                       regulator-boot-on;
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               /**
+> +                               /**
+
+Weird double comment here.
+
+> +                                * 1.8v required on LS expansion
+> +                                * for mezzanine boards
+> +                                */
+> +                               l15 {
+> +                                       regulator-min-microvolt = <1800000>;
+> +                                       regulator-max-microvolt = <1800000>;
+> +                                       regulator-always-on;
+> +                               };
+> +
