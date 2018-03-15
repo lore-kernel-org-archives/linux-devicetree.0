@@ -1,98 +1,116 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Thu, 15 Mar 2018 12:07:44 +0100
-Message-ID: <d14007a1-a4dd-bd28-3452-a4d3ad70e5a0@linaro.org>
-References: <20180314155514.3374-1-thierry.escande@linaro.org>
- <20180314155514.3374-3-thierry.escande@linaro.org>
- <FF2E3FDE-76C5-477A-A904-32AC064297DA@holtmann.org>
- <20180314183043.GX18510@minitux>
- <D999852D-E9A7-41D2-9878-A93CB4D43D0C@holtmann.org>
- <20180314190522.GY18510@minitux>
- <494C4C44-1949-405E-91DA-1B40100ED2E6@holtmann.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 4/5] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Thu, 15 Mar 2018 11:12:06 +0000
+Message-ID: <63943de8-198d-32ff-36fe-c3f6c4c10f1d@arm.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-5-vivek.gautam@codeaurora.org>
+	<8b427ea2-5c13-4712-13d1-e4c1aed0779e@arm.com>
+	<CAFp+6iEFDXKdS_mTgrrpCX2isMAT3XJifRV0FYxV+PFpVGV=2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <494C4C44-1949-405E-91DA-1B40100ED2E6@holtmann.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAFp+6iEFDXKdS_mTgrrpCX2isMAT3XJifRV0FYxV+PFpVGV=2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
-
-On 14/03/2018 20:51, Marcel Holtmann wrote:
-> Hi Bjorn,
+On 15/03/18 08:57, Vivek Gautam wrote:
+> Hi Robin,
 > 
->>>>>> +		bt-disable-n-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->>>>>
->>>>> can we use a common name here. I think that Nokia and Broadcom drivers
->>>>> define one. And if this is the enable/shutdown GPIO, we should name it
->>>>> consistently across all manufacturers. It essentially does the same on
->>>>> Bluetooth UART chips no matter what chip is behind them.
->>>>>
->>>>
->>>> Broadcomm has a device-wakup-gpios and Nokia has bluetooth-wakup-gpios.
->>>> It might be that these behave in the same way, but from the description
->>>> they only trigger the wakeup.
->>>
->>> that is something that we might need to start fixing. I really prefer
->>> if we name the GPIOs a bit more consistent.
->>>
->>>> The reason for the proposed naming here is that the pin is named
->>>> "BT_DISABLE_N" in the datasheet.
->>>
->>> That is not a reason I buy. So the next board comes around that labels
->>> it in the data sheet BT_DISABLE_YEAH_SUPER_GREAT and you send me a
->>> patch to the driver to look for that name. If the GPIO does the same
->>> thing, I couldn’t care less what the data sheet says. That might be
->>> a comment in the DT file, but it should not pollute the driver code.
->>>
->>
->> BT_DISABLE_N is the name of this pin in the datasheet of the QCA chip,
->> not on the board, so this name is the same regardless of what you name
->> the line or gpio your board connect it to.
 > 
-> and QCA chip v1 and QCA chip v2 will use the same driver and same firmware loading mechanism. So why do we have to add a new GPIO naming if they decide to change the name in the data sheet. With Bluetooth it is pretty much all the same. Every UART chip has a shutdown/reset GPIO to enable/disable the chip behind the UART.
-> 
->>> A new board should not require driver changes, you just ship a new DT
->>> for that board and an existing driver hopefully just does the job. No
->>> matter how someone named a GPIO in a piece of paper.
+> On Wed, Mar 14, 2018 at 11:20 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 13/03/18 08:55, Vivek Gautam wrote:
 >>>
->>
->> I totally agree with the fact that the board should not affect the
->> naming of the gpio in the driver. But I do enjoy when we refer to pins
->> by their real name - instead of having to guess which pin in the _chip_
->> specification the driver actually refer to.
+>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>
+>>> Finally add the device link between the master device and
+>>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>>> master needs it. This is done from add_device callback which gets
+>>> called once when the master is added to the smmu.
+>>>
+>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>> ---
+>>>    drivers/iommu/arm-smmu.c | 29 +++++++++++++++++++++++++++++
+>>>    1 file changed, 29 insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>> index 56a04ae80bf3..64953ff2281f 100644
+>>> --- a/drivers/iommu/arm-smmu.c
+>>> +++ b/drivers/iommu/arm-smmu.c
+>>> @@ -1460,10 +1460,31 @@ static int arm_smmu_add_device(struct device *dev)
+>>>          iommu_device_link(&smmu->iommu, dev);
+>>>    +     if (pm_runtime_enabled(smmu->dev)) {
+>>> +               struct device_link *link;
+>>> +
+>>> +               /*
+>>> +                * Establish the link between smmu and master, so that the
+>>> +                * smmu gets runtime enabled/disabled as per the master's
+>>> +                * needs.
+>>> +                */
+>>> +               link = device_link_add(dev, smmu->dev,
+>>> DL_FLAG_PM_RUNTIME);
+>>> +               if (!link) {
 >>
 >>
->> That said, what name would you prefer for this?
+>> FWIW, given that we don't really care about link itself, I'd be quite happy
+>> to simplify that lot down to:
 >>
->> Afaict this is not "wakeup" and there are a few extra steps between the
->> disabled state and "bluetooth is enabled", so "enable" feels slightly
->> wrong. And it probably should be "bluetooth" and not just "device" as
->> this refers to a pin on a WiFi/BT combo chip.
+>>          if (pm_runtime_enabled(smmu_dev) &&
+>>              !device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME)) {
 > 
-> The Broadcom side called it shutdown GPIO, it is essentially the shutdown/reset GPIO or power on/off GPIO. Personally I do not care what it is named, but it will be all the same for all Bluetooth chips. Take a poll from Broadcom, Intel, Realtek and Qualcomm and you can pick a reasonable common name.
-
-The Nokia driver has "bluetooth-wakeup" gpio. The Broadcom one has 
-"device-wakeup" and "shutdown". The "shutdown" gpio is set to its active 
-state to power on the chip which sounds reversed logic. Same for the 
-"bt-disable-n" gpio in the Qualcomm driver, configured as ACTIVE_HIGH, 
-and which is set to 1 to enable it...
-
-So for consistency, naming it as "shutdown" to stick to the bcm driver 
-but it should be configured as ACTIVE_LOW in the dts so we actually do a 
-gpiod_set_value(0) to un-shutdown it. Does that sound ok?
-
-Regards,
-Thierry
-
-> For the wakeup GPIOs, these are different and depend on if there is some low-power mode provided. You would need to check the data sheet to see if they provide more advanced low-power state handling.
+> Sure, will update this.
 > 
-> Regards
+>>
+>>> +                       dev_warn(smmu->dev,
+>>> +                                "Unable to add link to the consumer
+>>> %s\n",
+>>> +                                dev_name(dev));
+>>
+>>
+>> (side note: since device_link_add() already prints a message on success,
+>> maybe it could print its own failure message too?)
 > 
-> Marcel
-> 
+> Should we make device_link that verbose - to print failure messages at
+> each step (there are atleast a couple where we return link as NULL),
+> or we can let the users handle printing the message?
+
+I didn't mean to imply anything more than the idea below (although the 
+whole function could of course be refactored further to report explicit 
+error values). It just seems a bit unbalanced for the core code to be 
+noisy about success yet silent about failure, but ultimately that's an 
+entirely separate issue which doesn't have to have any bearing on this 
+series.
+
+Robin.
+
+----->8-----
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index b2261f92f2f1..895da95f5cb9 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -275,6 +275,9 @@ struct device_link *device_link_add(struct device 
+*consumer,
+   out:
+  	device_pm_unlock();
+  	device_links_write_unlock();
++	if (!link)
++		dev_warn(consumer, "Failed to link to supplier %s\n", 
+dev_name(supplier));
++
+  	return link;
+  }
+  EXPORT_SYMBOL_GPL(device_link_add);
