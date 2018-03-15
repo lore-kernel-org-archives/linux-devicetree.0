@@ -1,51 +1,44 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 2/4] drivers: firmware: xilinx: Add ZynqMP firmware
- driver
-Date: Thu, 15 Mar 2018 17:57:30 +0000
-Message-ID: <0a63e5d5-17b6-0be3-88e2-c8e56bcdfeb0@arm.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
- <1519154467-2896-3-git-send-email-jollys@xilinx.com>
- <dab419e8-3afe-5bfe-240e-e9ee4f2300f2@arm.com>
- <DM2PR0201MB076735E33069DC6F0C84EFDCB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
- <2fb8ee8c-35ac-b7e6-e691-84464b0c8745@arm.com>
- <DM2PR0201MB07673298E409D07F0F748316B8D30@DM2PR0201MB0767.namprd02.prod.outlook.com>
- <4cff1193-5345-0531-d81e-0dd6e0633b19@arm.com>
- <DM2PR0201MB0767229750776EF2AF8455F3B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: i.MX6: Add BTicino i.MX6DL Mamoj initial support
+Date: Thu, 15 Mar 2018 14:58:41 -0300
+Message-ID: <CAOMZO5CNDN9RbuBiELKdY9xjUFksMAg16enwtpd+bBtOZbdZrg@mail.gmail.com>
+References: <20180315170710.9551-1-jagan@amarulasolutions.com> <20180315170710.9551-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DM2PR0201MB0767229750776EF2AF8455F3B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20180315170710.9551-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jagan,
 
+On Thu, Mar 15, 2018 at 2:07 PM, Jagan Teki <jagan@amarulasolutions.com> wrote:
 
-On 15/03/18 17:53, Jolly Shah wrote:
-> Hi Sudeep,
-> 
+> +&iomuxc {
+> +       pinctrl_enet: enetgrp {
+> +               fsl,pins = <
+> +                       MX6QDL_PAD_ENET_MDIO__ENET_MDIO         0x1b0b0
+> +                       MX6QDL_PAD_ENET_MDC__ENET_MDC           0x1b0b0
+> +                       MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK    0x1b0b1
+> +                       MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0     0x1b0b0
+> +                       MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1     0x1b0b0
+> +                       MX6QDL_PAD_KEY_ROW2__ENET_TX_DATA2      0x1b0b0
+> +                       MX6QDL_PAD_KEY_ROW0__ENET_TX_DATA3      0x1b0b0
+> +                       MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN       0x1b0b0
+> +                       MX6QDL_PAD_GPIO_19__ENET_TX_ER          0x1b0b0
+> +                       MX6QDL_PAD_GPIO_18__ENET_RX_CLK         0x1b0b1
+> +                       MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0     0x1b0b0
+> +                       MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1     0x1b0b0
+> +                       MX6QDL_PAD_KEY_COL2__ENET_RX_DATA2      0x1b0b0
+> +                       MX6QDL_PAD_KEY_COL0__ENET_RX_DATA3      0x1b0b0
+> +                       MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN      0x1b0b0
+> +                       MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER       0x1b0b0
+> +                       MX6QDL_PAD_KEY_COL3__ENET_CRS           0x1b0b0
+> +                       MX6QDL_PAD_KEY_ROW1__ENET_COL           0x1b0b0
+> +                       /* KSZ8041 PHY Reset */
+> +                       MX6QDL_PAD_KEY_COL1__GPIO4_IO08         0x1b0b0
 
-[...]
-
->>
->> It's opposite, you are just adding whole lot of functions/APIs here with out the
->> users of those APIs. I am unable to visualise how they are getting used. So for
->> me even if you just add handful of above APIs with drivers making call to each
->> one of them along with it, I can better understand it. Without any usage of these
->> APIs in this series, I fail to understand the need of it.
->> So NACK to this patch without the users of the APIs introduced here.
->>
-> 
-> Ok. I will break series with users in next version.
-> 
-
-Thanks. Don't add any APIs which are not used by drivers in the series.
-We don't want the whole set of APIs in that structure lying around in
-the kernel without users.
-
--- 
-Regards,
-Sudeep
+You use a GPIO for the Ethernet PHY reset, but you missed to pass
+'phy-reset-gpios' in the fec node.
