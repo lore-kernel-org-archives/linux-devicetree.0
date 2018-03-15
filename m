@@ -1,89 +1,84 @@
-Return-Path: <SRS0=1M28=GE=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v6 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
-Date: Wed, 14 Mar 2018 14:16:00 +0100
-Message-Id: <20180314131602.1531-1-maxime.ripard@bootlin.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=NaSz=GF=linaro.org=ulf.hansson@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
+References: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org> <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 15 Mar 2018 11:23:47 +0100
+Message-ID: <CAPDyKFqj34cHt2sC9i_Fi72fpP3EDkpAwascp_bt8w9YdP6NOQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
+Content-Type: text/plain; charset="UTF-8"
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+On 8 March 2018 at 02:01, Shawn Guo <shawn.guo@linaro.org> wrote:
+> From: tianshuliang <tianshuliang@hisilicon.com>
+>
+> Hisilicon hi3798cv200 SoC extends the dw-mshc controller
+> for additional clock control. Add device tree bindings for
+> hi3798cv200-dw-mshc.
+>
+> Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
+Thanks, applied for next!
 
-This IP block is able to receive 4 video streams and stream them over
-a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
-interfaces to controllers generating some video signals, like a camera
-or a pattern generator.
+Kind regards
+Uffe
 
-It is able to map input streams to CSI2 virtual channels and datatypes
-dynamically. The streaming devices choose their virtual channels
-through an additional signal that is transparent to the CSI2-TX. The
-datatypes however are yet another additional input signal, and can be
-mapped to any CSI2 datatypes.
-
-Since v4l2 doesn't really allow for that setup at the moment, this
-preliminary version is a rather dumb one in order to start the
-discussion on how to address this properly.
-
-Let me know what you think!
-Maxime
-
-Changes from v5:
-  - Changed the return type to void for csi2tx_stop
-  - Checked for the pad index in get/set_pad_format
-  - Made a comment that the DPHY registers are for the DPHY *interface*
-    register
-
-Changes from v4:
-  - After playing a bit with the pad multiplexing patches, found that it
-    was making much more sense to have the subdev notifiers for the source
-    subdev rather for the sink that might even be outside of Linux control.
-    Removed the notifier for now.
-
-Changes from v3:
-  - Added a comment about entity links walk concurrency
-  - Changed the default resolution to 1280x720
-  - Changed usleep_range calls to udelay
-  - Reworked the reference counting mechanism to remove a race
-    condition by adding a mutex instead of an atomic count
-  - Changed the entity function to MEDIA_ENT_F_VID_IF_BRIDGE
-  - Changed the name of the reg variable in _get_resources to dev_cfg
-  - Removed the redundant error message in the devm_ioremap_resource
-    error path
-  - Moved the subdev s_stream call before enabling the TX bridge
-  - Changed some int types to unsigned
-  - Init'd the pad formats properly
-  - Fixed typo in the CSI2TX_LANES_MAX define name
-  - Added Sakari Acked-by
-
-Changes from v2:
-  - Use SPDX license header
-  - Use the lane mapping from DT
-
-Changes from v1:
-  - Add a subdev notifier and start our downstream subdevice in
-    s_stream  
-  - Based the decision to enable the stream or not on the link state
-    instead of whether a format was being set on the pad
-  - Put the controller back in reset when stopping the pipeline
-  - Clarified the enpoints number in the DT binding
-  - Added a default format for the pads
-  - Added some missing const
-  - Added more explicit comments
-  - Rebased on 4.15
-
-Maxime Ripard (2):
-  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-
- .../devicetree/bindings/media/cdns,csi2tx.txt      |  98 ++++
- drivers/media/platform/cadence/Kconfig             |  11 +
- drivers/media/platform/cadence/Makefile            |   1 +
- drivers/media/platform/cadence/cdns-csi2tx.c       | 528 +++++++++++++++++++++
- 4 files changed, 638 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
--- 
-2.14.3
+> ---
+>  .../bindings/mmc/hi3798cv200-dw-mshc.txt           | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+> new file mode 100644
+> index 000000000000..a0693b7145f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+> @@ -0,0 +1,40 @@
+> +* Hisilicon Hi3798CV200 specific extensions to the Synopsys Designware Mobile
+> +  Storage Host Controller
+> +
+> +Read synopsys-dw-mshc.txt for more details
+> +
+> +The Synopsys designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsys dw mshc controller properties described
+> +by synopsys-dw-mshc.txt and the properties used by the Hisilicon Hi3798CV200
+> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
+> +
+> +Required Properties:
+> +- compatible: Should contain "hisilicon,hi3798cv200-dw-mshc".
+> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed
+> +  in clock-names.
+> +- clock-names: Should contain the following:
+> +       "ciu" - The ciu clock described in synopsys-dw-mshc.txt.
+> +       "biu" - The biu clock described in synopsys-dw-mshc.txt.
+> +       "ciu-sample" - Hi3798CV200 extended phase clock for ciu sampling.
+> +       "ciu-drive"  - Hi3798CV200 extended phase clock for ciu driving.
+> +
+> +Example:
+> +
+> +       emmc: mmc@9830000 {
+> +               compatible = "hisilicon,hi3798cv200-dw-mshc";
+> +               reg = <0x9830000 0x10000>;
+> +               interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&crg HISTB_MMC_CIU_CLK>,
+> +                        <&crg HISTB_MMC_BIU_CLK>,
+> +                        <&crg HISTB_MMC_SAMPLE_CLK>,
+> +                        <&crg HISTB_MMC_DRV_CLK>;
+> +               clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
+> +               fifo-depth = <256>;
+> +               clock-frequency = <200000000>;
+> +               cap-mmc-highspeed;
+> +               mmc-ddr-1_8v;
+> +               mmc-hs200-1_8v;
+> +               non-removable;
+> +               bus-width = <8>;
+> +       };
+> --
+> 1.9.1
+>
