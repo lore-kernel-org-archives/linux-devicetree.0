@@ -1,90 +1,69 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Thu, 15 Mar 2018 17:47:01 +0000
-Message-ID: <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
-        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
-        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
-        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
-        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
- <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC PATCH] clk: qcom: rpmcc: Add support to XO buffered clocks
+Date: Thu, 15 Mar 2018 10:52:16 -0700
+Message-ID: <152113633637.107923.1559162375425599621@swboyd.mtv.corp.google.com>
+References: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
-Content-Language: en-US
+In-Reply-To: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLCBHZWVydCwgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogTWFyZWsgU3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0N
-Cj4gU2VudDogVHVlc2RheSwgTWFyY2ggMDYsIDIwMTggMTI6MDYgQU0NCj4gVG86IEdlZXJ0IFV5
-dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+OyBSb2IgSGVycmluZw0KPiA8cm9iaEBr
-ZXJuZWwub3JnPg0KPiBDYzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBNYXR0aGlh
-cyBCcnVnZ2VyDQo+IDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9zcyA8YW5keS5n
-cm9zc0BsaW5hcm8ub3JnPjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgR2Vl
-cnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47DQo+IEJqw7ZybiBBbmRl
-cnNzb24gPGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnPjsgc2Vhbi53YW5nQG1lZGlhdGVrLmNv
-bTsNCj4gTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IE1hcmsgUnV0bGFu
-ZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYWphbiBWYWphIDxSQUpBTlZAeGlsaW54LmNv
-bT47IG9wZW4gbGlzdDpPUEVODQo+IEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUg
-QklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51
-eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxp
-bmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBKb2xseSBTaGFoIDxK
-T0xMWVNAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGR0LWJpbmRpbmdz
-OiBwb3dlcjogQWRkIFp5bnFNUCBwb3dlciBkb21haW4NCj4gYmluZGluZ3MNCj4gDQo+IEhpIEFs
-bCwNCj4gDQo+IE9uIDIwMTgtMDMtMDYgMDg6NTksIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToN
-Cj4gPiBIaSBSb2IsIEpvbGx5LA0KPiA+DQo+ID4gT24gTW9uLCBNYXIgNSwgMjAxOCBhdCAxMToz
-OSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4+IE9uIFR1ZSwg
-RmViIDI3LCAyMDE4IGF0IDAzOjU1OjQ5UE0gLTA4MDAsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4+
-PiBBZGQgZG9jdW1lbnRhdGlvbiB0byBkZXNjcmliZSBaeW5xTVAgcG93ZXIgZG9tYWluIGJpbmRp
-bmdzLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEpvbGx5IFNoYWggPGpvbGx5c0B4aWxp
-bnguY29tPg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogUmFqYW4gVmFqYSA8cmFqYW52QHhpbGlueC5j
-b20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvenlu
-cW1wLWdlbnBkLnR4dCAgICAgfCA0Ng0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4+PiAg
-IDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspDQo+ID4+PiAgIGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiA+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3p5bnFt
-cC1nZW5wZC50eHQNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0DQo+ID4+PiBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci96eW5xbXAtZ2VucGQudHh0DQo+ID4+PiBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci96eW5xbXAtZ2VucGQudHh0DQo+
-ID4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+Pj4gaW5kZXggMDAwMDAwMC4uMjVmOTcxMQ0K
-PiA+Pj4gLS0tIC9kZXYvbnVsbA0KPiA+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Bvd2VyL3p5bnFtcC1nZW5wZC50eHQNCj4gPj4+ICtUaGlzIG5vZGUgY29udGFp
-bnMgYSBudW1iZXIgb2Ygc3Vibm9kZXMsIGVhY2ggcmVwcmVzZW50aW5nIGEgc2luZ2xlDQo+ID4+
-PiArUE0gZG9tYWluIHRoYXQgUE0gZG9tYWluIGNvbnN1bWVyIGRldmljZXMgcmVmZXJlbmNlLg0K
-PiA+Pj4gKw0KPiA+Pj4gKz09IFBNIERvbWFpbiBOb2RlcyA9PQ0KPiA+Pj4gKw0KPiA+Pj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+PiArIC0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTnVtYmVy
-IG9mIGNlbGxzIGluIGEgUE0gZG9tYWluIHNwZWNpZmllci4gTXVzdCBiZQ0KPiAwLg0KPiA+Pj4g
-KyAtIHBkLWlkOiBMaXN0IG9mIGRvbWFpbiBpZGVudGlmaWVycyBvZiBhcyBkZWZpbmVkIGJ5IHBs
-YXRmb3JtIGZpcm13YXJlLg0KPiBUaGVzZQ0KPiA+Pj4gKyAgICAgICBpZGVudGlmaWVycyBhcmUg
-cGFzc2VkIHRvIHRoZSBQTSBmaXJtd2FyZS4NCj4gPj4+ICsNCj4gPj4+ICtFeGFtcGxlOg0KPiA+
-Pj4gKyAgICAgenlucW1wLWdlbnBkIHsNCj4gPj4+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9
-ICJ4bG54LHp5bnFtcC1nZW5wZCI7DQo+ID4+IFdoYXQncyB0aGUgY29udHJvbCBpbnRlcmZhY2Ug
-Zm9yIGNvbnRyb2xsaW5nIHRoZSBkb21haW5zPw0KPiA+Pj4gKw0KPiA+Pj4gKyAgICAgICAgICAg
-ICBwZF91c2IwOiBwZC11c2IwIHsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICBwZC1pZCA9
-IDwyMj47DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9
-IDwwPjsNCj4gPj4gVGhlcmUncyBubyBuZWVkIGZvciBhbGwgdGhlc2Ugc3ViIG5vZGVzLiBNYWtl
-ICNwb3dlci1kb21haW4tY2VsbHMgMQ0KPiA+PiBhbmQgcHV0IHRoZSBpZCBpbiB0aGUgY2VsbCB2
-YWx1ZS4NCj4gPiBUaGF0IHdhcyBteSBmaXJzdCByZWFjdGlvbiwgdG9vLi4uDQo+ID4+PiArICAg
-ICAgICAgICAgIH07DQo+ID4+PiArDQo+ID4+PiArICAgICAgICAgICAgIHBkX3NhdGE6IHBkLXNh
-dGEgew0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDI4PjsNCj4gPj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPiA+Pj4gKyAg
-ICAgICAgICAgICB9Ow0KPiA+Pj4gKw0KPiA+Pj4gKyAgICAgICAgICAgICBwZF9ncHU6IHBkLWdw
-dSB7DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgcGQtaWQgPSA8NTggMjAgMjE+Ow0KPiA+
-IC4uLiB1bnRpbCBJIHNhdyB0aGUgYWJvdmUuDQo+ID4gQ29udHJvbGxpbmcgdGhlIEdQVSBwb3dl
-ciBhcmVhIHJlcXVpcmVzIGNvbnRyb2xsaW5nIDMgcGh5c2ljYWwgYXJlYXM/DQo+ID4NCj4gPiBI
-b3dldmVyLCBkb2luZyBpdCB0aGlzIHdheSBtYXkgYml0ZSB5b3UgaW4gdGhlIGZ1dHVyZSwgaWYg
-YSBuZWVkDQo+ID4gYXJpc2VzIHRvIGNvbnRyb2wgYSBzdWJzZXQuIEFuZCB3aGF0IGFib3V0IHBv
-d2VyIHVwL2Rvd24gb3JkZXI/DQo+IA0KPiBXaGF0IGFib3V0IGRlZmluaW5nIDMgc2VwYXJhdGUg
-ZG9tYWlucyBhbmQgYXJyYW5naW5nIHRoZW0gaW4gcGFyZW50LWNoaWxkDQo+IHJlbGF0aW9uc2hp
-cD8gZ2VuZXJpYyBwb3dlciBkb21haW5zIGFscmVhZHkgc3VwcG9ydHMgdGhhdCBhbmQgdGhpcyBh
-bGxvd3MgdG8NCj4gbmljZWx5IGRlZmluZSB0aGUgcG93ZXIgb24vb2ZmIG9yZGVyLg0KPiANCj4g
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDB4MD47DQo+
-ID4+PiArICAgICAgICAgICAgIH07DQo+ID4+PiArICAgICB9Ow0KPiANCg0KSSBhZ3JlZSBpdCBz
-aG91bGQgYmUgYXJyYW5nZWQgaW4gYXMgcGFyZW50IGNoaWxkIG9yZGVyIHRvIGNvbnRyb2wgc3Vi
-c2V0IG9yIGNvbnRyb2wgb3JkZXIuIFdpbGwgaW5jb3Jwb3JhdGUgdGhvc2UgY2hhbmdlcyBpbiBu
-ZXh0IHZlcnNpb24uDQoNCj4gQmVzdCByZWdhcmRzDQo+IC0tDQo+IE1hcmVrIFN6eXByb3dza2ks
-IFBoRA0KPiBTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5kDQoNCg==
+Quoting srinivas.kandagatla@linaro.org (2018-03-15 07:37:24)
+> diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+> index c60f61b10c7f..261f5505e714 100644
+> --- a/drivers/clk/qcom/clk-rpm.c
+> +++ b/drivers/clk/qcom/clk-rpm.c
+> @@ -56,6 +57,19 @@
+>                 },                                                            \
+>         }
+>  
+> +#define DEFINE_CLK_RPM_XO_BUFFER(_platform, _name, _active, offset)          \
+> +       static struct clk_rpm _platform##_##_name = {                         \
+> +               .rpm_clk_id = QCOM_RPM_CXO_BUFFERS,                           \
+> +               .xo_offset = (offset),                                        \
+> +               .rate = 19200000,                                             \
+
+Shouldn't these rates also come from parent, i.e. pxo_board? So drop
+this line?
+
+> +               .hw.init = &(struct clk_init_data){                           \
+> +                       .ops = &clk_rpm_fixed_ops,                            \
+> +                       .name = #_name,                                       \
+> +                       .parent_names = (const char *[]){ "pxo_board" },      \
+> +                       .num_parents = 1,                                     \
+> +               },                                                            \
+> +       }
+> +
+>  #define DEFINE_CLK_RPM_FIXED(_platform, _name, _active, r_id, r)             \
+>         static struct clk_rpm _platform##_##_name = {                         \
+>                 .rpm_clk_id = (r_id),                                         \
+> @@ -128,6 +142,8 @@
+>  
+>  struct clk_rpm {
+>         const int rpm_clk_id;
+> +       const int xo_offset;
+> +       u32 xo_buffer_value;
+>         const bool active_only;
+>         unsigned long rate;
+>         bool enabled;
+> @@ -308,6 +330,11 @@ static void clk_rpm_fixed_unprepare(struct clk_hw *hw)
+>         u32 value = 0;
+>         int ret;
+>  
+> +       if (r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS) {
+> +               r->xo_buffer_value &= ~(QCOM_RPM_XO_MODE_ON << r->xo_offset);
+> +               value = r->xo_buffer_value;
+> +       }
+> +
+
+I seem to recall that the xo buffers are within the same "word" or
+something like that for each of the buffers. So we would need to make
+sure we don't overwrite the bits in there between clks that are
+enabling/disabling stuff. Maybe make some sort of shared variable they
+all point to and then put a mutex around it? May also be worth making
+more clk_ops at that point to not conflate with the simpler on/off code.
