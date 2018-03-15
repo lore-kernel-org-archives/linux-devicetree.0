@@ -1,113 +1,67 @@
-From: Vivek Unune <npcomplete13@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X:Make usb3 phy use mdio phy driver
-Date: Thu, 15 Mar 2018 09:56:47 -0400
-Message-ID: <20180315135647.48456-1-npcomplete13@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v3 01/11] mmc: sdhci-omap: Fix when capabilities are
+ obtained from SDHCI_CAPABILITIES reg
+Date: Thu, 15 Mar 2018 16:17:25 +0200
+Message-ID: <e9ac3f68-2d75-6648-7774-786c20f6746c@intel.com>
+References: <20180307132020.30951-1-kishon@ti.com>
+ <20180307132020.30951-2-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180307132020.30951-2-kishon@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: florian.fainelli@broadcom.com, hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Unune <npcomplete13@gmail.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, usb3 phy in bcm5301x.dtsi uses platform driver which
-requires register range "ccb-mii" <0x18003000 0x1000>. This range
-overlaps with mdio cmd and param registers (<0x18003000 0x8>).
-Essentially, the platform driver partly acts like a mdio bus
-driver, hence to use of this register range.
+On 07/03/18 15:20, Kishon Vijay Abraham I wrote:
+> sdhci_omap_config_iodelay_pinctrl_state() requires caps and caps2 to be
+> initialized (speed mode capabilities like UHS/HS200) before it is
+> invoked. While mmc_of_parse() initializes caps/caps2 if capabilities is
+> populated in device tree, it will remain uninitialized for capabilities
+> obtained from SDHCI_CAPABILITIES register.
+> Fix sdhci_omap_config_iodelay_pinctrl_state() to be used even while
+> getting the capabilities from SDHCI_CAPABILITIES register by invoking
+> sdhci_setup_host() before sdhci_omap_config_iodelay_pinctrl_state().
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/mmc/host/sdhci-omap.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+> index 1456abd5eeb9..3cce30584d2f 100644
+> --- a/drivers/mmc/host/sdhci-omap.c
+> +++ b/drivers/mmc/host/sdhci-omap.c
+> @@ -916,10 +916,6 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+>  		goto err_put_sync;
+>  	}
+>  
+> -	ret = sdhci_omap_config_iodelay_pinctrl_state(omap_host);
+> -	if (ret)
+> -		goto err_put_sync;
+> -
+>  	host->mmc_host_ops.get_ro = mmc_gpio_get_ro;
+>  	host->mmc_host_ops.start_signal_voltage_switch =
+>  					sdhci_omap_start_signal_voltage_switch;
+> @@ -930,7 +926,15 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+>  	sdhci_read_caps(host);
+>  	host->caps |= SDHCI_CAN_DO_ADMA2;
+>  
+> -	ret = sdhci_add_host(host);
+> +	ret = sdhci_setup_host(host);
+> +	if (ret)
+> +		goto err_put_sync;
+> +
+> +	ret = sdhci_omap_config_iodelay_pinctrl_state(omap_host);
+> +	if (ret)
+> +		goto err_put_sync;
+> +
+> +	ret = __sdhci_add_host(host);
+>  	if (ret)
+>  		goto err_put_sync;
 
-In some Northstar devices like Linksys EA9500, secondary switch
-is connected via external mdio. The only way to access and
-configure the external switch is via mdio bus. When we enable the
-mdio bus in it's current state, the mdio bus and any child buses
-fail to register because of the register range overlap.
-
-On Northstar, the usb3 phy is connected at address 0x10 on the
-internal mdio bus. This change moves the usb3_phy node and makes
-it a child node of internal mdio bus.
-
-Thanks to Rafał Miłecki's commit af850e14a7ae
-("phy: bcm-ns-usb3: add MDIO driver using proper bus layer") the
-same usb3 platform driver can now act as usb3 phy mdio driver.
-
-Tested on Linksys Panamera (EA9500)
-
-Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
----
- arch/arm/boot/dts/bcm47094.dtsi |  7 ++++---
- arch/arm/boot/dts/bcm5301x.dtsi | 34 ++++++++++++++++++++++++++--------
- 2 files changed, 30 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm47094.dtsi b/arch/arm/boot/dts/bcm47094.dtsi
-index 4840a782fc05..f7c3e274b354 100644
---- a/arch/arm/boot/dts/bcm47094.dtsi
-+++ b/arch/arm/boot/dts/bcm47094.dtsi
-@@ -7,9 +7,10 @@
- #include "bcm4708.dtsi"
- 
- / {
--	usb3_phy: usb3-phy {
--		compatible = "brcm,ns-bx-usb3-phy";
--	};
-+};
-+
-+&usb3_phy {
-+	compatible = "brcm,ns-bx-usb3-phy";
- };
- 
- &uart0 {
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 9a076c409f4e..7ba6533f7615 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -154,13 +154,6 @@
- 		clock-names = "phy-ref-clk";
- 	};
- 
--	usb3_phy: usb3-phy {
--		compatible = "brcm,ns-ax-usb3-phy";
--		reg = <0x18105000 0x1000>, <0x18003000 0x1000>;
--		reg-names = "dmp", "ccb-mii";
--		#phy-cells = <0>;
--	};
--
- 	axi@18000000 {
- 		compatible = "brcm,bus-axi";
- 		reg = <0x18000000 0x1000>;
-@@ -359,7 +352,32 @@
- 		reg = <0x18003000 0x8>;
- 		#size-cells = <1>;
- 		#address-cells = <0>;
--		status = "disabled";
-+	};
-+
-+	mdio-bus-mux {
-+		compatible = "mdio-mux-mmioreg";
-+		mdio-parent-bus = <&mdio>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x18003000 0x4>;
-+		mux-mask = <0x200>;
-+
-+		mdio_int: mdio@0 {
-+			reg = <0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			usb3_phy: usb3-phy@10 {
-+				compatible = "brcm,ns-ax-usb3-phy";
-+				reg = <0x10>;
-+				usb3-dmp-syscon = <&usb3_dmp>;
-+				#phy-cells = <0>;
-+			};
-+		};
-+	};
-+
-+	usb3_dmp: syscon@18105000 {
-+		reg = <0x18105000 0x1000>;
- 	};
- 
- 	i2c0: i2c@18009000 {
--- 
-2.11.0
+if __sdhci_add_host() fails, then sdhci_cleanup_host() needs to be called to
+free resources allocated by sdhci_setup_host().
