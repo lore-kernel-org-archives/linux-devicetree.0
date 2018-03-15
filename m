@@ -1,844 +1,172 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC 1/2] drivers/edac: Add L1 and L2 error detection for
- A53 and A57
-Date: Thu, 15 Mar 2018 13:33:52 +0000
-Message-ID: <5AAA7640.3010506@arm.com>
-References: <1521073067-24348-1-git-send-email-york.sun@nxp.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Thu, 15 Mar 2018 14:37:00 +0100
+Message-ID: <1d98d055-fb5b-3840-e9dd-6bb8f8251bb9@samsung.com>
+References: <1521111391-3515-1-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180315112237epcas1p4fba95a534dc025679b054d5c58ce013d@epcas1p4.samsung.com>
+ <1521111391-3515-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521073067-24348-1-git-send-email-york.sun@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: York Sun <york.sun@nxp.com>
-Cc: bp@alien8.de, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1521111391-3515-3-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi York,
-
-You have a DT binding in here, please CC the devicetree list. You're touching
-code under arch/arm64, so you need the arm list too. get_maintainer.pl will take
-your patch and give you the list of which lists and maintainers to CC.
-
-(I've added those lists, the full patch is here:
-https://patchwork.kernel.org/patch/10283783/
-)
-
-Some comments below, I haven't looked in to edac or the manuals for A53/A57.
-
-On 15/03/18 00:17, York Sun wrote:
-> Add error detection for A53 and A57 cores. Hardware error injection
-> is supported on A53. Software error injection is supported on both.
-> For hardware error injection on A53 to work, proper access to
-> L2ACTLR_EL1, CPUACTLR_EL1 needs to be granted by EL3 firmware. This
-> is done by making an SMC call in the driver. Failure to enable access
-> disables hardware error injection. For error interrupt to work,
-> another SMC call enables access to L2ECTLR_EL1. Failure to enable
-> access disables interrupt for error reporting.
-
-This is tricky as there are shipped systems out there without these SMC calls.
-They need to be discovered in some way. We can't even assume firmware has PSCI,
-it has to be discovered via APCI/DT.
-
-I think it will be cleaner for the presence of this device/compatible to
-indicate that the registers are enabled for the normal-world, instead of having
-the OS try to call into firmware to enable it.
-
-
-> Signed-off-by: York Sun <york.sun@nxp.com>
-> ---
->  .../devicetree/bindings/edac/cortex-arm64-edac.txt |  37 +
->  arch/arm64/include/asm/cacheflush.h                |   1 +
->  arch/arm64/mm/cache.S                              |  35 +
->  drivers/edac/Kconfig                               |   6 +
->  drivers/edac/Makefile                              |   1 +
->  drivers/edac/cortex_arm64_l1_l2.c                  | 741 +++++++++++++++++++++
->  drivers/edac/cortex_arm64_l1_l2.h                  |  55 ++
->  7 files changed, 876 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
->  create mode 100644 drivers/edac/cortex_arm64_l1_l2.c
->  create mode 100644 drivers/edac/cortex_arm64_l1_l2.h
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
-> new file mode 100644
-> index 0000000..74a1c2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
-> @@ -0,0 +1,37 @@
-> +ARM Cortex A57 and A53 L1/L2 cache error reporting
-> +
-> +CPU Memory Error Syndrome and L2 Memory Error Syndrome registers can be used
-> +for checking L1 and L2 memory errors. However, only A53 supports double-bit
-> +error injection to L1 and L2 memory. This driver uses the hardware error
-> +injection when available, but also provides a way to inject errors by
-> +software. Both A53 and A57 supports interrupt when multi-bit errors happen.
-
-> +To use hardware error injection and the interrupt, proper access needs to be
-> +granted in ACTLR_EL3 (and/or ACTLR_EL2) register by EL3 firmware SMC call.
-
-How can Linux know whether firmware toggled these bits? How can it know if it
-needs to make an SMC call to do the work?
-
-This looks like platform policy, I'm not sure how this gets described...
-
-
-> +Correctable errors do not trigger such interrupt. This driver uses dynamic
-> +polling internal to check for errors. The more errors detected, the more
-> +frequently it polls. Combining with interrupt, this driver can detect
-> +correctable and uncorrectable errors. However, if the uncorrectable errors
-> +cause system abort exception, this drivr is not able to report errors in time.
-> +
-> +The following section describes the Cortex A57/A53 EDAC DT node binding.
-> +
-> +Required properties:
-> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
-> +- cpus: Should be a list of compatible cores
-> +
-> +Optional properties:
-> +- interrupts: Interrupt number if supported
-> +
-> +Example:
-> +	edac {
-> +		compatible = "arm,cortex-a53-edac";
-> +		cpus = <&cpu0>,
-> +		       <&cpu1>,
-> +		       <&cpu2>,
-> +		       <&cpu3>;
-> +		interrupts = <0 108 0x4>;
-> +
-> +	};
-> +
-
-> diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> index 76d1cc8..f1cd090 100644
-> --- a/arch/arm64/include/asm/cacheflush.h
-> +++ b/arch/arm64/include/asm/cacheflush.h
-> @@ -73,6 +73,7 @@ extern void __clean_dcache_area_pop(void *addr, size_t len);
->  extern void __clean_dcache_area_pou(void *addr, size_t len);
->  extern long __flush_cache_user_range(unsigned long start, unsigned long end);
->  extern void sync_icache_aliases(void *kaddr, unsigned long len);
-> +extern void __flush_l1_dcache_way(phys_addr_t ptr);
->  
->  static inline void flush_cache_mm(struct mm_struct *mm)
->  {
-
-> diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-> index 7f1dbe9..5e65c20 100644
-> --- a/arch/arm64/mm/cache.S
-> +++ b/arch/arm64/mm/cache.S
-> @@ -221,3 +221,38 @@ ENTRY(__dma_unmap_area)
->  	b.ne	__dma_inv_area
->  	ret
->  ENDPIPROC(__dma_unmap_area)
-> +
-> +/*
-> + *	Flush L1 dcache by way, using physical address to find sets
-> + *
-> + *	__flush_l1_dcache_way(ptr)
-> + *	- ptr	- physical address to be flushed
-> + */
-
-We don't have set/way maintenance in the kernel because its impossible to do
-correctly outside EL3's CPU power-on code.
-
-The ARM-ARM has a half page 'note' explaining the issues, under 'Performing
-cache maintenance instructions' in section "D3.4.8 A64 Cache maintenance
-instructions". If you have DDI0487B.b, its on Page D3-2020.
-
-These may also help:
-https://lkml.org/lkml/2016/3/21/190
-https://events.static.linuxfound.org/sites/events/files/slides/slides_17.pdf
-https://www.linux.com/news/taming-chaos-modern-caches
-
-Why do you need to do this? There is no way to guarantee an address isn't in the
-cache.
-
-
-> +ENTRY(__flush_l1_dcache_way)
-> +	msr	csselr_el1, xzr		/* select cache level 1 */
-> +	isb
-> +	mrs	x6, ccsidr_el1
-> +	and	x2, x6, #7
-> +	add	x2, x2, #4		/* x2 has log2(cache line size) */
-> +	mov	x3, #0x3ff
-> +	and	x3, x3, x6, lsr #3	/* x3 has number of ways - 1 */
-> +	clz	w5, w3			/* bit position of ways */
-> +	mov	x4, #0x7fff
-> +	and	x4, x4, x6, lsr #13	/* x4 has number of sets - 1 */
-> +	clz	x7, x4
-> +	lsr	x0, x0, x2
-> +	lsl	x0, x0, x7
-> +	lsr	x0, x0, x7		/* x0 has the set for ptr */
-> +
-> +	mov	x6, x3
-> +loop_way:
-> +	lsl	x9, x3, x5
-> +	lsl	x7, x0, x2
-> +	orr	x9, x9, x7
-> +	dc	cisw, x9
-> +	subs	x6, x6, #1
-> +	b.ge	loop_way
-> +	dsb	ish
-> +	ret
-> +
-> +ENDPIPROC(__flush_l1_dcache_way)
-
-
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 0fd9ffa..6c21941 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -78,3 +78,4 @@ obj-$(CONFIG_EDAC_THUNDERX)		+= thunderx_edac.o
->  obj-$(CONFIG_EDAC_ALTERA)		+= altera_edac.o
->  obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
->  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
-> +obj-$(CONFIG_EDAC_CORTEX_ARM64_L1_L2)	+= cortex_arm64_l1_l2.o
-> diff --git a/drivers/edac/cortex_arm64_l1_l2.c b/drivers/edac/cortex_arm64_l1_l2.c
-> new file mode 100644
-> index 0000000..9bcc8e9
-> --- /dev/null
-> +++ b/drivers/edac/cortex_arm64_l1_l2.c
-> @@ -0,0 +1,741 @@
-> +/*
-> + * Cortex A57 and A53 EDAC L1 and L2 cache error detection
-> + *
-> + * Copyright (c) 2018, NXP Semiconductor
-> + * Author: York Sun <york.sun@nxp.com>
-> + *
-> + * Partially take from a similar driver by
-> + * Brijesh Singh <brijeshkumar.singh@amd.com>
-> + * Copyright (c) 2015, Advanced Micro Devices
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_device.h>
-> +#include <linux/arm-smccc.h>
-> +#include <asm/barrier.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp_plat.h>
-> +
-> +#include "edac_module.h"
-> +#include "cortex_arm64_l1_l2.h"
-> +
-> +static int poll_msec = 1024;
-> +static long l1_ce_sw_inject_count, l1_ue_sw_inject_count;
-> +static long l2_ce_sw_inject_count, l2_ue_sw_inject_count;
-> +static struct cpumask compat_mask;
-> +static struct cpumask l1_ce_cpu_mask, l1_ue_cpu_mask;
-> +static struct cpumask l2_ce_cpu_mask, l2_ue_cpu_mask;
-> +static DEFINE_PER_CPU(unsigned long, actlr_en);
-> +static DEFINE_PER_CPU(unsigned long, l2ectlr_en);
-> +static DEFINE_PER_CPU(u64, cpumerr);
-> +static DEFINE_PER_CPU(u64, cpuactlr);
-> +static DEFINE_PER_CPU(u64, l2actlr);
-> +static DEFINE_PER_CPU(u64, l2merr);
-> +static DEFINE_PER_CPU(call_single_data_t, csd_check);
-> +static DEFINE_SPINLOCK(cortex_edac_lock);
-> +
-> +static inline void read_cpuactlr(void *info)
-> +{
-> +	u64 val;
-> +	int cpu = smp_processor_id();
-> +
-> +	asm volatile("mrs %0, S3_1_C15_C2_0" : "=r" (val));
-
-I make ACTLR_EL1's encoding S3_0_1_0_1. What's this thing?
-
-Please create a define in your driver for these registers and use the
-read_sysreg_s() helpers. e.g:
-| #define A53_SYS_SOMETHING_EL1		sys_reg(3, 1, 15, 2, 0)
-| val = read_sysreg_s(A53_SYS_SOMETHING_EL1);
-
-
-
-> +	per_cpu(cpuactlr, cpu) = val;
-
-this_cpu_write() ?
-
-
-> +}
-> +
-> +static inline void write_cpuactlr(int *mem)
-> +{
-> +	u64 val;
-> +	int cpu;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&cortex_edac_lock, flags);
-> +	cpu = smp_processor_id();
-> +
-> +	__flush_dcache_area(mem, 8);
-
-What is 8?
-
-
-> +	asm volatile("mrs %0, S3_1_C15_C2_0" : "=r" (val));
-> +	val |= L1_ERR_INJ_EN;
-> +	asm volatile("dsb sy");
-> +	asm volatile("msr S3_1_C15_C2_0, %0" :: "r" (val));
-> +	asm volatile("isb sy");
-
-Please use the macros, they're better than this asm-volatile:
-| dsb(sy);
-| isb();
-
-...and, they will also give you the compiler barrier you want here...
-
-
-> +	/* make cache dirty */
-> +	*mem = 0xDEADBEEF;	/* write to L1 data causes error right away */
-
-You're doing this in C code. The compiler is allowed to re-order this write. As
-you don't read *mem, it can put it anywhere between
-spin_lock_irqsave()/spin_unlock_irqrestore(). It can even do it in two halves,
-or do it twice if it wants to.
-
-WRITE_ONCE() tells the compiler not split this write up, and you need compiler
-barriers as well as the CPU instruction barriers you have. The compiler doesn't
-know what 'isb' means. (this is why we already have those macros)
-
-But! You're doing all this to try and make '*mem =' the first write to the
-cache? We can't do this in C: the compiler may write registers to the stack.
-Even if it didn't, I don't think we can do this at all as we may take a
-firmware-interrupt, or a real-interrupt to a hypervisor here.
-
-What happens if a CPU (not necessarily this one) decides to read *mem?
-
-
-> +	__flush_dcache_area(mem, 8);
-> +	val &= ~L1_ERR_INJ_EN;
-> +	asm volatile("dsb sy");
-> +	asm volatile("msr S3_1_C15_C2_0, %0" :: "r" (val));
-> +	asm volatile("isb sy");
-> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
-> +}
-> +
-> +static inline void read_l2actlr(void *info)
-> +{
-> +	u64 val;
-> +	int cpu = smp_processor_id();
-> +
-> +	asm volatile("mrs %0, S3_1_C15_C0_0" : "=r" (val));
-
-> +	per_cpu(l2actlr, cpu) = val;
-> +}
-> +
-> +static inline void write_l2actlr(int *mem)
-> +{
-> +	u64 val;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&cortex_edac_lock, flags);
-> +	__flush_dcache_area(mem, 8);
-> +	__flush_l1_dcache_way(virt_to_phys(mem));
-> +	asm volatile("mrs %0, S3_1_C15_C0_0" : "=r" (val));
-> +	val |= L2D_ERR_INJ_EN;
-> +	asm volatile("dsb sy");
-> +	asm volatile("msr S3_1_C15_C0_0, %0" :: "r" (val));
-> +	asm volatile("isb sy");
-> +	/* make cache dirty */
-> +	*mem = 0xDEADBEEF;	/* Error will be reported when L2 is accessed. */
-
-As above I don't think we can do this. What happens if another CPU accesses L2?
-
-
-> +	__flush_l1_dcache_way(virt_to_phys(mem));
-> +	__flush_dcache_area(mem, 8);
-> +	val &= ~L2D_ERR_INJ_EN;
-> +	asm volatile("dsb sy");
-> +	asm volatile("msr S3_1_C15_C0_0, %0" :: "r" (val));
-> +	asm volatile("isb sy");
-> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
-> +}
-> +
-> +static inline void write_l2ectlr_el1(void *info)
-> +{
-> +	u64 val;
-> +	int cpu = smp_processor_id();
-> +
-> +	asm volatile("mrs %0, S3_1_C11_C0_3" : "=r" (val));
-> +	if (val & L2_ERR_INT) {
-> +		pr_debug("l2ectlr_el1 on cpu %d reads 0x%llx\n", cpu, val);
-> +		val &= ~L2_ERR_INT;
-> +		asm volatile("msr S3_1_C11_C0_3, %0" :: "r" (val));
-> +	}
-> +}
-
-Isn't this more like a reset L2_ERR_INT bit than 'write_l2ectlr_el1();?
-
-
-> +
-> +static inline void write_cpumerrsr_el1(u64 val)
-> +{
-> +	asm volatile("msr s3_1_c15_c2_2, %0" :: "r" (val));
-> +}
-> +
-> +static void a53_allow_l1l2_err_inj(void *info)
-> +{
-> +	int cpu = smp_processor_id();
-> +	struct arm_smccc_res res;
-> +	unsigned long flags;
-> +
-> +	pr_debug("%s: cpu is %d\n", __func__, cpu);
-> +	spin_lock_irqsave(&cortex_edac_lock, flags);
-
-> +	arm_smccc_smc(SIP_ALLOW_L1L2_ERR_32, 0, 0, 0, 0, 0, 0, 0, &res);
-
-Where is this call defined? (Its standardised somewhere right?)
-How do we know firmware implements it?
-How do we know 'SMC' is the SMCCC conduit to use? This will undef if its run in
-a virtual machine...
-
-
-> +	per_cpu(actlr_en, cpu) = res.a0;
-> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
-> +	pr_debug("%s: return is %ld\n", __func__, res.a0);
-> +}
-> +
-> +static void a53_allow_l1l2_err_irq_clr(void *info)
-> +{
-> +	int cpu = smp_processor_id();
-> +	struct arm_smccc_res res;
-> +	unsigned long flags;
-> +
-> +	pr_debug("%s: cpu is %d\n", __func__, cpu);
-> +	spin_lock_irqsave(&cortex_edac_lock, flags);
-> +	arm_smccc_smc(SIP_ALLOW_L2_CLR_32, 0, 0, 0, 0, 0, 0, 0, &res);
-> +	per_cpu(l2ectlr_en, cpu) = res.a0;
-> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
-> +	pr_debug("%s: return is %ld\n", __func__, res.a0);
-> +}
-> +
-> +static inline void read_cpumerrsr_el1(void *info)
-> +{
-> +	u64 val;
-> +	int cpu = smp_processor_id();
-> +
-> +	asm volatile("mrs %0, s3_1_c15_c2_2" : "=r" (val));
-> +	per_cpu(cpumerr, cpu) = val;
-> +	if (val & ~CPUMERRSR_RAMID_MASK) {	/* Skip RAMID */
-> +		pr_debug("cpu %d reads cpumerrsr_el1 0x%llx\n", cpu, val);
-> +		/* clear the register since we already stored it */
-> +		write_cpumerrsr_el1(0);
-> +	} else if (l1_ce_sw_inject_count > 0) {
-> +		l1_ce_sw_inject_count--;
-> +		pr_debug("inject correctable errors to cpu %d\n", cpu);
-> +		per_cpu(cpumerr, cpu) = (1UL << 31);	/* valid bit */
-> +	} else if (l1_ue_sw_inject_count > 0) {
-> +		l1_ue_sw_inject_count--;
-> +		pr_debug("inject Uncorrectable errors to cpu %d\n", cpu);
-> +		per_cpu(cpumerr, cpu) = (1UL << 63) | (1UL << 31);
-> +	}
-> +}
-> +
-> +static inline void write_l2merrsr_el1(u64 val)
-> +{
-> +	asm volatile("msr s3_1_c15_c2_3, %0" :: "r" (val));
-> +}
-> +
-> +static inline void read_l2merrsr_el1(void *info)
-> +{
-> +	u64 val;
-> +	int cpu = smp_processor_id();
-> +
-> +	asm volatile("mrs %0, s3_1_c15_c2_3" : "=r" (val));
-> +	per_cpu(l2merr, cpu) = val;
-> +	if (val & ~L2MERRSR_RAMID_MASK) {	/* Skip RAMID */
-> +		pr_debug("cpu %d reads l2merrsr_el1 0x%llx\n", cpu, val);
-> +		/* clear the register since we already stored it */
-> +		write_l2merrsr_el1(0);
-> +	} else if (l2_ce_sw_inject_count > 0) {
-> +		l2_ce_sw_inject_count--;
-> +		pr_debug("inject correctable errors to L2 on cpu %d\n", cpu);
-
-> +		per_cpu(l2merr, cpu) = (1UL << 31);	/* valid bit */
-
-Please create named macros for these bits:
-| #define A53_L2MERR_VALID	BIT(31)
-
-> +	} else if (l2_ue_sw_inject_count > 0) {
-> +		l2_ue_sw_inject_count--;
-> +		pr_debug("inject Uncorrectable errors to L2 on cpu %d\n", cpu);
-
-> +		per_cpu(l2merr, cpu) = (1UL << 63) | (1UL << 31);
-
-> +	}
-> +}
-> +static void read_errors(void *info)
-> +{
-> +	read_cpumerrsr_el1(info);
-> +	read_l2merrsr_el1(info);
-> +	write_l2ectlr_el1(info);
-> +}
-> +
-> +
-> +/* Returns 0 for no error
-> + *	  -1 for uncorrectable error(s)
-> + *	   1 for correctable error(s)
-
-Is both a possibility?
-
-> + */
-> +static int parse_cpumerrsr(unsigned int cpu)
-> +{
-> +	u64 val = per_cpu(cpumerr, cpu);
-> +
-> +	/* check if we have valid error before continuing */
-> +	if (!CPUMERRSR_EL1_VALID(val))
-> +		return 0;
-> +
-> +	cortex_printk(KERN_INFO, "CPU %d ", cpu);
-> +
-> +	switch (CPUMERRSR_EL1_RAMID(val)) {
-> +	case L1_I_TAG_RAM:
-> +		pr_cont("L1-I Tag RAM");
-> +		break;
-> +	case L1_I_DATA_RAM:
-> +		pr_cont("L1-I Data RAM");
-> +		break;
-> +	case L1_D_TAG_RAM:
-> +		pr_cont("L1-D Tag RAM");
-> +		break;
-> +	case L1_D_DATA_RAM:
-> +		pr_cont("L1-D Data RAM");
-> +		break;
-> +	case L1_D_DIRTY_RAM:
-> +		pr_cont("L1 Dirty RAM");
-> +		break;
-> +	case TLB_RAM:
-> +		pr_cont("TLB RAM");
-> +		break;
-> +	default:
-> +		pr_cont("unknown");
-> +		break;
-> +	}
-> +	pr_cont(" error(s) detected\n");
-> +
-> +	if (CPUMERRSR_EL1_FATAL(val)) {
-> +		cortex_printk(KERN_INFO,
-> +			      "CPU %d L1 fatal error(s) detected (0x%llx)\n",
-> +			      cpu, val);
-> +		return -1;
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static int parse_l2merrsr(unsigned int cpu)
-> +{
-> +	u64 val = per_cpu(l2merr, cpu);
-> +
-> +	/* check if we have valid error before continuing */
-> +	if (!L2MERRSR_EL1_VALID(val))
-> +		return 0;
-> +
-> +	cortex_printk(KERN_INFO, "CPU %d L2 %s error(s) detected (0x%llx)\n",
-> +		      cpu, L2MERRSR_EL1_FATAL(val) ? "fatal" : "", val);
-> +
-> +	return L2MERRSR_EL1_FATAL(val) ? -1 : 1;
-> +}
-> +
-> +#define MESSAGE_SIZE 40
-> +static void cortex_arm64_edac_check(struct edac_device_ctl_info *edac_ctl)
-> +{
-> +	int cpu;
-> +	char msg[MESSAGE_SIZE];
-> +	call_single_data_t *csd;
-> +
-> +	get_online_cpus();
-> +	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-> +		csd = &per_cpu(csd_check, cpu);
-> +		csd->func = read_errors;
-> +		csd->info = NULL;
-> +		csd->flags = 0;
-> +		/* Read CPU L1 error */
-> +		smp_call_function_single_async(cpu, csd);
-
-> +		/* Wait until flags cleared */
-> +		smp_cond_load_acquire(&csd->flags, !VAL);
-
-So this CPU waits in IRQ context for each CPU in compat_mask to do the work.
-What happens if another driver does the same? Won't this deadlock?
-
-I think the whole point of this smp_call_function_single_async() call is you
-don't wait in IRQ context for it to finish.
-
-
-The problem here is the IRQ isn't a per-cpu PPI, but the register for
-acknowledging the interrupt is a per-cpu system register. Can we ask the irqchip
-to disable the IRQ until we've done the per-cpu work to clear it?
-
-
-
-> +	}
-> +	put_online_cpus();
-> +
-> +	cpumask_clear(&l1_ce_cpu_mask);
-> +	cpumask_clear(&l1_ue_cpu_mask);
-> +	cpumask_clear(&l2_ce_cpu_mask);
-> +	cpumask_clear(&l2_ue_cpu_mask);
-> +	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-> +		switch (parse_cpumerrsr(cpu)) {
-> +			case -1:
-> +				/* fatal error */
-> +				cpumask_set_cpu(cpu, &l1_ue_cpu_mask);
-> +				break;
-> +			case 1:
-> +				/* correctable error(s) */
-> +				cpumask_set_cpu(cpu, &l1_ce_cpu_mask);
-> +				break;
-> +			case 0:
-> +				/* fall through */
-> +			default:
-> +				break;
-> +		}
-> +		switch (parse_l2merrsr(cpu)) {
-> +			case -1:
-> +				/* fatal error */
-> +				cpumask_set_cpu(cpu, &l2_ue_cpu_mask);
-> +				break;
-> +			case 1:
-> +				/* correctable error(s) */
-> +				cpumask_set_cpu(cpu, &l2_ce_cpu_mask);
-> +				break;
-> +			case 0:
-> +				/* fall through */
-> +			default:
-> +				break;
-> +		}
-> +	}
-> +
-> +	for_each_cpu(cpu, &l1_ue_cpu_mask) {
-> +		snprintf(msg, MESSAGE_SIZE, "Fatal error(s) on CPU %d\n", cpu);
-> +		edac_device_handle_ue(edac_ctl, 0, 0, msg);
-> +	}
-> +
-> +	for_each_cpu(cpu, &l1_ce_cpu_mask) {
-> +		snprintf(msg, MESSAGE_SIZE, "Correctable error(s) on CPU %d\n", cpu);
-> +		edac_device_handle_ce(edac_ctl, 0, 0, msg);
-> +	}
-> +
-> +	for_each_cpu(cpu, &l2_ue_cpu_mask) {
-> +		snprintf(msg, MESSAGE_SIZE, "Fatal error(s) on CPU %d\n", cpu);
-> +		edac_device_handle_ue(edac_ctl, 0, 1, msg);
-> +	}
-> +
-> +	for_each_cpu(cpu, &l2_ce_cpu_mask) {
-> +		snprintf(msg, MESSAGE_SIZE, "Correctable error(s) on CPU %d\n", cpu);
-> +		edac_device_handle_ce(edac_ctl, 0, 1, msg);
-> +	}
-> +
-> +	if (!cpumask_empty(&l1_ce_cpu_mask) ||
-> +	    !cpumask_empty(&l2_ce_cpu_mask) ||
-> +	    !cpumask_empty(&l1_ue_cpu_mask) ||
-> +	    !cpumask_empty(&l2_ue_cpu_mask)) {
-> +		if (poll_msec > MIN_POLL_MSEC) {
-> +			poll_msec >>= 1;
-> +			edac_device_reset_delay_period(edac_ctl, poll_msec);
-> +		} else {
-> +			cortex_printk(KERN_CRIT,
-> +				      "Excessive correctable errors\n");
-> +		}
-> +	} else {
-> +		if (poll_msec < MAX_POLL_MSEC) {
-> +			poll_msec <<= 1;
-> +			edac_device_reset_delay_period(edac_ctl, poll_msec);
-> +		}
-> +	}
-> +}
-
-[...]
-
-> +static irqreturn_t cortex_edac_isr(int irq, void *dev_id)
-> +{
-> +	struct edac_device_ctl_info *edac_ctl = dev_id;
-> +
-> +	pr_debug("Got IRQ\n");
-> +	cortex_arm64_edac_check(edac_ctl);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int cortex_arm64_edac_probe(struct platform_device *pdev)
-> +{
-> +	int i, rc, cpu, num_attr;
-> +	struct edac_device_ctl_info *edac_ctl;
-> +	struct device *dev = &pdev->dev;
-> +	struct cortex_pdata *pdata;
-> +	struct device_node *np, *dn = pdev->dev.of_node;
-> +	struct of_phandle_iterator it;
-> +	struct edac_dev_sysfs_attribute *attr;
-> +	const __be32 *cell;
-> +	u64 mpidr;
-> +
-> +	cpumask_clear(&compat_mask);
-> +	of_for_each_phandle(&it, rc, dn, "cpus", NULL, 0) {
-> +		np = it.node;
-> +		cell = of_get_property(np, "reg", NULL);
-> +		if (!cell) {
-> +			pr_err("%pOF: missing reg property\n", np);
-> +			continue;
-> +		}
-> +		mpidr = of_read_number(cell, of_n_addr_cells(np));
-> +		cpu = get_logical_index(mpidr);
-> +		if (cpu < 0) {
-> +			pr_err("Bad CPU number for mpidr 0x%llx", mpidr);
-> +			continue;
-> +		}
-> +		cpumask_set_cpu(cpu, &compat_mask);
-> +	}
-> +
-> +	pr_debug("compat_mask is %*pbl\n", cpumask_pr_args(&compat_mask));
-> +
-> +	if (of_device_is_compatible(dn, "arm,cortex-a53-edac")) {
-> +		num_attr = ARRAY_SIZE(device_sysfs_attr);
-> +		get_online_cpus();
-> +		for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-> +			smp_call_function_single(cpu, a53_allow_l1l2_err_inj, NULL, 1);
-> +			if (per_cpu(actlr_en, cpu)) {
-> +				pr_err("Failed to enable hardware error injection (%ld)\n",
-> +				       per_cpu(actlr_en, cpu));
-> +				num_attr -= 2;
-> +				break;
-> +			}
-> +		}
-> +		put_online_cpus();
-> +	} else {
-> +		num_attr = ARRAY_SIZE(device_sysfs_attr) - 2;
-> +	}
-> +
-> +	/* POLL mode is used to detect correctable errors */
-> +	edac_op_state = EDAC_OPSTATE_POLL;
-> +
-> +	edac_ctl = edac_device_alloc_ctl_info(sizeof(*pdata), "cpu_cache",
-> +					      1, "L", 2, 1, NULL, 0,
-> +					      edac_device_alloc_index());
-> +	if (IS_ERR(edac_ctl))
-> +		return -ENOMEM;
-> +
-> +	pdata = edac_ctl->pvt_info;
-> +	attr = devm_kzalloc(dev,
-> +			    sizeof(struct edac_dev_sysfs_attribute) * num_attr,
-> +			    GFP_KERNEL);
-> +	if (!attr) {
-> +		rc = -ENOMEM;
-> +		goto out_dev;
-> +	}
-> +
-> +	for (i = 0; i < num_attr - 1; i++) {
-> +		attr[i].attr.name = device_sysfs_attr[i].attr.name;
-> +		attr[i].attr.mode = device_sysfs_attr[i].attr.mode;
-> +		attr[i].show = device_sysfs_attr[i].show;
-> +		attr[i].store = device_sysfs_attr[i].store;
-> +	}
-> +	edac_ctl->sysfs_attributes = attr;
-> +
-> +	rc = of_count_phandle_with_args(dn, "cpus", NULL);
-> +	if (rc <= 0) {
-> +		pr_err("Invalid number of phandles in 'cpus'\n");
-> +		rc = -EINVAL;
-> +		goto out_dev;
-> +	}
-> +	pdata->irq = platform_get_irq(pdev, 0);
-> +	pr_debug("irq is %d\n", pdata->irq);
-> +
-> +	edac_ctl->poll_msec = poll_msec;
-> +	edac_ctl->edac_check = cortex_arm64_edac_check;
-> +	edac_ctl->dev = dev;
-> +	edac_ctl->mod_name = dev_name(dev);
-> +	edac_ctl->dev_name = dev_name(dev);
-> +	edac_ctl->ctl_name = EDAC_MOD_STR;
-> +	dev_set_drvdata(dev, edac_ctl);
-> +
-> +	rc = edac_device_add_device(edac_ctl);
-> +	if (rc)
-> +		goto out_dev;
-> +
-> +	pdata->mem = devm_kzalloc(dev, PAGE_SIZE, GFP_KERNEL);
-> +	if (!pdata->mem)
-> +		goto out_mem;
-> +
-> +	if (pdata->irq) {
-> +		get_online_cpus();
-> +		for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-> +			smp_call_function_single(cpu,
-> +						 a53_allow_l1l2_err_irq_clr,
-> +						 NULL,
-> +						 1);
-
-How do you know this is only called on the A53s? You added all the CPUs to
-compat_mask.
-
-It may be worth having separate probe calls for A53 and A57.
-
-
-Thanks,
-
-James
-
-
-> +			if (per_cpu(l2ectlr_en, cpu)) {
-> +				pr_err("Failed to enable interrupt clearing (%ld)\n",
-> +				       per_cpu(l2ectlr_en, cpu));
-> +				rc = -EACCES;
-> +				break;
-> +			}
-> +		}
-> +		put_online_cpus();
-> +
-> +		if (!rc) {
-> +			rc = devm_request_irq(dev, pdata->irq, cortex_edac_isr,
-> +				      0, "cortex_edac error", edac_ctl);
-> +			if (rc < 0) {
-> +				pr_err("%s: Unable to request irq %d for cortex edac error\n",
-> +				       __func__, pdata->irq);
-> +				goto out_irq;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +out_mem:
-> +out_irq:
-> +	edac_device_del_device(edac_ctl->dev);
-> +
-> +out_dev:
-> +	edac_device_free_ctl_info(edac_ctl);
-> +
-> +	return rc;
-> +}
-> +
-> +static int cortex_arm64_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-> +
-> +	edac_device_del_device(edac_ctl->dev);
-> +	edac_device_free_ctl_info(edac_ctl);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cortex_arm64_edac_of_match[] = {
-> +	{ .compatible = "arm,cortex-a57-edac" },
-> +	{ .compatible = "arm,cortex-a53-edac" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-> +
-> +static struct platform_driver cortex_arm64_edac_driver = {
-> +	.probe = cortex_arm64_edac_probe,
-> +	.remove = cortex_arm64_edac_remove,
-> +	.driver = {
-> +		.name = EDAC_MOD_STR,
-> +		.of_match_table = cortex_arm64_edac_of_match,
-> +	},
-> +};
-> +module_platform_driver(cortex_arm64_edac_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("York Sun <york.sun@nxp.com>");
-> +MODULE_DESCRIPTION("Cortex A57 and A53 L1 and L2 cache EDAC driver");
+T24gMTUuMDMuMjAxOCAxMTo1NiwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IEFkZCBEUk0gYnJpZGdl
+IGRyaXZlciBmb3IgVGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgdG8gZGlnaXRhbCBwYXJhbGxlbAo+
+IG91dHB1dCBjb252ZXJ0ZXIuCj4KPiBTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29w
+bytyZW5lc2FzQGptb25kaS5vcmc+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2Nv
+bmZpZyAgICAgICAgfCAgIDYgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAg
+ICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQuYyB8IDI1
+NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwg
+MjYyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvdGhjNjNsdmQxMDI0LmMKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPiBpbmRleCAzYjk5
+ZDVhLi41ODE1YTIwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZp
+Zwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+IEBAIC05Miw2ICs5Miwx
+MiBAQCBjb25maWcgRFJNX1NJSTkyMzQKPiAgCSAgSXQgaXMgYW4gSTJDIGRyaXZlciwgdGhhdCBk
+ZXRlY3RzIGNvbm5lY3Rpb24gb2YgTUhMIGJyaWRnZQo+ICAJICBhbmQgc3RhcnRzIGVuY2Fwc3Vs
+YXRpb24gb2YgSERNSSBzaWduYWwuCj4gIAo+ICtjb25maWcgRFJNX1RISU5FX1RIQzYzTFZEMTAy
+NAo+ICsJdHJpc3RhdGUgIlRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgYnJpZGdlIgo+
+ICsJZGVwZW5kcyBvbiBPRgo+ICsJLS0taGVscC0tLQo+ICsJICBUaGluZSBUSEM2M0xWRDEwMjQg
+TFZEUy9wYXJhbGxlbCBjb252ZXJ0ZXIgZHJpdmVyLgo+ICsKPiAgY29uZmlnIERSTV9UT1NISUJB
+X1RDMzU4NzY3Cj4gIAl0cmlzdGF0ZSAiVG9zaGliYSBUQzM1ODc2NyBlRFAgYnJpZGdlIgo+ICAJ
+ZGVwZW5kcyBvbiBPRgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2Vm
+aWxlIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+IGluZGV4IDM3M2ViMjguLmZk
+OTBiMTYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+ICsr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUKPiBAQCAtOCw2ICs4LDcgQEAgb2Jq
+LSQoQ09ORklHX0RSTV9QQVJBREVfUFM4NjIyKSArPSBwYXJhZGUtcHM4NjIyLm8KPiAgb2JqLSQo
+Q09ORklHX0RSTV9TSUxfU0lJODYyMCkgKz0gc2lsLXNpaTg2MjAubwo+ICBvYmotJChDT05GSUdf
+RFJNX1NJSTkwMlgpICs9IHNpaTkwMngubwo+ICBvYmotJChDT05GSUdfRFJNX1NJSTkyMzQpICs9
+IHNpaTkyMzQubwo+ICtvYmotJChDT05GSUdfRFJNX1RISU5FX1RIQzYzTFZEMTAyNCkgKz0gdGhj
+NjNsdmQxMDI0Lm8KPiAgb2JqLSQoQ09ORklHX0RSTV9UT1NISUJBX1RDMzU4NzY3KSArPSB0YzM1
+ODc2Ny5vCj4gIG9iai0kKENPTkZJR19EUk1fQU5BTE9HSVhfRFApICs9IGFuYWxvZ2l4Lwo+ICBv
+YmotJChDT05GSUdfRFJNX0kyQ19BRFY3NTExKSArPSBhZHY3NTExLwo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RoYzYzbHZkMTAyNC5jIGIvZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS90aGM2M2x2ZDEwMjQuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAw
+MC4uMDY3ZjIzMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L3RoYzYzbHZkMTAyNC5jCj4gQEAgLTAsMCArMSwyNTUgQEAKPiArLy8gU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjAKPiArLyoKPiArICogVEhDNjNMVkQxMDI0IExWRFMgdG8gcGFyYWxs
+ZWwgZGF0YSBEUk0gYnJpZGdlIGRyaXZlci4KPiArICoKPiArICogQ29weXJpZ2h0IChDKSAyMDE4
+IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiArICovCj4gKwo+ICsj
+aW5jbHVkZSA8ZHJtL2RybVAuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1fYnJpZGdlLmg+Cj4gKyNp
+bmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4gKwo+ICsjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25z
+dW1lci5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiArI2luY2x1ZGUgPGxpbnV4
+L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ICsKPiArZW51bSB7Cj4gKwlUSEM2M19MVkRTX0lOMCwK
+PiArCVRIQzYzX0xWRFNfSU4xLAo+ICsJVEhDNjNfRElHSVRBTF9PVVQwLAo+ICsJVEhDNjNfRElH
+SVRBTF9PVVQxLAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCB0aGM2M19y
+ZWdfbmFtZXNbXSA9IHsKPiArCSJ2Y2MiLCAibHZjYyIsICJwdmNjIiwgImN2Y2MiLAo+ICt9Owo+
+ICsKPiArc3RydWN0IHRoYzYzX2RldiB7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4gKwo+ICsJ
+c3RydWN0IHJlZ3VsYXRvciAqdmNjc1tBUlJBWV9TSVpFKHRoYzYzX3JlZ19uYW1lcyldOwo+ICsK
+PiArCXN0cnVjdCBncGlvX2Rlc2MgKnBkd247Cj4gKwlzdHJ1Y3QgZ3Bpb19kZXNjICpvZTsKPiAr
+Cj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7Cj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSAqbmV4
+dDsKPiArfTsKPiArCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IHRoYzYzX2RldiAqdG9fdGhjNjMo
+c3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJcmV0dXJuIGNvbnRhaW5lcl9vZihi
+cmlkZ2UsIHN0cnVjdCB0aGM2M19kZXYsIGJyaWRnZSk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQg
+dGhjNjNfYXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gK3sKPiArCXN0cnVjdCB0
+aGM2M19kZXYgKnRoYzYzID0gdG9fdGhjNjMoYnJpZGdlKTsKPiArCj4gKwlyZXR1cm4gZHJtX2Jy
+aWRnZV9hdHRhY2goYnJpZGdlLT5lbmNvZGVyLCB0aGM2My0+bmV4dCwgYnJpZGdlKTsKPiArfQo+
+ICsKPiArc3RhdGljIHZvaWQgdGhjNjNfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Up
+Cj4gK3sKPiArCXN0cnVjdCB0aGM2M19kZXYgKnRoYzYzID0gdG9fdGhjNjMoYnJpZGdlKTsKPiAr
+CXN0cnVjdCByZWd1bGF0b3IgKnZjYzsKPiArCWludCBpOwo+ICsKPiArCWZvciAoaSA9IDA7IGkg
+PCBBUlJBWV9TSVpFKHRoYzYzLT52Y2NzKTsgaSsrKSB7Cj4gKwkJdmNjID0gdGhjNjMtPnZjY3Nb
+aV07Cj4gKwkJaWYgKCF2Y2MpCj4gKwkJCWNvbnRpbnVlOwo+ICsKPiArCQlpZiAocmVndWxhdG9y
+X2VuYWJsZSh2Y2MpKQo+ICsJCQlnb3RvIGVycm9yX3ZjY19lbmFibGU7Cj4gKwl9Cj4gKwo+ICsJ
+aWYgKHRoYzYzLT5wZHduKQo+ICsJCWdwaW9kX3NldF92YWx1ZSh0aGM2My0+cGR3biwgMCk7Cj4g
+Kwo+ICsJaWYgKHRoYzYzLT5vZSkKPiArCQlncGlvZF9zZXRfdmFsdWUodGhjNjMtPm9lLCAxKTsK
+PiArCj4gKwlyZXR1cm47Cj4gKwo+ICtlcnJvcl92Y2NfZW5hYmxlOgo+ICsJZGV2X2Vycih0aGM2
+My0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSByZWd1bGF0b3IgJXVcbiIsIGkpOwoKSXQgd291bGQg
+YmUgYmV0dGVyIHRvIHVzZSBzdXBwbHkgb3IgcmVndWxhdG9yIG5hbWUgaW5zdGVhZCBvZiBpbmRl
+eC4KCj4gKwo+ICsJZm9yIChpID0gaSAtIDE7IGkgPj0gMDsgaS0tKSB7Cj4gKwkJdmNjID0gdGhj
+NjMtPnZjY3NbaV07Cj4gKwkJaWYgKCF2Y2MpCj4gKwkJCWNvbnRpbnVlOwo+ICsKPiArCQlyZWd1
+bGF0b3JfZGlzYWJsZSh2Y2MpOwo+ICsJfQo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCB0aGM2M19k
+aXNhYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gK3sKPiArCXN0cnVjdCB0aGM2M19k
+ZXYgKnRoYzYzID0gdG9fdGhjNjMoYnJpZGdlKTsKPiArCXN0cnVjdCByZWd1bGF0b3IgKnZjYzsK
+PiArCWludCBpOwo+ICsKPiArCWlmICh0aGM2My0+b2UpCj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKHRo
+YzYzLT5vZSwgMCk7Cj4gKwo+ICsJaWYgKHRoYzYzLT5wZHduKQo+ICsJCWdwaW9kX3NldF92YWx1
+ZSh0aGM2My0+cGR3biwgMSk7Cj4gKwo+ICsJZm9yIChpID0gQVJSQVlfU0laRSh0aGM2My0+dmNj
+cykgLSAxOyBpID49IDA7IGktLSkgewo+ICsJCXZjYyA9IHRoYzYzLT52Y2NzW2ldOwo+ICsJCWlm
+ICghdmNjKQo+ICsJCQljb250aW51ZTsKPiArCj4gKwkJaWYgKHJlZ3VsYXRvcl9kaXNhYmxlKHZj
+YykpCj4gKwkJCWRldl9kYmcodGhjNjMtPmRldiwKPiArCQkJCSJGYWlsZWQgdG8gZGlzYWJsZSBy
+ZWd1bGF0b3IgJXVcbiIsIGkpOwoKZGl0dG8KCj4gKwl9Cj4gK30KPiArCj4gK3N0cnVjdCBkcm1f
+YnJpZGdlX2Z1bmNzIHRoYzYzX2JyaWRnZV9mdW5jID0gewo+ICsJLmF0dGFjaAk9IHRoYzYzX2F0
+dGFjaCwKPiArCS5lbmFibGUgPSB0aGM2M19lbmFibGUsCj4gKwkuZGlzYWJsZSA9IHRoYzYzX2Rp
+c2FibGUsCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IHRoYzYzX3BhcnNlX2R0KHN0cnVjdCB0aGM2
+M19kZXYgKnRoYzYzKQo+ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnRoYzYzX291dDsKPiAr
+CXN0cnVjdCBkZXZpY2Vfbm9kZSAqcmVtb3RlOwo+ICsJaW50IHJldCA9IDA7Cj4gKwo+ICsJdGhj
+NjNfb3V0ID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3ModGhjNjMtPmRldi0+b2Zfbm9k
+ZSwKPiArCQkJCQkJICBUSEM2M19ESUdJVEFMX09VVDAsIC0xKTsKPiArCWlmICghdGhjNjNfb3V0
+KSB7Cj4gKwkJZGV2X2Vycih0aGM2My0+ZGV2LCAiTWlzc2luZyBlbmRwb2ludCBpbiBQb3J0QCV1
+XG4iLAo+ICsJCQlUSEM2M19ESUdJVEFMX09VVDApOwo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsJ
+fQo+ICsKPiArCXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQodGhjNjNf
+b3V0KTsKPiArCWlmICghcmVtb3RlKSB7Cj4gKwkJZGV2X2Vycih0aGM2My0+ZGV2LCAiRW5kcG9p
+bnQgaW4gUG9ydEAldSB1bmNvbm5lY3RlZFxuIiwKPiArCQkJVEhDNjNfRElHSVRBTF9PVVQwKTsK
+PiArCQlyZXQgPSAtRU5PREVWOwo+ICsJCWdvdG8gZXJyb3JfcHV0X291dF9ub2RlOwo+ICsJfQo+
+ICsKPiArCWlmICghb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShyZW1vdGUpKSB7Cj4gKwkJZGV2X2Vy
+cih0aGM2My0+ZGV2LCAiUG9ydEAldSByZW1vdGUgZW5kcG9pbnQgaXMgZGlzYWJsZWRcbiIsCj4g
+KwkJCVRIQzYzX0RJR0lUQUxfT1VUMCk7Cj4gKwkJcmV0ID0gLUVOT0RFVjsKPiArCQlnb3RvIGVy
+cm9yX3B1dF9yZW1vdGVfbm9kZTsKPiArCX0KPiArCj4gKwl0aGM2My0+bmV4dCA9IG9mX2RybV9m
+aW5kX2JyaWRnZShyZW1vdGUpOwo+ICsJaWYgKCF0aGM2My0+bmV4dCkKPiArCQlyZXQgPSAtRVBS
+T0JFX0RFRkVSOwo+ICsKPiArZXJyb3JfcHV0X3JlbW90ZV9ub2RlOgo+ICsJb2Zfbm9kZV9wdXQo
+cmVtb3RlKTsKPiArZXJyb3JfcHV0X291dF9ub2RlOgo+ICsJb2Zfbm9kZV9wdXQodGhjNjNfb3V0
+KTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IHRoYzYzX2dwaW9f
+aW5pdChzdHJ1Y3QgdGhjNjNfZGV2ICp0aGM2MykKPiArewo+ICsJdGhjNjMtPm9lID0gZGV2bV9n
+cGlvZF9nZXRfb3B0aW9uYWwodGhjNjMtPmRldiwgIm9lIiwgR1BJT0RfT1VUX0xPVyk7Cj4gKwlp
+ZiAoSVNfRVJSKHRoYzYzLT5vZSkpIHsKPiArCQlkZXZfZXJyKHRoYzYzLT5kZXYsICJVbmFibGUg
+dG8gZ2V0IFwib2UtZ3Bpb3NcIlxuIik7Cj4gKwkJcmV0dXJuIFBUUl9FUlIodGhjNjMtPm9lKTsK
+PiArCX0KPiArCj4gKwl0aGM2My0+cGR3biA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKHRoYzYz
+LT5kZXYsICJwZHduIiwKPiArCQkJCQkgICAgICBHUElPRF9PVVRfSElHSCk7Cj4gKwlpZiAoSVNf
+RVJSKHRoYzYzLT5wZHduKSkgewo+ICsJCWRldl9lcnIodGhjNjMtPmRldiwgIlVuYWJsZSB0byBn
+ZXQgXCJwZHduLWdwaW9zXCJcbiIpOwo+ICsJCXJldHVybiBQVFJfRVJSKHRoYzYzLT5wZHduKTsK
+PiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCB0aGM2M19yZWd1
+bGF0b3JfaW5pdChzdHJ1Y3QgdGhjNjNfZGV2ICp0aGM2MykKPiArewo+ICsJc3RydWN0IHJlZ3Vs
+YXRvciAqKnJlZzsKPiArCWludCBpOwo+ICsKPiArCXJlZyA9ICZ0aGM2My0+dmNjc1swXTsKPiAr
+CWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHRoYzYzLT52Y2NzKTsgaSsrLCByZWcrKykgewo+
+ICsJCSpyZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwodGhjNjMtPmRldiwKPiArCQkJ
+CQkJICAgdGhjNjNfcmVnX25hbWVzW2ldKTsKPiArCQlpZiAoSVNfRVJSKCpyZWcpKSB7Cj4gKwkJ
+CWlmIChQVFJfRVJSKCpyZWcpID09IC1FUFJPQkVfREVGRVIpCj4gKwkJCQlyZXR1cm4gLUVQUk9C
+RV9ERUZFUjsKPiArCQkJKnJlZyA9IE5VTEw7Cj4gKwkJfQoKWW91IGNvdWxkIHVzZSAiaWYgKCEu
+Li4pIGNvbnRpbnVlIiwgdG8gYXZvaWQgbmVzdGluZy4KCldpdGggb3Igd2l0aG91dCBzdWdnZXN0
+ZWQgY2hhbmdlczoKUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5j
+b20+CgrCoC0tClJlZ2FyZHMKQW5kcnplagoKPiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+
+ICsKPiArc3RhdGljIGludCB0aGM2M19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQo+ICt7Cj4gKwlzdHJ1Y3QgdGhjNjNfZGV2ICp0aGM2MzsKPiArCWludCByZXQ7Cj4gKwo+ICsJ
+dGhjNjMgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCp0aGM2MyksIEdGUF9LRVJO
+RUwpOwo+ICsJaWYgKCF0aGM2MykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwl0aGM2My0+
+ZGV2ID0gJnBkZXYtPmRldjsKPiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHRoYzYzKTsK
+PiArCj4gKwlyZXQgPSB0aGM2M19yZWd1bGF0b3JfaW5pdCh0aGM2Myk7Cj4gKwlpZiAocmV0KQo+
+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmV0ID0gdGhjNjNfZ3Bpb19pbml0KHRoYzYzKTsKPiAr
+CWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXQgPSB0aGM2M19wYXJzZV9kdCh0
+aGM2Myk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJdGhjNjMtPmJyaWRn
+ZS5kcml2ZXJfcHJpdmF0ZSA9IHRoYzYzOwo+ICsJdGhjNjMtPmJyaWRnZS5vZl9ub2RlID0gcGRl
+di0+ZGV2Lm9mX25vZGU7Cj4gKwl0aGM2My0+YnJpZGdlLmZ1bmNzID0gJnRoYzYzX2JyaWRnZV9m
+dW5jOwo+ICsKPiArCWRybV9icmlkZ2VfYWRkKCZ0aGM2My0+YnJpZGdlKTsKPiArCj4gKwlyZXR1
+cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCB0aGM2M19yZW1vdmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IHRoYzYzX2RldiAqdGhjNjMgPSBwbGF0Zm9y
+bV9nZXRfZHJ2ZGF0YShwZGV2KTsKPiArCj4gKwlkcm1fYnJpZGdlX3JlbW92ZSgmdGhjNjMtPmJy
+aWRnZSk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gKyNpZmRlZiBDT05GSUdfT0YKPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdGhjNjNfbWF0Y2hbXSA9IHsKPiArCXsg
+LmNvbXBhdGlibGUgPSAidGhpbmUsdGhjNjNsdmQxMDI0IiwgfSwKPiArCXsgfSwKPiArfTsKPiAr
+TU9EVUxFX0RFVklDRV9UQUJMRShvZiwgdGhjNjNfbWF0Y2gpOwo+ICsjZW5kaWYKPiArCj4gK3N0
+YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHRoYzYzX2RyaXZlciA9IHsKPiArCS5wcm9iZQk9
+IHRoYzYzX3Byb2JlLAo+ICsJLnJlbW92ZQk9IHRoYzYzX3JlbW92ZSwKPiArCS5kcml2ZXIJPSB7
+Cj4gKwkJLm5hbWUJCT0gInRoYzYzbHZkMTAyNCIsCj4gKwkJLm9mX21hdGNoX3RhYmxlCT0gdGhj
+NjNfbWF0Y2gsCj4gKwl9LAo+ICt9Owo+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKHRoYzYzX2Ry
+aXZlcik7Cj4gKwo+ICtNT0RVTEVfQVVUSE9SKCJKYWNvcG8gTW9uZGkgPGphY29wb0BqbW9uZGku
+b3JnPiIpOwo+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRl
+Y29kZXIgRFJNIGJyaWRnZSBkcml2ZXIiKTsKPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
