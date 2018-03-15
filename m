@@ -1,76 +1,141 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 11/11] mmc: sdhci-omap: Add sdhci_omap specific ops for
- enable_sdio_irq
-Date: Thu, 15 Mar 2018 16:34:28 +0200
-Message-ID: <bac91c3b-9e67-0686-002f-a8547321504d@intel.com>
-References: <20180307132020.30951-1-kishon@ti.com>
- <20180307132020.30951-12-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: srinivas.kandagatla@linaro.org
+Subject: [RFC PATCH] clk: qcom: rpmcc: Add support to XO buffered clocks
+Date: Thu, 15 Mar 2018 14:37:24 +0000
+Message-ID: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307132020.30951-12-kishon@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/18 15:20, Kishon Vijay Abraham I wrote:
-> Add sdhci_omap_enable_sdio_irq to set CTPL and CLKEXTFREE bits in
-> MMCHS_CON register required to detect asynchronous card interrupt
-> on DAT[1].
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+XO is onchip buffer clock to generate 19.2MHz.
 
-> ---
->  drivers/mmc/host/sdhci-omap.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index 14dd51b51b41..8ceb3956b211 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -36,6 +36,7 @@
->  #define CON_DDR			BIT(19)
->  #define CON_CLKEXTFREE		BIT(16)
->  #define CON_PADEN		BIT(15)
-> +#define CON_CTPL		BIT(11)
->  #define CON_INIT		BIT(1)
->  #define CON_OD			BIT(0)
->  
-> @@ -226,6 +227,23 @@ static void sdhci_omap_conf_bus_power(struct sdhci_omap_host *omap_host,
->  	}
->  }
->  
-> +static void sdhci_omap_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +	u32 reg;
-> +
-> +	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-> +	if (enable)
-> +		reg |= (CON_CTPL | CON_CLKEXTFREE);
-> +	else
-> +		reg &= ~(CON_CTPL | CON_CLKEXTFREE);
-> +	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
-> +
-> +	sdhci_enable_sdio_irq(mmc, enable);
-> +}
-> +
->  static inline void sdhci_omap_set_dll(struct sdhci_omap_host *omap_host,
->  				      int count)
->  {
-> @@ -962,6 +980,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
->  	host->mmc_host_ops.set_ios = sdhci_omap_set_ios;
->  	host->mmc_host_ops.card_busy = sdhci_omap_card_busy;
->  	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
-> +	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
->  
->  	ret = sdhci_setup_host(host);
->  	if (ret)
-> 
+This patch adds support to 5 XO buffer clocks found on PMIC8921,
+these buffer clocks can be controlled from external pin or in
+manual mode.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/clk/qcom/clk-rpm.c             | 39 +++++++++++++++++++++++++++++++++-
+ include/dt-bindings/clock/qcom,rpmcc.h |  5 +++++
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+index c60f61b10c7f..261f5505e714 100644
+--- a/drivers/clk/qcom/clk-rpm.c
++++ b/drivers/clk/qcom/clk-rpm.c
+@@ -29,6 +29,7 @@
+ 
+ #define QCOM_RPM_MISC_CLK_TYPE				0x306b6c63
+ #define QCOM_RPM_SCALING_ENABLE_ID			0x2
++#define QCOM_RPM_XO_MODE_ON				0x2
+ 
+ #define DEFINE_CLK_RPM(_platform, _name, _active, r_id)			      \
+ 	static struct clk_rpm _platform##_##_active;			      \
+@@ -56,6 +57,19 @@
+ 		},							      \
+ 	}
+ 
++#define DEFINE_CLK_RPM_XO_BUFFER(_platform, _name, _active, offset)	      \
++	static struct clk_rpm _platform##_##_name = {			      \
++		.rpm_clk_id = QCOM_RPM_CXO_BUFFERS,			      \
++		.xo_offset = (offset),					      \
++		.rate = 19200000,					      \
++		.hw.init = &(struct clk_init_data){			      \
++			.ops = &clk_rpm_fixed_ops,			      \
++			.name = #_name,					      \
++			.parent_names = (const char *[]){ "pxo_board" },      \
++			.num_parents = 1,				      \
++		},							      \
++	}
++
+ #define DEFINE_CLK_RPM_FIXED(_platform, _name, _active, r_id, r)	      \
+ 	static struct clk_rpm _platform##_##_name = {			      \
+ 		.rpm_clk_id = (r_id),					      \
+@@ -128,6 +142,8 @@
+ 
+ struct clk_rpm {
+ 	const int rpm_clk_id;
++	const int xo_offset;
++	u32 xo_buffer_value;
+ 	const bool active_only;
+ 	unsigned long rate;
+ 	bool enabled;
+@@ -159,7 +175,8 @@ static int clk_rpm_handoff(struct clk_rpm *r)
+ 	 * The vendor tree simply reads the status for this
+ 	 * RPM clock.
+ 	 */
+-	if (r->rpm_clk_id == QCOM_RPM_PLL_4)
++	if (r->rpm_clk_id == QCOM_RPM_PLL_4 ||
++		r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS)
+ 		return 0;
+ 
+ 	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
+@@ -294,6 +311,11 @@ static int clk_rpm_fixed_prepare(struct clk_hw *hw)
+ 	u32 value = 1;
+ 	int ret;
+ 
++	if (r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS) {
++		r->xo_buffer_value |= (QCOM_RPM_XO_MODE_ON << r->xo_offset);
++		value = r->xo_buffer_value;
++	}
++
+ 	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
+ 			     r->rpm_clk_id, &value, 1);
+ 	if (!ret)
+@@ -308,6 +330,11 @@ static void clk_rpm_fixed_unprepare(struct clk_hw *hw)
+ 	u32 value = 0;
+ 	int ret;
+ 
++	if (r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS) {
++		r->xo_buffer_value &= ~(QCOM_RPM_XO_MODE_ON << r->xo_offset);
++		value = r->xo_buffer_value;
++	}
++
+ 	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
+ 			     r->rpm_clk_id, &value, 1);
+ 	if (!ret)
+@@ -449,6 +476,11 @@ DEFINE_CLK_RPM(apq8064, mmfpb_clk, mmfpb_a_clk, QCOM_RPM_MMFPB_CLK);
+ DEFINE_CLK_RPM(apq8064, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
+ DEFINE_CLK_RPM(apq8064, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
+ DEFINE_CLK_RPM(apq8064, qdss_clk, qdss_a_clk, QCOM_RPM_QDSS_CLK);
++DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_d0_clk, xo_d0_a_clk, 0);
++DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_d1_clk, xo_d1_a_clk, 8);
++DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a0_clk, xo_a0_a_clk, 16);
++DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a1_clk, xo_a1_a_clk, 24);
++DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a2_clk, xo_a2_a_clk, 28);
+ 
+ static struct clk_rpm *apq8064_clks[] = {
+ 	[RPM_APPS_FABRIC_CLK] = &apq8064_afab_clk,
+@@ -469,6 +501,11 @@ static struct clk_rpm *apq8064_clks[] = {
+ 	[RPM_SFPB_A_CLK] = &apq8064_sfpb_a_clk,
+ 	[RPM_QDSS_CLK] = &apq8064_qdss_clk,
+ 	[RPM_QDSS_A_CLK] = &apq8064_qdss_a_clk,
++	[RPM_XO_D0] = &apq8064_xo_d0_clk,
++	[RPM_XO_D1] = &apq8064_xo_d1_clk,
++	[RPM_XO_A0] = &apq8064_xo_a0_clk,
++	[RPM_XO_A1] = &apq8064_xo_a1_clk,
++	[RPM_XO_A2] = &apq8064_xo_a2_clk,
+ };
+ 
+ static const struct rpm_clk_desc rpm_clk_apq8064 = {
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index b8337a5fa347..c585b82b9c05 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -40,6 +40,11 @@
+ #define RPM_SMI_CLK				22
+ #define RPM_SMI_A_CLK				23
+ #define RPM_PLL4_CLK				24
++#define RPM_XO_D0				25
++#define RPM_XO_D1				26
++#define RPM_XO_A0				27
++#define RPM_XO_A1				28
++#define RPM_XO_A2				29
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
+-- 
+2.16.2
