@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 2/8] drm/sun4i: Add DT binding for Detail Enhancement Unit in Allwinner A80 SoC
-Date: Thu, 15 Mar 2018 19:41:30 +0800
-Message-ID: <20180315114136.24747-3-wens@csie.org>
+Subject: [PATCH 3/8] drm/sun4i: Add support for A80 TCONs
+Date: Thu, 15 Mar 2018 19:41:31 +0800
+Message-ID: <20180315114136.24747-4-wens@csie.org>
 References: <20180315114136.24747-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180315114136.24747-1-wens@csie.org>
@@ -10,50 +10,98 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>,
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The display pipeline on the A80 SoC has what is called the Detail
-Enhancement Unit, or DEU for short, block in between the display
-frontend and backend. This unit can sharpen images in both luma
-and chroma channels. It seems to also do colorspace conversion.
+The Allwinner A80 SoC has 2 documented TCONs. The display pipeline
+diagram from the user manual shows a third TCON, but it's missing
+an interrupt line, and its registers are not explained either.
+It's also not used in Allwinner's vendor BSP.
 
-This patch adds the device tree binding for this hardware block.
+The first TCON only has channel 0, for LCD panel output. The TCON
+hardware setup is peculiar in that the eDP reset must also be
+deasserted to allow access to the TCON. How the eDP module is wired
+in the SoC itself is never explained.
+
+The second TCON only has channel 1, and its output is connected to
+the HDMI encoder block.
+
+This patch adds a "needs_edp_reset" field to the tcon quirks structure,
+and adds quirks and compatible strings for the 2 documented TCONs.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../bindings/display/sunxi/sun4i-drm.txt           | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 27 +++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
+ 2 files changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index c05cbcdde4d7..671d75c76ad0 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -248,6 +248,28 @@ On the A33, some additional properties are required:
-   - resets and reset-names need to have a phandle to the SAT bus
-     resets, whose name will be "sat"
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index d4a29847dadd..b4cef03861f7 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -855,6 +855,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	struct sunxi_engine *engine;
+ 	struct device_node *remote;
+ 	struct sun4i_tcon *tcon;
++	struct reset_control *edp_rstc;
+ 	bool has_lvds_rst, has_lvds_alt, can_lvds;
+ 	int ret;
  
-+DEU
-+---
-+
-+The DEU (Detail Enhancement Unit), found in the Allwinner A80 SoC,
-+can sharpen the display content in both luma and chroma channels.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun9i-a80-deu
-+  - reg: base address and size of the memory-mapped region.
-+  - interrupts: interrupt associated to this IP
-+  - clocks: phandles to the clocks feeding the DEU
-+    * ahb: the DEU interface clock
-+    * mod: the DEU module clock
-+    * ram: the DEU DRAM clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandles to the reset line driving the DEU
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoints, the second one the outputs
-+
- Display Engine Frontend
- -----------------------
+@@ -879,6 +880,20 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		return PTR_ERR(tcon->lcd_rst);
+ 	}
  
++	if (tcon->quirks->needs_edp_reset) {
++		edp_rstc = devm_reset_control_get_shared(dev, "edp");
++		if (IS_ERR(edp_rstc)) {
++			dev_err(dev, "Couldn't get edp reset line\n");
++			return PTR_ERR(edp_rstc);
++		}
++
++		ret = reset_control_deassert(edp_rstc);
++		if (ret) {
++			dev_err(dev, "Couldn't deassert edp reset line\n");
++			return ret;
++		}
++	}
++
+ 	/* Make sure our TCON is reset */
+ 	ret = reset_control_reset(tcon->lcd_rst);
+ 	if (ret) {
+@@ -1176,6 +1191,16 @@ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+ 	.has_channel_0		= true,
+ };
+ 
++static const struct sun4i_tcon_quirks sun9i_a80_tcon_lcd_quirks = {
++	.has_channel_0	= true,
++	.needs_edp_reset = true,
++};
++
++static const struct sun4i_tcon_quirks sun9i_a80_tcon_tv_quirks = {
++	.has_channel_1	= true,
++	.needs_edp_reset = true,
++};
++
+ /* sun4i_drv uses this list to check if a device node is a TCON */
+ const struct of_device_id sun4i_tcon_of_table[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-tcon", .data = &sun4i_a10_quirks },
+@@ -1187,6 +1212,8 @@ const struct of_device_id sun4i_tcon_of_table[] = {
+ 	{ .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data = &sun8i_a83t_lcd_quirks },
+ 	{ .compatible = "allwinner,sun8i-a83t-tcon-tv", .data = &sun8i_a83t_tv_quirks },
+ 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
++	{ .compatible = "allwinner,sun9i-a80-tcon-lcd", .data = &sun9i_a80_tcon_lcd_quirks },
++	{ .compatible = "allwinner,sun9i-a80-tcon-tv", .data = &sun9i_a80_tcon_tv_quirks },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_tcon_of_table);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index abdc6ad6b384..c4979559b591 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -176,6 +176,7 @@ struct sun4i_tcon_quirks {
+ 	bool	has_channel_1;	/* a33 does not have channel 1 */
+ 	bool	has_lvds_alt;	/* Does the LVDS clock have a parent other than the TCON clock? */
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
++	bool	needs_edp_reset; /* a80 edp reset needed for tcon0 access */
+ 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
+ 
+ 	/* callback to handle tcon muxing options */
 -- 
 2.16.2
