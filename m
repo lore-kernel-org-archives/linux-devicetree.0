@@ -1,78 +1,131 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 00/11] mmc: sdhci-omap: Add UHS/HS200 mode support
-Date: Thu, 15 Mar 2018 10:52:26 +0200
-Message-ID: <1b7e25b2-4949-5427-1c36-0b253c79ff8d@intel.com>
-References: <20180307132020.30951-1-kishon@ti.com>
- <CAPDyKFrnPQs3B2QN7tf3UH0JYjqkpS1YDhq0s3scads3exPCCg@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 4/5] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Thu, 15 Mar 2018 14:27:26 +0530
+Message-ID: <CAFp+6iEFDXKdS_mTgrrpCX2isMAT3XJifRV0FYxV+PFpVGV=2w@mail.gmail.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-5-vivek.gautam@codeaurora.org>
+	<8b427ea2-5c13-4712-13d1-e4c1aed0779e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrnPQs3B2QN7tf3UH0JYjqkpS1YDhq0s3scads3exPCCg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <8b427ea2-5c13-4712-13d1-e4c1aed0779e-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/03/18 10:47, Ulf Hansson wrote:
-> On 7 March 2018 at 14:20, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Add UHS/HS200 mode support in sdhci-omap. The programming sequence
->> for voltage switching, tuning is followed from AM572x TRM
->> http://www.ti.com/lit/ug/spruhz6i/spruhz6i.pdf
->> (Similar to all AM57x/DRA7x SoCs). The patch series also implements
->> workaround for errata published in
->> http://www.ti.com/lit/er/sprz429k/sprz429k.pdf
->>
->> patches are created on top of
->> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
->>
->> Patches in v2 already applied to mmc -next are dropped from the
->> series.
->>
->> Changes from v2:
->> *) Changed SW timeout logic as per Adrians's suggestion
->> *) Validated SDIO with the current patches (added a couple of fixes
->>    found while adding SDIO support).
->> *) Used soc_device_match() instead of pdata-quirks as per Tony's
->>    suggestions.
->>
->> Changes from v1:
->> *) Only poll on DAT0 and DATI for card_busy status
->> *) Cleanup iodelay patch as suggested by Tony.
->> *) Added quirk to disable HW timeout
->> *) Use the existing data timer but program a relatively accurate
->>    SW timeout value (Impacts all platforms)
->> *) Fix a bug in sdhci which was using data_timer for non data line
->>    commands
->>
->> Kishon Vijay Abraham I (11):
->>   mmc: sdhci-omap: Fix when capabilities are obtained from
->>     SDHCI_CAPABILITIES reg
->>   mmc: sdhci-omap: Remove setting ADMA capability in driver
->>   mmc: sdhci-omap: Workaround for Errata i843
->>   mmc: sdhci-omap: Invoke sdhci_get_of_property to read sdhci dt
->>     properties
->>   mmc: sdhci: Disable HS200 mode if controller can't support 1.8v
->>   mmc: sdhci: Add quirk to disable HW timeout
->>   mmc: sdhci: Program a relatively accurate SW timeout value
->>   mmc: sdhci-omap: Workaround for Errata i834
->>   dt-bindings: sdhci-omap: Add K2G specific binding
->>   mmc: sdhci-omap: Add support for MMC/SD controller in k2g SoC
->>   mmc: sdhci-omap: Add sdhci_omap specific ops for enable_sdio_irq
->>
->>  .../devicetree/bindings/mmc/sdhci-omap.txt         |  2 +
->>  drivers/mmc/host/sdhci-omap.c                      | 78 +++++++++++++++++++---
->>  drivers/mmc/host/sdhci.c                           | 75 +++++++++++++++++----
->>  drivers/mmc/host/sdhci.h                           | 15 +++++
->>  4 files changed, 148 insertions(+), 22 deletions(-)
->>
->> --
->> 2.11.0
->>
-> 
-> Overall this looks good to me, however it seems like we need to give
-> Adrian a little more time to comment.
-> 
+Hi Robin,
 
-I will try to look at it today.
+
+On Wed, Mar 14, 2018 at 11:20 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 13/03/18 08:55, Vivek Gautam wrote:
+>>
+>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>
+>> Finally add the device link between the master device and
+>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>> master needs it. This is done from add_device callback which gets
+>> called once when the master is added to the smmu.
+>>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 29 +++++++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 56a04ae80bf3..64953ff2281f 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -1460,10 +1460,31 @@ static int arm_smmu_add_device(struct device *dev)
+>>         iommu_device_link(&smmu->iommu, dev);
+>>   +     if (pm_runtime_enabled(smmu->dev)) {
+>> +               struct device_link *link;
+>> +
+>> +               /*
+>> +                * Establish the link between smmu and master, so that the
+>> +                * smmu gets runtime enabled/disabled as per the master's
+>> +                * needs.
+>> +                */
+>> +               link = device_link_add(dev, smmu->dev,
+>> DL_FLAG_PM_RUNTIME);
+>> +               if (!link) {
+>
+>
+> FWIW, given that we don't really care about link itself, I'd be quite happy
+> to simplify that lot down to:
+>
+>         if (pm_runtime_enabled(smmu_dev) &&
+>             !device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME)) {
+
+Sure, will update this.
+
+>
+>> +                       dev_warn(smmu->dev,
+>> +                                "Unable to add link to the consumer
+>> %s\n",
+>> +                                dev_name(dev));
+>
+>
+> (side note: since device_link_add() already prints a message on success,
+> maybe it could print its own failure message too?)
+
+Should we make device_link that verbose - to print failure messages at
+each step (there are atleast a couple where we return link as NULL),
+or we can let the users handle printing the message?
+
+regards
+Vivek
+
+>
+> Robin.
+>
+>
+>> +                       ret = -ENODEV;
+>> +                       goto out_unlink;
+>> +               }
+>> +       }
+>> +
+>>         arm_smmu_rpm_put(smmu);
+>>         return 0;
+>>   +out_unlink:
+>> +       iommu_device_unlink(&smmu->iommu, dev);
+>> +       arm_smmu_master_free_smes(fwspec);
+>>   out_rpm_put:
+>>         arm_smmu_rpm_put(smmu);
+>>   out_cfg_free:
+>> @@ -1486,6 +1507,14 @@ static void arm_smmu_remove_device(struct device
+>> *dev)
+>>         cfg  = fwspec->iommu_priv;
+>>         smmu = cfg->smmu;
+>>   +     if (pm_runtime_enabled(smmu->dev)) {
+>> +               struct device_link *link;
+>> +
+>> +               link = device_link_find(dev, smmu->dev);
+>> +               if (link)
+>> +                       device_link_del(link);
+>> +       }
+>> +
+>>         ret = arm_smmu_rpm_get(smmu);
+>>         if (ret < 0)
+>>                 return;
+>>
+>
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
