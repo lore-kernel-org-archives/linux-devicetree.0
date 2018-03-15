@@ -1,85 +1,91 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 00/11] mmc: sdhci-omap: Add UHS/HS200 mode support
-Date: Thu, 15 Mar 2018 15:32:30 +0530
-Message-ID: <d6009c30-112f-eff9-4afe-5dd4c3a61baa@ti.com>
-References: <20180307132020.30951-1-kishon@ti.com>
- <CAPDyKFrnPQs3B2QN7tf3UH0JYjqkpS1YDhq0s3scads3exPCCg@mail.gmail.com>
- <1b7e25b2-4949-5427-1c36-0b253c79ff8d@intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/6] mmc: dw_mmc: remove the deprecated
+ "clock-freq-min-max" property
+Date: Thu, 15 Mar 2018 11:22:36 +0100
+Message-ID: <CAPDyKFp2TCBfBvA53+UTJYYRrn2x_Szwb92x_2ahHhOKWdvntw@mail.gmail.com>
+References: <CGME20180223064140epcas2p104fe6cca431ec24f2b09a6f5a45ed342@epcas2p1.samsung.com>
+ <20180223064138.18401-1-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1b7e25b2-4949-5427-1c36-0b253c79ff8d@intel.com>
+In-Reply-To: <20180223064138.18401-1-jh80.chung@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, dinguyen@kernel.org, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+On 23 February 2018 at 07:41, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> 'clock-freq-min-max' property had already deprecated.
+> Remove the 'clock-freq-min-max' property that is kept to maintain
+> the compatibility.
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
+Thanks, applied for next!
 
-On Thursday 15 March 2018 02:22 PM, Adrian Hunter wrote:
-> On 15/03/18 10:47, Ulf Hansson wrote:
->> On 7 March 2018 at 14:20, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>> Add UHS/HS200 mode support in sdhci-omap. The programming sequence
->>> for voltage switching, tuning is followed from AM572x TRM
->>> http://www.ti.com/lit/ug/spruhz6i/spruhz6i.pdf
->>> (Similar to all AM57x/DRA7x SoCs). The patch series also implements
->>> workaround for errata published in
->>> http://www.ti.com/lit/er/sprz429k/sprz429k.pdf
->>>
->>> patches are created on top of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
->>>
->>> Patches in v2 already applied to mmc -next are dropped from the
->>> series.
->>>
->>> Changes from v2:
->>> *) Changed SW timeout logic as per Adrians's suggestion
->>> *) Validated SDIO with the current patches (added a couple of fixes
->>>    found while adding SDIO support).
->>> *) Used soc_device_match() instead of pdata-quirks as per Tony's
->>>    suggestions.
->>>
->>> Changes from v1:
->>> *) Only poll on DAT0 and DATI for card_busy status
->>> *) Cleanup iodelay patch as suggested by Tony.
->>> *) Added quirk to disable HW timeout
->>> *) Use the existing data timer but program a relatively accurate
->>>    SW timeout value (Impacts all platforms)
->>> *) Fix a bug in sdhci which was using data_timer for non data line
->>>    commands
->>>
->>> Kishon Vijay Abraham I (11):
->>>   mmc: sdhci-omap: Fix when capabilities are obtained from
->>>     SDHCI_CAPABILITIES reg
->>>   mmc: sdhci-omap: Remove setting ADMA capability in driver
->>>   mmc: sdhci-omap: Workaround for Errata i843
->>>   mmc: sdhci-omap: Invoke sdhci_get_of_property to read sdhci dt
->>>     properties
->>>   mmc: sdhci: Disable HS200 mode if controller can't support 1.8v
->>>   mmc: sdhci: Add quirk to disable HW timeout
->>>   mmc: sdhci: Program a relatively accurate SW timeout value
->>>   mmc: sdhci-omap: Workaround for Errata i834
->>>   dt-bindings: sdhci-omap: Add K2G specific binding
->>>   mmc: sdhci-omap: Add support for MMC/SD controller in k2g SoC
->>>   mmc: sdhci-omap: Add sdhci_omap specific ops for enable_sdio_irq
->>>
->>>  .../devicetree/bindings/mmc/sdhci-omap.txt         |  2 +
->>>  drivers/mmc/host/sdhci-omap.c                      | 78 +++++++++++++++++++---
->>>  drivers/mmc/host/sdhci.c                           | 75 +++++++++++++++++----
->>>  drivers/mmc/host/sdhci.h                           | 15 +++++
->>>  4 files changed, 148 insertions(+), 22 deletions(-)
->>>
->>> --
->>> 2.11.0
->>>
->>
->> Overall this looks good to me, however it seems like we need to give
->> Adrian a little more time to comment.
->>
-> 
-> I will try to look at it today.
+Kind regards
+Uffe
 
-sure, thanks!
-
--Kishon
+> ---
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt          |  4 ----
+>  drivers/mmc/host/dw_mmc.c                                 | 15 ++++-----------
+>  2 files changed, 4 insertions(+), 15 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> index ef3e5f14067a..75c9fdca4aaf 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> @@ -59,10 +59,6 @@ Optional properties:
+>    is specified and the ciu clock is specified then we'll try to set the ciu
+>    clock to this at probe time.
+>
+> -* clock-freq-min-max (DEPRECATED): Minimum and Maximum clock frequency for card output
+> -  clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
+> -         (Use the "max-frequency" instead of "clock-freq-min-max".)
+> -
+>  * num-slots (DEPRECATED): specifies the number of slots supported by the controller.
+>    The number of physical slots actually used could be equal or less than the
+>    value specified by num-slots. If this property is not specified, the value
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 0aa39975f33b..38e0e7c4ffd9 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -2784,7 +2784,6 @@ static int dw_mci_init_slot(struct dw_mci *host)
+>         struct dw_mci_slot *slot;
+>         const struct dw_mci_drv_data *drv_data = host->drv_data;
+>         int ctrl_id, ret;
+> -       u32 freq[2];
+>
+>         mmc = mmc_alloc_host(sizeof(struct dw_mci_slot), host->dev);
+>         if (!mmc)
+> @@ -2798,16 +2797,6 @@ static int dw_mci_init_slot(struct dw_mci *host)
+>         host->slot = slot;
+>
+>         mmc->ops = &dw_mci_ops;
+> -       if (device_property_read_u32_array(host->dev, "clock-freq-min-max",
+> -                                          freq, 2)) {
+> -               mmc->f_min = DW_MCI_FREQ_MIN;
+> -               mmc->f_max = DW_MCI_FREQ_MAX;
+> -       } else {
+> -               dev_info(host->dev,
+> -                       "'clock-freq-min-max' property was deprecated.\n");
+> -               mmc->f_min = freq[0];
+> -               mmc->f_max = freq[1];
+> -       }
+>
+>         /*if there are external regulators, get them*/
+>         ret = mmc_regulator_get_supply(mmc);
+> @@ -2846,6 +2835,10 @@ static int dw_mci_init_slot(struct dw_mci *host)
+>         if (ret)
+>                 goto err_host_allocated;
+>
+> +       mmc->f_min = DW_MCI_FREQ_MIN;
+> +       if (!mmc->f_max)
+> +               mmc->f_max = DW_MCI_FREQ_MAX;
+> +
+>         /* Process SDIO IRQs through the sdio_irq_work. */
+>         if (mmc->caps & MMC_CAP_SDIO_IRQ)
+>                 mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
+> --
+> 2.15.1
+>
