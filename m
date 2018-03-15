@@ -1,31 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 14/15] clk: stm32: Add clk entry for SDMMC2 on stm32F769
-Date: Thu, 15 Mar 2018 14:24:03 -0700
-Message-ID: <152114904300.111154.16697790469167766472@swboyd.mtv.corp.google.com>
-References: <1516105859-3525-1-git-send-email-patrice.chotard@st.com>
- <1516105859-3525-15-git-send-email-patrice.chotard@st.com>
- <fb3b26e8-0102-122b-1386-68a661139706@st.com>
- <CACRpkdbd-Zz-JRC-_OfKtx28OvDcf0af93pqraP=XPpAN-geVg@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2 4/4] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Thu, 15 Mar 2018 22:33:04 +0100
+Message-ID: <20180315213304.ejvgpkhxtblr6xb3@pengutronix.de>
+References: <20180201175412.9480-1-l.stach@pengutronix.de>
+ <20180201175412.9480-4-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbd-Zz-JRC-_OfKtx28OvDcf0af93pqraP=XPpAN-geVg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180201175412.9480-4-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Linus Walleij (2018-03-01 01:12:30)
-> On Mon, Feb 26, 2018 at 9:41 AM, Patrice CHOTARD <patrice.chotard@st.com> wrote:
+On Thu, Feb 01, 2018 at 06:54:12PM +0100, Lucas Stach wrote:
+> Add driver for the Clock Control Module found on i.MX8MQ.
 > 
-> > Hi Stephen, Michael
-> >
-> > It's a gentle reminder as this patch is present on mailing list and
-> > acked-by since 01/12/2018
+> This is largely based on the downstream driver from Anson Huang and
+> Bai Ping at NXP, with only some small adaptions to mainline from me.
 > 
-> You need Stephen's new kernel.org mail address to reach him.
-> (Added on TO:)
-> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-Thanks. Both work now after I've setup filters to catch everything.
+A general thought: The i.MX8M finally has a consistent clock tree. We
+have for example 70 Peripheral clock slices consisting of a mux, a gate
+and two dividers, all 70 looking the same.
+For these it might make sense to create a more complex clock type
+providing mux, gate and set rate functionality in one clock. This would
+drastically reduce the number of clocks we have to handle.
+
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
