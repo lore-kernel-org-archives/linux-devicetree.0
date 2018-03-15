@@ -1,99 +1,90 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Thu, 15 Mar 2018 17:43:29 +0000
-Message-ID: <20180315174329.GB22176@e107981-ln.cambridge.arm.com>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Thu, 15 Mar 2018 17:47:01 +0000
+Message-ID: <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
+References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
+        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
+        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
+        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
+ <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
+In-Reply-To: <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 03:41:49PM +0800, Ryder Lee wrote:
-> A root complex usually consist of a host bridge and multiple P2P bridges,
-> and someone may express that in the form of a root node with many subnodes
-> and list all four interrupts for each slot (child node) in the root node
-> like this:
-> 
-> 	pcie-controller {
-> 		...
-> 		interrupt-map-mask = <0xf800 0 0 7>;
-> 		interrupt-map = <0x0000 0 0 {INTx} &{interrupt parent} ...>
-> 				 0x0800 0 0 {INTx} &{interrupt parent} ...>;
-> 
-> 		pcie@0,0 {
-> 			reg = <0x0000 0 0 0 0>;
-> 			...
-> 		};
-> 
-> 		pcie@1,0 {
-> 			reg = <0x0800 0 0 0 0>;
-> 			...
-> 		};
-> 	};
-> 
-> As shown above, we'd like to propagate IRQs from a root port to the devices
-> in the hierarchy below it in this way.  However, it seems that the current
-> parser couldn't handle such cases and will get something unexpected below:
-> 
-> 	pcieport 0000:00:01.0: assign IRQ: got 213
-> 	igb 0000:01:00.0: assign IRQ: got 212
-> 
-> There is a device which is connected to 2nd slot, but the port doesn't share
-> the same IRQ with its downstream devices.  The problem here is that, if the
-> loop found a P2P bridge, it wouldn't check whether the reg property exists
-> in ppnode or not but just pass the subordinate devfn to of_irq_parse_raw(),
-> thus the subsequent flow couldn't correctly resolve them.
-> 
-> Fix this by adding a check to fallback to standard device tree parsing.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
-> Please refer to the previous discussion thread: https://patchwork.ozlabs.org/patch/829108/
-> ---
->  drivers/of/of_pci_irq.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-
-Hi Ryder,
-
-from the thread discussion I gather I can drop this series from the PCI
-queue and you will update the DT as agreed with Ben, that looks like
-the most reasonable solution to the problem you are facing, please
-let me know if there is anything I am missing.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> index 3a05568..e445866 100644
-> --- a/drivers/of/of_pci_irq.c
-> +++ b/drivers/of/of_pci_irq.c
-> @@ -86,8 +86,18 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
->  	out_irq->np = ppnode;
->  	out_irq->args_count = 1;
->  	out_irq->args[0] = pin;
-> -	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
-> -	laddr[1] = laddr[2] = cpu_to_be32(0);
-> +
-> +	if (!dn && ppnode) {
-> +		const __be32 *addr;
-> +
-> +		addr = of_get_property(ppnode, "reg", NULL);
-> +		if (addr)
-> +			memcpy(laddr, addr, 3);
-> +	} else {
-> +		laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
-> +		laddr[1] = laddr[2] = cpu_to_be32(0);
-> +	}
-> +
->  	rc = of_irq_parse_raw(laddr, out_irq);
->  	if (rc)
->  		goto err;
-> -- 
-> 1.9.1
-> 
+SGkgUm9iLCBHZWVydCwgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogTWFyZWsgU3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0N
+Cj4gU2VudDogVHVlc2RheSwgTWFyY2ggMDYsIDIwMTggMTI6MDYgQU0NCj4gVG86IEdlZXJ0IFV5
+dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+OyBSb2IgSGVycmluZw0KPiA8cm9iaEBr
+ZXJuZWwub3JnPg0KPiBDYzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBNYXR0aGlh
+cyBCcnVnZ2VyDQo+IDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9zcyA8YW5keS5n
+cm9zc0BsaW5hcm8ub3JnPjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgR2Vl
+cnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47DQo+IEJqw7ZybiBBbmRl
+cnNzb24gPGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnPjsgc2Vhbi53YW5nQG1lZGlhdGVrLmNv
+bTsNCj4gTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IE1hcmsgUnV0bGFu
+ZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYWphbiBWYWphIDxSQUpBTlZAeGlsaW54LmNv
+bT47IG9wZW4gbGlzdDpPUEVODQo+IEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUg
+QklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51
+eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxp
+bmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBKb2xseSBTaGFoIDxK
+T0xMWVNAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIGR0LWJpbmRpbmdz
+OiBwb3dlcjogQWRkIFp5bnFNUCBwb3dlciBkb21haW4NCj4gYmluZGluZ3MNCj4gDQo+IEhpIEFs
+bCwNCj4gDQo+IE9uIDIwMTgtMDMtMDYgMDg6NTksIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToN
+Cj4gPiBIaSBSb2IsIEpvbGx5LA0KPiA+DQo+ID4gT24gTW9uLCBNYXIgNSwgMjAxOCBhdCAxMToz
+OSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4+IE9uIFR1ZSwg
+RmViIDI3LCAyMDE4IGF0IDAzOjU1OjQ5UE0gLTA4MDAsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4+
+PiBBZGQgZG9jdW1lbnRhdGlvbiB0byBkZXNjcmliZSBaeW5xTVAgcG93ZXIgZG9tYWluIGJpbmRp
+bmdzLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEpvbGx5IFNoYWggPGpvbGx5c0B4aWxp
+bnguY29tPg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogUmFqYW4gVmFqYSA8cmFqYW52QHhpbGlueC5j
+b20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvenlu
+cW1wLWdlbnBkLnR4dCAgICAgfCA0Ng0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4+PiAg
+IDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspDQo+ID4+PiAgIGNyZWF0ZSBtb2RlIDEw
+MDY0NA0KPiA+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3p5bnFt
+cC1nZW5wZC50eHQNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0DQo+ID4+PiBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci96eW5xbXAtZ2VucGQudHh0DQo+ID4+PiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci96eW5xbXAtZ2VucGQudHh0DQo+
+ID4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+Pj4gaW5kZXggMDAwMDAwMC4uMjVmOTcxMQ0K
+PiA+Pj4gLS0tIC9kZXYvbnVsbA0KPiA+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Bvd2VyL3p5bnFtcC1nZW5wZC50eHQNCj4gPj4+ICtUaGlzIG5vZGUgY29udGFp
+bnMgYSBudW1iZXIgb2Ygc3Vibm9kZXMsIGVhY2ggcmVwcmVzZW50aW5nIGEgc2luZ2xlDQo+ID4+
+PiArUE0gZG9tYWluIHRoYXQgUE0gZG9tYWluIGNvbnN1bWVyIGRldmljZXMgcmVmZXJlbmNlLg0K
+PiA+Pj4gKw0KPiA+Pj4gKz09IFBNIERvbWFpbiBOb2RlcyA9PQ0KPiA+Pj4gKw0KPiA+Pj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+PiArIC0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTnVtYmVy
+IG9mIGNlbGxzIGluIGEgUE0gZG9tYWluIHNwZWNpZmllci4gTXVzdCBiZQ0KPiAwLg0KPiA+Pj4g
+KyAtIHBkLWlkOiBMaXN0IG9mIGRvbWFpbiBpZGVudGlmaWVycyBvZiBhcyBkZWZpbmVkIGJ5IHBs
+YXRmb3JtIGZpcm13YXJlLg0KPiBUaGVzZQ0KPiA+Pj4gKyAgICAgICBpZGVudGlmaWVycyBhcmUg
+cGFzc2VkIHRvIHRoZSBQTSBmaXJtd2FyZS4NCj4gPj4+ICsNCj4gPj4+ICtFeGFtcGxlOg0KPiA+
+Pj4gKyAgICAgenlucW1wLWdlbnBkIHsNCj4gPj4+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJ4bG54LHp5bnFtcC1nZW5wZCI7DQo+ID4+IFdoYXQncyB0aGUgY29udHJvbCBpbnRlcmZhY2Ug
+Zm9yIGNvbnRyb2xsaW5nIHRoZSBkb21haW5zPw0KPiA+Pj4gKw0KPiA+Pj4gKyAgICAgICAgICAg
+ICBwZF91c2IwOiBwZC11c2IwIHsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICBwZC1pZCA9
+IDwyMj47DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9
+IDwwPjsNCj4gPj4gVGhlcmUncyBubyBuZWVkIGZvciBhbGwgdGhlc2Ugc3ViIG5vZGVzLiBNYWtl
+ICNwb3dlci1kb21haW4tY2VsbHMgMQ0KPiA+PiBhbmQgcHV0IHRoZSBpZCBpbiB0aGUgY2VsbCB2
+YWx1ZS4NCj4gPiBUaGF0IHdhcyBteSBmaXJzdCByZWFjdGlvbiwgdG9vLi4uDQo+ID4+PiArICAg
+ICAgICAgICAgIH07DQo+ID4+PiArDQo+ID4+PiArICAgICAgICAgICAgIHBkX3NhdGE6IHBkLXNh
+dGEgew0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDI4PjsNCj4gPj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPiA+Pj4gKyAg
+ICAgICAgICAgICB9Ow0KPiA+Pj4gKw0KPiA+Pj4gKyAgICAgICAgICAgICBwZF9ncHU6IHBkLWdw
+dSB7DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgcGQtaWQgPSA8NTggMjAgMjE+Ow0KPiA+
+IC4uLiB1bnRpbCBJIHNhdyB0aGUgYWJvdmUuDQo+ID4gQ29udHJvbGxpbmcgdGhlIEdQVSBwb3dl
+ciBhcmVhIHJlcXVpcmVzIGNvbnRyb2xsaW5nIDMgcGh5c2ljYWwgYXJlYXM/DQo+ID4NCj4gPiBI
+b3dldmVyLCBkb2luZyBpdCB0aGlzIHdheSBtYXkgYml0ZSB5b3UgaW4gdGhlIGZ1dHVyZSwgaWYg
+YSBuZWVkDQo+ID4gYXJpc2VzIHRvIGNvbnRyb2wgYSBzdWJzZXQuIEFuZCB3aGF0IGFib3V0IHBv
+d2VyIHVwL2Rvd24gb3JkZXI/DQo+IA0KPiBXaGF0IGFib3V0IGRlZmluaW5nIDMgc2VwYXJhdGUg
+ZG9tYWlucyBhbmQgYXJyYW5naW5nIHRoZW0gaW4gcGFyZW50LWNoaWxkDQo+IHJlbGF0aW9uc2hp
+cD8gZ2VuZXJpYyBwb3dlciBkb21haW5zIGFscmVhZHkgc3VwcG9ydHMgdGhhdCBhbmQgdGhpcyBh
+bGxvd3MgdG8NCj4gbmljZWx5IGRlZmluZSB0aGUgcG93ZXIgb24vb2ZmIG9yZGVyLg0KPiANCj4g
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDB4MD47DQo+
+ID4+PiArICAgICAgICAgICAgIH07DQo+ID4+PiArICAgICB9Ow0KPiANCg0KSSBhZ3JlZSBpdCBz
+aG91bGQgYmUgYXJyYW5nZWQgaW4gYXMgcGFyZW50IGNoaWxkIG9yZGVyIHRvIGNvbnRyb2wgc3Vi
+c2V0IG9yIGNvbnRyb2wgb3JkZXIuIFdpbGwgaW5jb3Jwb3JhdGUgdGhvc2UgY2hhbmdlcyBpbiBu
+ZXh0IHZlcnNpb24uDQoNCj4gQmVzdCByZWdhcmRzDQo+IC0tDQo+IE1hcmVrIFN6eXByb3dza2ks
+IFBoRA0KPiBTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5kDQoNCg==
