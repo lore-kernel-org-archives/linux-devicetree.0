@@ -1,83 +1,41 @@
 From: Harald Geyer <harald@ccbib.org>
-Subject: [PATCHv2 4/5] arm64: dts: allwinner: a64: Add pwm device
-Date: Thu, 15 Mar 2018 16:25:09 +0000
-Message-ID: <20180315162510.11669-5-harald@ccbib.org>
-References: <20180315162510.11669-1-harald@ccbib.org>
+Subject: [PATCHv2 0/5] arm64: allwinner: Add support for TERES-I laptop
+Date: Thu, 15 Mar 2018 16:25:05 +0000
+Message-ID: <20180315162510.11669-1-harald@ccbib.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180315162510.11669-1-harald@ccbib.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com, Harald Geyer <harald@ccbib.org>
 List-Id: devicetree@vger.kernel.org
 
-This device is compatible with A13, so no new driver is needed.
-A new compatible string is reserved in the binding documentation, to be
-used together with the proper fall back. Tested on Teres-I.
+This series adds support for the TERES I open hardware laptop produced
+by olimex. With these patches and a bootloader capable of setting up
+simple framebuffer the laptop is quite useable.
 
-Signed-off-by: Harald Geyer <harald@ccbib.org>
----
-changes since v1:
- * add and use an A64 specific compatible string
- * claim the full memory range
+Patches 1-4 add some pin descriptions and devices in the A64 dtsi, which
+are useful to have on the teres.
+Patch 5 finally adds the board dts itself.
 
-I saw that Andre Przywara has been working on A64 pwm too and has
-submitted some patches a few days ago. I think his patches are functionally
-equivalent to this one here, but clean up things a bit and additionally
-add support for r_pwm and thus are preferable. See:
+Changes to the previous version are listed along the individual patches.
 
-https://groups.google.com/forum/#!topic/linux-sunxi/hQFeteP591k
+best regards,
+Harald
 
-I'm including my patch here mostly to have a consistent series for others
-to test. OTOH you might merge the device tree changes here and pick up
-the cleanup patches from him. Either way should work fine.
 
- Documentation/devicetree/bindings/pwm/pwm-sun4i.txt |  1 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi       | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+Harald Geyer (5):
+  arm64: dts: allwinner: a64: Add i2c0 pins
+  arm64: dts: allwinner: a64: Add watchdog
+  arm64: dts: allwinner: a64: add simplefb for A64 SoC
+  arm64: dts: allwinner: a64: Add pwm device
+  arm64: allwinner: a64: Add support for TERES-I laptop
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-index 51ff54c8b8ef..5986a3b2a504 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
-@@ -5,6 +5,7 @@ Required properties:
-     - "allwinner,sun4i-a10-pwm"
-     - "allwinner,sun5i-a10s-pwm"
-     - "allwinner,sun5i-a13-pwm"
-+    - "allwinner,sun50i-a64-pwm","allwinner,sun5i-a13-pwm"
-     - "allwinner,sun7i-a20-pwm"
-     - "allwinner,sun8i-h3-pwm"
-   - reg: physical base address and length of the controller's registers
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 1b2ef28c42bd..7e72eadd07b1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -364,6 +364,11 @@
- 				bias-pull-up;
- 			};
- 
-+			pwm_pin: pwm_pin {
-+				pins = "PD22";
-+				function = "pwm";
-+			};
-+
- 			rmii_pins: rmii_pins {
- 				pins = "PD10", "PD11", "PD13", "PD14", "PD17",
- 				       "PD18", "PD19", "PD20", "PD22", "PD23";
-@@ -629,6 +634,15 @@
- 			#interrupt-cells = <3>;
- 		};
- 
-+		pwm: pwm@1c21400 {
-+			compatible = "allwinner,sun50i-a64-pwm",
-+				     "allwinner,sun5i-a13-pwm";
-+			reg = <0x01c21400 0x400>;
-+			clocks = <&osc24M>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		rtc: rtc@1f00000 {
- 			compatible = "allwinner,sun6i-a31-rtc";
- 			reg = <0x01f00000 0x54>;
+ .../devicetree/bindings/pwm/pwm-sun4i.txt          |   1 +
+ .../devicetree/bindings/watchdog/sunxi-wdt.txt     |   6 +-
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 279 +++++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  46 ++++
+ 5 files changed, 331 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+
 -- 
 2.11.0
