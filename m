@@ -1,55 +1,46 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v7 3/3] dts: arm64: Add mailbox binding for hi3660
-Date: Thu, 15 Mar 2018 16:41:18 +0000
-Message-ID: <5AAAA22E.5030009@hisilicon.com>
-References: <1521130058-24796-1-git-send-email-leo.yan@linaro.org>
- <1521130058-24796-4-git-send-email-leo.yan@linaro.org>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv2 3/7] driver, misc: add Intel Stratix10 service layer
+ driver
+Date: Thu, 15 Mar 2018 17:48:36 +0100
+Message-ID: <20180315164836.GB4060@kroah.com>
+References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
+ <1519949975-13548-4-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521130058-24796-4-git-send-email-leo.yan@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1519949975-13548-4-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kaihua Zhong <zhongkaihua@huawei.com>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Ruyi Wang <wangruyi@huawei.com>
+To: richard.gong@linux.intel.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
+On Thu, Mar 01, 2018 at 06:19:31PM -0600, richard.gong@linux.intel.com wrote:
+> +EXPORT_SYMBOL_GPL(request_svc_channel_byname);
 
-On 2018/3/15 16:07, Leo Yan wrote:
-> From: Kaihua Zhong <zhongkaihua@huawei.com>
-> 
-> Add DT binding for mailbox driver.
-> 
-> Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
-> Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
+All of your global symbols should have the same prefix, not a verb.  So
+this should be:
+	svc_channel_request_by_name(), right?
 
-Fine to me. Thanks!
-Acked-by: Wei Xu <xuwei5@hisilicon.com>
+> +EXPORT_SYMBOL_GPL(free_svc_channel);
 
-Best Regards,
-Wei
+svc_channel_free()?
 
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index 63d4f9d..3788448 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -298,6 +298,14 @@
->  			#reset-cells = <2>;
->  		};
->  
-> +		mailbox: mailbox@e896b000 {
-> +			compatible = "hisilicon,hi3660-mbox";
-> +			reg = <0x0 0xe896b000 0x0 0x1000>;
-> +			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-> +			#mbox-cells = <3>;
-> +		};
-> +
->  		dual_timer0: timer@fff14000 {
->  			compatible = "arm,sp804", "arm,primecell";
->  			reg = <0x0 0xfff14000 0x0 0x1000>;
-> 
+> +EXPORT_SYMBOL_GPL(intel_svc_send);
+
+Wait, why doesn't the first ones have "intel_svc" in them?
+
+What is the difference here?
+
+Should they all just have "intel_svc_" as the prefix?
+
+Stick to one thing for all exported functions/variables please, it's the
+only way we can attempt to keep our namespace "sane".
+
+Also, why would a 'misc' driver be exporting things that something else
+uses?  Why not just put this in the fpga directory next to the users of
+this code?
+
+thanks,
+
+greg k-h
