@@ -1,62 +1,39 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car
- V3M Eagle
-Date: Thu, 15 Mar 2018 14:38:22 +0100
-Message-ID: <186a9adc-f5b8-cbd9-218c-5a0c48dbc9aa@samsung.com>
-References: <1521111391-3515-1-git-send-email-jacopo+renesas@jmondi.org>
- <CGME20180315112823epcas5p3e8d475cddae340ce0625267f30d4b06a@epcas5p3.samsung.com>
- <1521111391-3515-4-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1521111391-3515-4-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888 output.
+Date: Thu, 15 Mar 2018 14:43:30 +0100
+Message-ID: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTUuMDMuMjAxOCAxMTo1NiwgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IFRoZSBSLUNhciBWM00g
-RWFnbGUgYm9hcmQgaW5jbHVkZXMgYSB0cmFuc3BhcmVudCBUSEM2M0xWRDEwMjQgTFZEUwo+IGRl
-Y29kZXIsIGNvbm5lY3RlZCB0byB0aGUgb24tY2hpcCBMVkRTIGVuY29kZXIgb3V0cHV0IG9uIG9u
-ZSBzaWRlCj4gYW5kIHRvIEhETUkgZW5jb2RlciBBRFY3NTExdyBvbiB0aGUgb3RoZXIgb25lLgo+
-Cj4gQXMgdGhlIGRlY29kZXIgZG9lcyBub3QgbmVlZCBhbnkgY29uZmlndXJhdGlvbiBpdCBoYXMg
-YmVlbiBzby1mYXIKPiBvbWl0dGVkIGZyb20gRFRTLiBOb3cgdGhhdCBhIGRyaXZlciBpcyBhdmFp
-bGFibGUsIGRlc2NyaWJlIGl0IGluIERUCj4gYXMgd2VsbC4KPgo+IFNpZ25lZC1vZmYtYnk6IEph
-Y29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KClJldmlld2VkLWJ5OiBBbmRy
-emVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgoKwqAtLQpSZWdhcmRzCkFuZHJ6ZWoKPiAt
-LS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cyB8IDMz
-ICsrKysrKysrKysrKysrKysrKysrKysrLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRp
-b25zKCspLCAzIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVz
-YXMvcjhhNzc5NzAtZWFnbGUuZHRzCj4gaW5kZXggYzBmZDE0NC4uNjlmNDNiOCAxMDA2NDQKPiAt
-LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAtZWFnbGUuZHRzCj4gKysr
-IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cwo+IEBAIC00
-Miw2ICs0MiwzMyBAQAo+ICAJCQl9Owo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCXRoYzYzbHZkMTAy
-NDogbHZkcy1kZWNvZGVyIHsKPiArCQljb21wYXRpYmxlID0gInRoaW5lLHRoYzYzbHZkMTAyNCI7
-Cj4gKwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXpl
-LWNlbGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCj4g
-KwkJCQl0aGM2M2x2ZDEwMjRfaW5fMDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmbHZkczBfb3V0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0QDJ7Cj4g
-KwkJCQlyZWcgPSA8Mj47Cj4gKwo+ICsJCQkJdGhjNjNsdmQxMDI0X291dF8yOiBlbmRwb2ludCB7
-Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZhZHY3NTExX2luPjsKPiArCQkJCX07Cj4gKwo+
-ICsJCQl9Owo+ICsKPiArCQl9Owo+ICsJfTsKPiAgfTsKPiAgCj4gICZhdmIgewo+IEBAIC05OCw3
-ICsxMjUsNyBAQAo+ICAJCQlwb3J0QDAgewo+ICAJCQkJcmVnID0gPDA+Owo+ICAJCQkJYWR2NzUx
-MV9pbjogZW5kcG9pbnQgewo+IC0JCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczBfb3V0PjsK
-PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRoYzYzbHZkMTAyNF9vdXRfMj47Cj4gIAkJCQl9
-Owo+ICAJCQl9Owo+ICAKPiBAQCAtMTUyLDggKzE3OSw4IEBACj4gIAo+ICAJcG9ydHMgewo+ICAJ
-CXBvcnRAMSB7Cj4gLQkJCWVuZHBvaW50IHsKPiAtCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYWR2
-NzUxMV9pbj47Cj4gKwkJCWx2ZHMwX291dDogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZ0aGM2M2x2ZDEwMjRfaW5fMD47Cj4gIAkJCX07Cj4gIAkJfTsKPiAgCX07CgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
+for the needed pins.
+
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index bd0cd32..d4b2d18 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -922,6 +922,14 @@
+ 				pins = "PI20", "PI21";
+ 				function = "uart7";
+ 			};
++
++			lcd0_rgb888_pins: lcd0-rgb888-pins {
++				pins = "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
++				       "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15",
++				       "PD16", "PD17", "PD18", "PD19", "PD20", "PD21", "PD22", "PD23",
++				       "PD24", "PD25", "PD26", "PD27";
++				function = "lcd0";
++			};
+ 		};
+ 
+ 		timer@1c20c00 {
+-- 
+2.7.4
