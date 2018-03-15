@@ -1,55 +1,30 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v3 2/2] ASoC: Add bindings for PCM1789
-Date: Thu, 15 Mar 2018 17:18:25 +0100
-Message-ID: <20180315161825.5524-3-mylene.josserand@bootlin.com>
-References: <20180315161825.5524-1-mylene.josserand@bootlin.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH] clk: qcom: rpmcc: Add support to XO buffered clocks
+Date: Thu, 15 Mar 2018 16:24:52 +0000
+Message-ID: <f2757455-c825-01d6-cf53-8b2504b9b2f8@linaro.org>
+References: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180315161825.5524-1-mylene.josserand@bootlin.com>
+In-Reply-To: <20180315143724.13859-1-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, michael@amarulasolutions.com
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add a device-tree binding for Texas Instrument's PCM1789 codec.
-For the moment, only I2C bus is supported but SPI could be added
-in future.
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- .../devicetree/bindings/sound/pcm1789.txt          | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/pcm1789.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/pcm1789.txt b/Documentation/devicetree/bindings/sound/pcm1789.txt
-new file mode 100644
-index 000000000000..3c74ed220ac2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/pcm1789.txt
-@@ -0,0 +1,22 @@
-+Texas Instruments pcm1789 DT bindings
-+
-+PCM1789 is a simple audio codec that can be connected via
-+I2C or SPI. Currently, only I2C bus is supported.
-+
-+Required properties:
-+
-+ - compatible: "ti,pcm1789"
-+
-+Required properties on I2C:
-+
-+ - reg: the I2C address
-+ - reset-gpios: GPIO to control the RESET pin
-+
-+Examples:
-+
-+	audio-codec@4c {
-+		compatible = "ti,pcm1789";
-+		reg = <0x4c>;
-+		reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+	};
--- 
-2.11.0
+On 15/03/18 14:37, srinivas.kandagatla@linaro.org wrote:
+>   
+>   struct clk_rpm {
+>   	const int rpm_clk_id;
+> +	const int xo_offset;
+> +	u32 xo_buffer_value;
+>   	const bool active_only;
+Just realized that this would not work when more than one xo are active, 
+I will have a closer look and send an new version.
+
+thanks,
+srini
