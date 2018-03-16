@@ -1,72 +1,62 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH 1/2] dt: bindings: fpga: add lattice machxo2 slave spi
- binding description
-Date: Fri, 16 Mar 2018 09:31:07 -0700
-Message-ID: <20180316163107.67gaxcjksn76ztmn@us-sjc-wireless-10-16-34-48.amer.corp.natinst.com>
-References: <1521215669-23874-1-git-send-email-p.pisati@gmail.com>
- <1521215669-23874-2-git-send-email-p.pisati@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 0/2] irqchip/gic*: Complain about the use of IRQ_TYPE_NONE
+Date: Fri, 16 Mar 2018 16:46:20 +0000
+Message-ID: <0c775a8f-07a8-3904-13cf-162a7f23ef49@arm.com>
+References: <20180316145511.28362-1-marc.zyngier@arm.com>
+ <5f274a06-3a9c-7d41-2e4d-9733e4ac6078@arm.com>
+ <399d5e06-c530-6a29-8a4d-9e8ca62167c4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1521215669-23874-2-git-send-email-p.pisati@gmail.com>
+In-Reply-To: <399d5e06-c530-6a29-8a4d-9e8ca62167c4@arm.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 04:54:28PM +0100, Paolo Pisati wrote:
-> Add dt binding documentation details for Lattice MachXO2 FPGA configuration
-> over Slave SPI interface.
+On 16/03/18 16:39, Marc Zyngier wrote:
+> On 16/03/18 16:19, Robin Murphy wrote:
+>> On 16/03/18 14:55, Marc Zyngier wrote:
+>>> Grepping through the dts files, the documentation, and reviewing
+>>> patches, one can only notice the use of IRQ_TYPE_NONE in interrupt
+>>> specifiers. At least for the GIC, this doesn't mean anything. The
+>>> unsuspecting driver will end-up with whatever was there before, and
+>>> there is a 50% probability that it is not what it wants.
+>>>
+>>> I'd love to fix it myself, but I also have a 50% probability of
+>>> getting it wrong. In order to make the user aware they are walking on
+>>> thin ice, let's add some warnings. Hopefully, they'll be annoying
+>>> enough that people will fix their firmware. Croudsourcing debugging...
+>>
+>> I guess there's also the alternative nuclear option of breaking their
+>> build ;)
+>>
+>> Robin.
+>>
+>> ----->8-----
+>> diff --git a/include/dt-bindings/interrupt-controller/irq.h
+>> b/include/dt-bindings/interrupt-controller/irq.h
+>> index a8b310555f14..de79af80d01e 100644
+>> --- a/include/dt-bindings/interrupt-controller/irq.h
+>> +++ b/include/dt-bindings/interrupt-controller/irq.h
+>> @@ -10,7 +10,7 @@
+>>    #ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+>>    #define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+>>
+>> -#define IRQ_TYPE_NONE		0
+>> +#define IRQ_TYPE_NONE		"This is nonsense and needs fixing"
+>>    #define IRQ_TYPE_EDGE_RISING	1
+>>    #define IRQ_TYPE_EDGE_FALLING	2
+>>    #define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
+>>
 > 
-> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-> new file mode 100644
-> index 0000000..a8c362e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-> @@ -0,0 +1,29 @@
-> +Lattice MachXO2 Slave SPI FPGA Manager
-> +
-> +Lattice MachXO2 FPGAs support a method of loading the bitstream over
-> +'slave SPI' interface.
-Nit: a 'slave SPI'
-> +
-> +See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
-> +
-> +Required properties:
-> +- compatible: should contain "lattice,machxo2-slave-spi"
-> +- reg: spi chip select of the FPGA
-> +
-> +Example for full FPGA configuration:
-> +
-> +	fpga-region0 {
-> +		compatible = "fpga-region";
-> +		fpga-mgr = <&fpga_mgr_spi>;
-> +		#address-cells = <0x1>;
-> +		#size-cells = <0x1>;
-> +	};
-> +
-> +	spi1: spi@2000 {
-> +        ...
-> +
-> +		fpga_mgr_spi: fpga-mgr@0 {
-> +			compatible = "lattice,machxo2-slave-spi";
-> +			spi-max-frequency = <8000000>;
-> +			reg = <0>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+> What really annoys me with this patch is that you haven't put a SoB on it...
 
-Thanks,
+On a more serious note, though, it dawns on me that this might be 
+something DTC could realistically scream about for us, although I guess 
+not all irqchip bindings include a type specifier so it would probably 
+need to special-case known ones.
 
-Moritz
+Robin.
