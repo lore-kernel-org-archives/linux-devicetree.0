@@ -1,109 +1,72 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH v3 1/7] watchdog: sama5d4: make use of timeout-secs
- provided in devicetree
-Date: Fri, 16 Mar 2018 14:37:04 +0100
-Message-ID: <20180316133703.GA31029@gmail.com>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4 0/9] Initial Allwinner H6 support
+Date: Fri, 16 Mar 2018 22:02:06 +0800
+Message-ID: <20180316140215.28663-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180211200847.25000-1-marcus.folkesson@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPE5V7KQKGQEUQ5ZQMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds initial support for the Allwinner H6 SoC.
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's quite different from earlier Allwinner SoCs. For example, the
+memory map is refactored, and the CCU is rearranged. It's also the first
+Allwinner SoC with PCI Express interface (although the implementation
+of the PCI Express controller is broken), and the second one with USB
+3.0 (the first one is A80).
 
-Hi,
+This patchset adds the most basical support for it, including the main pin
+controller, the main CCU and the basical device tree.
 
-Am I supposed to do something more to make this patchset picked up?
+Icenowy Zheng (9):
+  pinctrl: sunxi: refactor irq related register function to have desc
+  pinctrl: sunxi: introduce IRQ bank conversion function
+  pinctrl: sunxi: change irq_bank_base to irq_bank_map
+  pinctrl: sunxi: add support for the Allwinner H6 main pin controller
+  clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
+  dt-bindings: add device tree binding for Allwinner H6 main CCU
+  clk: sunxi-ng: add support for the Allwinner H6 CCU
+  arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
+  arm64: allwinner: h6: add support for Pine H64 board
 
-Thanks,
-Marcus Folkesson
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |    4 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |    1 +
+ arch/arm64/boot/dts/allwinner/Makefile             |    1 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      |   29 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       |  177 +++
+ drivers/clk/sunxi-ng/Kconfig                       |    5 +
+ drivers/clk/sunxi-ng/Makefile                      |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c               | 1207 ++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.h               |   56 +
+ drivers/clk/sunxi-ng/ccu_nkmp.c                    |   20 +-
+ drivers/clk/sunxi-ng/ccu_nkmp.h                    |    2 +
+ drivers/pinctrl/sunxi/Kconfig                      |    4 +
+ drivers/pinctrl/sunxi/Makefile                     |    1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          |  614 ++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c          |    4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c          |    4 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   22 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   40 +-
+ include/dt-bindings/clock/sun50i-h6-ccu.h          |  124 ++
+ include/dt-bindings/reset/sun50i-h6-ccu.h          |   73 ++
+ 20 files changed, 2359 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.h
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+ create mode 100644 include/dt-bindings/clock/sun50i-h6-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-h6-ccu.h
 
-On Sun, Feb 11, 2018 at 09:08:41PM +0100, Marcus Folkesson wrote:
-> watchdog_init_timeout() will allways pick timeout_param since it
-> defaults to a valid timeout.
->=20
-> Following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt to make use of
-> the parameter logic.
->=20
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
->=20
-> Notes:
->     v3:
->     	- Use wdd->timeout instead of wdt_timeout when print out
->     	  timout in probe function.
->=20
->  drivers/watchdog/sama5d4_wdt.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wd=
-t.c
-> index 0ae947c3d7bc..255169916dbb 100644
-> --- a/drivers/watchdog/sama5d4_wdt.c
-> +++ b/drivers/watchdog/sama5d4_wdt.c
-> @@ -33,7 +33,7 @@ struct sama5d4_wdt {
->  	unsigned long		last_ping;
->  };
-> =20
-> -static int wdt_timeout =3D WDT_DEFAULT_TIMEOUT;
-> +static int wdt_timeout;
->  static bool nowayout =3D WATCHDOG_NOWAYOUT;
-> =20
->  module_param(wdt_timeout, int, 0);
-> @@ -212,7 +212,7 @@ static int sama5d4_wdt_probe(struct platform_device *=
-pdev)
->  		return -ENOMEM;
-> =20
->  	wdd =3D &wdt->wdd;
-> -	wdd->timeout =3D wdt_timeout;
-> +	wdd->timeout =3D WDT_DEFAULT_TIMEOUT;
->  	wdd->info =3D &sama5d4_wdt_info;
->  	wdd->ops =3D &sama5d4_wdt_ops;
->  	wdd->min_timeout =3D MIN_WDT_TIMEOUT;
-> @@ -273,7 +273,7 @@ static int sama5d4_wdt_probe(struct platform_device *=
-pdev)
->  	platform_set_drvdata(pdev, wdt);
-> =20
->  	dev_info(&pdev->dev, "initialized (timeout =3D %d sec, nowayout =3D %d)=
-\n",
-> -		 wdt_timeout, nowayout);
-> +		 wdd->timeout, nowayout);
-> =20
->  	return 0;
->  }
-> --=20
-> 2.15.1
->=20
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAlqryHoACgkQiIBOb1ld
-UjLhTg/+LhuQESSJAa3VADaGhjoJzBzmqIesfKCeDPa08XQ5Il+7UbjNYkuhjBHn
-L8axLYGY7jq2GPE500Q6hsf7LcvUIFugyg9KLjPXq5e/PO+CHSVaXBPiJSobva3Y
-baTrwtdVhost+9eodoFPBZnOfLgCEayGz4AZEr93uHjJne2W9TVeWaWnLYv4SqfC
-qFpn/rOOvlA1tK/YXEIKRSxBUbVmPfxsGd5uRHfpkCzqlmai17Nv/+LQKB032mw9
-MwaBl9iqXFmP2XhK4iuy3oAiHwkRBnlIh6K7naiE7B5kqRxKhCQVQNlrqnj5HPFI
-/w+isbAoonMS0YFN5cG0DGIeH6MhYNjyy1RPGSbha5QACCej04GnU0+GhLf2A3RT
-LIWJFQojyZOMIeZYp2t4GV9BzI9+u8l5+oELwNn8WMJrP4IaQQFeg2gzCMfjGnUv
-YJOzP+EVtktm+fG8RDekmD7UZ1CWX+ojosrISXkSx/RvVzqcOnJwzB1zjTMq0Dqt
-9PmOsNa0QCnI6vSvZ2z2LDY26U0sejlxO8vNTwH8BHonhdhRvtFwfdpqydqhmqVA
-w8+QBbrSrbQaauIS5ZEOXAs94nVyDg372LQMJmhT0MxVV3feCI6RlnDFBkSt/HH4
-2lOFSY61e3SBLEUSBrQDFCa2wKLLQeGyBpz1/oFbh6qzO57LmkE=
-=gLfP
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
+-- 
+2.15.1
