@@ -1,62 +1,55 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888
- output.
-Date: Fri, 16 Mar 2018 07:47:31 +0100
-Message-ID: <20180316064731.muiw5yumhmfnwxg2@flea>
-References: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/5] ASoC: samsung: odroid: Fix 32000
+	sample rate handling
+Date: Fri, 16 Mar 2018 08:29:35 +0100
+Message-ID: <CAJKOXPem69c9L1pYqpV-WsYrHRMSp4=q=6KJQ3O12=xuO6+cvQ@mail.gmail.com>
+References: <CGME20180314164131epcas2p426aa34f4503ff12fa041a817cdd3eed9@epcas2p4.samsung.com>
+ <20180314164115.22736-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="55qzmh7lq24dy5mx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180314164115.22736-1-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 14, 2018 at 5:41 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> In case of sample rates lower than 44100 currently there is too low MCLK
+> frequency set for the CODEC. Playback fails with following errors:
+>
+> $ speaker-test -c2 -t sine -f 1500 -l2 -r 32000
+>
+> Sine wave rate is 1500.0000Hz
+> Rate set to 32000Hz (requested 32000Hz)
+> Buffer size range from 128 to 131072
+> Period size range from 64 to 65536
+> Using max buffer size 131072
+> Periods = 4
+> Unable to set hw params for playback: Invalid argument
+> Setting of hwparams failed: Invalid argument
+>
+> [  497.883700] max98090 1-0010: Invalid master clock frequency
+>
+> To fix this the I2S root clock's frequency is increased, depending
+> on sampling rate.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  sound/soc/samsung/odroid.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 
---55qzmh7lq24dy5mx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Hi Giulio,
-
-On Thu, Mar 15, 2018 at 02:43:30PM +0100, Giulio Benetti wrote:
-> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
-> for the needed pins.
->=20
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-
-Like we discussed last time, we only merge this kind of patches if
-there's an immediate user.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---55qzmh7lq24dy5mx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqraIIACgkQ0rTAlCFN
-r3TsTQ//aVAtfYmdxajp7kPWYUnUM183XdCsZdfdMaXpRxePj/8hrX+c8ajc2wlh
-7MCqz4hwX2neJHIzgD407cJPgk8lgmG7I82rKxiMyahtrTrRCtd9cvCxcJiYU7Zz
-d2udNrvS7VQVME+A1Kr+W5MNCfPHJ4rJ9hexidojEIswVmJ1w05ZjleHy3T/QpFw
-jis8tvPSamLstNfW9WaKPqXA6HMM+NEqFXCI1EYXRHLkJo6htkkIbyn38JPg4OSl
-KcVwUT6+h6Qh9WKeQ3lDdwLijJEmXfFINwL6aBU7ITyGXOjj7lKdO6cRZpEonbpz
-GU6NT37JnQb2Iu0vynECw5i26SMfcxg3Lj4kBObU3FBhDTUM99W0HgLnnSbRYnua
-xeRpQ34pQGmq/SSjL6PiumWMy8a41CGoB1TrX4Xtzx5vIS1aj3YKgiGZubfrRxNT
-YPjhJ3Ly9Nq1EFO8Xyv4Vmee1U1xW9SSNqazLxZ7ZR09E4SjTkIOlS4JdT2UsBKe
-IHdCVt9RmhzU4E1Ry/mpPsIbvqUp//rVFe6uj8Jm6I4flV4kwT3SfNZ9QBTAAVJf
-BLcGc731NZZF0jAX4duRqUokWQaOKk65TI/OZC9Ro9yiOqg6vNpPlq+JYZw0xx65
-W0UVN5ZBI8bSbEDN+D7vFhpD5DnQkmChoViWWaW2mFD1s5aN0BM=
-=zACC
------END PGP SIGNATURE-----
-
---55qzmh7lq24dy5mx--
+Best regards,
+Krzysztof
