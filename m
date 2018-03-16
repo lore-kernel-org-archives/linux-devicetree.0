@@ -1,59 +1,45 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: analogix-dp: Add backlight-pwm-passthru
-Date: Fri, 16 Mar 2018 14:56:09 +0530
-Message-ID: <124034c6-a0af-0142-0d04-7d8bbc19bb82@codeaurora.org>
-References: <20180316025659.217423-1-amstan@chromium.org>
- <20180316025659.217423-2-amstan@chromium.org>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: arm64: allwinner: Add support for TERES I laptop
+Date: Fri, 16 Mar 2018 10:30:55 +0100
+Message-ID: <E1ewlhQ-0000Jx-6s@stardust.g4.wien.funkfeuer.at>
+References: <20180312161050.7647-1-harald@ccbib.org> <20180315170606.GA3635@afzalpc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180316025659.217423-2-amstan@chromium.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandru M Stan <amstan@chromium.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <seanpaul@chromium.org>
-Cc: devicetree@vger.kernel.org, Thierry Escande <thierry.escande@collabora.com>, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, marcheu@chromium.org, hoegsberg@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20180315170606.GA3635@afzalpc>
+Content-ID: <1235.1521192655.1@stardust.g4.wien.funkfeuer.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBGcmlkYXkgMTYgTWFyY2ggMjAxOCAwODoyNiBBTSwgQWxleGFuZHJ1IE0gU3RhbiB3cm90
-ZToKPiBEb2N1bWVudGF0aW9uIGZvciB0aGUgb3B0aW9uYWwgYmFja2xpZ2h0LXB3bS1wYXNzdGhy
-dSBwcm9wZXJ0eS4KPiBUZWxscyB0aGUgRURQIHBhbmVsIHRvIGZvbG93IHRoZSBpbnB1dCBwd20g
-ZnJlcXVlbmN5IGluc3RlYWQKCnMvZm9sb3cvZm9sbG93CgpJdCB3b3VsZCBiZSBuaWNlIGlmIHdl
-IGNvdWxkIGFkZCB0aGUgZGV0YWlscyB5b3UgbWVudGlvbmVkIGluCnBhdGNoICMwIGluIGVpdGhl
-ciB0aGlzIG9yIHRoZSBuZXh0IHBhdGNoLgoKPiBvZiBnZW5lcmF0aW5nIGl0cyBvd24uCgpUaGlz
-IGlzIG9uZSBvZiB0aG9zZSBiaW5kaW5ncyB3aGljaCBpcyBtb3JlIGEga25vYiB0aGFuIGEgSFcg
-cHJvcGVydHksCmJ1dCBJIGNhbid0IHRoaW5rIG9mIGFueSBlYXN5IHdheSB0byBmaWd1cmUgdGhp
-cyBvdXQgaW4gU1cuIFNvLCBJIGd1ZXNzCml0J3Mgb2theSB0byBoYXZlLgoKT25lIHRoaW5nIEkg
-d2FzIHdvbmRlcmluZyBhYm91dCB3YXMgd2hldGhlciB0aGlzIHByb3Agc2hvdWxkIGJlbG9uZyB0
-bwp0aGUgZURQIGNvbnRyb2xsZXIgb3IgdGhlIGVEUCBwYW5lbC4gSSBkb24ndCBoYXZlIGFueSBz
-dHJvbmcgb3BpbmlvbgphYm91dCBpdCwgdGhvdWdoLgoKUmV2aWV3ZWQtYnk6IEFyY2hpdCBUYW5l
-amEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+CgpUaGFua3MsCkFyY2hpdAoKCj4gCj4gU2lnbmVk
-LW9mZi1ieTogQWxleGFuZHJ1IE0gU3RhbiA8YW1zdGFuQGNocm9taXVtLm9yZz4KPiAtLS0KPiAK
-PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hbmFs
-b2dpeF9kcC50eHQgfCA0ICsrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL2FuYWxvZ2l4X2RwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9hbmFsb2dpeF9kcC50eHQKPiBpbmRleCAwYzc0NzNkZDBlNTEu
-LjNjMTUyNDJmNmNlMyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvYW5hbG9naXhfZHAudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FuYWxvZ2l4X2RwLnR4dAo+IEBA
-IC0yMyw2ICsyMywxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBkcC1jb250cm9sbGVyOgo+
-ICAgCQlmcm9tIGdlbmVyYWwgUEhZIGJpbmRpbmc6IFNob3VsZCBiZSAiZHAiLgo+ICAgCj4gICBP
-cHRpb25hbCBwcm9wZXJ0aWVzIGZvciBkcC1jb250cm9sbGVyOgo+ICsJLWJhY2tsaWdodC1wd20t
-cGFzc3RocnU6Cj4gKwkJRGlyZWN0bHkgcGFzcyB0aGUgUFdNIGZyZXF1ZW5jeSBhcHBsaWVkIHRv
-IHRoZSBCTF9QV01fRElNCj4gKwkJcGluIHRvIHRoZSBiYWNrbGlnaHQgY3VycmVudCBzb3VyY2Uu
-IERvbmUgdmlhCj4gKwkJRURQX0JBQ0tMSUdIVF9NT0RFX1NFVF9SRUdJU1RFUiBvbiBEUENELgo+
-ICAgCS1mb3JjZS1ocGQ6Cj4gICAJCUluZGljYXRlIGRyaXZlciBuZWVkIGZvcmNlIGhwZCB3aGVu
-IGhwZCBkZXRlY3QgZmFpbGVkLCB0aGlzCj4gICAJCWlzIHVzZWQgZm9yIHNvbWUgZURQIHNjcmVl
-biB3aGljaCBkb24ndCBoYXZlIGhwZCBzaWduYWwuCj4gCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+afzal mohammed writes:
+> On Mon, Mar 12, 2018 at 04:10:45PM +0000, Harald Geyer wrote:
+> > This series adds support for the TERES I open hardware laptop produced
+> > by olimex. With these patches and a bootloader capable of setting up
+> > simple framebuffer the laptop is quite useable.
+> 
+> Thanks for the patches
+> 
+> w/ defconfig could reach to prompt via serial console using audio
+> jack.
+> 
+> And just by enabling PWM_SUN4I & FB_SIMPLE, laptop could function
+> standalone as well.
+> 
+> Suggestions (feel free to ignore):
+> 
+> 1. seems currently only review comment pending is on simple
+> framebuffer, perhaps you can proceed removing just that so that a
+> basic bootable system can be achieved at the earliest (iiuc, anyway
+> drm would be the final solution for display)
+
+I'm under the impression that I addressed the concerns regarding simplefb
+satisfactorily. But yes: I hope to get this merged in time for 4.17.
+If simplefb is a problem for that, I'd rather drop it then postpone
+the entire series.
+
+Thanks for testing,
+Harald
