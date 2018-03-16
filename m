@@ -1,66 +1,63 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
-Date: Fri, 16 Mar 2018 16:54:31 +0800
-Message-ID: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888
+ output.
+Date: Fri, 16 Mar 2018 10:19:41 +0100
+Message-ID: <658946b9-4f49-ff24-3b84-da1eb9b7d9ad@micronovasrl.com>
+References: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <20180316064731.muiw5yumhmfnwxg2@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180316064731.muiw5yumhmfnwxg2@flea>
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for imx7d-sdb board's gpio keys:
+Hi Maxime,
 
-S1(FUNC1): KEY_VOLUMEUP
-S3(FUNC2): KEY_VOLUMEDOWN
+Il 16/03/2018 07:47, Maxime Ripard ha scritto:
+> Hi Giulio,
+> 
+> On Thu, Mar 15, 2018 at 02:43:30PM +0100, Giulio Benetti wrote:
+>> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
+>> for the needed pins.
+>>
+>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> 
+> Like we discussed last time, we only merge this kind of patches if
+> there's an immediate user.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7d-sdb.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+You're right.
+In few time(I hope), I'm going to send dts for Linova1-4_3 and Linova1-7,
+where I use those pins.
+I have also to send 2 patches for 2 new panels for panel-simple.
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 7f241af..e47b5b2 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -52,6 +52,24 @@
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		volume-up {
-+			label = "Volume Up";
-+			gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+
-+		volume-down {
-+			label = "Volume Down";
-+			gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+	};
-+
- 	spi4 {
- 		compatible = "spi-gpio";
- 		pinctrl-names = "default";
-@@ -519,6 +537,12 @@
- 			>;
- 		};
- 
-+		pinctrl_gpio_keys: gpio_keysgrp {
-+			fsl,pins = <
-+				MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x59
-+				MX7D_PAD_SD2_WP__GPIO5_IO10		0x59
-+			>;
-+		};
- 
- 		pinctrl_hog: hoggrp {
- 			fsl,pins = <
+So I think I have to send 2 displays' patches before.
+And a patchset for the 2 boards and rgb888 pins.
+
+One question: do I have to wait for panels' patches to applied and then 
+send patchset for boards dts?
+Or can I send a unique patchset?
+Because as I understand those patches should be applied to 2 different 
+repositories, right?
+
+Thanks in advance
+
 -- 
-2.7.4
+Giulio Benetti
+CTO
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
+
+> 
+> Maxime
+> 
