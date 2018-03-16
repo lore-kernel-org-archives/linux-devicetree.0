@@ -1,89 +1,70 @@
 From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
-Date: Fri, 16 Mar 2018 10:28:01 +0000
-Message-ID: <AM3PR04MB306ED8D196C18858B5B368480D70@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH v2 4/4] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Fri, 16 Mar 2018 10:29:29 +0000
+Message-ID: <AM3PR04MB3060D75EF763926D9732BB780D70@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <20180201175412.9480-1-l.stach@pengutronix.de>
+ <20180201175412.9480-4-l.stach@pengutronix.de>
+ <20180315213304.ejvgpkhxtblr6xb3@pengutronix.de>
+ <1521195019.3492.7.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1521195019.3492.7.camel@pengutronix.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 > -----Original Message-----
-> From: Anson Huang [mailto:Anson.Huang@nxp.com]
-> Sent: Friday, March 16, 2018 4:55 PM
-> To: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux@armlinux.org.uk
-> Cc: dl-linux-imx <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.or=
-g;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
->=20
-> Add support for imx7d-sdb board's gpio keys:
->=20
-> S1(FUNC1): KEY_VOLUMEUP
-> S3(FUNC2): KEY_VOLUMEDOWN
->=20
+> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> Sent: Friday, March 16, 2018 6:10 PM
+> To: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
+> <sboyd@codeaurora.org>; A.s. Dong <aisheng.dong@nxp.com>;
+> devicetree@vger.kernel.org; patchwork-lst@pengutronix.de; Rob Herring
+> <robh+dt@kernel.org>; dl-linux-imx <linux-imx@nxp.com>;
+> kernel@pengutronix.de; Fabio Estevam <fabio.estevam@nxp.com>; Shawn
+> Guo <shawnguo@kernel.org>; linux-clk@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v2 4/4] clk: imx: add clock driver for i.MX8MQ CCM
+> 
+> Am Donnerstag, den 15.03.2018, 22:33 +0100 schrieb Sascha Hauer:
+> > On Thu, Feb 01, 2018 at 06:54:12PM +0100, Lucas Stach wrote:
+> > > Add driver for the Clock Control Module found on i.MX8MQ.
+> > >
+> > > This is largely based on the downstream driver from Anson Huang and
+> > > Bai Ping at NXP, with only some small adaptions to mainline from me.
+> > >
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> >
+> > A general thought: The i.MX8M finally has a consistent clock tree. We
+> > have for example 70 Peripheral clock slices consisting of a mux, a
+> > gate and two dividers, all 70 looking the same.
+> > For these it might make sense to create a more complex clock type
+> > providing mux, gate and set rate functionality in one clock. This
+> > would drastically reduce the number of clocks we have to handle.
+> 
+> I agree. It seems we are missing the 4.17 merge window with this anyways,
+> due to the large number of changes still required and time constraints on my
+> side, so a larger rework of the driver might be possible if we target 4.18.
+> 
 
-Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+Yes, that would be worth a try.
+
+Thanks for doing it.
 
 Regards
 Dong Aisheng
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  arch/arm/boot/dts/imx7d-sdb.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-
-> sdb.dts index 7f241af..e47b5b2 100644
-> --- a/arch/arm/boot/dts/imx7d-sdb.dts
-> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
-> @@ -52,6 +52,24 @@
->  		reg =3D <0x80000000 0x80000000>;
->  	};
->=20
-> +	gpio-keys {
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_gpio_keys>;
-> +
-> +		volume-up {
-> +			label =3D "Volume Up";
-> +			gpios =3D <&gpio5 11 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_VOLUMEUP>;
-> +		};
-> +
-> +		volume-down {
-> +			label =3D "Volume Down";
-> +			gpios =3D <&gpio5 10 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_VOLUMEDOWN>;
-> +		};
-> +	};
-> +
->  	spi4 {
->  		compatible =3D "spi-gpio";
->  		pinctrl-names =3D "default";
-> @@ -519,6 +537,12 @@
->  			>;
->  		};
->=20
-> +		pinctrl_gpio_keys: gpio_keysgrp {
-> +			fsl,pins =3D <
-> +				MX7D_PAD_SD2_RESET_B__GPIO5_IO11
-> 	0x59
-> +				MX7D_PAD_SD2_WP__GPIO5_IO10
-> 	0x59
-> +			>;
-> +		};
->=20
->  		pinctrl_hog: hoggrp {
->  			fsl,pins =3D <
-> --
-> 2.7.4
+> Regards,
+> Lucas
