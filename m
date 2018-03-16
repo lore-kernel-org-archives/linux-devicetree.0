@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v8 07/42] clk: davinci: Add platform information for TI DM644x PLL
-Date: Thu, 15 Mar 2018 21:52:23 -0500
-Message-ID: <1521168778-27236-8-git-send-email-david@lechnology.com>
+Subject: [PATCH v8 14/42] clk: davinci: Add platform information for TI DM365 PSC
+Date: Thu, 15 Mar 2018 21:52:30 -0500
+Message-ID: <1521168778-27236-15-git-send-email-david@lechnology.com>
 References: <1521168778-27236-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
@@ -10,151 +10,167 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds platform-specific declarations for the PLL clocks on TI
-DM644x based systems.
+This adds platform-specific declarations for the PSC clocks on TI
+DM365 based systems.
 
 Signed-off-by: David Lechner <david@lechnology.com>
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 ---
 
 v8 changes:
-- drop __init and __initconst attributes
-- add a clkdev lookup for each SYSCLK
+- drop use of __init and __initconst attributes
+- add parent clock mappings
 
 v7 changes:
-- split registration functions for each PLL
-- Add platform_device_id lookup
+- split registration function into two, one for each PSC
+- add platform_device_id table
+- don't wrap lines for readability
+- add LPSC_ALWAYS_ENABLED flag to timer0 clock
 
 v6 changes:
-- Added dm644x_pll{1,2}_info with controller-specific information
-- Add empty lines between function calls
+- change how clkdev lookups are declared
 
- drivers/clk/davinci/Makefile     |  1 +
- drivers/clk/davinci/pll-dm644x.c | 80 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/davinci/pll.c        |  2 +
- drivers/clk/davinci/pll.h        |  3 ++
- 4 files changed, 86 insertions(+)
- create mode 100644 drivers/clk/davinci/pll-dm644x.c
+ drivers/clk/davinci/Makefile    |  1 +
+ drivers/clk/davinci/psc-dm365.c | 96 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/davinci/psc.c       |  1 +
+ drivers/clk/davinci/psc.h       |  1 +
+ 4 files changed, 99 insertions(+)
+ create mode 100644 drivers/clk/davinci/psc-dm365.c
 
 diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
-index 353aa02..59d8ab6 100644
+index e0da5c3..78dc1eb 100644
 --- a/drivers/clk/davinci/Makefile
 +++ b/drivers/clk/davinci/Makefile
-@@ -6,4 +6,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= pll-da830.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= pll-da850.o
- obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= pll-dm355.o
- obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= pll-dm365.o
-+obj-$(CONFIG_ARCH_DAVINCI_DM644x)	+= pll-dm644x.o
+@@ -13,4 +13,5 @@ obj-y += psc.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
+ obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= psc-dm355.o
++obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= psc-dm365.o
  endif
-diff --git a/drivers/clk/davinci/pll-dm644x.c b/drivers/clk/davinci/pll-dm644x.c
+diff --git a/drivers/clk/davinci/psc-dm365.c b/drivers/clk/davinci/psc-dm365.c
 new file mode 100644
-index 0000000..69bf785
+index 0000000..3ad915f
 --- /dev/null
-+++ b/drivers/clk/davinci/pll-dm644x.c
-@@ -0,0 +1,80 @@
++++ b/drivers/clk/davinci/psc-dm365.c
+@@ -0,0 +1,96 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * PLL clock descriptions for TI DM644X
++ * PSC clock descriptions for TI DaVinci DM365
 + *
 + * Copyright (C) 2018 David Lechner <david@lechnology.com>
 + */
 +
-+#include <linux/bitops.h>
++#include <linux/clk-provider.h>
++#include <linux/clk.h>
 +#include <linux/clkdev.h>
 +#include <linux/init.h>
++#include <linux/kernel.h>
 +#include <linux/types.h>
 +
-+#include "pll.h"
++#include "psc.h"
 +
-+static const struct davinci_pll_clk_info dm644x_pll1_info = {
-+	.name = "pll1",
-+	.pllm_mask = GENMASK(4, 0),
-+	.pllm_min = 1,
-+	.pllm_max = 32,
-+	.pllout_min_rate = 400000000,
-+	.pllout_max_rate = 600000000, /* 810MHz @ 1.3V, -810 only */
-+	.flags = PLL_HAS_CLKMODE | PLL_HAS_POSTDIV,
++LPSC_CLKDEV1(vpss_slave_clkdev,		"slave",	"vpss");
++LPSC_CLKDEV1(spi1_clkdev,		NULL,		"spi_davinci.1");
++LPSC_CLKDEV1(mmcsd1_clkdev,		NULL,		"da830-mmc.1");
++LPSC_CLKDEV1(asp0_clkdev,		NULL,		"davinci-mcbsp");
++LPSC_CLKDEV1(usb_clkdev,		"usb",		NULL);
++LPSC_CLKDEV1(spi2_clkdev,		NULL,		"spi_davinci.2");
++LPSC_CLKDEV1(aemif_clkdev,		"aemif",	NULL);
++LPSC_CLKDEV1(mmcsd0_clkdev,		NULL,		"da830-mmc.0");
++LPSC_CLKDEV1(i2c_clkdev,		NULL,		"i2c_davinci.1");
++LPSC_CLKDEV1(uart0_clkdev,		NULL,		"serial8250.0");
++LPSC_CLKDEV1(uart1_clkdev,		NULL,		"serial8250.1");
++LPSC_CLKDEV1(spi0_clkdev,		NULL,		"spi_davinci.0");
++/* REVISIT: gpio-davinci.c should be modified to drop con_id */
++LPSC_CLKDEV1(gpio_clkdev,		"gpio",		NULL);
++LPSC_CLKDEV1(timer0_clkdev,		"timer0",	NULL);
++LPSC_CLKDEV1(timer2_clkdev,		NULL,		"davinci-wdt");
++LPSC_CLKDEV1(spi3_clkdev,		NULL,		"spi_davinci.3");
++LPSC_CLKDEV1(spi4_clkdev,		NULL,		"spi_davinci.4");
++LPSC_CLKDEV2(emac_clkdev,		NULL,		"davinci_emac.1",
++					"fck",		"davinci_mdio.0");
++LPSC_CLKDEV1(voice_codec_clkdev,	NULL,		"davinci_voicecodec");
++LPSC_CLKDEV1(vpss_dac_clkdev,		"vpss_dac",	NULL);
++LPSC_CLKDEV1(vpss_master_clkdev,	"master",	"vpss");
++
++static const struct davinci_lpsc_clk_info dm365_psc_info[] = {
++	LPSC(1,  0, vpss_slave,  pll1_sysclk5, vpss_slave_clkdev,  0),
++	LPSC(5,  0, timer3,      pll1_auxclk,  NULL,               0),
++	LPSC(6,  0, spi1,        pll1_sysclk4, spi1_clkdev,        0),
++	LPSC(7,  0, mmcsd1,      pll1_sysclk4, mmcsd1_clkdev,      0),
++	LPSC(8,  0, asp0,        pll1_sysclk4, asp0_clkdev,        0),
++	LPSC(9,  0, usb,         pll1_auxclk,  usb_clkdev,         0),
++	LPSC(10, 0, pwm3,        pll1_auxclk,  NULL,               0),
++	LPSC(11, 0, spi2,        pll1_sysclk4, spi2_clkdev,        0),
++	LPSC(12, 0, rto,         pll1_sysclk4, NULL,               0),
++	LPSC(14, 0, aemif,       pll1_sysclk4, aemif_clkdev,       0),
++	LPSC(15, 0, mmcsd0,      pll1_sysclk8, mmcsd0_clkdev,      0),
++	LPSC(18, 0, i2c,         pll1_auxclk,  i2c_clkdev,         0),
++	LPSC(19, 0, uart0,       pll1_auxclk,  uart0_clkdev,       0),
++	LPSC(20, 0, uart1,       pll1_sysclk4, uart1_clkdev,       0),
++	LPSC(22, 0, spi0,        pll1_sysclk4, spi0_clkdev,        0),
++	LPSC(23, 0, pwm0,        pll1_auxclk,  NULL,               0),
++	LPSC(24, 0, pwm1,        pll1_auxclk,  NULL,               0),
++	LPSC(25, 0, pwm2,        pll1_auxclk,  NULL,               0),
++	LPSC(26, 0, gpio,        pll1_sysclk4, gpio_clkdev,        0),
++	LPSC(27, 0, timer0,      pll1_auxclk,  timer0_clkdev,      LPSC_ALWAYS_ENABLED),
++	LPSC(28, 0, timer1,      pll1_auxclk,  NULL,               0),
++	/* REVISIT: why can't this be disabled? */
++	LPSC(29, 0, timer2,      pll1_auxclk,  timer2_clkdev,      LPSC_ALWAYS_ENABLED),
++	LPSC(31, 0, arm,         pll2_sysclk2, NULL,               LPSC_ALWAYS_ENABLED),
++	LPSC(38, 0, spi3,        pll1_sysclk4, spi3_clkdev,        0),
++	LPSC(39, 0, spi4,        pll1_auxclk,  spi4_clkdev,        0),
++	LPSC(40, 0, emac,        pll2_sysclk4, emac_clkdev,        0),
++	LPSC(44, 1, voice_codec, pll1_sysclk3, voice_codec_clkdev, 0),
++	LPSC(46, 1, vpss_dac,    pll1_sysclk3, vpss_dac_clkdev,    0),
++	LPSC(47, 0, vpss_master, pll1_sysclk5, vpss_master_clkdev, 0),
++	LPSC(50, 0, mjcp,        pll1_sysclk3, NULL,               0),
++	{ }
 +};
 +
-+SYSCLK(1, pll1_sysclk1, pll1_pllen, 4, SYSCLK_FIXED_DIV);
-+SYSCLK(2, pll1_sysclk2, pll1_pllen, 4, SYSCLK_FIXED_DIV);
-+SYSCLK(3, pll1_sysclk3, pll1_pllen, 4, SYSCLK_FIXED_DIV);
-+SYSCLK(5, pll1_sysclk5, pll1_pllen, 4, SYSCLK_FIXED_DIV);
-+
-+int dm644x_pll1_init(struct device *dev, void __iomem *base)
++static int dm365_psc_init(struct device *dev, void __iomem *base)
 +{
-+	struct clk *clk;
-+
-+	davinci_pll_clk_register(dev, &dm644x_pll1_info, "ref_clk", base);
-+
-+	clk = davinci_pll_sysclk_register(dev, &pll1_sysclk1, base);
-+	clk_register_clkdev(clk, "pll1_sysclk1", "dm644x-psc");
-+
-+	clk = davinci_pll_sysclk_register(dev, &pll1_sysclk2, base);
-+	clk_register_clkdev(clk, "pll1_sysclk2", "dm644x-psc");
-+
-+	clk = davinci_pll_sysclk_register(dev, &pll1_sysclk3, base);
-+	clk_register_clkdev(clk, "pll1_sysclk3", "dm644x-psc");
-+
-+	clk = davinci_pll_sysclk_register(dev, &pll1_sysclk5, base);
-+	clk_register_clkdev(clk, "pll1_sysclk5", "dm644x-psc");
-+
-+	clk = davinci_pll_auxclk_register(dev, "pll1_auxclk", base);
-+	clk_register_clkdev(clk, "pll1_auxclk", "dm644x-psc");
-+
-+	davinci_pll_sysclkbp_clk_register(dev, "pll1_sysclkbp", base);
-+
-+	return 0;
++	return davinci_psc_register_clocks(dev, dm365_psc_info, 52, base);
 +}
 +
-+static const struct davinci_pll_clk_info dm644x_pll2_info = {
-+	.name = "pll2",
-+	.pllm_mask = GENMASK(4, 0),
-+	.pllm_min = 1,
-+	.pllm_max = 32,
-+	.pllout_min_rate = 400000000,
-+	.pllout_max_rate = 900000000,
-+	.flags = PLL_HAS_POSTDIV | PLL_POSTDIV_FIXED_DIV,
++static struct clk_bulk_data dm365_psc_parent_clks[] = {
++	{ .id = "pll1_sysclk1" },
++	{ .id = "pll1_sysclk3" },
++	{ .id = "pll1_sysclk4" },
++	{ .id = "pll1_sysclk5" },
++	{ .id = "pll1_sysclk8" },
++	{ .id = "pll2_sysclk2" },
++	{ .id = "pll2_sysclk4" },
++	{ .id = "pll1_auxclk"  },
 +};
 +
-+SYSCLK(1, pll2_sysclk1, pll2_pllen, 4, 0);
-+SYSCLK(2, pll2_sysclk2, pll2_pllen, 4, 0);
-+
-+int dm644x_pll2_init(struct device *dev, void __iomem *base)
-+{
-+	davinci_pll_clk_register(dev, &dm644x_pll2_info, "oscin", base);
-+
-+	davinci_pll_sysclk_register(dev, &pll2_sysclk1, base);
-+
-+	davinci_pll_sysclk_register(dev, &pll2_sysclk2, base);
-+
-+	davinci_pll_sysclkbp_clk_register(dev, "pll2_sysclkbp", base);
-+
-+	return 0;
-+}
-diff --git a/drivers/clk/davinci/pll.c b/drivers/clk/davinci/pll.c
-index 3d8f4d2..0a1e68f 100644
---- a/drivers/clk/davinci/pll.c
-+++ b/drivers/clk/davinci/pll.c
-@@ -784,6 +784,8 @@ static const struct platform_device_id davinci_pll_id_table[] = {
- 	{ .name = "dm355-pll2",  .driver_data = (kernel_ulong_t)dm355_pll2_init  },
- 	{ .name = "dm365-pll1",  .driver_data = (kernel_ulong_t)dm365_pll1_init  },
- 	{ .name = "dm365-pll2",  .driver_data = (kernel_ulong_t)dm365_pll2_init  },
-+	{ .name = "dm644x-pll1", .driver_data = (kernel_ulong_t)dm644x_pll1_init },
-+	{ .name = "dm644x-pll2", .driver_data = (kernel_ulong_t)dm644x_pll2_init },
++const struct davinci_psc_init_data dm365_psc_init_data = {
++	.parent_clks		= dm365_psc_parent_clks,
++	.num_parent_clks	= ARRAY_SIZE(dm365_psc_parent_clks),
++	.psc_init		= &dm365_psc_init,
++};
+diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
+index 0825b62..7bcf316 100644
+--- a/drivers/clk/davinci/psc.c
++++ b/drivers/clk/davinci/psc.c
+@@ -493,6 +493,7 @@ static const struct platform_device_id davinci_psc_id_table[] = {
+ 	{ .name = "da850-psc0", .driver_data = (kernel_ulong_t)&da850_psc0_init_data },
+ 	{ .name = "da850-psc1", .driver_data = (kernel_ulong_t)&da850_psc1_init_data },
+ 	{ .name = "dm355-psc",  .driver_data = (kernel_ulong_t)&dm355_psc_init_data  },
++	{ .name = "dm365-psc",  .driver_data = (kernel_ulong_t)&dm365_psc_init_data  },
  	{ }
  };
  
-diff --git a/drivers/clk/davinci/pll.h b/drivers/clk/davinci/pll.h
-index bf9fdc8..d8af4f5 100644
---- a/drivers/clk/davinci/pll.h
-+++ b/drivers/clk/davinci/pll.h
-@@ -132,4 +132,7 @@ int dm355_pll2_init(struct device *dev, void __iomem *base);
- int dm365_pll1_init(struct device *dev, void __iomem *base);
- int dm365_pll2_init(struct device *dev, void __iomem *base);
+diff --git a/drivers/clk/davinci/psc.h b/drivers/clk/davinci/psc.h
+index d672e72..4f6210e 100644
+--- a/drivers/clk/davinci/psc.h
++++ b/drivers/clk/davinci/psc.h
+@@ -101,5 +101,6 @@ extern const struct davinci_psc_init_data da850_psc1_init_data;
+ extern const struct davinci_psc_init_data of_da850_psc0_init_data;
+ extern const struct davinci_psc_init_data of_da850_psc1_init_data;
+ extern const struct davinci_psc_init_data dm355_psc_init_data;
++extern const struct davinci_psc_init_data dm365_psc_init_data;
  
-+int dm644x_pll1_init(struct device *dev, void __iomem *base);
-+int dm644x_pll2_init(struct device *dev, void __iomem *base);
-+
- #endif /* __CLK_DAVINCI_PLL_H___ */
+ #endif /* __CLK_DAVINCI_PSC_H__ */
 -- 
 2.7.4
