@@ -1,75 +1,89 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v2 10/13] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2
- board file
-Date: Fri, 16 Mar 2018 15:57:03 +0530
-Message-ID: <0a8267721c841603894cbe50fe51560b@codeaurora.org>
-References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
- <1521193101-4586-11-git-send-email-sricharan@codeaurora.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
+Date: Fri, 16 Mar 2018 10:28:01 +0000
+Message-ID: <AM3PR04MB306ED8D196C18858B5B368480D70@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521193101-4586-11-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-16 15:08, Sricharan R wrote:
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> -----Original Message-----
+> From: Anson Huang [mailto:Anson.Huang@nxp.com]
+> Sent: Friday, March 16, 2018 4:55 PM
+> To: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> linux@armlinux.org.uk
+> Cc: dl-linux-imx <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.or=
+g;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
+>=20
+> Add support for imx7d-sdb board's gpio keys:
+>=20
+> S1(FUNC1): KEY_VOLUMEUP
+> S3(FUNC2): KEY_VOLUMEDOWN
+>=20
 
-  Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
+Regards
+Dong Aisheng
+
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  arch/arm/boot/dts/Makefile                      |  1 +
->  arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts | 26 
-> +++++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 8c93fd0..0844087 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -750,6 +750,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
->  	qcom-ipq4019-ap.dk04.1-c1.dtb \
->  	qcom-ipq4019-ap.dk04.1-c3.dtb \
->  	qcom-ipq4019-ap.dk07.1-c1.dtb \
-> +	qcom-ipq4019-ap.dk07.1-c2.dtb \
->  	qcom-ipq8064-ap148.dtb \
->  	qcom-msm8660-surf.dtb \
->  	qcom-msm8960-cdp.dtb \
-> diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-> b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-> new file mode 100644
-> index 0000000..c1e909c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>  arch/arm/boot/dts/imx7d-sdb.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-
+> sdb.dts index 7f241af..e47b5b2 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -52,6 +52,24 @@
+>  		reg =3D <0x80000000 0x80000000>;
+>  	};
+>=20
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_gpio_keys>;
 > +
-> +#include "qcom-ipq4019-ap.dk07.1.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1-C2";
-> +
-> +	soc {
-> +		pinctrl@1000000 {
-> +			serial_1_pins: serial1_pinmux {
-> +				mux {
-> +					pins = "gpio8", "gpio9";
-> +					function = "blsp_uart1";
-> +					bias-disable;
-> +				};
-> +			};
+> +		volume-up {
+> +			label =3D "Volume Up";
+> +			gpios =3D <&gpio5 11 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <KEY_VOLUMEUP>;
 > +		};
 > +
-> +		serial@78b0000 {
-> +			pinctrl-0 = <&serial_1_pins>;
-> +			pinctrl-names = "default";
-> +			status = "ok";
+> +		volume-down {
+> +			label =3D "Volume Down";
+> +			gpios =3D <&gpio5 10 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <KEY_VOLUMEDOWN>;
 > +		};
 > +	};
-> +};
+> +
+>  	spi4 {
+>  		compatible =3D "spi-gpio";
+>  		pinctrl-names =3D "default";
+> @@ -519,6 +537,12 @@
+>  			>;
+>  		};
+>=20
+> +		pinctrl_gpio_keys: gpio_keysgrp {
+> +			fsl,pins =3D <
+> +				MX7D_PAD_SD2_RESET_B__GPIO5_IO11
+> 	0x59
+> +				MX7D_PAD_SD2_WP__GPIO5_IO10
+> 	0x59
+> +			>;
+> +		};
+>=20
+>  		pinctrl_hog: hoggrp {
+>  			fsl,pins =3D <
+> --
+> 2.7.4
