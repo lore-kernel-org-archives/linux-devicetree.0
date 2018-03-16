@@ -1,38 +1,163 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 6/6] arm64: dts: rockchip: enable typec-phy0 for rk3399-puma-haikou.
-Date: Fri, 16 Mar 2018 11:39:33 +0100
-Message-ID: <1540740.GPTOZn9kC5@phil>
-References: <20180301152515.20940-1-enric.balletbo@collabora.com> <20180301152515.20940-7-enric.balletbo@collabora.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v2 11/13] ARM: dts: ipq8074: Add peripheral nodes
+Date: Fri, 16 Mar 2018 16:17:13 +0530
+Message-ID: <28b883a75162ccc8f3a212880a683714@codeaurora.org>
+References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
+ <1521193101-4586-12-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180301152515.20940-7-enric.balletbo@collabora.com>
+In-Reply-To: <1521193101-4586-12-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: kishon@ti.com, groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, vicencb@gmail.com, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Will Deacon <will.deacon@arm.com>, Rask Ingemann Lambertsen <rask@formelder.dk>, Catalin Marinas <catalin.marinas@arm.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 1. März 2018, 16:25:15 CET schrieb Enric Balletbo i Serra:
-> Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
-> support for rk3399") caused a regression regarding the USB3. During
-> boot, the following message appears a few times:
+On 2018-03-16 15:08, Sricharan R wrote:
+> Add serial, i2c, bam, spi, qpic peripheral nodes.
 > 
->     dwc3: failed to initialize core
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi | 105 
+> ++++++++++++++++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
 > 
-> The driver is deferred waiting for the typec-phy, but this never
-> happens beause is disabled. So, enable it.
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> index 2bc5dec..806fc56 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -124,6 +124,111 @@
+>  			clock-names = "core", "iface";
+>  			status = "disabled";
+>  		};
+> +
+> +		blsp_dma: dma@7884000 {
+> +			compatible = "qcom,bam-v1.7.0";
+> +			reg = <0x07884000 0x2b000>;
+
+  we can remove leading zero. s/0x07884000/0x7884000
+
+> +			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "bam_clk";
+> +			#dma-cells = <1>;
+> +			qcom,ee = <0>;
+> +		};
+> +
+> +		serial_blsp0: serial@78af000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0x78af000 0x200>;
+> +			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
+> +				 <&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "disabled";
+> +		};
+> +
+> +		serial_blsp2: serial@78B1000 {
+
+  For maintaining uniformity, we can have all address in lower case
+  s/78B1000/78b1000
+
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0x78B1000 0x200>;
+
+  same thing, here also
+
+> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+> +				<&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			dmas = <&blsp_dma 4>,
+> +				<&blsp_dma 5>;
+> +			dma-names = "tx", "rx";
+> +			status = "disabled";
+> +		};
+> +
+> +		spi_0: spi@78b5000 {
+> +			compatible = "qcom,spi-qup-v2.2.1";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x78b5000 0x600>;
+> +			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +			spi-max-frequency = <50000000>;
+> +			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
+> +				<&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
+> +			dma-names = "tx", "rx";
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c_0: i2c@78b6000 {
+> +			compatible = "qcom,i2c-qup-v2.2.1";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x78b6000 0x600>;
+> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+> +				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+> +			clock-names = "iface", "core";
+> +			clock-frequency  = <400000>;
+
+  remove one extra space. clock-frequency = <400000>;
+
+> +			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
+> +			dma-names = "rx", "tx";
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c_1: i2c@78b7000 {
+> +			compatible = "qcom,i2c-qup-v2.2.1";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x78b7000 0x600>;
+> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+> +				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
+> +			clock-names = "iface", "core";
+> +			clock-frequency  = <100000>;
+
+  remove one extra space. clock-frequency = <100000>;
+
+  with above changes.
+
+  Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
+
+> +			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
+> +			dma-names = "rx", "tx";
+> +			status = "disabled";
+> +		};
+> +
+> +		qpic_bam: dma@7984000 {
+> +			compatible = "qcom,bam-v1.7.0";
+> +			reg = <0x7984000 0x1a000>;
+> +			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_QPIC_AHB_CLK>;
+> +			clock-names = "bam_clk";
+> +			#dma-cells = <1>;
+> +			qcom,ee = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		qpic_nand: nand@79b0000 {
+> +			compatible = "qcom,ipq8074-nand";
+> +			reg = <0x79b0000 0x10000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			clocks = <&gcc GCC_QPIC_CLK>,
+> +				 <&gcc GCC_QPIC_AHB_CLK>;
+> +			clock-names = "core", "aon";
+> +
+> +			dmas = <&qpic_bam 0>,
+> +			       <&qpic_bam 1>,
+> +			       <&qpic_bam 2>;
+> +			dma-names = "tx", "rx", "cmd";
+> +			status = "disabled";
+> +		};
+>  	};
 > 
-> Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-I've amended the message a bit to clarify that the offending commit
-has been reverted for now and this change is needed for reenabling it
-and also dropped the Fixes tag.
-
-I've applied the result in my 4.17 branch, but may move that to 4.18
-depending on timing. The reenablement of the otg-port will be in
-4.18 only anyway.
-
-
-Heiko
+>  	cpus {
