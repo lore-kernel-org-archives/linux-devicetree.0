@@ -1,38 +1,90 @@
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
-Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I
- laptop
-Date: Fri, 16 Mar 2018 12:07:53 +0530
-Message-ID: <20180316063753.GB3415@afzalpc>
-References: <20180315162510.11669-1-harald@ccbib.org>
- <20180315162510.11669-6-harald@ccbib.org>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Fri, 16 Mar 2018 15:41:29 +0900
+Message-ID: <CAAFQd5AAgCE7avK=bR45Kjd=LhJ-qe+kD1otPWPaXUo7_JR65g@mail.gmail.com>
+References: <20180314081434.30875-1-vivek.gautam@codeaurora.org>
+	<20180314081434.30875-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180315162510.11669-6-harald@ccbib.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180314081434.30875-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vivek,
 
-On Thu, Mar 15, 2018 at 04:25:10PM +0000, Harald Geyer wrote:
-> The TERES-I is an open hardware laptop built by Olimex using the
-> Allwinner A64 SoC.
-> 
-> Add the board specific .dts file, which includes the A64 .dtsi and
-> enables the peripherals that we support so far.
-> 
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
+On Wed, Mar 14, 2018 at 5:14 PM, Vivek Gautam
+<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>
+> Finally add the device link between the master device and
+> smmu, so that the smmu gets runtime enabled/disabled only when the
+> master needs it. This is done from add_device callback which gets
+> called once when the master is added to the smmu.
+>
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>
+> Changes since v9:
+>  - Using device_link_del_dev() to delete the device link, instead of
+>    doing it in two steps - device_link_find() to first find the link, and
+>    then calling device_link_del().
+>
+>  drivers/iommu/arm-smmu.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 56a04ae80bf3..4cf270ffd449 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1460,10 +1460,31 @@ static int arm_smmu_add_device(struct device *dev)
+>
+>         iommu_device_link(&smmu->iommu, dev);
+>
+> +       if (pm_runtime_enabled(smmu->dev)) {
+> +               struct device_link *link;
+> +
+> +               /*
+> +                * Establish the link between smmu and master, so that the
+> +                * smmu gets runtime enabled/disabled as per the master's
+> +                * needs.
+> +                */
+> +               link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+> +               if (!link) {
+> +                       dev_warn(smmu->dev,
+> +                                "Unable to add link to the consumer %s\n",
+> +                                dev_name(dev));
+> +                       ret = -ENODEV;
+> +                       goto out_unlink;
+> +               }
+> +       }
 
-Received only patch 4 & 5 in my inbox, receive path was via
-linux-kernel rather than linux-arm-kernel, but in both archives all
-patches are seen (though threading seems not right), probably missing
-patches are due to issue gmail have with LKML,
+If it's an error, we should use dev_err(). Also, as per Robin's
+comment for v9 could we make it as follows?
 
-so had to pull the series from patchwork, for the series,
+if (pm_runtime_enabled(smmu->dev) &&
+    !device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME)) {
+        dev_err(smmu->dev,
+                         "Unable to add link to the consumer %s\n",
+dev_name(dev));
+        ret = -ENODEV;
+        goto out_unlink;
+}
 
-Tested-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-
-afzal
+Best regards,
+Tomasz
