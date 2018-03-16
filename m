@@ -1,93 +1,48 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 5/7] arm64: dts: msm8996: Add rpmpd device node
-Date: Fri, 16 Mar 2018 10:08:02 +0530
-Message-ID: <20180316043802.GR15832@vireshk-i7>
+Subject: Re: [PATCH 6/7] mmc: sdhci-msm: Adapt the driver to use OPPs to set
+ clocks/performance state
+Date: Fri, 16 Mar 2018 10:11:32 +0530
+Message-ID: <20180316044132.GS15832@vireshk-i7>
 References: <20180316040824.21472-1-rnayak@codeaurora.org>
- <20180316040824.21472-6-rnayak@codeaurora.org>
+ <20180316040824.21472-7-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180316040824.21472-6-rnayak@codeaurora.org>
+In-Reply-To: <20180316040824.21472-7-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 16-03-18, 09:38, Rajendra Nayak wrote:
-> Add rpmpd device node and its OPP table
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 46 +++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 0a6f7952bbb1..43757a078146 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -297,6 +297,52 @@
->  				#clock-cells = <1>;
->  			};
+> @@ -1540,6 +1571,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	pm_runtime_disable(&pdev->dev);
+>  	pm_runtime_set_suspended(&pdev->dev);
+>  	pm_runtime_put_noidle(&pdev->dev);
+> +	dev_pm_opp_of_remove_table(&pdev->dev);
+
+You can't do this if there is no OPP table. Probably you should just
+make it part of the below if block.
+
+> +	if (msm_host->opp_table)
+> +		dev_pm_opp_put_clkname(msm_host->opp_table);
+>  clk_disable:
+>  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>  				   msm_host->bulk_clks);
+> @@ -1564,6 +1598,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
+>  	pm_runtime_get_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+>  	pm_runtime_put_noidle(&pdev->dev);
+> +	dev_pm_opp_of_remove_table(&pdev->dev);
+
+And this too.
+
+> +	if (msm_host->opp_table)
+> +		dev_pm_opp_put_clkname(msm_host->opp_table);
 >  
-> +			rpmpd: qcom,rpmpd {
-> +				compatible = "qcom,rpmpd-msm8996";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmpd_opp_table>, /* cx */
-> +						      <&rpmpd_opp_table>, /* cx_ao */
-> +						      <&rpmpd_opp_table>, /* cx_vfc */
-> +						      <&rpmpd_opp_table>, /* mx */
-> +						      <&rpmpd_opp_table>, /* mx_ao */
-> +						      <&rpmpd_opp_table>, /* sscx */
-> +						      <&rpmpd_opp_table>; /* sscx_vfc */
-> +			};
-> +
-> +			rpmpd_opp_table: opp-table {
-> +				compatible = "operating-points-v2", "operating-points-v2-qcom";
-> +
-> +				rpmpd_opp1: opp@1 {
-> +					opp-hz = /bits/ 64 <1>;
-
-Actually this (magic values) isn't allowed right now. I will send a
-patchset to make this property optional later on separately (once the
-other series is accepted).
-
-> +					qcom,level = <1>;
-> +				};
-> +
-> +				rpmpd_opp2: opp@2 {
-> +					opp-hz = /bits/ 64 <2>;
-> +					qcom,level = <2>;
-> +				};
-> +
-> +				rpmpd_opp3: opp@3 {
-> +					opp-hz = /bits/ 64 <3>;
-> +					qcom,level = <3>;
-> +				};
-> +
-> +				rpmpd_opp4: opp@4 {
-> +					opp-hz = /bits/ 64 <4>;
-> +					qcom,level = <4>;
-> +				};
-> +
-> +				rpmpd_opp5: opp@5 {
-> +					opp-hz = /bits/ 64 <5>;
-> +					qcom,level = <5>;
-> +				};
-> +
-> +				rpmpd_opp6: opp@6 {
-> +					opp-hz = /bits/ 64 <6>;
-> +					qcom,level = <6>;
-> +				};
-> +			};
-> +
->  			pm8994-regulators {
->  				compatible = "qcom,rpm-pm8994-regulators";
->  
-
-Everything else is fine. After you remove the opp-hz property from
-this table:
+>  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>  				   msm_host->bulk_clks);
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
