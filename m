@@ -1,90 +1,62 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v10 4/5] iommu/arm-smmu: Add the device_link between
-	masters and smmu
-Date: Fri, 16 Mar 2018 15:41:29 +0900
-Message-ID: <CAAFQd5AAgCE7avK=bR45Kjd=LhJ-qe+kD1otPWPaXUo7_JR65g@mail.gmail.com>
-References: <20180314081434.30875-1-vivek.gautam@codeaurora.org>
-	<20180314081434.30875-5-vivek.gautam@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888
+ output.
+Date: Fri, 16 Mar 2018 07:47:31 +0100
+Message-ID: <20180316064731.muiw5yumhmfnwxg2@flea>
+References: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180314081434.30875-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="55qzmh7lq24dy5mx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
 
-On Wed, Mar 14, 2018 at 5:14 PM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->
-> Finally add the device link between the master device and
-> smmu, so that the smmu gets runtime enabled/disabled only when the
-> master needs it. This is done from add_device callback which gets
-> called once when the master is added to the smmu.
->
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->
-> Changes since v9:
->  - Using device_link_del_dev() to delete the device link, instead of
->    doing it in two steps - device_link_find() to first find the link, and
->    then calling device_link_del().
->
->  drivers/iommu/arm-smmu.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 56a04ae80bf3..4cf270ffd449 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1460,10 +1460,31 @@ static int arm_smmu_add_device(struct device *dev)
->
->         iommu_device_link(&smmu->iommu, dev);
->
-> +       if (pm_runtime_enabled(smmu->dev)) {
-> +               struct device_link *link;
-> +
-> +               /*
-> +                * Establish the link between smmu and master, so that the
-> +                * smmu gets runtime enabled/disabled as per the master's
-> +                * needs.
-> +                */
-> +               link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
-> +               if (!link) {
-> +                       dev_warn(smmu->dev,
-> +                                "Unable to add link to the consumer %s\n",
-> +                                dev_name(dev));
-> +                       ret = -ENODEV;
-> +                       goto out_unlink;
-> +               }
-> +       }
+--55qzmh7lq24dy5mx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If it's an error, we should use dev_err(). Also, as per Robin's
-comment for v9 could we make it as follows?
+Hi Giulio,
 
-if (pm_runtime_enabled(smmu->dev) &&
-    !device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME)) {
-        dev_err(smmu->dev,
-                         "Unable to add link to the consumer %s\n",
-dev_name(dev));
-        ret = -ENODEV;
-        goto out_unlink;
-}
+On Thu, Mar 15, 2018 at 02:43:30PM +0100, Giulio Benetti wrote:
+> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
+> for the needed pins.
+>=20
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 
-Best regards,
-Tomasz
+Like we discussed last time, we only merge this kind of patches if
+there's an immediate user.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--55qzmh7lq24dy5mx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqraIIACgkQ0rTAlCFN
+r3TsTQ//aVAtfYmdxajp7kPWYUnUM183XdCsZdfdMaXpRxePj/8hrX+c8ajc2wlh
+7MCqz4hwX2neJHIzgD407cJPgk8lgmG7I82rKxiMyahtrTrRCtd9cvCxcJiYU7Zz
+d2udNrvS7VQVME+A1Kr+W5MNCfPHJ4rJ9hexidojEIswVmJ1w05ZjleHy3T/QpFw
+jis8tvPSamLstNfW9WaKPqXA6HMM+NEqFXCI1EYXRHLkJo6htkkIbyn38JPg4OSl
+KcVwUT6+h6Qh9WKeQ3lDdwLijJEmXfFINwL6aBU7ITyGXOjj7lKdO6cRZpEonbpz
+GU6NT37JnQb2Iu0vynECw5i26SMfcxg3Lj4kBObU3FBhDTUM99W0HgLnnSbRYnua
+xeRpQ34pQGmq/SSjL6PiumWMy8a41CGoB1TrX4Xtzx5vIS1aj3YKgiGZubfrRxNT
+YPjhJ3Ly9Nq1EFO8Xyv4Vmee1U1xW9SSNqazLxZ7ZR09E4SjTkIOlS4JdT2UsBKe
+IHdCVt9RmhzU4E1Ry/mpPsIbvqUp//rVFe6uj8Jm6I4flV4kwT3SfNZ9QBTAAVJf
+BLcGc731NZZF0jAX4duRqUokWQaOKk65TI/OZC9Ro9yiOqg6vNpPlq+JYZw0xx65
+W0UVN5ZBI8bSbEDN+D7vFhpD5DnQkmChoViWWaW2mFD1s5aN0BM=
+=zACC
+-----END PGP SIGNATURE-----
+
+--55qzmh7lq24dy5mx--
