@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v8 21/42] ARM: davinci: da830: add new clock init using common clock framework
-Date: Thu, 15 Mar 2018 21:52:37 -0500
-Message-ID: <1521168778-27236-22-git-send-email-david@lechnology.com>
+Subject: [PATCH v8 23/42] ARM: davinci: dm355: add new clock init using common clock framework
+Date: Thu, 15 Mar 2018 21:52:39 -0500
+Message-ID: <1521168778-27236-24-git-send-email-david@lechnology.com>
 References: <1521168778-27236-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
@@ -10,7 +10,7 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the new board-specific clock init in mach-davinci/da830.c
+This adds the new board-specific clock init in mach-davinci/dm355.c
 using the new common clock framework drivers.
 
 The #ifdefs are needed to prevent compile errors until the entire
@@ -27,162 +27,190 @@ v8 changes:
 v7 changes:
 - add clock platform device declarations
 - register platform devices instead of registering clocks directly
-- clkdev lookup is moved to drivers/clk
 - add davinci prefix to commit description
 
 v6 changes:
 - add blank lines between function calls
-- include da8xx_register_cfgchip()
 
- arch/arm/mach-davinci/board-da830-evm.c    |  2 +
- arch/arm/mach-davinci/da830.c              | 77 +++++++++++++++++++++++++++---
- arch/arm/mach-davinci/include/mach/da8xx.h |  1 +
- 3 files changed, 74 insertions(+), 6 deletions(-)
+ arch/arm/mach-davinci/board-dm355-evm.c     |  2 +
+ arch/arm/mach-davinci/board-dm355-leopard.c |  2 +
+ arch/arm/mach-davinci/davinci.h             |  1 +
+ arch/arm/mach-davinci/dm355.c               | 88 +++++++++++++++++++++++++----
+ 4 files changed, 81 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index 004f9c8..3973124 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -551,6 +551,8 @@ static __init void da830_evm_init(void)
- 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+diff --git a/arch/arm/mach-davinci/board-dm355-evm.c b/arch/arm/mach-davinci/board-dm355-evm.c
+index cb30637..ea03ddc 100644
+--- a/arch/arm/mach-davinci/board-dm355-evm.c
++++ b/arch/arm/mach-davinci/board-dm355-evm.c
+@@ -384,6 +384,8 @@ static __init void dm355_evm_init(void)
+ 	struct clk *aemif;
  	int ret;
  
-+	da830_register_clocks();
++	dm355_register_clocks();
 +
- 	ret = da830_register_gpio();
+ 	ret = dm355_gpio_register();
  	if (ret)
  		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 0b17e5a..c1c2604 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -8,23 +8,26 @@
+diff --git a/arch/arm/mach-davinci/board-dm355-leopard.c b/arch/arm/mach-davinci/board-dm355-leopard.c
+index 59743bd..09f8216 100644
+--- a/arch/arm/mach-davinci/board-dm355-leopard.c
++++ b/arch/arm/mach-davinci/board-dm355-leopard.c
+@@ -233,6 +233,8 @@ static __init void dm355_leopard_init(void)
+ 	struct clk *aemif;
+ 	int ret;
+ 
++	dm355_register_clocks();
++
+ 	ret = dm355_gpio_register();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
+index 270cef8..6b6abf0a 100644
+--- a/arch/arm/mach-davinci/davinci.h
++++ b/arch/arm/mach-davinci/davinci.h
+@@ -84,6 +84,7 @@ int davinci_init_wdt(void);
+ /* DM355 function declarations */
+ void dm355_init(void);
+ void dm355_init_time(void);
++void dm355_register_clocks(void);
+ void dm355_init_spi0(unsigned chipselect_mask,
+ 		const struct spi_board_info *info, unsigned len);
+ void dm355_init_asp1(u32 evt_enable);
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index 0da7516..f53e07a 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -8,31 +8,34 @@
   * is licensed "as is" without any warranty of any kind, whether express
   * or implied.
   */
-+#include <linux/clk-provider.h>
- #include <linux/gpio.h>
- #include <linux/init.h>
+-#include <linux/init.h>
 -#include <linux/clk.h>
+-#include <linux/serial_8250.h>
+-#include <linux/platform_device.h>
++#include <linux/clk-provider.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+-#include <linux/spi/spi.h>
++#include <linux/init.h>
+ #include <linux/platform_data/edma.h>
  #include <linux/platform_data/gpio-davinci.h>
+ #include <linux/platform_data/spi-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
++#include <linux/spi/spi.h>
  
  #include <asm/mach/map.h>
  
++#include <mach/common.h>
+ #include <mach/cputype.h>
 -#include "psc.h"
--#include <mach/irqs.h>
--#include <mach/cputype.h>
- #include <mach/common.h>
+-#include <mach/mux.h>
+ #include <mach/irqs.h>
 -#include <mach/time.h>
-+#include <mach/cputype.h>
- #include <mach/da8xx.h>
-+#include <mach/irqs.h>
++#include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
 +#include <mach/time.h>
  
++#include "asp.h"
+ #include "davinci.h"
 -#include "clock.h"
  #include "mux.h"
- 
+-#include "asp.h"
++
 +#ifndef CONFIG_COMMON_CLK
 +#include "clock.h"
 +#include "psc.h"
 +#endif
-+
- /* Offsets of the 8 compare registers on the da830 */
- #define DA830_CMP12_0		0x60
- #define DA830_CMP12_1		0x64
-@@ -37,6 +40,7 @@
  
- #define DA830_REF_FREQ		24000000
+ #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
+ #define DM355_OSD_BASE		(IO_PHYS + 0x70200)
+@@ -43,6 +46,7 @@
+  */
+ #define DM355_REF_FREQ		24000000	/* 24 or 36 MHz */
  
 +#ifndef CONFIG_COMMON_CLK
- static struct pll_data pll0_data = {
- 	.num		= 1,
- 	.phys_base	= DA8XX_PLL0_BASE,
-@@ -432,6 +436,7 @@ static struct clk_lookup da830_clks[] = {
- 	CLK(NULL,		"rmii",		&rmii_clk),
- 	CLK(NULL,		NULL,		NULL),
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -382,7 +386,7 @@ static struct clk_lookup dm355_clks[] = {
+ 	CLK(NULL, "usb", &usb_clk),
+ 	CLK(NULL, NULL, NULL),
  };
+-
 +#endif
+ /*----------------------------------------------------------------------*/
  
- /*
-  * Device specific mux setup
-@@ -1223,6 +1228,66 @@ void __init da830_init(void)
+ static u64 dm355_spi0_dma_mask = DMA_BIT_MASK(32);
+@@ -1046,8 +1050,68 @@ void __init dm355_init(void)
  
- void __init da830_init_time(void)
+ void __init dm355_init_time(void)
  {
 +#ifdef CONFIG_COMMON_CLK
 +	struct clk *clk;
 +
-+	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
++	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
 +
 +	davinci_timer_init(clk);
 +#else
- 	davinci_clk_init(da830_clks);
- 	davinci_timer_init(&timerp64_0_clk);
+ 	davinci_clk_init(dm355_clks);
+ 	davinci_timer_init(&timer0_clk);
 +#endif
 +}
 +
-+static struct resource da830_pll_resources[] = {
++static struct resource dm355_pll1_resources[] = {
 +	{
-+		.start	= DA8XX_PLL0_BASE,
-+		.end	= DA8XX_PLL0_BASE + SZ_4K - 1,
++		.start	= DAVINCI_PLL1_BASE,
++		.end	= DAVINCI_PLL1_BASE + SZ_4K - 1,
 +		.flags	= IORESOURCE_MEM,
 +	},
 +};
 +
-+static struct platform_device da830_pll_device = {
-+	.name		= "da830-pll",
++static struct platform_device dm355_pll1_device = {
++	.name		= "dm355-pll1",
 +	.id		= -1,
-+	.resource	= da830_pll_resources,
-+	.num_resources	= ARRAY_SIZE(da830_pll_resources),
++	.resource	= dm355_pll1_resources,
++	.num_resources	= ARRAY_SIZE(dm355_pll1_resources),
 +};
 +
-+static struct resource da830_psc0_resources[] = {
++static struct resource dm355_pll2_resources[] = {
 +	{
-+		.start	= DA8XX_PSC0_BASE,
-+		.end	= DA8XX_PSC0_BASE + SZ_4K - 1,
++		.start	= DAVINCI_PLL2_BASE,
++		.end	= DAVINCI_PLL2_BASE + SZ_4K - 1,
 +		.flags	= IORESOURCE_MEM,
 +	},
 +};
 +
-+static struct platform_device da830_psc0_device = {
-+	.name		= "da830-psc0",
++static struct platform_device dm355_pll2_device = {
++	.name		= "dm355-pll2",
 +	.id		= -1,
-+	.resource	= da830_psc0_resources,
-+	.num_resources	= ARRAY_SIZE(da830_psc0_resources),
++	.resource	= dm355_pll2_resources,
++	.num_resources	= ARRAY_SIZE(dm355_pll2_resources),
 +};
 +
-+static struct resource da830_psc1_resources[] = {
++static struct resource dm355_psc_resources[] = {
 +	{
-+		.start	= DA8XX_PSC1_BASE,
-+		.end	= DA8XX_PSC1_BASE + SZ_4K - 1,
++		.start	= DAVINCI_PWR_SLEEP_CNTRL_BASE,
++		.end	= DAVINCI_PWR_SLEEP_CNTRL_BASE + SZ_4K - 1,
 +		.flags	= IORESOURCE_MEM,
 +	},
 +};
 +
-+static struct platform_device da830_psc1_device = {
-+	.name		= "da830-psc1",
++static struct platform_device dm355_psc_device = {
++	.name		= "dm355-psc",
 +	.id		= -1,
-+	.resource	= da830_psc1_resources,
-+	.num_resources	= ARRAY_SIZE(da830_psc1_resources),
++	.resource	= dm355_psc_resources,
++	.num_resources	= ARRAY_SIZE(dm355_psc_resources),
 +};
 +
-+void __init da830_register_clocks(void)
++void __init dm355_register_clocks(void)
 +{
-+	platform_device_register(&da830_pll_device);
-+	platform_device_register(&da830_psc0_device);
-+	platform_device_register(&da830_psc1_device);
++	platform_device_register(&dm355_pll1_device);
++	platform_device_register(&dm355_pll2_device);
++	platform_device_register(&dm355_psc_device);
  }
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index 9fd6d01..64861ac 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -89,6 +89,7 @@ extern unsigned int da850_max_speed;
  
- void da830_init(void);
- void da830_init_time(void);
-+void da830_register_clocks(void);
- 
- void da850_init(void);
- void da850_init_time(void);
+ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
 -- 
 2.7.4
