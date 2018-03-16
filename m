@@ -1,66 +1,61 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Fri, 16 Mar 2018 11:26:49 -0700
-Message-ID: <152122480915.70929.13116557401450122973@swboyd.mtv.corp.google.com>
-References: <20180226175802.20052-1-ilina@codeaurora.org>
- <20180226175802.20052-3-ilina@codeaurora.org>
- <20180305231455.GJ18510@minitux> <20180306155703.GA4930@codeaurora.org>
- <20180307190249.GW93895@bjorns-mbp-2.lan>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document qcom,adreno-gmu
+Date: Fri, 16 Mar 2018 12:27:01 -0600
+Message-ID: <20180316182701.GC28808@jcrouse-lnx.qualcomm.com>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-2-jcrouse@codeaurora.org>
+ <CAL_Jsq+OJ0jon2uFb6oMKjZuw4iPQxkxfBrbDyMN-BrNZfTRzA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307190249.GW93895@bjorns-mbp-2.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+OJ0jon2uFb6oMKjZuw4iPQxkxfBrbDyMN-BrNZfTRzA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-pm@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Viresh Kumar <vireshk@kernel.org>, freedreno@lists.freedesktop.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2018-03-07 11:02:49)
-> On Tue 06 Mar 07:57 PST 2018, Lina Iyer wrote:
-> 
-> > On Mon, Mar 05 2018 at 16:15 -0700, Bjorn Andersson wrote:
-> > > On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
-> 
-> > > As such I think you should just describe only the 0x85fe0000 + 0x20000
-> > > region here and to support the dynamic aspect of this from a system
-> > > point of view you can have the boot loader read the information at
-> > > 0xc3f000c and adjust the reserved memory. (Or just keep the step of
-> > > manually update the dts without caring about the indirection)
-> > > 
-> > It would be incorrect and very board specific to just use the 0x85fe000
-> > as the address. It is not how the SoC defines the location. Upon request
-> > earlier, this memory location was added in DT and the location is
-> > typical reference platform usage only.
-> > 
-> 
-> The problem is that as the db resides in a chunk of memory in the middle
-> of what Linux considers System RAM the DTS must specify this region as
-> reserved. Which means that as you, like described above, update the
-> dictionary something (in your scheme a person) has to update the
-> reserved-memory region as well.
-> 
-> That's why I'm proposing that the appropriate implementation for this
-> is to have the boot loader to the dictionary part of this and Linux only
-> care about the actual reserved-memory region. This way you would still
-> implement the dictionary lookup on a system level, but the Linux
-> part no longer depend on a human updating the DTS to match the values of
-> the dictionary.
-
-Agreed. I thought SMEM had a similar design of a cookie in IMEM to
-indicate location and size because coordinating changes across all the
-various software images is a hard problem. But coordinating between
-linux and the linux bootloader shouldn't be as hard.
-
-> 
-> 
-> But if we stick with the approach of describing both these and hoping
-> that the values in the first region matches the second (or should we add
-> a sanity check in probe?). The memory reserve defined as 0xc3f000c + 8
-> looks strange, is this system ram as well and what other things resides
-> in that same page?
-> 
-
-Doesn't look like it could be RAM, the address is not very close to the
-other one so I would guess it's something like IMEM. And there are two
-32-bit numbers to describe address and size?
+T24gTW9uLCBNYXIgMDUsIDIwMTggYXQgMDE6Mzg6NTlQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gRnJpLCBNYXIgMiwgMjAxOCBhdCAzOjU2IFBNLCBKb3JkYW4gQ3JvdXNlIDxqY3Jv
+dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+IERvY3VtZW50IHRoZSBkZXZpY2UgdHJlZSBi
+aW5kaW5ncyBmb3IgdGhlIEFkcmVubyBHTVUgZGV2aWNlCj4gPiBhdmFpbGFibGUgb24gQWRyZW5v
+IGE2eHggdGFyZ2V0cy4KPiA+Cj4gPiBDaGFuZ2UtSWQ6IEkzY2ZkNWZiMzVhYjAwNDVlMzk5MDVm
+ZjEyMzkzMDA2ZTYwZjFhMTI0Cj4gCj4gR2Vycml0IQo+IAo+ID4gU2lnbmVkLW9mZi1ieTogSm9y
+ZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQgICAgICAgIHwgNTQgKysrKysrKysr
+KysrKysrKysrKysrKwo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dw
+dS50eHQgICAgICAgIHwgMTAgKysrLQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNjIgaW5zZXJ0aW9u
+cygrKSwgMiBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKPiA+Cj4gPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4
+dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjY1YmI0
+OWZmZjM2Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAo+ID4gQEAgLTAsMCArMSw1NCBAQAo+ID4g
+K1F1YWxjb21tIGFkcmVuby9zbmFwZHJhZ29uIEdNVSAoR3JhcGhpY3MgbWFuYWdlbWVudCB1bml0
+KQo+ID4gKwo+ID4gK1RoZSBHTVUgaXMgYSBwcm9ncmFtbWFibGUgcG93ZXIgY29udHJvbGxlciBm
+b3IgdGhlIEdQVS4gdGhlIENQVSBjb250cm9scyB0aGUKPiA+ICtHTVUgd2hpY2ggaW4gdHVybiBo
+YW5kbGVzIHBvd2VyIGNvbnRyb2xzIGZvciB0aGUgR1BVLgo+ID4gKwo+ID4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOgo+ID4gKyAgKiAicWNvbSxhZHJlbm8tZ211Igo+
+IAo+IEtpbmQgb2YgZ2VuZXJpYy4gQWxsIHRoZSBmZWF0dXJlcyBhcmUgZGlzY292ZXJhYmxlPwoK
+SSB3YXMganVzdCBwcmVwcGluZyBhIG5ldyB2ZXJzaW9uIGFuZCBJIHJlYWxpemVkIEkgbmV2ZXIg
+cmVzcG9uZGVkIHRvIHRoaXMuClNvcnJ5LgoKWWVzLCBhbGwgdGhlIGZlYXR1cmVzIGFyZSBkaXNj
+b3ZlcmFibGUuIFNpbmNlIHRoZSBHTVUgaXMgb24gdGhlIHNhbWUgZGllIGFzIHRoZQpHUFUgd2Ug
+d291bGQgdXNlIHRoZSBHUFUgcmV2aXNpb24gYXMgdGhlIGNyaXRlcmlhIGZvciBhcHBseWluZyBo
+YXJkd2FyZQp3b3JrYXJvdW5kcyBhbmQgd2hhdG5vdC4gSSBjYW4ndCB0aGluayBvZiBhbnkgY3Vy
+cmVudCBzaXR1YXRpb24gdGhhdCB3b3VsZApyZXF1aXJlIHVzIHRvIHVuaXF1ZWx5IGlkZW50aWZ5
+IHRoZSBHTVUgZnJvbSBEVC4KCkpvcmRhbgoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENl
+bnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3Vu
+ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
