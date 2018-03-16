@@ -1,418 +1,179 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v8 19/42] clk: davinci: cfgchip: Add TI DA8XX USB PHY clocks
-Date: Thu, 15 Mar 2018 21:52:35 -0500
-Message-ID: <1521168778-27236-20-git-send-email-david@lechnology.com>
+Subject: [PATCH v8 13/42] clk: davinci: Add platform information for TI DM355
+ PSC
+Date: Thu, 15 Mar 2018 21:52:29 -0500
+Message-ID: <1521168778-27236-14-git-send-email-david@lechnology.com>
 References: <1521168778-27236-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new driver for the USB PHY clocks in the CFGCHIP2 syscon
-register on TI DA8XX-type SoCs.
-
-The USB0 (USB 2.0) PHY clock is an interesting case because it calls
-clk_enable() in a reentrant way. The USB 2.0 PSC only has to be enabled
-temporarily while we are locking the PLL, which takes place during the
-clk_enable() callback.
+This adds platform-specific declarations for the PSC clocks on TI
+DM355 based systems.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v8 changes:
-- none
+- drop use of __init and __initconst attributes
+- add parent clock mappings
 
 v7 changes:
-- convert to platform device
-- rename clk local variable to usb0/usb1
-- put code in da8xx-cfgchip.c instead of creating a new file
+- split registration function into two, one for each PSC
+- add platform_device_id table
+- don't wrap lines for readability
+- add LPSC_ALWAYS_ENABLED flag to timer0 clock
 
 v6 changes:
-- rename clocks to usb{0,1}_clk48
-- rename USB 2.0 PSC clock to "fck"
-- simplify {s,g}et_parent implementations
-- use pr_fmt macro
+- change how clkdev lookups are declared
 
- drivers/clk/davinci/da8xx-cfgchip.c | 351 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 351 insertions(+)
+ drivers/clk/davinci/Makefile    |  1 +
+ drivers/clk/davinci/psc-dm355.c | 88 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/davinci/psc.c       |  1 +
+ drivers/clk/davinci/psc.h       |  1 +
+ 4 files changed, 91 insertions(+)
+ create mode 100644 drivers/clk/davinci/psc-dm355.c
 
-diff --git a/drivers/clk/davinci/da8xx-cfgchip.c b/drivers/clk/davinci/da8xx-cfgchip.c
-index f0bdfea..858d378 100644
---- a/drivers/clk/davinci/da8xx-cfgchip.c
-+++ b/drivers/clk/davinci/da8xx-cfgchip.c
-@@ -343,6 +343,349 @@ static int __init of_da850_async3_init(struct device *dev, struct regmap *regmap
- 	return of_da8xx_cfgchip_init_mux_clock(dev, &da850_async3_info, regmap);
- }
- 
-+/* --- USB 2.0 PHY clock --- */
-+
-+struct da8xx_usb0_clk48 {
-+	struct clk_hw hw;
-+	struct clk *fck;
-+	struct regmap *regmap;
-+};
-+
-+#define to_da8xx_usb0_clk48(_hw) \
-+	container_of((_hw), struct da8xx_usb0_clk48, hw)
-+
-+static int da8xx_usb0_clk48_prepare(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+
-+	/* The USB 2.0 PSC clock is only needed temporarily during the USB 2.0
-+	 * PHY clock enable, but since clk_prepare() can't be called in an
-+	 * atomic context (i.e. in clk_enable()), we have to prepare it here.
-+	 */
-+	return clk_prepare(usb0->fck);
-+}
-+
-+static void da8xx_usb0_clk48_unprepare(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+
-+	clk_unprepare(usb0->fck);
-+}
-+
-+static int da8xx_usb0_clk48_enable(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+	unsigned int mask, val;
-+	int ret;
-+
-+	/* Locking the USB 2.O PLL requires that the USB 2.O PSC is enabled
-+	 * temporaily. It can be turned back off once the PLL is locked.
-+	 */
-+	clk_enable(usb0->fck);
-+
-+	/* Turn on the USB 2.0 PHY, but just the PLL, and not OTG. The USB 1.1
-+	 * PHY may use the USB 2.0 PLL clock without USB 2.0 OTG being used.
-+	 */
-+	mask = CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN | CFGCHIP2_PHY_PLLON;
-+	val = CFGCHIP2_PHY_PLLON;
-+
-+	regmap_write_bits(usb0->regmap, CFGCHIP(2), mask, val);
-+	ret = regmap_read_poll_timeout(usb0->regmap, CFGCHIP(2), val,
-+				       val & CFGCHIP2_PHYCLKGD, 0, 500000);
-+
-+	clk_disable(usb0->fck);
-+
-+	return ret;
-+}
-+
-+static void da8xx_usb0_clk48_disable(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+	unsigned int val;
-+
-+	val = CFGCHIP2_PHYPWRDN;
-+	regmap_write_bits(usb0->regmap, CFGCHIP(2), val, val);
-+}
-+
-+static int da8xx_usb0_clk48_is_enabled(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+	unsigned int val;
-+
-+	regmap_read(usb0->regmap, CFGCHIP(2), &val);
-+
-+	return !!(val & CFGCHIP2_PHYCLKGD);
-+}
-+
-+static unsigned long da8xx_usb0_clk48_recalc_rate(struct clk_hw *hw,
-+						  unsigned long parent_rate)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+	unsigned int mask, val;
-+
-+	/* The parent clock rate must be one of the following */
-+	mask = CFGCHIP2_REFFREQ_MASK;
-+	switch (parent_rate) {
-+	case 12000000:
-+		val = CFGCHIP2_REFFREQ_12MHZ;
-+		break;
-+	case 13000000:
-+		val = CFGCHIP2_REFFREQ_13MHZ;
-+		break;
-+	case 19200000:
-+		val = CFGCHIP2_REFFREQ_19_2MHZ;
-+		break;
-+	case 20000000:
-+		val = CFGCHIP2_REFFREQ_20MHZ;
-+		break;
-+	case 24000000:
-+		val = CFGCHIP2_REFFREQ_24MHZ;
-+		break;
-+	case 26000000:
-+		val = CFGCHIP2_REFFREQ_26MHZ;
-+		break;
-+	case 38400000:
-+		val = CFGCHIP2_REFFREQ_38_4MHZ;
-+		break;
-+	case 40000000:
-+		val = CFGCHIP2_REFFREQ_40MHZ;
-+		break;
-+	case 48000000:
-+		val = CFGCHIP2_REFFREQ_48MHZ;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	regmap_write_bits(usb0->regmap, CFGCHIP(2), mask, val);
-+
-+	/* USB 2.0 PLL always supplies 48MHz */
-+	return 48000000;
-+}
-+
-+static long da8xx_usb0_clk48_round_rate(struct clk_hw *hw, unsigned long rate,
-+					unsigned long *parent_rate)
-+{
-+	return 48000000;
-+}
-+
-+static int da8xx_usb0_clk48_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+
-+	return regmap_write_bits(usb0->regmap, CFGCHIP(2),
-+				 CFGCHIP2_USB2PHYCLKMUX,
-+				 index ? CFGCHIP2_USB2PHYCLKMUX : 0);
-+}
-+
-+static u8 da8xx_usb0_clk48_get_parent(struct clk_hw *hw)
-+{
-+	struct da8xx_usb0_clk48 *usb0 = to_da8xx_usb0_clk48(hw);
-+	unsigned int val;
-+
-+	regmap_read(usb0->regmap, CFGCHIP(2), &val);
-+
-+	return (val & CFGCHIP2_USB2PHYCLKMUX) ? 1 : 0;
-+}
-+
-+static const struct clk_ops da8xx_usb0_clk48_ops = {
-+	.prepare	= da8xx_usb0_clk48_prepare,
-+	.unprepare	= da8xx_usb0_clk48_unprepare,
-+	.enable		= da8xx_usb0_clk48_enable,
-+	.disable	= da8xx_usb0_clk48_disable,
-+	.is_enabled	= da8xx_usb0_clk48_is_enabled,
-+	.recalc_rate	= da8xx_usb0_clk48_recalc_rate,
-+	.round_rate	= da8xx_usb0_clk48_round_rate,
-+	.set_parent	= da8xx_usb0_clk48_set_parent,
-+	.get_parent	= da8xx_usb0_clk48_get_parent,
-+};
-+
-+static struct da8xx_usb0_clk48 *
-+da8xx_cfgchip_register_usb0_clk48(struct device *dev,
-+				  struct regmap *regmap)
-+{
-+	const char * const parent_names[] = { "usb_refclkin", "pll0_auxclk" };
-+	struct clk *fck_clk;
-+	struct da8xx_usb0_clk48 *usb0;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	fck_clk = devm_clk_get(dev, "fck");
-+	if (IS_ERR(fck_clk)) {
-+		if (PTR_ERR(fck_clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Missing fck clock\n");
-+		return ERR_CAST(fck_clk);
-+	}
-+
-+	usb0 = devm_kzalloc(dev, sizeof(*usb0), GFP_KERNEL);
-+	if (!usb0)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = "usb0_clk48";
-+	init.ops = &da8xx_usb0_clk48_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = 2;
-+
-+	usb0->hw.init = &init;
-+	usb0->fck = fck_clk;
-+	usb0->regmap = regmap;
-+
-+	ret = devm_clk_hw_register(dev, &usb0->hw);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	return usb0;
-+}
-+
-+/* --- USB 1.1 PHY clock --- */
-+
-+struct da8xx_usb1_clk48 {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+};
-+
-+#define to_da8xx_usb1_clk48(_hw) \
-+	container_of((_hw), struct da8xx_usb1_clk48, hw)
-+
-+static int da8xx_usb1_clk48_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct da8xx_usb1_clk48 *usb1 = to_da8xx_usb1_clk48(hw);
-+
-+	return regmap_write_bits(usb1->regmap, CFGCHIP(2),
-+				 CFGCHIP2_USB1PHYCLKMUX,
-+				 index ? CFGCHIP2_USB1PHYCLKMUX : 0);
-+}
-+
-+static u8 da8xx_usb1_clk48_get_parent(struct clk_hw *hw)
-+{
-+	struct da8xx_usb1_clk48 *usb1 = to_da8xx_usb1_clk48(hw);
-+	unsigned int val;
-+
-+	regmap_read(usb1->regmap, CFGCHIP(2), &val);
-+
-+	return (val & CFGCHIP2_USB1PHYCLKMUX) ? 1 : 0;
-+}
-+
-+static const struct clk_ops da8xx_usb1_clk48_ops = {
-+	.set_parent	= da8xx_usb1_clk48_set_parent,
-+	.get_parent	= da8xx_usb1_clk48_get_parent,
-+};
-+
-+/**
-+ * da8xx_cfgchip_register_usb1_clk48 - Register a new USB 1.1 PHY clock
-+ * @regmap: The CFGCHIP regmap
+diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+index aef0390..e0da5c3 100644
+--- a/drivers/clk/davinci/Makefile
++++ b/drivers/clk/davinci/Makefile
+@@ -12,4 +12,5 @@ obj-$(CONFIG_ARCH_DAVINCI_DM646x)	+= pll-dm646x.o
+ obj-y += psc.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= psc-da830.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= psc-da850.o
++obj-$(CONFIG_ARCH_DAVINCI_DM355)	+= psc-dm355.o
+ endif
+diff --git a/drivers/clk/davinci/psc-dm355.c b/drivers/clk/davinci/psc-dm355.c
+new file mode 100644
+index 0000000..249a053
+--- /dev/null
++++ b/drivers/clk/davinci/psc-dm355.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PSC clock descriptions for TI DaVinci DM355
++ *
++ * Copyright (C) 2018 David Lechner <david@lechnology.com>
 + */
-+static struct da8xx_usb1_clk48 *
-+da8xx_cfgchip_register_usb1_clk48(struct device *dev,
-+				  struct regmap *regmap)
++
++#include <linux/clk-provider.h>
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++
++#include "psc.h"
++
++LPSC_CLKDEV1(vpss_master_clkdev,	"master",	"vpss");
++LPSC_CLKDEV1(vpss_slave_clkdev,		"slave",	"vpss");
++LPSC_CLKDEV1(spi1_clkdev,		NULL,		"spi_davinci.1");
++LPSC_CLKDEV1(mmcsd1_clkdev,		NULL,		"dm6441-mmc.1");
++LPSC_CLKDEV1(mcbsp1_clkdev,		NULL,		"davinci-mcbsp.1");
++LPSC_CLKDEV1(usb_clkdev,		"usb",		NULL);
++LPSC_CLKDEV1(spi2_clkdev,		NULL,		"spi_davinci.2");
++LPSC_CLKDEV1(aemif_clkdev,		"aemif",	NULL);
++LPSC_CLKDEV1(mmcsd0_clkdev,		NULL,		"dm6441-mmc.0");
++LPSC_CLKDEV1(mcbsp0_clkdev,		NULL,		"davinci-mcbsp.0");
++LPSC_CLKDEV1(i2c_clkdev,		NULL,		"i2c_davinci.1");
++LPSC_CLKDEV1(uart0_clkdev,		NULL,		"serial8250.0");
++LPSC_CLKDEV1(uart1_clkdev,		NULL,		"serial8250.1");
++LPSC_CLKDEV1(uart2_clkdev,		NULL,		"serial8250.2");
++LPSC_CLKDEV1(spi0_clkdev,		NULL,		"spi_davinci.0");
++/* REVISIT: gpio-davinci.c should be modified to drop con_id */
++LPSC_CLKDEV1(gpio_clkdev,		"gpio",		NULL);
++LPSC_CLKDEV1(timer0_clkdev,		"timer0",	NULL);
++LPSC_CLKDEV1(timer2_clkdev,		NULL,		"davinci-wdt");
++LPSC_CLKDEV1(vpss_dac_clkdev,		"vpss_dac",	NULL);
++
++static const struct davinci_lpsc_clk_info dm355_psc_info[] = {
++	LPSC(0,  0, vpss_master, pll1_sysclk4, vpss_master_clkdev, 0),
++	LPSC(1,  0, vpss_slave,  pll1_sysclk4, vpss_slave_clkdev,  0),
++	LPSC(5,  0, timer3,      pll1_auxclk,  NULL,               0),
++	LPSC(6,  0, spi1,        pll1_sysclk2, spi1_clkdev,        0),
++	LPSC(7,  0, mmcsd1,      pll1_sysclk2, mmcsd1_clkdev,      0),
++	LPSC(8,  0, asp1,        pll1_sysclk2, NULL,               0),
++	LPSC(9,  0, usb,         pll1_sysclk2, usb_clkdev,         0),
++	LPSC(10, 0, pwm3,        pll1_auxclk,  NULL,               0),
++	LPSC(11, 0, spi2,        pll1_sysclk2, spi2_clkdev,        0),
++	LPSC(12, 0, rto,         pll1_auxclk,  NULL,               0),
++	LPSC(14, 0, aemif,       pll1_sysclk2, aemif_clkdev,       0),
++	LPSC(15, 0, mmcsd0,      pll1_sysclk2, mmcsd0_clkdev,      0),
++	LPSC(17, 0, asp0,        pll1_sysclk2, NULL,               0),
++	LPSC(18, 0, i2c,         pll1_auxclk,  i2c_clkdev,         0),
++	LPSC(19, 0, uart0,       pll1_auxclk,  uart0_clkdev,       0),
++	LPSC(20, 0, uart1,       pll1_auxclk,  uart1_clkdev,       0),
++	LPSC(21, 0, uart2,       pll1_sysclk2, uart2_clkdev,       0),
++	LPSC(22, 0, spi0,        pll1_sysclk2, spi0_clkdev,        0),
++	LPSC(23, 0, pwm0,        pll1_auxclk,  NULL,               0),
++	LPSC(24, 0, pwm1,        pll1_auxclk,  NULL,               0),
++	LPSC(25, 0, pwm2,        pll1_auxclk,  NULL,               0),
++	LPSC(26, 0, gpio,        pll1_sysclk2, gpio_clkdev,        0),
++	LPSC(27, 0, timer0,      pll1_auxclk,  timer0_clkdev,      LPSC_ALWAYS_ENABLED),
++	LPSC(28, 0, timer1,      pll1_auxclk,  NULL,               0),
++	/* REVISIT: why can't this be disabled? */
++	LPSC(29, 0, timer2,      pll1_auxclk,  timer2_clkdev,      LPSC_ALWAYS_ENABLED),
++	LPSC(31, 0, arm,         pll1_sysclk1, NULL,               LPSC_ALWAYS_ENABLED),
++	LPSC(40, 0, mjcp,        pll1_sysclk1, NULL,               0),
++	LPSC(41, 0, vpss_dac,    pll1_sysclk3, vpss_dac_clkdev,    0),
++	{ }
++};
++
++static int dm355_psc_init(struct device *dev, void __iomem *base)
 +{
-+	const char * const parent_names[] = { "usb0_clk48", "usb_refclkin" };
-+	struct da8xx_usb1_clk48 *usb1;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	usb1 = devm_kzalloc(dev, sizeof(*usb1), GFP_KERNEL);
-+	if (!usb1)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = "usb1_clk48";
-+	init.ops = &da8xx_usb1_clk48_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = 2;
-+
-+	usb1->hw.init = &init;
-+	usb1->regmap = regmap;
-+
-+	ret = devm_clk_hw_register(dev, &usb1->hw);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	return usb1;
++	return davinci_psc_register_clocks(base, dm355_psc_info, 42, base);
 +}
 +
-+static int da8xx_cfgchip_register_usb_phy_clk(struct device *dev,
-+					      struct regmap *regmap)
-+{
-+	struct da8xx_usb0_clk48 *usb0;
-+	struct da8xx_usb1_clk48 *usb1;
-+	struct clk_hw *parent;
++static struct clk_bulk_data dm355_psc_parent_clks[] = {
++	{ .id = "pll1_sysclk1" },
++	{ .id = "pll1_sysclk2" },
++	{ .id = "pll1_sysclk3" },
++	{ .id = "pll1_sysclk4" },
++	{ .id = "pll1_auxclk"  },
++};
 +
-+	usb0 = da8xx_cfgchip_register_usb0_clk48(dev, regmap);
-+	if (IS_ERR(usb0))
-+		return PTR_ERR(usb0);
-+
-+	/*
-+	 * All existing boards use pll0_auxclk as the parent and new boards
-+	 * should use device tree, so hard-coding the value (1) here.
-+	 */
-+	parent = clk_hw_get_parent_by_index(&usb0->hw, 1);
-+	if (parent)
-+		clk_set_parent(usb0->hw.clk, parent->clk);
-+	else
-+		dev_warn(dev, "Failed to find usb0 parent clock\n");
-+
-+	usb1 = da8xx_cfgchip_register_usb1_clk48(dev, regmap);
-+	if (IS_ERR(usb1))
-+		return PTR_ERR(usb1);
-+
-+	/*
-+	 * All existing boards use usb0_clk48 as the parent and new boards
-+	 * should use device tree, so hard-coding the value (0) here.
-+	 */
-+	parent = clk_hw_get_parent_by_index(&usb1->hw, 0);
-+	if (parent)
-+		clk_set_parent(usb1->hw.clk, parent->clk);
-+	else
-+		dev_warn(dev, "Failed to find usb1 parent clock\n");
-+
-+	clk_hw_register_clkdev(&usb0->hw, "usb0_clk48", "da8xx-usb-phy");
-+	clk_hw_register_clkdev(&usb1->hw, "usb1_clk48", "da8xx-usb-phy");
-+
-+	return 0;
-+}
-+
-+static int of_da8xx_usb_phy_clk_init(struct device *dev, struct regmap *regmap)
-+{
-+	struct clk_hw_onecell_data *clk_data;
-+	struct da8xx_usb0_clk48 *usb0;
-+	struct da8xx_usb1_clk48 *usb1;
-+
-+	clk_data = devm_kzalloc(dev, sizeof(*clk_data) + 2 *
-+				sizeof(*clk_data->hws), GFP_KERNEL);
-+	if (!clk_data)
-+		return -ENOMEM;
-+
-+	clk_data->num = 2;
-+
-+	usb0 = da8xx_cfgchip_register_usb0_clk48(dev, regmap);
-+	if (IS_ERR(usb0)) {
-+		if (PTR_ERR(usb0) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		dev_warn(dev, "Failed to register usb0_clk48 (%ld)\n",
-+			 PTR_ERR(usb0));
-+
-+		clk_data->hws[0] = ERR_PTR(-ENOENT);
-+	} else {
-+		clk_data->hws[0] = &usb0->hw;
-+	}
-+
-+	usb1 = da8xx_cfgchip_register_usb1_clk48(dev, regmap);
-+	if (IS_ERR(usb1)) {
-+		if (PTR_ERR(usb0) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		dev_warn(dev, "Failed to register usb1_clk48 (%ld)\n",
-+			 PTR_ERR(usb1));
-+
-+		clk_data->hws[1] = ERR_PTR(-ENOENT);
-+	} else {
-+		clk_data->hws[1] = &usb1->hw;
-+	}
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
-+}
-+
- /* --- platform device --- */
- 
- static const struct of_device_id da8xx_cfgchip_of_match[] = {
-@@ -362,6 +705,10 @@ static const struct of_device_id da8xx_cfgchip_of_match[] = {
- 		.compatible = "ti,da850-async3-clksrc",
- 		.data = of_da850_async3_init,
- 	},
-+	{
-+		.compatible = "ti,da830-usb-phy-clocks",
-+		.data = of_da8xx_usb_phy_clk_init,
-+	},
++const struct davinci_psc_init_data dm355_psc_init_data = {
++	.parent_clks		= dm355_psc_parent_clks,
++	.num_parent_clks	= ARRAY_SIZE(dm355_psc_parent_clks),
++	.psc_init		= &dm355_psc_init,
++};
+diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
+index fa39536..0825b62 100644
+--- a/drivers/clk/davinci/psc.c
++++ b/drivers/clk/davinci/psc.c
+@@ -492,6 +492,7 @@ static const struct platform_device_id davinci_psc_id_table[] = {
+ 	{ .name = "da830-psc1", .driver_data = (kernel_ulong_t)&da830_psc1_init_data },
+ 	{ .name = "da850-psc0", .driver_data = (kernel_ulong_t)&da850_psc0_init_data },
+ 	{ .name = "da850-psc1", .driver_data = (kernel_ulong_t)&da850_psc1_init_data },
++	{ .name = "dm355-psc",  .driver_data = (kernel_ulong_t)&dm355_psc_init_data  },
  	{ }
  };
  
-@@ -382,6 +729,10 @@ static const struct platform_device_id da8xx_cfgchip_id_table[] = {
- 		.name = "da850-async3-clksrc",
- 		.driver_data = (kernel_ulong_t)da850_cfgchip_register_async3,
- 	},
-+	{
-+		.name = "da830-usb-phy-clks",
-+		.driver_data = (kernel_ulong_t)da8xx_cfgchip_register_usb_phy_clk,
-+	},
- 	{ }
- };
+diff --git a/drivers/clk/davinci/psc.h b/drivers/clk/davinci/psc.h
+index 476bd74..d672e72 100644
+--- a/drivers/clk/davinci/psc.h
++++ b/drivers/clk/davinci/psc.h
+@@ -100,5 +100,6 @@ extern const struct davinci_psc_init_data da850_psc0_init_data;
+ extern const struct davinci_psc_init_data da850_psc1_init_data;
+ extern const struct davinci_psc_init_data of_da850_psc0_init_data;
+ extern const struct davinci_psc_init_data of_da850_psc1_init_data;
++extern const struct davinci_psc_init_data dm355_psc_init_data;
  
+ #endif /* __CLK_DAVINCI_PSC_H__ */
 -- 
 2.7.4
