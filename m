@@ -1,96 +1,66 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH 1/3] driver core: check notifier_call_chain return value
-Date: Fri, 16 Mar 2018 09:53:02 +0100
-Message-ID: <CA+M3ks5DHQNoEZQ9AM_g2fSGafFbMtpP=D7hfL9EXLvc-GH65w@mail.gmail.com>
-References: <20180227140926.22996-1-benjamin.gaignard@st.com>
- <20180227140926.22996-2-benjamin.gaignard@st.com> <20180315171059.GA10254@kroah.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7d-sdb: add gpio key support
+Date: Fri, 16 Mar 2018 16:54:31 +0800
+Message-ID: <1521190471-25242-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180315171059.GA10254@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-03-15 18:10 GMT+01:00 Greg KH <gregkh@linuxfoundation.org>:
-> On Tue, Feb 27, 2018 at 03:09:24PM +0100, Benjamin Gaignard wrote:
->> When being notified that a driver is about to be bind a listener
->> could return NOTIFY_BAD.
->> Check the return to be sure that the driver could be bind.
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> ---
->>  drivers/base/dd.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->> index de6fd092bf2f..9275f2c0fed2 100644
->> --- a/drivers/base/dd.c
->> +++ b/drivers/base/dd.c
->> @@ -304,9 +304,12 @@ static int driver_sysfs_add(struct device *dev)
->>  {
->>       int ret;
->>
->> -     if (dev->bus)
->> -             blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->> -                                          BUS_NOTIFY_BIND_DRIVER, dev);
->> +     if (dev->bus) {
->> +             if (blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->> +                                              BUS_NOTIFY_BIND_DRIVER, dev) ==
->> +                                              NOTIFY_BAD)
->> +                     return -EINVAL;
->
-> checkpatch does not complain about this?
+Add support for imx7d-sdb board's gpio keys:
 
-No (even with --strict), it should be indented with tabs
+S1(FUNC1): KEY_VOLUMEUP
+S3(FUNC2): KEY_VOLUMEDOWN
 
->
-> And what is going to break when we enable this, as we have never checked
-> this before?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx7d-sdb.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-I could have miss some occurences but when greping with BUS_NOTIFY_*
-patern I haven't any problematic cases.
-When notifiers don't care of the message they almost all return
-NOTIFY_DONE, some return NOTIFY_OK but none
-return NOTIFY_BAD. That I wrote the test like "== NOTIFY_BAD" and not
-"!= NOTIFY_OK".
-
-I have checked this list of files (I hope I haven't forgot any occurence)
-arch/powerpc/kernel/isa-bridge.c
-arch/powerpc/kernel/iommu.c
-arch/powerpc/kernel/dma-swiotlb.c
-arch/powerpc/platforms/pasemi/setup.c
-arch/powerpc/platforms/512x/pdm360ng.c
-arch/powerpc/platforms/cell/iommu.c
-arch/arm/mach-mvebu/coherency.c
-arch/arm/common/sa1111.c
-arch/arm/mach-keystone/keystone.c -> this one return NOTIFY_BAD if dev
-is NULL which is never the case.
-arch/arm/mach-highbank/highbank.c
-arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-arch/arm/mach-omap2/omap_device.c
-drivers/base/power/clock_ops.c
-drivers/platform/x86/silead_dmi.c
-drivers/input/serio/i8042.c
-drivers/input/mouse/psmouse-smbus.c
-drivers/w1/w1.c
-drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
-drivers/i2c/i2c-dev.c drivers/acpi/acpi_lpss.c
-drivers/gpu/vga/vgaarb.c
-drivers/xen/pci.c drivers/xen/xen-pciback/pci_stub.c
-drivers/xen/arm-device.c
-drivers/iommu/s390-iommu.c
-drivers/iommu/iommu.c
-drivers/iommu/dmar.c
-drivers/iommu/intel-iommu.c
-drivers/usb/core/usb.c
-drivers/s390/cio/ccwgroup.c
-drivers/net/ethernet/ibm/emac/core.c
-
-Benjamin
-
->
-> thanks,
->
-> greg k-h
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+index 7f241af..e47b5b2 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -52,6 +52,24 @@
+ 		reg = <0x80000000 0x80000000>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		volume-up {
++			label = "Volume Up";
++			gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++
++		volume-down {
++			label = "Volume Down";
++			gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++	};
++
+ 	spi4 {
+ 		compatible = "spi-gpio";
+ 		pinctrl-names = "default";
+@@ -519,6 +537,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_gpio_keys: gpio_keysgrp {
++			fsl,pins = <
++				MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x59
++				MX7D_PAD_SD2_WP__GPIO5_IO10		0x59
++			>;
++		};
+ 
+ 		pinctrl_hog: hoggrp {
+ 			fsl,pins = <
+-- 
+2.7.4
