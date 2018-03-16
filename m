@@ -1,60 +1,65 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888 output.
-Date: Fri, 16 Mar 2018 17:39:23 +0800
-Message-ID: <CAGb2v66bdH4kr=T=A0MNKShOCKkvp=+dWDZLskBoUJn_pUJDgw@mail.gmail.com>
-References: <1521121410-17103-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20180316064731.muiw5yumhmfnwxg2@flea> <658946b9-4f49-ff24-3b84-da1eb9b7d9ad@micronovasrl.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v2 10/13] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
+Date: Fri, 16 Mar 2018 15:08:18 +0530
+Message-ID: <1521193101-4586-11-git-send-email-sricharan@codeaurora.org>
+References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <658946b9-4f49-ff24-3b84-da1eb9b7d9ad@micronovasrl.com>
+In-Reply-To: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 5:19 PM, Giulio Benetti
-<giulio.benetti@micronovasrl.com> wrote:
-> Hi Maxime,
->
-> Il 16/03/2018 07:47, Maxime Ripard ha scritto:
->>
->> Hi Giulio,
->>
->> On Thu, Mar 15, 2018 at 02:43:30PM +0100, Giulio Benetti wrote:
->>>
->>> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
->>> for the needed pins.
->>>
->>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
->>
->>
->> Like we discussed last time, we only merge this kind of patches if
->> there's an immediate user.
->
->
-> You're right.
-> In few time(I hope), I'm going to send dts for Linova1-4_3 and Linova1-7,
-> where I use those pins.
-> I have also to send 2 patches for 2 new panels for panel-simple.
->
-> So I think I have to send 2 displays' patches before.
-> And a patchset for the 2 boards and rgb888 pins.
->
-> One question: do I have to wait for panels' patches to applied and then send
-> patchset for boards dts?
-> Or can I send a unique patchset?
-> Because as I understand those patches should be applied to 2 different
-> repositories, right?
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts | 26 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
 
-If none of them have been merged yet, it's best to send all of them
-as part of the same series, and to all parties involved. That way,
-people have the full picture of what you're trying to achieve when
-they review your patches. Unless your series is really big.
-
-Maintainers will pick up patches that need to go through their trees.
-In general you don't need to do much coordination beyond pointing out
-whether the patches are safe to go in independently or there are
-dependencies that the maintainers need to be aware of.
-
-ChenYu
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8c93fd0..0844087 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -750,6 +750,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c3.dtb \
+ 	qcom-ipq4019-ap.dk07.1-c1.dtb \
++	qcom-ipq4019-ap.dk07.1-c2.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+new file mode 100644
+index 0000000..c1e909c
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2018, The Linux Foundation. All rights reserved.
++
++#include "qcom-ipq4019-ap.dk07.1.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1-C2";
++
++	soc {
++		pinctrl@1000000 {
++			serial_1_pins: serial1_pinmux {
++				mux {
++					pins = "gpio8", "gpio9";
++					function = "blsp_uart1";
++					bias-disable;
++				};
++			};
++		};
++
++		serial@78b0000 {
++			pinctrl-0 = <&serial_1_pins>;
++			pinctrl-names = "default";
++			status = "ok";
++		};
++	};
++};
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
