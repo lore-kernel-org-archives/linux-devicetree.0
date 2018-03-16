@@ -1,240 +1,33 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v2 2/2] reset: stm32mp1: Enable stm32mp1 reset driver
-Date: Fri, 16 Mar 2018 14:35:16 +0000
-Message-ID: <0aa41806-22c9-c8ef-6fe4-1353cbbd680a@st.com>
-References: <1521045001-30788-1-git-send-email-gabriel.fernandez@st.com>
- <1521045001-30788-3-git-send-email-gabriel.fernandez@st.com>
- <1521206991.5061.5.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1521206991.5061.5.camel@pengutronix.de>
-Content-Language: en-US
-Content-ID: <5BE38ABF8E1FF64DBEEC588A588AD7A7@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson-gx: make efuse read-only
+Date: Fri, 16 Mar 2018 15:50:21 +0100
+Message-ID: <20180316145021.8517-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+efuse is one time programmable, so it is safer to deny write request
+to this memory, unless the user is savvy enough to remove the read-only
+flag from DTB
 
-Hi Philipp,
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for reviewing.
-
-On 03/16/2018 02:29 PM, Philipp Zabel wrote:
-> Hi Gabriel,
->
-> this looks mostly good to me, a few questions and comments below:
->
-> On Wed, 2018-03-14 at 17:30 +0100, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> stm32mp1 RCC IP 1 has a reset SET register and a reset CLEAR register.
->>
->> Writing '0' on reset SET register has no effect
->> Writing '1' on reset SET register
->> 	activates the reset of the corresponding peripheral
->>
->> Writing '0' on reset CLEAR register	has no effect
->> Writing '1' on reset CLEAR register
->> 	releases the reset of the corresponding peripheral
->>
->> See Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> ---
->>   drivers/reset/Kconfig          |   6 ++
->>   drivers/reset/Makefile         |   1 +
->>   drivers/reset/reset-stm32mp1.c | 122 +++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 129 insertions(+)
->>   create mode 100644 drivers/reset/reset-stm32mp1.c
->>
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index 1efbc6c..c0b292b 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -97,6 +97,12 @@ config RESET_SIMPLE
->>   	   - Allwinner SoCs
->>   	   - ZTE's zx2967 family
->>   
->> +config RESET_STM32MP157
->> +	bool "STM32MP157 Reset Driver" if COMPILE_TEST
->> +	default MACH_STM32MP157
->> +	help
->> +	  This enables the RCC reset controller driver for STM32 MPUs.
->> +
->>   config RESET_SUNXI
->>   	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
->>   	default ARCH_SUNXI
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 132c24f..c1261dc 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -15,6 +15,7 @@ obj-$(CONFIG_RESET_MESON) += reset-meson.o
->>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->>   obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
->>   obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
->> +obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
->>   obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->>   obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
->>   obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
->> diff --git a/drivers/reset/reset-stm32mp1.c b/drivers/reset/reset-stm32mp1.c
->> new file mode 100644
->> index 0000000..5e25388
->> --- /dev/null
->> +++ b/drivers/reset/reset-stm32mp1.c
->> @@ -0,0 +1,122 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
->> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com> for STMicroelectronics.
->> + */
->> +
->> +#include <linux/arm-smccc.h>
-> This does not seem to be necessary.
-right
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
-> This does not seem to be necessary either.
-ok
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +
->> +#define CLR_OFFSET 0x4
->> +
->> +struct stm32_reset_data {
->> +	struct reset_controller_dev	rcdev;
->> +	void __iomem			*membase;
->> +};
->> +
->> +static inline struct stm32_reset_data *
->> +to_stm32_reset_data(struct reset_controller_dev *rcdev)
->> +{
->> +	return container_of(rcdev, struct stm32_reset_data, rcdev);
->> +}
->> +
->> +static int stm32_reset_update(struct reset_controller_dev *rcdev,
->> +			      unsigned long id, bool assert)
->> +{
->> +	struct stm32_reset_data *data = to_stm32_reset_data(rcdev);
->> +	int reg_width = sizeof(u32);
->> +	int bank = id / (reg_width * BITS_PER_BYTE);
->> +	int offset = id % (reg_width * BITS_PER_BYTE);
->> +	void __iomem *addr;
->> +
->> +	addr = data->membase + (bank * reg_width);
->> +	if (!assert)
->> +		addr += CLR_OFFSET;
->> +
->> +	writel(BIT(offset), addr);
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_reset_assert(struct reset_controller_dev *rcdev,
->> +			      unsigned long id)
->> +{
->> +	return stm32_reset_update(rcdev, id, true);
->> +}
->> +
->> +static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
->> +				unsigned long id)
->> +{
->> +	return stm32_reset_update(rcdev, id, false);
->> +}
->> +
->> +static int stm32_reset_status(struct reset_controller_dev *rcdev,
->> +			      unsigned long id)
->> +{
->> +	struct stm32_reset_data *data = to_stm32_reset_data(rcdev);
->> +	int reg_width = sizeof(u32);
->> +	int bank = id / (reg_width * BITS_PER_BYTE);
->> +	int offset = id % (reg_width * BITS_PER_BYTE);
->> +	u32 reg;
->> +
->> +	reg = readl(data->membase + (bank * reg_width));
->> +
->> +	return !(reg & BIT(offset));
->> +}
-> So the SET register can be read back and returns 0 for reset lines that
-> are currently asserted and returns 1 for reset lines that are currently
-> deasserted?
-yes you have spotted a error, i will replace by'return !!(reg & 
-BIT(offset));'
->> +
->> +const struct reset_control_ops stm32_reset_ops = {
->> +	.assert		= stm32_reset_assert,
->> +	.deassert	= stm32_reset_deassert,
->> +	.status		= stm32_reset_status,
->> +};
->> +
->> +static const struct of_device_id stm32_reset_dt_ids[] = {
->> +	{ .compatible = "st,stm32mp1-rcc"},
->> +	{ /* sentinel */ },
->> +};
->  From the DT bindings it looks like the clock and reset drivers are
-> sharing the same node. Is there just no clock platform_driver at all?
-there is one hardware block that is used for clock, reset and power, 
-they share the same node but each have it own platform_driver
-
->> +
->> +static int stm32_reset_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct stm32_reset_data *data;
->> +	void __iomem *membase;
->> +	struct resource *res;
->> +
->> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	membase = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(membase))
->> +		return PTR_ERR(membase);
->> +
->> +	data->membase = membase;
->> +	data->rcdev.owner = THIS_MODULE;
->> +	data->rcdev.nr_resets = resource_size(res) * BITS_PER_BYTE;
->> +	data->rcdev.ops = &stm32_reset_ops;
->> +	data->rcdev.of_node = dev->of_node;
->> +
->> +	return devm_reset_controller_register(dev, &data->rcdev);
->> +}
->> +
->> +static struct platform_driver stm32_reset_driver = {
->> +	.probe	= stm32_reset_probe,
->> +	.driver = {
->> +		.name		= "stm32mp1-reset",
->> +		.of_match_table	= stm32_reset_dt_ids,
->> +	},
->> +};
->> +
->> +static int __init stm32_reset_init(void)
->> +{
->> +	return platform_driver_register(&stm32_reset_driver);
->> +}
->> +
->> +postcore_initcall(stm32_reset_init);
-> Isn't builtin_platform_driver early enough?
-ok
-
-Best Regards
-
-Gabriel
-
->
-> regards
-> Philipp
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 2d51ccd60628..3c31e21cbed7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -132,6 +132,7 @@
+ 		compatible = "amlogic,meson-gx-efuse", "amlogic,meson-gxbb-efuse";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		read-only;
+ 
+ 		sn: sn@14 {
+ 			reg = <0x14 0x10>;
+-- 
+2.14.3
