@@ -1,45 +1,95 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v8 42/42] ARM: dts: da850: Add clocks
-Date: Fri, 16 Mar 2018 12:20:02 -0500
-Message-ID: <cf0c4153-b65d-da57-cd0f-0a16cb186377@lechnology.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <1521168778-27236-43-git-send-email-david@lechnology.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v6 0/5] Add coupled regulators mechanism
+Date: Fri, 16 Mar 2018 10:21:21 -0700
+Message-ID: <20180316172121.GT5799@atomide.com>
+References: <CGME20180309122231eucas1p1b8e0a85a73b31aa07eac08f809face6e@eucas1p1.samsung.com>
+ <1520598128-11768-1-git-send-email-m.purski@samsung.com>
+ <20180309124234.GC5252@sirena.org.uk>
+ <20180309155827.GS5799@atomide.com>
+ <c6f43013-3d2e-afbc-9be8-2e07f58fda98@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521168778-27236-43-git-send-email-david@lechnology.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c6f43013-3d2e-afbc-9be8-2e07f58fda98@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2018 09:52 PM, David Lechner wrote:
-> This adds clock provider nodes for da850 and wires them up to all of the
-> devices.
+* Maciej Purski <m.purski@samsung.com> [180312 12:24]:
+> On 03/09/2018 04:58 PM, Tony Lindgren wrote:
+> > * Mark Brown <broonie@kernel.org> [180309 12:43]:
+> > > On Fri, Mar 09, 2018 at 01:22:02PM +0100, Maciej Purski wrote:
+> > > 
+> > > > I would like to kindly ask Fabio Estevam and Tony Lindgren to test the patch
+> > > > series on their boards.
+> > 
+> > I gave it a quick try and this set still causes at least mmc0
+> > to fail for me.
+>
+> Thanks. Here's a small patch, which adds some debugs. Maybe they will reveal,
+> where the problem is.
+
+Sorry for the delay, now back from ELC. I tried applying this on
+top of Linux next + your six patches but it fails to apply. Do
+I need something else too?
+
+Regards,
+
+Tony
+
+
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index f1f11cf..0e80ba5 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -2280,7 +2280,6 @@ int regulator_enable(struct regulator *regulator)
+>  {
+>  	struct regulator_dev *rdev = regulator->rdev;
+>  	int ret = 0;
+> -	int ret2;
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
-
-...
-
-This is the mcasp0: mcasp@100000 node...
-
-> @@ -560,6 +720,7 @@
->   			dmas = <&edma0 1 1>,
->   				<&edma0 0 1>;
->   			dma-names = "tx", "rx";
-> +			clocks = <&psc1 7>;
-
-After some testing, it looks like it needs to be:
-
-+			power-domains = <&psc1 7>;
-
-instead of
-
-+			clocks = <&psc1 7>;
-
->   		};
->   
->   		lcdc: display@213000 {
+>  	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
+>  		rdev_err(rdev, "not all coupled regulators registered\n");
+> @@ -2298,15 +2297,9 @@ int regulator_enable(struct regulator *regulator)
+> 
+>  	regulator_lock_dependent(rdev);
+>  	ret = _regulator_enable(rdev);
+> -	ret2 = regulator_balance_voltage(rdev, PM_SUSPEND_ON);
+> +	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
+>  	regulator_unlock_dependent(rdev);
+> 
+> -	if (ret2 != 0) {
+> -		rdev_err(rdev,
+> -			"balancing failed when trying to enable regulator: %d",
+> -			ret2);
+> -	}
+> -
+>  	if (ret != 0 && rdev->supply)
+>  		regulator_disable(rdev->supply);
+> 
+> @@ -3149,7 +3142,7 @@ static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+>  		ret = regulator_set_voltage_unlocked(rdev->supply,
+>  				best_supply_uV, INT_MAX, state);
+>  		if (ret)
+> -			dev_err(&rdev->dev, "Failed to decrease supply voltage: %d\n",
+> +			dev_warn(&rdev->dev, "Failed to decrease supply voltage: %d\n",
+>  					ret);
+>  		/* No need to fail here */
+>  		ret = 0;
+> @@ -3332,11 +3325,8 @@ static int regulator_balance_voltage(struct regulator_dev *rdev,
+>  		ret = regulator_set_voltage_rdev(best_rdev, best_uV,
+>  						 best_uV, state);
+> 
+> -		if (ret < 0) {
+> -			rdev_err(rdev,
+> -				"Failed to set voltage with error: %d", ret);
+> +		if (ret < 0)
+>  			goto out;
+> -		}
+>  	}
+> 
+>  out:
+> 
+> 
