@@ -1,41 +1,41 @@
 From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH 3/6] dt-bindings: phy-qcom-qmp: Update bindings for sdm845
-Date: Fri, 16 Mar 2018 15:14:56 +0530
-Message-ID: <1521193500-4696-4-git-send-email-mgautam@codeaurora.org>
+Subject: [PATCH 5/6] dt-bindings: phy-qcom-usb2: Update bindings for sdm845
+Date: Fri, 16 Mar 2018 15:14:58 +0530
+Message-ID: <1521193500-4696-6-git-send-email-mgautam@codeaurora.org>
 References: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update compatible strings for USB3 PHYs on SDM845.
-One is QMPv3 DisplayPort-USB combo PHY and other one
-is USB UNI PHY which is single lane USB3 PHY without
-DP capability.
+Update compatible strings for USB2 PHYs on sdm845.
+There are two QUSB2 PHYs present on sdm845. Few PHY registers
+programming is different for these PHYs related to electrical
+parameters, otherwise both are same.
 
 Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
+ Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index dcf1b8f..cef8765 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -9,7 +9,9 @@ Required properties:
- 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
--	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
-+	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
-+	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
-+	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+index 42c9742..20deaeb 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+@@ -6,7 +6,9 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+ Required properties:
+  - compatible: compatible list, contains
+ 	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
+-	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
++	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY,
++	       "qcom,sdm845-1-qusb2-phy" for primary PHY on sdm845,
++	       "qcom,sdm845-2-qusb2-phy" for secondary PHY on sdm845.
  
-  - reg: offset and length of register set for PHY's common serdes block.
- 
+  - reg: offset and length of the PHY register set.
+  - #phy-cells: must be 0.
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
