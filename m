@@ -1,104 +1,34 @@
-Return-Path: <SRS0=dGTv=GC=nvidia.com=pchandru@kernel.org>
-From: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Subject: [PATCH V8 1/9] dt-bindings: Tegra210: add binding documentation
-Date: Mon, 12 Mar 2018 17:10:30 +0530
-Message-ID: <1520854838-21779-2-git-send-email-pchandru@nvidia.com>
-In-Reply-To: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
-References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com, Preetham Ramchandra <pchandru@nvidia.com>
+Return-Path: <SRS0=C/sM=GG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:39328 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753053AbeCPRAW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 16 Mar 2018 13:00:22 -0400
+From: Andy Yeh <andy.yeh@intel.com>
+Subject: RESEND[PATCH v6 0/2] DW9807 DT binding and driver patches
+Date: Sat, 17 Mar 2018 01:05:24 +0800
+Message-Id: <1521219926-15329-1-git-send-email-andy.yeh@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, alanx.chiang@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Preetham Ramchandra <pchandru@nvidia.com>
+Hi Sakari and Tomasz,
 
-This adds bindings documentation for the AHCI controller on Tegra210.
+The two patches are the DT binding and driver for DW9807 VCM controller.
 
-Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
----
-v8:
-* Add Tegra132: "nvidia,tegra132-ahci", "nvidia,tegra124-ahci".
-* Changed AUX registers to optional.
-* corrected commit message line length.
-* Move phy-name for Tegra210 to optional.
-v7:
-* For Aux register set drop the Tegra210 since this register
-  set also works on Tegra124
-* rephrase the sentence for cml1 clock
-* change the commit subject to include ahci-tegra
-* drop pll_e since CCF handles it automatically as
-  CML1 is a child clock of it.
-v4:
-* changed the commit message
-* changed 'sata-cold' reset to mandatory for t210 and t124
-* Removed the regulators for T210 since these regulators
-  will be enabled in phy driver.
-v3:
-* Add AUX register.
-v2:
-* change cml1, pll_e and phy regulators as optional
-  for T210.
----
- .../bindings/ata/nvidia,tegra124-ahci.txt          | 36 ++++++++++++++--------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+Alan Chiang (2):
+  media: dw9807: Add dw9807 vcm driver
+  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
 
-diff --git a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-index 66c83c3e8915..12ab2f723eb0 100644
---- a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-+++ b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-@@ -1,9 +1,10 @@
--Tegra124 SoC SATA AHCI controller
-+Tegra SoC SATA AHCI controller
- 
- Required properties :
--- compatible : For Tegra124, must contain "nvidia,tegra124-ahci".  Otherwise,
--  must contain '"nvidia,<chip>-ahci", "nvidia,tegra124-ahci"', where <chip>
--  is tegra132.
-+- compatible : Must be one of:
-+  - Tegra124 : "nvidia,tegra124-ahci"
-+  - Tegra132 : "nvidia,tegra132-ahci", "nvidia,tegra124-ahci"
-+  - Tegra210 : "nvidia,tegra210-ahci"
- - reg : Should contain 2 entries:
-   - AHCI register set (SATA BAR5)
-   - SATA register set
-@@ -13,8 +14,6 @@ Required properties :
- - clock-names : Must include the following entries:
-   - sata
-   - sata-oob
--  - cml1
--  - pll_e
- - resets : Must contain an entry for each entry in reset-names.
-   See ../reset/reset.txt for details.
- - reset-names : Must include the following entries:
-@@ -24,9 +23,22 @@ Required properties :
- - phys : Must contain an entry for each entry in phy-names.
-   See ../phy/phy-bindings.txt for details.
- - phy-names : Must include the following entries:
--  - sata-phy : XUSB PADCTL SATA PHY
--- hvdd-supply : Defines the SATA HVDD regulator
--- vddio-supply : Defines the SATA VDDIO regulator
--- avdd-supply : Defines the SATA AVDD regulator
--- target-5v-supply : Defines the SATA 5V power regulator
--- target-12v-supply : Defines the SATA 12V power regulator
-+  - For Tegra124 and Tegra132:
-+    - sata-phy : XUSB PADCTL SATA PHY
-+- For Tegra124 and Tegra132:
-+  - hvdd-supply : Defines the SATA HVDD regulator
-+  - vddio-supply : Defines the SATA VDDIO regulator
-+  - avdd-supply : Defines the SATA AVDD regulator
-+  - target-5v-supply : Defines the SATA 5V power regulator
-+  - target-12v-supply : Defines the SATA 12V power regulator
-+
-+Optional properties:
-+- reg :
-+  - AUX register set
-+- clock-names :
-+  - cml1 :
-+    cml1 clock should be defined here if the PHY driver
-+    doesn't manage them. If it does, they should not be.
-+- phy-names :
-+  - For T210:
-+    - sata-phy
+ .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  10 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/dw9807.c                         | 320 +++++++++++++++++++++
+ 5 files changed, 347 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+ create mode 100644 drivers/media/i2c/dw9807.c
+
 -- 
 2.7.4
+
