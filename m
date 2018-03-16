@@ -1,70 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH] ARM: dts: am43xx: Enable dual-role mode for USB1
-Date: Fri, 16 Mar 2018 13:11:43 +0200
-Message-ID: <1521198703-27352-1-git-send-email-rogerq@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car
+ V3M Eagle
+Date: Fri, 16 Mar 2018 12:16:45 +0100
+Message-ID: <20180316111644.k5ofsl5o5ethbnie@verge.net.au>
+References: <1521130316-1221-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521130316-1221-4-git-send-email-jacopo+renesas@jmondi.org>
+ <20180316000004.GC3432@bigcity.dyn.berto.se>
+ <20180316093953.GC31710@w540>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180316093953.GC31710@w540>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, magnus.damm@gmail.com, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-USB1 port is micro-AB type and can function as peripheral
-as well as host. Enable dual-role mode for USB1.
+On Fri, Mar 16, 2018 at 10:39:53AM +0100, jacopo mondi wrote:
+> Hi Niklas,
+>    thanks for review,
+> 
+> On Fri, Mar 16, 2018 at 01:00:04AM +0100, Niklas Söderlund wrote:
+> > Hi Jacopo,
+> >
+> > Thanks for your patch.
+> >
+> > This one must depend on '[PATCH v2 0/5] arm64: dts: renesas: r8a77970:
+> > enable HDMI output' or something similar not yet in renesas-drivers
+> > repository correct?
+> 
+> Yes, I have listed dependencies of this series in my v1 cover letter:
+> 
+> ---------------------------------------------------------------------------
+> The series is based on Laurent's drm/next/du branch with patches on top for:
+> - Sergei: Enable PFC, I2c, GPIOs for r8a77970
+> - Sergei: Add support for r8a77970 in DU and add display device nodes in
+>   r8a77970 DTSI
+> - Niklas: Connect DU LVDS output to HDMI bridge adv7511w in Eagle DTS
+> - Sergei: fix video output on R8A77970
+> 
+> A base branch with these patches applied is available at
+> git://jmondi.org/linux v3m/v4.16-rc3/base
+> ---------------------------------------------------------------------------
+> 
+> My bad I have not reported this in all cover letters (and I have not
+> reported the full name of the series)
+> 
+> PFC, GPIO and I2c support I have listed as dependencies seems to have
+> landed in renesas-drivers, while I don't see yet:
+> 
+> Sergei:
+> [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+> 
+> whose patches for r8a77970 dtsi are included in yours:
+> [PATCH v2 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
+> 
+> On top I also have Sergei's/Laurent's:
+> [PATCH v4] v4l: vsp1: Fix video output on R8A77970
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
-Tony,
-
-The USB driver side patches are already in Felipe's next branch.
-
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am437x-sk-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index c3b1a3f..8fe95cd 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -805,7 +805,7 @@
- };
- 
- &usb1 {
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 3fa3b22..4118802 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -600,7 +600,7 @@
- };
- 
- &usb1 {
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb1_pins>;
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 00c3d1d..a669418 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -856,7 +856,7 @@
- };
- 
- &usb1 {
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I have marked this patch as Deferred pending acceptance of the
+dependencies. Please repost or otherwise ping me once the
+dependencies are in place.
