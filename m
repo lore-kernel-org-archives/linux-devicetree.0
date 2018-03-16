@@ -1,41 +1,48 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH 5/6] dt-bindings: phy-qcom-usb2: Update bindings for sdm845
-Date: Fri, 16 Mar 2018 15:14:58 +0530
-Message-ID: <1521193500-4696-6-git-send-email-mgautam@codeaurora.org>
-References: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 4/4] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Fri, 16 Mar 2018 11:10:19 +0100
+Message-ID: <1521195019.3492.7.camel@pengutronix.de>
+References: <20180201175412.9480-1-l.stach@pengutronix.de>
+ <20180201175412.9480-4-l.stach@pengutronix.de>
+ <20180315213304.ejvgpkhxtblr6xb3@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180315213304.ejvgpkhxtblr6xb3@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Update compatible strings for USB2 PHYs on sdm845.
-There are two QUSB2 PHYs present on sdm845. Few PHY registers
-programming is different for these PHYs related to electrical
-parameters, otherwise both are same.
+Am Donnerstag, den 15.03.2018, 22:33 +0100 schrieb Sascha Hauer:
+> On Thu, Feb 01, 2018 at 06:54:12PM +0100, Lucas Stach wrote:
+> > Add driver for the Clock Control Module found on i.MX8MQ.
+> > 
+> > This is largely based on the downstream driver from Anson Huang and
+> > Bai Ping at NXP, with only some small adaptions to mainline from me.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> 
+> A general thought: The i.MX8M finally has a consistent clock tree. We
+> have for example 70 Peripheral clock slices consisting of a mux, a gate
+> and two dividers, all 70 looking the same.
+> For these it might make sense to create a more complex clock type
+> providing mux, gate and set rate functionality in one clock. This would
+> drastically reduce the number of clocks we have to handle.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
----
- Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I agree. It seems we are missing the 4.17 merge window with this
+anyways, due to the large number of changes still required and time
+constraints on my side, so a larger rework of the driver might be
+possible if we target 4.18.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-index 42c9742..20deaeb 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-@@ -6,7 +6,9 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
- Required properties:
-  - compatible: compatible list, contains
- 	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
--	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
-+	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY,
-+	       "qcom,sdm845-1-qusb2-phy" for primary PHY on sdm845,
-+	       "qcom,sdm845-2-qusb2-phy" for secondary PHY on sdm845.
- 
-  - reg: offset and length of the PHY register set.
-  - #phy-cells: must be 0.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Lucas
