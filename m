@@ -1,52 +1,41 @@
-Return-Path: <SRS0=hILt=GK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0074.outbound.protection.outlook.com ([104.47.0.74]:15671
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752614AbeCTKlb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 20 Mar 2018 06:41:31 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH 4/5] usb: typec: wcove: remove max_snk_* for sink config
-Date: Tue, 20 Mar 2018 18:26:08 +0800
-Message-Id: <1521541570-25363-5-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
-References: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=k2mn=GG=gondor.apana.org.au=herbert@kernel.org>
+Date: Fri, 16 Mar 2018 23:54:08 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/2] hwrng: mxc-rnga - add driver support on boards
+ with device tree
+Message-ID: <20180316155408.GD7095@gondor.apana.org.au>
+References: <20180305222100.29351-1-vz@mleia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, linux@roeck-us.net, hdegoede@redhat.com, rmfrfs@gmail.com, yueyao.zhu@gmail.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180305222100.29351-1-vz@mleia.com>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
-variable PDO for sink config.
+On Tue, Mar 06, 2018 at 12:20:58AM +0200, Vladimir Zapolskiy wrote:
+> The series is a trivial change to extend Freescale i.MX31 RNGA
+> driver to work on boards with device description taken from device
+> tree blob. The change was tested on a legacy LogicPD MX31Lite board.
+> 
+> Vladimir Zapolskiy (2):
+>   dt-bindings: rng: Document Freescale i.MX21 and i.MX31 RNGA compatibles
+>   hwrng: mxc-rnga - add driver support on boards with device tree
+> 
+> Changes from v1 to v2:
+> * a kernel for iMX boards is always built with multiplatform support,
+>   thus CONFIG_OF guards were removed, thanks to Kim Phillips for review,
+> * added i.MX21 RNGA compatible, i.MX31 RNGA is backward compatible to it,
+> * though the list of documented compatibles is extended, I dare to add
+>   Rob's Reviewed-by tag casted for v1.
+> 
+>  .../bindings/rng/{imx-rngc.txt => imx-rng.txt}     | 11 +++++------
+>  drivers/char/hw_random/mxc-rnga.c                  | 23 +++++++++++++---------
+>  2 files changed, 19 insertions(+), 15 deletions(-)
+>  rename Documentation/devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt} (54%)
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/typec_wcove.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
-index 2e990e0..7c10e06 100644
---- a/drivers/usb/typec/typec_wcove.c
-+++ b/drivers/usb/typec/typec_wcove.c
-@@ -558,6 +558,7 @@ static const u32 src_pdo[] = {
- static const u32 snk_pdo[] = {
- 	PDO_FIXED(5000, 500, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP |
- 		  PDO_FIXED_USB_COMM),
-+	PDO_VAR(5000, 12000, 3000),
- };
- 
- static struct tcpc_config wcove_typec_config = {
-@@ -566,9 +567,6 @@ static struct tcpc_config wcove_typec_config = {
- 	.snk_pdo = snk_pdo,
- 	.nr_snk_pdo = ARRAY_SIZE(snk_pdo),
- 
--	.max_snk_mv = 12000,
--	.max_snk_ma = 3000,
--	.max_snk_mw = 36000,
- 	.operating_snk_mw = 15000,
- 
- 	.type = TYPEC_PORT_DRP,
+All applied.  Thanks.
 -- 
-2.7.4
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
