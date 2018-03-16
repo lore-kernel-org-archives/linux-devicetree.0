@@ -1,45 +1,54 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: arm64: allwinner: Add support for TERES I laptop
-Date: Fri, 16 Mar 2018 10:30:55 +0100
-Message-ID: <E1ewlhQ-0000Jx-6s@stardust.g4.wien.funkfeuer.at>
-References: <20180312161050.7647-1-harald@ccbib.org> <20180315170606.GA3635@afzalpc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v2 01/13] firmware: qcom: scm: Add ipq4019 soc compatible
+Date: Fri, 16 Mar 2018 15:08:09 +0530
+Message-ID: <1521193101-4586-2-git-send-email-sricharan@codeaurora.org>
+References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180315170606.GA3635@afzalpc>
-Content-ID: <1235.1521192655.1@stardust.g4.wien.funkfeuer.at>
+In-Reply-To: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add the compatible for ipq4019.
+This does not need clocks to do scm calls.
 
-afzal mohammed writes:
-> On Mon, Mar 12, 2018 at 04:10:45PM +0000, Harald Geyer wrote:
-> > This series adds support for the TERES I open hardware laptop produced
-> > by olimex. With these patches and a bootloader capable of setting up
-> > simple framebuffer the laptop is quite useable.
-> 
-> Thanks for the patches
-> 
-> w/ defconfig could reach to prompt via serial console using audio
-> jack.
-> 
-> And just by enabling PWM_SUN4I & FB_SIMPLE, laptop could function
-> standalone as well.
-> 
-> Suggestions (feel free to ignore):
-> 
-> 1. seems currently only review comment pending is on simple
-> framebuffer, perhaps you can proceed removing just that so that a
-> basic bootable system can be achieved at the earliest (iiuc, anyway
-> drm would be the final solution for display)
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
+ drivers/firmware/qcom_scm.c                             | 3 +++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-I'm under the impression that I addressed the concerns regarding simplefb
-satisfactorily. But yes: I hope to get this merged in time for 4.17.
-If simplefb is a problem for that, I'd rather drop it then postpone
-the entire series.
-
-Thanks for testing,
-Harald
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index 7b40054..fcf6979 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -11,9 +11,10 @@ Required properties:
+  * "qcom,scm-msm8660" for MSM8660 platforms
+  * "qcom,scm-msm8690" for MSM8690 platforms
+  * "qcom,scm-msm8996" for MSM8996 platforms
++ * "qcom,scm-ipq4019" for IPQ4019 platforms
+  * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+ - clocks: One to three clocks may be required based on compatible.
+- * No clock required for "qcom,scm-msm8996"
++ * No clock required for "qcom,scm-msm8996", "qcom,scm-ipq4019"
+  * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
+  * Core, iface, and bus clocks required for "qcom,scm"
+ - clock-names: Must contain "core" for the core clock, "iface" for the interface
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 5a7d6930..e778af7 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -603,6 +603,9 @@ static void qcom_scm_shutdown(struct platform_device *pdev)
+ 	{ .compatible = "qcom,scm-msm8996",
+ 	  .data = NULL, /* no clocks */
+ 	},
++	{ .compatible = "qcom,scm-ipq4019",
++	  .data = NULL, /* no clocks */
++	},
+ 	{ .compatible = "qcom,scm",
+ 	  .data = (void *)(SCM_HAS_CORE_CLK
+ 			   | SCM_HAS_IFACE_CLK
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
