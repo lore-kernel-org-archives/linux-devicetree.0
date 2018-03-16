@@ -1,159 +1,38 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v2 13/13] ARM: dts: ipq8074: Enable few peripherals for
- hk01 board
-Date: Fri, 16 Mar 2018 16:27:25 +0530
-Message-ID: <7284d03a864202fd0baaeeea093068ee@codeaurora.org>
-References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
- <1521193101-4586-14-git-send-email-sricharan@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 6/6] drm/rockchip: cdn-dp: remove the DP phy switch
+Date: Fri, 16 Mar 2018 12:02:53 +0100
+Message-ID: <1866837.JGGNoqQO1N@phil>
+References: <20180216120956.19034-1-enric.balletbo@collabora.com> <20180216120956.19034-6-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521193101-4586-14-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <20180216120956.19034-6-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-16 15:08, Sricharan R wrote:
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/ipq8074-hk01.dts | 103 
-> ++++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
+Am Freitag, 16. Februar 2018, 13:09:56 CET schrieb Enric Balletbo i Serra:
+> From: Chris Zhong <zyw@rock-chips.com>
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-> b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-> index 6a838b5..81dff867 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-> +++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-> @@ -21,6 +21,7 @@
+> There are 2 Type-c PHYs in RK3399, but only one DP controller. Hence
+> only one PHY can connect to DP controller at one time, the other should
+> be disconnected. The GRF_SOC_CON26 register has a switch bit to do it,
+> set this bit means enable PHY 1, clear this bit means enable PHY 0.
 > 
->  	aliases {
->  		serial0 = &blsp1_uart5;
-> +		serial1 = &serial_blsp2;
->  	};
+> If the board has 2 Type-C ports, the DP driver get the phy id from
+> devm_of_phy_get_by_index, and then control this switch according to
+> this id. But some others board only has one Type-C port, it may be PHY 0
+> or PHY 1. The dts node id can not tell us the correct PHY id. Hence move
+> this switch to PHY driver, the PHY driver can distinguish between PHY 0
+> and PHY 1, and then write the correct register bit.
 > 
->  	chosen {
-> @@ -41,6 +42,47 @@
->  					bias-disable;
->  				};
->  			};
-> +
-> +			 i2c_0_pins: i2c_0_pinmux {
-> +				  mux {
-> +					   pins = "gpio42", "gpio43";
-> +					   function = "blsp1_i2c";
-> +					   drive-strength = <8>;
-> +					   bias-disable;
-> +				  };
-> +			 };
-> +
-> +			 spi_0_pins: spi_0_pins {
-> +				  mux {
-> +					   pins = "gpio38", "gpio39", "gpio40", "gpio41";
-> +					   function = "blsp0_spi";
-> +					   drive-strength = <8>;
-> +					   bias-disable;
-> +				  };
-> +			 };
-> +
-> +			 hsuart_pins: hsuart_pins {
-> +				  mux {
-> +					   pins = "gpio46", "gpio47", "gpio48", "gpio49";
-> +					   function = "blsp2_uart";
-> +					   drive-strength = <8>;
-> +					   bias-disable;
-> +				  };
-> +			 };
-> +
-> +			 qpic_pins: qpic_pins {
-> +				mux {
-> +					   pins = "gpio1", "gpio3", "gpio4",
-> +						  "gpio5", "gpio6", "gpio7",
-> +						  "gpio8", "gpio10", "gpio11",
-> +						  "gpio12", "gpio13", "gpio14",
-> +						  "gpio15", "gpio16", "gpio17";
-> +					   function = "qpic";
-> +					   drive-strength = <8>;
-> +					   bias-disable;
-> +				  };
-> +			};
-> +
->  		};
-> 
->  		serial@78b3000 {
-> @@ -48,5 +90,66 @@
->  			pinctrl-names = "default";
->  			status = "ok";
->  		};
-> +
-> +		spi@78b5000 {
-> +			 pinctrl-0 = <&spi_0_pins>;
-> +			 pinctrl-names = "default";
-> +			 status = "ok";
-> +
-> +			 m25p80@0 {
-> +				  #address-cells = <1>;
-> +				  #size-cells = <1>;
-> +				  compatible = "n25q128a11", "jedec,spi-nor";
-> +				  reg = <0>;
-> +				  spi-max-frequency = <50000000>;
-> +			 };
-> +		};
-> +
-> +		serial@78B1000 {
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-  s/78B1000/78b1000
+applied to drm-misc with a note stating where the rest of the series
+went to.
 
-  With that,
-  Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-
-> +			 pinctrl-0 = <&hsuart_pins>;
-> +			 pinctrl-names = "default";
-> +			 status = "ok";
-> +		};
-> +
-> +		i2c_0@78b6000 {
-> +			 pinctrl-0 = <&i2c_0_pins>;
-> +			 pinctrl-names = "default";
-> +			 status = "ok";
-> +		};
-> +
-> +		dma@7984000 {
-> +			 status = "ok";
-> +		};
-> +
-> +		nand@79b0000 {
-> +			pinctrl-0 = <&qpic_pins>;
-> +			pinctrl-names = "default";
-> +			status = "ok";
-> +
-> +			nand@0 {
-> +				reg = <0>;
-> +				nand-ecc-strength = <4>;
-> +				nand-ecc-step-size = <512>;
-> +				nand-bus-width = <8>;
-> +			};
-> +		};
-> +
-> +		phy@86000 {
-> +			status = "ok";
-> +		};
-> +
-> +		phy@8e000 {
-> +			status = "ok";
-> +		};
-> +
-> +		pci@20000000 {
-> +			status = "ok";
-> +			perst-gpio = <&tlmm 58 0x1>;
-> +		};
-> +
-> +		pci@10000000 {
-> +			status = "ok";
-> +			perst-gpio = <&tlmm 61 0x1>;
-> +		};
->  	};
->  };
+Thanks
+Heiko
