@@ -1,101 +1,68 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v6 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
-Date: Fri, 16 Mar 2018 16:16:39 +0100
-Message-ID: <1521213399-31947-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Fri, 16 Mar 2018 10:40:13 -0500
+Message-ID: <CAL_Jsq+=qMOAYw1+APwWKmgkfY=2c8OSes5ah2jrXnRVNU78mw@mail.gmail.com>
+References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
+ <20180309233931.7xujvo4eg4g5ftri@rob-hp-laptop>
+ <HE1PR04MB3113DC090D0608077D396DCB87D30@HE1PR04MB3113.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <HE1PR04MB3113DC090D0608077D396DCB87D30@HE1PR04MB3113.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The R-Car V3M Eagle board includes a transparent THC63LVD1024 LVDS
-decoder, connected to the on-chip LVDS encoder output on one side
-and to HDMI encoder ADV7511w on the other one.
+On Sun, Mar 11, 2018 at 11:43 PM, Jacky Bai <ping.bai@nxp.com> wrote:
+>> > diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+>> > +           spi3 = &ecspi3;
+>> > +           spi4 = &ecspi4;
+>> > +           usbphy0 = &usbphy1;
+>> > +           usbphy1 = &usbphy2;
+>>
+>> Why do you need a alias for phys?
+>
+> The alias of usbphy seems used by drivers/usb/phy/phy-mxs-usb.c. So we need to add alias for usbphy.
 
-As the decoder does not need any configuration it has been so-far
-omitted from DTS. Now that a driver is available, describe it in DT
-as well.
+That use should be fixed. The correct way to handle this is add a cell
+to "fsl,anatop" with 0 or 1 to distinguish each phy.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+>> > +   };
+>> > +
+>> > +   cpus {
+>> > +           #address-cells = <1>;
+>> > +           #size-cells = <0>;
+>> > +
+>> > +           cpu0: cpu@0 {
+>> > +                   compatible = "arm,cortex-a9";
+>> > +                   device_type = "cpu";
+>> > +                   reg = <0>;
+>> > +                   next-level-cache = <&L2>;
+>> > +                   operating-points = <
+>> > +                           /* kHz    uV */
+>> > +                           996000  1225000
+>> > +                           792000  1175000
+>> > +                           396000  1075000
+>> > +                           198000  975000
+>> > +                   >;
+>> > +                   fsl,soc-operating-points = <
+>>
+>> This is not documented.
+>
+> This is same as we used on other imx6 SOC. I don't know where to add doc for this property. Please give me some suggestion.
 
----
+Along side other OPP binding docs. The real question is why you need
+this and can't use the original OPP binding (which you have too) or
+move to the v2 binding.
 
-List of patch dependencies, as of renesas-drivers-2018-03-13-v4.16-rc5:
-
-- [PATCH v2 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
-   which includes DU, LVDS and FCPD enablement from:
-  [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
-- [PATCH v4] v4l: vsp1: Fix video output on R8A77970
-
-Patches to be applied on top of
-"arm64: dts: renesas: eagle: add HDMI output using the ADV7511W"
-
-Thanks
-   j
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 33 +++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-index c0fd144..69f43b8 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -42,6 +42,33 @@
- 			};
- 		};
- 	};
-+
-+	thc63lvd1024: lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				thc63lvd1024_in_0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@2{
-+				reg = <2>;
-+
-+				thc63lvd1024_out_2: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+
-+			};
-+
-+		};
-+	};
- };
- 
- &avb {
-@@ -98,7 +125,7 @@
- 			port@0 {
- 				reg = <0>;
- 				adv7511_in: endpoint {
--					remote-endpoint = <&lvds0_out>;
-+					remote-endpoint = <&thc63lvd1024_out_2>;
- 				};
- 			};
- 
-@@ -152,8 +179,8 @@
- 
- 	ports {
- 		port@1 {
--			endpoint {
--				remote-endpoint = <&adv7511_in>;
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in_0>;
- 			};
- 		};
- 	};
--- 
-2.7.4
+Rob
