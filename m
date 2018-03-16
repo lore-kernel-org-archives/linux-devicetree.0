@@ -1,133 +1,177 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v8 09/42] dt-bindings: clock: New bindings for TI Davinci PSC
-Date: Thu, 15 Mar 2018 21:52:25 -0500
-Message-ID: <1521168778-27236-10-git-send-email-david@lechnology.com>
+Subject: [PATCH v8 20/42] ARM: davinci: pass clock as parameter to davinci_timer_init()
+Date: Thu, 15 Mar 2018 21:52:36 -0500
+Message-ID: <1521168778-27236-21-git-send-email-david@lechnology.com>
 References: <1521168778-27236-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for the Power Sleep Controller (PSC) for the
-mach-davinci family of processors.
+This changes davinci_timer_init() so that we pass the clock as a
+parameter instead of using clk_get(). This is done in preparation
+for converting to the common clock framework.
 
-Note: Although TI Keystone has a very similar PSC, we are not using the
-existing bindings. Keystone is using a legacy one-node-per-clock binding
-(actually two nodes if you count the separate reset binding for the same
-IP block). Also, some davinci LPSCs have quirks that aren't handled by
-the keystone bindings, so we would be adding one compatible string per
-clock with quirks instead of just a new compatible string for each
-controller.
+It removes the requirement that we have to have a clock with con_id
+of "timer0", which will be good for DT bindings since clock-names =
+"timer0" doesn't really make sense.
+
+Additionally, when we convert to the common clock framework, most of
+the clocks will be platform devices, which will not be available at
+this point during the boot process, so we will need to pass a clock
+that is available (i.e. ref_clk) instead of the "timer0" clock.
+
+NB: The comment added in time.c is not entirely true when this patch
+is applied, but it will be correct once the conversion to the common
+clock framework is complete in subsequent patches.
+
+Also, drop use of extern in header file since we are touching the
+definition.
 
 Signed-off-by: David Lechner <david@lechnology.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 v8 changes:
-- None
+- none
 
 v7 changes:
-- Fixed clock-names property typo
-- Added #power-domain-cells property
+- new in v7
 
-v6 changes:
-- added clocks and clock-names properties
-- expanded examples
+ arch/arm/mach-davinci/da830.c               |  2 +-
+ arch/arm/mach-davinci/da850.c               |  2 +-
+ arch/arm/mach-davinci/dm355.c               |  2 +-
+ arch/arm/mach-davinci/dm365.c               |  2 +-
+ arch/arm/mach-davinci/dm644x.c              |  2 +-
+ arch/arm/mach-davinci/dm646x.c              |  2 +-
+ arch/arm/mach-davinci/include/mach/common.h |  3 ++-
+ arch/arm/mach-davinci/time.c                | 13 +++++++++----
+ 8 files changed, 17 insertions(+), 11 deletions(-)
 
-
- .../devicetree/bindings/clock/ti/davinci/psc.txt   | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-new file mode 100644
-index 0000000..dae4ad8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-@@ -0,0 +1,71 @@
-+Binding for TI DaVinci Power Sleep Controller (PSC)
-+
-+The PSC provides power management, clock gating and reset functionality. It is
-+primarily used for clocking.
-+
-+Required properties:
-+- compatible: shall be one of:
-+	- "ti,da850-psc0" for PSC0 on DA850/OMAP-L138/AM18XX
-+	- "ti,da850-psc1" for PSC1 on DA850/OMAP-L138/AM18XX
-+- reg: physical base address and size of the controller's register area
-+- #clock-cells: from common clock binding; shall be set to 1
-+- #power-domain-cells: from generic power domain binding; shall be set to 1.
-+- clocks: phandles to clocks corresponding to the clock-names property
-+- clock-names: list of parent clock names - depends on compatible value
-+	- for "ti,da850-psc0", shall be "pll0_sysclk1", "pll0_sysclk2",
-+	  "pll0_sysclk4", "pll0_sysclk6", "async1"
-+	- for "ti,da850-psc1", shall be "pll0_sysclk2", "pll0_sysclk4", "async3"
-+
-+Optional properties:
-+- #reset-cells: from reset binding; shall be set to 1 - only applicable when
-+  at least one local domain provides a local reset.
-+
-+Consumers:
-+
-+	Clock, power domain and reset consumers shall use the local power domain
-+	module ID (LPSC) as the index corresponding to the clock cell. Refer to
-+	the device-specific datasheet to find these numbers. NB: Most local
-+	domains	only provide a clock/power domain and not a reset.
-+
-+Examples:
-+
-+	psc0: clock-controller@10000 {
-+		compatible = "ti,da850-psc0";
-+		reg = <0x10000 0x1000>;
-+		#clock-cells = <1>;
-+		#power-domain-cells = <1>;
-+		#reset-cells = <1>;
-+		clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
-+			 <&pll0_sysclk 4>, <&pll0_sysclk 6>, <&async1_clk>;
-+		clock_names = "pll0_sysclk1", "pll0_sysclk2",
-+			      "pll0_sysclk4", "pll0_sysclk6", "async1";
-+	};
-+	psc1: clock-controller@227000 {
-+		compatible = "ti,da850-psc1";
-+		reg = <0x227000 0x1000>;
-+		#clock-cells = <1>;
-+		#power-domain-cells = <1>;
-+		clocks = <&pll0_sysclk 2>, <&pll0_sysclk 4>, <&async3_clk>;
-+		clock_names = "pll0_sysclk2", "pll0_sysclk4", "async3";
-+	};
-+
-+	/* consumer */
-+	dsp: dsp@11800000 {
-+		compatible = "ti,da850-dsp";
-+		reg = <0x11800000 0x40000>,
-+		      <0x11e00000 0x8000>,
-+		      <0x11f00000 0x8000>,
-+		      <0x01c14044 0x4>,
-+		      <0x01c14174 0x8>;
-+		reg-names = "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig";
-+		interrupt-parent = <&intc>;
-+		interrupts = <28>;
-+		clocks = <&psc0 15>;
-+		power-domains = <&psc0 15>;
-+		resets = <&psc0 15>;
-+	};
-+
-+Also see:
-+- Documentation/devicetree/bindings/clock/clock-bindings.txt
-+- Documentation/devicetree/bindings/power/power_domain.txt
-+- Documentation/devicetree/bindings/reset/reset.txt
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 350d767..0b17e5a 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -1224,5 +1224,5 @@ void __init da830_init(void)
+ void __init da830_init_time(void)
+ {
+ 	davinci_clk_init(da830_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timerp64_0_clk);
+ }
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 34117e61..1dbf01c 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -1396,5 +1396,5 @@ void __init da850_init(void)
+ void __init da850_init_time(void)
+ {
+ 	davinci_clk_init(da850_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timerp64_0_clk);
+ }
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index f294804..0da7516 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -1047,7 +1047,7 @@ void __init dm355_init(void)
+ void __init dm355_init_time(void)
+ {
+ 	davinci_clk_init(dm355_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
+ 
+ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index 1e3df9d..871372a 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -1172,7 +1172,7 @@ void __init dm365_init(void)
+ void __init dm365_init_time(void)
+ {
+ 	davinci_clk_init(dm365_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
+ 
+ static struct resource dm365_vpss_resources[] = {
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index b409801..71a16fc 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -935,7 +935,7 @@ void __init dm644x_init(void)
+ void __init dm644x_init_time(void)
+ {
+ 	davinci_clk_init(dm644x_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
+ 
+ int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 109ab1f..e1d6e92 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -956,7 +956,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
+ 	ref_clk.rate = ref_clk_rate;
+ 	aux_clkin.rate = aux_clkin_rate;
+ 	davinci_clk_init(dm646x_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
+ 
+ static int __init dm646x_init_devices(void)
+diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
+index f0d5e858..5f45d0a 100644
+--- a/arch/arm/mach-davinci/include/mach/common.h
++++ b/arch/arm/mach-davinci/include/mach/common.h
+@@ -12,11 +12,12 @@
+ #ifndef __ARCH_ARM_MACH_DAVINCI_COMMON_H
+ #define __ARCH_ARM_MACH_DAVINCI_COMMON_H
+ 
++#include <linux/clk.h>
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+ #include <linux/reboot.h>
+ 
+-extern void davinci_timer_init(void);
++void davinci_timer_init(struct clk *clk);
+ 
+ extern void davinci_irq_init(void);
+ extern void __iomem *davinci_intc_base;
+diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
+index 1bb991a..2521333 100644
+--- a/arch/arm/mach-davinci/time.c
++++ b/arch/arm/mach-davinci/time.c
+@@ -334,10 +334,8 @@ static struct clock_event_device clockevent_davinci = {
+ 	.set_state_oneshot	= davinci_set_oneshot,
+ };
+ 
+-
+-void __init davinci_timer_init(void)
++void __init davinci_timer_init(struct clk *timer_clk)
+ {
+-	struct clk *timer_clk;
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	unsigned int clockevent_id;
+ 	unsigned int clocksource_id;
+@@ -373,7 +371,14 @@ void __init davinci_timer_init(void)
+ 		}
+ 	}
+ 
+-	timer_clk = clk_get(NULL, "timer0");
++	/*
++	 * REVISIT: Currently, timer_clk will be "ref_clk". However, the actual
++	 * clock for this device comes from a PLL AUXCLK or a PSC clock
++	 * (depending on the SoC). The PLL and PSC clocks are not registered
++	 * until later in boot because they are platform devices. We should try
++	 * again later to get the real clock so that the real clock is not
++	 * turned off when disabling unused clocks, which would stop the timer.
++	 */
+ 	BUG_ON(IS_ERR(timer_clk));
+ 	clk_prepare_enable(timer_clk);
+ 
 -- 
 2.7.4
