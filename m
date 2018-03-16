@@ -1,40 +1,27 @@
-From: Alexandru M Stan <amstan@chromium.org>
-Subject: [PATCH 0/2] Add backlight-pwm-passthru in analogix DP driver
-Date: Thu, 15 Mar 2018 19:56:57 -0700
-Message-ID: <20180316025659.217423-1-amstan@chromium.org>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v8_00/42]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Thu, 15 Mar 2018 21:59:04 -0500
+Message-ID: <234488a1-7b99-68e4-0a4b-fbf7121944b5@lechnology.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <seanpaul@chromium.org>
-Cc: devicetree@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Heiko Stuebner <heiko@sntech.de>, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, marcheu@chromium.org, hoegsberg@chromium.org, Thierry Escande <thierry.escande@collabora.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Alexandru M Stan <amstan@chromium.org>, Yakir Yang <kuankuan.y@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, zain wang <wzz@rock-chips.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I noticed that the backlight on the ASUS Chromebook Flip C101 (bob) is
-flickering.
-
-We're sending it a high frequency pwm signal, but the EDP panel decided to
-"parse" the signal, read the duty cycle, then make its own signal that
-it sends to the LEDs.
-
-So even though we send a nice high refresh rate at 1200Hz, the panel backlight
-flickers at 200Hz (which is not even divisible by the 60Hz refresh rate).
-
-The fix for that is to enable the EDP_BACKLIGHT_FREQ_PWM_PIN_PASSTHRU bit from
-the DPCD EDP registers. This makes the panel actually follow the signal
-we're giving it.
-
-This series includes the optional dt binding to enable this fix
-(backlight-pwm-passthru) and the corresponding code in the analogix
-drm/bridge driver.
+On 03/15/2018 09:52 PM, David Lechner wrote:
+> This series converts mach-davinci to use the common clock framework.
+> 
 
 
-Alexandru M Stan (2):
-  dt-bindings: analogix-dp: Add backlight-pwm-passthru
-  drm/bridge: analogix: Enable EDP_BACKLIGHT_FREQ_PWM_PIN_PASSTHRU
+Hi Adam,
 
- .../bindings/display/bridge/analogix_dp.txt        |  4 ++
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 48 ++++++++++++++++++++++
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  1 +
- 3 files changed, 53 insertions(+)
-
--- 
-2.13.5
+I think we are getting pretty close to the final product here. If you
+have time to test the EVM(s) you have again, I think this is a good
+time to do it.
