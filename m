@@ -1,65 +1,219 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car
- V3M Eagle
-Date: Fri, 16 Mar 2018 12:16:45 +0100
-Message-ID: <20180316111644.k5ofsl5o5ethbnie@verge.net.au>
-References: <1521130316-1221-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521130316-1221-4-git-send-email-jacopo+renesas@jmondi.org>
- <20180316000004.GC3432@bigcity.dyn.berto.se>
- <20180316093953.GC31710@w540>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v2 12/13] ARM: dts: ipq8074: Add pcie nodes
+Date: Fri, 16 Mar 2018 16:50:57 +0530
+Message-ID: <69ff9b14b9b2fe4d90a02ca629059af2@codeaurora.org>
+References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
+ <1521193101-4586-13-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180316093953.GC31710@w540>
+In-Reply-To: <1521193101-4586-13-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, magnus.damm@gmail.com, geert@linux-m68k.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 10:39:53AM +0100, jacopo mondi wrote:
-> Hi Niklas,
->    thanks for review,
+On 2018-03-16 15:08, Sricharan R wrote:
+> The driver/phy support for ipq8074 is available now.
+> So enabling the nodes in DT.
 > 
-> On Fri, Mar 16, 2018 at 01:00:04AM +0100, Niklas Söderlund wrote:
-> > Hi Jacopo,
-> >
-> > Thanks for your patch.
-> >
-> > This one must depend on '[PATCH v2 0/5] arm64: dts: renesas: r8a77970:
-> > enable HDMI output' or something similar not yet in renesas-drivers
-> > repository correct?
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi | 157 
+> +++++++++++++++++++++++++++++++++-
+>  1 file changed, 156 insertions(+), 1 deletion(-)
 > 
-> Yes, I have listed dependencies of this series in my v1 cover letter:
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> index 806fc56..7562650 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -24,7 +24,7 @@
+>  		ranges = <0 0 0 0xffffffff>;
+>  		compatible = "simple-bus";
 > 
-> ---------------------------------------------------------------------------
-> The series is based on Laurent's drm/next/du branch with patches on top for:
-> - Sergei: Enable PFC, I2c, GPIOs for r8a77970
-> - Sergei: Add support for r8a77970 in DU and add display device nodes in
->   r8a77970 DTSI
-> - Niklas: Connect DU LVDS output to HDMI bridge adv7511w in Eagle DTS
-> - Sergei: fix video output on R8A77970
-> 
-> A base branch with these patches applied is available at
-> git://jmondi.org/linux v3m/v4.16-rc3/base
-> ---------------------------------------------------------------------------
-> 
-> My bad I have not reported this in all cover letters (and I have not
-> reported the full name of the series)
-> 
-> PFC, GPIO and I2c support I have listed as dependencies seems to have
-> landed in renesas-drivers, while I don't see yet:
-> 
-> Sergei:
-> [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
-> 
-> whose patches for r8a77970 dtsi are included in yours:
-> [PATCH v2 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
-> 
-> On top I also have Sergei's/Laurent's:
-> [PATCH v4] v4l: vsp1: Fix video output on R8A77970
+> -		pinctrl@1000000 {
+> +		tlmm: pinctrl@1000000 {
+>  			compatible = "qcom,ipq8074-pinctrl";
+>  			reg = <0x1000000 0x300000>;
+>  			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -229,6 +229,161 @@
+>  			dma-names = "tx", "rx", "cmd";
+>  			status = "disabled";
+>  		};
+> +
+> +		pcie_phy0: phy@86000 {
+> +			compatible = "qcom,ipq8074-qmp-pcie-phy";
+> +			reg = <0x86000 0x1000>;
+> +			#phy-cells = <0>;
+> +			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+> +			clock-names = "pipe_clk";
+> +			clock-output-names = "pcie20_phy0_pipe_clk";
+> +
+> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+> +				<&gcc GCC_PCIE0PHY_PHY_BCR>;
+> +			reset-names = "phy",
+> +				      "common";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie0: pci@20000000 {
+> +			compatible = "qcom,pcie-ipq8074";
+> +			reg =  <0x20000000 0xf1d
+> +				0x20000F20 0xa8
 
-I have marked this patch as Deferred pending acceptance of the
-dependencies. Please repost or otherwise ping me once the
-dependencies are in place.
+  s/0x20000F20/0x20000f20
+
+> +				0x80000 0x2000
+> +				0x20100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "parf", "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <0>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie_phy0>;
+> +			phy-names = "pciephy";
+> +
+> +			ranges = <0x81000000 0 0x20200000 0x20200000
+> +				  0 0x00100000   /* downstream I/O */
+
+  we can remove trailing zeros from address.
+  s/0x00100000/0x100000
+
+> +				  0x82000000 0 0x20300000 0x20300000
+> +				  0 0x00d00000>; /* non-prefetchable memory */
+
+  s/0x00d00000/0xd00000
+
+  Same changes are for PCIE1 also.
+
+  With that.
+
+  Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
+
+> +
+> +			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 75
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 78
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 79
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 83
+> +					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
+> +				 <&gcc GCC_PCIE0_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE0_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE0_AHB_CLK>,
+> +				 <&gcc GCC_PCIE0_AUX_CLK>;
+> +
+> +			clock-names = "iface",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "aux";
+> +			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE0_SLEEP_ARES>,
+> +				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
+> +				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
+> +				 <&gcc GCC_PCIE0_AHB_ARES>,
+> +				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
+> +			reset-names = "pipe",
+> +				      "sleep",
+> +				      "sticky",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "axi_m_sticky";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie_phy1: phy@8e000 {
+> +			compatible = "qcom,ipq8074-qmp-pcie-phy";
+> +			reg = <0x8e000 0x1000>;
+> +			#phy-cells = <0>;
+> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+> +			clock-names = "pipe_clk";
+> +			clock-output-names = "pcie20_phy1_pipe_clk";
+> +
+> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+> +				<&gcc GCC_PCIE1PHY_PHY_BCR>;
+> +			reset-names = "phy",
+> +				      "common";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie1: pci@10000000 {
+> +			compatible = "qcom,pcie-ipq8074";
+> +			reg =  <0x10000000 0xf1d
+> +				0x10000F20 0xa8
+> +				0x88000 0x2000
+> +				0x10100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "parf", "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <1>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie_phy1>;
+> +			phy-names = "pciephy";
+> +
+> +			ranges = <0x81000000 0 0x10200000 0x10200000
+> +				  0 0x00100000   /* downstream I/O */
+> +				  0x82000000 0 0x10300000 0x10300000
+> +				  0 0x00d00000>; /* non-prefetchable memory */
+> +
+> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 142
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 143
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 144
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 145
+> +					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
+> +				 <&gcc GCC_PCIE1_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE1_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE1_AHB_CLK>,
+> +				 <&gcc GCC_PCIE1_AUX_CLK>;
+> +			clock-names = "iface",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "aux";
+> +			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE1_SLEEP_ARES>,
+> +				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
+> +				 <&gcc GCC_PCIE1_AHB_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>;
+> +			reset-names = "pipe",
+> +				      "sleep",
+> +				      "sticky",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "axi_m_sticky";
+> +			status = "disabled";
+> +		};
+>  	};
+> 
+>  	cpus {
