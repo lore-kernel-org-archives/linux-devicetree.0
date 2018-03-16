@@ -1,84 +1,72 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: sdm845: Add gpu and gmu device nodes
-Date: Fri, 16 Mar 2018 12:51:52 -0600
-Message-ID: <20180316185152.32020-3-jcrouse@codeaurora.org>
-References: <20180316185152.32020-1-jcrouse@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Fri, 16 Mar 2018 12:55:22 -0700
+Message-ID: <20180316195522.GC15968@tuxbook-pro>
+References: <20180226175802.20052-1-ilina@codeaurora.org>
+ <20180226175802.20052-3-ilina@codeaurora.org>
+ <20180305231455.GJ18510@minitux>
+ <20180306155703.GA4930@codeaurora.org>
+ <20180307190249.GW93895@bjorns-mbp-2.lan>
+ <152122480915.70929.13116557401450122973@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180316185152.32020-1-jcrouse@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: freedreno@lists.freedesktop.org
-Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, vireshk@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <152122480915.70929.13116557401450122973@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Lina Iyer <ilina@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBub2RlcyB0byBkZXNjcmliZSB0aGUgQWRyZW5vIEdQVSBhbmQgR01VIGRldmljZXMu
-CgpTaWduZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgot
-LS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDExOSArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExOSBpbnNlcnRpb25z
-KCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCmluZGV4IDE2YjVmMzU2ZWM5Ni4u
-ODU0ZGE2NjA0NDE3IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1
-LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCkBAIC0zMTIs
-NCArMzEyLDEyMyBAQAogCQkJfTsKIAkJfTsKIAl9OworCisJYWRyZW5vX3NtbXU6IGFybSxzbW11
-LWFkcmVub0A1MDQwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJxY29tLG1zbTg5OTYtc21tdS12MiI7
-CisJCXJlZyA9IDwweDUwNDAwMDAgMHgxMDAwMD47CisJCSNpb21tdS1jZWxscyA9IDwxPjsKKwkJ
-I2dsb2JhbC1pbnRlcnJ1cHRzID0gPDI+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI5IElS
-UV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJICAgICA8R0lDX1NQSSAyMzEgSVJRX1RZUEVfTEVWRUxf
-SElHSD4sCisJCQkgICAgIDxHSUNfU1BJIDM2NCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkg
-ICAgIDxHSUNfU1BJIDM2NSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkgICAgIDxHSUNfU1BJ
-IDM2NiBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkgICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQ
-RV9FREdFX1JJU0lORz4sCisJCQkgICAgIDxHSUNfU1BJIDM2OCBJUlFfVFlQRV9FREdFX1JJU0lO
-Rz4sCisJCQkgICAgIDxHSUNfU1BJIDM2OSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkgICAg
-IDxHSUNfU1BJIDM3MCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkgICAgIDxHSUNfU1BJIDM3
-MSBJUlFfVFlQRV9FREdFX1JJU0lORz47CisJCWNsb2NrcyA9IDwmY2xvY2tfZ2NjIEdDQ19HUFVf
-TUVNTk9DX0dGWF9DTEs+LAorCQkJIDwmY2xvY2tfZ2NjIEdDQ19HUFVfQ0ZHX0FIQl9DTEs+Owor
-CQljbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOworCisJCXBvd2VyLWRvbWFpbnMgPSA8JmNs
-b2NrX2dwdWNjIEdQVV9DWF9HRFNDPjsKKwl9OworCisJZ3B1X29wcF90YWJsZTogYWRyZW5vLW9w
-cC10YWJsZSB7CisJCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7CisKKwkJb3Bw
-LTcxMDAwMDAwMCB7CisJCQlvcHAtaHogPSAvYml0cy8gNjQgPDcxMDAwMDAwMD47CisJCQlxY29t
-LGxldmVsID0gPDQxNj47CisJCX07CisKKwkJb3BwLTY3NTAwMDAwMCB7CisJCQlvcHAtaHogPSAv
-Yml0cy8gNjQgPDY3NTAwMDAwMD47CisJCQlxY29tLGxldmVsID0gPDM4ND47CisJCX07CisKKwkJ
-b3BwLTU5NjAwMDAwMCB7CisJCQlvcHAtaHogPSAvYml0cy8gNjQgPDU5NjAwMDAwMD47CisJCQlx
-Y29tLGxldmVsID0gPDMyMD47CisJCX07CisKKwkJb3BwLTUyMDAwMDAwMCB7CisJCQlvcHAtaHog
-PSAvYml0cy8gNjQgPDUyMDAwMDAwMD47CisJCQlxY29tLGxldmVsID0gPDI1Nj47CisJCX07CisK
-KwkJb3BwLTQxNDAwMDAwMCB7CisJCQlvcHAtaHogPSAvYml0cy8gNjQgPDQxNDAwMDAwMD47CisJ
-CQlxY29tLGxldmVsID0gPDE5Mj47CisJCX07CisKKwkJb3BwLTM0MjAwMDAwMCB7CisJCQlvcHAt
-aHogPSAvYml0cy8gNjQgPDM0MjAwMDAwMD47CisJCQlxY29tLGxldmVsID0gPDEyOD47CisJCX07
-CisKKwkJb3BwLTI1NzAwMDAwMCB7CisJCQlvcHAtaHogPSAvYml0cy8gNjQgPDI1NzAwMDAwMD47
-CisJCQlxY29tLGxldmVsID0gPDY0PjsKKwkJfTsKKwl9OworCisJZ3B1QDUwMDAwMDAgeworCQlj
-b21wYXRpYmxlID0gInFjb20sYWRyZW5vLTYzMC4yIiwgInFjb20sYWRyZW5vIjsKKwkJI3N0cmVh
-bS1pZC1jZWxscyA9IDwxNj47CisKKwkJcmVnID0gPDB4NTAwMDAwMCAweDQwMDAwPjsKKwkJcmVn
-LW5hbWVzID0gImtnc2xfM2QwX3JlZ19tZW1vcnkiOworCisJCS8qCisJCSAqIExvb2sgbWEsIG5v
-IGNsb2NrcyEgVGhlIEdQVSBjbG9ja3MgYW5kIHBvd2VyIGFyZSBjb250cm9sbGVkCisJCSAqIGVu
-dGlyZWx5IGJ5IHRoZSBHTVUKKwkJICovCisKKwkJaW50ZXJydXB0cyA9IDwwIDMwMCAwPjsKKwkJ
-aW50ZXJydXB0LW5hbWVzID0gImtnc2xfM2QwX2lycSI7CisKKwkJaW9tbXVzID0gPCZhZHJlbm9f
-c21tdSAwPjsKKworCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKKwor
-CQlnbXUgPSA8JmdtdT47CisJfTsKKworCWdtdV9vcHBfdGFibGU6IGFkcmVuby1nbXUtb3BwLXRh
-YmxlIHsKKwkJY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyIjsKKworCQlvcHAtNDAw
-MDAwMDAwIHsKKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NDAwMDAwMDAwPjsKKwkJCXFjb20sbGV2
-ZWwgPSA8MTI4PjsKKwkJfTsKKworCQlvcHAtMjAwMDAwMDAwIHsKKwkJCW9wcC1oeiA9IC9iaXRz
-LyA2NCA8MjAwMDAwMDAwPjsKKwkJCXFjb20sbGV2ZWwgPSA8NDg+OworCQl9OworCX07CisKKwln
-bXU6IGdtdUA1MDZhMDAwIHsKKwkJY29tcGF0aWJsZT0icWNvbSxhZHJlbm8tZ211IjsKKworCQly
-ZWcgPSA8MHg1MDZhMDAwIDB4MzAwMDA+LCA8MHhiMjAwMDAwIDB4MzAwMDAwPjsKKwkJcmVnLW5h
-bWVzID0gImdtdSIsICJnbXVfcGRjIjsKKworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMzA0IElS
-UV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJICAgICA8R0lDX1NQSSAzMDUgSVJRX1RZUEVfTEVWRUxf
-SElHSD47CisJCWludGVycnVwdC1uYW1lcyA9ICJoZmkiLCAiZ211IjsKKworCQljbG9ja3MgPSA8
-JmNsb2NrX2dwdWNjIEdQVV9DQ19DWF9HTVVfQ0xLPiwKKwkJCTwmY2xvY2tfZ3B1Y2MgR1BVX0ND
-X0NYT19DTEs+LAorCQkJPCZjbG9ja19nY2MgR0NDX0REUlNTX0dQVV9BWElfQ0xLPiwKKwkJCTwm
-Y2xvY2tfZ2NjIEdDQ19HUFVfTUVNTk9DX0dGWF9DTEs+OworCQljbG9jay1uYW1lcyA9ICJnbXUi
-LCAiY3hvIiwgImF4aSIsICJtZW1ub2MiOworCisJCXBvd2VyLWRvbWFpbnMgPSA8JmNsb2NrX2dw
-dWNjIEdQVV9DWF9HRFNDPjsKKwkJaW9tbXVzID0gPCZhZHJlbm9fc21tdSA1PjsKKworCQlvcGVy
-YXRpbmctcG9pbnRzLXYyID0gPCZnbXVfb3BwX3RhYmxlPjsKKwl9OwogfTsKLS0gCjIuMTYuMQoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri 16 Mar 11:26 PDT 2018, Stephen Boyd wrote:
+
+> Quoting Bjorn Andersson (2018-03-07 11:02:49)
+> > On Tue 06 Mar 07:57 PST 2018, Lina Iyer wrote:
+> > 
+> > > On Mon, Mar 05 2018 at 16:15 -0700, Bjorn Andersson wrote:
+> > > > On Mon 26 Feb 09:58 PST 2018, Lina Iyer wrote:
+> > 
+> > > > As such I think you should just describe only the 0x85fe0000 + 0x20000
+> > > > region here and to support the dynamic aspect of this from a system
+> > > > point of view you can have the boot loader read the information at
+> > > > 0xc3f000c and adjust the reserved memory. (Or just keep the step of
+> > > > manually update the dts without caring about the indirection)
+> > > > 
+> > > It would be incorrect and very board specific to just use the 0x85fe000
+> > > as the address. It is not how the SoC defines the location. Upon request
+> > > earlier, this memory location was added in DT and the location is
+> > > typical reference platform usage only.
+> > > 
+> > 
+> > The problem is that as the db resides in a chunk of memory in the middle
+> > of what Linux considers System RAM the DTS must specify this region as
+> > reserved. Which means that as you, like described above, update the
+> > dictionary something (in your scheme a person) has to update the
+> > reserved-memory region as well.
+> > 
+> > That's why I'm proposing that the appropriate implementation for this
+> > is to have the boot loader to the dictionary part of this and Linux only
+> > care about the actual reserved-memory region. This way you would still
+> > implement the dictionary lookup on a system level, but the Linux
+> > part no longer depend on a human updating the DTS to match the values of
+> > the dictionary.
+> 
+> Agreed. I thought SMEM had a similar design of a cookie in IMEM to
+> indicate location and size because coordinating changes across all the
+> various software images is a hard problem. But coordinating between
+> linux and the linux bootloader shouldn't be as hard.
+> 
+
+Correct, SMEM has exactly the same mechanism.
+
+I get that the coordinating of these addresses between all involved
+images can be a tricky thing, but the only way to make this automatic on
+the application CPU is to split this between boot and Linux; as any
+all-Linux solution requires a human to update the reserved-memory node
+to match the values in the indirection.
+
+So for SMEM we agreed that we implement this as "someone needs to tell
+Linux where SMEM is" and that can be a human or the boot loader.
+
+Regards,
+Bjorn
