@@ -1,65 +1,41 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v2 10/13] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
-Date: Fri, 16 Mar 2018 15:08:18 +0530
-Message-ID: <1521193101-4586-11-git-send-email-sricharan@codeaurora.org>
-References: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH 3/6] dt-bindings: phy-qcom-qmp: Update bindings for sdm845
+Date: Fri, 16 Mar 2018 15:14:56 +0530
+Message-ID: <1521193500-4696-4-git-send-email-mgautam@codeaurora.org>
+References: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521193101-4586-1-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org
-Cc: sricharan@codeaurora.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- arch/arm/boot/dts/Makefile                      |  1 +
- arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts | 26 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+Update compatible strings for USB3 PHYs on SDM845.
+One is QMPv3 DisplayPort-USB combo PHY and other one
+is USB UNI PHY which is single lane USB3 PHY without
+DP capability.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8c93fd0..0844087 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -750,6 +750,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq4019-ap.dk04.1-c1.dtb \
- 	qcom-ipq4019-ap.dk04.1-c3.dtb \
- 	qcom-ipq4019-ap.dk07.1-c1.dtb \
-+	qcom-ipq4019-ap.dk07.1-c2.dtb \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-new file mode 100644
-index 0000000..c1e909c
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+
-+#include "qcom-ipq4019-ap.dk07.1.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1-C2";
-+
-+	soc {
-+		pinctrl@1000000 {
-+			serial_1_pins: serial1_pinmux {
-+				mux {
-+					pins = "gpio8", "gpio9";
-+					function = "blsp_uart1";
-+					bias-disable;
-+				};
-+			};
-+		};
-+
-+		serial@78b0000 {
-+			pinctrl-0 = <&serial_1_pins>;
-+			pinctrl-names = "default";
-+			status = "ok";
-+		};
-+	};
-+};
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+---
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index dcf1b8f..cef8765 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -9,7 +9,9 @@ Required properties:
+ 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+ 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+-	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
++	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
++	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
++	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+ 
+  - reg: offset and length of register set for PHY's common serdes block.
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
