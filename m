@@ -1,12 +1,15 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 0/9] Initial Allwinner H6 support
-Date: Fri, 16 Mar 2018 22:02:06 +0800
-Message-ID: <20180316140215.28663-1-icenowy@aosc.io>
+Subject: [PATCH v4 1/9] pinctrl: sunxi: refactor irq related
+ register function to have desc
+Date: Fri, 16 Mar 2018 22:02:07 +0800
+Message-ID: <20180316140215.28663-2-icenowy@aosc.io>
+References: <20180316140215.28663-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPE5V7KQKGQEUQ5ZQMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQ45V7KQKGQEBETY7GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180316140215.28663-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,56 +20,165 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds initial support for the Allwinner H6 SoC.
+As the new H6 SoC has holes in the IRQ registers, refactor the IRQ
+related register function for getting the full pinctrl desc structure.
 
-It's quite different from earlier Allwinner SoCs. For example, the
-memory map is refactored, and the CCU is rearranged. It's also the first
-Allwinner SoC with PCI Express interface (although the implementation
-of the PCI Express controller is broken), and the second one with USB
-3.0 (the first one is A80).
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+Changes in v4:
+- Adjusted parameter sequence.
 
-This patchset adds the most basical support for it, including the main pin
-controller, the main CCU and the basical device tree.
+Patch introduced in v3.
 
-Icenowy Zheng (9):
-  pinctrl: sunxi: refactor irq related register function to have desc
-  pinctrl: sunxi: introduce IRQ bank conversion function
-  pinctrl: sunxi: change irq_bank_base to irq_bank_map
-  pinctrl: sunxi: add support for the Allwinner H6 main pin controller
-  clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
-  dt-bindings: add device tree binding for Allwinner H6 main CCU
-  clk: sunxi-ng: add support for the Allwinner H6 CCU
-  arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
-  arm64: allwinner: h6: add support for Pine H64 board
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 22 ++++++++++------------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h | 26 ++++++++++++++++++--------
+ 2 files changed, 28 insertions(+), 20 deletions(-)
 
- .../devicetree/bindings/clock/sunxi-ccu.txt        |    4 +
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |    1 +
- arch/arm64/boot/dts/allwinner/Makefile             |    1 +
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      |   29 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       |  177 +++
- drivers/clk/sunxi-ng/Kconfig                       |    5 +
- drivers/clk/sunxi-ng/Makefile                      |    1 +
- drivers/clk/sunxi-ng/ccu-sun50i-h6.c               | 1207 ++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun50i-h6.h               |   56 +
- drivers/clk/sunxi-ng/ccu_nkmp.c                    |   20 +-
- drivers/clk/sunxi-ng/ccu_nkmp.h                    |    2 +
- drivers/pinctrl/sunxi/Kconfig                      |    4 +
- drivers/pinctrl/sunxi/Makefile                     |    1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          |  614 ++++++++++
- drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c          |    4 +-
- drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c          |    4 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   22 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   40 +-
- include/dt-bindings/clock/sun50i-h6-ccu.h          |  124 ++
- include/dt-bindings/reset/sun50i-h6-ccu.h          |   73 ++
- 20 files changed, 2359 insertions(+), 30 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-h6.h
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
- create mode 100644 include/dt-bindings/clock/sun50i-h6-ccu.h
- create mode 100644 include/dt-bindings/reset/sun50i-h6-ccu.h
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 341312d66512..af7264654151 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -835,7 +835,7 @@ static void sunxi_pinctrl_irq_release_resources(struct irq_data *d)
+ static int sunxi_pinctrl_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_cfg_reg(d->hwirq, pctl->desc->irq_bank_base);
++	u32 reg = sunxi_irq_cfg_reg(pctl->desc, d->hwirq);
+ 	u8 index = sunxi_irq_cfg_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 regval;
+@@ -882,8 +882,7 @@ static int sunxi_pinctrl_irq_set_type(struct irq_data *d, unsigned int type)
+ static void sunxi_pinctrl_irq_ack(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 status_reg = sunxi_irq_status_reg(d->hwirq,
+-					      pctl->desc->irq_bank_base);
++	u32 status_reg = sunxi_irq_status_reg(pctl->desc, d->hwirq);
+ 	u8 status_idx = sunxi_irq_status_offset(d->hwirq);
+ 
+ 	/* Clear the IRQ */
+@@ -893,7 +892,7 @@ static void sunxi_pinctrl_irq_ack(struct irq_data *d)
+ static void sunxi_pinctrl_irq_mask(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_ctrl_reg(d->hwirq, pctl->desc->irq_bank_base);
++	u32 reg = sunxi_irq_ctrl_reg(pctl->desc, d->hwirq);
+ 	u8 idx = sunxi_irq_ctrl_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 val;
+@@ -910,7 +909,7 @@ static void sunxi_pinctrl_irq_mask(struct irq_data *d)
+ static void sunxi_pinctrl_irq_unmask(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_ctrl_reg(d->hwirq, pctl->desc->irq_bank_base);
++	u32 reg = sunxi_irq_ctrl_reg(pctl->desc, d->hwirq);
+ 	u8 idx = sunxi_irq_ctrl_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 val;
+@@ -1002,7 +1001,7 @@ static void sunxi_pinctrl_irq_handler(struct irq_desc *desc)
+ 	if (bank == pctl->desc->irq_banks)
+ 		return;
+ 
+-	reg = sunxi_irq_status_reg_from_bank(bank, pctl->desc->irq_bank_base);
++	reg = sunxi_irq_status_reg_from_bank(pctl->desc, bank);
+ 	val = readl(pctl->membase + reg);
+ 
+ 	if (val) {
+@@ -1234,8 +1233,7 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
+ 
+ 		writel(src | div << 4,
+ 		       pctl->membase +
+-		       sunxi_irq_debounce_reg_from_bank(i,
+-							pctl->desc->irq_bank_base));
++		       sunxi_irq_debounce_reg_from_bank(pctl->desc, i));
+ 	}
+ 
+ 	return 0;
+@@ -1410,11 +1408,11 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+ 
+ 	for (i = 0; i < pctl->desc->irq_banks; i++) {
+ 		/* Mask and clear all IRQs before registering a handler */
+-		writel(0, pctl->membase + sunxi_irq_ctrl_reg_from_bank(i,
+-						pctl->desc->irq_bank_base));
++		writel(0, pctl->membase +
++			  sunxi_irq_ctrl_reg_from_bank(pctl->desc, i));
+ 		writel(0xffffffff,
+-		       pctl->membase + sunxi_irq_status_reg_from_bank(i,
+-						pctl->desc->irq_bank_base));
++		       pctl->membase +
++		       sunxi_irq_status_reg_from_bank(pctl->desc, i));
+ 
+ 		irq_set_chained_handler_and_data(pctl->irq[i],
+ 						 sunxi_pinctrl_irq_handler,
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index 11b128f54ed2..a13bd57d880d 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -263,8 +263,10 @@ static inline u32 sunxi_pull_offset(u16 pin)
+ 	return pin_num * PULL_PINS_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_cfg_reg(u16 irq, unsigned bank_base)
++static inline u32 sunxi_irq_cfg_reg(const struct sunxi_pinctrl_desc *desc,
++				    u16 irq)
+ {
++	unsigned bank_base = desc->irq_bank_base;
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 	u8 reg = (irq % IRQ_PER_BANK) / IRQ_CFG_IRQ_PER_REG * 0x04;
+ 
+@@ -277,16 +279,19 @@ static inline u32 sunxi_irq_cfg_offset(u16 irq)
+ 	return irq_num * IRQ_CFG_IRQ_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_ctrl_reg_from_bank(u8 bank, unsigned bank_base)
++static inline u32 sunxi_irq_ctrl_reg_from_bank(const struct sunxi_pinctrl_desc *desc, u8 bank)
+ {
++	unsigned bank_base = desc->irq_bank_base;
++
+ 	return IRQ_CTRL_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+ }
+ 
+-static inline u32 sunxi_irq_ctrl_reg(u16 irq, unsigned bank_base)
++static inline u32 sunxi_irq_ctrl_reg(const struct sunxi_pinctrl_desc *desc,
++				     u16 irq)
+ {
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 
+-	return sunxi_irq_ctrl_reg_from_bank(bank, bank_base);
++	return sunxi_irq_ctrl_reg_from_bank(desc, bank);
+ }
+ 
+ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
+@@ -295,21 +300,26 @@ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
+ 	return irq_num * IRQ_CTRL_IRQ_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_debounce_reg_from_bank(u8 bank, unsigned bank_base)
++static inline u32 sunxi_irq_debounce_reg_from_bank(const struct sunxi_pinctrl_desc *desc, u8 bank)
+ {
++	unsigned bank_base = desc->irq_bank_base;
++
+ 	return IRQ_DEBOUNCE_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+ }
+ 
+-static inline u32 sunxi_irq_status_reg_from_bank(u8 bank, unsigned bank_base)
++static inline u32 sunxi_irq_status_reg_from_bank(const struct sunxi_pinctrl_desc *desc, u8 bank)
+ {
++	unsigned bank_base = desc->irq_bank_base;
++
+ 	return IRQ_STATUS_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+ }
+ 
+-static inline u32 sunxi_irq_status_reg(u16 irq, unsigned bank_base)
++static inline u32 sunxi_irq_status_reg(const struct sunxi_pinctrl_desc *desc,
++				       u16 irq)
+ {
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 
+-	return sunxi_irq_status_reg_from_bank(bank, bank_base);
++	return sunxi_irq_status_reg_from_bank(desc, bank);
+ }
+ 
+ static inline u32 sunxi_irq_status_offset(u16 irq)
 -- 
 2.15.1
