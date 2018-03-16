@@ -1,61 +1,50 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document qcom,adreno-gmu
-Date: Fri, 16 Mar 2018 12:27:01 -0600
-Message-ID: <20180316182701.GC28808@jcrouse-lnx.qualcomm.com>
-References: <20180302215638.6145-1-jcrouse@codeaurora.org>
- <20180302215638.6145-2-jcrouse@codeaurora.org>
- <CAL_Jsq+OJ0jon2uFb6oMKjZuw4iPQxkxfBrbDyMN-BrNZfTRzA@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Fri, 16 Mar 2018 11:27:45 -0700
+Message-ID: <152122486529.168459.15256316986315304276@swboyd.mtv.corp.google.com>
+References: <20180314171330.1828-1-ilina@codeaurora.org>
+ <20180314171330.1828-3-ilina@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+OJ0jon2uFb6oMKjZuw4iPQxkxfBrbDyMN-BrNZfTRzA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-pm@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Viresh Kumar <vireshk@kernel.org>, freedreno@lists.freedesktop.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180314171330.1828-3-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMDUsIDIwMTggYXQgMDE6Mzg6NTlQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gRnJpLCBNYXIgMiwgMjAxOCBhdCAzOjU2IFBNLCBKb3JkYW4gQ3JvdXNlIDxqY3Jv
-dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+IERvY3VtZW50IHRoZSBkZXZpY2UgdHJlZSBi
-aW5kaW5ncyBmb3IgdGhlIEFkcmVubyBHTVUgZGV2aWNlCj4gPiBhdmFpbGFibGUgb24gQWRyZW5v
-IGE2eHggdGFyZ2V0cy4KPiA+Cj4gPiBDaGFuZ2UtSWQ6IEkzY2ZkNWZiMzVhYjAwNDVlMzk5MDVm
-ZjEyMzkzMDA2ZTYwZjFhMTI0Cj4gCj4gR2Vycml0IQo+IAo+ID4gU2lnbmVkLW9mZi1ieTogSm9y
-ZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQgICAgICAgIHwgNTQgKysrKysrKysr
-KysrKysrKysrKysrKwo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dw
-dS50eHQgICAgICAgIHwgMTAgKysrLQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNjIgaW5zZXJ0aW9u
-cygrKSwgMiBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKPiA+Cj4gPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4
-dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjY1YmI0
-OWZmZjM2Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAo+ID4gQEAgLTAsMCArMSw1NCBAQAo+ID4g
-K1F1YWxjb21tIGFkcmVuby9zbmFwZHJhZ29uIEdNVSAoR3JhcGhpY3MgbWFuYWdlbWVudCB1bml0
-KQo+ID4gKwo+ID4gK1RoZSBHTVUgaXMgYSBwcm9ncmFtbWFibGUgcG93ZXIgY29udHJvbGxlciBm
-b3IgdGhlIEdQVS4gdGhlIENQVSBjb250cm9scyB0aGUKPiA+ICtHTVUgd2hpY2ggaW4gdHVybiBo
-YW5kbGVzIHBvd2VyIGNvbnRyb2xzIGZvciB0aGUgR1BVLgo+ID4gKwo+ID4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOgo+ID4gKyAgKiAicWNvbSxhZHJlbm8tZ211Igo+
-IAo+IEtpbmQgb2YgZ2VuZXJpYy4gQWxsIHRoZSBmZWF0dXJlcyBhcmUgZGlzY292ZXJhYmxlPwoK
-SSB3YXMganVzdCBwcmVwcGluZyBhIG5ldyB2ZXJzaW9uIGFuZCBJIHJlYWxpemVkIEkgbmV2ZXIg
-cmVzcG9uZGVkIHRvIHRoaXMuClNvcnJ5LgoKWWVzLCBhbGwgdGhlIGZlYXR1cmVzIGFyZSBkaXNj
-b3ZlcmFibGUuIFNpbmNlIHRoZSBHTVUgaXMgb24gdGhlIHNhbWUgZGllIGFzIHRoZQpHUFUgd2Ug
-d291bGQgdXNlIHRoZSBHUFUgcmV2aXNpb24gYXMgdGhlIGNyaXRlcmlhIGZvciBhcHBseWluZyBo
-YXJkd2FyZQp3b3JrYXJvdW5kcyBhbmQgd2hhdG5vdC4gSSBjYW4ndCB0aGluayBvZiBhbnkgY3Vy
-cmVudCBzaXR1YXRpb24gdGhhdCB3b3VsZApyZXF1aXJlIHVzIHRvIHVuaXF1ZWx5IGlkZW50aWZ5
-IHRoZSBHTVUgZnJvbSBEVC4KCkpvcmRhbgoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENl
-bnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3Vu
-ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Quoting Lina Iyer (2018-03-14 10:13:30)
+> +Properties:
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: Should be "qcom,cmd-db"
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <prop encoded array>
+> +       Definition: The register address that points to the location of the
+> +                   Command DB in memory. Additionally, specify the address
+> +                   and size of the actual lacation in memory.
+
+s/lacation/location/ (seems this was missed from last round)
+
+> +
+> +Example:
+> +
+> +       reserved-memory {
+> +               [...]
+> +               qcom,cmd-db@c3f000c {
+> +                       reg = <0x0 0xc3f000c 0x0 0x8>,
+> +                             <0x0 0x85fe0000 0x0 0x20000>;
+
+I agree with Bjorn and replied so on v4.
+
+> +                       compatible = "qcom,cmd-db";
+> +               };
+> +       };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
