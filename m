@@ -1,95 +1,101 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 0/5] Add coupled regulators mechanism
-Date: Fri, 16 Mar 2018 10:21:21 -0700
-Message-ID: <20180316172121.GT5799@atomide.com>
-References: <CGME20180309122231eucas1p1b8e0a85a73b31aa07eac08f809face6e@eucas1p1.samsung.com>
- <1520598128-11768-1-git-send-email-m.purski@samsung.com>
- <20180309124234.GC5252@sirena.org.uk>
- <20180309155827.GS5799@atomide.com>
- <c6f43013-3d2e-afbc-9be8-2e07f58fda98@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v6 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M Eagle
+Date: Fri, 16 Mar 2018 16:16:39 +0100
+Message-ID: <1521213399-31947-4-git-send-email-jacopo+renesas@jmondi.org>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c6f43013-3d2e-afbc-9be8-2e07f58fda98@samsung.com>
+In-Reply-To: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Maciej Purski <m.purski@samsung.com> [180312 12:24]:
-> On 03/09/2018 04:58 PM, Tony Lindgren wrote:
-> > * Mark Brown <broonie@kernel.org> [180309 12:43]:
-> > > On Fri, Mar 09, 2018 at 01:22:02PM +0100, Maciej Purski wrote:
-> > > 
-> > > > I would like to kindly ask Fabio Estevam and Tony Lindgren to test the patch
-> > > > series on their boards.
-> > 
-> > I gave it a quick try and this set still causes at least mmc0
-> > to fail for me.
->
-> Thanks. Here's a small patch, which adds some debugs. Maybe they will reveal,
-> where the problem is.
+The R-Car V3M Eagle board includes a transparent THC63LVD1024 LVDS
+decoder, connected to the on-chip LVDS encoder output on one side
+and to HDMI encoder ADV7511w on the other one.
 
-Sorry for the delay, now back from ELC. I tried applying this on
-top of Linux next + your six patches but it fails to apply. Do
-I need something else too?
+As the decoder does not need any configuration it has been so-far
+omitted from DTS. Now that a driver is available, describe it in DT
+as well.
 
-Regards,
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-Tony
+---
 
+List of patch dependencies, as of renesas-drivers-2018-03-13-v4.16-rc5:
 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index f1f11cf..0e80ba5 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -2280,7 +2280,6 @@ int regulator_enable(struct regulator *regulator)
->  {
->  	struct regulator_dev *rdev = regulator->rdev;
->  	int ret = 0;
-> -	int ret2;
-> 
->  	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
->  		rdev_err(rdev, "not all coupled regulators registered\n");
-> @@ -2298,15 +2297,9 @@ int regulator_enable(struct regulator *regulator)
-> 
->  	regulator_lock_dependent(rdev);
->  	ret = _regulator_enable(rdev);
-> -	ret2 = regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-> +	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
->  	regulator_unlock_dependent(rdev);
-> 
-> -	if (ret2 != 0) {
-> -		rdev_err(rdev,
-> -			"balancing failed when trying to enable regulator: %d",
-> -			ret2);
-> -	}
-> -
->  	if (ret != 0 && rdev->supply)
->  		regulator_disable(rdev->supply);
-> 
-> @@ -3149,7 +3142,7 @@ static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
->  		ret = regulator_set_voltage_unlocked(rdev->supply,
->  				best_supply_uV, INT_MAX, state);
->  		if (ret)
-> -			dev_err(&rdev->dev, "Failed to decrease supply voltage: %d\n",
-> +			dev_warn(&rdev->dev, "Failed to decrease supply voltage: %d\n",
->  					ret);
->  		/* No need to fail here */
->  		ret = 0;
-> @@ -3332,11 +3325,8 @@ static int regulator_balance_voltage(struct regulator_dev *rdev,
->  		ret = regulator_set_voltage_rdev(best_rdev, best_uV,
->  						 best_uV, state);
-> 
-> -		if (ret < 0) {
-> -			rdev_err(rdev,
-> -				"Failed to set voltage with error: %d", ret);
-> +		if (ret < 0)
->  			goto out;
-> -		}
->  	}
-> 
->  out:
-> 
-> 
+- [PATCH v2 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
+   which includes DU, LVDS and FCPD enablement from:
+  [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+- [PATCH v4] v4l: vsp1: Fix video output on R8A77970
+
+Patches to be applied on top of
+"arm64: dts: renesas: eagle: add HDMI output using the ADV7511W"
+
+Thanks
+   j
+---
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 33 +++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+index c0fd144..69f43b8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+@@ -42,6 +42,33 @@
+ 			};
+ 		};
+ 	};
++
++	thc63lvd1024: lvds-decoder {
++		compatible = "thine,thc63lvd1024";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				thc63lvd1024_in_0: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@2{
++				reg = <2>;
++
++				thc63lvd1024_out_2: endpoint {
++					remote-endpoint = <&adv7511_in>;
++				};
++
++			};
++
++		};
++	};
+ };
+ 
+ &avb {
+@@ -98,7 +125,7 @@
+ 			port@0 {
+ 				reg = <0>;
+ 				adv7511_in: endpoint {
+-					remote-endpoint = <&lvds0_out>;
++					remote-endpoint = <&thc63lvd1024_out_2>;
+ 				};
+ 			};
+ 
+@@ -152,8 +179,8 @@
+ 
+ 	ports {
+ 		port@1 {
+-			endpoint {
+-				remote-endpoint = <&adv7511_in>;
++			lvds0_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in_0>;
+ 			};
+ 		};
+ 	};
+-- 
+2.7.4
