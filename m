@@ -1,65 +1,102 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/5] ASoC: samsung: Document compatible
- strings for Odroid X/X2, Odroid XU3
-Date: Fri, 16 Mar 2018 08:37:28 +0100
-Message-ID: <CAJKOXPdxSULHestFBc2YmtVzEpu422VdqtKMmy9FoCOjGV3wgw@mail.gmail.com>
-References: <CGME20180314164301epcas1p105f42730914735774284892b71839572@epcas1p1.samsung.com>
- <20180314164242.22927-1-s.nawrocki@samsung.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/2] drm/bridge: analogix: Enable
+ EDP_BACKLIGHT_FREQ_PWM_PIN_PASSTHRU
+Date: Fri, 16 Mar 2018 09:36:04 +0100
+Message-ID: <20180316083604.GG25297@phenom.ffwll.local>
+References: <20180316025659.217423-1-amstan@chromium.org>
+ <20180316025659.217423-3-amstan@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180314164242.22927-1-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180316025659.217423-3-amstan@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandru M Stan <amstan@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, dianders@chromium.org, zain wang <wzz@rock-chips.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, hoegsberg@chromium.org, Marek Szyprowski <m.szyprowski@samsung.com>, briannorris@chromium.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, marcheu@chromium.org, Thierry Escande <thierry.escande@collabora.com>, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Yakir Yang <kuankuan.y@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 5:42 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> There are no significant differences across Odroid X, Odroid-X2, Odroid-U3
-> and Odroid-XU3 with regards to the audio subsystem so add more entries
-> to the compatible strings list.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  Documentation/devicetree/bindings/sound/samsung,odroid.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> index f35a2694eb04..a50a0c6a354b 100644
-> --- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> +++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> @@ -1,8 +1,10 @@
-> -Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
-> +Hardkernel Odroid X/X2/U3/XU3/XU4 audio complex with MAX98090 codec
->
->  Required properties:
->
-> - - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
-> + - compatible - "hardkernel,odroid-u3-audio" - for Odroid U3 board,
-> +               "hardkernel,odroid-x-audio" - for Odroid X, Odroid X2 boards,
-> +               "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
->                 "hardkernel,odroid-xu4-audio" - for Odroid XU4 board
-
-These are the same so I think they should not get separate
-compatibles. By definition [2] the compatible expresses the
-compatibility with family of devices. In this case - these belong to
-the same family.
-
-The same applies to patch 5/5 (implementation of this).
-
-Best regards,
-Krzysztof
-
-[1] DeviceTree specification v0.2: "They allow a device to express its
-compatibility with a family of similar devices, potentially allowing a
-single device driver to match against several devices."
+T24gVGh1LCBNYXIgMTUsIDIwMTggYXQgMDc6NTY6NTlQTSAtMDcwMCwgQWxleGFuZHJ1IE0gU3Rh
+biB3cm90ZToKPiBDb25maWd1cmUgdGhlIERQQ0QgcmVnaXN0ZXJzIGZvciB0aGUgYmFja2xpZ2h0
+IHRvIHJlc3BlY3QgdGhlIHB3bSBmcmVxdWVuY3kKPiBvZiB0aGUgaW5wdXQuIFdlIHNvbWV0aW1l
+cyBkb24ndCB3YW50IGl0IHRvIGdlbmVyYXRlIGl0cyBvd24uCj4gCj4gU2lnbmVkLW9mZi1ieTog
+QWxleGFuZHJ1IE0gU3RhbiA8YW1zdGFuQGNocm9taXVtLm9yZz4KCkkgd29uZGVyIGEgYml0IHdo
+ZXRoZXIgd2Ugc2hvdWxkIGhhdmUgc29tZSBnZW5lcmljIGluZnJhc3RydWN0dXJlIGluIHRoZQpk
+cCBoZWxwZXJzIGl0c2VsZiB0byBhcHBseSBxdWlya3MgbGlrZSB0aGlzLiBJdCdzIG1vcmUtb3It
+bGVzcyB3aGF0IHdlCmhhdmUgZm9yIEVESUQgcXVpcmtpbmcuCgpCdXQgdGhlbiBJIGd1ZXNzIGZv
+ciBwYW5lbHMgYSBsb3Qgb2YgaXQgaXMgc3BlY2lmaWMgdG8gdGhlCmJyaWRnZS9lbmNvZGVyL3Bh
+bmVsIGNvbWJvIGFuZCBnaXZlbiBwbGF0Zm9ybSwgc28gcHJvYmFibHkgbm90IG11Y2ggdXNlCmZv
+ciByZXVzZSBhY3Jvc3MgYm9hcmRzL3BsYXRmb3Jtcy4gRXh0ZXJuYWwgZGlzcGxheXMgd291bGQg
+YmUgYSBkaWZmZXJlbnQKc3RvcnkuIEkgZ3Vlc3MgeW91IGNhbiBjb3VudCB0aGF0IGFzIGFuCgpB
+Y2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KCm9uIHRoZSBv
+dmVyYWxsIHRoaW5nLCBidXQgcGxzIGdldCBicmlkZ2UgZm9sa3MgdG8gcmV2aWV3IHRoaXMgdG9v
+LgotRGFuaWVsCgo+IC0tLQo+IAo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2Fu
+YWxvZ2l4X2RwX2NvcmUuYyB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmggfCAgMSArCj4gIDIgZmls
+ZXMgY2hhbmdlZCwgNDkgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5jCj4gaW5kZXggNWM1MjMwNzE0NmM3
+Li5iODMwNDAzYmU4ZWIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFs
+b2dpeC9hbmFsb2dpeF9kcF9jb3JlLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fu
+YWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuYwo+IEBAIC05MTYsNiArOTE2LDQ2IEBAIHN0YXRpYyBp
+cnFyZXR1cm5fdCBhbmFsb2dpeF9kcF9pcnFfdGhyZWFkKGludCBpcnEsIHZvaWQgKmFyZykKPiAg
+CXJldHVybiBJUlFfSEFORExFRDsKPiAgfQo+ICAKPiArc3RhdGljIGludCBhbmFsb2dpeF9kcF9i
+YWNrbGlnaHRfcHdtX3Bhc3N0aHJ1KHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKQo+ICt7
+Cj4gKwl1OCB2YWx1ZTsKPiArCWNvbnN0IHU4IGV4cGVjdGVkX2NhcCA9IERQX0VEUF9CQUNLTElH
+SFRfQlJJR0hUTkVTU19QV01fUElOX0NBUCB8Cj4gKwkJCQlEUF9FRFBfQkFDS0xJR0hUX0ZSRVFf
+UFdNX1BJTl9QQVNTVEhSVV9DQVA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwlyZXQgPSBkcm1f
+ZHBfZHBjZF9yZWFkYigmZHAtPmF1eCwgRFBfRURQX0JBQ0tMSUdIVF9BREpVU1RNRU5UX0NBUCwK
+PiArCQkJCSZ2YWx1ZSk7Cj4gKwlpZiAocmV0ICE9IDEpIHsKPiArCQlEUk1fREVWX0VSUk9SKGRw
+LT5kZXYsCj4gKwkJCSJiYWNrbGlnaHQgUFdNIHBhc3N0aHJ1OiBDYW4ndCByZWFkIEJBQ0tMSUdI
+VF9BREpVU1RNRU5UX0NBUFxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwlpZiAo
+KHZhbHVlICYgZXhwZWN0ZWRfY2FwKSAhPSBleHBlY3RlZF9jYXApIHsKPiArCQlEUk1fREVWX0VS
+Uk9SKGRwLT5kZXYsCj4gKwkJCSJwYW5lbCBkb2Vzbid0IHN1cHBvcnQgYmFja2xpZ2h0IFBXTSBw
+YXNzdGhydSwgQkFDS0xJR0hUX0FESlVTVE1FTlRfQ0FQPTB4JTAyeFxuIiwKPiArCQkJdmFsdWUp
+Owo+ICsJCXJldHVybiAtMTsKPiArCX0KPiArCj4gKwlyZXQgPSBkcm1fZHBfZHBjZF9yZWFkYigm
+ZHAtPmF1eCwgRFBfRURQX0JBQ0tMSUdIVF9NT0RFX1NFVF9SRUdJU1RFUiwKPiArCQkJCSZ2YWx1
+ZSk7Cj4gKwlpZiAocmV0ICE9IDEpIHsKPiArCQlEUk1fREVWX0VSUk9SKGRwLT5kZXYsCj4gKwkJ
+CSJiYWNrbGlnaHQgUFdNIHBhc3N0aHJ1OiBDYW4ndCByZWFkIEJBQ0tMSUdIVF9NT0RFX1NFVF9S
+RUdJU1RFUlxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwl2YWx1ZSB8PSBEUF9F
+RFBfQkFDS0xJR0hUX0ZSRVFfUFdNX1BJTl9QQVNTVEhSVV9FTkFCTEU7Cj4gKwlyZXQgPSBkcm1f
+ZHBfZHBjZF93cml0ZWIoJmRwLT5hdXgsIERQX0VEUF9CQUNLTElHSFRfTU9ERV9TRVRfUkVHSVNU
+RVIsCj4gKwkJCQkgdmFsdWUpOwo+ICsJaWYgKHJldCAhPSAxKSB7Cj4gKwkJRFJNX0RFVl9FUlJP
+UihkcC0+ZGV2LAo+ICsJCQkiYmFja2xpZ2h0IFBXTSBwYXNzdGhydTogQ2FuJ3Qgd3JpdGUgQkFD
+S0xJR0hUX01PREVfU0VUX1JFR0lTVEVSXG4iKTsKPiArCX0KPiArCXJldHVybiByZXQ7Cj4gK30K
+PiArCj4gIHN0YXRpYyB2b2lkIGFuYWxvZ2l4X2RwX2NvbW1pdChzdHJ1Y3QgYW5hbG9naXhfZHBf
+ZGV2aWNlICpkcCkKPiAgewo+ICAJaW50IHJldDsKPiBAQCAtOTU0LDYgKzk5NCwxMiBAQCBzdGF0
+aWMgdm9pZCBhbmFsb2dpeF9kcF9jb21taXQoc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAp
+Cj4gIAlkcC0+cHNyX2VuYWJsZSA9IGFuYWxvZ2l4X2RwX2RldGVjdF9zaW5rX3BzcihkcCk7Cj4g
+IAlpZiAoZHAtPnBzcl9lbmFibGUpCj4gIAkJYW5hbG9naXhfZHBfZW5hYmxlX3NpbmtfcHNyKGRw
+KTsKPiArCj4gKwlpZiAoZHAtPmJhY2tsaWdodF9wd21fcGFzc3RocnUpIHsKPiArCQlpZiAoYW5h
+bG9naXhfZHBfYmFja2xpZ2h0X3B3bV9wYXNzdGhydShkcCkgIT0gMSkKPiArCQkJRFJNX0RFVl9F
+UlJPUihkcC0+ZGV2LAo+ICsJCQkJICJDb3VsZCBub3QgZW5hYmxlIGJhY2tsaWdodCBwd20gcGlu
+IHBhc3N0aHJ1LlxuIik7Cj4gKwl9Cj4gIH0KPiAgCj4gIC8qCj4gQEAgLTE0MjQsNiArMTQ3MCw4
+IEBAIGFuYWxvZ2l4X2RwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZHJtX2RldiwKPiAgCWlmIChJU19FUlIoZHAtPnJlZ19iYXNlKSkKPiAgCQlyZXR1cm4gRVJS
+X0NBU1QoZHAtPnJlZ19iYXNlKTsKPiAgCj4gKwlkcC0+YmFja2xpZ2h0X3B3bV9wYXNzdGhydSA9
+Cj4gKwkgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9ib29sKGRldi0+b2Zfbm9kZSwgImJhY2tsaWdo
+dC1wd20tcGFzc3RocnUiKTsKPiAgCWRwLT5mb3JjZV9ocGQgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jv
+b2woZGV2LT5vZl9ub2RlLCAiZm9yY2UtaHBkIik7Cj4gIAo+ICAJZHAtPmhwZF9ncGlvID0gb2Zf
+Z2V0X25hbWVkX2dwaW8oZGV2LT5vZl9ub2RlLCAiaHBkLWdwaW9zIiwgMCk7Cj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5oIGIv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmgKPiBpbmRl
+eCA2YTk2ZWY3ZTY5MzQuLmFlYTUxNDEzZTc4ZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5oCj4gQEAgLTE3MSw2ICsxNzEs
+NyBAQCBzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlIHsKPiAgCXN0cnVjdCBwaHkJCSpwaHk7Cj4g
+IAlpbnQJCQlkcG1zX21vZGU7Cj4gIAlpbnQJCQlocGRfZ3BpbzsKPiArCWJvb2wJCQliYWNrbGln
+aHRfcHdtX3Bhc3N0aHJ1Owo+ICAJYm9vbCAgICAgICAgICAgICAgICAgICAgZm9yY2VfaHBkOwo+
+ICAJYm9vbAkJCXBzcl9lbmFibGU7Cj4gIAlib29sCQkJZmFzdF90cmFpbl9zdXBwb3J0Owo+IC0t
+IAo+IDIuMTMuNQo+IAoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVs
+IENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
