@@ -1,112 +1,47 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
-Date: Sat, 17 Mar 2018 14:57:07 +0800
-Message-ID: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7s: add anatop vdd1p2 regulator
+Date: Sat, 17 Mar 2018 15:36:55 +0800
+Message-ID: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yibin.gong@nxp.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, lgirdwood@gmail.com, broonie@kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update sw1a/vldo4's voltage range according to latest pfuze3000
-datasheet from:
-
-http://cache.freescale.com/files/analog/doc/data_sheet/PF3000.pdf?fsrch=1&sr=1&pageNum=1
+Add i.MX7S/D anatop vdd1p2 regulator.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- arch/arm/boot/dts/imx6sx-udoo-neo.dtsi  | 2 +-
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- arch/arm/boot/dts/imx7d-nitrogen7.dts   | 2 +-
- arch/arm/boot/dts/imx7d-sdb.dts         | 6 +++---
- arch/arm/boot/dts/imx7s-warp.dts        | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/imx7s.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-index 53b3eac..1de0a0f 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-@@ -142,7 +142,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index ae45af1..3781cb8 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -87,7 +87,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-@@ -284,4 +284,4 @@
- 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
- 		>;
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index 2b05898..2802bcf 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -188,7 +188,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index a7a5dc7..ba60457 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -248,7 +248,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-@@ -324,8 +324,8 @@
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index cd6964f..1210028 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -565,6 +565,21 @@
+ 					anatop-max-voltage = <1200000>;
+ 					anatop-enable-bit = <0>;
+ 				};
++
++				reg_1p2: regulator-vdd1p2@30360220 {
++					reg = <0x30360220>;
++					compatible = "fsl,anatop-regulator";
++					regulator-name = "vdd1p2";
++					regulator-min-microvolt = <1100000>;
++					regulator-max-microvolt = <1300000>;
++					anatop-reg-offset = <0x220>;
++					anatop-vol-bit-shift = <8>;
++					anatop-vol-bit-width = <5>;
++					anatop-min-bit-val = <0x14>;
++					anatop-min-voltage = <1100000>;
++					anatop-max-voltage = <1300000>;
++					anatop-enable-bit = <0>;
++				};
  			};
  
- 			vgen6_reg: vldo4 {
--				regulator-min-microvolt = <2800000>;
--				regulator-max-microvolt = <2800000>;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 9bdf121..0e0cbcf 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -129,7 +129,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
+ 			snvs: snvs@30370000 {
 -- 
 2.7.4
