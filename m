@@ -1,47 +1,65 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx7s: add anatop vdd1p2 regulator
-Date: Sat, 17 Mar 2018 15:36:55 +0800
-Message-ID: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH v3 1/7] watchdog: sama5d4: make use of timeout-secs
+ provided in devicetree
+Date: Sat, 17 Mar 2018 09:37:03 +0100
+Message-ID: <20180317083646.GA927@gmail.com>
+References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
+ <20180316133703.GA31029@gmail.com>
+ <f3d913af-a396-ccdf-105f-c4e64397cbff@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f3d913af-a396-ccdf-105f-c4e64397cbff@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX7S/D anatop vdd1p2 regulator.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7s.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+--LpQ9ahxlCli8rRTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index cd6964f..1210028 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -565,6 +565,21 @@
- 					anatop-max-voltage = <1200000>;
- 					anatop-enable-bit = <0>;
- 				};
-+
-+				reg_1p2: regulator-vdd1p2@30360220 {
-+					reg = <0x30360220>;
-+					compatible = "fsl,anatop-regulator";
-+					regulator-name = "vdd1p2";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1300000>;
-+					anatop-reg-offset = <0x220>;
-+					anatop-vol-bit-shift = <8>;
-+					anatop-vol-bit-width = <5>;
-+					anatop-min-bit-val = <0x14>;
-+					anatop-min-voltage = <1100000>;
-+					anatop-max-voltage = <1300000>;
-+					anatop-enable-bit = <0>;
-+				};
- 			};
- 
- 			snvs: snvs@30370000 {
--- 
-2.7.4
+On Fri, Mar 16, 2018 at 06:56:27PM -0700, Guenter Roeck wrote:
+> On 03/16/2018 06:37 AM, Marcus Folkesson wrote:
+> > Hi,
+> >=20
+> > Am I supposed to do something more to make this patchset picked up?
+> >=20
+>=20
+> Did you check linux-next ?
+
+:-)
+
+Thank you
+
+/Marcus
+
+>=20
+> Guenter
+>=20
+
+--LpQ9ahxlCli8rRTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAlqs06oACgkQiIBOb1ld
+UjIvSQ/+OZNz57o0QzL0AcahUDcORE0yMlvflD5NjEFI6idt7gcrLkx+kTr9L+Pq
+HGyamPmXqSY01zTqbSfcIdJQ3hKO3Bs8TaGaoksdP/fyJRQ71QkvEWn09P8VnElb
+SBxkcEj8OPzIk5bgy+oW2o8a1Qlv/7qsrsihuEBRK9NPZ+ac/Xc3Zcg4K4l/28MT
+LmfK7H1gTYk38hjk0TzMrv9hVJDAbLudhow74kB4czRz0T6bJBRbkZdaoANGejJN
+TKFZkBh3/pqQ/IKu498Qnm7K0uLqQD8q3FJKRXPEjuIkzGSOYkVkuJGTJA8m6l3+
+72lfpERxcO1+nl+2MMX9CPM7F7lV25mPhWgQ/C40tYjpB+0MUrT8jv3CBJcTN2t7
+cZLIA12aI21nBuvsWNWH+X4npSu1CPPXRvZPx2rfP/L5fHlve7unY0qr3CL9fGtV
+rKTA3+ZH5jEkD+qrGnBCWEbArzhC70UyrT3C/fChOZs36HnrCUD3GocUpD2DQnU4
+q+oQ8capQqf2T3/PoRTpx1oOZ6KqLBll6WIU0NJvOUmlE6d9K/KXXfM4G5RDrrf2
+s1qh1ZPYSq44tTPDy7xDRqsgMbfqsHRae8jyTcB4MSHfJajR9w0utkRxvPDnateg
+FhQ5lyF48DBfz5IXgZ/e2JQLebAkAb7VOfZmPm6wZy6THST6L7E=
+=ubOx
+-----END PGP SIGNATURE-----
+
+--LpQ9ahxlCli8rRTG--
