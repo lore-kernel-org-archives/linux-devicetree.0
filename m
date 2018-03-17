@@ -1,19 +1,27 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Mar 2018 07:49:25 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] leds: add LED driver for CR0014114 board
-Message-ID: <20180318124925.i4yuxigkfu6spv26@rob-hp-laptop>
-References: <20180312155829.12365-1-oleg@kaa.org.ua>
- <20180313124548.12074-1-oleg@kaa.org.ua>
+Return-Path: <SRS0=7W87=GH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm0-f47.google.com ([74.125.82.47]:52021 "EHLO
+        mail-wm0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751813AbeCQIVK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 17 Mar 2018 04:21:10 -0400
+Subject: Re: [PATCH] leds: add LED driver for CR0014114 board
+References: <026d9ec2-f2bd-18b9-d5fa-f593d40e2f57@kaa.org.ua>
+ <20180312153323.9200-1-oleg@kaa.org.ua>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a59ab12c-7053-e49c-6fc5-0db8123a413e@gmail.com>
+Date: Sat, 17 Mar 2018 09:19:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180313124548.12074-1-oleg@kaa.org.ua>
-To: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <20180312153323.9200-1-oleg@kaa.org.ua>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Mar 13, 2018 at 02:45:48PM +0200, Oleh Kravchenko wrote:
+Hi Oleh,
+
+Thank you for the patch. Please see my comments below.
+
+On 03/12/2018 04:33 PM, Oleh Kravchenko wrote:
 > This patch adds a LED class driver for the RGB LEDs found on
 > the Crane Merchandising System CR0014114 LEDs board.
 > 
@@ -21,32 +29,45 @@ On Tue, Mar 13, 2018 at 02:45:48PM +0200, Oleh Kravchenko wrote:
 > ---
 >  .../devicetree/bindings/leds/leds-cr0014114.txt    |  46 ++++
 >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-
-Please split to separate patch.
-
 >  drivers/leds/Kconfig                               |  13 +
 >  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-cr0014114.c                      | 292 +++++++++++++++++++++
->  5 files changed, 353 insertions(+)
+>  drivers/leds/leds-cr0014114.c                      | 282 +++++++++++++++++++++
+>  5 files changed, 343 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
 >  create mode 100644 drivers/leds/leds-cr0014114.c
 > 
 > diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
 > new file mode 100644
-> index 000000000000..977a9929b04f
+> index 000000000000..56721598ee81
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+
+Please split DT bindings related changes to the separate patch.
+
 > @@ -0,0 +1,46 @@
 > +Crane Merchandising System - cr0014114 LED driver
 > +-------------------------------------------------
 > +
-> +This LED Board is widely used in vending machines produced
+> +This LED Board widely used in vending machines produced
 > +by Crane Merchandising Systems.
 > +
 > +Required properties:
 > +- compatible: "cms,cr0014114"
+
+Why here cms and crane in the example below? Please make it
+consistent. I assume that vendor prefix should be "crane",
+so in this case this should look like below:
+
+- compatible: Must be "crane,cr0014114".
+
 > +- reg: chip select address for the device
 > +- spi-cpha: shifted clock phase mode is required
+
+You don't have to say that it is required - it is already
+under "Required properties". Apart from that - you don't
+parse this property in the driver, so it doesn't seem to
+be needed.
+
 > +
 > +LED sub-node properties:
 > +- label : (optional)
@@ -59,19 +80,33 @@ Please split to separate patch.
 > +
 > +cr0014114@0 {
 
-leds@...
+led-controller@9
 
 > +	compatible = "crane,cr0014114";
+
+You need also below properties to avoid dtc warnings.
+
+#address-cells = <1>;
+#size-cells = <0>;
+
+
 > +	reg = <0>;
 > +	spi-max-frequency = <50000>;
 > +	spi-cpha;
-> +
+
+Please consider if this is really required.
+
 > +	led0 {
-
-Is '0' meaningful to the controller as an address/channel. If so, use 
-reg.
-
 > +		label = "cr0:red:";
+
+Please separate "led" from the address with "@" character,
+e.g. here it should be led@0.
+
+Also why "cr0" and not full device name "cr0014114"?
+You could also think of some exemplary LED functions to not
+leave that section empty.
+
+
 > +	};
 > +	led1 {
 > +		label = "cr0:green:";
@@ -102,3 +137,361 @@ reg.
 >  creative	Creative Technology Ltd
 >  crystalfontz	Crystalfontz America, Inc.
 >  cubietech	Cubietech, Ltd.
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 2c896c0e69e1..bb6a70ac5004 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -104,6 +104,19 @@ config LEDS_CPCAP
+>  	  This option enables support for LEDs offered by Motorola's
+>  	  CPCAP PMIC.
+>  
+> +config LEDS_CR0014114
+> +	tristate "LED Support for Crane CR0014114"
+> +	depends on LEDS_CLASS
+> +	depends on SPI
+> +	depends on OF
+> +	help
+> +	  This option enables support for CR0014114 LED Board which
+> +	  widely used in vending machines produced by
+> +	  Crane Merchandising Systems.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called leds-cr0014114.
+> +
+>  config LEDS_LM3530
+>  	tristate "LCD Backlight driver for LM3530"
+>  	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 91eca81cae82..0176e7335994 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -78,6 +78,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
+>  obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
+>  
+>  # LED SPI Drivers
+> +obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+>  obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+>  
+>  # LED Userspace Drivers
+> diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
+> new file mode 100644
+> index 000000000000..e3aecdbea73c
+> --- /dev/null
+> +++ b/drivers/leds/leds-cr0014114.c
+> @@ -0,0 +1,282 @@
+> +#include <linux/delay.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/timer.h>
+> +#include <linux/workqueue.h>
+> +
+> +/* CR0014114 SPI commands */
+> +#define CR_SET_BRIGHTNESS	0x80
+> +#define CR_INIT_REENUMERATE	0x81
+> +#define CR_NEXT_REENUMERATE	0x82
+> +
+> +/* CR0014114 default settings */
+> +#define CR_MAX_BRIGHTNESS	GENMASK(6, 0)
+> +#define CR_FW_DELAY_MSEC	10
+> +#define CR_RECOUNT_DELAY	(HZ * 3600)
+> +
+> +struct cr0014114_led {
+> +	const char		*name;
+> +	struct cr0014114	*priv;
+> +	struct led_classdev	ldev;
+> +	u8			brightness;
+> +};
+> +
+> +struct cr0014114 {
+> +	bool			do_recount;
+> +	size_t			count;
+> +	struct device		*dev;
+> +	struct mutex		lock;
+> +	struct spi_device	*spi;
+> +	struct timer_list	timer;
+> +	struct work_struct	work;
+> +	unsigned long		delay;
+> +	struct cr0014114_led	leds[];
+> +};
+> +
+> +static void cr0014114_calc_crc(u8 *buf, const size_t len)
+> +{
+> +	size_t	i;
+> +	u8	crc;
+> +
+> +	for (i = 1, crc = 1; i < len - 1; i++)
+> +		crc += buf[i];
+> +	crc |= BIT(7);
+> +
+> +	/* special case when CRC matches to SPI commands */
+> +	if (crc == CR_SET_BRIGHTNESS ||
+> +	    crc == CR_INIT_REENUMERATE ||
+> +	    crc == CR_NEXT_REENUMERATE)
+> +		crc = 0xfe;
+> +
+> +	buf[len - 1] = crc;
+> +}
+> +
+> +static int cr0014114_recount(struct cr0014114 *priv)
+> +{
+> +	int	ret;
+> +	size_t	i;
+> +	u8	cmd;
+> +
+> +	dev_dbg(priv->dev, "recount of LEDs is started\n");
+> +
+> +	do {
+
+This do..while(0) loop isn't really required. Let's do it otherwise.
+
+> +		cmd = CR_INIT_REENUMERATE;
+> +		ret = spi_write(priv->spi, &cmd, sizeof(cmd));
+> +		if (ret)
+> +			break;
+
+Please add a label out_reenum at the end of the function
+and goto there from here in case of error.
+
+> +
+> +		cmd = CR_NEXT_REENUMERATE;
+> +		for (i = 0; i < priv->count; i++) {
+> +			msleep(CR_FW_DELAY_MSEC);
+> +
+> +			ret = spi_write(priv->spi, &cmd, sizeof(cmd));
+> +			if (ret)
+> +				break;
+
+Similarly goto out_reenum here.
+
+> +		}
+> +	} while (0);
+> +
+> +	dev_dbg(priv->dev, "recount of LEDs is complete, error: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int cr0014114_sync(struct cr0014114 *priv)
+> +{
+> +	int		ret;
+> +	size_t		i;
+> +	u8		data[priv->count + 2];
+
+sparse is not happy about this and it causes two more problems below:
+
+drivers/leds/leds-cr0014114.c:101:42: warning: Variable length array is
+used.
+drivers/leds/leds-cr0014114.c:122:42: error: cannot size expression
+drivers/leds/leds-cr0014114.c:124:50: error: cannot size expression
+
+
+> +	unsigned long	udelay, now = jiffies;
+> +
+> +	/* to avoid SPI mistiming with firmware we should wait some time */
+> +	if (time_after(priv->delay, now)) {
+> +		udelay = jiffies_to_usecs(priv->delay - now);
+> +		usleep_range(udelay, udelay + 1);
+> +	}
+> +
+> +	do {
+> +		if (unlikely(priv->do_recount)) {
+> +			ret = cr0014114_recount(priv);
+> +			if (ret)
+> +				break;
+> +
+> +			priv->do_recount = false;
+> +		}
+> +
+> +		data[0] = CR_SET_BRIGHTNESS;
+> +		for (i = 0; i < priv->count; i++)
+> +			data[i + 1] = priv->leds[i].brightness;
+> +		cr0014114_calc_crc(data, sizeof(data));
+> +
+> +		ret = spi_write(priv->spi, data, sizeof(data));
+> +		if (ret)
+> +			break;
+> +	} while (0);
+> +
+> +	priv->delay = jiffies + msecs_to_jiffies(CR_FW_DELAY_MSEC);
+> +
+> +	return ret;
+> +}
+> +
+> +static void cr0014114_recount_work(struct work_struct *work)
+> +{
+> +	int			ret;
+> +	struct cr0014114	*priv = container_of(work, struct cr0014114,
+> +						     work);
+> +
+> +	mutex_lock(&priv->lock);
+> +	priv->do_recount = true;
+> +	ret = cr0014114_sync(priv);
+> +	mutex_unlock(&priv->lock);
+> +
+> +	if (ret)
+> +		dev_warn(priv->dev, "recount LEDs failed %d\n", ret);
+> +}
+> +
+> +int cr0014114_set_sync(struct led_classdev *ldev,
+> +		       enum led_brightness brightness)
+> +{
+> +	int			ret;
+> +	struct cr0014114_led    *led = container_of(ldev,
+> +						    struct cr0014114_led,
+> +						    ldev);
+> +
+> +	mutex_lock(&led->priv->lock);
+> +	led->brightness = (u8)brightness;
+> +	ret = cr0014114_sync(led->priv);
+> +	mutex_unlock(&led->priv->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +void cr0014114_recount_timer(struct timer_list *t)
+> +{
+> +	struct cr0014114 *priv = from_timer(priv, t, timer);
+> +
+> +	schedule_work(&priv->work);
+> +	mod_timer(&priv->timer, jiffies + CR_RECOUNT_DELAY);
+> +}
+> +
+> +static int cr0014114_probe_dt(struct cr0014114 *priv)
+> +{
+> +	size_t			i = 0;
+> +	struct cr0014114_led	*led;
+> +	struct fwnode_handle	*child;
+> +	struct device_node	*np;
+> +	int			ret;
+> +
+> +	device_for_each_child_node(priv->dev, child) {
+> +		np = to_of_node(child);
+> +		led = &priv->leds[i];
+> +
+> +		ret = fwnode_property_read_string(child, "label",
+> +						  &led->name);
+> +		if (ret && IS_ENABLED(CONFIG_OF) && np)
+
+The driver already depends on OF, so IS_ENABLED is redundant here.
+
+> +			led->name = np->name;
+> +
+> +		if (!led->name) {
+> +			fwnode_handle_put(child);
+> +			return -EINVAL;
+> +		}
+> +
+> +		fwnode_property_read_string(child, "linux,default-trigger",
+> +					    &led->ldev.default_trigger);
+> +
+> +		led->priv			  = priv;
+> +		led->ldev.name			  = led->name;
+> +		led->ldev.brightness		  = LED_OFF;
+
+This is already secured by kzalloc.
+
+> +		led->ldev.max_brightness	  = CR_MAX_BRIGHTNESS;
+> +		led->ldev.brightness_set_blocking = cr0014114_set_sync;
+> +
+> +		ret = devm_of_led_classdev_register(priv->dev, np,
+> +						    &led->ldev);
+> +		if (ret) {
+> +			fwnode_handle_put(child);
+> +			return ret;
+> +		}
+> +
+> +		led->ldev.dev->of_node = np;
+> +
+> +		i++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cr0014114_probe(struct spi_device *spi)
+> +{
+> +	struct cr0014114	*priv;
+> +	size_t			count;
+> +	int			ret;
+> +
+> +	count = device_get_child_node_count(&spi->dev);
+> +	if (!count) {
+> +		dev_err(&spi->dev, "LEDs are not defined in device tree");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv = devm_kzalloc(&spi->dev,
+> +			    sizeof(*priv) + sizeof(*priv->leds) * count,
+> +			    GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&priv->lock);
+> +	INIT_WORK(&priv->work, cr0014114_recount_work);
+> +	priv->do_recount	= true;
+> +	priv->count		= count;
+> +	priv->dev		= &spi->dev;
+> +	priv->spi		= spi;
+> +
+> +	ret = cr0014114_probe_dt(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = cr0014114_sync(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* setup recount timer to workaround buggy firmware */
+> +	timer_setup(&priv->timer, cr0014114_recount_timer, 0);
+> +	mod_timer(&priv->timer, jiffies + CR_RECOUNT_DELAY);
+> +
+> +	spi_set_drvdata(spi, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cr0014114_remove(struct spi_device *spi)
+> +{
+> +	struct cr0014114 *priv = spi_get_drvdata(spi);
+> +
+> +	cancel_work_sync(&priv->work);
+> +	del_timer_sync(&priv->timer);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cr0014114_dt_ids[] = {
+> +	{ .compatible = "crane,cr0014114", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, cr0014114_dt_ids);
+> +
+> +static struct spi_driver cr0014114_driver = {
+> +	.probe		= cr0014114_probe,
+> +	.remove		= cr0014114_remove,
+> +	.driver = {
+> +		.name		= KBUILD_MODNAME,
+> +		.of_match_table	= cr0014114_dt_ids,
+> +	},
+> +};
+> +
+> +module_spi_driver(cr0014114_driver);
+> +
+> +MODULE_AUTHOR("Oleh Kravchenko <oleg@kaa.org.ua>");
+> +MODULE_DESCRIPTION("cr0014114 LED driver");
+> +MODULE_LICENSE("GPL");
+
+Please add SPDX license identifier at the top of the file:
+Documentation/process/license-rules.rst
+
+> +MODULE_ALIAS("spi:cr0014114");
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
