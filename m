@@ -1,71 +1,49 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 2/2] regulator: pfuze100: update voltage setting for
- pfuze3000 sw1a
-Date: Sat, 17 Mar 2018 13:35:44 +0100 (CET)
-Message-ID: <1937778373.476574.1521290144753@email.1und1.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
+Date: Sat, 17 Mar 2018 11:53:08 -0300
+Message-ID: <CAOMZO5BzE46Dm24++j+xVA4KGFnpsopGfJ97h7sFGOAxVa19=g@mail.gmail.com>
 References: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
- <1521269828-8874-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1521269828-8874-2-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, fabio.estevam@nxp.com, mark.rutland@arm.com, yibin.gong@nxp.com, linux@armlinux.org.uk, Anson Huang <Anson.Huang@nxp.com>, lgirdwood@gmail.com, shawnguo@kernel.org, kernel@pengutronix.de, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5zb24sCgo+IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPiBoYXQgYW0gMTcu
-IE3DpHJ6IDIwMTggdW0gMDc6NTcgZ2VzY2hyaWViZW46Cj4gCj4gCj4gTGF0ZXN0IHBmdXplMzAw
-MCBkYXRhc2hlZXQgZnJvbToKPiAKPiBodHRwOi8vY2FjaGUuZnJlZXNjYWxlLmNvbS9maWxlcy9h
-bmFsb2cvZG9jL2RhdGFfc2hlZXQvUEYzMDAwLnBkZj9mc3JjaD0xJnNyPTEmcGFnZU51bT0xCgp0
-aGlzIGxpbmsgZ29lcyB0byBSZXYuIDcuMCwgOS8yMDE2LCB3aGljaCBpc24ndCB0aGUgbGF0ZXN0
-IG9uZS4KCkkgZ3Vlc3MgUmV2LiA5LjAsIDgvMjAxNyBpcyB0aGUgbGF0ZXN0LgoKUmVnYXJkcwpT
-dGVmYW4KCj4gCj4gdXBkYXRlcyBzdzFhJ3Mgdm9sdGFnZSByYW5nZSwgdGhlIHNldHRpbmdzIGZv
-ciAxLjQ1MFYgYW5kIDEuNDc1Vgo+IGFyZSByZXBsYWNlZCB3aXRoIDEuOFYgYW5kIDMuM1Y6Cj4g
-Cj4gNWInMTExMTAgMS40NTAgKFNXMUIpLCAxLjggKFNXMUEvU1cxQUIpCj4gNWInMTExMTEgMS40
-NzUgKFNXMUIpLCAzLjMgKFNXMUEvU1cxQUIpCj4gCj4gdGhlIHZvbHRhZ2UgY2FsY3VsYXRpb24g
-dXNpbmcgc3RlcHMgaXMgTk9UIGF2YWlsYWJsZSBmb3Igc3cxYSBub3csCj4gdXNlIHZvbHRhZ2Ug
-dGFibGUgaW5zdGVhZC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5j
-b20+Cj4gLS0tCj4gIGRyaXZlcnMvcmVndWxhdG9yL3BmdXplMTAwLXJlZ3VsYXRvci5jIHwgOSAr
-KysrKysrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JlZ3VsYXRvci9wZnV6ZTEwMC1yZWd1bGF0b3Iu
-YyBiL2RyaXZlcnMvcmVndWxhdG9yL3BmdXplMTAwLXJlZ3VsYXRvci5jCj4gaW5kZXggNjM5MjJh
-Mi4uNjgwZjA3NiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3JlZ3VsYXRvci9wZnV6ZTEwMC1yZWd1
-bGF0b3IuYwo+ICsrKyBiL2RyaXZlcnMvcmVndWxhdG9yL3BmdXplMTAwLXJlZ3VsYXRvci5jCj4g
-QEAgLTg2LDYgKzg2LDEzIEBAIHN0YXRpYyBjb25zdCBpbnQgcGZ1emUxMDBfY29pbltdID0gewo+
-ICAJMjUwMDAwMCwgMjcwMDAwMCwgMjgwMDAwMCwgMjkwMDAwMCwgMzAwMDAwMCwgMzEwMDAwMCwg
-MzIwMDAwMCwgMzMwMDAwMCwKPiAgfTsKPiAgCj4gK3N0YXRpYyBjb25zdCBpbnQgcGZ1emUzMDAw
-X3N3MWFbXSA9IHsKPiArCTcwMDAwMCwgNzI1MDAwLCA3NTAwMDAsIDc3NTAwMCwgODAwMDAwLCA4
-MjUwMDAsIDg1MDAwMCwgODc1MDAwLAo+ICsJOTAwMDAwLCA5MjUwMDAsIDk1MDAwMCwgOTc1MDAw
-LCAxMDAwMDAwLCAxMDI1MDAwLCAxMDUwMDAwLCAxMDc1MDAwLAo+ICsJMTEwMDAwMCwgMTEyNTAw
-MCwgMTE1MDAwMCwgMTE3NTAwMCwgMTIwMDAwMCwgMTIyNTAwMCwgMTI1MDAwMCwgMTI3NTAwMCwK
-PiArCTEzMDAwMDAsIDEzMjUwMDAsIDEzNTAwMDAsIDEzNzUwMDAsIDE0MDAwMDAsIDE0MjUwMDAs
-IDE4MDAwMDAsIDMzMDAwMDAsCj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3QgaW50IHBmdXplMzAw
-MF9zdzJsb1tdID0gewo+ICAJMTUwMDAwMCwgMTU1MDAwMCwgMTYwMDAwMCwgMTY1MDAwMCwgMTcw
-MDAwMCwgMTc1MDAwMCwgMTgwMDAwMCwgMTg1MDAwMCwKPiAgfTsKPiBAQCAtMzQzLDcgKzM1MCw3
-IEBAIHN0YXRpYyBzdHJ1Y3QgcGZ1emVfcmVndWxhdG9yIHBmdXplMjAwX3JlZ3VsYXRvcnNbXSA9
-IHsKPiAgfTsKPiAgCj4gIHN0YXRpYyBzdHJ1Y3QgcGZ1emVfcmVndWxhdG9yIHBmdXplMzAwMF9y
-ZWd1bGF0b3JzW10gPSB7Cj4gLQlQRlVaRTEwMF9TV19SRUcoUEZVWkUzMDAwLCBTVzFBLCBQRlVa
-RTEwMF9TVzFBQlZPTCwgNzAwMDAwLCAxNDc1MDAwLCAyNTAwMCksCj4gKwlQRlVaRTEwMF9TV0Jf
-UkVHKFBGVVpFMzAwMCwgU1cxQSwgUEZVWkUxMDBfU1cxQUJWT0wsIDB4MWYsIHBmdXplMzAwMF9z
-dzFhKSwKPiAgCVBGVVpFMTAwX1NXX1JFRyhQRlVaRTMwMDAsIFNXMUIsIFBGVVpFMTAwX1NXMUNW
-T0wsIDcwMDAwMCwgMTQ3NTAwMCwgMjUwMDApLAo+ICAJUEZVWkUxMDBfU1dCX1JFRyhQRlVaRTMw
-MDAsIFNXMiwgUEZVWkUxMDBfU1cyVk9MLCAweDcsIHBmdXplMzAwMF9zdzJsbyksCj4gIAlQRlVa
-RTMwMDBfU1czX1JFRyhQRlVaRTMwMDAsIFNXMywgUEZVWkUxMDBfU1czQVZPTCwgOTAwMDAwLCAx
-NjUwMDAwLCA1MDAwMCksCj4gLS0gCj4gMi43LjQKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Anson,
+
+On Sat, Mar 17, 2018 at 3:57 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> Update sw1a/vldo4's voltage range according to latest pfuze3000
+> datasheet from:
+>
+> http://cache.freescale.com/files/analog/doc/data_sheet/PF3000.pdf?fsrch=1&sr=1&pageNum=1
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6sx-udoo-neo.dtsi  | 2 +-
+>  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
+>  arch/arm/boot/dts/imx7d-nitrogen7.dts   | 2 +-
+>  arch/arm/boot/dts/imx7d-sdb.dts         | 6 +++---
+>  arch/arm/boot/dts/imx7s-warp.dts        | 2 +-
+>  5 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> index 53b3eac..1de0a0f 100644
+> --- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> @@ -142,7 +142,7 @@
+>                 regulators {
+>                         sw1a_reg: sw1a {
+>                                 regulator-min-microvolt = <700000>;
+> -                               regulator-max-microvolt = <1475000>;
+> +                               regulator-max-microvolt = <3300000>;
+
+This change does not look like a safe thing to do without carefully
+checking each one of the board schematics.
+
+Even if the regulator itself is capable of driving a higher voltage,
+it does not mean that the circuitry that consumes such regulator is
+allowed to receive the higher voltages.
