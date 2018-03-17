@@ -1,197 +1,66 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH net-next 06/12] net: stmmac: dwmac-sun8i: Use regmap_field for
- syscon register access
-Date: Sat, 17 Mar 2018 17:28:51 +0800
-Message-ID: <20180317092857.4396-7-wens@csie.org>
-References: <20180317092857.4396-1-wens@csie.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 1/2] ASoC: codecs: Add support for
+	PCM1789
+Date: Sat, 17 Mar 2018 19:19:51 +0800
+Message-ID: <201803171907.vbmkB7Z8%fengguang.wu@intel.com>
+References: <20180315161825.5524-2-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180317092857.4396-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180315161825.5524-2-mylene.josserand@bootlin.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, kbuild-all@01.org, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On the Allwinner R40, the "GMAC clock" register is located in the CCU
-block, at a different register address than the other SoCs that have
-it in the "system control" block.
+Hi Myl=E8ne,
 
-This patch converts the use of regmap to regmap_field for mapping and
-accessing the syscon register, so we can have the register address in
-the variants data, and not in the actual register manipulation code.
+Thank you for the patch! Perhaps something to improve:
 
-This patch only converts regmap_read() and regmap_write() calls to
-regmap_field_read() and regmap_field_write() calls. There are some
-places where it might make sense to switch to regmap_field_update_bits(),
-but this is not done here to keep the patch simple.
+[auto build test WARNING on v4.16-rc4]
+[also build test WARNING on next-20180316]
+[if your patch is applied to the wrong git tree, please drop us a note to h=
+elp improve the system]
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+url:    https://github.com/0day-ci/linux/commits/Myl-ne-Josserand/ASoC-code=
+cs-Add-support-for-PCM1789/20180317-174449
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> sound/soc/codecs/pcm1789.c:265:1-3: ERROR: test of a variable/field addr=
+ess
+
+vim +265 sound/soc/codecs/pcm1789.c
+
+   260	=
+
+   261	int pcm1789_common_exit(struct device *dev)
+   262	{
+   263		struct pcm1789_private *priv =3D dev_get_drvdata(dev);
+   264	=
+
+ > 265		if (&priv->work)
+   266			flush_work(&priv->work);
+   267	=
+
+   268		return 0;
+   269	}
+   270	EXPORT_SYMBOL_GPL(pcm1789_common_exit);
+   271	=
+
+
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 42 +++++++++++++++++------
- 1 file changed, 31 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index a3fa65b1ca8e..de93f0faf58d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -42,6 +42,7 @@
-  *				This value is used for disabling properly EMAC
-  *				and used as a good starting value in case of the
-  *				boot process(uboot) leave some stuff.
-+ * @syscon_field		reg_field for the syscon's gmac register
-  * @soc_has_internal_phy:	Does the MAC embed an internal PHY
-  * @support_mii:		Does the MAC handle MII
-  * @support_rmii:		Does the MAC handle RMII
-@@ -49,6 +50,7 @@
-  */
- struct emac_variant {
- 	u32 default_syscon_value;
-+	const struct reg_field *syscon_field;
- 	bool soc_has_internal_phy;
- 	bool support_mii;
- 	bool support_rmii;
-@@ -71,13 +73,21 @@ struct sunxi_priv_data {
- 	struct regulator *regulator;
- 	struct reset_control *rst_ephy;
- 	const struct emac_variant *variant;
--	struct regmap *regmap;
-+	struct regmap_field *regmap_field;
- 	bool internal_phy_powered;
- 	void *mux_handle;
- };
- 
-+/* EMAC clock register @ 0x30 in the "system control" address range */
-+const struct reg_field sun8i_syscon_reg_field = {
-+	.reg = 0x30,
-+	.lsb = 0,
-+	.msb = 31,
-+};
-+
- static const struct emac_variant emac_variant_h3 = {
- 	.default_syscon_value = 0x58000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -86,12 +96,14 @@ static const struct emac_variant emac_variant_h3 = {
- 
- static const struct emac_variant emac_variant_v3s = {
- 	.default_syscon_value = 0x38000,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = true,
- 	.support_mii = true
- };
- 
- static const struct emac_variant emac_variant_a83t = {
- 	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rgmii = true
-@@ -99,6 +111,7 @@ static const struct emac_variant emac_variant_a83t = {
- 
- static const struct emac_variant emac_variant_a64 = {
- 	.default_syscon_value = 0,
-+	.syscon_field = &sun8i_syscon_reg_field,
- 	.soc_has_internal_phy = false,
- 	.support_mii = true,
- 	.support_rmii = true,
-@@ -216,7 +229,6 @@ static const struct emac_variant emac_variant_a64 = {
- #define SYSCON_ETCS_MII		0x0
- #define SYSCON_ETCS_EXT_GMII	0x1
- #define SYSCON_ETCS_INT_GMII	0x2
--#define SYSCON_EMAC_REG		0x30
- 
- /* sun8i_dwmac_dma_reset() - reset the EMAC
-  * Called from stmmac via stmmac_dma_ops->reset
-@@ -745,7 +757,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 	bool need_power_ephy = false;
- 
- 	if (current_child ^ desired_child) {
--		regmap_read(gmac->regmap, SYSCON_EMAC_REG, &reg);
-+		regmap_field_read(gmac->regmap_field, &reg);
- 		switch (desired_child) {
- 		case DWMAC_SUN8I_MDIO_MUX_INTERNAL_ID:
- 			dev_info(priv->device, "Switch mux to internal PHY");
-@@ -763,7 +775,7 @@ static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
- 				desired_child);
- 			return -EINVAL;
- 		}
--		regmap_write(gmac->regmap, SYSCON_EMAC_REG, val);
-+		regmap_field_write(gmac->regmap_field, val);
- 		if (need_power_ephy) {
- 			ret = sun8i_dwmac_power_internal_phy(priv);
- 			if (ret)
-@@ -801,7 +813,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 	int ret;
- 	u32 reg, val;
- 
--	regmap_read(gmac->regmap, SYSCON_EMAC_REG, &val);
-+	regmap_field_read(gmac->regmap_field, &val);
- 	reg = gmac->variant->default_syscon_value;
- 	if (reg != val)
- 		dev_warn(priv->device,
-@@ -883,7 +895,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		return -EINVAL;
- 	}
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- 
- 	return 0;
- }
-@@ -892,7 +904,7 @@ static void sun8i_dwmac_unset_syscon(struct sunxi_priv_data *gmac)
- {
- 	u32 reg = gmac->variant->default_syscon_value;
- 
--	regmap_write(gmac->regmap, SYSCON_EMAC_REG, reg);
-+	regmap_field_write(gmac->regmap_field, reg);
- }
- 
- static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
-@@ -980,6 +992,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	int ret;
- 	struct stmmac_priv *priv;
- 	struct net_device *ndev;
-+	struct regmap *regmap;
- 
- 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
- 	if (ret)
-@@ -1014,14 +1027,21 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 		gmac->regulator = NULL;
- 	}
- 
--	gmac->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
--						       "syscon");
--	if (IS_ERR(gmac->regmap)) {
--		ret = PTR_ERR(gmac->regmap);
-+	regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "syscon");
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
- 		return ret;
- 	}
- 
-+	gmac->regmap_field = devm_regmap_field_alloc(dev, regmap,
-+						     *gmac->variant->syscon_field);
-+	if (IS_ERR(gmac->regmap_field)) {
-+		ret = PTR_ERR(gmac->regmap_field);
-+		dev_err(dev, "Unable to map syscon register: %d\n", ret);
-+		return ret;
-+	}
-+
- 	plat_dat->interface = of_get_phy_mode(dev->of_node);
- 
- 	/* platform data specifying hardware features and callbacks.
--- 
-2.16.2
+0-DAY kernel test infrastructure                Open Source Technology Cent=
+er
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporati=
+on
