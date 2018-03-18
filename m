@@ -1,113 +1,71 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
-Date: Sun, 18 Mar 2018 11:23:20 +0800
-Message-ID: <1521343401-3109-1-git-send-email-Anson.Huang@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH net-next 03/12] dt-bindings: net: dwmac-sun8i: Clean up
+ clock delay chain descriptions
+Date: Sun, 18 Mar 2018 12:21:44 +0300
+Message-ID: <eb47a027-c678-7496-ef58-fc8e96be7dd9@cogentembedded.com>
+References: <20180317092857.4396-1-wens@csie.org>
+ <20180317092857.4396-4-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, lgirdwood@gmail.com, broonie@kernel.org, stefan.wahren@i2se.com
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180317092857.4396-4-wens@csie.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Update sw1a/vldo4's voltage range according to pfuze3000
-datasheet(Rev.9.0) from:
+Hello!
 
-https://www.nxp.com/docs/en/data-sheet/PF3000.pdf
+On 3/17/2018 12:28 PM, Chen-Yu Tsai wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
-no changes since V1.
- arch/arm/boot/dts/imx6sx-udoo-neo.dtsi  | 2 +-
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- arch/arm/boot/dts/imx7d-nitrogen7.dts   | 2 +-
- arch/arm/boot/dts/imx7d-sdb.dts         | 6 +++---
- arch/arm/boot/dts/imx7s-warp.dts        | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+> The clock delay chains found in the glue layer for dwmac-sun8i are only
+> used with RGMII PHYs. They are not intended for non-RGMII PHYs, such as
+> MII external PHYs or the internal PHY. Also, a recent SoC has a smaller
+> range of possible values for the delay chain.
+> 
+> This patch reformats the delay chain section of the device tree binding
+> to make it clear that the delay chains only apply to RGMII PHYs, and
+> make it easier to add the R40-specific bits later.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>   Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> index 3d6d5fa0c4d5..b8a3028d6c30 100644
+> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> @@ -28,10 +28,13 @@ Required properties:
+>     - allwinner,sun8i-a83t-system-controller
+>   
+>   Optional properties:
+> -- allwinner,tx-delay-ps: TX clock delay chain value in ps. Range value is 0-700. Default is 0)
+> -- allwinner,rx-delay-ps: RX clock delay chain value in ps. Range value is 0-3100. Default is 0)
+> -Both delay properties need to be a multiple of 100. They control the delay for
+> -external PHY.
+> +- allwinner,tx-delay-ps: TX clock delay chain value in ps.
+> +			 Range is 0-700. Default is 0.
+> +- allwinner,rx-delay-ps: RX clock delay chain value in ps.
+> +			 Range is 0-3100. Default is 0.
+> +Both delay properties need to be a multiple of 100. They control the
+> +clock delay for external RGMII PHY. They are do apply to the internal
 
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-index 53b3eac..1de0a0f 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-@@ -142,7 +142,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index ae45af1..3781cb8 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -87,7 +87,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-@@ -284,4 +284,4 @@
- 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
- 		>;
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index 2b05898..2802bcf 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -188,7 +188,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index a7a5dc7..ba60457 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -248,7 +248,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
-@@ -324,8 +324,8 @@
- 			};
- 
- 			vgen6_reg: vldo4 {
--				regulator-min-microvolt = <2800000>;
--				regulator-max-microvolt = <2800000>;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 9bdf121..0e0cbcf 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -129,7 +129,7 @@
- 		regulators {
- 			sw1a_reg: sw1a {
- 				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1475000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 				regulator-ramp-delay = <6250>;
--- 
-2.7.4
+   s/are do/do not/?
+
+> +PHY or external non-RGMII PHYs.
+>   
+>   Optional properties for the following compatibles:
+>     - "allwinner,sun8i-h3-emac",
+
+MBR, Sergei
