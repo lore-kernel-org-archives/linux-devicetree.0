@@ -1,34 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/8] dt-bindings: stm32-dma: introduce DMA features
- bitfield
-Date: Sun, 18 Mar 2018 07:49:30 -0500
-Message-ID: <20180318124930.tgd4llar3zat7idx@rob-hp-laptop>
-References: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
- <1520959327-25760-2-git-send-email-pierre-yves.mordret@st.com>
+Subject: Re: [PATCH] of: unittest: Remove VLA stack usage
+Date: Sun, 18 Mar 2018 07:48:36 -0500
+Message-ID: <20180317235304.eohpmrii3htlmann@rob-hp-laptop>
+References: <1520828843-22289-1-git-send-email-me@tobin.cc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520959327-25760-2-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <1520828843-22289-1-git-send-email-me@tobin.cc>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Tobin C. Harding" <me@tobin.cc>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com, Tycho Andersen <tycho@tycho.ws>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2018 at 05:42:00PM +0100, Pierre-Yves MORDRET wrote:
-> This bitfield intends to address features to be activated within the
-> driver. Initially the mask was only meant for FIFO Threshold management.
-> Backward compatibility is preserved but the meaning of this field has been
-> extended to features instead of only threshold.
+On Mon, Mar 12, 2018 at 03:27:23PM +1100, Tobin C. Harding wrote:
+> The kernel would like to have all stack VLA usage removed[1].  This is a
+> test function so the execution speed is not critical.  We can allocate
+> memory for this buffer instead of using a VLA.  If kmalloc() fails just
+> return.
 > 
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Allocate buffer with kmalloc().
+> 
+> [1]: https://lkml.org/lkml/2018/3/7/621
+> 
+> Signed-off-by: Tobin C. Harding <me@tobin.cc>
 > ---
->   Version history:
->     v1:
->        * Initial
-> ---
-> ---
->  Documentation/devicetree/bindings/dma/stm32-dma.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> Kees is this annoying you, CC'ing you an all my VLA patches?
+> 
+>  drivers/of/unittest.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.
+
+Rob
