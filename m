@@ -1,67 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: analogix-dp: Add backlight-pwm-passthru
-Date: Sun, 18 Mar 2018 07:52:45 -0500
-Message-ID: <20180318125245.ndnplplmtsy3hmu7@rob-hp-laptop>
-References: <20180316025659.217423-1-amstan@chromium.org>
- <20180316025659.217423-2-amstan@chromium.org>
- <124034c6-a0af-0142-0d04-7d8bbc19bb82@codeaurora.org>
+Subject: Re: [PATCH] pcie: qcom: Add support to enable pcie refclk
+Date: Sun, 18 Mar 2018 07:52:27 -0500
+Message-ID: <20180318031703.xt6fscof7ibslgrq@rob-hp-laptop>
+References: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <124034c6-a0af-0142-0d04-7d8bbc19bb82@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Escande <thierry.escande@collabora.com>, Alexandru M Stan <amstan@chromium.org>, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, marcheu@chromium.org, hoegsberg@chromium.org
+In-Reply-To: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: bhelgaas@google.com, svarbanov@mm-sol.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMTYsIDIwMTggYXQgMDI6NTY6MDlQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiAKPiAKPiBPbiBGcmlkYXkgMTYgTWFyY2ggMjAxOCAwODoyNiBBTSwgQWxleGFuZHJ1
-IE0gU3RhbiB3cm90ZToKPiA+IERvY3VtZW50YXRpb24gZm9yIHRoZSBvcHRpb25hbCBiYWNrbGln
-aHQtcHdtLXBhc3N0aHJ1IHByb3BlcnR5Lgo+ID4gVGVsbHMgdGhlIEVEUCBwYW5lbCB0byBmb2xv
-dyB0aGUgaW5wdXQgcHdtIGZyZXF1ZW5jeSBpbnN0ZWFkCj4gCj4gcy9mb2xvdy9mb2xsb3cKPiAK
-PiBJdCB3b3VsZCBiZSBuaWNlIGlmIHdlIGNvdWxkIGFkZCB0aGUgZGV0YWlscyB5b3UgbWVudGlv
-bmVkIGluCj4gcGF0Y2ggIzAgaW4gZWl0aGVyIHRoaXMgb3IgdGhlIG5leHQgcGF0Y2guCj4gCj4g
-PiBvZiBnZW5lcmF0aW5nIGl0cyBvd24uCj4gCj4gVGhpcyBpcyBvbmUgb2YgdGhvc2UgYmluZGlu
-Z3Mgd2hpY2ggaXMgbW9yZSBhIGtub2IgdGhhbiBhIEhXIHByb3BlcnR5LAo+IGJ1dCBJIGNhbid0
-IHRoaW5rIG9mIGFueSBlYXN5IHdheSB0byBmaWd1cmUgdGhpcyBvdXQgaW4gU1cuIFNvLCBJIGd1
-ZXNzCj4gaXQncyBva2F5IHRvIGhhdmUuCj4gCj4gT25lIHRoaW5nIEkgd2FzIHdvbmRlcmluZyBh
-Ym91dCB3YXMgd2hldGhlciB0aGlzIHByb3Agc2hvdWxkIGJlbG9uZyB0bwo+IHRoZSBlRFAgY29u
-dHJvbGxlciBvciB0aGUgZURQIHBhbmVsLiBJIGRvbid0IGhhdmUgYW55IHN0cm9uZyBvcGluaW9u
-Cj4gYWJvdXQgaXQsIHRob3VnaC4KClNlZW1zIHRvIG1lLCBpdCBzaG91bGQgYmUgdGhlIHBhbmVs
-LiBJdCdzIGEgc2V0dGluZyBpbiB0aGUgcGFuZWwsIHJpZ2h0PwoKSXMgdGhpcyBnZW5lcmljIHRv
-IERQIHBhbmVscyBvciBzb21ldGhpbmcgc3BlY2lmaWMgdG8gYSBjZXJ0YWluIHBhbmVsPyAKVGhl
-IG5hbWluZyAodmVuZG9yIHByZWZpeCBvciBub3QpIGFuZCBkb2MgbG9jYXRpb24gc2hvdWxkIG1h
-dGNoIAp3aGF0ZXZlciB0aGUgYW5zd2VyIHRvIHRoYXQgaXMuCgo+IAo+IFJldmlld2VkLWJ5OiBB
-cmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+IAo+IFRoYW5rcywKPiBBcmNo
-aXQKPiAKPiAKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IE0gU3RhbiA8YW1zdGFu
-QGNocm9taXVtLm9yZz4KPiA+IC0tLQo+ID4gCj4gPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hbmFsb2dpeF9kcC50eHQgfCA0ICsrKysKPiA+ICAg
-MSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FuYWxvZ2l4X2Rw
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9h
-bmFsb2dpeF9kcC50eHQKPiA+IGluZGV4IDBjNzQ3M2RkMGU1MS4uM2MxNTI0MmY2Y2UzIDEwMDY0
-NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL2FuYWxvZ2l4X2RwLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FuYWxvZ2l4X2RwLnR4dAo+ID4gQEAgLTIzLDYgKzIzLDEw
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIGRwLWNvbnRyb2xsZXI6Cj4gPiAgIAkJZnJvbSBn
-ZW5lcmFsIFBIWSBiaW5kaW5nOiBTaG91bGQgYmUgImRwIi4KPiA+ICAgT3B0aW9uYWwgcHJvcGVy
-dGllcyBmb3IgZHAtY29udHJvbGxlcjoKPiA+ICsJLWJhY2tsaWdodC1wd20tcGFzc3RocnU6Cj4g
-PiArCQlEaXJlY3RseSBwYXNzIHRoZSBQV00gZnJlcXVlbmN5IGFwcGxpZWQgdG8gdGhlIEJMX1BX
-TV9ESU0KPiA+ICsJCXBpbiB0byB0aGUgYmFja2xpZ2h0IGN1cnJlbnQgc291cmNlLiBEb25lIHZp
-YQo+ID4gKwkJRURQX0JBQ0tMSUdIVF9NT0RFX1NFVF9SRUdJU1RFUiBvbiBEUENELgo+ID4gICAJ
-LWZvcmNlLWhwZDoKPiA+ICAgCQlJbmRpY2F0ZSBkcml2ZXIgbmVlZCBmb3JjZSBocGQgd2hlbiBo
-cGQgZGV0ZWN0IGZhaWxlZCwgdGhpcwo+ID4gICAJCWlzIHVzZWQgZm9yIHNvbWUgZURQIHNjcmVl
-biB3aGljaCBkb24ndCBoYXZlIGhwZCBzaWduYWwuCj4gPiAKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Mar 15, 2018 at 02:41:33PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> This patch adds support to enable 100MHz pcie refclk,
+> On some boards like DB600c this clock is not enabled by default.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.txt |  1 +
+>  drivers/pci/dwc/pcie-qcom.c                         | 21 ++++++++++++++++++++-
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
