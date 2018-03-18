@@ -1,49 +1,28 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx7s: add anatop vdd1p2 regulator
-Date: Sun, 18 Mar 2018 16:54:19 -0300
-Message-ID: <CAOMZO5DJ5-AdudGhk6VfTazJXBpReGHW-bxKM1=bLZO90PnXsg@mail.gmail.com>
-References: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/2] brcmfmac: add new dt entries for SG SDIO settings
+Date: Sun, 18 Mar 2018 21:01:26 +0100
+Message-ID: <20180318200126.GQ1188@lunn.ch>
+References: <20180318184101.26951-1-alexey.roslyakov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180318184101.26951-1-alexey.roslyakov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexey Roslyakov <alexey.roslyakov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+> +	if (of_property_read_u16(np, "brcm,sd-head-align", &align) == 0)
+> +		sdio->sd_head_align = align;
 
-On Sat, Mar 17, 2018 at 4:36 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> Add i.MX7S/D anatop vdd1p2 regulator.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  arch/arm/boot/dts/imx7s.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index cd6964f..1210028 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -565,6 +565,21 @@
->                                         anatop-max-voltage = <1200000>;
->                                         anatop-enable-bit = <0>;
->                                 };
-> +
-> +                               reg_1p2: regulator-vdd1p2@30360220 {
-> +                                       reg = <0x30360220>;
-> +                                       compatible = "fsl,anatop-regulator";
-> +                                       regulator-name = "vdd1p2";
-> +                                       regulator-min-microvolt = <1100000>;
-> +                                       regulator-max-microvolt = <1300000>;
-> +                                       anatop-reg-offset = <0x220>;
-> +                                       anatop-vol-bit-shift = <8>;
-> +                                       anatop-vol-bit-width = <5>;
-> +                                       anatop-min-bit-val = <0x14>;
-> +                                       anatop-min-voltage = <1100000>;
-> +                                       anatop-max-voltage = <1300000>;
-> +                                       anatop-enable-bit = <0>;
-> +                               };
+Hi Alexey
 
-Do you also plan to add a consumer for it?
+I think you can make this:
+
+	of_property_read_u16(np, "brcm,sd-head-align", &sdio->sd_head_align);
+
+of_property_read_u16() should not touch the destination variable if
+the properties does not exist, or if there is an error.
+
+    Andrew
