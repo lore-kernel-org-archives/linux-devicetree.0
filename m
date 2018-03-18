@@ -1,78 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: bd9571mwv: Document DDR Backup
- Mode properties
-Date: Sun, 18 Mar 2018 07:49:45 -0500
-Message-ID: <20180318124945.s73c7lbtmih7ecrz@rob-hp-laptop>
-References: <1521025722-24205-1-git-send-email-geert+renesas@glider.be>
- <1521025722-24205-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v1 1/8] dt-bindings: stm32-dma: introduce DMA features
+ bitfield
+Date: Sun, 18 Mar 2018 07:49:30 -0500
+Message-ID: <20180318124930.tgd4llar3zat7idx@rob-hp-laptop>
+References: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
+ <1520959327-25760-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521025722-24205-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1520959327-25760-2-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 12:08:39PM +0100, Geert Uytterhoeven wrote:
-> Document the new optional properties related to DDR Backup Mode and
-> toggle/momentary power switches.
+On Tue, Mar 13, 2018 at 05:42:00PM +0100, Pierre-Yves MORDRET wrote:
+> This bitfield intends to address features to be activated within the
+> driver. Initially the mask was only meant for FIFO Threshold management.
+> Backward compatibility is preserved but the meaning of this field has been
+> extended to features instead of only threshold.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 > ---
-> v2:
->   - Improve property description,
->   - Add properties for power switch type.
+>   Version history:
+>     v1:
+>        * Initial
 > ---
->  Documentation/devicetree/bindings/mfd/bd9571mwv.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> index 9ab216a851d5619b..8804a214759845c5 100644
-> --- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> @@ -25,6 +25,25 @@ Required properties:
->  			    Each child node is defined using the standard
->  			    binding for regulators.
->  
-> +Optional properties:
-> +  - rohm,ddr-backup-power : Value to use for DDR-Backup Power (default 0).
-> +			    This is a bitmask that specifies which DDR power
-> +			    rails need to be kept powered when backup mode is
-> +			    entered, for system suspend:
-> +			      - bit 0: DDR0
-> +			      - bit 1: DDR1
-> +			      - bit 2: DDR0C
-> +			      - bit 3: DDR1C
-> +			    These bits match the KEEPON_DDR* bits in the
-> +			    documentation for the "BKUP Mode Cnt" register.
-> +  - rohm,rstbmode-level: The RSTB signal is configured for level mode, to
-> +			 accommodate a toggle power switch (the RSTBMODE pin is
-> +			 strapped low).
-> +  - rohm,rstbmode-pulse: The RSTB signal is configured for pulse mode, to
-> +			 accommodate a momentary power switch (the RSTBMODE pin
-> +			 is strapped high).
-> +			 The two properties above are mutually exclusive.
-> +
->  Example:
->  
->  	pmic: pmic@30 {
-> @@ -36,6 +55,8 @@ Example:
->  		#interrupt-cells = <2>;
->  		gpio-controller;
->  		#gpio-cells = <2>;
-> +		rohm,ddr-backup-power = <15>;
-
-Would be better to use hex for a bit mask. Otherwise,
+> ---
+>  Documentation/devicetree/bindings/dma/stm32-dma.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-
-> +		rohm,rstbmode-pulse;
->  
->  		regulators {
->  			dvfs: dvfs {
-> -- 
-> 2.7.4
-> 
