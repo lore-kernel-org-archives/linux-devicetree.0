@@ -1,78 +1,143 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 1/4] pwm: sun4i: drop unused .has_rdy member
-Date: Sun, 18 Mar 2018 23:28:44 +0000
-Message-ID: <20180318232847.14278-2-andre.przywara@arm.com>
-References: <20180318232847.14278-1-andre.przywara@arm.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 13/19] arm: dts: mt7623: move node mt6323 leds to
+ mt6323.dtsi
+Date: Mon, 19 Mar 2018 00:46:41 +0100
+Message-ID: <457d4fb4-dd38-af89-208d-31477a2eb20e@gmail.com>
+References: <cover.1519378871.git.sean.wang@mediatek.com>
+ <e8a515a1aeaf06a7162b8b0e390bee615b323303.1519378872.git.sean.wang@mediatek.com>
+ <20180302154050.lfxojro4woucl6lh@rob-hp-laptop>
+ <1520030818.8089.190.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBPXMXPKQKGQEAE23Y4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180318232847.14278-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520030818.8089.190.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit a054c4d68408 ("pwm: sun4i: Drop legacy callbacks") dropped the
-only user of the .has_rdy member in our sun4i_pwm_data struct.
-Consequently we don't need to store this anymore for the various SoCs,
-which paves the way for further simplifications.
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
- drivers/pwm/pwm-sun4i.c | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 334199c58f1d..b3e4a4b3774d 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -73,7 +73,6 @@ static const u32 prescaler_table[] = {
- 
- struct sun4i_pwm_data {
- 	bool has_prescaler_bypass;
--	bool has_rdy;
- 	unsigned int npwm;
- };
- 
-@@ -313,31 +312,26 @@ static const struct pwm_ops sun4i_pwm_ops = {
- 
- static const struct sun4i_pwm_data sun4i_pwm_data_a10 = {
- 	.has_prescaler_bypass = false,
--	.has_rdy = false,
- 	.npwm = 2,
- };
- 
- static const struct sun4i_pwm_data sun4i_pwm_data_a10s = {
- 	.has_prescaler_bypass = true,
--	.has_rdy = true,
- 	.npwm = 2,
- };
- 
- static const struct sun4i_pwm_data sun4i_pwm_data_a13 = {
- 	.has_prescaler_bypass = true,
--	.has_rdy = true,
- 	.npwm = 1,
- };
- 
- static const struct sun4i_pwm_data sun4i_pwm_data_a20 = {
- 	.has_prescaler_bypass = true,
--	.has_rdy = true,
- 	.npwm = 2,
- };
- 
- static const struct sun4i_pwm_data sun4i_pwm_data_h3 = {
- 	.has_prescaler_bypass = true,
--	.has_rdy = true,
- 	.npwm = 1,
- };
- 
--- 
-2.14.1
+On 03/02/2018 11:46 PM, Sean Wang wrote:
+> On Fri, 2018-03-02 at 09:40 -0600, Rob Herring wrote:
+>> On Fri, Feb 23, 2018 at 06:16:33PM +0800, sean.wang@mediatek.com wrote:
+>>> From: Sean Wang <sean.wang@mediatek.com>
+>>>
+>>> Since those LEDs are parts of PMIC MT6323, it is reasonable to merge
+>>> those LEDs node definition back into mt6323.dtsi. This way can improve
+>>> the reusability of those nodes among different boards with the same PMIC.
+>>>
+>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> Cc: Lee Jones <lee.jones@linaro.org>
+>>> ---
+>>>  arch/arm/boot/dts/mt6323.dtsi                 | 26 ++++++++++++++++++++++++-
+>>>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 28 ---------------------------
+>>>  2 files changed, 25 insertions(+), 29 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+>>> index 7c783d6..44c5642 100644
+>>> --- a/arch/arm/boot/dts/mt6323.dtsi
+>>> +++ b/arch/arm/boot/dts/mt6323.dtsi
+>>> @@ -1,5 +1,5 @@
+>>>  /*
+>>> - * Copyright (c) 2017 MediaTek Inc.
+>>> + * Copyright (c) 2017-2018 MediaTek Inc.
+>>>   * Author: John Crispin <john@phrozen.org>
+>>>   *	   Sean Wang <sean.wang@mediatek.com>
+>>>   * This program is free software; you can redistribute it and/or modify
+>>> @@ -237,5 +237,29 @@
+>>>  				regulator-enable-ramp-delay = <216>;
+>>>  			};
+>>>  		};
+>>> +
+>>> +		leds {
+>>> +			compatible = "mediatek,mt6323-led";
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +
+>>> +			led@0 {
+>>> +				reg = <0>;
+>>> +				label = "mt6323:isink:green";
+>>
+>> Changing the label potentially breaks userspace. And the fact that it is 
+>> a green LED is very much board specific. So I think the old location was 
+>> correct. You could put the parent node here and leave these child nodes 
+>> in the board specific dts file.
+>>
+> 
+> yes, I really made a mistake on breaking userspace with a label change.
+> 
+> I will keep the parent node here and then leave these child nodes into
+> board specific dts files. thanks for your idea!
+> 
+
+Sorry I didn't see your email when I wrote my first comment. Yes this sounds
+like the proper way to do it.
+
+Regards,
+Matthias
+
+>>
+>>> +				default-state = "off";
+>>> +			};
+>>> +
+>>> +			led@1 {
+>>> +				reg = <1>;
+>>> +				label = "mt6323:isink:red";
+>>> +				default-state = "off";
+>>> +			};
+>>> +
+>>> +			led@2 {
+>>> +				reg = <2>;
+>>> +				label = "mt6323:isink:blue";
+>>> +				default-state = "off";
+>>> +			};
+>>> +		};
+>>>  	};
+>>>  };
+>>> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>>> index 75e61c4..767b225 100644
+>>> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>>> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>>> @@ -483,34 +483,6 @@
+>>>  	status = "okay";
+>>>  };
+>>>  
+>>> -&pwrap {
+>>> -	mt6323 {
+>>> -		mt6323led: led {
+>>> -			compatible = "mediatek,mt6323-led";
+>>> -			#address-cells = <1>;
+>>> -			#size-cells = <0>;
+>>> -
+>>> -			led@0 {
+>>> -				reg = <0>;
+>>> -				label = "bpi-r2:isink:green";
+>>> -				default-state = "off";
+>>> -			};
+>>> -
+>>> -			led@1 {
+>>> -				reg = <1>;
+>>> -				label = "bpi-r2:isink:red";
+>>> -				default-state = "off";
+>>> -			};
+>>> -
+>>> -			led@2 {
+>>> -				reg = <2>;
+>>> -				label = "bpi-r2:isink:blue";
+>>> -				default-state = "off";
+>>> -			};
+>>> -		};
+>>> -	};
+>>> -};
+>>> -
+>>>  &spi0 {
+>>>  	pinctrl-names = "default";
+>>>  	pinctrl-0 = <&spi0_pins_a>;
+>>> -- 
+>>> 2.7.4
+>>>
+> 
+> 
