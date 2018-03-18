@@ -1,107 +1,57 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 7/7] remoteproc: qcom: Always assert and deassert
- reset signals in SDM845
-Date: Sun, 18 Mar 2018 15:46:31 -0700
-Message-ID: <20180318224631.GH5626@tuxbook-pro>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-8-git-send-email-sibis@codeaurora.org>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 0/4] drivers: pwm: sun4i: Improve support for
+ A64 SoCs
+Date: Sun, 18 Mar 2018 23:28:43 +0000
+Message-ID: <20180318232847.14278-1-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1521019283-32212-8-git-send-email-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi S <sibis@codeaurora.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBPHMXPKQKGQEEKFQZLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
-> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-[..]
-> +struct q6v5_reset_ops {
-> +	int (*reset_start)(struct q6v5 *qproc);
-> +	int (*reset_stop)(struct q6v5 *qproc);
-> +};
+A rework addressing the comments. I dropped the H6 and the reset support
+for now, to simplify merging this series.
 
-Please add these two ops directly in q6v5 instead and please keep the
-naming "reset_assert" and "reset_deassert".
+This series adds PWM support for new Allwinner SoCs. Actually the A64 PWM 
+is fully compatible with the A13 and H3 PWM IP, so the driver does not
+need any additional code. But I use this opportunity to provide some
+cleanup.
+Patch 1 removes a no longer used parameter from our per-SoC data structure,
+to simplify patch 2, which groups SoCs with a compatible PWM controller.
+Patch 3 adds the new compatible strings to the binding documentation
+(and just there, we expect to use "allwinner,sun5i-a13-pwm" as a fallback
+compatible string).
+The final patch 4 adds the respective PWM nodes to the A64 .dtsi.
+This eventually does not enable the PWM on any new board at the moment, as
+the PWM pins are either not usable (muxed with Ethernet) or exposed on
+a header pin not dedicated to PWM. But the Pinebook (and Teres I) should be
+able to use the PWM for the LCD backlights, plus users can enable the
+R_PWM on their Pine64 boards, if they like.
 
-> +
->  enum {
->  	MSS_MSM8916,
->  	MSS_MSM8974,
-> @@ -343,6 +354,52 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->  	return 0;
->  }
->  
-> +static void alt_reset_restart(struct q6v5 *qproc, u32 restart)
-> +{
-> +	writel(restart, qproc->rmb_base + RMB_MBA_ALT_RESET);
+Tested by manually enabling r_pwm on a Pine64-LTS.
 
-Just move this write into q6v5_sdm_reset_start()
+Cheers,
+Andre.
 
-> +}
-> +
-> +static int q6v5_msm_reset_stop(struct q6v5 *qproc)
-> +{
-> +	return reset_control_assert(qproc->mss_restart);
-> +}
-> +
-> +static int q6v5_msm_reset_start(struct q6v5 *qproc)
-> +{
-> +	return reset_control_deassert(qproc->mss_restart);
-> +}
-> +
-> +static int q6v5_sdm_reset_stop(struct q6v5 *qproc)
-> +{
-> +	return reset_control_reset(qproc->mss_restart);
-> +}
-> +
-> +static int q6v5_sdm_reset_start(struct q6v5 *qproc)
-> +{
-> +	int ret;
-> +
-> +	alt_reset_restart(qproc, 1);
-> +	/* Ensure alt reset is written before restart reg */
+Andre Przywara (4):
+  pwm: sun4i: drop unused .has_rdy member
+  pwm: sun4i: simplify controller mapping
+  dt-bindings: pwm: sunxi: add new compatible strings
+  dts: sunxi: A64: Add PWM controllers
 
-That's not what udelay does ;)
+ .../devicetree/bindings/pwm/pwm-sun4i.txt          |  2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 28 +++++++++++++++++++
+ drivers/pwm/pwm-sun4i.c                            | 32 ++++++----------------
+ 3 files changed, 38 insertions(+), 24 deletions(-)
 
-If you want to make sure that the register is written and then give it
-100us delay until you reset the reset you have to readl() the same
-register back after the writel()
-
-I think the delay deserves a comment on what we're waiting for.
-
-> +	udelay(100);
-
-Use usleep_range() for delays longer than 10us.
-
-> +
-> +	ret = reset_control_reset(qproc->mss_restart);
-> +
-> +	udelay(100);
-
-Same as the delay above, what are we waiting for?
-
-> +	alt_reset_restart(qproc, 0);
-> +
-> +	return ret;
-> +}
-> +
-[..]
-> @@ -1179,6 +1251,12 @@ static int q6v5_probe(struct platform_device *pdev)
->  	qproc->dev = &pdev->dev;
->  	qproc->rproc = rproc;
->  	platform_set_drvdata(pdev, qproc);
-> +	qproc->version = desc->version;
-> +
-> +	if (qproc->version == MSS_SDM845)
-> +		qproc->ops = &q6v5_sdm_ops;
-> +	else
-> +		qproc->ops = &q6v5_msm_ops;
-
-Can we carry a boolean for "has_alt_reset" or something that picks the
-new reset ops, rather than picking by version?
-
-Regards,
-Bjorn
+-- 
+2.14.1
