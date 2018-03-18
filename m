@@ -1,46 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 4/5] arm64: dts: allwinner: a64: Add pwm device
-Date: Sun, 18 Mar 2018 07:52:40 -0500
-Message-ID: <20180318032309.dys4p5gth5fvyawn@rob-hp-laptop>
-References: <20180315162510.11669-1-harald@ccbib.org>
- <20180315162510.11669-5-harald@ccbib.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 6/9] dt-bindings: add device tree binding
+ for Allwinner H6 main CCU
+Date: Sun, 18 Mar 2018 07:52:57 -0500
+Message-ID: <20180318033523.kxtlewiwtboebtqe@rob-hp-laptop>
+References: <20180316140215.28663-1-icenowy@aosc.io>
+ <20180316140215.28663-7-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBLGCXHKQKGQEVSVVNOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180315162510.11669-5-harald@ccbib.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+In-Reply-To: <20180316140215.28663-7-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2018 at 04:25:09PM +0000, Harald Geyer wrote:
-> This device is compatible with A13, so no new driver is needed.
-> A new compatible string is reserved in the binding documentation, to be
-> used together with the proper fall back. Tested on Teres-I.
+On Fri, Mar 16, 2018 at 10:02:12PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 main CCU uses the internal oscillator of the SoC, which
+> is different with old SoCs' main CCU.
 > 
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
+> Add device tree binding for the Allwinner H6 main CCU.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> changes since v1:
->  * add and use an A64 specific compatible string
->  * claim the full memory range
+> Extracted in v4.
 > 
-> I saw that Andre Przywara has been working on A64 pwm too and has
-> submitted some patches a few days ago. I think his patches are functionally
-> equivalent to this one here, but clean up things a bit and additionally
-> add support for r_pwm and thus are preferable. See:
-> 
-> https://groups.google.com/forum/#!topic/linux-sunxi/hQFeteP591k
-> 
-> I'm including my patch here mostly to have a consistent series for others
-> to test. OTOH you might merge the device tree changes here and pick up
-> the cleanup patches from him. Either way should work fine.
+>  Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-I would sync up with Andre and send out a combined series. Don't make 
-the maintainer(s) have to sort this out.
-
->  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt |  1 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi       | 14 ++++++++++++++
->  2 files changed, 15 insertions(+)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
