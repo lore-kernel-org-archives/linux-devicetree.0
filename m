@@ -1,32 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: soc: Add a binding for the Broadcom
- VCHIQ services. (v3)
-Date: Sun, 18 Mar 2018 07:48:23 -0500
-Message-ID: <20180318124823.jfvoy3xraogsxpdi@rob-hp-laptop>
-References: <20180309184417.23368-1-eric@anholt.net>
- <20180309184417.23368-3-eric@anholt.net>
+Subject: Re: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524
+ and pcal9555a
+Date: Sun, 18 Mar 2018 07:48:26 -0500
+Message-ID: <20180317234320.ahqlhzjzxco7xnyb@rob-hp-laptop>
+References: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180309184417.23368-3-eric@anholt.net>
+In-Reply-To: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 10:44:14AM -0800, Eric Anholt wrote:
-> The VCHIQ communication channel can be provided by BCM283x and Capri
-> SoCs, to communicate with the VPU-side OS services.
+On Sat, Mar 10, 2018 at 12:00:01PM +0100, H. Nikolaus Schaller wrote:
+> The Pyra-Handheld originally used the tca6424 but recently we have
+> replaced it by the pin and package compatible pcal6524. So let's
+> add this to the bindings and the driver.
 > 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+> And while we are at it, the pcal9555a does not have a compatible entry
+> either but is already supported by the device id table.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
-> 
-> v2: VCHI->VCHIQ, dropped firmware property, added cache-line-size
-> v3: Dropped cache-line-size, s/vchi@/mailbox@/
-> 
->  .../devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt   | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 2 ++
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  drivers/gpio/gpio-pca953x.c                             | 4 ++++
+>  2 files changed, 6 insertions(+)
