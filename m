@@ -1,55 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 11/25] of: base: Add of_get_cpu_state_node() to get
- idle states for a CPU node
-Date: Sun, 18 Mar 2018 07:51:59 -0500
-Message-ID: <20180318023811.izvvsjqzb3awqwpy@rob-hp-laptop>
-References: <1521046715-30683-1-git-send-email-ulf.hansson@linaro.org>
- <1521046715-30683-12-git-send-email-ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/8] drm/sun4i: Add compatible strings for A80 TCONs
+Date: Sun, 18 Mar 2018 07:52:12 -0500
+Message-ID: <20180318030014.4rkxe4huxxhslj3v@rob-hp-laptop>
+References: <20180315114136.24747-1-wens@csie.org>
+ <20180315114136.24747-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1521046715-30683-12-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, linux-pm@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Lina Iyer <lina.iyer@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Juri Lelli <juri.lelli@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180315114136.24747-2-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 05:58:21PM +0100, Ulf Hansson wrote:
-> The CPU's idle state nodes are currently parsed at the common cpuidle DT
-> library, but also when initializing back-end data for the arch specific CPU
-> operations, as in the PSCI driver case.
-> 
-> To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-> the device node for the CPU and the index to the requested idle state node,
-> as in-parameters. In case a corresponding idle state node is found, it
-> returns the node with the refcount incremented for it, else it returns
-> NULL.
-> 
-> Moreover, for ARM, there are two generic methods, to describe the CPU's
-> idle states, either via the flattened description through the
-> "cpu-idle-states" binding [1] or via the hierarchical layout, using the
-> "power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-> take both options into account.
-> 
-> [1]
-> Documentation/devicetree/bindings/arm/idle-states.txt
-> [2]
-> Documentation/devicetree/bindings/arm/psci.txt
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  8 ++++++++
->  2 files changed, 43 insertions(+)
-
-I'd prefer not to add this here, but don't have a better suggestion. If 
-more cpu related functions are added, I'd like to move them to a 
-separate file in drivers/of/, but that can wait.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVGh1LCBNYXIgMTUsIDIwMTggYXQgMDc6NDE6MjlQTSArMDgwMCwgQ2hlbi1ZdSBUc2FpIHdy
+b3RlOgo+IFRoZSBBODAgaGFzIDIgb3IgMyBUQ09Ocy4gVGhlIGRvY3VtZW50YXRpb24gYW5kIHZl
+bmRvciBrZXJuZWwgYXJlIHZlcnkKPiB2YWd1ZSBhYm91dCB0aGUgdGhpcmQgVENPTiwgdG8gdGhl
+IHBvaW50IHRoYXQgaXQgbWlnaHQgbm90IGV4aXN0Lgo+IAo+IEluIHRoZSBkb2N1bWVudGF0aW9u
+LCB0aGUgZmlyc3QgVENPTiBpcyBtaXNzaW5nIGNoYW5uZWwgMSwgYW5kIHRoZQo+IHNlY29uZCBp
+cyBtaXNzaW5nIGNoYW5uZWwgMC4gSG93ZXZlciB0aGUgdmVuZG9yIGtlcm5lbCBzZWVtcyB0byBi
+ZQo+IGFibGUgdG8gdXNlIHRoZW0gcmVnYXJkbGVzcy4gSGVyZSB3ZSBtb2RlbCB0aGVtIGxpa2Ug
+dGhlIG9sZCBUQ09Ocy4KPiAKPiBBbiBvZGRpdHkgaXMgdGhhdCBUQ09OMCByZXF1aXJlcyB0aGUg
+cmVzZXQgY29udHJvbCBmb3IgdGhlIGVEUCBibG9jawo+IHRvIGJlIGRlYXNzZXJ0ZWQsIGZvciBh
+bnkgcmVnaXN0ZXIgYWNjZXNzIHRvIHN0aWNrLgo+IAo+IFRoaXMgcGF0Y2ggYWRkcyBjb21wYXRp
+YmxlIHN0cmluZ3MgZm9yIFRDT04wIGFuZCBUQ09OMSwgd2l0aCBUQ09OMAo+IHJlcXVpcmluZyBh
+biBleHRyYSAiZWRwIiByZXNldCBjb250cm9sLgo+IAo+IFNpZ25lZC1vZmYtYnk6IENoZW4tWXUg
+VHNhaSA8d2Vuc0Bjc2llLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dCB8IDExICsrKysrKysrLS0tCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpSZXZpZXdlZC1i
+eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
