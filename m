@@ -1,41 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 2/5] arm64: dts: allwinner: a64: Add watchdog
-Date: Sun, 18 Mar 2018 07:52:37 -0500
-Message-ID: <20180318031909.u5s4ttzxmta7e4sa@rob-hp-laptop>
-References: <20180315162510.11669-1-harald@ccbib.org>
- <20180315162510.11669-3-harald@ccbib.org>
+Subject: Re: [PATCH 2/7] soc: qcom: rpmpd: Add a powerdomain driver to model
+ corners
+Date: Sun, 18 Mar 2018 07:52:47 -0500
+Message-ID: <20180318125247.qrttjjuvr7xniwmu@rob-hp-laptop>
+References: <20180316040824.21472-1-rnayak@codeaurora.org>
+ <20180316040824.21472-3-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180315162510.11669-3-harald@ccbib.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+In-Reply-To: <20180316040824.21472-3-rnayak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2018 at 04:25:07PM +0000, Harald Geyer wrote:
-> Add a watchdog node for the A64, automatically enabled on all boards.
-> Since the device is compatible with an existing driver, we only reserve
-> a new compatible string to be used together with the fall back.
-> Tested on Olimex Teres-I.
+On Fri, Mar 16, 2018 at 09:38:19AM +0530, Rajendra Nayak wrote:
+> The powerdomains for corners just pass the performance state set by the
+> consumers to the RPM (Remote Power manager) which then takes care
+> of setting the appropriate voltage on the corresponding rails to
+> meet the performance needs.
 > 
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
+> We add all powerdomain data needed on msm8996 here. This driver can easily
+> be extended by adding data for other qualcomm SoCs as well.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
-> changes since v1:
->  * add and use a specific compatible string
+>  .../devicetree/bindings/power/qcom,rpmpd.txt       |  14 +
+>  drivers/soc/qcom/Kconfig                           |   9 +
+>  drivers/soc/qcom/Makefile                          |   1 +
+>  drivers/soc/qcom/rpmpd.c                           | 299 +++++++++++++++++++++
+>  4 files changed, 323 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>  create mode 100644 drivers/soc/qcom/rpmpd.c
 > 
->  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 6 ++++--
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi            | 7 +++++++
->  2 files changed, 11 insertions(+), 2 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> new file mode 100644
+> index 000000000000..4d7a4a1f054f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> @@ -0,0 +1,14 @@
+> +Qualcomm RPM Powerdomains
+> +
+> +* For RPM powerdomains, we communicate a performance state to RPM
+> +which then translates it into a corresponding voltage on a rail
+> +
+> +Required Properties:
+> + - compatible: Should be one of the following
+> +	* qcom,rpmpd-msm8996: RPM Powerdomain for the msm8996 family of SoC
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+qcom,msm8996-rpmpd
+
+> + - power-domain-cells: number of cells in power domain specifier
+> +	must be 1.
+> + - domain-performance-state: One or more nodes describing the performance-states
+> +	supported by the powerdomain.
+> +	For domain-performance-state bindings refer to
+> +	Documentation/devicetree/bindings/power/power_domain.txt
