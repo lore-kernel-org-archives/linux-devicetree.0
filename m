@@ -1,104 +1,48 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 2/7] reset: qcom: AOSS (always on subsystem) reset
- controller
-Date: Sun, 18 Mar 2018 15:45:11 -0700
-Message-ID: <20180318224511.GD5626@tuxbook-pro>
+Subject: Re: [PATCH v3 3/7] dt-bindings: mailbox: Add APCS global binding for
+ SDM845 SoCs
+Date: Sun, 18 Mar 2018 15:45:24 -0700
+Message-ID: <20180318224524.GE5626@tuxbook-pro>
 References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-3-git-send-email-sibis@codeaurora.org>
+ <1521019283-32212-4-git-send-email-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521019283-32212-3-git-send-email-sibis@codeaurora.org>
+In-Reply-To: <1521019283-32212-4-git-send-email-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sibi S <sibis@codeaurora.org>
 Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 7fc7769..d06bd1d 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -81,6 +81,16 @@ config RESET_PISTACHIO
->  	help
->  	  This enables the reset driver for ImgTec Pistachio SoCs.
->  
-> +config RESET_QCOM_AOSS
-> +	bool "Qcom AOSS Reset Driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	select MFD_SYSCON
 
-Drop syscon
+> Include SDM845 APCS binding to the list of possible bindings
+> 
 
-> +	help
-> +	  This enables the AOSS (always on subsystem) reset driver
-> +	  for Qualcomm SDM845 SoCs. Say Y if you want to control
-> +	  reset signals provided by AOSS for Modem, Venus, ADSP,
-> +	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
-> +
-[..]
-> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-[..]
-> +static const struct regmap_config sdm845_aoss_regmap_config = {
-> +	.name		= "aoss-reset",
-> +	.reg_bits	= 32,
-> +	.reg_stride	= 4,
-> +	.val_bits	= 32,
-> +	.max_register	= 0x20000,
-> +	.fast_io	= true,
-> +};
-
-Is there a particular reason why you're setting up a regmap and not just
-operate on the ioremap region directly with readl/writel? It would save
-you a few lines of code and some runtime memory.
-
-> +
-> +static const struct qcom_aoss_reset_map sdm845_aoss_resets[] = {
-> +	[AOSS_CC_MSS_RESTART] = { 0x0, 0 },
-> +	[AOSS_CC_CAMSS_RESTART] = { 0x1000, 0 },
-> +	[AOSS_CC_VENUS_RESTART] = { 0x2000, 0 },
-> +	[AOSS_CC_GPU_RESTART] = { 0x3000, 0 },
-> +	[AOSS_CC_DISPSS_RESTART] = { 0x4000, 0 },
-> +	[AOSS_CC_WCSS_RESTART] = { 0x10000, 0 },
-> +	[AOSS_CC_LPASS_RESTART] = { 0x20000, 0 },
-
-Do you have a case where bit != 0? If not please drop the bit until it's
-necessary.
-
-> +};
-> +
-> +static const struct qcom_aoss_desc sdm845_aoss_desc = {
-> +	.config = &sdm845_aoss_regmap_config,
-> +	.resets = sdm845_aoss_resets,
-> +	/* Wait 6 32kHz sleep cycles for reset */
-> +	.delay = 200,
-
-Please move this constant into qcom_aoss_control_reset(), until there's
-a need for it to be configurable.
-
-> +	.num_resets = ARRAY_SIZE(sdm845_aoss_resets),
-> +};
-> +
-[..]
-> +static int qcom_aoss_control_reset(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	int ret;
-> +
-> +	ret = qcom_aoss_control_assert(rcdev, idx);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(data->desc->delay);
-
-Per Documentation/timers/timers-howto.txt please use usleep_range() when
-delays are between 10us and 20ms.
-
-> +
-> +	return qcom_aoss_control_deassert(rcdev, idx);
-> +}
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> Signed-off-by: Sibi S <sibis@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> index 16964f0..6a7e5d8 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> @@ -10,6 +10,7 @@ platforms.
+>  	Definition: must be one of:
+>  		    "qcom,msm8916-apcs-kpss-global",
+>  		    "qcom,msm8996-apcs-hmss-global"
+> +		    "qcom,sdm845-apcs-hmss-global"
+>  
+>  - reg:
+>  	Usage: required
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
