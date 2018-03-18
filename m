@@ -1,25 +1,63 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: unittest: fix an error code in
- of_unittest_apply_overlay()
-Date: Sun, 18 Mar 2018 07:52:01 -0500
-Message-ID: <20180318125201.aezip6bgycmvgbqa@rob-hp-laptop>
-References: <20180314200828.GA10588@mwanda>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: bcm2835-gpio: Add generic
+ pinctrl support
+Date: Sun, 18 Mar 2018 07:48:20 -0500
+Message-ID: <20180318124820.xea5etlb3wu7wnpw@rob-hp-laptop>
+References: <483687035.384686.1520596004410@email.1und1.de>
+ <1520615640-9153-1-git-send-email-matheus@castello.eng.br>
+ <1520615640-9153-2-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180314200828.GA10588@mwanda>
+In-Reply-To: <1520615640-9153-2-git-send-email-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: stefan.wahren@i2se.com, eric@anholt.net, linus.walleij@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2018 at 11:08:28PM +0300, Dan Carpenter wrote:
-> We accidentally return zero on failure instead of a negative error code.
+On Fri, Mar 09, 2018 at 01:13:58PM -0400, Matheus Castello wrote:
+> Added generic pin configuration and multiplexing support,
+> and shoud be preferred than brcm legacy one.
 > 
-> Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+> index 2569866..58b4720 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+> @@ -36,6 +36,25 @@ listed. In other words, a subnode that lists only a mux function implies no
+>  information about any pull configuration. Similarly, a subnode that lists only
+>  a pul parameter implies no information about the mux function.
+>  
+> +This driver supports the generic pin multiplexing and configuration
 
-Applied.
+Bindings describe h/w, not drivers.
 
-Rob
+> +bindings. For details on each properties, you can refer to
+> +./pinctrl-bindings.txt.
+> +
+> +Required sub-node properties:
+> +  - pins
+> +  - function
+> +
+> +Optional sub-node properties:
+> +  - bias-disable
+> +  - bias-pull-up
+> +  - bias-pull-down
+> +  - output-high
+> +  - output-low
+> +
+> +Legacy pin configuration and multiplexing binding:
+> +*** (Its use is deprecated, use generic multiplexing and configuration
+> +bindings instead)
+> +
+>  Required subnode-properties:
+>  - brcm,pins: An array of cells. Each cell contains the ID of a pin. Valid IDs
+>    are the integer GPIO IDs; 0==GPIO0, 1==GPIO1, ... 53==GPIO53.
+> -- 
+> 2.7.4
+> 
