@@ -1,214 +1,61 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v2] clk: qcom: rpmcc: Add support to XO buffered clocks
-Date: Sun, 18 Mar 2018 14:44:01 +0000
-Message-ID: <20180318144401.21904-1-srinivas.kandagatla@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation
+ with hhi syscon
+Date: Sun, 18 Mar 2018 16:09:57 +0100
+Message-ID: <1521385797.6569.90.camel@baylibre.com>
+References: <20180315115545.1884-1-jbrunet@baylibre.com>
+         <20180315115545.1884-2-jbrunet@baylibre.com>
+         <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Sun, 2018-03-18 at 07:52 -0500, Rob Herring wrote:
+> On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
+> > The HHI register region hosts more than just clocks and needs to
+> > accessed drivers other than the clock controller, such as the display
+> > driver.
+> > 
+> > This register region should be managed by syscon. It is already the case
+> > on gxbb/gxl and it soon will be on axg. The clock controllers must use
+> > this system controller instead of directly mapping the registers.
+> 
+> Sounds like a kernel problem, not a DT one.
 
-XO is onchip buffer clock to generate 19.2MHz.
+It's a platform problem, so it has much a kernel problem (solution already
+merged) as a DT problem
 
-This patch adds support to 5 XO buffer clocks found on PMIC8921,
-these buffer clocks can be controlled from external pin or in
-manual mode.
+DT wise, we've got two devices mapping the same region
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes since v1:
- - Made buffer clk word global and protected it by mutex, suggested by S Boyd.
- - removed rate from clock define as it can be derived from parent clk rate,
-	 suggested by S Boyd.
+in arch/arm64/boot/dts/amlogic/meson-gx.dtsi:
+> system-controller@0 
 
- drivers/clk/qcom/clk-rpm.c             | 79 +++++++++++++++++++++++++++++++++-
- include/dt-bindings/clock/qcom,rpmcc.h |  5 +++
- 2 files changed, 83 insertions(+), 1 deletion(-)
+which is used by the display device.
 
-diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-index c60f61b10c7f..b94981447664 100644
---- a/drivers/clk/qcom/clk-rpm.c
-+++ b/drivers/clk/qcom/clk-rpm.c
-@@ -29,6 +29,7 @@
- 
- #define QCOM_RPM_MISC_CLK_TYPE				0x306b6c63
- #define QCOM_RPM_SCALING_ENABLE_ID			0x2
-+#define QCOM_RPM_XO_MODE_ON				0x2
- 
- #define DEFINE_CLK_RPM(_platform, _name, _active, r_id)			      \
- 	static struct clk_rpm _platform##_##_active;			      \
-@@ -56,6 +57,18 @@
- 		},							      \
- 	}
- 
-+#define DEFINE_CLK_RPM_XO_BUFFER(_platform, _name, _active, offset)	      \
-+	static struct clk_rpm _platform##_##_name = {			      \
-+		.rpm_clk_id = QCOM_RPM_CXO_BUFFERS,			      \
-+		.xo_offset = (offset),					      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_xo_ops,			      \
-+			.name = #_name,					      \
-+			.parent_names = (const char *[]){ "cxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	}
-+
- #define DEFINE_CLK_RPM_FIXED(_platform, _name, _active, r_id, r)	      \
- 	static struct clk_rpm _platform##_##_name = {			      \
- 		.rpm_clk_id = (r_id),					      \
-@@ -126,8 +139,11 @@
- 
- #define to_clk_rpm(_hw) container_of(_hw, struct clk_rpm, hw)
- 
-+struct rpm_cc;
-+
- struct clk_rpm {
- 	const int rpm_clk_id;
-+	const int xo_offset;
- 	const bool active_only;
- 	unsigned long rate;
- 	bool enabled;
-@@ -135,12 +151,15 @@ struct clk_rpm {
- 	struct clk_rpm *peer;
- 	struct clk_hw hw;
- 	struct qcom_rpm *rpm;
-+	struct rpm_cc *rpm_cc;
- };
- 
- struct rpm_cc {
- 	struct qcom_rpm *rpm;
- 	struct clk_rpm **clks;
- 	size_t num_clks;
-+	u32 xo_buffer_value;
-+	struct mutex xo_lock;
- };
- 
- struct rpm_clk_desc {
-@@ -159,7 +178,8 @@ static int clk_rpm_handoff(struct clk_rpm *r)
- 	 * The vendor tree simply reads the status for this
- 	 * RPM clock.
- 	 */
--	if (r->rpm_clk_id == QCOM_RPM_PLL_4)
-+	if (r->rpm_clk_id == QCOM_RPM_PLL_4 ||
-+		r->rpm_clk_id == QCOM_RPM_CXO_BUFFERS)
- 		return 0;
- 
- 	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
-@@ -288,6 +308,46 @@ static void clk_rpm_unprepare(struct clk_hw *hw)
- 	mutex_unlock(&rpm_clk_lock);
- }
- 
-+static int clk_rpm_xo_prepare(struct clk_hw *hw)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+	struct rpm_cc *rcc = r->rpm_cc;
-+	int ret, clk_id = r->rpm_clk_id;
-+	u32 value;
-+
-+	mutex_lock(&rcc->xo_lock);
-+
-+	value = rcc->xo_buffer_value | (QCOM_RPM_XO_MODE_ON << r->xo_offset);
-+	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE, clk_id, &value, 1);
-+	if (!ret) {
-+		r->enabled = true;
-+		rcc->xo_buffer_value = value;
-+	}
-+
-+	mutex_unlock(&rcc->xo_lock);
-+
-+	return ret;
-+}
-+
-+static void clk_rpm_xo_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+	struct rpm_cc *rcc = r->rpm_cc;
-+	int ret, clk_id = r->rpm_clk_id;
-+	u32 value;
-+
-+	mutex_lock(&rcc->xo_lock);
-+
-+	value = rcc->xo_buffer_value & ~(QCOM_RPM_XO_MODE_ON << r->xo_offset);
-+	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE, clk_id, &value, 1);
-+	if (!ret) {
-+		r->enabled = false;
-+		rcc->xo_buffer_value = value;
-+	}
-+
-+	mutex_unlock(&rcc->xo_lock);
-+}
-+
- static int clk_rpm_fixed_prepare(struct clk_hw *hw)
- {
- 	struct clk_rpm *r = to_clk_rpm(hw);
-@@ -378,6 +438,11 @@ static unsigned long clk_rpm_recalc_rate(struct clk_hw *hw,
- 	return r->rate;
- }
- 
-+static const struct clk_ops clk_rpm_xo_ops = {
-+	.prepare	= clk_rpm_xo_prepare,
-+	.unprepare	= clk_rpm_xo_unprepare,
-+};
-+
- static const struct clk_ops clk_rpm_fixed_ops = {
- 	.prepare	= clk_rpm_fixed_prepare,
- 	.unprepare	= clk_rpm_fixed_unprepare,
-@@ -449,6 +514,11 @@ DEFINE_CLK_RPM(apq8064, mmfpb_clk, mmfpb_a_clk, QCOM_RPM_MMFPB_CLK);
- DEFINE_CLK_RPM(apq8064, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
- DEFINE_CLK_RPM(apq8064, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
- DEFINE_CLK_RPM(apq8064, qdss_clk, qdss_a_clk, QCOM_RPM_QDSS_CLK);
-+DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_d0_clk, xo_d0_a_clk, 0);
-+DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_d1_clk, xo_d1_a_clk, 8);
-+DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a0_clk, xo_a0_a_clk, 16);
-+DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a1_clk, xo_a1_a_clk, 24);
-+DEFINE_CLK_RPM_XO_BUFFER(apq8064, xo_a2_clk, xo_a2_a_clk, 28);
- 
- static struct clk_rpm *apq8064_clks[] = {
- 	[RPM_APPS_FABRIC_CLK] = &apq8064_afab_clk,
-@@ -469,6 +539,11 @@ static struct clk_rpm *apq8064_clks[] = {
- 	[RPM_SFPB_A_CLK] = &apq8064_sfpb_a_clk,
- 	[RPM_QDSS_CLK] = &apq8064_qdss_clk,
- 	[RPM_QDSS_A_CLK] = &apq8064_qdss_a_clk,
-+	[RPM_XO_D0] = &apq8064_xo_d0_clk,
-+	[RPM_XO_D1] = &apq8064_xo_d1_clk,
-+	[RPM_XO_A0] = &apq8064_xo_a0_clk,
-+	[RPM_XO_A1] = &apq8064_xo_a1_clk,
-+	[RPM_XO_A2] = &apq8064_xo_a2_clk,
- };
- 
- static const struct rpm_clk_desc rpm_clk_apq8064 = {
-@@ -526,12 +601,14 @@ static int rpm_clk_probe(struct platform_device *pdev)
- 
- 	rcc->clks = rpm_clks;
- 	rcc->num_clks = num_clks;
-+	mutex_init(&rcc->xo_lock);
- 
- 	for (i = 0; i < num_clks; i++) {
- 		if (!rpm_clks[i])
- 			continue;
- 
- 		rpm_clks[i]->rpm = rpm;
-+		rpm_clks[i]->rpm_cc = rcc;
- 
- 		ret = clk_rpm_handoff(rpm_clks[i]);
- 		if (ret)
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index b8337a5fa347..c585b82b9c05 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -40,6 +40,11 @@
- #define RPM_SMI_CLK				22
- #define RPM_SMI_A_CLK				23
- #define RPM_PLL4_CLK				24
-+#define RPM_XO_D0				25
-+#define RPM_XO_D1				26
-+#define RPM_XO_A0				27
-+#define RPM_XO_A1				28
-+#define RPM_XO_A2				29
- 
- /* SMD RPM clocks */
- #define RPM_SMD_XO_CLK_SRC				0
--- 
-2.16.2
+and in arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi (same for gxl)
+> clock-controller@0
+
+It has worked so far because the clock controller claims the region w/o
+reserving it but it remains unsafe since both device may access the same region.
+The fix is to have the clock controller go through the existing syscon.
+
+> 
+> > 
+> 
+> With a single child, there is really no point to this change. A single 
+> node can provide multiple functions. Look at nodes that are both reset 
+> and clock providers.
+
+There is more than a single user, as explained above and in the cover letter of
+this series.
+
+> 
+> What other functions are there?
+> 
+> Rob
