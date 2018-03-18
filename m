@@ -1,38 +1,162 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [DPU PATCH 1/2] dt-bindings: msm/disp: Remove hw
- block offset DT entries for SDM845
-Date: Sun, 18 Mar 2018 07:49:40 -0500
-Message-ID: <20180318124940.7bmsancpnh6ks6fu@rob-hp-laptop>
-References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
- <1521006698-23703-2-git-send-email-skolluku@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 2/3] nvmem: add driver for Raspberry Pi OTP
+Date: Sun, 18 Mar 2018 07:48:18 -0500
+Message-ID: <20180318124818.exwbcmknlbgqwmxo@rob-hp-laptop>
+References: <1520602328-28972-1-git-send-email-stefan.wahren@i2se.com>
+ <1520602328-28972-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1521006698-23703-2-git-send-email-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <1520602328-28972-3-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMTQsIDIwMTggYXQgMTE6MjE6MzdBTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IHdyb3RlOgo+IFJlbW92ZSBEVCBlbnRyaWVzIG9mIGh3IGJsb2NrIG9mZnNldHMgYW5k
-IG90aGVyIHRhcmdldCBzcGVjaWZpYyBjYXRhbG9nCj4gaW5mb3JtYXRpb24gZm9yIFNETTg0NS4K
-ClRoYXQgaXMgY2xlYXIgZnJvbSB0aGUgZGlmZi4gVGhlIGNvbW1pdCBtc2cgc2hvdWxkIGFuc3dl
-ciB3aHk/Cgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNyYXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1
-a3VAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbXNtL2RwdS50eHQgICAgICAgIHwgNTMwIC0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKVGhpcyBm
-aWxlIGlzIG5vdCB1cHN0cmVhbS4gV2hhdCB0cmVlIGlzIHRoaXMgZm9yPwoKPiAgMSBmaWxlIGNo
-YW5nZWQsIDUzMCBkZWxldGlvbnMoLSkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZnJlZWRyZW5vCg==
+On Fri, Mar 09, 2018 at 02:32:07PM +0100, Stefan Wahren wrote:
+> This patch brings read-only support for the Raspberry Pi Customer OTP.
+> The driver accesses the OTP via the mailbox property interface
+> provided by the VPU firmware.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  drivers/nvmem/Kconfig           |  10 +++
+>  drivers/nvmem/Makefile          |   2 +
+>  drivers/nvmem/raspberrypi-otp.c | 138 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 drivers/nvmem/raspberrypi-otp.c
+> 
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index ff505af..76b8af3 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -175,4 +175,14 @@ config NVMEM_SNVS_LPGPR
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called nvmem-snvs-lpgpr.
+>  
+> +config NVMEM_RASPBERRYPI_OTP
+> +	tristate "Raspberry Pi Customer OTP support"
+> +	depends on (ARCH_BCM2835 && RASPBERRYPI_FIRMWARE) || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
+> +	depends on RASPBERRYPI_FIRMWARE
+> +	help
+> +	  This is a driver for access to the Customer OTP on the Raspberry Pi.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-raspberrypi-otp.
+> +
+>  endif
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index e54dcfa..3b53b0b 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -37,3 +37,5 @@ obj-$(CONFIG_MESON_MX_EFUSE)	+= nvmem_meson_mx_efuse.o
+>  nvmem_meson_mx_efuse-y		:= meson-mx-efuse.o
+>  obj-$(CONFIG_NVMEM_SNVS_LPGPR)	+= nvmem_snvs_lpgpr.o
+>  nvmem_snvs_lpgpr-y		:= snvs_lpgpr.o
+> +obj-$(CONFIG_NVMEM_RASPBERRYPI_OTP)	+= nvmem-raspberrypi-otp.o
+> +nvmem-raspberrypi-otp-y		:= raspberrypi-otp.o
+> diff --git a/drivers/nvmem/raspberrypi-otp.c b/drivers/nvmem/raspberrypi-otp.c
+> new file mode 100644
+> index 0000000..e925435
+> --- /dev/null
+> +++ b/drivers/nvmem/raspberrypi-otp.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Raspberry Pi Customer OTP driver
+> + *
+> + * Copyright (C) 2018 Stefan Wahren <stefan.wahren@i2se.com>
+> + */
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <soc/bcm2835/raspberrypi-firmware.h>
+> +
+> +#define CUSTOMER_CELLS 8
+> +
+> +struct rpi_otp {
+> +	struct nvmem_device *nvmem;
+> +	struct rpi_firmware *fw;
+> +};
+> +
+> +/*
+> + * Packet definition used by RPI_FIRMWARE_GET_CUSTOMER_OTP
+> + */
+> +struct rpi_customer_otp_packet {
+> +	u32 index;
+> +	u32 length;
+> +	u32 cells[CUSTOMER_CELLS];
+> +};
+> +
+> +static int rpi_otp_read(void *context, unsigned int offset, void *val,
+> +			size_t bytes)
+> +{
+> +	struct rpi_customer_otp_packet packet;
+> +	struct rpi_otp *otp = context;
+> +	u32 *buf = val;
+> +	int ret;
+> +
+> +	packet.index = 0;
+> +	packet.length = CUSTOMER_CELLS;
+> +	memset(packet.cells, 0xff, sizeof(packet.cells));
+> +
+> +	ret = rpi_firmware_property(otp->fw, RPI_FIRMWARE_GET_CUSTOMER_OTP,
+> +				    &packet, sizeof(packet));
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Request rejected by firmware */
+> +	if (packet.index)
+> +		return -EIO;
+> +
+> +	while (bytes) {
+> +		if ((offset / 4) < sizeof(packet.cells))
+> +			*buf = packet.cells[offset / 4];
+> +		else
+> +			*buf = 0;
+> +
+> +		buf++;
+> +		bytes -= 4;
+> +		offset += 4;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct nvmem_config ocotp_config = {
+> +	.name = "rpi-customer-otp",
+> +	.size = CUSTOMER_CELLS * 4,
+> +	.stride = 4,
+> +	.word_size = 4,
+> +	.reg_read = rpi_otp_read,
+> +};
+> +
+> +static int rpi_otp_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *match;
+> +	struct device_node *fw_node;
+> +	struct rpi_otp *otp;
+> +
+> +	match = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!match)
+> +		return -EINVAL;
+
+This call isn't necessary if there's no match data.
+
+Rob
