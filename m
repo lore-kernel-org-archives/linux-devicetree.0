@@ -1,83 +1,44 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: bcm2835-gpio: Add generic
- pinctrl support
-Date: Sun, 18 Mar 2018 11:23:49 -0400
-Message-ID: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
-References: <483687035.384686.1520596004410@email.1und1.de>
- <1520615640-9153-1-git-send-email-matheus@castello.eng.br>
- <1520615640-9153-2-git-send-email-matheus@castello.eng.br>
- <20180318124820.xea5etlb3wu7wnpw@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2] ASoC: samsung: Mark unused Odroid compatibles as deprecated
+Date: Sun, 18 Mar 2018 16:35:12 +0100
+Message-ID: <20180318153512.8343-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318124820.xea5etlb3wu7wnpw@rob-hp-laptop>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: stefan.wahren@i2se.com, eric@anholt.net, linus.walleij@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Compatible for XU4 audio is not being used.  Instead the board uses the
+same compatible as XU3.  The devices are now just compatible so they
+should use the same value.  Mark "hardkernel,odroid-xu4-audio" as being
+deprecated so in this future could be removed to limit useless
+properties.
 
-sorry I used allwinner,sunxi-pinctrl.txt from Maxime Ripard as a base, I 
-used the same words, I thought it would be correct.
+Additionally add older compatibles appearing in the bindings.
 
-I will modify this to:
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-The BCM2835 pin configuration and multiplexing supports the generic 
-bindings. For details on each properties, you can refer to
-./pinctrl-bindings.txt.
+---
 
-If it's okay for you let me know, so I can send the v5 patch.
+Changes since v1:
+1. Correct typo XU4->XU3 for one deprecated compatible.
+---
+ Documentation/devicetree/bindings/sound/samsung,odroid.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Best Regards
-Matheus Castello
-
-
-On 03/18/2018 08:48 AM, Rob Herring wrote:
-> On Fri, Mar 09, 2018 at 01:13:58PM -0400, Matheus Castello wrote:
->> Added generic pin configuration and multiplexing support,
->> and shoud be preferred than brcm legacy one.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->> ---
->>   .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
->> index 2569866..58b4720 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
->> @@ -36,6 +36,25 @@ listed. In other words, a subnode that lists only a mux function implies no
->>   information about any pull configuration. Similarly, a subnode that lists only
->>   a pul parameter implies no information about the mux function.
->>   
->> +This driver supports the generic pin multiplexing and configuration
-> 
-> Bindings describe h/w, not drivers.
-> 
->> +bindings. For details on each properties, you can refer to
->> +./pinctrl-bindings.txt.
->> +
->> +Required sub-node properties:
->> +  - pins
->> +  - function
->> +
->> +Optional sub-node properties:
->> +  - bias-disable
->> +  - bias-pull-up
->> +  - bias-pull-down
->> +  - output-high
->> +  - output-low
->> +
->> +Legacy pin configuration and multiplexing binding:
->> +*** (Its use is deprecated, use generic multiplexing and configuration
->> +bindings instead)
->> +
->>   Required subnode-properties:
->>   - brcm,pins: An array of cells. Each cell contains the ID of a pin. Valid IDs
->>     are the integer GPIO IDs; 0==GPIO0, 1==GPIO1, ... 53==GPIO53.
->> -- 
->> 2.7.4
->>
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index f35a2694eb04..e9da2200e173 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -3,7 +3,9 @@ Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+ Required properties:
+ 
+  - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
+-		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board
++		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated),
++		"samsung,odroid-xu3-audio" - for Odroid XU3 board (deprecated),
++		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
+  - model - the user-visible name of this sound complex
+  - clocks - should contain entries matching clock names in the clock-names
+     property
+-- 
+2.14.1
