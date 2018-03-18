@@ -1,28 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pcie: qcom: Add support to enable pcie refclk
-Date: Sun, 18 Mar 2018 07:52:27 -0500
-Message-ID: <20180318031703.xt6fscof7ibslgrq@rob-hp-laptop>
-References: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCHv2 4/5] arm64: dts: allwinner: a64: Add pwm device
+Date: Sun, 18 Mar 2018 07:52:40 -0500
+Message-ID: <20180318032309.dys4p5gth5fvyawn@rob-hp-laptop>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-5-harald@ccbib.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20180315162510.11669-5-harald@ccbib.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: bhelgaas@google.com, svarbanov@mm-sol.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2018 at 02:41:33PM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Thu, Mar 15, 2018 at 04:25:09PM +0000, Harald Geyer wrote:
+> This device is compatible with A13, so no new driver is needed.
+> A new compatible string is reserved in the binding documentation, to be
+> used together with the proper fall back. Tested on Teres-I.
 > 
-> This patch adds support to enable 100MHz pcie refclk,
-> On some boards like DB600c this clock is not enabled by default.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
 > ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt |  1 +
->  drivers/pci/dwc/pcie-qcom.c                         | 21 ++++++++++++++++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
+> changes since v1:
+>  * add and use an A64 specific compatible string
+>  * claim the full memory range
+> 
+> I saw that Andre Przywara has been working on A64 pwm too and has
+> submitted some patches a few days ago. I think his patches are functionally
+> equivalent to this one here, but clean up things a bit and additionally
+> add support for r_pwm and thus are preferable. See:
+> 
+> https://groups.google.com/forum/#!topic/linux-sunxi/hQFeteP591k
+> 
+> I'm including my patch here mostly to have a consistent series for others
+> to test. OTOH you might merge the device tree changes here and pick up
+> the cleanup patches from him. Either way should work fine.
+
+I would sync up with Andre and send out a combined series. Don't make 
+the maintainer(s) have to sort this out.
+
+>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt |  1 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi       | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
