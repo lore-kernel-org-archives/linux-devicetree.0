@@ -1,55 +1,122 @@
-Return-Path: <SRS0=yttm=GG=synopsys.com=Thinh.Nguyen@kernel.org>
-Date: Fri, 16 Mar 2018 15:33:41 -0700
-Message-ID: <cover.1521239259.git.thinhn@synopsys.com>
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: [PATCH v5 00/10] usb: dwc3: Add new updates for DWC_usb31
+Return-Path: <robherring2@gmail.com>
+Date: Sun, 18 Mar 2018 07:49:07 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V8 1/9] dt-bindings: Tegra210: add binding documentation
+Message-ID: <20180318124907.adfylj6nxfakn3cq@rob-hp-laptop>
+References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
+ <1520854838-21779-2-git-send-email-pchandru@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <John.Youn@synopsys.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1520854838-21779-2-git-send-email-pchandru@nvidia.com>
+To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
+Cc: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, mark.rutland@arm.com, preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series adds new updates and some fixes for DWC_usb31.
+On Mon, Mar 12, 2018 at 05:10:30PM +0530, Preetham Chandru Ramchandra wrote:
+> From: Preetham Ramchandra <pchandru@nvidia.com>
 
-Changes in v5:
- - Remove isoc workaround patches from series
- - Remove "usb: core: urb: Check SSP isoc ep comp descriptor" from series
+The subject should indicate this is for the AHCI controller.
 
-Changes in v4:
- - Correctly refer "databook" as "programming guide"
- - Document more detail about enabling of ESS periodic tx/rx threshold
+> 
+> This adds bindings documentation for the AHCI controller on Tegra210.
+> 
+> Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+> ---
+> v8:
+> * Add Tegra132: "nvidia,tegra132-ahci", "nvidia,tegra124-ahci".
+> * Changed AUX registers to optional.
+> * corrected commit message line length.
+> * Move phy-name for Tegra210 to optional.
+> v7:
+> * For Aux register set drop the Tegra210 since this register
+>   set also works on Tegra124
+> * rephrase the sentence for cml1 clock
+> * change the commit subject to include ahci-tegra
 
-Changes in v3:
- - Add "usb: dwc3: Check controller type before setting speed" to series
+Really?
 
-Changes in v2:
- - Add another patch to the series to increase mass_storage max_speed
- - Separate "usb: dwc3: ep0: Reset TRB counter for ep0 IN" from series
- - Separate "usb: dwc3: gadget: Set maxpacket size for ep0 IN" from series
- - Use msleep() instead of mdelay() for SoftReset PHY sync delay
- - Rename new USB31 macros from DWC3_USB31_* to DWC31_*
- - Rename device properties and replace '_' with '-'
- - Minor fixes in the commit messages
+> * drop pll_e since CCF handles it automatically as
+>   CML1 is a child clock of it.
+> v4:
+> * changed the commit message
+> * changed 'sata-cold' reset to mandatory for t210 and t124
+> * Removed the regulators for T210 since these regulators
+>   will be enabled in phy driver.
+> v3:
+> * Add AUX register.
+> v2:
+> * change cml1, pll_e and phy regulators as optional
+>   for T210.
+> ---
+>  .../bindings/ata/nvidia,tegra124-ahci.txt          | 36 ++++++++++++++--------
+>  1 file changed, 24 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> index 66c83c3e8915..12ab2f723eb0 100644
+> --- a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> +++ b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> @@ -1,9 +1,10 @@
+> -Tegra124 SoC SATA AHCI controller
+> +Tegra SoC SATA AHCI controller
+>  
+>  Required properties :
+> -- compatible : For Tegra124, must contain "nvidia,tegra124-ahci".  Otherwise,
+> -  must contain '"nvidia,<chip>-ahci", "nvidia,tegra124-ahci"', where <chip>
+> -  is tegra132.
+> +- compatible : Must be one of:
+> +  - Tegra124 : "nvidia,tegra124-ahci"
+> +  - Tegra132 : "nvidia,tegra132-ahci", "nvidia,tegra124-ahci"
+> +  - Tegra210 : "nvidia,tegra210-ahci"
+>  - reg : Should contain 2 entries:
+>    - AHCI register set (SATA BAR5)
+>    - SATA register set
+> @@ -13,8 +14,6 @@ Required properties :
+>  - clock-names : Must include the following entries:
+>    - sata
+>    - sata-oob
+> -  - cml1
+> -  - pll_e
 
+You can't just remove clocks.
 
-Thinh Nguyen (10):
-  usb: dwc3: Add SoftReset PHY synchonization delay
-  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
-  usb: dwc3: Check IP revision for GTXFIFOSIZ
-  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
-  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
-  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
-  usb: dwc3: Make TX/RX threshold configurable
-  usb: dwc3: Check for ESS TX/RX threshold config
-  usb: dwc3: Dump LSP and BMU debug info
-  usb: dwc3: Check controller type before setting speed
+>  - resets : Must contain an entry for each entry in reset-names.
+>    See ../reset/reset.txt for details.
+>  - reset-names : Must include the following entries:
+> @@ -24,9 +23,22 @@ Required properties :
+>  - phys : Must contain an entry for each entry in phy-names.
+>    See ../phy/phy-bindings.txt for details.
+>  - phy-names : Must include the following entries:
+> -  - sata-phy : XUSB PADCTL SATA PHY
+> -- hvdd-supply : Defines the SATA HVDD regulator
+> -- vddio-supply : Defines the SATA VDDIO regulator
+> -- avdd-supply : Defines the SATA AVDD regulator
+> -- target-5v-supply : Defines the SATA 5V power regulator
+> -- target-12v-supply : Defines the SATA 12V power regulator
+> +  - For Tegra124 and Tegra132:
+> +    - sata-phy : XUSB PADCTL SATA PHY
+> +- For Tegra124 and Tegra132:
+> +  - hvdd-supply : Defines the SATA HVDD regulator
+> +  - vddio-supply : Defines the SATA VDDIO regulator
+> +  - avdd-supply : Defines the SATA AVDD regulator
+> +  - target-5v-supply : Defines the SATA 5V power regulator
+> +  - target-12v-supply : Defines the SATA 12V power regulator
+> +
+> +Optional properties:
+> +- reg :
+> +  - AUX register set
+> +- clock-names :
+> +  - cml1 :
+> +    cml1 clock should be defined here if the PHY driver
+> +    doesn't manage them. If it does, they should not be.
 
- Documentation/devicetree/bindings/usb/dwc3.txt | 16 ++++++
- drivers/usb/dwc3/core.c                        | 68 +++++++++++++++++++++++++-
- drivers/usb/dwc3/core.h                        | 35 +++++++++++++
- drivers/usb/dwc3/debugfs.c                     |  5 ++
- drivers/usb/dwc3/gadget.c                      | 16 ++++--
- 5 files changed, 136 insertions(+), 4 deletions(-)
+What driver in what OS? The binding shouldn't depend on the whims of the 
+OS. This needs to be defined in terms of what compatibles this is valid 
+with or marked as deprecated.
 
--- 
-2.11.0
+> +- phy-names :
+> +  - For T210:
+> +    - sata-phy
+> -- 
+> 2.7.4
+> 
