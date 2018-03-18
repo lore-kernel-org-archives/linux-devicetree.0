@@ -1,60 +1,24 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/7] soc: qcom: rpmpd: Add a powerdomain driver to model
- corners
-Date: Sun, 18 Mar 2018 07:52:47 -0500
-Message-ID: <20180318125247.qrttjjuvr7xniwmu@rob-hp-laptop>
-References: <20180316040824.21472-1-rnayak@codeaurora.org>
- <20180316040824.21472-3-rnayak@codeaurora.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
+Date: Sun, 18 Mar 2018 09:54:42 -0300
+Message-ID: <CAOMZO5AFJk_Q5CYrV0s+hLmORHosWujRSGjwf9smyAQc4nmJ+A@mail.gmail.com>
+References: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5BzE46Dm24++j+xVA4KGFnpsopGfJ97h7sFGOAxVa19=g@mail.gmail.com> <AM3PR04MB1315E1C3071C0BD2E7169968F5D50@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180316040824.21472-3-rnayak@codeaurora.org>
+In-Reply-To: <AM3PR04MB1315E1C3071C0BD2E7169968F5D50@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 09:38:19AM +0530, Rajendra Nayak wrote:
-> The powerdomains for corners just pass the performance state set by the
-> consumers to the RPM (Remote Power manager) which then takes care
-> of setting the appropriate voltage on the corresponding rails to
-> meet the performance needs.
-> 
-> We add all powerdomain data needed on msm8996 here. This driver can easily
-> be extended by adding data for other qualcomm SoCs as well.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../devicetree/bindings/power/qcom,rpmpd.txt       |  14 +
->  drivers/soc/qcom/Kconfig                           |   9 +
->  drivers/soc/qcom/Makefile                          |   1 +
->  drivers/soc/qcom/rpmpd.c                           | 299 +++++++++++++++++++++
->  4 files changed, 323 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->  create mode 100644 drivers/soc/qcom/rpmpd.c
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> new file mode 100644
-> index 000000000000..4d7a4a1f054f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> @@ -0,0 +1,14 @@
-> +Qualcomm RPM Powerdomains
-> +
-> +* For RPM powerdomains, we communicate a performance state to RPM
-> +which then translates it into a corresponding voltage on a rail
-> +
-> +Required Properties:
-> + - compatible: Should be one of the following
-> +	* qcom,rpmpd-msm8996: RPM Powerdomain for the msm8996 family of SoC
+On Sat, Mar 17, 2018 at 11:23 PM, Anson Huang <anson.huang@nxp.com> wrote:
 
-qcom,msm8996-rpmpd
+> I thought the max value here means the capability of regulator itself, like the internal
 
-> + - power-domain-cells: number of cells in power domain specifier
-> +	must be 1.
-> + - domain-performance-state: One or more nodes describing the performance-states
-> +	supported by the powerdomain.
-> +	For domain-performance-state bindings refer to
-> +	Documentation/devicetree/bindings/power/power_domain.txt
+No it is not.
+
+Please check Documentation/devicetree/bindings/regulator/regulator.txt:
+
+"- regulator-max-microvolt: largest voltage consumers may set"
