@@ -1,167 +1,106 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/2] usb: dwc3: add clock and resets
-Date: Mon, 19 Mar 2018 07:37:47 +0900
-Message-ID: <CAK7LNAQT8wfAk55c40zrZ15wPh3fnsh=B1ciNfVx4uA-oGi34g@mail.gmail.com>
-References: <1521113998-25052-1-git-send-email-yamada.masahiro@socionext.com>
- <1521113998-25052-2-git-send-email-yamada.masahiro@socionext.com> <20180318125209.juoa3gkgdv2djciw@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Sun, 18 Mar 2018 15:44:59 -0700
+Message-ID: <20180318224459.GC5626@tuxbook-pro>
+References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
+ <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318125209.juoa3gkgdv2djciw@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Sibi S <sibis@codeaurora.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the register
+> +	            space.
+> +
+> +
 
-2018-03-18 21:52 GMT+09:00 Rob Herring <robh@kernel.org>:
-> On Thu, Mar 15, 2018 at 08:39:58PM +0900, Masahiro Yamada wrote:
->> dwc3-of-simple.c only handles arbitrary number of clocks and resets.
->> They are both generic enough to be put into the dwc3 core.  For simple
->> cases, a nested node structure like follows:
->>
->>   dwc3-glue {
->>           compatible = "foo,dwc3";
->>           clocks = ...;
->>           resets = ...;
->>           ...
->>
->>           dwc3 {
->>                   compatible = "snps,dwc3";
->>                   ...
->>           };
->
-> I'm not a fan of how this was done.
->
->
->>   }
->>
->> would be turned into a single node:
->>
->>   dwc3 {
->>           compatible = "foo,dwc3", "snps,dwc3";
->>           clocks = ...;
->>           resets = ...;
->>           ...
->>   }
->
-> And yes, this is what I'd prefer.
+Double empty lines.
 
+> +- #reset-cells:
+> +	Usage: required
+> +	Value type: <uint>
+> +	Definition: must be 1; cell entry represents the reset index.
+> +
+> +example:
 
+Please capitalize the initial char.
 
-Not only dwc3-of-simple.c, but all dwc3 nodes are
-written like this.
+> +
+> +aoss_reset: qcom,reset-controller@b2e0100 {
+> +	compatible = "qcom,sdm845-aoss-reset";
+> +	reg = <0xc2b0000 0x20004>;
 
+0x20004 does seem very even, please verify this size.
 
-omap_dwc3_1: omap_dwc3_1@48880000 {
-        compatible = "ti,dwc3";
-        reg = <0x48880000 0x10000>;
-        #address-cells = <1>;
-        #size-cells = <1>;
-        ranges;
-        ...
+> +	#reset-cells = <1>;
+> +};
+> +
+> +
+> +Specifying reset lines connected to IP modules
 
-        usb1: usb@48890000 {
-                compatible = "snps,dwc3";
-                reg = <0x48890000 0x17000>;
-                ...
-        };
-};
+"AOSS reset clients"
 
+Although you could probably get a way with just referring to reset.txt
+and the header file.
 
-The glue layer initializes SoC-specific things,
-then populates the child "snps,dwc3".
+> +==============================================
+> +
+> +Device nodes that need access to reset lines should
+> +specify them as a reset phandle in their corresponding node as
+> +specified in reset.txt.
+> +
+> +For list of all valid reset indicies see
+> +<dt-bindings/reset/qcom,sdm845-aoss.h>
+> +
+> +Example:
+> +
+> +modem-pil@4080000 {
+> +	...
+> +
+> +	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
+> +	reset-names = "mss_restart";
+> +
+> +	...
+> +};
+> diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+> new file mode 100644
+> index 0000000..e9b38fc
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
+For tooling reasons header files should have their SPDX License tag
+wrapped in /* */
 
-I think the following structure should work
-by handling EPROBE_DEFER properly.
+> +/*
+> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
+> +#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
+> +
+> +#define AOSS_CC_MSS_RESTART	0
+> +#define AOSS_CC_CAMSS_RESTART	1
+> +#define AOSS_CC_VENUS_RESTART	2
+> +#define AOSS_CC_GPU_RESTART	3
+> +#define AOSS_CC_DISPSS_RESTART	4
+> +#define AOSS_CC_WCSS_RESTART	5
+> +#define AOSS_CC_LPASS_RESTART	6
+> +
+> +#endif
 
-omap_dwc3_1: omap_dwc3_1@48880000 {
-        compatible = "ti,dwc3"; (should be "ti,dwc3-glue" or something)
-        reg = <0x48880000 0x10000>;
-        ...
-};
+Apart from these nits this looks reasonable.
 
-usb1: usb@48890000 {
-        compatible = "snps,dwc3";
-        reg = <0x48890000 0x17000>;
-        ...
-};
-
-
-
->>
->> I inserted reset_control_deassert() and clk_enable() before the first
->> register access, i.e. dwc3_cache_hwparams().
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->> ---
->>
->>  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +
->>  drivers/usb/dwc3/core.c                        | 127 ++++++++++++++++++++++++-
->>  drivers/usb/dwc3/core.h                        |   5 +
->>  3 files changed, 132 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->> index 44e8bab..67e9cfb 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -9,12 +9,14 @@ Required properties:
->>   - interrupts: Interrupts used by the dwc3 controller.
->>
->>  Optional properties:
->> + - clocks: list of phandle and clock specifier pairs
->
-> However, this should be specific as to how many clocks and their
-> function. This should be readily available to someone with access to
-> Synopsys datasheet. The number of clocks should generally be the same
-> across SoCs, it is just some SoCs either tie clocks together or don't
-> provide s/w control of some of the clocks.
-
-
-Make sense.
-You also implies this property is mandatory.
-The number of clocks should be available in the datasheet
-and no hardware can work with zero clock.
-
-However, making it mandatory breaks the binding
-since the existing DT files do not specify clocks at all
-in the "snps,dwc3" node.
-
-
-
-Anyway, our current situation:
-
-- We have the dwc3-core under the glue layer node
-  despite they are independent in the CPU address view
-- We add all sorts of clocks and resets in the glue layer node,
-  and nothing in the dwc3-core node.
-
-If these are design mistake, what should we do?
-
-Continue development based on it?
-If we fix it, how to change the course?
-
-
-
-
-
->>   - usb-phy : array of phandle for the PHY device.  The first element
->>     in the array is expected to be a handle to the USB2/HS PHY and
->>     the second element is expected to be a handle to the USB3/SS PHY
->>   - phys: from the *Generic PHY* bindings
->>   - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
->>       or "usb3-phy".
->> + - resets: list of phandle and reset specifier pairs
->
-> ditto
->
-
-Same issue as the clocks.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Regards,
+Bjorn
