@@ -1,104 +1,100 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/9] sunxi-cedrus: Add device tree binding document
-Date: Sun, 18 Mar 2018 07:48:00 -0500
-Message-ID: <20180318124800.7soqh34fxvwjm7pn@rob-hp-laptop>
-References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
- <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND 2/2] clk: stm32: Add DSI clock for STM32F469 Board
+Date: Sun, 18 Mar 2018 07:47:53 -0500
+Message-ID: <20180318124753.nbjbs5deslihl7ir@rob-hp-laptop>
+References: <1520578651-28849-1-git-send-email-gabriel.fernandez@st.com>
+ <1520578651-28849-3-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBA6AXHKQKGQEUJE2IXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180309101445.16190-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Signed-off-by : Bob Ham" <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Florent Revest <revestflo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas van Kleef <thomas-XCRq7eEM0/pmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <1520578651-28849-3-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gabriel.fernandez@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Loic PALLARDY <loic.pallardy@st.com>, olivier.bideau@st.com, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
-> From: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-"device tree binding document" can all be summarized with the subject 
-prefix "dt-bindings: media: ".
-
-Also, email should be updated to @bootlin.com?
-
+On Fri, Mar 09, 2018 at 07:57:31AM +0100, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> Device Tree bindings for the Allwinner's video engine
+> This patch adds DSI clock for STM32F469 board
 > 
-> Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
->  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+>  drivers/clk/clk-stm32f4.c                 | 11 ++++++++++-
+>  include/dt-bindings/clock/stm32fx-clock.h |  3 ++-
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> new file mode 100644
-> index 000000000000..138581113c49
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
-> @@ -0,0 +1,44 @@
-> +Device-Tree bindings for SUNXI video engine found in sunXi SoC family
+> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+> index 96c6b6b..d15bae6 100644
+> --- a/drivers/clk/clk-stm32f4.c
+> +++ b/drivers/clk/clk-stm32f4.c
+> @@ -521,7 +521,7 @@ struct stm32f4_pll_data {
+>  };
+>  
+>  static const struct stm32f4_pll_data stm32f469_pll[MAX_PLL_DIV] = {
+> -	{ PLL,	   50, { "pll",	     "pll-q",    NULL	    } },
+> +	{ PLL,	   50, { "pll",	     "pll-q",    "pll-r"    } },
+>  	{ PLL_I2S, 50, { "plli2s-p", "plli2s-q", "plli2s-r" } },
+>  	{ PLL_SAI, 50, { "pllsai-p", "pllsai-q", "pllsai-r" } },
+>  };
+> @@ -1047,6 +1047,8 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+>  	"no-clock", "lse", "lsi", "hse-rtc"
+>  };
+>  
+> +static const char *dsi_parent[2] = { NULL, "pll-r" };
 > +
-> +Required properties:
-> +- compatible	    : "allwinner,sun4i-a10-video-engine";
-> +- memory-region     : DMA pool for buffers allocation;
-
-Why do you need this linkage? Many drivers use CMA and don't need this.
-
-> +- clocks	    : list of clock specifiers, corresponding to
-> +		      entries in clock-names property;
-> +- clock-names	    : should contain "ahb", "mod" and "ram" entries;
-> +- resets	    : phandle for reset;
-> +- interrupts	    : should contain VE interrupt number;
-> +- reg		    : should contain register base and length of VE.
-> +
-> +Example:
-> +
-> +reserved-memory {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +
-> +	ve_reserved: cma {
-> +		compatible = "shared-dma-pool";
-> +		reg = <0x43d00000 0x9000000>;
-> +		no-map;
-> +		linux,cma-default;
-> +	};
-> +};
-> +
-> +video-engine {
-> +	compatible = "allwinner,sun4i-a10-video-engine";
-> +	memory-region = <&ve_reserved>;
-> +
-> +	clocks = <&ahb_gates 32>, <&ccu CLK_VE>,
-> +		 <&dram_gates 0>;
-> +	clock-names = "ahb", "mod", "ram";
-> +
-> +	assigned-clocks = <&ccu CLK_VE>;
-> +	assigned-clock-rates = <320000000>;
-
-Not documented.
-
-> +
-> +	resets = <&ccu RST_VE>;
-> +
-> +	interrupts = <53>;
-> +
-> +	reg = <0x01c0e000 4096>;
-> +};
+>  static const char *lcd_parent[1] = { "pllsai-r-div" };
+>  
+>  static const char *i2s_parents[2] = { "plli2s-r", NULL };
+> @@ -1156,6 +1158,12 @@ struct stm32f4_clk_data {
+>  		NO_GATE, 0,
+>  		0
+>  	},
+> +	{
+> +		CLK_F469_DSI, "dsi", dsi_parent, ARRAY_SIZE(dsi_parent),
+> +		STM32F4_RCC_DCKCFGR, 29, 1,
+> +		STM32F4_RCC_APB2ENR, 27,
+> +		CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT
+> +	},
+>  };
+>  
+>  static const struct stm32_aux_clk stm32f746_aux_clk[] = {
+> @@ -1450,6 +1458,7 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+>  	stm32f4_gate_map = data->gates_map;
+>  
+>  	hse_clk = of_clk_get_parent_name(np, 0);
+> +	dsi_parent[0] = hse_clk;
+>  
+>  	i2s_in_clk = of_clk_get_parent_name(np, 1);
+>  
+> diff --git a/include/dt-bindings/clock/stm32fx-clock.h b/include/dt-bindings/clock/stm32fx-clock.h
+> index 4d523b0..58d8b51 100644
+> --- a/include/dt-bindings/clock/stm32fx-clock.h
+> +++ b/include/dt-bindings/clock/stm32fx-clock.h
+> @@ -35,8 +35,9 @@
+>  #define CLK_SAIQ_PDIV		13
+>  #define CLK_HSI			14
+>  #define CLK_SYSCLK		15
+> +#define CLK_F469_DSI		16
+>  
+> -#define END_PRIMARY_CLK		16
+> +#define END_PRIMARY_CLK		17
+>  
+>  #define CLK_HDMI_CEC		16
+>  #define CLK_SPDIF		17
 > -- 
-> 2.16.2
+> 1.9.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
