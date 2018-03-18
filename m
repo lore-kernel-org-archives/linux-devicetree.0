@@ -1,36 +1,56 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6sx-sabreauto: add external 24MHz clock source
-Date: Sun, 18 Mar 2018 10:03:43 -0300
-Message-ID: <CAOMZO5CG6XuJ7N8W--zEwEVd9JHj887_7aNp+K8D-Xt1OnKh7A@mail.gmail.com>
-References: <1521342853-2941-1-git-send-email-Anson.Huang@nxp.com> <1521342853-2941-2-git-send-email-Anson.Huang@nxp.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Subject: Re: [PATCHv2 4/5] arm64: dts: allwinner: a64: Add pwm device
+Date: Sun, 18 Mar 2018 13:51:04 +0000
+Message-ID: <1d6ba3e9-e2e7-c121-dc6d-7d4b867316ab@arm.com>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-5-harald@ccbib.org>
+ <20180318032309.dys4p5gth5fvyawn@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521342853-2941-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180318032309.dys4p5gth5fvyawn@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Harald Geyer <harald@ccbib.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 18, 2018 at 12:14 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+On 18/03/18 12:52, Rob Herring wrote:
+> On Thu, Mar 15, 2018 at 04:25:09PM +0000, Harald Geyer wrote:
+>> This device is compatible with A13, so no new driver is needed.
+>> A new compatible string is reserved in the binding documentation, to be
+>> used together with the proper fall back. Tested on Teres-I.
+>>
+>> Signed-off-by: Harald Geyer <harald@ccbib.org>
+>> ---
+>> changes since v1:
+>>  * add and use an A64 specific compatible string
+>>  * claim the full memory range
+>>
+>> I saw that Andre Przywara has been working on A64 pwm too and has
+>> submitted some patches a few days ago. I think his patches are functionally
+>> equivalent to this one here, but clean up things a bit and additionally
+>> add support for r_pwm and thus are preferable. See:
+>>
+>> https://groups.google.com/forum/#!topic/linux-sunxi/hQFeteP591k
+>>
+>> I'm including my patch here mostly to have a consistent series for others
+>> to test. OTOH you might merge the device tree changes here and pick up
+>> the cleanup patches from him. Either way should work fine.
+> 
+> I would sync up with Andre and send out a combined series. Don't make 
+> the maintainer(s) have to sort this out.
 
-> diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> index 72da5ac..83f7cac 100644
-> --- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> +++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-> @@ -18,6 +18,14 @@
->                 reg = <0x80000000 0x80000000>;
->         };
->
-> +       clocks {
-> +               codec_osc: anaclk2 {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <24576000>;
-> +               };
-> +       };
+I have something ready, but need to test it. Will try to send an updated
+series later tonight.
 
-The clocks container should be removed and the clock node could be put
-directly into the root node.
+Thanks,
+Andre.
 
-Also, I do not see 'codec_osc' being used in this dts.
+> 
+>>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt |  1 +
+>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi       | 14 ++++++++++++++
+>>  2 files changed, 15 insertions(+)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
