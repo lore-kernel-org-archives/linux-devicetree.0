@@ -1,77 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation with
- hhi syscon
-Date: Sun, 18 Mar 2018 07:52:22 -0500
-Message-ID: <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
-References: <20180315115545.1884-1-jbrunet@baylibre.com>
- <20180315115545.1884-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Add bindings for PCM1789
+Date: Sun, 18 Mar 2018 07:52:31 -0500
+Message-ID: <20180318031809.doznckhzraitowcz@rob-hp-laptop>
+References: <20180315161825.5524-1-mylene.josserand@bootlin.com>
+ <20180315161825.5524-3-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180315115545.1884-2-jbrunet@baylibre.com>
+In-Reply-To: <20180315161825.5524-3-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
-> The HHI register region hosts more than just clocks and needs to
-> accessed drivers other than the clock controller, such as the display
-> driver.
+On Thu, Mar 15, 2018 at 05:18:25PM +0100, Mylène Josserand wrote:
+> Add a device-tree binding for Texas Instrument's PCM1789 codec.
+> For the moment, only I2C bus is supported but SPI could be added
+> in future.
 > 
-> This register region should be managed by syscon. It is already the case
-> on gxbb/gxl and it soon will be on axg. The clock controllers must use
-> this system controller instead of directly mapping the registers.
-
-Sounds like a kernel problem, not a DT one.
-
-> 
-> This changes the bindings of gxbb and axg's clock controllers. This is
-> due to an initial 'incomplete' knowledge of these SoCs, which is why the
-> meson bindings are unstable ATM.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
 > ---
->  .../devicetree/bindings/clock/amlogic,gxbb-clkc.txt      | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> index e2b377ed6f91..e950599566a9 100644
-> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> @@ -10,9 +10,6 @@ Required Properties:
->  		"amlogic,gxl-clkc" for GXL and GXM SoC,
->  		"amlogic,axg-clkc" for AXG SoC.
->  
-> -- reg: physical base address of the clock controller and length of memory
-> -       mapped region.
-> -
->  - #clock-cells: should be 1.
->  
->  Each clock is assigned an identifier and client nodes can use this identifier
-> @@ -20,13 +17,22 @@ to specify the clock which they consume. All available clocks are defined as
->  preprocessor macros in the dt-bindings/clock/gxbb-clkc.h header and can be
->  used in device tree sources.
->  
-> +Parent node should have the following properties :
-> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-gx-hhi-sysctrl" or
-> +              "amlogic,meson-axg-hhi-sysctrl"
-> +- reg: base address and size of the HHI system control register space.
-> +
->  Example: Clock controller node:
->  
-> -	clkc: clock-controller@c883c000 {
-> +sysctrl: system-controller@0 {
-> +	compatible = "amlogic,meson-gx-hhi-sysctrl", "syscon", "simple-mfd";
-> +	reg = <0 0 0 0x400>;
-> +
-> +	clkc: clock-controller {
+>  .../devicetree/bindings/sound/pcm1789.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/pcm1789.txt
 
-With a single child, there is really no point to this change. A single 
-node can provide multiple functions. Look at nodes that are both reset 
-and clock providers.
-
-What other functions are there?
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
