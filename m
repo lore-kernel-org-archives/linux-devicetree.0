@@ -1,157 +1,222 @@
-From: Michael Clark <mjc@sifive.com>
-Subject: Re: [PATCH] of: Respect CONFIG_CMDLINE{,_EXTENED,_FORCE) with no
- chosen node
-Date: Sun, 18 Mar 2018 14:42:23 -0700
-Message-ID: <B67897DB-4D0F-4653-ADB2-F90760A0267E@sifive.com>
-References: <20180314163105.8638-1-palmer@sifive.com>
- <20180318125150.3i54r7i5edefbhfq@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 12/19] arm: dts: mt7623: fix all Warnings
+ (unit_address_vs_reg)
+Date: Sun, 18 Mar 2018 22:54:48 +0100
+Message-ID: <0ff8d1ab-704a-1263-ec16-a9f3464b5798@gmail.com>
+References: <cover.1519378871.git.sean.wang@mediatek.com>
+ <5cf5b140e45b8484eca780b53cc223ba8d1d768b.1519378872.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318125150.3i54r7i5edefbhfq@rob-hp-laptop>
+In-Reply-To: <5cf5b140e45b8484eca780b53cc223ba8d1d768b.1519378872.git.sean.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Palmer Dabbelt <palmer@sifive.com>, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Trung Tran <trung.tran@ettus.com>, Moritz Fischer <mdf@kernel.org>, Wesley Terpstra <wesley@sifive.com>
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-> On 18/03/2018, at 5:51 AM, Rob Herring <robh@kernel.org> wrote:
->=20
-> On Wed, Mar 14, 2018 at 09:31:05AM -0700, Palmer Dabbelt wrote:
->> Systems that boot without a chosen node in the device tree should =
-still
->> respect the command lines that are built into the kernel.  This patch
->> avoids bailing out of the command line argument parsing code when =
-there
->> is no chosen node in the device tree.  This is necessary to boot
->> straight to a root file system (ie, without an initramfs)
->>=20
->> The intent here is that the only functional change is to copy
->> CONFIG_CMDLINE into data if both of them are valid (ie, =
-CONFIG_CMDLINE
->> is defined and data is non-null) on systems where there is no chosen
->> device tree node.  I don't actually know what the return values do so =
-I
->> just preserved them.
->>=20
->> Thanks to Trung and Moritz for finding the bug during our ELC =
-hackathon
->> (and providing the first fix), and Michal for suggesting this fix =
-(which
->> is cleaner than what I was doing).  I've given this very minimal
->> testing: it fixes the RISC-V bug (in conjunction with a patch to move
->> from COMMANDLINE_OVERRIDE to COMMANDLINE_FORCE), still works on =
-systems
->> with and without the chosen node, and builds on ARM64.
->>=20
->> CC: Michael J Clark <mjc@sifive.com>
->> CC: Trung Tran <trung.tran@ettus.com>
->> CC: Moritz Fischer <mdf@kernel.org>
->> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
->> ---
->> drivers/of/fdt.c | 14 ++++++++++++--
->> 1 file changed, 12 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 84aa9d676375..60241b1cb024 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -1084,9 +1084,12 @@ int __init early_init_dt_scan_chosen(unsigned =
-long node, const char *uname,
->>=20
->> 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, =
-uname);
->>=20
->> -	if (depth !=3D 1 || !data ||
->> +	if (!data)
->> +		goto no_data;
->=20
-> Just "return 0" here.
->=20
->> +
->> +	if (depth !=3D 1 ||
->> 	    (strcmp(uname, "chosen") !=3D 0 && strcmp(uname, "chosen@0") =
-!=3D 0))
->> -		return 0;
->> +		goto no_chosen;
->>=20
->> 	early_init_dt_check_for_initrd(node);
->>=20
->> @@ -1117,6 +1120,13 @@ int __init early_init_dt_scan_chosen(unsigned =
-long node, const char *uname,
->>=20
->> 	/* break now */
->> 	return 1;
->> +
->> +no_chosen:
->> +#ifdef CONFIG_CMDLINE
->> +	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
->=20
-> Best case, this is going to needlessly copy the string on every single=20=
+On 02/23/2018 11:16 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Fix below a lot of warnings that dtc complains so much
+> 
+> Warning (unit_address_vs_reg): Node /oscillator@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /oscillator@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/cir@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/i2c@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/i2c@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/i2s@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/i2s@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/keys@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/leds@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/pwm@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/spi@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/uart@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/uart@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /pinctrl@10005000/uart@2 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /ethernet@1b100000/mdio-bus/switch@0/ports has a reg or ranges property, but no unit name
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi                 |  4 ++--
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 29 +++++++++++++--------------
+>  arch/arm/boot/dts/mt7623n-rfb.dtsi            |  2 +-
+>  3 files changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index 4b68448..bf9db44 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -130,14 +130,14 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> -	rtc32k: oscillator@1 {
+> +	rtc32k: oscillator-1 {
+>  		compatible = "fixed-clock";
+>  		#clock-cells = <0>;
+>  		clock-frequency = <32000>;
+>  		clock-output-names = "rtc32k";
+>  	};
+>  
+> -	clk26m: oscillator@0 {
+> +	clk26m: oscillator-0 {
+>  		compatible = "fixed-clock";
+>  		#clock-cells = <0>;
+>  		clock-frequency = <26000000>;
+> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> index a6295ef..75e61c4 100644
+> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> @@ -158,7 +158,6 @@
+>  			ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> -				reg = <0>;
+>  
+>  				port@0 {
+>  					reg = <0>;
+> @@ -262,14 +261,14 @@
+>  };
+>  
+>  &pio {
+> -	cir_pins_a:cir@0 {
+> +	cir_pins_a:cir-default {
+>  		pins-cir {
+>  			pinmux = <MT7623_PIN_46_IR_FUNC_IR>;
+>  			bias-disable;
+>  		};
+>  	};
+>  
+> -	i2c0_pins_a: i2c@0 {
+> +	i2c0_pins_a: i2c0-default {
+>  		pins-i2c0 {
+>  			pinmux = <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+>  				 <MT7623_PIN_76_SCL0_FUNC_SCL0>;
+> @@ -277,7 +276,7 @@
+>  		};
+>  	};
+>  
+> -	i2c1_pins_a: i2c@1 {
+> +	i2c1_pins_a: i2c1-default {
+>  		pin-i2c1 {
+>  			pinmux = <MT7623_PIN_57_SDA1_FUNC_SDA1>,
+>  				 <MT7623_PIN_58_SCL1_FUNC_SCL1>;
+> @@ -285,7 +284,7 @@
+>  		};
+>  	};
+>  
+> -	i2s0_pins_a: i2s@0 {
+> +	i2s0_pins_a: i2s0-default {
+>  		pin-i2s0 {
+>  			pinmux = <MT7623_PIN_49_I2S0_DATA_FUNC_I2S0_DATA>,
+>  				 <MT7623_PIN_72_I2S0_DATA_IN_FUNC_I2S0_DATA_IN>,
+> @@ -297,7 +296,7 @@
+>  		};
+>  	};
+>  
+> -	i2s1_pins_a: i2s@1 {
+> +	i2s1_pins_b: i2s1-default {
 
-> node that is not /chosen.
->=20
-> Worst case, I think this changes behavior. For example, first you copy=20=
+Why does this change from i2s1_pins_a to i2s1_pins_b?
 
-> CONFIG_CMDLINE into data, then on a later iteration, you strlcat=20
-> CONFIG_CMDLINE into data if CONFIG_CMDLINE_EXTEND is enable. There =
-could=20
-> also be some unintended behavior if data has a string to start with.=20=
+>  		pin-i2s1 {
+>  			pinmux = <MT7623_PIN_33_I2S1_DATA_FUNC_I2S1_DATA>,
+>  				 <MT7623_PIN_34_I2S1_DATA_IN_FUNC_I2S1_DATA_IN>,
+> @@ -309,7 +308,7 @@
+>  		};
+>  	};
+>  
+> -	key_pins_a: keys@0 {
+> +	key_pins_a: keys-alt {
+>  		pins-keys {
+>  			pinmux = <MT7623_PIN_256_GPIO256_FUNC_GPIO256>,
+>  				 <MT7623_PIN_257_GPIO257_FUNC_GPIO257> ;
+> @@ -317,7 +316,7 @@
+>  		};
+>  	};
+>  
+> -	led_pins_a: leds@0 {
+> +	led_pins_a: leds-alt {
+>  		pins-leds {
+>  			pinmux = <MT7623_PIN_239_EXT_SDIO0_FUNC_GPIO239>,
+>  				 <MT7623_PIN_240_EXT_XCS_FUNC_GPIO240>,
+> @@ -428,15 +427,15 @@
+>  		};
+>  	};
+>  
+> -	pcie_default: pcie_pin_default {
+> -		pins_cmd_dat {
+> +	pcie_default: pcie-pin-default {
+> +		pins-cmd-dat {
 
->=20
-> I'd really like to see this function re-written to just find the =
-/chosen=20
-> node and then handle each property one by one. The iterating approach =
-is=20
-> silly. I assume it predates libfdt and we didn't have nice functions =
-to=20
-> find nodes by path (or any other way).
+No pcie node present in upstream. Please rebase.
 
-Thanks very much for the feedback.
+Regards,
+Matthias
 
-I think we had the right intent, which was to fix the issue in the =
-generic device tree code rather than add a arch specific hack. =
-Previously we had code in arch/riscv/kernel/setup.c which would copy the =
-built-in command line but this clashed with the architecture neutral =
-code, which resulted in appending the compiled-in command twice if the =
-chosen node was present in device-tree. I=E2=80=99m adding Wes to the =
-=E2=80=98cc as he has recently changed the HiFive Unleased device-tree =
-to include an empty chosen node which is another workaround for the =
-issue.
-
-We weren=E2=80=99t aware that this code was called in a loop for each =
-device-tree node. I guess one possibility is to hoist the CONFIG_CMDLINE =
-code out of early_init_dt_scan_chosen into early_init_dt_scan and have =
-early_init_dt_scan_chosen append bootargs or optionally ignore it if =
-CONFIG_CMDLINE_OVERRIDE is set.
-
-> I'm working on a patch to re-structure this function. Will send it out=20=
-
-> in the next day.
-
-Thanks!
-
-It seems logical that the architecture neutral code should set the =
-compiled in command-line if CONFIG_CMDLINE_OVERRIDE is set, whether or =
-not a =E2=80=9Cchosen=E2=80=9D node is present. So we would prefer a fix =
-in the device-tree code over an architecture specific workaround. The =
-problem with an architecture specific workaround outside of device-tree =
-code is that it doesn=E2=80=99t know whether the chosen node is present. =
-I had previously submitted a patch to remove the architecture specific =
-command line code because it duplicated code in drivers/of/fdt.c and =
-resulted in the built-in command being appended twice if the chosen node =
-was present. It was only later that we became aware that it was not =
-possible to use the built-in command line if the =E2=80=9Cchosen=E2=80=9D =
-node was not present.
-
->> +#endif
->> +no_data:
->> +	return 0;
->> }
->>=20
->> #ifdef CONFIG_HAVE_MEMBLOCK
->> --=20
->> 2.16.1
+>  			pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
+>  				 <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
+>  			bias-disable;
+>  		};
+>  	};
+>  
+> -	pwm_pins_a: pwm@0 {
+> +	pwm_pins_a: pwm-default {
+>  		pins-pwm {
+>  			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
+>  				 <MT7623_PIN_204_PWM1_FUNC_PWM1>,
+> @@ -446,7 +445,7 @@
+>  		};
+>  	};
+>  
+> -	spi0_pins_a: spi@0 {
+> +	spi0_pins_a: spi0-default {
+>  		pins-spi {
+>  			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+>  				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+> @@ -456,21 +455,21 @@
+>  		};
+>  	};
+>  
+> -	uart0_pins_a: uart@0 {
+> +	uart0_pins_a: uart0-default {
+>  		pins-dat {
+>  			pinmux = <MT7623_PIN_79_URXD0_FUNC_URXD0>,
+>  				 <MT7623_PIN_80_UTXD0_FUNC_UTXD0>;
+>  		};
+>  	};
+>  
+> -	uart1_pins_a: uart@1 {
+> +	uart1_pins_a: uart1-default {
+>  		pins-dat {
+>  			pinmux = <MT7623_PIN_81_URXD1_FUNC_URXD1>,
+>  				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
+>  		};
+>  	};
+>  
+> -	uart2_pins_a: uart@2 {
+> +	uart2_pins_a: uart2-default {
+>  		pins-dat {
+>  			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
+>  				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
+> diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> index 256c5fd..128586d 100644
+> --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> @@ -50,7 +50,7 @@
+>  		reg = <0 0x80000000 0 0x40000000>;
+>  	};
+>  
+> -	usb_p1_vbus: regulator@0 {
+> +	usb_p1_vbus: regulator-5v {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "usb_vbus";
+>  		regulator-min-microvolt = <5000000>;
+> 
