@@ -1,51 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: phy-qcom-usb2: Update bindings for
- sdm845
-Date: Sun, 18 Mar 2018 07:52:52 -0500
-Message-ID: <20180318033421.bicewbj3s5wenuis@rob-hp-laptop>
-References: <1521193500-4696-1-git-send-email-mgautam@codeaurora.org>
- <1521193500-4696-6-git-send-email-mgautam@codeaurora.org>
+Subject: Re: [PATCHv2 2/5] arm64: dts: allwinner: a64: Add watchdog
+Date: Sun, 18 Mar 2018 07:52:37 -0500
+Message-ID: <20180318031909.u5s4ttzxmta7e4sa@rob-hp-laptop>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-3-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1521193500-4696-6-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20180315162510.11669-3-harald@ccbib.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 03:14:58PM +0530, Manu Gautam wrote:
-> Update compatible strings for USB2 PHYs on sdm845.
-> There are two QUSB2 PHYs present on sdm845. Few PHY registers
-> programming is different for these PHYs related to electrical
-> parameters, otherwise both are same.
-
-Register locations are different or tuning values are different? For the 
-latter, is that something that could be DT properties?
-
+On Thu, Mar 15, 2018 at 04:25:07PM +0000, Harald Geyer wrote:
+> Add a watchdog node for the A64, automatically enabled on all boards.
+> Since the device is compatible with an existing driver, we only reserve
+> a new compatible string to be used together with the fall back.
+> Tested on Olimex Teres-I.
 > 
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
 > ---
->  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> changes since v1:
+>  * add and use a specific compatible string
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> index 42c9742..20deaeb 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> @@ -6,7 +6,9 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->  Required properties:
->   - compatible: compatible list, contains
->  	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
-> -	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
-> +	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY,
-> +	       "qcom,sdm845-1-qusb2-phy" for primary PHY on sdm845,
-> +	       "qcom,sdm845-2-qusb2-phy" for secondary PHY on sdm845.
->  
->   - reg: offset and length of the PHY register set.
->   - #phy-cells: must be 0.
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+>  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 6 ++++--
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi            | 7 +++++++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
