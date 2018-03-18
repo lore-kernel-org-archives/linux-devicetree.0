@@ -1,29 +1,37 @@
-Return-Path: <SRS0=p4ib=GI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-oi0-f49.google.com ([209.85.218.49]:33870 "EHLO
-        mail-oi0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753813AbeCRODK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 18 Mar 2018 10:03:10 -0400
-Received: by mail-oi0-f49.google.com with SMTP id u141so372969oif.1
-        for <devicetree@vger.kernel.org>; Sun, 18 Mar 2018 07:03:10 -0700 (PDT)
+Return-Path: <robherring2@gmail.com>
+Date: Sun, 18 Mar 2018 07:48:29 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: ifc: Fix the unit address format in the
+ examples
+Message-ID: <20180318124829.kiiei2234jndt3fb@rob-hp-laptop>
+References: <1520701581-3650-1-git-send-email-festevam@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20180318124829.kiiei2234jndt3fb@rob-hp-laptop>
-References: <1520701581-3650-1-git-send-email-festevam@gmail.com> <20180318124829.kiiei2234jndt3fb@rob-hp-laptop>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Sun, 18 Mar 2018 11:03:09 -0300
-Message-ID: <CAOMZO5CJMHD=ibBGfx0Ttr7RoTryA0VTMrZ=UNqT3dhjzb+XYg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: ifc: Fix the unit address format in the examples
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1520701581-3650-1-git-send-email-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: shawnguo@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
+On Sat, Mar 10, 2018 at 02:06:21PM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+> 
+> DTC warnings will be seen if these examples are used in a real dts file 
+> due to a mismatch in the unit address notation.
+> 
+> Align the unit address notation to what is done in the real dts files
+> as per commit f81d7af79575 ("arm64: dts: fsl: fix ifc simple-bus unit
+> address format warnings")
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+> Hi,
+> 
+> Commit f81d7af79575 ("arm64: dts: fsl: fix ifc simple-bus unit address
+> format warnings") is present in Shawn Guo's tree.
 
-On Sun, Mar 18, 2018 at 9:48 AM, Rob Herring <robh@kernel.org> wrote:
+This "fix" is wrong. Memory controllers with chip selects should have 
+the chip select in the unit-address. The correct fix here is you should drop 
+"simple-bus".
 
-> This "fix" is wrong. Memory controllers with chip selects should have
-> the chip select in the unit-address. The correct fix here is you should drop
-> "simple-bus".
-
-Thanks. I will revert the change and will drop "simple-bus" as suggested.
+Rob
