@@ -1,32 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers: gpio: pca953x: add compatibility for pcal6524
- and pcal9555a
-Date: Sun, 18 Mar 2018 07:48:26 -0500
-Message-ID: <20180317234320.ahqlhzjzxco7xnyb@rob-hp-laptop>
-References: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: phy-mtk-tphy: add properties for U2
+ slew rate calibrate
+Date: Sun, 18 Mar 2018 07:48:38 -0500
+Message-ID: <20180318124838.ruakamqywz4jd6jz@rob-hp-laptop>
+References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520832210.git.chunfeng.yun@mediatek.com>
+ <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <49f6922ba342cf69bfd2a787d0c2a93b4df2c429.1520664883.git.hns@goldelico.com>
+In-Reply-To: <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 10, 2018 at 12:00:01PM +0100, H. Nikolaus Schaller wrote:
-> The Pyra-Handheld originally used the tca6424 but recently we have
-> replaced it by the pin and package compatible pcal6524. So let's
-> add this to the bindings and the driver.
+On Mon, Mar 12, 2018 at 01:25:40PM +0800, Chunfeng Yun wrote:
+> Add two properties of ref_clk and coefficient used by U2 slew rate
+> calibrate which may vary on different SoCs
 > 
-> And while we are at it, the pcal9555a does not have a compatible entry
-> either but is already supported by the device id table.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 2 ++
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> index 41e09ed..0d34b2b 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> @@ -27,6 +27,10 @@ Optional properties (controller (parent) node):
+>   - reg		: offset and length of register shared by multiple ports,
+>  		  exclude port's private register. It is needed on mt2701
+>  		  and mt8173, but not on mt2712.
+> + - mediatek,src-ref-clk-mhz	: frequency of reference clock for slew rate
+> +		  calibrate
+> + - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
+> +		  SoC process
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+What are valid values? This is one cell?
 
->  drivers/gpio/gpio-pca953x.c                             | 4 ++++
->  2 files changed, 6 insertions(+)
+>  
+>  Required properties (port (child) node):
+>  - reg		: address and length of the register set for the port.
+> -- 
+> 1.9.1
+> 
