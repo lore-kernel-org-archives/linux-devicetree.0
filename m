@@ -1,145 +1,49 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Sun, 18 Mar 2018 20:07:15 +0100
-Message-ID: <20180318200715.363f3135@dell-desktop.home>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
-        <20180223133742.26044-11-mylene.josserand@bootlin.com>
-        <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7s: add anatop vdd1p2 regulator
+Date: Sun, 18 Mar 2018 16:54:19 -0300
+Message-ID: <CAOMZO5DJ5-AdudGhk6VfTazJXBpReGHW-bxKM1=bLZO90PnXsg@mail.gmail.com>
+References: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
+In-Reply-To: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: maxime.ripard@bootlin.com, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hi Anson,
 
-Please, excuse me for this late answer and thank you for the review!
+On Sat, Mar 17, 2018 at 4:36 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> Add i.MX7S/D anatop vdd1p2 regulator.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx7s.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index cd6964f..1210028 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -565,6 +565,21 @@
+>                                         anatop-max-voltage = <1200000>;
+>                                         anatop-enable-bit = <0>;
+>                                 };
+> +
+> +                               reg_1p2: regulator-vdd1p2@30360220 {
+> +                                       reg = <0x30360220>;
+> +                                       compatible = "fsl,anatop-regulator";
+> +                                       regulator-name = "vdd1p2";
+> +                                       regulator-min-microvolt = <1100000>;
+> +                                       regulator-max-microvolt = <1300000>;
+> +                                       anatop-reg-offset = <0x220>;
+> +                                       anatop-vol-bit-shift = <8>;
+> +                                       anatop-vol-bit-width = <5>;
+> +                                       anatop-min-bit-val = <0x14>;
+> +                                       anatop-min-voltage = <1100000>;
+> +                                       anatop-max-voltage = <1300000>;
+> +                                       anatop-enable-bit = <0>;
+> +                               };
 
-On Wed, 7 Mar 2018 12:18:33 +0000
-Marc Zyngier <marc.zyngier@arm.com> wrote:
-
-> On 23/02/18 13:37, Mylène Josserand wrote:
-> > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.  
-> 
-> Only on A7? Is that specific to your platform?
-
-I do not really know other Allwinner's platforms about this subject. At
-least, the sun9i-a80 which is a Cortex-a15/a7 does not need that but it
-is necessary for sun8i-a83t which is a cortex-a7. Maybe, Chen-Yu or
-Maxime could help us on it.
-
-> 
-> > It should be done by the bootloader but it is currently not the case,
-> > even for boot CPU because this SoC is booting in secure mode.
-> > It leads to an random offset value meaning that each CPU will have a
-> > different time, which isn't working very well.
-> > 
-> > Add assembly code used for boot CPU and secondary CPU cores to make
-> > sure that the CNTVOFF register is initialized.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
-> >  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
-> >  2 files changed, 25 insertions(+)
-> > 
-> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> > index d5c97e945e69..605896251927 100644
-> > --- a/arch/arm/mach-sunxi/headsmp.S
-> > +++ b/arch/arm/mach-sunxi/headsmp.S
-> > @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
-> >  	first: .word sunxi_mc_smp_first_comer - .
-> >  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> >  
-> > +ENTRY(sunxi_init_cntvoff)
-> > +	/*
-> > +	 * CNTVOFF has to be initialized either from non-secure Hypervisor
-> > +	 * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
-> > +	 * then it should be handled by the secure code
-> > +	 */
-> > +	cps	#MON_MODE
-> > +	mrc	p15, 0, r1, c1, c1, 0		/* Get Secure Config */
-> > +	orr	r0, r1, #1
-> > +	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
-> > +	instr_sync  
-> 
-> Since these CPUs are all ARMv7, you can use isb directly. Nobody wants
-> to see more of the CP15 barriers.
-
-Okay, thanks, I will update that.
-
-> 
-> > +	mov	r0, #0
-> > +	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF = 0 */
-> > +	instr_sync
-> > +	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
-> > +	instr_sync
-> > +	cps	#SVC_MODE
-> > +	ret	lr  
-> 
-> Given that this code is identical to the shmobile hack, it'd be good to
-> make it common, one way or another.
-
-Sure, I will try that.
-May you have some hints to give me on how to implement it?
-
-> 
-> > +ENDPROC(sunxi_init_cntvoff)
-> > +
-> >  #ifdef CONFIG_SMP
-> >  ENTRY(sunxi_boot)
-> >  	bl	sunxi_mc_smp_cluster_cache_enable
-> > +	bl	sunxi_init_cntvoff
-> >  	b	secondary_startup
-> >  ENDPROC(sunxi_boot)
-> >  
-> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> > index 5e9602ce1573..4bb041492b54 100644
-> > --- a/arch/arm/mach-sunxi/sunxi.c
-> > +++ b/arch/arm/mach-sunxi/sunxi.c
-> > @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] = {
-> >  };
-> >  
-> >  extern void __init sun6i_reset_init(void);
-> > +extern void sunxi_init_cntvoff(void);
-> > +
-> >  static void __init sun6i_timer_init(void)
-> >  {
-> > +	sunxi_init_cntvoff();
-> > +  
-> 
-> It is slightly odd that some CPUs get initialized from the early asm
-> code, and some others do a detour via some C code. I'm sure this could
-> be made to work
-
-Renesa's code was also doing that so I thought it could be ok to do
-it.
-
-Without this code in this timer_init function, it fails to initialize
-cntvoff correctly:
-http://code.bulix.org/i9fhc9-302612?raw
-
-How should I implement that?
-
-> 
-> >  	of_clk_init(NULL);
-> >  	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
-> >  		sun6i_reset_init();
-> >   
-> 
-> Thanks,
-> 
-> 	M.
-
-Thanks,
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Do you also plan to add a consumer for it?
