@@ -1,162 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 2/3] nvmem: add driver for Raspberry Pi OTP
-Date: Sun, 18 Mar 2018 07:48:18 -0500
-Message-ID: <20180318124818.exwbcmknlbgqwmxo@rob-hp-laptop>
-References: <1520602328-28972-1-git-send-email-stefan.wahren@i2se.com>
- <1520602328-28972-3-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 1/7] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Sun, 18 Mar 2018 07:49:43 -0500
+Message-ID: <20180318124943.4ixek2mnalfvqwbu@rob-hp-laptop>
+References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
+ <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520602328-28972-3-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi S <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 02:32:07PM +0100, Stefan Wahren wrote:
-> This patch brings read-only support for the Raspberry Pi Customer OTP.
-> The driver accesses the OTP via the mailbox property interface
-> provided by the VPU firmware.
+On Wed, Mar 14, 2018 at 02:51:17PM +0530, Sibi S wrote:
+> Add SDM845 AOSS (always on subsystem) reset controller binding
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Sibi S <sibis@codeaurora.org>
+
+Still need a full name.
+
+Otherwise, looks fine.
+
 > ---
->  drivers/nvmem/Kconfig           |  10 +++
->  drivers/nvmem/Makefile          |   2 +
->  drivers/nvmem/raspberrypi-otp.c | 138 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 drivers/nvmem/raspberrypi-otp.c
-> 
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index ff505af..76b8af3 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -175,4 +175,14 @@ config NVMEM_SNVS_LPGPR
->  	  This driver can also be built as a module. If so, the module
->  	  will be called nvmem-snvs-lpgpr.
->  
-> +config NVMEM_RASPBERRYPI_OTP
-> +	tristate "Raspberry Pi Customer OTP support"
-> +	depends on (ARCH_BCM2835 && RASPBERRYPI_FIRMWARE) || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-> +	depends on RASPBERRYPI_FIRMWARE
-> +	help
-> +	  This is a driver for access to the Customer OTP on the Raspberry Pi.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-raspberrypi-otp.
-> +
->  endif
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index e54dcfa..3b53b0b 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -37,3 +37,5 @@ obj-$(CONFIG_MESON_MX_EFUSE)	+= nvmem_meson_mx_efuse.o
->  nvmem_meson_mx_efuse-y		:= meson-mx-efuse.o
->  obj-$(CONFIG_NVMEM_SNVS_LPGPR)	+= nvmem_snvs_lpgpr.o
->  nvmem_snvs_lpgpr-y		:= snvs_lpgpr.o
-> +obj-$(CONFIG_NVMEM_RASPBERRYPI_OTP)	+= nvmem-raspberrypi-otp.o
-> +nvmem-raspberrypi-otp-y		:= raspberrypi-otp.o
-> diff --git a/drivers/nvmem/raspberrypi-otp.c b/drivers/nvmem/raspberrypi-otp.c
-> new file mode 100644
-> index 0000000..e925435
-> --- /dev/null
-> +++ b/drivers/nvmem/raspberrypi-otp.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Raspberry Pi Customer OTP driver
-> + *
-> + * Copyright (C) 2018 Stefan Wahren <stefan.wahren@i2se.com>
-> + */
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +
-> +#define CUSTOMER_CELLS 8
-> +
-> +struct rpi_otp {
-> +	struct nvmem_device *nvmem;
-> +	struct rpi_firmware *fw;
-> +};
-> +
-> +/*
-> + * Packet definition used by RPI_FIRMWARE_GET_CUSTOMER_OTP
-> + */
-> +struct rpi_customer_otp_packet {
-> +	u32 index;
-> +	u32 length;
-> +	u32 cells[CUSTOMER_CELLS];
-> +};
-> +
-> +static int rpi_otp_read(void *context, unsigned int offset, void *val,
-> +			size_t bytes)
-> +{
-> +	struct rpi_customer_otp_packet packet;
-> +	struct rpi_otp *otp = context;
-> +	u32 *buf = val;
-> +	int ret;
-> +
-> +	packet.index = 0;
-> +	packet.length = CUSTOMER_CELLS;
-> +	memset(packet.cells, 0xff, sizeof(packet.cells));
-> +
-> +	ret = rpi_firmware_property(otp->fw, RPI_FIRMWARE_GET_CUSTOMER_OTP,
-> +				    &packet, sizeof(packet));
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Request rejected by firmware */
-> +	if (packet.index)
-> +		return -EIO;
-> +
-> +	while (bytes) {
-> +		if ((offset / 4) < sizeof(packet.cells))
-> +			*buf = packet.cells[offset / 4];
-> +		else
-> +			*buf = 0;
-> +
-> +		buf++;
-> +		bytes -= 4;
-> +		offset += 4;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct nvmem_config ocotp_config = {
-> +	.name = "rpi-customer-otp",
-> +	.size = CUSTOMER_CELLS * 4,
-> +	.stride = 4,
-> +	.word_size = 4,
-> +	.reg_read = rpi_otp_read,
-> +};
-> +
-> +static int rpi_otp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct of_device_id *match;
-> +	struct device_node *fw_node;
-> +	struct rpi_otp *otp;
-> +
-> +	match = of_match_device(dev->driver->of_match_table, dev);
-> +	if (!match)
-> +		return -EINVAL;
-
-This call isn't necessary if there's no match data.
-
-Rob
+>  .../devicetree/bindings/reset/qcom,aoss-reset.txt  | 54 ++++++++++++++++++++++
+>  include/dt-bindings/reset/qcom,sdm845-aoss.h       | 17 +++++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
