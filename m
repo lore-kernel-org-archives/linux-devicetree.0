@@ -1,61 +1,38 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation
- with hhi syscon
-Date: Sun, 18 Mar 2018 16:09:57 +0100
-Message-ID: <1521385797.6569.90.camel@baylibre.com>
-References: <20180315115545.1884-1-jbrunet@baylibre.com>
-         <20180315115545.1884-2-jbrunet@baylibre.com>
-         <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ASoC: samsung: Mark unused Odroid compatibles as deprecated
+Date: Sun, 18 Mar 2018 16:23:21 +0100
+Message-ID: <20180318152321.4419-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-03-18 at 07:52 -0500, Rob Herring wrote:
-> On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
-> > The HHI register region hosts more than just clocks and needs to
-> > accessed drivers other than the clock controller, such as the display
-> > driver.
-> > 
-> > This register region should be managed by syscon. It is already the case
-> > on gxbb/gxl and it soon will be on axg. The clock controllers must use
-> > this system controller instead of directly mapping the registers.
-> 
-> Sounds like a kernel problem, not a DT one.
+Compatible for XU4 audio is not being used.  Instead the board uses the
+same compatible as XU3.  The devices are now just compatible so they
+should use the same value.  Mark hardkernel,odroid-xu4-audio as being
+deprecated so in future could be removed to limit useless compatibles.
 
-It's a platform problem, so it has much a kernel problem (solution already
-merged) as a DT problem
+Additionally add older compatibles appearing in the bindings.
 
-DT wise, we've got two devices mapping the same region
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/samsung,odroid.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-in arch/arm64/boot/dts/amlogic/meson-gx.dtsi:
-> system-controller@0 
-
-which is used by the display device.
-
-and in arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi (same for gxl)
-> clock-controller@0
-
-It has worked so far because the clock controller claims the region w/o
-reserving it but it remains unsafe since both device may access the same region.
-The fix is to have the clock controller go through the existing syscon.
-
-> 
-> > 
-> 
-> With a single child, there is really no point to this change. A single 
-> node can provide multiple functions. Look at nodes that are both reset 
-> and clock providers.
-
-There is more than a single user, as explained above and in the cover letter of
-this series.
-
-> 
-> What other functions are there?
-> 
-> Rob
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index f35a2694eb04..4a18d83456c3 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -3,7 +3,9 @@ Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+ Required properties:
+ 
+  - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
+-		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board
++		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
++		"samsung,odroid-xu3-audio" - for Odroid XU4 board (deprecated)
++		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
+  - model - the user-visible name of this sound complex
+  - clocks - should contain entries matching clock names in the clock-names
+     property
+-- 
+2.14.1
