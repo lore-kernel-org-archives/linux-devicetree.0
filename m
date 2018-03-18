@@ -1,84 +1,76 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4 3/8] doc: Add doc for the Ingenic TCU hardware
-Date: Sat, 17 Mar 2018 16:52:32 -0700
-Message-ID: <1e5b82ca-5ac3-6e98-d40b-67916008b485@infradead.org>
-References: <20180110224838.16711-2-paul@crapouillou.net>
- <20180317232901.14129-1-paul@crapouillou.net>
- <20180317232901.14129-4-paul@crapouillou.net>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
+Date: Sun, 18 Mar 2018 02:23:18 +0000
+Message-ID: <AM3PR04MB1315E1C3071C0BD2E7169968F5D50@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5BzE46Dm24++j+xVA4KGFnpsopGfJ97h7sFGOAxVa19=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180317232901.14129-4-paul@crapouillou.net>
+In-Reply-To: <CAOMZO5BzE46Dm24++j+xVA4KGFnpsopGfJ97h7sFGOAxVa19=g@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
-Cc: James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2018 04:28 PM, Paul Cercueil wrote:
-> Add a documentation file about the Timer/Counter Unit (TCU)
-> present in the Ingenic JZ47xx SoCs.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/mips/00-INDEX        |  3 +++
->  Documentation/mips/ingenic-tcu.txt | 50 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 53 insertions(+)
->  create mode 100644 Documentation/mips/ingenic-tcu.txt
-> 
->  v4: New patch in this series
-
-> diff --git a/Documentation/mips/ingenic-tcu.txt b/Documentation/mips/ingenic-tcu.txt
-> new file mode 100644
-> index 000000000000..2508e5793da8
-> --- /dev/null
-> +++ b/Documentation/mips/ingenic-tcu.txt
-> @@ -0,0 +1,50 @@
-> +Ingenic JZ47xx SoCs Timer/Counter Unit hardware
-> +-----------------------------------------------
-> +
-> +The Timer/Counter Unit (TCU) in Ingenic JZ47xx SoCs is a multi-function
-> +hardware block. It features eight channels, that can be used as counters,
-
-                    drop comma ............. ^
-
-> +timers, or PWM.
-> +
-> +- JZ4770 introduced a separate channel, called Operating System Timer (OST).
-> +  It is a 64-bit programmable timer.
-> +
-> +- Each one of the eight channels has its own clock, which can be reparented
-> +  to three different clocks (pclk, ext, rtc), gated, and reclocked, through
-> +  their TCSR register.
-> +  * The watchdog and OST hardware blocks also feature a TCSR register with
-> +	the same format in their register space.
-> +  * The TCU registers used to gate/ungate can also gate/ungate the watchdog
-> +	and OST clocks.
-> +
-> +- On SoCs >= JZ4770, there are two different modes:
-> +  * Channels 0, 3-7 operate in TCU1 mode: they cannot work in sleep mode,
-> +	but are easier to operate.
-> +  * Channels 1-2 operate in TCU2 mode: they can work in sleep mode, but
-> +	the operation is a bit more complicated than with TCU1 channels.
-> +
-> +- Each channel can generate an interrupt. Some channels share an interrupt	
-> +  line, some don't, and this changes between SoC versions:
-> +  * on JZ4740, timer 0 and timer 1 have their own interrupt line; others share
-> +	one interrupt line.
-> +  * on JZ4770 and JZ4780, timer 5 has its own interrupt; timers 0-4 and 6-7 all
-> +	use one interrupt line; the OST uses the last interrupt.
-
-"The OST uses the last interrupt." is not clear to someone who doesn't know
-about this hardware. (I can read it several ways.)
-
-Does it mean that the 4770 and 4780 have 3 interrupt lines used like so?
-
-- timer 5 uses one interrupt line
-- timers 0-4 and 6-7 use a second interrupt line
-- the OST uses a third interrupt line
-
-
-thanks,
--- 
-~Randy
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
+XQ0KPiBTZW50OiBTYXR1cmRheSwgTWFyY2ggMTcsIDIwMTggMTA6NTMgUE0NCj4gVG86IEFuc29u
+IEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogUm9iaW4gR29uZyA8eWliaW4uZ29u
+Z0BueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gU2FzY2hhIEhh
+dWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtDQo+IDxmYWJpby5lc3Rl
+dmFtQG54cC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRs
+YW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCA8
+bGludXhAYXJtbGludXgub3JnLnVrPjsNCj4gTGlhbSBHaXJkd29vZCA8bGdpcmR3b29kQGdtYWls
+LmNvbT47IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47DQo+IGRsLWxpbnV4LWlteCA8
+bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1Y
+Qw0KPiBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRSBUUkVF
+IEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWtlcm5lbCA8
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJd
+IEFSTTogZHRzOiBwZnV6ZTMwMDA6IHVwZGF0ZSBzdzFhL3ZsZG80IHZvbHRhZ2UgcmFuZ2UNCj4g
+DQo+IEhpIEFuc29uLA0KPiANCj4gT24gU2F0LCBNYXIgMTcsIDIwMTggYXQgMzo1NyBBTSwgQW5z
+b24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+IFVwZGF0ZSBzdzFh
+L3ZsZG80J3Mgdm9sdGFnZSByYW5nZSBhY2NvcmRpbmcgdG8gbGF0ZXN0IHBmdXplMzAwMA0KPiA+
+IGRhdGFzaGVldCBmcm9tOg0KPiA+DQo+ID4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3Rl
+Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGY2FjaA0KPiA+DQo+IGUuZnJlZXNj
+YWxlLmNvbSUyRmZpbGVzJTJGYW5hbG9nJTJGZG9jJTJGZGF0YV9zaGVldCUyRlBGMzAwMC5wZGYl
+M0Zmc3INCj4gPg0KPiBjaCUzRDElMjZzciUzRDElMjZwYWdlTnVtJTNEMSZkYXRhPTAyJTdDMDEl
+N0NBbnNvbi5IdWFuZyU0MG4NCj4geHAuY29tJTdDYw0KPiA+DQo+IDk2MTRhZTI2Zjk0NDNjMmQw
+YWUwOGQ1OGMxNmNkOGElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0Mw
+DQo+ID4gJTdDMSU3QzYzNjU2ODk1MTkyMzQ1NjAzNyZzZGF0YT1PZU0lMkIzeFBObG05T0VUcFpj
+cnZHNjVMakglDQo+IDJGcDRDUlp2eUQNCj4gPiBIVDgxOWt1UGslM0QmcmVzZXJ2ZWQ9MA0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+IC0t
+LQ0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2c3gtdWRvby1uZW8uZHRzaSAgfCAyICstDQo+
+ID4gYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtY2wtc29tLWlteDcuZHRzIHwgNCArKy0tDQo+ID4g
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLW5pdHJvZ2VuNy5kdHMgICB8IDIgKy0NCj4gPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLmR0cyAgICAgICAgIHwgNiArKystLS0NCj4gPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvaW14N3Mtd2FycC5kdHMgICAgICAgIHwgMiArLQ0KPiA+ICA1IGZpbGVz
+IGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtdWRvby1uZW8uZHRzaQ0KPiA+IGIvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnN4LXVkb28tbmVvLmR0c2kNCj4gPiBpbmRleCA1M2IzZWFjLi4x
+ZGUwYTBmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC11ZG9vLW5l
+by5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LXVkb28tbmVvLmR0c2kN
+Cj4gPiBAQCAtMTQyLDcgKzE0Miw3IEBADQo+ID4gICAgICAgICAgICAgICAgIHJlZ3VsYXRvcnMg
+ew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN3MWFfcmVnOiBzdzFhIHsNCj4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDcw
+MDAwMD47DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4
+LW1pY3Jvdm9sdCA9IDwxNDc1MDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0NCj4gPDMzMDAwMDA+Ow0KPiANCj4gVGhpcyBj
+aGFuZ2UgZG9lcyBub3QgbG9vayBsaWtlIGEgc2FmZSB0aGluZyB0byBkbyB3aXRob3V0IGNhcmVm
+dWxseSBjaGVja2luZyBlYWNoDQo+IG9uZSBvZiB0aGUgYm9hcmQgc2NoZW1hdGljcy4NCj4gDQo+
+IEV2ZW4gaWYgdGhlIHJlZ3VsYXRvciBpdHNlbGYgaXMgY2FwYWJsZSBvZiBkcml2aW5nIGEgaGln
+aGVyIHZvbHRhZ2UsIGl0IGRvZXMgbm90DQo+IG1lYW4gdGhhdCB0aGUgY2lyY3VpdHJ5IHRoYXQg
+Y29uc3VtZXMgc3VjaCByZWd1bGF0b3IgaXMgYWxsb3dlZCB0byByZWNlaXZlIHRoZQ0KPiBoaWdo
+ZXIgdm9sdGFnZXMuDQogDQpJIHRob3VnaHQgdGhlIG1heCB2YWx1ZSBoZXJlIG1lYW5zIHRoZSBj
+YXBhYmlsaXR5IG9mIHJlZ3VsYXRvciBpdHNlbGYsIGxpa2UgdGhlIGludGVybmFsDQphbmF0b3Ag
+TERPIHJlZ3VsYXRvciBWRERfQ09SRSwgdGhlIG1heCB2YWx1ZSBkZWZpbmVkIGluIGR0c2kgaXMg
+MS40NVYsIGJ1dCBvdXQgaS5NWDYNClNvQ3MgY2FuIE5PVCByZWNlaXZlIHRvIHZvbHRhZ2UgaGln
+aGVyIHRoYW4gMS4zVi4NCg0KVGhlIGRlZmF1bHQgc2V0dGluZyBvZiBQTUlDIG91dHB1dCBpcyBj
+b250cm9sbGVkIGJ5IGl0cyBPVFAgYW5kIHRoZSBPVFAgdmFsdWUgc2hvdWxkDQpjb25zaWRlciB0
+aGUgYm9hcmQgZGVzaWduLCB0aGUgcmVzdCBvZiB2b2x0YWdlIHNldHRpbmcgc2hvdWxkIGJlIHRh
+a2VuIGNhcmUgYnkgZGV2aWNlIGRyaXZlci4NCkhlcmUgSSB0aGluayB0aGUgbWF4IG1lYW5zIFBN
+SUMncyBjYXBhYmlsaXR5Lg0KDQpBbnNvbi4NCg0KDQoNCg==
