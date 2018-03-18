@@ -1,60 +1,59 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/2] regulator: pfuze100: update voltage setting for
- pfuze3000 sw1a
-Date: Sun, 18 Mar 2018 02:25:00 +0000
-Message-ID: <AM3PR04MB1315FFAB52CBB2E5DECED17BF5D50@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
- <1521269828-8874-2-git-send-email-Anson.Huang@nxp.com>
- <1937778373.476574.1521290144753@email.1und1.de>
- <CAOMZO5CUD373oZsnE69kEwj0oXLSQTMeb5k2YK6H5gPY7QyZPA@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 11/16] mmc: tmio: deprecate "toshiba,mmc-wrprotect-disable"
+ DT property
+Date: Sun, 18 Mar 2018 11:46:48 +0900
+Message-ID: <CAK7LNATy=VzKXS-uZBgYm5A1k6E-87qDGNBTi=zFi9JGa2xrng@mail.gmail.com>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg@mail.gmail.com> <20180207193227.hu6cyh2e27dmrqwt@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CUD373oZsnE69kEwj0oXLSQTMeb5k2YK6H5gPY7QyZPA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180207193227.hu6cyh2e27dmrqwt@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Robin Gong <yibin.gong@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Wolfram Sang <wsa@the-dreams.de>, linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
-XQ0KPiBTZW50OiBTdW5kYXksIE1hcmNoIDE4LCAyMDE4IDI6MjcgQU0NCj4gVG86IFN0ZWZhbiBX
-YWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPjsgRmFiaW8gRXN0ZXZhbQ0KPiA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsg
-TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJvYmluDQo+IEdvbmcgPHlpYmlu
-LmdvbmdAbnhwLmNvbT47IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eA0KPiA8bGludXhAYXJtbGlu
-dXgub3JnLnVrPjsgQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBMaWFtDQo+IEdp
-cmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPjsNCj4gU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBNYXJrIEJyb3du
-IDxicm9vbmllQGtlcm5lbC5vcmc+Ow0KPiBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxB
-VFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zz47IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQNCj4gbGlzdDpB
-Uk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFDQo+IDxsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSByZWd1bGF0b3I6IHBm
-dXplMTAwOiB1cGRhdGUgdm9sdGFnZSBzZXR0aW5nIGZvcg0KPiBwZnV6ZTMwMDAgc3cxYQ0KPiAN
-Cj4gSGkgU3RlZmFuLA0KPiANCj4gT24gU2F0LCBNYXIgMTcsIDIwMTggYXQgOTozNSBBTSwgU3Rl
-ZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4NCj4gd3JvdGU6DQo+ID4gSGkgQW5z
-b24sDQo+ID4NCj4gPj4gQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+IGhhdCBhbSAx
-Ny4gTcOkcnogMjAxOCB1bSAwNzo1Nw0KPiBnZXNjaHJpZWJlbjoNCj4gPj4NCj4gPj4NCj4gPj4g
-TGF0ZXN0IHBmdXplMzAwMCBkYXRhc2hlZXQgZnJvbToNCj4gPj4NCj4gPj4NCj4gaHR0cHM6Ly9l
-bWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJG
-Y2FjaGUuZnINCj4gZWVzY2FsZS5jb20lMkZmaWxlcyUyRmFuYWxvZyUyRmRvYyUyRmRhdGFfc2hl
-ZXQlMkZQRjMwMDAucGRmJTNGZnNyY2gNCj4gJTNEMSUyNnNyJTNEMSUyNnBhZ2VOdW0lM0QxJmRh
-dGE9MDIlN0MwMSU3Q0Fuc29uLkh1YW5nJTQwbnhwDQo+IC5jb20lN0NmNmUxMzc0YTE5Njc0MWVm
-ZTQ5YjA4ZDU4YzM0YmJhYiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5DQo+IGM1YzMwMTYzNSU3
-QzAlN0MxJTdDNjM2NTY5MDgwNDc5MjE2NTgwJnNkYXRhPURaUUZiMmhIYllxWGpkdUhDMA0KPiAx
-eiUyRmlBVDR4dnp0TjRHeTg1Uzg5bVVMd28lM0QmcmVzZXJ2ZWQ9MA0KPiA+DQo+ID4gdGhpcyBs
-aW5rIGdvZXMgdG8gUmV2LiA3LjAsIDkvMjAxNiwgd2hpY2ggaXNuJ3QgdGhlIGxhdGVzdCBvbmUu
-DQo+ID4NCj4gPiBJIGd1ZXNzIFJldi4gOS4wLCA4LzIwMTcgaXMgdGhlIGxhdGVzdC4NCj4gDQo+
-IFlvdSBhcmUgcmlnaHQuIFRoaXMgaXMgdGhlIGxpbmsgdG8gdGhlIGxhdGVzdCBkYXRhc2hlZXQ6
-DQo+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9
-aHR0cHMlM0ElMkYlMkZ3d3cubg0KPiB4cC5jb20lMkZkb2NzJTJGZW4lMkZkYXRhLXNoZWV0JTJG
-UEYzMDAwLnBkZiZkYXRhPTAyJTdDMDElN0NBbnNvbg0KPiAuSHVhbmclNDBueHAuY29tJTdDZjZl
-MTM3NGExOTY3NDFlZmU0OWIwOGQ1OGMzNGJiYWIlN0M2ODZlYTFkM2JjDQo+IDJiNGM2ZmE5MmNk
-OTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNjU2OTA4MDQ3OTIxNjU4MCZzZGF0YT1XSVFZRA0KPiA3
-V0RuMCUyRlRsNEJ6TTdvSmRTdXdLMzFaNjRUZmVrZUJBa291OVhRJTNEJnJlc2VydmVkPTANCg0K
-WWVzLCB0aGFuayB5b3UgZm9yIHRoZSByZW1pbmRlciwgSSB3aWxsIHVwZGF0ZSB0aGUgY29tbWl0
-IG1lc3NhZ2UgYW5kIHRoZSBsaW5rIGluIFYyLg0KIA0KQW5zb24uDQoNCg0K
+2018-02-08 4:32 GMT+09:00 Wolfram Sang <wsa@the-dreams.de>:
+> On Thu, Jan 18, 2018 at 10:58:36AM +0900, Masahiro Yamada wrote:
+>> 2018-01-18 1:28 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+>> > This property is equivalent to "disable-wp" defined in
+>> > Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+>>
+>> This is mistake.
+>>
+>> "disable-wp" is defined in
+>>
+>> Documentation/devicetree/bindings/mmc/mmc.txt
+>
+> With that fixed:
+>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+
+BTW, the subject of the applied version is wrong.
+
+In my original post:
+https://patchwork.kernel.org/patch/10170007/
+"toshiba,mmc-wrprotect-disable"
+No space after the vendor prefix.
+
+
+But, applied commit (788778b0d21a6d5cd5)
+I see a space, like
+"toshiba, mmc-wrprotect-disable"
+
+
+I think this is a bug of patchwork.
+
+
+I have seen various bugs that break
+the patch format.
+
+I filed some bug reports for patchwork,
+but not sure what happened.
+
+-- 
+Best Regards
+Masahiro Yamada
