@@ -1,25 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] of: Documentation: Fix forgotten reference to
- of_overlay_apply()
-Date: Sun, 18 Mar 2018 07:48:05 -0500
-Message-ID: <20180318124805.hnc7q57b57ilgst7@rob-hp-laptop>
-References: <1520592288-7680-1-git-send-email-geert+renesas@glider.be>
- <1520592288-7680-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v3 3/6] dt-bindings: soc: Add a binding for the Broadcom
+ VCHIQ services. (v3)
+Date: Sun, 18 Mar 2018 07:48:23 -0500
+Message-ID: <20180318124823.jfvoy3xraogsxpdi@rob-hp-laptop>
+References: <20180309184417.23368-1-eric@anholt.net>
+ <20180309184417.23368-3-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1520592288-7680-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <20180309184417.23368-3-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 11:44:46AM +0100, Geert Uytterhoeven wrote:
-> Fixes: 93a6039000b5acab ("of: Documentation: of_overlay_apply() replaced by of_overlay_fdt_apply()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Mar 09, 2018 at 10:44:14AM -0800, Eric Anholt wrote:
+> The VCHIQ communication channel can be provided by BCM283x and Capri
+> SoCs, to communicate with the VPU-side OS services.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
->  Documentation/devicetree/overlay-notes.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> v2: VCHI->VCHIQ, dropped firmware property, added cache-line-size
+> v3: Dropped cache-line-size, s/vchi@/mailbox@/
+> 
+>  .../devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt   | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
 
-Applied.
+Reviewed-by: Rob Herring <robh@kernel.org>
