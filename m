@@ -1,122 +1,49 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 13/19] arm: dts: mt7623: move node mt6323 leds to
- mt6323.dtsi
-Date: Sun, 18 Mar 2018 23:01:40 +0100
-Message-ID: <a4097137-4364-6ca3-ece3-1842569d7e54@gmail.com>
-References: <cover.1519378871.git.sean.wang@mediatek.com>
- <e8a515a1aeaf06a7162b8b0e390bee615b323303.1519378872.git.sean.wang@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 0/8] Ingenic JZ47xx Timer/Counter Unit drivers
+Date: Sun, 18 Mar 2018 23:13:13 +0100
+Message-ID: <aeb57b92-6932-9774-dc50-7563d30846bf@linaro.org>
+References: <20180110224838.16711-2-paul@crapouillou.net>
+ <20180317232901.14129-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8a515a1aeaf06a7162b8b0e390bee615b323303.1519378872.git.sean.wang@mediatek.com>
+In-Reply-To: <20180317232901.14129-1-paul@crapouillou.net>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+To: Paul Cercueil <paul@crapouillou.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/23/2018 11:16 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 18/03/2018 00:28, Paul Cercueil wrote:
+> Hi,
 > 
-> Since those LEDs are parts of PMIC MT6323, it is reasonable to merge
-> those LEDs node definition back into mt6323.dtsi. This way can improve
-> the reusability of those nodes among different boards with the same PMIC.
+> This is the 4th version of my TCU patchset.
 > 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> ---
->  arch/arm/boot/dts/mt6323.dtsi                 | 26 ++++++++++++++++++++++++-
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 28 ---------------------------
->  2 files changed, 25 insertions(+), 29 deletions(-)
+> The major change is a greatly improved documentation, both in-code
+> and as separate text files, to describe how the hardware works and
+> how the devicetree bindings should be used.
 > 
-> diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
-> index 7c783d6..44c5642 100644
-> --- a/arch/arm/boot/dts/mt6323.dtsi
-> +++ b/arch/arm/boot/dts/mt6323.dtsi
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright (c) 2017 MediaTek Inc.
-> + * Copyright (c) 2017-2018 MediaTek Inc.
->   * Author: John Crispin <john@phrozen.org>
->   *	   Sean Wang <sean.wang@mediatek.com>
->   * This program is free software; you can redistribute it and/or modify
-> @@ -237,5 +237,29 @@
->  				regulator-enable-ramp-delay = <216>;
->  			};
->  		};
-> +
-> +		leds {
-> +			compatible = "mediatek,mt6323-led";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			led@0 {
-> +				reg = <0>;
-> +				label = "mt6323:isink:green";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@1 {
-> +				reg = <1>;
-> +				label = "mt6323:isink:red";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@2 {
-> +				reg = <2>;
-> +				label = "mt6323:isink:blue";
-> +				default-state = "off";
-> +			};
-> +		};
+> There are also cosmetic changes in the irqchip driver, and the
+> clocksource driver will now use as timers all TCU channels not
+> requested by the TCU PWM driver.
 
-The color of the leds are defined by the board and not by the PMIC. So as long
-as you don't have any good arguments, I tend not to merge this one.
+Hi Paul,
 
-Regards,
-Matthias
+I don't know why but you series appears in reply to [PATCH v3 2/9]. Not
+sure if it is my mailer or how you are sending the patches but if it is
+the latter can you in the future, when resending a new version, not use
+the in-reply-to option. It will be easier to follow the versions.
 
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 75e61c4..767b225 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -483,34 +483,6 @@
->  	status = "okay";
->  };
->  
-> -&pwrap {
-> -	mt6323 {
-> -		mt6323led: led {
-> -			compatible = "mediatek,mt6323-led";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			led@0 {
-> -				reg = <0>;
-> -				label = "bpi-r2:isink:green";
-> -				default-state = "off";
-> -			};
-> -
-> -			led@1 {
-> -				reg = <1>;
-> -				label = "bpi-r2:isink:red";
-> -				default-state = "off";
-> -			};
-> -
-> -			led@2 {
-> -				reg = <2>;
-> -				label = "bpi-r2:isink:blue";
-> -				default-state = "off";
-> -			};
-> -		};
-> -	};
-> -};
-> -
->  &spi0 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&spi0_pins_a>;
-> 
+Thanks.
+
+ -- Daniel
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
