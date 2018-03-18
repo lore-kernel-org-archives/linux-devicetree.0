@@ -1,71 +1,104 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH net-next 03/12] dt-bindings: net: dwmac-sun8i: Clean up
- clock delay chain descriptions
-Date: Sun, 18 Mar 2018 12:21:44 +0300
-Message-ID: <eb47a027-c678-7496-ef58-fc8e96be7dd9@cogentembedded.com>
-References: <20180317092857.4396-1-wens@csie.org>
- <20180317092857.4396-4-wens@csie.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/9] sunxi-cedrus: Add device tree binding document
+Date: Sun, 18 Mar 2018 07:48:00 -0500
+Message-ID: <20180318124800.7soqh34fxvwjm7pn@rob-hp-laptop>
+References: <20180309100933.15922-3-paul.kocialkowski@bootlin.com>
+ <20180309101445.16190-4-paul.kocialkowski@bootlin.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180317092857.4396-4-wens@csie.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBA6AXHKQKGQEUJE2IXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180309101445.16190-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Signed-off-by : Bob Ham" <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Florent Revest <revestflo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas van Kleef <thomas-XCRq7eEM0/pmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Fri, Mar 09, 2018 at 11:14:42AM +0100, Paul Kocialkowski wrote:
+> From: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 3/17/2018 12:28 PM, Chen-Yu Tsai wrote:
+"device tree binding document" can all be summarized with the subject 
+prefix "dt-bindings: media: ".
 
-> The clock delay chains found in the glue layer for dwmac-sun8i are only
-> used with RGMII PHYs. They are not intended for non-RGMII PHYs, such as
-> MII external PHYs or the internal PHY. Also, a recent SoC has a smaller
-> range of possible values for the delay chain.
+Also, email should be updated to @bootlin.com?
+
 > 
-> This patch reformats the delay chain section of the device tree binding
-> to make it clear that the delay chains only apply to RGMII PHYs, and
-> make it easier to add the R40-specific bits later.
+> Device Tree bindings for the Allwinner's video engine
 > 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Florent Revest <florent.revest-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->   Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/media/sunxi-cedrus.txt     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> index 3d6d5fa0c4d5..b8a3028d6c30 100644
-> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> @@ -28,10 +28,13 @@ Required properties:
->     - allwinner,sun8i-a83t-system-controller
->   
->   Optional properties:
-> -- allwinner,tx-delay-ps: TX clock delay chain value in ps. Range value is 0-700. Default is 0)
-> -- allwinner,rx-delay-ps: RX clock delay chain value in ps. Range value is 0-3100. Default is 0)
-> -Both delay properties need to be a multiple of 100. They control the delay for
-> -external PHY.
-> +- allwinner,tx-delay-ps: TX clock delay chain value in ps.
-> +			 Range is 0-700. Default is 0.
-> +- allwinner,rx-delay-ps: RX clock delay chain value in ps.
-> +			 Range is 0-3100. Default is 0.
-> +Both delay properties need to be a multiple of 100. They control the
-> +clock delay for external RGMII PHY. They are do apply to the internal
+> diff --git a/Documentation/devicetree/bindings/media/sunxi-cedrus.txt b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> new file mode 100644
+> index 000000000000..138581113c49
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+> @@ -0,0 +1,44 @@
+> +Device-Tree bindings for SUNXI video engine found in sunXi SoC family
+> +
+> +Required properties:
+> +- compatible	    : "allwinner,sun4i-a10-video-engine";
+> +- memory-region     : DMA pool for buffers allocation;
 
-   s/are do/do not/?
+Why do you need this linkage? Many drivers use CMA and don't need this.
 
-> +PHY or external non-RGMII PHYs.
->   
->   Optional properties for the following compatibles:
->     - "allwinner,sun8i-h3-emac",
+> +- clocks	    : list of clock specifiers, corresponding to
+> +		      entries in clock-names property;
+> +- clock-names	    : should contain "ahb", "mod" and "ram" entries;
+> +- resets	    : phandle for reset;
+> +- interrupts	    : should contain VE interrupt number;
+> +- reg		    : should contain register base and length of VE.
+> +
+> +Example:
+> +
+> +reserved-memory {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	ve_reserved: cma {
+> +		compatible = "shared-dma-pool";
+> +		reg = <0x43d00000 0x9000000>;
+> +		no-map;
+> +		linux,cma-default;
+> +	};
+> +};
+> +
+> +video-engine {
+> +	compatible = "allwinner,sun4i-a10-video-engine";
+> +	memory-region = <&ve_reserved>;
+> +
+> +	clocks = <&ahb_gates 32>, <&ccu CLK_VE>,
+> +		 <&dram_gates 0>;
+> +	clock-names = "ahb", "mod", "ram";
+> +
+> +	assigned-clocks = <&ccu CLK_VE>;
+> +	assigned-clock-rates = <320000000>;
 
-MBR, Sergei
+Not documented.
+
+> +
+> +	resets = <&ccu RST_VE>;
+> +
+> +	interrupts = <53>;
+> +
+> +	reg = <0x01c0e000 4096>;
+> +};
+> -- 
+> 2.16.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
