@@ -1,80 +1,67 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add Mali node
-Date: Sun, 18 Mar 2018 22:57:12 +0100
-Message-ID: <20180318215712.t2evailkwua5xxow@flea>
-References: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v5 3/4] clk: lpc32xx: Set name of regmap_config
+Date: Sun, 18 Mar 2018 23:57:39 +0200
+Message-ID: <23a9cbf8-9b1d-f7ec-b980-a16c9b2c4d84@mleia.com>
+References: <20180312095142.30854-1-jeffy.chen@rock-chips.com>
+ <20180312095142.30854-4-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1302949677=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1520936205-64723-1-git-send-email-giulio.benetti@micronovasrl.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180312095142.30854-4-jeffy.chen@rock-chips.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, stephen lu <lumotuwe@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Joseph Lo <josephl@nvidia.com>, lee.jones@linaro.org, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, linux-input@vger.kernel.org, Arvind Yadav <arvind.yadav.cs@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jeffy,
 
---===============1302949677==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7br5xyiczou6vho7"
-Content-Disposition: inline
+On 03/12/2018 11:51 AM, Jeffy Chen wrote:
+> We are now allowing to register debugfs without a valid device, and not
+> having a valid name will end up using "dummy*" to create debugfs dir.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> ---
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> 
+>  drivers/clk/nxp/clk-lpc32xx.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
+> index f5d815f577e0..a2a0a7f3bc57 100644
+> --- a/drivers/clk/nxp/clk-lpc32xx.c
+> +++ b/drivers/clk/nxp/clk-lpc32xx.c
+> @@ -67,6 +67,7 @@
+>  #define LPC32XX_USB_CLK_STS		0xF8
+>  
+>  static struct regmap_config lpc32xx_scb_regmap_config = {
+> +	.name = "lpc32xx-scb",
 
+please rename it to "scb", LPC32xx SoC name is already known from the context.
 
---7br5xyiczou6vho7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When it's done, feel free to add to the next version my
 
-On Tue, Mar 13, 2018 at 11:16:45AM +0100, Giulio Benetti wrote:
-> The H3 has an ARM Mali 400 GPU, so add binding to our DT.
->=20
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 
-Applied, thanks!
-Maxime
+>  	.reg_bits = 32,
+>  	.val_bits = 32,
+>  	.reg_stride = 4,
+> 
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thank you for the change.
 
---7br5xyiczou6vho7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqu4LgACgkQ0rTAlCFN
-r3TDXA/6A1nkN6lH8iE98zckrDlgEktATEwGao635p3YhKyfhNnBrZmR5xzp5fFn
-lco83aVTo6NIkP60Yueb1svKy1qPg44+hMAjiKP9eG359NVYGpcVcX19lHnGIlop
-/W6rixVg96C6XvmmVY2PoILjZpzkrzHQ3jn+XlesspQNiEk4AupJCMFK4+WMlTPM
-bBMyNHWu4FbjfkMz3W9Uqe/yWC2aSxoBf5wbDR/uRmWPTCggGtt6i8pHC/UwNJef
-I3Eih3Nog+qTbpeePiTYeNfZzL971ndREM/BLrz97+EJ4/hh8EWhGUSSFiMNe5el
-G2/hD+0VmBiAx3zlGFN4sz48DYdbhlUM5DSbSypjXQJgPgjmT5nS2+fXQBIFfT6Z
-vwT+mRVPZ5sjgX27PpQ0c5CIK0l0gNov5pTGfGeGCHJaVp9ho/mWuNC4qeaEZItn
-ACAg2HkGrXBxlRcxXHu3WB3wSx/BBsQ9cXKpoZTvr9fDio250hrznEFeWa7S69dc
-20IR6H8XIBdsh4Owhhq0HU1p6tDz/ctH4RLdx5qYr9V0x6qVKD8nz9G0vMSiK21R
-qa8ATXNf1K8fjEoyfne/b4ikd/WXAKxXDAujpKZv8CwECXR2YeSuHwoe6032Jkt7
-7SJXzWfBBAiseYuNNn6+/8afbJ0gvlN7u9G6qgN/u+BSGj46bG0=
-=HpyW
------END PGP SIGNATURE-----
-
---7br5xyiczou6vho7--
-
---===============1302949677==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1302949677==--
+--
+With best wishes,
+Vladimir
