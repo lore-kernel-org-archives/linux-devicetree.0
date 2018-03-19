@@ -1,236 +1,125 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v8_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Mon, 19 Mar 2018 12:52:25 -0500
-Message-ID: <CAHCN7xLt6QqHodd=0HKXBxLjjn8ua5Re7NYW=sPeH+TmnXpkJQ@mail.gmail.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
- <af89be8d-04dd-e845-1d5b-afdd7e55629f@lechnology.com> <CAHCN7xKQ47DnVXiZTJ-0myoth2SJ3wnyvDb2i07uKZDgomhgwQ@mail.gmail.com>
- <CAMpxmJWoP+BDYeuqCnQ2txWy7wkxKuyjKODJqgDtRkq0ahY1mw@mail.gmail.com> <CAMpxmJX+BqnU=cK0KMOOCrXd4bB2RRZ30A-U3f3tk6K05csrTw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for
+ brcmfmac
+Date: Mon, 19 Mar 2018 10:55:26 -0700
+Message-ID: <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com>
+ <5AAF838D.2030105@broadcom.com>
+ <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJX+BqnU=cK0KMOOCrXd4bB2RRZ30A-U3f3tk6K05csrTw@mail.gmail.com>
+In-Reply-To: <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Alexey Roslyakov <alexey.roslyakov@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, kvalo@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 11:15 AM, Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> 2018-03-19 17:14 GMT+01:00 Bartosz Golaszewski <bgolaszewski@baylibre.com>:
->> 2018-03-19 17:11 GMT+01:00 Adam Ford <aford173@gmail.com>:
->>> On Mon, Mar 19, 2018 at 10:59 AM, David Lechner <david@lechnology.com> wrote:
->>>> On 03/19/2018 08:17 AM, Bartosz Golaszewski wrote:
->>>>>
->>>>> 2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
->>>>>>
->>>>>> This series converts mach-davinci to use the common clock framework.
->>>>>>
->>>>>> The series works like this, the first 19 patches create new clock drivers
->>>>>> using the common clock framework. There are basically 3 groups of clocks
->>>>>> -
->>>>>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
->>>>>> have
->>>>>> unique init data, which is the reason for so many patches.
->>>>>>
->>>>>> Then, starting with "ARM: davinci: pass clock as parameter to
->>>>>> davinci_timer_init()", we get the mach code ready for the switch by
->>>>>> adding the
->>>>>> code needed for the new clock drivers and adding #ifndef
->>>>>> CONFIG_COMMON_CLK
->>>>>> around the legacy clocks so that we can switch easily between the old and
->>>>>> the
->>>>>> new.
->>>>>>
->>>>>> "ARM: davinci: switch to common clock framework" actually flips the
->>>>>> switch
->>>>>> to start using the new clock drivers. Then the next 8 patches remove all
->>>>>> of the old clock code.
->>>>>>
->>>>>> The final three patches add device tree clock support to the one SoC that
->>>>>> supports it.
->>>>>>
->>>>>> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
->>>>>> OMAP-L138 LCDK (both device tree and legacy board file).
->>>>>>
+On 03/19/2018 07:10 AM, Alexey Roslyakov wrote:
+> Hi Arend,
+> I appreciate your response. In my opinion, it has nothing to do with
+> SDIO host, because it defines "quirks" in the driver itself.
 
+It is not clear to me from your patch series whether the problem is that:
 
-Does anyone have an LCD connected to the LCDC controller with device
-tree?  I posted an RFC patch a while ago for the DA850-EVM, but I got
-distracted and forgot about it, so I never working on getting the
-patch ready for acceptance.
+- the SDIO device has a specific alignment requirements, which would be
+either a SDIO device driver limitation/issue or maybe the underlying
+hardware device/firmware requiring that
 
-I am trying to test the LCD now, but I cannot get the screen to come
-up, but in the process, it appears as if the clocking to the LCD isn't
-quite right.  I know it used to work, but I am going to probe some
-pins, but I am getting warning messages I have never received before.
-The desired clock frequency is 9000000, but when I use the cpufreq in
-ondemand mode, I get the following messages:
+- the SDIO host controller used is not capable of coping nicely with
+these said limitations
 
-#  echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-# tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
- calculated rate (54000000Hz)
-tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
+It seems to me like what you are doing here is a) applicable to possibly
+more SDIO devices and host combinations, and b) should likely be done at
+the layer between the host and device, such that it is available to more
+combinations.
 
-As ondemend is used and the processor scaling happens, the above
-message appears on and off.
+> If I get it right, you mean something like this:
+> 
+> mmc3: mmc@1c12000 {
+> ...
+>         broken-sg-support;
+>         sd-head-align = 4;
+>         sd-sgentry-align = 512;
+> 
+>         brcmf: wifi@1 {
+>                 ...
+>         };
+> };
+> 
+> Where dt: bindings documentation for these entries should reside?
+> In generic MMC bindings? Well, this is the very special case and
+> mmc-linux maintainer will unlikely to accept these changes.
+> Also, extra kernel code modification might be required. It could make
+> quite trivial change much more complex.
 
-I do not know if it impacts the LCD image since I haven't been able to
-get it working yet, but I'll troubleshoot it and when/if I can get the
-LCD working, I'll turn on the ondemand again and see how it behaves.
+If the MMC maintainers are not copied on this patch series, it will
+likely be hard for them to identify this patch series and chime in...
 
-adam
-
-
->>>>>
->>>>> Hi David,
->>>>>
->>>>> thanks, with the u-boot fix everything seems to work fine. I tested
->>>>> da850-lcdk and da850-evm boards in DT and board file modes.
->>>>>
+> 
+>> Also I am not sure if the broken-sg-support is still needed. We added that for omap_hsmmc, but that has since changed to scatter-gather emulation so it might not be needed anymore.
+> 
+> I've experienced the problem with rk3288 (dw-mmc host) and sdio
+> settings like above solved it.
+> Frankly, I haven't investigated any deeper which one of the settings
+> helped in my case yet...
+> I will try to get rid of broken-sg-support first and let you know if
+> it does make any difference.
+> 
+> All the best,
+>   Alex.
+> 
+> On 19 March 2018 at 16:31, Arend van Spriel
+> <arend.vanspriel@broadcom.com> wrote:
+>> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
 >>>
->>> I tested MMC and Ethernet.  Both appear to be operating normally, but
->>> I have having USB issues.
+>>> In case if the host has higher align requirements for SG items, allow
+>>> setting device-specific aligns for scatterlist items.
 >>>
->>> Should I be testing cpufreq?  I noticed that when changing the
->>> frequencies, the USB appears to stop recognizing connections and
->>> disconnections.
+>>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt | 5
+>>> +++++
+>>>   1 file changed, 5 insertions(+)
 >>>
->>> I did some testing on the DA850-EVM with USB from your repo, and I'm
->>> getting some crashing on MUSB unplug that do not appear in the
->>> 4.16-RC6 from linux-stable:
->>>
->>>
->>> ------------[ cut here ]------------
->>> WARNING: CPU: 0 PID: 13 at drivers/dma/cppi41.c:694
->>> cppi41_stop_chan+0x1f4/0x378 [cppi41]
->>> Modules linked in: evbug evdev mousedev hid_generic usbhid hid
->>> usb_f_ss_lb g_zero libcomposite configfs ofpart cmdlinepart m25p80
->>> spi_nor cppi41 adv7343 tvp514x vpif_display vpif_capture
->>> videobuf2_dma_con
->>> tig videobuf2_memops videobuf2_v4l2 videobuf2_common v4l2_fwnode
->>> v4l2_common snd_soc_simple_card tilcdc spi_davinci
->>> snd_soc_simple_card_utils videodev pwm_tiecap spi_bitbang da8xx
->>> drm_kms_helper phy_gener
->>> ic syscopyarea ohci_da8xx musb_hdrc sysfillrect sysimgblt fb_sys_fops
->>> ohci_hcd udc_core drm usbcore drm_panel_orientation_quirks usb_common
->>> snd_soc_tlv320aic3x vpif snd_soc_davinci_mcasp snd_soc_edma snd_
->>> soc_core snd_pcm_dmaengine snd_pcm rtc_omap snd_timer snd soundcore
->>> phy_da8xx_usb davinci_nand nand nand_ecc mtd pwm_bl backlight
->>> cpufreq_dt ti_aemif
->>> CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 4.16.0-rc5-g291ba8b-dirty #3
->>> Hardware name: Generic DA850/OMAP-L138/AM18x
->>> Workqueue: usb_hub_wq hub_event [usbcore]
->>> Backtrace:
->>> [<c000df94>] (dump_backtrace) from [<c000e264>] (show_stack+0x18/0x1c)
->>>  r7:00000009 r6:00000000 r5:bf339ad0 r4:00000000
->>> [<c000e24c>] (show_stack) from [<c04864c0>] (dump_stack+0x20/0x28)
->>> [<c04864a0>] (dump_stack) from [<c001ac38>] (__warn+0xd4/0xfc)
->>> [<c001ab64>] (__warn) from [<c001ad7c>] (warn_slowpath_null+0x44/0x50)
->>>  r8:c6c43080 r7:c05f1008 r6:bf338744 r5:000002b6 r4:bf339ad0
->>> [<c001ad38>] (warn_slowpath_null) from [<bf338744>]
->>> (cppi41_stop_chan+0x1f4/0x378 [cppi41])
->>>  r6:c5e59410 r5:c5e59420 r4:c5feca50
->>> [<bf338550>] (cppi41_stop_chan [cppi41]) from [<bf213dac>]
->>> (cppi41_dma_channel_abort+0xe0/0x2a8 [musb_hdrc])
->>>  r8:c6929180 r7:00000000 r6:c5c67290 r5:bf2175a0 r4:00000008
->>> [<bf213ccc>] (cppi41_dma_channel_abort [musb_hdrc]) from [<bf20c4bc>]
->>> (musb_cleanup_urb+0x60/0x210 [musb_hdrc])
->>>  r10:00000001 r9:c5fca010 r8:c5c67290 r7:a0000093 r6:00000080 r5:c55b5100
->>>  r4:c5fca5a8
->>> [<bf20c45c>] (musb_cleanup_urb [musb_hdrc]) from [<bf20ca8c>]
->>> (musb_urb_dequeue+0xfc/0x164 [musb_hdrc])
->>>  r10:00000001 r9:40408280 r8:c5fca010 r7:a0000093 r6:00000000 r5:c55b5380
->>>  r4:c55b5100
->>> [<bf20c990>] (musb_urb_dequeue [musb_hdrc]) from [<bf10fd7c>]
->>> (unlink1+0x34/0x13c [usbcore])
->>>  r10:00000100 r9:c5cb2a00 r8:c55b5100 r7:ffffff94 r6:c5c6c000 r5:c5dd2380
->>>  r4:c55b5100 r3:bf20c990
->>> [<bf10fd48>] (unlink1 [usbcore]) from [<bf112424>]
->>> (usb_hcd_flush_endpoint+0x164/0x1a4 [usbcore])
->>>  r9:c5cb2a00 r8:c55b5100 r7:c5c6c000 r6:c5dd2398 r5:c5dd2380 r4:ffffe000
->>> [<bf1122c0>] (usb_hcd_flush_endpoint [usbcore]) from [<bf11563c>]
->>> (usb_disable_endpoint+0x50/0x94 [usbcore])
->>>  r9:c5cb2a00 r8:bf39e898 r7:00000000 r6:c5c43000 r5:c5c43000 r4:c5dd2380
->>> [<bf1155ec>] (usb_disable_endpoint [usbcore]) from [<bf1156c4>]
->>> (usb_disable_interface+0x44/0x58 [usbcore])
->>>  r5:c5dd2348 r4:00000000
->>> [<bf115680>] (usb_disable_interface [usbcore]) from [<bf118044>]
->>> (usb_unbind_interface+0x1c0/0x268 [usbcore])
->>>  r7:c5cb2c00 r6:bf39e898 r5:c5cb2c20 r4:c5cb2c20
->>> [<bf117e84>] (usb_unbind_interface [usbcore]) from [<c02ce180>]
->>> (device_release_driver_internal+0x160/0x208)
->>>  r10:00000100 r9:c5cb2a00 r8:00000034 r7:00000000 r6:bf39e898 r5:c5cb2c54
->>>  r4:c5cb2c20
->>> [<c02ce020>] (device_release_driver_internal) from [<c02ce240>]
->>> (device_release_driver+0x18/0x1c)
->>>  r9:c5cb2a00 r8:c05f1008 r7:c5c43070 r6:bf12895c r5:c5cb2c20 r4:c5dc91ac
->>> [<c02ce228>] (device_release_driver) from [<c02ccf70>]
->>> (bus_remove_device+0xd0/0x100)
->>> [<c02ccea0>] (bus_remove_device) from [<c02c9c60>] (device_del+0x120/0x378)
->>>  r7:c5c43070 r6:c5cb2c28 r5:00000000 r4:c5cb2c20
->>> [<c02c9b40>] (device_del) from [<bf11576c>]
->>> (usb_disable_device+0x94/0x1d8 [usbcore])
->>>  r10:00000100 r9:c5cb2a00 r8:c5cb2c00 r7:c5c6c000 r6:00000001 r5:00000000
->>>  r4:c5c43000
->>> [<bf1156d8>] (usb_disable_device [usbcore]) from [<bf10bccc>]
->>> (usb_disconnect+0xb4/0x244 [usbcore])
->>>  r9:c5cb2a00 r8:c5c2d600 r7:c5c430a4 r6:c5c43070 r5:c5c43000 r4:00000000
->>> [<bf10bc18>] (usb_disconnect [usbcore]) from [<bf10d788>]
->>> (hub_event+0x678/0x11dc [usbcore])
->>>  r10:00000100 r9:c05f1008 r8:c5c2dcf8 r7:c68fc400 r6:00000001 r5:40000000
->>>  r4:00000000
->>> [<bf10d110>] (hub_event [usbcore]) from [<c0031db0>]
->>> (process_one_work+0x1d8/0x41c)
->>>  r10:00000008 r9:00000000 r8:c060b1d0 r7:00000000 r6:c7ede200 r5:c6882480
->>>  r4:c5c2dcf8
->>> [<c0031bd8>] (process_one_work) from [<c0032030>] (worker_thread+0x3c/0x670)
->>>  r10:00000008 r9:c060b1e4 r8:c061ab60 r7:c6882498 r6:ffffe000 r5:c060b1d0
->>>  r4:c6882480
->>> [<c0031ff4>] (worker_thread) from [<c0038270>] (kthread+0x134/0x14c)
->>>  r10:c683fe90 r9:c0031ff4 r8:c6882480 r7:c6896000 r6:00000000 r5:c687bd80
->>>  r4:c6803e80
->>> [<c003813c>] (kthread) from [<c00090e0>] (ret_from_fork+0x14/0x34)
->>> Exception stack(0xc6897fb0 to 0xc6897ff8)
->>> 7fa0:                                     00000000 00000000 00000000 00000000
->>> 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->>> 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
->>>  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c003813c
->>>  r4:c687bd80
->>> ---[ end trace cb9c7f93aaa3ed36 ]---
->>> ------------[ cut here ]------------
->>>
->>>
->>> adam
->>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> index 86602f264dce..187b8c1b52a7 100644
+>>> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> @@ -17,6 +17,11 @@ Optional properties:
+>>>         When not specified the device will use in-band SDIO interrupts.
+>>>    - interrupt-names : name of the out-of-band interrupt, which must be
+>>> set
+>>>         to "host-wake".
+>>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO host
+>>> +       controller has higher align requirement than 32 bytes for each
+>>> +       scatterlist item.
+>>> + - brcm,sd-head-align : alignment requirement for start of data buffer.
+>>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
+>>> entry.
 >>
->> Hi Adam,
 >>
->> this is a known issue and it's present in mainline and even in TI BSP.
->> It's been deprioritized for now, but I'll return to debugging it once
->> the common clock conversion is complete.
+>> Hi Alexey,
 >>
->> Thanks,
->> Bartosz
->
-> Ugh, -ETOOEARLY
->
-> I meant the ohci dying during cpufreq bug, not the crash you posted.
->
-> Bart
+>> Thanks for the patch. However, the problem with these is that they are
+>> characterizing the host controller and not the wireless device. So from
+>> device tree perspective , which is to describe the hardware, these
+>> properties should be SDIO host controller properties. Also I am not sure if
+>> the broken-sg-support is still needed. We added that for omap_hsmmc, but
+>> that has since changed to scatter-gather emulation so it might not be needed
+>> anymore.
+>>
+>> Regards,
+>> Arend
+> 
+> 
+> 
+
+
+-- 
+Florian
