@@ -1,57 +1,48 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: mt2712: Add auxadc device node.
-Date: Mon, 19 Mar 2018 02:51:58 +0100
-Message-ID: <f1c8f79f-8536-f3cc-22be-31466a1390ad@gmail.com>
-References: <1505957212-13402-1-git-send-email-zhiyong.tao@mediatek.com>
- <1505957212-13402-4-git-send-email-zhiyong.tao@mediatek.com>
- <20170924164705.78cbb856@archlinux>
- <0e1bac27-18ca-121c-f1d7-8063af177a8b@gmail.com>
- <6680d15a-625a-cc16-830f-9831f5f52ad3@gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] ARM: dts: pfuze3000: update sw1a/vldo4 voltage range
+Date: Mon, 19 Mar 2018 01:59:41 +0000
+Message-ID: <AM3PR04MB1315E036D33F27C9AF617252F5D40@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1521269828-8874-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5BzE46Dm24++j+xVA4KGFnpsopGfJ97h7sFGOAxVa19=g@mail.gmail.com>
+ <AM3PR04MB1315E1C3071C0BD2E7169968F5D50@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AFJk_Q5CYrV0s+hLmORHosWujRSGjwf9smyAQc4nmJ+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6680d15a-625a-cc16-830f-9831f5f52ad3@gmail.com>
+In-Reply-To: <CAOMZO5AFJk_Q5CYrV0s+hLmORHosWujRSGjwf9smyAQc4nmJ+A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, yt.shen@mediatek.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/16/2017 05:09 PM, Matthias Brugger wrote:
-> 
-> 
-> On 10/13/2017 05:11 PM, Matthias Brugger wrote:
->>
->>
->> On 09/24/2017 05:47 PM, Jonathan Cameron wrote:
->>> On Thu, 21 Sep 2017 09:26:52 +0800
->>> Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->>>
->>>> Add auxadc device node for MT2712.
->>>>
->>>> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
->>>
->>> I've applied the IIO patches to make this work, so assume this will get
->>> picked up in due course.
->>>
->>
->> pushed now to v4.14-next/dts64
->> Thanks.
->>
-> 
-> I realized that this needs the mt2712 clock patches to actually work.
-> Dropped for now. Please resubmit as soon as mt2712 clock patches got [1]
-> accepted upstream.
-> 
-
-I think you actually never resubmitted. Anyway I pushed it now to v4.16-next/dts64
-
-Thanks.
-
-> Thanks,
-> Matthias
-> 
-> [1] https://lkml.org/lkml/2017/9/19/9
+SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
+Z21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIE1hcmNoIDE4LCAyMDE4IDg6NTUgUE0NCj4gVG86
+IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogUm9iaW4gR29uZyA8eWli
+aW4uZ29uZ0BueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gU2Fz
+Y2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtDQo+IDxmYWJp
+by5lc3RldmFtQG54cC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFy
+ayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJ1c3NlbGwgS2luZyAtIEFSTSBM
+aW51eCA8bGludXhAYXJtbGludXgub3JnLnVrPjsNCj4gTGlhbSBHaXJkd29vZCA8bGdpcmR3b29k
+QGdtYWlsLmNvbT47IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47DQo+IGRsLWxpbnV4
+LWlteCA8bGludXgtaW14QG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElN
+WCAvIE1YQw0KPiBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklD
+RSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWtl
+cm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SCAxLzJdIEFSTTogZHRzOiBwZnV6ZTMwMDA6IHVwZGF0ZSBzdzFhL3ZsZG80IHZvbHRhZ2UgcmFu
+Z2UNCj4gDQo+IE9uIFNhdCwgTWFyIDE3LCAyMDE4IGF0IDExOjIzIFBNLCBBbnNvbiBIdWFuZyA8
+YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IEkgdGhvdWdodCB0aGUgbWF4
+IHZhbHVlIGhlcmUgbWVhbnMgdGhlIGNhcGFiaWxpdHkgb2YgcmVndWxhdG9yIGl0c2VsZiwgbGlr
+ZSB0aGUNCj4gaW50ZXJuYWwNCj4gDQo+IE5vIGl0IGlzIG5vdC4NCj4gDQo+IFBsZWFzZSBjaGVj
+ayBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRvci50
+eHQ6DQo+IA0KPiAiLSByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdDogbGFyZ2VzdCB2b2x0YWdlIGNv
+bnN1bWVycyBtYXkgc2V0Ig0KIA0KT0ssIHNvIEkgc2hvdWxkIGNoYW5nZSB0aGUgbWF4IHZhbHVl
+IG9mIFNXMUEgYWNjb3JkaW5nIHRvIGJvYXJkIGRlc2lnbiwgc3VjaA0KYXMgZm9yIE1YN0QsIGl0
+IGlzIDEuMDc1ViBmb3IgbWF4IGNwdS1mcmVxJ3Mgdm9sdGFnZSwgc2V0IGl0IHRvIDEuMDc1IGlu
+IGR0cz8NCg0KQWxzbywgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5nIGRvYywgZG8geW91IHRoaW5r
+IHRoZSBhbmF0b3AncyB2ZGRfYXJtIGFuZCB2ZGRfc29jL3B1J3MgbWF4DQp2YWx1ZSBhbHNvIG5l
+ZWQgdG8gYmUgYWRqdXN0ZWQgdG8gbWF0Y2ggdGhlIHZhbHVlIGRlZmluZSBpbiBlYWNoIHNvYydz
+IGRhdGFzaGVldD8gDQoNCkFuc29uLg0KDQo=
