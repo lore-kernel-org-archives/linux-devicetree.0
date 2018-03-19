@@ -1,48 +1,52 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: reset: add STM32MP1 resets
-Date: Mon, 19 Mar 2018 09:28:43 +0000
-Message-ID: <3ad18501-9438-64a1-19d5-05db4e8d7cd2@st.com>
-References: <1521444351-29550-1-git-send-email-gabriel.fernandez@st.com>
- <1521444351-29550-2-git-send-email-gabriel.fernandez@st.com>
- <1521450140.5471.1.camel@pengutronix.de>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for
+ brcmfmac
+Date: Mon, 19 Mar 2018 10:31:57 +0100
+Message-ID: <5AAF838D.2030105@broadcom.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1521450140.5471.1.camel@pengutronix.de>
-Content-Language: en-US
-Content-ID: <43BB48D85425B94B8AEF6A0944FE6CE0@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180319014032.9394-3-alexey.roslyakov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Roslyakov <alexey.roslyakov@gmail.com>, andrew@lunn.ch, kvalo@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
 List-Id: devicetree@vger.kernel.org
 
-Many Thanks Philipp,
-
-Best Regards
-
-Gabriel
-
-
-On 03/19/2018 10:02 AM, Philipp Zabel wrote:
-> Hi Gabriel,
+On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
+> In case if the host has higher align requirements for SG items, allow
+> setting device-specific aligns for scatterlist items.
 >
-> On Mon, 2018-03-19 at 08:25 +0100, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> This patch adds the reset binding entry for STM32MP1
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> thank you, both applied to reset/next.
+> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+> ---
+>   Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt | 5 +++++
+>   1 file changed, 5 insertions(+)
 >
-> regards
-> Philipp
+> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> index 86602f264dce..187b8c1b52a7 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> @@ -17,6 +17,11 @@ Optional properties:
+>   	When not specified the device will use in-band SDIO interrupts.
+>    - interrupt-names : name of the out-of-band interrupt, which must be set
+>   	to "host-wake".
+> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO host
+> +	controller has higher align requirement than 32 bytes for each
+> +	scatterlist item.
+> + - brcm,sd-head-align : alignment requirement for start of data buffer.
+> + - brcm,sd-sgentry-align : length alignment requirement for each sg entry.
+
+Hi Alexey,
+
+Thanks for the patch. However, the problem with these is that they are 
+characterizing the host controller and not the wireless device. So from 
+device tree perspective , which is to describe the hardware, these 
+properties should be SDIO host controller properties. Also I am not sure 
+if the broken-sg-support is still needed. We added that for omap_hsmmc, 
+but that has since changed to scatter-gather emulation so it might not 
+be needed anymore.
+
+Regards,
+Arend
