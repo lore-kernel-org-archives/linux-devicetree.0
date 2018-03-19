@@ -1,49 +1,37 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 1/3] iio: rename the multiplexer category to wrapper
-Date: Mon, 19 Mar 2018 11:36:32 -0700
-Message-ID: <6b97bd50-b2bb-2695-4efb-16bc70fd638b@infradead.org>
-References: <20180319170246.26830-1-peda@axentia.se>
- <20180319170246.26830-2-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for Bticino
+Date: Tue, 20 Mar 2018 01:11:13 +0530
+Message-ID: <20180319194114.15349-1-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180319170246.26830-2-peda@axentia.se>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2018 10:02 AM, Peter Rosin wrote:
-> Paves the way for other wrappers.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
+Added 'bticino' vendor prefix for Bticino International.
 
-> diff --git a/drivers/iio/multiplexer/Kconfig b/drivers/iio/wrapper/Kconfig
-> similarity index 88%
-> rename from drivers/iio/multiplexer/Kconfig
-> rename to drivers/iio/wrapper/Kconfig
-> index 735a7b0e6fd8..f27de347c9b3 100644
-> --- a/drivers/iio/multiplexer/Kconfig
-> +++ b/drivers/iio/wrapper/Kconfig
-> @@ -1,9 +1,9 @@
->  #
-> -# Multiplexer drivers
-> +# Wrapper drivers
->  #
->  # When adding new entries keep the list in alphabetical order
->  
-> -menu "Multiplexers"
-> +menu "Wrapers"
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
+Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v2:
+- Collect review tag from Rob
 
-         Wrappers
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->  
->  config IIO_MUX
->  	tristate "IIO multiplexer driver"
-
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ae850d6c0ad3..da0ead5b1ea3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -56,6 +56,7 @@ bosch	Bosch Sensortec GmbH
+ boundary	Boundary Devices Inc.
+ brcm	Broadcom Corporation
+ buffalo	Buffalo, Inc.
++bticino Bticino International
+ calxeda	Calxeda
+ capella	Capella Microsystems, Inc
+ cascoda	Cascoda, Ltd.
 -- 
-~Randy
+2.14.3
