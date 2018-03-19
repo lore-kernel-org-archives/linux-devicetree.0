@@ -1,15 +1,13 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/3] dt-bindings: display: dw_hdmi.txt
-Date: Mon, 19 Mar 2018 12:48:53 +0100
-Message-ID: <9dddbaf3-0883-b960-7d36-8aeca6525a02@xs4all.nl>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/3] dw-hdmi: add property to disable CEC
+Date: Mon, 19 Mar 2018 14:10:50 +0100
+Message-ID: <0d341d4b-64f4-2d6e-555c-43136e74807e@baylibre.com>
 References: <20180319114345.29837-1-hverkuil@xs4all.nl>
- <20180319114345.29837-2-hverkuil@xs4all.nl>
- <CAOMZO5CmehWh5gudCXF2wchdbi2yFULvcHwSHY-jUr7zEsr=0A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAOMZO5CmehWh5gudCXF2wchdbi2yFULvcHwSHY-jUr7zEsr=0A@mail.gmail.com>
+In-Reply-To: <20180319114345.29837-1-hverkuil@xs4all.nl>
 Content-Language: en-US
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
@@ -20,17 +18,30 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-amlogic@lists.infradead.org, linux-media <linux-media@vger.kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMTkvMjAxOCAxMjo0NiBQTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiBIaSBIYW5zLAo+
-IAo+IE9uIE1vbiwgTWFyIDE5LCAyMDE4IGF0IDg6NDMgQU0sIEhhbnMgVmVya3VpbCA8aHZlcmt1
-aWxAeHM0YWxsLm5sPiB3cm90ZToKPj4gRnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxA
-Y2lzY28uY29tPgo+IAo+IEl0IHNlZW1zIHRoZSBTdWJqZWN0IGxpbmUgaXMgbWlzc2luZyBzb21l
-IGNvbnRlbnQ/CgpPb3BzLiBUaGF0IHNob3VsZCBoYXZlIGJlZW46CgpkdC1iaW5kaW5nczogZGlz
-cGxheTogZHdfaGRtaS50eHQ6IGFkZCBjZWMtZGlzYWJsZSBwcm9wZXJ0eQoKVGhhbmtzIGZvciBw
-b2ludGluZyB0aGlzIG91dC4KClJlZ2FyZHMsCgoJSGFucwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+SGkgSGFucywKCk9uIDE5LzAzLzIwMTggMTI6NDMsIEhhbnMgVmVya3VpbCB3cm90ZToKPiBGcm9t
+OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4gCj4gU29tZSBib2FyZHMg
+KGFtbG9naWMpIGhhdmUgdHdvIENFQyBjb250cm9sbGVyczogdGhlIERlc2lnbldhcmUgY29udHJv
+bGxlcgo+IGFuZCB0aGVpciBvd24gQ0VDIGNvbnRyb2xsZXIgKG1lc29uIGFvLWNlYykuCj4gCj4g
+U2luY2UgdGhlIENFQyBsaW5lIGlzIG5vdCBob29rZWQgdXAgdG8gdGhlIERXIGNvbnRyb2xsZXIg
+d2UgbmVlZCBhIHdheQo+IHRvIGRpc2FibGUgdGhhdCBjb250cm9sbGVyLiBUaGlzIHBhdGNoIHNl
+cmllcyBhZGRzIHRoZSBjZWMtZGlzYWJsZQo+IHByb3BlcnR5IGZvciB0aGF0IHB1cnBvc2UuCj4g
+Cj4gTmVpbCwgSSBoYXZlIGFkZGVkIGNlYy1kaXNhYmxlIHRvIG1lc29uLWd4bC1zOTA1eC1saWJy
+ZXRlY2gtY2MuZHRzCj4gb25seSwgYnV0IEkgc3VzcGVjdCBpdCBpcyBwcm9iYWJseSB2YWxpZCBm
+b3IgYWxsIG1lc29uLWdseCBkZXZpY2VzPwo+IFNob3VsZCBJIG1vdmUgaXQgdG8gbWVzb24tZ3hs
+LmR0c2k/CgpJdCdzIHZhbGlkIG9uIGFsbCBHWCBkZXZpY2VzLCBzbyB5b3UgY2FuIGFkZCB0byBt
+ZXNvbi1neC5kdHNpCgpOZWlsCgo+IAo+IFJlZ2FyZHMsCj4gCj4gCUhhbnMKPiAKPiBIYW5zIFZl
+cmt1aWwgKDMpOgo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGR3X2hkbWkudHh0Cj4gICBkcm06
+IGJyaWRnZTogZHctaGRtaTogY2hlY2sgdGhlIGNlYy1kaXNhYmxlIHByb3BlcnR5Cj4gICBhcm02
+NDogZHRzOiBtZXNvbi1neGwtczkwNXgtbGlicmV0ZWNoLWNjOiBhZGQgY2VjLWRpc2FibGUKPiAK
+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R3X2hk
+bWkudHh0IHwgMyArKysKPiAgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1z
+OTA1eC1saWJyZXRlY2gtY2MuZHRzIHwgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lu
+b3BzeXMvZHctaGRtaS5jICAgICAgICAgICAgICAgICAgICB8IDMgKystCj4gIDMgZmlsZXMgY2hh
+bmdlZCwgNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
