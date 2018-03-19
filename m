@@ -1,54 +1,42 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/2] ARM: dts: imx6sx-sabreauto: add external 24MHz clock
- source
-Date: Mon, 19 Mar 2018 02:09:39 +0000
-Message-ID: <AM3PR04MB1315E9D8E8C4492876E6CFF3F5D40@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1521342853-2941-1-git-send-email-Anson.Huang@nxp.com>
- <1521342853-2941-2-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5CG6XuJ7N8W--zEwEVd9JHj887_7aNp+K8D-Xt1OnKh7A@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
+Date: Mon, 19 Mar 2018 10:14:19 +0800
+Message-ID: <CAGb2v65QHkuM2GmT4MC+tp+HqN2ecqeZt8bB5OvZm2br1AJJ-w@mail.gmail.com>
+References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
+ <20180223133742.26044-11-mylene.josserand@bootlin.com> <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
+ <20180318200715.363f3135@dell-desktop.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CG6XuJ7N8W--zEwEVd9JHj887_7aNp+K8D-Xt1OnKh7A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180318200715.363f3135@dell-desktop.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, quentin.schulz@bootlin.com, linux-kernel <linux-kernel@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIE1hcmNoIDE4LCAyMDE4IDk6MDQgUE0NCj4gVG86
-IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+
-OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2INCj4gSGVycmluZyA8
-cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
-DQo+IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCA8bGludXhAYXJtbGludXgub3JnLnVrPjsgTWlj
-aGFlbCBUdXJxdWV0dGUNCj4gPG10dXJxdWV0dGVAYmF5bGlicmUuY29tPjsgU3RlcGhlbiBCb3lk
-IDxzYm95ZEBrZXJuZWwub3JnPjsgUy5qLiBXYW5nDQo+IDxzaGVuZ2ppdS53YW5nQG54cC5jb20+
-OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgbW9kZXJhdGVkDQo+IGxpc3Q6QVJN
-L0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNIEFSQ0hJVEVDVFVSRQ0KPiA8bGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EDQo+IEZM
-QVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1j
-bGsgPGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8y
-XSBBUk06IGR0czogaW14NnN4LXNhYnJlYXV0bzogYWRkIGV4dGVybmFsIDI0TUh6IGNsb2NrDQo+
-IHNvdXJjZQ0KPiANCj4gT24gU3VuLCBNYXIgMTgsIDIwMTggYXQgMTI6MTQgQU0sIEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gDQo+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zYWJyZWF1dG8uZHRzDQo+ID4gYi9hcmNoL2FybS9i
-b290L2R0cy9pbXg2c3gtc2FicmVhdXRvLmR0cw0KPiA+IGluZGV4IDcyZGE1YWMuLjgzZjdjYWMg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LXNhYnJlYXV0by5kdHMN
-Cj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtc2FicmVhdXRvLmR0cw0KPiA+IEBA
-IC0xOCw2ICsxOCwxNCBAQA0KPiA+ICAgICAgICAgICAgICAgICByZWcgPSA8MHg4MDAwMDAwMCAw
-eDgwMDAwMDAwPjsNCj4gPiAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgIGNsb2NrcyB7DQo+
-ID4gKyAgICAgICAgICAgICAgIGNvZGVjX29zYzogYW5hY2xrMiB7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyNDU3NjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgIH07
-DQo+ID4gKyAgICAgICB9Ow0KPiANCj4gVGhlIGNsb2NrcyBjb250YWluZXIgc2hvdWxkIGJlIHJl
-bW92ZWQgYW5kIHRoZSBjbG9jayBub2RlIGNvdWxkIGJlIHB1dCBkaXJlY3RseQ0KPiBpbnRvIHRo
-ZSByb290IG5vZGUuDQo+IA0KPiBBbHNvLCBJIGRvIG5vdCBzZWUgJ2NvZGVjX29zYycgYmVpbmcg
-dXNlZCBpbiB0aGlzIGR0cy4NCiANClRoaXMgY2xvY2sgd2lsbCBiZSB1c2VkIGJ5IGNzNDI4ODgg
-Y29kZWMsIHRoaXMgcGF0Y2ggaXMgb25seSB0byBhZGQgYmFzaWMgY2xvY2sgc291cmNlDQp0byBj
-b21wbGV0ZSB0aGUgY2xvY2sgdHJlZS4gVGhhbmtzLg0KDQpBbnNvbi4NCg==
+On Mon, Mar 19, 2018 at 3:07 AM, Mylène Josserand
+<mylene.josserand@bootlin.com> wrote:
+> Hello Mark,
+>
+> Please, excuse me for this late answer and thank you for the review!
+>
+> On Wed, 7 Mar 2018 12:18:33 +0000
+> Marc Zyngier <marc.zyngier@arm.com> wrote:
+>
+>> On 23/02/18 13:37, Mylène Josserand wrote:
+>> > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
+>>
+>> Only on A7? Is that specific to your platform?
+>
+> I do not really know other Allwinner's platforms about this subject. At
+> least, the sun9i-a80 which is a Cortex-a15/a7 does not need that but it
+> is necessary for sun8i-a83t which is a cortex-a7. Maybe, Chen-Yu or
+> Maxime could help us on it.
+
+AFAIK all Allwinner CPUs need it if there isn't a firmware (PSCI) layer
+beneath the kernel that will do the setup. We just have
+"arm,cpu-registers-not-fw-configured" set for all the other SoCs that
+have in-kernel SMP support, which includes the A31, A23, A33 and A80.
+
+ChenYu
