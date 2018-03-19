@@ -1,41 +1,49 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH 2/3] dt-bindings: clock: Add bindings for ZynqMP clock
- driver
-Date: Mon, 19 Mar 2018 11:23:55 -0700
-Message-ID: <152148383577.242365.14896728603053993045@swboyd.mtv.corp.google.com>
-References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
- <1519856861-31384-3-git-send-email-jollys@xilinx.com>
- <20180306014549.6t3ae5adzc3cpi5v@rob-hp-laptop>
- <DM2PR0201MB0767031248A9F773620722FDB8D80@DM2PR0201MB0767.namprd02.prod.outlook.com>
- <CAL_JsqKUC47xB5O2Y6c3efVCjJY=V+XO3xyLTU9rNia40bdZkg@mail.gmail.com>
- <DM2PR0201MB0767FFBAECF3A0B30251DBB8B8D20@DM2PR0201MB0767.namprd02.prod.outlook.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 1/3] iio: rename the multiplexer category to wrapper
+Date: Mon, 19 Mar 2018 11:36:32 -0700
+Message-ID: <6b97bd50-b2bb-2695-4efb-16bc70fd638b@infradead.org>
+References: <20180319170246.26830-1-peda@axentia.se>
+ <20180319170246.26830-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DM2PR0201MB0767FFBAECF3A0B30251DBB8B8D20@DM2PR0201MB0767.namprd02.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jolly Shah <JOLLYS@xilinx.com>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180319170246.26830-2-peda@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jolly Shah (2018-03-13 11:39:13)
-> Hi Rob,
-> > 
-> > What is the interface to the "platform management controller"? Because you
-> > have no registers, I'm guessing a firmware interface? If so, then just define the
-> > firmware node as a clock provider.
+On 03/19/2018 10:02 AM, Peter Rosin wrote:
+> Paves the way for other wrappers.
 > 
-> Yes it is firmware interface. Along with clocks, firmware interface also controls power and pinctrl operations as major.
-> I am not sure if I understand you correctly. Do you suggest to register clocks through Firmware driver or just use firmware DT node as clock provider and clock driver DT node can reference clocks from FW node to register same?
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
 
-I would suggest making the firmware driver register the clks and act as
-the clk provider. Not sure what Rob wants.
+> diff --git a/drivers/iio/multiplexer/Kconfig b/drivers/iio/wrapper/Kconfig
+> similarity index 88%
+> rename from drivers/iio/multiplexer/Kconfig
+> rename to drivers/iio/wrapper/Kconfig
+> index 735a7b0e6fd8..f27de347c9b3 100644
+> --- a/drivers/iio/multiplexer/Kconfig
+> +++ b/drivers/iio/wrapper/Kconfig
+> @@ -1,9 +1,9 @@
+>  #
+> -# Multiplexer drivers
+> +# Wrapper drivers
+>  #
+>  # When adding new entries keep the list in alphabetical order
+>  
+> -menu "Multiplexers"
+> +menu "Wrapers"
+
+         Wrappers
+
+>  
+>  config IIO_MUX
+>  	tristate "IIO multiplexer driver"
+
+
+-- 
+~Randy
