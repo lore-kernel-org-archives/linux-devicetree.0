@@ -1,42 +1,100 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps receiver) power
- control driver
-Date: Mon, 19 Mar 2018 15:05:55 +0100
-Message-ID: <20180319140555.GN18359@localhost>
-References: <cover.1512114576.git.hns@goldelico.com>
- <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
- <20171222124427.GI3374@localhost>
- <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
- <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
- <20180112153903.GB5992@localhost>
- <E7ECBBB8-2E88-4F04-AFC3-659332E84CF6@goldelico.com>
- <20180118061314.GG3286@localhost>
- <8B2641B8-E86B-425C-9E79-E9C41E4E623C@goldelico.com>
- <461DBB7C-5FF7-4723-9518-C9A5E7E5610D@goldelico.com>
+From: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
+Date: Mon, 19 Mar 2018 21:10:21 +0700
+Message-ID: <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com> <5AAF838D.2030105@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <461DBB7C-5FF7-4723-9518-C9A5E7E5610D@goldelico.com>
+In-Reply-To: <5AAF838D.2030105@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, kernel@pyra-handheld.com, Andreas Kemnade <andreas@kemnade.info>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>Linu
+To: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, kvalo@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2018 at 04:53:12PM +0100, H. Nikolaus Schaller wrote:
+Hi Arend,
+I appreciate your response. In my opinion, it has nothing to do with
+SDIO host, because it defines "quirks" in the driver itself.
+If I get it right, you mean something like this:
 
-> If I look for example at the camera module drivers provided by
-> drivers/media/i2c, most of them could be easily power-controlled from
-> user-space by i2c-tools and 1-2 gpios through /sys/class/gpio and
-> a big set of scripts.
-> 
-> Still they have a place in the kernel and cameras are powered on
-> if the device is opened and powered down if it is closed.
-> 
-> So I am still trying to understand the rationale and logic (if one exists)
-> behind having them in kernel but rejecting our driver which does the
-> same for a different class of devices.
+mmc3: mmc@1c12000 {
+...
+        broken-sg-support;
+        sd-head-align = 4;
+        sd-sgentry-align = 512;
 
-For media we have a framework in place; for gps we do not (yet).
+        brcmf: wifi@1 {
+                ...
+        };
+};
 
-Johan
+Where dt: bindings documentation for these entries should reside?
+In generic MMC bindings? Well, this is the very special case and
+mmc-linux maintainer will unlikely to accept these changes.
+Also, extra kernel code modification might be required. It could make
+quite trivial change much more complex.
+
+>Also I am not sure if the broken-sg-support is still needed. We added that for omap_hsmmc, but that has since changed to scatter-gather emulation so it might not be needed anymore.
+
+I've experienced the problem with rk3288 (dw-mmc host) and sdio
+settings like above solved it.
+Frankly, I haven't investigated any deeper which one of the settings
+helped in my case yet...
+I will try to get rid of broken-sg-support first and let you know if
+it does make any difference.
+
+All the best,
+  Alex.
+
+On 19 March 2018 at 16:31, Arend van Spriel
+<arend.vanspriel@broadcom.com> wrote:
+> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
+>>
+>> In case if the host has higher align requirements for SG items, allow
+>> setting device-specific aligns for scatterlist items.
+>>
+>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt | 5
+>> +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> index 86602f264dce..187b8c1b52a7 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> @@ -17,6 +17,11 @@ Optional properties:
+>>         When not specified the device will use in-band SDIO interrupts.
+>>    - interrupt-names : name of the out-of-band interrupt, which must be
+>> set
+>>         to "host-wake".
+>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO host
+>> +       controller has higher align requirement than 32 bytes for each
+>> +       scatterlist item.
+>> + - brcm,sd-head-align : alignment requirement for start of data buffer.
+>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
+>> entry.
+>
+>
+> Hi Alexey,
+>
+> Thanks for the patch. However, the problem with these is that they are
+> characterizing the host controller and not the wireless device. So from
+> device tree perspective , which is to describe the hardware, these
+> properties should be SDIO host controller properties. Also I am not sure if
+> the broken-sg-support is still needed. We added that for omap_hsmmc, but
+> that has since changed to scatter-gather emulation so it might not be needed
+> anymore.
+>
+> Regards,
+> Arend
+
+
+
+-- 
+With best regards,
+  Alexey Roslyakov
+Email: alexey.roslyakov@gmail.com
