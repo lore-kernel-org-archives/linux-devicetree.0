@@ -1,105 +1,70 @@
-Return-Path: <SRS0=EV7f=GE=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v4 6/6] arm64: dts: sdm845: Add I2C controller support
-Date: Wed, 14 Mar 2018 17:58:51 -0600
-Message-Id: <1521071931-9294-7-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
-References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
+Return-Path: <SRS0=ayJo=GJ=gmail.com=keepcalm444@kernel.org>
+From: Simon Shields <simon@lineageos.org>
+Subject: [PATCH v3 1/2] dt-bindings: leds: document Panasonic AN30259A bindings
+Date: Tue, 20 Mar 2018 00:59:36 +1100
+Message-Id: <20180319135937.18772-2-simon@lineageos.org>
+In-Reply-To: <20180319135937.18772-1-simon@lineageos.org>
+References: <20180319135937.18772-1-simon@lineageos.org>
+To: linux-leds@vger.kernel.org
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Simon Shields <simon@lineageos.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add I2C master controller support for a built-in test I2C slave.
-
-Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Signed-off-by: Simon Shields <simon@lineageos.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 19 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 29 +++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ .../devicetree/bindings/leds/leds-an30259a.txt     | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index ea3efc5..69445f1 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -27,6 +27,10 @@
- 		serial@a84000 {
- 			status = "okay";
- 		};
+diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+new file mode 100644
+index 000000000000..6ffb861083c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+@@ -0,0 +1,43 @@
++* Panasonic AN30259A 3-channel LED driver
 +
-+		i2c@a88000 {
-+			status = "okay";
-+		};
- 	};
- 
- 	pinctrl@3400000 {
-@@ -50,5 +54,20 @@
- 				bias-pull-down;
- 			};
- 		};
++The AN30259A is a LED controller capable of driving three LEDs independently. It supports
++constant current output and sloping current output modes. The chip is connected over I2C.
 +
-+		qup-i2c10-default {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
++Required properties:
++	- compatible: Must be "panasonic,an30259a".
++	- reg: I2C slave address.
++	- #address-cells: Must be 1.
++	- #size-cells: Must be 0.
 +
-+		qup-i2c10-sleep {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+				bias-pull-up;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 59334d9..9ef056f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -209,6 +209,21 @@
- 					pins = "gpio4", "gpio5";
- 				};
- 			};
++Each LED is represented as a sub-node of the panasonic,an30259a node.
 +
-+			qup_i2c10_default: qup-i2c10-default {
-+				pinmux {
-+					function = "qup10";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
++Required sub-node properties:
++	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
 +
-+			qup_i2c10_sleep: qup-i2c10-sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
++Optional sub-node properties:
++	- label: see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
 +
- 		};
- 
- 		timer@17c90000 {
-@@ -309,6 +324,20 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
++Example:
++led-controller@30 {
++	compatible = "panasonic,an30259a";
++	reg = <0x30>;
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+			i2c10: i2c@a88000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0xa88000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_i2c10_default>;
-+				pinctrl-1 = <&qup_i2c10_sleep>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
++	led@1 {
++		reg = <1>;
++		linux,default-trigger = "heartbeat";
++		label = "red:indicator";
++	};
++
++	led@2 {
++		reg = <2>;
++		label = "green:indicator";
++	};
++
++	led@3 {
++		reg = <3>;
++		label = "blue:indicator";
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.16.2
