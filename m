@@ -1,30 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rsnd: Document R-Car M3-W support" to
-	the asoc tree
-Date: Mon, 19 Mar 2018 01:03:07 +0000 (GMT)
-Message-ID: <20180319010307.3AE6C440079@finisterre.ee.mobilebroadband>
-References: <1521208785-5698-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1521208785-5698-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Applied "ASoC: samsung: Mark unused Odroid compatibles as deprecated" to the asoc tree
+Date: Mon, 19 Mar 2018 01:03:15 +0000 (GMT)
+Message-ID: <20180319010315.ECCA1440079@finisterre.ee.mobilebroadband>
+References: <20180318153512.8343-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180318153512.8343-1-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: rsnd: Document R-Car M3-W support
+   ASoC: samsung: Mark unused Odroid compatibles as deprecated
 
 has been applied to the asoc tree at
 
@@ -49,34 +37,39 @@ to this mail.
 Thanks,
 Mark
 
->From da263026c013412110da464537e1c5532f0714ee Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Fri, 16 Mar 2018 14:59:45 +0100
-Subject: [PATCH] ASoC: rsnd: Document R-Car M3-W support
+>From 3b84574d95c020f01410ff2ca0a38dd8fd7b644b Mon Sep 17 00:00:00 2001
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Date: Sun, 18 Mar 2018 16:35:12 +0100
+Subject: [PATCH] ASoC: samsung: Mark unused Odroid compatibles as deprecated
 
-Document support for the sound modules in the Renesas M3-W (r8a7796)
-SoC.
+Compatible for XU4 audio is not being used.  Instead the board uses the
+same compatible as XU3.  The devices are now just compatible so they
+should use the same value.  Mark "hardkernel,odroid-xu4-audio" as being
+deprecated so in this future could be removed to limit useless
+properties.
 
-No driver update is needed.
+Additionally add older compatibles appearing in the bindings.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sound/samsung,odroid.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 5bed9a595772..b86d790f630f 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -351,6 +351,7 @@ Required properties:
- 				    - "renesas,rcar_sound-r8a7793" (R-Car M2-N)
- 				    - "renesas,rcar_sound-r8a7794" (R-Car E2)
- 				    - "renesas,rcar_sound-r8a7795" (R-Car H3)
-+				    - "renesas,rcar_sound-r8a7796" (R-Car M3-W)
- - reg				: Should contain the register physical address.
- 				  required register is
- 				   SRU/ADG/SSI      if generation1
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index f35a2694eb04..e9da2200e173 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -3,7 +3,9 @@ Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+ Required properties:
+ 
+  - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
+-		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board
++		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated),
++		"samsung,odroid-xu3-audio" - for Odroid XU3 board (deprecated),
++		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
+  - model - the user-visible name of this sound complex
+  - clocks - should contain entries matching clock names in the clock-names
+     property
 -- 
 2.16.2
