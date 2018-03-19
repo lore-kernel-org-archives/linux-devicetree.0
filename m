@@ -1,14 +1,14 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 09/10] DT: QCOM: Add cpufreq-dt to msm8996
-Date: Mon, 19 Mar 2018 09:48:42 -0700
-Message-ID: <152147812199.242365.11821734771337881765@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v3 07/10] clk: qcom: clk-cpu-8996: Prepare PLLs on probe
+Date: Mon, 19 Mar 2018 09:50:18 -0700
+Message-ID: <152147821849.242365.7709382599118820578@swboyd.mtv.corp.google.com>
 References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
- <1518616792-29028-10-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-8-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518616792-29028-10-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <1518616792-29028-8-git-send-email-ilialin@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,126 +22,57 @@ To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-c
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, ilialin@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ilia Lin (2018-02-14 05:59:51)
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> index 492a011..930f68b 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2014-2016,2018 The Linux Foundation. All rights reserved.
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 and
+Quoting Ilia Lin (2018-02-14 05:59:49)
+> The PLLs must be prepared enabled during the probe to be
+> accessible by the OPPs. Otherwise an OPP may switch
+> to non-enabled clock.
 
-Why?
+Sounds like an OPP problem.
 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 4b2afcc..0359197 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -144,6 +152,182 @@
->                 };
->         };
+> 
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> ---
+>  drivers/clk/qcom/clk-cpu-8996.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
+> index 854f327..b0a3b73 100644
+> --- a/drivers/clk/qcom/clk-cpu-8996.c
+> +++ b/drivers/clk/qcom/clk-cpu-8996.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> -
+> +#include <linux/clk-provider.h>
+
+Please leave a newline between linux/* and local includes.
+
+>  #include "clk-alpha-pll.h"
 >  
-> +       cluster0_opp: opp_table0 {
-> +               compatible = "operating-points-v2";
-> +               opp-shared;
-> +
-> +               opp@307200000 {
-> +                       opp-hz = /bits/ 64 <  307200000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@422400000 {
-> +                       opp-hz = /bits/ 64 <  422400000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@480000000 {
-
-It looks like opp-480000000 now instead of opp@<freq>.
-
-> +                       opp-hz = /bits/ 64 <  480000000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@556800000 {
-> +                       opp-hz = /bits/ 64 <  556800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@652800000 {
-> +                       opp-hz = /bits/ 64 <  652800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@729600000 {
-> +                       opp-hz = /bits/ 64 <  729600000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@844800000 {
-> +                       opp-hz = /bits/ 64 <  844800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@960000000 {
-> +                       opp-hz = /bits/ 64 <  960000000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1036800000 {
-> +                       opp-hz = /bits/ 64 < 1036800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1113600000 {
-> +                       opp-hz = /bits/ 64 < 1113600000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1190400000 {
-> +                       opp-hz = /bits/ 64 < 1190400000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1228800000 {
-> +                       opp-hz = /bits/ 64 < 1228800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1324800000 {
-> +                       opp-hz = /bits/ 64 < 1324800000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1401600000 {
-> +                       opp-hz = /bits/ 64 < 1401600000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1478400000 {
-> +                       opp-hz = /bits/ 64 < 1478400000 >;
-> +                       clock-latency-ns = <200000>;
-> +               };
-> +               opp@1593600000 {
-[...]
-> +
-> +       };
->         thermal-zones {
->                 cpu-thermal0 {
->                         polling-delay-passive = <250>;
-> @@ -403,7 +587,7 @@
->                 };
+>  #define VCO(a, b, c) { \
+> @@ -376,6 +376,18 @@ struct clk_hw_clks {
+>         clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
+>         clk_alpha_pll_configure(&pwrcl_alt_pll, regmap, &altpll_config);
 >  
->                 kryocc: clock-controller@6400000 {
-> -                       compatible = "qcom,apcc-msm8996";
-> +                       compatible = "qcom-msm8996-apcc";
+> +       /* Enable all PLLs and alt PLLs */
+> +       clk_prepare_enable(pwrcl_alt_pll.clkr.hw.clk);
+> +       clk_prepare_enable(perfcl_alt_pll.clkr.hw.clk);
+> +       clk_prepare_enable(pwrcl_pll.clkr.hw.clk);
+> +       clk_prepare_enable(perfcl_pll.clkr.hw.clk);
 
-Bad change?
+And this can't be done by the cpufreq-dt driver?
 
->                         reg = <0x6400000 0x90000>;
->                         #clock-cells = <1>;
->                 };
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 3b585e4..b6cd0ae 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -95,6 +95,9 @@
->         { .compatible = "xlnx,zynq-7000", },
->         { .compatible = "xlnx,zynqmp", },
->  
-> +       { .compatible = "qcom,msm8996", },
-> +       { .compatible = "qcom,apq8096", },
 > +
+> +       /* Set initial boot frequencies for power/perf PLLs */
+> +       clk_set_rate(pwrcl_alt_pll.clkr.hw.clk, 652800000);
+> +       clk_set_rate(perfcl_alt_pll.clkr.hw.clk, 652800000);
+> +       clk_set_rate(pwrcl_pll.clkr.hw.clk, 652800000);
+> +       clk_set_rate(perfcl_pll.clkr.hw.clk, 652800000);
 
-Why can't we base it on the kryocc node being present? Or even populate
-the cpufreq-dt from the kryocc driver?
+We have assigned rates in DT for this.
+
+> +
+>         ret = clk_notifier_register(pwrcl_pmux.clkr.hw.clk, &pwrcl_pmux.nb);
+>         if (ret)
+>                 return ret;
