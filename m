@@ -1,15 +1,14 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCHv6 3/3] clk: socfpga: stratix10: add clock driver for
- Stratix10 platform
-Date: Mon, 19 Mar 2018 11:17:40 -0700
-Message-ID: <152148346040.242365.18406406194344107023@swboyd.mtv.corp.google.com>
-References: <1519656455-14629-1-git-send-email-dinguyen@kernel.org>
- <1519656455-14629-3-git-send-email-dinguyen@kernel.org>
+Subject: Re: [PATCH 1/3] drivers: clk: Add clk_get_children support
+Date: Mon, 19 Mar 2018 11:21:55 -0700
+Message-ID: <152148371542.242365.18433130635050412528@swboyd.mtv.corp.google.com>
+References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
+ <1519856861-31384-2-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519656455-14629-3-git-send-email-dinguyen@kernel.org>
+In-Reply-To: <1519856861-31384-2-git-send-email-jollys@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,297 +18,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-clk@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mturquette@baylibre.com, dinguyen@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-clk@vger.kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mturquette@baylibre.com, robh+dt@kernel.org, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, Tejas Patel <tejasp@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, rajanv@xilinx.com, Jolly Shah <jolly.shah@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Dinh Nguyen (2018-02-26 06:47:35)
-> diff --git a/drivers/clk/socfpga/Makefile b/drivers/clk/socfpga/Makefile
-> index 9146c20..87ef977 100644
-> --- a/drivers/clk/socfpga/Makefile
-> +++ b/drivers/clk/socfpga/Makefile
-> @@ -1,6 +1,11 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +ifeq ($(CONFIG_ARCH_SOCFPGA),y)
+Quoting Jolly Shah (2018-02-28 14:27:39)
+> From: Jolly Shah <jolly.shah@xilinx.com>
+> 
+> This API helps to determine the users for any clock.
 
-Ugh, any chance to make this better if we get three?
+Ok, but why do you need it?
 
->  obj-y += clk.o
->  obj-y += clk-gate.o
->  obj-y += clk-pll.o
->  obj-y += clk-periph.o
->  obj-y += clk-pll-a10.o clk-periph-a10.o clk-gate-a10.o
-> +else
-> +obj-y += clk-s10.o
-> +obj-y += clk-pll-s10.o clk-periph-s10.o clk-gate-s10.o
-> +endif
-> diff --git a/drivers/clk/socfpga/clk-gate-s10.c b/drivers/clk/socfpga/clk-gate-s10.c
-> new file mode 100644
-> index 0000000..5b09aef
-> --- /dev/null
-> +++ b/drivers/clk/socfpga/clk-gate-s10.c
-> @@ -0,0 +1,124 @@
-> +// SPDX-License-Identifier:    GPL-2.0
-> +/*
-> + * Copyright (C) 2017, Intel Corporation
-> + */
-> +#include <linux/clk-provider.h>
-> +#include <linux/slab.h>
-> +#include "clk.h"
+> 
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Tejas Patel <tejasp@xilinx.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  drivers/clk/clk.c            | 28 ++++++++++++++++++++++++++++
+>  include/linux/clk-provider.h |  1 +
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 0f686a9..947a18b 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -274,6 +274,34 @@ struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw)
+>  }
+>  EXPORT_SYMBOL_GPL(clk_hw_get_parent);
+>  
+> +static unsigned int sibling;
+
+Looks very thread unsafe!
+
 > +
-> +#define SOCFPGA_CS_PDBG_CLK    "cs_pdbg_clk"
-
-Drop the define? It's used once.
-
-> +#define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
-> +
-> +static unsigned long socfpga_gate_clk_recalc_rate(struct clk_hw *hwclk,
-> +                                                 unsigned long parent_rate)
+> +static void clk_show_subtree(struct clk_core *c,
+> +                            int level)
 > +{
-> +       struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-> +       u32 div = 1, val;
+> +       struct clk_core *child;
 > +
-> +       if (socfpgaclk->fixed_div) {
-> +               div = socfpgaclk->fixed_div;
-> +       } else if (socfpgaclk->div_reg) {
-> +               val = readl(socfpgaclk->div_reg) >> socfpgaclk->shift;
-> +               val &= GENMASK(socfpgaclk->width - 1, 0);
-> +               div = (1 << val);
-> +       }
-> +       return parent_rate / div;
-> +}
-> +
-> +static unsigned long socfpga_dbg_clk_recalc_rate(struct clk_hw *hwclk,
-> +                                                 unsigned long parent_rate)
-> +{
-> +       struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-> +       u32 div = 1, val;
-> +
-> +       val = readl(socfpgaclk->div_reg) >> socfpgaclk->shift;
-> +       val &= GENMASK(socfpgaclk->width - 1, 0);
-> +       div = (1 << val);
-> +       div = div ? 4 : 1;
-> +
-> +       return parent_rate / div;
-> +}
-> +
-> +static u8 socfpga_gate_get_parent(struct clk_hw *hwclk)
-> +{
-> +       struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-> +       u32 mask;
-> +       u8 parent = 0;
-> +
-> +       if (socfpgaclk->bypass_reg) {
-> +               mask = (0x1 << socfpgaclk->bypass_shift);
-> +               parent = ((readl(socfpgaclk->bypass_reg) & mask) >>
-> +                         socfpgaclk->bypass_shift);
-> +       }
-> +       return parent;
-> +}
-> +
-> +static struct clk_ops gateclk_ops = {
-
-const?
-
-> +       .recalc_rate = socfpga_gate_clk_recalc_rate,
-> +       .get_parent = socfpga_gate_get_parent,
-> +};
-> +
-> +static struct clk_ops dbgclk_ops = {
-
-const?
-
-> +       .recalc_rate = socfpga_dbg_clk_recalc_rate,
-> +       .get_parent = socfpga_gate_get_parent,
-> +};
-> +
-> +struct clk *s10_register_gate(char *name, const char *parent_name,
-> +                             const char * const *parent_names,
-> +                             u8 num_parents, unsigned long flags,
-> +                             void __iomem *regbase, unsigned long gate_reg,
-> +                             unsigned long gate_idx, unsigned long div_reg,
-> +                             unsigned long div_offset, u8 div_width,
-> +                             unsigned long bypass_reg, u8 bypass_shift,
-> +                             u8 fixed_div)
-> +{
-> +       struct clk *clk;
-> +       struct socfpga_gate_clk *socfpga_clk;
-> +       struct clk_init_data init;
-> +
-> +       socfpga_clk = kzalloc(sizeof(*socfpga_clk), GFP_KERNEL);
-> +       if (WARN_ON(!socfpga_clk))
-
-Allocation failures already print a nice stack so maybe just return NULL
-if nothing allocates.
-
-> +               return NULL;
-> +
-> +       socfpga_clk->hw.reg = regbase + gate_reg;
-> +       socfpga_clk->hw.bit_idx = gate_idx;
-> +
-> +       gateclk_ops.enable = clk_gate_ops.enable;
-> +       gateclk_ops.disable = clk_gate_ops.disable;
-> +
-> +       socfpga_clk->fixed_div = fixed_div;
-> +
-> +       if (div_reg)
-> +               socfpga_clk->div_reg = regbase + div_reg;
-> +       else
-> +               socfpga_clk->div_reg = NULL;
-> +
-> +       socfpga_clk->width = div_width;
-> +       socfpga_clk->shift = div_offset;
-> +
-> +       if (bypass_reg)
-> +               socfpga_clk->bypass_reg = regbase + bypass_reg;
-> +       else
-> +               socfpga_clk->bypass_reg = NULL;
-> +       socfpga_clk->bypass_shift = bypass_shift;
-> +
-> +       if (streq(name, SOCFPGA_CS_PDBG_CLK))
-> +               init.ops = &dbgclk_ops;
-> +       else
-> +               init.ops = &gateclk_ops;
-> +
-> +       init.name = name;
-> +       init.flags = flags;
-> +
-> +       init.num_parents = num_parents;
-> +       init.parent_names = parent_names ? parent_names : &parent_name;
-> +       socfpga_clk->hw.hw.init = &init;
-> +
-> +       clk = clk_register(NULL, &socfpga_clk->hw.hw);
-> +       if (WARN_ON(IS_ERR(clk))) {
-> +               kfree(socfpga_clk);
-> +               return NULL;
-> +       }
-> +
-> +       return clk;
-> +}
-> diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
-> new file mode 100644
-> index 0000000..31572cb
-> --- /dev/null
-> +++ b/drivers/clk/socfpga/clk-s10.c
-> @@ -0,0 +1,319 @@
-[...]
-> +
-> +static int s10_clk_register_pll(const struct stratix10_pll_clock *clks,
-> +                                int nums, struct stratix10_clock_data *data)
-> +{
-> +       struct clk *clk;
-> +       void __iomem *base = data->base;
-> +       int i;
-> +
-> +       for (i = 0; i < nums; i++) {
-> +               clk = s10_register_pll(clks[i].name, clks[i].parent_names,
-> +                                   clks[i].num_parents,
-> +                                   clks[i].flags, base,
-> +                                   clks[i].offset);
-> +               if (IS_ERR(clk)) {
-> +                       pr_err("%s: failed to register clock %s\n",
-> +                              __func__, clks[i].name);
-> +                       continue;
-> +               }
-> +               data->clk_data.clks[clks[i].id] = clk;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +struct stratix10_clock_data *__socfpga_s10_clk_init(struct device_node *np,
-
-static?
-
-> +                                                   int nr_clks)
-> +{
-> +       struct stratix10_clock_data *clk_data;
-> +       struct clk **clk_table;
-> +       void __iomem *base;
-> +
-> +       base = of_iomap(np, 0);
-> +       if (!base) {
-> +               pr_err("%s: failed to map clock registers\n", __func__);
-> +               goto err;
-> +       }
-> +
-> +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-> +       if (!clk_data)
-> +               goto err;
-> +
-> +       clk_data->base = base;
-> +       clk_table = kcalloc(nr_clks, sizeof(*clk_table), GFP_KERNEL);
-> +       if (!clk_table)
-> +               goto err_data;
-> +
-> +       clk_data->clk_data.clks = clk_table;
-> +       clk_data->clk_data.clk_num = nr_clks;
-> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data->clk_data);
-> +       return clk_data;
-> +
-> +err_data:
-> +       kfree(clk_data);
-> +err:
-> +       return NULL;
-> +}
-> +
-> +
-> +void __init socfpga_s10_init(struct device_node *node)
-
-static?
-
-> +{
-> +       struct stratix10_clock_data *clk_data;
-> +
-> +       clk_data = __socfpga_s10_clk_init(node, STRATIX10_NUM_CLKS);
-> +       if (!clk_data)
+> +       if (!c)
 > +               return;
 > +
-> +       s10_clk_register_pll(s10_pll_clks, ARRAY_SIZE(s10_pll_clks), clk_data);
+> +       if (level == 1)
+> +               sibling++;
 > +
-> +       s10_clk_register_c_perip(s10_main_perip_c_clks,
-> +                                ARRAY_SIZE(s10_main_perip_c_clks), clk_data);
-> +
-> +       s10_clk_register_cnt_perip(s10_main_perip_cnt_clks,
-> +                                  ARRAY_SIZE(s10_main_perip_cnt_clks),
-> +                                  clk_data);
-> +
-> +       s10_clk_register_gate(s10_gate_clks, ARRAY_SIZE(s10_gate_clks),
-> +                             clk_data);
+> +       hlist_for_each_entry(child, &c->children, child_node)
+> +               clk_show_subtree(child, level + 1);
 > +}
 > +
-> +CLK_OF_DECLARE(stratix10_clock, "intel,stratix10-clkmgr", socfpga_s10_init);
-
-Can it be a platform device? We prefer those over the CLK_OF_DECLARE
-style.
-
-> diff --git a/drivers/clk/socfpga/stratix10-clk.h b/drivers/clk/socfpga/stratix10-clk.h
-> new file mode 100644
-> index 0000000..10f1532
-> --- /dev/null
-> +++ b/drivers/clk/socfpga/stratix10-clk.h
-> @@ -0,0 +1,86 @@
-> +/* SPDX-License-Identifier:    GPL-2.0 */
-> +/*
-> + * Copyright (C) 2017, Intel Corporation
-> + */
+> +unsigned int clk_get_children(char *name)
+> +{
+> +       struct clk_core *core;
+> +       struct clk *pclk = __clk_lookup(name);
 > +
-> +#ifndef        __STRATIX10_CLK_H
-> +#define        __STRATIX10_CLK_H
+> +       sibling = 0;
+> +       core = pclk->core;
+> +       clk_show_subtree(core, 0);
+> +       return sibling;
+> +}
 > +
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/spinlock.h>
+>  static struct clk_core *__clk_lookup_subtree(const char *name,
+>                                              struct clk_core *core)
+>  {
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index f711be6..e94dfb2 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -745,6 +745,7 @@ unsigned int __clk_get_enable_count(struct clk *clk);
+>  unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+>  unsigned long __clk_get_flags(struct clk *clk);
+>  unsigned long clk_hw_get_flags(const struct clk_hw *hw);
+> +unsigned int clk_get_children(char *name);
 
-Why include this? And why clk-provider.h?
-
-> +
-> +struct platform_device;
-
-Why?
-
-> +
-> +struct stratix10_clock_data {
-> +       struct clk_onecell_data clk_data;
-> +       void __iomem            *base;
-> +};
+And uses a string lookup instead of having the clk_hw pointer in hand.
+No thanks.
