@@ -1,65 +1,69 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] ASoC: samsung: Mark unused Odroid compatibles as deprecated
-Date: Mon, 19 Mar 2018 11:56:00 +0100
-Message-ID: <CAJKOXPcBesWpBoq07XbE1j3F1_N5dAWMTRkv8SN=tSMEm1q0iQ@mail.gmail.com>
-References: <CGME20180319102927epcas1p12d4a070d0a7125db9424990b997c01c8@epcas1p1.samsung.com>
- <20180318153512.8343-1-krzk@kernel.org> <9bb639c3-f4e9-3a1e-61e8-a34fcfd0a344@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v17 08/10] ACPI / scan: do not enumerate Indirect IO host children
+Date: Mon, 19 Mar 2018 11:57:15 +0100
+Message-ID: <CAJZ5v0gm5AokZy4JvuJzDgdNoc88FjrMmXR2RK5pdRkXgtYrXQ@mail.gmail.com>
+References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+ <1521051359-34473-9-git-send-email-john.garry@huawei.com> <2309217.pWfZsU88YQ@aspire.rjw.lan>
+ <906b3868-39a5-3807-23a4-dfc52c2e82c4@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9bb639c3-f4e9-3a1e-61e8-a34fcfd0a344@samsung.com>
+In-Reply-To: <906b3868-39a5-3807-23a4-dfc52c2e82c4@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 11:29 AM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 03/18/2018 04:35 PM, Krzysztof Kozlowski wrote:
->> Compatible for XU4 audio is not being used.  Instead the board uses the
->> same compatible as XU3.  The devices are now just compatible so they
->> should use the same value.  Mark "hardkernel,odroid-xu4-audio" as being
->> deprecated so in this future could be removed to limit useless
->> properties.
+On Mon, Mar 19, 2018 at 11:48 AM, John Garry <john.garry@huawei.com> wrote:
+> On 19/03/2018 10:30, Rafael J. Wysocki wrote:
+>>
+>> On Wednesday, March 14, 2018 7:15:57 PM CET John Garry wrote:
+>>>
+>>> > Through the logical PIO framework systems which otherwise have
+>>> > no IO space access to legacy ISA/LPC devices may access these
+>>> > devices through so-called "indirect IO" method. In this, IO
+>>> > space accesses for non-PCI hosts are redirected to a host
+>>> > LLDD to manually generate the IO space (bus) accesses. Hosts
+>>> > are able to register a region in logical PIO space to map to
+>>> > its bus address range.
+>>> >
+>>> > Indirect IO child devices have an associated host-specific bus
+>>> > address. Special translation is required to map between
+>>> > a logical PIO address for a device and it's host bus address.
+>>> >
+>>> > Since in the ACPI tables the child device IO resources would
+>>> > be the host-specific values, it is required the ACPI scan code
+>>> > should not enumerate these devices, and that this should be
+>>> > the responsibility of the host driver so that it can "fixup"
+>>> > the resources so that they map to the appropriate logical PIO
+>>> > addresses.
+>>> >
+>>> > To avoid enumerating these child devices, we add a check from
+>>> > acpi_device_enumeration_by_parent() as to whether the parent
+>>> > for a device is a member of a known list of "indirect IO" hosts.
+>>> > For now, the HiSilicon LPC host controller ID is added.
+>>> >
+>>> > Signed-off-by: John Garry <john.garry@huawei.com>
+>>> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> You have my ACK here already.
+>>
+>> Since I've ACKed the [7/10] too, I don't think there's anything more I can
+>> do
+>> about this series and I'm assuming that it will be routed through other
+>> trees.
+>>
+>> Thanks!
+>>
 >
-> It doesn't feel right to obsolete the "hardkernel,odroid-xu4-audio"
-> compatible, there is significant difference between XU3 and XU4 - there
-> is no audio CODEC on XU4, this board only supports audio over HDMI interface.
-> XU4 could be compatible with XU3, but not the other way around.
-> It just happens we have other DT properties that help to handle such HW
-> design difference.
-
-The compatible does not describe physical differences. It does not
-mean that devices are the same. In this case they are just coming from
-the same family and they operate the same, from the bindings
-perspective.
-
-The XU4 binding is not being used. Adding a compatible which is not
-used in the moment of adding is a proof that this compatible is not
-needed. It is just a duplicate. There is no point of adding
-duplicates.
-
+> Hi Rafael,
 >
-> Moreover, only XU4 is still in production and should be in few more years [1],
-> others are obsoleted now.
-
-It is not a problem. Whether device is manufactured or not, does not
-reflect what bindings we are using. Deprecated XU4 compatible does not
-mean that XU4 itself is deprecated. Just this compatible should not be
-used for new DTS.
-
+> Thanks for this.
 >
-> So I think we should keep at least these 2 compatible strings:
->
-> - "hardkernel,odroid-xu3-audio" - for boards with audio CODEC,
-> - "hardkernel,odroid-xu4-audio" - for boards without audio CODEC,
->    supporting only HDMI interface.
+> Yes, I am working on getting this whole series routed through another tree.
+> Actually I think 7+8 could go separately since there is no build dependency,
+> but I will try to keep the series together.
 
-Yeah, and then we inflate this list into X, X2, U3, HC1 and all others
-which are the same. And then we should add XU3-lite (it is different
-device). This goes to some nonsense. Compatible is not for each device
-but for family even though there are differences between specific
-devices.
+I can take the [7-8/10] if you want me to, so please let me know.
 
-Best regards,
-Krzysztof
+Thanks!
