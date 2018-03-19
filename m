@@ -1,52 +1,28 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: phy-mtk-tphy: add properties for U2
- slew rate calibrate
-Date: Mon, 19 Mar 2018 11:21:40 +0800
-Message-ID: <1521429700.3717.31.camel@mhfsdcap03>
-References: <c9679bc6e969ebf0f97a01c6d1aff3bbc0e8e4f7.1520832210.git.chunfeng.yun@mediatek.com>
-         <94a7d3b1240297cd0cac82df52954d0a53d50d36.1520832210.git.chunfeng.yun@mediatek.com>
-         <20180318124838.ruakamqywz4jd6jz@rob-hp-laptop>
+From: JeffyChen <jeffy.chen@rock-chips.com>
+Subject: Re: [PATCH v5 3/4] clk: lpc32xx: Set name of regmap_config
+Date: Mon, 19 Mar 2018 11:59:36 +0800
+Message-ID: <5AAF35A8.3040107@rock-chips.com>
+References: <20180312095142.30854-1-jeffy.chen@rock-chips.com> <20180312095142.30854-4-jeffy.chen@rock-chips.com> <23a9cbf8-9b1d-f7ec-b980-a16c9b2c4d84@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318124838.ruakamqywz4jd6jz@rob-hp-laptop>
+In-Reply-To: <23a9cbf8-9b1d-f7ec-b980-a16c9b2c4d84@mleia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>, linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com
+Cc: Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, lee.jones@linaro.org, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-03-18 at 07:48 -0500, Rob Herring wrote:
-> On Mon, Mar 12, 2018 at 01:25:40PM +0800, Chunfeng Yun wrote:
-> > Add two properties of ref_clk and coefficient used by U2 slew rate
-> > calibrate which may vary on different SoCs
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index 41e09ed..0d34b2b 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -27,6 +27,10 @@ Optional properties (controller (parent) node):
-> >   - reg		: offset and length of register shared by multiple ports,
-> >  		  exclude port's private register. It is needed on mt2701
-> >  		  and mt8173, but not on mt2712.
-> > + - mediatek,src-ref-clk-mhz	: frequency of reference clock for slew rate
-> > +		  calibrate
-> > + - mediatek,src-coef	: coefficient for slew rate calibrate, depends on
-> > +		  SoC process
-> 
-> What are valid values? This is one cell?
-Yes, one cell, integer type. If need, I'll send a new patch
+Hi Vladimir,
 
-Thanks
-> 
-> >  
-> >  Required properties (port (child) node):
-> >  - reg		: address and length of the register set for the port.
-> > -- 
-> > 1.9.1
-> > 
+On 03/19/2018 05:57 AM, Vladimir Zapolskiy wrote:
+>> >  static struct regmap_config lpc32xx_scb_regmap_config = {
+>> >+	.name = "lpc32xx-scb",
+> please rename it to "scb", LPC32xx SoC name is already known from the context.
+>
+> When it's done, feel free to add to the next version my
+>
+> Acked-by: Vladimir Zapolskiy<vz@mleia.com>
+>
+
+ok, will do, thanks:)
