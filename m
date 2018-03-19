@@ -1,98 +1,118 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] clk: sunxi-ng: add missing hdmi-slow clock for H6 CCU
-Date: Mon, 19 Mar 2018 22:26:38 +0100
-Message-ID: <20180319212638.4zi2wk76kusemqkh@flea>
+Subject: Re: [PATCH 2/2] arm64: allwinner: h6: temporarily drop the usage of
+ CCU headers in DTSI
+Date: Mon, 19 Mar 2018 22:27:05 +0100
+Message-ID: <20180319212705.7u5yqz4mk644aomk@flea>
 References: <20180319081108.23496-1-icenowy@aosc.io>
+ <20180319081108.23496-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3ayikdluu3d7sqex"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180319081108.23496-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3241193313965378938=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180319081108.23496-2-icenowy@aosc.io>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---3ayikdluu3d7sqex
+--===============3241193313965378938==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ixzervdxjrzxhrrb"
+Content-Disposition: inline
+
+
+--ixzervdxjrzxhrrb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 19, 2018 at 04:11:07PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 CCU has a "HDMI Slow Clock", which is currently missing
-> in the ccu-sun50i-h6 driver.
+On Mon, Mar 19, 2018 at 04:11:08PM +0800, Icenowy Zheng wrote:
+> As the CCU driver will be merged in different tree with the device tree,
+> temporarily drop the usage of CCU headers in the DTSI file, and replace
+> macros with the corresponding numbers.
 >=20
-> Add this missing clock to the driver.
+> After they are both merged into Linus' tree, it can be switched back to
+> use the CCU headers.
 >=20
-> Fixes: 542353ea ("clk: sunxi-ng: add support for the Allwinner H6 CCU")
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > ---
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.c      | 4 ++++
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.h      | 2 +-
->  include/dt-bindings/clock/sun50i-h6-ccu.h | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
 >=20
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/=
-ccu-sun50i-h6.c
-> index d5eab49e6350..bdbfe78fe133 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> @@ -643,6 +643,8 @@ static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hd=
-mi_parents, 0xb00,
->  				 BIT(31),	/* gate */
->  				 0);
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
+ot/dts/allwinner/sun50i-h6.dtsi
+> index 4debc3962830..56563150d61a 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -4,8 +4,6 @@
+>   */
 > =20
-> +static SUNXI_CCU_GATE(hdmi_slow_clk, "hdmi-slow", "osc24M", 0xb04, BIT(3=
-1), 0);
-> +
->  static const char * const hdmi_cec_parents[] =3D { "osc32k", "pll-periph=
-0-2x" };
->  static const struct ccu_mux_fixed_prediv hdmi_cec_predivs[] =3D {
->  	{ .index =3D 1, .div =3D 36621 },
-> @@ -876,6 +878,7 @@ static struct ccu_common *sun50i_h6_ccu_clks[] =3D {
->  	&pcie_aux_clk.common,
->  	&bus_pcie_clk.common,
->  	&hdmi_clk.common,
-> +	&hdmi_slow_clk.common,
->  	&hdmi_cec_clk.common,
->  	&bus_hdmi_clk.common,
->  	&bus_tcon_top_clk.common,
-> @@ -1017,6 +1020,7 @@ static struct clk_hw_onecell_data sun50i_h6_hw_clks=
- =3D {
->  		[CLK_PCIE_AUX]		=3D &pcie_aux_clk.common.hw,
->  		[CLK_BUS_PCIE]		=3D &bus_pcie_clk.common.hw,
->  		[CLK_HDMI]		=3D &hdmi_clk.common.hw,
-> +		[CLK_HDMI_SLOW]		=3D &hdmi_slow_clk.common.hw,
->  		[CLK_HDMI_CEC]		=3D &hdmi_cec_clk.common.hw,
->  		[CLK_BUS_HDMI]		=3D &bus_hdmi_clk.common.hw,
->  		[CLK_BUS_TCON_TOP]	=3D &bus_tcon_top_clk.common.hw,
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.h b/drivers/clk/sunxi-ng/=
-ccu-sun50i-h6.h
-> index ad6da4aa733c..ef499a7d45f2 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.h
-> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.h
-> @@ -51,6 +51,6 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> -#include <dt-bindings/clock/sun50i-h6-ccu.h>
+> -#include <dt-bindings/reset/sun50i-h6-ccu.h>
 > =20
->  #define CLK_BUS_DRAM		60
+>  / {
+>  	interrupt-parent =3D <&gic>;
+> @@ -117,7 +115,7 @@
+>  				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks =3D <&ccu CLK_APB1>, <&osc24M>, <&osc32k>;
+> +			clocks =3D <&ccu 26>, <&osc24M>, <&osc32k>;
+>  			clock-names =3D "apb", "hosc", "losc";
+>  			gpio-controller;
+>  			#gpio-cells =3D <3>;
+> @@ -136,8 +134,8 @@
+>  			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg-shift =3D <2>;
+>  			reg-io-width =3D <4>;
+> -			clocks =3D <&ccu CLK_BUS_UART0>;
+> -			resets =3D <&ccu RST_BUS_UART0>;
+> +			clocks =3D <&ccu 70>;
+> +			resets =3D <&ccu 21>;
+>  			status =3D "disabled";
+>  		};
 > =20
-> -#define CLK_NUMBER		137
-> +#define CLK_NUMBER		(CLK_HDMI_SLOW + 1)
+> @@ -147,8 +145,8 @@
+>  			interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg-shift =3D <2>;
+>  			reg-io-width =3D <4>;
+> -			clocks =3D <&ccu CLK_BUS_UART1>;
+> -			resets =3D <&ccu RST_BUS_UART1>;
+> +			clocks =3D <&ccu 71>;
+> +			resets =3D <&ccu 22>;
+>  			status =3D "disabled";
+>  		};
 > =20
->  #endif /* _CCU_SUN50I_H6_H_ */
-> diff --git a/include/dt-bindings/clock/sun50i-h6-ccu.h b/include/dt-bindi=
-ngs/clock/sun50i-h6-ccu.h
-> index 6045735a2821..205d09d3dc72 100644
-> --- a/include/dt-bindings/clock/sun50i-h6-ccu.h
-> +++ b/include/dt-bindings/clock/sun50i-h6-ccu.h
-> @@ -107,6 +107,7 @@
->  #define CLK_PCIE_AUX		121
->  #define CLK_BUS_PCIE		122
->  #define CLK_HDMI		123
-> +#define CLK_HDMI_SLOW		137
+> @@ -158,8 +156,8 @@
+>  			interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg-shift =3D <2>;
+>  			reg-io-width =3D <4>;
+> -			clocks =3D <&ccu CLK_BUS_UART2>;
+> -			resets =3D <&ccu RST_BUS_UART2>;
+> +			clocks =3D <&ccu 72>;
+> +			resets =3D <&ccu 23>;
+>  			status =3D "disabled";
+>  		};
+> =20
+> @@ -169,8 +167,8 @@
+>  			interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg-shift =3D <2>;
+>  			reg-io-width =3D <4>;
+> -			clocks =3D <&ccu CLK_BUS_UART3>;
+> -			resets =3D <&ccu RST_BUS_UART3>;
+> +			clocks =3D <&ccu 73>;
+> +			resets =3D <&ccu 24>;
 
-It's not been in a release yet, so we can just change the other IDs.
+Thanks, I squashed a similar patch earlier.
 
 Maxime
 
@@ -101,24 +121,38 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---3ayikdluu3d7sqex
+--ixzervdxjrzxhrrb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqwKw0ACgkQ0rTAlCFN
-r3QaVA/+K3Hv4xvTsYu8Hva+kKJMTT2KTCzQMQVbijy2JAR3ZUabtkpXWNQmjrxb
-TAeh9oYxp4wFyeLDvrhzx1jw4EtiRvCLr/HiyEe2Sv6XYbn8QBBFOSMWlnD46LFF
-gzHgWkD87xcJv9XGHYjkYnrtBerS5+Miy+3PE03ZWr93KsnqH1MF5sjk3YmcS/WH
-auHTtEHNcYFtFORqsTqWD5VpOSFnDNvh/jzgKyxBY2uvSs7pOW7O2ZfRGfoHCQHN
-WW65S59f+IFxdTv5irEA/wZJOv7wNNEyWXqqsGzvUj93LeaxMygyN3n47K3pmZ86
-Dbo9oReM5CSzUPgOzWAe2RnA3H27kncZC6Q7yk0/FW83xK6frbw+JRs9Ww0Umm4m
-owIS8S4lTkDRmHsu8dKbQYgkSmchwn0lF+pbQnsDlbG8YpWWxLB/eDGtGWtCRGP0
-k+kpRT1peXpYZNcLv7ieYi3ciB6BxIN3NuH4UVZQXumgV7ncWF1y17xOhVaQFTTQ
-w/0UjyJDpzTNqoTtefAajH5QRVLsjJ7KnzY8YHlasxUHibC/G110rwt1LbAT/SMM
-XjAV9yovwGd/s4II41fMdqJV4HNwcNnhH8oEuAAo3FXrFx/tukSVq6BFonjmKc7V
-VSk7PTt+DAIDyvbUhMcc6cYy23ZkB9kcG/44tfM2jyZYsAxqHqU=
-=i7nW
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqwKygACgkQ0rTAlCFN
+r3TPPQ//RSwwnM/8GD7a/ZyxYWTs39sHi0mhis9WFxbsiF4BDR55pX0Xis8GTlz8
+fUk9giwlt3bUbIRUAVzEIjR408xhnlMMO8dr0MZ+4wix8Ua8oHrSIOszzcFOQlYD
+CcyT0mBmCN19dbzF+ZDqGz6Mj7Ds7uURCru8hVFk+VzuhkoShQJdfxkYQqSSStOr
+Igr28omXfPva4ahhh3RBHXhc7hP5yu0vfVpFkfRiceujUQb7aTyRoJEp/fdyMfDU
+vs3aioWeq05QoMKvSps7Wq+1V7rRryEBWIeO+aaa6NAn4LOrDsJ787Nu+CcChUAm
+djxQ6KlM68ENOD2mHbqbg+PQZDDMXpvUkKSNsRraCCyxnRLt5iKoS5MAIuvUF0wf
+tD2wRaepfQJx0qf7kTt+QE7EilNQWjDvonUZTSToQvKZzMes/ZhyuKyFflGuzNEa
+zXyYmEXxAoV/AAs2amemLEdAeDs5BZlPxcB17VXBOSIazsaEmjNpeDjeElHMGu/J
+GrYDuO1kQhMSg7gtDtPfoslKFfl/GBorCPdcJCrLJNAqMYtTvIih64yli5qJEBfN
+psIvcMSQC2LckBGPz2AKzVORPy4M4WIcrNjH8+plhZtC0u7VnL61QvQjnql68EIn
+ABgJM7rz23OzcYKrVrZgE3lmhOO8HarS9ifIk3lSHZgp1dXsDbc=
+=Gbo1
 -----END PGP SIGNATURE-----
 
---3ayikdluu3d7sqex--
+--ixzervdxjrzxhrrb--
+
+
+--===============3241193313965378938==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3241193313965378938==--
