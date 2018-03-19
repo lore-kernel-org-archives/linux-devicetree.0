@@ -1,92 +1,59 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Mon, 19 Mar 2018 09:15:50 +0200
-Message-ID: <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
- <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
- <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+From: afzal mohammed <afzal.mohd.ma@gmail.com>
+Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I
+ laptop
+Date: Mon, 19 Mar 2018 12:47:23 +0530
+Message-ID: <20180319071723.GA854@afzalpc>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-6-harald@ccbib.org>
+ <20180318202251.5gpv6sblfr4edxmj@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180318202251.5gpv6sblfr4edxmj@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Harald Geyer <harald@ccbib.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMTkvMDMvMTggMDI6MDYsIFJvYiBIZXJyaW5nIHdyb3RlOgo+IE9uIFdlZCwg
-TWFyIDE0LCAyMDE4IGF0IDY6MjMgQU0sIFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0
-aS5jb20+IHdyb3RlOgo+PiBPbiAwOS8wMy8xOCAyMDoyNywgQmVub2l0IFBhcnJvdCB3cm90ZToK
-Pj4KPj4+PiBJcyBsb2dpY2FsIHBsYW5lIGEgaC93IGNvbmNlcHQ/Cj4+Pgo+Pj4gSXQgZG9lcyBy
-ZXByZXNlbnQgYSBoYXJkd2FyZSByZXNvdXJjZS4KPj4KPj4gTG9naWNhbCBwbGFuZSBpcyBub3Qg
-YSBodyBjb25jZXB0LCBpdCBqdXN0IGRlc2NyaWJlcyBhIGdyb3VwIG9mIG9uZSBvcgo+PiB0d28g
-SFcgcGxhbmVzLiBUaGVuIGFnYWluLCBpbiB0aGUgY29udGV4dCBvZiAyaysgZGlzcGxheXMsIHR3
-byBIVyBwbGFuZXMKPj4gbXVzdCBhbHdheXMgYmUgdXNlZCB0b2dldGhlciwgc28gdGhhdCB3YXkg
-aXQgY291bGQgYmUgY29uc2lkZXJlZCBhCj4+IHNpbmdsZSBIVyByZXNvdXJjZS4KPj4KPj4+PiBS
-ZWFsbHksIEknbSBza2VwdGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxvbmdzIGluIERULiBGb3Ig
-ZXhhbXBsZSwKPj4+PiBjYW4ndCB5b3UgZmlndXJlIG91dCB5b3UgbmVlZCAyIHBoeXNpY2FsIHBs
-YW5lcyB3aGVuZXZlciB5b3VyCj4+Pj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhh
-biAyMDQ4Pwo+Pj4KPj4+IEFzIHN0YXRlZCBpbiB0aGUgZGVzY3JpcHRpb24gSSBhZGRlZCBhYm92
-ZSwgd2UgY2Fubm90IGhhdmUgcmVzb3VyY2VzCj4+PiBleHBvc2VkIHRvIHVzZXItc3BhY2Ugd2hp
-Y2ggY2FuICJkaXNhcHBlYXIiIGR5bmFtaWNhbGx5Lgo+Pj4gRG9pbmcgc28gd291bGQgYnJlYWsg
-dXNlci1zcGFjZSBhcHBsaWNhdGlvbnMgd2hpY2ggcmVseSBvbiB0aGVzZQo+Pj4gcmVzb3VyY2Vz
-Lgo+IAo+IElzbid0IHRoaXMgdGhlIHBvaW50IG9mIGF0b21pYyBtb2RlIHNldHRpbmc/IElmIHlv
-dSBoYXZlIDIgcGxhbmVzCj4gZnJlZSwgdGhlbiB5b3UgY2FuIHN1cHBvcnQgdGhlIG1vZGUsIG90
-aGVyd2lzZSB5b3UgZmFpbC4gSG93IHdvdWxkIGEKPiBwbGFuZSBiZSBpbiB1c2UgaWYgeW91IGFy
-ZSBkb2luZyBtb2Rlc2V0dGluZyB1bmxlc3MgaXQgaXMgb24gYW5vdGhlcgo+IGRpc3BsYXk/Cj4g
-Cj4+IFRoZSBxdWVzdGlvbiBpcywgaWYgbm90IGluIERULCB0aGVuIHdoZXJlPyBJIGFncmVlIHRo
-YXQgdGhpcyBpcyBub3QKPj4gZXhhY3RseSBkZXNjcmliaW5nIHRoZSBIVy4gQnV0IGl0IGNhbid0
-IGJlIGRvbmUgZHluYW1pY2FsbHkgZWl0aGVyIChvcgo+PiBhdCBsZWFzdCB3ZSBoYXZlIG5vdCBm
-aWd1cmVkIG91dCBhIHdheSkuIEFuZCBpdCBtdXN0IGJlIHVzZXIgY29uZmlndXJhYmxlLgo+IAo+
-IElmIHlvdSBhcmUgcGx1Z2dpbmcgaW4gYSBtb25pdG9yLCBkb2Vzbid0IGl0IGhhdmUgdG8gYmUg
-ZHluYW1pYz8KPiAKPj4gTW9kdWxlIHBhcmFtZXRlcnMgYXJlIGFuIG9wdGlvbiwgYnV0IGl0IHdv
-dWxkIGJlIHNvbWV3aGF0IGRpZmZpY3VsdCB0bwo+PiBnaXZlIGFsbCB0aGlzIGluZm9ybWF0aW9u
-IHRoZXJlLiBBbmQgYWxzbywgaWYgeW91ciBib2FyZCBoYXMgYSAyaysKPj4gZGlzcGxheSwgeW91
-IG11c3QgaGF2ZSB0aGVzZSBjb25maWd1cmF0aW9ucyBnaXZlbiB0byB0aGUgZHJpdmVyLCBpdCdz
-Cj4+IG5vdCBvcHRpb25hbC4KPiAKPiBDYW4ndCB5b3UgbG9vayBhdCB0aGUgcGFuZWwgc2l6ZSBv
-biBib290IG9yIG1vZHVsZSBsb2FkIGFuZCBkZXRlcm1pbmUKPiBpZiB5b3UgbmVlZCB0byBjb21i
-aW5lIHBsYW5lcyBvciBub3QuIFRoZSBtYWluIGRpZmZlcmVuY2UgSSBzZWUgaXMKPiB0aGF0IHRo
-ZSBkcml2ZXIgd291bGQgaGF2ZSB0byBmaWd1cmUgb3V0IHdoaWNoIHBsYW5lcyB0byB1c2UgcmF0
-aGVyCj4gdGhhbiBEVCB0ZWxsaW5nIGl0IHdoYXQgcGxhbmVzIHRvIHVzZS4gSXMgZGVjaWRpbmcg
-d2hpY2ggcGxhbmVzIGEgaGFyZAo+IHByb2JsZW0/CgpPaywgSSB0aGluayB0aGUgZGVzY3JpcHRp
-b24gd2FzIGEgYml0IHVuY2xlYXIuIFNvLCB0aGUgZHJpdmVyIGNhbiBkbwp0aGlzIGp1c3QgZmlu
-ZSwgaXQgY2FuIHJlc2VydmUgaHcgcGxhbmVzIGR5bmFtaWNhbGx5IHdoZW4gbmVlZGVkLiBUaGUK
-cHJvYmxlbSBpcyB0aGUgdXNlcnNwYWNlLgoKV2hlbiBhIERSTSBhcHBsaWNhdGlvbiBzdGFydHMs
-IGl0IHNlZXMgYSBidW5jaCBvZiBwbGFuZXMsIGFuZCBjYW4gc2VlIG9uCndoaWNoIGNydGNzIGVh
-Y2ggcGxhbmUgY2FuIGJlIHVzZWQuIFRoZSBleHBlY3RhdGlvbiBpcywgb2YgY291cnNlLCB0aGF0
-CnRoZXNlIHBsYW5lcyBjYW4gYmUgdXNlZCBub3JtYWxseS4gSWYgdGhlIGRyaXZlciB3b3VsZCBk
-eW5hbWljYWxseQpyZXNlcnZlIGFuIGFkZGl0aW9uYWwsIGN1cnJlbnRseSB1bnVzZWQgcGxhbmUs
-IHRoZSB1c2Vyc3BhY2Ugd291bGQgYmUKdG90YWxseSBiYWZmbGVkLCBhcyBpdCBmYWlscyB0byBj
-b25maWd1cmUgYmFzaWMgcGxhbmUgc2V0dXBzLgoKRm9yIGV4YW1wbGUsIHRoZSB1c2Vyc3BhY2Ug
-Y291bGQgc2VlIHRoYXQgdGhlcmUgYXJlIHR3byBwbGFuZXMsIHVzYWJsZQpvbiBMQ0QgYW5kIEhE
-TUkgY3J0Y3MuIEJ1dCBteXN0ZXJpb3VzbHkgbW9kZXNldHRpbmcgd291bGQgc29tZXRpbWVzIGZh
-aWwKaWYgdGhlIEhETUkgaXMgMmsrIGRpc3BsYXkuIFNldHRpbmcgdXAgYSBwbGFuZSBvbiB0aGUg
-SERNSSB3b3VsZCB3b3JrLApleGNlcHQgd2hlbiB0aGUgTENEIGFscmVhZHkgaGFzIGEgcGxhbmUu
-IFNldHRpbmcgdXAgdHdvIHBsYW5lcyBvbiB0aGUKTENEIHdvdWxkIHdvcmssIGJ1dCBtb3Zpbmcg
-b25lIG9yIGJvdGggcGxhbmVzIHRvIHRoZSBIRE1JIHdvdWxkIGZhaWwuIEV0Yy4KCldlIGNvdWxk
-LCBvZiBjb3Vyc2UsIGNvbnZleSB0aGlzIGluZm9ybWF0aW9uIHRvIHRoZSB1c2Vyc3BhY2UgYXQg
-cnVudGltZQp2aWEgdGhlIERSTSBwcm9wZXJ0aWVzLCBidXQgdGhlbiBpdCB3b3VsZCBtZWFuIHdl
-J2QgbmVlZCBjdXN0b21pemVkCmFwcGxpY2F0aW9ucy4KClNvLCBhcyBmYXIgYXMgSSBjYW4gc2Vl
-LCBrZWVwaW5nIG5vcm1hbCBEUk0gYmVoYXZpb3Igd2l0aCAyaysgZGlzcGxheXMKb24gT01BUCBE
-U1MgcmVxdWlyZXMgYSBzdGF0aWMgdmlydHVhbCBwbGFuZSBzZXR1cC4gVGhlIG1vc3Qgc2ltcGxl
-IHNldHVwCndvdWxkIGJlIHRvIGp1c3Qgc3BsaXQgdGhlIG51bWJlciBvZiBhdmFpbGFibGUgcGxh
-bmVzIGJ5IDIsIGJ1dCB0aGVuIGluCm1hbnkgdXNlIGNhc2VzIHRoYXQgd2FzdGVzIG9uZSBodyBw
-bGFuZS4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFu
-a2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQu
-IEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Maxime,
+
+On Sun, Mar 18, 2018 at 09:22:51PM +0100, Maxime Ripard wrote:
+> The first part is supposed to be the name of the boards. I did sed
+> s/leds/teres-i/, and applied, together with all the patches but the
+> PWM (so I had to drop the backlight node as well).
+> 
+> Please coordinate with Andre about who should send the PWM support.
+
+Assuming that these patches were applied to your sunxi/dt64-for-4.17
+branch, since PWM support patch is missing, there is a build error,
+
+arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts:129.1-5 Label or path pwm not found
+
+Diff at the end cures it.
+
+(there is another H6 pine 64 DT build error related to header file
+missing)
+
+afzal
+
+
+--->8---
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index b3c7ef6b6fe5..d9baab3dc96b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -126,12 +126,6 @@
+        status = "okay";
+ };
+ 
+-&pwm {
+-       pinctrl-names = "default";
+-       pinctrl-0 = <&pwm_pin>;
+-       status = "okay";
+-};
+-
+ &ohci1 {
+        status = "okay";
+ };
