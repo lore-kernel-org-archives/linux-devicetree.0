@@ -1,86 +1,70 @@
-From: Stefan =?ISO-8859-1?Q?Br=FCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] dts: sunxi: A64: Add PWM controllers
-Date: Mon, 19 Mar 2018 01:04:29 +0100
-Message-ID: <8200788.OcfDqQcPbJ@pebbles>
-References: <20180318232847.14278-1-andre.przywara@arm.com> <20180318232847.14278-5-andre.przywara@arm.com>
-Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Sun, 18 Mar 2018 19:06:25 -0500
+Message-ID: <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+ <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4368031.duILcS1gDj";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBGH5XPKQKGQEILWX7JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180318232847.14278-5-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
---nextPart4368031.duILcS1gDj
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-
-On Montag, 19. M=C3=A4rz 2018 00:28:47 CET Andre Przywara wrote:
-> The Allwinner A64 SoC features two PWM controllers, which are fully
-> compatible to the one used in the A13 and H3 chips.
-> Add the respective device nodes (one for the "normal" PWM, the other for
-> the one in the CPUS domain) and the pin their output is connected to.
-
-"Add the nodes for the devices (...) and the pins their outputs are connect=
-ed=20
-to."
-
-> On the A64 the "normal" PWM is muxed together with one of the MDIO pins
-> used to communicate with the Ethernet PHY, so it won't be usable on many
-> boards. But the Pinebook laptop uses this pin for controlling the LCD
-> backlight.
-> The CPUS PWM pin however is routed to the "RPi2" header, at the same
-> location as the PWM pin on the RaspberryPi.
-
-The last sentence is misssing a reference to the Pine64.
-=20
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 28
-> +++++++++++++++++++++++++++ 1 file changed, 28 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
-> d783d164b9c3..fda1783b1c86 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -321,6 +321,11 @@
-<...>
-
-Kind regards,
-
-Stefan
-
---=20
-Stefan Br=C3=BCns  /  Bergstra=C3=9Fe 21  /  52062 Aachen
-home: +49 241 53809034     mobile: +49 151 50412019
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---nextPart4368031.duILcS1gDj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSwWRWIpJbl0W4DemNvf0o9jP6qUwUCWq7+jQAKCRBvf0o9jP6q
-U0lmAJ4qDQfxMi9FnRnON1VRHm7nQW8WswCfQEubRlcRvzxUzzlLhuq5GsYwaVU=
-=jNEZ
------END PGP SIGNATURE-----
-
---nextPart4368031.duILcS1gDj--
+T24gV2VkLCBNYXIgMTQsIDIwMTggYXQgNjoyMyBBTSwgVG9taSBWYWxrZWluZW4gPHRvbWkudmFs
+a2VpbmVuQHRpLmNvbT4gd3JvdGU6Cj4gT24gMDkvMDMvMTggMjA6MjcsIEJlbm9pdCBQYXJyb3Qg
+d3JvdGU6Cj4KPj4+IElzIGxvZ2ljYWwgcGxhbmUgYSBoL3cgY29uY2VwdD8KPj4KPj4gSXQgZG9l
+cyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNvdXJjZS4KPgo+IExvZ2ljYWwgcGxhbmUgaXMgbm90
+IGEgaHcgY29uY2VwdCwgaXQganVzdCBkZXNjcmliZXMgYSBncm91cCBvZiBvbmUgb3IKPiB0d28g
+SFcgcGxhbmVzLiBUaGVuIGFnYWluLCBpbiB0aGUgY29udGV4dCBvZiAyaysgZGlzcGxheXMsIHR3
+byBIVyBwbGFuZXMKPiBtdXN0IGFsd2F5cyBiZSB1c2VkIHRvZ2V0aGVyLCBzbyB0aGF0IHdheSBp
+dCBjb3VsZCBiZSBjb25zaWRlcmVkIGEKPiBzaW5nbGUgSFcgcmVzb3VyY2UuCj4KPj4+IFJlYWxs
+eSwgSSdtIHNrZXB0aWNhbCB0aGF0IGFueSBvZiB0aGlzIGJlbG9uZ3MgaW4gRFQuIEZvciBleGFt
+cGxlLAo+Pj4gY2FuJ3QgeW91IGZpZ3VyZSBvdXQgeW91IG5lZWQgMiBwaHlzaWNhbCBwbGFuZXMg
+d2hlbmV2ZXIgeW91cgo+Pj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhhbiAyMDQ4
+Pwo+Pgo+PiBBcyBzdGF0ZWQgaW4gdGhlIGRlc2NyaXB0aW9uIEkgYWRkZWQgYWJvdmUsIHdlIGNh
+bm5vdCBoYXZlIHJlc291cmNlcwo+PiBleHBvc2VkIHRvIHVzZXItc3BhY2Ugd2hpY2ggY2FuICJk
+aXNhcHBlYXIiIGR5bmFtaWNhbGx5Lgo+PiBEb2luZyBzbyB3b3VsZCBicmVhayB1c2VyLXNwYWNl
+IGFwcGxpY2F0aW9ucyB3aGljaCByZWx5IG9uIHRoZXNlCj4+IHJlc291cmNlcy4KCklzbid0IHRo
+aXMgdGhlIHBvaW50IG9mIGF0b21pYyBtb2RlIHNldHRpbmc/IElmIHlvdSBoYXZlIDIgcGxhbmVz
+CmZyZWUsIHRoZW4geW91IGNhbiBzdXBwb3J0IHRoZSBtb2RlLCBvdGhlcndpc2UgeW91IGZhaWwu
+IEhvdyB3b3VsZCBhCnBsYW5lIGJlIGluIHVzZSBpZiB5b3UgYXJlIGRvaW5nIG1vZGVzZXR0aW5n
+IHVubGVzcyBpdCBpcyBvbiBhbm90aGVyCmRpc3BsYXk/Cgo+IFRoZSBxdWVzdGlvbiBpcywgaWYg
+bm90IGluIERULCB0aGVuIHdoZXJlPyBJIGFncmVlIHRoYXQgdGhpcyBpcyBub3QKPiBleGFjdGx5
+IGRlc2NyaWJpbmcgdGhlIEhXLiBCdXQgaXQgY2FuJ3QgYmUgZG9uZSBkeW5hbWljYWxseSBlaXRo
+ZXIgKG9yCj4gYXQgbGVhc3Qgd2UgaGF2ZSBub3QgZmlndXJlZCBvdXQgYSB3YXkpLiBBbmQgaXQg
+bXVzdCBiZSB1c2VyIGNvbmZpZ3VyYWJsZS4KCklmIHlvdSBhcmUgcGx1Z2dpbmcgaW4gYSBtb25p
+dG9yLCBkb2Vzbid0IGl0IGhhdmUgdG8gYmUgZHluYW1pYz8KCj4gTW9kdWxlIHBhcmFtZXRlcnMg
+YXJlIGFuIG9wdGlvbiwgYnV0IGl0IHdvdWxkIGJlIHNvbWV3aGF0IGRpZmZpY3VsdCB0bwo+IGdp
+dmUgYWxsIHRoaXMgaW5mb3JtYXRpb24gdGhlcmUuIEFuZCBhbHNvLCBpZiB5b3VyIGJvYXJkIGhh
+cyBhIDJrKwo+IGRpc3BsYXksIHlvdSBtdXN0IGhhdmUgdGhlc2UgY29uZmlndXJhdGlvbnMgZ2l2
+ZW4gdG8gdGhlIGRyaXZlciwgaXQncwo+IG5vdCBvcHRpb25hbC4KCkNhbid0IHlvdSBsb29rIGF0
+IHRoZSBwYW5lbCBzaXplIG9uIGJvb3Qgb3IgbW9kdWxlIGxvYWQgYW5kIGRldGVybWluZQppZiB5
+b3UgbmVlZCB0byBjb21iaW5lIHBsYW5lcyBvciBub3QuIFRoZSBtYWluIGRpZmZlcmVuY2UgSSBz
+ZWUgaXMKdGhhdCB0aGUgZHJpdmVyIHdvdWxkIGhhdmUgdG8gZmlndXJlIG91dCB3aGljaCBwbGFu
+ZXMgdG8gdXNlIHJhdGhlcgp0aGFuIERUIHRlbGxpbmcgaXQgd2hhdCBwbGFuZXMgdG8gdXNlLiBJ
+cyBkZWNpZGluZyB3aGljaCBwbGFuZXMgYSBoYXJkCnByb2JsZW0/Cgo+Cj4gQW5kIHdoaWxlIGl0
+J3MgcGVyaGFwcyBzdHJldGNoaW5nIHRoZSBkZWZpbml0aW9ucyBhIGJpdCwgSSBndWVzcyBvbmUK
+PiBjb3VsZCBhcmd1ZSB0aGF0IHRoaXMgZGVzY3JpYmVzIHRoZSBIVyBpbiBhIHdheTogaXQgZGVz
+Y3JpYmVzIGhvdyB0aGUgSFcKPiByZXNvdXJjZXMgbXVzdCBiZSB1c2VkIGlmIHlvdSBoYXZlIGEg
+ZGlzcGxheSBvZiAyaysgd2lkdGgsIGFuZCBpcyBub3QgYXMKPiBzdWNoIHJlbGF0ZWQgdG8gTGlu
+dXggb3IgRFJNLgo+Cj4gIFRvbWkKPgo+IC0tCj4gVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
+eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuCj4gWS10dW5udXMvQnVzaW5lc3Mg
+SUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
