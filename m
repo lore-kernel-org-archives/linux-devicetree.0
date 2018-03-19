@@ -1,86 +1,52 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v1 02/19] dt-bindings: cpufreq: mediatek: use - instead
- of _ in examples
-Date: Mon, 19 Mar 2018 10:51:01 +0800
-Message-ID: <1521427861.13211.8.camel@mtkswgap22>
-References: <cover.1519378871.git.sean.wang@mediatek.com>
-         <fd1fc4c6760ab8fcbf7518df1cecf3837ab18d2c.1519378871.git.sean.wang@mediatek.com>
-         <20180226041336.GJ26947@vireshk-i7>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7d-pinfunc: update sai select input value
+Date: Mon, 19 Mar 2018 11:14:41 +0800
+Message-ID: <1521429281-23394-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180226041336.GJ26947@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, shengjiu.wang@nxp.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Update SAI select input daisy chain value according to
+Reference Manual.
 
-Hi, Matthias
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm/boot/dts/imx7d-pinfunc.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I'm worried you missed the patch which already got both tags Reviewed-by
-from Rob and Acked-by: Viresh and thus I thought it
-should be ready for your tree.
-
-For the other patches in the same series, I will have v2 to refine them
-according to these suggestions and comments in v1 and let them easy to
-review.
-
-Really thanks for your effort!
-	
-	Sean
-
-
-On Mon, 2018-02-26 at 09:43 +0530, Viresh Kumar wrote:
-> On 23-02-18, 18:16, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > It should be good that no use "_" is in examples. Consequently,
-> > those nodes in certain files which have an inappropriate name containing
-> > "_" are all being replaced with "-".
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> > index d36f07e..38cfbb5 100644
-> > --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> > @@ -26,7 +26,7 @@ Optional properties:
-> >  
-> >  Example 1 (MT7623 SoC):
-> >  
-> > -	cpu_opp_table: opp_table {
-> > +	cpu_opp_table: opp-table {
-> >  		compatible = "operating-points-v2";
-> >  		opp-shared;
-> >  
-> > @@ -86,7 +86,7 @@ Example 1 (MT7623 SoC):
-> >  	};
-> >  
-> >  Example 2 (MT8173 SoC):
-> > -	cpu_opp_table_a: opp_table_a {
-> > +	cpu_opp_table_a: opp-table-a {
-> >  		compatible = "operating-points-v2";
-> >  		opp-shared;
-> >  
-> > @@ -131,7 +131,7 @@ Example 2 (MT8173 SoC):
-> >  		};
-> >  	};
-> >  
-> > -	cpu_opp_table_b: opp_table_b {
-> > +	cpu_opp_table_b: opp-table-b {
-> >  		compatible = "operating-points-v2";
-> >  		opp-shared;
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
+diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-pinfunc.h
+index f2493bc..aa9dbea 100644
+--- a/arch/arm/boot/dts/imx7d-pinfunc.h
++++ b/arch/arm/boot/dts/imx7d-pinfunc.h
+@@ -592,7 +592,7 @@
+ #define MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX                      0x0130 0x03A0 0x06FC 0x0 0x2
+ #define MX7D_PAD_UART2_RX_DATA__UART2_DTE_TX                      0x0130 0x03A0 0x0000 0x0 0x0
+ #define MX7D_PAD_UART2_RX_DATA__I2C2_SCL                          0x0130 0x03A0 0x05DC 0x1 0x0
+-#define MX7D_PAD_UART2_RX_DATA__SAI3_RX_BCLK                      0x0130 0x03A0 0x0000 0x2 0x0
++#define MX7D_PAD_UART2_RX_DATA__SAI3_RX_BCLK                      0x0130 0x03A0 0x06C4 0x2 0x0
+ #define MX7D_PAD_UART2_RX_DATA__ECSPI1_SS3                        0x0130 0x03A0 0x0000 0x3 0x0
+ #define MX7D_PAD_UART2_RX_DATA__ENET2_1588_EVENT1_IN              0x0130 0x03A0 0x0000 0x4 0x0
+ #define MX7D_PAD_UART2_RX_DATA__GPIO4_IO2                         0x0130 0x03A0 0x0000 0x5 0x0
+@@ -1112,13 +1112,13 @@
+ #define MX7D_PAD_ENET1_RGMII_TD3__GPIO7_IO9                       0x0250 0x04C0 0x0000 0x5 0x0
+ #define MX7D_PAD_ENET1_RGMII_TD3__CAAM_RNG_OSC_OBS                0x0250 0x04C0 0x0000 0x7 0x0
+ #define MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL           0x0254 0x04C4 0x0000 0x0 0x0
+-#define MX7D_PAD_ENET1_RGMII_TX_CTL__SAI1_RX_SYNC                 0x0254 0x04C4 0x0000 0x2 0x0
++#define MX7D_PAD_ENET1_RGMII_TX_CTL__SAI1_RX_SYNC                 0x0254 0x04C4 0x06A4 0x2 0x1
+ #define MX7D_PAD_ENET1_RGMII_TX_CTL__GPT2_COMPARE1                0x0254 0x04C4 0x0000 0x3 0x0
+ #define MX7D_PAD_ENET1_RGMII_TX_CTL__EPDC_PWR_CTRL2               0x0254 0x04C4 0x0000 0x4 0x0
+ #define MX7D_PAD_ENET1_RGMII_TX_CTL__GPIO7_IO10                   0x0254 0x04C4 0x0000 0x5 0x0
+ #define MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC                 0x0258 0x04C8 0x0000 0x0 0x0
+ #define MX7D_PAD_ENET1_RGMII_TXC__ENET1_TX_ER                     0x0258 0x04C8 0x0000 0x1 0x0
+-#define MX7D_PAD_ENET1_RGMII_TXC__SAI1_RX_BCLK                    0x0258 0x04C8 0x0000 0x2 0x0
++#define MX7D_PAD_ENET1_RGMII_TXC__SAI1_RX_BCLK                    0x0258 0x04C8 0x069C 0x2 0x1
+ #define MX7D_PAD_ENET1_RGMII_TXC__GPT2_COMPARE2                   0x0258 0x04C8 0x0000 0x3 0x0
+ #define MX7D_PAD_ENET1_RGMII_TXC__EPDC_PWR_CTRL3                  0x0258 0x04C8 0x0000 0x4 0x0
+ #define MX7D_PAD_ENET1_RGMII_TXC__GPIO7_IO11                      0x0258 0x04C8 0x0000 0x5 0x0
+-- 
+2.7.4
