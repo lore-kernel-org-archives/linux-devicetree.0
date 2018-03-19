@@ -1,69 +1,48 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v4 0/9] Initial Allwinner H6 support
-Date: Mon, 19 Mar 2018 09:28:23 +0800
-Message-ID: <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
-References: <20180316140215.28663-1-icenowy@aosc.io> <20180318201744.dw6hnm2vdybaunev@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: soc: update MT2712 power dt-bindings
+Date: Mon, 19 Mar 2018 02:32:56 +0100
+Message-ID: <a80922c9-3feb-c3f1-d1f1-1673a57d5795@gmail.com>
+References: <20180312070342.4335-1-weiyi.lu@mediatek.com>
+ <20180312070342.4335-3-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSVEXTKQKGQECOABCOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180318201744.dw6hnm2vdybaunev@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180312070342.4335-3-weiyi.lu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Weiyi Lu <weiyi.lu@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-=E4=BA=8E 2018=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=884:=
-17:44, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Fri, Mar 16, 2018 at 10:02:06PM +0800, Icenowy Zheng wrote:
->> This patchset adds initial support for the Allwinner H6 SoC.
->>=20
->> It's quite different from earlier Allwinner SoCs. For example, the
->> memory map is refactored, and the CCU is rearranged. It's also the
->first
->> Allwinner SoC with PCI Express interface (although the implementation
->> of the PCI Express controller is broken), and the second one with USB
->> 3.0 (the first one is A80).
->>=20
->> This patchset adds the most basical support for it, including the
->main pin
->> controller, the main CCU and the basical device tree.
->>=20
->> Icenowy Zheng (9):
->>   pinctrl: sunxi: refactor irq related register function to have desc
->>   pinctrl: sunxi: introduce IRQ bank conversion function
->>   pinctrl: sunxi: change irq_bank_base to irq_bank_map
->>   pinctrl: sunxi: add support for the Allwinner H6 main pin
->controller
->>   clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
->>   dt-bindings: add device tree binding for Allwinner H6 main CCU
->>   clk: sunxi-ng: add support for the Allwinner H6 CCU
->>   arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
->>   arm64: allwinner: h6: add support for Pine H64 board
->
->Applied the !pinctrl patches.
+On 03/12/2018 08:03 AM, Weiyi Lu wrote:
+> Add new power domains(MFG_SC1/MFG_SC2/MFG_SC3)
+> for MT2712 according to ECO design change.
+> 
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Oops, one clock (CLK_HDMI_SLOW) is missing in the CCU
-driver, as Jernej pointed out.
+Pushed to v4.16-next/soc
 
-Should I send a patch that fix it?
+Thanks!
 
->
->Thanks!
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> ---
+>  include/dt-bindings/power/mt2712-power.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/dt-bindings/power/mt2712-power.h b/include/dt-bindings/power/mt2712-power.h
+> index 92b46d772fae..2c147817efc2 100644
+> --- a/include/dt-bindings/power/mt2712-power.h
+> +++ b/include/dt-bindings/power/mt2712-power.h
+> @@ -22,5 +22,8 @@
+>  #define MT2712_POWER_DOMAIN_USB		5
+>  #define MT2712_POWER_DOMAIN_USB2	6
+>  #define MT2712_POWER_DOMAIN_MFG		7
+> +#define MT2712_POWER_DOMAIN_MFG_SC1	8
+> +#define MT2712_POWER_DOMAIN_MFG_SC2	9
+> +#define MT2712_POWER_DOMAIN_MFG_SC3	10
+>  
+>  #endif /* _DT_BINDINGS_POWER_MT2712_POWER_H */
+> 
