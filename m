@@ -1,64 +1,107 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 0/9] Initial Allwinner H6 support
-Date: Mon, 19 Mar 2018 14:44:56 +0100
-Message-ID: <20180319134456.shebby73ngqavsnl@flea>
-References: <20180316140215.28663-1-icenowy@aosc.io>
- <20180318201744.dw6hnm2vdybaunev@flea>
- <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Matt Porter <mporter@konsulko.com>
+Subject: [PATCH] arm: dts: hummingboard2: convert onboard audio to simple-audio-card
+Date: Mon, 19 Mar 2018 09:53:26 -0400
+Message-ID: <20180319135326.24357-1-mporter@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 09:28:23AM +0800, Icenowy Zheng wrote:
-> 
-> 
-> 于 2018年3月19日 GMT+08:00 上午4:17:44, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
-> >On Fri, Mar 16, 2018 at 10:02:06PM +0800, Icenowy Zheng wrote:
-> >> This patchset adds initial support for the Allwinner H6 SoC.
-> >> 
-> >> It's quite different from earlier Allwinner SoCs. For example, the
-> >> memory map is refactored, and the CCU is rearranged. It's also the
-> >first
-> >> Allwinner SoC with PCI Express interface (although the implementation
-> >> of the PCI Express controller is broken), and the second one with USB
-> >> 3.0 (the first one is A80).
-> >> 
-> >> This patchset adds the most basical support for it, including the
-> >main pin
-> >> controller, the main CCU and the basical device tree.
-> >> 
-> >> Icenowy Zheng (9):
-> >>   pinctrl: sunxi: refactor irq related register function to have desc
-> >>   pinctrl: sunxi: introduce IRQ bank conversion function
-> >>   pinctrl: sunxi: change irq_bank_base to irq_bank_map
-> >>   pinctrl: sunxi: add support for the Allwinner H6 main pin
-> >controller
-> >>   clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
-> >>   dt-bindings: add device tree binding for Allwinner H6 main CCU
-> >>   clk: sunxi-ng: add support for the Allwinner H6 CCU
-> >>   arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
-> >>   arm64: allwinner: h6: add support for Pine H64 board
-> >
-> >Applied the !pinctrl patches.
-> 
-> Oops, one clock (CLK_HDMI_SLOW) is missing in the CCU
-> driver, as Jernej pointed out.
-> 
-> Should I send a patch that fix it?
+The HB2 onboard audio currently makes use of the imx-audio-sgtl5000
+binding. This binding does not support auxiliary audio devices such
+as external amplifiers. The simple-audio-card binding does support
+this property which allows systems incorporating the HB2 to easily
+add an auxiliary device that's attached to the HB2 audio jack with
+an overlay. Convert HB2 to use simple-audio-card for the onboard
+audio to allow for this additional flexibility.
 
-Yes, please.
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+---
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 48 +++++++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 8 deletions(-)
 
-Thanks!
-Maxime
-
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+index dffbc92e0023..587251ab76ec 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+@@ -38,6 +38,7 @@
+  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
++#include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+ / {
+ 	chosen {
+@@ -145,22 +146,52 @@
+ 		vin-supply = <&v_5v0>;
+ 	};
+ 
+-	sound-sgtl5000 {
+-		audio-codec = <&sgtl5000>;
+-		audio-routing =
++	audio: sound-sgtl5000 {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "On-Board Codec";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&sound_codec>;
++		simple-audio-card,frame-master = <&sound_codec>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Headphone", "Headphone Jack";
++		simple-audio-card,routing =
+ 			"MIC_IN", "Mic Jack",
+ 			"Mic Jack", "Mic Bias",
+ 			"Headphone Jack", "HP_OUT";
+-		compatible = "fsl,imx-audio-sgtl5000";
+-		model = "On-board Codec";
+-		mux-ext-port = <5>;
+-		mux-int-port = <1>;
+-		ssi-controller = <&ssi1>;
++
++		sound_cpu: simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++		};
++
++		sound_codec: simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++		};
+ 	};
+ };
+ 
+ &audmux {
+ 	status = "okay";
++
++	ssi1 {
++		fsl,audmux-port = <0>;
++		fsl,port-config = <
++			(IMX_AUDMUX_V2_PTCR_SYN |
++			 IMX_AUDMUX_V2_PTCR_TFSEL(4) |
++			 IMX_AUDMUX_V2_PTCR_TCSEL(4) |
++			 IMX_AUDMUX_V2_PTCR_TFSDIR |
++			 IMX_AUDMUX_V2_PTCR_TCLKDIR)
++			 IMX_AUDMUX_V2_PDCR_RXDSEL(4)
++		>;
++	};
++
++	pins5 {
++		fsl,audmux-port = <4>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN
++			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
++		>;
++	};
+ };
+ 
+ &ecspi2 {
+@@ -193,6 +224,7 @@
+ 		compatible = "fsl,sgtl5000";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard2_sgtl5000>;
++		#sound-dai-cells = <0>;
+ 		reg = <0x0a>;
+ 		VDDA-supply = <&v_3v2>;
+ 		VDDD-supply = <&vcc_1p8>;
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.11.0
