@@ -1,28 +1,100 @@
-From: JeffyChen <jeffy.chen@rock-chips.com>
-Subject: Re: [PATCH v5 3/4] clk: lpc32xx: Set name of regmap_config
-Date: Mon, 19 Mar 2018 11:59:36 +0800
-Message-ID: <5AAF35A8.3040107@rock-chips.com>
-References: <20180312095142.30854-1-jeffy.chen@rock-chips.com> <20180312095142.30854-4-jeffy.chen@rock-chips.com> <23a9cbf8-9b1d-f7ec-b980-a16c9b2c4d84@mleia.com>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: usb: Update documentation for
+ Qualcomm DWC3 driver
+Date: Mon, 19 Mar 2018 09:50:10 +0530
+Message-ID: <835029bb-08a9-16dc-e107-870615f57124@codeaurora.org>
+References: <1520937362-28777-1-git-send-email-mgautam@codeaurora.org>
+ <20180318124922.kxa5q2vmhvydfp25@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <23a9cbf8-9b1d-f7ec-b980-a16c9b2c4d84@mleia.com>
+In-Reply-To: <20180318124922.kxa5q2vmhvydfp25@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, linux-kernel@vger.kernel.org, broonie@kernel.org, alexandre.belloni@bootlin.com
-Cc: Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, lee.jones@linaro.org, Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+Hi,
 
-On 03/19/2018 05:57 AM, Vladimir Zapolskiy wrote:
->> >  static struct regmap_config lpc32xx_scb_regmap_config = {
->> >+	.name = "lpc32xx-scb",
-> please rename it to "scb", LPC32xx SoC name is already known from the context.
->
-> When it's done, feel free to add to the next version my
->
-> Acked-by: Vladimir Zapolskiy<vz@mleia.com>
->
 
-ok, will do, thanks:)
+On 3/18/2018 6:19 PM, Rob Herring wrote:
+> On Tue, Mar 13, 2018 at 04:06:00PM +0530, Manu Gautam wrote:
+>> Existing documentation has lot of incorrect information as it
+>> was originally added for a driver that no longer exists.
+>>
+>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/usb/qcom,dwc3.txt          | 87 +++++++++++++++-------
+>>  1 file changed, 59 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> index bc8a2fa..df312f7 100644
+>> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>> @@ -1,54 +1,85 @@
+>>  Qualcomm SuperSpeed DWC3 USB SoC controller
+>>  
+>>  Required properties:
+>> -- compatible:	should contain "qcom,dwc3"
+>> -- clocks:		A list of phandle + clock-specifier pairs for the
+>> -				clocks listed in clock-names
+>> -- clock-names:	Should contain the following:
+>> -  "core"		Master/Core clock, have to be >= 125 MHz for SS
+>> -				operation and >= 60MHz for HS operation
+>> -
+>> -Optional clocks:
+>> -  "iface"		System bus AXI clock.  Not present on all platforms
+>> -  "sleep"		Sleep clock, used when USB3 core goes into low
+>> -				power mode (U3).
+>> +- compatible:		should contain "qcom,dwc3"
+>> +- reg:			offset and length of register set for QSCRATCH wrapper
+>> +- reg-names:		should be "qscratch"
+> reg-names is pointless for a single range.
+Ok. Will change this.
+
+>
+>> +- power-domains:	specifies a phandle to PM domain provider node
+>> +- clocks:		list of phandle + clock-specifier pairs
+> How many clocks and what are they?
+I will add description of the clocks in next version of patchset.
+
+
+>
+>> +- assigned-clocks:	should be:
+>> +				MOCK_UTMI_CLK
+>> +				MASTER_CLK
+>> +- assigned-clock-rates: should be:
+>> +                                19.2Mhz (192000000) for MOCK_UTMI_CLK
+>> +                                >=125Mhz (125000000) for MASTER_CLK in SS mode
+>> +                                >=60Mhz (60000000) for MASTER_CLK in HS mode
+>> +
+>> +Optional properties:
+>> +- resets:		list of phandle and reset specifier pairs
+>> +- interrupts:		specifies interrupts from controller wrapper used
+>> +			to wakeup from low power/susepnd state.	Must contain
+>> +			one or more entry for interrupt-names property
+>> +- interrupt-names:	Must include the following entries:
+>> +			- "hs_phy_irq": The interrupt that is asserted when a
+>> +			   wakeup event is received on USB2 bus
+>> +			- "ss_phy_irq": The interrupt that is asserted when a
+>> +			   wakeup event is received on USB3 bus
+>> +			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
+>> +			   interrupts for any wakeup event on DM and DP lines
+>> +- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
+>> +				Used when dwc3 operates without SSPHY and only
+>> +				HS/FS/LS modes are supported.
+>>  
+>>  Required child node:
+>>  A child node must exist to represent the core DWC3 IP block. The name of
+>>  the node is not important. The content of the node is defined in dwc3.txt.
+>>  
+>>  Phy documentation is provided in the following places:
+>> -Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+>> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+>> +Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
