@@ -1,70 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASoC: codecs: Add support for
-	PCM1789
-Date: Mon, 19 Mar 2018 09:23:35 +0800
-Message-ID: <20180319012335.GA2186@sirena.org.uk>
-References: <20180315161825.5524-2-mylene.josserand@bootlin.com>
- <201803171907.vbmkB7Z8%fengguang.wu@intel.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v4 0/9] Initial Allwinner H6 support
+Date: Mon, 19 Mar 2018 09:28:23 +0800
+Message-ID: <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
+References: <20180316140215.28663-1-icenowy@aosc.io> <20180318201744.dw6hnm2vdybaunev@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4677099683268348733=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <201803171907.vbmkB7Z8%fengguang.wu@intel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: kbuild test robot <lkp@intel.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, kbuild-all@01.org, thomas.petazzoni@bootlin.com, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSVEXTKQKGQECOABCOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180318201744.dw6hnm2vdybaunev@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============4677099683268348733==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rmZDAlAp7pllCg/D"
-Content-Disposition: inline
 
+=E4=BA=8E 2018=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=884:=
+17:44, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Fri, Mar 16, 2018 at 10:02:06PM +0800, Icenowy Zheng wrote:
+>> This patchset adds initial support for the Allwinner H6 SoC.
+>>=20
+>> It's quite different from earlier Allwinner SoCs. For example, the
+>> memory map is refactored, and the CCU is rearranged. It's also the
+>first
+>> Allwinner SoC with PCI Express interface (although the implementation
+>> of the PCI Express controller is broken), and the second one with USB
+>> 3.0 (the first one is A80).
+>>=20
+>> This patchset adds the most basical support for it, including the
+>main pin
+>> controller, the main CCU and the basical device tree.
+>>=20
+>> Icenowy Zheng (9):
+>>   pinctrl: sunxi: refactor irq related register function to have desc
+>>   pinctrl: sunxi: introduce IRQ bank conversion function
+>>   pinctrl: sunxi: change irq_bank_base to irq_bank_map
+>>   pinctrl: sunxi: add support for the Allwinner H6 main pin
+>controller
+>>   clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
+>>   dt-bindings: add device tree binding for Allwinner H6 main CCU
+>>   clk: sunxi-ng: add support for the Allwinner H6 CCU
+>>   arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
+>>   arm64: allwinner: h6: add support for Pine H64 board
+>
+>Applied the !pinctrl patches.
 
---rmZDAlAp7pllCg/D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Oops, one clock (CLK_HDMI_SLOW) is missing in the CCU
+driver, as Jernej pointed out.
 
-On Sat, Mar 17, 2018 at 07:19:51PM +0800, kbuild test robot wrote:
+Should I send a patch that fix it?
 
-> >> sound/soc/codecs/pcm1789.c:265:1-3: ERROR: test of a variable/field address
+>
+>Thanks!
+>Maxime
 
->  > 265		if (&priv->work)
->    266			flush_work(&priv->work);
-
-This is a legit warning but otherwise this looks good so I'll apply,
-please send a followup patch fixing this.
-
---rmZDAlAp7pllCg/D
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqvERcACgkQJNaLcl1U
-h9Bz6Af+Obo5cUDzueqjNID4s8PqyHekx1WLIbfKMpBrMnZT9yunB+tKct+xQ2Zf
-s9OQ5zNuYVo1SdY4KFKGtqHWQm7UPwLr/aISpEZFov/gRYRVkXibf/LjdhVEx9Du
-GNSSnsE6ZYDQ8U5LJB03wofldsHH7HD5ZRJ9+/gAc/uX2qwtF0GTX9RF8q3Z+AQw
-r+VtleDfLSr2Ca/83qka4o7IBrbjl3nWgyczY4wRs6I3kUlRfnp0EK6IIHxHnmyQ
-Pdwcxi14w9rRHmw3j0IGgiR/9BLUTYlyh+ik9DKm89UslcEYW3LX8jrzxird10i0
-csg2pQT3CBA9Eyeq8XXkaGkuva/3dA==
-=kJ15
------END PGP SIGNATURE-----
-
---rmZDAlAp7pllCg/D--
-
---===============4677099683268348733==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4677099683268348733==--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
