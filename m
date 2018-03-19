@@ -1,62 +1,65 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v8_00/42]_ARM:_davinci:_convert_to_common_cloc?=
- =?UTF-8?Q?k_framework=e2=80=8b?=
-Date: Mon, 19 Mar 2018 10:59:47 -0500
-Message-ID: <af89be8d-04dd-e845-1d5b-afdd7e55629f@lechnology.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: pwm_bl: support linear interpolation
+ and brightness to human eye
+Date: Mon, 19 Mar 2018 17:04:31 +0100
+Message-ID: <CAFqH_52bXq76TnQLfnD0mohgr0d5iAcrHBcPefwnRB8gdbaYFQ@mail.gmail.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180208113032.27810-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2018 08:17 AM, Bartosz Golaszewski wrote:
-> 2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
->> This series converts mach-davinci to use the common clock framework.
->>
->> The series works like this, the first 19 patches create new clock drivers
->> using the common clock framework. There are basically 3 groups of clocks -
->> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
->> unique init data, which is the reason for so many patches.
->>
->> Then, starting with "ARM: davinci: pass clock as parameter to
->> davinci_timer_init()", we get the mach code ready for the switch by adding the
->> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
->> around the legacy clocks so that we can switch easily between the old and the
->> new.
->>
->> "ARM: davinci: switch to common clock framework" actually flips the switch
->> to start using the new clock drivers. Then the next 8 patches remove all
->> of the old clock code.
->>
->> The final three patches add device tree clock support to the one SoC that
->> supports it.
->>
->> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
->> OMAP-L138 LCDK (both device tree and legacy board file).
->>
-> 
-> Hi David,
-> 
-> thanks, with the u-boot fix everything seems to work fine. I tested
-> da850-lcdk and da850-evm boards in DT and board file modes.
-> 
-> I'll be working with this series in the following days and will do
-> some thorough testing and rebase my aemif series on top of it. I'll
-> also use the recently merged reset support for board files to get rid
-> of the exported reset functions.
-> 
-> Thanks for your work!
-> 
-> Best regards,
-> Bartosz Golaszewski
-> 
+Hi Daniel,
 
-Sounds like a good plan to me. FYI, I've started a common-clk-v9 branch
-on my GitHub already with a few minor fixes.
+Gentle ping for this series, there is any possibility you have a
+chance to review it? Let me know if you want I change something.
+
+Thanks,
+  Enric
+
+2018-02-08 12:30 GMT+01:00 Enric Balletbo i Serra
+<enric.balletbo@collabora.com>:
+> Dear all,
+>
+> This series is a third patchset integrating the requested changes.
+>
+> The first and second patch what tries to solve is the problem of
+> granularity for high resolution PWMs. The idea is simple interpolate
+> between 2 brightness values so we can have a high PWM duty cycle (a
+> 16 bits PWM is up to 65535 possible steps) without having to list
+> out every possible value in the dts. I think that this patch is
+> required to not break backward compability, to be more flexible and
+> also extend the functionality to be able to use high resolution PWM
+> with enough steps to have a good UI experience in userspace.
+>
+> The thirth and fourth patch is a bit more ambicious, the idea is let
+> decide the driver the brightness-levels required in function of the PWM
+> resolution. To do this create a brightness-levels table filled with the
+> CIE 1931 algorithm values to convert brightness to PWM duty cycle.
+>
+> More detailed info is available in the commit message of every patch.
+>
+> Both functionalities were tested on a Samsung Chromebook Plus (that has
+> a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
+>
+> Waiting for your feedback.
+>
+> Best regards,
+>
+> Enric Balletbo i Serra (4):
+>   backlight: pwm_bl: linear interpolation between brightness-levels
+>   dt-bindings: pwm-backlight: add a num-interpolation-steps property.
+>   backlight: pwm_bl: compute brightness of LED linearly to human eye.
+>   dt-bindings: pwm-backlight: move brightness-levels to optional.
+>
+>  .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
+>  drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
+>  2 files changed, 246 insertions(+), 20 deletions(-)
+>
+> --
+> 2.15.1
+>
