@@ -1,91 +1,70 @@
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Subject: [PATCH] arm64: dts: uniphier: add syscon property for UniPhier sound system
-Date: Mon, 19 Mar 2018 10:21:58 +0900
-Message-ID: <20180319012158.26411-1-suzuki.katsuhiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
-Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] ASoC: codecs: Add support for
+	PCM1789
+Date: Mon, 19 Mar 2018 09:23:35 +0800
+Message-ID: <20180319012335.GA2186@sirena.org.uk>
+References: <20180315161825.5524-2-mylene.josserand@bootlin.com>
+ <201803171907.vbmkB7Z8%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4677099683268348733=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <201803171907.vbmkB7Z8%fengguang.wu@intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: kbuild test robot <lkp@intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, kbuild-all@01.org, thomas.petazzoni@bootlin.com, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds syscon property for specifying soc-glue core into
-device-tree of LD11/LD20 SoC.
 
-Currently, soc-glue core is used for changing the state of S/PDIF
-signal output pin to signal output state or Hi-Z state.
+--===============4677099683268348733==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rmZDAlAp7pllCg/D"
+Content-Disposition: inline
 
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
----
- arch/arm/boot/dts/uniphier-pxs2.dtsi             | 4 +++-
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 4 +++-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 595045441c9c..c72c0a123c87 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -243,6 +243,8 @@
- 			resets = <&sys_rst 40>;
- 			#sound-dai-cells = <1>;
- 
-+			socionext,syscon = <&sg>;
-+
- 			i2s_port0: port@0 {
- 				i2s_hdmi: endpoint {
- 				};
-@@ -418,7 +420,7 @@
- 			};
- 		};
- 
--		soc-glue@5f800000 {
-+		sg: soc-glue@5f800000 {
- 			compatible = "socionext,uniphier-pxs2-soc-glue",
- 				     "simple-mfd", "syscon";
- 			reg = <0x5f800000 0x2000>;
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index efa95573b2aa..5a1b8d574904 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -198,6 +198,8 @@
- 			resets = <&sys_rst 40>;
- 			#sound-dai-cells = <1>;
- 
-+			socionext,syscon = <&sg>;
-+
- 			i2s_port0: port@0 {
- 				i2s_hdmi: endpoint {
- 				};
-@@ -479,7 +481,7 @@
- 			};
- 		};
- 
--		soc-glue@5f800000 {
-+		sg: soc-glue@5f800000 {
- 			compatible = "socionext,uniphier-ld11-soc-glue",
- 				     "simple-mfd", "syscon";
- 			reg = <0x5f800000 0x2000>;
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index 19c935688a77..831522444276 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -298,6 +298,8 @@
- 			resets = <&sys_rst 40>;
- 			#sound-dai-cells = <1>;
- 
-+			socionext,syscon = <&sg>;
-+
- 			i2s_port0: port@0 {
- 				i2s_hdmi: endpoint {
- 				};
-@@ -525,7 +527,7 @@
- 			cdns,phy-dll-delay-sdclk-hsmmc = <21>;
- 		};
- 
--		soc-glue@5f800000 {
-+		sg: soc-glue@5f800000 {
- 			compatible = "socionext,uniphier-ld20-soc-glue",
- 				     "simple-mfd", "syscon";
- 			reg = <0x5f800000 0x2000>;
--- 
-2.16.2
+--rmZDAlAp7pllCg/D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Mar 17, 2018 at 07:19:51PM +0800, kbuild test robot wrote:
+
+> >> sound/soc/codecs/pcm1789.c:265:1-3: ERROR: test of a variable/field address
+
+>  > 265		if (&priv->work)
+>    266			flush_work(&priv->work);
+
+This is a legit warning but otherwise this looks good so I'll apply,
+please send a followup patch fixing this.
+
+--rmZDAlAp7pllCg/D
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqvERcACgkQJNaLcl1U
+h9Bz6Af+Obo5cUDzueqjNID4s8PqyHekx1WLIbfKMpBrMnZT9yunB+tKct+xQ2Zf
+s9OQ5zNuYVo1SdY4KFKGtqHWQm7UPwLr/aISpEZFov/gRYRVkXibf/LjdhVEx9Du
+GNSSnsE6ZYDQ8U5LJB03wofldsHH7HD5ZRJ9+/gAc/uX2qwtF0GTX9RF8q3Z+AQw
+r+VtleDfLSr2Ca/83qka4o7IBrbjl3nWgyczY4wRs6I3kUlRfnp0EK6IIHxHnmyQ
+Pdwcxi14w9rRHmw3j0IGgiR/9BLUTYlyh+ik9DKm89UslcEYW3LX8jrzxird10i0
+csg2pQT3CBA9Eyeq8XXkaGkuva/3dA==
+=kJ15
+-----END PGP SIGNATURE-----
+
+--rmZDAlAp7pllCg/D--
+
+--===============4677099683268348733==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4677099683268348733==--
