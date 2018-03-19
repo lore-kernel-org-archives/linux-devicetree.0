@@ -1,107 +1,80 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file for SDM845
-Date: Mon, 19 Mar 2018 09:59:31 -0400
-Message-ID: <20180319135931.GJ223881@art_vandelay>
-References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
- <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
+ receiver) power control driver
+Date: Mon, 19 Mar 2018 15:02:52 +0100
+Message-ID: <20180319140252.GM18359@localhost>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+ <20180109184347.28ba0a6e@aktux>
+ <20180112144647.GA5992@localhost>
+ <20180112194022.7da1e726@kemnade.info>
+ <20180118064736.GH3286@localhost>
+ <20180308071459.310d0ba2@aktux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sravanthi Kollukuduru <skolluku@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org
+In-Reply-To: <20180308071459.310d0ba2@aktux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMTQsIDIwMTggYXQgMTE6MjE6MzhBTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IHdyb3RlOgo+IFRoaXMgY2hhbmdlIGFkZHMgdGhlIGhhcmR3YXJlIGNhdGFsb2cgaW5m
-b3JtYXRpb24gaW4gZHJpdmVyIHNvdXJjZQo+IGZvciBTRE04NDUuIFRoaXMgcmVtb3ZlcyB0aGUg
-Y3VycmVudCBsb2dpYyBvZiBkdCBiYXNlZCBwYXJzaW5nCj4gb2YgdGFyZ2V0IGNhdGFsb2cgaW5m
-b3JtYXRpb24uCj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29s
-bHVrdUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9NYWtlZmls
-ZSAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9k
-aXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuYyAgICAgfCAzMDcxICstLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nLmggICAgIHwg
-ICAxNyArLQo+ICAuLi4vZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0
-NS5jICB8ICA3NDQgKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2tt
-cy5jICAgICAgICAgICAgfCAgICAyICstCj4gIDUgZmlsZXMgY2hhbmdlZCwgNzY3IGluc2VydGlv
-bnMoKyksIDMwNjggZGVsZXRpb25zKC0pCgpIaSBTcmF2YW50aGksClRoYW5rIHlvdSBmb3IgdGhl
-IHBhdGNoLCBpdCdzIGdyZWF0IHRvIHNlZSBkaWZmc3RhdHMgbGlrZSB0aGlzIDopCgo8c25pcCAv
-PgoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2Nh
-dGFsb2dfc2RtODQ1LmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfY2F0
-YWxvZ19zZG04NDUuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uM2Nh
-NWRjNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
-MS9kcHVfaHdfY2F0YWxvZ19zZG04NDUuYwo+IEBAIC0wLDAgKzEsNzQ0IEBACj4gKy8qIENvcHly
-aWdodCAoYykgMjAxOCwgVGhlIExpbnV4IEZvdW5kYXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQu
-Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
-dHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
-R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFuZAo+ICsgKiBvbmx5IHZlcnNp
-b24gMiBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICoK
-PiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2ls
-bCBiZSB1c2VmdWwsCj4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVu
-IHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4gKyAqIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNT
-IEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPiArICogR05VIEdlbmVyYWwgUHVi
-bGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KCldlIHNob3VsZCBiZSB1c2luZyBTUERYIGxp
-Y2Vuc2UgdGFncyBmcm9tIG5vdyBvbi4KCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgImRwdV9od19j
-YXRhbG9nLmgiCj4gKyNpbmNsdWRlICJkcHVfaHdfY2F0YWxvZ19mb3JtYXQuaCIKPiArI2luY2x1
-ZGUgImRwdV9od19tZHNzLmgiCj4gKyNpbmNsdWRlICJkcHVfaHdpby5oIgo+ICsKPiArLyogVklH
-IGxheWVyIGNhcGFiaWxpdHkgKi8KPiArI2RlZmluZSBWSUdfNDBYX01BU0sgXAo+ICsJKEJJVChE
-UFVfU1NQUF9TUkMpIHwgQklUKERQVV9TU1BQX1NDQUxFUl9RU0VFRDMpIHwgQklUKERQVV9TU1BQ
-X1FPUykgfFwKPiArCUJJVChEUFVfU1NQUF9DU0NfMTBCSVQpIHwgQklUKERQVV9TU1BQX0NEUCkg
-fCBCSVQoRFBVX1NTUFBfUU9TXzhMVkwpIHxcCj4gKwlCSVQoRFBVX1NTUFBfVFNfUFJFRklMTCkg
-fCBCSVQoRFBVX1NTUFBfRVhDTF9SRUNUKSkKPiArCj4gKy8qIERNQSBsYXllciBjYXBhYmlsaXR5
-ICovCj4gKyNkZWZpbmUgRE1BXzQwWF9NQVNLIFwKPiArCShCSVQoRFBVX1NTUFBfU1JDKSB8IEJJ
-VChEUFVfU1NQUF9RT1MpIHwgQklUKERQVV9TU1BQX1FPU184TFZMKSB8XAo+ICsJQklUKERQVV9T
-U1BQX1RTX1BSRUZJTEwpIHwgQklUKERQVV9TU1BQX0NEUCkgfCBCSVQoRFBVX1NTUFBfRVhDTF9S
-RUNUKSkKPiArCj4gKyNkZWZpbmUgTUlYRVJfNDBYX01BU0sgXAo+ICsJKEJJVChEUFVfTUlYRVJf
-U09VUkNFU1BMSVQpIHwgQklUKERQVV9ESU1fTEFZRVIpKQo+ICsKPiArI2RlZmluZSBEU1BQXzQw
-WF9NQVNLIFwKPiArCShCSVQoRFBVX0RTUFBfSUdDKSB8IEJJVChEUFVfRFNQUF9QQ0MpIHwgQklU
-KERQVV9EU1BQX0dDKSB8XAo+ICsJQklUKERQVV9EU1BQX0hTSUMpIHwgQklUKERQVV9EU1BQX0dB
-TVVUKSB8IEJJVChEUFVfRFNQUF9ISVNUKSB8XAo+ICsJQklUKERQVV9EU1BQX01FTUNPTE9SKSB8
-IEJJVChEUFVfRFNQUF9TSVhaT05FKSB8IEJJVChEUFVfRFNQUF9WTFVUKSkKPiArCj4gKyNkZWZp
-bmUgRFNQUF9BRF80MFhfTUFTSyBcCj4gKwkoRFNQUF80MFhfTUFTSyB8IEJJVChEUFVfRFNQUF9B
-RCkpCj4gKwo+ICsjZGVmaW5lIFBJTkdQT05HXzQwWF9NQVNLIEJJVChEUFVfUElOR1BPTkdfRElU
-SEVSKQo+ICsKPiArI2RlZmluZSBQSU5HUE9OR180MFhfU1BMSVRfTUFTSyBcCj4gKwkoUElOR1BP
-TkdfNDBYX01BU0sgfCBCSVQoRFBVX1BJTkdQT05HX1NQTElUKSB8IEJJVChEUFVfUElOR1BPTkdf
-VEUyKSkKPiArCj4gKyNkZWZpbmUgV0IyXzQwWF9NQVNLIFwKPiArCShCSVQoRFBVX1dCX0xJTkVf
-TU9ERSkgfCBCSVQoRFBVX1dCX1RSQUZGSUNfU0hBUEVSKSB8IEJJVChEUFVfV0JfQ0RQKSB8XAo+
-ICsJQklUKERQVV9XQl9ZVVZfQ09ORklHKSB8IEJJVChEUFVfV0JfUU9TXzhMVkwpIHwgQklUKERQ
-VV9XQl9VQldDKSkKPiArCj4gKyNkZWZpbmUgREVDSU1BVElPTl80MFhfTUFYX0gJNAo+ICsjZGVm
-aW5lIERFQ0lNQVRJT05fNDBYX01BWF9WCTQKPiArCj4gKy8qCj4gKyAqIHNldF9jZmdfeHh4X2lu
-aXQoKTogcG9wdWxhdGUgZHB1IHN1Yi1ibG9ja3MgcmVnIG9mZnNldHMKPiArICogYW5kIGluc3Rh
-bmNlIGNvdW50cy4KPiArICovCj4gK3N0YXRpYyBpbmxpbmUgaW50IHNldF9jZmdfNDBYX2luaXQo
-c3RydWN0IGRwdV9tZHNzX2NmZyAqZHB1X2NmZykKPiArewo+ICsJLyogTGF5ZXIgY2FwYWJpbGl0
-eSAqLwo+ICsJc3RhdGljIGNvbnN0IHN0cnVjdCBkcHVfc3NwcF9zdWJfYmxrcyB2aWdfc2Jsa18w
-ID0gewo+ICsJCS5tYXhsaW5ld2lkdGggPSAyNTYwLAo+ICsJCS5waXhlbF9yYW1fc2l6ZSA9IDUw
-ICogMTAyNCwKPiArCQkubWF4ZHduc2NhbGUgPSA0LAo+ICsJCS5tYXh1cHNjYWxlID0gMjAsCj4g
-KwkJLm1heGhkZWNpZXhwID0gREVDSU1BVElPTl80MFhfTUFYX0gsCj4gKwkJLm1heHZkZWNpZXhw
-ID0gREVDSU1BVElPTl80MFhfTUFYX1YsCj4gKwkJLnNtYXJ0X2RtYV9wcmlvcml0eSA9IDUsCj4g
-KwkJLnNyY19ibGsgPSB7Lm5hbWUgPSAic3NwcF9zcmNfMCIsIC5pZCA9IERQVV9TU1BQX1NSQywK
-PiArCQkJLmJhc2UgPSAweDAwLCAubGVuID0gMHgxNTAsfSwKPiArCQkuc2NhbGVyX2JsayA9IHsu
-bmFtZSA9ICJzc3BwX3NjYWxlcjAiLAo+ICsJCQkuaWQgPSBEUFVfU1NQUF9TQ0FMRVJfUVNFRUQz
-LAo+ICsJCQkuYmFzZSA9IDB4YTAwLCAubGVuID0gMHhhMCx9LAo+ICsJCS5jc2NfYmxrID0gey5u
-YW1lID0gInNzcHBfY3NjMCIsIC5pZCA9IERQVV9TU1BQX0NTQ18xMEJJVCwKPiArCQkJLmJhc2Ug
-PSAweDFhMDAsIC5sZW4gPSAweDEwMCx9LAo+ICsJCS5mb3JtYXRfbGlzdCA9IHBsYW5lX2Zvcm1h
-dHNfeXV2LAo+ICsJCS52aXJ0X2Zvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0cywKPiArCX07CgpJ
-bnN0ZWFkIG9mIGxvY2F0aW5nIGFsbCBvZiB0aGVzZSBwYXJhbWV0ZXJzIGluIG9uZSBmaWxlLCB0
-aGVzZSBzaG91bGQgYmUKbG9jYXRlZCBpbiB0aGVpciByZXNwZWN0aXZlIGRyaXZlciBmaWxlLiBJ
-dCBhbHNvIHNlZW1zIGxpa2UgeW91IGNvdWxkIHNlcGFyYXRlCm91dCB0aGUgY29tbW9uIHN0dWZm
-IHN1Y2ggYXMgbGluZSB3aWR0aCwgcmFtIHNpemUsIHNjYWxpbmcsIGZvcm1hdCwgZXRjCnBhcmFt
-ZXRlcnMgZnJvbSB0aGUgcGlwZWxpbmUgc2V0dXAuCgpUaGUgc2FtZSBjb21tZW50cyBhcHBseSB0
-byB0aGUgb3RoZXIgYmxvY2tzLiBNb3ZlIHRoaW5ncyBpbnRvIHRoZSBkcml2ZXJzLAp1c2UgY29t
-cGF0aWJpbGl0eSBzdHJpbmcgdG8gZGV0ZXJtaW5lIHRoZSB2ZXJzaW9uLCBhbmQgdGhlbiBhc3Nv
-Y2lhdGUgdGhlIGNvbW1vbgpwYXJhbWV0ZXJzIHdpdGggb2ZfZGV2aWNlX2lkLmRhdGEuCgpTZWFu
-Cgo8c25pcCAvPgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hy
-b21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Mar 08, 2018 at 07:16:44AM +0100, Andreas Kemnade wrote:
+> Hi,
+> 
+> On Thu, 18 Jan 2018 17:47:36 +1100
+> Johan Hovold <johan@kernel.org> wrote:
+> 
+> [...]
+> > > 
+> > > So to avoid having hardware information spread all over the table at least
+> > > these information would need to be in devicetree. But that also all feels
+> > > like a hack and hard to maintain.  
+> > 
+> > Having the device described in the device tree is certainly desirable,
+> > not least for chip identification. And with a GPS framework in the
+> > kernel with a well-defined interface, implementing power management
+> > would be straight forward.
+> > 
+> Hmm, devicetree without in-kernel drivers, do we have anything like that
+> somewhere? I thought that was a big no-go. But maybe I am wrong.
+
+No, that's probably not a good idea, even if it may be possible (what
+about ACPI then, for example?).
+
+> > I'm just not convinced that the proposed tty interface is the right
+> > interface for this. User space would still rely on gpsd for the GPS
+> > protocols, and would also ultimately be managing power by killing gpsd
+> > or whatever daemon that would otherwise be holding the port open.
+> > 
+> > Something like the generic power sequences that has been discussed
+> > elsewhere might be a better fit for this if all you want to do is power
+> > on and off on port open and close (and on suspend/resume). There really
+> > isn't anything GPS-specific in the current proposal (besides the
+> > suggested tty-device name).
+> 
+> So a bit like that mmc-powerseq stuff we already have?
+
+Yeah, the generic power sequence patches were inspired by that and
+intended to generalise it (e.g. to be used by the USB bus to power on
+devices so that they could be enumerated). There were some issues with
+that work though (which also precludes it from being used for something
+like this), and it still wouldn't be sufficient to deal with the gps
+device in question (which needs to monitor the incoming data).
+
+> > But sure, that wouldn't be sufficient to deal with the
+> > unknown-power-state problem with the device in question.
+>
+> Maybe there could be a kind of active flag set by the tty if
+> there is traffic, so that active flag could be used in these
+> power sequence stuff? But then again the tty layer has to be extended
+> which would probably also cause a lot of ruffled feathers.
+
+Yeah, I think this is a dead end. We need some kind of gps framework
+with drivers that can implement the device specific bits.
+
+I may have some time to look at little closer at it this week.
+
+Johan
