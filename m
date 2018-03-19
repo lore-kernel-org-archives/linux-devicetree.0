@@ -1,54 +1,107 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Mon, 19 Mar 2018 14:55:05 +0100
-Message-ID: <20180319135505.py4evmbexm2asvlo@flea>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
- <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
- <20180318200715.363f3135@dell-desktop.home>
- <CAGb2v65QHkuM2GmT4MC+tp+HqN2ecqeZt8bB5OvZm2br1AJJ-w@mail.gmail.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file for SDM845
+Date: Mon, 19 Mar 2018 09:59:31 -0400
+Message-ID: <20180319135931.GJ223881@art_vandelay>
+References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+ <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65QHkuM2GmT4MC+tp+HqN2ecqeZt8bB5OvZm2br1AJJ-w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, quentin.schulz@bootlin.com, linux-kernel <linux-kernel@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 10:14:19AM +0800, Chen-Yu Tsai wrote:
-> On Mon, Mar 19, 2018 at 3:07 AM, Mylène Josserand
-> <mylene.josserand@bootlin.com> wrote:
-> > Hello Mark,
-> >
-> > Please, excuse me for this late answer and thank you for the review!
-> >
-> > On Wed, 7 Mar 2018 12:18:33 +0000
-> > Marc Zyngier <marc.zyngier@arm.com> wrote:
-> >
-> >> On 23/02/18 13:37, Mylène Josserand wrote:
-> >> > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
-> >>
-> >> Only on A7? Is that specific to your platform?
-> >
-> > I do not really know other Allwinner's platforms about this subject. At
-> > least, the sun9i-a80 which is a Cortex-a15/a7 does not need that but it
-> > is necessary for sun8i-a83t which is a cortex-a7. Maybe, Chen-Yu or
-> > Maxime could help us on it.
-> 
-> AFAIK all Allwinner CPUs need it if there isn't a firmware (PSCI) layer
-> beneath the kernel that will do the setup. We just have
-> "arm,cpu-registers-not-fw-configured" set for all the other SoCs that
-> have in-kernel SMP support, which includes the A31, A23, A33 and A80.
-
-Most of these ones are here for historical reasons though. Now that we
-have U-Boot properly setting it up, we could probably remove it.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+T24gV2VkLCBNYXIgMTQsIDIwMTggYXQgMTE6MjE6MzhBTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
+a3VkdXJ1IHdyb3RlOgo+IFRoaXMgY2hhbmdlIGFkZHMgdGhlIGhhcmR3YXJlIGNhdGFsb2cgaW5m
+b3JtYXRpb24gaW4gZHJpdmVyIHNvdXJjZQo+IGZvciBTRE04NDUuIFRoaXMgcmVtb3ZlcyB0aGUg
+Y3VycmVudCBsb2dpYyBvZiBkdCBiYXNlZCBwYXJzaW5nCj4gb2YgdGFyZ2V0IGNhdGFsb2cgaW5m
+b3JtYXRpb24uCj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29s
+bHVrdUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9k
+aXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuYyAgICAgfCAzMDcxICstLS0tLS0tLS0tLS0tLS0tLS0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nLmggICAgIHwg
+ICAxNyArLQo+ICAuLi4vZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0
+NS5jICB8ICA3NDQgKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2tt
+cy5jICAgICAgICAgICAgfCAgICAyICstCj4gIDUgZmlsZXMgY2hhbmdlZCwgNzY3IGluc2VydGlv
+bnMoKyksIDMwNjggZGVsZXRpb25zKC0pCgpIaSBTcmF2YW50aGksClRoYW5rIHlvdSBmb3IgdGhl
+IHBhdGNoLCBpdCdzIGdyZWF0IHRvIHNlZSBkaWZmc3RhdHMgbGlrZSB0aGlzIDopCgo8c25pcCAv
+PgoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2Nh
+dGFsb2dfc2RtODQ1LmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfY2F0
+YWxvZ19zZG04NDUuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uM2Nh
+NWRjNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
+MS9kcHVfaHdfY2F0YWxvZ19zZG04NDUuYwo+IEBAIC0wLDAgKzEsNzQ0IEBACj4gKy8qIENvcHly
+aWdodCAoYykgMjAxOCwgVGhlIExpbnV4IEZvdW5kYXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQu
+Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
+dHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
+R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFuZAo+ICsgKiBvbmx5IHZlcnNp
+b24gMiBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICoK
+PiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2ls
+bCBiZSB1c2VmdWwsCj4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVu
+IHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4gKyAqIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNT
+IEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPiArICogR05VIEdlbmVyYWwgUHVi
+bGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KCldlIHNob3VsZCBiZSB1c2luZyBTUERYIGxp
+Y2Vuc2UgdGFncyBmcm9tIG5vdyBvbi4KCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgImRwdV9od19j
+YXRhbG9nLmgiCj4gKyNpbmNsdWRlICJkcHVfaHdfY2F0YWxvZ19mb3JtYXQuaCIKPiArI2luY2x1
+ZGUgImRwdV9od19tZHNzLmgiCj4gKyNpbmNsdWRlICJkcHVfaHdpby5oIgo+ICsKPiArLyogVklH
+IGxheWVyIGNhcGFiaWxpdHkgKi8KPiArI2RlZmluZSBWSUdfNDBYX01BU0sgXAo+ICsJKEJJVChE
+UFVfU1NQUF9TUkMpIHwgQklUKERQVV9TU1BQX1NDQUxFUl9RU0VFRDMpIHwgQklUKERQVV9TU1BQ
+X1FPUykgfFwKPiArCUJJVChEUFVfU1NQUF9DU0NfMTBCSVQpIHwgQklUKERQVV9TU1BQX0NEUCkg
+fCBCSVQoRFBVX1NTUFBfUU9TXzhMVkwpIHxcCj4gKwlCSVQoRFBVX1NTUFBfVFNfUFJFRklMTCkg
+fCBCSVQoRFBVX1NTUFBfRVhDTF9SRUNUKSkKPiArCj4gKy8qIERNQSBsYXllciBjYXBhYmlsaXR5
+ICovCj4gKyNkZWZpbmUgRE1BXzQwWF9NQVNLIFwKPiArCShCSVQoRFBVX1NTUFBfU1JDKSB8IEJJ
+VChEUFVfU1NQUF9RT1MpIHwgQklUKERQVV9TU1BQX1FPU184TFZMKSB8XAo+ICsJQklUKERQVV9T
+U1BQX1RTX1BSRUZJTEwpIHwgQklUKERQVV9TU1BQX0NEUCkgfCBCSVQoRFBVX1NTUFBfRVhDTF9S
+RUNUKSkKPiArCj4gKyNkZWZpbmUgTUlYRVJfNDBYX01BU0sgXAo+ICsJKEJJVChEUFVfTUlYRVJf
+U09VUkNFU1BMSVQpIHwgQklUKERQVV9ESU1fTEFZRVIpKQo+ICsKPiArI2RlZmluZSBEU1BQXzQw
+WF9NQVNLIFwKPiArCShCSVQoRFBVX0RTUFBfSUdDKSB8IEJJVChEUFVfRFNQUF9QQ0MpIHwgQklU
+KERQVV9EU1BQX0dDKSB8XAo+ICsJQklUKERQVV9EU1BQX0hTSUMpIHwgQklUKERQVV9EU1BQX0dB
+TVVUKSB8IEJJVChEUFVfRFNQUF9ISVNUKSB8XAo+ICsJQklUKERQVV9EU1BQX01FTUNPTE9SKSB8
+IEJJVChEUFVfRFNQUF9TSVhaT05FKSB8IEJJVChEUFVfRFNQUF9WTFVUKSkKPiArCj4gKyNkZWZp
+bmUgRFNQUF9BRF80MFhfTUFTSyBcCj4gKwkoRFNQUF80MFhfTUFTSyB8IEJJVChEUFVfRFNQUF9B
+RCkpCj4gKwo+ICsjZGVmaW5lIFBJTkdQT05HXzQwWF9NQVNLIEJJVChEUFVfUElOR1BPTkdfRElU
+SEVSKQo+ICsKPiArI2RlZmluZSBQSU5HUE9OR180MFhfU1BMSVRfTUFTSyBcCj4gKwkoUElOR1BP
+TkdfNDBYX01BU0sgfCBCSVQoRFBVX1BJTkdQT05HX1NQTElUKSB8IEJJVChEUFVfUElOR1BPTkdf
+VEUyKSkKPiArCj4gKyNkZWZpbmUgV0IyXzQwWF9NQVNLIFwKPiArCShCSVQoRFBVX1dCX0xJTkVf
+TU9ERSkgfCBCSVQoRFBVX1dCX1RSQUZGSUNfU0hBUEVSKSB8IEJJVChEUFVfV0JfQ0RQKSB8XAo+
+ICsJQklUKERQVV9XQl9ZVVZfQ09ORklHKSB8IEJJVChEUFVfV0JfUU9TXzhMVkwpIHwgQklUKERQ
+VV9XQl9VQldDKSkKPiArCj4gKyNkZWZpbmUgREVDSU1BVElPTl80MFhfTUFYX0gJNAo+ICsjZGVm
+aW5lIERFQ0lNQVRJT05fNDBYX01BWF9WCTQKPiArCj4gKy8qCj4gKyAqIHNldF9jZmdfeHh4X2lu
+aXQoKTogcG9wdWxhdGUgZHB1IHN1Yi1ibG9ja3MgcmVnIG9mZnNldHMKPiArICogYW5kIGluc3Rh
+bmNlIGNvdW50cy4KPiArICovCj4gK3N0YXRpYyBpbmxpbmUgaW50IHNldF9jZmdfNDBYX2luaXQo
+c3RydWN0IGRwdV9tZHNzX2NmZyAqZHB1X2NmZykKPiArewo+ICsJLyogTGF5ZXIgY2FwYWJpbGl0
+eSAqLwo+ICsJc3RhdGljIGNvbnN0IHN0cnVjdCBkcHVfc3NwcF9zdWJfYmxrcyB2aWdfc2Jsa18w
+ID0gewo+ICsJCS5tYXhsaW5ld2lkdGggPSAyNTYwLAo+ICsJCS5waXhlbF9yYW1fc2l6ZSA9IDUw
+ICogMTAyNCwKPiArCQkubWF4ZHduc2NhbGUgPSA0LAo+ICsJCS5tYXh1cHNjYWxlID0gMjAsCj4g
+KwkJLm1heGhkZWNpZXhwID0gREVDSU1BVElPTl80MFhfTUFYX0gsCj4gKwkJLm1heHZkZWNpZXhw
+ID0gREVDSU1BVElPTl80MFhfTUFYX1YsCj4gKwkJLnNtYXJ0X2RtYV9wcmlvcml0eSA9IDUsCj4g
+KwkJLnNyY19ibGsgPSB7Lm5hbWUgPSAic3NwcF9zcmNfMCIsIC5pZCA9IERQVV9TU1BQX1NSQywK
+PiArCQkJLmJhc2UgPSAweDAwLCAubGVuID0gMHgxNTAsfSwKPiArCQkuc2NhbGVyX2JsayA9IHsu
+bmFtZSA9ICJzc3BwX3NjYWxlcjAiLAo+ICsJCQkuaWQgPSBEUFVfU1NQUF9TQ0FMRVJfUVNFRUQz
+LAo+ICsJCQkuYmFzZSA9IDB4YTAwLCAubGVuID0gMHhhMCx9LAo+ICsJCS5jc2NfYmxrID0gey5u
+YW1lID0gInNzcHBfY3NjMCIsIC5pZCA9IERQVV9TU1BQX0NTQ18xMEJJVCwKPiArCQkJLmJhc2Ug
+PSAweDFhMDAsIC5sZW4gPSAweDEwMCx9LAo+ICsJCS5mb3JtYXRfbGlzdCA9IHBsYW5lX2Zvcm1h
+dHNfeXV2LAo+ICsJCS52aXJ0X2Zvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0cywKPiArCX07CgpJ
+bnN0ZWFkIG9mIGxvY2F0aW5nIGFsbCBvZiB0aGVzZSBwYXJhbWV0ZXJzIGluIG9uZSBmaWxlLCB0
+aGVzZSBzaG91bGQgYmUKbG9jYXRlZCBpbiB0aGVpciByZXNwZWN0aXZlIGRyaXZlciBmaWxlLiBJ
+dCBhbHNvIHNlZW1zIGxpa2UgeW91IGNvdWxkIHNlcGFyYXRlCm91dCB0aGUgY29tbW9uIHN0dWZm
+IHN1Y2ggYXMgbGluZSB3aWR0aCwgcmFtIHNpemUsIHNjYWxpbmcsIGZvcm1hdCwgZXRjCnBhcmFt
+ZXRlcnMgZnJvbSB0aGUgcGlwZWxpbmUgc2V0dXAuCgpUaGUgc2FtZSBjb21tZW50cyBhcHBseSB0
+byB0aGUgb3RoZXIgYmxvY2tzLiBNb3ZlIHRoaW5ncyBpbnRvIHRoZSBkcml2ZXJzLAp1c2UgY29t
+cGF0aWJpbGl0eSBzdHJpbmcgdG8gZGV0ZXJtaW5lIHRoZSB2ZXJzaW9uLCBhbmQgdGhlbiBhc3Nv
+Y2lhdGUgdGhlIGNvbW1vbgpwYXJhbWV0ZXJzIHdpdGggb2ZfZGV2aWNlX2lkLmRhdGEuCgpTZWFu
+Cgo8c25pcCAvPgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hy
+b21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
