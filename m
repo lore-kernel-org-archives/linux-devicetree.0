@@ -1,85 +1,51 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/8] ARM: sun9i: a80: Add display support
-Date: Mon, 19 Mar 2018 22:13:22 +0100
-Message-ID: <20180319211322.gnbc4mgk4nn2uskg@flea>
-References: <20180315114136.24747-1-wens@csie.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 08/10] clk: qcom: Add ACD path to CPU clock driver for
+ msm8996
+Date: Mon, 19 Mar 2018 14:21:22 -0700
+Message-ID: <152149448251.242365.16980775001987673274@swboyd.mtv.corp.google.com>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-9-git-send-email-ilialin@codeaurora.org>
+ <152147863176.242365.17292287330283256524@swboyd.mtv.corp.google.com>
+ <41f3b246-43f4-450d-5c6b-34cdad7b15dd@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wdy4vv7sq55rfep4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180315114136.24747-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <41f3b246-43f4-450d-5c6b-34cdad7b15dd@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ilia Lin <ilialin@codeaurora.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Robin Murphy (2018-03-19 11:16:15)
+> On 19/03/18 16:57, Stephen Boyd wrote:
+> [...]
+> >> +
+> > 
+> >> +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
+> >> +                                       PWRCL_REG_OFFSET + SSSCTL_OFFSET);
+> >> +               /* Ensure SSSCTL config goes through before enabling ACD. */
+> >> +               mb();
+> > 
+> > Use writel instead.
+> 
+> Note that writel() only gives an implicit wmb() *before* the store to 
+> ensure ordering against any previous writes. If this code really needs 
+> to ensure that the given write has definitely completed before any other 
+> accesses happen, then it still needs an explicit barrier *after* the 
+> write*(), unless perhaps the next access is always guaranteed to be a 
+> non-relaxed write (thus implicitly providing a suitable DSB).
+> 
 
---wdy4vv7sq55rfep4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 15, 2018 at 07:41:28PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
->=20
-> This series adds basic support for the display pipelines found on the
-> Allwinner A80 SoC. Currently only parallel RGB output via TCON0 is
-> supported. TCON1 drives the HDMI encoder, which I've not been able to
-> get working yet.
->=20
-> Patch 1 adds device tree bindings for the TCONs on the A80. In
-> particular, TCON0 requires the eDP reset control in addition to its own.
->=20
-> Patch 2 adds a device tree binding for the Detail Enhancement Unit found
-> only on the A80.
->=20
-> Patch 3 adds driver support for the TCONs.
->=20
-> Patch 4 adds compatible strings to the device tree bindings for all the=
-=20
-> remaining peripherals covered by this series.
->=20
-> Patch 5 adds support for the compatible strings from the previous patch
-> to the sun4i-drm driver.
->=20
-> Patch 6 adds the display pipeline device nodes to the A80 .dtsi file.
->=20
-> Patch 7 adds a pinmux setting for RGB888 output for TCON0.
->=20
-> Patch 8 enables VGA output on the Cubieboard4 via an external DAC and
-> an I2C bus from the SoC for DDC.
->=20
->=20
-> I've had these patches for quite some time now, rebasing them as more
-> features were added to sun4i-drm. Please have a look.
-
-Applied all, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---wdy4vv7sq55rfep4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqwJ/EACgkQ0rTAlCFN
-r3QqZRAAgQjnhfi/zcsXVxH8QFKdBjJYRZKBwrNP5S9H3qvW9pSKv1U6rzz1WlEi
-kfXv7gRZHzlZrBYw/uWPfxvplKwPee9rWMGJi8r7xhonZ10LJ2vAtcuCSjp1OuTk
-cnt+RkCGRrlMb+x7WHKm4Gd4cF02HdNQZF+xjVVDNrLu8NH69Yw/wZyXWnGmBXKC
-1TtrTFSjKQZzV1XnU2ZZCyL7ex4GmNkHJ0iaHPtsCE5XCBZ5+ORTi8yBU6/ZPXqk
-Y1KepEBnqmGLMtaBktTr1axV7dAPZKm9nbFl3bmrsYEF2BKI4V7dmRQDLZotkqrZ
-GY4+mUZhq0/j/LNUurAnbB2pjMuciN2dt6YLJZD/64du+BUZmRkhmhnh6fboB30p
-aNYBVRCag5uL/2O06Qq8j/F5wnqUkeeSklxsHbJDxed703i/IfhQUqKT6I+PNlBD
-j+0MCJjMHdgR4EJ905IkSfOOwWRIK7ph40tpbmQtKH9xo2x8dGc/oKBHi41lEfpH
-YGrbVhfRUULezmUUGdhG3oC/9a9mwa6q+i4b07HW/1NFEjnGPLzY1FjvR+TWK7dy
-QWoJUyp9eDLycm84oQAOezoq683CR4H/4hLQei9c/2Nma2t2a4bRjhzTBCusMTXD
-4arS9Psh5kFdnx3vWTomGJeH6MXUa1zukJft4B/HaMdJtCr+gJ0=
-=WteB
------END PGP SIGNATURE-----
-
---wdy4vv7sq55rfep4--
+Ah right. So this should be a wmb() too? I suspect it's to order with
+the write to the l2 indirect registers, but reading that register before
+the MMIO write is not a problem. The comment above the l2 accessors
+could be slightly more specific here and it would help immensely.
