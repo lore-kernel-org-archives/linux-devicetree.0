@@ -1,54 +1,85 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2] clk: Add driver for the si544 clock generator chip
-Date: Mon, 19 Mar 2018 14:08:56 -0700
-Message-ID: <152149373621.242365.4815290210815209160@swboyd.mtv.corp.google.com>
-References: <1521114608-21967-1-git-send-email-mike.looijmans@topic.nl>
- <20180318125219.ar7f2n4o73ljz6vg@rob-hp-laptop>
- <ec813ab3-88db-f6e3-eca1-b6ea58936fcf@topic.nl>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/8] ARM: sun9i: a80: Add display support
+Date: Mon, 19 Mar 2018 22:13:22 +0100
+Message-ID: <20180319211322.gnbc4mgk4nn2uskg@flea>
+References: <20180315114136.24747-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wdy4vv7sq55rfep4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ec813ab3-88db-f6e3-eca1-b6ea58936fcf@topic.nl>
+Content-Disposition: inline
+In-Reply-To: <20180315114136.24747-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>, Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, mark.rutland@arm.com
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mike Looijmans (2018-03-19 08:04:15)
-> On 18-03-18 13:52, Rob Herring wrote:
-> > On Thu, Mar 15, 2018 at 12:50:08PM +0100, Mike Looijmans wrote:
-> >> +Required properties:
-> >> + - compatible: One of "silabs,si514a", "silabs,si514b" "silabs,si514c" according
-> >> +               to the speed grade of the chip.
-> >> + - reg: I2C device address.
-> >> + - #clock-cells: From common clock bindings: Shall be 0.
-> >> +
-> >> +Optional properties:
-> >> + - clock-output-names: From common clock bindings. Recommended to be "si544".
-> > 
-> > What's the point if there is only 1 clock output?
-> 
-> I have a board with 6 of these chips, and the clock registration fails if they 
-> don't have unique names. Providing a clock-output-names property was the 
-> easiest way around it.
-> 
-> Should I just omit the line or change the wording to reflect the above or is 
-> there a better solution (maybe I can use the DT node name as clock name in the 
-> driver, will look into that)
 
-I would leave clock-output-names for now. One day we can get off of
-strings in CCF. Soon perhaps.
+--wdy4vv7sq55rfep4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > 
-> >> +
-> >> +Example:
-> >> +    si544: clock-generator@55 {
-> > 
-> > clock-controller@55 is the standard node name.
-> 
-> I'll change and post patch v3
-> 
+On Thu, Mar 15, 2018 at 07:41:28PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+>=20
+> This series adds basic support for the display pipelines found on the
+> Allwinner A80 SoC. Currently only parallel RGB output via TCON0 is
+> supported. TCON1 drives the HDMI encoder, which I've not been able to
+> get working yet.
+>=20
+> Patch 1 adds device tree bindings for the TCONs on the A80. In
+> particular, TCON0 requires the eDP reset control in addition to its own.
+>=20
+> Patch 2 adds a device tree binding for the Detail Enhancement Unit found
+> only on the A80.
+>=20
+> Patch 3 adds driver support for the TCONs.
+>=20
+> Patch 4 adds compatible strings to the device tree bindings for all the=
+=20
+> remaining peripherals covered by this series.
+>=20
+> Patch 5 adds support for the compatible strings from the previous patch
+> to the sun4i-drm driver.
+>=20
+> Patch 6 adds the display pipeline device nodes to the A80 .dtsi file.
+>=20
+> Patch 7 adds a pinmux setting for RGB888 output for TCON0.
+>=20
+> Patch 8 enables VGA output on the Cubieboard4 via an external DAC and
+> an I2C bus from the SoC for DDC.
+>=20
+>=20
+> I've had these patches for quite some time now, rebasing them as more
+> features were added to sun4i-drm. Please have a look.
 
-I made some comments on v1. Please fold those into v3.
+Applied all, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--wdy4vv7sq55rfep4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqwJ/EACgkQ0rTAlCFN
+r3QqZRAAgQjnhfi/zcsXVxH8QFKdBjJYRZKBwrNP5S9H3qvW9pSKv1U6rzz1WlEi
+kfXv7gRZHzlZrBYw/uWPfxvplKwPee9rWMGJi8r7xhonZ10LJ2vAtcuCSjp1OuTk
+cnt+RkCGRrlMb+x7WHKm4Gd4cF02HdNQZF+xjVVDNrLu8NH69Yw/wZyXWnGmBXKC
+1TtrTFSjKQZzV1XnU2ZZCyL7ex4GmNkHJ0iaHPtsCE5XCBZ5+ORTi8yBU6/ZPXqk
+Y1KepEBnqmGLMtaBktTr1axV7dAPZKm9nbFl3bmrsYEF2BKI4V7dmRQDLZotkqrZ
+GY4+mUZhq0/j/LNUurAnbB2pjMuciN2dt6YLJZD/64du+BUZmRkhmhnh6fboB30p
+aNYBVRCag5uL/2O06Qq8j/F5wnqUkeeSklxsHbJDxed703i/IfhQUqKT6I+PNlBD
+j+0MCJjMHdgR4EJ905IkSfOOwWRIK7ph40tpbmQtKH9xo2x8dGc/oKBHi41lEfpH
+YGrbVhfRUULezmUUGdhG3oC/9a9mwa6q+i4b07HW/1NFEjnGPLzY1FjvR+TWK7dy
+QWoJUyp9eDLycm84oQAOezoq683CR4H/4hLQei9c/2Nma2t2a4bRjhzTBCusMTXD
+4arS9Psh5kFdnx3vWTomGJeH6MXUa1zukJft4B/HaMdJtCr+gJ0=
+=WteB
+-----END PGP SIGNATURE-----
+
+--wdy4vv7sq55rfep4--
