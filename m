@@ -1,48 +1,38 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Mon, 19 Mar 2018 11:59:11 +0100
-Message-ID: <20180319105911.o63otbbhld54br4r@flea>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
- <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
- <20180318200715.363f3135@dell-desktop.home>
+Subject: Re: [PATCH v2 3/4] dt-bindings: pwm: sunxi: add new compatible strings
+Date: Mon, 19 Mar 2018 14:43:49 +0100
+Message-ID: <20180319134349.yjmicwqb3ypplsho@flea>
+References: <20180318232847.14278-1-andre.przywara@arm.com>
+ <20180318232847.14278-4-andre.przywara@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180318200715.363f3135@dell-desktop.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180318232847.14278-4-andre.przywara@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 18, 2018 at 08:07:15PM +0100, Mylène Josserand wrote:
-> Hello Mark,
+On Sun, Mar 18, 2018 at 11:28:46PM +0000, Andre Przywara wrote:
+> The PWM controllers found in the Allwinner A64 and H5 SoCs are fully
+> compatible to the PWM controllers found in the A13 and H3.
+> Add new compatible strings for those SoCs to the binding document, so
+> that they can be safely used, together with a fallback string
+> (preferably "allwinner,sun5i-a13-pwm").
 > 
-> Please, excuse me for this late answer and thank you for the review!
-> 
-> On Wed, 7 Mar 2018 12:18:33 +0000
-> Marc Zyngier <marc.zyngier@arm.com> wrote:
-> 
-> > On 23/02/18 13:37, Mylène Josserand wrote:
-> > > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.  
-> > 
-> > Only on A7? Is that specific to your platform?
-> 
-> I do not really know other Allwinner's platforms about this subject. At
-> least, the sun9i-a80 which is a Cortex-a15/a7 does not need that but it
-> is necessary for sun8i-a83t which is a cortex-a7. Maybe, Chen-Yu or
-> Maxime could help us on it.
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-This is not related to the CPU.
-
-On all the other SoCs but the A80 and the A83t, U-Boot will boot the
-system in HYP, and while switching to non-secure will setup CNTVOFF on
-the boot CPU.
-
-On the A80 and A83t, U-Boot will execute the kernel in secure, it will
-not switch to non-secure, and CNTVOFF will not be set on the boot CPU.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 Maxime
 
