@@ -1,131 +1,142 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v8_00/42]_ARM:_davinci:_convert_to_common_cloc?=
- =?UTF-8?Q?k_framework=e2=80=8b?=
-Date: Mon, 19 Mar 2018 17:54:27 -0500
-Message-ID: <4dc2725d-0dee-1c7f-1e6d-9a93e6228826@lechnology.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
- <af89be8d-04dd-e845-1d5b-afdd7e55629f@lechnology.com>
- <CAHCN7xKQ47DnVXiZTJ-0myoth2SJ3wnyvDb2i07uKZDgomhgwQ@mail.gmail.com>
- <CAMpxmJWoP+BDYeuqCnQ2txWy7wkxKuyjKODJqgDtRkq0ahY1mw@mail.gmail.com>
- <CAMpxmJX+BqnU=cK0KMOOCrXd4bB2RRZ30A-U3f3tk6K05csrTw@mail.gmail.com>
- <CAHCN7xLt6QqHodd=0HKXBxLjjn8ua5Re7NYW=sPeH+TmnXpkJQ@mail.gmail.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for
+ brcmfmac
+Date: Tue, 20 Mar 2018 00:16:16 +0100
+Message-ID: <5AB044C0.9060701@broadcom.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com>
+ <5AAF838D.2030105@broadcom.com>
+ <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
+ <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xLt6QqHodd=0HKXBxLjjn8ua5Re7NYW=sPeH+TmnXpkJQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, Alexey Roslyakov <alexey.roslyakov@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, kvalo@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2018 12:52 PM, Adam Ford wrote:
-> On Mon, Mar 19, 2018 at 11:15 AM, Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
->> 2018-03-19 17:14 GMT+01:00 Bartosz Golaszewski <bgolaszewski@baylibre.com>:
->>> 2018-03-19 17:11 GMT+01:00 Adam Ford <aford173@gmail.com>:
->>>> On Mon, Mar 19, 2018 at 10:59 AM, David Lechner <david@lechnology.com> wrote:
->>>>> On 03/19/2018 08:17 AM, Bartosz Golaszewski wrote:
->>>>>>
->>>>>> 2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
->>>>>>>
->>>>>>> This series converts mach-davinci to use the common clock framework.
->>>>>>>
->>>>>>> The series works like this, the first 19 patches create new clock drivers
->>>>>>> using the common clock framework. There are basically 3 groups of clocks
->>>>>>> -
->>>>>>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each
->>>>>>> have
->>>>>>> unique init data, which is the reason for so many patches.
->>>>>>>
->>>>>>> Then, starting with "ARM: davinci: pass clock as parameter to
->>>>>>> davinci_timer_init()", we get the mach code ready for the switch by
->>>>>>> adding the
->>>>>>> code needed for the new clock drivers and adding #ifndef
->>>>>>> CONFIG_COMMON_CLK
->>>>>>> around the legacy clocks so that we can switch easily between the old and
->>>>>>> the
->>>>>>> new.
->>>>>>>
->>>>>>> "ARM: davinci: switch to common clock framework" actually flips the
->>>>>>> switch
->>>>>>> to start using the new clock drivers. Then the next 8 patches remove all
->>>>>>> of the old clock code.
->>>>>>>
->>>>>>> The final three patches add device tree clock support to the one SoC that
->>>>>>> supports it.
->>>>>>>
->>>>>>> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
->>>>>>> OMAP-L138 LCDK (both device tree and legacy board file).
->>>>>>>
-> 
-> 
-> Does anyone have an LCD connected to the LCDC controller with device
-> tree?  I posted an RFC patch a while ago for the DA850-EVM, but I got
-> distracted and forgot about it, so I never working on getting the
-> patch ready for acceptance.
-> 
-> I am trying to test the LCD now, but I cannot get the screen to come
-> up, but in the process, it appears as if the clocking to the LCD isn't
-> quite right.  I know it used to work, but I am going to probe some
-> pins, but I am getting warning messages I have never received before.
-> The desired clock frequency is 9000000, but when I use the cpufreq in
-> ondemand mode, I get the following messages:
-> 
-> #  echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-> # tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz) differs from the
->   calculated rate (54000000Hz)
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> 
-> As ondemend is used and the processor scaling happens, the above
-> message appears on and off.
-> 
-> I do not know if it impacts the LCD image since I haven't been able to
-> get it working yet, but I'll troubleshoot it and when/if I can get the
-> LCD working, I'll turn on the ondemand again and see how it behaves.
-> 
-> adam
-> 
-> 
++ Uffe
 
-I've just been using the VGA connector on the LCDK since that is the only
-hardware I have that uses the LCDC controller and I haven't tried it with
-ondemand CPU freq yet.
+On 3/19/2018 6:55 PM, Florian Fainelli wrote:
+> On 03/19/2018 07:10 AM, Alexey Roslyakov wrote:
+>> Hi Arend,
+>> I appreciate your response. In my opinion, it has nothing to do with
+>> SDIO host, because it defines "quirks" in the driver itself.
+>
+> It is not clear to me from your patch series whether the problem is that:
+>
+> - the SDIO device has a specific alignment requirements, which would be
+> either a SDIO device driver limitation/issue or maybe the underlying
+> hardware device/firmware requiring that
+>
+> - the SDIO host controller used is not capable of coping nicely with
+> these said limitations
+>
+> It seems to me like what you are doing here is a) applicable to possibly
+> more SDIO devices and host combinations, and b) should likely be done at
+> the layer between the host and device, such that it is available to more
+> combinations.
 
-But, I do know this. The parent clock for the LCDC (PLL0 SYSCLK2) must be
-(according to the TRM) set to a fixed ratio to the ARM clock (/2), so it
-can only have certain rates. The tilcdc driver then tries to pick a
-divider for that rate to get close enough to the requested 54MHz. Also,
-this divider must be at least 2. It can't be 1 (or 0).
+Indeed. That was my thought exactly and I can not imagine Uffe would 
+push back on that reasoning.
 
-So, if the CPU throttles down to 100, 200, or 300MHz, then 50Mz is as
-close as any integer divider can get. The kernel prints a warning if
-the difference between the requested and actual rate is over 5%. There
-is a note in the kernel comments that this 5% value is arbitrary, so
-maybe it needs to change to 10%?
+>> If I get it right, you mean something like this:
+>>
+>> mmc3: mmc@1c12000 {
+>> ...
+>>          broken-sg-support;
+>>          sd-head-align = 4;
+>>          sd-sgentry-align = 512;
+>>
+>>          brcmf: wifi@1 {
+>>                  ...
+>>          };
+>> };
+>>
+>> Where dt: bindings documentation for these entries should reside?
+>> In generic MMC bindings? Well, this is the very special case and
+>> mmc-linux maintainer will unlikely to accept these changes.
+>> Also, extra kernel code modification might be required. It could make
+>> quite trivial change much more complex.
+>
+> If the MMC maintainers are not copied on this patch series, it will
+> likely be hard for them to identify this patch series and chime in...
 
-I haven't dug deep enough to understand why the driver thinks it needs
-a 54MHz pixel when you think it should be 9MHz.
+The main question is whether this is indeed a "very special case" as 
+Alexey claims it to be or that it is likely to be applicable to other 
+device and host combinations as you are suggesting.
 
-I am also occasionally seeing the underflow error when the CPU is busy.
-Maybe there is some more tweaking that could be done with the master
-priority controller (unrelated to this patch series)? Or maybe if you
-want to use the LCDC, then you just need to run at 475MHz all of the
-time?
+If these properties are imposed by the host or host controller it would 
+make sense to have these in the mmc bindings.
+
+>>
+>>> Also I am not sure if the broken-sg-support is still needed. We added that for omap_hsmmc, but that has since changed to scatter-gather emulation so it might not be needed anymore.
+>>
+>> I've experienced the problem with rk3288 (dw-mmc host) and sdio
+>> settings like above solved it.
+>> Frankly, I haven't investigated any deeper which one of the settings
+>> helped in my case yet...
+>> I will try to get rid of broken-sg-support first and let you know if
+>> it does make any difference.
+
+Are you using some chromebook. I have some lying around here so I could 
+also look into it. What broadcom chipset do you have?
+
+Regards,
+Arend
+
+>> All the best,
+>>    Alex.
+>>
+>> On 19 March 2018 at 16:31, Arend van Spriel
+>> <arend.vanspriel@broadcom.com> wrote:
+>>> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
+>>>>
+>>>> In case if the host has higher align requirements for SG items, allow
+>>>> setting device-specific aligns for scatterlist items.
+>>>>
+>>>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt | 5
+>>>> +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> index 86602f264dce..187b8c1b52a7 100644
+>>>> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> @@ -17,6 +17,11 @@ Optional properties:
+>>>>          When not specified the device will use in-band SDIO interrupts.
+>>>>     - interrupt-names : name of the out-of-band interrupt, which must be
+>>>> set
+>>>>          to "host-wake".
+>>>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO host
+>>>> +       controller has higher align requirement than 32 bytes for each
+>>>> +       scatterlist item.
+>>>> + - brcm,sd-head-align : alignment requirement for start of data buffer.
+>>>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
+>>>> entry.
+>>>
+>>>
+>>> Hi Alexey,
+>>>
+>>> Thanks for the patch. However, the problem with these is that they are
+>>> characterizing the host controller and not the wireless device. So from
+>>> device tree perspective , which is to describe the hardware, these
+>>> properties should be SDIO host controller properties. Also I am not sure if
+>>> the broken-sg-support is still needed. We added that for omap_hsmmc, but
+>>> that has since changed to scatter-gather emulation so it might not be needed
+>>> anymore.
+>>>
+>>> Regards,
+>>> Arend
+>>
+>>
+>>
+>
+>
