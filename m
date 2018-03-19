@@ -1,28 +1,68 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2] clk: qcom: rpmcc: Add support to XO buffered clocks
-Date: Mon, 19 Mar 2018 14:41:25 -0700
-Message-ID: <152149568591.242365.10167530411419851285@swboyd.mtv.corp.google.com>
-References: <20180318144401.21904-1-srinivas.kandagatla@linaro.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
+Date: Mon, 19 Mar 2018 22:41:30 +0100
+Message-ID: <87efkfyc8l.fsf@bootlin.com>
+References: <20180227160135.GU9418@n2100.armlinux.org.uk>
+ <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318144401.21904-1-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk> (Russell King's
+ message of "Tue, 27 Feb 2018 16:02:02 +0000")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting srinivas.kandagatla@linaro.org (2018-03-18 07:44:01)
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> XO is onchip buffer clock to generate 19.2MHz.
-> 
-> This patch adds support to 5 XO buffer clocks found on PMIC8921,
-> these buffer clocks can be controlled from external pin or in
-> manual mode.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-
-Applied to clk-next
+SGkgUnVzc2VsbCwKIAogT24gbWFyLiwgZsOpdnIuIDI3IDIwMTgsIFJ1c3NlbGwgS2luZyA8cm1r
+K2tlcm5lbEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKCj4gQWRkIFNGUCBtb2R1bGUgc3VwcG9y
+dCBmb3IgQ2xlYXJmb2cgdXNpbmcgdGhlIFNGUCBwaHlsaW5rIHN1cHBvcnQuCj4KPiBTaWduZWQt
+b2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytrZXJuZWxAYXJtLmxpbnV4Lm9yZy51az4KCgpBcHBs
+aWVkIG9uIG12ZWJ1L2R0IHdpdGggdGhlIHRlc3RlZC1ieSBmbGFncwoKVGhhbmtzLAoKR3JlZ29y
+eQoKPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpIHwg
+NDUgKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBp
+bnNlcnRpb25zKCspLCAzMyBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9hcm1hZGEtMzg4LWNsZWFyZm9nLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9hcm1h
+ZGEtMzg4LWNsZWFyZm9nLmR0c2kKPiBpbmRleCAwZTNiMWYxNDBlNmQuLmE0NGJmMjBhYjdmOCAx
+MDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzg4LWNsZWFyZm9nLmR0c2kK
+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzg4LWNsZWFyZm9nLmR0c2kKPiBAQCAt
+MTE3LDYgKzExNywxNiBAQAo+ICAJCQl9Owo+ICAJCX07Cj4gIAl9Owo+ICsKPiArCXNmcDogc2Zw
+IHsKPiArCQljb21wYXRpYmxlID0gInNmZixzZnAiOwo+ICsJCWkyYy1idXMgPSA8JmkyYzE+Owo+
+ICsJCWxvcy1ncGlvID0gPCZleHBhbmRlcjAgMTIgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJbW9k
+LWRlZjAtZ3BpbyA9IDwmZXhwYW5kZXIwIDE1IEdQSU9fQUNUSVZFX0xPVz47Cj4gKwkJdHgtZGlz
+YWJsZS1ncGlvID0gPCZleHBhbmRlcjAgMTQgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJdHgtZmF1
+bHQtZ3BpbyA9IDwmZXhwYW5kZXIwIDEzIEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsJCW1heGltdW0t
+cG93ZXItbWlsbGl3YXR0ID0gPDIwMDA+Owo+ICsJfTsKPiAgfTsKPiAgCj4gICZldGgxIHsKPiBA
+QCAtMTMzLDEzICsxNDMsMTAgQEAKPiAgCWJtLHBvb2wtbG9uZyA9IDwzPjsKPiAgCWJtLHBvb2wt
+c2hvcnQgPSA8MT47Cj4gIAlidWZmZXItbWFuYWdlciA9IDwmYm0+Owo+ICsJbWFuYWdlZCA9ICJp
+bi1iYW5kLXN0YXR1cyI7Cj4gIAlwaHktbW9kZSA9ICJzZ21paSI7Cj4gKwlzZnAgPSA8JnNmcD47
+Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gLQo+IC0JZml4ZWQtbGluayB7Cj4gLQkJc3BlZWQgPSA8
+MTAwMD47Cj4gLQkJZnVsbC1kdXBsZXg7Cj4gLQl9Owo+ICB9Owo+ICAKPiAgJmkyYzAgewo+IEBA
+IC0yMDgsMzQgKzIxNSw2IEBACj4gIAkJCW91dHB1dC1sb3c7Cj4gIAkJCWxpbmUtbmFtZSA9ICJt
+LjIgZGV2c2xwIjsKPiAgCQl9Owo+IC0JCXNmcF9sb3Mgewo+IC0JCQkvKiBTRlAgbG9zcyBvZiBz
+aWduYWwgKi8KPiAtCQkJZ3Bpby1ob2c7Cj4gLQkJCWdwaW9zID0gPDEyIEdQSU9fQUNUSVZFX0hJ
+R0g+Owo+IC0JCQlpbnB1dDsKPiAtCQkJbGluZS1uYW1lID0gInNmcC1sb3MiOwo+IC0JCX07Cj4g
+LQkJc2ZwX3R4X2ZhdWx0IHsKPiAtCQkJLyogU0ZQIGxhc2VyIGZhdWx0ICovCj4gLQkJCWdwaW8t
+aG9nOwo+IC0JCQlncGlvcyA9IDwxMyBHUElPX0FDVElWRV9ISUdIPjsKPiAtCQkJaW5wdXQ7Cj4g
+LQkJCWxpbmUtbmFtZSA9ICJzZnAtdHgtZmF1bHQiOwo+IC0JCX07Cj4gLQkJc2ZwX3R4X2Rpc2Fi
+bGUgewo+IC0JCQkvKiBTRlAgdHJhbnNtaXQgZGlzYWJsZSAqLwo+IC0JCQlncGlvLWhvZzsKPiAt
+CQkJZ3Bpb3MgPSA8MTQgR1BJT19BQ1RJVkVfSElHSD47Cj4gLQkJCW91dHB1dC1sb3c7Cj4gLQkJ
+CWxpbmUtbmFtZSA9ICJzZnAtdHgtZGlzYWJsZSI7Cj4gLQkJfTsKPiAtCQlzZnBfbW9kX2RlZjAg
+ewo+IC0JCQkvKiBTRlAgbW9kdWxlIHByZXNlbnQgKi8KPiAtCQkJZ3Bpby1ob2c7Cj4gLQkJCWdw
+aW9zID0gPDE1IEdQSU9fQUNUSVZFX0xPVz47Cj4gLQkJCWlucHV0Owo+IC0JCQlsaW5lLW5hbWUg
+PSAic2ZwLW1vZC1kZWYwIjsKPiAtCQl9Owo+ICAJfTsKPiAgCj4gIAkvKiBUaGUgTUNQMzAyMSBz
+dXBwb3J0cyBzdGFuZGFyZCBhbmQgZmFzdCBtb2RlcyAqLwo+IC0tIAo+IDIuNy40Cj4KCi0tIApH
+cmVnb3J5IENsZW1lbnQsIEJvb3RsaW4gKGZvcm1lcmx5IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRl
+ZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9ib290bGluLmNvbQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
