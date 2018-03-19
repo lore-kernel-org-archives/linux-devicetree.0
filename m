@@ -1,77 +1,62 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 1/2] dt: bindings: fpga: add lattice machxo2 slave spi
- binding description
-Date: Mon, 19 Mar 2018 10:42:30 -0500
-Message-ID: <CANk1AXQvCVLvSNJJUpazmiqauzHU6bHxn_gayWCFr8aidM=yHw@mail.gmail.com>
-References: <1521215669-23874-1-git-send-email-p.pisati@gmail.com>
- <1521215669-23874-2-git-send-email-p.pisati@gmail.com> <20180316163107.67gaxcjksn76ztmn@us-sjc-wireless-10-16-34-48.amer.corp.natinst.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v8_00/42]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Mon, 19 Mar 2018 10:59:47 -0500
+Message-ID: <af89be8d-04dd-e845-1d5b-afdd7e55629f@lechnology.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180316163107.67gaxcjksn76ztmn@us-sjc-wireless-10-16-34-48.amer.corp.natinst.com>
+In-Reply-To: <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 16, 2018 at 11:31 AM, Moritz Fischer <mdf@kernel.org> wrote:
-> On Fri, Mar 16, 2018 at 04:54:28PM +0100, Paolo Pisati wrote:
->> Add dt binding documentation details for Lattice MachXO2 FPGA configuration
->> over Slave SPI interface.
+On 03/19/2018 08:17 AM, Bartosz Golaszewski wrote:
+> 2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
+>> This series converts mach-davinci to use the common clock framework.
 >>
->> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
->> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Moritz Fischer <mdf@kernel.org>
-Acked-by: Alan Tull <atull@kernel.org>
+>> The series works like this, the first 19 patches create new clock drivers
+>> using the common clock framework. There are basically 3 groups of clocks -
+>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+>> unique init data, which is the reason for so many patches.
+>>
+>> Then, starting with "ARM: davinci: pass clock as parameter to
+>> davinci_timer_init()", we get the mach code ready for the switch by adding the
+>> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+>> around the legacy clocks so that we can switch easily between the old and the
+>> new.
+>>
+>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>> to start using the new clock drivers. Then the next 8 patches remove all
+>> of the old clock code.
+>>
+>> The final three patches add device tree clock support to the one SoC that
+>> supports it.
+>>
+>> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
+>> OMAP-L138 LCDK (both device tree and legacy board file).
+>>
+> 
+> Hi David,
+> 
+> thanks, with the u-boot fix everything seems to work fine. I tested
+> da850-lcdk and da850-evm boards in DT and board file modes.
+> 
+> I'll be working with this series in the following days and will do
+> some thorough testing and rebase my aemif series on top of it. I'll
+> also use the recently merged reset support for board files to get rid
+> of the exported reset functions.
+> 
+> Thanks for your work!
+> 
+> Best regards,
+> Bartosz Golaszewski
+> 
 
-Thanks,
-Alan
-
->> ---
->>  .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
->> new file mode 100644
->> index 0000000..a8c362e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
->> @@ -0,0 +1,29 @@
->> +Lattice MachXO2 Slave SPI FPGA Manager
->> +
->> +Lattice MachXO2 FPGAs support a method of loading the bitstream over
->> +'slave SPI' interface.
-> Nit: a 'slave SPI'
->> +
->> +See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
->> +
->> +Required properties:
->> +- compatible: should contain "lattice,machxo2-slave-spi"
->> +- reg: spi chip select of the FPGA
->> +
->> +Example for full FPGA configuration:
->> +
->> +     fpga-region0 {
->> +             compatible = "fpga-region";
->> +             fpga-mgr = <&fpga_mgr_spi>;
->> +             #address-cells = <0x1>;
->> +             #size-cells = <0x1>;
->> +     };
->> +
->> +     spi1: spi@2000 {
->> +        ...
->> +
->> +             fpga_mgr_spi: fpga-mgr@0 {
->> +                     compatible = "lattice,machxo2-slave-spi";
->> +                     spi-max-frequency = <8000000>;
->> +                     reg = <0>;
->> +             };
->> +     };
->> --
->> 2.7.4
->>
->
-> Thanks,
->
-> Moritz
+Sounds like a good plan to me. FYI, I've started a common-clk-v9 branch
+on my GitHub already with a few minor fixes.
