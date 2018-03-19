@@ -1,48 +1,54 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/3] drm: bridge: dw-hdmi: check the cec-disable property
-Date: Mon, 19 Mar 2018 14:11:39 +0100
-Message-ID: <7ec5ea06-92ab-59e6-898c-57b3e5cdf83d@baylibre.com>
-References: <20180319114345.29837-1-hverkuil@xs4all.nl>
- <20180319114345.29837-3-hverkuil@xs4all.nl>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v8_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
+        =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Mon, 19 Mar 2018 14:17:01 +0100
+Message-ID: <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180319114345.29837-3-hverkuil@xs4all.nl>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTkvMDMvMjAxOCAxMjo0MywgSGFucyBWZXJrdWlsIHdyb3RlOgo+IEZyb206IEhhbnMgVmVy
-a3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiAKPiBJZiB0aGUgY2VjLWRpc2FibGUgcHJv
-cGVydHkgd2FzIHNldCwgdGhlbiBkaXNhYmxlIHRoZSBEVyBDRUMKPiBjb250cm9sbGVyLiBUaGlz
-IGlzIG5lZWRlZCBmb3IgYm9hcmRzIHRoYXQgaGF2ZSB0aGVpciBvd24KPiBDRUMgY29udHJvbGxl
-ci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5j
-b20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jIHwg
-MyArKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+
-IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWku
-YyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jCj4gaW5kZXggYTM4
-ZGI0MGNlOTkwLi41OTcyMjBlNDA1NDEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
-bm9wc3lzL2R3LWhkbWkuYwo+IEBAIC0yNTA4LDcgKzI1MDgsOCBAQCBfX2R3X2hkbWlfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCQloZG1pLT5hdWRpbyA9IHBsYXRmb3Jt
-X2RldmljZV9yZWdpc3Rlcl9mdWxsKCZwZGV2aW5mbyk7Cj4gIAl9Cj4gIAo+IC0JaWYgKGNvbmZp
-ZzAgJiBIRE1JX0NPTkZJRzBfQ0VDKSB7Cj4gKwlpZiAoKGNvbmZpZzAgJiBIRE1JX0NPTkZJRzBf
-Q0VDKSAmJgo+ICsJICAgICFvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJjZWMtZGlzYWJsZSIp
-KSB7Cj4gIAkJY2VjLmhkbWkgPSBoZG1pOwo+ICAJCWNlYy5vcHMgPSAmZHdfaGRtaV9jZWNfb3Bz
-Owo+ICAJCWNlYy5pcnEgPSBpcnE7Cj4gCgpJIHN1c3BlY3RlZCB0aGUgYml0IHdhcyBvZmYgZm9y
-IHRoZSBBbWxvZ2ljIEdYIFNvQ3MsIEkgd2FzIHdyb25nLi4uCgpSZXZpZXdlZC1ieTogTmVpbCBB
-cm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
+> This series converts mach-davinci to use the common clock framework.
+>
+> The series works like this, the first 19 patches create new clock drivers
+> using the common clock framework. There are basically 3 groups of clocks -
+> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+> unique init data, which is the reason for so many patches.
+>
+> Then, starting with "ARM: davinci: pass clock as parameter to
+> davinci_timer_init()", we get the mach code ready for the switch by adding the
+> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+> around the legacy clocks so that we can switch easily between the old and the
+> new.
+>
+> "ARM: davinci: switch to common clock framework" actually flips the switch
+> to start using the new clock drivers. Then the next 8 patches remove all
+> of the old clock code.
+>
+> The final three patches add device tree clock support to the one SoC that
+> supports it.
+>
+> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
+> OMAP-L138 LCDK (both device tree and legacy board file).
+>
+
+Hi David,
+
+thanks, with the u-boot fix everything seems to work fine. I tested
+da850-lcdk and da850-evm boards in DT and board file modes.
+
+I'll be working with this series in the following days and will do
+some thorough testing and rebase my aemif series on top of it. I'll
+also use the recently merged reset support for board files to get rid
+of the exported reset functions.
+
+Thanks for your work!
+
+Best regards,
+Bartosz Golaszewski
