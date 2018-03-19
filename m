@@ -1,204 +1,59 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 08/10] clk: qcom: Add ACD path to CPU clock driver for
- msm8996
-Date: Mon, 19 Mar 2018 09:57:11 -0700
-Message-ID: <152147863176.242365.17292287330283256524@swboyd.mtv.corp.google.com>
-References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
- <1518616792-29028-9-git-send-email-ilialin@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/3] iio: add unit converter
+Date: Mon, 19 Mar 2018 18:02:43 +0100
+Message-ID: <20180319170246.26830-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518616792-29028-9-git-send-email-ilialin@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, ilialin@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ilia Lin (2018-02-14 05:59:50)
-> diff --git a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
-> index b0a3b73..1552791 100644
-> --- a/drivers/clk/qcom/clk-cpu-8996.c
-> +++ b/drivers/clk/qcom/clk-cpu-8996.c
-> @@ -17,6 +17,7 @@
->  #include <linux/regmap.h>
->  #include <linux/clk-provider.h>
->  #include "clk-alpha-pll.h"
-> +#include <soc/qcom/kryo-l2-accessors.h>
+Hi!
 
-Put this above local includes please.
+This moves the iio-mux driver to a new category, since I think
+it will be the single driver in that category forever, and now
+I'm adding a new driver that is somewhat similar in nature...
 
->  
->  #define VCO(a, b, c) { \
->         .val = a,\
-> @@ -29,6 +30,27 @@
->  #define ACD_INDEX              2
->  #define ALT_INDEX              3
->  #define DIV_2_THRESHOLD                600000000
-> +#define PWRCL_REG_OFFSET 0x0
-> +#define PERFCL_REG_OFFSET 0x80000
-> +#define MUX_OFFSET     0x40
-> +#define ALT_PLL_OFFSET 0x100
-> +#define SSSCTL_OFFSET 0x160
-> +/*
-> +APCy_QLL_SSSCTL value:
-> +SACDRCLEN=1
-> +SSWEN=1
-> +SSTRTEN=1
-> +SSTPAPMSWEN=1
-> +*/
+But that rename is not very interesting, it's just reshuffling.
+It's the new driver that I need. Specifically, I need to allow
+linear scaling and modification of the type of an io-channel.
+I don't know exactly how that is accomplished in the best way,
+but this is what I came up with.
 
-Bad comment style and I have no idea what it means.
+The use cases are an ADC hooked up to measure a "big" voltage by
+looking at the midpoint of a voltage divider, and an ADC used
+to measure the current by looking at the voltage over a resistor.
 
-> +#define SSSCTL_VAL 0xF
-> +
-> +enum {
-> +       APC_BASE,
-> +       EFUSE_BASE,
+Comments?
 
-Is this used? efuse should go through nvmem APIs.
+Cheers,
+Peter
 
-> +       NUM_BASES
-> +};
-> +
-> +static void __iomem *vbases[NUM_BASES];
+Peter Rosin (3):
+  iio: rename the multiplexer category to wrapper
+  dt-bindings: iio: wrapper: add io-channel-unit-converter
+  iio: wrapper: unit-converter: new driver
 
-Please just pass this to the function that uses it and drop EFUSE_BASE.
+ .../{multiplexer => wrapper}/io-channel-mux.txt    |   0
+ .../iio/wrapper/io-channel-unit-converter.txt      |  84 +++++++
+ MAINTAINERS                                        |  11 +-
+ drivers/iio/Kconfig                                |   2 +-
+ drivers/iio/Makefile                               |   2 +-
+ drivers/iio/multiplexer/Makefile                   |   6 -
+ drivers/iio/{multiplexer => wrapper}/Kconfig       |  13 +-
+ drivers/iio/wrapper/Makefile                       |   7 +
+ drivers/iio/{multiplexer => wrapper}/iio-mux.c     |   0
+ drivers/iio/wrapper/iio-unit-converter.c           | 268 +++++++++++++++++++++
+ 10 files changed, 381 insertions(+), 12 deletions(-)
+ rename Documentation/devicetree/bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt (100%)
+ create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+ delete mode 100644 drivers/iio/multiplexer/Makefile
+ rename drivers/iio/{multiplexer => wrapper}/Kconfig (53%)
+ create mode 100644 drivers/iio/wrapper/Makefile
+ rename drivers/iio/{multiplexer => wrapper}/iio-mux.c (100%)
+ create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
 
->  
->  static const u8 prim_pll_regs[PLL_OFF_MAX_REGS] = {
->         [PLL_OFF_L_VAL] = 0x04,
-> @@ -399,10 +424,64 @@ struct clk_hw_clks {
->         return ret;
->  }
->  
-> +#define CPU_AFINITY_MASK 0xFFF
-> +#define PWRCL_CPU_REG_MASK 0x3
-> +#define PERFCL_CPU_REG_MASK 0x103
-> +
-> +/* ACD static settings (HMSS HPG 7.2.2) */
-> +#define L2ACDCR_REG 0x580ULL
-> +#define L2ACDTD_REG 0x581ULL
-> +#define L2ACDDVMRC_REG 0x584ULL
-> +#define L2ACDSSCR_REG 0x589ULL
-> +#define ACDTD_VAL 0x00006A11
-> +#define ACDCR_VAL 0x002C5FFD
-> +#define ACDSSCR_VAL 0x00000601
-> +#define ACDDVMRC_VAL 0x000E0F0F
-
-Please don't have #defines for random register settings. It just
-obfuscates what's going on at the place where the define is used.
-
-> +
-> +static DEFINE_SPINLOCK(acd_lock);
-> +
-> +static void qcom_cpu_clk_msm8996_acd_init(void)
-> +{
-> +       u64 hwid;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&acd_lock, flags);
-> +
-> +       hwid = read_cpuid_mpidr() & CPU_AFINITY_MASK;
-> +
-> +       /* Program ACD Tunable-Length Delay (TLD) */
-> +       set_l2_indirect_reg(L2ACDTD_REG, ACDTD_VAL);
-> +       /* Initial ACD for *this* cluster */
-> +       set_l2_indirect_reg(L2ACDDVMRC_REG, ACDDVMRC_VAL);
-> +       /* Program ACD soft start control bits. */
-> +       set_l2_indirect_reg(L2ACDSSCR_REG, ACDSSCR_VAL);
-
-Please remove all useless comments, the code is obviously touching
-registers.
-
-> +
-> +       if (PWRCL_CPU_REG_MASK == (hwid | PWRCL_CPU_REG_MASK)) {
-> +               /* Enable Soft Stop/Start */
-
-Sigh.
-
-> +               if (vbases[APC_BASE])
-
-When is this false?
-
-> +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
-> +                                       PWRCL_REG_OFFSET + SSSCTL_OFFSET);
-> +               /* Ensure SSSCTL config goes through before enabling ACD. */
-> +               mb();
-
-Use writel instead.
-
-> +               /* Program ACD control bits */
-> +               set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
-> +       }
-> +       if (PERFCL_CPU_REG_MASK == (hwid | PERFCL_CPU_REG_MASK)) { //else {
-
-What is that '// else {' stuff?
-
-> +               /* Program ACD control bits */
-> +               set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
-> +               /* Enable Soft Stop/Start */
-> +               if (vbases[APC_BASE])
-> +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
-> +                                       PERFCL_REG_OFFSET + SSSCTL_OFFSET);
-> +               /* Ensure SSSCTL config goes through before enabling ACD. */
-> +               mb();
-
-Again, use writel.
-
-> +       }
-> +
-> +       spin_unlock_irqrestore(&acd_lock, flags);
-> +}
->  static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
->  {
->         int ret;
-> -       void __iomem *base;
->         struct resource *res;
->         struct regmap *regmap_cpu;
->         struct clk_hw_clks *hws;
-> @@ -415,17 +494,17 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
->         if (!data)
->                 return -ENOMEM;
->  
-> -       hws = devm_kzalloc(dev, sizeof(*hws) + 2 * sizeof(struct clk_hw *),
-> +       hws = devm_kzalloc(dev, sizeof(*hws) + 4 * sizeof(struct clk_hw *),
->                            GFP_KERNEL);
->         if (!hws)
->                 return -ENOMEM;
->  
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       base = devm_ioremap_resource(dev, res);
-> -       if (IS_ERR(base))
-> -               return PTR_ERR(base);
-> +       vbases[APC_BASE] = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(vbases[APC_BASE]))
-> +               return PTR_ERR(vbases[APC_BASE]);
->  
-> -       regmap_cpu = devm_regmap_init_mmio(dev, base,
-> +       regmap_cpu = devm_regmap_init_mmio(dev, vbases[APC_BASE],
->                                            &cpu_msm8996_regmap_config);
->         if (IS_ERR(regmap_cpu))
->                 return PTR_ERR(regmap_cpu);
-
-Cool, none of this diff is needed.
-
-> @@ -433,6 +512,7 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
->         ret = qcom_cpu_clk_msm8996_register_clks(dev, hws, regmap_cpu);
->         if (ret)
->                 return ret;
-> +       qcom_cpu_clk_msm8996_acd_init();
-
-Pass base here.
-
->  
->         data->hws[0] = &pwrcl_pmux.clkr.hw;
->         data->hws[1] = &perfcl_pmux.clkr.hw;
+-- 
+2.11.0
