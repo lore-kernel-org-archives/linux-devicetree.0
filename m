@@ -1,43 +1,77 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I laptop
-Date: Mon, 19 Mar 2018 16:27:36 +0100
-Message-ID: <E1exwhF-0000Qw-4g@stardust.g4.wien.funkfeuer.at>
-References: <20180315162510.11669-1-harald@ccbib.org> <20180315162510.11669-6-harald@ccbib.org> <20180318202251.5gpv6sblfr4edxmj@flea>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 1/2] dt: bindings: fpga: add lattice machxo2 slave spi
+ binding description
+Date: Mon, 19 Mar 2018 10:42:30 -0500
+Message-ID: <CANk1AXQvCVLvSNJJUpazmiqauzHU6bHxn_gayWCFr8aidM=yHw@mail.gmail.com>
+References: <1521215669-23874-1-git-send-email-p.pisati@gmail.com>
+ <1521215669-23874-2-git-send-email-p.pisati@gmail.com> <20180316163107.67gaxcjksn76ztmn@us-sjc-wireless-10-16-34-48.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180318202251.5gpv6sblfr4edxmj@flea>
-Content-ID: <1667.1521473255.1@stardust.g4.wien.funkfeuer.at>
+In-Reply-To: <20180316163107.67gaxcjksn76ztmn@us-sjc-wireless-10-16-34-48.amer.corp.natinst.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Paolo Pisati <p.pisati@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard writes:
-> On Thu, Mar 15, 2018 at 04:25:10PM +0000, Harald Geyer wrote:
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +
-> > +		capslock {
-> > +			label = "leds:green:capslock";
-> 
-> The first part is supposed to be the name of the boards. I did sed
-> s/leds/teres-i/, and applied,
-
-I'm not sure what good this convention would do, if anything it seems
-to make it harder to write portable scripts, but in the end I don't care.
-
-> together with all the patches but the
-> PWM (so I had to drop the backlight node as well).
->
-> Please coordinate with Andre about who should send the PWM support.
-
-Seems the patch got broken because only the backlight node but not the
-pwm node was removed. Anyway, since Andre has already sent an updated
-version of his series, maybe just revert the broken patch, merge his
-series and then apply the original teres-i patch again?
-
-I'm going to test his patches soon, but I don't expect any problems.
+On Fri, Mar 16, 2018 at 11:31 AM, Moritz Fischer <mdf@kernel.org> wrote:
+> On Fri, Mar 16, 2018 at 04:54:28PM +0100, Paolo Pisati wrote:
+>> Add dt binding documentation details for Lattice MachXO2 FPGA configuration
+>> over Slave SPI interface.
+>>
+>> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+Acked-by: Alan Tull <atull@kernel.org>
 
 Thanks,
-Harald
+Alan
+
+>> ---
+>>  .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+>> new file mode 100644
+>> index 0000000..a8c362e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+>> @@ -0,0 +1,29 @@
+>> +Lattice MachXO2 Slave SPI FPGA Manager
+>> +
+>> +Lattice MachXO2 FPGAs support a method of loading the bitstream over
+>> +'slave SPI' interface.
+> Nit: a 'slave SPI'
+>> +
+>> +See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
+>> +
+>> +Required properties:
+>> +- compatible: should contain "lattice,machxo2-slave-spi"
+>> +- reg: spi chip select of the FPGA
+>> +
+>> +Example for full FPGA configuration:
+>> +
+>> +     fpga-region0 {
+>> +             compatible = "fpga-region";
+>> +             fpga-mgr = <&fpga_mgr_spi>;
+>> +             #address-cells = <0x1>;
+>> +             #size-cells = <0x1>;
+>> +     };
+>> +
+>> +     spi1: spi@2000 {
+>> +        ...
+>> +
+>> +             fpga_mgr_spi: fpga-mgr@0 {
+>> +                     compatible = "lattice,machxo2-slave-spi";
+>> +                     spi-max-frequency = <8000000>;
+>> +                     reg = <0>;
+>> +             };
+>> +     };
+>> --
+>> 2.7.4
+>>
+>
+> Thanks,
+>
+> Moritz
