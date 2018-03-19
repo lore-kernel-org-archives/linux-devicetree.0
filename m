@@ -1,24 +1,29 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 5/6] dt-bindings: clock: mediatek: add audsys support for
- MT2701
-Date: Mon, 19 Mar 2018 13:41:44 -0700
-Message-ID: <152149210481.242365.6023758294737799949@swboyd.mtv.corp.google.com>
-References: <cover.1520327262.git.ryder.lee@mediatek.com>
- <9ff8a4ae99e50bc5f9f1ae6c7a454cb80451fd5b.1520327262.git.ryder.lee@mediatek.com>
+Subject: Re: [PATCH RESEND 1/2] clk: stm32: END_PRIMARY_CLK should be declare after
+ CLK_SYSCLK
+Date: Mon, 19 Mar 2018 13:45:38 -0700
+Message-ID: <152149233843.242365.271342087460300826@swboyd.mtv.corp.google.com>
+References: <1520578651-28849-1-git-send-email-gabriel.fernandez@st.com>
+ <1520578651-28849-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ff8a4ae99e50bc5f9f1ae6c7a454cb80451fd5b.1520327262.git.ryder.lee@mediatek.com>
+In-Reply-To: <1520578651-28849-2-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Garlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Alexandre Torgue <alexandre.torgue@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ryder Lee (2018-03-06 01:09:30)
-> This patch adds a compatible string for MT2701.
+Quoting gabriel.fernandez@st.com (2018-03-08 22:57:30)
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Update of END_PRIMARY_CLK was missed, it should be after CLK_SYSCLK
+> hsi and sysclk are overwritten by gpioa and gpiob.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Tested-by: Philippe Cornu <philippe.cornu@st.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 
 Applied to clk-next
