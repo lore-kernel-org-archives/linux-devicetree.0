@@ -1,7 +1,7 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 1/3] iio: rename the multiplexer category to wrapper
-Date: Mon, 19 Mar 2018 18:02:44 +0100
-Message-ID: <20180319170246.26830-2-peda@axentia.se>
+Subject: [PATCH 3/3] iio: wrapper: unit-converter: new driver
+Date: Mon, 19 Mar 2018 18:02:46 +0100
+Message-ID: <20180319170246.26830-4-peda@axentia.se>
 References: <20180319170246.26830-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,114 +12,336 @@ To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Paves the way for other wrappers.
+If an ADC channel measures the midpoint of a voltage divider, the
+interesting voltage is often the voltage over the full resistance.
+E.g. if the full voltage it too big for the ADC to handle.
+Likewise, if an ADC channel measures the voltage across a resistor,
+the interesting value is often the current through the resistor.
+
+This driver solves both problems by allowing to linearly scale a channel
+and by allowing changes to the type of the channel. Or both.
 
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt          | 0
- MAINTAINERS                                                           | 4 ++--
- drivers/iio/Kconfig                                                   | 2 +-
- drivers/iio/Makefile                                                  | 2 +-
- drivers/iio/{multiplexer => wrapper}/Kconfig                          | 4 ++--
- drivers/iio/{multiplexer => wrapper}/Makefile                         | 2 +-
- drivers/iio/{multiplexer => wrapper}/iio-mux.c                        | 0
- 7 files changed, 7 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt (100%)
- rename drivers/iio/{multiplexer => wrapper}/Kconfig (88%)
- rename drivers/iio/{multiplexer => wrapper}/Makefile (67%)
- rename drivers/iio/{multiplexer => wrapper}/iio-mux.c (100%)
+ MAINTAINERS                              |   1 +
+ drivers/iio/wrapper/Kconfig              |   9 ++
+ drivers/iio/wrapper/Makefile             |   1 +
+ drivers/iio/wrapper/iio-unit-converter.c | 268 +++++++++++++++++++++++++++++++
+ 4 files changed, 279 insertions(+)
+ create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
 
-diff --git a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt b/Documentation/devicetree/bindings/iio/wrapper/io-channel-mux.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-rename to Documentation/devicetree/bindings/iio/wrapper/io-channel-mux.txt
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bdc260e36b7..96e5503bfb60 100644
+index 5dd555c7b1b0..b879289f1318 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -6865,8 +6865,8 @@ IIO MULTIPLEXER
- M:	Peter Rosin <peda@axentia.se>
+@@ -6889,6 +6889,7 @@ M:	Peter Rosin <peda@axentia.se>
  L:	linux-iio@vger.kernel.org
  S:	Maintained
--F:	Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
--F:	drivers/iio/multiplexer/iio-mux.c
-+F:	Documentation/devicetree/bindings/iio/wrapper/io-channel-mux.txt
-+F:	drivers/iio/wrapper/iio-mux.c
+ F:	Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
++F:	drivers/iio/wrapper/iio-unit-converter.c
  
- IIO SUBSYSTEM AND DRIVERS
- M:	Jonathan Cameron <jic23@kernel.org>
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index b3c8c6ef0dff..c4d25746c585 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -83,7 +83,6 @@ source "drivers/iio/humidity/Kconfig"
- source "drivers/iio/imu/Kconfig"
- source "drivers/iio/light/Kconfig"
- source "drivers/iio/magnetometer/Kconfig"
--source "drivers/iio/multiplexer/Kconfig"
- source "drivers/iio/orientation/Kconfig"
- if IIO_TRIGGER
-    source "drivers/iio/trigger/Kconfig"
-@@ -93,5 +92,6 @@ source "drivers/iio/potentiostat/Kconfig"
- source "drivers/iio/pressure/Kconfig"
- source "drivers/iio/proximity/Kconfig"
- source "drivers/iio/temperature/Kconfig"
-+source "drivers/iio/wrapper/Kconfig"
- 
- endif # IIO
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index b16b2e9ddc40..dc5486f6c148 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -29,7 +29,6 @@ obj-y += humidity/
- obj-y += imu/
- obj-y += light/
- obj-y += magnetometer/
--obj-y += multiplexer/
- obj-y += orientation/
- obj-y += potentiometer/
- obj-y += potentiostat/
-@@ -37,3 +36,4 @@ obj-y += pressure/
- obj-y += proximity/
- obj-y += temperature/
- obj-y += trigger/
-+obj-y += wrapper/
-diff --git a/drivers/iio/multiplexer/Kconfig b/drivers/iio/wrapper/Kconfig
-similarity index 88%
-rename from drivers/iio/multiplexer/Kconfig
-rename to drivers/iio/wrapper/Kconfig
-index 735a7b0e6fd8..f27de347c9b3 100644
---- a/drivers/iio/multiplexer/Kconfig
+ IKANOS/ADI EAGLE ADSL USB DRIVER
+ M:	Matthieu Castet <castet.matthieu@free.fr>
+diff --git a/drivers/iio/wrapper/Kconfig b/drivers/iio/wrapper/Kconfig
+index f27de347c9b3..16554479264a 100644
+--- a/drivers/iio/wrapper/Kconfig
 +++ b/drivers/iio/wrapper/Kconfig
-@@ -1,9 +1,9 @@
- #
--# Multiplexer drivers
-+# Wrapper drivers
- #
- # When adding new entries keep the list in alphabetical order
+@@ -15,4 +15,13 @@ config IIO_MUX
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called iio-mux.
  
--menu "Multiplexers"
-+menu "Wrapers"
- 
- config IIO_MUX
- 	tristate "IIO multiplexer driver"
-diff --git a/drivers/iio/multiplexer/Makefile b/drivers/iio/wrapper/Makefile
-similarity index 67%
-rename from drivers/iio/multiplexer/Makefile
-rename to drivers/iio/wrapper/Makefile
-index 68be3c4abd07..53a7b78734e3 100644
---- a/drivers/iio/multiplexer/Makefile
++config IIO_UNIT_CONVERTER
++	tristate "IIO unit converter"
++	depends on OF || COMPILE_TEST
++	help
++	  Say yes here to build support for the IIO unit converter.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called iio-unit-converter.
++
+ endmenu
+diff --git a/drivers/iio/wrapper/Makefile b/drivers/iio/wrapper/Makefile
+index 53a7b78734e3..1b9db53bd420 100644
+--- a/drivers/iio/wrapper/Makefile
 +++ b/drivers/iio/wrapper/Makefile
-@@ -1,5 +1,5 @@
- #
--# Makefile for industrial I/O multiplexer drivers
-+# Makefile for industrial I/O wrapper drivers
- #
+@@ -4,3 +4,4 @@
  
  # When adding new entries keep the list in alphabetical order
-diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/wrapper/iio-mux.c
-similarity index 100%
-rename from drivers/iio/multiplexer/iio-mux.c
-rename to drivers/iio/wrapper/iio-mux.c
+ obj-$(CONFIG_IIO_MUX) += iio-mux.o
++obj-$(CONFIG_IIO_UNIT_CONVERTER) += iio-unit-converter.o
+diff --git a/drivers/iio/wrapper/iio-unit-converter.c b/drivers/iio/wrapper/iio-unit-converter.c
+new file mode 100644
+index 000000000000..53c126f39e4e
+--- /dev/null
++++ b/drivers/iio/wrapper/iio-unit-converter.c
+@@ -0,0 +1,268 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * IIO unit converter
++ *
++ * Copyright (C) 2018 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ */
++
++#include <linux/err.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++
++struct unit_converter {
++	struct iio_channel *parent;
++	struct iio_dev *indio_dev;
++	struct iio_chan_spec chan;
++	struct iio_chan_spec_ext_info *ext_info;
++	s32 numerator;
++	s32 denominator;
++};
++
++static int unit_converter_read_raw(struct iio_dev *indio_dev,
++				   struct iio_chan_spec const *chan,
++				   int *val, int *val2, long mask)
++{
++	struct unit_converter *uc = iio_priv(indio_dev);
++	unsigned long long tmp;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return iio_read_channel_raw(uc->parent, val);
++
++	case IIO_CHAN_INFO_SCALE:
++		ret = iio_read_channel_scale(uc->parent, val, val2);
++		switch (ret) {
++		case IIO_VAL_FRACTIONAL:
++			*val *= uc->numerator;
++			*val2 *= uc->denominator;
++			return ret;
++		case IIO_VAL_INT:
++			*val *= uc->numerator;
++			if (uc->denominator == 1)
++				return ret;
++			*val2 = uc->denominator;
++			return IIO_VAL_FRACTIONAL;
++		case IIO_VAL_FRACTIONAL_LOG2:
++			tmp = *val * 1000000000LL;
++			do_div(tmp, uc->denominator);
++			tmp *= uc->numerator;
++			do_div(tmp, 1000000000LL);
++			*val = tmp;
++			return ret;
++		}
++		return -EOPNOTSUPP;
++	}
++
++	return -EINVAL;
++}
++
++static int unit_converter_read_avail(struct iio_dev *indio_dev,
++				     struct iio_chan_spec const *chan,
++				     const int **vals, int *type, int *length,
++				     long mask)
++{
++	struct unit_converter *uc = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		*type = IIO_VAL_INT;
++		return iio_read_avail_channel_raw(uc->parent, vals, length);
++	}
++
++	return -EINVAL;
++}
++
++static int unit_converter_write_raw(struct iio_dev *indio_dev,
++				    struct iio_chan_spec const *chan,
++				    int val, int val2, long mask)
++{
++	struct unit_converter *uc = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return iio_write_channel_raw(uc->parent, val);
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info unit_converter_info = {
++	.read_raw = unit_converter_read_raw,
++	.read_avail = unit_converter_read_avail,
++	.write_raw = unit_converter_write_raw,
++};
++
++static ssize_t unit_converter_read_ext_info(struct iio_dev *indio_dev,
++					    uintptr_t private,
++					    struct iio_chan_spec const *chan,
++					    char *buf)
++{
++	struct unit_converter *uc = iio_priv(indio_dev);
++
++	return iio_read_channel_ext_info(uc->parent,
++					 uc->ext_info[private].name,
++					 buf);
++}
++
++static ssize_t unit_converter_write_ext_info(struct iio_dev *indio_dev,
++					     uintptr_t private,
++					     struct iio_chan_spec const *chan,
++					     const char *buf, size_t len)
++{
++	struct unit_converter *uc = iio_priv(indio_dev);
++
++	return iio_write_channel_ext_info(uc->parent,
++					  uc->ext_info[private].name,
++					  buf, len);
++}
++
++static int unit_converter_configure_channel(struct device *dev,
++					    struct unit_converter *uc,
++					    enum iio_chan_type type)
++{
++	struct iio_chan_spec *chan = &uc->chan;
++	struct iio_chan_spec const *pchan = uc->parent->channel;
++	int ret;
++
++	chan->indexed = 1;
++	chan->output = pchan->output;
++	chan->ext_info = uc->ext_info;
++
++	if (type == -1) {
++		ret = iio_get_channel_type(uc->parent, &type);
++		if (ret < 0) {
++			dev_err(dev, "failed to get parent channel type\n");
++			return ret;
++		}
++	}
++	chan->type = type;
++
++	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
++		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
++	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
++		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
++
++	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
++		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
++
++	chan->channel = 0;
++
++	return 0;
++}
++
++static int unit_converter_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct iio_channel *parent;
++	struct unit_converter *uc;
++	const char *type_name;
++	enum iio_chan_type type = -1; /* default to same as parent */
++	int sizeof_ext_info;
++	int sizeof_priv;
++	int i;
++	int ret;
++
++	if (!device_property_read_string(dev, "type", &type_name)) {
++		if (!strcmp(type_name, "voltage"))
++			type = IIO_VOLTAGE;
++		else if (!strcmp(type_name, "current"))
++			type = IIO_CURRENT;
++		else
++			return -EINVAL;
++	}
++
++	parent = devm_iio_channel_get(dev, "parent");
++	if (IS_ERR(parent)) {
++		if (PTR_ERR(parent) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get parent channel\n");
++		return PTR_ERR(parent);
++	}
++
++	sizeof_ext_info = iio_get_channel_ext_info_count(parent);
++	if (sizeof_ext_info) {
++		sizeof_ext_info += 1; /* one extra entry for the sentinel */
++		sizeof_ext_info *= sizeof(*uc->ext_info);
++	}
++
++	sizeof_priv = sizeof(*uc) + sizeof_ext_info;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof_priv);
++	if (!indio_dev)
++		return -ENOMEM;
++
++	uc = iio_priv(indio_dev);
++
++	uc->numerator = 1;
++	uc->denominator = 1;
++	device_property_read_u32(dev, "numerator", &uc->numerator);
++	device_property_read_u32(dev, "denominator", &uc->denominator);
++	if (!uc->numerator || !uc->denominator) {
++		dev_err(dev, "invalid scaling factor.\n");
++		return -EINVAL;
++	}
++
++	platform_set_drvdata(pdev, indio_dev);
++
++	uc->parent = parent;
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &unit_converter_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = &uc->chan;
++	indio_dev->num_channels = 1;
++	if (sizeof_ext_info) {
++		uc->ext_info = devm_kmemdup(dev,
++					    parent->channel->ext_info,
++					    sizeof_ext_info, GFP_KERNEL);
++		if (!uc->ext_info)
++			return -ENOMEM;
++
++		for (i = 0; uc->ext_info[i].name; ++i) {
++			if (parent->channel->ext_info[i].read)
++				uc->ext_info[i].read = unit_converter_read_ext_info;
++			if (parent->channel->ext_info[i].write)
++				uc->ext_info[i].write = unit_converter_write_ext_info;
++			uc->ext_info[i].private = i;
++		}
++	}
++
++	ret = unit_converter_configure_channel(dev, uc, type);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_iio_device_register(dev, indio_dev);
++	if (ret) {
++		dev_err(dev, "failed to register iio device\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id unit_converter_match[] = {
++	{ .compatible = "io-channel-unit-converter" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, unit_converter_match);
++
++static struct platform_driver unit_converter_driver = {
++	.probe = unit_converter_probe,
++	.driver = {
++		.name = "iio-unit-converter",
++		.of_match_table = unit_converter_match,
++	},
++};
++module_platform_driver(unit_converter_driver);
++
++MODULE_DESCRIPTION("IIO unit converter driver");
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
