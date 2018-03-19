@@ -1,141 +1,88 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: Re: [PATCH] arm: dts: hummingboard2: convert onboard audio to
- simple-audio-card
-Date: Mon, 19 Mar 2018 11:02:17 -0400
-Message-ID: <20180319150217.legzgw6a63b7a3ky@bacon.ohporter.com>
-References: <20180319135326.24357-1-mporter@konsulko.com>
- <20180319142350.GE2743@n2100.armlinux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2] ASoC: samsung: Mark unused Odroid compatibles as
+ deprecated
+Date: Mon, 19 Mar 2018 16:14:38 +0100
+Message-ID: <12dfaefb-fd79-7a1d-2676-307d4e28b7e1@samsung.com>
+References: <CGME20180319102927epcas1p12d4a070d0a7125db9424990b997c01c8@epcas1p1.samsung.com>
+        <20180318153512.8343-1-krzk@kernel.org>
+        <9bb639c3-f4e9-3a1e-61e8-a34fcfd0a344@samsung.com>
+        <CAJKOXPcBesWpBoq07XbE1j3F1_N5dAWMTRkv8SN=tSMEm1q0iQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180319142350.GE2743@n2100.armlinux.org.uk>
+In-reply-to: <CAJKOXPcBesWpBoq07XbE1j3F1_N5dAWMTRkv8SN=tSMEm1q0iQ@mail.gmail.com>
+Content-language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 02:23:50PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Mar 19, 2018 at 09:53:26AM -0400, Matt Porter wrote:
-> > The HB2 onboard audio currently makes use of the imx-audio-sgtl5000
-> > binding. This binding does not support auxiliary audio devices such
-> > as external amplifiers. The simple-audio-card binding does support
-> > this property which allows systems incorporating the HB2 to easily
-> > add an auxiliary device that's attached to the HB2 audio jack with
-> > an overlay. Convert HB2 to use simple-audio-card for the onboard
-> > audio to allow for this additional flexibility.
+On 03/19/2018 11:56 AM, Krzysztof Kozlowski wrote:
+> On Mon, Mar 19, 2018 at 11:29 AM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>> On 03/18/2018 04:35 PM, Krzysztof Kozlowski wrote:
+>>> Compatible for XU4 audio is not being used.  Instead the board uses the
+>>> same compatible as XU3.  The devices are now just compatible so they
+>>> should use the same value.  Mark "hardkernel,odroid-xu4-audio" as being
+>>> deprecated so in this future could be removed to limit useless
+>>> properties.
+>>
+>> It doesn't feel right to obsolete the "hardkernel,odroid-xu4-audio"
+>> compatible, there is significant difference between XU3 and XU4 - there
+>> is no audio CODEC on XU4, this board only supports audio over HDMI interface.
+>> XU4 could be compatible with XU3, but not the other way around.
+>> It just happens we have other DT properties that help to handle such HW
+>> design difference.
 > 
-> What is driving this change?
+> The compatible does not describe physical differences. It does not
+> mean that devices are the same. In this case they are just coming from
+> the same family and they operate the same, from the bindings
+> perspective.
 
-I have an HB2 that's incorporated in a platform that includes an
-audio processor (tda7419) and external amplifier (tda7850) attached to
-the HB2 headphone out. The tda7419 also handles two additional non-Linux
-audio source inputs, FWIW. The tda7419 and tda7850 are supported as
-ASoC component drivers. However, they must be added to a card as
-auxiliary devices to be instantiated and have their controls exposed
-to userspace. In addition, once added as an aux device, the tda7419
-muxes and switches can participate in DAPM properly. Using
-simple-audio-card enables this option, without giving up any of the
-current functionality when using imx-audio-sgtl5000.
+>From the ePAPR 'compatible' string definition you cited, the compatible 
+string is supposed to indicate programming model of a device, for the purpose 
+of matching a driver. I thought the programming model refers to the driver's
+SW interfaces used to control the hardware, rather than only to a particular
+DT binding design. And XU4 is not compatible with XU3 from device programming
+perspective.
 
->Why only make this change for HB2 and not HB?
+> The XU4 binding is not being used. Adding a compatible which is not
+> used in the moment of adding is a proof that this compatible is not
+> needed. It is just a duplicate. There is no point of adding
+> duplicates.
 
-I was a little fixated on the HB2 platform that I'm working on. It's
-equally applicable to HB so I can add the same change there.
-
--Matt
-
-> > Signed-off-by: Matt Porter <mporter@konsulko.com>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 48 +++++++++++++++++++++++-----
-> >  1 file changed, 40 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> > index dffbc92e0023..587251ab76ec 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> > @@ -38,6 +38,7 @@
-> >   *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> >   *     OTHER DEALINGS IN THE SOFTWARE.
-> >   */
-> > +#include <dt-bindings/sound/fsl-imx-audmux.h>
-> >  
-> >  / {
-> >  	chosen {
-> > @@ -145,22 +146,52 @@
-> >  		vin-supply = <&v_5v0>;
-> >  	};
-> >  
-> > -	sound-sgtl5000 {
-> > -		audio-codec = <&sgtl5000>;
-> > -		audio-routing =
-> > +	audio: sound-sgtl5000 {
-> > +		compatible = "simple-audio-card";
-> > +		simple-audio-card,name = "On-Board Codec";
-> > +		simple-audio-card,format = "i2s";
-> > +		simple-audio-card,bitclock-master = <&sound_codec>;
-> > +		simple-audio-card,frame-master = <&sound_codec>;
-> > +		simple-audio-card,widgets =
-> > +			"Microphone", "Mic Jack",
-> > +			"Headphone", "Headphone Jack";
-> > +		simple-audio-card,routing =
-> >  			"MIC_IN", "Mic Jack",
-> >  			"Mic Jack", "Mic Bias",
-> >  			"Headphone Jack", "HP_OUT";
-> > -		compatible = "fsl,imx-audio-sgtl5000";
-> > -		model = "On-board Codec";
-> > -		mux-ext-port = <5>;
-> > -		mux-int-port = <1>;
-> > -		ssi-controller = <&ssi1>;
-> > +
-> > +		sound_cpu: simple-audio-card,cpu {
-> > +			sound-dai = <&ssi1>;
-> > +		};
-> > +
-> > +		sound_codec: simple-audio-card,codec {
-> > +			sound-dai = <&sgtl5000>;
-> > +		};
-> >  	};
-> >  };
-> >  
-> >  &audmux {
-> >  	status = "okay";
-> > +
-> > +	ssi1 {
-> > +		fsl,audmux-port = <0>;
-> > +		fsl,port-config = <
-> > +			(IMX_AUDMUX_V2_PTCR_SYN |
-> > +			 IMX_AUDMUX_V2_PTCR_TFSEL(4) |
-> > +			 IMX_AUDMUX_V2_PTCR_TCSEL(4) |
-> > +			 IMX_AUDMUX_V2_PTCR_TFSDIR |
-> > +			 IMX_AUDMUX_V2_PTCR_TCLKDIR)
-> > +			 IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-> > +		>;
-> > +	};
-> > +
-> > +	pins5 {
-> > +		fsl,audmux-port = <4>;
-> > +		fsl,port-config = <
-> > +			IMX_AUDMUX_V2_PTCR_SYN
-> > +			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-> > +		>;
-> > +	};
-> >  };
-> >  
-> >  &ecspi2 {
-> > @@ -193,6 +224,7 @@
-> >  		compatible = "fsl,sgtl5000";
-> >  		pinctrl-names = "default";
-> >  		pinctrl-0 = <&pinctrl_hummingboard2_sgtl5000>;
-> > +		#sound-dai-cells = <0>;
-> >  		reg = <0x0a>;
-> >  		VDDA-supply = <&v_3v2>;
-> >  		VDDD-supply = <&vcc_1p8>;
-> > -- 
-> > 2.11.0
-> > 
+I disagree it is just an unnecessary duplicate, I think dts for XU4 could
+fixed instead of dropping that compatible from the binding.
+>> Moreover, only XU4 is still in production and should be in few more years [1],
+>> others are obsoleted now.
 > 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-> According to speedtest.net: 8.21Mbps down 510kbps up
+> It is not a problem. Whether device is manufactured or not, does not
+> reflect what bindings we are using. Deprecated XU4 compatible does not
+> mean that XU4 itself is deprecated. Just this compatible should not be
+> used for new DTS.
+
+>> So I think we should keep at least these 2 compatible strings:
+>>
+>> - "hardkernel,odroid-xu3-audio" - for boards with audio CODEC,
+>> - "hardkernel,odroid-xu4-audio" - for boards without audio CODEC,
+>>    supporting only HDMI interface.
+> 
+> Yeah, and then we inflate this list into X, X2, U3, HC1 and all others
+> which are the same. And then we should add XU3-lite (it is different
+> device). This goes to some nonsense. Compatible is not for each device
+> but for family even though there are differences between specific
+> devices.
+
+You are not listening, I refer only to major audio subsystem differences.
+It would have been:
+
+ - "hardkernel,odroid-xu3-audio" for: U2, U3, X, X2, XU, XU3, XU3-Lite
+ - "hardkernel,odroid-xu4-audio" for: XU4
+
+But if you insist on only one compatible I'm not going to argue further,
+you will be responsible for this. :)  
+
+-- 
+Regards,
+Sylwester
