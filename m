@@ -1,84 +1,111 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
-Date: Mon, 19 Mar 2018 01:40:52 +0000
-Message-ID: <HE1PR04MB3113594EF47FBFE55802C88F87D40@HE1PR04MB3113.eurprd04.prod.outlook.com>
-References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
- <20180309233931.7xujvo4eg4g5ftri@rob-hp-laptop>
- <HE1PR04MB3113DC090D0608077D396DCB87D30@HE1PR04MB3113.eurprd04.prod.outlook.com>
- <CAL_Jsq+=qMOAYw1+APwWKmgkfY=2c8OSes5ah2jrXnRVNU78mw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: add tda7419 audio processor binding" to
+	the asoc tree
+Date: Mon, 19 Mar 2018 01:41:01 +0000 (GMT)
+Message-ID: <20180319014101.ADC1344007A@finisterre.ee.mobilebroadband>
+References: <20180318172238.9795-2-mporter@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+=qMOAYw1+APwWKmgkfY=2c8OSes5ah2jrXnRVNU78mw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180318172238.9795-2-mporter@konsulko.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
-> 
-> On Sun, Mar 11, 2018 at 11:43 PM, Jacky Bai <ping.bai@nxp.com> wrote:
-> >> > diff --git a/arch/arm/boot/dts/imx6sll.dtsi
-> >> > b/arch/arm/boot/dts/imx6sll.dtsi
-> >> > +           spi3 = &ecspi3;
-> >> > +           spi4 = &ecspi4;
-> >> > +           usbphy0 = &usbphy1;
-> >> > +           usbphy1 = &usbphy2;
-> >>
-> >> Why do you need a alias for phys?
-> >
-> > The alias of usbphy seems used by drivers/usb/phy/phy-mxs-usb.c. So we need
-> to add alias for usbphy.
-> 
-> That use should be fixed. The correct way to handle this is add a cell to
-> "fsl,anatop" with 0 or 1 to distinguish each phy.
-> 
+The patch
 
-This change can be done later by usb guys, for now I think it can be just keep as other imx6 platform.
+   ASoC: add tda7419 audio processor binding
 
-> >> > +   };
-> >> > +
-> >> > +   cpus {
-> >> > +           #address-cells = <1>;
-> >> > +           #size-cells = <0>;
-> >> > +
-> >> > +           cpu0: cpu@0 {
-> >> > +                   compatible = "arm,cortex-a9";
-> >> > +                   device_type = "cpu";
-> >> > +                   reg = <0>;
-> >> > +                   next-level-cache = <&L2>;
-> >> > +                   operating-points = <
-> >> > +                           /* kHz    uV */
-> >> > +                           996000  1225000
-> >> > +                           792000  1175000
-> >> > +                           396000  1075000
-> >> > +                           198000  975000
-> >> > +                   >;
-> >> > +                   fsl,soc-operating-points = <
-> >>
-> >> This is not documented.
-> >
-> > This is same as we used on other imx6 SOC. I don't know where to add doc for
-> this property. Please give me some suggestion.
-> 
-> Along side other OPP binding docs. The real question is why you need this and
-> can't use the original OPP binding (which you have too) or move to the v2
-> binding.
-> 
+has been applied to the asoc tree at
 
-For i.MX6 SOCs, we have CPU core voltage domain and a SOC voltage domain. The voltage of these two domain
-has strict relationship. So when doing cpu core DVFS, the SOC voltage need to be changed accordingly, the
-'fsl,soc-operating-points' binding is used for SOC OPP.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Jacky
-> Rob
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 050a0e1f539448474250f441332c0a7d9714d3b5 Mon Sep 17 00:00:00 2001
+From: Matt Porter <mporter@konsulko.com>
+Date: Sun, 18 Mar 2018 13:22:37 -0400
+Subject: [PATCH] ASoC: add tda7419 audio processor binding
+
+DeviceTree binding for the tda7419 audio processor.
+
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/tda7419.txt          | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tda7419.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/tda7419.txt b/Documentation/devicetree/bindings/sound/tda7419.txt
+new file mode 100644
+index 000000000000..6b85ec38dd56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tda7419.txt
+@@ -0,0 +1,38 @@
++TDA7419 audio processor
++
++This device supports I2C only.
++
++Required properties:
++
++- compatible : "st,tda7419"
++- reg : the I2C address of the device.
++- vdd-supply : a regulator spec for the common power supply (8-10V)
++
++Optional properties:
++
++- st,mute-gpios : a GPIO spec for the MUTE pin.
++
++Pins on the device (for linking into audio routes):
++
++  * SE3L
++  * SE3R
++  * SE2L
++  * SE2R
++  * SE1L
++  * SE1R
++  * DIFFL
++  * DIFFR
++  * MIX
++  * OUTLF
++  * OUTRF
++  * OUTLR
++  * OUTRR
++  * OUTSW
++
++Example:
++
++ap: tda7419@44 {
++	compatible = "st,tda7419";
++	reg = <0x44>;
++	vdd-supply = <&vdd_9v0_reg>;
++};
+-- 
+2.16.2
