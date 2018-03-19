@@ -1,75 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: samsung: Mark unused Odroid compatibles as deprecated" to the asoc tree
-Date: Mon, 19 Mar 2018 01:03:15 +0000 (GMT)
-Message-ID: <20180319010315.ECCA1440079@finisterre.ee.mobilebroadband>
-References: <20180318153512.8343-1-krzk@kernel.org>
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Subject: [PATCH] arm64: dts: uniphier: add syscon property for UniPhier sound system
+Date: Mon, 19 Mar 2018 10:21:58 +0900
+Message-ID: <20180319012158.26411-1-suzuki.katsuhiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318153512.8343-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+This patch adds syscon property for specifying soc-glue core into
+device-tree of LD11/LD20 SoC.
 
-   ASoC: samsung: Mark unused Odroid compatibles as deprecated
+Currently, soc-glue core is used for changing the state of S/PDIF
+signal output pin to signal output state or Hi-Z state.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3b84574d95c020f01410ff2ca0a38dd8fd7b644b Mon Sep 17 00:00:00 2001
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Sun, 18 Mar 2018 16:35:12 +0100
-Subject: [PATCH] ASoC: samsung: Mark unused Odroid compatibles as deprecated
-
-Compatible for XU4 audio is not being used.  Instead the board uses the
-same compatible as XU3.  The devices are now just compatible so they
-should use the same value.  Mark "hardkernel,odroid-xu4-audio" as being
-deprecated so in this future could be removed to limit useless
-properties.
-
-Additionally add older compatibles appearing in the bindings.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 ---
- Documentation/devicetree/bindings/sound/samsung,odroid.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/uniphier-pxs2.dtsi             | 4 +++-
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 4 +++-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-index f35a2694eb04..e9da2200e173 100644
---- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-+++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-@@ -3,7 +3,9 @@ Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
- Required properties:
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index 595045441c9c..c72c0a123c87 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -243,6 +243,8 @@
+ 			resets = <&sys_rst 40>;
+ 			#sound-dai-cells = <1>;
  
-  - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
--		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board
-+		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated),
-+		"samsung,odroid-xu3-audio" - for Odroid XU3 board (deprecated),
-+		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
-  - model - the user-visible name of this sound complex
-  - clocks - should contain entries matching clock names in the clock-names
-     property
++			socionext,syscon = <&sg>;
++
+ 			i2s_port0: port@0 {
+ 				i2s_hdmi: endpoint {
+ 				};
+@@ -418,7 +420,7 @@
+ 			};
+ 		};
+ 
+-		soc-glue@5f800000 {
++		sg: soc-glue@5f800000 {
+ 			compatible = "socionext,uniphier-pxs2-soc-glue",
+ 				     "simple-mfd", "syscon";
+ 			reg = <0x5f800000 0x2000>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index efa95573b2aa..5a1b8d574904 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -198,6 +198,8 @@
+ 			resets = <&sys_rst 40>;
+ 			#sound-dai-cells = <1>;
+ 
++			socionext,syscon = <&sg>;
++
+ 			i2s_port0: port@0 {
+ 				i2s_hdmi: endpoint {
+ 				};
+@@ -479,7 +481,7 @@
+ 			};
+ 		};
+ 
+-		soc-glue@5f800000 {
++		sg: soc-glue@5f800000 {
+ 			compatible = "socionext,uniphier-ld11-soc-glue",
+ 				     "simple-mfd", "syscon";
+ 			reg = <0x5f800000 0x2000>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 19c935688a77..831522444276 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -298,6 +298,8 @@
+ 			resets = <&sys_rst 40>;
+ 			#sound-dai-cells = <1>;
+ 
++			socionext,syscon = <&sg>;
++
+ 			i2s_port0: port@0 {
+ 				i2s_hdmi: endpoint {
+ 				};
+@@ -525,7 +527,7 @@
+ 			cdns,phy-dll-delay-sdclk-hsmmc = <21>;
+ 		};
+ 
+-		soc-glue@5f800000 {
++		sg: soc-glue@5f800000 {
+ 			compatible = "socionext,uniphier-ld20-soc-glue",
+ 				     "simple-mfd", "syscon";
+ 			reg = <0x5f800000 0x2000>;
 -- 
 2.16.2
