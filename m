@@ -1,72 +1,48 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/5] ASoC: samsung: Document compatible
- strings for Odroid X/X2, Odroid XU3
-Date: Mon, 19 Mar 2018 11:57:40 +0100
-Message-ID: <CAJKOXPecksw8Y_XRVCR3rsDVHPHYbiwWDrMcxeCnx1bDDV6nyg@mail.gmail.com>
-References: <CGME20180314164301epcas1p105f42730914735774284892b71839572@epcas1p1.samsung.com>
- <20180314164242.22927-1-s.nawrocki@samsung.com>
- <CAJKOXPdxSULHestFBc2YmtVzEpu422VdqtKMmy9FoCOjGV3wgw@mail.gmail.com>
- <dad52dab-d6e3-0283-0a19-b42d6632df29@samsung.com>
+From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 27/37] iommu/arm-smmu-v3: Register fault workqueue
+Date: Mon, 19 Mar 2018 19:03:41 +0800
+Message-ID: <f2841aac-4c5e-4ac2-fa4d-81d6b2857503@huawei.com>
+References: <1519280641-30258-1-git-send-email-xieyisheng1@huawei.com>
+	<1519280641-30258-27-git-send-email-xieyisheng1@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <dad52dab-d6e3-0283-0a19-b42d6632df29@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1519280641-30258-27-git-send-email-xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 19, 2018 at 11:17 AM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 03/16/2018 08:37 AM, Krzysztof Kozlowski wrote:
->>> diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
->>> index f35a2694eb04..a50a0c6a354b 100644
->>> --- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
->>> +++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
->>> @@ -1,8 +1,10 @@
->>> -Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
->>> +Hardkernel Odroid X/X2/U3/XU3/XU4 audio complex with MAX98090 codec
->>>
->>>  Required properties:
->>>
->>> - - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
->>> + - compatible - "hardkernel,odroid-u3-audio" - for Odroid U3 board,
->>> +               "hardkernel,odroid-x-audio" - for Odroid X, Odroid X2 boards,
->>> +               "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
->>>                 "hardkernel,odroid-xu4-audio" - for Odroid XU4 board
->>
->> These are the same so I think they should not get separate
->> compatibles. By definition [2] the compatible expresses the
->> compatibility with family of devices. In this case - these belong to
->> the same family.
->>
->> The same applies to patch 5/5 (implementation of this).
->
-> Given that everything except XU4 is already obsoleted, are we going to use
-> "hardkernel,odroid-xu3-audio" for Odroid X and Odroid U3?
->
-> We could also make it:
-> "hardkernel,odroid-xu3-audio", "hardkernel,odroid-x-audio" - for Odroid X, Odroid X2
-> "hardkernel,odroid-xu3-audio", "hardkernel,odroid-u3-audio" - for Odroid U3
->
-> And in the driver wee would only have "hardkernel,odroid-xu3-audio", while dts
-> would contain detailed compatible.
+Hi Jean,
 
-Add only these compatibles which are different. If the binding is the
-same, then there is no point of adding new compatible.
+[...]
+> @@ -3168,6 +3260,13 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (smmu->features & (ARM_SMMU_FEAT_STALLS | ARM_SMMU_FEAT_PRI)) {
+> +		smmu->faultq_nb.notifier_call = arm_smmu_flush_queues;
+> +		ret = iommu_fault_queue_register(&smmu->faultq_nb);
+> +		if (ret)
+> +			return ret;
 
-If such difference in binding appears, then it is not a problem to add
-new compatible. It is however more difficult to remove or change
-existing binding...
+I find a case here: CONFIG_IOMMU_FAULT=n, and smmu support feature STALLS or PRI,
+the device probe will failed here, is this what we want?
 
-Best regards,
-Krzysztof
+Thanks
+Yisheng
+
+> +	}
+> +
+>  	/* And we're up. Go go go! */
+>  	ret = iommu_device_sysfs_add(&smmu->iommu, dev, NULL,
+>  				     "smmu3.%pa", &ioaddr);
