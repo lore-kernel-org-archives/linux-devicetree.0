@@ -1,54 +1,84 @@
-From: Alexey Roslyakov <alexey.roslyakov@gmail.com>
-Subject: [PATCH net-next v2 1/2] brcmfmac: add new dt entries for SG SDIO settings
-Date: Mon, 19 Mar 2018 08:40:31 +0700
-Message-ID: <20180319014032.9394-2-alexey.roslyakov@gmail.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch, kvalo@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, arend.vanspriel@broadcom.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, Alexey Roslyakov <alexey.roslyakov@gmail.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Mon, 19 Mar 2018 01:40:52 +0000
+Message-ID: <HE1PR04MB3113594EF47FBFE55802C88F87D40@HE1PR04MB3113.eurprd04.prod.outlook.com>
+References: <1520503424-22985-1-git-send-email-ping.bai@nxp.com>
+ <20180309233931.7xujvo4eg4g5ftri@rob-hp-laptop>
+ <HE1PR04MB3113DC090D0608077D396DCB87D30@HE1PR04MB3113.eurprd04.prod.outlook.com>
+ <CAL_Jsq+=qMOAYw1+APwWKmgkfY=2c8OSes5ah2jrXnRVNU78mw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+=qMOAYw1+APwWKmgkfY=2c8OSes5ah2jrXnRVNU78mw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There are 3 fields in SDIO settings (quirks) to workaround some of
-the SG SDIO host particularities, i.e higher align requirements for
-SG items.
-All coding is done the long time ago, but there is no way to change the
-driver behavior without patching the kernel.
-Add missing devicetree entries.
+> Subject: Re: [PATCH v4 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+> 
+> On Sun, Mar 11, 2018 at 11:43 PM, Jacky Bai <ping.bai@nxp.com> wrote:
+> >> > diff --git a/arch/arm/boot/dts/imx6sll.dtsi
+> >> > b/arch/arm/boot/dts/imx6sll.dtsi
+> >> > +           spi3 = &ecspi3;
+> >> > +           spi4 = &ecspi4;
+> >> > +           usbphy0 = &usbphy1;
+> >> > +           usbphy1 = &usbphy2;
+> >>
+> >> Why do you need a alias for phys?
+> >
+> > The alias of usbphy seems used by drivers/usb/phy/phy-mxs-usb.c. So we need
+> to add alias for usbphy.
+> 
+> That use should be fixed. The correct way to handle this is add a cell to
+> "fsl,anatop" with 0 or 1 to distinguish each phy.
+> 
 
-Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+This change can be done later by usb guys, for now I think it can be just keep as other imx6 platform.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-index aee6e5937c41..14135752b659 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-@@ -30,14 +30,20 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
- 	struct device_node *np = dev->of_node;
- 	int irq;
- 	u32 irqf;
--	u32 val;
- 
- 	if (!np || bus_type != BRCMF_BUSTYPE_SDIO ||
- 	    !of_device_is_compatible(np, "brcm,bcm4329-fmac"))
- 		return;
- 
--	if (of_property_read_u32(np, "brcm,drive-strength", &val) == 0)
--		sdio->drive_strength = val;
-+	of_property_read_u32(np, "brcm,drive-strength", &sdio->drive_strength);
-+
-+	sdio->broken_sg_support =
-+		of_property_read_bool(np, "brcm,broken-sg-support");
-+
-+	of_property_read_u16(np, "brcm,sd-head-align", &sdio->sd_head_align);
-+
-+	of_property_read_u16(np, "brcm,sd-sgentry-align",
-+			     &sdio->sd_sgentry_align);
- 
- 	/* make sure there are interrupts defined in the node */
- 	if (!of_find_property(np, "interrupts", NULL))
--- 
-2.16.1
+> >> > +   };
+> >> > +
+> >> > +   cpus {
+> >> > +           #address-cells = <1>;
+> >> > +           #size-cells = <0>;
+> >> > +
+> >> > +           cpu0: cpu@0 {
+> >> > +                   compatible = "arm,cortex-a9";
+> >> > +                   device_type = "cpu";
+> >> > +                   reg = <0>;
+> >> > +                   next-level-cache = <&L2>;
+> >> > +                   operating-points = <
+> >> > +                           /* kHz    uV */
+> >> > +                           996000  1225000
+> >> > +                           792000  1175000
+> >> > +                           396000  1075000
+> >> > +                           198000  975000
+> >> > +                   >;
+> >> > +                   fsl,soc-operating-points = <
+> >>
+> >> This is not documented.
+> >
+> > This is same as we used on other imx6 SOC. I don't know where to add doc for
+> this property. Please give me some suggestion.
+> 
+> Along side other OPP binding docs. The real question is why you need this and
+> can't use the original OPP binding (which you have too) or move to the v2
+> binding.
+> 
+
+For i.MX6 SOCs, we have CPU core voltage domain and a SOC voltage domain. The voltage of these two domain
+has strict relationship. So when doing cpu core DVFS, the SOC voltage need to be changed accordingly, the
+'fsl,soc-operating-points' binding is used for SOC OPP.
+
+Jacky
+> Rob
