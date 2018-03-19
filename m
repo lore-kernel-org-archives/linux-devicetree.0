@@ -1,70 +1,82 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Sun, 18 Mar 2018 19:06:25 -0500
-Message-ID: <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
- <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
- <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rsnd: Document R-Car M3-W support" to
+	the asoc tree
+Date: Mon, 19 Mar 2018 01:03:07 +0000 (GMT)
+Message-ID: <20180319010307.3AE6C440079@finisterre.ee.mobilebroadband>
+References: <1521208785-5698-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1521208785-5698-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMTQsIDIwMTggYXQgNjoyMyBBTSwgVG9taSBWYWxrZWluZW4gPHRvbWkudmFs
-a2VpbmVuQHRpLmNvbT4gd3JvdGU6Cj4gT24gMDkvMDMvMTggMjA6MjcsIEJlbm9pdCBQYXJyb3Qg
-d3JvdGU6Cj4KPj4+IElzIGxvZ2ljYWwgcGxhbmUgYSBoL3cgY29uY2VwdD8KPj4KPj4gSXQgZG9l
-cyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNvdXJjZS4KPgo+IExvZ2ljYWwgcGxhbmUgaXMgbm90
-IGEgaHcgY29uY2VwdCwgaXQganVzdCBkZXNjcmliZXMgYSBncm91cCBvZiBvbmUgb3IKPiB0d28g
-SFcgcGxhbmVzLiBUaGVuIGFnYWluLCBpbiB0aGUgY29udGV4dCBvZiAyaysgZGlzcGxheXMsIHR3
-byBIVyBwbGFuZXMKPiBtdXN0IGFsd2F5cyBiZSB1c2VkIHRvZ2V0aGVyLCBzbyB0aGF0IHdheSBp
-dCBjb3VsZCBiZSBjb25zaWRlcmVkIGEKPiBzaW5nbGUgSFcgcmVzb3VyY2UuCj4KPj4+IFJlYWxs
-eSwgSSdtIHNrZXB0aWNhbCB0aGF0IGFueSBvZiB0aGlzIGJlbG9uZ3MgaW4gRFQuIEZvciBleGFt
-cGxlLAo+Pj4gY2FuJ3QgeW91IGZpZ3VyZSBvdXQgeW91IG5lZWQgMiBwaHlzaWNhbCBwbGFuZXMg
-d2hlbmV2ZXIgeW91cgo+Pj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhhbiAyMDQ4
-Pwo+Pgo+PiBBcyBzdGF0ZWQgaW4gdGhlIGRlc2NyaXB0aW9uIEkgYWRkZWQgYWJvdmUsIHdlIGNh
-bm5vdCBoYXZlIHJlc291cmNlcwo+PiBleHBvc2VkIHRvIHVzZXItc3BhY2Ugd2hpY2ggY2FuICJk
-aXNhcHBlYXIiIGR5bmFtaWNhbGx5Lgo+PiBEb2luZyBzbyB3b3VsZCBicmVhayB1c2VyLXNwYWNl
-IGFwcGxpY2F0aW9ucyB3aGljaCByZWx5IG9uIHRoZXNlCj4+IHJlc291cmNlcy4KCklzbid0IHRo
-aXMgdGhlIHBvaW50IG9mIGF0b21pYyBtb2RlIHNldHRpbmc/IElmIHlvdSBoYXZlIDIgcGxhbmVz
-CmZyZWUsIHRoZW4geW91IGNhbiBzdXBwb3J0IHRoZSBtb2RlLCBvdGhlcndpc2UgeW91IGZhaWwu
-IEhvdyB3b3VsZCBhCnBsYW5lIGJlIGluIHVzZSBpZiB5b3UgYXJlIGRvaW5nIG1vZGVzZXR0aW5n
-IHVubGVzcyBpdCBpcyBvbiBhbm90aGVyCmRpc3BsYXk/Cgo+IFRoZSBxdWVzdGlvbiBpcywgaWYg
-bm90IGluIERULCB0aGVuIHdoZXJlPyBJIGFncmVlIHRoYXQgdGhpcyBpcyBub3QKPiBleGFjdGx5
-IGRlc2NyaWJpbmcgdGhlIEhXLiBCdXQgaXQgY2FuJ3QgYmUgZG9uZSBkeW5hbWljYWxseSBlaXRo
-ZXIgKG9yCj4gYXQgbGVhc3Qgd2UgaGF2ZSBub3QgZmlndXJlZCBvdXQgYSB3YXkpLiBBbmQgaXQg
-bXVzdCBiZSB1c2VyIGNvbmZpZ3VyYWJsZS4KCklmIHlvdSBhcmUgcGx1Z2dpbmcgaW4gYSBtb25p
-dG9yLCBkb2Vzbid0IGl0IGhhdmUgdG8gYmUgZHluYW1pYz8KCj4gTW9kdWxlIHBhcmFtZXRlcnMg
-YXJlIGFuIG9wdGlvbiwgYnV0IGl0IHdvdWxkIGJlIHNvbWV3aGF0IGRpZmZpY3VsdCB0bwo+IGdp
-dmUgYWxsIHRoaXMgaW5mb3JtYXRpb24gdGhlcmUuIEFuZCBhbHNvLCBpZiB5b3VyIGJvYXJkIGhh
-cyBhIDJrKwo+IGRpc3BsYXksIHlvdSBtdXN0IGhhdmUgdGhlc2UgY29uZmlndXJhdGlvbnMgZ2l2
-ZW4gdG8gdGhlIGRyaXZlciwgaXQncwo+IG5vdCBvcHRpb25hbC4KCkNhbid0IHlvdSBsb29rIGF0
-IHRoZSBwYW5lbCBzaXplIG9uIGJvb3Qgb3IgbW9kdWxlIGxvYWQgYW5kIGRldGVybWluZQppZiB5
-b3UgbmVlZCB0byBjb21iaW5lIHBsYW5lcyBvciBub3QuIFRoZSBtYWluIGRpZmZlcmVuY2UgSSBz
-ZWUgaXMKdGhhdCB0aGUgZHJpdmVyIHdvdWxkIGhhdmUgdG8gZmlndXJlIG91dCB3aGljaCBwbGFu
-ZXMgdG8gdXNlIHJhdGhlcgp0aGFuIERUIHRlbGxpbmcgaXQgd2hhdCBwbGFuZXMgdG8gdXNlLiBJ
-cyBkZWNpZGluZyB3aGljaCBwbGFuZXMgYSBoYXJkCnByb2JsZW0/Cgo+Cj4gQW5kIHdoaWxlIGl0
-J3MgcGVyaGFwcyBzdHJldGNoaW5nIHRoZSBkZWZpbml0aW9ucyBhIGJpdCwgSSBndWVzcyBvbmUK
-PiBjb3VsZCBhcmd1ZSB0aGF0IHRoaXMgZGVzY3JpYmVzIHRoZSBIVyBpbiBhIHdheTogaXQgZGVz
-Y3JpYmVzIGhvdyB0aGUgSFcKPiByZXNvdXJjZXMgbXVzdCBiZSB1c2VkIGlmIHlvdSBoYXZlIGEg
-ZGlzcGxheSBvZiAyaysgd2lkdGgsIGFuZCBpcyBub3QgYXMKPiBzdWNoIHJlbGF0ZWQgdG8gTGlu
-dXggb3IgRFJNLgo+Cj4gIFRvbWkKPgo+IC0tCj4gVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
-eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuCj4gWS10dW5udXMvQnVzaW5lc3Mg
-SUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The patch
+
+   ASoC: rsnd: Document R-Car M3-W support
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From da263026c013412110da464537e1c5532f0714ee Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Fri, 16 Mar 2018 14:59:45 +0100
+Subject: [PATCH] ASoC: rsnd: Document R-Car M3-W support
+
+Document support for the sound modules in the Renesas M3-W (r8a7796)
+SoC.
+
+No driver update is needed.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+index 5bed9a595772..b86d790f630f 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+@@ -351,6 +351,7 @@ Required properties:
+ 				    - "renesas,rcar_sound-r8a7793" (R-Car M2-N)
+ 				    - "renesas,rcar_sound-r8a7794" (R-Car E2)
+ 				    - "renesas,rcar_sound-r8a7795" (R-Car H3)
++				    - "renesas,rcar_sound-r8a7796" (R-Car M3-W)
+ - reg				: Should contain the register physical address.
+ 				  required register is
+ 				   SRU/ADG/SSI      if generation1
+-- 
+2.16.2
