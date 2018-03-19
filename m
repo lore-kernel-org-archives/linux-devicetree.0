@@ -1,54 +1,52 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v8_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
-        =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Mon, 19 Mar 2018 14:17:01 +0100
-Message-ID: <CAMpxmJX-AxhpPpCnWoaSGYmNh3o8iRjdKacnmozsPWmhpcGdTg@mail.gmail.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
+Date: Mon, 19 Mar 2018 11:59:11 +0100
+Message-ID: <20180319105911.o63otbbhld54br4r@flea>
+References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
+ <20180223133742.26044-11-mylene.josserand@bootlin.com>
+ <6329fbb6-13a1-41fe-f6cf-f2f0d4b2e5f9@arm.com>
+ <20180318200715.363f3135@dell-desktop.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521168778-27236-1-git-send-email-david@lechnology.com>
+Content-Disposition: inline
+In-Reply-To: <20180318200715.363f3135@dell-desktop.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2018-03-16 3:52 GMT+01:00 David Lechner <david@lechnology.com>:
-> This series converts mach-davinci to use the common clock framework.
->
-> The series works like this, the first 19 patches create new clock drivers
-> using the common clock framework. There are basically 3 groups of clocks -
-> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
-> unique init data, which is the reason for so many patches.
->
-> Then, starting with "ARM: davinci: pass clock as parameter to
-> davinci_timer_init()", we get the mach code ready for the switch by adding the
-> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
-> around the legacy clocks so that we can switch easily between the old and the
-> new.
->
-> "ARM: davinci: switch to common clock framework" actually flips the switch
-> to start using the new clock drivers. Then the next 8 patches remove all
-> of the old clock code.
->
-> The final three patches add device tree clock support to the one SoC that
-> supports it.
->
-> This series has been tested on LEGO MINDSTORMS EV3 (device tree) and TI
-> OMAP-L138 LCDK (both device tree and legacy board file).
->
+On Sun, Mar 18, 2018 at 08:07:15PM +0100, Mylène Josserand wrote:
+> Hello Mark,
+> 
+> Please, excuse me for this late answer and thank you for the review!
+> 
+> On Wed, 7 Mar 2018 12:18:33 +0000
+> Marc Zyngier <marc.zyngier@arm.com> wrote:
+> 
+> > On 23/02/18 13:37, Mylène Josserand wrote:
+> > > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.  
+> > 
+> > Only on A7? Is that specific to your platform?
+> 
+> I do not really know other Allwinner's platforms about this subject. At
+> least, the sun9i-a80 which is a Cortex-a15/a7 does not need that but it
+> is necessary for sun8i-a83t which is a cortex-a7. Maybe, Chen-Yu or
+> Maxime could help us on it.
 
-Hi David,
+This is not related to the CPU.
 
-thanks, with the u-boot fix everything seems to work fine. I tested
-da850-lcdk and da850-evm boards in DT and board file modes.
+On all the other SoCs but the A80 and the A83t, U-Boot will boot the
+system in HYP, and while switching to non-secure will setup CNTVOFF on
+the boot CPU.
 
-I'll be working with this series in the following days and will do
-some thorough testing and rebase my aemif series on top of it. I'll
-also use the recently merged reset support for board files to get rid
-of the exported reset functions.
+On the A80 and A83t, U-Boot will execute the kernel in secure, it will
+not switch to non-secure, and CNTVOFF will not be set on the boot CPU.
 
-Thanks for your work!
+Maxime
 
-Best regards,
-Bartosz Golaszewski
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
