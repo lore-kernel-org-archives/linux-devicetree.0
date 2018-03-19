@@ -1,39 +1,61 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: pwm: sunxi: add new compatible strings
-Date: Mon, 19 Mar 2018 14:43:49 +0100
-Message-ID: <20180319134349.yjmicwqb3ypplsho@flea>
-References: <20180318232847.14278-1-andre.przywara@arm.com>
- <20180318232847.14278-4-andre.przywara@arm.com>
+Subject: Re: [PATCH v4 0/9] Initial Allwinner H6 support
+Date: Mon, 19 Mar 2018 14:44:56 +0100
+Message-ID: <20180319134456.shebby73ngqavsnl@flea>
+References: <20180316140215.28663-1-icenowy@aosc.io>
+ <20180318201744.dw6hnm2vdybaunev@flea>
+ <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180318232847.14278-4-andre.przywara@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <F40271A8-3782-4A69-8C40-3909EB296C66@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 18, 2018 at 11:28:46PM +0000, Andre Przywara wrote:
-> The PWM controllers found in the Allwinner A64 and H5 SoCs are fully
-> compatible to the PWM controllers found in the A13 and H3.
-> Add new compatible strings for those SoCs to the binding document, so
-> that they can be safely used, together with a fallback string
-> (preferably "allwinner,sun5i-a13-pwm").
+On Mon, Mar 19, 2018 at 09:28:23AM +0800, Icenowy Zheng wrote:
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> 
+> 于 2018年3月19日 GMT+08:00 上午4:17:44, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+> >On Fri, Mar 16, 2018 at 10:02:06PM +0800, Icenowy Zheng wrote:
+> >> This patchset adds initial support for the Allwinner H6 SoC.
+> >> 
+> >> It's quite different from earlier Allwinner SoCs. For example, the
+> >> memory map is refactored, and the CCU is rearranged. It's also the
+> >first
+> >> Allwinner SoC with PCI Express interface (although the implementation
+> >> of the PCI Express controller is broken), and the second one with USB
+> >> 3.0 (the first one is A80).
+> >> 
+> >> This patchset adds the most basical support for it, including the
+> >main pin
+> >> controller, the main CCU and the basical device tree.
+> >> 
+> >> Icenowy Zheng (9):
+> >>   pinctrl: sunxi: refactor irq related register function to have desc
+> >>   pinctrl: sunxi: introduce IRQ bank conversion function
+> >>   pinctrl: sunxi: change irq_bank_base to irq_bank_map
+> >>   pinctrl: sunxi: add support for the Allwinner H6 main pin
+> >controller
+> >>   clk: sunxi-ng: Support fixed post-dividers on NKMP style clocks
+> >>   dt-bindings: add device tree binding for Allwinner H6 main CCU
+> >>   clk: sunxi-ng: add support for the Allwinner H6 CCU
+> >>   arm64: allwinner: h6: add the basical Allwinner H6 DTSI file
+> >>   arm64: allwinner: h6: add support for Pine H64 board
+> >
+> >Applied the !pinctrl patches.
+> 
+> Oops, one clock (CLK_HDMI_SLOW) is missing in the CCU
+> driver, as Jernej pointed out.
+> 
+> Should I send a patch that fix it?
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Yes, please.
 
+Thanks!
 Maxime
 
 -- 
