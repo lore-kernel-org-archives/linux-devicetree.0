@@ -1,158 +1,96 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v5 09/12] clk: actions: Add fixed factor clock support
-Date: Tue, 20 Mar 2018 14:34:00 +0530
-Message-ID: <20180320090400.6bgugy6fgze3ohsd@linaro.org>
-References: <20180317100952.28538-1-manivannan.sadhasivam@linaro.org>
- <20180317100952.28538-10-manivannan.sadhasivam@linaro.org>
- <152150820384.254778.6585368643028088392@swboyd.mtv.corp.google.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: usb: ehci: add optional external vbus
+ supply property
+Date: Tue, 20 Mar 2018 09:10:38 +0000
+Message-ID: <e3370b8d-2398-b4c0-c57c-978abd75c0f2@st.com>
+References: <1519897899-8577-1-git-send-email-amelie.delaunay@st.com>
+ <1519897899-8577-2-git-send-email-amelie.delaunay@st.com>
+ <20180306015743.uazy4e5quil2ijy2@rob-hp-laptop>
+ <ae4c741e-d5aa-4a8c-4029-1dff6bef2cdd@arm.com>
+ <CAL_Jsq+iPZN-RV61+AFcRg-eKORQDQ9-4s4-vaFOrCqWBK8PDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152150820384.254778.6585368643028088392@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: afaerber@suse.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+iPZN-RV61+AFcRg-eKORQDQ9-4s4-vaFOrCqWBK8PDg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <78844BF5406B594585633567020A4221@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On Mon, Mar 19, 2018 at 06:10:03PM -0700, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2018-03-17 03:09:49)
-> > Add support for Actions Semi fixed factor clock together with
-> > helper functions to be used in composite clock.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/clk/actions/Makefile           |  1 +
-> >  drivers/clk/actions/owl-fixed-factor.c | 81 ++++++++++++++++++++++++++++++++++
-> >  drivers/clk/actions/owl-fixed-factor.h | 62 ++++++++++++++++++++++++++
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 drivers/clk/actions/owl-fixed-factor.c
-> >  create mode 100644 drivers/clk/actions/owl-fixed-factor.h
-> > 
-> > diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
-> > index 994357fa560b..b618696ba54e 100644
-> > --- a/drivers/clk/actions/Makefile
-> > +++ b/drivers/clk/actions/Makefile
-> > @@ -5,3 +5,4 @@ clk-owl-y                       += owl-gate.o
-> >  clk-owl-y                      += owl-mux.o
-> >  clk-owl-y                      += owl-divider.o
-> >  clk-owl-y                      += owl-factor.o
-> > +clk-owl-y                      += owl-fixed-factor.o
-> > diff --git a/drivers/clk/actions/owl-fixed-factor.c b/drivers/clk/actions/owl-fixed-factor.c
-> > new file mode 100644
-> > index 000000000000..f1281565129c
-> > --- /dev/null
-> > +++ b/drivers/clk/actions/owl-fixed-factor.c
-> > @@ -0,0 +1,81 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +//
-> > +// OWL fixed factor clock driver
-> > +//
-> > +// Copyright (c) 2014 Actions Semi Inc.
-> > +// Author: David Liu <liuwei@actions-semi.com>
-> > +//
-> > +// Copyright (c) 2018 Linaro Ltd.
-> > +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include "owl-fixed-factor.h"
-> > +
-> > +long owl_fix_fact_helper_round_rate(struct owl_clk_common *common,
-> > +                               const struct owl_fix_fact_hw *fix_fact_hw,
-> > +                               unsigned long rate,
-> > +                               unsigned long *parent_rate)
-> > +{
-> > +       if (clk_hw_get_flags(&common->hw) & CLK_SET_RATE_PARENT) {
-> > +               unsigned long best_parent;
-> > +
-> > +               best_parent = (rate / fix_fact_hw->mul) * fix_fact_hw->div;
-> > +               *parent_rate = clk_hw_round_rate(clk_hw_get_parent(&common->hw),
-> > +                                                       best_parent);
-> > +       }
-> > +
-> > +       return (*parent_rate / fix_fact_hw->div) * fix_fact_hw->mul;
-> > +}
-> > +
-> > +static long owl_fix_fact_round_rate(struct clk_hw *hw, unsigned long rate,
-> > +                       unsigned long *parent_rate)
-> > +{
-> > +       struct owl_fix_fact *fix_fact = hw_to_owl_fix_fact(hw);
-> > +       struct owl_fix_fact_hw *fix_fact_hw = &fix_fact->fix_fact_hw;
-> > +
-> > +       return owl_fix_fact_helper_round_rate(&fix_fact->common, fix_fact_hw,
-> > +                                                       rate, parent_rate);
-> > +}
-> > +
-> > +unsigned long owl_fix_fact_helper_recalc_rate(struct owl_clk_common *common,
-> > +                       const struct owl_fix_fact_hw *fix_fact_hw,
-> > +                       unsigned long parent_rate)
-> > +{
-> > +       unsigned long long int rate;
-> > +
-> > +       rate = (unsigned long long int)parent_rate * fix_fact_hw->mul;
-> > +       do_div(rate, fix_fact_hw->div);
-> > +
-> > +       return (unsigned long)rate;
+
+On 03/06/2018 03:40 PM, Rob Herring wrote:
+> On Tue, Mar 6, 2018 at 8:09 AM, Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 06/03/18 01:57, Rob Herring wrote:
+>>>
+>>> On Thu, Mar 01, 2018 at 10:51:38AM +0100, Amelie Delaunay wrote:
+>>>>
+>>>> On some boards, especially when vbus supply requires large current,
+>>>> and the charge pump on the PHY isn't enough, an external vbus power
+>>>> switch
+>>>> per port may be used.
+>>>> Add portN_vbus-supply property to usb-ehci bindings. As the number of
+>>>> ports
+>>>> depends on the ehci controller, and the port on which an external vbus
+>>>> supply depends on the platform, <portN> is used to make it generic.
+>>>>
+>>>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/usb/usb-ehci.txt | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>>>> b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>>>> index 3efde12..cd576db 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>>>> @@ -19,6 +19,7 @@ Optional properties:
+>>>>     - phys : phandle + phy specifier pair
+>>>>     - phy-names : "usb"
+>>>>     - resets : phandle + reset specifier pair
+>>>> + - portN_vbus-supply : phandle of regulator supplying vbus for port N
+>>>
+>>>
+>>> Just make this an array with the index being the port (and drop
+>>> "portN_").
+>>
+>>
+>> Does that still work if there is an external supply for port 1 but none for
+>> port 0? I believe that was brought up as a possibility before.
 > 
-> You can drop the cast.
+> Yes, if you use 0 or -1 to skip over an index.
+> 
+> Really, this should go in the connector node instead because Vbus is
+> supplied to the connector, not the host controller. The connector
+> binding is on its way into mainline.
+> 
+> Rob
 > 
 
-Okay.
+Not sure to catch what you mean by "make this an array" because 
+regulator framework imposes <name>-supply: phandle to the regulator node.
 
-> > +}
-> > +
-> > +static unsigned long owl_fix_fact_recalc_rate(struct clk_hw *hw,
-> > +                       unsigned long parent_rate)
-> > +{
-> > +       struct owl_fix_fact *fix_fact = hw_to_owl_fix_fact(hw);
-> > +       struct owl_fix_fact_hw *fix_fact_hw = &fix_fact->fix_fact_hw;
-> > +
-> > +       return owl_fix_fact_helper_recalc_rate(&fix_fact->common, fix_fact_hw,
-> > +                                                       parent_rate);
-> > +}
-> > +
-> > +static int owl_fix_fact_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +                              unsigned long parent_rate)
-> > +{
-> > +       /*
-> > +        * We must report success but we can do so unconditionally because
-> > +        * clk_fix_fact_round_rate returns values that ensure this call is a
-> 
-> What function is that?
->
+I may have missed something around regulator consumers management ?
 
-It should be owl_fix_fact_round_rate.
+Do you meant something like
+vbus-supply = <&reg_port0 &reg_port1>;
+or in case there is an external supply for port 1 but none for port 0
+vbus-supply = <-1 &reg_port1>;
+?
+If yes, a new API is needed in regulator framework to get an array of 
+regulators ?
 
-> > +        * nop.
-> > +        */
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +const struct clk_ops owl_fix_fact_ops = {
-> > +       .round_rate     = owl_fix_fact_round_rate,
-> > +       .recalc_rate    = owl_fix_fact_recalc_rate,
-> > +       .set_rate       = owl_fix_fact_set_rate,
-> > +};
-> 
-> Why can't you use the regular fixed factor clk code and ops?
->
 
-That's going to be really messy. Since I'm having the clk_hw embedded inside
-owl_clk_common and using it for registering all the clocks, using generic
-fixed factor functions will be a different approach _only_ for this clock and
-it won't look good I guess. Also, it may become complicated with composite
-clocks.
-
-If you still want to use the generic fixed factor code, I can do that in
-next revision.
-
-Your views?
-
-Thanks,
-Mani
+Regards,
+Amelie
