@@ -1,7 +1,7 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v3 13/13] ARM: dts: ipq8074: Enable few peripherals for hk01 board
-Date: Tue, 20 Mar 2018 09:28:56 +0530
-Message-ID: <1521518336-5467-14-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH v3 10/13] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
+Date: Tue, 20 Mar 2018 09:28:53 +0530
+Message-ID: <1521518336-5467-11-git-send-email-sricharan@codeaurora.org>
 References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
@@ -13,135 +13,54 @@ List-Id: devicetree@vger.kernel.org
 Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts | 103 ++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts | 26 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-index 6a838b5..8efc8f9e 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-@@ -21,6 +21,7 @@
- 
- 	aliases {
- 		serial0 = &blsp1_uart5;
-+		serial1 = &serial_blsp2;
- 	};
- 
- 	chosen {
-@@ -41,6 +42,47 @@
- 					bias-disable;
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8c93fd0..0844087 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -750,6 +750,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c3.dtb \
+ 	qcom-ipq4019-ap.dk07.1-c1.dtb \
++	qcom-ipq4019-ap.dk07.1-c2.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+new file mode 100644
+index 0000000..c1e909c
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2018, The Linux Foundation. All rights reserved.
 +
-+			 i2c_0_pins: i2c_0_pinmux {
-+				  mux {
-+					   pins = "gpio42", "gpio43";
-+					   function = "blsp1_i2c";
-+					   drive-strength = <8>;
-+					   bias-disable;
-+				  };
-+			 };
++#include "qcom-ipq4019-ap.dk07.1.dtsi"
 +
-+			 spi_0_pins: spi_0_pins {
-+				  mux {
-+					   pins = "gpio38", "gpio39", "gpio40", "gpio41";
-+					   function = "blsp0_spi";
-+					   drive-strength = <8>;
-+					   bias-disable;
-+				  };
-+			 };
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1-C2";
 +
-+			 hsuart_pins: hsuart_pins {
-+				  mux {
-+					   pins = "gpio46", "gpio47", "gpio48", "gpio49";
-+					   function = "blsp2_uart";
-+					   drive-strength = <8>;
-+					   bias-disable;
-+				  };
-+			 };
-+
-+			 qpic_pins: qpic_pins {
++	soc {
++		pinctrl@1000000 {
++			serial_1_pins: serial1_pinmux {
 +				mux {
-+					   pins = "gpio1", "gpio3", "gpio4",
-+						  "gpio5", "gpio6", "gpio7",
-+						  "gpio8", "gpio10", "gpio11",
-+						  "gpio12", "gpio13", "gpio14",
-+						  "gpio15", "gpio16", "gpio17";
-+					   function = "qpic";
-+					   drive-strength = <8>;
-+					   bias-disable;
-+				  };
++					pins = "gpio8", "gpio9";
++					function = "blsp_uart1";
++					bias-disable;
++				};
 +			};
-+
- 		};
- 
- 		serial@78b3000 {
-@@ -48,5 +90,66 @@
- 			pinctrl-names = "default";
- 			status = "ok";
- 		};
-+
-+		spi@78b5000 {
-+			 pinctrl-0 = <&spi_0_pins>;
-+			 pinctrl-names = "default";
-+			 status = "ok";
-+
-+			 m25p80@0 {
-+				  #address-cells = <1>;
-+				  #size-cells = <1>;
-+				  compatible = "n25q128a11", "jedec,spi-nor";
-+				  reg = <0>;
-+				  spi-max-frequency = <50000000>;
-+			 };
 +		};
 +
-+		serial@78b1000 {
-+			 pinctrl-0 = <&hsuart_pins>;
-+			 pinctrl-names = "default";
-+			 status = "ok";
-+		};
-+
-+		i2c_0@78b6000 {
-+			 pinctrl-0 = <&i2c_0_pins>;
-+			 pinctrl-names = "default";
-+			 status = "ok";
-+		};
-+
-+		dma@7984000 {
-+			 status = "ok";
-+		};
-+
-+		nand@79b0000 {
-+			pinctrl-0 = <&qpic_pins>;
++		serial@78b0000 {
++			pinctrl-0 = <&serial_1_pins>;
 +			pinctrl-names = "default";
 +			status = "ok";
-+
-+			nand@0 {
-+				reg = <0>;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+				nand-bus-width = <8>;
-+			};
 +		};
-+
-+		phy@86000 {
-+			status = "ok";
-+		};
-+
-+		phy@8e000 {
-+			status = "ok";
-+		};
-+
-+		pci@20000000 {
-+			status = "ok";
-+			perst-gpio = <&tlmm 58 0x1>;
-+		};
-+
-+		pci@10000000 {
-+			status = "ok";
-+			perst-gpio = <&tlmm 61 0x1>;
-+		};
- 	};
- };
++	};
++};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
