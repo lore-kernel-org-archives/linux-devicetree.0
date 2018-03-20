@@ -1,77 +1,156 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] PCI: rockchip: Create individual folder for
- rockchip drivers
-Date: Tue, 20 Mar 2018 12:46:33 -0500
-Message-ID: <20180320174633.GA137590@bhelgaas-glaptop.roam.corp.google.com>
-References: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
- <1520304202-232891-1-git-send-email-shawn.lin@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1520304202-232891-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v2 2/2] earlycon: Use a pointer table to fix __earlycon_table stride
+Date: Tue, 20 Mar 2018 11:57:12 -0600
+Message-ID: <20180320175712.201572-3-djkurtz@chromium.org>
+References: <20180320175712.201572-1-djkurtz@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180320175712.201572-1-djkurtz@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Kaehlcke <mka@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Cc: adurbin@chromium.org, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jiri Slaby <jslaby@suse.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 06, 2018 at 10:43:22AM +0800, Shawn Lin wrote:
-> In preparation for introducing End-Point driver for Rockchip
-> PCIe controller, we create a new folder to follow the convention
-> of dwc and cadence. Then we rename the host driver from pcie-rockchip.c
-> to pcie-rockchip-host.c, and only leave some common functions in
-> pcie-rockchip.c in order to be reused for both of host and EP drivers.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ...
+Commit 99492c39f39f ("earlycon: Fix __earlycon_table stride") tried to fix
+__earlycon_table stride by forcing the earlycon_id struct alignment to 32
+and asking the linker to 32-byte align the __earlycon_table symbol.  This
+fix was based on commit 07fca0e57fca92 ("tracing: Properly align linker
+defined symbols") which tried a similar fix for the tracing subsystem.
 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 34b56a8..b85ad40 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -141,4 +141,5 @@ source "drivers/pci/cadence/Kconfig"
->  source "drivers/pci/dwc/Kconfig"
->  source "drivers/pci/host/Kconfig"
->  source "drivers/pci/endpoint/Kconfig"
-> +source "drivers/pci/rockchip/Kconfig"
->  source "drivers/pci/switch/Kconfig"
+However, this fix doesn't quite work because there is no guarantee that
+gcc will place structures packed into an array format.  In fact, gcc 4.9
+chooses to 64-byte align these structs by inserting additional padding
+between the entries because it has no clue that they are supposed to be in
+an array.  If we are unlucky, the linker will assign symbol
+"__earlycon_table" to a 32-byte aligned address which does not correpsond
+to the 64-byte alignbed contents of section "__earlycon_table".
 
-Why is this out of order?  This seems exactly analogous to
-drivers/pci/cadence and dwc, so they should be next to each other.
+To address this same problem, the fix to the tracing system was
+subsequently re-implemented using a more robust table of pointers approach
+by commits:
+ 3d56e331b653 ("tracing: Replace syscall_meta_data struct array with pointer array")
+ 654986462939 ("tracepoints: Fix section alignment using pointer array")
+ e4a9ea5ee7c8 ("tracing: Replace trace_event struct array with pointer array")
 
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 9419709..8434afb 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -55,6 +55,8 @@ obj-y += switch/
->  
->  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
->  
-> +obj-$(CONFIG_PCIE_ROCKCHIP)	+= rockchip/
-> +
->  # Endpoint library must be initialized before its users
->  obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+Let's use this same "array of pointers to structs" approach for
+EARLYCON_TABLE.
 
-Similarly here.
+Fixes: 99492c39f39f ("earlycon: Fix __earlycon_table stride")
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Suggested-by: Aaron Durbin <adurbin@chromium.org>
+---
+Changes since v1:
+ * added Suggested-by and Fixes, and reworded the commit message per Randy. 
 
-I admit to still being a little dubious about the idea of a bunch of
-vendor-specific directories, each containing a completely trivial
-Makefile, a mostly-trivial Kconfig, a header file, a shared .c file, a
-host .c file, and an endpoint .c file.
+ drivers/of/fdt.c                  |  7 +++++--
+ drivers/tty/serial/earlycon.c     |  6 ++++--
+ include/asm-generic/vmlinux.lds.h |  2 +-
+ include/linux/serial_core.h       | 21 ++++++++++++++-------
+ 4 files changed, 24 insertions(+), 12 deletions(-)
 
-One alternative would be to keep the single pcie-rockchip.c file with
-an #ifdef CONFIG_PCIE_ROCKCHIP_HOST section and an #ifdef
-CONFIG_PCIE_ROCKCHIP_EP section.
-
-Bjorn
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 84aa9d676375..6da20b9688f7 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -942,7 +942,7 @@ int __init early_init_dt_scan_chosen_stdout(void)
+ 	int offset;
+ 	const char *p, *q, *options = NULL;
+ 	int l;
+-	const struct earlycon_id *match;
++	const struct earlycon_id **p_match;
+ 	const void *fdt = initial_boot_params;
+ 
+ 	offset = fdt_path_offset(fdt, "/chosen");
+@@ -969,7 +969,10 @@ int __init early_init_dt_scan_chosen_stdout(void)
+ 		return 0;
+ 	}
+ 
+-	for (match = __earlycon_table; match < __earlycon_table_end; match++) {
++	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
++	     p_match++) {
++		const struct earlycon_id *match = *p_match;
++
+ 		if (!match->compatible[0])
+ 			continue;
+ 
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index a24278380fec..22683393a0f2 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -169,7 +169,7 @@ static int __init register_earlycon(char *buf, const struct earlycon_id *match)
+  */
+ int __init setup_earlycon(char *buf)
+ {
+-	const struct earlycon_id *match;
++	const struct earlycon_id **p_match;
+ 
+ 	if (!buf || !buf[0])
+ 		return -EINVAL;
+@@ -177,7 +177,9 @@ int __init setup_earlycon(char *buf)
+ 	if (early_con.flags & CON_ENABLED)
+ 		return -EALREADY;
+ 
+-	for (match = __earlycon_table; match < __earlycon_table_end; match++) {
++	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
++	     p_match++) {
++		const struct earlycon_id *match = *p_match;
+ 		size_t len = strlen(match->name);
+ 
+ 		if (strncmp(buf, match->name, len))
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 1ab0e520d6fc..e17de55c2542 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -179,7 +179,7 @@
+ #endif
+ 
+ #ifdef CONFIG_SERIAL_EARLYCON
+-#define EARLYCON_TABLE() STRUCT_ALIGN();			\
++#define EARLYCON_TABLE() . = ALIGN(8);				\
+ 			 VMLINUX_SYMBOL(__earlycon_table) = .;	\
+ 			 KEEP(*(__earlycon_table))		\
+ 			 VMLINUX_SYMBOL(__earlycon_table_end) = .;
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index b32df49a3bd5..93b7add47087 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -351,10 +351,10 @@ struct earlycon_id {
+ 	char	name[16];
+ 	char	compatible[128];
+ 	int	(*setup)(struct earlycon_device *, const char *options);
+-} __aligned(32);
++};
+ 
+-extern const struct earlycon_id __earlycon_table[];
+-extern const struct earlycon_id __earlycon_table_end[];
++extern const struct earlycon_id *__earlycon_table[];
++extern const struct earlycon_id *__earlycon_table_end[];
+ 
+ #if defined(CONFIG_SERIAL_EARLYCON) && !defined(MODULE)
+ #define EARLYCON_USED_OR_UNUSED	__used
+@@ -362,12 +362,19 @@ extern const struct earlycon_id __earlycon_table_end[];
+ #define EARLYCON_USED_OR_UNUSED	__maybe_unused
+ #endif
+ 
+-#define OF_EARLYCON_DECLARE(_name, compat, fn)				\
+-	static const struct earlycon_id __UNIQUE_ID(__earlycon_##_name)	\
+-	     EARLYCON_USED_OR_UNUSED __section(__earlycon_table)	\
++#define _OF_EARLYCON_DECLARE(_name, compat, fn, unique_id)		\
++	static const struct earlycon_id unique_id			\
++	     EARLYCON_USED_OR_UNUSED __initdata				\
+ 		= { .name = __stringify(_name),				\
+ 		    .compatible = compat,				\
+-		    .setup = fn  }
++		    .setup = fn  };					\
++	static const struct earlycon_id EARLYCON_USED_OR_UNUSED		\
++		__section(__earlycon_table)				\
++		* const __PASTE(__p, unique_id) = &unique_id
++
++#define OF_EARLYCON_DECLARE(_name, compat, fn)				\
++	_OF_EARLYCON_DECLARE(_name, compat, fn,				\
++			     __UNIQUE_ID(__earlycon_##_name))
+ 
+ #define EARLYCON_DECLARE(_name, fn)	OF_EARLYCON_DECLARE(_name, "", fn)
+ 
+-- 
+2.16.2.804.g6dcf76e118-goog
