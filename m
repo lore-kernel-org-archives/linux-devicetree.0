@@ -1,55 +1,42 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4 3/6] clk: mediatek: add audsys support for MT2701
-Date: Tue, 20 Mar 2018 14:38:52 +0800
-Message-ID: <1521527932.21199.4.camel@mtkswgap22>
-References: <cover.1520327262.git.ryder.lee@mediatek.com>
-         <f1445b95864af04f1f90d3be96d0a485d1bb4560.1520327262.git.ryder.lee@mediatek.com>
-         <152149148431.242365.4625152577833480987@swboyd.mtv.corp.google.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
+Date: Tue, 20 Mar 2018 15:48:11 +0900
+Message-ID: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152149148431.242365.4625152577833480987@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-03-19 at 13:31 -0700, Stephen Boyd wrote:
-> Quoting Ryder Lee (2018-03-06 01:09:28)
-> > +
-> > +static const struct of_device_id of_match_clk_mt2701_aud[] = {
-> > +       { .compatible = "mediatek,mt2701-audsys", },
-> > +       {}
-> > +};
-> > +
-> > +static int clk_mt2701_aud_probe(struct platform_device *pdev)
-> > +{
-> > +       struct clk_onecell_data *clk_data;
-> > +       struct device_node *node = pdev->dev.of_node;
-> > +       int r;
-> > +
-> > +       clk_data = mtk_alloc_clk_data(CLK_AUD_NR);
-> > +
-> > +       mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-> > +                              clk_data);
-> > +
-> > +       r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> > +       if (r) {
-> > +               dev_err(&pdev->dev,
-> > +                       "could not register clock provider: %s: %d\n",
-> > +                       pdev->name, r);
-> > +
-> > +               return r;
-> > +       }
-> 
-> This fails to remove the clk provider when devm_of_platform_populate()
-> returns an error.
-> 
-> > +
-> > +       return devm_of_platform_populate(&pdev->dev);
-> > +}
+From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
-I've sent a new one to fix it.
+Update the IPMMU DT binding documentation to include the r8a77965 compat
+string for the IPMMU devices included in the R-Car M3-N SoC.
 
-Thanks
+Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+---
+
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2018-03-20 15:30:50.640607110 +0900
+@@ -17,6 +17,7 @@ Required Properties:
+     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+     - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
++    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+     - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+     - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
