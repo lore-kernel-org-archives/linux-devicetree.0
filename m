@@ -1,73 +1,94 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 1/3] drivers: clk: Add clk_get_children support
-Date: Tue, 20 Mar 2018 19:29:58 +0000
-Message-ID: <DM2PR0201MB07679A2DF21F254ACD5E0417B8AB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
- <1519856861-31384-2-git-send-email-jollys@xilinx.com>
- <152148371542.242365.18433130635050412528@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH v3 03/10] clk: qcom: Add CPU clock driver for msm8996
+Date: Tue, 20 Mar 2018 13:01:54 -0700
+Message-ID: <152157611468.125118.11602572683762995667@swboyd.mtv.corp.google.com>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-4-git-send-email-ilialin@codeaurora.org>
+ <152148100496.242365.3846617702949655708@swboyd.mtv.corp.google.com>
+ <015201d3c056$658ff510$30afdf30$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152148371542.242365.18433130635050412528@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tejas Patel <TEJASP@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <015201d3c056$658ff510$30afdf30$@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ilialin@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlcGhhbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVw
-aGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJuZWwub3JnXQ0KPiBTZW50OiBNb25kYXksIE1hcmNo
-IDE5LCAyMDE4IDExOjIyIEFNDQo+IFRvOiBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT47
-IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBtaWNo
-YWwuc2ltZWtAeGlsaW54LmNvbTsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHJvYmgrZHRA
-a2VybmVsLm9yZzsgc2JveWRAY29kZWF1cm9yYS5vcmcNCj4gQ2M6IFJhamFuIFZhamEgPFJBSkFO
-VkB4aWxpbnguY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4g
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IEpvbGx5IFNoYWgNCj4gPEpPTExZU0B4aWxpbnguY29tPjsgSm9sbHkgU2hhaCA8Sk9MTFlTQHhp
-bGlueC5jb20+OyBUZWphcyBQYXRlbA0KPiA8VEVKQVNQQHhpbGlueC5jb20+OyBTaHViaHJhanlv
-dGkgRGF0dGEgPHNodWJocmFqQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8z
-XSBkcml2ZXJzOiBjbGs6IEFkZCBjbGtfZ2V0X2NoaWxkcmVuIHN1cHBvcnQNCj4gDQo+IFF1b3Rp
-bmcgSm9sbHkgU2hhaCAoMjAxOC0wMi0yOCAxNDoyNzozOSkNCj4gPiBGcm9tOiBKb2xseSBTaGFo
-IDxqb2xseS5zaGFoQHhpbGlueC5jb20+DQo+ID4NCj4gPiBUaGlzIEFQSSBoZWxwcyB0byBkZXRl
-cm1pbmUgdGhlIHVzZXJzIGZvciBhbnkgY2xvY2suDQo+IA0KPiBPaywgYnV0IHdoeSBkbyB5b3Ug
-bmVlZCBpdD8NCg0KQXMgeW91IHN1Z2dlc3RlZCBpbiBvdGhlciBwYXRjaCwgd2Ugd2lsbCBtb3Zl
-IGNoaWxkcmVuIHZhbGlkYXRpb24gaW4gRlcuDQoNCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBKb2xseSBTaGFoIDxqb2xseXNAeGlsaW54LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUZWph
-cyBQYXRlbCA8dGVqYXNwQHhpbGlueC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2h1YmhyYWp5
-b3RpIERhdHRhIDxzaHViaHJhanlvdGkuZGF0dGFAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAg
-ZHJpdmVycy9jbGsvY2xrLmMgICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9jbGstcHJvdmlkZXIuaCB8ICAxICsNCj4gPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9jbGsvY2xrLmMgYi9kcml2ZXJzL2Nsay9jbGsuYyBpbmRleA0KPiA+IDBmNjg2YTkuLjk0
-N2ExOGIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLmMNCj4gPiArKysgYi9kcml2
-ZXJzL2Nsay9jbGsuYw0KPiA+IEBAIC0yNzQsNiArMjc0LDM0IEBAIHN0cnVjdCBjbGtfaHcgKmNs
-a19od19nZXRfcGFyZW50KGNvbnN0IHN0cnVjdA0KPiA+IGNsa19odyAqaHcpICB9ICBFWFBPUlRf
-U1lNQk9MX0dQTChjbGtfaHdfZ2V0X3BhcmVudCk7DQo+ID4NCj4gPiArc3RhdGljIHVuc2lnbmVk
-IGludCBzaWJsaW5nOw0KPiANCj4gTG9va3MgdmVyeSB0aHJlYWQgdW5zYWZlIQ0KPiANCj4gPiAr
-DQo+ID4gK3N0YXRpYyB2b2lkIGNsa19zaG93X3N1YnRyZWUoc3RydWN0IGNsa19jb3JlICpjLA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGxldmVsKSB7DQo+ID4gKyAgICAg
-ICBzdHJ1Y3QgY2xrX2NvcmUgKmNoaWxkOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghYykNCj4g
-PiArICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChsZXZlbCA9
-PSAxKQ0KPiA+ICsgICAgICAgICAgICAgICBzaWJsaW5nKys7DQo+ID4gKw0KPiA+ICsgICAgICAg
-aGxpc3RfZm9yX2VhY2hfZW50cnkoY2hpbGQsICZjLT5jaGlsZHJlbiwgY2hpbGRfbm9kZSkNCj4g
-PiArICAgICAgICAgICAgICAgY2xrX3Nob3dfc3VidHJlZShjaGlsZCwgbGV2ZWwgKyAxKTsgfQ0K
-PiA+ICsNCj4gPiArdW5zaWduZWQgaW50IGNsa19nZXRfY2hpbGRyZW4oY2hhciAqbmFtZSkgew0K
-PiA+ICsgICAgICAgc3RydWN0IGNsa19jb3JlICpjb3JlOw0KPiA+ICsgICAgICAgc3RydWN0IGNs
-ayAqcGNsayA9IF9fY2xrX2xvb2t1cChuYW1lKTsNCj4gPiArDQo+ID4gKyAgICAgICBzaWJsaW5n
-ID0gMDsNCj4gPiArICAgICAgIGNvcmUgPSBwY2xrLT5jb3JlOw0KPiA+ICsgICAgICAgY2xrX3No
-b3dfc3VidHJlZShjb3JlLCAwKTsNCj4gPiArICAgICAgIHJldHVybiBzaWJsaW5nOw0KPiA+ICt9
-DQo+ID4gKw0KPiA+ICBzdGF0aWMgc3RydWN0IGNsa19jb3JlICpfX2Nsa19sb29rdXBfc3VidHJl
-ZShjb25zdCBjaGFyICpuYW1lLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHN0cnVjdCBjbGtfY29yZSAqY29yZSkgIHsNCj4gPiBkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9jbGstcHJvdmlkZXIuaA0KPiA+IGIvaW5jbHVkZS9saW51eC9jbGstcHJv
-dmlkZXIuaCBpbmRleCBmNzExYmU2Li5lOTRkZmIyIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUv
-bGludXgvY2xrLXByb3ZpZGVyLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2Nsay1wcm92aWRl
-ci5oDQo+ID4gQEAgLTc0NSw2ICs3NDUsNyBAQCB1bnNpZ25lZCBpbnQgX19jbGtfZ2V0X2VuYWJs
-ZV9jb3VudChzdHJ1Y3QgY2xrDQo+ID4gKmNsayk7ICB1bnNpZ25lZCBsb25nIGNsa19od19nZXRf
-cmF0ZShjb25zdCBzdHJ1Y3QgY2xrX2h3ICpodyk7DQo+ID4gdW5zaWduZWQgbG9uZyBfX2Nsa19n
-ZXRfZmxhZ3Moc3RydWN0IGNsayAqY2xrKTsgIHVuc2lnbmVkIGxvbmcNCj4gPiBjbGtfaHdfZ2V0
-X2ZsYWdzKGNvbnN0IHN0cnVjdCBjbGtfaHcgKmh3KTsNCj4gPiArdW5zaWduZWQgaW50IGNsa19n
-ZXRfY2hpbGRyZW4oY2hhciAqbmFtZSk7DQo+IA0KPiBBbmQgdXNlcyBhIHN0cmluZyBsb29rdXAg
-aW5zdGVhZCBvZiBoYXZpbmcgdGhlIGNsa19odyBwb2ludGVyIGluIGhhbmQuDQo+IE5vIHRoYW5r
-cy4NCg==
+Quoting ilialin@codeaurora.org (2018-03-20 07:18:57)
+> > From: Stephen Boyd <sboyd@kernel.org>
+> > 
+> > > +       struct clk_regmap *clkr = to_clk_regmap(hw);
+> > > +       struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+> > > +       unsigned int mask = GENMASK(cpuclk->width + cpuclk->shift - 1,
+> > > +                                   cpuclk->shift);
+> > > +
+> > > +       val = index;
+> > > +       val <<= cpuclk->shift;
+> > > +
+> > > +       return regmap_update_bits(clkr->regmap, cpuclk->reg, mask,
+> > > +val); }
+> > > +
+> > > +static int
+> > > +clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, struct
+> > > +clk_rate_request *req) {
+> > > +       struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+> > > +       struct clk_hw *parent = cpuclk->pll;
+> > > +
+> > > +       if (!cpuclk->pll)
+> > > +               return -EINVAL;
+> > 
+> > Does this happen?
+> 
+> On successful probe it shouldn't. May I omit pointer checks in this case? Future maintenance ma y change the flow.
+> 
+
+Yes please omit useless checks.
+
+> > 
+> > > +
+> > > +       req->best_parent_rate = clk_hw_round_rate(parent, req->rate);
+> > > +       req->best_parent_hw = parent;
+> > 
+> > Is the parent index always the same? Perhaps just call
+> > clk_hw_get_parent_by_index() then instead of adding a pointer to the
+> > clk_cpu_8996_mux.
+> > 
+> 
+> > 
+> > > +       },
+> > > +};
+> > > +
+> > > +static const struct regmap_config cpu_msm8996_regmap_config = {
+> > > +       .reg_bits               = 32,
+> > > +       .reg_stride             = 4,
+> > > +       .val_bits               = 32,
+> > > +       .max_register           = 0x80210,
+> > > +       .fast_io                = true,
+> > > +       .val_format_endian      = REGMAP_ENDIAN_LITTLE,
+> > > +};
+> > > +
+> > > +static const struct of_device_id match_table[] = {
+> > 
+> > Move this next to driver structure and give it a more specific name.
+> 
+> Will be changed in the next spin.
+> 
+> > 
+> > > +       { .compatible = "qcom-msm8996-apcc" },
+> > 
+> > Bad compatible? Should be qcom,msm8996-apcc?
+> 
+> The naming is per Rob Herring's requirement.
+> 
+
+Hmm, maybe Rob made a typo?
