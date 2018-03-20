@@ -1,82 +1,200 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 1/5] driver core: Find an existing link between two
-	devices
-Date: Tue, 20 Mar 2018 13:26:52 +0530
-Message-ID: <726cf34b-568f-55c9-0459-ff34176f9927@codeaurora.org>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
-	<2217404.A2W3Iek6du@aspire.rjw.lan>
-	<CAAFQd5CQXY0Efv+2MC1kTVW5q4eZjJ=gwVaR-LA=3agnSSHzUw@mail.gmail.com>
-	<2705105.V6KYPvoJqj@aspire.rjw.lan>
-	<11eae0bc-7921-e598-9c01-63498400c85b@arm.com>
-	<20180314122759.GB19651@wunner.de>
+From: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
+Date: Tue, 20 Mar 2018 14:58:38 +0700
+Message-ID: <CALFoz4aaEshpmyCxzut1t6cqSOSee4YP6vsi5G4Eei9m8hkZ3A@mail.gmail.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com> <5AAF838D.2030105@broadcom.com>
+ <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
+ <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com> <5AB044C0.9060701@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180314122759.GB19651-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5AB044C0.9060701@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Kalle Valo <kvalo@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Arend,
 
+>Also I am not sure if the broken-sg-support is still needed. We added that for omap_hsmmc, but that has since changed to scatter-gather emulation so it might not be needed anymore.
+I can confirm it doesn't impact wifi performance in case of rk3288+ap6335.
 
-On 3/14/2018 5:57 PM, Lukas Wunner wrote:
-> On Wed, Mar 14, 2018 at 12:14:15PM +0000, Robin Murphy wrote:
->>>> On Wed, Mar 14, 2018 at 8:12 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
->>>>> On Tuesday, March 13, 2018 12:23:34 PM CET Tomasz Figa wrote:
->>>>>> On Tue, Mar 13, 2018 at 7:34 PM, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>>>> On Tue, Mar 13, 2018 at 3:45 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>>>>> On Tue, Mar 13, 2018 at 5:55 PM, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>>>>>> The lists managing the device-links can be traversed to
->>>>>>>>> find the link between two devices. The device_link_add() APIs
->>>>>>>>> does traverse these lists to check if there's already a link
->>>>>>>>> setup between the two devices.
->>>>>>>>> So, add a new APIs, device_link_find(), to find an existing
->>>>>>>>> device link between two devices - suppliers and consumers.
->>>>>>>> I'm wondering if this API would be useful for anything else that the
->>>>>>>> problem we're trying to solve with deleting links without storing them
->>>>>>>> anywhere. Perhaps a device_link_del_dev(consumer, supplier) would be a
->>>>>>>> better alternative?
->>>>>>> Yea, that sounds simpler i think. Will add this API instead of
->>>>>>> find_link(). Thanks.
->>>>>> Perhaps let's wait for a moment to see if there are other opinions. :)
->>>>>>
->>>>>> Rafael, Lucas, any thoughts?
->>>>> It is not clear to me what the device_link_del_dev(consumer, supplier)
->>>>> would do.
->> Not quite - the issue here is that we have one supplier with an arbitrarily
->> large number of consumers, and would prefer that supplier not to have to
->> spend a whole bunch of memory to store all the struct device_link pointers
->> for the sole reason of having something to give to device_link_del() at the
->> end, given that the device links code is already keeping track of everything
->> internally anyway.
-> Makes sense to me.  How about an additional flag which autoremoves the
-> link on provider unbind?
+But I still have to set settings->bus.sdio.sd_head_align = 4 and
+settings->bus.sdio.sd_sgentry_align = 512, otherwise
+brcmf_sdiod_sglist_rw fails:
 
-If I understand this correctly, if we create the device link with 
-DL_FLAG_AUTOREMOVE, the link is deleted after a consumer unbind. During 
-a supplier unbind all we get is a WARN_ON with DL_FLAG_AUTOREMOVE. I 
-guess that's an intended behavior?
+  974.888452] net_ratelimit: 8 callbacks suppressed
+[  974.888457] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed -84
+[  974.901527] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes failed: -5
+[  974.910248] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
+[  975.018041] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed -84
+[  975.025833] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes failed: -5
+[  975.033634] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
+[  975.033924] dwmmc_rockchip ff0d0000.dwmmc: Unexpected command
+timeout, state 0
+[  975.049209] brcmfmac: brcmf_sdio_readframes: RXHEADER FAILED: -84
+[  975.056034] brcmfmac: brcmf_sdio_rxfail: abort command, terminate
+frame, send NAK
+[  975.068367] brcmfmac: brcmf_sdio_hdparse: HW header length too long
+[  975.075379] brcmfmac: brcmf_sdio_rxfail: terminate frame
 
-If this is the case, then the consumer/supplier drivers just don't have 
-to take care of deleting the device link explicitly.
-Is my understanding correct?
+Regards,
+  Alex
 
-regards
-Vivek
-
+On 20 March 2018 at 06:16, Arend van Spriel
+<arend.vanspriel@broadcom.com> wrote:
+> + Uffe
 >
-> Thanks,
+> On 3/19/2018 6:55 PM, Florian Fainelli wrote:
+>>
+>> On 03/19/2018 07:10 AM, Alexey Roslyakov wrote:
+>>>
+>>> Hi Arend,
+>>> I appreciate your response. In my opinion, it has nothing to do with
+>>> SDIO host, because it defines "quirks" in the driver itself.
+>>
+>>
+>> It is not clear to me from your patch series whether the problem is that:
+>>
+>> - the SDIO device has a specific alignment requirements, which would be
+>> either a SDIO device driver limitation/issue or maybe the underlying
+>> hardware device/firmware requiring that
+>>
+>> - the SDIO host controller used is not capable of coping nicely with
+>> these said limitations
+>>
+>> It seems to me like what you are doing here is a) applicable to possibly
+>> more SDIO devices and host combinations, and b) should likely be done at
+>> the layer between the host and device, such that it is available to more
+>> combinations.
 >
-> Lukas
+>
+> Indeed. That was my thought exactly and I can not imagine Uffe would push
+> back on that reasoning.
+>
+>>> If I get it right, you mean something like this:
+>>>
+>>> mmc3: mmc@1c12000 {
+>>> ...
+>>>          broken-sg-support;
+>>>          sd-head-align = 4;
+>>>          sd-sgentry-align = 512;
+>>>
+>>>          brcmf: wifi@1 {
+>>>                  ...
+>>>          };
+>>> };
+>>>
+>>> Where dt: bindings documentation for these entries should reside?
+>>> In generic MMC bindings? Well, this is the very special case and
+>>> mmc-linux maintainer will unlikely to accept these changes.
+>>> Also, extra kernel code modification might be required. It could make
+>>> quite trivial change much more complex.
+>>
+>>
+>> If the MMC maintainers are not copied on this patch series, it will
+>> likely be hard for them to identify this patch series and chime in...
+>
+>
+> The main question is whether this is indeed a "very special case" as Alexey
+> claims it to be or that it is likely to be applicable to other device and
+> host combinations as you are suggesting.
+>
+> If these properties are imposed by the host or host controller it would make
+> sense to have these in the mmc bindings.
+>
+>>>
+>>>> Also I am not sure if the broken-sg-support is still needed. We added
+>>>> that for omap_hsmmc, but that has since changed to scatter-gather emulation
+>>>> so it might not be needed anymore.
+>>>
+>>>
+>>> I've experienced the problem with rk3288 (dw-mmc host) and sdio
+>>> settings like above solved it.
+>>> Frankly, I haven't investigated any deeper which one of the settings
+>>> helped in my case yet...
+>>> I will try to get rid of broken-sg-support first and let you know if
+>>> it does make any difference.
+>
+>
+> Are you using some chromebook. I have some lying around here so I could also
+> look into it. What broadcom chipset do you have?
+>
+> Regards,
+> Arend
+>
+>
+>>> All the best,
+>>>    Alex.
+>>>
+>>> On 19 March 2018 at 16:31, Arend van Spriel
+>>> <arend.vanspriel@broadcom.com> wrote:
+>>>>
+>>>> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
+>>>>>
+>>>>>
+>>>>> In case if the host has higher align requirements for SG items, allow
+>>>>> setting device-specific aligns for scatterlist items.
+>>>>>
+>>>>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+>>>>> ---
+>>>>>    Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>> | 5
+>>>>> +++++
+>>>>>    1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>> index 86602f264dce..187b8c1b52a7 100644
+>>>>> ---
+>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>> +++
+>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>> @@ -17,6 +17,11 @@ Optional properties:
+>>>>>          When not specified the device will use in-band SDIO
+>>>>> interrupts.
+>>>>>     - interrupt-names : name of the out-of-band interrupt, which must
+>>>>> be
+>>>>> set
+>>>>>          to "host-wake".
+>>>>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO
+>>>>> host
+>>>>> +       controller has higher align requirement than 32 bytes for each
+>>>>> +       scatterlist item.
+>>>>> + - brcm,sd-head-align : alignment requirement for start of data
+>>>>> buffer.
+>>>>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
+>>>>> entry.
+>>>>
+>>>>
+>>>>
+>>>> Hi Alexey,
+>>>>
+>>>> Thanks for the patch. However, the problem with these is that they are
+>>>> characterizing the host controller and not the wireless device. So from
+>>>> device tree perspective , which is to describe the hardware, these
+>>>> properties should be SDIO host controller properties. Also I am not sure
+>>>> if
+>>>> the broken-sg-support is still needed. We added that for omap_hsmmc, but
+>>>> that has since changed to scatter-gather emulation so it might not be
+>>>> needed
+>>>> anymore.
+>>>>
+>>>> Regards,
+>>>> Arend
+>>>
+>>>
+>>>
+>>>
+>>
+>>
+>
+
+
+
+-- 
+With best regards,
+  Alexey Roslyakov
+Email: alexey.roslyakov@gmail.com
