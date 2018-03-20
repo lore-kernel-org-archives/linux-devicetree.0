@@ -1,66 +1,62 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v6 4/6] MIPS: mscc: add ocelot PCB123 device tree
-Date: Tue, 20 Mar 2018 14:07:59 +0100
-Message-ID: <20180320130801.9247-5-alexandre.belloni@bootlin.com>
-References: <20180320130801.9247-1-alexandre.belloni@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320130801.9247-1-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: tali.perry1@gmail.com
+Subject: [PATCH v11 0/2] clk: npcm750: Add NPCM7XX Clock driver and binding
+Date: Tue, 20 Mar 2018 15:40:47 +0200
+Message-ID: <1521553249-6971-1-git-send-email-tali.perry1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a device tree for the Microsemi Ocelot PCB123 evaluation board.
+From: Tali Perry <tali.perry1@gmail.com>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+Nuvoton NPCM7XX Clock Controller
+
+Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
+generates and supplies clocks to all modules within the BMC.
+
 ---
- arch/mips/boot/dts/mscc/Makefile          |  2 ++
- arch/mips/boot/dts/mscc/ocelot_pcb123.dts | 27 +++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb123.dts
 
-diff --git a/arch/mips/boot/dts/mscc/Makefile b/arch/mips/boot/dts/mscc/Makefile
-index dd08e63a10ba..c51164537c02 100644
---- a/arch/mips/boot/dts/mscc/Makefile
-+++ b/arch/mips/boot/dts/mscc/Makefile
-@@ -1 +1,3 @@
-+dtb-$(CONFIG_LEGACY_BOARD_OCELOT)	+= ocelot_pcb123.dtb
-+
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb123.dts b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
-new file mode 100644
-index 000000000000..29d6414f8886
---- /dev/null
-+++ b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/* Copyright (c) 2017 Microsemi Corporation */
-+
-+/dts-v1/;
-+
-+#include "ocelot.dtsi"
-+
-+/ {
-+	compatible = "mscc,ocelot-pcb123", "mscc,ocelot";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0e000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
+10 ==> 11
+update documentation. "eth" replaced with "ethernet" in use case eaxample.
+
+2 ==> 10
+update documentation. add external clocks as inputs to clk driver.
+fix SPDX comment.
+
+1 ==> 2
+This patch includes fix request described here:
+https://patchwork.kernel.org/patch/10200033/
+(move fixed clocks to DT)
+
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+
+Tali Perry (2):
+  clk: npcm750: Add binding for Nuvoton NPCM7XX clock Controller
+  clk: npcm7xx: Add Nuvoton NPCM7XX Clock Controller driver
+
+ .../bindings/clock/nuvoton,npcm750-clk.txt         | 100 +++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-npcm7xx.c                          | 757 +++++++++++++++++++++
+ include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  44 ++
+ 4 files changed, 902 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+ create mode 100644 drivers/clk/clk-npcm7xx.c
+ create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+
 -- 
-2.16.2
+2.14.1
