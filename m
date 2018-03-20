@@ -1,26 +1,77 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v7 2/3] dt-bindings: qcom: Add SDM845 bindings
-Date: Tue, 20 Mar 2018 10:30:05 -0700
-Message-ID: <152156700515.214794.11469616837693895976@swboyd.mtv.corp.google.com>
-References: <20180312141224.11907-1-rnayak@codeaurora.org>
- <20180312141224.11907-3-rnayak@codeaurora.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] PCI: rockchip: Create individual folder for
+ rockchip drivers
+Date: Tue, 20 Mar 2018 12:46:33 -0500
+Message-ID: <20180320174633.GA137590@bhelgaas-glaptop.roam.corp.google.com>
+References: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
+ <1520304202-232891-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312141224.11907-3-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1520304202-232891-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2018-03-12 07:12:23)
-> Add a SoC string 'sdm845' for the qualcomm SDM845 SoC
-> =
+On Tue, Mar 06, 2018 at 10:43:22AM +0800, Shawn Lin wrote:
+> In preparation for introducing End-Point driver for Rockchip
+> PCIe controller, we create a new folder to follow the convention
+> of dwc and cadence. Then we rename the host driver from pcie-rockchip.c
+> to pcie-rockchip-host.c, and only leave some common functions in
+> pcie-rockchip.c in order to be reused for both of host and EP drivers.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ...
 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 34b56a8..b85ad40 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -141,4 +141,5 @@ source "drivers/pci/cadence/Kconfig"
+>  source "drivers/pci/dwc/Kconfig"
+>  source "drivers/pci/host/Kconfig"
+>  source "drivers/pci/endpoint/Kconfig"
+> +source "drivers/pci/rockchip/Kconfig"
+>  source "drivers/pci/switch/Kconfig"
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Why is this out of order?  This seems exactly analogous to
+drivers/pci/cadence and dwc, so they should be next to each other.
+
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 9419709..8434afb 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -55,6 +55,8 @@ obj-y += switch/
+>  
+>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+>  
+> +obj-$(CONFIG_PCIE_ROCKCHIP)	+= rockchip/
+> +
+>  # Endpoint library must be initialized before its users
+>  obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
+>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+
+Similarly here.
+
+I admit to still being a little dubious about the idea of a bunch of
+vendor-specific directories, each containing a completely trivial
+Makefile, a mostly-trivial Kconfig, a header file, a shared .c file, a
+host .c file, and an endpoint .c file.
+
+One alternative would be to keep the single pcie-rockchip.c file with
+an #ifdef CONFIG_PCIE_ROCKCHIP_HOST section and an #ifdef
+CONFIG_PCIE_ROCKCHIP_EP section.
+
+Bjorn
