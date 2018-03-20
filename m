@@ -1,34 +1,53 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 07/10] ARM: dts: gemini: Remove "cooling-{min|max}-level"
- for gpio-fan node
-Date: Tue, 20 Mar 2018 04:10:19 +0100
-Message-ID: <CACRpkdaQtPOJCcXoVB0UufLDNhkkh4__XTT2sapAKWDu9jw73g@mail.gmail.com>
-References: <cover.1518166039.git.viresh.kumar@linaro.org> <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v5 0/3] Bluetooth: hci_qca: Add serdev support
+Date: Tue, 20 Mar 2018 04:23:28 +0100
+Message-ID: <20180320032331.29865-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 9, 2018 at 9:58 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+Hi,
 
-> The "cooling-min-level" and "cooling-max-level" properties are not
-> parsed by any part of the kernel currently and the max cooling state of
-> gpio-fan cooling device is found by referring to the
-> "gpio-fan,speed-map" instead.
->
-> Remove the unused properties from the gpio-fan node.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+This patchset enables the Qualcomm BT controller QCA6174 node in the
+device tree of the db820c board. This allows the bluetooth chipset to
+be probed and registered against the hci layer by using the serdev
+framework.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+This patchset also contains the documentation for the compatible
+string "qcom,qca6174-bt" related to this chipset.
 
-I can queue it next week (different machine hosting the git tree)
-but it is also OK if the ARM SoC maintainers want to pick it
-directly for the ARM SoC DTS branch.
+v5:
+- Rename 'bt-disable-n' gpio as 'enable'
 
-Yours,
-Linus Walleij
+v4:
+- Fix dt binding documentation
+- Address some other issues in patch #3
+
+v3:
+- Address comments for patch #3 (details in patch)
+
+v2:
+- Fix author email
+
+Thierry Escande (3):
+  arm64: dts: apq8096-db820c: enable bluetooth node
+  dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+  Bluetooth: hci_qca: Add serdev support
+
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt |  34 +++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  14 +++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  17 ++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  33 +++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
+ drivers/bluetooth/Kconfig                          |   1 +
+ drivers/bluetooth/hci_qca.c                        | 109 ++++++++++++++++++++-
+ 7 files changed, 216 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+
+-- 
+2.14.1
