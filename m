@@ -1,195 +1,114 @@
-From: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-Subject: [RFC PATCH] net: phy: Added device tree binding for dev-addr and dev-addr code check-up and usage
-Date: Tue, 20 Mar 2018 08:46:15 -0500
-Message-ID: <20180320134615.17817-1-vicentiu.galanopulo@nxp.com>
-Reply-To: vicentiu.galanopulo@nxp.com
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 0/3] allow override of bus format in bridges
+Date: Tue, 20 Mar 2018 15:47:55 +0200
+Message-ID: <7353957.qIouzRlT7t@avalon>
+References: <20180317221525.18534-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org
-Cc: madalin.bucur@nxp.com, alexandru.marginean@nxp.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180317221525.18534-1-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Reason for this patch is that the Inphi PHY
-has a vendor specific address space for accessing
-the C45 MDIO registers - starting from 0x1e.
-
-A new function has been added, get_phy_c45_dev_addr,
-which loops through all the PHY device nodes under
-a MDIO bus node and looks for the <dev-addr> property. If
-it's not set/found, the get_phy_c45_devs_in_pkg,
-will be called with the value 0 as dev_addr parameter,
-else it will be called with the dev-addr property
-value from the device tree.
-
-As a plus to this patch, num_ids in get_phy_c45_ids,
-has the value 8 (ARRAY_SIZE(c45_ids->device_ids)), but
-the u32 *devs can store 32 devices in the bitfield. If
-a device is stored in *devs, in bits 32 to 9, it
-will not be found. This is the reason for changing in phy.h,
-the size of device_ids array.
-
-Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
----
- Documentation/devicetree/bindings/net/phy.txt |  6 ++
- drivers/net/phy/phy_device.c                  | 80 ++++++++++++++++++++++++++-
- include/linux/phy.h                           |  2 +-
- 3 files changed, 84 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-index d2169a5..82692e2 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -61,6 +61,11 @@ Optional Properties:
- - reset-deassert-us: Delay after the reset was deasserted in microseconds.
-   If this property is missing the delay will be skipped.
- 
-+- dev-addr: If set, it indicates the device address of the PHY to be used
-+  when accessing the C45 PHY registers over MDIO. It is used for vendor specific
-+  register space addresses that do no conform to standard address for the MDIO
-+  registers (e.g. MMD30)
-+
- Example:
- 
- ethernet-phy@0 {
-@@ -72,4 +77,5 @@ ethernet-phy@0 {
- 	reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	reset-assert-us = <1000>;
- 	reset-deassert-us = <2000>;
-+	dev-addr = <0x1e>;
- };
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index b285323..35b9a2b 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -442,6 +442,52 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
- }
- 
- /**
-+ * get_phy_c45_dev_addr - reads the C45 PHY device register address
-+ * from the  PHY device tree node
-+ * @bus: the target MII bus
-+ * @addr: PHY address on the MII bus
-+ * @dev_addr: where to store the device address of the C45 PHY.
-+ *
-+ * Description: reads the PHY device address in @dev_addr
-+ * from PHY at @addr on @bus.
-+ *
-+ * Returns: 0 on success, -EIO and -ENODEV on failure.
-+ */
-+static int get_phy_c45_dev_addr(struct mii_bus *bus,
-+				int addr, int *dev_addr)
-+{
-+	struct device_node *child;
-+	u32 reg_addr;
-+	int ret;
-+
-+	if (!bus->dev.of_node)
-+		return -ENODEV;
-+
-+	for_each_available_child_of_node(bus->dev.of_node, child) {
-+		ret = of_property_read_u32(child, "reg", &reg_addr);
-+		if (ret < 0) {
-+			dev_err(&bus->dev, "%s has invalid PHY address\n",
-+				child->full_name);
-+			*dev_addr = 0;
-+			return -EINVAL;
-+		}
-+
-+		/* match the device address with the device tree address */
-+		if (reg_addr == addr) {
-+			ret = of_property_read_u32(child, "dev-addr", dev_addr);
-+			if (ret < 0) {
-+				dev_warn(&bus->dev, "No PHY device address defined for %s\n",
-+					 child->full_name);
-+				*dev_addr = 0;
-+			}
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * get_phy_c45_ids - reads the specified addr for its 802.3-c45 IDs.
-  * @bus: the target MII bus
-  * @addr: PHY address on the MII bus
-@@ -458,6 +504,9 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
- 			   struct phy_c45_device_ids *c45_ids) {
- 	int phy_reg;
- 	int i, reg_addr;
-+	int dev_addr = 0;
-+	int ret;
-+	int dev_reg_addr;
- 	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
- 	u32 *devs = &c45_ids->devices_in_package;
- 
-@@ -475,9 +524,27 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
- 			 *  10G PHYs have zero Devices In package,
- 			 *  e.g. Cortina CS4315/CS4340 PHY.
- 			 */
--			phy_reg = get_phy_c45_devs_in_pkg(bus, addr, 0, devs);
-+
-+			/*  Check if the device address
-+			 *  is set in the device tree
-+			 */
-+			ret = get_phy_c45_dev_addr(bus, addr, &dev_addr);
-+			/*  Exit only when MDIO querying fails
-+			 *  or <reg> property is not set in the
-+			 *  PHY device tree node.
-+			 */
-+			if (ret < 0)
-+				return -EIO;
-+
-+			/*  If the device tree property (dev-addr)
-+			 *  is not set, the default value for
-+			 *  dev_addr is 0.
-+			 */
-+			phy_reg = get_phy_c45_devs_in_pkg(bus, addr,
-+							  dev_addr, devs);
- 			if (phy_reg < 0)
- 				return -EIO;
-+
- 			/* no device there, let's get out of here */
- 			if ((*devs & 0x1fffffff) == 0x1fffffff) {
- 				*phy_id = 0xffffffff;
-@@ -493,13 +560,20 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
- 		if (!(c45_ids->devices_in_package & (1 << i)))
- 			continue;
- 
--		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID1;
-+		/*  If dev-addr is set in the device tree,
-+		 *  use that property value for querying
-+		 *  the PHY device ID.
-+		 */
-+
-+		dev_reg_addr = (!!dev_addr ? dev_addr : i) << 16;
-+		reg_addr = MII_ADDR_C45 | dev_reg_addr | MII_PHYSID1;
- 		phy_reg = mdiobus_read(bus, addr, reg_addr);
- 		if (phy_reg < 0)
- 			return -EIO;
- 		c45_ids->device_ids[i] = (phy_reg & 0xffff) << 16;
- 
--		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID2;
-+		dev_reg_addr = (!!dev_addr ? dev_addr : i) << 16;
-+		reg_addr = MII_ADDR_C45 | dev_reg_addr | MII_PHYSID2;
- 		phy_reg = mdiobus_read(bus, addr, reg_addr);
- 		if (phy_reg < 0)
- 			return -EIO;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5a9b175..c3b3633 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -360,7 +360,7 @@ enum phy_state {
-  */
- struct phy_c45_device_ids {
- 	u32 devices_in_package;
--	u32 device_ids[8];
-+	u32 device_ids[32];
- };
- 
- /* phy_device: An instance of a PHY
--- 
-2.7.4
+SGkgUGV0ZXIsCgooQ0MnaW5nIEphY29wbyBNb25kaSB3aG8gbWlnaHQgYmUgd29ya2luZyBvbiBz
+b21ldGhpbmcgc2ltaWxhcikKCk9uIFN1bmRheSwgMTggTWFyY2ggMjAxOCAwMDoxNToyMiBFRVQg
+UGV0ZXIgUm9zaW4gd3JvdGU6Cj4gSSdtIHRyeWluZyB0byBnZXQgc29tZXRoaW5nIHRvIHdvcmsg
+dGhhdCBJIGFzc3VtZWQgd291bGQgbm90Cj4gbmVlZCBwYXRjaGVzLCBzbyBJIHRoaW5rIEkgbWln
+aHQgYmUgbWlzc2luZyBzb21ldGhpbmcgY29tcGxldGVseQo+IG9idmlvdXMuLi4KPiAKPiBJIGhh
+dmUgYW4gQXRtZWwgc2FtYTVkMzEgaG9va2VkIHVwIHRvIGFuIGx2ZHMgZW5jb2RlciBhbmQgdGhl
+bgo+IG9uIHRvIGFuIGx2ZHMgcGFuZWwuIFdoaWNoIHNlZW1zIGxpa2Ugc29tZXRoaW5nIHRoYXQg
+aGFzIGJlZW4KPiBkb25lIG9uZSBvciB0d28gdGltZXMgYmVmb3JlLi4uCj4gCj4gVGhlIHByb2Js
+ZW0gKEkgdGhpbmspIGlzIHRoYXQgdGhlIGJ1c19mb3JtYXQgb2YgdGhlIFNvQyBhbmQgdGhlCj4g
+cGFuZWwgZG8gbm90IGFncmVlLiBUaGUgU29DIGRyaXZlciAoYXRtZWwtaGxjZGMpIGNhbiBoYW5k
+bGUgdGhlCj4gcmdiNDQ0LCByZ2I1NjUsIHJnYjY2NiBhbmQgcmdiODg4IGJ1cyBmb3JtYXRzLiBU
+aGUgaGFyZHdhcmUgaXMKPiB3aXJlZCBmb3IgdGhlIHJnYjU2NSBjYXNlLiBUaGUgbHZkcyBlbmNv
+ZGVyIHN1cHBvcnRzIHJnYjg4OCBvbgo+IGl0cyBpbnB1dCBzaWRlIHdpdGggdGhlIExTQiB3aXJl
+cyBzaW1wbHkgcHVsbGVkIGRvd24gaW50ZXJuYWxseQo+IGluIHRoZSBlbmNvZGVyIGluIG15IGNh
+c2UuIEFuZCB0aGUgcGFuZWwgaXMgZXhwZWN0aW5nIGx2ZHMKPiAodmVzYS0yNCksIHdoaWNoIGlz
+IHdoYXQgdGhlIGVuY29kZXIgb3V0cHV0cy4KPiAKPiBUaGUgcmVhc29uIEkgImJsYW1lIiB0aGUg
+YnVzX2Zvcm1hdCBvZiB0aGUgZHJtX2Nvbm5lY3RvciBpcyB0aGF0Cj4gd2l0aCB0aGUgYmVsb3cg
+RFQgc25pcHBldCwgdGhpbmdzIGRvIG5vdCB3b3JrICpleGFjdGx5KiBkdWUgdG8KPiB0aGF0LiBB
+dCBsZWFzdCwgaXQgc3RhcnRzIHRvIHdvcmsgaWYgSSBoYWNrIHRoZSBwYW5lbC1sdmRzIGRyaXZl
+cgo+IHRvIHJlcG9ydCB0aGUgcmdiNTY1IGJ1c19mb3JtYXQgaW5zdGVhZCBvZiB2ZXNhLTI0Lgo+
+IAo+IAlwYW5lbDogcGFuZWwgewo+IAkJY29tcGF0aWJsZSA9ICJwYW5lbC1sdmRzIjsKPiAKPiAJ
+CXdpZHRoLW1tID0gPDQ3Nj47Cj4gCQloZWlnaHQtbW0gPSA8MjY4PjsKPiAKPiAJCWRhdGEtbWFw
+cGluZyA9ICJ2ZXNhLTI0IjsKPiAKPiAJCXBhbmVsLXRpbWluZyB7Cj4gCQkJLy8gMTAyNHg3Njgg
+QCA2MEh6ICh0eXBpY2FsKQo+IAkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw1MjE0MDAwMCA2NTAwMDAw
+MCA3MTEwMDAwMD47Cj4gCQkJaGFjdGl2ZSA9IDwxMDI0PjsKPiAJCQl2YWN0aXZlID0gPDc2OD47
+Cj4gCQkJaGZyb250LXBvcmNoID0gPDU5IDEwNyAxMDc+Owo+IAkJCWhiYWNrLXBvcmNoID0gPDU5
+IDEwNyAxMDc+Owo+IAkJCWhzeW5jLWxlbiA9IDw1OSAxMDYgMTA2PjsKPiAJCQl2ZnJvbnQtcG9y
+Y2ggPSA8OCAxMyAxND47Cj4gCQkJdmJhY2stcG9yY2ggPSA8OCAxMyAxND47Cj4gCQkJdnN5bmMt
+bGVuID0gPDggMTIgMTQ+Owo+IAkJfTsKPiAKPiAJCXBvcnQgewo+IAkJCXBhbmVsX2lucHV0OiBl
+bmRwb2ludCB7Cj4gCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkc19lbmNvZGVyX291dHB1dD47
+Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4gCj4gCWx2ZHMtZW5jb2RlciB7Cj4gCQljb21wYXRpYmxl
+ID0gInRpLGRzOTBjMTg3IiwgImx2ZHMtZW5jb2RlciI7Cj4gCj4gCQlwb3J0cyB7Cj4gCQkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47Cj4gCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gCj4gCQkJcG9ydEAw
+IHsKPiAJCQkJcmVnID0gPDA+Owo+IAo+IAkJCQlsdmRzX2VuY29kZXJfaW5wdXQ6IGVuZHBvaW50
+IHsKPiAJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGxjZGNfb3V0cHV0PjsKPiAJCQkJfTsKPiAJ
+CQl9Owo+IAo+IAkJCXBvcnRAMSB7Cj4gCQkJCXJlZyA9IDwxPjsKPiAKPiAJCQkJbHZkc19lbmNv
+ZGVyX291dHB1dDogZW5kcG9pbnQgewo+IAkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9p
+bnB1dD47Cj4gCQkJCX07Cj4gCQkJfTsKPiAJCX07Cj4gCX07CgpJIGFncmVlIHdpdGggeW91ciBh
+bmFseXNpcywgaXQncyB3cm9uZyBmb3IgYSBkaXNwbGF5IGNvbnRyb2xsZXIgdG8gdXNlIHRoZSAK
+Zm9ybWF0cyByZXBvcnRlZCBieSB0aGUgcGFuZWwgKHRocm91Z2ggdGhlIGNvbm5lY3Rvcikgd2l0
+aG91dCB0YWtpbmcgaW50byAKYWNjb3VudCBpbnRlcm1lZGlhdGUgYnJpZGdlcy4KCj4gQnV0LCBp
+bnN0ZWFkIG9mIHBlcnZlcnRpbmcgdGhlIHBhbmVsLWx2ZHMgZHJpdmVyIHdpdGggc3VwcG9ydAo+
+IGZvciBhIHRvdGFsbHkgZmFrZSBub24tbHZkcyBidXNfZm9ybWF0LCBJIGNhbWUgdXAgd2l0aCBh
+biBvcHRpb25hbAo+IGJ1c19mb3JtYXQgb3ZlcnJpZGUgaW4gdGhlIGx2ZHMtZW5jb2RlciBkcml2
+ZXIsIHdoaWNoIEkgdHJpZ2dlciB3aXRoCj4gdGhpcyBhZGRpdGlvbiB0byB0aGUgbHZkcy1lbmNv
+ZGVyIERUIG5vZGU6Cj4gCj4gCQlpbnRlcmZhY2UtcGl4LWZtdCA9ICJyZ2I1NjUiOwo+IAo+IFRo
+ZXJlIGFyZSBzb21lIGlzc3VlcyB3aXRoIHRoZSBpbnRlcmZhY2UtcGl4LWZtdCBuYW1lLiBJIGNv
+cGllZCBpdAo+IGZyb20gdGhlIGZyZWVzY2FsZSBmc2wtaW14LWRybSBiaW5kaW5nLCBidXQgYSkg
+SSBwZXJzb25hbGx5IGRvbid0Cj4gbGlrZSBob3cgdGhhdCBiaW5kaW5nIHVzZXMgcmdiMjQgaW5z
+dGVhZCBvZiByZ2I4ODggYW5kIGIpIEkgZG9uJ3QKPiBsaWtlIGhvdyB0aGUgaW1wbGVtZW50YXRp
+b24gb2YgdGhhdCBiaW5kaW5nIHNlbGVjdHMgcmdiNjY2IHdoZW4geW91Cj4gc2F5IGJncjY2NiBp
+biB0aGUgRFQsIGJ1dCBmb3IgcGFyYWxsZWwgaGFyZHdhcmUgaW50ZXJmYWNlIHRoZSBiaXQKPiBv
+cmRlciBpcyBub3QgcmVhbGx5IHJlbGV2YW50IHNvIEkgc3dhbGxvd2VkIHRoYXQuIEFueXdheSwg
+aXQgbWlnaHQKPiBiZSBiZXR0ZXIgdG8gdXNlIHNvbWV0aGluZyBlbHNlIHRoYW4gaW50ZXJmYWNl
+LXBpeC1mbXQ/IFBlcmhhcHMKPiByZXVzZSB0aGUgImRhdGEtbWFwcGluZyIgbmFtZSBmcm9tIHRo
+ZSBwYW5lbC1sdmRzIGJpbmRpbmc/IEJ1dCB0aGF0Cj4gc2VlbXMgc29tZXdoYXQgbHZkcyBzcGVj
+aWZpYz8gVGhlbiB0aGVyZSBhIGNvdXBsZSBvZiBpbnN0YW5jZXMgb2YKPiAiYnVzLWZvcm1hdC1v
+dmVycmlkZSIgaW4gc29tZSBkdHNpIGZpbGVzLCBidXQgdGhhdCBuYW1lIGlzIG5vdAo+IG1lbnRp
+b25lZCBpbiBhbnkgYmluZGluZywgbm9yIGluICh1cHN0cmVhbSkgY29kZS4uLgoKVGhlIGRhdGEt
+bWFwcGluZ3MgcHJvcGVydHkgZGVzY3JpYmUgdGhlIG1hcHBpbmcgb2YgdGhlIGJpdHMgb3ZlciB0
+aGUgTFZEUyB0aW1lIApzbG90cywgc28gSSB3b3VsZG4ndCByZXVzZSB0aGF0IG5hbWUsIGVzcGVj
+aWFsbHkgZ2l2ZW4gdGhhdCB0aGUgcHJvcGVydHkgeW91IApuZWVkIGlzbid0IHNwZWNpZmljIHRv
+IExWRFMuICJidXMtZm9ybWF0IiBzb3VuZHMgYmV0dGVyIHRvIG1lLCBvciBtYXliZSAKInZpZGVv
+LWZvcm1hdCIgKGNvbWluZyBmcm9tIGEgc2ltaWxhciBwcm9wZXJ0eSBpbiBhIFhpbGlueC1zcGVj
+aWZpYyBWNEwyIApiaW5kaW5nKS4KCj4gQW5kIG1heWJlIGl0IHNob3VsZCBiZSBmb3VyY2MgY29k
+ZXMgb3Igc29tZXRoaW5nIGluc3RlYWQgb2YgdGhlc2UKPiAicmdiNTY1IiBuYW1lcz8KCldlJ2Qg
+ZW5kIHVwIGludHJvZHVjaW5nIHRoZSBmb3JtYXQgZm91cmNjIHZhbHVlcywgd2hpY2ggYXJlIHRv
+IHNvbWUgZXh0ZW50IApMaW51eC1zcGVjaWZpYyAod2l0aCBpZGVudGljYWwgZm9ybWF0cyB0aGF0
+IGhhdmUgZGlmZmVyZW50IGZvdXJjY3MgaW4gVjRMMiBhbmQgCkRSTSksIGluIHRoZSBEVCBiaW5k
+aW5ncywgc28gSSdtIHRlbXB0ZWQgdG8gc3RpY2sgdG8gc3RyaW5ncywgYnV0IEkgY291bGQgYmUg
+CmNvbnZpbmNlZCBvdGhlcndpc2UuCgpBbm90aGVyIG9wdGlvbiB3b3VsZCBiZSB0byB1c2UgZGV2
+aWNlLXNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5ncywgaW4gd2hpY2ggCmNhc2UgdGhlIGZvcm1h
+dCBjb3VsZCBiZSBzdG9yZWQgaW4gdGhlIGRyaXZlciBpbnN0ZWFkIG9mIGluIGEgRFQgcHJvcGVy
+dHkuIEknbSAKbm90IHN1cmUgdGhhdCdzIGEgZ29vZCBpZGVhLCBJIGhhdmVuJ3QgcmVhbGx5IHRo
+b3VnaHQgYWJvdXQgaXQgbXVjaCA6LSkKCj4gSSB0aHJldyBpbiB0aGUgZmlyc3QgcGF0Y2gsIHNp
+bmNlIHRoYXQgaXMgdGhlIGFjdHVhbCBsdmRzIGVuY29kZXIKPiBJIGhhdmUgaW4gdGhpcyBjYXNl
+Lgo+IAo+IFN1Z2dlc3Rpb25zIHdlbGNvbWUuCgpJJ2xsIGNvbW1lbnQgb24gdGhlIEFQSSBpbiBy
+ZXBsaWVzIHRvIHRoZSBwYXRjaGVzLgoKPiBQZXRlciBSb3NpbiAoMyk6Cj4gICBkdC1iaW5kaW5n
+czogZGlzcGxheTogYnJpZGdlOiBsdmRzLXRyYW5zbWl0dGVyOiBhZGQgdGksZHM5MGMxODUKPiAg
+IGRybTogYnJpZGdlOiBwYW5lbDogYWxsb3cgb3ZlcnJpZGUgb2YgdGhlIGJ1cyBmb3JtYXQKPiAg
+IGRybTogYnJpZGdlOiBsdmRzLWVuY29kZXI6IG9uIHJlcXVlc3QsIG92ZXJyaWRlIHRoZSBidXMg
+Zm9ybWF0Cj4gCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVy
+LnR4dCAgIHwgMTMgKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMt
+ZW5jb2Rlci5jICAgICAgICAgICAgICB8IDE4ICsrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMgICAgICAgICAgICAgICAgICAgICB8IDIyICsrKysrKysr
+KysrKysrKysrKy0KPiAgaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgMSArCj4gIDQgZmlsZXMgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
