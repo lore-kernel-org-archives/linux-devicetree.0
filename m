@@ -1,211 +1,202 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 07/11] mmc: sdhci: Program a relatively accurate SW
- timeout value
-Date: Tue, 20 Mar 2018 15:18:15 +0530
-Message-ID: <27e92e28-08b4-42b1-e4ef-32fa8ac785dc@ti.com>
-References: <20180307132020.30951-1-kishon@ti.com>
- <20180307132020.30951-8-kishon@ti.com>
- <1e87e5f9-13e1-765b-f077-26a55359b2c3@intel.com>
- <47752066-aeda-87bc-6928-1a9b80f1c45c@ti.com>
- <49210daa-b593-4b34-abf5-be81580723bc@intel.com>
- <29f640ac-b155-41c6-cf3f-8c66e1b300f1@ti.com>
- <1905d25f-d16d-50b1-54b0-35807d801a12@intel.com>
- <dacb62d3-086d-27a7-85cf-94916ce464b5@ti.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 3/5] iommu/arm-smmu: Invoke pm_runtime during probe,
+	add/remove device
+Date: Tue, 20 Mar 2018 15:19:10 +0530
+Message-ID: <3e25955c-c6a6-9ca0-3c77-ae5c133d3c10@codeaurora.org>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-4-vivek.gautam@codeaurora.org>
+	<77ed3675-0af0-b36a-5f76-b920d7a4c8e0@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dacb62d3-086d-27a7-85cf-94916ce464b5@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <77ed3675-0af0-b36a-5f76-b920d7a4c8e0-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-On Monday 19 March 2018 03:49 PM, Kishon Vijay Abraham I wrote:
-> Hi Adrian,
-> 
-> On Monday 19 March 2018 03:30 PM, Adrian Hunter wrote:
->> On 19/03/18 11:20, Kishon Vijay Abraham I wrote:
->>> Hi Adrian,
->>>
->>> On Friday 16 March 2018 07:51 PM, Adrian Hunter wrote:
->>>> On 16/03/18 08:29, Kishon Vijay Abraham I wrote:
->>>>> Hi,
->>>>>
->>>>> On Thursday 15 March 2018 06:43 PM, Adrian Hunter wrote:
->>>>>> On 07/03/18 15:20, Kishon Vijay Abraham I wrote:
->>>>>>> sdhci has a 10 second timeout to catch devices that stop responding.
->>>>>>> Instead of programming 10 second arbitrary value, calculate the total time
->>>>>>> it would take for the entire transfer to happen and program the timeout
->>>>>>> value accordingly.
->>>>>>>
->>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>>> ---
->>>>>>>  drivers/mmc/host/sdhci.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
->>>>>>>  drivers/mmc/host/sdhci.h | 10 ++++++++++
->>>>>>>  2 files changed, 50 insertions(+), 7 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>>>>>> index 1dd117cbeb6e..baab67bfa39b 100644
->>>>>>> --- a/drivers/mmc/host/sdhci.c
->>>>>>> +++ b/drivers/mmc/host/sdhci.c
->>>>>>> @@ -709,6 +709,36 @@ static u32 sdhci_sdma_address(struct sdhci_host *host)
->>>>>>>  		return sg_dma_address(host->data->sg);
->>>>>>>  }
->>>>>>>  
->>>>>>> +static void sdhci_calc_sw_timeout(struct sdhci_host *host,
->>>>>>> +				  struct mmc_command *cmd,
->>>>>>> +				  unsigned int target_timeout)
->>>>>>> +{
->>>>>>> +	struct mmc_data *data = cmd->data;
->>>>>>> +	struct mmc_host *mmc = host->mmc;
->>>>>>> +	u64 transfer_time;
->>>>>>> +	struct mmc_ios *ios = &mmc->ios;
->>>>>>> +	unsigned char bus_width = 1 << ios->bus_width;
->>>>>>> +	unsigned int blksz;
->>>>>>> +	unsigned int freq;
->>>>>>> +
->>>>>>> +	if (data) {
->>>>>>> +		blksz = data->blksz;
->>>>>>> +		freq = host->mmc->actual_clock ? : host->clock;
->>>>>>> +		transfer_time = (u64)blksz * NSEC_PER_SEC * (8 / bus_width);
->>>>>>> +		do_div(transfer_time, freq);
->>>>>>> +		/* multiply by '2' to account for any unknowns */
->>>>>>> +		transfer_time = transfer_time * 2;
->>>>>>> +		/* calculate timeout for the entire data */
->>>>>>> +		host->data_timeout = (data->blocks * ((target_timeout *
->>>>>>> +						       NSEC_PER_USEC) +
->>>>>>> +						       transfer_time));
->>>>>>
->>>>>> (target_timeout * NSEC_PER_USEC) might be 32-bit and therefore overflow
->>>>>> for timeouts greater than about 4 seconds.
->>>>>>
->>>>>>> +	} else {
->>>>>>> +		host->data_timeout = (u64)target_timeout * NSEC_PER_USEC;
->>>>>>> +	}
->>>>>>> +
->>>>>>> +	host->data_timeout += MMC_CMD_TRANSFER_TIME;
->>>>>>
->>>>>> Need to allow for target_timeout == 0 so:
->>>>>>
->>>>>> 	if (host->data_timeout)
->>>>>> 		host->data_timeout += MMC_CMD_TRANSFER_TIME;
->>>>>>
->>>>>>> +}
->>>>>>> +
->>>>>>>  static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->>>>>>>  {
->>>>>>>  	u8 count;
->>>>>>> @@ -766,6 +796,7 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->>>>>>>  		if (count >= 0xF)
->>>>>>>  			break;
->>>>>>>  	}
->>>>>>> +	sdhci_calc_sw_timeout(host, cmd, target_timeout);
->>>>>>
->>>>>> If you make the changes I suggest for patch 6, then this would
->>>>>> move sdhci_calc_sw_timeout() into sdhci_set_timeout().
->>>>>>
->>>>>> I suggest you factor out the target_timeout calculation e.g.
->>>>>>
->>>>>> static unsigned int sdhci_target_timeout(struct sdhci_host *host,
->>>>>> 					 struct mmc_command *cmd,
->>>>>> 					 struct mmc_data *data)
->>>>>> {
->>>>>> 	unsigned int target_timeout;
->>>>>>
->>>>>> 	/* timeout in us */
->>>>>> 	if (!data)
->>>>>> 		target_timeout = cmd->busy_timeout * 1000;
->>>>>> 	else {
->>>>>> 		target_timeout = DIV_ROUND_UP(data->timeout_ns, 1000);
->>>>>> 		if (host->clock && data->timeout_clks) {
->>>>>> 			unsigned long long val;
->>>>>>
->>>>>> 			/*
->>>>>> 			 * data->timeout_clks is in units of clock cycles.
->>>>>> 			 * host->clock is in Hz.  target_timeout is in us.
->>>>>> 			 * Hence, us = 1000000 * cycles / Hz.  Round up.
->>>>>> 			 */
->>>>>> 			val = 1000000ULL * data->timeout_clks;
->>>>>> 			if (do_div(val, host->clock))
->>>>>> 				target_timeout++;
->>>>>> 			target_timeout += val;
->>>>>> 		}
->>>>>> 	}
->>>>>>
->>>>>> 	return target_timeout;
->>>>>> }
->>>>>>
->>>>>> And call it from sdhci_calc_sw_timeout()
->>>>>>
->>>>>>>  
->>>>>>>  	return count;
->>>>>>>  }
->>>>>>> @@ -1175,13 +1206,6 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->>>>>>>  		mdelay(1);
->>>>>>>  	}
->>>>>>>  
->>>>>>> -	timeout = jiffies;
->>>>>>> -	if (!cmd->data && cmd->busy_timeout > 9000)
->>>>>>> -		timeout += DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
->>>>>>> -	else
->>>>>>> -		timeout += 10 * HZ;
->>>>>>> -	sdhci_mod_timer(host, cmd->mrq, timeout);
->>>>>>> -
->>>>>>>  	host->cmd = cmd;
->>>>>>>  	if (sdhci_data_line_cmd(cmd)) {
->>>>>>>  		WARN_ON(host->data_cmd);
->>>>>>> @@ -1221,6 +1245,15 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->>>>>>>  	    cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)
->>>>>>>  		flags |= SDHCI_CMD_DATA;
->>>>>>>  
->>>>>>> +	timeout = jiffies;
->>>>>>> +	if (host->data_timeout > 0) {
->>>>>>
->>>>>> This can be just:
->>>>>>
->>>>>> 	if (host->data_timeout) {
->>>>>>
->>>>>>> +		timeout += nsecs_to_jiffies(host->data_timeout);
->>>>>>> +		host->data_timeout = 0;
->>>>>>
->>>>>> It would be better to initialize host->data_timeout = 0 at the top of
->>>>>> sdhci_prepare_data().
->>>>>>
->>>>>> Also still need:
->>>>>>
->>>>>> 	else if (!cmd->data && cmd->busy_timeout > 9000) {
->>>>>> 		timeout += DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
->>>>>
->>>>> sdhci_calc_sw_timeout should have calculated the timeout for this case too no?
->>>>
->>>> Yes, but I was thinking you would only calculate when it was needed.
->>>
->>> I feel since we would have anyways calculated data_timeout, we should use that
->>> instead unless you see a problem with that.
->>
->> I would prefer not to calculate data_timeout when a hardware timeout is
->> being used.
->>
-> 
-> That differs from what I had thought. This patch tries to program a relatively
-> accurate SW timeout value (for data_timer) irrespective of whether hardware
-> timeout is used or not. This only tries to change the 10 Sec SW timeout value
-> programmed for all data transfer commands.
-
-IMHO since we calculate the worst case timeout value we should be using that
-for all cases where we are able to calculate the timeout value so that we don't
-give a too high or too low timeout value. Let me know If this sounds okay to you.
-
-Thanks
-Kishon
+SGkgUm9iaW4sCgoKT24gMy8xNC8yMDE4IDExOjE2IFBNLCBSb2JpbiBNdXJwaHkgd3JvdGU6Cj4g
+T24gMTMvMDMvMTggMDg6NTUsIFZpdmVrIEdhdXRhbSB3cm90ZToKPj4gRnJvbTogU3JpY2hhcmFu
+IFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4KPj4gVGhlIHNtbXUgZGV2aWNlIHByb2Jl
+L3JlbW92ZSBhbmQgYWRkL3JlbW92ZSBtYXN0ZXIgZGV2aWNlIGNhbGxiYWNrcwo+PiBnZXRzIGNh
+bGxlZCB3aGVuIHRoZSBzbW11IGlzIG5vdCBsaW5rZWQgdG8gaXRzIG1hc3RlciwgdGhhdCBpcyB3
+aXRob3V0Cj4+IHRoZSBjb250ZXh0IG9mIHRoZSBtYXN0ZXIgZGV2aWNlLiBTbyBjYWxsaW5nIHJ1
+bnRpbWUgYXBpcyBpbiB0aG9zZSAKPj4gcGxhY2VzCj4+IHNlcGFyYXRlbHkuCj4+Cj4+IFNpZ25l
+ZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4+IFt2aXZl
+azogQ2xlYW51cCBwbSBydW50aW1lIGNhbGxzXQo+PiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0
+YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPj4gUmV2aWV3ZWQtYnk6IFRvbWFzeiBG
+aWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4+IC0tLQo+PiDCoCBkcml2ZXJzL2lvbW11L2FybS1z
+bW11LmMgfCA5NSAKPj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KystLS0tCj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9u
+cygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jIGIvZHJpdmVy
+cy9pb21tdS9hcm0tc21tdS5jCj4+IGluZGV4IGQ1ODczZDU0NTAyNC4uNTZhMDRhZTgwYmYzIDEw
+MDY0NAo+PiAtLS0gYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPj4gKysrIGIvZHJpdmVycy9p
+b21tdS9hcm0tc21tdS5jCj4+IEBAIC0yNjgsNiArMjY4LDIwIEBAIHN0YXRpYyBzdHJ1Y3QgYXJt
+X3NtbXVfb3B0aW9uX3Byb3AgCj4+IGFybV9zbW11X29wdGlvbnNbXSA9IHsKPj4gwqDCoMKgwqDC
+oCB7IDAsIE5VTEx9LAo+PiDCoCB9Owo+PiDCoCArc3RhdGljIGlubGluZSBpbnQgYXJtX3NtbXVf
+cnBtX2dldChzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11KQo+PiArewo+PiArwqDCoMKgIGlm
+IChwbV9ydW50aW1lX2VuYWJsZWQoc21tdS0+ZGV2KSkKPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVy
+biBwbV9ydW50aW1lX2dldF9zeW5jKHNtbXUtPmRldik7Cj4+ICsKPj4gK8KgwqDCoCByZXR1cm4g
+MDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGlubGluZSB2b2lkIGFybV9zbW11X3JwbV9wdXQoc3Ry
+dWN0IGFybV9zbW11X2RldmljZSAqc21tdSkKPj4gK3sKPj4gK8KgwqDCoCBpZiAocG1fcnVudGlt
+ZV9lbmFibGVkKHNtbXUtPmRldikpCj4+ICvCoMKgwqDCoMKgwqDCoCBwbV9ydW50aW1lX3B1dChz
+bW11LT5kZXYpOwo+PiArfQo+PiArCj4+IMKgIHN0YXRpYyBzdHJ1Y3QgYXJtX3NtbXVfZG9tYWlu
+ICp0b19zbW11X2RvbWFpbihzdHJ1Y3QgaW9tbXVfZG9tYWluIAo+PiAqZG9tKQo+PiDCoCB7Cj4+
+IMKgwqDCoMKgwqAgcmV0dXJuIGNvbnRhaW5lcl9vZihkb20sIHN0cnVjdCBhcm1fc21tdV9kb21h
+aW4sIGRvbWFpbik7Cj4+IEBAIC05MTMsMTEgKzkyNywxNSBAQCBzdGF0aWMgdm9pZCAKPj4gYXJt
+X3NtbXVfZGVzdHJveV9kb21haW5fY29udGV4dChzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4p
+Cj4+IMKgwqDCoMKgwqAgc3RydWN0IGFybV9zbW11X2RvbWFpbiAqc21tdV9kb21haW4gPSB0b19z
+bW11X2RvbWFpbihkb21haW4pOwo+PiDCoMKgwqDCoMKgIHN0cnVjdCBhcm1fc21tdV9kZXZpY2Ug
+KnNtbXUgPSBzbW11X2RvbWFpbi0+c21tdTsKPj4gwqDCoMKgwqDCoCBzdHJ1Y3QgYXJtX3NtbXVf
+Y2ZnICpjZmcgPSAmc21tdV9kb21haW4tPmNmZzsKPj4gLcKgwqDCoCBpbnQgaXJxOwo+PiArwqDC
+oMKgIGludCByZXQsIGlycTsKPj4gwqAgwqDCoMKgwqDCoCBpZiAoIXNtbXUgfHwgZG9tYWluLT50
+eXBlID09IElPTU1VX0RPTUFJTl9JREVOVElUWSkKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVy
+bjsKPj4gwqAgK8KgwqDCoCByZXQgPSBhcm1fc21tdV9ycG1fZ2V0KHNtbXUpOwo+PiArwqDCoMKg
+IGlmIChyZXQgPCAwKQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuOwo+PiArCj4+IMKgwqDCoMKg
+wqAgLyoKPj4gwqDCoMKgwqDCoMKgICogRGlzYWJsZSB0aGUgY29udGV4dCBiYW5rIGFuZCBmcmVl
+IHRoZSBwYWdlIHRhYmxlcyBiZWZvcmUgCj4+IGZyZWVpbmcKPj4gwqDCoMKgwqDCoMKgICogaXQu
+Cj4+IEBAIC05MzIsNiArOTUwLDggQEAgc3RhdGljIHZvaWQgCj4+IGFybV9zbW11X2Rlc3Ryb3lf
+ZG9tYWluX2NvbnRleHQoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluKQo+PiDCoCDCoMKgwqDC
+oMKgIGZyZWVfaW9fcGd0YWJsZV9vcHMoc21tdV9kb21haW4tPnBndGJsX29wcyk7Cj4+IMKgwqDC
+oMKgwqAgX19hcm1fc21tdV9mcmVlX2JpdG1hcChzbW11LT5jb250ZXh0X21hcCwgY2ZnLT5jYm5k
+eCk7Cj4+ICsKPj4gK8KgwqDCoCBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+PiDCoCB9Cj4+IMKg
+IMKgIHN0YXRpYyBzdHJ1Y3QgaW9tbXVfZG9tYWluICphcm1fc21tdV9kb21haW5fYWxsb2ModW5z
+aWduZWQgdHlwZSkKPj4gQEAgLTEyMTMsMTAgKzEyMzMsMTUgQEAgc3RhdGljIGludCBhcm1fc21t
+dV9hdHRhY2hfZGV2KHN0cnVjdCAKPj4gaW9tbXVfZG9tYWluICpkb21haW4sIHN0cnVjdCBkZXZp
+Y2UgKmRldikKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRU5PREVWOwo+PiDCoCDCoMKg
+wqDCoMKgIHNtbXUgPSBmd3NwZWNfc21tdShmd3NwZWMpOwo+PiArCj4+ICvCoMKgwqAgcmV0ID0g
+YXJtX3NtbXVfcnBtX2dldChzbW11KTsKPj4gK8KgwqDCoCBpZiAocmV0IDwgMCkKPj4gK8KgwqDC
+oMKgwqDCoMKgIHJldHVybiByZXQ7Cj4+ICsKPj4gwqDCoMKgwqDCoCAvKiBFbnN1cmUgdGhhdCB0
+aGUgZG9tYWluIGlzIGZpbmFsaXNlZCAqLwo+PiDCoMKgwqDCoMKgIHJldCA9IGFybV9zbW11X2lu
+aXRfZG9tYWluX2NvbnRleHQoZG9tYWluLCBzbW11KTsKPj4gwqDCoMKgwqDCoCBpZiAocmV0IDwg
+MCkKPj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7Cj4+ICvCoMKgwqDCoMKgwqDCoCBnb3Rv
+IHJwbV9wdXQ7Cj4+IMKgIMKgwqDCoMKgwqAgLyoKPj4gwqDCoMKgwqDCoMKgICogU2FuaXR5IGNo
+ZWNrIHRoZSBkb21haW4uIFdlIGRvbid0IHN1cHBvcnQgZG9tYWlucyBhY3Jvc3MKPj4gQEAgLTEy
+MzAsMjkgKzEyNTUsNDcgQEAgc3RhdGljIGludCBhcm1fc21tdV9hdHRhY2hfZGV2KHN0cnVjdCAK
+Pj4gaW9tbXVfZG9tYWluICpkb21haW4sIHN0cnVjdCBkZXZpY2UgKmRldikKPj4gwqDCoMKgwqDC
+oCB9Cj4+IMKgIMKgwqDCoMKgwqAgLyogTG9va3Mgb2ssIHNvIGFkZCB0aGUgZGV2aWNlIHRvIHRo
+ZSBkb21haW4gKi8KPj4gLcKgwqDCoCByZXR1cm4gYXJtX3NtbXVfZG9tYWluX2FkZF9tYXN0ZXIo
+c21tdV9kb21haW4sIGZ3c3BlYyk7Cj4+ICvCoMKgwqAgcmV0ID0gYXJtX3NtbXVfZG9tYWluX2Fk
+ZF9tYXN0ZXIoc21tdV9kb21haW4sIGZ3c3BlYyk7Cj4+ICsKPj4gK3JwbV9wdXQ6Cj4+ICvCoMKg
+wqAgYXJtX3NtbXVfcnBtX3B1dChzbW11KTsKPj4gK8KgwqDCoCByZXR1cm4gcmV0Owo+PiDCoCB9
+Cj4+IMKgIMKgIHN0YXRpYyBpbnQgYXJtX3NtbXVfbWFwKHN0cnVjdCBpb21tdV9kb21haW4gKmRv
+bWFpbiwgdW5zaWduZWQgCj4+IGxvbmcgaW92YSwKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcGh5c19hZGRyX3QgcGFkZHIsIHNpemVfdCBzaXplLCBpbnQgcHJvdCkKPj4gwqAgewo+PiDC
+oMKgwqDCoMKgIHN0cnVjdCBpb19wZ3RhYmxlX29wcyAqb3BzID0gdG9fc21tdV9kb21haW4oZG9t
+YWluKS0+cGd0Ymxfb3BzOwo+PiArwqDCoMKgIHN0cnVjdCBhcm1fc21tdV9kb21haW4gKnNtbXVf
+ZG9tYWluID0gdG9fc21tdV9kb21haW4oZG9tYWluKTsKPj4gK8KgwqDCoCBzdHJ1Y3QgYXJtX3Nt
+bXVfZGV2aWNlICpzbW11ID0gc21tdV9kb21haW4tPnNtbXU7Cj4KPiBOaXQ6IHBsZWFzZSB1c2Ug
+YXJtX3NtbXVfZG9tYWluIGZvciBvcHMgYXMgd2VsbCAoYXMgaXQgd2FzIGJlZm9yZSAKPiA1MjNk
+NzQyM2UyMWIpLCBvciBjb25zaXN0ZW50bHkgZWxpZGUgaXQgZm9yIHNtbXUgLSB0aGUgbWl4dHVy
+ZSBvZiBib3RoIAo+IG1ldGhvZHMgaXMganVzdCBhIGhvcnJpYmxlIG1lc3MgKGhlcmUgYW5kIGlu
+IHVubWFwKS4KClN1cmUsIHdpbGwgbWFrZSBpdCBjb25zaXN0ZW50IGZvciBhcm1fc21tdV9kZXZp
+Y2UgKGluIGJvdGggcGxhY2VzIC0gCm1hcC91bm1hcCkKCiDCoMKgwqDCoCBzdHJ1Y3QgYXJtX3Nt
+bXVfZGV2aWNlICpzbW11ID0gdG9fc21tdV9kb21haW4oZG9tYWluKS0+c21tdTsKCj4KPj4gK8Kg
+wqDCoCBpbnQgcmV0Owo+PiDCoCDCoMKgwqDCoMKgIGlmICghb3BzKQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqAgcmV0dXJuIC1FTk9ERVY7Cj4+IMKgIC3CoMKgwqAgcmV0dXJuIG9wcy0+bWFwKG9wcywg
+aW92YSwgcGFkZHIsIHNpemUsIHByb3QpOwo+PiArwqDCoMKgIGFybV9zbW11X3JwbV9nZXQoc21t
+dSk7Cj4+ICvCoMKgwqAgcmV0ID0gb3BzLT5tYXAob3BzLCBpb3ZhLCBwYWRkciwgc2l6ZSwgcHJv
+dCk7Cj4+ICvCoMKgwqAgYXJtX3NtbXVfcnBtX3B1dChzbW11KTsKPj4gKwo+PiArwqDCoMKgIHJl
+dHVybiByZXQ7Cj4+IMKgIH0KPj4gwqAgwqAgc3RhdGljIHNpemVfdCBhcm1fc21tdV91bm1hcChz
+dHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4sIAo+PiB1bnNpZ25lZCBsb25nIGlvdmEsCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaXplX3Qgc2l6ZSkKPj4gwqAgewo+
+PiDCoMKgwqDCoMKgIHN0cnVjdCBpb19wZ3RhYmxlX29wcyAqb3BzID0gdG9fc21tdV9kb21haW4o
+ZG9tYWluKS0+cGd0Ymxfb3BzOwo+PiArwqDCoMKgIHN0cnVjdCBhcm1fc21tdV9kb21haW4gKnNt
+bXVfZG9tYWluID0gdG9fc21tdV9kb21haW4oZG9tYWluKTsKPj4gK8KgwqDCoCBzdHJ1Y3QgYXJt
+X3NtbXVfZGV2aWNlICpzbW11ID0gc21tdV9kb21haW4tPnNtbXU7Cj4+ICvCoMKgwqAgc2l6ZV90
+IHJldDsKPj4gwqAgwqDCoMKgwqDCoCBpZiAoIW9wcykKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHJl
+dHVybiAwOwo+PiDCoCAtwqDCoMKgIHJldHVybiBvcHMtPnVubWFwKG9wcywgaW92YSwgc2l6ZSk7
+Cj4+ICvCoMKgwqAgYXJtX3NtbXVfcnBtX2dldChzbW11KTsKPj4gK8KgwqDCoCByZXQgPSBvcHMt
+PnVubWFwKG9wcywgaW92YSwgc2l6ZSk7Cj4+ICvCoMKgwqAgYXJtX3NtbXVfcnBtX3B1dChzbW11
+KTsKPj4gKwo+PiArwqDCoMKgIHJldHVybiByZXQ7Cj4+IMKgIH0KPj4gwqAgwqAgc3RhdGljIHZv
+aWQgYXJtX3NtbXVfaW90bGJfc3luYyhzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4pCj4+IEBA
+IC0xNDA3LDE0ICsxNDUwLDIyIEBAIHN0YXRpYyBpbnQgYXJtX3NtbXVfYWRkX2RldmljZShzdHJ1
+Y3QgZGV2aWNlIAo+PiAqZGV2KQo+PiDCoMKgwqDCoMKgIHdoaWxlIChpLS0pCj4+IMKgwqDCoMKg
+wqDCoMKgwqDCoCBjZmctPnNtZW5keFtpXSA9IElOVkFMSURfU01FTkRYOwo+PiDCoCArwqDCoMKg
+IHJldCA9IGFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4+ICvCoMKgwqAgaWYgKHJldCA8IDApCj4+
+ICvCoMKgwqDCoMKgwqDCoCBnb3RvIG91dF9jZmdfZnJlZTsKPj4gKwo+PiDCoMKgwqDCoMKgIHJl
+dCA9IGFybV9zbW11X21hc3Rlcl9hbGxvY19zbWVzKGRldik7Cj4KPiBOaXQ6IGl0IHdvdWxkIGJl
+IGVhc2llciB0byBqdXN0IGRvIHRoZSBycG1fcHV0IGhlcmU7IHRoZW4geW91IGRvbid0IAo+IG5l
+ZWQgdG8gbWVzcyB3aXRoIHRoZSBjbGVhbnVwIHBhdGguCgpTdXJlLCB3aWxsIGRvIHRoYXQuIEl0
+IHdpbGwgYmUgY2xlYW5lci4KCj4KPj4gwqDCoMKgwqDCoCBpZiAocmV0KQo+PiAtwqDCoMKgwqDC
+oMKgwqAgZ290byBvdXRfY2ZnX2ZyZWU7Cj4+ICvCoMKgwqDCoMKgwqDCoCBnb3RvIG91dF9ycG1f
+cHV0Owo+PiDCoCDCoMKgwqDCoMKgIGlvbW11X2RldmljZV9saW5rKCZzbW11LT5pb21tdSwgZGV2
+KTsKPj4gwqAgK8KgwqDCoCBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+PiArCj4+IMKgwqDCoMKg
+wqAgcmV0dXJuIDA7Cj4+IMKgICtvdXRfcnBtX3B1dDoKPj4gK8KgwqDCoCBhcm1fc21tdV9ycG1f
+cHV0KHNtbXUpOwo+PiDCoCBvdXRfY2ZnX2ZyZWU6Cj4+IMKgwqDCoMKgwqAga2ZyZWUoY2ZnKTsK
+Pj4gwqAgb3V0X2ZyZWU6Cj4+IEBAIC0xNDI3LDcgKzE0NzgsNyBAQCBzdGF0aWMgdm9pZCBhcm1f
+c21tdV9yZW1vdmVfZGV2aWNlKHN0cnVjdCAKPj4gZGV2aWNlICpkZXYpCj4+IMKgwqDCoMKgwqAg
+c3RydWN0IGlvbW11X2Z3c3BlYyAqZndzcGVjID0gZGV2LT5pb21tdV9md3NwZWM7Cj4+IMKgwqDC
+oMKgwqAgc3RydWN0IGFybV9zbW11X21hc3Rlcl9jZmcgKmNmZzsKPj4gwqDCoMKgwqDCoCBzdHJ1
+Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11Owo+PiAtCj4+ICvCoMKgwqAgaW50IHJldDsKPj4gwqAg
+wqDCoMKgwqDCoCBpZiAoIWZ3c3BlYyB8fCBmd3NwZWMtPm9wcyAhPSAmYXJtX3NtbXVfb3BzKQo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOwo+PiBAQCAtMTQzNSw4ICsxNDg2LDE1IEBAIHN0
+YXRpYyB2b2lkIGFybV9zbW11X3JlbW92ZV9kZXZpY2Uoc3RydWN0IAo+PiBkZXZpY2UgKmRldikK
+Pj4gwqDCoMKgwqDCoCBjZmfCoCA9IGZ3c3BlYy0+aW9tbXVfcHJpdjsKPj4gwqDCoMKgwqDCoCBz
+bW11ID0gY2ZnLT5zbW11Owo+PiDCoCArwqDCoMKgIHJldCA9IGFybV9zbW11X3JwbV9nZXQoc21t
+dSk7Cj4+ICvCoMKgwqAgaWYgKHJldCA8IDApCj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4+
+ICsKPj4gwqDCoMKgwqDCoCBpb21tdV9kZXZpY2VfdW5saW5rKCZzbW11LT5pb21tdSwgZGV2KTsK
+Pj4gwqDCoMKgwqDCoCBhcm1fc21tdV9tYXN0ZXJfZnJlZV9zbWVzKGZ3c3BlYyk7Cj4+ICsKPj4g
+K8KgwqDCoCBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+PiArCj4+IMKgwqDCoMKgwqAgaW9tbXVf
+Z3JvdXBfcmVtb3ZlX2RldmljZShkZXYpOwo+PiDCoMKgwqDCoMKgIGtmcmVlKGZ3c3BlYy0+aW9t
+bXVfcHJpdik7Cj4+IMKgwqDCoMKgwqAgaW9tbXVfZndzcGVjX2ZyZWUoZGV2KTsKPj4gQEAgLTIx
+MjQsNiArMjE4Miw4IEBAIHN0YXRpYyBpbnQgYXJtX3NtbXVfZGV2aWNlX3Byb2JlKHN0cnVjdCAK
+Pj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgc21tdS0+aXJx
+c1tpXSA9IGlycTsKPj4gwqDCoMKgwqDCoCB9Cj4+IMKgICvCoMKgwqAgcGxhdGZvcm1fc2V0X2Ry
+dmRhdGEocGRldiwgc21tdSk7Cj4+ICsKPj4gwqDCoMKgwqDCoCBlcnIgPSBkZXZtX2Nsa19idWxr
+X2dldChzbW11LT5kZXYsIHNtbXUtPm51bV9jbGtzLCBzbW11LT5jbGtzKTsKPj4gwqDCoMKgwqDC
+oCBpZiAoZXJyKQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGVycjsKPj4gQEAgLTIxMzIs
+NiArMjE5MiwxOSBAQCBzdGF0aWMgaW50IGFybV9zbW11X2RldmljZV9wcm9iZShzdHJ1Y3QgCj4+
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gwqDCoMKgwqDCoCBpZiAoZXJyKQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqAgcmV0dXJuIGVycjsKPj4gwqAgK8KgwqDCoCAvKgo+PiArwqDCoMKgwqAgKiBX
+ZSB3YW50IHRvIGF2b2lkIHRvdWNoaW5nIGRldi0+cG93ZXIubG9jayBpbiBmYXN0cGF0aHMgdW5s
+ZXNzCj4+ICvCoMKgwqDCoCAqIGl0J3MgcmVhbGx5IGdvaW5nIHRvIGRvIHNvbWV0aGluZyB1c2Vm
+dWwgLSBwbV9ydW50aW1lX2VuYWJsZWQoKQo+PiArwqDCoMKgwqAgKiBjYW4gc2VydmUgYXMgYW4g
+aWRlYWwgcHJveHkgZm9yIHRoYXQgZGVjaXNpb24uIFNvLCBjb25kaXRpb25hbGx5Cj4+ICvCoMKg
+wqDCoCAqIGVuYWJsZSBwbV9ydW50aW1lLgo+PiArwqDCoMKgwqAgKi8KPj4gK8KgwqDCoCBpZiAo
+ZGV2LT5wbV9kb21haW4pCj4+ICvCoMKgwqDCoMKgwqDCoCBwbV9ydW50aW1lX2VuYWJsZShkZXYp
+Owo+PiArCj4+ICvCoMKgwqAgZXJyID0gYXJtX3NtbXVfcnBtX2dldChzbW11KTsKPj4gK8KgwqDC
+oCBpZiAoZXJyIDwgMCkKPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiBlcnI7Cj4+ICsKPj4gwqDC
+oMKgwqDCoCBlcnIgPSBhcm1fc21tdV9kZXZpY2VfY2ZnX3Byb2JlKHNtbXUpOwo+PiDCoMKgwqDC
+oMKgIGlmIChlcnIpCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gZXJyOwo+PiBAQCAtMjE3
+MywxMCArMjI0NiwxMSBAQCBzdGF0aWMgaW50IGFybV9zbW11X2RldmljZV9wcm9iZShzdHJ1Y3Qg
+Cj4+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBl
+cnI7Cj4+IMKgwqDCoMKgwqAgfQo+PiDCoCAtwqDCoMKgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBk
+ZXYsIHNtbXUpOwo+PiDCoMKgwqDCoMKgIGFybV9zbW11X2RldmljZV9yZXNldChzbW11KTsKPj4g
+wqDCoMKgwqDCoCBhcm1fc21tdV90ZXN0X3Ntcl9tYXNrcyhzbW11KTsKPj4gwqAgK8KgwqDCoCBh
+cm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+PiArCj4+IMKgwqDCoMKgwqAgLyoKPj4gwqDCoMKgwqDC
+oMKgICogRm9yIEFDUEkgYW5kIGdlbmVyaWMgRFQgYmluZGluZ3MsIGFuIFNNTVUgd2lsbCBiZSBw
+cm9iZWQgYmVmb3JlCj4+IMKgwqDCoMKgwqDCoCAqIGFueSBkZXZpY2Ugd2hpY2ggbWlnaHQgbmVl
+ZCBpdCwgc28gd2Ugd2FudCB0aGUgYnVzIG9wcyBpbiBwbGFjZQo+PiBAQCAtMjIxMiw4ICsyMjg2
+LDEzIEBAIHN0YXRpYyBpbnQgYXJtX3NtbXVfZGV2aWNlX3JlbW92ZShzdHJ1Y3QgCj4+IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKPj4gwqDCoMKgwqDCoCBpZiAoIWJpdG1hcF9lbXB0eShzbW11LT5j
+b250ZXh0X21hcCwgQVJNX1NNTVVfTUFYX0NCUykpCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZf
+ZXJyKCZwZGV2LT5kZXYsICJyZW1vdmluZyBkZXZpY2Ugd2l0aCBhY3RpdmUgZG9tYWlucyFcbiIp
+Owo+PiDCoCArwqDCoMKgIGFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4+IMKgwqDCoMKgwqAgLyog
+VHVybiB0aGUgdGhpbmcgb2ZmICovCj4+IMKgwqDCoMKgwqAgd3JpdGVsKHNDUjBfQ0xJRU5UUEQs
+IEFSTV9TTU1VX0dSMF9OUyhzbW11KSArIEFSTV9TTU1VX0dSMF9zQ1IwKTsKPj4gK8KgwqDCoCBh
+cm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+PiArCj4+ICvCoMKgwqAgaWYgKHBtX3J1bnRpbWVfZW5h
+YmxlZChzbW11LT5kZXYpKQo+PiArwqDCoMKgwqDCoMKgwqAgcG1fcnVudGltZV9kaXNhYmxlKHNt
+bXUtPmRldik7Cj4+IMKgIMKgwqDCoMKgwqAgY2xrX2J1bGtfdW5wcmVwYXJlKHNtbXUtPm51bV9j
+bGtzLCBzbW11LT5jbGtzKTsKPgo+IEkgZG9uJ3Qga25vdyBob3cgcnVudGltZSBhbmQgc3lzdGVt
+IFBNIGludGVyYWN0IC0gZG9lcyB0aGUgcmVzZXQgaW4gCj4gYXJtX3NtbXVfcG1fcmVzdW1lIG5l
+ZWQgc3BlY2lhbCB0cmVhdG1lbnQgYXMgd2VsbCwgb3IgaXMgdGhlIGRldmljZSAKPiBndWFyYW50
+ZWVkIHRvIGJlIHBvd2VyZWQgdXAgYXQgdGhhdCBwb2ludCBieSBvdGhlciBtZWFucz8KClNvLCBh
+cyBUb21hc3ogd3JvdGUsIHdlIHNob3VsZCBiZSBva2F5IHdpdGggdGhpcy4KVGhhbmtzLgoKcmVn
+YXJkcwpWaXZlawo+Cj4gUm9iaW4uCj4gLS0gCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxp
+c3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIAo+IGxpbnV4LWFybS1tc20iIGluCj4gdGhl
+IGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1h
+am9yZG9tbyBpbmZvIGF0wqAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5o
+dG1sCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21t
+dSBtYWlsaW5nIGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9s
+aXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
