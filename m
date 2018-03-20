@@ -1,72 +1,169 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M
- Eagle
-Date: Tue, 20 Mar 2018 15:01:57 +0200
-Message-ID: <3127791.hHqCBynxiV@avalon>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-4-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1521213399-31947-4-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v6 3/6] MIPS: mscc: add ocelot dtsi
+Date: Tue, 20 Mar 2018 14:07:58 +0100
+Message-ID: <20180320130801.9247-4-alexandre.belloni@bootlin.com>
+References: <20180320130801.9247-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180320130801.9247-1-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDE2IE1hcmNo
-IDIwMTggMTc6MTY6MzkgRUVUIEphY29wbyBNb25kaSB3cm90ZToKPiBUaGUgUi1DYXIgVjNNIEVh
-Z2xlIGJvYXJkIGluY2x1ZGVzIGEgdHJhbnNwYXJlbnQgVEhDNjNMVkQxMDI0IExWRFMKPiBkZWNv
-ZGVyLCBjb25uZWN0ZWQgdG8gdGhlIG9uLWNoaXAgTFZEUyBlbmNvZGVyIG91dHB1dCBvbiBvbmUg
-c2lkZQo+IGFuZCB0byBIRE1JIGVuY29kZXIgQURWNzUxMXcgb24gdGhlIG90aGVyIG9uZS4KPiAK
-PiBBcyB0aGUgZGVjb2RlciBkb2VzIG5vdCBuZWVkIGFueSBjb25maWd1cmF0aW9uIGl0IGhhcyBi
-ZWVuIHNvLWZhcgo+IG9taXR0ZWQgZnJvbSBEVFMuIE5vdyB0aGF0IGEgZHJpdmVyIGlzIGF2YWls
-YWJsZSwgZGVzY3JpYmUgaXQgaW4gRFQKPiBhcyB3ZWxsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEph
-Y29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiBSZXZpZXdlZC1ieTogQW5k
-cnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KClRoZSBwYXRjaCBsb29rcyBPSyB0byBt
-ZSwgYnV0IEkgdGhpbmsgaXQgc2hvdWxkIGJlIHNxdWFzaGVkIHdpdGggTmlrbGFzJyBwYXRjaCAK
-dGhhdCBhZGRlZCBkaXNwbGF5IEhETUkgb3V0cHV0IHN1cHBvcnQgdG8gdGhlIFYzTSBFYWdsZSBE
-VC4KCj4gLS0tCj4gCj4gTGlzdCBvZiBwYXRjaCBkZXBlbmRlbmNpZXMsIGFzIG9mIHJlbmVzYXMt
-ZHJpdmVycy0yMDE4LTAzLTEzLXY0LjE2LXJjNToKPiAKPiAtIFtQQVRDSCB2MiAwLzVdIGFybTY0
-OiBkdHM6IHJlbmVzYXM6IHI4YTc3OTcwOiBlbmFibGUgSERNSSBvdXRwdXQKPiAgICB3aGljaCBp
-bmNsdWRlcyBEVSwgTFZEUyBhbmQgRkNQRCBlbmFibGVtZW50IGZyb206Cj4gICBbUEFUQ0ggdjIg
-MC81XSBBZGQgUjhBNzc5NzAvVjNNU0sgTFZEUy9IRE1JIHN1cHBvcnQKPiAtIFtQQVRDSCB2NF0g
-djRsOiB2c3AxOiBGaXggdmlkZW8gb3V0cHV0IG9uIFI4QTc3OTcwCj4gCj4gUGF0Y2hlcyB0byBi
-ZSBhcHBsaWVkIG9uIHRvcCBvZgo+ICJhcm02NDogZHRzOiByZW5lc2FzOiBlYWdsZTogYWRkIEhE
-TUkgb3V0cHV0IHVzaW5nIHRoZSBBRFY3NTExVyIKPiAKPiBUaGFua3MKPiAgICBqCj4gLS0tCj4g
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMgfCAzMyArKysr
-KysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
-c2FzL3I4YTc3OTcwLWVhZ2xlLmR0cwo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4
-YTc3OTcwLWVhZ2xlLmR0cyBpbmRleCBjMGZkMTQ0Li42OWY0M2I4Cj4gMTAwNjQ0Cj4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cwo+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMKPiBAQCAtNDIsNiAr
-NDIsMzMgQEAKPiAgCQkJfTsKPiAgCQl9Owo+ICAJfTsKPiArCj4gKwl0aGM2M2x2ZDEwMjQ6IGx2
-ZHMtZGVjb2RlciB7Cj4gKwkJY29tcGF0aWJsZSA9ICJ0aGluZSx0aGM2M2x2ZDEwMjQiOwo+ICsK
-PiArCQlwb3J0cyB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsKPiArCj4gKwkJCXBvcnRAMCB7Cj4gKwkJCQlyZWcgPSA8MD47Cj4gKwo+ICsJCQkJ
-dGhjNjNsdmQxMDI0X2luXzA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-Jmx2ZHMwX291dD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsKPiArCQkJcG9ydEAyewo+ICsJCQkJ
-cmVnID0gPDI+Owo+ICsKPiArCQkJCXRoYzYzbHZkMTAyNF9vdXRfMjogZW5kcG9pbnQgewo+ICsJ
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYWR2NzUxMV9pbj47Cj4gKwkJCQl9Owo+ICsKPiArCQkJ
-fTsKPiArCj4gKwkJfTsKPiArCX07Cj4gIH07Cj4gCj4gICZhdmIgewo+IEBAIC05OCw3ICsxMjUs
-NyBAQAo+ICAJCQlwb3J0QDAgewo+ICAJCQkJcmVnID0gPDA+Owo+ICAJCQkJYWR2NzUxMV9pbjog
-ZW5kcG9pbnQgewo+IC0JCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczBfb3V0PjsKPiArCQkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRoYzYzbHZkMTAyNF9vdXRfMj47Cj4gIAkJCQl9Owo+ICAJ
-CQl9Owo+IAo+IEBAIC0xNTIsOCArMTc5LDggQEAKPiAKPiAgCXBvcnRzIHsKPiAgCQlwb3J0QDEg
-ewo+IC0JCQllbmRwb2ludCB7Cj4gLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmFkdjc1MTFfaW4+
-Owo+ICsJCQlsdmRzMF9vdXQ6IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-dGhjNjNsdmQxMDI0X2luXzA+Owo+ICAJCQl9Owo+ICAJCX07Cj4gIAl9OwoKLS0gClJlZ2FyZHMs
-CgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Add a device tree include file for the Microsemi Ocelot SoC.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ arch/mips/boot/dts/Makefile         |   1 +
+ arch/mips/boot/dts/mscc/Makefile    |   1 +
+ arch/mips/boot/dts/mscc/ocelot.dtsi | 117 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 arch/mips/boot/dts/mscc/Makefile
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot.dtsi
+
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index e2c6f131c8eb..1e79cab8e269 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
+ subdir-y	+= img
+ subdir-y	+= ingenic
+ subdir-y	+= lantiq
++subdir-y	+= mscc
+ subdir-y	+= mti
+ subdir-y	+= netlogic
+ subdir-y	+= ni
+diff --git a/arch/mips/boot/dts/mscc/Makefile b/arch/mips/boot/dts/mscc/Makefile
+new file mode 100644
+index 000000000000..dd08e63a10ba
+--- /dev/null
++++ b/arch/mips/boot/dts/mscc/Makefile
+@@ -0,0 +1 @@
++obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+new file mode 100644
+index 000000000000..dd239cab2f9d
+--- /dev/null
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/* Copyright (c) 2017 Microsemi Corporation */
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "mscc,ocelot";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "mips,mips24KEc";
++			device_type = "cpu";
++			clocks = <&cpu_clk>;
++			reg = <0>;
++		};
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	cpu_clk: cpu-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <500000000>;
++	};
++
++	ahb_clk: ahb-clk {
++		compatible = "fixed-factor-clock";
++		#clock-cells = <0>;
++		clocks = <&cpu_clk>;
++		clock-div = <2>;
++		clock-mult = <1>;
++	};
++
++	ahb@70000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x70000000 0x2000000>;
++
++		interrupt-parent = <&intc>;
++
++		cpu_ctrl: syscon@0 {
++			compatible = "mscc,ocelot-cpu-syscon", "syscon";
++			reg = <0x0 0x2c>;
++		};
++
++		intc: interrupt-controller@70 {
++			compatible = "mscc,ocelot-icpu-intr";
++			reg = <0x70 0x70>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>;
++		};
++
++		uart0: serial@100000 {
++			pinctrl-0 = <&uart_pins>;
++			pinctrl-names = "default";
++			compatible = "ns16550a";
++			reg = <0x100000 0x20>;
++			interrupts = <6>;
++			clocks = <&ahb_clk>;
++			reg-io-width = <4>;
++			reg-shift = <2>;
++
++			status = "disabled";
++		};
++
++		uart2: serial@100800 {
++			pinctrl-0 = <&uart2_pins>;
++			pinctrl-names = "default";
++			compatible = "ns16550a";
++			reg = <0x100800 0x20>;
++			interrupts = <7>;
++			clocks = <&ahb_clk>;
++			reg-io-width = <4>;
++			reg-shift = <2>;
++
++			status = "disabled";
++		};
++
++		reset@1070008 {
++			compatible = "mscc,ocelot-chip-reset";
++			reg = <0x1070008 0x4>;
++		};
++
++		gpio: pinctrl@1070034 {
++			compatible = "mscc,ocelot-pinctrl";
++			reg = <0x1070034 0x68>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&gpio 0 0 22>;
++
++			uart_pins: uart-pins {
++				pins = "GPIO_6", "GPIO_7";
++				function = "uart";
++			};
++
++			uart2_pins: uart2-pins {
++				pins = "GPIO_12", "GPIO_13";
++				function = "uart2";
++			};
++		};
++	};
++};
+-- 
+2.16.2
