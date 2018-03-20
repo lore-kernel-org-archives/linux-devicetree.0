@@ -1,40 +1,26 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCH 2/2] ARM: dts: imx53: PPD: Update ACHC programming interface
-Date: Tue, 20 Mar 2018 18:22:01 +0100
-Message-ID: <20180320172201.2065-3-sebastian.reichel@collabora.co.uk>
-References: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: arm: Document kryo385 cpu
+Date: Tue, 20 Mar 2018 10:28:25 -0700
+Message-ID: <152156690591.214794.3806846589522580946@swboyd.mtv.corp.google.com>
+References: <20180222061208.2031-1-rnayak@codeaurora.org>
+ <20180222061208.2031-2-rnayak@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
+In-Reply-To: <20180222061208.2031-2-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Update ACHC programming interface description following the binding
-document. This makes it possible to use the new EzPort firmware
-update driver.
+Quoting Rajendra Nayak (2018-02-21 22:12:05)
+> Document the compatible string for the Kryo385 cpus found in qualcomm
+> SoCs.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/imx53-ppd.dts | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-index 3c87e0d73f63..03c353be2fe7 100644
---- a/arch/arm/boot/dts/imx53-ppd.dts
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -253,9 +253,10 @@
- 	status = "okay";
- 
- 	spidev0: spi@0 {
--		compatible = "ge,achc";
-+		compatible = "ge,achc-ezport";
- 		reg = <0>;
--		spi-max-frequency = <1000000>;
-+		spi-max-frequency = <300000>;
-+		reset-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	spidev1: spi@1 {
--- 
-2.16.2
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
