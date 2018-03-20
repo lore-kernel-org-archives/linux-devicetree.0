@@ -1,28 +1,48 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/7] dt-bindings: add binding for the Allwinner A64 DE2
- bus
-Date: Tue, 20 Mar 2018 19:46:46 +0100
-Message-ID: <20180320184646.dynqv6qubzabroe4@flea>
+Subject: Re: [PATCH 5/7] arm64: allwinner: a64: add DE2 CCU related device
+ tree nodes
+Date: Tue, 20 Mar 2018 19:47:59 +0100
+Message-ID: <20180320184759.nb2zwn5liqa2kpm4@flea>
 References: <20180316175354.21437-1-icenowy@aosc.io>
- <20180316175354.21437-3-icenowy@aosc.io>
+ <20180316175354.21437-6-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180316175354.21437-3-icenowy@aosc.io>
+In-Reply-To: <20180316175354.21437-6-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Icenowy Zheng <icenowy@aosc.io>
 Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
-> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC to
-> be claimed, otherwise the whole DE2 space is inaccessible.
-> 
-> Add a device tree binding of the DE2 part as a sub-bus.
+On Sat, Mar 17, 2018 at 01:53:52AM +0800, Icenowy Zheng wrote:
+> +		sram-controller@1c00000 {
+> +			compatible = "allwinner,sun50i-a64-sram-controller";
+> +			reg = <0x01c00000 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			sram_c: sram@18000 {
+> +				compatible = "mmio-sram";
+> +				reg = <0x00018000 0x28000>;
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges = <0 0x00018000 0x28000>;
+> +
+> +				de2_sram: sram-section@0 {
+> +					compatible = "allwinner,sun50i-a64-sram-c";
+> +					reg = <0x0000 0x28000>;
+> +				};
+> +			};
+> +		};
+> +
+>  		syscon: syscon@1c00000 {
+>  			compatible = "allwinner,sun50i-a64-system-controller",
+>  				"syscon";
 
-Where did you get the info that it was a bus?
+Isn't that the same device than the sram controller node you just added?
 
 Maxime
 
