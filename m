@@ -1,60 +1,50 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I
- laptop
-Date: Tue, 20 Mar 2018 17:09:47 +0000
-Message-ID: <0288a32a-bbbf-20ca-2ebf-6fc8e82168df@arm.com>
-References: <20180315162510.11669-1-harald@ccbib.org>
- <20180315162510.11669-6-harald@ccbib.org>
- <20180318202251.5gpv6sblfr4edxmj@flea>
- <E1exwhF-0000Qw-4g@stardust.g4.wien.funkfeuer.at>
- <20180320141353.zmzq4e5652rsp4ye@flea>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 09/12] clk: actions: Add fixed factor clock support
+Date: Tue, 20 Mar 2018 10:15:28 -0700
+Message-ID: <152156612855.183971.17769572831805053841@swboyd.mtv.corp.google.com>
+References: <20180317100952.28538-1-manivannan.sadhasivam@linaro.org>
+ <20180317100952.28538-10-manivannan.sadhasivam@linaro.org>
+ <152150820384.254778.6585368643028088392@swboyd.mtv.corp.google.com>
+ <20180320090400.6bgugy6fgze3ohsd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320141353.zmzq4e5652rsp4ye@flea>
-Content-Language: en-GB
+In-Reply-To: <20180320090400.6bgugy6fgze3ohsd@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Harald Geyer <harald@ccbib.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, manivannanece23@gmail.com, bdong@ucrobotics.com, viresh.kumar@linaro.org, mturquette@baylibre.com, 96boards@ucrobotics.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, davem@davemloft.net, hzhang@ucrobotics.com, robh+dt@kernel.org, mp-cs@actions-semi.com, liuwei@actions-semi.com, mchehab@kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 20/03/18 14:13, Maxime Ripard wrote:
-> On Mon, Mar 19, 2018 at 04:27:36PM +0100, Harald Geyer wrote:
->>> together with all the patches but the
->>> PWM (so I had to drop the backlight node as well).
->>>
->>> Please coordinate with Andre about who should send the PWM support.
->>
->> Seems the patch got broken because only the backlight node but not the
->> pwm node was removed. Anyway, since Andre has already sent an updated
->> version of his series, maybe just revert the broken patch, merge his
->> series and then apply the original teres-i patch again?
+Quoting Manivannan Sadhasivam (2018-03-20 02:04:00)
+> On Mon, Mar 19, 2018 at 06:10:03PM -0700, Stephen Boyd wrote:
+> > > +        * nop.
+> > > +        */
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +const struct clk_ops owl_fix_fact_ops = {
+> > > +       .round_rate     = owl_fix_fact_round_rate,
+> > > +       .recalc_rate    = owl_fix_fact_recalc_rate,
+> > > +       .set_rate       = owl_fix_fact_set_rate,
+> > > +};
+> > 
+> > Why can't you use the regular fixed factor clk code and ops?
+> >
 > 
-> Unfortunately, there's dependencies on the PWM driver itself, and the
-> maintainer hasn't replied yet.
+> That's going to be really messy. Since I'm having the clk_hw embedded inside
+> owl_clk_common and using it for registering all the clocks, using generic
+> fixed factor functions will be a different approach _only_ for this clock and
+> it won't look good I guess. Also, it may become complicated with composite
+> clocks.
+> 
+> If you still want to use the generic fixed factor code, I can do that in
+> next revision.
+> 
 
-But those dependencies are purely "administrative", not technical,
-aren't they? As the existing driver worked already with the DT changes,
-it's just the listing of the compatible strings in the binding doc that
-is missing? IIRC we added those later on in the past already.
-
-So I think it's safe to merge them independently:
-"[PATCH v2 1/4] pwm: sun4i: drop unused .has_rdy member" and
-"[PATCH v2 2/4] pwm: sun4i: simplify controller mapping" are
-PWM fixes and go via Thierry, I guess.
-
-"[PATCH v2 3/4] dt-bindings: pwm: sunxi: add new compatible strings" is
-just Documentation of existing behaviour, and independent from 1/4 and 2/4.
-
-"[PATCH v2 4/4] dts: sunxi: A64: Add PWM controllers" just "softly"
-depends on the introduction of the compatible strings in 3/4, but has no
-real technical dependency. It can go in any time on its own without
-breaking the build or functionality.
-
-Or am I too sloppy here?
-
-Cheers,
-Andre.
+The qcom clk driver has support for the 'regmap' clk_hws and the
+non-regmap based clk_hws. I suggest having a list of clk_hw pointers
+that you register in a loop and then have other lists that you use to
+register wrapper structs, etc. Otherwise we're left with a bunch of code
+that's copy/pasted around.
