@@ -1,224 +1,158 @@
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for
- brcmfmac
-Date: Tue, 20 Mar 2018 10:03:39 +0100
-Message-ID: <5AB0CE6B.2050109@broadcom.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
- <20180319014032.9394-3-alexey.roslyakov@gmail.com>
- <5AAF838D.2030105@broadcom.com>
- <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
- <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
- <5AB044C0.9060701@broadcom.com>
- <CALFoz4aaEshpmyCxzut1t6cqSOSee4YP6vsi5G4Eei9m8hkZ3A@mail.gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v5 09/12] clk: actions: Add fixed factor clock support
+Date: Tue, 20 Mar 2018 14:34:00 +0530
+Message-ID: <20180320090400.6bgugy6fgze3ohsd@linaro.org>
+References: <20180317100952.28538-1-manivannan.sadhasivam@linaro.org>
+ <20180317100952.28538-10-manivannan.sadhasivam@linaro.org>
+ <152150820384.254778.6585368643028088392@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALFoz4aaEshpmyCxzut1t6cqSOSee4YP6vsi5G4Eei9m8hkZ3A@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <152150820384.254778.6585368643028088392@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Roslyakov <alexey.roslyakov@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Kalle Valo <kvalo@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, Ulf Hansson <ulf.hansson@linaro.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: afaerber@suse.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/20/2018 8:58 AM, Alexey Roslyakov wrote:
-> Arend,
->
->> Also I am not sure if the broken-sg-support is still needed. We added that for omap_hsmmc, but that has since changed to scatter-gather emulation so it might not be needed anymore.
-> I can confirm it doesn't impact wifi performance in case of rk3288+ap6335.
->
-> But I still have to set settings->bus.sdio.sd_head_align = 4 and
-> settings->bus.sdio.sd_sgentry_align = 512, otherwise
-> brcmf_sdiod_sglist_rw fails:
->
->    974.888452] net_ratelimit: 8 callbacks suppressed
-> [  974.888457] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed -84
-> [  974.901527] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes failed: -5
-> [  974.910248] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
-> [  975.018041] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed -84
-> [  975.025833] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes failed: -5
-> [  975.033634] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
-> [  975.033924] dwmmc_rockchip ff0d0000.dwmmc: Unexpected command
-> timeout, state 0
-> [  975.049209] brcmfmac: brcmf_sdio_readframes: RXHEADER FAILED: -84
-> [  975.056034] brcmfmac: brcmf_sdio_rxfail: abort command, terminate
-> frame, send NAK
-> [  975.068367] brcmfmac: brcmf_sdio_hdparse: HW header length too long
-> [  975.075379] brcmfmac: brcmf_sdio_rxfail: terminate frame
+Hi Stephen,
 
-Hi Alex,
+On Mon, Mar 19, 2018 at 06:10:03PM -0700, Stephen Boyd wrote:
+> Quoting Manivannan Sadhasivam (2018-03-17 03:09:49)
+> > Add support for Actions Semi fixed factor clock together with
+> > helper functions to be used in composite clock.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/clk/actions/Makefile           |  1 +
+> >  drivers/clk/actions/owl-fixed-factor.c | 81 ++++++++++++++++++++++++++++++++++
+> >  drivers/clk/actions/owl-fixed-factor.h | 62 ++++++++++++++++++++++++++
+> >  3 files changed, 144 insertions(+)
+> >  create mode 100644 drivers/clk/actions/owl-fixed-factor.c
+> >  create mode 100644 drivers/clk/actions/owl-fixed-factor.h
+> > 
+> > diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
+> > index 994357fa560b..b618696ba54e 100644
+> > --- a/drivers/clk/actions/Makefile
+> > +++ b/drivers/clk/actions/Makefile
+> > @@ -5,3 +5,4 @@ clk-owl-y                       += owl-gate.o
+> >  clk-owl-y                      += owl-mux.o
+> >  clk-owl-y                      += owl-divider.o
+> >  clk-owl-y                      += owl-factor.o
+> > +clk-owl-y                      += owl-fixed-factor.o
+> > diff --git a/drivers/clk/actions/owl-fixed-factor.c b/drivers/clk/actions/owl-fixed-factor.c
+> > new file mode 100644
+> > index 000000000000..f1281565129c
+> > --- /dev/null
+> > +++ b/drivers/clk/actions/owl-fixed-factor.c
+> > @@ -0,0 +1,81 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +//
+> > +// OWL fixed factor clock driver
+> > +//
+> > +// Copyright (c) 2014 Actions Semi Inc.
+> > +// Author: David Liu <liuwei@actions-semi.com>
+> > +//
+> > +// Copyright (c) 2018 Linaro Ltd.
+> > +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/slab.h>
+> > +
+> > +#include "owl-fixed-factor.h"
+> > +
+> > +long owl_fix_fact_helper_round_rate(struct owl_clk_common *common,
+> > +                               const struct owl_fix_fact_hw *fix_fact_hw,
+> > +                               unsigned long rate,
+> > +                               unsigned long *parent_rate)
+> > +{
+> > +       if (clk_hw_get_flags(&common->hw) & CLK_SET_RATE_PARENT) {
+> > +               unsigned long best_parent;
+> > +
+> > +               best_parent = (rate / fix_fact_hw->mul) * fix_fact_hw->div;
+> > +               *parent_rate = clk_hw_round_rate(clk_hw_get_parent(&common->hw),
+> > +                                                       best_parent);
+> > +       }
+> > +
+> > +       return (*parent_rate / fix_fact_hw->div) * fix_fact_hw->mul;
+> > +}
+> > +
+> > +static long owl_fix_fact_round_rate(struct clk_hw *hw, unsigned long rate,
+> > +                       unsigned long *parent_rate)
+> > +{
+> > +       struct owl_fix_fact *fix_fact = hw_to_owl_fix_fact(hw);
+> > +       struct owl_fix_fact_hw *fix_fact_hw = &fix_fact->fix_fact_hw;
+> > +
+> > +       return owl_fix_fact_helper_round_rate(&fix_fact->common, fix_fact_hw,
+> > +                                                       rate, parent_rate);
+> > +}
+> > +
+> > +unsigned long owl_fix_fact_helper_recalc_rate(struct owl_clk_common *common,
+> > +                       const struct owl_fix_fact_hw *fix_fact_hw,
+> > +                       unsigned long parent_rate)
+> > +{
+> > +       unsigned long long int rate;
+> > +
+> > +       rate = (unsigned long long int)parent_rate * fix_fact_hw->mul;
+> > +       do_div(rate, fix_fact_hw->div);
+> > +
+> > +       return (unsigned long)rate;
+> 
+> You can drop the cast.
+> 
 
-Thanks for checking. In your case I think you do not need sd_head_align 
-as it will default to either 4 or 8:
+Okay.
 
-#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-#define ALIGNMENT  8
-#else
-#define ALIGNMENT  4
-#endif
-
-I am not saying you should not be needing this. When it comes to DT 
-people are often tempted to accommodate a driver solution especially 
-when such a solution is already in place. However, DT is a hardware 
-description and these do not describe the wifi device. They are 
-applicable to the wifi device because it is a limitation of the host 
-controller and as such should be described in the DT binding of the host 
-controller.
-
-Regards,
-Arend
-
-> Regards,
->    Alex
+> > +}
+> > +
+> > +static unsigned long owl_fix_fact_recalc_rate(struct clk_hw *hw,
+> > +                       unsigned long parent_rate)
+> > +{
+> > +       struct owl_fix_fact *fix_fact = hw_to_owl_fix_fact(hw);
+> > +       struct owl_fix_fact_hw *fix_fact_hw = &fix_fact->fix_fact_hw;
+> > +
+> > +       return owl_fix_fact_helper_recalc_rate(&fix_fact->common, fix_fact_hw,
+> > +                                                       parent_rate);
+> > +}
+> > +
+> > +static int owl_fix_fact_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +                              unsigned long parent_rate)
+> > +{
+> > +       /*
+> > +        * We must report success but we can do so unconditionally because
+> > +        * clk_fix_fact_round_rate returns values that ensure this call is a
+> 
+> What function is that?
 >
-> On 20 March 2018 at 06:16, Arend van Spriel
-> <arend.vanspriel@broadcom.com> wrote:
->> + Uffe
->>
->> On 3/19/2018 6:55 PM, Florian Fainelli wrote:
->>>
->>> On 03/19/2018 07:10 AM, Alexey Roslyakov wrote:
->>>>
->>>> Hi Arend,
->>>> I appreciate your response. In my opinion, it has nothing to do with
->>>> SDIO host, because it defines "quirks" in the driver itself.
->>>
->>>
->>> It is not clear to me from your patch series whether the problem is that:
->>>
->>> - the SDIO device has a specific alignment requirements, which would be
->>> either a SDIO device driver limitation/issue or maybe the underlying
->>> hardware device/firmware requiring that
->>>
->>> - the SDIO host controller used is not capable of coping nicely with
->>> these said limitations
->>>
->>> It seems to me like what you are doing here is a) applicable to possibly
->>> more SDIO devices and host combinations, and b) should likely be done at
->>> the layer between the host and device, such that it is available to more
->>> combinations.
->>
->>
->> Indeed. That was my thought exactly and I can not imagine Uffe would push
->> back on that reasoning.
->>
->>>> If I get it right, you mean something like this:
->>>>
->>>> mmc3: mmc@1c12000 {
->>>> ...
->>>>           broken-sg-support;
->>>>           sd-head-align = 4;
->>>>           sd-sgentry-align = 512;
->>>>
->>>>           brcmf: wifi@1 {
->>>>                   ...
->>>>           };
->>>> };
->>>>
->>>> Where dt: bindings documentation for these entries should reside?
->>>> In generic MMC bindings? Well, this is the very special case and
->>>> mmc-linux maintainer will unlikely to accept these changes.
->>>> Also, extra kernel code modification might be required. It could make
->>>> quite trivial change much more complex.
->>>
->>>
->>> If the MMC maintainers are not copied on this patch series, it will
->>> likely be hard for them to identify this patch series and chime in...
->>
->>
->> The main question is whether this is indeed a "very special case" as Alexey
->> claims it to be or that it is likely to be applicable to other device and
->> host combinations as you are suggesting.
->>
->> If these properties are imposed by the host or host controller it would make
->> sense to have these in the mmc bindings.
->>
->>>>
->>>>> Also I am not sure if the broken-sg-support is still needed. We added
->>>>> that for omap_hsmmc, but that has since changed to scatter-gather emulation
->>>>> so it might not be needed anymore.
->>>>
->>>>
->>>> I've experienced the problem with rk3288 (dw-mmc host) and sdio
->>>> settings like above solved it.
->>>> Frankly, I haven't investigated any deeper which one of the settings
->>>> helped in my case yet...
->>>> I will try to get rid of broken-sg-support first and let you know if
->>>> it does make any difference.
->>
->>
->> Are you using some chromebook. I have some lying around here so I could also
->> look into it. What broadcom chipset do you have?
->>
->> Regards,
->> Arend
->>
->>
->>>> All the best,
->>>>     Alex.
->>>>
->>>> On 19 March 2018 at 16:31, Arend van Spriel
->>>> <arend.vanspriel@broadcom.com> wrote:
->>>>>
->>>>> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
->>>>>>
->>>>>>
->>>>>> In case if the host has higher align requirements for SG items, allow
->>>>>> setting device-specific aligns for scatterlist items.
->>>>>>
->>>>>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
->>>>>> ---
->>>>>>     Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>> | 5
->>>>>> +++++
->>>>>>     1 file changed, 5 insertions(+)
->>>>>>
->>>>>> diff --git
->>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>> index 86602f264dce..187b8c1b52a7 100644
->>>>>> ---
->>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>> +++
->>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>> @@ -17,6 +17,11 @@ Optional properties:
->>>>>>           When not specified the device will use in-band SDIO
->>>>>> interrupts.
->>>>>>      - interrupt-names : name of the out-of-band interrupt, which must
->>>>>> be
->>>>>> set
->>>>>>           to "host-wake".
->>>>>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO
->>>>>> host
->>>>>> +       controller has higher align requirement than 32 bytes for each
->>>>>> +       scatterlist item.
->>>>>> + - brcm,sd-head-align : alignment requirement for start of data
->>>>>> buffer.
->>>>>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
->>>>>> entry.
->>>>>
->>>>>
->>>>>
->>>>> Hi Alexey,
->>>>>
->>>>> Thanks for the patch. However, the problem with these is that they are
->>>>> characterizing the host controller and not the wireless device. So from
->>>>> device tree perspective , which is to describe the hardware, these
->>>>> properties should be SDIO host controller properties. Also I am not sure
->>>>> if
->>>>> the broken-sg-support is still needed. We added that for omap_hsmmc, but
->>>>> that has since changed to scatter-gather emulation so it might not be
->>>>> needed
->>>>> anymore.
->>>>>
->>>>> Regards,
->>>>> Arend
->>>>
->>>>
->>>>
->>>>
->>>
->>>
->>
+
+It should be owl_fix_fact_round_rate.
+
+> > +        * nop.
+> > +        */
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +const struct clk_ops owl_fix_fact_ops = {
+> > +       .round_rate     = owl_fix_fact_round_rate,
+> > +       .recalc_rate    = owl_fix_fact_recalc_rate,
+> > +       .set_rate       = owl_fix_fact_set_rate,
+> > +};
+> 
+> Why can't you use the regular fixed factor clk code and ops?
 >
->
->
+
+That's going to be really messy. Since I'm having the clk_hw embedded inside
+owl_clk_common and using it for registering all the clocks, using generic
+fixed factor functions will be a different approach _only_ for this clock and
+it won't look good I guess. Also, it may become complicated with composite
+clocks.
+
+If you still want to use the generic fixed factor code, I can do that in
+next revision.
+
+Your views?
+
+Thanks,
+Mani
