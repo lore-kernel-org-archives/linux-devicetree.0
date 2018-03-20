@@ -1,213 +1,225 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v2 2/3] drm: bridge: Add LVDS decoder driver
-Date: Tue, 20 Mar 2018 17:42:59 +0200
-Message-ID: <dc468964-dc9c-65fb-7ec8-e180409ffa03@mentor.com>
-References: <1520603500-15218-1-git-send-email-jacopo+renesas@jmondi.org>
- <1520603500-15218-3-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v5 3/3] Bluetooth: hci_qca: Add serdev support
+Date: Tue, 20 Mar 2018 16:49:53 +0100
+Message-ID: <7097660B-DC63-4685-B095-4D5C37ECD89E@holtmann.org>
+References: <20180320032331.29865-1-thierry.escande@linaro.org>
+ <20180320032331.29865-4-thierry.escande@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520603500-15218-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180320032331.29865-4-thierry.escande@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Escande <thierry.escande@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi Thierry,
 
-On 03/09/2018 03:51 PM, Jacopo Mondi wrote:
-> Add transparent LVDS decoder driver.
+> Add support for Qualcomm serial slave devices. Probe the serial device,
+> retrieve its maximum speed and register a new hci uart device.
 > 
-> A transparent LVDS decoder is a DRM bridge device that does not require
-> any configuration and converts LVDS input to digital CMOS/TTL parallel
-> data output.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
 > ---
->  drivers/gpu/drm/bridge/Kconfig        |   8 +++
->  drivers/gpu/drm/bridge/Makefile       |   1 +
->  drivers/gpu/drm/bridge/lvds-decoder.c | 129 ++++++++++++++++++++++++++++++++++
->  3 files changed, 138 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/lvds-decoder.c
 > 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 3b99d5a..e52a5af 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -32,6 +32,14 @@ config DRM_DUMB_VGA_DAC
->  	help
->  	  Support for RGB to VGA DAC based bridges
+> v5:
+> - Use gpio new name 'enable'
 > 
-> +config DRM_LVDS_DECODER
-> +	tristate "Transparent LVDS to parallel decoder support"
-> +	depends on OF
-> +	select DRM_PANEL_BRIDGE
-> +	help
-> +	  Support for transparent LVDS to parallel decoders that don't require
-> +	  any configuration.
+> v4:
+> - Rename divclk4 as susclk (its name in the bt chip)
+> - Use gpiod_set_value_cansleep()
+> - Replace #include <linux/of.h> with <linux/mod_devicetable.h>
+> - Restore dependency on BT_HCIUART
+> 
+> v3:
+> - Remove redundant call to gpiod_set_value() after devm_gpiod_get()
+> - Check returned values for clk_set_rate() and clk_prepare_enable()
+> - Use clk_disable_unprepare()
+> 
+> v2:
+> - Fix author email
+> 
+> drivers/bluetooth/Kconfig   |   1 +
+> drivers/bluetooth/hci_qca.c | 109 +++++++++++++++++++++++++++++++++++++++++++-
+> 2 files changed, 108 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
+> index 07e55cd8f8c8..e0f1a6609b68 100644
+> --- a/drivers/bluetooth/Kconfig
+> +++ b/drivers/bluetooth/Kconfig
+> @@ -196,6 +196,7 @@ config BT_HCIUART_BCM
+> config BT_HCIUART_QCA
+> 	bool "Qualcomm Atheros protocol support"
+> 	depends on BT_HCIUART
+> +	depends on BT_HCIUART_SERDEV
+> 	select BT_HCIUART_H4
+> 	select BT_QCA
+> 	help
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 05ec530b8a3a..6e6042f77784 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -29,7 +29,11 @@
+>  */
+> 
+> #include <linux/kernel.h>
+> +#include <linux/clk.h>
+> #include <linux/debugfs.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/serdev.h>
+> 
+> #include <net/bluetooth/bluetooth.h>
+> #include <net/bluetooth/hci_core.h>
+> @@ -50,6 +54,9 @@
+> #define IBS_TX_IDLE_TIMEOUT_MS		2000
+> #define BAUDRATE_SETTLE_TIMEOUT_MS	300
+> 
+> +/* susclk rate */
+> +#define SUSCLK_RATE_32KHZ	32768
 > +
->  config DRM_LVDS_ENCODER
->  	tristate "Transparent parallel to LVDS encoder support"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 373eb28..edc2332 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> +obj-$(CONFIG_DRM_LVDS_DECODER) += lvds-decoder.o
->  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
->  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
->  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
-> diff --git a/drivers/gpu/drm/bridge/lvds-decoder.c b/drivers/gpu/drm/bridge/lvds-decoder.c
-> new file mode 100644
-> index 0000000..319f4d5
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/lvds-decoder.c
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * LVDS to parallel data DRM bridge driver.
-> + *
-> + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_panel.h>
-> +
-> +#include <linux/of_graph.h>
-> +
-> +struct lvds_decoder {
-> +	struct device *dev;
-> +
-> +	struct drm_bridge bridge;
-> +	struct drm_bridge *next;
-> +	struct drm_encoder *bridge_encoder;
+> /* HCI_IBS transmit side sleep protocol states */
+> enum tx_ibs_states {
+> 	HCI_IBS_TX_ASLEEP,
+> @@ -111,6 +118,12 @@ struct qca_data {
+> 	u64 votes_off;
+> };
+> 
+> +struct qca_serdev {
+> +	struct hci_uart	 serdev_hu;
+> +	struct gpio_desc *bt_en;
+> +	struct clk	 *susclk;
 > +};
 > +
-> +static inline struct lvds_decoder *to_lvds_decoder(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct lvds_decoder, bridge);
-> +}
+> static void __serial_clock_on(struct tty_struct *tty)
+> {
+> 	/* TODO: Some chipset requires to enable UART clock on client
+> @@ -386,6 +399,7 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
+> /* Initialize protocol */
+> static int qca_open(struct hci_uart *hu)
+> {
+> +	struct qca_serdev *qcadev;
+> 	struct qca_data *qca;
+> 
+> 	BT_DBG("hu %p qca_open", hu);
+> @@ -444,6 +458,13 @@ static int qca_open(struct hci_uart *hu)
+> 	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
+> 	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
+> 
+> +	if (hu->serdev) {
+> +		serdev_device_open(hu->serdev);
 > +
-> +static int lvds_decoder_attach(struct drm_bridge *bridge)
-> +{
-> +	struct lvds_decoder *lvds = to_lvds_decoder(bridge);
-> +
-> +	return drm_bridge_attach(bridge->encoder, lvds->next, bridge);
-> +}
-> +
-> +struct drm_bridge_funcs lvds_dec_bridge_func = {
-
-static const struct drm_bridge_funcs lvds_dec_bridge_func
-
-> +	.attach	= lvds_decoder_attach,
-> +};
-> +
-> +static int lvds_decoder_parse_dt(struct lvds_decoder *lvds)
-> +{
-> +	struct device_node *lvds_output;
-> +	struct device_node *remote;
-> +	int ret = 0;
-> +
-> +	lvds_output = of_graph_get_endpoint_by_regs(lvds->dev->of_node, 1, -1);
-> +	if (!lvds_output) {
-> +		dev_err(lvds->dev, "Missing endpoint in Port@1\n");
-> +		return -ENODEV;
+> +		qcadev = serdev_device_get_drvdata(hu->serdev);
+> +		gpiod_set_value_cansleep(qcadev->bt_en, 1);
 > +	}
 > +
-> +	remote = of_graph_get_remote_port_parent(lvds_output);
-
-Add of_node_put(lvds_output) right here to get rid of error_put_lvds_node
-goto label.
-
-> +	if (!remote) {
-> +		dev_err(lvds->dev, "Endpoint in Port@1 unconnected\n");
-> +		ret = -ENODEV;
-> +		goto error_put_lvds_node;
+> 	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
+> 	       qca->tx_idle_delay, qca->wake_retrans);
+> 
+> @@ -512,6 +533,7 @@ static int qca_flush(struct hci_uart *hu)
+> /* Close protocol */
+> static int qca_close(struct hci_uart *hu)
+> {
+> +	struct qca_serdev *qcadev;
+> 	struct qca_data *qca = hu->priv;
+> 
+> 	BT_DBG("hu %p qca close", hu);
+> @@ -525,6 +547,13 @@ static int qca_close(struct hci_uart *hu)
+> 	destroy_workqueue(qca->workqueue);
+> 	qca->hu = NULL;
+> 
+> +	if (hu->serdev) {
+> +		serdev_device_close(hu->serdev);
+> +
+> +		qcadev = serdev_device_get_drvdata(hu->serdev);
+> +		gpiod_set_value_cansleep(qcadev->bt_en, 0);
 > +	}
 > +
-> +	if (!of_device_is_available(remote)) {
-> +		dev_err(lvds->dev, "Port@1 remote endpoint is disabled\n");
-> +		ret = -ENODEV;
-> +		goto error_put_remote_node;
-> +	}
-> +
-> +	lvds->next = of_drm_find_bridge(remote);
-> +	if (!lvds->next)
-> +		ret = -EPROBE_DEFER;
-> +
-> +error_put_remote_node:
-> +	of_node_put(remote);
-> +error_put_lvds_node:
-> +	of_node_put(lvds_output);
-> +
-> +	return ret;
+> 	kfree_skb(qca->rx_skb);
+> 
+> 	hu->priv = NULL;
+> @@ -885,6 +914,14 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+> 	return 0;
+> }
+> 
+> +static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
+> +{
+> +	if (hu->serdev)
+> +		serdev_device_set_baudrate(hu->serdev, speed);
+> +	else
+> +		hci_uart_set_baudrate(hu, speed);
 > +}
 > +
-> +static int lvds_decoder_probe(struct platform_device *pdev)
+> static int qca_setup(struct hci_uart *hu)
+> {
+> 	struct hci_dev *hdev = hu->hdev;
+> @@ -905,7 +942,7 @@ static int qca_setup(struct hci_uart *hu)
+> 		speed = hu->proto->init_speed;
+> 
+> 	if (speed)
+> -		hci_uart_set_baudrate(hu, speed);
+> +		host_set_baudrate(hu, speed);
+> 
+> 	/* Setup user speed if needed */
+> 	speed = 0;
+> @@ -924,7 +961,7 @@ static int qca_setup(struct hci_uart *hu)
+> 				   ret);
+> 			return ret;
+> 		}
+> -		hci_uart_set_baudrate(hu, speed);
+> +		host_set_baudrate(hu, speed);
+> 	}
+> 
+> 	/* Setup patch / NVM configurations */
+> @@ -958,12 +995,80 @@ static struct hci_uart_proto qca_proto = {
+> 	.dequeue	= qca_dequeue,
+> };
+> 
+> +static int qca_serdev_probe(struct serdev_device *serdev)
 > +{
-> +	struct lvds_decoder *lvds;
-> +	int ret;
+> +	struct qca_serdev *qcadev;
+> +	int err;
 > +
-> +	lvds = devm_kzalloc(&pdev->dev, sizeof(*lvds), GFP_KERNEL);
-> +	if (!lvds)
+> +	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
+> +	if (!qcadev)
 > +		return -ENOMEM;
 > +
-> +	lvds->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, lvds);
+> +	qcadev->serdev_hu.serdev = serdev;
+> +	serdev_device_set_drvdata(serdev, qcadev);
 > +
-> +	ret = lvds_decoder_parse_dt(lvds);
-> +	if (ret)
-> +		return ret;
+> +	qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
+> +				       GPIOD_OUT_LOW);
+> +	if (IS_ERR(qcadev->bt_en)) {
+> +		dev_err(&serdev->dev, "failed to acquire bt-disable-n gpio\n");
+> +		return PTR_ERR(qcadev->bt_en);
+> +	}
 > +
-> +	lvds->bridge.driver_private = lvds;
-> +	lvds->bridge.of_node = pdev->dev.of_node;
-> +	lvds->bridge.funcs = &lvds_dec_bridge_func;
+> +	qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+> +	if (IS_ERR(qcadev->susclk)) {
+> +		dev_err(&serdev->dev, "failed to acquire clk\n");
+> +		return PTR_ERR(qcadev->susclk);
+> +	}
 > +
-> +	drm_bridge_add(&lvds->bridge);
+> +	err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
+> +	if (err)
+> +		return err;
 > +
-> +	return 0;
+> +	err = clk_prepare_enable(qcadev->susclk);
+> +	if (err)
+> +		return err;
+> +
+> +	err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
+> +	if (err)
+> +		clk_disable_unprepare(qcadev->susclk);
+> +
+> +	return err;
 > +}
-> +
-> +static int lvds_decoder_remove(struct platform_device *pdev)
-> +{
-> +	struct lvds_decoder *lvds = platform_get_drvdata(pdev);
-> +
-> +	drm_bridge_remove(&lvds->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id lvds_decoder_match[] = {
-> +	{ .compatible = "lvds-decoder", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, lvds_decoder_match);
-> +#endif
-> +
 
-I would say "#ifdef CONFIG_OF" is redundant, because the driver "depends on OF".
+so this a more generic question. Does the clk setup has to be done in serdev probe or can we just do that within qca_open callback. I asked because I really want to move towards btuart.c and integrate the vendor specific pieces there nicely. So what I did was that I posted a v2 that has the vendor abstraction build in and it would be super simple to add qca support to it. However I have no vendor specific handling from within the probe callback. If that is not needed and we can do all the clk and GPIO setup in the vendor open callback, then it should be fairly simple to do (I am ignoring IBS support for now, but I realize it is there).
 
-> +static struct platform_driver lvds_decoder_driver = {
-> +	.probe	= lvds_decoder_probe,
-> +	.remove	= lvds_decoder_remove,
-> +	.driver	= {
-> +		.name		= "lvds_decoder",
-> +		.of_match_table	= lvds_decoder_match,
-> +	},
-> +};
-> +module_platform_driver(lvds_decoder_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo@jmondi.org>");
-> +MODULE_DESCRIPTION("Transparent LVDS to parallel data decoder");
-> +MODULE_LICENSE("GPL v2");
+That all said, the hci_qca.c code has __serial_clock_on() and __serial_clock_off() empty stubs. Is this about the susclk or is that something totally different?
 
---
-With best wishes,
-Vladimir
+Regards
+
+Marcel
