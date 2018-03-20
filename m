@@ -1,166 +1,159 @@
-From: Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH v2 2/2] earlycon: Use a pointer table to fix
- __earlycon_table stride
-Date: Tue, 20 Mar 2018 11:19:38 -0700
-Message-ID: <CABXOdTdi0eyCx87JW1H=MnW8_xmEQZKRBaY+YTH0KQwgMFS+xA@mail.gmail.com>
-References: <20180320175712.201572-1-djkurtz@chromium.org> <20180320175712.201572-3-djkurtz@chromium.org>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v3 01/10] soc: qcom: Separate kryo l2 accessors from PMU
+ driver
+Date: Tue, 20 Mar 2018 20:42:23 +0200
+Message-ID: <016d01d3c07b$34fa84e0$9eef8ea0$@codeaurora.org>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-2-git-send-email-ilialin@codeaurora.org>
+ <152148150406.242365.14021083340615345047@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320175712.201572-3-djkurtz@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Kaehlcke <mka@chromium.org>, Guenter Roeck <groeck@chromium.org>, Aaron Durbin <adurbin@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jiri Slaby <jslaby@suse.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152148150406.242365.14021083340615345047@swboyd.mtv.corp.google.com>
+Content-Language: en-us
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Stephen Boyd' <sboyd@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 10:57 AM, Daniel Kurtz <djkurtz@chromium.org> wrote:
-> Commit 99492c39f39f ("earlycon: Fix __earlycon_table stride") tried to fix
-> __earlycon_table stride by forcing the earlycon_id struct alignment to 32
-> and asking the linker to 32-byte align the __earlycon_table symbol.  This
-> fix was based on commit 07fca0e57fca92 ("tracing: Properly align linker
-> defined symbols") which tried a similar fix for the tracing subsystem.
->
-> However, this fix doesn't quite work because there is no guarantee that
-> gcc will place structures packed into an array format.  In fact, gcc 4.9
-> chooses to 64-byte align these structs by inserting additional padding
-> between the entries because it has no clue that they are supposed to be in
-> an array.  If we are unlucky, the linker will assign symbol
-> "__earlycon_table" to a 32-byte aligned address which does not correpsond
 
-correspond
 
-> to the 64-byte alignbed contents of section "__earlycon_table".
+> -----Original Message-----
+> From: Stephen Boyd <sboyd@kernel.org>
+> Sent: Monday, March 19, 2018 19:45
+> To: Ilia Lin <ilialin@codeaurora.org>; linux-arm-kernel@lists.infradead.org;
+> linux-arm-msm@vger.kernel.org; linux-clk@vger.kernel.org;
+> sboyd@codeaurora.org
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> rnayak@codeaurora.org; robh@kernel.org; will.deacon@arm.com;
+> amit.kucheria@linaro.org; tfinkel@codeaurora.org; ilialin@codeaurora.org;
+> nicolas.dechesne@linaro.org; celster@codeaurora.org
+> Subject: Re: [PATCH v3 01/10] soc: qcom: Separate kryo l2 accessors from
+> PMU driver
+> 
+> Quoting Ilia Lin (2018-02-14 05:59:43)
+> > diff --git a/arch/arm64/Kconfig.platforms
+> > b/arch/arm64/Kconfig.platforms index fbedbd8..78a103b 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -145,6 +145,13 @@ config ARCH_REALTEK
+> >           This enables support for the ARMv8 based Realtek chipsets,
+> >           like the RTD1295.
+> >
+> > +config ARCH_MSM8996
+> > +    bool "Enable Support for Qualcomm Technologies, Inc. MSM8996"
+> > +       depends on ARCH_QCOM
+> 
+> Is this really the proposed approach? Doesn't the PMU code use these
+> accessors? I would think the accessors are compiled if ARCH_QCOM=y so
+> that the PMU stuff keeps working. Drop this Kconfig addition?
 
-aligned
+I'll check whether the kryo-accessors code is SOC specific or not.
 
->
-> To address this same problem, the fix to the tracing system was
-> subsequently re-implemented using a more robust table of pointers approach
-> by commits:
->  3d56e331b653 ("tracing: Replace syscall_meta_data struct array with pointer array")
->  654986462939 ("tracepoints: Fix section alignment using pointer array")
->  e4a9ea5ee7c8 ("tracing: Replace trace_event struct array with pointer array")
->
-> Let's use this same "array of pointers to structs" approach for
-> EARLYCON_TABLE.
->
-> Fixes: 99492c39f39f ("earlycon: Fix __earlycon_table stride")
-> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> Suggested-by: Aaron Durbin <adurbin@chromium.org>
-> ---
-> Changes since v1:
->  * added Suggested-by and Fixes, and reworded the commit message per Randy.
->
->  drivers/of/fdt.c                  |  7 +++++--
->  drivers/tty/serial/earlycon.c     |  6 ++++--
->  include/asm-generic/vmlinux.lds.h |  2 +-
->  include/linux/serial_core.h       | 21 ++++++++++++++-------
->  4 files changed, 24 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 84aa9d676375..6da20b9688f7 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -942,7 +942,7 @@ int __init early_init_dt_scan_chosen_stdout(void)
->         int offset;
->         const char *p, *q, *options = NULL;
->         int l;
-> -       const struct earlycon_id *match;
-> +       const struct earlycon_id **p_match;
->         const void *fdt = initial_boot_params;
->
->         offset = fdt_path_offset(fdt, "/chosen");
-> @@ -969,7 +969,10 @@ int __init early_init_dt_scan_chosen_stdout(void)
->                 return 0;
->         }
->
-> -       for (match = __earlycon_table; match < __earlycon_table_end; match++) {
-> +       for (p_match = __earlycon_table; p_match < __earlycon_table_end;
-> +            p_match++) {
-> +               const struct earlycon_id *match = *p_match;
-> +
->                 if (!match->compatible[0])
->                         continue;
->
-> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> index a24278380fec..22683393a0f2 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -169,7 +169,7 @@ static int __init register_earlycon(char *buf, const struct earlycon_id *match)
->   */
->  int __init setup_earlycon(char *buf)
->  {
-> -       const struct earlycon_id *match;
-> +       const struct earlycon_id **p_match;
->
->         if (!buf || !buf[0])
->                 return -EINVAL;
-> @@ -177,7 +177,9 @@ int __init setup_earlycon(char *buf)
->         if (early_con.flags & CON_ENABLED)
->                 return -EALREADY;
->
-> -       for (match = __earlycon_table; match < __earlycon_table_end; match++) {
-> +       for (p_match = __earlycon_table; p_match < __earlycon_table_end;
-> +            p_match++) {
-> +               const struct earlycon_id *match = *p_match;
->                 size_t len = strlen(match->name);
->
->                 if (strncmp(buf, match->name, len))
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 1ab0e520d6fc..e17de55c2542 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -179,7 +179,7 @@
->  #endif
->
->  #ifdef CONFIG_SERIAL_EARLYCON
-> -#define EARLYCON_TABLE() STRUCT_ALIGN();                       \
-> +#define EARLYCON_TABLE() . = ALIGN(8);                         \
->                          VMLINUX_SYMBOL(__earlycon_table) = .;  \
->                          KEEP(*(__earlycon_table))              \
->                          VMLINUX_SYMBOL(__earlycon_table_end) = .;
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index b32df49a3bd5..93b7add47087 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -351,10 +351,10 @@ struct earlycon_id {
->         char    name[16];
->         char    compatible[128];
->         int     (*setup)(struct earlycon_device *, const char *options);
-> -} __aligned(32);
-> +};
->
-> -extern const struct earlycon_id __earlycon_table[];
-> -extern const struct earlycon_id __earlycon_table_end[];
-> +extern const struct earlycon_id *__earlycon_table[];
-> +extern const struct earlycon_id *__earlycon_table_end[];
->
->  #if defined(CONFIG_SERIAL_EARLYCON) && !defined(MODULE)
->  #define EARLYCON_USED_OR_UNUSED        __used
-> @@ -362,12 +362,19 @@ extern const struct earlycon_id __earlycon_table_end[];
->  #define EARLYCON_USED_OR_UNUSED        __maybe_unused
->  #endif
->
-> -#define OF_EARLYCON_DECLARE(_name, compat, fn)                         \
-> -       static const struct earlycon_id __UNIQUE_ID(__earlycon_##_name) \
-> -            EARLYCON_USED_OR_UNUSED __section(__earlycon_table)        \
-> +#define _OF_EARLYCON_DECLARE(_name, compat, fn, unique_id)             \
-> +       static const struct earlycon_id unique_id                       \
-> +            EARLYCON_USED_OR_UNUSED __initdata                         \
->                 = { .name = __stringify(_name),                         \
->                     .compatible = compat,                               \
-> -                   .setup = fn  }
-> +                   .setup = fn  };                                     \
-> +       static const struct earlycon_id EARLYCON_USED_OR_UNUSED         \
-> +               __section(__earlycon_table)                             \
-> +               * const __PASTE(__p, unique_id) = &unique_id
-> +
-> +#define OF_EARLYCON_DECLARE(_name, compat, fn)                         \
-> +       _OF_EARLYCON_DECLARE(_name, compat, fn,                         \
-> +                            __UNIQUE_ID(__earlycon_##_name))
->
->  #define EARLYCON_DECLARE(_name, fn)    OF_EARLYCON_DECLARE(_name, "", fn)
->
-> --
-> 2.16.2.804.g6dcf76e118-goog
->
+> 
+> > +       help
+> > +       This enables support for the MSM8996 chipset. If you do not
+> > +       wish to build a kernel that runs on this chipset, say 'N' here.
+> > +
+> >  config ARCH_ROCKCHIP
+> >         bool "Rockchip Platforms"
+> >         select ARCH_HAS_RESET_CONTROLLER diff --git
+> > a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c index
+> > 4fdc848..8cece9e 100644
+> > --- a/drivers/perf/qcom_l2_pmu.c
+> > +++ b/drivers/perf/qcom_l2_pmu.c
+> > @@ -1,4 +1,4 @@
+> > -/* Copyright (c) 2015-2017 The Linux Foundation. All rights reserved.
+> > +/* Copyright (c) 2015-2018 The Linux Foundation. All rights reserved.
+> 
+> Sorry, this makes little sense. First off, code is only being deleted and more
+> than half the file isn't being modified so why update copyright dates?
+
+Agree. Will roll back.
+
+> 
+> >   *
+> >   * This program is free software; you can redistribute it and/or modify
+> >   * it under the terms of the GNU General Public License version 2 and
+> > diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> > index dcebf28..4e91e2a 100644
+> > --- a/drivers/soc/qcom/Makefile
+> > +++ b/drivers/soc/qcom/Makefile
+> > @@ -12,3 +12,4 @@ obj-$(CONFIG_QCOM_SMEM_STATE) +=
+> smem_state.o
+> >  obj-$(CONFIG_QCOM_SMP2P)       += smp2p.o
+> >  obj-$(CONFIG_QCOM_SMSM)        += smsm.o
+> >  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
+> > +obj-$(CONFIG_ARCH_MSM8996) +=  kryo-l2-accessors.o
+> > diff --git a/drivers/soc/qcom/kryo-l2-accessors.c
+> > b/drivers/soc/qcom/kryo-l2-accessors.c
+> > new file mode 100644
+> > index 0000000..6743848
+> > --- /dev/null
+> > +++ b/drivers/soc/qcom/kryo-l2-accessors.c
+> > @@ -0,0 +1,64 @@
+> > +/*
+> > + * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> 
+> SPDX tags?
+
+Will do.
+
+> 
+> > diff --git a/include/soc/qcom/kryo-l2-accessors.h
+> > b/include/soc/qcom/kryo-l2-accessors.h
+> > new file mode 100644
+> > index 0000000..e9a5eab
+> > --- /dev/null
+> > +++ b/include/soc/qcom/kryo-l2-accessors.h
+> > @@ -0,0 +1,22 @@
+> > +/*
+> > + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#ifndef __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
+> > +#define __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
+> 
+> Maybe change this tO __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
+
+No problem. Will change.
+
+> 
+> > +
+> > +#ifdef CONFIG_ARCH_QCOM
+> > +void set_l2_indirect_reg(u64 reg_addr, u64 val);
+> > +u64 get_l2_indirect_reg(u64 reg_addr); #endif
+> 
+> This ifdef isn't doing much. Drop it? Or provide the inline nop alternatives.
+
+Right. I'll drop it.
