@@ -1,32 +1,66 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 0/5] update Mediatek MT2712 clock and scpsys support
-Date: Tue, 20 Mar 2018 00:23:34 -0700
-Message-ID: <152153061465.254778.3061562183948751301@swboyd.mtv.corp.google.com>
-References: <20180312070342.4335-1-weiyi.lu@mediatek.com>
- <1521526068.13313.8.camel@mtksdaap41>
+Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board data
+Date: Tue, 20 Mar 2018 00:33:31 -0700
+Message-ID: <152153121123.254778.13134751025860491351@swboyd.mtv.corp.google.com>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521526068.13313.8.camel@mtksdaap41>
+In-Reply-To: <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Weiyi Lu <weiyi.lu@mediatek.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+To: absahu@codeaurora.org, andy.gross@linaro.org, bjorn.andersson@linaro.org, catalin.marinas@arm.com, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux@armlinux.org.uk, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, robh@kernel.org, sboyd@codeaurora.org, will.deacon@arm.com
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Weiyi Lu (2018-03-19 23:07:48)
-> On Mon, 2018-03-12 at 15:03 +0800, Weiyi Lu wrote:
-> > This series is based on v4.16-rc1 and composed of scpsys control (PATCH 1-2) and clock control (PATCH 3-5).
-> > Basically, all changes are for the ECO design change of MT2712.
-> > 
-> > changes since v1:
-> > - Avoid renumbering clocks. Append new clocks at the bottom of each own subsystem.
-> > 
-> Hi Matthias & Stephen,
-> 
-> Sorry to bother. Just saw patch 1/2 are already pushed to v4.16-next-soc
-> and patch 3/5 are applied onto clk-next. What about the patch 4(arm64:
-> dts: add clock device nodes of MT2712). Does there any problem remain or
-> it cause some problems? Many thanks.
+Quoting Sricharan R (2018-03-19 20:58:47)
+> Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Patch 4 can go via arm-soc? I'm not planning to apply that patch.
+That is an odd place for a reviewed-by tag.
+
+> Adds missing memory, reserved-memory nodes.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 28 +++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> index e413b21e..ad0fbc9 100644
+> --- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> +++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> @@ -20,6 +20,34 @@
+>         model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
+>         compatible = "qcom,ipq4019";
+>  
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x10000000>; /* 256MB */
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               rsvd1@87000000 {
+> +                       /* Reserved for other subsystem */
+> +                       reg = <0x87000000 0x500000>;
+> +                       no-map;
+> +               };
+> +
+> +               wifi_dump@87500000 {
+> +                       reg = <0x87500000 0x600000>;
+> +                       no-map;
+> +               };
+> +
+> +               rsvd2@87B00000 {
+
+Lowercase hex please.
+
+> +                       /* Reserved for other subsystem */
+> +                       reg = <0x87B00000 0x500000>;
+> +                       no-map;
+> +               };
+> +       };
