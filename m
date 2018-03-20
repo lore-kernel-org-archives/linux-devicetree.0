@@ -1,45 +1,66 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx7d-pinfunc: update sai select input value
-Date: Tue, 20 Mar 2018 02:13:14 +0000
-Message-ID: <AM3PR04MB1315B6C5A16ACC2C7D709C71F5AB0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1521429281-23394-1-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5A0fA2h_T__vFzGXPzrzKZJuMyiRLRvNag43Xffif1EZQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Subject: [PATCH v2 1/2] arm64: dts: uniphier: add syscon property for UniPhier sound system
+Date: Tue, 20 Mar 2018 11:48:23 +0900
+Message-ID: <20180320024824.28902-1-suzuki.katsuhiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5A0fA2h_T__vFzGXPzrzKZJuMyiRLRvNag43Xffif1EZQ@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
-Z21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXJjaCAyMCwgMjAxOCA5OjU4IEFNDQo+IFRv
-OiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hh
-d25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlcg0KPiA8a2VybmVsQHBlbmd1dHJvbml4LmRl
-PjsgRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgUm9iDQo+IEhlcnJpbmcg
-PHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-Ow0KPiBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggPGxpbnV4QGFybWxpbnV4Lm9yZy51az47IFMu
-ai4gV2FuZw0KPiA8c2hlbmdqaXUud2FuZ0BueHAuY29tPjsgZGwtbGludXgtaW14IDxsaW51eC1p
-bXhAbnhwLmNvbT47IG1vZGVyYXRlZA0KPiBsaXN0OkFSTS9GUkVFU0NBTEUgSU1YIC8gTVhDIEFS
-TSBBUkNISVRFQ1RVUkUNCj4gPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47
-IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORA0KPiBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
-RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVsDQo+IDxsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0
-czogaW14N2QtcGluZnVuYzogdXBkYXRlIHNhaSBzZWxlY3QgaW5wdXQgdmFsdWUNCj4gDQo+IEhp
-IEFuc29uLA0KPiANCj4gT24gTW9uLCBNYXIgMTksIDIwMTggYXQgMTI6MTQgQU0sIEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPiBVcGRhdGUgU0FJIHNlbGVj
-dCBpbnB1dCBkYWlzeSBjaGFpbiB2YWx1ZSBhY2NvcmRpbmcgdG8gUmVmZXJlbmNlDQo+ID4gTWFu
-dWFsLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54
-cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0Bu
-eHAuY29tPg0KPiANCj4gQ291bGQgeW91IHBsZWFzZSBjbGFyaWZ5IHRoZSBhdXRob3JzaGlwIG9m
-IHRoaXMgcGF0Y2g/IElzIHRoaXMgeW91cnMgb3IgZnJvbQ0KPiBTaGVuZ2ppdSBXYW5nPw0KPiAN
-Cj4gSWYgaXQgaXMgZnJvbSBTaGVuZ2ppdSBXYW5nIHRoZW4gaGlzIG5hbWUgc2hvdWxkIGFwcGVh
-ciBpbiB0aGUgRnJvbSBmaWVsZCBhbmQgaGlzDQo+IFNpZ25lZC1vZmYtYnkgdGFnIHNob3VsZCBh
-cHBlYXIgZmlyc3QgYW5kIHlvdXJzIHNob3VsZCBnbyBhZnRlciBpdC4NCiANClRoZSBvcmlnaW5h
-bCBwYXRjaCBpcyBmcm9tIFNoZW5naml1IHdhbmcgaW4gb3VyIGludGVybmFsIHRyZWUsIEkgbW9k
-aWZ5IHRoZSBjb21taXQNCm1lc3NhZ2UsIHllcywgSSBtaXNzIGNoYW5naW5nIHRoZSBmcm9tIGZp
-ZWxkLCByZXNlbnQgdGhlIFYyIHBhdGNoLiBUaGFua3MuDQoNCkFuc29uLiANCg==
+This patch adds syscon property for specifying soc-glue core into
+device-tree of LD11/LD20 SoC.
+
+Currently, soc-glue core is used for changing the state of S/PDIF
+signal output pin to signal output state or Hi-Z state.
+
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+---
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 ++-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index efa95573b2aa..e62bda1cf2d9 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -197,6 +197,7 @@
+ 			reset-names = "aio";
+ 			resets = <&sys_rst 40>;
+ 			#sound-dai-cells = <1>;
++			socionext,syscon = <&soc_glue>;
+ 
+ 			i2s_port0: port@0 {
+ 				i2s_hdmi: endpoint {
+@@ -479,7 +480,7 @@
+ 			};
+ 		};
+ 
+-		soc-glue@5f800000 {
++		soc_glue: soc-glue@5f800000 {
+ 			compatible = "socionext,uniphier-ld11-soc-glue",
+ 				     "simple-mfd", "syscon";
+ 			reg = <0x5f800000 0x2000>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 19c935688a77..9efe20d07589 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -297,6 +297,7 @@
+ 			reset-names = "aio";
+ 			resets = <&sys_rst 40>;
+ 			#sound-dai-cells = <1>;
++			socionext,syscon = <&soc_glue>;
+ 
+ 			i2s_port0: port@0 {
+ 				i2s_hdmi: endpoint {
+@@ -525,7 +526,7 @@
+ 			cdns,phy-dll-delay-sdclk-hsmmc = <21>;
+ 		};
+ 
+-		soc-glue@5f800000 {
++		soc_glue: soc-glue@5f800000 {
+ 			compatible = "socionext,uniphier-ld20-soc-glue",
+ 				     "simple-mfd", "syscon";
+ 			reg = <0x5f800000 0x2000>;
+-- 
+2.16.2
