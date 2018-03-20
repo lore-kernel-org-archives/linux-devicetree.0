@@ -1,64 +1,51 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 16/20] clk: add support for clocks provided by SCMI
-Date: Tue, 20 Mar 2018 12:08:51 +0000
-Message-ID: <6b5a56f7-ff0d-dde2-097b-bf245971e8a6@arm.com>
-References: <1519403030-21189-1-git-send-email-sudeep.holla@arm.com>
- <1519403030-21189-17-git-send-email-sudeep.holla@arm.com>
- <152124137391.242365.17144416413429914606@swboyd.mtv.corp.google.com>
+From: sricharan@codeaurora.org
+Subject: Re: [PATCH v3 06/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1
+ board file
+Date: Tue, 20 Mar 2018 17:40:21 +0530
+Message-ID: <a8ec44084bbcf7d6b4e51f195c9d6046@codeaurora.org>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-7-git-send-email-sricharan@codeaurora.org>
+ <152153125818.254778.5435627269964796441@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152124137391.242365.17144416413429914606@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <152153125818.254778.5435627269964796441@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, ALKML <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Alexey Klimov <klimov.linux@gmail.com>, linux-clk@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: absahu@codeaurora.org, andy.gross@linaro.org, bjorn.andersson@linaro.org, catalin.marinas@arm.com, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux@armlinux.org.uk, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, robh@kernel.org, sboyd@codeaurora.org, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 16/03/18 23:02, Stephen Boyd wrote:
-> Quoting Sudeep Holla (2018-02-23 08:23:46)
->> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+On 2018-03-20 13:04, Stephen Boyd wrote:
+> Quoting Sricharan R (2018-03-19 20:58:49)
+>> diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts 
+>> b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
 >> new file mode 100644
->> index 000000000000..1e4d7a57779b
+>> index 0000000..871ac3f
 >> --- /dev/null
->> +++ b/drivers/clk/clk-scmi.c
->> +                       hws[idx] = &sclk->hw;
->> +               }
->> +       }
+>> +++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
+>> @@ -0,0 +1,20 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
 >> +
->> +       return of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
-> 
-> devm_of_clk_add_hw_provider?
-> 
-
-Thanks for noticing this, I wasn't aware of it's addition. This patch
-predates that :(
-
->> +}
+>> +#include "qcom-ipq4019-ap.dk04.1.dtsi"
 >> +
->> +static void scmi_clocks_remove(struct scmi_device *sdev)
->> +{
->> +       struct device *dev = &sdev->dev;
->> +       struct device_node *np = dev->of_node;
+>> +/ {
+>> +       model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1-C1";
 >> +
->> +       of_clk_del_provider(np);
->> +}
->> +
+>> +       soc {
+>> +               qpic_bam: dma@7984000 {
 > 
-> Drop?
-> 
-
-Sure, I will have to do these changes as add-on patch as this original
-patch is already queued in ARM SoC tree for v4.17
-
-> You can keep my acked-by otherwise.
+> Why the labels?
 > 
 
-Thanks.
+   ok, will remove here and few other places to make it uniform.
 
--- 
 Regards,
-Sudeep
+  Sricharan
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
