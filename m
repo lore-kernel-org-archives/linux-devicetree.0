@@ -1,53 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: display: bridge: lvds-transmitter:
- add ti, ds90c185
-Date: Tue, 20 Mar 2018 15:52:28 +0200
-Message-ID: <4505095.GfTyCNF5lz@avalon>
-References: <20180317221525.18534-1-peda@axentia.se>
- <20180317221525.18534-2-peda@axentia.se>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v8_00/42]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Tue, 20 Mar 2018 19:22:08 +0530
+Message-ID: <4d6cc890-e948-6784-82bf-dac196804c07@ti.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <152150722338.254778.4743967512266809482@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180317221525.18534-2-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152150722338.254778.4743967512266809482@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFN1bmRheSwgMTggTWFyY2gg
-MjAxOCAwMDoxNToyMyBFRVQgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gU3RhcnQgbGlzdCBvZiBhY3R1
-YWwgY2hpcHMgY29tcGF0aWJsZSB3aXRoICJsdmRzLWVuY29kZXIiLgo+IAo+IFNpZ25lZC1vZmYt
-Ynk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0ICAgICAgIHwgNSAr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdAo+
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMt
-dHJhbnNtaXR0ZXIudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQKPiBpbmRleCBmZDM5YWQzNGMzODMuLjlk
-MDkxOTBkOTIxMCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50
-eHQKPiBAQCAtMjQsNiArMjQsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAKPiAgLSBjb21w
-YXRpYmxlOiBNdXN0IGJlICJsdmRzLWVuY29kZXIiCj4gCj4gKwkgICAgICBLbm93biBhY3R1YWwg
-Y2hpcHMgKHRoZXNlIHNob3VsZCBzdGlsbCB1c2UgImx2ZHMtZW5jb2RlciIgYXMgYQo+ICsJICAg
-ICAgZmFsbGJhY2sgY29tcGF0aWJsZSkgaW5jbHVkZToKPiArCj4gKwkgICAgICAidGksZHM5MGMx
-ODUiCgpUaGUgd29yZGluZyBzb3VuZHMgYSBiaXQgc3RyYW5nZSB0byBtZS4gSG93IGFib3V0Cgog
-LSBjb21wYXRpYmxlOiBNdXN0IGJlIG9uZSBvciBtb3JlIG9mIHRoZSBmb2xsb3dpbmcKICAgLSAi
-dGksZHM5MGMxODUiIGZvciB0aGUgVEkgRFM5MEMxODUgRlBELUxpbmsgU2VyaWFsaXplcgogICAt
-ICJsdmRzLWVuY29kZXIiIGZvciBhIGdlbmVyaWMgTFZEUyBlbmNvZGVyIGRldmljZQoKICAgV2hl
-biBjb21wYXRpYmxlIHdpdGggdGhlIGdlbmVyaWMgdmVyc2lvbiBub2RlcyBtdXN0IGxpc3QgdGhl
-CiAgIGRldmljZS1zcGVjaWZpYyB2ZXJzaW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRldmljZSBm
-aXJzdAogICBmb2xsb3dlZCBieSB0aGUgZ2VuZXJpYyB2ZXJzaW9uLgoKPiAgUmVxdWlyZWQgbm9k
-ZXM6Cj4gCj4gIFRoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rp
-b25zIGFyZSBtb2RlbGVkIHVzaW5nIHRoZSBPRgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNo
-YXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Stephen,
+
+On Tuesday 20 March 2018 06:23 AM, Stephen Boyd wrote:
+> Quoting David Lechner (2018-03-15 19:52:16)
+>> This series converts mach-davinci to use the common clock framework.
+>>
+>> The series works like this, the first 19 patches create new clock drivers
+>> using the common clock framework. There are basically 3 groups of clocks -
+>> PLL, PSC and CFGCHIP (syscon). There are six different SoCs that each have
+>> unique init data, which is the reason for so many patches.
+> 
+> Should I apply the first 19 patches to clk tree? Looking over them
+> nothing stands out except for your self comment about the bad
+> reviewed-by tag which I can remove.
+
+I think it will be a good idea to go ahead merge the drivers/clk/ parts
+for v4.17.
+
+I have been traveling, and have not been able to review this version.
+But I have closely reviewed previous versions. If there really are
+issues, I am sure we can get follow-on patches to fix those.
+
+But getting these into v4.17 will enable platform parts to come in
+easily into v4.18
+
+Thanks,
+Sekhar
