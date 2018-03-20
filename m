@@ -1,46 +1,34 @@
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Subject: [PATCH v2 2/2] ARM: dts: uniphier: add syscon property for UniPhier sound system
-Date: Tue, 20 Mar 2018 11:48:24 +0900
-Message-ID: <20180320024824.28902-2-suzuki.katsuhiro@socionext.com>
-References: <20180320024824.28902-1-suzuki.katsuhiro@socionext.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 07/10] ARM: dts: gemini: Remove "cooling-{min|max}-level"
+ for gpio-fan node
+Date: Tue, 20 Mar 2018 04:10:19 +0100
+Message-ID: <CACRpkdaQtPOJCcXoVB0UufLDNhkkh4__XTT2sapAKWDu9jw73g@mail.gmail.com>
+References: <cover.1518166039.git.viresh.kumar@linaro.org> <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320024824.28902-1-suzuki.katsuhiro@socionext.com>
+In-Reply-To: <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
-Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds syscon property for specifying soc-glue core into
-device-tree of PXs2 SoC.
+On Fri, Feb 9, 2018 at 9:58 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-Currently, soc-glue core is used for changing the state of S/PDIF
-signal output pin to signal output state or Hi-Z state.
+> The "cooling-min-level" and "cooling-max-level" properties are not
+> parsed by any part of the kernel currently and the max cooling state of
+> gpio-fan cooling device is found by referring to the
+> "gpio-fan,speed-map" instead.
+>
+> Remove the unused properties from the gpio-fan node.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
----
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 595045441c9c..debcbd15c24b 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -242,6 +242,7 @@
- 			reset-names = "aio";
- 			resets = <&sys_rst 40>;
- 			#sound-dai-cells = <1>;
-+			socionext,syscon = <&soc_glue>;
- 
- 			i2s_port0: port@0 {
- 				i2s_hdmi: endpoint {
-@@ -418,7 +419,7 @@
- 			};
- 		};
- 
--		soc-glue@5f800000 {
-+		soc_glue: soc-glue@5f800000 {
- 			compatible = "socionext,uniphier-pxs2-soc-glue",
- 				     "simple-mfd", "syscon";
- 			reg = <0x5f800000 0x2000>;
--- 
-2.16.2
+I can queue it next week (different machine hosting the git tree)
+but it is also OK if the ARM SoC maintainers want to pick it
+directly for the ARM SoC DTS branch.
+
+Yours,
+Linus Walleij
