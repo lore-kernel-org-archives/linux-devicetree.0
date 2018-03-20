@@ -1,59 +1,35 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
-Date: Tue, 20 Mar 2018 10:18:44 +0200
-Message-ID: <1662708.Iq9jEY22gx@avalon>
-References: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH] pcie: qcom: Add support to enable pcie refclk
+Date: Tue, 20 Mar 2018 10:30:30 +0200
+Message-ID: <09b50715-5835-bf85-b53b-12b4b839ca10@mm-sol.com>
+References: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180315144133.14031-1-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, bhelgaas@google.com, linux-pci@vger.kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+Hi Srini,
 
-Thank you for the patch.
-
-On Tuesday, 20 March 2018 08:48:11 EET Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+On 03/15/2018 04:41 PM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> Update the IPMMU DT binding documentation to include the r8a77965 compat
-> string for the IPMMU devices included in the R-Car M3-N SoC.
+> This patch adds support to enable 100MHz pcie refclk,
+> On some boards like DB600c this clock is not enabled by default.
 > 
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> 
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-> +++
-> work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	
-2018-03
-> -20 15:30:50.640607110 +0900 @@ -17,6 +17,7 @@ Required Properties:
->      - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
->      - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
->      - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
-> +    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
->      - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
->      - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
->      - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+>  Documentation/devicetree/bindings/pci/qcom,pcie.txt |  1 +
+>  drivers/pci/dwc/pcie-qcom.c                         | 21 ++++++++++++++++++++-
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
 -- 
-Regards,
-
-Laurent Pinchart
+regards,
+Stan
