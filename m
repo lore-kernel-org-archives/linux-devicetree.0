@@ -1,34 +1,32 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Tue, 20 Mar 2018 07:31:31 -0700
-Message-ID: <20180320143131.4eenixtbhciq5fwc@localhost>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 0/8] omapdrm: DSI command mode panel support
+Date: Tue, 20 Mar 2018 07:31:34 -0700
+Message-ID: <20180320143134.GZ5799@atomide.com>
+References: <20180208183035.8461-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <20180208183035.8461-1-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 09:28:47AM +0530, Sricharan R wrote:
-> Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-> Adds missing memory, reserved-memory nodes.
+Tomi,
+
+* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [180208 10:31]:
+> Hi,
 > 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> ---
->  arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 28 +++++++++++++++++++++++++++
+> These are the remaining patches from my previous patchset to get
+> Droid 4 (omap4) display working. The patches have been rebased to
+> current master branch from Torvalds (581e400ff935). Since N950
+> (omap3) is broken even with the workaround I moved it to the end,
+> so that it can be skipped.
 
-Q: Does mainline Linux even boot on the DK?
+Seems like the first three patches of these could be applied
+for v4.17 separate from the rotation and omap3 related issues?
 
-A: No, it doesn't.
+Regards,
 
-Please add the missing basic board support before hacking random stuff
-into the DTS.
-
-Thanks,
-Richard
+Tony
