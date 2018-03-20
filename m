@@ -1,94 +1,108 @@
-Return-Path: <SRS0=dqFC=GN=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V3 4/4] arm64: dts: mt6797: add pwrap support for mt6797
-Date: Fri, 23 Mar 2018 16:32:38 +0800
-Message-ID: <20180323083238.13569-5-argus.lin@mediatek.com>
-In-Reply-To: <20180323083238.13569-1-argus.lin@mediatek.com>
-References: <20180323083238.13569-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=hILt=GK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0067.outbound.protection.outlook.com ([104.47.0.67]:16309
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752649AbeCTKll (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 20 Mar 2018 06:41:41 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH 5/5] usb: typec: tcpm: remove max_snk_*
+Date: Tue, 20 Mar 2018 18:26:10 +0800
+Message-Id: <1521541570-25363-7-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
+References: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_002_1609490474.1798488056"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, linux@roeck-us.net, hdegoede@redhat.com, rmfrfs@gmail.com, yueyao.zhu@gmail.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_002_1609490474.1798488056
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_003_840112792.5185411"
+Since there is no user of max_snk_*, so we can remove them from tcpm.
 
---__=_Part_Boundary_003_840112792.5185411
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/usb/typec/tcpm.c | 12 ------------
+ include/linux/usb/tcpm.h |  9 ---------
+ 2 files changed, 21 deletions(-)
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-bXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCm10NjM1MSBh
-cyBQb3dlciBNYW5hZ2VtZW50IElDLg0KV2UgbmVlZCB0byBhZGQgcHdyYXAgZGV2aWNlIHRvIGNv
-bW11bmljYXRlIHdpdGgNCm10NjM1MSBieSBTUEkuDQpUaGUgYmFzZSBhZGRyZXNzIG9mIHB3cmFw
-IGlzIDB4MTAwMGQwMDAsIGFuZCBJUlENCm51bWJlciBpcyAxNzguIEl0IGFsc28gdXNpbmcgZml4
-ZWQgMjZNaHogY2xvY2sNCmFzIFNQSSBDTEsuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiAm
-bHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-bWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
-ZGlhdGVrL210Njc5Ny5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcu
-ZHRzaQ0KaW5kZXggNGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYgMTAwNjQ0DQotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQpAQCAtMTYxLDYgKzE2MSwyMCBAQA0KIAkJICAg
-ICAgJmx0OzAgMHgxMDIyMDY5MCAwIDB4MTAmZ3Q7Ow0KIAl9Ow0KIA0KKwlwd3JhcDogcHdyYXBA
-MTAwMGQwMDAgew0KKwkJY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZx
-dW90OzsNCisJCXJlZyA9ICZsdDswIDB4MTAwMGQwMDAgMCAweDEwMDAmZ3Q7Ow0KKwkJcmVnLW5h
-bWVzID0gJnF1b3Q7cHdyYXAmcXVvdDs7DQorCQlpbnRlcnJ1cHRzID0gJmx0O0dJQ19TUEkgMTc4
-IElSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0KKwkJY2xvY2tzID0gJmx0OyZhbXA7Y2xrMjZtJmd0
-OywgJmx0OyZhbXA7Y2xrMjZtJmd0OzsNCisJCWNsb2NrLW5hbWVzID0gJnF1b3Q7c3BpJnF1b3Q7
-LCAmcXVvdDt3cmFwJnF1b3Q7Ow0KKw0KKwkJcG1pYzogbXQ2MzUxIHsNCisJCQljb21wYXRpYmxl
-ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVy
-Ow0KKwkJfTsNCisJfTsNCisNCiAJdWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQogCQljb21wYXRp
-YmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXVhcnQmcXVvdDssDQogCQkJICAgICAmcXVvdDtt
-ZWRpYXRlayxtdDY1NzctdWFydCZxdW90OzsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBl
-OnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkg
-Tm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
-IHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJl
-IGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhl
-bXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVk
-IHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFu
-eSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5n
-IG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykg
-YnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5
-IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0
-aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1h
-aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSBy
-ZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0
-aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwg
-YW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90
-aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 20f7ca8..8e3e051 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -258,9 +258,6 @@ struct tcpm_port {
+ 	u32 snk_vdo[VDO_MAX_OBJECTS];
+ 	unsigned int nr_snk_vdo;
+ 
+-	unsigned int max_snk_mv;
+-	unsigned int max_snk_ma;
+-	unsigned int max_snk_mw;
+ 	unsigned int operating_snk_mw;
+ 
+ 	/* Requested current / voltage */
+@@ -3582,9 +3579,6 @@ EXPORT_SYMBOL_GPL(tcpm_update_source_capabilities);
+ 
+ int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 				  unsigned int nr_pdo,
+-				  unsigned int max_snk_mv,
+-				  unsigned int max_snk_ma,
+-				  unsigned int max_snk_mw,
+ 				  unsigned int operating_snk_mw)
+ {
+ 	if (tcpm_validate_caps(port, pdo, nr_pdo))
+@@ -3592,9 +3586,6 @@ int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 
+ 	mutex_lock(&port->lock);
+ 	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, pdo, nr_pdo);
+-	port->max_snk_mv = max_snk_mv;
+-	port->max_snk_ma = max_snk_ma;
+-	port->max_snk_mw = max_snk_mw;
+ 	port->operating_snk_mw = operating_snk_mw;
+ 
+ 	switch (port->state) {
+@@ -3682,9 +3673,6 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
+ 					  tcpc->config->nr_snk_vdo);
+ 
+-	port->max_snk_mv = tcpc->config->max_snk_mv;
+-	port->max_snk_ma = tcpc->config->max_snk_ma;
+-	port->max_snk_mw = tcpc->config->max_snk_mw;
+ 	port->operating_snk_mw = tcpc->config->operating_snk_mw;
+ 	if (!tcpc->config->try_role_hw)
+ 		port->try_role = tcpc->config->default_role;
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index ca1c0b5..2649c97 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -62,9 +62,6 @@ enum tcpm_transmit_type {
+  * @snk_pdo:	PDO parameters sent to partner as response to
+  *		PD_CTRL_GET_SINK_CAP message
+  * @nr_snk_pdo:	Number of entries in @snk_pdo
+- * @max_snk_mv:	Maximum acceptable sink voltage in mV
+- * @max_snk_ma:	Maximum sink current in mA
+- * @max_snk_mw:	Maximum required sink power in mW
+  * @operating_snk_mw:
+  *		Required operating sink power in mW
+  * @type:	Port type (TYPEC_PORT_DFP, TYPEC_PORT_UFP, or
+@@ -85,9 +82,6 @@ struct tcpc_config {
+ 	const u32 *snk_vdo;
+ 	unsigned int nr_snk_vdo;
+ 
+-	unsigned int max_snk_mv;
+-	unsigned int max_snk_ma;
+-	unsigned int max_snk_mw;
+ 	unsigned int operating_snk_mw;
+ 
+ 	enum typec_port_type type;
+@@ -187,9 +181,6 @@ int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 				    unsigned int nr_pdo);
+ int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 				  unsigned int nr_pdo,
+-				  unsigned int max_snk_mv,
+-				  unsigned int max_snk_ma,
+-				  unsigned int max_snk_mw,
+ 				  unsigned int operating_snk_mw);
+ 
+ void tcpm_vbus_change(struct tcpm_port *port);
+-- 
+2.7.4
 
---__=_Part_Boundary_003_840112792.5185411
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDY3OTcgaXMgYSBo
-aWdobHkgaW50ZWdyYXRlZCBTb0NzLCBhbmQgaXQgdXNlcw0KbXQ2MzUxIGFzIFBvd2VyIE1hbmFn
-ZW1lbnQgSUMuDQpXZSBuZWVkIHRvIGFkZCBwd3JhcCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0
-aA0KbXQ2MzUxIGJ5IFNQSS4NClRoZSBiYXNlIGFkZHJlc3Mgb2YgcHdyYXAgaXMgMHgxMDAwZDAw
-MCwgYW5kIElSUQ0KbnVtYmVyIGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9j
-aw0KYXMgU1BJIENMSy4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVk
-aWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRz
-aSB8IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykN
-Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQppbmRleCA0YmVhYTcx
-MTA3ZDcuLjQ4NTU0NmVmYzliZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ2Nzk3LmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
-Nzk3LmR0c2kNCkBAIC0xNjEsNiArMTYxLDIwIEBADQogCQkgICAgICA8MCAweDEwMjIwNjkwIDAg
-MHgxMD47DQogCX07DQogDQorCXB3cmFwOiBwd3JhcEAxMDAwZDAwMCB7DQorCQljb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10Njc5Ny1wd3JhcCI7DQorCQlyZWcgPSA8MCAweDEwMDBkMDAwIDAgMHgx
-MDAwPjsNCisJCXJlZy1uYW1lcyA9ICJwd3JhcCI7DQorCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MTc4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmNsazI2
-bT47DQorCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQorDQorCQlwbWljOiBtdDYzNTEg
-ew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCisJCQlpbnRlcnJ1cHQtY29u
-dHJvbGxlcjsNCisJCX07DQorCX07DQorDQogCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KIAkJ
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctdWFydCIsDQogCQkJICAgICAibWVkaWF0ZWss
-bXQ2NTc3LXVhcnQiOw0KLS0gDQoyLjEyLjUNCg==
-
---__=_Part_Boundary_003_840112792.5185411--
-
---__=_Part_Boundary_002_1609490474.1798488056--
