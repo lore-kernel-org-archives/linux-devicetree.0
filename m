@@ -1,39 +1,37 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v6 16/20] clk: add support for clocks provided by SCMI
-Date: Tue, 20 Mar 2018 09:22:12 -0700
-Message-ID: <152156293212.254778.7714453841547508122@swboyd.mtv.corp.google.com>
-References: <1519403030-21189-1-git-send-email-sudeep.holla@arm.com>
- <1519403030-21189-17-git-send-email-sudeep.holla@arm.com>
- <152124137391.242365.17144416413429914606@swboyd.mtv.corp.google.com>
- <6b5a56f7-ff0d-dde2-097b-bf245971e8a6@arm.com>
+Subject: Re: [PATCH v8 18/42] clk: davinci: New driver for TI DA8XX CFGCHIP clocks
+Date: Tue, 20 Mar 2018 09:54:15 -0700
+Message-ID: <152156485535.183971.1627687499726447092@swboyd.mtv.corp.google.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <1521168778-27236-19-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6b5a56f7-ff0d-dde2-097b-bf245971e8a6@arm.com>
+In-Reply-To: <1521168778-27236-19-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ALKML <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Alexey Klimov <klimov.linux@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-clk@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sudeep Holla (2018-03-20 05:08:51)
-> 
-> >> +}
-> >> +
-> >> +static void scmi_clocks_remove(struct scmi_device *sdev)
-> >> +{
-> >> +       struct device *dev = &sdev->dev;
-> >> +       struct device_node *np = dev->of_node;
-> >> +
-> >> +       of_clk_del_provider(np);
-> >> +}
-> >> +
-> > 
-> > Drop?
-> > 
-> 
-> Sure, I will have to do these changes as add-on patch as this original
-> patch is already queued in ARM SoC tree for v4.17
-> 
+Quoting David Lechner (2018-03-15 19:52:34)
+> +
+> +typedef int (*da8xx_cfgchip_init)(struct device *dev, void __iomem *base);
 
-Ok!
+Should be struct regmap *regmap?
+
+I've squashed this in.
+
+diff --git a/drivers/clk/davinci/da8xx-cfgchip.c b/drivers/clk/davinci/da8xx-cfgchip.c
+index 858d3786b27b..c971111d2601 100644
+--- a/drivers/clk/davinci/da8xx-cfgchip.c
++++ b/drivers/clk/davinci/da8xx-cfgchip.c
+@@ -736,7 +736,7 @@ static const struct platform_device_id da8xx_cfgchip_id_table[] = {
+ 	{ }
+ };
+ 
+-typedef int (*da8xx_cfgchip_init)(struct device *dev, void __iomem *base);
++typedef int (*da8xx_cfgchip_init)(struct device *dev, struct regmap *regmap);
+ 
+ static int da8xx_cfgchip_probe(struct platform_device *pdev)
+ {
