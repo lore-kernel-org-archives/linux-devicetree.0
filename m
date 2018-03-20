@@ -1,92 +1,22 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file
- for SDM845
-Date: Tue, 20 Mar 2018 11:17:11 -0400
-Message-ID: <20180320151711.GP223881@art_vandelay>
-References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
- <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
- <20180319135931.GJ223881@art_vandelay>
- <a4863676581e8a25f13233a65a387ae4@codeaurora.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: i.MX6: Add BTicino i.MX6DL Mamoj initial support
+Date: Tue, 20 Mar 2018 12:35:27 -0300
+Message-ID: <CAOMZO5CKz+tuEmj2DnPgJ_ti6hC-CD=_L-U+59PtJDHNk-EE8Q@mail.gmail.com>
+References: <20180319194114.15349-1-jagan@amarulasolutions.com> <20180319194114.15349-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a4863676581e8a25f13233a65a387ae4-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180319194114.15349-2-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio maggi <fabio.mauri@bticino.it>, linux-kernel <linux-kernel@vger.kernel.org>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Rob Herring <robh+dt@kernel.org>, Andrea CORTESE <andrea.cortese@bticino.it>, Raffaele Recalcati <lamiaposta71@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Simone CIANNI <simone.cianni@bticino.it>, Michael Trimarchi <michael@amarulasolutions.com>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@list>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMjAsIDIwMTggYXQgMDc6MTM6MzhQTSArMDUzMCwgc2tvbGx1a3VAY29kZWF1
-cm9yYS5vcmcgd3JvdGU6Cj4gT24gMjAxOC0wMy0xOSAxOToyOSwgU2VhbiBQYXVsIHdyb3RlOgo+
-ID4gT24gV2VkLCBNYXIgMTQsIDIwMTggYXQgMTE6MjE6MzhBTSArMDUzMCwgU3JhdmFudGhpIEtv
-bGx1a3VkdXJ1IHdyb3RlOgo+ID4gPiBUaGlzIGNoYW5nZSBhZGRzIHRoZSBoYXJkd2FyZSBjYXRh
-bG9nIGluZm9ybWF0aW9uIGluIGRyaXZlciBzb3VyY2UKPiA+ID4gZm9yIFNETTg0NS4gVGhpcyBy
-ZW1vdmVzIHRoZSBjdXJyZW50IGxvZ2ljIG9mIGR0IGJhc2VkIHBhcnNpbmcKPiA+ID4gb2YgdGFy
-Z2V0IGNhdGFsb2cgaW5mb3JtYXRpb24uCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTcmF2
-YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnPgoKPHNuaXAgLz4KCj4g
-PiA+ICt7Cj4gPiA+ICsJLyogTGF5ZXIgY2FwYWJpbGl0eSAqLwo+ID4gPiArCXN0YXRpYyBjb25z
-dCBzdHJ1Y3QgZHB1X3NzcHBfc3ViX2Jsa3MgdmlnX3NibGtfMCA9IHsKPiA+ID4gKwkJLm1heGxp
-bmV3aWR0aCA9IDI1NjAsCj4gPiA+ICsJCS5waXhlbF9yYW1fc2l6ZSA9IDUwICogMTAyNCwKPiA+
-ID4gKwkJLm1heGR3bnNjYWxlID0gNCwKPiA+ID4gKwkJLm1heHVwc2NhbGUgPSAyMCwKPiA+ID4g
-KwkJLm1heGhkZWNpZXhwID0gREVDSU1BVElPTl80MFhfTUFYX0gsCj4gPiA+ICsJCS5tYXh2ZGVj
-aWV4cCA9IERFQ0lNQVRJT05fNDBYX01BWF9WLAo+ID4gPiArCQkuc21hcnRfZG1hX3ByaW9yaXR5
-ID0gNSwKPiA+ID4gKwkJLnNyY19ibGsgPSB7Lm5hbWUgPSAic3NwcF9zcmNfMCIsIC5pZCA9IERQ
-VV9TU1BQX1NSQywKPiA+ID4gKwkJCS5iYXNlID0gMHgwMCwgLmxlbiA9IDB4MTUwLH0sCj4gPiA+
-ICsJCS5zY2FsZXJfYmxrID0gey5uYW1lID0gInNzcHBfc2NhbGVyMCIsCj4gPiA+ICsJCQkuaWQg
-PSBEUFVfU1NQUF9TQ0FMRVJfUVNFRUQzLAo+ID4gPiArCQkJLmJhc2UgPSAweGEwMCwgLmxlbiA9
-IDB4YTAsfSwKPiA+ID4gKwkJLmNzY19ibGsgPSB7Lm5hbWUgPSAic3NwcF9jc2MwIiwgLmlkID0g
-RFBVX1NTUFBfQ1NDXzEwQklULAo+ID4gPiArCQkJLmJhc2UgPSAweDFhMDAsIC5sZW4gPSAweDEw
-MCx9LAo+ID4gPiArCQkuZm9ybWF0X2xpc3QgPSBwbGFuZV9mb3JtYXRzX3l1diwKPiA+ID4gKwkJ
-LnZpcnRfZm9ybWF0X2xpc3QgPSBwbGFuZV9mb3JtYXRzLAo+ID4gPiArCX07Cj4gPiAKPiA+IElu
-c3RlYWQgb2YgbG9jYXRpbmcgYWxsIG9mIHRoZXNlIHBhcmFtZXRlcnMgaW4gb25lIGZpbGUsIHRo
-ZXNlIHNob3VsZCBiZQo+ID4gbG9jYXRlZCBpbiB0aGVpciByZXNwZWN0aXZlIGRyaXZlciBmaWxl
-LiBJdCBhbHNvIHNlZW1zIGxpa2UgeW91IGNvdWxkCj4gPiBzZXBhcmF0ZQo+ID4gb3V0IHRoZSBj
-b21tb24gc3R1ZmYgc3VjaCBhcyBsaW5lIHdpZHRoLCByYW0gc2l6ZSwgc2NhbGluZywgZm9ybWF0
-LCBldGMKPiA+IHBhcmFtZXRlcnMgZnJvbSB0aGUgcGlwZWxpbmUgc2V0dXAuCj4gPiAKPiA+IFRo
-ZSBzYW1lIGNvbW1lbnRzIGFwcGx5IHRvIHRoZSBvdGhlciBibG9ja3MuIE1vdmUgdGhpbmdzIGlu
-dG8gdGhlCj4gPiBkcml2ZXJzLAo+ID4gdXNlIGNvbXBhdGliaWxpdHkgc3RyaW5nIHRvIGRldGVy
-bWluZSB0aGUgdmVyc2lvbiwgYW5kIHRoZW4gYXNzb2NpYXRlCj4gPiB0aGUgY29tbW9uCj4gPiBw
-YXJhbWV0ZXJzIHdpdGggb2ZfZGV2aWNlX2lkLmRhdGEuCj4gPiAKPiA+IFNlYW4KPiA+IAo+ID4g
-PHNuaXAgLz4KPiAKPiBUaGFua3MgU2VhbiBmb3IgdGhlIGZlZWRiYWNrLgo+IFRoZSBpZGVhIGJl
-aGluZCB0aGlzIGFwcHJvYWNoIGlzIHRvIG1haW50YWluIGEgb25lIHBvaW50IGFjY2VzcyBmb3Ig
-YWxsIHRoZQo+IHRhcmdldCBzcGVjaWZpYyBpbmZvcm1hdGlvbiwgYW5hbG9nb3VzIHRvIHRoZSBj
-dXJyZW50IGRwdSBkdHNpIGZpbGUuCj4gVGhpcyBhbHNvIGVuc3VyZXMgZWFzeSBtYWludGVuYW5j
-ZSBmb3IgZGlmZmVyZW50IGhhcmR3YXJlIHZlcnNpb25zLCBhcyBhbGwKPiBpdAo+IHRha2VzIGlz
-IHRvIGFkZCBhbm90aGVyIGZpbGUgaW5zdGVhZCBvZiB1cGRhdGluZyBhY3Jvc3MgaW5kaXZpZHVh
-bCBzdWIgYmxvY2sKPiBmaWxlcy4KCkkgYW0gbm90IGNvbnZpbmNlZCB0aGlzIGlzIHdoYXQgd2Ug
-c2hvdWxkIG9wdGltaXplIGZvci4gVGhpcyBmaWxlIGlzIGJhc2ljYWxseQp1bnJlYWRhYmxlLCBh
-bmQgaXQncyBhYnN0cmFjdGluZyByZWxldmFudCBkZXRhaWxzIGF3YXkgZnJvbSB0aGUgYmxvY2sg
-Y29kZS4gVGhlcmUKYXJlIGFsc28gYSBUT04gb2YgZHVwbGljYXRlZCBwYXJhbWV0ZXJzL3ZhbHVl
-cyB3aGljaCBpcyBlcnJvci1wcm9uZS4gTGFzdGx5LAp0aGlzIGlzIG5vdCB0aGUgdHlwZSBvZiBm
-aWxlIHRoYXQgeW91IHdhbnQgdG8gY29weS9wYXN0ZSBtdWx0aXBsZSB0aW1lcywgaXQgd291bGQK
-YmUgbXVjaCBiZXR0ZXIgdG8gc2ltcGx5IGFkZCB0aGUgbmV3IHN0cnVjdHMgdG8gdGhlIGJsb2Nr
-IGRyaXZlcnMgd2hlcmUgYXBwbGljYWJsZS4KCj4gCj4gQWxzbywgaSdtIG5vdCBxdWl0ZSBjbGVh
-ciBvbiBob3cgY29tcGF0aWJpbGl0eSBzdHJpbmdzIGlzIGFwcGxpY2FibGUgdG8gc3ViCj4gYmxv
-Y2tzLgoKQ29uc2lkZXIgdGhlIGZvbGxvd2luZyBleGFtcGxlIGZyb20gcm9ja2NoaXA6Cmh0dHBz
-Oi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9zZWFucGF1bC9kcHUtc3RhZ2luZy9ibG9iL2Zvci1u
-ZXh0L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMjTDUzOAoKRWFj
-aCB0aW1lIHRoZSB2b3AgaXMgY2hhbmdlZCwgaXQgZ2V0cyBhIG5ldyBjb21wYXRpYmxlIHN0cmlu
-ZyBpbiB0aGUgZHQgYmluZGluZ3MuClRoaXMgY29tcGF0aWJsZSBzdHJpbmcgaXMgdGllZCB0byBh
-IHBhcmFtZXRlcnMgdGhhdCBkZXNjcmliZSB0aGUgZmVhdHVyZXMgb2YKdGhhdCB2ZXJzaW9uIG9m
-IHZvcC4gVGhpcyBkYXRhIGlzIHRpZWQgdG8gdGhlIGRyaXZlciBkYXRhIGR1cmluZyBwcm9iZSBh
-bmQgdXNlZAp3aGUgbmVlZGVkIHRocm91Z2hvdXQgdGhlIGRyaXZlci4KClNvIGFsbCBvZiB5b3Vy
-IGNhdGFsb2cgZGF0YSBzaG91bGQgYmUgYnJva2VuIHVwIGludG8gc3RydWN0cyBzcGVjaWZpYyB0
-byB0aGUKdmFyaW91cyBzdWItYmxvY2tzIG9mIHRoZSBkcHUgZHJpdmVyIGFuZCBhc3NvY2lhdGVk
-IHdpdGggY29tcGF0aWJsZSBzdHJpbmdzLgpXaGVuIGEgbmV3IGNoaXAgY29tZXMgb3V0IHdpdGgg
-ZGlmZmVyZW50IHBhcmFtZXRlcnMsIGEgbmV3IHN0cnVjdCBzaG91bGQgYmUKZGVmaW5lZCBhbG9u
-ZyB3aXRoIGEgbmV3IGNvbXBhdGlibGUgc3RyaW5nLgoKTWFrZSBzZW5zZT8KClNlYW4KCj4gUGxl
-YXNlIGNsYXJpZnkuCj4gCj4gVGhhbmtzLAo+IFNyYXZhbnRoaQoKLS0gClNlYW4gUGF1bCwgU29m
-dHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Mon, Mar 19, 2018 at 4:41 PM, Jagan Teki <jagan@amarulasolutions.com> wrote:
+> This patch adds initial support for BTicino i.MX6DL Mamoj board.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
+> Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
