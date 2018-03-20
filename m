@@ -1,89 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Tue, 20 Mar 2018 14:43:33 +0200
-Message-ID: <4060923.7DxT9ae38L@avalon>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH 10/10] dt-bindings: thermal: Remove
+ "cooling-{min|max}-level" properties
+Date: Tue, 20 Mar 2018 20:49:50 +0800
+Message-ID: <1521550190.2781.3.camel@intel.com>
+References: <cover.1518166039.git.viresh.kumar@linaro.org>
+         <0ec53640f1a09e6e0d7aa1a21d1a3266c3c209c7.1518166039.git.viresh.kumar@linaro.org>
+         <20180312043815.GW6842@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180312043815.GW6842@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Eduardo Valentin <edubezval@gmail.com>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKKENDJ2luZyBSb2IpCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZy
-aWRheSwgMTYgTWFyY2ggMjAxOCAxNzoxNjozNyBFRVQgSmFjb3BvIE1vbmRpIHdyb3RlOgo+IERv
-Y3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGlu
-Z3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9u
-ZGkub3JnPgo+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29t
-Pgo+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5l
-c2FzQHJhZ25hdGVjaC5zZT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Ro
-aW5lLHRoYzYzbHZkMTAyNC50eHQgfCA2NiArKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA2NiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEw
-MjQudHh0Cj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
-dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi44MjI1YzZhCj4gLS0t
-IC9kZXYvbnVsbAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBAQCAtMCwwICsxLDY2IEBACj4g
-K1RoaW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFRIQzYzTFZEMTAy
-NCBpcyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVyIGRlc2lnbmVkIHRvIGNvbnZlcnQgTFZEUwo+
-IHN0cmVhbXMKPiArdG8gcGFyYWxsZWwgZGF0YSBvdXRwdXRzLiBUaGUgY2hpcCBzdXBwb3J0cyBz
-aW5nbGUvZHVhbCBpbnB1dC9vdXRwdXQgbW9kZXMsCj4gK2hhbmRsaW5nIHVwIHRvIHR3byB0d28g
-aW5wdXQgTFZEUyBzdHJlYW0gYW5kIHVwIHRvIHR3byBkaWdpdGFsIENNT1MvVFRMCj4gb3V0cHV0
-cy4KPiArCj4gK1NpbmdsZSBvciBkdWFsIG9wZXJhdGlvbiBtb2Rlcywgb3V0cHV0IGRhdGEgbWFw
-cGluZyBhbmQgRERSIG91dHB1dCBtb2Rlcwo+IGFyZQo+ICtjb25maWd1cmVkIHRocm91Z2ggaW5w
-dXQgc2lnbmFscyBhbmQgdGhlIGNoaXAgZG9lcyBub3QgZXhwb3NlIGFueSBjb250cm9sCj4gYnVz
-Lgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBTaGFsbCBiZSAi
-dGhpbmUsdGhjNjNsdmQxMDI0Igo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSB2Y2Mt
-c3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIFRUTCBvdXRwdXQgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5
-Cj4gKy0gY3ZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgVFRMIENMT0NLT1VUIHNpZ25hbAo+
-ICstIGx2Y2Mtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIExWRFMgaW5wdXRzCj4gKy0gcHZjYy1z
-dXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgUExMIGNpcmN1aXRyeQoKQXMgZXhwbGFpbmVkIGluIGEg
-Y29tbWVudCB0byBvbmUgb2YgdGhlIHByZXZpb3VzIHZlcnNpb25zIG9mIHRoaXMgc2VyaWVzLCBJ
-J20gCnRlbXB0ZWQgdG8gbWFrZSB2Y2Mtc3VwcGx5IG1hbmRhdG9yeSBhbmQgZHJvcCB0aGUgdGhy
-ZWUgb3RoZXIgcG93ZXIgc3VwcGxpZXMgCmZvciBub3csIGFzIEkgYmVsaWV2ZSB0aGVyZSdzIHZl
-cnkgbGl0dGxlIGNoYW5jZSB0aGV5IHdpbGwgYmUgY29ubmVjdGVkIHRvIApzZXBhcmF0ZWx5IGNv
-bnRyb2xsYWJsZSByZWd1bGF0b3JzIChhbGwgc3VwcGxpZXMgdXNlIHRoZSBzYW1lIHZvbHRhZ2Up
-LiBJbiB0aGUgCnZlcnkgdW5saWtlbHkgZXZlbnQgdGhhdCB0aGlzIG9jY3VycyBpbiBkZXNpZ24g
-d2UgbmVlZCB0byBzdXBwb3J0IGluIHRoZSAKZnV0dXJlLCB0aGUgY3ZjYywgbHZjYyBhbmQgcHZj
-YyBzdXBwbGllcyBjYW4gYmUgYWRkZWQgbGF0ZXIgYXMgb3B0aW9uYWwgCndpdGhvdXQgYnJlYWtp
-bmcgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4KCkFwYXJ0IGZyb20gdGhhdCwKClJldmlld2VkLWJ5
-OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cgo+
-ICstIHBkd24tZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwuIEFjdGl2ZSBsb3cKPiArLSBv
-ZS1ncGlvczogT3V0cHV0IGVuYWJsZSBHUElPIHNpZ25hbC4gQWN0aXZlIGhpZ2gKPiArCj4gK1Ro
-ZSBUSEM2M0xWRDEwMjQgdmlkZW8gcG9ydCBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCBhY2NvcmRp
-bmcKPiArdG8gT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGJ5Cj4gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ICsKPiArUmVxdWlyZWQgdmlkZW8gcG9ydCBu
-b2RlczoKPiArLSBQb3J0QDA6IEZpcnN0IExWRFMgaW5wdXQgcG9ydAo+ICstIFBvcnRAMjogRmly
-c3QgZGlnaXRhbCBDTU9TL1RUTCBwYXJhbGxlbCBvdXRwdXQKPiArCj4gK09wdGlvbmFsIHZpZGVv
-IHBvcnQgbm9kZXM6Cj4gKy0gUG9ydEAxOiBTZWNvbmQgTFZEUyBpbnB1dCBwb3J0Cj4gKy0gUG9y
-dEAzOiBTZWNvbmQgZGlnaXRhbCBDTU9TL1RUTCBwYXJhbGxlbCBvdXRwdXQKPiArCj4gK0V4YW1w
-bGU6Cj4gKy0tLS0tLS0tCj4gKwo+ICsJdGhjNjNsdmQxMDI0OiBsdmRzLWRlY29kZXIgewo+ICsJ
-CWNvbXBhdGlibGUgPSAidGhpbmUsdGhjNjNsdmQxMDI0IjsKPiArCj4gKwkJdmNjLXN1cHBseSA9
-IDwmcmVnX2x2ZHNfdmNjPjsKPiArCQlsdmNjLXN1cHBseSA9IDwmcmVnX2x2ZHNfbHZjYz47Cj4g
-Kwo+ICsJCXBkd24tZ3BpbyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsKPiArCj4gKwkJ
-cG9ydHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8
-MD47Cj4gKwo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJCWx2ZHNf
-ZGVjX2luXzA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0
-PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0QDJ7Cj4gKwkJCQlyZWcgPSA8Mj47
-Cj4gKwo+ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JmFkdjc1MTFfaW4+Owo+ICsJCQkJfTsKPiArCj4gKwkJCX07Cj4gKwo+ICsJCX07
-Cj4gKwl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 一, 2018-03-12 at 10:08 +0530, Viresh Kumar wrote:
+> On 09-02-18, 14:28, Viresh Kumar wrote:
+> > 
+> > The "cooling-min-level" and "cooling-max-level" properties are not
+> > parsed by any part of kernel currently and the max cooling state of
+> > a
+> > CPU cooling device is found by referring to the cpufreq table
+> > instead.
+> > 
+> > Remove the unused bindings.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/thermal/thermal.txt | 16 +----
+> > -----------
+> >  1 file changed, 1 insertion(+), 15 deletions(-)
+> @Zhang/Eduardo: Can you please pick this patch (10/10) as almost
+> everything else
+> is already lined up for 4.17 ?
+
+I think Eduardo should have reviewed all the DT thermal patches in the
+list, but I didn't see his response about this one.
+
+Eduardo,
+did you miss this one?
+
+thanks,
+rui
+> 
