@@ -1,201 +1,119 @@
-From: tali.perry1@gmail.com
-Subject: [PATCH v11 1/2] dt-binding: clk: npcm750: Add binding for Nuvoton NPCM7XX Clock
-Date: Tue, 20 Mar 2018 15:40:48 +0200
-Message-ID: <1521553249-6971-2-git-send-email-tali.perry1@gmail.com>
-References: <1521553249-6971-1-git-send-email-tali.perry1@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521553249-6971-1-git-send-email-tali.perry1@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
+From: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file
+ for SDM845
+Date: Tue, 20 Mar 2018 19:13:38 +0530
+Message-ID: <a4863676581e8a25f13233a65a387ae4@codeaurora.org>
+References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+ <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
+ <20180319135931.GJ223881@art_vandelay>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180319135931.GJ223881@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tali Perry <tali.perry1@gmail.com>
-
-* Nuvoton NPCM7XX Clock Controller
-
-Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-generates and supplies clocks to all modules within the BMC.
-
----
-
-10 ==> 11
-update documentation. "eth" replaced with "ethernet" in use case eaxample.
-
-2 ==> 10
-update documentation. add external clocks as inputs to clk driver.
-fix SPDX comment.
-
-1 ==> 2
-This patch includes fix request described here:
-https://patchwork.kernel.org/patch/10200033/
-(move fixed clocks to DT)
-
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-
- .../bindings/clock/nuvoton,npcm750-clk.txt         | 100 +++++++++++++++++++++
- include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  44 +++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
- create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-
-diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-new file mode 100644
-index 000000000000..f82064546d11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-@@ -0,0 +1,100 @@
-+* Nuvoton NPCM7XX Clock Controller
-+
-+Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-+generates and supplies clocks to all modules within the BMC.
-+
-+External clocks:
-+
-+There are six fixed clocks that are generated outside the BMC. All clocks are of
-+a known fixed value that cannot be changed. clk_refclk, clk_mcbypck and
-+clk_sysbypck are inputs to the clock controller.
-+clk_rg1refck, clk_rg2refck and clk_xin are external clocks suppling the
-+network. They are set on the device tree, but not used by the clock module. The
-+network devices use them directly.
-+Example can be found below.
-+
-+All available clocks are defined as preprocessor macros in:
-+dt-bindings/clock/nuvoton,npcm7xx-clock.h
-+and can be reused as DT sources.
-+
-+Required Properties of clock controller:
-+
-+	- compatible: "nuvoton,npcm750-clk" : for clock controller of Nuvoton
-+		  Poleg BMC NPCM750
-+
-+	- reg: physical base address of the clock controller and length of
-+		memory mapped region.
-+
-+	- #clock-cells: should be 1.
-+
-+Example: Clock controller node:
-+
-+	clk: clock-controller@f0801000 {
-+		compatible = "nuvoton,npcm750-clk";
-+		#clock-cells = <1>;
-+		reg = <0xf0801000 0x1000>;
-+		clock-names = "refclk", "sysbypck", "mcbypck";
-+		clocks = <&clk_refclk>, <&clk_sysbypck>, <&clk_mcbypck>;
-+	};
-+
-+Example: Required external clocks for network:
-+
-+	/* external reference clock */
-+	clk_refclk: clk-refclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+		clock-output-names = "refclk";
-+	};
-+
-+	/* external reference clock for cpu. float in normal operation */
-+	clk_sysbypck: clk-sysbypck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <800000000>;
-+		clock-output-names = "sysbypck";
-+	};
-+
-+	/* external reference clock for MC. float in normal operation */
-+	clk_mcbypck: clk-mcbypck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <800000000>;
-+		clock-output-names = "mcbypck";
-+	};
-+
-+	 /* external clock signal rg1refck, supplied by the phy */
-+	clk_rg1refck: clk-rg1refck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clk_rg1refck";
-+	};
-+
-+	 /* external clock signal rg2refck, supplied by the phy */
-+	clk_rg2refck: clk-rg2refck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clk_rg2refck";
-+	};
-+
-+	clk_xin: clk-xin {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
-+		clock-output-names = "clk_xin";
-+	};
-+
-+
-+Example: GMAC controller node that consumes two clocks: a generated clk by the
-+clock controller and a fixed clock from DT (clk_rg1refck).
-+
-+	ethernet0: ethernet@f0802000 {
-+		compatible = "snps,dwmac";
-+		reg = <0xf0802000 0x2000>;
-+		interrupts = <0 14 4>;
-+		interrupt-names = "macirq";
-+		clocks	= <&clk_rg1refck>, <&clk NPCM7XX_CLK_AHB>;
-+		clock-names = "stmmaceth", "clk_gmac";
-+	};
-diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-new file mode 100644
-index 000000000000..f21522605b94
---- /dev/null
-+++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Nuvoton NPCM7xx Clock Generator binding
-+ * clock binding number for all clocks supportted by nuvoton,npcm7xx-clk
-+ *
-+ * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_NPCM7XX_H
-+#define __DT_BINDINGS_CLOCK_NPCM7XX_H
-+
-+
-+#define NPCM7XX_CLK_CPU 0
-+#define NPCM7XX_CLK_GFX_PIXEL 1
-+#define NPCM7XX_CLK_MC 2
-+#define NPCM7XX_CLK_ADC 3
-+#define NPCM7XX_CLK_AHB 4
-+#define NPCM7XX_CLK_TIMER 5
-+#define NPCM7XX_CLK_UART 6
-+#define NPCM7XX_CLK_MMC  7
-+#define NPCM7XX_CLK_SPI3 8
-+#define NPCM7XX_CLK_PCI  9
-+#define NPCM7XX_CLK_AXI 10
-+#define NPCM7XX_CLK_APB4 11
-+#define NPCM7XX_CLK_APB3 12
-+#define NPCM7XX_CLK_APB2 13
-+#define NPCM7XX_CLK_APB1 14
-+#define NPCM7XX_CLK_APB5 15
-+#define NPCM7XX_CLK_CLKOUT 16
-+#define NPCM7XX_CLK_GFX  17
-+#define NPCM7XX_CLK_SU   18
-+#define NPCM7XX_CLK_SU48 19
-+#define NPCM7XX_CLK_SDHC 20
-+#define NPCM7XX_CLK_SPI0 21
-+#define NPCM7XX_CLK_SPIX 22
-+
-+#define NPCM7XX_CLK_REFCLK 23
-+#define NPCM7XX_CLK_SYSBYPCK 24
-+#define NPCM7XX_CLK_MCBYPCK 25
-+
-+#define NPCM7XX_NUM_CLOCKS	 (NPCM7XX_CLK_MCBYPCK+1)
-+
-+#endif
--- 
-2.14.1
+T24gMjAxOC0wMy0xOSAxOToyOSwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFdlZCwgTWFyIDE0LCAy
+MDE4IGF0IDExOjIxOjM4QU0gKzA1MzAsIFNyYXZhbnRoaSBLb2xsdWt1ZHVydSB3cm90ZToKPj4g
+VGhpcyBjaGFuZ2UgYWRkcyB0aGUgaGFyZHdhcmUgY2F0YWxvZyBpbmZvcm1hdGlvbiBpbiBkcml2
+ZXIgc291cmNlCj4+IGZvciBTRE04NDUuIFRoaXMgcmVtb3ZlcyB0aGUgY3VycmVudCBsb2dpYyBv
+ZiBkdCBiYXNlZCBwYXJzaW5nCj4+IG9mIHRhcmdldCBjYXRhbG9nIGluZm9ybWF0aW9uLgo+PiAK
+Pj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVy
+b3JhLm9yZz4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDEgKwo+PiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
+ZHB1X2h3X2NhdGFsb2cuYyAgICAgfCAzMDcxIAo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAg
+ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuaCAgICAgfCAgIDE3
+ICstCj4+ICAuLi4vZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0NS5j
+ICB8ICA3NDQgKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9rbXMu
+YyAgICAgICAgICAgIHwgICAgMiArLQo+PiAgNSBmaWxlcyBjaGFuZ2VkLCA3NjcgaW5zZXJ0aW9u
+cygrKSwgMzA2OCBkZWxldGlvbnMoLSkKPiAKPiBIaSBTcmF2YW50aGksCj4gVGhhbmsgeW91IGZv
+ciB0aGUgcGF0Y2gsIGl0J3MgZ3JlYXQgdG8gc2VlIGRpZmZzdGF0cyBsaWtlIHRoaXMgOikKPiAK
+PiA8c25pcCAvPgo+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X2h3X2NhdGFsb2dfc2RtODQ1LmMgCj4+IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
+L2RwdTEvZHB1X2h3X2NhdGFsb2dfc2RtODQ1LmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4g
+aW5kZXggMDAwMDAwMC4uM2NhNWRjNwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0NS5jCj4+IEBAIC0wLDAg
+KzEsNzQ0IEBACj4+ICsvKiBDb3B5cmlnaHQgKGMpIDIwMTgsIFRoZSBMaW51eCBGb3VuZGF0aW9u
+LiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+PiArICoKPj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVl
+IHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgCj4+IG1vZGlmeQo+PiAr
+ICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2
+ZXJzaW9uIDIgYW5kCj4+ICsgKiBvbmx5IHZlcnNpb24gMiBhcyBwdWJsaXNoZWQgYnkgdGhlIEZy
+ZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPj4gKyAqCj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlz
+dHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPj4gKyAqIGJ1dCBX
+SVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9m
+Cj4+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
+U0UuICBTZWUgdGhlCj4+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBk
+ZXRhaWxzLgo+IAo+IFdlIHNob3VsZCBiZSB1c2luZyBTUERYIGxpY2Vuc2UgdGFncyBmcm9tIG5v
+dyBvbi4KPiAKPj4gKyAqLwo+PiArCj4+ICsjaW5jbHVkZSAiZHB1X2h3X2NhdGFsb2cuaCIKPj4g
+KyNpbmNsdWRlICJkcHVfaHdfY2F0YWxvZ19mb3JtYXQuaCIKPj4gKyNpbmNsdWRlICJkcHVfaHdf
+bWRzcy5oIgo+PiArI2luY2x1ZGUgImRwdV9od2lvLmgiCj4+ICsKPj4gKy8qIFZJRyBsYXllciBj
+YXBhYmlsaXR5ICovCj4+ICsjZGVmaW5lIFZJR180MFhfTUFTSyBcCj4+ICsJKEJJVChEUFVfU1NQ
+UF9TUkMpIHwgQklUKERQVV9TU1BQX1NDQUxFUl9RU0VFRDMpIHwgQklUKERQVV9TU1BQX1FPUykg
+Cj4+IHxcCj4+ICsJQklUKERQVV9TU1BQX0NTQ18xMEJJVCkgfCBCSVQoRFBVX1NTUFBfQ0RQKSB8
+IEJJVChEUFVfU1NQUF9RT1NfOExWTCkgCj4+IHxcCj4+ICsJQklUKERQVV9TU1BQX1RTX1BSRUZJ
+TEwpIHwgQklUKERQVV9TU1BQX0VYQ0xfUkVDVCkpCj4+ICsKPj4gKy8qIERNQSBsYXllciBjYXBh
+YmlsaXR5ICovCj4+ICsjZGVmaW5lIERNQV80MFhfTUFTSyBcCj4+ICsJKEJJVChEUFVfU1NQUF9T
+UkMpIHwgQklUKERQVV9TU1BQX1FPUykgfCBCSVQoRFBVX1NTUFBfUU9TXzhMVkwpIHxcCj4+ICsJ
+QklUKERQVV9TU1BQX1RTX1BSRUZJTEwpIHwgQklUKERQVV9TU1BQX0NEUCkgfCAKPj4gQklUKERQ
+VV9TU1BQX0VYQ0xfUkVDVCkpCj4+ICsKPj4gKyNkZWZpbmUgTUlYRVJfNDBYX01BU0sgXAo+PiAr
+CShCSVQoRFBVX01JWEVSX1NPVVJDRVNQTElUKSB8IEJJVChEUFVfRElNX0xBWUVSKSkKPj4gKwo+
+PiArI2RlZmluZSBEU1BQXzQwWF9NQVNLIFwKPj4gKwkoQklUKERQVV9EU1BQX0lHQykgfCBCSVQo
+RFBVX0RTUFBfUENDKSB8IEJJVChEUFVfRFNQUF9HQykgfFwKPj4gKwlCSVQoRFBVX0RTUFBfSFNJ
+QykgfCBCSVQoRFBVX0RTUFBfR0FNVVQpIHwgQklUKERQVV9EU1BQX0hJU1QpIHxcCj4+ICsJQklU
+KERQVV9EU1BQX01FTUNPTE9SKSB8IEJJVChEUFVfRFNQUF9TSVhaT05FKSB8IEJJVChEUFVfRFNQ
+UF9WTFVUKSkKPj4gKwo+PiArI2RlZmluZSBEU1BQX0FEXzQwWF9NQVNLIFwKPj4gKwkoRFNQUF80
+MFhfTUFTSyB8IEJJVChEUFVfRFNQUF9BRCkpCj4+ICsKPj4gKyNkZWZpbmUgUElOR1BPTkdfNDBY
+X01BU0sgQklUKERQVV9QSU5HUE9OR19ESVRIRVIpCj4+ICsKPj4gKyNkZWZpbmUgUElOR1BPTkdf
+NDBYX1NQTElUX01BU0sgXAo+PiArCShQSU5HUE9OR180MFhfTUFTSyB8IEJJVChEUFVfUElOR1BP
+TkdfU1BMSVQpIHwgCj4+IEJJVChEUFVfUElOR1BPTkdfVEUyKSkKPj4gKwo+PiArI2RlZmluZSBX
+QjJfNDBYX01BU0sgXAo+PiArCShCSVQoRFBVX1dCX0xJTkVfTU9ERSkgfCBCSVQoRFBVX1dCX1RS
+QUZGSUNfU0hBUEVSKSB8IAo+PiBCSVQoRFBVX1dCX0NEUCkgfFwKPj4gKwlCSVQoRFBVX1dCX1lV
+Vl9DT05GSUcpIHwgQklUKERQVV9XQl9RT1NfOExWTCkgfCBCSVQoRFBVX1dCX1VCV0MpKQo+PiAr
+Cj4+ICsjZGVmaW5lIERFQ0lNQVRJT05fNDBYX01BWF9ICTQKPj4gKyNkZWZpbmUgREVDSU1BVElP
+Tl80MFhfTUFYX1YJNAo+PiArCj4+ICsvKgo+PiArICogc2V0X2NmZ194eHhfaW5pdCgpOiBwb3B1
+bGF0ZSBkcHUgc3ViLWJsb2NrcyByZWcgb2Zmc2V0cwo+PiArICogYW5kIGluc3RhbmNlIGNvdW50
+cy4KPj4gKyAqLwo+PiArc3RhdGljIGlubGluZSBpbnQgc2V0X2NmZ180MFhfaW5pdChzdHJ1Y3Qg
+ZHB1X21kc3NfY2ZnICpkcHVfY2ZnKQo+PiArewo+PiArCS8qIExheWVyIGNhcGFiaWxpdHkgKi8K
+Pj4gKwlzdGF0aWMgY29uc3Qgc3RydWN0IGRwdV9zc3BwX3N1Yl9ibGtzIHZpZ19zYmxrXzAgPSB7
+Cj4+ICsJCS5tYXhsaW5ld2lkdGggPSAyNTYwLAo+PiArCQkucGl4ZWxfcmFtX3NpemUgPSA1MCAq
+IDEwMjQsCj4+ICsJCS5tYXhkd25zY2FsZSA9IDQsCj4+ICsJCS5tYXh1cHNjYWxlID0gMjAsCj4+
+ICsJCS5tYXhoZGVjaWV4cCA9IERFQ0lNQVRJT05fNDBYX01BWF9ILAo+PiArCQkubWF4dmRlY2ll
+eHAgPSBERUNJTUFUSU9OXzQwWF9NQVhfViwKPj4gKwkJLnNtYXJ0X2RtYV9wcmlvcml0eSA9IDUs
+Cj4+ICsJCS5zcmNfYmxrID0gey5uYW1lID0gInNzcHBfc3JjXzAiLCAuaWQgPSBEUFVfU1NQUF9T
+UkMsCj4+ICsJCQkuYmFzZSA9IDB4MDAsIC5sZW4gPSAweDE1MCx9LAo+PiArCQkuc2NhbGVyX2Js
+ayA9IHsubmFtZSA9ICJzc3BwX3NjYWxlcjAiLAo+PiArCQkJLmlkID0gRFBVX1NTUFBfU0NBTEVS
+X1FTRUVEMywKPj4gKwkJCS5iYXNlID0gMHhhMDAsIC5sZW4gPSAweGEwLH0sCj4+ICsJCS5jc2Nf
+YmxrID0gey5uYW1lID0gInNzcHBfY3NjMCIsIC5pZCA9IERQVV9TU1BQX0NTQ18xMEJJVCwKPj4g
+KwkJCS5iYXNlID0gMHgxYTAwLCAubGVuID0gMHgxMDAsfSwKPj4gKwkJLmZvcm1hdF9saXN0ID0g
+cGxhbmVfZm9ybWF0c195dXYsCj4+ICsJCS52aXJ0X2Zvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0
+cywKPj4gKwl9Owo+IAo+IEluc3RlYWQgb2YgbG9jYXRpbmcgYWxsIG9mIHRoZXNlIHBhcmFtZXRl
+cnMgaW4gb25lIGZpbGUsIHRoZXNlIHNob3VsZCAKPiBiZQo+IGxvY2F0ZWQgaW4gdGhlaXIgcmVz
+cGVjdGl2ZSBkcml2ZXIgZmlsZS4gSXQgYWxzbyBzZWVtcyBsaWtlIHlvdSBjb3VsZCAKPiBzZXBh
+cmF0ZQo+IG91dCB0aGUgY29tbW9uIHN0dWZmIHN1Y2ggYXMgbGluZSB3aWR0aCwgcmFtIHNpemUs
+IHNjYWxpbmcsIGZvcm1hdCwgZXRjCj4gcGFyYW1ldGVycyBmcm9tIHRoZSBwaXBlbGluZSBzZXR1
+cC4KPiAKPiBUaGUgc2FtZSBjb21tZW50cyBhcHBseSB0byB0aGUgb3RoZXIgYmxvY2tzLiBNb3Zl
+IHRoaW5ncyBpbnRvIHRoZSAKPiBkcml2ZXJzLAo+IHVzZSBjb21wYXRpYmlsaXR5IHN0cmluZyB0
+byBkZXRlcm1pbmUgdGhlIHZlcnNpb24sIGFuZCB0aGVuIGFzc29jaWF0ZSAKPiB0aGUgY29tbW9u
+Cj4gcGFyYW1ldGVycyB3aXRoIG9mX2RldmljZV9pZC5kYXRhLgo+IAo+IFNlYW4KPiAKPiA8c25p
+cCAvPgoKVGhhbmtzIFNlYW4gZm9yIHRoZSBmZWVkYmFjay4KVGhlIGlkZWEgYmVoaW5kIHRoaXMg
+YXBwcm9hY2ggaXMgdG8gbWFpbnRhaW4gYSBvbmUgcG9pbnQgYWNjZXNzIGZvciBhbGwgCnRoZQp0
+YXJnZXQgc3BlY2lmaWMgaW5mb3JtYXRpb24sIGFuYWxvZ291cyB0byB0aGUgY3VycmVudCBkcHUg
+ZHRzaSBmaWxlLgpUaGlzIGFsc28gZW5zdXJlcyBlYXN5IG1haW50ZW5hbmNlIGZvciBkaWZmZXJl
+bnQgaGFyZHdhcmUgdmVyc2lvbnMsIGFzIAphbGwgaXQKdGFrZXMgaXMgdG8gYWRkIGFub3RoZXIg
+ZmlsZSBpbnN0ZWFkIG9mIHVwZGF0aW5nIGFjcm9zcyBpbmRpdmlkdWFsIHN1YiAKYmxvY2sgZmls
+ZXMuCgpBbHNvLCBpJ20gbm90IHF1aXRlIGNsZWFyIG9uIGhvdyBjb21wYXRpYmlsaXR5IHN0cmlu
+Z3MgaXMgYXBwbGljYWJsZSB0byAKc3ViIGJsb2Nrcy4KUGxlYXNlIGNsYXJpZnkuCgpUaGFua3Ms
+ClNyYXZhbnRoaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
