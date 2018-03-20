@@ -1,106 +1,88 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH v3 07/10] clk: qcom: clk-cpu-8996: Prepare PLLs on probe
-Date: Tue, 20 Mar 2018 15:53:08 +0200
-Message-ID: <013c01d3c052$ca49ecd0$5eddc670$@codeaurora.org>
-References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
- <1518616792-29028-8-git-send-email-ilialin@codeaurora.org>
- <152147821849.242365.7709382599118820578@swboyd.mtv.corp.google.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 2/3] drm: bridge: panel: allow override of the bus
+ format
+Date: Tue, 20 Mar 2018 15:56:52 +0200
+Message-ID: <7015227.p44CVkfgjM@avalon>
+References: <20180317221525.18534-1-peda@axentia.se>
+ <20180317221525.18534-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <152147821849.242365.7709382599118820578@swboyd.mtv.corp.google.com>
-Content-Language: en-us
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 'Stephen Boyd' <sboyd@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180317221525.18534-3-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Stephen Boyd <sboyd@kernel.org>
-> Sent: Monday, March 19, 2018 18:50
-> To: Ilia Lin <ilialin@codeaurora.org>; linux-arm-kernel@lists.infradead.org;
-> linux-arm-msm@vger.kernel.org; linux-clk@vger.kernel.org;
-> sboyd@codeaurora.org
-> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
-> rnayak@codeaurora.org; robh@kernel.org; will.deacon@arm.com;
-> amit.kucheria@linaro.org; tfinkel@codeaurora.org; ilialin@codeaurora.org;
-> nicolas.dechesne@linaro.org; celster@codeaurora.org
-> Subject: Re: [PATCH v3 07/10] clk: qcom: clk-cpu-8996: Prepare PLLs on probe
-> 
-> Quoting Ilia Lin (2018-02-14 05:59:49)
-> > The PLLs must be prepared enabled during the probe to be accessible by
-> > the OPPs. Otherwise an OPP may switch to non-enabled clock.
-> 
-> Sounds like an OPP problem.
-
-And again, it could be solved by a platform specific cpufreq driver. Worth it?
-
-> 
-> >
-> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > ---
-> >  drivers/clk/qcom/clk-cpu-8996.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clk/qcom/clk-cpu-8996.c
-> > b/drivers/clk/qcom/clk-cpu-8996.c index 854f327..b0a3b73 100644
-> > --- a/drivers/clk/qcom/clk-cpu-8996.c
-> > +++ b/drivers/clk/qcom/clk-cpu-8996.c
-> > @@ -15,7 +15,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/regmap.h>
-> > -
-> > +#include <linux/clk-provider.h>
-> 
-> Please leave a newline between linux/* and local includes.
-
-Will be changed in the next spin.
-
-> 
-> >  #include "clk-alpha-pll.h"
-> >
-> >  #define VCO(a, b, c) { \
-> > @@ -376,6 +376,18 @@ struct clk_hw_clks {
-> >         clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
-> >         clk_alpha_pll_configure(&pwrcl_alt_pll, regmap,
-> > &altpll_config);
-> >
-> > +       /* Enable all PLLs and alt PLLs */
-> > +       clk_prepare_enable(pwrcl_alt_pll.clkr.hw.clk);
-> > +       clk_prepare_enable(perfcl_alt_pll.clkr.hw.clk);
-> > +       clk_prepare_enable(pwrcl_pll.clkr.hw.clk);
-> > +       clk_prepare_enable(perfcl_pll.clkr.hw.clk);
-> 
-> And this can't be done by the cpufreq-dt driver?
-
-Are you suggesting changing the cpufreq-dt as well?
-
-> 
-> > +
-> > +       /* Set initial boot frequencies for power/perf PLLs */
-> > +       clk_set_rate(pwrcl_alt_pll.clkr.hw.clk, 652800000);
-> > +       clk_set_rate(perfcl_alt_pll.clkr.hw.clk, 652800000);
-> > +       clk_set_rate(pwrcl_pll.clkr.hw.clk, 652800000);
-> > +       clk_set_rate(perfcl_pll.clkr.hw.clk, 652800000);
-> 
-> We have assigned rates in DT for this.
-
-I assumed that the clock driver can live without the OPP table and any cpufreq driver. Or do you mean adding this as parameters for the kryocc DT node?
-
-> 
-> > +
-> >         ret = clk_notifier_register(pwrcl_pmux.clkr.hw.clk, &pwrcl_pmux.nb);
-> >         if (ret)
-> >                 return ret;
+SGkgUGV0ZXIsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFN1bmRheSwgMTggTWFyY2gg
+MjAxOCAwMDoxNToyNCBFRVQgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gVXNlZnVsIGlmIHRoZSBicmlk
+Z2UgZG9lcyBzb21lIGtpbmQgb2YgY29udmVyc2lvbiBvZiB0aGUgYnVzIGZvcm1hdC4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICBkcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMgfCAyMiArKysrKysrKysrKysrKysrKysrKystCj4g
+IGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAgICB8ICAxICsKPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwu
+Ywo+IGluZGV4IDZkOTlkNGEzYmViMy4uY2NlZjAyODNmZjQxIDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+cGFuZWwuYwo+IEBAIC0yMiw2ICsyMiw3IEBAIHN0cnVjdCBwYW5lbF9icmlkZ2Ugewo+ICAJc3Ry
+dWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+ICAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7
+Cj4gIAl1MzIgY29ubmVjdG9yX3R5cGU7Cj4gKwl1MzIgYnVzX2Zvcm1hdDsKPiAgfTsKPiAKPiAg
+c3RhdGljIGlubGluZSBzdHJ1Y3QgcGFuZWxfYnJpZGdlICoKPiBAQCAtNDAsOCArNDEsMTUgQEAg
+c3RhdGljIGludCBwYW5lbF9icmlkZ2VfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QKPiBkcm1f
+Y29ubmVjdG9yICpjb25uZWN0b3IpIHsKPiAgCXN0cnVjdCBwYW5lbF9icmlkZ2UgKnBhbmVsX2Jy
+aWRnZSA9Cj4gIAkJZHJtX2Nvbm5lY3Rvcl90b19wYW5lbF9icmlkZ2UoY29ubmVjdG9yKTsKPiAr
+CWludCByZXQ7Cj4gKwo+ICsJcmV0ID0gZHJtX3BhbmVsX2dldF9tb2RlcyhwYW5lbF9icmlkZ2Ut
+PnBhbmVsKTsKPiArCj4gKwlpZiAocGFuZWxfYnJpZGdlLT5idXNfZm9ybWF0KQo+ICsJCWRybV9k
+aXNwbGF5X2luZm9fc2V0X2J1c19mb3JtYXRzKCZjb25uZWN0b3ItPmRpc3BsYXlfaW5mbywKPiAr
+CQkJCQkJICZwYW5lbF9icmlkZ2UtPmJ1c19mb3JtYXQsIDEpOwoKV2hpbGUgSSBhZ3JlZSB3aXRo
+IHRoZSBwcm9ibGVtIHN0YXRlbWVudCBhbmQsIHRvIHNvbWUgZXh0ZW50LCB0aGUgRFQgYmluZGlu
+Z3MsIApJIGRvbid0IHRoaW5rIHRoaXMgaXMgdGhlIHJpZ2h0IGltcGxlbWVudGF0aW9uLiBZb3Un
+dmUgY29ycmVjdGx5IG5vdGVkIHRoYXQgCmRpc3BsYXkgY29udHJvbGxlciBzaG91bGRuJ3QgYmxp
+bmRseSB1c2UgdGhlIGZvcm1hdHMgcmVwb3J0ZWQgYnkgdGhlIHBhbmVsIAp0aHJvdWdoIHRoZSBj
+b25uZWN0b3IgZm9ybWF0cywgYW5kIHRoYXQgaGFja2luZyB0aGUgcGFuZWwgZHJpdmVyIHRvIG92
+ZXJyaWRlIAp0aGUgZm9ybWF0cyBpc24ndCBhIGdvb2QgaWRlYSwgc28gSSB3b3VsZG4ndCBvdmVy
+cmlkZSB0aGUgZm9ybWF0cyByZXBvcnRlZCBieSAKdGhlIGNvbm5lY3Rvci4gSSB3b3VsZCBpbnN0
+ZWFkIGV4dGVuZCB0aGUgZHJtX2JyaWRnZSBBUEkgdG8gcmVwb3J0IGZvcm1hdHMgYXQgCmJyaWRn
+ZSBpbnB1dHMuIFRoaXMgd291bGQgYmUgbW9yZSBnZW5lcmljIGFuZCBhbGxvdyBlYWNoIGJyaWRn
+ZSB0byBjb25maWd1cmUgCml0c2VsZiBhY2NvcmRpbmcgdG8gdGhlIG5leHQgYnJpZGdlIGluIHRo
+ZSBjaGFpbi4KCkknbSBub3Qgc3VyZSB3aGV0aGVyIHRoaXMgQVBJIGV4dGVuc2lvbiBzaG91bGQg
+YmUgaW4gdGhlIGZvcm0gb2YgYSBuZXcgYnJpZGdlIApmdW5jdGlvbiwgb3IgaWYgdGhlIGZvcm1h
+dHMgc2hvdWxkIGJlIHN0b3JlZCBpbiB0aGUgZHJtX2JyaWRnZSBzdHJ1Y3R1cmUgCmRpcmVjdGx5
+IGFzIGRvbmUgZm9yIGNvbm5lY3RvcnMgaW4gdGhlIGRpc3BsYXkgaW5mbyBzdHJ1Y3R1cmUuIEkn
+bSB0ZW1wdGVkIGJ5IAp0aGUgZm9ybWVyLCBidXQgSSdtIG9wZW4gdG8gZGlzY3Vzc2lvbnMuCgo+
+IC0JcmV0dXJuIGRybV9wYW5lbF9nZXRfbW9kZXMocGFuZWxfYnJpZGdlLT5wYW5lbCk7Cj4gKwly
+ZXR1cm4gcmV0Owo+ICB9Cj4gCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9o
+ZWxwZXJfZnVuY3MKPiBAQCAtMjAzLDYgKzIxMSwxOCBAQCB2b2lkIGRybV9wYW5lbF9icmlkZ2Vf
+cmVtb3ZlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gfQo+ICBFWFBPUlRfU1lNQk9MKGRy
+bV9wYW5lbF9icmlkZ2VfcmVtb3ZlKTsKPiAKPiArdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3NldF9i
+dXNfZm9ybWF0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsIHUzMgo+IGJ1c19mb3JtYXQpICt7
+Cj4gKwlzdHJ1Y3QgcGFuZWxfYnJpZGdlICpwYW5lbF9icmlkZ2U7Cj4gKwo+ICsJaWYgKCFicmlk
+Z2UpCj4gKwkJcmV0dXJuOwo+ICsKPiArCXBhbmVsX2JyaWRnZSA9IGRybV9icmlkZ2VfdG9fcGFu
+ZWxfYnJpZGdlKGJyaWRnZSk7Cj4gKwlwYW5lbF9icmlkZ2UtPmJ1c19mb3JtYXQgPSBidXNfZm9y
+bWF0Owo+ICt9Cj4gK0VYUE9SVF9TWU1CT0woZHJtX3BhbmVsX2JyaWRnZV9zZXRfYnVzX2Zvcm1h
+dCk7Cj4gKwo+ICBzdGF0aWMgdm9pZCBkZXZtX2RybV9wYW5lbF9icmlkZ2VfcmVsZWFzZShzdHJ1
+Y3QgZGV2aWNlICpkZXYsIHZvaWQgKnJlcykKPiAgewo+ICAJc3RydWN0IGRybV9icmlkZ2UgKipi
+cmlkZ2UgPSByZXM7Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCBiL2lu
+Y2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+IGluZGV4IDY4MmQwMWJhOTIwYy4uODE5MDNiOTJmMTg3
+IDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ICsrKyBiL2luY2x1ZGUv
+ZHJtL2RybV9icmlkZ2UuaAo+IEBAIC0yNjgsNiArMjY4LDcgQEAgdm9pZCBkcm1fYnJpZGdlX2Vu
+YWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKTsKPiAgc3RydWN0IGRybV9icmlkZ2UgKmRy
+bV9wYW5lbF9icmlkZ2VfYWRkKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsLAo+ICAJCQkJCXUzMiBj
+b25uZWN0b3JfdHlwZSk7Cj4gIHZvaWQgZHJtX3BhbmVsX2JyaWRnZV9yZW1vdmUoc3RydWN0IGRy
+bV9icmlkZ2UgKmJyaWRnZSk7Cj4gK3ZvaWQgZHJtX3BhbmVsX2JyaWRnZV9zZXRfYnVzX2Zvcm1h
+dChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLCB1MzIKPiBidXNfZm9ybWF0KTsKPiBzdHJ1Y3Qg
+ZHJtX2JyaWRnZSAqZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZChzdHJ1Y3QgZGV2aWNlCj4gKmRl
+diwKPiAgCQkJCQkgICAgIHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsLAo+ICAJCQkJCSAgICAgdTMy
+IGNvbm5lY3Rvcl90eXBlKTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
