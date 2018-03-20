@@ -1,91 +1,50 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v5 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Tue, 20 Mar 2018 16:58:25 +0100
-Message-ID: <FAC61078-6298-47A7-A51C-73D72BEF6E4A@holtmann.org>
-References: <20180320032331.29865-1-thierry.escande@linaro.org>
- <20180320032331.29865-3-thierry.escande@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320032331.29865-3-thierry.escande@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: [PATCH 3/3] dt-bindings: sound: rockchip Fix
+	compatible string in example
+Date: Tue, 20 Mar 2018 13:03:32 -0300
+Message-ID: <20180320160332.13212-4-ezequiel@vanguardiasur.com.ar>
+References: <20180320160332.13212-1-ezequiel@vanguardiasur.com.ar>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180320160332.13212-1-ezequiel@vanguardiasur.com.ar>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org, Ezequiel Garcia <ezequiel@collabora.co.uk>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+From: Ezequiel Garcia <ezequiel@collabora.co.uk>
 
-> Add binding document for serial bluetooth chips using Qualcomm protocol.
-> 
-> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-> ---
-> 
-> v5:
-> - Rename 'bt-disable-n' gpio as 'enable'
-> 
-> v4:
-> - Move bt-disable-n-gpios to required properties section
-> - Add clocks and pinctrl-0 as required properties
-> 
-> v3: no change
-> v2: no change
-> 
-> .../devicetree/bindings/net/qualcomm-bluetooth.txt | 34 ++++++++++++++++++++++
-> 1 file changed, 34 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> new file mode 100644
-> index 000000000000..bbc2973634b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -0,0 +1,34 @@
-> +Qualcomm Bluetooth Chips
-> +---------------------
-> +
-> +This documents the binding structure and common properties for serial
-> +attached Qualcomm devices.
-> +
-> +Serial attached Qualcomm devices shall be a child node of the host UART
-> +device the slave device is attached to.
-> +
-> +Required properties:
-> + - compatible: should contain one of the following:
-> +   * "qcom,qca6174-bt"
-> + - enable-gpios: gpio specifier used to enable chip
-> + - pinctrl-0: pin phandle for bt_en gpio
-> + - clocks: clock phandle for SUSCLK_32KHZ
+Use the correct compatible string in the example devicetree
+snippet, which was probably overlooked.
 
-if I compare this with broadcom-bluetooth.txt or ti-bluetooth.txt then besides compatible, everything else is optional. The nokia-bluetooth.txt has everything required, but that is also a really specific platform.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.co.uk>
+---
+ Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Can we be less restrictive for a QCA general purpose chip?
-
-> +
-> +Example:
-> +
-> +serial@7570000 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&blsp1_uart1_default>;
-> +	pinctrl-1 = <&blsp1_uart1_sleep>;
-> +
-> +	bluetooth {
-> +		compatible = "qcom,qca6174-bt";
-> +
-> +		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_en_pin_a>;
-
-This one I do not understand and you might want to shed some light into why this is done that way.
-
-> +
-> +		clocks = <&divclk4>;
-
-No clock-names?
-
-Regards
-
-Marcel
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
+index 2539e1d68107..e5430d1d34e4 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
+@@ -22,7 +22,7 @@ Optionnal properties:
+ Example:
+ 
+ sound {
+-	compatible = "rockchip,rockchip-audio-es8388";
++	compatible = "rockchip,rk3288-hdmi-analog";
+ 	rockchip,model = "Analog audio output";
+ 	rockchip,i2s-controller = <&i2s>;
+ 	rockchip,audio-codec = <&es8388>;
+-- 
+2.16.2
