@@ -1,42 +1,63 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v2 PATCH 0/2] arm64: dts: Add sdm845 GPU/GMU and
- SMMU
-Date: Tue, 20 Mar 2018 11:44:50 +0800
-Message-ID: <20180320034450.tw4lcw6jv6wktmef@vireshk-mac-ubuntu>
-References: <20180316185152.32020-1-jcrouse@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180316185152.32020-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v3 00/13] ARM: dts: ipq: updates to enable a few peripherals
+Date: Tue, 20 Mar 2018 09:28:43 +0530
+Message-ID: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYtMDMtMTgsIDEyOjUxLCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+IChyZXNlbmQgYmVjYXVz
-ZSBJIGZvcmdvdCB0byBDQyBldmVyeWJvZHkgb24gdGhlIHBhdGNoZXMpCj4gCj4gQWRkIERUIG5v
-ZGVzIGZvciB0aGUgc2RtODQ1IEdQVS9HTVUgKGdyYXBoaWNzIG1hbmFnZW1lbnQgdW5pdCkgYW5k
-IHRoZSBjb21wYW5pb24KPiBhcm0tc21tdS12MiBjb21wYXRpYmxlIFNNTVUuCj4gCj4gVGhpcyBi
-dWlsZHMgb24gdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXMgLQo+IGh0dHBzOi8vcGF0Y2h3b3Jr
-Lmtlcm5lbC5vcmcvcGF0Y2gvMTAyODYzNjkvIC0gYmluZGluZ3MgZm9yIHFjb20sbGV2ZWwKPiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMjgxNTk5LyAtIHFjb20sc21tdS12
-MiBiaW5kaW5ncwo+IAo+IFBsZWFzZSByZWZlciB0byBodHRwczovL3BhdGNod29yay5mcmVlZGVz
-a3RvcC5vcmcvc2VyaWVzLzM3NDI4LyBmb3IgdGhlIGRyaXZlcgo+IGNvZGUuCj4gCj4gW3YyIC0g
-Y2hhbmdlZCBxY29tLGFyYy1sZXZlbCB0byBxY29tLGxldmVsIGZvbGxvd2luZyBkaXNjdXNzaW9u
-IHdpdGggVmlyZXNoOwo+IGNoYW5nZSBnbXUgcGhhbmRsZSB0byBxY29tLGdtdSBwZXIgUm9iXQo+
-IAo+IEpvcmRhbiBDcm91c2UgKDIpOgo+ICAgZHQtYmluZGluZ3M6IERvY3VtZW50IHFjb20sYWRy
-ZW5vLWdtdQo+ICAgYXJtNjQ6IGR0czogc2RtODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5v
-ZGVzCgpBY2tlZC1ieTogVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz4KCi0t
-IAp2aXJlc2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+[v3]
+    * Fixed minor comments from v2,
+      https://www.spinics.net/lists/arm-kernel/msg641480.html
+
+    * Added Abhishek's review tags
+
+[v2]
+    * Addressed all comments from Abhishek
+    * Removed dk01-c2 and dk04-c5 spinand based boards
+      as support for spinand is not complete
+    * Based all patches on top of Andy's for-next branch
+
+[V1]
+    * https://www.spinics.net/lists/arm-kernel/msg631318.html
+
+Sricharan R (13):
+  firmware: qcom: scm: Add ipq4019 soc compatible
+  ARM: dts: ipq4019: Add a few peripheral nodes
+  ARM: dts: ipq4019: Change the max opp frequency
+  ARM: dts: ipq4019: Update ipq4019-dk01.1 board data
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c3 board file
+  ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
+  ARM: dts: ipq8074: Add peripheral nodes
+  ARM: dts: ipq8074: Add pcie nodes
+  ARM: dts: ipq8074: Enable few peripherals for hk01 board
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |   3 +-
+ arch/arm/boot/dts/Makefile                         |   4 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi      |  32 ++-
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts    |  20 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts    |   8 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi      | 135 +++++++++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |  65 +++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts    |  26 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi      |  83 +++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi                | 136 ++++++++++-
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          | 103 ++++++++
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 262 ++++++++++++++++++++-
+ drivers/firmware/qcom_scm.c                        |   3 +
+ 13 files changed, 875 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
