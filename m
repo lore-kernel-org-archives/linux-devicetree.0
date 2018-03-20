@@ -1,24 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v8 16/42] clk: davinci: Add platform information for TI DM646x PSC
-Date: Tue, 20 Mar 2018 10:04:18 -0700
-Message-ID: <152156545843.183971.17801508459755974309@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v8 12/42] clk: davinci: Add platform information for TI DA850 PSC
+Date: Tue, 20 Mar 2018 10:04:06 -0700
+Message-ID: <152156544622.183971.11140203339349698747@swboyd.mtv.corp.google.com>
 References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <1521168778-27236-17-git-send-email-david@lechnology.com>
+ <1521168778-27236-13-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521168778-27236-17-git-send-email-david@lechnology.com>
+In-Reply-To: <1521168778-27236-13-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting David Lechner (2018-03-15 19:52:32)
-> This adds platform-specific declarations for the PSC clocks on TI
-> DM646x based systems.
+Quoting David Lechner (2018-03-15 19:52:28)
+> This adds platform-specific declarations for the PSC clocks on TI DA850/
+> OMAP-L138/AM18XX SoCs.
 > 
 > Signed-off-by: David Lechner <david@lechnology.com>
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 > ---
 
 Applied to clk-next
