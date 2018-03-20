@@ -1,74 +1,44 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] dt-bindings: analogix-dp: Add backlight-pwm-passthru
-Date: Tue, 20 Mar 2018 16:07:50 +0200
-Message-ID: <15529527.TZOXJSfS0B@avalon>
-References: <20180316025659.217423-1-amstan@chromium.org>
- <124034c6-a0af-0142-0d04-7d8bbc19bb82@codeaurora.org>
- <20180318125245.ndnplplmtsy3hmu7@rob-hp-laptop>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
+Date: Tue, 20 Mar 2018 15:10:59 +0100
+Message-ID: <CAMuHMdXCgXnbgKKo_ucxztMUnar=FDgtuUwkYo6SEuGiA2C3jQ@mail.gmail.com>
+References: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180318125245.ndnplplmtsy3hmu7@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Escande <thierry.escande@collabora.com>, Alexandru M Stan <amstan@chromium.org>, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, marcheu@chromium.org, hoegsberg@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiBTdW5kYXksIDE4IE1hcmNoIDIwMTggMTQ6NTI6NDUgRUVUIFJvYiBIZXJyaW5n
-IHdyb3RlOgo+IE9uIEZyaSwgTWFyIDE2LCAyMDE4IGF0IDAyOjU2OjA5UE0gKzA1MzAsIEFyY2hp
-dCBUYW5lamEgd3JvdGU6Cj4gPiBPbiBGcmlkYXkgMTYgTWFyY2ggMjAxOCAwODoyNiBBTSwgQWxl
-eGFuZHJ1IE0gU3RhbiB3cm90ZToKPiA+ID4gRG9jdW1lbnRhdGlvbiBmb3IgdGhlIG9wdGlvbmFs
-IGJhY2tsaWdodC1wd20tcGFzc3RocnUgcHJvcGVydHkuCj4gPiA+IFRlbGxzIHRoZSBFRFAgcGFu
-ZWwgdG8gZm9sb3cgdGhlIGlucHV0IHB3bSBmcmVxdWVuY3kgaW5zdGVhZAo+ID4gCj4gPiBzL2Zv
-bG93L2ZvbGxvdwo+ID4gCj4gPiBJdCB3b3VsZCBiZSBuaWNlIGlmIHdlIGNvdWxkIGFkZCB0aGUg
-ZGV0YWlscyB5b3UgbWVudGlvbmVkIGluCj4gPiBwYXRjaCAjMCBpbiBlaXRoZXIgdGhpcyBvciB0
-aGUgbmV4dCBwYXRjaC4KPiA+IAo+ID4gPiBvZiBnZW5lcmF0aW5nIGl0cyBvd24uCj4gPiAKPiA+
-IFRoaXMgaXMgb25lIG9mIHRob3NlIGJpbmRpbmdzIHdoaWNoIGlzIG1vcmUgYSBrbm9iIHRoYW4g
-YSBIVyBwcm9wZXJ0eSwKPiA+IGJ1dCBJIGNhbid0IHRoaW5rIG9mIGFueSBlYXN5IHdheSB0byBm
-aWd1cmUgdGhpcyBvdXQgaW4gU1cuIFNvLCBJIGd1ZXNzCj4gPiBpdCdzIG9rYXkgdG8gaGF2ZS4K
-PiA+IAo+ID4gT25lIHRoaW5nIEkgd2FzIHdvbmRlcmluZyBhYm91dCB3YXMgd2hldGhlciB0aGlz
-IHByb3Agc2hvdWxkIGJlbG9uZyB0bwo+ID4gdGhlIGVEUCBjb250cm9sbGVyIG9yIHRoZSBlRFAg
-cGFuZWwuIEkgZG9uJ3QgaGF2ZSBhbnkgc3Ryb25nIG9waW5pb24KPiA+IGFib3V0IGl0LCB0aG91
-Z2guCj4gCj4gU2VlbXMgdG8gbWUsIGl0IHNob3VsZCBiZSB0aGUgcGFuZWwuIEl0J3MgYSBzZXR0
-aW5nIGluIHRoZSBwYW5lbCwgcmlnaHQ/CgpBcyB0aGlzIGFpbXMgYXQgZml4aW5nIGFuIGlzc3Vl
-IHdpdGggdGhlIHBhbmVsLCBJIGFncmVlIGl0IHNob3VsZCBiZSBhIHBhbmVsIApwcm9wZXJ0eS4K
-ClN0dXBpZCBxdWVzdGlvbiAoSSdtIG5vdCB0b28gZmFtaWxpYXIgd2l0aCBlRFAgcGFuZWxzKSwg
-Y291bGRuJ3Qgd2Ugc2V0IApFRFBfQkFDS0xJR0hUX0ZSRVFfUFdNX1BJTl9QQVNTVEhSVSB1bmNv
-bmRpdGlvbmFsbHkgPwoKPiBJcyB0aGlzIGdlbmVyaWMgdG8gRFAgcGFuZWxzIG9yIHNvbWV0aGlu
-ZyBzcGVjaWZpYyB0byBhIGNlcnRhaW4gcGFuZWw/Cj4gVGhlIG5hbWluZyAodmVuZG9yIHByZWZp
-eCBvciBub3QpIGFuZCBkb2MgbG9jYXRpb24gc2hvdWxkIG1hdGNoCj4gd2hhdGV2ZXIgdGhlIGFu
-c3dlciB0byB0aGF0IGlzLgo+IAo+ID4gUmV2aWV3ZWQtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hp
-dHRAY29kZWF1cm9yYS5vcmc+Cj4gPiAKPiA+IFRoYW5rcywKPiA+IEFyY2hpdAo+ID4gCj4gPiA+
-IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBNIFN0YW4gPGFtc3RhbkBjaHJvbWl1bS5vcmc+Cj4g
-PiA+IC0tLQo+ID4gPiAKPiA+ID4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvYW5hbG9naXhfZHAudHh0IHwgNAo+ID4gPiAgICsrKysKPiA+ID4gICAx
-IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0Cj4g
-PiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2Fu
-YWxvZ2l4X2RwLnR4dAo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9hbmFsb2dpeF9kcC50eHQKPiA+ID4gaW5kZXggMGM3NDczZGQwZTUxLi4z
-YzE1MjQyZjZjZTMgMTAwNjQ0Cj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hbmFsb2dpeF9kcC50eHQKPiA+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FuYWxvZ2l4X2RwLnR4
-dAo+ID4gPiAKPiA+ID4gQEAgLTIzLDYgKzIzLDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9y
-IGRwLWNvbnRyb2xsZXI6Cj4gPiA+ICAgCQlmcm9tIGdlbmVyYWwgUEhZIGJpbmRpbmc6IFNob3Vs
-ZCBiZSAiZHAiLgo+ID4gPiAgIAo+ID4gPiAgIE9wdGlvbmFsIHByb3BlcnRpZXMgZm9yIGRwLWNv
-bnRyb2xsZXI6Cj4gPiA+ICsJLWJhY2tsaWdodC1wd20tcGFzc3RocnU6Cj4gPiA+ICsJCURpcmVj
-dGx5IHBhc3MgdGhlIFBXTSBmcmVxdWVuY3kgYXBwbGllZCB0byB0aGUgQkxfUFdNX0RJTQo+ID4g
-PiArCQlwaW4gdG8gdGhlIGJhY2tsaWdodCBjdXJyZW50IHNvdXJjZS4gRG9uZSB2aWEKPiA+ID4g
-KwkJRURQX0JBQ0tMSUdIVF9NT0RFX1NFVF9SRUdJU1RFUiBvbiBEUENELgo+ID4gPiAKPiA+ID4g
-ICAJLWZvcmNlLWhwZDoKPiA+ID4gICAJCUluZGljYXRlIGRyaXZlciBuZWVkIGZvcmNlIGhwZCB3
-aGVuIGhwZCBkZXRlY3QgZmFpbGVkLCB0aGlzCj4gPiA+ICAgCQlpcyB1c2VkIGZvciBzb21lIGVE
-UCBzY3JlZW4gd2hpY2ggZG9uJ3QgaGF2ZSBocGQgc2lnbmFsLgoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Tue, Mar 20, 2018 at 7:48 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+>
+> Update the IPMMU DT binding documentation to include the r8a77965 compat
+> string for the IPMMU devices included in the R-Car M3-N SoC.
+>
+> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+
+(as already supplied to Jacopo's submission)
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
