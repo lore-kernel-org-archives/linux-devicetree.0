@@ -1,280 +1,211 @@
-From: Alexey Roslyakov <alexey.roslyakov@gmail.com>
-Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
-Date: Tue, 20 Mar 2018 16:35:48 +0700
-Message-ID: <CALFoz4bug5h=p_FFFf_Xa=yBibkepY7H6spAUg4+zFLhX9tgUA@mail.gmail.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
- <20180319014032.9394-3-alexey.roslyakov@gmail.com> <5AAF838D.2030105@broadcom.com>
- <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
- <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com> <5AB044C0.9060701@broadcom.com>
- <CALFoz4aaEshpmyCxzut1t6cqSOSee4YP6vsi5G4Eei9m8hkZ3A@mail.gmail.com> <5AB0CE6B.2050109@broadcom.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 07/11] mmc: sdhci: Program a relatively accurate SW
+ timeout value
+Date: Tue, 20 Mar 2018 15:18:15 +0530
+Message-ID: <27e92e28-08b4-42b1-e4ef-32fa8ac785dc@ti.com>
+References: <20180307132020.30951-1-kishon@ti.com>
+ <20180307132020.30951-8-kishon@ti.com>
+ <1e87e5f9-13e1-765b-f077-26a55359b2c3@intel.com>
+ <47752066-aeda-87bc-6928-1a9b80f1c45c@ti.com>
+ <49210daa-b593-4b34-abf5-be81580723bc@intel.com>
+ <29f640ac-b155-41c6-cf3f-8c66e1b300f1@ti.com>
+ <1905d25f-d16d-50b1-54b0-35807d801a12@intel.com>
+ <dacb62d3-086d-27a7-85cf-94916ce464b5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5AB0CE6B.2050109@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Kalle Valo <kvalo@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, franky.lin@broadcom.com, hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com, wright.feng@cypress.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dacb62d3-086d-27a7-85cf-94916ce464b5@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Arend,
+Hi Adrian,
 
-Agreed. Let's dismiss these patches.
-Now I'm curious if I can get the information about DMA SG limitations
-from MMC layer, I'll try to figure out something.
-
-BTW, my specific setup (with default alignments) triggers kernel panic
-(I see brcm_* in backtrace). It's better if I create separate email
-chain for the issue.
-
-Thanks,
-  Alex.
-
-On 20 March 2018 at 16:03, Arend van Spriel
-<arend.vanspriel@broadcom.com> wrote:
-> On 3/20/2018 8:58 AM, Alexey Roslyakov wrote:
->>
->> Arend,
->>
->>> Also I am not sure if the broken-sg-support is still needed. We added
->>> that for omap_hsmmc, but that has since changed to scatter-gather emulation
->>> so it might not be needed anymore.
->>
->> I can confirm it doesn't impact wifi performance in case of rk3288+ap6335.
->>
->> But I still have to set settings->bus.sdio.sd_head_align = 4 and
->> settings->bus.sdio.sd_sgentry_align = 512, otherwise
->> brcmf_sdiod_sglist_rw fails:
->>
->>    974.888452] net_ratelimit: 8 callbacks suppressed
->> [  974.888457] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed
->> -84
->> [  974.901527] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes
->> failed: -5
->> [  974.910248] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
->> [  975.018041] brcmfmac: brcmf_sdiod_sglist_rw: CMD53 sg block read failed
->> -84
->> [  975.025833] brcmfmac: brcmf_sdio_rxglom: glom read of 6144 bytes
->> failed: -5
->> [  975.033634] brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame
->> [  975.033924] dwmmc_rockchip ff0d0000.dwmmc: Unexpected command
->> timeout, state 0
->> [  975.049209] brcmfmac: brcmf_sdio_readframes: RXHEADER FAILED: -84
->> [  975.056034] brcmfmac: brcmf_sdio_rxfail: abort command, terminate
->> frame, send NAK
->> [  975.068367] brcmfmac: brcmf_sdio_hdparse: HW header length too long
->> [  975.075379] brcmfmac: brcmf_sdio_rxfail: terminate frame
->
->
-> Hi Alex,
->
-> Thanks for checking. In your case I think you do not need sd_head_align as
-> it will default to either 4 or 8:
->
-> #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-> #define ALIGNMENT  8
-> #else
-> #define ALIGNMENT  4
-> #endif
->
-> I am not saying you should not be needing this. When it comes to DT people
-> are often tempted to accommodate a driver solution especially when such a
-> solution is already in place. However, DT is a hardware description and
-> these do not describe the wifi device. They are applicable to the wifi
-> device because it is a limitation of the host controller and as such should
-> be described in the DT binding of the host controller.
->
-> Regards,
-> Arend
->
->
->> Regards,
->>    Alex
->>
->> On 20 March 2018 at 06:16, Arend van Spriel
->> <arend.vanspriel@broadcom.com> wrote:
+On Monday 19 March 2018 03:49 PM, Kishon Vijay Abraham I wrote:
+> Hi Adrian,
+> 
+> On Monday 19 March 2018 03:30 PM, Adrian Hunter wrote:
+>> On 19/03/18 11:20, Kishon Vijay Abraham I wrote:
+>>> Hi Adrian,
 >>>
->>> + Uffe
->>>
->>> On 3/19/2018 6:55 PM, Florian Fainelli wrote:
->>>>
->>>>
->>>> On 03/19/2018 07:10 AM, Alexey Roslyakov wrote:
+>>> On Friday 16 March 2018 07:51 PM, Adrian Hunter wrote:
+>>>> On 16/03/18 08:29, Kishon Vijay Abraham I wrote:
+>>>>> Hi,
 >>>>>
->>>>>
->>>>> Hi Arend,
->>>>> I appreciate your response. In my opinion, it has nothing to do with
->>>>> SDIO host, because it defines "quirks" in the driver itself.
->>>>
->>>>
->>>>
->>>> It is not clear to me from your patch series whether the problem is
->>>> that:
->>>>
->>>> - the SDIO device has a specific alignment requirements, which would be
->>>> either a SDIO device driver limitation/issue or maybe the underlying
->>>> hardware device/firmware requiring that
->>>>
->>>> - the SDIO host controller used is not capable of coping nicely with
->>>> these said limitations
->>>>
->>>> It seems to me like what you are doing here is a) applicable to possibly
->>>> more SDIO devices and host combinations, and b) should likely be done at
->>>> the layer between the host and device, such that it is available to more
->>>> combinations.
->>>
->>>
->>>
->>> Indeed. That was my thought exactly and I can not imagine Uffe would push
->>> back on that reasoning.
->>>
->>>>> If I get it right, you mean something like this:
->>>>>
->>>>> mmc3: mmc@1c12000 {
->>>>> ...
->>>>>           broken-sg-support;
->>>>>           sd-head-align = 4;
->>>>>           sd-sgentry-align = 512;
->>>>>
->>>>>           brcmf: wifi@1 {
->>>>>                   ...
->>>>>           };
->>>>> };
->>>>>
->>>>> Where dt: bindings documentation for these entries should reside?
->>>>> In generic MMC bindings? Well, this is the very special case and
->>>>> mmc-linux maintainer will unlikely to accept these changes.
->>>>> Also, extra kernel code modification might be required. It could make
->>>>> quite trivial change much more complex.
->>>>
->>>>
->>>>
->>>> If the MMC maintainers are not copied on this patch series, it will
->>>> likely be hard for them to identify this patch series and chime in...
->>>
->>>
->>>
->>> The main question is whether this is indeed a "very special case" as
->>> Alexey
->>> claims it to be or that it is likely to be applicable to other device and
->>> host combinations as you are suggesting.
->>>
->>> If these properties are imposed by the host or host controller it would
->>> make
->>> sense to have these in the mmc bindings.
->>>
->>>>>
->>>>>> Also I am not sure if the broken-sg-support is still needed. We added
->>>>>> that for omap_hsmmc, but that has since changed to scatter-gather
->>>>>> emulation
->>>>>> so it might not be needed anymore.
->>>>>
->>>>>
->>>>>
->>>>> I've experienced the problem with rk3288 (dw-mmc host) and sdio
->>>>> settings like above solved it.
->>>>> Frankly, I haven't investigated any deeper which one of the settings
->>>>> helped in my case yet...
->>>>> I will try to get rid of broken-sg-support first and let you know if
->>>>> it does make any difference.
->>>
->>>
->>>
->>> Are you using some chromebook. I have some lying around here so I could
->>> also
->>> look into it. What broadcom chipset do you have?
->>>
->>> Regards,
->>> Arend
->>>
->>>
->>>>> All the best,
->>>>>     Alex.
->>>>>
->>>>> On 19 March 2018 at 16:31, Arend van Spriel
->>>>> <arend.vanspriel@broadcom.com> wrote:
->>>>>>
->>>>>>
->>>>>> On 3/19/2018 2:40 AM, Alexey Roslyakov wrote:
+>>>>> On Thursday 15 March 2018 06:43 PM, Adrian Hunter wrote:
+>>>>>> On 07/03/18 15:20, Kishon Vijay Abraham I wrote:
+>>>>>>> sdhci has a 10 second timeout to catch devices that stop responding.
+>>>>>>> Instead of programming 10 second arbitrary value, calculate the total time
+>>>>>>> it would take for the entire transfer to happen and program the timeout
+>>>>>>> value accordingly.
 >>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> In case if the host has higher align requirements for SG items, allow
->>>>>>> setting device-specific aligns for scatterlist items.
->>>>>>>
->>>>>>> Signed-off-by: Alexey Roslyakov <alexey.roslyakov@gmail.com>
+>>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 >>>>>>> ---
+>>>>>>>  drivers/mmc/host/sdhci.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
+>>>>>>>  drivers/mmc/host/sdhci.h | 10 ++++++++++
+>>>>>>>  2 files changed, 50 insertions(+), 7 deletions(-)
 >>>>>>>
->>>>>>> Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>>> | 5
->>>>>>> +++++
->>>>>>>     1 file changed, 5 insertions(+)
->>>>>>>
->>>>>>> diff --git
->>>>>>>
->>>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>>>
->>>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>>> index 86602f264dce..187b8c1b52a7 100644
->>>>>>> ---
->>>>>>>
->>>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>>> +++
->>>>>>>
->>>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->>>>>>> @@ -17,6 +17,11 @@ Optional properties:
->>>>>>>           When not specified the device will use in-band SDIO
->>>>>>> interrupts.
->>>>>>>      - interrupt-names : name of the out-of-band interrupt, which
->>>>>>> must
->>>>>>> be
->>>>>>> set
->>>>>>>           to "host-wake".
->>>>>>> + - brcm,broken-sg-support : boolean flag to indicate that the SDIO
->>>>>>> host
->>>>>>> +       controller has higher align requirement than 32 bytes for
->>>>>>> each
->>>>>>> +       scatterlist item.
->>>>>>> + - brcm,sd-head-align : alignment requirement for start of data
->>>>>>> buffer.
->>>>>>> + - brcm,sd-sgentry-align : length alignment requirement for each sg
->>>>>>> entry.
+>>>>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>>>>>> index 1dd117cbeb6e..baab67bfa39b 100644
+>>>>>>> --- a/drivers/mmc/host/sdhci.c
+>>>>>>> +++ b/drivers/mmc/host/sdhci.c
+>>>>>>> @@ -709,6 +709,36 @@ static u32 sdhci_sdma_address(struct sdhci_host *host)
+>>>>>>>  		return sg_dma_address(host->data->sg);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> +static void sdhci_calc_sw_timeout(struct sdhci_host *host,
+>>>>>>> +				  struct mmc_command *cmd,
+>>>>>>> +				  unsigned int target_timeout)
+>>>>>>> +{
+>>>>>>> +	struct mmc_data *data = cmd->data;
+>>>>>>> +	struct mmc_host *mmc = host->mmc;
+>>>>>>> +	u64 transfer_time;
+>>>>>>> +	struct mmc_ios *ios = &mmc->ios;
+>>>>>>> +	unsigned char bus_width = 1 << ios->bus_width;
+>>>>>>> +	unsigned int blksz;
+>>>>>>> +	unsigned int freq;
+>>>>>>> +
+>>>>>>> +	if (data) {
+>>>>>>> +		blksz = data->blksz;
+>>>>>>> +		freq = host->mmc->actual_clock ? : host->clock;
+>>>>>>> +		transfer_time = (u64)blksz * NSEC_PER_SEC * (8 / bus_width);
+>>>>>>> +		do_div(transfer_time, freq);
+>>>>>>> +		/* multiply by '2' to account for any unknowns */
+>>>>>>> +		transfer_time = transfer_time * 2;
+>>>>>>> +		/* calculate timeout for the entire data */
+>>>>>>> +		host->data_timeout = (data->blocks * ((target_timeout *
+>>>>>>> +						       NSEC_PER_USEC) +
+>>>>>>> +						       transfer_time));
 >>>>>>
+>>>>>> (target_timeout * NSEC_PER_USEC) might be 32-bit and therefore overflow
+>>>>>> for timeouts greater than about 4 seconds.
 >>>>>>
+>>>>>>> +	} else {
+>>>>>>> +		host->data_timeout = (u64)target_timeout * NSEC_PER_USEC;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	host->data_timeout += MMC_CMD_TRANSFER_TIME;
 >>>>>>
+>>>>>> Need to allow for target_timeout == 0 so:
 >>>>>>
->>>>>> Hi Alexey,
+>>>>>> 	if (host->data_timeout)
+>>>>>> 		host->data_timeout += MMC_CMD_TRANSFER_TIME;
 >>>>>>
->>>>>> Thanks for the patch. However, the problem with these is that they are
->>>>>> characterizing the host controller and not the wireless device. So
->>>>>> from
->>>>>> device tree perspective , which is to describe the hardware, these
->>>>>> properties should be SDIO host controller properties. Also I am not
->>>>>> sure
->>>>>> if
->>>>>> the broken-sg-support is still needed. We added that for omap_hsmmc,
->>>>>> but
->>>>>> that has since changed to scatter-gather emulation so it might not be
->>>>>> needed
->>>>>> anymore.
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>  static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>>>>>>  {
+>>>>>>>  	u8 count;
+>>>>>>> @@ -766,6 +796,7 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>>>>>>>  		if (count >= 0xF)
+>>>>>>>  			break;
+>>>>>>>  	}
+>>>>>>> +	sdhci_calc_sw_timeout(host, cmd, target_timeout);
 >>>>>>
->>>>>> Regards,
->>>>>> Arend
+>>>>>> If you make the changes I suggest for patch 6, then this would
+>>>>>> move sdhci_calc_sw_timeout() into sdhci_set_timeout().
+>>>>>>
+>>>>>> I suggest you factor out the target_timeout calculation e.g.
+>>>>>>
+>>>>>> static unsigned int sdhci_target_timeout(struct sdhci_host *host,
+>>>>>> 					 struct mmc_command *cmd,
+>>>>>> 					 struct mmc_data *data)
+>>>>>> {
+>>>>>> 	unsigned int target_timeout;
+>>>>>>
+>>>>>> 	/* timeout in us */
+>>>>>> 	if (!data)
+>>>>>> 		target_timeout = cmd->busy_timeout * 1000;
+>>>>>> 	else {
+>>>>>> 		target_timeout = DIV_ROUND_UP(data->timeout_ns, 1000);
+>>>>>> 		if (host->clock && data->timeout_clks) {
+>>>>>> 			unsigned long long val;
+>>>>>>
+>>>>>> 			/*
+>>>>>> 			 * data->timeout_clks is in units of clock cycles.
+>>>>>> 			 * host->clock is in Hz.  target_timeout is in us.
+>>>>>> 			 * Hence, us = 1000000 * cycles / Hz.  Round up.
+>>>>>> 			 */
+>>>>>> 			val = 1000000ULL * data->timeout_clks;
+>>>>>> 			if (do_div(val, host->clock))
+>>>>>> 				target_timeout++;
+>>>>>> 			target_timeout += val;
+>>>>>> 		}
+>>>>>> 	}
+>>>>>>
+>>>>>> 	return target_timeout;
+>>>>>> }
+>>>>>>
+>>>>>> And call it from sdhci_calc_sw_timeout()
+>>>>>>
+>>>>>>>  
+>>>>>>>  	return count;
+>>>>>>>  }
+>>>>>>> @@ -1175,13 +1206,6 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>>>>>>>  		mdelay(1);
+>>>>>>>  	}
+>>>>>>>  
+>>>>>>> -	timeout = jiffies;
+>>>>>>> -	if (!cmd->data && cmd->busy_timeout > 9000)
+>>>>>>> -		timeout += DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
+>>>>>>> -	else
+>>>>>>> -		timeout += 10 * HZ;
+>>>>>>> -	sdhci_mod_timer(host, cmd->mrq, timeout);
+>>>>>>> -
+>>>>>>>  	host->cmd = cmd;
+>>>>>>>  	if (sdhci_data_line_cmd(cmd)) {
+>>>>>>>  		WARN_ON(host->data_cmd);
+>>>>>>> @@ -1221,6 +1245,15 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>>>>>>>  	    cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)
+>>>>>>>  		flags |= SDHCI_CMD_DATA;
+>>>>>>>  
+>>>>>>> +	timeout = jiffies;
+>>>>>>> +	if (host->data_timeout > 0) {
+>>>>>>
+>>>>>> This can be just:
+>>>>>>
+>>>>>> 	if (host->data_timeout) {
+>>>>>>
+>>>>>>> +		timeout += nsecs_to_jiffies(host->data_timeout);
+>>>>>>> +		host->data_timeout = 0;
+>>>>>>
+>>>>>> It would be better to initialize host->data_timeout = 0 at the top of
+>>>>>> sdhci_prepare_data().
+>>>>>>
+>>>>>> Also still need:
+>>>>>>
+>>>>>> 	else if (!cmd->data && cmd->busy_timeout > 9000) {
+>>>>>> 		timeout += DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
 >>>>>
->>>>>
->>>>>
->>>>>
->>>>>
+>>>>> sdhci_calc_sw_timeout should have calculated the timeout for this case too no?
 >>>>
->>>>
+>>>> Yes, but I was thinking you would only calculate when it was needed.
 >>>
+>>> I feel since we would have anyways calculated data_timeout, we should use that
+>>> instead unless you see a problem with that.
 >>
+>> I would prefer not to calculate data_timeout when a hardware timeout is
+>> being used.
 >>
->>
->
+> 
+> That differs from what I had thought. This patch tries to program a relatively
+> accurate SW timeout value (for data_timer) irrespective of whether hardware
+> timeout is used or not. This only tries to change the 10 Sec SW timeout value
+> programmed for all data transfer commands.
 
+IMHO since we calculate the worst case timeout value we should be using that
+for all cases where we are able to calculate the timeout value so that we don't
+give a too high or too low timeout value. Let me know If this sounds okay to you.
 
-
--- 
-With best regards,
-  Alexey Roslyakov
-Email: alexey.roslyakov@gmail.com
+Thanks
+Kishon
