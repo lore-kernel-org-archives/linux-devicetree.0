@@ -1,44 +1,40 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
-Date: Tue, 20 Mar 2018 15:10:59 +0100
-Message-ID: <CAMuHMdXCgXnbgKKo_ucxztMUnar=FDgtuUwkYo6SEuGiA2C3jQ@mail.gmail.com>
-References: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I
+ laptop
+Date: Tue, 20 Mar 2018 15:13:54 +0100
+Message-ID: <20180320141353.zmzq4e5652rsp4ye@flea>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-6-harald@ccbib.org>
+ <20180318202251.5gpv6sblfr4edxmj@flea>
+ <E1exwhF-0000Qw-4g@stardust.g4.wien.funkfeuer.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <E1exwhF-0000Qw-4g@stardust.g4.wien.funkfeuer.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.io>, info@olimex.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 7:48 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->
-> Update the IPMMU DT binding documentation to include the r8a77965 compat
-> string for the IPMMU devices included in the R-Car M3-N SoC.
->
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+On Mon, Mar 19, 2018 at 04:27:36PM +0100, Harald Geyer wrote:
+> > together with all the patches but the
+> > PWM (so I had to drop the backlight node as well).
+> >
+> > Please coordinate with Andre about who should send the PWM support.
+> 
+> Seems the patch got broken because only the backlight node but not the
+> pwm node was removed. Anyway, since Andre has already sent an updated
+> version of his series, maybe just revert the broken patch, merge his
+> series and then apply the original teres-i patch again?
 
-(as already supplied to Jacopo's submission)
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Unfortunately, there's dependencies on the PWM driver itself, and the
+maintainer hasn't replied yet.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Maxime
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
