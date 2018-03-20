@@ -1,82 +1,258 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 3/3] drm: bridge: lvds-encoder: on request,
- override the bus format
-Date: Tue, 20 Mar 2018 16:00:19 +0200
-Message-ID: <11191357.lM4H1k0N3I@avalon>
-References: <20180317221525.18534-1-peda@axentia.se>
- <20180317221525.18534-4-peda@axentia.se>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v3 08/10] clk: qcom: Add ACD path to CPU clock driver for
+ msm8996
+Date: Tue, 20 Mar 2018 16:04:05 +0200
+Message-ID: <014101d3c054$52104460$f630cd20$@codeaurora.org>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-9-git-send-email-ilialin@codeaurora.org>
+ <152147863176.242365.17292287330283256524@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180317221525.18534-4-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152147863176.242365.17292287330283256524@swboyd.mtv.corp.google.com>
+Content-Language: en-us
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Stephen Boyd' <sboyd@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFN1bmRheSwgMTggTWFyY2gg
-MjAxOCAwMDoxNToyNSBFRVQgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gSWYgdGhlIGJyaWRnZSBjaGFu
-Z2VzIHRoZSBidXMgZm9ybWF0LCBhbGxvdyB0aGlzIHRvIGJlIGRlc2NyaWJlZCBpbgo+IHRoZSBi
-cmlkZ2UsIGluc3RlYWQgb2YgcHJvdmlkaW5nIGZhbHNlIGluZm9ybWF0aW9uIGFib3V0IHRoZSBi
-dXMKPiBmb3JtYXQgb2YgdGhlIHBhbmVsIGl0c2VsZi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRl
-ciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQgICAgICAgfCAgOCArKysrKysrKwo+ICBkcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL2x2ZHMtZW5jb2Rlci5jICAgICAgICAgICAgICAgICAgfCAxOCArKysr
-KysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCj4gCj4gZGlm
-ZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQKPiBpbmRleCA5ZDA5MTkw
-ZDkyMTAuLmMwZmJlNzQyNzJlNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQKPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFu
-c21pdHRlci50eHQKPiBAQCAtMjksNiArMjksMTQgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAK
-PiAgCSAgICAgICJ0aSxkczkwYzE4NSIKPiAKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4g
-Ky0gaW50ZXJmYWNlLXBpeC1mbXQ6Cj4gKwkgICAgICBPdmVycmlkZSB0aGUgYnVzIGZvcm1hdCBv
-ZiB0aGUgcGFuZWwsIGluIGNhc2UgdGhlIGJyaWRnZQo+ICsJICAgICAgY29udmVydHMgdGhlIHNp
-Z25hbHMuIFJlY29nbml6ZWQgZm9ybWF0cyBpbmNsdWRlOgo+ICsKPiArCSAgICAgICJyZ2I1NjUi
-CgpQbGVhc2UgZGVzY3JpYmUgdGhlIGZvcm1hdCBpbiBtb3JlIGRldGFpbHMsIHdpdGggYW4gZXhw
-bGljaXQgbWFwcGluZyBvZiBiaXRzIAp0byBzaWduYWxzLCBvdGhlcndpc2Ugd2UnbGwgZW5kIHVw
-IGFnYWluIHdpdGggbXVsdGlwbGUgZGlmZmVyZW50IAppbnRlcnByZXRhdGlvbnMgKGF0IGxlYXN0
-IHdoZW4gaXQgY29tZXMgdG8gZW5kaWFubmVzcykuCgo+ICsKPiAgUmVxdWlyZWQgbm9kZXM6Cj4g
-Cj4gIFRoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFy
-ZSBtb2RlbGVkIHVzaW5nIHRoZSBPRgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL2x2ZHMtZW5jb2Rlci5jCj4gYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtZW5jb2Rl
-ci5jIGluZGV4IDc1YjBkM2Y2ZTRkZS4uYWNmZjNhNWIwNTYyCj4gMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWVuY29kZXIuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvbHZkcy1lbmNvZGVyLmMKPiBAQCAtMzksNiArMzksOSBAQCBzdGF0aWMgaW50IGx2
-ZHNfZW5jb2Rlcl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlCj4gKnBkZXYpIHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqcGFuZWxfbm9kZTsKPiAgCXN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsOwo+ICAJ
-c3RydWN0IGx2ZHNfZW5jb2RlciAqbHZkc19lbmNvZGVyOwo+ICsJdTMyIGJ1c19mb3JtYXQgPSAw
-Owo+ICsJY29uc3QgY2hhciAqZm10Owo+ICsJaW50IHJldDsKPiAKPiAgCWx2ZHNfZW5jb2RlciA9
-IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmx2ZHNfZW5jb2RlciksCj4gIAkJCQkg
-ICAgR0ZQX0tFUk5FTCk7Cj4gQEAgLTc5LDYgKzgyLDIxIEBAIHN0YXRpYyBpbnQgbHZkc19lbmNv
-ZGVyX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UKPiAqcGRldikgaWYgKElTX0VSUihsdmRz
-X2VuY29kZXItPnBhbmVsX2JyaWRnZSkpCj4gIAkJcmV0dXJuIFBUUl9FUlIobHZkc19lbmNvZGVy
-LT5wYW5lbF9icmlkZ2UpOwo+IAo+ICsJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcocGRl
-di0+ZGV2Lm9mX25vZGUsCj4gKwkJCQkgICAgICAiaW50ZXJmYWNlLXBpeC1mbXQiLCAmZm10KTsK
-PiArCWlmICghcmV0KSB7Cj4gKwkJaWYgKCFzdHJjbXAoZm10LCAicmdiNTY1IikpIHsKPiArCQkJ
-YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCNTY1XzFYMTY7CgpJIHRoaW5rIHRoZSBzdHJp
-bmcgdG8gZm91cmNjIGNvbnZlcnNpb24gc2hvdWxkIHRha2UgcGxhY2UgaW4gdGhlIERSTSBjb3Jl
-LCBub3QgCmluIHRoZSBMVkRTIGVuY29kZXIgZHJpdmVyLiBUaGlzIHdvdWxkIGF2b2lkIGVuZGlu
-ZyB1cCB3aXRoIG11bHRpcGxlIAppbmNvbXBhdGlibGUgY29udmVyc2lvbnMuIEl0IG1pZ2h0IGV2
-ZW4gYmUgYmV0dGVyIHRvIG1vdmUgdGhlIERUIHBhcnNpbmcgdG8gCnRoZSBjb3JlIGFzIHdlbGws
-IG5vdCBqdXN0IHRoZSBjb252ZXJzaW9uLgoKPiArCQl9IGVsc2Ugewo+ICsJCQlkZXZfZGJnKCZw
-ZGV2LT5kZXYsCj4gKwkJCQkicmVxdWVzdGVkIGludGVyZmFjZS1waXgtZm10IG5vdCByZWNvZ25p
-emVkXG4iKTsKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsJfQo+ICsJaWYgKGJ1c19m
-b3JtYXQpCj4gKwkJZHJtX3BhbmVsX2JyaWRnZV9zZXRfYnVzX2Zvcm1hdChsdmRzX2VuY29kZXIt
-PnBhbmVsX2JyaWRnZSwKPiArCQkJCQkJYnVzX2Zvcm1hdCk7Cj4gKwo+ICAJLyogVGhlIHBhbmVs
-X2JyaWRnZSBicmlkZ2UgaXMgYXR0YWNoZWQgdG8gdGhlIHBhbmVsJ3Mgb2Zfbm9kZSwKPiAgCSAq
-IGJ1dCB3ZSBuZWVkIGEgYnJpZGdlIGF0dGFjaGVkIHRvIG91ciBvZl9ub2RlIGZvciBvdXIgdXNl
-cgo+ICAJICogdG8gbG9vayB1cC4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+> -----Original Message-----
+> From: Stephen Boyd <sboyd@kernel.org>
+> Sent: Monday, March 19, 2018 18:57
+> To: Ilia Lin <ilialin@codeaurora.org>; linux-arm-kernel@lists.infradead.org;
+> linux-arm-msm@vger.kernel.org; linux-clk@vger.kernel.org;
+> sboyd@codeaurora.org
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> rnayak@codeaurora.org; robh@kernel.org; will.deacon@arm.com;
+> amit.kucheria@linaro.org; tfinkel@codeaurora.org; ilialin@codeaurora.org;
+> nicolas.dechesne@linaro.org; celster@codeaurora.org
+> Subject: Re: [PATCH v3 08/10] clk: qcom: Add ACD path to CPU clock driver
+> for msm8996
+> 
+> Quoting Ilia Lin (2018-02-14 05:59:50)
+> > diff --git a/drivers/clk/qcom/clk-cpu-8996.c
+> > b/drivers/clk/qcom/clk-cpu-8996.c index b0a3b73..1552791 100644
+> > --- a/drivers/clk/qcom/clk-cpu-8996.c
+> > +++ b/drivers/clk/qcom/clk-cpu-8996.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/regmap.h>
+> >  #include <linux/clk-provider.h>
+> >  #include "clk-alpha-pll.h"
+> > +#include <soc/qcom/kryo-l2-accessors.h>
+> 
+> Put this above local includes please.
+
+Will be changed in the next spin.
+
+> 
+> >
+> >  #define VCO(a, b, c) { \
+> >         .val = a,\
+> > @@ -29,6 +30,27 @@
+> >  #define ACD_INDEX              2
+> >  #define ALT_INDEX              3
+> >  #define DIV_2_THRESHOLD                600000000
+> > +#define PWRCL_REG_OFFSET 0x0
+> > +#define PERFCL_REG_OFFSET 0x80000
+> > +#define MUX_OFFSET     0x40
+> > +#define ALT_PLL_OFFSET 0x100
+> > +#define SSSCTL_OFFSET 0x160
+> > +/*
+> > +APCy_QLL_SSSCTL value:
+> > +SACDRCLEN=1
+> > +SSWEN=1
+> > +SSTRTEN=1
+> > +SSTPAPMSWEN=1
+> > +*/
+> 
+> Bad comment style and I have no idea what it means.
+
+Will be changed in the next spin.
+
+> 
+> > +#define SSSCTL_VAL 0xF
+> > +
+> > +enum {
+> > +       APC_BASE,
+> > +       EFUSE_BASE,
+> 
+> Is this used? efuse should go through nvmem APIs.
+
+Will be removed in the next spin.
+
+> 
+> > +       NUM_BASES
+> > +};
+> > +
+> > +static void __iomem *vbases[NUM_BASES];
+> 
+> Please just pass this to the function that uses it and drop EFUSE_BASE.
+
+Will be changed in the next spin.
+
+> 
+> >
+> >  static const u8 prim_pll_regs[PLL_OFF_MAX_REGS] = {
+> >         [PLL_OFF_L_VAL] = 0x04,
+> > @@ -399,10 +424,64 @@ struct clk_hw_clks {
+> >         return ret;
+> >  }
+> >
+> > +#define CPU_AFINITY_MASK 0xFFF
+> > +#define PWRCL_CPU_REG_MASK 0x3
+> > +#define PERFCL_CPU_REG_MASK 0x103
+> > +
+> > +/* ACD static settings (HMSS HPG 7.2.2) */ #define L2ACDCR_REG
+> > +0x580ULL #define L2ACDTD_REG 0x581ULL #define L2ACDDVMRC_REG
+> 0x584ULL
+> > +#define L2ACDSSCR_REG 0x589ULL #define ACDTD_VAL 0x00006A11
+> #define
+> > +ACDCR_VAL 0x002C5FFD #define ACDSSCR_VAL 0x00000601 #define
+> > +ACDDVMRC_VAL 0x000E0F0F
+> 
+> Please don't have #defines for random register settings. It just obfuscates
+> what's going on at the place where the define is used.
+
+So should I just use the values directly?
+
+> 
+> > +
+> > +static DEFINE_SPINLOCK(acd_lock);
+> > +
+> > +static void qcom_cpu_clk_msm8996_acd_init(void)
+> > +{
+> > +       u64 hwid;
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&acd_lock, flags);
+> > +
+> > +       hwid = read_cpuid_mpidr() & CPU_AFINITY_MASK;
+> > +
+> > +       /* Program ACD Tunable-Length Delay (TLD) */
+> > +       set_l2_indirect_reg(L2ACDTD_REG, ACDTD_VAL);
+> > +       /* Initial ACD for *this* cluster */
+> > +       set_l2_indirect_reg(L2ACDDVMRC_REG, ACDDVMRC_VAL);
+> > +       /* Program ACD soft start control bits. */
+> > +       set_l2_indirect_reg(L2ACDSSCR_REG, ACDSSCR_VAL);
+> 
+> Please remove all useless comments, the code is obviously touching
+> registers.
+
+Will be changed in the next spin.
+
+> 
+> > +
+> > +       if (PWRCL_CPU_REG_MASK == (hwid | PWRCL_CPU_REG_MASK)) {
+> > +               /* Enable Soft Stop/Start */
+> 
+> Sigh.
+> 
+> > +               if (vbases[APC_BASE])
+> 
+> When is this false?
+
+It is checked in the probe. You are right, I'll remove this check and pass the base as argument.
+
+> 
+> > +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
+> > +                                       PWRCL_REG_OFFSET + SSSCTL_OFFSET);
+> > +               /* Ensure SSSCTL config goes through before enabling ACD. */
+> > +               mb();
+> 
+> Use writel instead.
+
+OK
+
+> 
+> > +               /* Program ACD control bits */
+> > +               set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
+> > +       }
+> > +       if (PERFCL_CPU_REG_MASK == (hwid | PERFCL_CPU_REG_MASK)) {
+> > + //else {
+> 
+> What is that '// else {' stuff?
+
+Missed leftover. Will be changed in the next spin.
+
+> 
+> > +               /* Program ACD control bits */
+> > +               set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
+> > +               /* Enable Soft Stop/Start */
+> > +               if (vbases[APC_BASE])
+> > +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
+> > +                                       PERFCL_REG_OFFSET + SSSCTL_OFFSET);
+> > +               /* Ensure SSSCTL config goes through before enabling ACD. */
+> > +               mb();
+> 
+> Again, use writel.
+
+OK
+
+> 
+> > +       }
+> > +
+> > +       spin_unlock_irqrestore(&acd_lock, flags); }
+> >  static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device
+> > *pdev)  {
+> >         int ret;
+> > -       void __iomem *base;
+> >         struct resource *res;
+> >         struct regmap *regmap_cpu;
+> >         struct clk_hw_clks *hws;
+> > @@ -415,17 +494,17 @@ static int
+> qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
+> >         if (!data)
+> >                 return -ENOMEM;
+> >
+> > -       hws = devm_kzalloc(dev, sizeof(*hws) + 2 * sizeof(struct clk_hw *),
+> > +       hws = devm_kzalloc(dev, sizeof(*hws) + 4 * sizeof(struct
+> > + clk_hw *),
+> >                            GFP_KERNEL);
+> >         if (!hws)
+> >                 return -ENOMEM;
+> >
+> >         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -       base = devm_ioremap_resource(dev, res);
+> > -       if (IS_ERR(base))
+> > -               return PTR_ERR(base);
+> > +       vbases[APC_BASE] = devm_ioremap_resource(dev, res);
+> > +       if (IS_ERR(vbases[APC_BASE]))
+> > +               return PTR_ERR(vbases[APC_BASE]);
+> >
+> > -       regmap_cpu = devm_regmap_init_mmio(dev, base,
+> > +       regmap_cpu = devm_regmap_init_mmio(dev, vbases[APC_BASE],
+> >                                            &cpu_msm8996_regmap_config);
+> >         if (IS_ERR(regmap_cpu))
+> >                 return PTR_ERR(regmap_cpu);
+> 
+> Cool, none of this diff is needed.
+
+Since the effuse code will not be implemented in the clock driver, you are right. Will be changed in the next spin.
+
+> 
+> > @@ -433,6 +512,7 @@ static int
+> qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
+> >         ret = qcom_cpu_clk_msm8996_register_clks(dev, hws, regmap_cpu);
+> >         if (ret)
+> >                 return ret;
+> > +       qcom_cpu_clk_msm8996_acd_init();
+> 
+> Pass base here.
+
+Sure.
+
+> 
+> >
+> >         data->hws[0] = &pwrcl_pmux.clkr.hw;
+> >         data->hws[1] = &perfcl_pmux.clkr.hw;
