@@ -1,46 +1,38 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add a reserved-gpio-ranges property
-Date: Tue, 20 Mar 2018 14:35:52 -0700
-Message-ID: <152158175270.198100.17839151793045734833@swboyd.mtv.corp.google.com>
-References: <20180126011400.2191-1-sboyd@codeaurora.org>
- <20180126011400.2191-2-sboyd@codeaurora.org>
- <CACRpkdbAYPpcoyVkMm=yKABMByJuCyXdYifuFdYhV4g6CU3sEg@mail.gmail.com>
+Subject: RE: [PATCH v3 09/10] DT: QCOM: Add cpufreq-dt to msm8996
+Date: Tue, 20 Mar 2018 14:46:19 -0700
+Message-ID: <152158237920.125118.18071859696919294995@swboyd.mtv.corp.google.com>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-10-git-send-email-ilialin@codeaurora.org>
+ <152147812199.242365.11821734771337881765@swboyd.mtv.corp.google.com>
+ <013a01d3c051$d65a9160$830fb420$@codeaurora.org>
+ <152157637794.125118.12382168941652366593@swboyd.mtv.corp.google.com>
+ <017c01d3c08a$cf903270$6eb09750$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbAYPpcoyVkMm=yKABMByJuCyXdYifuFdYhV4g6CU3sEg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <017c01d3c08a$cf903270$6eb09750$@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ilialin@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Linus Walleij (2018-03-19 20:36:35)
-> Hi Stephen,
+Quoting ilialin@codeaurora.org (2018-03-20 13:34:04)
+> Understood, what you mean. I assumed that the cpufreq-dt is generic driver, and adding architecture specific code to it is no not correct from architectural point of view. Anyway, I'm considering adding a platform specific cpufreq driver, which will handle the efuse data as well.
 > 
-> thanks for the patch and hope you have a good time at your new
-> workplace!
+> Meanwhile this is the way to use the generic driver.
 > 
-> On Fri, Jan 26, 2018 at 2:13 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> 
-> > Some qcom platforms make some GPIOs or pins unavailable for use
-> > by non-secure operating systems, and thus reading or writing the
-> > registers for those pins will cause access control issues.
-> > Introduce a DT property to describe the set of GPIOs that are
-> > available for use so that higher level OSes are able to know what
-> > pins to avoid reading/writing.
-> >
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: <devicetree@vger.kernel.org>
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> 
-> This looks fine except Andy's note to rename this ranges
-> to gpio-reserved-ranges for namespacing.
 
-Ok! I'll rename to gpio-reserved-ranges.
-
-> 
-> Are you reposting this series as v3 with this fixed or does someone
-> else need to pick it up?
-
-Yes I can do it today or tomorrow.
+You'll need to Cc Viresh Kumar, who can comment further on cpufreq-dt.
+I wasn't recommending adding architecture specific code to cpufreq-dt,
+but at least updating how it handles CPU clk on/off state around hotplug
+would be good to do.
