@@ -1,47 +1,35 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 08/12] clk: actions: Add factor clock support
-Date: Mon, 19 Mar 2018 18:11:32 -0700
-Message-ID: <152150829204.254778.2737344357539002182@swboyd.mtv.corp.google.com>
-References: <20180317100952.28538-1-manivannan.sadhasivam@linaro.org>
- <20180317100952.28538-9-manivannan.sadhasivam@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 06/10] ARM64: dts: meson: Remove
+ "cooling-{min|max}-level" for CPU nodes
+Date: Tue, 20 Mar 2018 09:37:31 +0800
+Message-ID: <20180320013731.olxjil4qfj6ppjsl@vireshk-mac-ubuntu>
+References: <cover.1518166039.git.viresh.kumar@linaro.org>
+ <6c91ebfecf86da98a7682c6d262ff1218a1d7343.1518166039.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180317100952.28538-9-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <6c91ebfecf86da98a7682c6d262ff1218a1d7343.1518166039.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: arm@kernel.org, arnd.bergmann@linaro.org, Rafael Wysocki <rjw@rjwysocki.net>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manivannan Sadhasivam (2018-03-17 03:09:48)
-> +
-> +static int clk_val_best(struct clk_hw *hw, unsigned long rate,
-> +                       unsigned long *best_parent_rate)
-> +{
-[...]
-> +               }
-> +
-> +               parent_rate = clk_hw_round_rate(clk_hw_get_parent(hw),
-> +                               try_parent_rate);
-> +               cur_rate = DIV_ROUND_UP(parent_rate, clkt->div) * clkt->mul;
-> +               if (cur_rate <= rate && cur_rate > best) {
-> +                       bestval = clkt->val;
-> +                       best = cur_rate;
-> +                       *best_parent_rate = parent_rate;
-> +               }
-> +       }
-> +
-> +       if (!bestval) {
-> +               bestval = _get_table_maxval(clkt);
-> +               *best_parent_rate = clk_hw_round_rate(
-> +                               clk_hw_get_parent(hw), 1);
-> +       }
-> +
-> +       return bestval;
+On 09-02-18, 14:28, Viresh Kumar wrote:
+> The "cooling-min-level" and "cooling-max-level" properties are not
+> parsed by any part of the kernel currently and the max cooling state of
+> a CPU cooling device is found by referring to the cpufreq table instead.
+> 
+> Remove the unused properties from the CPU nodes.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 4 ----
+>  1 file changed, 4 deletions(-)
 
-Also, if this is largely copy/paste from the factor clk code then
-perhaps those functions can be exported to here and reused instead of
-copy/paste.
+@Arnd: Can you please pick this and patch 8/10 from this series for 4.17 ? Both
+are already Acked by Neil. I have just re-bounced both the messages to
+arm@kernel.org. Thanks.
 
-> +}
+--
+viresh
