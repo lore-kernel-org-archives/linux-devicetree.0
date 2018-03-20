@@ -1,119 +1,172 @@
-From: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file
- for SDM845
-Date: Tue, 20 Mar 2018 19:13:38 +0530
-Message-ID: <a4863676581e8a25f13233a65a387ae4@codeaurora.org>
-References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
- <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
- <20180319135931.GJ223881@art_vandelay>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v3 09/10] DT: QCOM: Add cpufreq-dt to msm8996
+Date: Tue, 20 Mar 2018 15:46:19 +0200
+Message-ID: <013a01d3c051$d65a9160$830fb420$@codeaurora.org>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-10-git-send-email-ilialin@codeaurora.org>
+ <152147812199.242365.11821734771337881765@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180319135931.GJ223881@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152147812199.242365.11821734771337881765@swboyd.mtv.corp.google.com>
+Content-Language: en-us
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Stephen Boyd' <sboyd@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wMy0xOSAxOToyOSwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFdlZCwgTWFyIDE0LCAy
-MDE4IGF0IDExOjIxOjM4QU0gKzA1MzAsIFNyYXZhbnRoaSBLb2xsdWt1ZHVydSB3cm90ZToKPj4g
-VGhpcyBjaGFuZ2UgYWRkcyB0aGUgaGFyZHdhcmUgY2F0YWxvZyBpbmZvcm1hdGlvbiBpbiBkcml2
-ZXIgc291cmNlCj4+IGZvciBTRE04NDUuIFRoaXMgcmVtb3ZlcyB0aGUgY3VycmVudCBsb2dpYyBv
-ZiBkdCBiYXNlZCBwYXJzaW5nCj4+IG9mIHRhcmdldCBjYXRhbG9nIGluZm9ybWF0aW9uLgo+PiAK
-Pj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVy
-b3JhLm9yZz4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL01ha2VmaWxlICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgIDEgKwo+PiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
-ZHB1X2h3X2NhdGFsb2cuYyAgICAgfCAzMDcxIAo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAg
-ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuaCAgICAgfCAgIDE3
-ICstCj4+ICAuLi4vZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0NS5j
-ICB8ICA3NDQgKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9rbXMu
-YyAgICAgICAgICAgIHwgICAgMiArLQo+PiAgNSBmaWxlcyBjaGFuZ2VkLCA3NjcgaW5zZXJ0aW9u
-cygrKSwgMzA2OCBkZWxldGlvbnMoLSkKPiAKPiBIaSBTcmF2YW50aGksCj4gVGhhbmsgeW91IGZv
-ciB0aGUgcGF0Y2gsIGl0J3MgZ3JlYXQgdG8gc2VlIGRpZmZzdGF0cyBsaWtlIHRoaXMgOikKPiAK
-PiA8c25pcCAvPgo+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X2h3X2NhdGFsb2dfc2RtODQ1LmMgCj4+IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
-L2RwdTEvZHB1X2h3X2NhdGFsb2dfc2RtODQ1LmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4g
-aW5kZXggMDAwMDAwMC4uM2NhNWRjNwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19jYXRhbG9nX3NkbTg0NS5jCj4+IEBAIC0wLDAg
-KzEsNzQ0IEBACj4+ICsvKiBDb3B5cmlnaHQgKGMpIDIwMTgsIFRoZSBMaW51eCBGb3VuZGF0aW9u
-LiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+PiArICoKPj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVl
-IHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgCj4+IG1vZGlmeQo+PiAr
-ICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2
-ZXJzaW9uIDIgYW5kCj4+ICsgKiBvbmx5IHZlcnNpb24gMiBhcyBwdWJsaXNoZWQgYnkgdGhlIEZy
-ZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPj4gKyAqCj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlz
-dHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPj4gKyAqIGJ1dCBX
-SVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9m
-Cj4+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
-U0UuICBTZWUgdGhlCj4+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBk
-ZXRhaWxzLgo+IAo+IFdlIHNob3VsZCBiZSB1c2luZyBTUERYIGxpY2Vuc2UgdGFncyBmcm9tIG5v
-dyBvbi4KPiAKPj4gKyAqLwo+PiArCj4+ICsjaW5jbHVkZSAiZHB1X2h3X2NhdGFsb2cuaCIKPj4g
-KyNpbmNsdWRlICJkcHVfaHdfY2F0YWxvZ19mb3JtYXQuaCIKPj4gKyNpbmNsdWRlICJkcHVfaHdf
-bWRzcy5oIgo+PiArI2luY2x1ZGUgImRwdV9od2lvLmgiCj4+ICsKPj4gKy8qIFZJRyBsYXllciBj
-YXBhYmlsaXR5ICovCj4+ICsjZGVmaW5lIFZJR180MFhfTUFTSyBcCj4+ICsJKEJJVChEUFVfU1NQ
-UF9TUkMpIHwgQklUKERQVV9TU1BQX1NDQUxFUl9RU0VFRDMpIHwgQklUKERQVV9TU1BQX1FPUykg
-Cj4+IHxcCj4+ICsJQklUKERQVV9TU1BQX0NTQ18xMEJJVCkgfCBCSVQoRFBVX1NTUFBfQ0RQKSB8
-IEJJVChEUFVfU1NQUF9RT1NfOExWTCkgCj4+IHxcCj4+ICsJQklUKERQVV9TU1BQX1RTX1BSRUZJ
-TEwpIHwgQklUKERQVV9TU1BQX0VYQ0xfUkVDVCkpCj4+ICsKPj4gKy8qIERNQSBsYXllciBjYXBh
-YmlsaXR5ICovCj4+ICsjZGVmaW5lIERNQV80MFhfTUFTSyBcCj4+ICsJKEJJVChEUFVfU1NQUF9T
-UkMpIHwgQklUKERQVV9TU1BQX1FPUykgfCBCSVQoRFBVX1NTUFBfUU9TXzhMVkwpIHxcCj4+ICsJ
-QklUKERQVV9TU1BQX1RTX1BSRUZJTEwpIHwgQklUKERQVV9TU1BQX0NEUCkgfCAKPj4gQklUKERQ
-VV9TU1BQX0VYQ0xfUkVDVCkpCj4+ICsKPj4gKyNkZWZpbmUgTUlYRVJfNDBYX01BU0sgXAo+PiAr
-CShCSVQoRFBVX01JWEVSX1NPVVJDRVNQTElUKSB8IEJJVChEUFVfRElNX0xBWUVSKSkKPj4gKwo+
-PiArI2RlZmluZSBEU1BQXzQwWF9NQVNLIFwKPj4gKwkoQklUKERQVV9EU1BQX0lHQykgfCBCSVQo
-RFBVX0RTUFBfUENDKSB8IEJJVChEUFVfRFNQUF9HQykgfFwKPj4gKwlCSVQoRFBVX0RTUFBfSFNJ
-QykgfCBCSVQoRFBVX0RTUFBfR0FNVVQpIHwgQklUKERQVV9EU1BQX0hJU1QpIHxcCj4+ICsJQklU
-KERQVV9EU1BQX01FTUNPTE9SKSB8IEJJVChEUFVfRFNQUF9TSVhaT05FKSB8IEJJVChEUFVfRFNQ
-UF9WTFVUKSkKPj4gKwo+PiArI2RlZmluZSBEU1BQX0FEXzQwWF9NQVNLIFwKPj4gKwkoRFNQUF80
-MFhfTUFTSyB8IEJJVChEUFVfRFNQUF9BRCkpCj4+ICsKPj4gKyNkZWZpbmUgUElOR1BPTkdfNDBY
-X01BU0sgQklUKERQVV9QSU5HUE9OR19ESVRIRVIpCj4+ICsKPj4gKyNkZWZpbmUgUElOR1BPTkdf
-NDBYX1NQTElUX01BU0sgXAo+PiArCShQSU5HUE9OR180MFhfTUFTSyB8IEJJVChEUFVfUElOR1BP
-TkdfU1BMSVQpIHwgCj4+IEJJVChEUFVfUElOR1BPTkdfVEUyKSkKPj4gKwo+PiArI2RlZmluZSBX
-QjJfNDBYX01BU0sgXAo+PiArCShCSVQoRFBVX1dCX0xJTkVfTU9ERSkgfCBCSVQoRFBVX1dCX1RS
-QUZGSUNfU0hBUEVSKSB8IAo+PiBCSVQoRFBVX1dCX0NEUCkgfFwKPj4gKwlCSVQoRFBVX1dCX1lV
-Vl9DT05GSUcpIHwgQklUKERQVV9XQl9RT1NfOExWTCkgfCBCSVQoRFBVX1dCX1VCV0MpKQo+PiAr
-Cj4+ICsjZGVmaW5lIERFQ0lNQVRJT05fNDBYX01BWF9ICTQKPj4gKyNkZWZpbmUgREVDSU1BVElP
-Tl80MFhfTUFYX1YJNAo+PiArCj4+ICsvKgo+PiArICogc2V0X2NmZ194eHhfaW5pdCgpOiBwb3B1
-bGF0ZSBkcHUgc3ViLWJsb2NrcyByZWcgb2Zmc2V0cwo+PiArICogYW5kIGluc3RhbmNlIGNvdW50
-cy4KPj4gKyAqLwo+PiArc3RhdGljIGlubGluZSBpbnQgc2V0X2NmZ180MFhfaW5pdChzdHJ1Y3Qg
-ZHB1X21kc3NfY2ZnICpkcHVfY2ZnKQo+PiArewo+PiArCS8qIExheWVyIGNhcGFiaWxpdHkgKi8K
-Pj4gKwlzdGF0aWMgY29uc3Qgc3RydWN0IGRwdV9zc3BwX3N1Yl9ibGtzIHZpZ19zYmxrXzAgPSB7
-Cj4+ICsJCS5tYXhsaW5ld2lkdGggPSAyNTYwLAo+PiArCQkucGl4ZWxfcmFtX3NpemUgPSA1MCAq
-IDEwMjQsCj4+ICsJCS5tYXhkd25zY2FsZSA9IDQsCj4+ICsJCS5tYXh1cHNjYWxlID0gMjAsCj4+
-ICsJCS5tYXhoZGVjaWV4cCA9IERFQ0lNQVRJT05fNDBYX01BWF9ILAo+PiArCQkubWF4dmRlY2ll
-eHAgPSBERUNJTUFUSU9OXzQwWF9NQVhfViwKPj4gKwkJLnNtYXJ0X2RtYV9wcmlvcml0eSA9IDUs
-Cj4+ICsJCS5zcmNfYmxrID0gey5uYW1lID0gInNzcHBfc3JjXzAiLCAuaWQgPSBEUFVfU1NQUF9T
-UkMsCj4+ICsJCQkuYmFzZSA9IDB4MDAsIC5sZW4gPSAweDE1MCx9LAo+PiArCQkuc2NhbGVyX2Js
-ayA9IHsubmFtZSA9ICJzc3BwX3NjYWxlcjAiLAo+PiArCQkJLmlkID0gRFBVX1NTUFBfU0NBTEVS
-X1FTRUVEMywKPj4gKwkJCS5iYXNlID0gMHhhMDAsIC5sZW4gPSAweGEwLH0sCj4+ICsJCS5jc2Nf
-YmxrID0gey5uYW1lID0gInNzcHBfY3NjMCIsIC5pZCA9IERQVV9TU1BQX0NTQ18xMEJJVCwKPj4g
-KwkJCS5iYXNlID0gMHgxYTAwLCAubGVuID0gMHgxMDAsfSwKPj4gKwkJLmZvcm1hdF9saXN0ID0g
-cGxhbmVfZm9ybWF0c195dXYsCj4+ICsJCS52aXJ0X2Zvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0
-cywKPj4gKwl9Owo+IAo+IEluc3RlYWQgb2YgbG9jYXRpbmcgYWxsIG9mIHRoZXNlIHBhcmFtZXRl
-cnMgaW4gb25lIGZpbGUsIHRoZXNlIHNob3VsZCAKPiBiZQo+IGxvY2F0ZWQgaW4gdGhlaXIgcmVz
-cGVjdGl2ZSBkcml2ZXIgZmlsZS4gSXQgYWxzbyBzZWVtcyBsaWtlIHlvdSBjb3VsZCAKPiBzZXBh
-cmF0ZQo+IG91dCB0aGUgY29tbW9uIHN0dWZmIHN1Y2ggYXMgbGluZSB3aWR0aCwgcmFtIHNpemUs
-IHNjYWxpbmcsIGZvcm1hdCwgZXRjCj4gcGFyYW1ldGVycyBmcm9tIHRoZSBwaXBlbGluZSBzZXR1
-cC4KPiAKPiBUaGUgc2FtZSBjb21tZW50cyBhcHBseSB0byB0aGUgb3RoZXIgYmxvY2tzLiBNb3Zl
-IHRoaW5ncyBpbnRvIHRoZSAKPiBkcml2ZXJzLAo+IHVzZSBjb21wYXRpYmlsaXR5IHN0cmluZyB0
-byBkZXRlcm1pbmUgdGhlIHZlcnNpb24sIGFuZCB0aGVuIGFzc29jaWF0ZSAKPiB0aGUgY29tbW9u
-Cj4gcGFyYW1ldGVycyB3aXRoIG9mX2RldmljZV9pZC5kYXRhLgo+IAo+IFNlYW4KPiAKPiA8c25p
-cCAvPgoKVGhhbmtzIFNlYW4gZm9yIHRoZSBmZWVkYmFjay4KVGhlIGlkZWEgYmVoaW5kIHRoaXMg
-YXBwcm9hY2ggaXMgdG8gbWFpbnRhaW4gYSBvbmUgcG9pbnQgYWNjZXNzIGZvciBhbGwgCnRoZQp0
-YXJnZXQgc3BlY2lmaWMgaW5mb3JtYXRpb24sIGFuYWxvZ291cyB0byB0aGUgY3VycmVudCBkcHUg
-ZHRzaSBmaWxlLgpUaGlzIGFsc28gZW5zdXJlcyBlYXN5IG1haW50ZW5hbmNlIGZvciBkaWZmZXJl
-bnQgaGFyZHdhcmUgdmVyc2lvbnMsIGFzIAphbGwgaXQKdGFrZXMgaXMgdG8gYWRkIGFub3RoZXIg
-ZmlsZSBpbnN0ZWFkIG9mIHVwZGF0aW5nIGFjcm9zcyBpbmRpdmlkdWFsIHN1YiAKYmxvY2sgZmls
-ZXMuCgpBbHNvLCBpJ20gbm90IHF1aXRlIGNsZWFyIG9uIGhvdyBjb21wYXRpYmlsaXR5IHN0cmlu
-Z3MgaXMgYXBwbGljYWJsZSB0byAKc3ViIGJsb2Nrcy4KUGxlYXNlIGNsYXJpZnkuCgpUaGFua3Ms
-ClNyYXZhbnRoaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+
+
+> -----Original Message-----
+> From: Stephen Boyd <sboyd@kernel.org>
+> Sent: Monday, March 19, 2018 18:49
+> To: Ilia Lin <ilialin@codeaurora.org>; linux-arm-kernel@lists.infradead.org;
+> linux-arm-msm@vger.kernel.org; linux-clk@vger.kernel.org;
+> sboyd@codeaurora.org
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> rnayak@codeaurora.org; robh@kernel.org; will.deacon@arm.com;
+> amit.kucheria@linaro.org; tfinkel@codeaurora.org; ilialin@codeaurora.org;
+> nicolas.dechesne@linaro.org; celster@codeaurora.org
+> Subject: Re: [PATCH v3 09/10] DT: QCOM: Add cpufreq-dt to msm8996
+> 
+> Quoting Ilia Lin (2018-02-14 05:59:51)
+> > diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > index 492a011..930f68b 100644
+> > --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > @@ -1,5 +1,5 @@
+> >  /*
+> > - * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+> > + * Copyright (c) 2014-2016,2018 The Linux Foundation. All rights reserved.
+> >   *
+> >   * This program is free software; you can redistribute it and/or modify
+> >   * it under the terms of the GNU General Public License version 2 and
+> 
+> Why?
+The file was changed again in 2018. I'm reflecting this in the file dates.
+> 
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index 4b2afcc..0359197 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -144,6 +152,182 @@
+> >                 };
+> >         };
+> >
+> > +       cluster0_opp: opp_table0 {
+> > +               compatible = "operating-points-v2";
+> > +               opp-shared;
+> > +
+> > +               opp@307200000 {
+> > +                       opp-hz = /bits/ 64 <  307200000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@422400000 {
+> > +                       opp-hz = /bits/ 64 <  422400000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@480000000 {
+> 
+> It looks like opp-480000000 now instead of opp@<freq>.
+Will be changed in the next spin.
+> 
+> > +                       opp-hz = /bits/ 64 <  480000000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@556800000 {
+> > +                       opp-hz = /bits/ 64 <  556800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@652800000 {
+> > +                       opp-hz = /bits/ 64 <  652800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@729600000 {
+> > +                       opp-hz = /bits/ 64 <  729600000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@844800000 {
+> > +                       opp-hz = /bits/ 64 <  844800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@960000000 {
+> > +                       opp-hz = /bits/ 64 <  960000000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1036800000 {
+> > +                       opp-hz = /bits/ 64 < 1036800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1113600000 {
+> > +                       opp-hz = /bits/ 64 < 1113600000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1190400000 {
+> > +                       opp-hz = /bits/ 64 < 1190400000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1228800000 {
+> > +                       opp-hz = /bits/ 64 < 1228800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1324800000 {
+> > +                       opp-hz = /bits/ 64 < 1324800000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1401600000 {
+> > +                       opp-hz = /bits/ 64 < 1401600000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1478400000 {
+> > +                       opp-hz = /bits/ 64 < 1478400000 >;
+> > +                       clock-latency-ns = <200000>;
+> > +               };
+> > +               opp@1593600000 {
+> [...]
+> > +
+> > +       };
+> >         thermal-zones {
+> >                 cpu-thermal0 {
+> >                         polling-delay-passive = <250>; @@ -403,7
+> > +587,7 @@
+> >                 };
+> >
+> >                 kryocc: clock-controller@6400000 {
+> > -                       compatible = "qcom,apcc-msm8996";
+> > +                       compatible = "qcom-msm8996-apcc";
+> 
+> Bad change?
+This was required by Rob Herring.
+> 
+> >                         reg = <0x6400000 0x90000>;
+> >                         #clock-cells = <1>;
+> >                 };
+> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c
+> > b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > index 3b585e4..b6cd0ae 100644
+> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > @@ -95,6 +95,9 @@
+> >         { .compatible = "xlnx,zynq-7000", },
+> >         { .compatible = "xlnx,zynqmp", },
+> >
+> > +       { .compatible = "qcom,msm8996", },
+> > +       { .compatible = "qcom,apq8096", },
+> > +
+> 
+> Why can't we base it on the kryocc node being present?
+This could be good idea, if I would writing a platform specific cpufreq driver, which may be a future option.
+> Or even populate
+> the cpufreq-dt from the kryocc driver?
+There is a problem that during the clock probe the OPP table still doesn't exist. 
