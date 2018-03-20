@@ -1,44 +1,59 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH RESEND 2/2] clk: stm32: Add DSI clock for STM32F469 Board
-Date: Tue, 20 Mar 2018 08:20:07 +0000
-Message-ID: <898668a8-5582-e84f-878a-35749ab39657@st.com>
-References: <1520578651-28849-1-git-send-email-gabriel.fernandez@st.com>
- <1520578651-28849-3-git-send-email-gabriel.fernandez@st.com>
- <152149234283.242365.10046675267029705746@swboyd.mtv.corp.google.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
+Date: Tue, 20 Mar 2018 10:18:44 +0200
+Message-ID: <1662708.Iq9jEY22gx@avalon>
+References: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <152149234283.242365.10046675267029705746@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Content-ID: <F9ED6ABD04D4494ABB60EA6AA5A4B5B4@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Loic PALLARDY <loic.pallardy@st.com>, Olivier BIDEAU <olivier.bideau@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Stephen !
+Hi Magnus,
 
-Best Regards
+Thank you for the patch.
 
-Gabriel
+On Tuesday, 20 March 2018 08:48:11 EET Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> 
+> Update the IPMMU DT binding documentation to include the r8a77965 compat
+> string for the IPMMU devices included in the R-Car M3-N SoC.
+> 
+> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-On 03/19/2018 09:45 PM, Stephen Boyd wrote:
-> Quoting gabriel.fernandez@st.com (2018-03-08 22:57:31)
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> This patch adds DSI clock for STM32F469 board
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> ---
-> Applied to clk-next
->
+> ---
+> 
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+> +++
+> work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	
+2018-03
+> -20 15:30:50.640607110 +0900 @@ -17,6 +17,7 @@ Required Properties:
+>      - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+>      - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+>      - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+> +    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+>      - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+>      - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+>      - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+
+-- 
+Regards,
+
+Laurent Pinchart
