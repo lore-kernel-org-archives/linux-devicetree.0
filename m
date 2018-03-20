@@ -1,52 +1,29 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 07/10] ARM: dts: gemini: Remove "cooling-{min|max}-level"
- for gpio-fan node
-Date: Tue, 20 Mar 2018 09:43:18 +0800
-Message-ID: <20180320014318.g7koh7ld3seucg4c@vireshk-mac-ubuntu>
-References: <cover.1518166039.git.viresh.kumar@linaro.org>
- <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
- <20180312043533.GU6842@vireshk-i7>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7d-pinfunc: update sai select input value
+Date: Mon, 19 Mar 2018 22:57:41 -0300
+Message-ID: <CAOMZO5A0fA2h_T__vFzGXPzrzKZJuMyiRLRvNag43Xffif1EZQ@mail.gmail.com>
+References: <1521429281-23394-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180312043533.GU6842@vireshk-i7>
+In-Reply-To: <1521429281-23394-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, arnd.bergmann@linaro.org, arm@kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "S.j. Wang" <shengjiu.wang@nxp.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12-03-18, 10:05, Viresh Kumar wrote:
-> On 09-02-18, 14:28, Viresh Kumar wrote:
-> > The "cooling-min-level" and "cooling-max-level" properties are not
-> > parsed by any part of the kernel currently and the max cooling state of
-> > gpio-fan cooling device is found by referring to the
-> > "gpio-fan,speed-map" instead.
-> > 
-> > Remove the unused properties from the gpio-fan node.
-> > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/gemini-dlink-dns-313.dts | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/gemini-dlink-dns-313.dts b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-> > index 08568ce24d06..727d16eb02d9 100644
-> > --- a/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-> > +++ b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-> > @@ -78,8 +78,6 @@
-> >  		gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>,
-> >  			<&gpio0 12 GPIO_ACTIVE_HIGH>;
-> >  		gpio-fan,speed-map = <0 0>, <3000 1>, <6000 2>;
-> > -		cooling-min-level = <0>;
-> > -		cooling-max-level = <2>;
-> >  		#cooling-cells = <2>;
-> >  	};
-> >  
-> 
-> @Linus: Can you please pick this one for 4.17 ?
+Hi Anson,
 
-@Arnd/Olof: Can you please pick this one up as well ?
+On Mon, Mar 19, 2018 at 12:14 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> Update SAI select input daisy chain value according to
+> Reference Manual.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
--- 
-viresh
+Could you please clarify the authorship of this patch? Is this yours
+or from Shengjiu Wang?
+
+If it is from Shengjiu Wang then his name should appear in the From
+field and his Signed-off-by tag should appear first and yours should
+go after it.
