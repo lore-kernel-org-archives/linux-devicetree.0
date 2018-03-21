@@ -1,77 +1,134 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 7/9] hwmon: pwm-fan: add sysfs node to read rpm of fan
-Date: Tue, 20 Mar 2018 23:09:52 -0700
-Message-ID: <0da71848-1f75-62a3-75cb-a9b5cd887798@roeck-us.net>
-References: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
- <1521607244-29734-8-git-send-email-rrajk@nvidia.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Wed, 21 Mar 2018 11:59:30 +0530
+Message-ID: <d5a7f0c0-5daa-d2ac-a383-9456e9e38e4f@codeaurora.org>
+References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
+ <1521019283-32212-2-git-send-email-sibis@codeaurora.org>
+ <20180318224459.GC5626@tuxbook-pro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521607244-29734-8-git-send-email-rrajk@nvidia.com>
+In-Reply-To: <20180318224459.GC5626@tuxbook-pro>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajkumar Rampelli <rrajk@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2018 09:40 PM, Rajkumar Rampelli wrote:
-> Add fan device attribute fan1_input in pwm-fan driver
-> to read speed of fan in rotations per minute.
-> 
-> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
-> ---
-> 
-> V2: Removed generic-pwm-tachometer driver and using pwm-fan driver as per suggestions
->      to read fan speed.
->      Added fan device attribute to report speed of fan in rpms through hwmon sysfs.
-> 
->   drivers/hwmon/pwm-fan.c | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 70cc0d1..8dda209 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -98,11 +98,34 @@ static ssize_t show_pwm(struct device *dev,
->   	return sprintf(buf, "%u\n", ctx->pwm_value);
->   }
->   
-> +static ssize_t show_rpm(struct device *dev, struct device_attribute *attr,
-> +			char *buf)
-> +{
-> +	struct pwm_fan_ctx *ptt = dev_get_drvdata(dev);
-> +	struct pwm_device *pwm = ptt->pwm;
-> +	struct pwm_capture result;
-> +	unsigned int rpm = 0;
-> +	int ret;
-> +
-> +	ret = pwm_capture(pwm, &result, 0);
-> +	if (ret < 0) {
-> +		pr_err("Failed to capture PWM: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (result.period)
-> +		rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
-> +					    result.period);
-> +
-> +	return sprintf(buf, "%u\n", rpm);
-> +}
->   
->   static SENSOR_DEVICE_ATTR(pwm1, S_IRUGO | S_IWUSR, show_pwm, set_pwm, 0);
-> +static SENSOR_DEVICE_ATTR(fan1_input, 0444, show_rpm, NULL, 0);
->   
->   static struct attribute *pwm_fan_attrs[] = {
->   	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
+Hi Bjorn,
+Thanks for the review.
 
-This doesn't make sense. The same pwm can not both control the fan speed
-and report it.
-
-Guenter
-
->   	NULL,
->   };
->   
+On 03/19/2018 04:14 AM, Bjorn Andersson wrote:
+> On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the register
+>> +	            space.
+>> +
+>> +
 > 
+> Double empty lines.
+> 
+
+will remove them
+
+>> +- #reset-cells:
+>> +	Usage: required
+>> +	Value type: <uint>
+>> +	Definition: must be 1; cell entry represents the reset index.
+>> +
+>> +example:
+> 
+> Please capitalize the initial char.
+>
+
+sure
+
+>> +
+>> +aoss_reset: qcom,reset-controller@b2e0100 {
+>> +	compatible = "qcom,sdm845-aoss-reset";
+>> +	reg = <0xc2b0000 0x20004>;
+> 
+> 0x20004 does seem very even, please verify this size.
+> 
+
+even though the reg space after that range is unused, the AOSS reset
+driver is supposed to control only those listed reset lines
+
+>> +	#reset-cells = <1>;
+>> +};
+>> +
+>> +
+>> +Specifying reset lines connected to IP modules
+> 
+> "AOSS reset clients"
+> 
+
+yep this heading makes much more sense
+
+> Although you could probably get a way with just referring to reset.txt
+> and the header file.
+> 
+>> +==============================================
+>> +
+>> +Device nodes that need access to reset lines should
+>> +specify them as a reset phandle in their corresponding node as
+>> +specified in reset.txt.
+>> +
+>> +For list of all valid reset indicies see
+>> +<dt-bindings/reset/qcom,sdm845-aoss.h>
+>> +
+>> +Example:
+>> +
+>> +modem-pil@4080000 {
+>> +	...
+>> +
+>> +	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
+>> +	reset-names = "mss_restart";
+>> +
+>> +	...
+>> +};
+>> diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+>> new file mode 100644
+>> index 0000000..e9b38fc
+>> --- /dev/null
+>> +++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+>> @@ -0,0 +1,17 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+> 
+> For tooling reasons header files should have their SPDX License tag
+> wrapped in /* */
+> 
+
+Sure will replace it
+
+>> +/*
+>> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
+>> +#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
+>> +
+>> +#define AOSS_CC_MSS_RESTART	0
+>> +#define AOSS_CC_CAMSS_RESTART	1
+>> +#define AOSS_CC_VENUS_RESTART	2
+>> +#define AOSS_CC_GPU_RESTART	3
+>> +#define AOSS_CC_DISPSS_RESTART	4
+>> +#define AOSS_CC_WCSS_RESTART	5
+>> +#define AOSS_CC_LPASS_RESTART	6
+>> +
+>> +#endif
+> 
+> Apart from these nits this looks reasonable.
+> 
+> Regards,
+> Bjorn
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
