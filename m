@@ -1,35 +1,35 @@
-Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
-Date: Wed, 21 Mar 2018 14:36:36 -0700
-From: Richard Cochran <richardcochran@gmail.com>
+Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from vps0.lunn.ch ([185.16.172.187]:38205 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752974AbeCUTdV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 21 Mar 2018 15:33:21 -0400
+Date: Wed, 21 Mar 2018 20:33:15 +0100
+From: Andrew Lunn <andrew@lunn.ch>
 Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
  time stamping IP core.
-Message-ID: <20180321213636.2mmfveu2vg5qbwpp@localhost>
+Message-ID: <20180321193315.GR24516@lunn.ch>
 References: <cover.1521656774.git.richardcochran@gmail.com>
  <e9def53dd0f751d7f5e3df47e604d7ccb6020159.1521656774.git.richardcochran@gmail.com>
- <20180321193315.GR24516@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180321193315.GR24516@lunn.ch>
-To: Andrew Lunn <andrew@lunn.ch>
+In-Reply-To: <e9def53dd0f751d7f5e3df47e604d7ccb6020159.1521656774.git.richardcochran@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Mar 21, 2018 at 08:33:15PM +0100, Andrew Lunn wrote:
-> Can you point us at some documentation for this.
+On Wed, Mar 21, 2018 at 11:58:18AM -0700, Richard Cochran wrote:
+> The InES at the ZHAW offers a PTP time stamping IP core.  The FPGA
+> logic recognizes and time stamps PTP frames on the MII bus.  This
+> patch adds a driver for the core along with a device tree binding to
+> allow hooking the driver to MAC devices.
 
-The overall one-step functionality is described IEEE 1588.
+Hi Richard
 
-> I think Florian and I want to better understand how this device works,
-> in order to understand your other changes.
+Can you point us at some documentation for this.
 
-The device is from here:
+I think Florian and I want to better understand how this device works,
+in order to understand your other changes.
 
-   https://www.zhaw.ch/en/engineering/institutes-centres/ines/products-and-services/ptp-ieee-1588/ptp-hardware/#c43991
-
-The only other docs that I have is a PDF of the register layout, but I
-don't think I can redistribute that.  Actually, there really isn't any
-detail in that doc at all.
-
-Thanks,
-Richard
+   Andrew
