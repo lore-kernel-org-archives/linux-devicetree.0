@@ -1,196 +1,160 @@
-Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:36627 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751486AbeCEQud (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Mar 2018 11:50:33 -0500
-Received: by mail-wm0-f65.google.com with SMTP id 188so16828515wme.1
-        for <devicetree@vger.kernel.org>; Mon, 05 Mar 2018 08:50:33 -0800 (PST)
-Received: from [198.90.202.87] ([5.172.152.52])
-        by smtp.gmail.com with ESMTPSA id d23sm8648328wma.20.2018.03.05.08.50.30
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Mar 2018 08:50:31 -0800 (PST)
-Reply-To: Lucas Tanure <tanure@linux.com>
-From: Lucas Tanure <tanure@linux.com>
-Subject: Device tree overlay properties order issue
-Message-ID: <52dae8af-e2a7-0141-61a0-b016dbcb25e3@linux.com>
-Date: Mon, 5 Mar 2018 16:50:30 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: [PATCH net-next RFC V1 4/5] net: Use the generic MII time stamper when available.
+Date: Wed, 21 Mar 2018 11:58:17 -0700
+Message-Id: <461dff568dba6ea8c98582c79d16c3155e662cf5.1521656774.git.richardcochran@gmail.com>
+In-Reply-To: <cover.1521656774.git.richardcochran@gmail.com>
+References: <cover.1521656774.git.richardcochran@gmail.com>
+To: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Now that the infrastructure is in place, convert the PHY time stamping
+logic to use the generic MII device.  This change has the added benefit
+of simplifying the code somewhat.
 
-I'm working with Raspberry Pi 3 and overlays.
-I'm seeing one issue with overlays, that I don't see with normal device 
-trees.
-
-Using the attached patch with Rpi 4.9 kernel and loading 
-dts-test-overlay.dts,
-the order that my machine driver reads properties "cpu-codec" is the 
-opposite
-of what I is specified on dts.
-
-[    4.558259] dts-test-order soc:sound: dts_test_probe
-[    4.558275] dts-test-order soc:sound: Dai Name cpu-codec1
-[    4.558284] dts-test-order soc:sound: Dai Name cpu-codec0
-
-Just for testing, commenting out drivers/of/fdt.c , line 451, did make 
-the order be
-the same as dts file.
-Looking at the history of the code in that area it appears that it was 
-actually trying
-to preserve the order of sub-nodes, but for some reason it no longer 
-works for
-overlays on raspberry pi.
-
-     /*
-      * Reverse the child list. Some drivers assumes node order matches .dts
-      * node order
-      */
-     if (!dryrun)
-         reverse_nodes(root);
-
-This is a issue with overlays or I'm missing something ?
-
-Thanks
-Lucas
-
-Signed-off-by: Lucas Tanure <tanure@linux.com>
+Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 ---
-  arch/arm/boot/dts/overlays/Makefile             |  1 +
-  arch/arm/boot/dts/overlays/dts-test-overlay.dts | 19 ++++++++++++
-  arch/arm/configs/bcm2709_defconfig              |  1 +
-  sound/soc/cirrus/Kconfig                        |  3 ++
-  sound/soc/cirrus/Makefile                       |  3 ++
-  sound/soc/cirrus/dts-test.c                     | 40 
-+++++++++++++++++++++++++
-  6 files changed, 67 insertions(+)
-  create mode 100644 arch/arm/boot/dts/overlays/dts-test-overlay.dts
-  create mode 100644 sound/soc/cirrus/dts-test.c
+ drivers/net/phy/phy.c   |  6 ++++--
+ net/Kconfig             |  8 ++++----
+ net/core/ethtool.c      |  5 ++---
+ net/core/timestamping.c | 36 ++++++++++--------------------------
+ 4 files changed, 20 insertions(+), 35 deletions(-)
 
-diff --git a/arch/arm/boot/dts/overlays/Makefile 
-b/arch/arm/boot/dts/overlays/Makefile
-index e99392ca95f9..a6b78c3a513c 100644
---- a/arch/arm/boot/dts/overlays/Makefile
-+++ b/arch/arm/boot/dts/overlays/Makefile
-@@ -17,6 +17,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
-      audioinjector-wm8731-audio.dtbo \
-      audremap.dtbo \
-      bmp085_i2c-sensor.dtbo \
-+    dts-test.dtbo \
-      dht11.dtbo \
-      dionaudio-loco.dtbo \
-      dionaudio-loco-v2.dtbo \
-diff --git a/arch/arm/boot/dts/overlays/dts-test-overlay.dts 
-b/arch/arm/boot/dts/overlays/dts-test-overlay.dts
-new file mode 100644
-index 000000000000..e6c91c1fc5a4
---- /dev/null
-+++ b/arch/arm/boot/dts/overlays/dts-test-overlay.dts
-@@ -0,0 +1,19 @@
-+/dts-v1/;
-+/plugin/;
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index 466bf88053ce..df80c6b14478 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -397,6 +397,7 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
+ 	struct mii_ioctl_data *mii_data = if_mii(ifr);
+ 	u16 val = mii_data->val_in;
+ 	bool change_autoneg = false;
++	struct net_device *netdev;
+ 
+ 	switch (cmd) {
+ 	case SIOCGMIIPHY:
+@@ -457,8 +458,9 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
+ 		return 0;
+ 
+ 	case SIOCSHWTSTAMP:
+-		if (phydev->mdio.hwtstamp)
+-			return phydev->mdio.hwtstamp(&phydev->mdio, ifr);
++		netdev = phydev->attached_dev;
++		if (netdev->mdiots->hwtstamp)
++			return netdev->mdiots->hwtstamp(netdev->mdiots, ifr);
+ 		/* fall through */
+ 
+ 	default:
+diff --git a/net/Kconfig b/net/Kconfig
+index 0428f12c25c2..e38403cd010c 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -102,12 +102,12 @@ config NET_PTP_CLASSIFY
+ 	def_bool n
+ 
+ config NETWORK_PHY_TIMESTAMPING
+-	bool "Timestamping in PHY devices"
++	bool "Timestamping in PHY and MII bus devices"
+ 	select NET_PTP_CLASSIFY
+ 	help
+-	  This allows timestamping of network packets by PHYs with
+-	  hardware timestamping capabilities. This option adds some
+-	  overhead in the transmit and receive paths.
++	  This allows timestamping of network packets by PHYs or other
++	  MII bus devices with hardware timestamping capabilities. This
++	  option adds some overhead in the transmit and receive paths.
+ 
+ 	  If you are unsure how to answer this question, answer N.
+ 
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index b4b81eaa15a9..507e56abecb7 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -2213,13 +2213,12 @@ static int ethtool_get_ts_info(struct net_device *dev, void __user *useraddr)
+ 	int err = 0;
+ 	struct ethtool_ts_info info;
+ 	const struct ethtool_ops *ops = dev->ethtool_ops;
+-	struct phy_device *phydev = dev->phydev;
+ 
+ 	memset(&info, 0, sizeof(info));
+ 	info.cmd = ETHTOOL_GET_TS_INFO;
+ 
+-	if (phydev && phydev->mdio.ts_info) {
+-		err = phydev->mdio.ts_info(&phydev->mdio, &info);
++	if (dev->mdiots && dev->mdiots->ts_info) {
++		err = dev->mdiots->ts_info(dev->mdiots, &info);
+ 	} else if (ops->get_ts_info) {
+ 		err = ops->get_ts_info(dev, &info);
+ 	} else {
+diff --git a/net/core/timestamping.c b/net/core/timestamping.c
+index b8857028e652..ecb0ecb03740 100644
+--- a/net/core/timestamping.c
++++ b/net/core/timestamping.c
+@@ -23,44 +23,32 @@
+ #include <linux/skbuff.h>
+ #include <linux/export.h>
+ 
+-static unsigned int classify(const struct sk_buff *skb)
+-{
+-	if (likely(skb->dev && skb->dev->phydev &&
+-		   skb->dev->phydev->drv))
+-		return ptp_classify_raw(skb);
+-	else
+-		return PTP_CLASS_NONE;
+-}
+-
+ void skb_clone_tx_timestamp(struct sk_buff *skb)
+ {
+-	struct phy_device *phydev;
+ 	struct sk_buff *clone;
+ 	unsigned int type;
+ 
+-	if (!skb->sk)
++	if (!skb->sk || !skb->dev || !skb->dev->mdiots)
+ 		return;
+ 
+-	type = classify(skb);
++	type = ptp_classify_raw(skb);
 +
-+/{
-+    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+ 	if (type == PTP_CLASS_NONE)
+ 		return;
+ 
+-	phydev = skb->dev->phydev;
+-	if (likely(phydev->mdio.txtstamp)) {
+-		clone = skb_clone_sk(skb);
+-		if (!clone)
+-			return;
+-		phydev->mdio.txtstamp(&phydev->mdio, clone, type);
+-	}
++	clone = skb_clone_sk(skb);
++	if (!clone)
++		return;
 +
-+    fragment@0 {
-+        target = <&sound>;
-+        __overlay__ {
-+            status = "okay";
-+            compatible = "dts,test-order";
-+
-+            cpu-codec0 {
-+            };
-+            cpu-codec1 {
-+            };
-+        };
-+    };
-+};
-diff --git a/arch/arm/configs/bcm2709_defconfig 
-b/arch/arm/configs/bcm2709_defconfig
-index 281f1381b9b3..d7ff1e89742b 100644
---- a/arch/arm/configs/bcm2709_defconfig
-+++ b/arch/arm/configs/bcm2709_defconfig
-@@ -1348,3 +1348,4 @@ CONFIG_CRYPTO_SHA1_ARM_NEON=m
-  CONFIG_CRYPTO_AES_ARM_BS=m
-  CONFIG_CRC_ITU_T=y
-  CONFIG_LIBCRC32C=y
-+CONFIG_SND_SOC_DTS_TEST=m
-diff --git a/sound/soc/cirrus/Kconfig b/sound/soc/cirrus/Kconfig
-index c7cd60f009e9..d981c054e171 100644
---- a/sound/soc/cirrus/Kconfig
-+++ b/sound/soc/cirrus/Kconfig
-@@ -41,3 +41,6 @@ config SND_EP93XX_SOC_EDB93XX
-      help
-        Say Y or M here if you want to add support for I2S audio on the
-        Cirrus Logic EDB93xx boards.
-+
-+config SND_SOC_DTS_TEST
-+    tristate "Device Tree Order Test"
-diff --git a/sound/soc/cirrus/Makefile b/sound/soc/cirrus/Makefile
-index 5514146cbdf0..436f1974cd2e 100644
---- a/sound/soc/cirrus/Makefile
-+++ b/sound/soc/cirrus/Makefile
-@@ -15,3 +15,6 @@ snd-soc-edb93xx-objs                := edb93xx.o
-  obj-$(CONFIG_SND_EP93XX_SOC_SNAPPERCL15)    += snd-soc-snappercl15.o
-  obj-$(CONFIG_SND_EP93XX_SOC_SIMONE)        += snd-soc-simone.o
-  obj-$(CONFIG_SND_EP93XX_SOC_EDB93XX)        += snd-soc-edb93xx.o
-+
-+snd-soc-dts-test-objs                := dts-test.o
-+obj-$(CONFIG_SND_SOC_DTS_TEST)            += snd-soc-dts-test.o
-diff --git a/sound/soc/cirrus/dts-test.c b/sound/soc/cirrus/dts-test.c
-new file mode 100644
-index 000000000000..fe7a5099a005
---- /dev/null
-+++ b/sound/soc/cirrus/dts-test.c
-@@ -0,0 +1,40 @@
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+
-+static int dts_test_probe(struct platform_device *pdev)
-+{
-+    struct device_node *dai;
-+    struct device_node *np = pdev->dev.of_node;
-+
-+    dev_info(&pdev->dev,"dts_test_probe\n");
-+    for_each_child_of_node(np, dai) {
-+        dev_info(&pdev->dev,"Dai Name %s\n", dai->name);
-+    }
-+    return 0;
-+}
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id dts_test_of_match[] = {
-+    { .compatible = "dts,test-order", },
-+    {},
-+};
-+MODULE_DEVICE_TABLE(of, dts_test_of_match);
-+#endif /* CONFIG_OF */
-+
-+static struct platform_driver dts_test_driver = {
-+    .driver        = {
-+        .name    = "dts-test-order",
-+        .owner    = THIS_MODULE,
-+        .of_match_table = of_match_ptr(dts_test_of_match),
-+    },
-+
-+    .probe        = dts_test_probe,
-+};
-+
-+module_platform_driver(dts_test_driver);
-+
-+MODULE_DESCRIPTION("Device Order Test");
-+MODULE_AUTHOR("Lucas Tanure <tanure@linux.com>");
-+MODULE_LICENSE("GPL");
++	skb->dev->mdiots->txtstamp(skb->dev->mdiots, clone, type);
+ }
+ EXPORT_SYMBOL_GPL(skb_clone_tx_timestamp);
+ 
+ bool skb_defer_rx_timestamp(struct sk_buff *skb)
+ {
+-	struct phy_device *phydev;
+ 	unsigned int type;
+ 
+-	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->drv)
++	if (!skb->dev || !skb->dev->mdiots)
+ 		return false;
+ 
+ 	if (skb_headroom(skb) < ETH_HLEN)
+@@ -75,10 +63,6 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
+ 	if (type == PTP_CLASS_NONE)
+ 		return false;
+ 
+-	phydev = skb->dev->phydev;
+-	if (likely(phydev->mdio.rxtstamp))
+-		return phydev->mdio.rxtstamp(&phydev->mdio, skb, type);
+-
+-	return false;
++	return skb->dev->mdiots->rxtstamp(skb->dev->mdiots, skb, type);
+ }
+ EXPORT_SYMBOL_GPL(skb_defer_rx_timestamp);
 -- 
 2.11.0
-
-
