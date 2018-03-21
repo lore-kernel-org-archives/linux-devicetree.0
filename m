@@ -1,63 +1,75 @@
-Return-Path: <SRS0=oFd4=GL=redhat.com=hdegoede@kernel.org>
-Subject: Re: [PATCH 2/5] usb: typec: fusb302: remove max_snk_* for sink config
+Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40066.outbound.protection.outlook.com ([40.107.4.66]:47872
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751545AbeCULUA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 21 Mar 2018 07:20:00 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH 2/5] usb: typec: fusb302: remove max_snk_* for sink config
+Date: Wed, 21 Mar 2018 11:19:55 +0000
+Message-ID: <VI1PR0402MB391738D930AA33B26A53E96289AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
  <1521541570-25363-3-git-send-email-jun.li@nxp.com>
  <6d76c9c9-5e73-bf71-c0cd-db4070dadece@redhat.com>
- <VI1PR0402MB391738D930AA33B26A53E96289AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-From: Hans de Goede <hdegoede@redhat.com>
-Message-ID: <96e2a4bd-3213-0abb-c47d-91727741c7f5@redhat.com>
-Date: Wed, 21 Mar 2018 13:16:06 +0100
-MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB391738D930AA33B26A53E96289AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <6d76c9c9-5e73-bf71-c0cd-db4070dadece@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Jun Li <jun.li@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>
 Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On 21-03-18 12:19, Jun Li wrote:
-> 
->> -----Original Message-----
->> From: Hans de Goede [mailto:hdegoede@redhat.com]
->> Sent: 2018年3月20日 20:29
->> To: Jun Li <jun.li@nxp.com>; gregkh@linuxfoundation.org;
->> robh+dt@kernel.org; mark.rutland@arm.com;
->> heikki.krogerus@linux.intel.com; linux@roeck-us.net; rmfrfs@gmail.com;
->> yueyao.zhu@gmail.com
->> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; dl-linux-imx
->> <linux-imx@nxp.com>
->> Subject: Re: [PATCH 2/5] usb: typec: fusb302: remove max_snk_* for sink
->> config
->>
->> Hi,
->>
->> On 20-03-18 11:26, Li Jun wrote:
->>> Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
->>> variable PDO for sink config.
->>
->> NACK there are actual users of the device-properties which you are now
->> breaking. As I mentioned in another thread, you need to instead add the pdo
->> array to the fusb302_chip struct (so that it is no longer
->> const) and generate a PDO_VAR pdo based on the device-properties.
->>
-> 
-> OK, I did a search of those properties in dts dir of upstream kernel
-> but didn't find any user of them,
-
-Note that these properties are not accessed through the dt APIs but through the
-generic device-properties API. And these are set as device-properties by the
-driver instantiating the fusb302 i2c-client on (some) x86 boards:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/intel_cht_int33fe.c
-
- > if there are actual of users, I will create
- > a PDO_VAR pdo based on dt in v2.
-
-Thank you.
-
-Regards,
-
-Hans
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhhbnMgZGUgR29lZGUgW21h
+aWx0bzpoZGVnb2VkZUByZWRoYXQuY29tXQ0KPiBTZW50OiAyMDE45bm0M+aciDIw5pelIDIwOjI5
+DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGhlaWtr
+aS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldDsgcm1mcmZzQGdt
+YWlsLmNvbTsNCj4geXVleWFvLnpodUBnbWFpbC5jb20NCj4gQ2M6IGxpbnV4LXVzYkB2Z2VyLmtl
+cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxp
+bnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNV0gdXNiOiB0eXBlYzog
+ZnVzYjMwMjogcmVtb3ZlIG1heF9zbmtfKiBmb3Igc2luaw0KPiBjb25maWcNCj4gDQo+IEhpLA0K
+PiANCj4gT24gMjAtMDMtMTggMTE6MjYsIExpIEp1biB3cm90ZToNCj4gPiBTaW5jZSBtYXhfc25r
+XyogaXMgdG8gYmUgZGVwcmVjYXRlZCwgc28gcmVtb3ZlIG1heF9zbmtfKiBieSBhZGRpbmcgYQ0K
+PiA+IHZhcmlhYmxlIFBETyBmb3Igc2luayBjb25maWcuDQo+IA0KPiBOQUNLIHRoZXJlIGFyZSBh
+Y3R1YWwgdXNlcnMgb2YgdGhlIGRldmljZS1wcm9wZXJ0aWVzIHdoaWNoIHlvdSBhcmUgbm93DQo+
+IGJyZWFraW5nLiBBcyBJIG1lbnRpb25lZCBpbiBhbm90aGVyIHRocmVhZCwgeW91IG5lZWQgdG8g
+aW5zdGVhZCBhZGQgdGhlIHBkbw0KPiBhcnJheSB0byB0aGUgZnVzYjMwMl9jaGlwIHN0cnVjdCAo
+c28gdGhhdCBpdCBpcyBubyBsb25nZXINCj4gY29uc3QpIGFuZCBnZW5lcmF0ZSBhIFBET19WQVIg
+cGRvIGJhc2VkIG9uIHRoZSBkZXZpY2UtcHJvcGVydGllcy4NCj4gDQoNCk9LLCBJIGRpZCBhIHNl
+YXJjaCBvZiB0aG9zZSBwcm9wZXJ0aWVzIGluIGR0cyBkaXIgb2YgdXBzdHJlYW0ga2VybmVsDQpi
+dXQgZGlkbid0IGZpbmQgYW55IHVzZXIgb2YgdGhlbSwgaWYgdGhlcmUgYXJlIGFjdHVhbCBvZiB1
+c2VycywgSSB3aWxsIGNyZWF0ZQ0KYSBQRE9fVkFSIHBkbyBiYXNlZCBvbiBkdCBpbiB2Mi4NCg0K
+VGhhbmtzDQpKdW4gTGkNCg0KPiBSZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAg
+ZHJpdmVycy91c2IvdHlwZWMvZnVzYjMwMi9mdXNiMzAyLmMgfCAxMyArLS0tLS0tLS0tLS0tDQo+
+ID4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEyIGRlbGV0aW9ucygtKQ0KPiA+
+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL2Z1c2IzMDIvZnVzYjMwMi5jDQo+
+ID4gYi9kcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYw0KPiA+IGluZGV4IGRhMTc5
+YWEuLmMxODNmNDYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvdHlwZWMvZnVzYjMwMi9m
+dXNiMzAyLmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYw0K
+PiA+IEBAIC0xMjA3LDYgKzEyMDcsNyBAQCBzdGF0aWMgY29uc3QgdTMyIHNyY19wZG9bXSA9IHsN
+Cj4gPg0KPiA+ICAgc3RhdGljIGNvbnN0IHUzMiBzbmtfcGRvW10gPSB7DQo+ID4gICAJUERPX0ZJ
+WEVEKDUwMDAsIDQwMCwgUERPX0ZJWEVEX0ZMQUdTKSwNCj4gPiArCVBET19WQVIoODAwLCA1MDAw
+LCAzMDAwKSwNCj4gPiAgIH07DQo+ID4NCj4gPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdGNwY19j
+b25maWcgZnVzYjMwMl90Y3BjX2NvbmZpZyA9IHsgQEAgLTEyMTQsOQ0KPiA+ICsxMjE1LDYgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCB0Y3BjX2NvbmZpZyBmdXNiMzAyX3RjcGNfY29uZmlnID0gew0K
+PiA+ICAgCS5ucl9zcmNfcGRvID0gQVJSQVlfU0laRShzcmNfcGRvKSwNCj4gPiAgIAkuc25rX3Bk
+byA9IHNua19wZG8sDQo+ID4gICAJLm5yX3Nua19wZG8gPSBBUlJBWV9TSVpFKHNua19wZG8pLA0K
+PiA+IC0JLm1heF9zbmtfbXYgPSA1MDAwLA0KPiA+IC0JLm1heF9zbmtfbWEgPSAzMDAwLA0KPiA+
+IC0JLm1heF9zbmtfbXcgPSAxNTAwMCwNCj4gPiAgIAkub3BlcmF0aW5nX3Nua19tdyA9IDI1MDAs
+DQo+ID4gICAJLnR5cGUgPSBUWVBFQ19QT1JUX0RSUCwNCj4gPiAgIAkuZGVmYXVsdF9yb2xlID0g
+VFlQRUNfU0lOSywNCj4gPiBAQCAtMTc4NCwxNSArMTc4Miw2IEBAIHN0YXRpYyBpbnQgZnVzYjMw
+Ml9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudA0KPiAqY2xpZW50LA0KPiA+ICAgCWNoaXAtPnRjcGNf
+ZGV2LmNvbmZpZyA9ICZjaGlwLT50Y3BjX2NvbmZpZzsNCj4gPiAgIAltdXRleF9pbml0KCZjaGlw
+LT5sb2NrKTsNCj4gPg0KPiA+IC0JaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAi
+ZmNzLG1heC1zaW5rLW1pY3Jvdm9sdCIsICZ2KSkNCj4gPiAtCQljaGlwLT50Y3BjX2NvbmZpZy5t
+YXhfc25rX212ID0gdiAvIDEwMDA7DQo+ID4gLQ0KPiA+IC0JaWYgKCFkZXZpY2VfcHJvcGVydHlf
+cmVhZF91MzIoZGV2LCAiZmNzLG1heC1zaW5rLW1pY3JvYW1wIiwgJnYpKQ0KPiA+IC0JCWNoaXAt
+PnRjcGNfY29uZmlnLm1heF9zbmtfbWEgPSB2IC8gMTAwMDsNCj4gPiAtDQo+ID4gLQlpZiAoIWRl
+dmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmY3MsbWF4LXNpbmstbWljcm93YXR0IiwgJnYp
+KQ0KPiA+IC0JCWNoaXAtPnRjcGNfY29uZmlnLm1heF9zbmtfbXcgPSB2IC8gMTAwMDsNCj4gPiAt
+DQo+ID4gICAJaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiZmNzLG9wZXJhdGlu
+Zy1zaW5rLW1pY3Jvd2F0dCIsICZ2KSkNCj4gPiAgIAkJY2hpcC0+dGNwY19jb25maWcub3BlcmF0
+aW5nX3Nua19tdyA9IHYgLyAxMDAwOw0KPiA+DQo+ID4NCg==
