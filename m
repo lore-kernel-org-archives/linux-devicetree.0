@@ -1,263 +1,78 @@
-Return-Path: <SRS0=MR/7=F4=linaro.org=shawn.guo@kernel.org>
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH v2 2/2] mmc: dw_mmc: add support for hi3798cv200 specific extensions of dw-mshc
-Date: Tue,  6 Mar 2018 14:58:51 +0800
-Message-Id: <1520319531-24661-3-git-send-email-shawn.guo@linaro.org>
-In-Reply-To: <1520319531-24661-1-git-send-email-shawn.guo@linaro.org>
-References: <1520319531-24661-1-git-send-email-shawn.guo@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:41637 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753356AbeCUT25 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 21 Mar 2018 15:28:57 -0400
+Received: by mail-qk0-f194.google.com with SMTP id s78so6689530qkl.8
+        for <devicetree@vger.kernel.org>; Wed, 21 Mar 2018 12:28:56 -0700 (PDT)
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: [PATCH 07/14] mmc: dt-bindings: add MMC support to JZ4740 SoC
+Date: Wed, 21 Mar 2018 16:27:34 -0300
+Message-Id: <20180321192741.25872-8-ezequiel@vanguardiasur.com.ar>
+In-Reply-To: <20180321192741.25872-1-ezequiel@vanguardiasur.com.ar>
+References: <20180321192741.25872-1-ezequiel@vanguardiasur.com.ar>
+Sender: devicetree-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>, Ulf Hansson <ulf.hansson@linaro.org>, Paul Cercueil <paul@crapouillou.net>
+Cc: linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.co.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: tianshuliang <tianshuliang@hisilicon.com>
+From: Ezequiel Garcia <ezequiel@collabora.co.uk>
 
-Hi3798CV200 SoC extends the dw-mshc controller for additional clock
-and bus control. Add support for these extensions.
+Add the devicetree binding for JZ4740/JZ4780 SoC MMC/SD controller.
 
-Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.co.uk>
 ---
- drivers/mmc/host/Kconfig              |   9 ++
- drivers/mmc/host/Makefile             |   1 +
- drivers/mmc/host/dw_mmc-hi3798cv200.c | 197 ++++++++++++++++++++++++++++++++++
- 3 files changed, 207 insertions(+)
- create mode 100644 drivers/mmc/host/dw_mmc-hi3798cv200.c
+ Documentation/devicetree/bindings/mmc/jz4740.txt | 38 ++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/jz4740.txt
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 620c2d90a646..de36fffe8225 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -718,6 +718,15 @@ config MMC_DW_EXYNOS
- 	  Synopsys DesignWare Memory Card Interface driver. Select this option
- 	  for platforms based on Exynos4 and Exynos5 SoC's.
- 
-+config MMC_DW_HI3798CV200
-+	tristate "Hi3798CV200 specific extensions for Synopsys DW Memory Card Interface"
-+	depends on MMC_DW
-+	select MMC_DW_PLTFM
-+	help
-+	  This selects support for HiSilicon Hi3798CV200 SoC specific extensions to the
-+	  Synopsys DesignWare Memory Card Interface driver. Select this option
-+	  for platforms based on HiSilicon Hi3798CV200 SoC.
-+
- config MMC_DW_K3
- 	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
- 	depends on MMC_DW
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 84cd1388abc3..00ec9a2f59be 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_MMC_CAVIUM_THUNDERX) += thunderx-mmc.o
- obj-$(CONFIG_MMC_DW)		+= dw_mmc.o
- obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
- obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
-+obj-$(CONFIG_MMC_DW_HI3798CV200) += dw_mmc-hi3798cv200.o
- obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
- obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
- obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
-diff --git a/drivers/mmc/host/dw_mmc-hi3798cv200.c b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+diff --git a/Documentation/devicetree/bindings/mmc/jz4740.txt b/Documentation/devicetree/bindings/mmc/jz4740.txt
 new file mode 100644
-index 000000000000..364ad3dd7116
+index 000000000000..7cd8c432d7c8
 --- /dev/null
-+++ b/drivers/mmc/host/dw_mmc-hi3798cv200.c
-@@ -0,0 +1,197 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2017 HiSilicon Technologies Co., Ltd.
-+ */
++++ b/Documentation/devicetree/bindings/mmc/jz4740.txt
+@@ -0,0 +1,38 @@
++* Ingenic JZ47xx MMC controllers
 +
-+#include <linux/clk.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mmc/host.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
++This file documents the device tree properties used for the MMC controller in
++Ingenic JZ4740/JZ4780 SoCs. These are in addition to the core MMC properties
++described in mmc.txt.
 +
-+#include "dw_mmc.h"
-+#include "dw_mmc-pltfm.h"
++Required properties:
++- compatible: Should be one of the following:
++  - "ingenic,jz4740-mmc" for the JZ4740
++  - "ingenic,jz4780-mmc" for the JZ4780
++- reg: Should contain the MMC controller registers location and length.
++- interrupts: Should contain the interrupt specifier of the MMC controller.
++- clocks: Clock for the MMC controller.
 +
-+#define SDMMC_DDR_REG		0x10c
-+#define SDMMC_DDR_HS400		BIT(31)
-+#define SDMMC_ENABLE_SH		0x110
-+#define SDMMC_ENABLE_SH_PHASE	BIT(0)
++Optional properties:
++- dmas: List of DMA specifiers with the controller specific format
++        as described in the generic DMA client binding. A tx and rx
++        specifier is required.
++- dma-names: RX and TX  DMA request names.
++        Should be "rx" and "tx", in that order.
 +
-+#define SDMMC_UHS_DDR		BIT(16)
-+#define ALL_INT_CLR		0x1efff
++For additional details on DMA client bindings see ../dma/dma.txt.
 +
-+struct hi3798cv200_priv {
-+	struct clk *sample_clk;
-+	struct clk *drive_clk;
++Example:
++
++mmc0: mmc@13450000 {
++	compatible = "ingenic,jz4780-mmc";
++	reg = <0x13450000 0x1000>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <37>;
++
++	clocks = <&cgu JZ4780_CLK_MSC0>;
++	clock-names = "mmc";
++
++	dmas = <&dma JZ4780_DMA_MSC0_RX 0xffffffff>, <&dma JZ4780_DMA_MSC0_TX 0xffffffff>;
++	dma-names = "rx", "tx";
 +};
-+
-+static void dw_mci_hi3798cv200_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	struct hi3798cv200_priv *priv = host->priv;
-+	u32 val;
-+
-+	val = mci_readl(host, UHS_REG);
-+	if (ios->timing == MMC_TIMING_MMC_DDR52 ||
-+	    ios->timing == MMC_TIMING_UHS_DDR50)
-+		val |= SDMMC_UHS_DDR;
-+	else
-+		val &= ~SDMMC_UHS_DDR;
-+	mci_writel(host, UHS_REG, val);
-+
-+	val = mci_readl(host, ENABLE_SH);
-+	if (ios->timing == MMC_TIMING_MMC_DDR52)
-+		val |= SDMMC_ENABLE_SH_PHASE;
-+	else
-+		val &= ~SDMMC_ENABLE_SH_PHASE;
-+	mci_writel(host, ENABLE_SH, val);
-+
-+	val = mci_readl(host, DDR_REG);
-+	if (ios->timing == MMC_TIMING_MMC_HS400)
-+		val |= SDMMC_DDR_HS400;
-+	else
-+		val &= ~SDMMC_DDR_HS400;
-+	mci_writel(host, DDR_REG, val);
-+
-+	if (ios->timing == MMC_TIMING_MMC_HS ||
-+	    ios->timing == MMC_TIMING_LEGACY)
-+		clk_set_phase(priv->drive_clk, 180);
-+	else if (ios->timing == MMC_TIMING_MMC_HS200)
-+		clk_set_phase(priv->drive_clk, 135);
-+}
-+
-+static int dw_mci_hi3798cv200_execute_tuning(struct dw_mci_slot *slot,
-+					     u32 opcode)
-+{
-+	int degrees[] = { 0, 45, 90, 135, 180, 225, 270, 315 };
-+	struct dw_mci *host = slot->host;
-+	struct hi3798cv200_priv *priv = host->priv;
-+	int raise_point = -1, fall_point = -1;
-+	int err, prev_err = -1;
-+	int found = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(degrees); i++) {
-+		clk_set_phase(priv->sample_clk, degrees[i]);
-+		mci_writel(host, RINTSTS, ALL_INT_CLR);
-+
-+		err = mmc_send_tuning(slot->mmc, opcode, NULL);
-+		if (!err)
-+			found = 1;
-+
-+		if (i > 0) {
-+			if (err && !prev_err)
-+				fall_point = i - 1;
-+			if (!err && prev_err)
-+				raise_point = i;
-+		}
-+
-+		if (raise_point != -1 && fall_point != -1)
-+			goto tuning_out;
-+
-+		prev_err = err;
-+		err = 0;
-+	}
-+
-+tuning_out:
-+	if (found) {
-+		if (raise_point == -1)
-+			raise_point = 0;
-+		if (fall_point == -1)
-+			fall_point = ARRAY_SIZE(degrees) - 1;
-+		if (fall_point < raise_point) {
-+			if ((raise_point + fall_point) >
-+			    (ARRAY_SIZE(degrees) - 1))
-+				i = fall_point / 2;
-+			else
-+				i = (raise_point + ARRAY_SIZE(degrees) - 1) / 2;
-+		} else {
-+			i = (raise_point + fall_point) / 2;
-+		}
-+
-+		clk_set_phase(priv->sample_clk, degrees[i]);
-+		dev_dbg(host->dev, "Tuning clk_sample[%d, %d], set[%d]\n",
-+			raise_point, fall_point, degrees[i]);
-+	} else {
-+		dev_err(host->dev, "No valid clk_sample shift! use default\n");
-+		err = -EINVAL;
-+	}
-+
-+	mci_writel(host, RINTSTS, ALL_INT_CLR);
-+	return err;
-+}
-+
-+static int dw_mci_hi3798cv200_init(struct dw_mci *host)
-+{
-+	struct hi3798cv200_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->sample_clk = devm_clk_get(host->dev, "ciu-sample");
-+	if (IS_ERR(priv->sample_clk)) {
-+		dev_err(host->dev, "failed to get ciu-sample clock\n");
-+		return PTR_ERR(priv->sample_clk);
-+	}
-+
-+	priv->drive_clk = devm_clk_get(host->dev, "ciu-drive");
-+	if (IS_ERR(priv->drive_clk)) {
-+		dev_err(host->dev, "failed to get ciu-drive clock\n");
-+		return PTR_ERR(priv->drive_clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->sample_clk);
-+	if (ret) {
-+		dev_err(host->dev, "failed to enable ciu-sample clock\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(priv->drive_clk);
-+	if (ret) {
-+		dev_err(host->dev, "failed to enable ciu-drive clock\n");
-+		goto disable_sample_clk;
-+	}
-+
-+	host->priv = priv;
-+	return 0;
-+
-+disable_sample_clk:
-+	clk_disable_unprepare(priv->sample_clk);
-+	return ret;
-+}
-+
-+static const struct dw_mci_drv_data hi3798cv200_data = {
-+	.init = dw_mci_hi3798cv200_init,
-+	.set_ios = dw_mci_hi3798cv200_set_ios,
-+	.execute_tuning = dw_mci_hi3798cv200_execute_tuning,
-+};
-+
-+static int dw_mci_hi3798cv200_probe(struct platform_device *pdev)
-+{
-+	return dw_mci_pltfm_register(pdev, &hi3798cv200_data);
-+}
-+
-+static const struct of_device_id dw_mci_hi3798cv200_match[] = {
-+	{ .compatible = "hisilicon,hi3798cv200-dw-mshc", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, dw_mci_hi3798cv200_match);
-+static struct platform_driver dw_mci_hi3798cv200_driver = {
-+	.probe = dw_mci_hi3798cv200_probe,
-+	.remove = dw_mci_pltfm_remove,
-+	.driver = {
-+		.name = "dwmmc_hi3798cv200",
-+		.of_match_table = dw_mci_hi3798cv200_match,
-+	},
-+};
-+module_platform_driver(dw_mci_hi3798cv200_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon Hi3798CV200 Specific DW-MSHC Driver Extension");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:dwmmc_hi3798cv200");
 -- 
-1.9.1
+2.16.2
+
