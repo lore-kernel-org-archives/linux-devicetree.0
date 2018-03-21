@@ -1,168 +1,300 @@
-Return-Path: <SRS0=vTV3=GL=chromium.org=swboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Return-Path: <SRS0=JDWs=GL=chromium.org=evgreen@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-From: Stephen Boyd <swboyd@chromium.org>
-In-Reply-To: <23359b7c-6760-9cca-4c99-b08b3e79fa7a@codeaurora.org>
 References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
  <1521071931-9294-5-git-send-email-kramasub@codeaurora.org>
- <152156025613.254778.431774948232120027@swboyd.mtv.corp.google.com>
- <23359b7c-6760-9cca-4c99-b08b3e79fa7a@codeaurora.org>
-Message-ID: <152165280040.91116.1976061062009791598@swboyd.mtv.corp.google.com>
-Subject: Re: [PATCH v4 4/6] tty: serial: msm_geni_serial: Add serial driver support
- for GENI based QUP
-Date: Wed, 21 Mar 2018 10:20:00 -0700
-To: Karthik Ramasubramanian <kramasub@codeaurora.org>, andy.gross@linaro.org, corbet@lwn.net, david.brown@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
-Cc: linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
+ <CAE=gft7QAE0+3YpLu9BL2uvN=A0YgF=Xp2ocmbX=pvwszWtZew@mail.gmail.com> <1fa9262a-28bf-8432-5672-4f8c09898493@codeaurora.org>
+In-Reply-To: <1fa9262a-28bf-8432-5672-4f8c09898493@codeaurora.org>
+From: Evan Green <evgreen@chromium.org>
+Date: Wed, 21 Mar 2018 00:18:52 +0000
+Message-ID: <CAE=gft7x23Fc3OicbaaF6wGw-CjgnSDT53xnHmXEDoZmtW0_7Q@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] tty: serial: msm_geni_serial: Add serial driver
+ support for GENI based QUP
+Content-Type: text/plain; charset="UTF-8"
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, acourbot@chromium.org, swboyd@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Karthik Ramasubramanian (2018-03-20 15:53:25)
-> =
+On Tue, Mar 20, 2018 at 4:44 PM Karthik Ramasubramanian <
+kramasub@codeaurora.org> wrote:
 
-> =
 
-> On 3/20/2018 9:37 AM, Stephen Boyd wrote:
-> > Quoting Karthikeyan Ramasubramanian (2018-03-14 16:58:49)
-> >> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/seria=
-l/qcom_geni_serial.c
-> >> new file mode 100644
-> >> index 0000000..1442777
-> >> --- /dev/null
-> >> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> >> @@ -0,0 +1,1158 @@
+
+> On 3/20/2018 12:39 PM, Evan Green wrote:
+> > Hi Karthik,
+> >
+> > On Wed, Mar 14, 2018 at 4:59 PM Karthikeyan Ramasubramanian <
+> > kramasub@codeaurora.org> wrote:
+> >
 > >> +
-> >> +#ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
-> >> +static void qcom_geni_serial_wr_char(struct uart_port *uport, int ch)
+> >> +static bool qcom_geni_serial_poll_bit(struct uart_port *uport,
+> >> +                               int offset, int field, bool set)
 > >> +{
-> >> +       writel_relaxed(ch, uport->membase + SE_GENI_TX_FIFOn);
-> > =
-
-> > Does this expect the whole word to have data to write? Or does the FIFO
-> > output a character followed by three NUL bytes each time it gets
-> > written? The way that uart_console_write() works is to take each
-> > character a byte at a time, put it into an int (so extend that byte with
-> > zero) and then pass it to the putchar function. I would expect that at
-> > this point the hardware sees the single character and then 3 NULs enter
-> > the FIFO each time.
-> > =
-
-> > For previous MSM uarts I had to handle this oddity by packing the words
-> > into the fifo four at a time. You may need to do the same here.
-> The packing configuration 1 * 8 (done using geni_se_config_packing)
-> ensures that only one byte per FIFO word needs to be transmitted. From
-> that perspective, we need not have such oddity.
-
-Ok! That's good to hear.
-
-> > =
-
-> > Can you also support the OF_EARLYCON_DECLARE method of console writing
-> > so we can get an early printk style debug console?
-> Do you prefer that as part of this patch itself or is it ok if I upload
-> the earlycon support once this gets merged.
-
-I think this already got merged? So just split it out into another patch
-would be fine. I see the config is already selecting the earlycon
-support so it must be planned.
-
-> > =
-
-> > =
-
+> >> +       u32 reg;
+> >> +       struct qcom_geni_serial_port *port;
+> >> +       unsigned int baud;
+> >> +       unsigned int fifo_bits;
+> >> +       unsigned long timeout_us = 20000;
 > >> +
-> >> +       spin_lock_irqsave(&uport->lock, flags);
-> >> +       m_irq_status =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_=
-STATUS);
-> >> +       s_irq_status =3D readl_relaxed(uport->membase + SE_GENI_S_IRQ_=
-STATUS);
-> >> +       m_irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
-> >> +       writel_relaxed(m_irq_status, uport->membase + SE_GENI_M_IRQ_CL=
-EAR);
-> >> +       writel_relaxed(s_irq_status, uport->membase + SE_GENI_S_IRQ_CL=
-EAR);
+> >> +       /* Ensure polling is not re-ordered before the prior
+writes/reads
+> > */
+> >> +       mb();
+> >
+> > These barriers sprinkled around everywhere are new. Did
+> > you find that you needed them for something? In this case, the
+> > readl_poll_timeout_atomic should already have a read barrier (nor do you
+> > probably care about read reordering, right?) Perhaps this should
+> > only be a mmiowb rather than a full barrier, because you really just
+want
+> > to say "make sure all my old writes got out to hardware before spinning"
+> These barriers have been there from v3. Regarding this barrier - since
+> readl_poll_timeout_atomic has a read barrier, this one can be converted
+> to just write barrier.
+
+Thanks. I must have missed them in v3. Is that mmiowb that would go there,
+or wmb? I'm unsure.
+
+> >
 > >> +
-> >> +       if (WARN_ON(m_irq_status & M_ILLEGAL_CMD_EN))
-> >> +               goto out_unlock;
-> >> +
-> >> +       if (s_irq_status & S_RX_FIFO_WR_ERR_EN) {
-> >> +               uport->icount.overrun++;
-> >> +               tty_insert_flip_char(tport, 0, TTY_OVERRUN);
+> >> +       if (uport->private_data) {
+> >> +               port = to_dev_port(uport, uport);
+> >> +               baud = port->baud;
+> >> +               if (!baud)
+> >> +                       baud = 115200;
+> >> +               fifo_bits = port->tx_fifo_depth * port->tx_fifo_width;
+> >> +               /*
+> >> +                * Total polling iterations based on FIFO worth of
+bytes
+> > to be
+> >> +                * sent at current baud. Add a little fluff to the
+wait.
+> >> +                */
+> >> +               timeout_us = ((fifo_bits * USEC_PER_SEC) / baud) + 500;
 > >> +       }
 > >> +
-> >> +       if (m_irq_status & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN) &&
-> >> +           m_irq_en & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN))
-> >> +               qcom_geni_serial_handle_tx(uport);
+> >> +       return !readl_poll_timeout_atomic(uport->membase + offset, reg,
+> >> +                        (bool)(reg & field) == set, 10, timeout_us);
+> >> +}
+> > [...]
 > >> +
-> >> +       if (s_irq_status & S_GP_IRQ_0_EN || s_irq_status & S_GP_IRQ_1_=
-EN) {
-> >> +               if (s_irq_status & S_GP_IRQ_0_EN)
-> >> +                       uport->icount.parity++;
-> >> +               drop_rx =3D true;
-> >> +       } else if (s_irq_status & S_GP_IRQ_2_EN ||
-> >> +                                       s_irq_status & S_GP_IRQ_3_EN) {
-> >> +               uport->icount.brk++;
-> > =
+> >> +static void qcom_geni_serial_start_tx(struct uart_port *uport)
+> >> +{
+> >> +       u32 irq_en;
+> >> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+> >> +       u32 status;
+> >> +
+> >> +       if (port->xfer_mode == GENI_SE_FIFO) {
+> >> +               status = readl_relaxed(uport->membase +
+SE_GENI_STATUS);
+> >> +               if (status & M_GENI_CMD_ACTIVE)
+> >> +                       return;
+> >> +
+> >> +               if (!qcom_geni_serial_tx_empty(uport))
+> >> +                       return;
+> >> +
+> >> +               /*
+> >> +                * Ensure writing to IRQ_EN & watermark registers are
+not
+> >> +                * re-ordered before checking the status of the Serial
+> >> +                * Engine and TX FIFO
+> >> +                */
+> >> +               mb();
+> >
+> > Here's another one. You should just be able to use a regular readl when
+> > reading SE_GENI_STATUS and remove this barrier, since readl has an rmb
+> > which orders your read of M_IRQ_EN below. I don't think you need to
+worry
+> > about the writes below going above the read above, since there's logic
+in
+> > between that needs the result of the read. Maybe that also saves you in
+the
+> > read case, too. Either way, this barrier seems heavy handed.
+> Write to the watermark register does not have any dependency on the
+> reads. Hence it can be re-ordered. But writing to that register alone
+> without enabling the watermark interrupt will not have any impact. From
+> that perspective, using readl while checking the GENI_STATUS is
+> sufficient to maintain the required order. I will put a comment
+> regarding the use of readl so that the reason is not lost.
 
-> > Maybe move this stat accounting to the place where brk is handled?
-> Since other error accounting like overrun, parity are happening here, it
-> feels logical to keep that accounting here.
+Yes, I see what you mean, and without the branch I'd agree. My thinking
+though was that you have a branch between the read and writes. So to
+determine whether or not to even execute the writes, you must have
+successfully evaluated the read, since program flow depends on it. I will
+admit this is where my barrier knowledge gets fuzzy. Can speculative
+execution perform register writes? (ie if that branch was guessed wrong
+before the read actually completes, and then the writes happen before the
+read? That seems like it couldn't possibly happen, as it would result in
+weird spurious speculative writes to registers. Perhaps the mapping bits
+prevent this sort of thing...)
 
-Alright.
+If what I've said makes any sort of sense, and you still want to keep the
+barriers here and below, then I'll let it go.
 
-> >> +       return uart_add_one_port(&qcom_geni_console_driver, uport);
+> >
+> >> +
+> >> +               irq_en = readl_relaxed(uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +               irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
+> >> +
+> >> +               writel_relaxed(port->tx_wm, uport->membase +
+> >> +
+SE_GENI_TX_WATERMARK_REG);
+> >> +               writel_relaxed(irq_en, uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +       }
 > >> +}
 > >> +
-> >> +static int qcom_geni_serial_remove(struct platform_device *pdev)
+> >> +static void qcom_geni_serial_stop_tx(struct uart_port *uport)
 > >> +{
-> >> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pd=
-ev);
-> >> +       struct uart_driver *drv =3D port->uport.private_data;
+> >> +       u32 irq_en;
+> >> +       u32 status;
+> >> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
 > >> +
-> >> +       uart_remove_one_port(drv, &port->uport);
-> >> +       return 0;
+> >> +       irq_en = readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
+> >> +       irq_en &= ~M_CMD_DONE_EN;
+> >> +       if (port->xfer_mode == GENI_SE_FIFO) {
+> >> +               irq_en &= ~M_TX_FIFO_WATERMARK_EN;
+> >> +               writel_relaxed(0, uport->membase +
+> >> +                                    SE_GENI_TX_WATERMARK_REG);
+> >> +       }
+> >> +       port->xmit_size = 0;
+> >> +       writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+> >> +       status = readl_relaxed(uport->membase + SE_GENI_STATUS);
+> >> +       /* Possible stop tx is called multiple times. */
+> >> +       if (!(status & M_GENI_CMD_ACTIVE))
+> >> +               return;
+> >> +
+> >> +       /*
+> >> +        * Ensure cancel command write is not re-ordered before
+checking
+> >> +        * the status of the Primary Sequencer.
+> >> +        */
+> >> +       mb();
+> >
+> > I don't see how what's stated in your comment could happen, as that
+would
+> > be a logic error. This barrier seems unneeded to me.
+> Issuing a cancel command to the primary sequencer, makes the primary
+> sequencer to go to inactive state. Even though they are 2 different
+> registers, writing to one register impacts the other. From that
+> perspective, we want to ensure that the order is maintained. Else if the
+> cancel command goes through and then the GENI_STATUS is read, it might
+> say that the primary sequencer is not active and the function might
+> return prematurely. Same argument applies for the below mentioned cases.
+> >
+> >> +
+> >> +       geni_se_cancel_m_cmd(&port->se);
+> >> +       if (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> >> +                                               M_CMD_CANCEL_EN,
+true)) {
+> >> +               geni_se_abort_m_cmd(&port->se);
+> >> +               qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> >> +                                               M_CMD_ABORT_EN, true);
+> >> +               writel_relaxed(M_CMD_ABORT_EN, uport->membase +
+> >> +
+> > SE_GENI_M_IRQ_CLEAR);
+> >> +       }
+> >> +       writel_relaxed(M_CMD_CANCEL_EN, uport->membase +
+> > SE_GENI_M_IRQ_CLEAR);
 > >> +}
 > >> +
-> >> +static int __maybe_unused qcom_geni_serial_sys_suspend_noirq(struct d=
-evice *dev)
+> >> +static void qcom_geni_serial_start_rx(struct uart_port *uport)
 > >> +{
-> >> +       struct platform_device *pdev =3D to_platform_device(dev);
-> >> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pd=
-ev);
-> >> +       struct uart_port *uport =3D &port->uport;
+> >> +       u32 irq_en;
+> >> +       u32 status;
+> >> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
 > >> +
-> >> +       uart_suspend_port(uport->private_data, uport);
-> >> +       return 0;
+> >> +       status = readl_relaxed(uport->membase + SE_GENI_STATUS);
+> >> +       if (status & S_GENI_CMD_ACTIVE)
+> >> +               qcom_geni_serial_stop_rx(uport);
+> >> +
+> >> +       /*
+> >> +        * Ensure setup command write is not re-ordered before checking
+> >> +        * the status of the Secondary Sequencer.
+> >> +        */
+> >> +       mb();
+> >
+> > Also here, I think the reordering you're worried about would mean the
+CPU
+> > is executing incorrectly.
+> >
+> >> +
+> >> +       geni_se_setup_s_cmd(&port->se, UART_START_READ, 0);
+> >> +
+> >> +       if (port->xfer_mode == GENI_SE_FIFO) {
+> >> +               irq_en = readl_relaxed(uport->membase +
+SE_GENI_S_IRQ_EN);
+> >> +               irq_en |= S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
+> >> +               writel_relaxed(irq_en, uport->membase +
+SE_GENI_S_IRQ_EN);
+> >> +
+> >> +               irq_en = readl_relaxed(uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +               irq_en |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
+> >> +               writel_relaxed(irq_en, uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +       }
 > >> +}
 > >> +
-> >> +static int __maybe_unused qcom_geni_serial_sys_resume_noirq(struct de=
-vice *dev)
+> >> +static void qcom_geni_serial_stop_rx(struct uart_port *uport)
 > >> +{
-> >> +       struct platform_device *pdev =3D to_platform_device(dev);
-> >> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pd=
-ev);
-> >> +       struct uart_port *uport =3D &port->uport;
+> >> +       u32 irq_en;
+> >> +       u32 status;
+> >> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+> >> +       u32 irq_clear = S_CMD_DONE_EN;
 > >> +
-> >> +       if (console_suspend_enabled && uport->suspended) {
-> >> +               uart_resume_port(uport->private_data, uport);
-> >> +               disable_irq(uport->irq);
-> > =
-
-> > I missed the enable_irq() part. Is this still necessary?
-> Suspending the uart console port invokes the uart port shutdown
-> operation. The shutdown operation disables and frees the concerned IRQ.
-> Resuming the uart console port invokes the uart port startup operation
-> which requests for the IRQ. The request_irq operation auto-enables the
-> IRQ. In addition, resume_noirq implicitly enables the IRQ. This leads to
-> an unbalanced IRQ enable warning.
-> =
-
-> This disable_irq() helps with suppressing that warning.
-
-That's not obvious so we need a big comment here.
-
-I thought we would move this to the normal suspend/resume callbacks and
-skip the noirq variants. That would make this disable_irq() unnecessary
-then?
-
-BTW, free_irq() should disable the irq itself, so it looks odd to have a
-disable_irq() followed directly by a free_irq().
+> >> +       if (port->xfer_mode == GENI_SE_FIFO) {
+> >> +               irq_en = readl_relaxed(uport->membase +
+SE_GENI_S_IRQ_EN);
+> >> +               irq_en &= ~(S_RX_FIFO_WATERMARK_EN |
+S_RX_FIFO_LAST_EN);
+> >> +               writel_relaxed(irq_en, uport->membase +
+SE_GENI_S_IRQ_EN);
+> >> +
+> >> +               irq_en = readl_relaxed(uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +               irq_en &= ~(M_RX_FIFO_WATERMARK_EN |
+M_RX_FIFO_LAST_EN);
+> >> +               writel_relaxed(irq_en, uport->membase +
+SE_GENI_M_IRQ_EN);
+> >> +       }
+> >> +
+> >> +       status = readl_relaxed(uport->membase + SE_GENI_STATUS);
+> >> +       /* Possible stop rx is called multiple times. */
+> >> +       if (!(status & S_GENI_CMD_ACTIVE))
+> >> +               return;
+> >> +
+> >> +       /*
+> >> +        * Ensure cancel command write is not re-ordered before
+checking
+> >> +        * the status of the Secondary Sequencer.
+> >> +        */
+> >> +       mb();
+> >
+> > Same deal here.
+> >
+> >> +
+> >> +       geni_se_cancel_s_cmd(&port->se);
+> >> +       qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+> >> +                                       S_GENI_CMD_CANCEL, false);
+> >> +       status = readl_relaxed(uport->membase + SE_GENI_STATUS);
+> >> +       writel_relaxed(irq_clear, uport->membase +
+SE_GENI_S_IRQ_CLEAR);
+> >> +       if (status & S_GENI_CMD_ACTIVE)
+> >> +               qcom_geni_serial_abort_rx(uport);
+> >> +}
+> >> +
+> >
+> > Sorry gmail decided to wrap some of the context lines.
+> > -Evan
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe
+linux-arm-msm" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> Regards,
+> Karthik.
+> --
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
