@@ -1,77 +1,92 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCHv6 1/3] dt-bindings: documentation: add clock bindings
- information for Stratix10
-Date: Tue, 20 Mar 2018 23:10:04 -0500
-Message-ID: <1b10d9b1-3b2a-9c62-4817-e925fbd3bb77@kernel.org>
-References: <1519656455-14629-1-git-send-email-dinguyen@kernel.org>
- <152148291051.242365.11482305337775703728@swboyd.mtv.corp.google.com>
+From: Rajkumar Rampelli <rrajk@nvidia.com>
+Subject: [PATCH V2 1/9] pwm: core: Add support for PWM HW driver with pwm capture only
+Date: Wed, 21 Mar 2018 10:10:36 +0530
+Message-ID: <1521607244-29734-2-git-send-email-rrajk@nvidia.com>
+References: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <152148291051.242365.11482305337775703728@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com, rrajk@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
+Add support for pwm HW driver which has only capture functionality.
+This helps to implement the PWM based Tachometer driver which reads
+the PWM output signals from electronic fans.
 
+PWM Tachometer captures the period and duty cycle of the PWM signal
 
-On 03/19/2018 01:08 PM, Stephen Boyd wrote:
-> Quoting Dinh Nguyen (2018-02-26 06:47:33)
->> diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
->> new file mode 100644
->> index 0000000..0652ff1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
->> @@ -0,0 +1,51 @@
->> +Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
->> +
->> +This binding uses the common clock binding[1].
->> +
->> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +Required properties:
->> +- compatible : shall be
->> +       "intel,stratix10-clkmgr"
->> +
->> +- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
->> +
->> +- #clock-cells : from common clock binding, shall be set to 1.
->> +
->> +- clocks : Should contain fixed-clock sources, such as oscillators.
->> +
->> +Example:
->> +       clkmgr: clock-controller@ffd10000 {
->> +               compatible = "intel,stratix10-clkmgr";
->> +               reg = <0xffd10000 0x1000>;
->> +               #clock-cells = <1>;
->> +
->> +               clocks {
-> 
-> Why do we need a subnode for clocks inside of a clock controller node?
-> 
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +
->> +                       cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
->> +                               #clock-cells = <0>;
->> +                               compatible = "fixed-clock";
->> +                               clock-frequency = <25000000>;
-> 
-> What is this for? I would think oscillators go into the root of the DT
-> because they're on the board, not inside the clock controller.
-> 
+Add conditional checks for callabacks enable(), disable(), config()
+to check if they are supported by the client driver or not. Skip these
+callbacks if they are not supported.
 
-Thanks for the review! I'll move the PLLs into the root of the DT.
+Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+---
 
-Dinh
+V2: Added if conditional checks for pwm callbacks since drivers may
+    implements only pwm capture functionality.
+
+ drivers/pwm/core.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 1581f6a..f70fe68 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -246,6 +246,10 @@ static bool pwm_ops_check(const struct pwm_ops *ops)
+ 	if (ops->apply)
+ 		return true;
+ 
++	/* driver supports capture operation */
++	if (ops->capture)
++		return true;
++
+ 	return false;
+ }
+ 
+@@ -495,7 +499,8 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
+ 			 * ->apply().
+ 			 */
+ 			if (pwm->state.enabled) {
+-				pwm->chip->ops->disable(pwm->chip, pwm);
++				if (pwm->chip->ops->disable)
++					pwm->chip->ops->disable(pwm->chip, pwm);
+ 				pwm->state.enabled = false;
+ 			}
+ 
+@@ -509,22 +514,26 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
+ 
+ 		if (state->period != pwm->state.period ||
+ 		    state->duty_cycle != pwm->state.duty_cycle) {
+-			err = pwm->chip->ops->config(pwm->chip, pwm,
++			if (pwm->chip->ops->config) {
++				err = pwm->chip->ops->config(pwm->chip, pwm,
+ 						     state->duty_cycle,
+ 						     state->period);
+-			if (err)
+-				return err;
++				if (err)
++					return err;
++			}
+ 
+ 			pwm->state.duty_cycle = state->duty_cycle;
+ 			pwm->state.period = state->period;
+ 		}
+ 
+ 		if (state->enabled != pwm->state.enabled) {
+-			if (state->enabled) {
++			if (state->enabled && pwm->chip->ops->enable) {
+ 				err = pwm->chip->ops->enable(pwm->chip, pwm);
+ 				if (err)
+ 					return err;
+-			} else {
++			}
++
++			if (!state->enabled && pwm->chip->ops->disable) {
+ 				pwm->chip->ops->disable(pwm->chip, pwm);
+ 			}
+ 
+-- 
+2.1.4
