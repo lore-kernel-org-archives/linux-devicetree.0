@@ -1,37 +1,24 @@
-Return-Path: <SRS0=h742=GR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:24558 "EHLO mga09.intel.com"
+Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga04.intel.com ([192.55.52.120]:36604 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751935AbeC0BGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Mar 2018 21:06:18 -0400
-From: "Yeh, Andy" <andy.yeh@intel.com>
-Subject: RE: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
-Date: Tue, 27 Mar 2018 01:06:14 +0000
-Message-ID: <8E0971CCB6EA9D41AF58191A2D3978B61D559002@PGSMSX111.gar.corp.intel.com>
+        id S1751319AbeCURGg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 21 Mar 2018 13:06:36 -0400
+Date: Wed, 21 Mar 2018 19:06:30 +0200
+From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
+Message-ID: <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
 References: <1521219926-15329-1-git-send-email-andy.yeh@intel.com>
  <1521219926-15329-3-git-send-email-andy.yeh@intel.com>
  <20180320102817.GB5372@w540>
  <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
- <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
-In-Reply-To: <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+To: "Yeh, Andy" <andy.yeh@intel.com>
 Cc: jacopo mondi <jacopo@jmondi.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Chiang, AlanX" <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
-
-Got it. We shall reverse the order in the later submission on list.
-
-Regards, Andy
-
------Original Message-----
-From: sakari.ailus@linux.intel.com [mailto:sakari.ailus@linux.intel.com] 
-Sent: Thursday, March 22, 2018 1:07 AM
-To: Yeh, Andy <andy.yeh@intel.com>
-Cc: jacopo mondi <jacopo@jmondi.org>; linux-media@vger.kernel.org; devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
-Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
 
 Hi Andy,
 
@@ -42,8 +29,7 @@ On Wed, Mar 21, 2018 at 03:58:42PM +0000, Yeh, Andy wrote:
 > From: jacopo mondi [mailto:jacopo@jmondi.org]
 > Sent: Tuesday, March 20, 2018 6:28 PM
 > To: Yeh, Andy <andy.yeh@intel.com>
-> Cc: linux-media@vger.kernel.org; sakari.ailus@linux.intel.com; 
-> devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
+> Cc: linux-media@vger.kernel.org; sakari.ailus@linux.intel.com; devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
 > Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
 > 
 > Hi Andy,
@@ -74,9 +60,12 @@ On Wed, Mar 21, 2018 at 03:58:42PM +0000, Yeh, Andy wrote:
 > // Copyright (c) 2008 The NetBSD Foundation, Inc.
 > // SPDX-License-Identifier: BSD-2-Clause-NetBSD
 
-This is an example which is AFAIU purported to show the problem with various BSD licenses in a comment from someone. The order of the copyright holder and license lines might be just random. The practice in kernel at least appears to be SPDX license first.
+This is an example which is AFAIU purported to show the problem with
+various BSD licenses in a comment from someone. The order of the copyright
+holder and license lines might be just random. The practice in kernel at
+least appears to be SPDX license first.
 
---
+-- 
 Regards,
 
 Sakari Ailus
