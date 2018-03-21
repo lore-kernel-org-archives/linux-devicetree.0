@@ -1,43 +1,44 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 2/3] gpiolib: Support 'gpio-reserved-ranges' property
-Date: Wed, 21 Mar 2018 22:31:14 +0200
-Message-ID: <1521664274.23017.92.camel@linux.intel.com>
-References: <20180321165848.89751-1-swboyd@chromium.org>
-         <20180321165848.89751-3-swboyd@chromium.org>
-         <1521655150.23017.79.camel@linux.intel.com>
-         <152166234504.91116.14942145962035607739@swboyd.mtv.corp.google.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 0/3] ARM: dts: at91: cleanup pullup on uarts
+Date: Wed, 21 Mar 2018 21:50:45 +0100
+Message-ID: <20180321205045.GA19753@piout.net>
+References: <20180321153552.29213-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152166234504.91116.14942145962035607739@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <20180321153552.29213-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-03-21 at 12:59 -0700, Stephen Boyd wrote:
-> Quoting Andy Shevchenko (2018-03-21 10:59:10)
-> > On Wed, 2018-03-21 at 09:58 -0700, Stephen Boyd wrote:
-> > > 
-
-> > 
-> > > +     gpiochip->valid_mask = kcalloc(BITS_TO_LONGS(gpiochip-
-> > > > ngpio),
-> > > 
-> > > +                                    sizeof(long), GFP_KERNEL);
-> > 
-> > Just noticed that kcalloc is superfluous here.
-> > kmalloc_array() would be enough.
-> > 
+On 21/03/2018 at 16:35:49 +0100, Peter Rosin wrote:
+> Hi!
 > 
-> Ok. I was copying the irqchip style. Should I fold them together into
-> a
-> helper function and also update to kmalloc_array?
-
-Not sure about first part, but definitely makes sense the second one (as
-a separate patch perhaps).
+> I noticed a *LOT* of pointless pullups and missing pullups related
+> to uart/usart pins. These patches fixes what I found.
+> 
+> I separated out the two changes that had pullup on neither rx nor tx,
+> since there might exist some reason for that? But a pullup on tx and
+> a missing pullup on rx is a sure sign of confusion, so I lumped all
+> those fixes in one big patch.
+> 
+> One or two of the removed comments with duplicate info where wrong
+> as well, i.e. the info was supposed to be duplicate but wasn't.
+> 
+> Cheers,
+> Peter
+> 
+> Peter Rosin (3):
+>   ARM: dts: at91: fixes uart pinctrl, set pullup on rx, clear pullup on
+>     tx
+>   ARM: dts: at91rm9200: pullup rx on uart0
+>   ARM: dts: at91sam9260: pullup rx on usart0
+> 
+Applied, thanks.
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
