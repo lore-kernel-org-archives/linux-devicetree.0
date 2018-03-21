@@ -1,77 +1,135 @@
-Return-Path: <SRS0=lDSl=GG=holtmann.org=marcel@kernel.org>
-Content-Type: text/plain;
-	charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
-Subject: Re: [RFC v1 6/8] Bluetooth: hci_h5: add support for Realtek UART
- Bluetooth modules
-From: Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20171117223543.32429-7-martin.blumenstingl@googlemail.com>
-Date: Fri, 16 Mar 2018 23:22:14 +0100
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <14831F71-B426-491A-A5B0-7F93533AE78C@holtmann.org>
-References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
- <20171117223543.32429-7-martin.blumenstingl@googlemail.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-serial@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>, linux-sunxi@googlegroups.com, linux-amlogic@lists.infradead.org, Larry.Finger@lwfinger.net
+Return-Path: <SRS0=vFgR=GL=codeaurora.org=sdharia@kernel.org>
+Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add I2C controller support
+References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
+ <1521071931-9294-7-git-send-email-kramasub@codeaurora.org>
+ <CAD=FV=Wk5apkO9ro+PkLGDS7poJgvTkDA4uSKnMXmK=GMzuMcQ@mail.gmail.com>
+ <65fa4ff5-7f37-b6fd-e493-bec18511d334@codeaurora.org>
+ <CAD=FV=Vq4Q2LvY_O-YsdyUmQOUANa0ap+U9j7PXSD3_ao6sCdQ@mail.gmail.com>
+ <c9e6f964-4e84-a5ed-77c4-e0a6655ee146@codeaurora.org>
+ <CAD=FV=WLiX8kiOxtAbnEfj9cLGtpbTad6AfWY=t0Ro843UFL9g@mail.gmail.com>
+From: Sagar Dharia <sdharia@codeaurora.org>
+Message-ID: <3c7d380e-c30e-f82b-f1d0-d14f2b231bf4@codeaurora.org>
+Date: Wed, 21 Mar 2018 10:07:29 -0600
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=WLiX8kiOxtAbnEfj9cLGtpbTad6AfWY=t0Ro843UFL9g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Doug Anderson <dianders@chromium.org>
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Martin,
+Hi Doug
 
-> Realtek RTL8723BS and RTL8723DS are SDIO wifi chips with an embedded
-> Bluetooth controller which connects to the host via UART.
-> The H5 protocol is used for communication between host and device.
->=20
-> The Realtek "rtl8723bs_bt" and "rtl8723ds_bt" userspace Bluetooth UART
-> initialization tools (rtk_hciattach) use the following sequence:
-> 1) send H5 sync pattern (already supported by hci_h5)
-> 2) get LMP version (already supported by btrtl)
-> 3) get ROM version (already supported by btrtl)
-> 4) load the firmware and config for the current chipset (already
->   supported by btrtl)
-> 5) read UART settings from the config blob (already supported by =
-btrtl)
-> 6) send UART settings via a vendor command to the device (which =
-changes
->   the baudrate of the device and enables or disables flow control
->   depending on the config)
-> 7) change the baudrate and flow control settings on the host
-> 8) send the firmware and config blob to the device (already supported =
-by
->   btrtl)
->=20
-> This uses the serdev library as well as the existing btrtl driver to
-> initialize the Bluetooth functionality, which consists of:
-> - identifying the device and loading the corresponding firmware and
->  config blobs (steps #2, #3 and #4)
-> - configuring the baudrate and flow control (steps #6 and #7)
-> - uploading the firmware to the device (step #8)
->=20
-> Signed-off-by: Martin Blumenstingl =
-<martin.blumenstingl@googlemail.com>
-> ---
-> drivers/bluetooth/Kconfig  |   1 +
-> drivers/bluetooth/hci_h5.c | 195 =
-++++++++++++++++++++++++++++++++++++++++++++-
-> 2 files changed, 195 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-> index 60e1c7d6986d..3001f1200c72 100644
-> --- a/drivers/bluetooth/Kconfig
-> +++ b/drivers/bluetooth/Kconfig
-> @@ -146,6 +146,7 @@ config BT_HCIUART_LL
-> config BT_HCIUART_3WIRE
-> 	bool "Three-wire UART (H5) protocol support"
-> 	depends on BT_HCIUART
-> +	select BT_RTL if SERIAL_DEV_BUS
-> 	help
-> 	  The HCI Three-wire UART Transport Layer makes it possible to
-> 	  user the Bluetooth HCI over a serial port interface. The HCI
+On 3/20/2018 9:47 PM, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Mar 20, 2018 at 3:16 PM, Sagar Dharia <sdharia@codeaurora.org> wrote:
+>>>>>> +                       pinconf {
+>>>>>> +                               pins = "gpio55", "gpio56";
+>>>>>> +                               drive-strength = <2>;
+>>>>>> +                               bias-disable;
+>>>>>> +                       };
+>>>>>> +               };
+>>>>>> +
+>>>>>> +               qup-i2c10-sleep {
+>>>>>> +                       pinconf {
+>>>>>> +                               pins = "gpio55", "gpio56";
+>>>>>> +                               bias-pull-up;
+>>>>>
+>>>>> Are you sure that you want pullups enabled for sleep here?  There are
+>>>>> external pulls on this line (as there are on many i2c busses) so doing
+>>>>> this will double-enable pulls.  It probably won't hurt, but I'm
+>>>>> curious if there's some sort of reason here.
+>>>>>
+>>>> 1. We need the lines to remain high to avoid slaves sensing a false
+>>>> start-condition (this can happen if the SDA goes down before SCL).
+>>>> 2. Disclaimer: I'm not a HW expert, but we were told that
+>>>> tri-state/bias-disabled lines can draw more current. I will find out
+>>>> more about that.
+>>>
+>>> Agreed that they need to remain high, but you've got very strong
+>>> pullups external to the SoC.  Those will keep it high.  You don't need
+>>> the internal ones too.
+>>>
+>>> As extra evidence that the external pullups _must_ be present on your
+>>> board: you specify bias-disable in the active state.  That can only
+>>> work if there are external pullups (or if there were some special
+>>> extra secret internal pullups that were part of geni).  i2c is an
+>>> open-drain bus and thus there must be pullups on the bus in order to
+>>> communicate.
+>>>
+>>
+>> You are right, I followed up about the pull-up recommendation and that
+>> was for a GPIO where there was no external pull-up (GPIO was not used
+>> for I2C). It's safe to assume I2C will always have external pullup.
+> 
+> It is even more safe to say that I2C will always have an external
+> pullup on the SDM845-MTP.  Remember that the pullup config is in the
+> board device tree file, not the SoC one.  So even if someone out there
+> decides that the internal pull is somehow good enough for their own
+> board and they don't stuff external ones, then it will be up to them
+> to turn the pull up on in their own board file.
+> 
+> 
+>> We
+>> will change sleep-config of I2C GPIOs to no-pull.
+> 
+> Even better IMHO: don't specify the bias in the sleep config.  I don't
+> believe it's possible for the sleep config to take effect without the
+> default config since the default config applies at probe time.  ...so
+> you'll always get the default config applied at probe time and you
+> don't need to touch the bias at sleep time.
 
-so I just posted a bt3wire.c driver that is serdev only and written from =
-scratch. On a RPi3 Broadcom chip it kinda works. I think there is a lot =
-of extra work to be done, but this might be a better starting point for =
-Realtek UART devices.
+Good point, we will remove the bias from the sleep config for i2c GPIOs.
 
-Regards
+Thanks
+Sagar
+> 
+> 
+>>>>>> +                       i2c10: i2c@a88000 {
+>>>>>
+>>>>> Seems like it might be nice to add all the i2c busses into the main
+>>>>> sdm845.dtsi file.  Sure, most won't be enabled, but it seems like it
+>>>>> would avoid churn later.
+>>>>>
+>>>>> ...if you're sure you want to add only one i2c controller, subject of
+>>>>> this patch should indicate that.
+>>>>>
+>>>>
+>>>> Yes, we typically have a "platform(sdm845 here)-qupv3.dtsi" defining
+>>>> most of the serial-bus instances (i2c, spi, and uart with
+>>>> status=disabled) that we include from the common header. The boards
+>>>> enable instances they need.
+>>>> Will that be okay?
+>>>
+>>> Unless you really feel the need to put these in a separate file I'd
+>>> just put them straight in sdm845.dtsi.  Yeah, it'll get big, but
+>>> that's OK by me.  I _think_ this matches what Bjorn was suggesting on
+>>> previous device tree patches, but CCing him just in case.  I'm
+>>> personally OK with whatever Bjorn and other folks with more Qualcomm
+>>> history would like.
+>>>
+>>> ...but yeah, I'm asking for them all to be listed with status="disabled".
+>>>
+>>
+>> Sure, we will change the subject of this patch to indicate that we are
+>> adding 1 controller as of now. Later we will add all I2C controllers to
+>> dtsi as another patch since that will need pinctrl settings for GPIOs
+>> used by those instances and the wrappers devices needed by them.
+> 
+> Yeah, it's fine to just change the subject of this patch.  It would be
+> nice to add all the other controllers in sooner rather than later, but
+> it doesn't have to be today.
+> 
+> 
+> -Doug
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-Marcel
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
