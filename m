@@ -1,142 +1,81 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Wed, 21 Mar 2018 11:04:52 -0700
-Message-ID: <1521655492.7999.13.camel@perches.com>
-References: <1521653726-24625-1-git-send-email-p.pisati@gmail.com>
-         <1521653726-24625-3-git-send-email-p.pisati@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Wed, 21 Mar 2018 20:07:09 +0200
+Message-ID: <1521655629.23017.84.camel@linux.intel.com>
+References: <20180321165848.89751-1-swboyd@chromium.org>
+         <20180321165848.89751-4-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521653726-24625-3-git-send-email-p.pisati@gmail.com>
+In-Reply-To: <20180321165848.89751-4-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-03-21 at 18:35 +0100, Paolo Pisati wrote:
-> This patch adds support to the FPGA manager for programming
-> MachXO2 device’s internal flash memory, via slave SPI.
+On Wed, 2018-03-21 at 09:58 -0700, Stephen Boyd wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Some qcom platforms make some GPIOs or pins unavailable for use
+> by non-secure operating systems, and thus reading or writing the
+> registers for those pins will cause access control issues and
+> reset the device. With a DT/ACPI property to describe the set of
+> pins that are available for use, parse the available pins and set
+> the irq valid bits for gpiolib to know what to consider 'valid'.
+> This should avoid any issues with gpiolib. Furthermore, implement
+> the pinmux_ops::request function so that pinmux can also make
+> sure to not use pins that are unavailable.
+> 
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-style trivia:
+Hmm...
 
-> diff --git a/drivers/fpga/machxo2-spi.c b/drivers/fpga/machxo2-spi.c
-[]
-> +static int get_status(struct spi_device *spi, unsigned long *status)
+> +static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned
+> offset)
 > +{
-> +	struct spi_message msg;
-> +	struct spi_transfer rx, tx;
-> +	u8 cmd[] = LSC_READ_STATUS;
-
-static const u8 cmd[]
-here and everywhere else as all the tx_buf assignments 
-of cmd are to const void *
-
-> +	int ret;
+> +	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct gpio_chip *chip = &pctrl->chip;
 > +
-> +	memset(&rx, 0, sizeof(rx));
-> +	memset(&tx, 0, sizeof(tx));
-> +	tx.tx_buf = cmd;
-
-[]
-
-> +#ifdef DEBUG
-> +static void dump_status_reg(unsigned long *status)
-> +{
-
-Instead of multiple declarations of dump_status_reg
-it's frequently nicer to use a style like
-
-static void debug_func(args...)
-{
-#ifdef DEBUG
-	[code...]
-#endif
-}
-
-so if function arguments ever need to be changed
-it's only required to be changed in one spot and
-not multiply compilation tested with and without
-the DEBUG definition
-
-> +	char *ferr;
+> +	if (gpiochip_line_is_valid(chip, offset))
+> +		return 0;
 > +
-> +	switch (get_err(status)) {
-> +	case ENOERR:
-> +		ferr = "No Error";
-> +		break;
-> +	case EID:
-> +		ferr = "ID ERR";
-> +		break;
-> +	case ECMD:
-> +		ferr = "CMD ERR";
-> +		break;
-> +	case ECRC:
-> +		ferr = "CRC ERR";
-> +		break;
-> +	case EPREAM:
-> +		ferr = "Preamble ERR";
-> +		break;
-> +	case EABRT:
-> +		ferr = "Abort ERR";
-> +		break;
-> +	case EOVERFL:
-> +		ferr = "Overflow ERR";
-> +		break;
-> +	case ESDMEOF:
-> +		ferr = "SDM EOF";
-> +		break;
-> +	default:
-> +		ferr = "Default switch case";
-> +	}
+> +	return -EINVAL;
 
-It's frequently nicer to use a static function
-for these enum -> string conversions like:
+Perhaps traditional pattern
 
-static const char *get_err_string(unsigned long err)
-{
-	switch (err) {
-	case ENOERR:	return "No Error";
-	case EID:	return "ID ERR";
-	case ECMD:	return "CMD ERR";
-	[...]
-	}
-	return "default switch case";
-}
+if (!...)
+ return -EINVAL;
 
-> +	pr_debug("machxo2 status: 0x%08lX - done=%d, cfgena=%d, busy=%d, fail=%d, devver=%d, err=%s\n",
-> +	       *status, test_bit(DONE, status), test_bit(ENAB, status),
-> +	       test_bit(BUSY, status), test_bit(FAIL, status),
-> +		   test_bit(DVER, status), ferr);
+return 0;
 
-So instead of ferr, this could use
-	get_err_string(*status)
-
-And please try to keep a consistent alignment for
-indentation of multiple line statements
+?
 
 > +}
-> +#else
-> +static void dump_status_reg(unsigned long *status) {}
-> +#endif
-> +
-> +static int wait_until_not_busy(struct spi_device *spi)
-> +{
-> +	unsigned long status;
-> +	int ret, loop = 0;
-> +
-> +	do {
-> +		ret = get_status(spi, &status);
-> +		if (ret)
-> +			break;
-> +		if (++loop >= MACHXO2_MAX_BUSY_LOOP) {
-> +			ret = -EBUSY;
-> +			break;
-> +		}
-> +	} while (test_bit(BUSY, &status));
-> +
-> +	return ret;
-> +}
 
-Direct returns are OK and would shorten the function
-line count.
+>  	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
+> -	seq_printf(s, " %s", pulls[pull]);
+> +	seq_printf(s, " %s\n", pulls[pull]);
+
+I had commented this once, but you ignored by some reason.
+
+I would rather just move 
+ seq_puts(s, "\n");
+here.
+
+The rationale behind, besides making diff more neat, is to reduce
+possible burden in the future if someone would like to squeeze more data
+in between.
+
+> +		tmp = kmalloc_array(len, sizeof(tmp[0]), GFP_KERNEL);
+
+sizeof(*tmp) ?
+
+> +		if (!tmp)
+> +			return -ENOMEM;
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
