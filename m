@@ -1,72 +1,53 @@
 Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:36604 "EHLO mga04.intel.com"
+Received: from mga05.intel.com ([192.55.52.43]:57373 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751319AbeCURGg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 21 Mar 2018 13:06:36 -0400
-Date: Wed, 21 Mar 2018 19:06:30 +0200
-From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
-Message-ID: <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
+        id S1751416AbeCUP6s (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 21 Mar 2018 11:58:48 -0400
+From: "Yeh, Andy" <andy.yeh@intel.com>
+Subject: RE: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
+Date: Wed, 21 Mar 2018 15:58:42 +0000
+Message-ID: <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
 References: <1521219926-15329-1-git-send-email-andy.yeh@intel.com>
  <1521219926-15329-3-git-send-email-andy.yeh@intel.com>
  <20180320102817.GB5372@w540>
- <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
+In-Reply-To: <20180320102817.GB5372@w540>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: "Yeh, Andy" <andy.yeh@intel.com>
-Cc: jacopo mondi <jacopo@jmondi.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Chiang, AlanX" <alanx.chiang@intel.com>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Chiang, AlanX" <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Andy,
-
-On Wed, Mar 21, 2018 at 03:58:42PM +0000, Yeh, Andy wrote:
-> Thanks for the comments. A quick question first. For the reset we need some time to address.
-> 
-> -----Original Message-----
-> From: jacopo mondi [mailto:jacopo@jmondi.org]
-> Sent: Tuesday, March 20, 2018 6:28 PM
-> To: Yeh, Andy <andy.yeh@intel.com>
-> Cc: linux-media@vger.kernel.org; sakari.ailus@linux.intel.com; devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
-> Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
-> 
-> Hi Andy,
->    a few comments on you patch below...
-> 
-> On Sat, Mar 17, 2018 at 01:05:26AM +0800, Andy Yeh wrote:
-> > From: Alan Chiang <alanx.chiang@intel.com> 
-> > a/drivers/media/i2c/dw9807.c b/drivers/media/i2c/dw9807.c new file 
-> > mode 100644 index 0000000..95626e9
-> > --- /dev/null
-> > +++ b/drivers/media/i2c/dw9807.c
-> > @@ -0,0 +1,320 @@
-> > +// Copyright (C) 2018 Intel Corporation // SPDX-License-Identifier: 
-> > +GPL-2.0
-> > +
-> 
-> Nit: my understanding is that the SPDX identifier goes first
-> 
-> https://lwn.net/Articles/739183/
-> 
-> I checked this site. And it says Copyright should be before SPDX identifier.
-> ========== file01.c ==========
-> // Copyright (c) 2012-2016 Joe Random Hacker // SPDX-License-Identifier: BSD-2-Clause ...
-> ========== file02.c ==========
-> // Copyright (c) 2017 Jon Severinsson
-> // SPDX-License-Identifier: BSD-2-Clause ...
-> ========== file03.c ==========
-> // Copyright (c) 2008 The NetBSD Foundation, Inc.
-> // SPDX-License-Identifier: BSD-2-Clause-NetBSD
-
-This is an example which is AFAIU purported to show the problem with
-various BSD licenses in a comment from someone. The order of the copyright
-holder and license lines might be just random. The practice in kernel at
-least appears to be SPDX license first.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+VGhhbmtzIGZvciB0aGUgY29tbWVudHMuIEEgcXVpY2sgcXVlc3Rpb24gZmlyc3QuIEZvciB0aGUg
+cmVzZXQgd2UgbmVlZCBzb21lIHRpbWUgdG8gYWRkcmVzcy4NCg0KLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCkZyb206IGphY29wbyBtb25kaSBbbWFpbHRvOmphY29wb0BqbW9uZGkub3JnXQ0K
+U2VudDogVHVlc2RheSwgTWFyY2ggMjAsIDIwMTggNjoyOCBQTQ0KVG86IFllaCwgQW5keSA8YW5k
+eS55ZWhAaW50ZWwuY29tPg0KQ2M6IGxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZzsgc2FrYXJp
+LmFpbHVzQGxpbnV4LmludGVsLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IENoaWFu
+ZywgQWxhblggPGFsYW54LmNoaWFuZ0BpbnRlbC5jb20+DQpTdWJqZWN0OiBSZTogUkVTRU5EW1BB
+VENIIHY2IDIvMl0gbWVkaWE6IGR3OTgwNzogQWRkIGR3OTgwNyB2Y20gZHJpdmVyDQoNCkhpIEFu
+ZHksDQogICBhIGZldyBjb21tZW50cyBvbiB5b3UgcGF0Y2ggYmVsb3cuLi4NCg0KT24gU2F0LCBN
+YXIgMTcsIDIwMTggYXQgMDE6MDU6MjZBTSArMDgwMCwgQW5keSBZZWggd3JvdGU6DQo+IEZyb206
+IEFsYW4gQ2hpYW5nIDxhbGFueC5jaGlhbmdAaW50ZWwuY29tPiANCj4gYS9kcml2ZXJzL21lZGlh
+L2kyYy9kdzk4MDcuYyBiL2RyaXZlcnMvbWVkaWEvaTJjL2R3OTgwNy5jIG5ldyBmaWxlIA0KPiBt
+b2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi45NTYyNmU5DQo+IC0tLSAvZGV2L251bGwNCj4gKysr
+IGIvZHJpdmVycy9tZWRpYS9pMmMvZHc5ODA3LmMNCj4gQEAgLTAsMCArMSwzMjAgQEANCj4gKy8v
+IENvcHlyaWdodCAoQykgMjAxOCBJbnRlbCBDb3Jwb3JhdGlvbiAvLyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogDQo+ICtHUEwtMi4wDQo+ICsNCg0KTml0OiBteSB1bmRlcnN0YW5kaW5nIGlzIHRo
+YXQgdGhlIFNQRFggaWRlbnRpZmllciBnb2VzIGZpcnN0DQoNCmh0dHBzOi8vbHduLm5ldC9BcnRp
+Y2xlcy83MzkxODMvDQoNCkkgY2hlY2tlZCB0aGlzIHNpdGUuIEFuZCBpdCBzYXlzIENvcHlyaWdo
+dCBzaG91bGQgYmUgYmVmb3JlIFNQRFggaWRlbnRpZmllci4NCj09PT09PT09PT0gZmlsZTAxLmMg
+PT09PT09PT09PQ0KLy8gQ29weXJpZ2h0IChjKSAyMDEyLTIwMTYgSm9lIFJhbmRvbSBIYWNrZXIg
+Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEJTRC0yLUNsYXVzZSAuLi4NCj09PT09PT09PT0g
+ZmlsZTAyLmMgPT09PT09PT09PQ0KLy8gQ29weXJpZ2h0IChjKSAyMDE3IEpvbiBTZXZlcmluc3Nv
+bg0KLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEJTRC0yLUNsYXVzZSAuLi4NCj09PT09PT09
+PT0gZmlsZTAzLmMgPT09PT09PT09PQ0KLy8gQ29weXJpZ2h0IChjKSAyMDA4IFRoZSBOZXRCU0Qg
+Rm91bmRhdGlvbiwgSW5jLg0KLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEJTRC0yLUNsYXVz
+ZS1OZXRCU0QNCg0KPiArI2luY2x1ZGUgPGxpbnV4L2FjcGkuaD4NCj4gKyNpbmNsdWRlIDxsaW51
+eC9kZWxheS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L2kyYy5oPg0KPiArI2luY2x1ZGUgPGxpbnV4
+L21vZHVsZS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gKyNpbmNsdWRl
+IDxtZWRpYS92NGwyLWN0cmxzLmg+DQo+ICsjaW5jbHVkZSA8bWVkaWEvdjRsMi1kZXZpY2UuaD4N
+Cj4gKw0KPiArI2RlZmluZSBEVzk4MDdfTkFNRQkJImR3OTgwNyINCj4gKyNkZWZpbmUgRFc5ODA3
+X01BWF9GT0NVU19QT1MJMTAyMw0KPg0K
