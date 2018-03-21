@@ -1,31 +1,65 @@
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH 1/7] dt-bindings: add cdtech vendor prefix
-Date: Wed, 21 Mar 2018 21:03:07 +0100
-Message-ID: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 2/7] drm/panel: add panel CDTech S070_WV95_CT16 to panel-simple
+Date: Wed, 21 Mar 2018 21:03:08 +0100
+Message-ID: <1521662593-25468-2-git-send-email-giulio.benetti@micronovasrl.com>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Giulio Benetti <giulio.benetti@micronovasrl.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a vendor prefix "cdtech" for CDTech(H.K.) Electronics Limited
-
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ae850d6..9854399 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -61,6 +61,7 @@ capella	Capella Microsystems, Inc
- cascoda	Cascoda, Ltd.
- cavium	Cavium, Inc.
- cdns	Cadence Design Systems Inc.
-+cdtech	CDTech(H.K.) Electronics Limited
- ceva	Ceva, Inc.
- chipidea	Chipidea, Inc
- chipone		ChipOne
--- 
-2.7.4
+U2lnbmVkLW9mZi1ieTogR2l1bGlvIEJlbmV0dGkgPGdpdWxpby5iZW5ldHRpQG1pY3Jvbm92YXNy
+bC5jb20+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvY2R0ZWNoLHMwNzB3djk1LWN0MTYudHh0ICAg
+ICAgICAgfCAgNyArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAg
+ICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2Vk
+LCAzNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvY2R0ZWNoLHMwNzB3djk1LWN0MTYudHh0Cgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvY2R0ZWNoLHMwNzB3djk1LWN0MTYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvY2R0ZWNoLHMwNzB3djk1LWN0MTYudHh0Cm5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmIwMGQ2YzcKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9jZHRlY2gsczA3MHd2
+OTUtY3QxNi50eHQKQEAgLTAsMCArMSw3IEBACitDRFRlY2goSC5LLikgRWxlY3Ryb25pY3MgTGlt
+aXRlZCA3IiA4MDB4NDgwIGNvbG9yIFRGVC1MQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGll
+czoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJjZHRlY2gsczA3MHd2OTUtY3QxNiIKKworVGhp
+cyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdo
+aWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCA1NTkxOTg0Li43MTRmYmRkIDEw
+MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC03NjQsNiArNzY0LDMwIEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBib2VfbnYxMDF3eG1uNTEgPSB7CiAJfSwKIH07
+CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBjZHRlY2hfczA3MHd2OTVf
+Y3QxNl9tb2RlID0geworCS5jbG9jayA9IDM1MDAwLAorCS5oZGlzcGxheSA9IDgwMCwKKwkuaHN5
+bmNfc3RhcnQgPSA4MDAgKyA0MCwKKwkuaHN5bmNfZW5kID0gODAwICsgNDAgKyA0MCwKKwkuaHRv
+dGFsID0gODAwICsgNDAgKyA0MCArIDQ4LAorCS52ZGlzcGxheSA9IDQ4MCwKKwkudnN5bmNfc3Rh
+cnQgPSA0ODAgKyAyOSwKKwkudnN5bmNfZW5kID0gNDgwICsgMjkgKyAxMywKKwkudnRvdGFsID0g
+NDgwICsgMjkgKyAxMyArIDMsCisJLnZyZWZyZXNoID0gNjAsCisJLmZsYWdzID0gRFJNX01PREVf
+RkxBR19OSFNZTkMgfCBEUk1fTU9ERV9GTEFHX05WU1lOQywKK307CisKK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgcGFuZWxfZGVzYyBjZHRlY2hfczA3MHd2OTVfY3QxNiA9IHsKKwkubW9kZXMgPSAmY2R0
+ZWNoX3MwNzB3djk1X2N0MTZfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwku
+c2l6ZSA9IHsKKwkJLndpZHRoID0gMTU0LAorCQkuaGVpZ2h0ID0gODUsCisJfSwKK307CisKIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBjaHVuZ2h3YV9jbGFhMDcwd3AwM3hn
+X21vZGUgPSB7CiAJLmNsb2NrID0gNjY3NzAsCiAJLmhkaXNwbGF5ID0gODAwLApAQCAtMjA2Nyw2
+ICsyMDkxLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2Zf
+bWF0Y2hbXSA9IHsKIAkJLmNvbXBhdGlibGUgPSAiYm9lLG52MTAxd3htbjUxIiwKIAkJLmRhdGEg
+PSAmYm9lX252MTAxd3htbjUxLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiY2R0ZWNoLHMwNzB3
+djk1LWN0MTYiLAorCQkuZGF0YSA9ICZjZHRlY2hfczA3MHd2OTVfY3QxNiwKKwl9LCB7CiAJCS5j
+b21wYXRpYmxlID0gImNodW5naHdhLGNsYWEwNzB3cDAzeGciLAogCQkuZGF0YSA9ICZjaHVuZ2h3
+YV9jbGFhMDcwd3AwM3hnLAogCX0sIHsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
