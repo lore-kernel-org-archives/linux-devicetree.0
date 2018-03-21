@@ -1,108 +1,63 @@
-Return-Path: <SRS0=hILt=GK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0067.outbound.protection.outlook.com ([104.47.0.67]:16309
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752649AbeCTKll (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 20 Mar 2018 06:41:41 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH 5/5] usb: typec: tcpm: remove max_snk_*
-Date: Tue, 20 Mar 2018 18:26:10 +0800
-Message-Id: <1521541570-25363-7-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=oFd4=GL=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH 2/5] usb: typec: fusb302: remove max_snk_* for sink config
 References: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
+ <1521541570-25363-3-git-send-email-jun.li@nxp.com>
+ <6d76c9c9-5e73-bf71-c0cd-db4070dadece@redhat.com>
+ <VI1PR0402MB391738D930AA33B26A53E96289AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <96e2a4bd-3213-0abb-c47d-91727741c7f5@redhat.com>
+Date: Wed, 21 Mar 2018 13:16:06 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, linux@roeck-us.net, hdegoede@redhat.com, rmfrfs@gmail.com, yueyao.zhu@gmail.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <VI1PR0402MB391738D930AA33B26A53E96289AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Jun Li <jun.li@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Since there is no user of max_snk_*, so we can remove them from tcpm.
+Hi,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/tcpm.c | 12 ------------
- include/linux/usb/tcpm.h |  9 ---------
- 2 files changed, 21 deletions(-)
+On 21-03-18 12:19, Jun Li wrote:
+> 
+>> -----Original Message-----
+>> From: Hans de Goede [mailto:hdegoede@redhat.com]
+>> Sent: 2018年3月20日 20:29
+>> To: Jun Li <jun.li@nxp.com>; gregkh@linuxfoundation.org;
+>> robh+dt@kernel.org; mark.rutland@arm.com;
+>> heikki.krogerus@linux.intel.com; linux@roeck-us.net; rmfrfs@gmail.com;
+>> yueyao.zhu@gmail.com
+>> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; dl-linux-imx
+>> <linux-imx@nxp.com>
+>> Subject: Re: [PATCH 2/5] usb: typec: fusb302: remove max_snk_* for sink
+>> config
+>>
+>> Hi,
+>>
+>> On 20-03-18 11:26, Li Jun wrote:
+>>> Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
+>>> variable PDO for sink config.
+>>
+>> NACK there are actual users of the device-properties which you are now
+>> breaking. As I mentioned in another thread, you need to instead add the pdo
+>> array to the fusb302_chip struct (so that it is no longer
+>> const) and generate a PDO_VAR pdo based on the device-properties.
+>>
+> 
+> OK, I did a search of those properties in dts dir of upstream kernel
+> but didn't find any user of them,
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 20f7ca8..8e3e051 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -258,9 +258,6 @@ struct tcpm_port {
- 	u32 snk_vdo[VDO_MAX_OBJECTS];
- 	unsigned int nr_snk_vdo;
- 
--	unsigned int max_snk_mv;
--	unsigned int max_snk_ma;
--	unsigned int max_snk_mw;
- 	unsigned int operating_snk_mw;
- 
- 	/* Requested current / voltage */
-@@ -3582,9 +3579,6 @@ EXPORT_SYMBOL_GPL(tcpm_update_source_capabilities);
- 
- int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
- 				  unsigned int nr_pdo,
--				  unsigned int max_snk_mv,
--				  unsigned int max_snk_ma,
--				  unsigned int max_snk_mw,
- 				  unsigned int operating_snk_mw)
- {
- 	if (tcpm_validate_caps(port, pdo, nr_pdo))
-@@ -3592,9 +3586,6 @@ int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
- 
- 	mutex_lock(&port->lock);
- 	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, pdo, nr_pdo);
--	port->max_snk_mv = max_snk_mv;
--	port->max_snk_ma = max_snk_ma;
--	port->max_snk_mw = max_snk_mw;
- 	port->operating_snk_mw = operating_snk_mw;
- 
- 	switch (port->state) {
-@@ -3682,9 +3673,6 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
- 					  tcpc->config->nr_snk_vdo);
- 
--	port->max_snk_mv = tcpc->config->max_snk_mv;
--	port->max_snk_ma = tcpc->config->max_snk_ma;
--	port->max_snk_mw = tcpc->config->max_snk_mw;
- 	port->operating_snk_mw = tcpc->config->operating_snk_mw;
- 	if (!tcpc->config->try_role_hw)
- 		port->try_role = tcpc->config->default_role;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index ca1c0b5..2649c97 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -62,9 +62,6 @@ enum tcpm_transmit_type {
-  * @snk_pdo:	PDO parameters sent to partner as response to
-  *		PD_CTRL_GET_SINK_CAP message
-  * @nr_snk_pdo:	Number of entries in @snk_pdo
-- * @max_snk_mv:	Maximum acceptable sink voltage in mV
-- * @max_snk_ma:	Maximum sink current in mA
-- * @max_snk_mw:	Maximum required sink power in mW
-  * @operating_snk_mw:
-  *		Required operating sink power in mW
-  * @type:	Port type (TYPEC_PORT_DFP, TYPEC_PORT_UFP, or
-@@ -85,9 +82,6 @@ struct tcpc_config {
- 	const u32 *snk_vdo;
- 	unsigned int nr_snk_vdo;
- 
--	unsigned int max_snk_mv;
--	unsigned int max_snk_ma;
--	unsigned int max_snk_mw;
- 	unsigned int operating_snk_mw;
- 
- 	enum typec_port_type type;
-@@ -187,9 +181,6 @@ int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
- 				    unsigned int nr_pdo);
- int tcpm_update_sink_capabilities(struct tcpm_port *port, const u32 *pdo,
- 				  unsigned int nr_pdo,
--				  unsigned int max_snk_mv,
--				  unsigned int max_snk_ma,
--				  unsigned int max_snk_mw,
- 				  unsigned int operating_snk_mw);
- 
- void tcpm_vbus_change(struct tcpm_port *port);
--- 
-2.7.4
+Note that these properties are not accessed through the dt APIs but through the
+generic device-properties API. And these are set as device-properties by the
+driver instantiating the fusb302 i2c-client on (some) x86 boards:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/intel_cht_int33fe.c
+
+ > if there are actual of users, I will create
+ > a PDO_VAR pdo based on dt in v2.
+
+Thank you.
+
+Regards,
+
+Hans
