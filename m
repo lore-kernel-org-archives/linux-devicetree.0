@@ -1,154 +1,53 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 1/8] reset: modify the way reset lookup works for board files
-Date: Wed, 21 Mar 2018 13:08:00 +0100
-Message-ID: <20180321120807.18032-2-brgl@bgdev.pl>
-References: <20180321120807.18032-1-brgl@bgdev.pl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321120807.18032-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 27/37] iommu/arm-smmu-v3: Register fault workqueue
+Date: Wed, 21 Mar 2018 13:24:22 +0000
+Message-ID: <cabd71fd-c54c-c21a-a5b7-227e69fa4286@arm.com>
+References: <1519280641-30258-1-git-send-email-xieyisheng1@huawei.com>
+	<1519280641-30258-27-git-send-email-xieyisheng1@huawei.com>
+	<f2841aac-4c5e-4ac2-fa4d-81d6b2857503@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f2841aac-4c5e-4ac2-fa4d-81d6b2857503-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, rjw-LthD3rsA81gHJAlzAAQw8A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Yisheng,
 
-Commit 7af1bb19f1d7 ("reset: add support for non-DT systems")
-introduced reset control lookup mechanism for boards that still use
-board files.
+On 19/03/18 11:03, Yisheng Xie wrote:
+> Hi Jean,
+> 
+> [...]
+>> @@ -3168,6 +3260,13 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> +	if (smmu->features & (ARM_SMMU_FEAT_STALLS | ARM_SMMU_FEAT_PRI)) {
+>> +		smmu->faultq_nb.notifier_call = arm_smmu_flush_queues;
+>> +		ret = iommu_fault_queue_register(&smmu->faultq_nb);
+>> +		if (ret)
+>> +			return ret;
+> 
+> I find a case here: CONFIG_IOMMU_FAULT=n, and smmu support feature STALLS or PRI,
+> the device probe will failed here, is this what we want?
 
-The routine used to register lookup entries takes the corresponding
-reset_controlled_dev structure as argument.
+Since CONFIG_ARM_SMMU_V3 selects CONFIG_IOMMU_FAULT, I don't think it
+can happen. I'm not sure what the best practices are, but I feel like it
+would be too much work to guard against config combinations that violate
+an explicit "select" in Kconfig
 
-It's been determined however that for the first user of this new
-interface - davinci psc driver - it will be easier to register the
-lookup entries using the reset controller device name.
-
-This patch changes the way lookup entries are added.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/reset/core.c             | 33 +++++++++++++++++++++++++++++----
- include/linux/reset-controller.h |  8 +++++---
- 2 files changed, 34 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 06fa4907afc4..f37048e55336 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -153,11 +153,11 @@ EXPORT_SYMBOL_GPL(devm_reset_controller_register);
- 
- /**
-  * reset_controller_add_lookup - register a set of lookup entries
-- * @rcdev: initialized reset controller device owning the reset line
-+ * @provider: name of the reset controller provider
-  * @lookup: array of reset lookup entries
-  * @num_entries: number of entries in the lookup array
-  */
--void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
-+void reset_controller_add_lookup(const char *provider,
- 				 struct reset_control_lookup *lookup,
- 				 unsigned int num_entries)
- {
-@@ -174,7 +174,7 @@ void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
- 			continue;
- 		}
- 
--		entry->rcdev = rcdev;
-+		entry->provider = provider;
- 		list_add_tail(&entry->list, &reset_lookup_list);
- 	}
- 	mutex_unlock(&reset_lookup_mutex);
-@@ -526,11 +526,30 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
- }
- EXPORT_SYMBOL_GPL(__of_reset_control_get);
- 
-+static struct reset_controller_dev *
-+__reset_controller_by_name(const char *name)
-+{
-+	struct reset_controller_dev *rcdev;
-+
-+	lockdep_assert_held(&reset_list_mutex);
-+
-+	list_for_each_entry(rcdev, &reset_controller_list, list) {
-+		if (!rcdev->dev)
-+			continue;
-+
-+		if (!strcmp(name, dev_name(rcdev->dev)))
-+			return rcdev;
-+	}
-+
-+	return NULL;
-+}
-+
- static struct reset_control *
- __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 				bool shared, bool optional)
- {
- 	const struct reset_control_lookup *lookup;
-+	struct reset_controller_dev *rcdev;
- 	const char *dev_id = dev_name(dev);
- 	struct reset_control *rstc = NULL;
- 
-@@ -547,7 +566,13 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 		    ((con_id && lookup->con_id) &&
- 		     !strcmp(con_id, lookup->con_id))) {
- 			mutex_lock(&reset_list_mutex);
--			rstc = __reset_control_get_internal(lookup->rcdev,
-+			rcdev = __reset_controller_by_name(lookup->provider);
-+			if (!rcdev) {
-+				mutex_unlock(&reset_list_mutex);
-+				continue;
-+			}
-+
-+			rstc = __reset_control_get_internal(rcdev,
- 							    lookup->index,
- 							    shared);
- 			mutex_unlock(&reset_list_mutex);
-diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-index 25698f6c1fae..1a6c25d825d3 100644
---- a/include/linux/reset-controller.h
-+++ b/include/linux/reset-controller.h
-@@ -30,14 +30,14 @@ struct of_phandle_args;
-  * struct reset_control_lookup - represents a single lookup entry
-  *
-  * @list: internal list of all reset lookup entries
-- * @rcdev: reset controller device controlling this reset line
-+ * @provider: name of the reset controller device controlling this reset line
-  * @index: ID of the reset controller in the reset controller device
-  * @dev_id: name of the device associated with this reset line
-  * @con_id name of the reset line (can be NULL)
-  */
- struct reset_control_lookup {
- 	struct list_head list;
--	struct reset_controller_dev *rcdev;
-+	const char *provider;
- 	unsigned int index;
- 	const char *dev_id;
- 	const char *con_id;
-@@ -57,6 +57,7 @@ struct reset_control_lookup {
-  * @owner: kernel module of the reset controller driver
-  * @list: internal list of reset controller devices
-  * @reset_control_head: head of internal list of requested reset controls
-+ * @dev: corresponding driver model device struct
-  * @of_node: corresponding device tree node as phandle target
-  * @of_reset_n_cells: number of cells in reset line specifiers
-  * @of_xlate: translation function to translate from specifier as found in the
-@@ -68,6 +69,7 @@ struct reset_controller_dev {
- 	struct module *owner;
- 	struct list_head list;
- 	struct list_head reset_control_head;
-+	struct device *dev;
- 	struct device_node *of_node;
- 	int of_reset_n_cells;
- 	int (*of_xlate)(struct reset_controller_dev *rcdev,
-@@ -82,7 +84,7 @@ struct device;
- int devm_reset_controller_register(struct device *dev,
- 				   struct reset_controller_dev *rcdev);
- 
--void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
-+void reset_controller_add_lookup(const char *provider,
- 				 struct reset_control_lookup *lookup,
- 				 unsigned int num_entries);
- 
--- 
-2.16.1
+Thanks,
+Jean
