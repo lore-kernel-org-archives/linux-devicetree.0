@@ -1,44 +1,43 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 0/5] update Mediatek MT2712 clock and scpsys support
-Date: Wed, 21 Mar 2018 10:11:09 +0100
-Message-ID: <6c29df1f-f619-5e11-4160-b58e154f6592@gmail.com>
-References: <20180312070342.4335-1-weiyi.lu@mediatek.com>
- <1521526068.13313.8.camel@mtksdaap41>
- <152153061465.254778.3061562183948751301@swboyd.mtv.corp.google.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] mtd: rawnand: sunxi: Stop supporting ECC_HW_SYNDROME mode
+Date: Wed, 21 Mar 2018 10:21:01 +0100
+Message-ID: <20180321092101.djkebipvv3qdwnru@flea>
+References: <20180321083618.18355-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152153061465.254778.3061562183948751301@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Weiyi Lu <weiyi.lu@mediatek.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180321083618.18355-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/20/2018 08:23 AM, Stephen Boyd wrote:
-> Quoting Weiyi Lu (2018-03-19 23:07:48)
->> On Mon, 2018-03-12 at 15:03 +0800, Weiyi Lu wrote:
->>> This series is based on v4.16-rc1 and composed of scpsys control (PATCH 1-2) and clock control (PATCH 3-5).
->>> Basically, all changes are for the ECO design change of MT2712.
->>>
->>> changes since v1:
->>> - Avoid renumbering clocks. Append new clocks at the bottom of each own subsystem.
->>>
->> Hi Matthias & Stephen,
->>
->> Sorry to bother. Just saw patch 1/2 are already pushed to v4.16-next-soc
->> and patch 3/5 are applied onto clk-next. What about the patch 4(arm64:
->> dts: add clock device nodes of MT2712). Does there any problem remain or
->> it cause some problems? Many thanks.
+On Wed, Mar 21, 2018 at 09:36:18AM +0100, Boris Brezillon wrote:
+> This mode is not used by any existing setup and should not be used
+> because it overrides the BBMs. Let's just remove it before someone
+> starts using it.
 > 
-> Patch 4 can go via arm-soc? I'm not planning to apply that patch.
-> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 
-I can take it through my branch, no problem. But I think it is too late for this
-cycle. CCing Arnd to confirm.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Regards,
-Matthias
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
