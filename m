@@ -1,70 +1,57 @@
-Return-Path: <SRS0=ayJo=GJ=gmail.com=keepcalm444@kernel.org>
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH v3 1/2] dt-bindings: leds: document Panasonic AN30259A bindings
-Date: Tue, 20 Mar 2018 00:59:36 +1100
-Message-Id: <20180319135937.18772-2-simon@lineageos.org>
-In-Reply-To: <20180319135937.18772-1-simon@lineageos.org>
-References: <20180319135937.18772-1-simon@lineageos.org>
-To: linux-leds@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Simon Shields <simon@lineageos.org>
+Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: [PATCH net-next RFC V1 0/5] Peer to Peer One-Step time stamping
+Date: Wed, 21 Mar 2018 11:58:13 -0700
+Message-Id: <cover.1521656774.git.richardcochran@gmail.com>
+To: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Simon Shields <simon@lineageos.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/leds/leds-an30259a.txt     | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
+This series adds support for PTP (IEEE 1588) P2P one-step time
+stamping along with a driver for a hardware device that supports this.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-new file mode 100644
-index 000000000000..6ffb861083c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-@@ -0,0 +1,43 @@
-+* Panasonic AN30259A 3-channel LED driver
-+
-+The AN30259A is a LED controller capable of driving three LEDs independently. It supports
-+constant current output and sloping current output modes. The chip is connected over I2C.
-+
-+Required properties:
-+	- compatible: Must be "panasonic,an30259a".
-+	- reg: I2C slave address.
-+	- #address-cells: Must be 1.
-+	- #size-cells: Must be 0.
-+
-+Each LED is represented as a sub-node of the panasonic,an30259a node.
-+
-+Required sub-node properties:
-+	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
-+
-+Optional sub-node properties:
-+	- label: see Documentation/devicetree/bindings/leds/common.txt
-+	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+led-controller@30 {
-+	compatible = "panasonic,an30259a";
-+	reg = <0x30>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	led@1 {
-+		reg = <1>;
-+		linux,default-trigger = "heartbeat";
-+		label = "red:indicator";
-+	};
-+
-+	led@2 {
-+		reg = <2>;
-+		label = "green:indicator";
-+	};
-+
-+	led@3 {
-+		reg = <3>;
-+		label = "blue:indicator";
-+	};
-+};
+If the hardware supports p2p one-step, it subtracts the ingress time
+stamp value from the Pdelay_Request correction field.  The user space
+software stack then simply copies the correction field into the
+Pdelay_Response, and on transmission the hardware adds the egress time
+stamp into the correction field.
+
+- Patch 1 adds the new option.
+- Patches 2-4 adds support for MII time stamping in non-PHY devices.
+- Patch 5 adds a driver implementing the new option.
+
+Earlier today I posted user space support as an RFC on the
+linuxptp-devel list.  Comments and review are most welcome.
+
+Thanks,
+Richard
+
+Richard Cochran (5):
+  net: Introduce peer to peer one step PTP time stamping.
+  net: phy: Move time stamping interface into the generic mdio layer.
+  net: Introduce field for the MII time stamper.
+  net: Use the generic MII time stamper when available.
+  net: mdio: Add a driver for InES time stamping IP core.
+
+ Documentation/devicetree/bindings/net/ines-ptp.txt |  42 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |   1 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/dp83640.c                          |  29 +-
+ drivers/net/phy/ines_ptp.c                         | 857 +++++++++++++++++++++
+ drivers/net/phy/mdio_bus.c                         |  51 +-
+ drivers/net/phy/phy.c                              |   6 +-
+ drivers/ptp/Kconfig                                |  10 +
+ include/linux/mdio.h                               |  23 +
+ include/linux/netdevice.h                          |   1 +
+ include/linux/phy.h                                |  23 -
+ include/uapi/linux/net_tstamp.h                    |   8 +
+ net/Kconfig                                        |   8 +-
+ net/core/dev_ioctl.c                               |   1 +
+ net/core/ethtool.c                                 |   5 +-
+ net/core/timestamping.c                            |  36 +-
+ 16 files changed, 1034 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ines-ptp.txt
+ create mode 100644 drivers/net/phy/ines_ptp.c
+
 -- 
-2.16.2
+2.11.0
