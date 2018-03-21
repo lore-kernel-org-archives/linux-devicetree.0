@@ -1,55 +1,167 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 2/7] dt-bindings: add binding for the
- Allwinner A64 DE2 bus
-Date: Wed, 21 Mar 2018 10:18:13 +0800
-Message-ID: <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io>
-References: <20180316175354.21437-1-icenowy@aosc.io> <20180316175354.21437-3-icenowy@aosc.io> <20180320184646.dynqv6qubzabroe4@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: [PATCH v1] ARM: dts: imx6qdl-sabreauto: add ecspi dts for sabreauto board
+Date: Wed, 21 Mar 2018 18:38:18 +0800
+Message-ID: <1521628698-1178-1-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHECY7KQKGQEU4MQKLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180320184646.dynqv6qubzabroe4@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kernel@pengutronix.de, fabio.estevam@nxp.com, aisheng.dong@nxp.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+DIN pin of SPI-NOR muxed with I2C3_SDA which connected to one gpio expand
+chip, thus have to disable all those module which compacted by those gpios
+if enable SPI-NOR support on Sabreauto board.
 
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+ arch/arm/boot/dts/Makefile                   |  2 ++
+ arch/arm/boot/dts/imx6dl-sabreauto-ecspi.dts | 47 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-sabreauto-ecspi.dts  | 48 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi     |  1 +
+ 4 files changed, 98 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-sabreauto-ecspi.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-sabreauto-ecspi.dts
 
-=E4=BA=8E 2018=E5=B9=B43=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882:=
-46:46, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
->> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC
->to
->> be claimed, otherwise the whole DE2 space is inaccessible.
->>=20
->> Add a device tree binding of the DE2 part as a sub-bus.
->
->Where did you get the info that it was a bus?
-
-There's no direct evidence, just some guess.
-
-The DE2 is a whole part that is just allocated a memory
-space at the user manual, and the SRAM controls the
-access to all modules in the DE2.
-
-So it might be a bus.
-
-Implement it as a bus is a clear representation on A64.
-
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4fe209c..4a814bb 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -406,6 +406,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-rex-basic.dtb \
+ 	imx6dl-riotboard.dtb \
+ 	imx6dl-sabreauto.dtb \
++	imx6dl-sabreauto-ecspi.dtb \
+ 	imx6dl-sabrelite.dtb \
+ 	imx6dl-sabresd.dtb \
+ 	imx6dl-savageboard.dtb \
+@@ -478,6 +479,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-pistachio.dtb \
+ 	imx6q-rex-pro.dtb \
+ 	imx6q-sabreauto.dtb \
++	imx6q-sabreauto-ecspi.dtb \
+ 	imx6q-sabrelite.dtb \
+ 	imx6q-sabresd.dtb \
+ 	imx6q-savageboard.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-sabreauto-ecspi.dts b/arch/arm/boot/dts/imx6dl-sabreauto-ecspi.dts
+new file mode 100644
+index 0000000..80d018d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-sabreauto-ecspi.dts
+@@ -0,0 +1,47 @@
++/*
++ * Copyright (C) 2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "imx6dl-sabreauto.dts"
++
++&gpio5 {
++	eim_d18_steered {
++		gpio-hog;
++		gpios = <4 GPIO_ACTIVE_LOW>;
++		output-high;
++		line-name = "ecspi1_din";
++	};
++};
++
++&ecspi1 {
++	status = "okay";
++};
++
++&can2 {
++	/* max7310_c on i2c3 is gone */
++	status = "disabled";
++};
++
++&i2c3 {
++	/* pin conflict with ecspi1 */
++	status = "disabled";
++};
++
++&uart3 {
++	/* the uart3 depends on the i2c3, so disable it too. */
++	status = "disabled";
++};
++
++&usbh1 {
++	/* max7310_b on i2c3 is gone */
++	status = "disabled";
++};
++
++&usbotg {
++	dr_mode = "peripheral";
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6q-sabreauto-ecspi.dts b/arch/arm/boot/dts/imx6q-sabreauto-ecspi.dts
+new file mode 100644
+index 0000000..cb7f38e
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-sabreauto-ecspi.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright (C) 2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "imx6q-sabreauto.dts"
++
++&gpio5 {
++	eim_d18_steered {
++		gpio-hog;
++		gpios = <4 GPIO_ACTIVE_LOW>;
++		output-high;
++		line-name = "ecspi1_din";
++	};
++};
++
++&ecspi1 {
++	status = "okay";
++};
++
++&can2 {
++	/* max7310_c on i2c3 is gone */
++	status = "disabled";
++};
++
++&i2c3 {
++	/* pin conflict with ecspi1 */
++	status = "disabled";
++};
++
++&uart3 {
++	/* the uart3 depends on the i2c3, so disable it too. */
++	status = "disabled";
++};
++
++&usbh1 {
++	/* max7310_b on i2c3 is gone */
++	status = "disabled";
++};
++
++&usbotg {
++	/* max7310_c on i2c3 is gone */
++	status = "okay";
++	dr_mode = "peripheral";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 54b0139..b83efc3 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -375,6 +375,7 @@
+ 				MX6QDL_PAD_NANDF_CS2__GPIO6_IO15 0x80000000
+ 				MX6QDL_PAD_SD2_DAT2__GPIO1_IO13  0x80000000
+ 				MX6QDL_PAD_GPIO_18__SD3_VSELECT 0x17059
++				MX6QDL_PAD_EIM_A24__GPIO5_IO04   0x80000000
+ 			>;
+ 		};
+ 
+-- 
+2.7.4
