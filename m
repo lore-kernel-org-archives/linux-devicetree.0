@@ -1,92 +1,31 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 3/3] drivers: clk: Add ZynqMP clock driver
-Date: Wed, 21 Mar 2018 19:59:21 +0000
-Message-ID: <DM2PR0201MB07674E4EE557F73BC195853EB8AA0@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
- <1519856861-31384-4-git-send-email-jollys@xilinx.com>
- <152149019011.242365.2529338400397080149@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH 1/7] dt-bindings: add cdtech vendor prefix
+Date: Wed, 21 Mar 2018 21:03:07 +0100
+Message-ID: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152149019011.242365.2529338400397080149@swboyd.mtv.corp.google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tejas Patel <TEJASP@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpIaSBTdGVwaGFuLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcsDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIFttYWlsdG86c2JveWRAa2VybmVs
-Lm9yZ10NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAxOSwgMjAxOCAxOjEwIFBNDQo+IFRvOiBKb2xs
-eSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT47IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7DQo+
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBtaWNoYWwuc2ltZWtAeGlsaW54LmNvbTsgbXR1cnF1ZXR0
-ZUBiYXlsaWJyZS5jb207DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgc2JveWRAY29kZWF1cm9yYS5v
-cmcNCj4gQ2M6IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEpvbGx5IFNoYWgNCj4gPEpPTExZU0B4aWxpbngu
-Y29tPjsgVGVqYXMgUGF0ZWwgPFRFSkFTUEB4aWxpbnguY29tPjsgU2h1YmhyYWp5b3RpIERhdHRh
-DQo+IDxzaHViaHJhakB4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gZHJp
-dmVyczogY2xrOiBBZGQgWnlucU1QIGNsb2NrIGRyaXZlcg0KPiANCj4gPiArLyoqDQo+ID4gKyAq
-IHN0cnVjdCB6eW5xbXBfY2xvY2sgLSBTdHJ1Y3R1cmUgZm9yIGNsb2NrDQo+ID4gKyAqIEBjbGtf
-bmFtZTogICAgICAgICAgQ2xvY2sgbmFtZQ0KPiA+ICsgKiBAdmFsaWQ6ICAgICAgICAgICAgIFZh
-bGlkaXR5IGZsYWcgb2YgY2xvY2sNCj4gPiArICogQGluaXRfZW5hYmxlOiAgICAgICBpbml0X2Vu
-YWJsZSBmbGFnIG9mIGNsb2NrDQo+ID4gKyAqIEB0eXBlOiAgICAgICAgICAgICAgQ2xvY2sgdHlw
-ZSAoT3V0cHV0L0V4dGVybmFsKQ0KPiA+ICsgKiBAbm9kZTogICAgICAgICAgICAgIENsb2NrIHRv
-bG9sb2d5IG5vZGVzDQo+ID4gKyAqIEBudW1fbm9kZXM6ICAgICAgICAgTnVtYmVyIG9mIG5vZGVz
-IHByZXNlbnQgaW4gdG9wb2xvZ3kNCj4gPiArICogQHBhcmVudDogICAgICAgICAgICBzdHJ1Y3R1
-cmUgb2YgcGFyZW50IG9mIGNsb2NrDQo+ID4gKyAqIEBudW1fcGFyZW50czogICAgICAgTnVtYmVy
-IG9mIHBhcmVudHMgb2YgY2xvY2sNCj4gPiArICovDQo+ID4gK3N0cnVjdCB6eW5xbXBfY2xvY2sg
-ew0KPiA+ICsgICAgICAgY2hhciBjbGtfbmFtZVtNQVhfTkFNRV9MRU5dOw0KPiA+ICsgICAgICAg
-dTMyIHZhbGlkOw0KPiA+ICsgICAgICAgdTMyIGluaXRfZW5hYmxlOw0KPiA+ICsgICAgICAgZW51
-bSBjbGtfdHlwZSB0eXBlOw0KPiANCj4gSXMgdGhpcyBldmVyIGFzc2lnbmVkPw0KDQpZZXMgaXRz
-IGFzc2lnbmVkIGluIHp5bnFtcF9nZXRfY2xvY2tfaW5mbyBmdW5jdGlvbiBiZWxvdy4NCg0KPiAN
-Cj4gPiArICogUmV0dXJuOiBSZXR1cm5zIHN0YXR1cywgZWl0aGVyIHN1Y2Nlc3Mgb3IgZXJyb3Ir
-cmVhc29uLg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGludCB6eW5xbXBfcG1fY2xvY2tfZ2V0X3Bh
-cmVudHModTMyIGNsb2NrX2lkLCB1MzIgaW5kZXgsIHUzMg0KPiAqcGFyZW50cykNCj4gPiArew0K
-PiA+ICsgICAgICAgc3RydWN0IHp5bnFtcF9wbV9xdWVyeV9kYXRhIHFkYXRhID0gezB9Ow0KPiA+
-ICsgICAgICAgdTMyIHJldF9wYXlsb2FkW1BBWUxPQURfQVJHX0NOVF07DQo+ID4gKyAgICAgICBp
-bnQgcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHFkYXRhLnFpZCA9IFBNX1FJRF9DTE9DS19HRVRf
-UEFSRU5UUzsNCj4gPiArICAgICAgIHFkYXRhLmFyZzEgPSBjbG9ja19pZDsNCj4gPiArICAgICAg
-IHFkYXRhLmFyZzIgPSBpbmRleDsNCj4gPiArDQo+ID4gKyAgICAgICByZXQgPSBlZW1pX29wcy0+
-cXVlcnlfZGF0YShxZGF0YSwgcmV0X3BheWxvYWQpOw0KPiA+ICsgICAgICAgbWVtY3B5KHBhcmVu
-dHMsICZyZXRfcGF5bG9hZFsxXSwgQ0xLX0dFVF9QQVJFTlRTX1JFU1BfV09SRFMgKg0KPiA0KTsN
-Cj4gDQo+IElzIDQgc2l6ZW9mKHUzMik/IE9yIGlzIGl0IHN1cHBvc2VkIHRvIGJlIDMgZm9yIHRo
-ZSAzIHBhcmVudHMgcmV0dXJuZWQ/DQoNCkl0IHNob3VsZCBiZSAzLg0KDQo+IA0KPiA+ICsNCj4g
-PiArLyoqDQo+ID4gKyAqIHp5bnFtcF9jbGtfc2V0dXAoKSAtIFNldHVwIHRoZSBjbG9jayBmcmFt
-ZXdvcmsgYW5kIHJlZ2lzdGVyIGNsb2Nrcw0KPiA+ICsgKiBAbnA6ICAgICAgICAgICAgICAgIERl
-dmljZSBub2RlDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBfX2luaXQgenlucW1wX2Nsa19z
-ZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpbnQgaWR4
-Ow0KPiA+ICsNCj4gPiArICAgICAgIGlkeCA9IG9mX3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwg
-ImNsb2NrLW5hbWVzIiwgInBzc19yZWZfY2xrIik7DQo+ID4gKyAgICAgICBpZiAoaWR4IDwgMCkg
-ew0KPiA+ICsgICAgICAgICAgICAgICBwcl9lcnIoInBzc19yZWZfY2xrIG5vdCBwcm92aWRlZFxu
-Iik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybjsNCj4gPiArICAgICAgIH0NCj4gPiArICAg
-ICAgIGlkeCA9IG9mX3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwgImNsb2NrLW5hbWVzIiwgInZp
-ZGVvX2NsayIpOw0KPiA+ICsgICAgICAgaWYgKGlkeCA8IDApIHsNCj4gPiArICAgICAgICAgICAg
-ICAgcHJfZXJyKCJ2aWRlb19jbGsgbm90IHByb3ZpZGVkXG4iKTsNCj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsgICAgICAgaWR4ID0gb2ZfcHJvcGVydHlf
-bWF0Y2hfc3RyaW5nKG5wLCAiY2xvY2stbmFtZXMiLCAicHNzX2FsdF9yZWZfY2xrIik7DQo+ID4g
-KyAgICAgICBpZiAoaWR4IDwgMCkgew0KPiA+ICsgICAgICAgICAgICAgICBwcl9lcnIoInBzc19h
-bHRfcmVmX2NsayBub3QgcHJvdmlkZWRcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm47
-DQo+ID4gKyAgICAgICB9DQo+ID4gKyAgICAgICBpZHggPSBvZl9wcm9wZXJ0eV9tYXRjaF9zdHJp
-bmcobnAsICJjbG9jay1uYW1lcyIsICJhdXhfcmVmX2NsayIpOw0KPiA+ICsgICAgICAgaWYgKGlk
-eCA8IDApIHsNCj4gPiArICAgICAgICAgICAgICAgcHJfZXJyKCJhdXhfcmVmX2NsayBub3QgcHJv
-dmlkZWRcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gKyAgICAgICB9DQo+
-ID4gKyAgICAgICBpZHggPSBvZl9wcm9wZXJ0eV9tYXRjaF9zdHJpbmcobnAsICJjbG9jay1uYW1l
-cyIsICJndF9jcnhfcmVmX2NsayIpOw0KPiA+ICsgICAgICAgaWYgKGlkeCA8IDApIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgcHJfZXJyKCJhdXhfcmVmX2NsayBub3QgcHJvdmlkZWRcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gKyAgICAgICB9DQo+IA0KPiBXaHkgYXJlIHdl
-IGRvaW5nIGFsbCB0aGlzPyBQbGVhc2UgZG9uJ3QgdmVyaWZ5IERUIGNvbnRlbnRzIGluIGRyaXZl
-cg0KPiBjb2RlLg0KDQpUaGUgaW50ZW50IGlzIG5vdCB0byBnbyBhaGVhZCB3aXRoIG90aGVyIGNs
-b2NrIHJlZ2lzdHJhdGlvbiBpZiB0aGVzZSBleHRlcm5hbCBjbG9ja3MgYXJlIG5vdCBhdmFpbGFi
-bGUuDQpXaGVyZSBzaG91bGQgaXQgYmUgdmFsaWRhdGVkPw0KDQo+ID4gKw0KPiA+ICsvKioNCj4g
-PiArICogcGxsX2dldF9tb2RlIC0gR2V0IG1vZGUgb2YgUExMDQo+ID4gKyAqIEBodzogSGFuZGxl
-IGJldHdlZW4gY29tbW9uIGFuZCBoYXJkd2FyZS1zcGVjaWZpYyBpbnRlcmZhY2VzDQo+ID4gKyAq
-DQo+ID4gKyAqIFJldHVybjogTW9kZSBvZiBQTEwNCj4gPiArICovDQo+ID4gK3N0YXRpYyBpbmxp
-bmUgZW51bSBwbGxfbW9kZSBwbGxfZ2V0X21vZGUoc3RydWN0IGNsa19odyAqaHcpDQo+ID4gK3sN
-Cj4gPiArICAgICAgIHN0cnVjdCB6eW5xbXBfcGxsICpjbGsgPSB0b196eW5xbXBfcGxsKGh3KTsN
-Cj4gPiArICAgICAgIHUzMiBjbGtfaWQgPSBjbGstPmNsa19pZDsNCj4gPiArICAgICAgIGNvbnN0
-IGNoYXIgKmNsa19uYW1lID0gY2xrX2h3X2dldF9uYW1lKGh3KTsNCj4gPiArICAgICAgIHUzMiBy
-ZXRfcGF5bG9hZFtQQVlMT0FEX0FSR19DTlRdOw0KPiANCj4gSG93IGJpZyBpcyBQQVlMT0FEX0FS
-R19DTlQ/DQo+IA0KSXRzIDUuDQoNClJlc3QgYWxsIGNvbW1lbnRzIHdpbGwgYmUgdGFrZW4gY2Fy
-ZSBpbiBuZXh0IHZlcnNpb24uDQoNCg0KVGhhbmtzLA0KSm9sbHkgU2hhaA0K
+This adds a vendor prefix "cdtech" for CDTech(H.K.) Electronics Limited
+
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ae850d6..9854399 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -61,6 +61,7 @@ capella	Capella Microsystems, Inc
+ cascoda	Cascoda, Ltd.
+ cavium	Cavium, Inc.
+ cdns	Cadence Design Systems Inc.
++cdtech	CDTech(H.K.) Electronics Limited
+ ceva	Ceva, Inc.
+ chipidea	Chipidea, Inc
+ chipone		ChipOne
+-- 
+2.7.4
