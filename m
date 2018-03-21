@@ -1,135 +1,60 @@
-Return-Path: <SRS0=EV7f=GE=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v4 5/6] arm64: dts: sdm845: Add serial console support
-Date: Wed, 14 Mar 2018 17:58:50 -0600
-Message-Id: <1521071931-9294-6-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
-References: <1521071931-9294-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
+Return-Path: <SRS0=0uUh=GL=ucw.cz=pavel@kernel.org>
+Date: Thu, 22 Mar 2018 00:08:27 +0100
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/2] leds: add Panasonic AN30259A support
+Message-ID: <20180321230827.GB6668@amd>
+References: <20180319135937.18772-1-simon@lineageos.org>
+ <20180319135937.18772-3-simon@lineageos.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+Content-Disposition: inline
+In-Reply-To: <20180319135937.18772-3-simon@lineageos.org>
+To: Simon Shields <simon@lineageos.org>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
 
-Add the qup uart node and geni se instance needed to
-support the serial console on the MTP.
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 39 +++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 38 ++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 979ab49..ea3efc5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -12,4 +12,43 @@
- / {
- 	model = "Qualcomm Technologies, Inc. SDM845 MTP";
- 	compatible = "qcom,sdm845-mtp";
-+
-+	aliases {
-+		serial0 = &uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+};
-+
-+&soc {
-+	geniqup@ac0000 {
-+		serial@a84000 {
-+			status = "okay";
-+		};
-+	};
-+
-+	pinctrl@3400000 {
-+		qup-uart2-default {
-+			pinconf_tx {
-+				pins = "gpio4";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+
-+			pinconf_rx {
-+				pins = "gpio5";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+		};
-+
-+		qup-uart2-sleep {
-+			pinconf {
-+				pins = "gpio4", "gpio5";
-+				bias-pull-down;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 32f8561..59334d9 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/qcom,gcc-sdm845.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -194,6 +195,20 @@
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+
-+			qup_uart2_default: qup-uart2-default {
-+				pinmux {
-+					function = "qup9";
-+					pins = "gpio4", "gpio5";
-+				};
-+			};
-+
-+			qup_uart2_sleep: qup-uart2-sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio4", "gpio5";
-+				};
-+			};
- 		};
- 
- 		timer@17c90000 {
-@@ -272,5 +287,28 @@
- 			#interrupt-cells = <4>;
- 			cell-index = <0>;
- 		};
-+
-+		geniqup@ac0000 {
-+			compatible = "qcom,geni-se-qup";
-+			reg = <0xac0000 0x6000>;
-+			clock-names = "m-ahb", "s-ahb";
-+			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-+				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			uart2: serial@a84000 {
-+				compatible = "qcom,geni-debug-uart";
-+				reg = <0xa84000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_uart2_default>;
-+				pinctrl-1 = <&qup_uart2_sleep>;
-+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+		};
- 	};
- };
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Tue 2018-03-20 00:59:37, Simon Shields wrote:
+> AN30259A is a 3-channel LED driver which uses I2C. It supports timed
+> operation via an internal PWM clock, and variable brightness. This
+> driver offers support for basic hardware-based blinking and brightness
+> control.
+>=20
+> The datasheet is freely available:
+> https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
+>=20
+> Signed-off-by: Simon Shields <simon@lineageos.org>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+You still need device tree description AFAICT:
+
+pavel@amd:/data/l/linux$ grep -ri an30259 Documentation/devicetree/
+pavel@amd:/data/l/linux$
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqy5esACgkQMOfwapXb+vK6swCgg2sLbKFzYvBtn6uHGtwagokr
+4doAoJEqs8uuA6vh4s8aa3yNigx6oXs2
+=AnjF
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
