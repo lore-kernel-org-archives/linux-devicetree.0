@@ -1,54 +1,41 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [linux-sunxi] Re: [PATCH 2/7] dt-bindings: add binding for the Allwinner A64 DE2 bus
-Date: Wed, 21 Mar 2018 18:13:42 +0100
-Message-ID: <2866474.lRHIcLtROC@jernej-laptop>
-References: <20180316175354.21437-1-icenowy@aosc.io> <20180320184646.dynqv6qubzabroe4@flea> <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: [PATCH 0/2 v7] Lattice MachXO2 Slave SPI FPGA Manager support
+Date: Wed, 21 Mar 2018 18:35:24 +0100
+Message-ID: <1521653726-24625-1-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, icenowy@aosc.io
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi all,
+this series adds support for the Lattice MachXO2 FPGA chip, programmed
+over Slave SPI.
 
-Dne sreda, 21. marec 2018 ob 03:18:13 CET je Icenowy Zheng napisal(a):
-> 于 2018年3月21日 GMT+08:00 上午2:46:46, Maxime Ripard <maxime.ripard@bootlin.com> 
-写到:
-> >On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
-> >> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC
-> >
-> >to
-> >
-> >> be claimed, otherwise the whole DE2 space is inaccessible.
-> >> 
-> >> Add a device tree binding of the DE2 part as a sub-bus.
-> >
-> >Where did you get the info that it was a bus?
-> 
-> There's no direct evidence, just some guess.
-> 
-> The DE2 is a whole part that is just allocated a memory
-> space at the user manual, and the SRAM controls the
-> access to all modules in the DE2.
-> 
-> So it might be a bus.
-> 
-> Implement it as a bus is a clear representation on A64.
+Tested on a raspberry pi3, beaglebone black (little endian mode) and imx6
+hummingboard (big endian mode) + bugblat's pif2 fpga hat (machxo2 7000HC) or
+tinyfpga A1/A2 (machxo2 256HC / 1200HC), in SPI slave mode with varying bus
+speed.
 
-Since there is already syscon for same mmio region, we migh as well use it 
-when loading ccu-sun8i-de2 driver on A64.
+Changes since v6:
+* added the SPDX boilerplate
+* switched to pr_debug() and renamed MACHXO2_DEBUG to DEBUG
 
-Other options, like SRAM driver or bus driver, might better represent HW, but 
-then we would have two DT nodes covering same mmio region, which I think is 
-not really acceptable.
 
-Any suggestions?
+Paolo Pisati (2):
+  dt: bindings: fpga: add lattice machxo2 slave spi binding description
+  fpga: lattice machxo2: Add Lattice MachXO2 support
 
-BTW, H6 has same design in this regard.
+ .../bindings/fpga/lattice-machxo2-spi.txt          |  29 ++
+ drivers/fpga/Kconfig                               |   8 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/machxo2-spi.c                         | 405 +++++++++++++++++++++
+ 4 files changed, 443 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ create mode 100644 drivers/fpga/machxo2-spi.c
 
-Best regards,
-Jernej
+-- 
+2.7.4
