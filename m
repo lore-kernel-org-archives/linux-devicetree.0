@@ -1,61 +1,123 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM driver
-Date: Wed, 21 Mar 2018 06:47:09 -0700
-Message-ID: <20180321134710.29757-2-andrew.smirnov@gmail.com>
-References: <20180321134710.29757-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321134710.29757-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [Freedreno] [DPU PATCH 2/2] drm/msm: Add hardware catalog file
+ for SDM845
+Date: Wed, 21 Mar 2018 09:52:15 -0400
+Message-ID: <20180321135215.GR223881@art_vandelay>
+References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+ <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
+ <20180319135931.GJ223881@art_vandelay>
+ <a4863676581e8a25f13233a65a387ae4@codeaurora.org>
+ <20180320151711.GP223881@art_vandelay>
+ <f676c0321d6d2a025dab282935c38232@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <f676c0321d6d2a025dab282935c38232@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: skolluku@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-
-diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-new file mode 100644
-index 000000000000..556abfa70524
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-@@ -0,0 +1,23 @@
-+Zodiac Inflight Innovations RAVE EEPROM Bindings
-+
-+RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
-+attached to RAVE Supervisory Processor. It is expected that its Device
-+Tree node is specified as a child of the node corresponding to the
-+parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+
-+- compatible: Should be "zii,rave-sp-eeprom"
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		dds-eeprom {
-+			compatible = "zii,rave-sp-eeprom";
-+			reg = <0xA3 0x2000>;
-+		};
-+	}
--- 
-2.14.3
+T24gV2VkLCBNYXIgMjEsIDIwMTggYXQgMDQ6MDU6MzFQTSArMDUzMCwgc2tvbGx1a3VAY29kZWF1
+cm9yYS5vcmcgd3JvdGU6Cj4gT24gMjAxOC0wMy0yMCAyMDo0NywgU2VhbiBQYXVsIHdyb3RlOgo+
+ID4gT24gVHVlLCBNYXIgMjAsIDIwMTggYXQgMDc6MTM6MzhQTSArMDUzMCwgc2tvbGx1a3VAY29k
+ZWF1cm9yYS5vcmcgd3JvdGU6Cj4gPiA+IE9uIDIwMTgtMDMtMTkgMTk6MjksIFNlYW4gUGF1bCB3
+cm90ZToKPiA+ID4gPiBPbiBXZWQsIE1hciAxNCwgMjAxOCBhdCAxMToyMTozOEFNICswNTMwLCBT
+cmF2YW50aGkgS29sbHVrdWR1cnUgd3JvdGU6Cj4gPiA+ID4gPiBUaGlzIGNoYW5nZSBhZGRzIHRo
+ZSBoYXJkd2FyZSBjYXRhbG9nIGluZm9ybWF0aW9uIGluIGRyaXZlciBzb3VyY2UKPiA+ID4gPiA+
+IGZvciBTRE04NDUuIFRoaXMgcmVtb3ZlcyB0aGUgY3VycmVudCBsb2dpYyBvZiBkdCBiYXNlZCBw
+YXJzaW5nCj4gPiA+ID4gPiBvZiB0YXJnZXQgY2F0YWxvZyBpbmZvcm1hdGlvbi4KPiA+ID4gPiA+
+Cj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1
+QGNvZGVhdXJvcmEub3JnPgo+ID4gCj4gPiA8c25pcCAvPgo+ID4gCj4gPiA+ID4gPiArewo+ID4g
+PiA+ID4gKwkvKiBMYXllciBjYXBhYmlsaXR5ICovCj4gPiA+ID4gPiArCXN0YXRpYyBjb25zdCBz
+dHJ1Y3QgZHB1X3NzcHBfc3ViX2Jsa3MgdmlnX3NibGtfMCA9IHsKPiA+ID4gPiA+ICsJCS5tYXhs
+aW5ld2lkdGggPSAyNTYwLAo+ID4gPiA+ID4gKwkJLnBpeGVsX3JhbV9zaXplID0gNTAgKiAxMDI0
+LAo+ID4gPiA+ID4gKwkJLm1heGR3bnNjYWxlID0gNCwKPiA+ID4gPiA+ICsJCS5tYXh1cHNjYWxl
+ID0gMjAsCj4gPiA+ID4gPiArCQkubWF4aGRlY2lleHAgPSBERUNJTUFUSU9OXzQwWF9NQVhfSCwK
+PiA+ID4gPiA+ICsJCS5tYXh2ZGVjaWV4cCA9IERFQ0lNQVRJT05fNDBYX01BWF9WLAo+ID4gPiA+
+ID4gKwkJLnNtYXJ0X2RtYV9wcmlvcml0eSA9IDUsCj4gPiA+ID4gPiArCQkuc3JjX2JsayA9IHsu
+bmFtZSA9ICJzc3BwX3NyY18wIiwgLmlkID0gRFBVX1NTUFBfU1JDLAo+ID4gPiA+ID4gKwkJCS5i
+YXNlID0gMHgwMCwgLmxlbiA9IDB4MTUwLH0sCj4gPiA+ID4gPiArCQkuc2NhbGVyX2JsayA9IHsu
+bmFtZSA9ICJzc3BwX3NjYWxlcjAiLAo+ID4gPiA+ID4gKwkJCS5pZCA9IERQVV9TU1BQX1NDQUxF
+Ul9RU0VFRDMsCj4gPiA+ID4gPiArCQkJLmJhc2UgPSAweGEwMCwgLmxlbiA9IDB4YTAsfSwKPiA+
+ID4gPiA+ICsJCS5jc2NfYmxrID0gey5uYW1lID0gInNzcHBfY3NjMCIsIC5pZCA9IERQVV9TU1BQ
+X0NTQ18xMEJJVCwKPiA+ID4gPiA+ICsJCQkuYmFzZSA9IDB4MWEwMCwgLmxlbiA9IDB4MTAwLH0s
+Cj4gPiA+ID4gPiArCQkuZm9ybWF0X2xpc3QgPSBwbGFuZV9mb3JtYXRzX3l1diwKPiA+ID4gPiA+
+ICsJCS52aXJ0X2Zvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0cywKPiA+ID4gPiA+ICsJfTsKPiA+
+ID4gPgo+ID4gPiA+IEluc3RlYWQgb2YgbG9jYXRpbmcgYWxsIG9mIHRoZXNlIHBhcmFtZXRlcnMg
+aW4gb25lIGZpbGUsIHRoZXNlIHNob3VsZCBiZQo+ID4gPiA+IGxvY2F0ZWQgaW4gdGhlaXIgcmVz
+cGVjdGl2ZSBkcml2ZXIgZmlsZS4gSXQgYWxzbyBzZWVtcyBsaWtlIHlvdSBjb3VsZAo+ID4gPiA+
+IHNlcGFyYXRlCj4gPiA+ID4gb3V0IHRoZSBjb21tb24gc3R1ZmYgc3VjaCBhcyBsaW5lIHdpZHRo
+LCByYW0gc2l6ZSwgc2NhbGluZywgZm9ybWF0LCBldGMKPiA+ID4gPiBwYXJhbWV0ZXJzIGZyb20g
+dGhlIHBpcGVsaW5lIHNldHVwLgo+ID4gPiA+Cj4gPiA+ID4gVGhlIHNhbWUgY29tbWVudHMgYXBw
+bHkgdG8gdGhlIG90aGVyIGJsb2Nrcy4gTW92ZSB0aGluZ3MgaW50byB0aGUKPiA+ID4gPiBkcml2
+ZXJzLAo+ID4gPiA+IHVzZSBjb21wYXRpYmlsaXR5IHN0cmluZyB0byBkZXRlcm1pbmUgdGhlIHZl
+cnNpb24sIGFuZCB0aGVuIGFzc29jaWF0ZQo+ID4gPiA+IHRoZSBjb21tb24KPiA+ID4gPiBwYXJh
+bWV0ZXJzIHdpdGggb2ZfZGV2aWNlX2lkLmRhdGEuCj4gPiA+ID4KPiA+ID4gPiBTZWFuCj4gPiA+
+ID4KPiA+ID4gPiA8c25pcCAvPgo+ID4gPiAKPiA+ID4gVGhhbmtzIFNlYW4gZm9yIHRoZSBmZWVk
+YmFjay4KPiA+ID4gVGhlIGlkZWEgYmVoaW5kIHRoaXMgYXBwcm9hY2ggaXMgdG8gbWFpbnRhaW4g
+YSBvbmUgcG9pbnQgYWNjZXNzIGZvcgo+ID4gPiBhbGwgdGhlCj4gPiA+IHRhcmdldCBzcGVjaWZp
+YyBpbmZvcm1hdGlvbiwgYW5hbG9nb3VzIHRvIHRoZSBjdXJyZW50IGRwdSBkdHNpIGZpbGUuCj4g
+PiA+IFRoaXMgYWxzbyBlbnN1cmVzIGVhc3kgbWFpbnRlbmFuY2UgZm9yIGRpZmZlcmVudCBoYXJk
+d2FyZSB2ZXJzaW9ucywKPiA+ID4gYXMgYWxsCj4gPiA+IGl0Cj4gPiA+IHRha2VzIGlzIHRvIGFk
+ZCBhbm90aGVyIGZpbGUgaW5zdGVhZCBvZiB1cGRhdGluZyBhY3Jvc3MgaW5kaXZpZHVhbAo+ID4g
+PiBzdWIgYmxvY2sKPiA+ID4gZmlsZXMuCj4gPiAKPiA+IEkgYW0gbm90IGNvbnZpbmNlZCB0aGlz
+IGlzIHdoYXQgd2Ugc2hvdWxkIG9wdGltaXplIGZvci4gVGhpcyBmaWxlIGlzCj4gPiBiYXNpY2Fs
+bHkKPiA+IHVucmVhZGFibGUsIGFuZCBpdCdzIGFic3RyYWN0aW5nIHJlbGV2YW50IGRldGFpbHMg
+YXdheSBmcm9tIHRoZSBibG9jawo+ID4gY29kZS4gVGhlcmUKPiA+IGFyZSBhbHNvIGEgVE9OIG9m
+IGR1cGxpY2F0ZWQgcGFyYW1ldGVycy92YWx1ZXMgd2hpY2ggaXMgZXJyb3ItcHJvbmUuCj4gPiBM
+YXN0bHksCj4gPiB0aGlzIGlzIG5vdCB0aGUgdHlwZSBvZiBmaWxlIHRoYXQgeW91IHdhbnQgdG8g
+Y29weS9wYXN0ZSBtdWx0aXBsZQo+ID4gdGltZXMsIGl0IHdvdWxkCj4gPiBiZSBtdWNoIGJldHRl
+ciB0byBzaW1wbHkgYWRkIHRoZSBuZXcgc3RydWN0cyB0byB0aGUgYmxvY2sgZHJpdmVycwo+ID4g
+d2hlcmUgYXBwbGljYWJsZS4KPiA+IAo+ID4gPiAKPiA+ID4gQWxzbywgaSdtIG5vdCBxdWl0ZSBj
+bGVhciBvbiBob3cgY29tcGF0aWJpbGl0eSBzdHJpbmdzIGlzIGFwcGxpY2FibGUKPiA+ID4gdG8g
+c3ViCj4gPiA+IGJsb2Nrcy4KPiA+IAo+ID4gQ29uc2lkZXIgdGhlIGZvbGxvd2luZyBleGFtcGxl
+IGZyb20gcm9ja2NoaXA6Cj4gPiBodHRwczovL2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvc2VhbnBh
+dWwvZHB1LXN0YWdpbmcvYmxvYi9mb3ItbmV4dC9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9j
+a2NoaXBfdm9wX3JlZy5jI0w1MzgKPiA+IAo+ID4gRWFjaCB0aW1lIHRoZSB2b3AgaXMgY2hhbmdl
+ZCwgaXQgZ2V0cyBhIG5ldyBjb21wYXRpYmxlIHN0cmluZyBpbiB0aGUKPiA+IGR0IGJpbmRpbmdz
+Lgo+ID4gVGhpcyBjb21wYXRpYmxlIHN0cmluZyBpcyB0aWVkIHRvIGEgcGFyYW1ldGVycyB0aGF0
+IGRlc2NyaWJlIHRoZQo+ID4gZmVhdHVyZXMgb2YKPiA+IHRoYXQgdmVyc2lvbiBvZiB2b3AuIFRo
+aXMgZGF0YSBpcyB0aWVkIHRvIHRoZSBkcml2ZXIgZGF0YSBkdXJpbmcgcHJvYmUKPiA+IGFuZCB1
+c2VkCj4gPiB3aGUgbmVlZGVkIHRocm91Z2hvdXQgdGhlIGRyaXZlci4KPiA+IAo+ID4gU28gYWxs
+IG9mIHlvdXIgY2F0YWxvZyBkYXRhIHNob3VsZCBiZSBicm9rZW4gdXAgaW50byBzdHJ1Y3RzIHNw
+ZWNpZmljIHRvCj4gPiB0aGUKPiA+IHZhcmlvdXMgc3ViLWJsb2NrcyBvZiB0aGUgZHB1IGRyaXZl
+ciBhbmQgYXNzb2NpYXRlZCB3aXRoIGNvbXBhdGlibGUKPiA+IHN0cmluZ3MuCj4gPiBXaGVuIGEg
+bmV3IGNoaXAgY29tZXMgb3V0IHdpdGggZGlmZmVyZW50IHBhcmFtZXRlcnMsIGEgbmV3IHN0cnVj
+dCBzaG91bGQKPiA+IGJlCj4gPiBkZWZpbmVkIGFsb25nIHdpdGggYSBuZXcgY29tcGF0aWJsZSBz
+dHJpbmcuCj4gPiAKPiA+IE1ha2Ugc2Vuc2U/Cj4gPiAKPiA+IFNlYW4KPiA+IAo+IAo+IFllcyBT
+ZWFuLCB0aGFua3MgZm9yIHNoYXJpbmcgdGhlIHJvY2tjaGlwX3ZvcCByZWZlcmVuY2UuCj4gQmFz
+ZWQgb24gdGhlIGRpc2N1c3Npb25zIHNvIGZhciwgdGhlcmUgYXJlIHR3byBtYWluIHBvaW50cyB0
+byBiZSBhZGRyZXNzZWQ6Cj4gMS4gQXNzb2NpYXRlIGNhdGFsb2cgaW5mb3JtYXRpb24gd2l0aCBo
+YXJkd2FyZSB2ZXJzaW9ucyB1c2luZyBjb21wYXRpYmxlCj4gc3RyaW5ncwo+IDIuIENyZWF0ZSBz
+dWIgYmxvY2sgc3RydWN0dXJlcyB0aGF0ICB2YXJpb3VzIGhhcmR3YXJlIHZlcnNpb25zIGNhbiBy
+ZXVzZS4KPiAKPiBUaGUgaW50ZW50IG9mIFBvaW50IDEuIGlzIHByZXNlbnQgaW4gdGhlIGN1cnJl
+bnQgaW1wbGVtZW50YXRpb24uCj4gVGhlIGhhcmR3YXJlIHZlcnNpb24gaXMgcmVhZCBmcm9tIHJl
+Z2lzdGVyIHRvIGV4dHJhY3QgdGhlIHJlbGV2YW50IGNhdGFsb2cKPiBpbmZvcm1hdGlvbi4KPiBI
+ZW5jZSwgd2UgZG9uJ3QgcGxhbiB0byBkZWZpbmUgbmV3IERUIGNvbXBhdGlibGUgc3RyaW5ncyBm
+b3IgdGhpcyBwdXJwb3NlLgo+IChVcHN0cmVhbSByZWZlcmVuY2UgZm9yIHNpbWlsYXIgaW1wbGVt
+ZW50YXRpb24gOgo+IGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9zZWFucGF1bC9kcHUt
+c3RhZ2luZy9ibG9iL2Zvci1uZXh0L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9tZHA1L21kcDVf
+Y2ZnLmMjTDU1NikKClllYWgsIGlmIHlvdSBjYW4gZ2V0IHRoZSB2ZXJzaW9uIGZyb20gYSByZWdp
+c3RlciBhbmQgYXZvaWQgYSBuZXcgZHQgYmluZGluZywKdGhhdCdzIGV2ZW4gYmV0dGVyLgoKPiAK
+PiAKPiBQb2ludCAyLiBob3dldmVyLCBpcyBhIHZhbGlkIGNvbmNlcm4gYW5kIG5lZWRzIHRvIGJl
+IHRob3JvdWdobHkgbG9va2VkIGludG8uCj4gVGhlIGNoYWxsZW5nZSBoZXJlIGlzIHRvIGFzc2Vz
+cyB0aGUgY29kZSBpbXBhY3QgaWYgd2UgcGxhbiB0byBtb2RpZnkgdGhlCj4gcHJlc2VudAo+IGNh
+dGFsb2cgc3RydWN0dXJlcyAoZm9yIGluc3RhbmNlLCBjcmVhdGUgYSBuZXcgY29tbW9uIHN0cnVj
+dHVyZSkuCj4gV2lsbCBnZXQgYmFjayB0byB5b3Ugb24gdGhpcyBhZnRlciBpbnRlcm5hbCByZXZp
+ZXcuCgpIbW0sIG9rLgoKU2VhbgoKPiAKPiBUaGFua3MsCj4gU3JhdmFudGhpCj4gCj4gPiA+IFBs
+ZWFzZSBjbGFyaWZ5Lgo+ID4gPiAKPiA+ID4gVGhhbmtzLAo+ID4gPiBTcmF2YW50aGkKCi0tIApT
+ZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
