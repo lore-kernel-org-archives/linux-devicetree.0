@@ -1,85 +1,82 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] dma-mapping: move dma configuration to bus
-	infrastructure
-Date: Wed, 21 Mar 2018 16:13:38 +0000
-Message-ID: <HE1PR0401MB242585F3CB211F71AF29791EE6AA0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
-References: <1520868292-2479-1-git-send-email-nipun.gupta@nxp.com>
-	<1521615323-4752-1-git-send-email-nipun.gupta@nxp.com>
-	<20180321092954.GS14085@kroah.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 4/8] clk: davinci: add a reset lookup table for psc0
+Date: Wed, 21 Mar 2018 11:17:35 -0500
+Message-ID: <a4ca0ba3-5d31-2d8c-7fa6-f8e9ba9b4535@lechnology.com>
+References: <20180321120807.18032-1-brgl@bgdev.pl>
+ <20180321120807.18032-5-brgl@bgdev.pl>
+ <4b985ed2-0db0-b4ad-8a9f-b8804e6d4db4@lechnology.com>
+ <CAMpxmJUELxNGv5fL1gdNM4nRxdJ9t39G2Nc29yjZRnS0fRyHYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180321092954.GS14085-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMpxmJUELxNGv5fL1gdNM4nRxdJ9t39G2Nc29yjZRnS0fRyHYg@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msuchanek-l3A5Bk7waGM@public.gmane.org" <msuchanek-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32k@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org]
-> Sent: Wednesday, March 21, 2018 15:00
-
-<snip>
-
-> > +int dma_configure(struct device *dev)
-> > +{
-> > +	if (dev->bus->dma_configure)
-> > +		return dev->bus->dma_configure(dev);
-> > +
-> > +	return 0;
-> > +}
-> >  void dma_deconfigure(struct device *dev)
+On 03/21/2018 11:08 AM, Bartosz Golaszewski wrote:
+> 2018-03-21 17:01 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 03/21/2018 07:08 AM, Bartosz Golaszewski wrote:
+>>>
+>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>
+>>> In order to be able to use the reset framework in legacy boot mode as
+>>> well, add the reset lookup table to the psc driver for da850 variant.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> ---
+>>>    drivers/clk/davinci/psc-da850.c | 8 ++++++++
+>>>    drivers/clk/davinci/psc.c       | 1 +
+>>>    2 files changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/davinci/psc-da850.c
+>>> b/drivers/clk/davinci/psc-da850.c
+>>> index ccc7eb17bf3a..395db4b2c0ee 100644
+>>> --- a/drivers/clk/davinci/psc-da850.c
+>>> +++ b/drivers/clk/davinci/psc-da850.c
+>>> @@ -6,6 +6,7 @@
+>>>     */
+>>>      #include <linux/clk-provider.h>
+>>> +#include <linux/reset-controller.h>
+>>>    #include <linux/clk.h>
+>>>    #include <linux/clkdev.h>
+>>>    #include <linux/init.h>
+>>> @@ -66,8 +67,15 @@ LPSC_CLKDEV3(ecap_clkdev,    "fck",  "ecap.0",
+>>>                                  "fck",  "ecap.1",
+>>>                                  "fck",  "ecap.2");
+>>>    +static struct reset_control_lookup da850_psc0_reset_lookup_table[] = {
+>>> +       RESET_LOOKUP("davinci-rproc.0", NULL, 15),
+>>> +};
+>>> +
+>>>    static int da850_psc0_init(struct device *dev, void __iomem *base)
+>>>    {
+>>> +       reset_controller_add_lookup("da850-psc0",
+>>> +                                   da850_psc0_reset_lookup_table,
+>>> +
+>>> ARRAY_SIZE(da850_psc0_reset_lookup_table));
+>>
+>>
+>> Could there be a race condition here since you are adding the lookup
+>> *before*
+>> you are adding the actual provider? It seems like
+>> reset_controller_add_lookup()
+>> should be after davinci_psc_register_clocks().
+>>
 > 
-> Empty line after this new function?  Sorry, couldn't help it :)
+> I don't think so, because reset_controller_add_lookup() only adds the
+> lookup structure to the list in reset/core.c. The actual reset
+> controller struct is only located and used when reset_control_get_*()
+> is called, so after probing the user. And it's all protected with
+> mutexes.
 > 
-> >  {
-> >  	of_dma_deconfigure(dev);
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index f1bf7b3..d2d5891 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -1130,6 +1130,11 @@ int platform_pm_restore(struct device *dev)
-> >
-> >  #endif /* CONFIG_HIBERNATE_CALLBACKS */
-> >
-
-<snip>
-
-> > +
-> >  	const struct dev_pm_ops *pm;
-> >
-> >  	const struct iommu_ops *iommu_ops;
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > index eb9eab4..c15986b 100644
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -761,6 +761,7 @@ void *dma_mark_declared_memory_occupied(struct
-> device *dev,
-> >  }
-> >  #endif /* CONFIG_HAVE_GENERIC_DMA_COHERENT */
-> >
-> > +int dma_common_configure(struct device *dev);
-> >  #ifdef CONFIG_HAS_DMA
+> This made me think though - maybe if we can't locate the controller,
+> we should return -EPROBE_DEFER from probe in davinci-rproc?
 > 
-> Blank line after the new function declaration?
+> Bart
 > 
-> Other than those very minor things, nice job, this looks good:
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 
-Thank you for the review :). I will fix your comments in next version.
-
-Regards,
-Nipun
+Yes, especially since we know that the PSC driver itself does get
+deferred already.
