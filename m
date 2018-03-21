@@ -1,44 +1,35 @@
-Return-Path: <SRS0=ljBG=GL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from vps0.lunn.ch ([185.16.172.187]:38345 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753704AbeCUVol (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 21 Mar 2018 17:44:41 -0400
-Date: Wed, 21 Mar 2018 22:44:36 +0100
-From: Andrew Lunn <andrew@lunn.ch>
+Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
+Date: Wed, 21 Mar 2018 14:36:36 -0700
+From: Richard Cochran <richardcochran@gmail.com>
 Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
  time stamping IP core.
-Message-ID: <20180321214436.GX24516@lunn.ch>
+Message-ID: <20180321213636.2mmfveu2vg5qbwpp@localhost>
 References: <cover.1521656774.git.richardcochran@gmail.com>
  <e9def53dd0f751d7f5e3df47e604d7ccb6020159.1521656774.git.richardcochran@gmail.com>
  <20180321193315.GR24516@lunn.ch>
- <20180321213636.2mmfveu2vg5qbwpp@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180321213636.2mmfveu2vg5qbwpp@localhost>
-Sender: devicetree-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
+In-Reply-To: <20180321193315.GR24516@lunn.ch>
+To: Andrew Lunn <andrew@lunn.ch>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Richard
+On Wed, Mar 21, 2018 at 08:33:15PM +0100, Andrew Lunn wrote:
+> Can you point us at some documentation for this.
 
-> The only other docs that I have is a PDF of the register layout, but I
-> don't think I can redistribute that.  Actually, there really isn't any
-> detail in that doc at all.
+The overall one-step functionality is described IEEE 1588.
 
-O.K, so lets do the 20 questions approach.
+> I think Florian and I want to better understand how this device works,
+> in order to understand your other changes.
 
-As far as i can see, this is not an MDIO device. It is not connected
-to the MDIO bus, it has no MDIO registers, you don't even pass a valid
-MDIO address in device tree.
+The device is from here:
 
-It it actually an MII bus snooper? Does it snoop, or is it actually in
-the MII bus, and can modify packets, i.e. insert time stamps as frames
-pass over the MII bus?
+   https://www.zhaw.ch/en/engineering/institutes-centres/ines/products-and-services/ptp-ieee-1588/ptp-hardware/#c43991
 
-When the driver talks about having three ports, does that mean it can
-be on three different MII busses?
+The only other docs that I have is a PDF of the register layout, but I
+don't think I can redistribute that.  Actually, there really isn't any
+detail in that doc at all.
 
-Thanks
-   Andrew
+Thanks,
+Richard
