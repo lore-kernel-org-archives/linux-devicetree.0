@@ -1,74 +1,53 @@
-Return-Path: <SRS0=iiFe=F6=linaro.org=shawn.guo@kernel.org>
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH v3 1/2] dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
-Date: Thu,  8 Mar 2018 09:01:33 +0800
-Message-Id: <1520470894-9114-2-git-send-email-shawn.guo@linaro.org>
-In-Reply-To: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org>
-References: <1520470894-9114-1-git-send-email-shawn.guo@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, tianshuliang <tianshuliang@hisilicon.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Return-Path: <SRS0=qE9/=GL=intel.com=jacob.e.keller@kernel.org>
+From: "Keller, Jacob E" <jacob.e.keller@intel.com>
+Subject: RE: [PATCH net-next RFC V1 1/5] net: Introduce peer to peer one
+ step PTP time stamping.
+Date: Wed, 21 Mar 2018 23:51:25 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB5882D02569@ORSMSX115.amr.corp.intel.com>
+References: <cover.1521656774.git.richardcochran@gmail.com>
+ <60ae964d6a0da497bcac1d3fdb5b3fe01f5d70f1.1521656774.git.richardcochran@gmail.com>
+ <02874ECE860811409154E81DA85FBB5882D02105@ORSMSX115.amr.corp.intel.com>
+ <20180321212623.r6tmqts2n4npa5ki@localhost>
+In-Reply-To: <20180321212623.r6tmqts2n4npa5ki@localhost>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: tianshuliang <tianshuliang@hisilicon.com>
+> -----Original Message-----
+> From: Richard Cochran [mailto:richardcochran@gmail.com]
+> Sent: Wednesday, March 21, 2018 2:26 PM
+> To: Keller, Jacob E <jacob.e.keller@intel.com>
+> Cc: netdev@vger.kernel.org; devicetree@vger.kernel.org; Andrew Lunn
+> <andrew@lunn.ch>; David Miller <davem@davemloft.net>; Florian Fainelli
+> <f.fainelli@gmail.com>; Mark Rutland <mark.rutland@arm.com>; Miroslav
+> Lichvar <mlichvar@redhat.com>; Rob Herring <robh+dt@kernel.org>; Willem d=
+e
+> Bruijn <willemb@google.com>
+> Subject: Re: [PATCH net-next RFC V1 1/5] net: Introduce peer to peer one =
+step
+> PTP time stamping.
+>=20
+> On Wed, Mar 21, 2018 at 08:05:36PM +0000, Keller, Jacob E wrote:
+> > I am guessing that we expect all devices which support onestep P2P mess=
+ages,
+> will always support onestep SYNC as well?
+>=20
+> Yes.  Anything else doesn't make sense, don't you think?
+>=20
+> Also, reading 1588, it isn't clear whether supporting only 1-step Sync
+> without 1-step P2P is even intended.  There is only a "one-step
+> clock", and it is described as doing both.
+>=20
+> Thanks,
+> Richard
 
-Hisilicon hi3798cv200 SoC extends the dw-mshc controller
-for additional clock control. Add device tree bindings for
-hi3798cv200-dw-mshc.
+This was my understanding as well, but given the limited hardware which can=
+ do sync but not pdelay messages, I just wanted to make sure we were on the=
+ same page.
 
-Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/mmc/hi3798cv200-dw-mshc.txt           | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
-new file mode 100644
-index 000000000000..a0693b7145f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
-@@ -0,0 +1,40 @@
-+* Hisilicon Hi3798CV200 specific extensions to the Synopsys Designware Mobile
-+  Storage Host Controller
-+
-+Read synopsys-dw-mshc.txt for more details
-+
-+The Synopsys designware mobile storage host controller is used to interface
-+a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-+differences between the core Synopsys dw mshc controller properties described
-+by synopsys-dw-mshc.txt and the properties used by the Hisilicon Hi3798CV200
-+specific extensions to the Synopsys Designware Mobile Storage Host Controller.
-+
-+Required Properties:
-+- compatible: Should contain "hisilicon,hi3798cv200-dw-mshc".
-+- clocks: A list of phandle + clock-specifier pairs for the clocks listed
-+  in clock-names.
-+- clock-names: Should contain the following:
-+	"ciu" - The ciu clock described in synopsys-dw-mshc.txt.
-+	"biu" - The biu clock described in synopsys-dw-mshc.txt.
-+	"ciu-sample" - Hi3798CV200 extended phase clock for ciu sampling.
-+	"ciu-drive"  - Hi3798CV200 extended phase clock for ciu driving.
-+
-+Example:
-+
-+	emmc: mmc@9830000 {
-+		compatible = "hisilicon,hi3798cv200-dw-mshc";
-+		reg = <0x9830000 0x10000>;
-+		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&crg HISTB_MMC_CIU_CLK>,
-+			 <&crg HISTB_MMC_BIU_CLK>,
-+			 <&crg HISTB_MMC_SAMPLE_CLK>,
-+			 <&crg HISTB_MMC_DRV_CLK>;
-+		clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
-+		fifo-depth = <256>;
-+		clock-frequency = <200000000>;
-+		cap-mmc-highspeed;
-+		mmc-ddr-1_8v;
-+		mmc-hs200-1_8v;
-+		non-removable;
-+		bus-width = <8>;
-+	};
--- 
-1.9.1
+Thanks,
+Jake
