@@ -1,12 +1,12 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: sound: rockchip Fix
- compatible string in example
-Date: Wed, 21 Mar 2018 09:52:16 +0800
-Message-ID: <20180321015216.GU2186@sirena.org.uk>
-References: <20180320160332.13212-1-ezequiel@vanguardiasur.com.ar>
- <20180320160332.13212-4-ezequiel@vanguardiasur.com.ar>
+Subject: Applied "ASoC: rockchip: Fix compatible string in
+	example" to the asoc tree
+Date: Wed, 21 Mar 2018 01:57:44 +0000 (GMT)
+Message-ID: <20180321015744.64AAD44007A@finisterre.ee.mobilebroadband>
+References: <20180320160332.13212-4-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2801568672922947606=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
 In-Reply-To: <20180320160332.13212-4-ezequiel@vanguardiasur.com.ar>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
@@ -18,53 +18,63 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-rockchip@lists.infradead.org, Ezequiel Garcia <ezequiel@collabora.co.uk>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+To: Ezequiel Garcia <ezequiel@collabora.co.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---===============2801568672922947606==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fzjtk4ayEOCSo8lB"
-Content-Disposition: inline
+   ASoC: rockchip: Fix compatible string in example
 
+has been applied to the asoc tree at
 
---fzjtk4ayEOCSo8lB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-On Tue, Mar 20, 2018 at 01:03:32PM -0300, Ezequiel Garcia wrote:
-> From: Ezequiel Garcia <ezequiel@collabora.co.uk>
->=20
-> Use the correct compatible string in the example devicetree
-> snippet, which was probably overlooked.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---fzjtk4ayEOCSo8lB
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqxutAACgkQJNaLcl1U
-h9DAcwf/bYW4CIGdq2kOKN4CHIVmjGVX3W11zO75WlWSXST/IqFd0H0JN4crYn9S
-25HvEkob+XjA1v/eSzho/yizt9yVOjh5jod6oRKruT1fmbzczMhc1gg3ZXbmeSJi
-F2HAYpJFDh5cGKAVWVYnrXFyCG/9jnBwWWdfy7kjp9sbmDSXCi2MgFqHVyrKcdxx
-qUoD/ErnN4loLH1/I3LJpWYpaPLSeBz/BXqw4pzAWYgcSsOaGBDSTFVRh3Ix+Smy
-gKAdMcH7vOUtSiU96xnLp1aW9xG4di1dWFir62uthz53vzNbfluR/t2NBLzHBXYY
-U1FkjlQ4+TVHDjz2zRDVMDVaUcwypg==
-=MLPw
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---fzjtk4ayEOCSo8lB--
+>From 279df1917d3e7817983bf5b3476643ec6dfd6f22 Mon Sep 17 00:00:00 2001
+From: Ezequiel Garcia <ezequiel@collabora.co.uk>
+Date: Tue, 20 Mar 2018 13:03:32 -0300
+Subject: [PATCH] ASoC: rockchip: Fix compatible string in example
 
---===============2801568672922947606==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Use the correct compatible string in the example devicetree
+snippet, which was probably overlooked.
 
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.co.uk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---===============2801568672922947606==--
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
+index 2539e1d68107..e5430d1d34e4 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
+@@ -22,7 +22,7 @@ Optionnal properties:
+ Example:
+ 
+ sound {
+-	compatible = "rockchip,rockchip-audio-es8388";
++	compatible = "rockchip,rk3288-hdmi-analog";
+ 	rockchip,model = "Analog audio output";
+ 	rockchip,i2s-controller = <&i2s>;
+ 	rockchip,audio-codec = <&es8388>;
+-- 
+2.16.2
