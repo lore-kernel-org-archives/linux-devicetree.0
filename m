@@ -1,36 +1,77 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v2 2/2] dt-bindings: phy-qcom-qmp: Add UFS phy compitable string for sdm845
-Date: Wed, 21 Mar 2018 13:37:20 +0800
-Message-ID: <20180321053720.12780-3-cang@codeaurora.org>
-References: <20180321053720.12780-1-cang@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V2 7/9] hwmon: pwm-fan: add sysfs node to read rpm of fan
+Date: Tue, 20 Mar 2018 23:09:52 -0700
+Message-ID: <0da71848-1f75-62a3-75cb-a9b5cd887798@roeck-us.net>
+References: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
+ <1521607244-29734-8-git-send-email-rrajk@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321053720.12780-1-cang@codeaurora.org>
+In-Reply-To: <1521607244-29734-8-git-send-email-rrajk@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>
+To: Rajkumar Rampelli <rrajk@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible string for UFS QMP PHY on SDM845.
+On 03/20/2018 09:40 PM, Rajkumar Rampelli wrote:
+> Add fan device attribute fan1_input in pwm-fan driver
+> to read speed of fan in rotations per minute.
+> 
+> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+> ---
+> 
+> V2: Removed generic-pwm-tachometer driver and using pwm-fan driver as per suggestions
+>      to read fan speed.
+>      Added fan device attribute to report speed of fan in rpms through hwmon sysfs.
+> 
+>   drivers/hwmon/pwm-fan.c | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 70cc0d1..8dda209 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -98,11 +98,34 @@ static ssize_t show_pwm(struct device *dev,
+>   	return sprintf(buf, "%u\n", ctx->pwm_value);
+>   }
+>   
+> +static ssize_t show_rpm(struct device *dev, struct device_attribute *attr,
+> +			char *buf)
+> +{
+> +	struct pwm_fan_ctx *ptt = dev_get_drvdata(dev);
+> +	struct pwm_device *pwm = ptt->pwm;
+> +	struct pwm_capture result;
+> +	unsigned int rpm = 0;
+> +	int ret;
+> +
+> +	ret = pwm_capture(pwm, &result, 0);
+> +	if (ret < 0) {
+> +		pr_err("Failed to capture PWM: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (result.period)
+> +		rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+> +					    result.period);
+> +
+> +	return sprintf(buf, "%u\n", rpm);
+> +}
+>   
+>   static SENSOR_DEVICE_ATTR(pwm1, S_IRUGO | S_IWUSR, show_pwm, set_pwm, 0);
+> +static SENSOR_DEVICE_ATTR(fan1_input, 0444, show_rpm, NULL, 0);
+>   
+>   static struct attribute *pwm_fan_attrs[] = {
+>   	&sensor_dev_attr_pwm1.dev_attr.attr,
+> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This doesn't make sense. The same pwm can not both control the fan speed
+and report it.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index cef8765..6e68a6d 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -11,7 +11,8 @@ Required properties:
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
- 	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
- 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
--	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
-+	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-+	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
- 
-  - reg: offset and length of register set for PHY's common serdes block.
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Guenter
+
+>   	NULL,
+>   };
+>   
+> 
