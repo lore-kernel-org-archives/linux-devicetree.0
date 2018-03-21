@@ -1,31 +1,55 @@
-From: cang@codeaurora.org
-Subject: Re: [PATCH v1 0/2] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Wed, 21 Mar 2018 10:42:21 +0800
-Message-ID: <c14de7cf5c497de1d3ee1b0217438116@codeaurora.org>
-References: <20180320113051.14444-1-cang@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: regulator: add QCOM RPMh regulator
+ bindings
+Date: Wed, 21 Mar 2018 10:43:11 +0800
+Message-ID: <20180321024311.GW2186@sirena.org.uk>
+References: <cover.1521246069.git.collinsd@codeaurora.org>
+ <b718873e5ad53a2e8df6a5103828a4c04881d564.1521246069.git.collinsd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rK7ir9GIO0YQrgt+"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180320113051.14444-1-cang@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <b718873e5ad53a2e8df6a5103828a4c04881d564.1521246069.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-20 19:30, Can Guo wrote:
-> This patch series adds support for UFS QMP PHY on SDM845 and updates 
-> the
-> compitable string for it.
-> 
-> Can Guo (2):
->   phy: Add QMP phy based UFS phy support for sdm845
->   dt-bindings: phy-qcom-qmp: Update UFS phy compitable string for 
-> sdm845
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   3 +-
->  drivers/phy/qualcomm/phy-qcom-qmp.c                | 120 
-> ++++++++++++++++++++-
->  drivers/phy/qualcomm/phy-qcom-qmp.h                |   8 ++
->  3 files changed, 128 insertions(+), 3 deletions(-)
+
+--rK7ir9GIO0YQrgt+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Mar 16, 2018 at 06:09:11PM -0700, David Collins wrote:
+> Introduce bindings for RPMh regulator devices found on some
+> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+> +=========================================
+> +Second Level Nodes - Regulators
+> +=========================================
+> +
+> +- regulator-name
+
+This document appears to be reproducing the standard regulator bindings;
+there is no need to do that, just reference them.
+
+--rK7ir9GIO0YQrgt+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqxxr4ACgkQJNaLcl1U
+h9DLiQf/Q8ERePDXGrWJlqwYQG9rsHnVP1PRk0PKR9znv+BLDavwr6/eTzv07Bpg
+q/b3baaG5X1X2tgGHSf8mBvMTjYb0di2kkHrt3JqWOFuzBOZXmvfN4+puzFlKNH6
+urygn7u3wn9KNpavzNpdrhVVDyn5JMujEU0O7i1ob6vZcnLvqatF/QGb9x835igR
+LGeakmDERXCEE6ZelPLQeXqfvpTIXL8/6szJHSLMNLjdLzClfOuf8+wlc4Sa8l1E
+rxrUFczZe/1qx5en6BqOomthCF6vmTTODsTKwFvtaQTZzA1q/ZP75S2AM/7y07vk
+wGgEKIqv/cc4pm0ysYgrMrWq4bLw8g==
+=nBpg
+-----END PGP SIGNATURE-----
+
+--rK7ir9GIO0YQrgt+--
