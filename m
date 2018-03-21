@@ -1,81 +1,110 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
- requested
-Date: Wed, 21 Mar 2018 20:07:09 +0200
-Message-ID: <1521655629.23017.84.camel@linux.intel.com>
-References: <20180321165848.89751-1-swboyd@chromium.org>
-         <20180321165848.89751-4-swboyd@chromium.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] PCI: rockchip: Create individual folder for
+ rockchip drivers
+Date: Wed, 21 Mar 2018 18:19:40 +0000
+Message-ID: <20180321181940.GA9760@e107981-ln.cambridge.arm.com>
+References: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
+ <1520304202-232891-1-git-send-email-shawn.lin@rock-chips.com>
+ <20180320174633.GA137590@bhelgaas-glaptop.roam.corp.google.com>
+ <879a4862-d0d5-21fd-6c47-029c795fe78e@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321165848.89751-4-swboyd@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <879a4862-d0d5-21fd-6c47-029c795fe78e-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-03-21 at 09:58 -0700, Stephen Boyd wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
+On Wed, Mar 21, 2018 at 09:04:21AM +0800, Shawn Lin wrote:
+> Dear Bjorn, Lorenzo
 > 
-> Some qcom platforms make some GPIOs or pins unavailable for use
-> by non-secure operating systems, and thus reading or writing the
-> registers for those pins will cause access control issues and
-> reset the device. With a DT/ACPI property to describe the set of
-> pins that are available for use, parse the available pins and set
-> the irq valid bits for gpiolib to know what to consider 'valid'.
-> This should avoid any issues with gpiolib. Furthermore, implement
-> the pinmux_ops::request function so that pinmux can also make
-> sure to not use pins that are unavailable.
+> On 2018/3/21 1:46, Bjorn Helgaas wrote:
+> >On Tue, Mar 06, 2018 at 10:43:22AM +0800, Shawn Lin wrote:
+> >>In preparation for introducing End-Point driver for Rockchip
+> >>PCIe controller, we create a new folder to follow the convention
+> >>of dwc and cadence. Then we rename the host driver from pcie-rockchip.c
+> >>to pcie-rockchip-host.c, and only leave some common functions in
+> >>pcie-rockchip.c in order to be reused for both of host and EP drivers.
+> >>
+> >>Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>...
+> >
+> >>diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> >>index 34b56a8..b85ad40 100644
+> >>--- a/drivers/pci/Kconfig
+> >>+++ b/drivers/pci/Kconfig
+> >>@@ -141,4 +141,5 @@ source "drivers/pci/cadence/Kconfig"
+> >>  source "drivers/pci/dwc/Kconfig"
+> >>  source "drivers/pci/host/Kconfig"
+> >>  source "drivers/pci/endpoint/Kconfig"
+> >>+source "drivers/pci/rockchip/Kconfig"
+> >>  source "drivers/pci/switch/Kconfig"
+> >
+> >Why is this out of order?  This seems exactly analogous to
+> >drivers/pci/cadence and dwc, so they should be next to each other.
 > 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> This confused me as well! I just put "rockchip" before "switch"
+> to keep the order, but I didn't know why "endpoint" wasn't ordered.
+> 
+> >
+> >>diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> >>index 9419709..8434afb 100644
+> >>--- a/drivers/pci/Makefile
+> >>+++ b/drivers/pci/Makefile
+> >>@@ -55,6 +55,8 @@ obj-y += switch/
+> >>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+> >>+obj-$(CONFIG_PCIE_ROCKCHIP)	+= rockchip/
+> >>+
+> >>  # Endpoint library must be initialized before its users
+> >>  obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
+> >>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+> >
+> >Similarly here.
+> >
+> >I admit to still being a little dubious about the idea of a bunch of
+> >vendor-specific directories, each containing a completely trivial
+> >Makefile, a mostly-trivial Kconfig, a header file, a shared .c file, a
+> >host .c file, and an endpoint .c file.
+> 
+> So do I.
+> 
+> >
+> >One alternative would be to keep the single pcie-rockchip.c file with
+> >an #ifdef CONFIG_PCIE_ROCKCHIP_HOST section and an #ifdef
+> >CONFIG_PCIE_ROCKCHIP_EP section.
+> 
+> I admit I thought this eariler, however, I don't like it personally, as
+> it confuses the new-comer to follow the convention here, if we are
+> alternatives just for "style issue" or "personal taste".
 
-Hmm...
+It would be OK for me to keep files separate too; a separate question
+would then be whether we have to rename drivers/pci/host if we add
+endpoint drivers in there, do we have to?
 
-> +static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned
-> offset)
-> +{
-> +	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct gpio_chip *chip = &pctrl->chip;
-> +
-> +	if (gpiochip_line_is_valid(chip, offset))
-> +		return 0;
-> +
-> +	return -EINVAL;
+At that stage we could well move drivers/pci/dwc and drivers/pci/cadence
+in there too.
 
-Perhaps traditional pattern
+> Certainly, I could do that beased on your suggestion, but I would like
+> to know if this's the final agreement both you and Lorenzo reached. :)
 
-if (!...)
- return -EINVAL;
+Or we can add all EP drivers into drivers/pci/endpoint but then the problem
+is how to share code between host and endpoint directories and it starts
+feeling like we are going round in circles.
 
-return 0;
+I can merge this series as-is as long as we will rework the directory
+structure according to this discussion (given that's already late -rc6
+so directory moves/renames can be disrupting - if feasible at all).
 
-?
-
-> +}
-
->  	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
-> -	seq_printf(s, " %s", pulls[pull]);
-> +	seq_printf(s, " %s\n", pulls[pull]);
-
-I had commented this once, but you ignored by some reason.
-
-I would rather just move 
- seq_puts(s, "\n");
-here.
-
-The rationale behind, besides making diff more neat, is to reduce
-possible burden in the future if someone would like to squeeze more data
-in between.
-
-> +		tmp = kmalloc_array(len, sizeof(tmp[0]), GFP_KERNEL);
-
-sizeof(*tmp) ?
-
-> +		if (!tmp)
-> +			return -ENOMEM;
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Lorenzo
