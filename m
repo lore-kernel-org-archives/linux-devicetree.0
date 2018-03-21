@@ -1,276 +1,112 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: sunxi: Stop supporting ECC_HW_SYNDROME mode
-Date: Wed, 21 Mar 2018 10:53:27 +0100
-Message-ID: <20180321105327.27a28987@bbrezillon>
-References: <20180321083618.18355-1-boris.brezillon@bootlin.com>
+From: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [DPU PATCH 2/2] drm/msm: Add hardware catalog file
+ for SDM845
+Date: Wed, 21 Mar 2018 16:05:31 +0530
+Message-ID: <f676c0321d6d2a025dab282935c38232@codeaurora.org>
+References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+ <1521006698-23703-3-git-send-email-skolluku@codeaurora.org>
+ <20180319135931.GJ223881@art_vandelay>
+ <a4863676581e8a25f13233a65a387ae4@codeaurora.org>
+ <20180320151711.GP223881@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180321083618.18355-1-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180320151711.GP223881@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Mar 2018 09:36:18 +0100
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-
-> This mode is not used by any existing setup and should not be used
-> because it overrides the BBMs. Let's just remove it before someone
-
-	     ^ 'overwrites' not 'overrides'
-
-> starts using it.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> ---
->  .../devicetree/bindings/mtd/sunxi-nand.txt         |   4 +-
->  drivers/mtd/nand/raw/sunxi_nand.c                  | 155 +++------------------
->  2 files changed, 22 insertions(+), 137 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> index 5e13a5cdff03..0734f03bf3d3 100644
-> --- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> @@ -24,8 +24,8 @@ Optional properties:
->  - allwinner,rb : shall contain the native Ready/Busy ids.
->   or
->  - rb-gpios : shall contain the gpios used as R/B pins.
-> -- nand-ecc-mode : one of the supported ECC modes ("hw", "hw_syndrome", "soft",
-> -  "soft_bch" or "none")
-> +- nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
-> +		  "none")
->  
->  see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
->  
-> diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-> index f5a55c63935c..aad42812a353 100644
-> --- a/drivers/mtd/nand/raw/sunxi_nand.c
-> +++ b/drivers/mtd/nand/raw/sunxi_nand.c
-> @@ -1475,92 +1475,18 @@ static int sunxi_nfc_hw_ecc_write_page_dma(struct mtd_info *mtd,
->  	return sunxi_nfc_hw_ecc_write_page(mtd, chip, buf, oob_required, page);
->  }
->  
-> -static int sunxi_nfc_hw_syndrome_ecc_read_page(struct mtd_info *mtd,
-> -					       struct nand_chip *chip,
-> -					       uint8_t *buf, int oob_required,
-> -					       int page)
-> -{
-> -	struct nand_ecc_ctrl *ecc = &chip->ecc;
-> -	unsigned int max_bitflips = 0;
-> -	int ret, i, cur_off = 0;
-> -	bool raw_mode = false;
-> -
-> -	nand_read_page_op(chip, page, 0, NULL, 0);
-> -
-> -	sunxi_nfc_hw_ecc_enable(mtd);
-> -
-> -	for (i = 0; i < ecc->steps; i++) {
-> -		int data_off = i * (ecc->size + ecc->bytes + 4);
-> -		int oob_off = data_off + ecc->size;
-> -		u8 *data = buf + (i * ecc->size);
-> -		u8 *oob = chip->oob_poi + (i * (ecc->bytes + 4));
-> -
-> -		ret = sunxi_nfc_hw_ecc_read_chunk(mtd, data, data_off, oob,
-> -						  oob_off, &cur_off,
-> -						  &max_bitflips, !i,
-> -						  oob_required,
-> -						  page);
-> -		if (ret < 0)
-> -			return ret;
-> -		else if (ret)
-> -			raw_mode = true;
-> -	}
-> -
-> -	if (oob_required)
-> -		sunxi_nfc_hw_ecc_read_extra_oob(mtd, chip->oob_poi, &cur_off,
-> -						!raw_mode, page);
-> -
-> -	sunxi_nfc_hw_ecc_disable(mtd);
-> -
-> -	return max_bitflips;
-> -}
-> -
-> -static int sunxi_nfc_hw_syndrome_ecc_write_page(struct mtd_info *mtd,
-> -						struct nand_chip *chip,
-> -						const uint8_t *buf,
-> -						int oob_required, int page)
-> -{
-> -	struct nand_ecc_ctrl *ecc = &chip->ecc;
-> -	int ret, i, cur_off = 0;
-> -
-> -	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> -
-> -	sunxi_nfc_hw_ecc_enable(mtd);
-> -
-> -	for (i = 0; i < ecc->steps; i++) {
-> -		int data_off = i * (ecc->size + ecc->bytes + 4);
-> -		int oob_off = data_off + ecc->size;
-> -		const u8 *data = buf + (i * ecc->size);
-> -		const u8 *oob = chip->oob_poi + (i * (ecc->bytes + 4));
-> -
-> -		ret = sunxi_nfc_hw_ecc_write_chunk(mtd, data, data_off,
-> -						   oob, oob_off, &cur_off,
-> -						   false, page);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	if (oob_required || (chip->options & NAND_NEED_SCRAMBLING))
-> -		sunxi_nfc_hw_ecc_write_extra_oob(mtd, chip->oob_poi,
-> -						 &cur_off, page);
-> -
-> -	sunxi_nfc_hw_ecc_disable(mtd);
-> -
-> -	return nand_prog_page_end_op(chip);
-> -}
-> -
-> -static int sunxi_nfc_hw_common_ecc_read_oob(struct mtd_info *mtd,
-> -					    struct nand_chip *chip,
-> -					    int page)
-> +static int sunxi_nfc_hw_ecc_read_oob(struct mtd_info *mtd,
-> +				     struct nand_chip *chip,
-> +				     int page)
->  {
->  	chip->pagebuf = -1;
->  
->  	return chip->ecc.read_page(mtd, chip, chip->data_buf, 1, page);
->  }
->  
-> -static int sunxi_nfc_hw_common_ecc_write_oob(struct mtd_info *mtd,
-> -					     struct nand_chip *chip,
-> -					     int page)
-> +static int sunxi_nfc_hw_ecc_write_oob(struct mtd_info *mtd,
-> +				      struct nand_chip *chip,
-> +				      int page)
->  {
->  	int ret;
->  
-> @@ -1801,9 +1727,14 @@ static const struct mtd_ooblayout_ops sunxi_nand_ooblayout_ops = {
->  	.free = sunxi_nand_ooblayout_free,
->  };
->  
-> -static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
-> -					      struct nand_ecc_ctrl *ecc,
-> -					      struct device_node *np)
-> +static void sunxi_nand_hw_ecc_ctrl_cleanup(struct nand_ecc_ctrl *ecc)
-> +{
-> +	kfree(ecc->priv);
-> +}
-> +
-> +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
-> +				       struct nand_ecc_ctrl *ecc,
-> +				       struct device_node *np)
->  {
->  	static const u8 strengths[] = { 16, 24, 28, 32, 40, 48, 56, 60, 64 };
->  	struct nand_chip *nand = mtd_to_nand(mtd);
-> @@ -1889,37 +1820,11 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
->  		goto err;
->  	}
->  
-> -	ecc->read_oob = sunxi_nfc_hw_common_ecc_read_oob;
-> -	ecc->write_oob = sunxi_nfc_hw_common_ecc_write_oob;
-> +	ecc->read_oob = sunxi_nfc_hw_ecc_read_oob;
-> +	ecc->write_oob = sunxi_nfc_hw_ecc_write_oob;
->  	mtd_set_ooblayout(mtd, &sunxi_nand_ooblayout_ops);
->  	ecc->priv = data;
->  
-> -	return 0;
-> -
-> -err:
-> -	kfree(data);
-> -
-> -	return ret;
-> -}
-> -
-> -static void sunxi_nand_hw_common_ecc_ctrl_cleanup(struct nand_ecc_ctrl *ecc)
-> -{
-> -	kfree(ecc->priv);
-> -}
-> -
-> -static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
-> -				       struct nand_ecc_ctrl *ecc,
-> -				       struct device_node *np)
-> -{
-> -	struct nand_chip *nand = mtd_to_nand(mtd);
-> -	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
-> -	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
-> -	int ret;
-> -
-> -	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
-> -	if (ret)
-> -		return ret;
-> -
->  	if (nfc->dmac) {
->  		ecc->read_page = sunxi_nfc_hw_ecc_read_page_dma;
->  		ecc->read_subpage = sunxi_nfc_hw_ecc_read_subpage_dma;
-> @@ -1937,33 +1842,18 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
->  	ecc->write_oob_raw = nand_write_oob_std;
->  
->  	return 0;
-> -}
-> -
-> -static int sunxi_nand_hw_syndrome_ecc_ctrl_init(struct mtd_info *mtd,
-> -						struct nand_ecc_ctrl *ecc,
-> -						struct device_node *np)
-> -{
-> -	int ret;
-> -
-> -	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
-> -	if (ret)
-> -		return ret;
->  
-> -	ecc->prepad = 4;
-> -	ecc->read_page = sunxi_nfc_hw_syndrome_ecc_read_page;
-> -	ecc->write_page = sunxi_nfc_hw_syndrome_ecc_write_page;
-> -	ecc->read_oob_raw = nand_read_oob_syndrome;
-> -	ecc->write_oob_raw = nand_write_oob_syndrome;
-> +err:
-> +	kfree(data);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static void sunxi_nand_ecc_cleanup(struct nand_ecc_ctrl *ecc)
->  {
->  	switch (ecc->mode) {
->  	case NAND_ECC_HW:
-> -	case NAND_ECC_HW_SYNDROME:
-> -		sunxi_nand_hw_common_ecc_ctrl_cleanup(ecc);
-> +		sunxi_nand_hw_ecc_ctrl_cleanup(ecc);
->  		break;
->  	case NAND_ECC_NONE:
->  	default:
-> @@ -1991,11 +1881,6 @@ static int sunxi_nand_ecc_init(struct mtd_info *mtd, struct nand_ecc_ctrl *ecc,
->  		if (ret)
->  			return ret;
->  		break;
-> -	case NAND_ECC_HW_SYNDROME:
-> -		ret = sunxi_nand_hw_syndrome_ecc_ctrl_init(mtd, ecc, np);
-> -		if (ret)
-> -			return ret;
-> -		break;
->  	case NAND_ECC_NONE:
->  	case NAND_ECC_SOFT:
->  		break;
-
-
-
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+T24gMjAxOC0wMy0yMCAyMDo0NywgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIFR1ZSwgTWFyIDIwLCAy
+MDE4IGF0IDA3OjEzOjM4UE0gKzA1MzAsIHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnIAo+IHdyb3Rl
+Ogo+PiBPbiAyMDE4LTAzLTE5IDE5OjI5LCBTZWFuIFBhdWwgd3JvdGU6Cj4+ID4gT24gV2VkLCBN
+YXIgMTQsIDIwMTggYXQgMTE6MjE6MzhBTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1a3VkdXJ1IHdy
+b3RlOgo+PiA+ID4gVGhpcyBjaGFuZ2UgYWRkcyB0aGUgaGFyZHdhcmUgY2F0YWxvZyBpbmZvcm1h
+dGlvbiBpbiBkcml2ZXIgc291cmNlCj4+ID4gPiBmb3IgU0RNODQ1LiBUaGlzIHJlbW92ZXMgdGhl
+IGN1cnJlbnQgbG9naWMgb2YgZHQgYmFzZWQgcGFyc2luZwo+PiA+ID4gb2YgdGFyZ2V0IGNhdGFs
+b2cgaW5mb3JtYXRpb24uCj4+ID4gPgo+PiA+ID4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtv
+bGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4KPiAKPiA8c25pcCAvPgo+IAo+PiA+
+ID4gK3sKPj4gPiA+ICsJLyogTGF5ZXIgY2FwYWJpbGl0eSAqLwo+PiA+ID4gKwlzdGF0aWMgY29u
+c3Qgc3RydWN0IGRwdV9zc3BwX3N1Yl9ibGtzIHZpZ19zYmxrXzAgPSB7Cj4+ID4gPiArCQkubWF4
+bGluZXdpZHRoID0gMjU2MCwKPj4gPiA+ICsJCS5waXhlbF9yYW1fc2l6ZSA9IDUwICogMTAyNCwK
+Pj4gPiA+ICsJCS5tYXhkd25zY2FsZSA9IDQsCj4+ID4gPiArCQkubWF4dXBzY2FsZSA9IDIwLAo+
+PiA+ID4gKwkJLm1heGhkZWNpZXhwID0gREVDSU1BVElPTl80MFhfTUFYX0gsCj4+ID4gPiArCQku
+bWF4dmRlY2lleHAgPSBERUNJTUFUSU9OXzQwWF9NQVhfViwKPj4gPiA+ICsJCS5zbWFydF9kbWFf
+cHJpb3JpdHkgPSA1LAo+PiA+ID4gKwkJLnNyY19ibGsgPSB7Lm5hbWUgPSAic3NwcF9zcmNfMCIs
+IC5pZCA9IERQVV9TU1BQX1NSQywKPj4gPiA+ICsJCQkuYmFzZSA9IDB4MDAsIC5sZW4gPSAweDE1
+MCx9LAo+PiA+ID4gKwkJLnNjYWxlcl9ibGsgPSB7Lm5hbWUgPSAic3NwcF9zY2FsZXIwIiwKPj4g
+PiA+ICsJCQkuaWQgPSBEUFVfU1NQUF9TQ0FMRVJfUVNFRUQzLAo+PiA+ID4gKwkJCS5iYXNlID0g
+MHhhMDAsIC5sZW4gPSAweGEwLH0sCj4+ID4gPiArCQkuY3NjX2JsayA9IHsubmFtZSA9ICJzc3Bw
+X2NzYzAiLCAuaWQgPSBEUFVfU1NQUF9DU0NfMTBCSVQsCj4+ID4gPiArCQkJLmJhc2UgPSAweDFh
+MDAsIC5sZW4gPSAweDEwMCx9LAo+PiA+ID4gKwkJLmZvcm1hdF9saXN0ID0gcGxhbmVfZm9ybWF0
+c195dXYsCj4+ID4gPiArCQkudmlydF9mb3JtYXRfbGlzdCA9IHBsYW5lX2Zvcm1hdHMsCj4+ID4g
+PiArCX07Cj4+ID4KPj4gPiBJbnN0ZWFkIG9mIGxvY2F0aW5nIGFsbCBvZiB0aGVzZSBwYXJhbWV0
+ZXJzIGluIG9uZSBmaWxlLCB0aGVzZSBzaG91bGQgYmUKPj4gPiBsb2NhdGVkIGluIHRoZWlyIHJl
+c3BlY3RpdmUgZHJpdmVyIGZpbGUuIEl0IGFsc28gc2VlbXMgbGlrZSB5b3UgY291bGQKPj4gPiBz
+ZXBhcmF0ZQo+PiA+IG91dCB0aGUgY29tbW9uIHN0dWZmIHN1Y2ggYXMgbGluZSB3aWR0aCwgcmFt
+IHNpemUsIHNjYWxpbmcsIGZvcm1hdCwgZXRjCj4+ID4gcGFyYW1ldGVycyBmcm9tIHRoZSBwaXBl
+bGluZSBzZXR1cC4KPj4gPgo+PiA+IFRoZSBzYW1lIGNvbW1lbnRzIGFwcGx5IHRvIHRoZSBvdGhl
+ciBibG9ja3MuIE1vdmUgdGhpbmdzIGludG8gdGhlCj4+ID4gZHJpdmVycywKPj4gPiB1c2UgY29t
+cGF0aWJpbGl0eSBzdHJpbmcgdG8gZGV0ZXJtaW5lIHRoZSB2ZXJzaW9uLCBhbmQgdGhlbiBhc3Nv
+Y2lhdGUKPj4gPiB0aGUgY29tbW9uCj4+ID4gcGFyYW1ldGVycyB3aXRoIG9mX2RldmljZV9pZC5k
+YXRhLgo+PiA+Cj4+ID4gU2Vhbgo+PiA+Cj4+ID4gPHNuaXAgLz4KPj4gCj4+IFRoYW5rcyBTZWFu
+IGZvciB0aGUgZmVlZGJhY2suCj4+IFRoZSBpZGVhIGJlaGluZCB0aGlzIGFwcHJvYWNoIGlzIHRv
+IG1haW50YWluIGEgb25lIHBvaW50IGFjY2VzcyBmb3IgCj4+IGFsbCB0aGUKPj4gdGFyZ2V0IHNw
+ZWNpZmljIGluZm9ybWF0aW9uLCBhbmFsb2dvdXMgdG8gdGhlIGN1cnJlbnQgZHB1IGR0c2kgZmls
+ZS4KPj4gVGhpcyBhbHNvIGVuc3VyZXMgZWFzeSBtYWludGVuYW5jZSBmb3IgZGlmZmVyZW50IGhh
+cmR3YXJlIHZlcnNpb25zLCBhcyAKPj4gYWxsCj4+IGl0Cj4+IHRha2VzIGlzIHRvIGFkZCBhbm90
+aGVyIGZpbGUgaW5zdGVhZCBvZiB1cGRhdGluZyBhY3Jvc3MgaW5kaXZpZHVhbCBzdWIgCj4+IGJs
+b2NrCj4+IGZpbGVzLgo+IAo+IEkgYW0gbm90IGNvbnZpbmNlZCB0aGlzIGlzIHdoYXQgd2Ugc2hv
+dWxkIG9wdGltaXplIGZvci4gVGhpcyBmaWxlIGlzIAo+IGJhc2ljYWxseQo+IHVucmVhZGFibGUs
+IGFuZCBpdCdzIGFic3RyYWN0aW5nIHJlbGV2YW50IGRldGFpbHMgYXdheSBmcm9tIHRoZSBibG9j
+awo+IGNvZGUuIFRoZXJlCj4gYXJlIGFsc28gYSBUT04gb2YgZHVwbGljYXRlZCBwYXJhbWV0ZXJz
+L3ZhbHVlcyB3aGljaCBpcyBlcnJvci1wcm9uZS4gCj4gTGFzdGx5LAo+IHRoaXMgaXMgbm90IHRo
+ZSB0eXBlIG9mIGZpbGUgdGhhdCB5b3Ugd2FudCB0byBjb3B5L3Bhc3RlIG11bHRpcGxlCj4gdGlt
+ZXMsIGl0IHdvdWxkCj4gYmUgbXVjaCBiZXR0ZXIgdG8gc2ltcGx5IGFkZCB0aGUgbmV3IHN0cnVj
+dHMgdG8gdGhlIGJsb2NrIGRyaXZlcnMKPiB3aGVyZSBhcHBsaWNhYmxlLgo+IAo+PiAKPj4gQWxz
+bywgaSdtIG5vdCBxdWl0ZSBjbGVhciBvbiBob3cgY29tcGF0aWJpbGl0eSBzdHJpbmdzIGlzIGFw
+cGxpY2FibGUgCj4+IHRvIHN1Ygo+PiBibG9ja3MuCj4gCj4gQ29uc2lkZXIgdGhlIGZvbGxvd2lu
+ZyBleGFtcGxlIGZyb20gcm9ja2NoaXA6Cj4gaHR0cHM6Ly9naXRsYWIuZnJlZWRlc2t0b3Aub3Jn
+L3NlYW5wYXVsL2RwdS1zdGFnaW5nL2Jsb2IvZm9yLW5leHQvZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX3ZvcF9yZWcuYyNMNTM4Cj4gCj4gRWFjaCB0aW1lIHRoZSB2b3AgaXMgY2hh
+bmdlZCwgaXQgZ2V0cyBhIG5ldyBjb21wYXRpYmxlIHN0cmluZyBpbiB0aGUKPiBkdCBiaW5kaW5n
+cy4KPiBUaGlzIGNvbXBhdGlibGUgc3RyaW5nIGlzIHRpZWQgdG8gYSBwYXJhbWV0ZXJzIHRoYXQg
+ZGVzY3JpYmUgdGhlIAo+IGZlYXR1cmVzIG9mCj4gdGhhdCB2ZXJzaW9uIG9mIHZvcC4gVGhpcyBk
+YXRhIGlzIHRpZWQgdG8gdGhlIGRyaXZlciBkYXRhIGR1cmluZyBwcm9iZSAKPiBhbmQgdXNlZAo+
+IHdoZSBuZWVkZWQgdGhyb3VnaG91dCB0aGUgZHJpdmVyLgo+IAo+IFNvIGFsbCBvZiB5b3VyIGNh
+dGFsb2cgZGF0YSBzaG91bGQgYmUgYnJva2VuIHVwIGludG8gc3RydWN0cyBzcGVjaWZpYyAKPiB0
+byB0aGUKPiB2YXJpb3VzIHN1Yi1ibG9ja3Mgb2YgdGhlIGRwdSBkcml2ZXIgYW5kIGFzc29jaWF0
+ZWQgd2l0aCBjb21wYXRpYmxlIAo+IHN0cmluZ3MuCj4gV2hlbiBhIG5ldyBjaGlwIGNvbWVzIG91
+dCB3aXRoIGRpZmZlcmVudCBwYXJhbWV0ZXJzLCBhIG5ldyBzdHJ1Y3QgCj4gc2hvdWxkIGJlCj4g
+ZGVmaW5lZCBhbG9uZyB3aXRoIGEgbmV3IGNvbXBhdGlibGUgc3RyaW5nLgo+IAo+IE1ha2Ugc2Vu
+c2U/Cj4gCj4gU2Vhbgo+IAoKWWVzIFNlYW4sIHRoYW5rcyBmb3Igc2hhcmluZyB0aGUgcm9ja2No
+aXBfdm9wIHJlZmVyZW5jZS4KQmFzZWQgb24gdGhlIGRpc2N1c3Npb25zIHNvIGZhciwgdGhlcmUg
+YXJlIHR3byBtYWluIHBvaW50cyB0byBiZSAKYWRkcmVzc2VkOgoxLiBBc3NvY2lhdGUgY2F0YWxv
+ZyBpbmZvcm1hdGlvbiB3aXRoIGhhcmR3YXJlIHZlcnNpb25zIHVzaW5nIGNvbXBhdGlibGUgCnN0
+cmluZ3MKMi4gQ3JlYXRlIHN1YiBibG9jayBzdHJ1Y3R1cmVzIHRoYXQgIHZhcmlvdXMgaGFyZHdh
+cmUgdmVyc2lvbnMgY2FuIApyZXVzZS4KClRoZSBpbnRlbnQgb2YgUG9pbnQgMS4gaXMgcHJlc2Vu
+dCBpbiB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbi4KVGhlIGhhcmR3YXJlIHZlcnNpb24gaXMg
+cmVhZCBmcm9tIHJlZ2lzdGVyIHRvIGV4dHJhY3QgdGhlIHJlbGV2YW50IApjYXRhbG9nIGluZm9y
+bWF0aW9uLgpIZW5jZSwgd2UgZG9uJ3QgcGxhbiB0byBkZWZpbmUgbmV3IERUIGNvbXBhdGlibGUg
+c3RyaW5ncyBmb3IgdGhpcyAKcHVycG9zZS4KKFVwc3RyZWFtIHJlZmVyZW5jZSBmb3Igc2ltaWxh
+ciBpbXBsZW1lbnRhdGlvbiA6Cmh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9zZWFucGF1
+bC9kcHUtc3RhZ2luZy9ibG9iL2Zvci1uZXh0L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9tZHA1
+L21kcDVfY2ZnLmMjTDU1NikKCgpQb2ludCAyLiBob3dldmVyLCBpcyBhIHZhbGlkIGNvbmNlcm4g
+YW5kIG5lZWRzIHRvIGJlIHRob3JvdWdobHkgbG9va2VkIAppbnRvLgpUaGUgY2hhbGxlbmdlIGhl
+cmUgaXMgdG8gYXNzZXNzIHRoZSBjb2RlIGltcGFjdCBpZiB3ZSBwbGFuIHRvIG1vZGlmeSB0aGUg
+CnByZXNlbnQKY2F0YWxvZyBzdHJ1Y3R1cmVzIChmb3IgaW5zdGFuY2UsIGNyZWF0ZSBhIG5ldyBj
+b21tb24gc3RydWN0dXJlKS4KV2lsbCBnZXQgYmFjayB0byB5b3Ugb24gdGhpcyBhZnRlciBpbnRl
+cm5hbCByZXZpZXcuCgpUaGFua3MsClNyYXZhbnRoaQoKPj4gUGxlYXNlIGNsYXJpZnkuCj4+IAo+
+PiBUaGFua3MsCj4+IFNyYXZhbnRoaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9mcmVlZHJlbm8K
