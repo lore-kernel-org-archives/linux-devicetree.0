@@ -1,33 +1,74 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 8/8] DT: arm: Add the RZN1D-DB Board to Renesas
- Makefile target
-Date: Thu, 22 Mar 2018 13:51:22 +0100
-Message-ID: <CAMuHMdUjtZnZpVE11-5ECsGs-zuNzwaPR_n+KL3_5tWtq2i+8A@mail.gmail.com>
-References: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com> <1521719091-25157-9-git-send-email-michel.pollet@bp.renesas.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v4 00/13] ARM: dts: ipq: updates to enable a few peripherals
+Date: Thu, 22 Mar 2018 18:28:39 +0530
+Message-ID: <1521723532-28361-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521719091-25157-9-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 22, 2018 at 12:44 PM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> This adds the newly added board to the Renesas built target
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+[v4]
+    * Fixed more comments.
+    * Dropped reserved-memory nodes from board files as
+      that might break existing users whose u-boot do not
+      specify the fdt_high accordingly.
+    * Added chosen serial node for all boards to have
+      the default serial console specified from DT.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[v3]
+    * Fixed minor comments from v2,
+      https://www.spinics.net/lists/arm-kernel/msg641480.html
 
-Gr{oetje,eeting}s,
+    * Added Abhishek's review tags
 
-                        Geert
+[v2]
+    * Addressed all comments from Abhishek
+    * Removed dk01-c2 and dk04-c5 spinand based boards
+      as support for spinand is not complete
+    * Based all patches on top of Andy's for-next branch
+
+[V1]
+    * https://www.spinics.net/lists/arm-kernel/msg631318.html
+
+Sricharan R (13):
+  firmware: qcom: scm: Add ipq4019 soc compatible
+  ARM: dts: ipq4019: Add a default chosen node
+  ARM: dts: ipq4019: Add a few peripheral nodes
+  ARM: dts: ipq4019: Change the max opp frequency
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c3 board file
+  ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
+  ARM: dts: ipq8074: Add peripheral nodes
+  ARM: dts: ipq8074: Add pcie nodes
+  ARM: dts: ipq8074: Enable few peripherals for hk01 board
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |   3 +-
+ arch/arm/boot/dts/Makefile                         |   4 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi      |   8 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts    |  20 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts    |   8 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi      | 115 +++++++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |  65 +++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts    |  26 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi      |  68 ++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi                | 140 ++++++++++-
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          | 103 ++++++++
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 262 ++++++++++++++++++++-
+ drivers/firmware/qcom_scm.c                        |   3 +
+ 13 files changed, 820 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
