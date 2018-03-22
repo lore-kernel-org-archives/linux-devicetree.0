@@ -1,84 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Thu, 22 Mar 2018 14:55:53 +0100
-Message-ID: <20180322135553.GA27648@amd>
-References: <20180309023750.108942-1-tony@atomide.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v17 00/10] LPC: legacy ISA I/O support
+Date: Thu, 22 Mar 2018 14:18:10 +0000
+Message-ID: <8cc028fa-e4b5-514f-b2f6-a6bbd2ea57a6@huawei.com>
+References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+ <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
+ <334da3b2-5233-5ad3-728e-7ae95231bf01@huawei.com>
+ <20180322133544.GA236400@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180309023750.108942-1-tony@atomide.com>
+In-Reply-To: <20180322133544.GA236400@bhelgaas-glaptop.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "joe@perches.com" <joe@perches.com>, "benh@kernel.crashing.org" <benh@kernel.cras>
 List-Id: devicetree@vger.kernel.org
 
+>>>
+>>> I applied this whole series to pci/lpc for v4.17.
+>>>
+>>> I made the following whitespace and other trivial corrections.
+>>> Hopefully I didn't break anything.
+>>>
+>>
+>> Hi Bjorn,
+>>
+>> Super thanks for doing this. In general the changes look ok. However a build
+>> issue has appeared, below.
+>
+> It didn't just "appear"; I added it myself!  I fixed it and repushed the
+> branch.
+>
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Bjorn,
 
-Hi!
+I repulled and tested, and it looks ok.
 
-> idle lcd off	phy-mapphone-mdm6600	ohci-platform
-> 153mW		284mW			344mW
->=20
-> So it seems that MDM6600 is currently not yet idling even with it's
-> radio turned off, but that's something that is beyond the control of
-> this USB PHY driver. This patch does get us to the point where modem
-> data and GPS are usable with libqmi and ModemManager for example.
-> Voice calls need more audio driver work.
+Thanks,
+John
 
-Ok, let me try. I believe I should see the modem device on lsusb, but
-I don't.
-
-user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-sudo lsusb
-Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
-user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-zcat /proc/config.gz | grep MAPPH
-CONFIG_PHY_MAPPHONE_MDM6600=3Dy
-user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-zcat /proc/config.gz | grep OHCI_
-CONFIG_USB_OHCI_LITTLE_ENDIAN=3Dy
-CONFIG_USB_OHCI_HCD=3Dy
-CONFIG_USB_OHCI_HCD_OMAP3=3Dy
-CONFIG_USB_OHCI_HCD_PLATFORM=3Dy
-user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-
-As far as I can tell,
-
-+CONFIG_USB_WDM=3Dy
-+CONFIG_USB_SERIAL=3Dy
-+CONFIG_USB_SERIAL_QUALCOMM=3Dy
-+CONFIG_USB_SERIAL_WWAN=3Dy
-
-should be enabled to enable the drivers (and I did that), but without
-device showing on the bus...
-
-Any ideas?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlqztegACgkQMOfwapXb+vIqfQCfarnENvRNJy/2ZqTZSAKuiD8V
-3tEAoIUsdOYhKl1971CiW7Z+SIInnO3T
-=/46F
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+> .
+>
