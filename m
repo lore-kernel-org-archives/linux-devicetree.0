@@ -1,69 +1,139 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
-Date: Thu, 22 Mar 2018 11:29:53 +0100
-Message-ID: <CAPDyKFr2GVB0+UUpT3GgGBT17TMcrky6X4L_pw+ztTL6ejbCwQ@mail.gmail.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
- <20180319014032.9394-3-alexey.roslyakov@gmail.com> <5AAF838D.2030105@broadcom.com>
- <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
- <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com> <5AB044C0.9060701@broadcom.com>
- <87po3zxe9n.fsf@kamboji.qca.qualcomm.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v17 00/10] LPC: legacy ISA I/O support
+Date: Thu, 22 Mar 2018 10:38:37 +0000
+Message-ID: <334da3b2-5233-5ad3-728e-7ae95231bf01@huawei.com>
+References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+ <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87po3zxe9n.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Alexey Roslyakov <alexey.roslyakov@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "joe@perches.com" <joe@perches.com>, "benh@kernel.crashing.org" <benh@kernel.cras>
 List-Id: devicetree@vger.kernel.org
 
-On 20 March 2018 at 10:55, Kalle Valo <kvalo@codeaurora.org> wrote:
-> Arend van Spriel <arend.vanspriel@broadcom.com> writes:
+On 21/03/2018 23:39, Bjorn Helgaas wrote:
+> On Thu, Mar 15, 2018 at 02:15:49AM +0800, John Garry wrote:
+>> This patchset supports the IPMI-bt device attached to the Low-Pin-Count
+>> interface implemented on Hisilicon Hip06/Hip07 SoC.
+>>                         -----------
+>>                         | LPC host|
+>>                         |         |
+>>                         -----------
+>>                              |
+>>                 _____________V_______________LPC
+>>                   |                       |
+>>                   V                       V
+>>                                      ------------
+>>                                      |  BT(ipmi)|
+>>                                      ------------
+>> ...
 >
->>>> If I get it right, you mean something like this:
->>>>
->>>> mmc3: mmc@1c12000 {
->>>> ...
->>>>          broken-sg-support;
->>>>          sd-head-align = 4;
->>>>          sd-sgentry-align = 512;
->>>>
->>>>          brcmf: wifi@1 {
->>>>                  ...
->>>>          };
->>>> };
->>>>
->>>> Where dt: bindings documentation for these entries should reside?
->>>> In generic MMC bindings? Well, this is the very special case and
->>>> mmc-linux maintainer will unlikely to accept these changes.
->>>> Also, extra kernel code modification might be required. It could make
->>>> quite trivial change much more complex.
->>>
->>> If the MMC maintainers are not copied on this patch series, it will
->>> likely be hard for them to identify this patch series and chime in...
+>> Gabriele Paoloni (2):
+>>   PCI: Remove unused __weak attribute in pci_register_io_range()
+>>   PCI: Add fwnode handler as input param of pci_register_io_range()
 >>
->> The main question is whether this is indeed a "very special case" as
->> Alexey claims it to be or that it is likely to be applicable to other
->> device and host combinations as you are suggesting.
+>> John Garry (4):
+>>   ACPI / scan: rename acpi_is_serial_bus_slave() to widen use
+>>   ACPI / scan: do not enumerate Indirect IO host children
+>>   HISI LPC: Add ACPI support
+>>   MAINTAINERS: Add maintainer for HiSilicon LPC driver
 >>
->> If these properties are imposed by the host or host controller it
->> would make sense to have these in the mmc bindings.
+>> Zhichang Yuan (4):
+>>   LIB: Introduce a generic PIO mapping method
+>>   PCI: Apply the new generic I/O management on PCI IO hosts
+>>   OF: Add missing I/O range exception for indirect-IO devices
+>>   HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings
+>>
+>>  .../arm/hisilicon/hisilicon-low-pin-count.txt      |  33 ++
+>>  MAINTAINERS                                        |   7 +
+>>  drivers/acpi/pci_root.c                            |   8 +-
+>>  drivers/acpi/scan.c                                |  33 +-
+>>  drivers/bus/Kconfig                                |   8 +
+>>  drivers/bus/Makefile                               |   2 +
+>>  drivers/bus/hisi_lpc.c                             | 623 +++++++++++++++++++++
+>>  drivers/of/address.c                               |  96 +++-
+>>  drivers/pci/pci.c                                  |  95 +---
+>>  include/acpi/acpi_bus.h                            |   2 +-
+>>  include/asm-generic/io.h                           |   4 +-
+>>  include/linux/logic_pio.h                          | 124 ++++
+>>  include/linux/pci.h                                |   3 +-
+>>  lib/Kconfig                                        |  15 +
+>>  lib/Makefile                                       |   2 +
+>>  lib/logic_pio.c                                    | 282 ++++++++++
+>>  16 files changed, 1229 insertions(+), 108 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
+>>  create mode 100644 drivers/bus/hisi_lpc.c
+>>  create mode 100644 include/linux/logic_pio.h
+>>  create mode 100644 lib/logic_pio.c
 >
-> BTW, last year we were discussing something similar (I mean related to
-> alignment requirements) with ath10k SDIO patches and at the time the
-> patch submitter was proposing to have a bounce buffer in ath10k to
-> workaround that. I don't remember the details anymore, they are on the
-> ath10k mailing list archive if anyone is curious to know, but I would
-> not be surprised if they are similar as here. So there might be a need
-> to solve this in a generic way (but not sure of course as I haven't
-> checked the details).
+> I applied this whole series to pci/lpc for v4.17.
+>
+> I made the following whitespace and other trivial corrections.
+> Hopefully I didn't break anything.
+>
 
-I re-call something about these as well, here are the patches. Perhaps
-I should pick some of them up...
+Hi Bjorn,
 
-https://patchwork.kernel.org/patch/10123137/
-https://patchwork.kernel.org/patch/10123139/
-https://patchwork.kernel.org/patch/10123141/
-https://patchwork.kernel.org/patch/10123143/
+Super thanks for doing this. In general the changes look ok. However a 
+build issue has appeared, below.
 
-Kind regards
-Uffe
+I retested your pci/lpc branch (with the build fix), and it seems fine.
+
+BTW, I am also testing with a "Serial controller: MosChip Semiconductor 
+Technology Ltd. PCIe 9912 Multi-I/O Controller" in loopback mode to 
+ensure PCI host IO space is not broken and this is ok.
+
+Thanks again, and to everyone who has helped with this patchset!
+
+John
+
+>
+> --- changelogs.orig	2018-03-21 18:37:47.209217927 -0500
+> +++ changelogs	2018-03-21 18:37:35.993074570 -0500
+> @@ -1,29 +1,31 @@
+> -commit cc88cacce96a
+> +commit eb3a2ff7e72e
+>  Author: John Garry <john.garry@huawei.com>
+>  Date:   Thu Mar 15 02:15:59 2018 +0800
+>
+
+[ ... ]
+
+>
+> @@ -134,21 +132,20 @@ static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
+>   * logic_pio_to_hwaddr - translate logical PIO to HW address
+>   * @pio: logical PIO value
+>   *
+> - * Returns HW address if valid, ~0 otherwise
+> + * Returns HW address if valid, ~0 otherwise.
+>   *
+> - * Translate the input logical pio to the corresponding hardware address.
+> - * The input pio should be unique in the whole logical PIO space.
+> + * Translate the input logical PIO to the corresponding hardware address.
+> + * The input PIO should be unique in the whole logical PIO space.
+>   */
+>  resource_size_t logic_pio_to_hwaddr(unsigned long pio)
+>  {
+>  	struct logic_pio_hwaddr *range;
+> -	resource_size_t hwaddr = (resource_size_t)~0;
+>
+>  	range = find_io_range(pio);
+>  	if (range)
+> -		hwaddr = range->hw_start + pio - range->io_start;
+> +		return = range->hw_start + pio - range->io_start;
+
+Please remove '='
+
+>
+> -	return hwaddr;
+> +	return (resource_size_t)~0;
+>  }
+>
+>  /**
+> @@ -159,15 +156,14 @@ resource_size_t logic_pio_to_hwaddr(unsigned long pio)
+>   *
+>   * Returns Logical PIO value if successful, ~0UL otherwise
+>   */
