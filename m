@@ -1,86 +1,41 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v17 00/10] LPC: legacy ISA I/O support
-Date: Thu, 22 Mar 2018 08:35:44 -0500
-Message-ID: <20180322133544.GA236400@bhelgaas-glaptop.roam.corp.google.com>
-References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
- <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
- <334da3b2-5233-5ad3-728e-7ae95231bf01@huawei.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v2 0/2] drm/omap: Workaround for errata i878
+Date: Thu, 22 Mar 2018 15:42:04 +0200
+Message-ID: <20180322134206.22857-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <334da3b2-5233-5ad3-728e-7ae95231bf01@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "joe@perches.com" <joe@perches.com>, "benh@kernel.crashing.org" <benh@kernel.cras>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 22, 2018 at 10:38:37AM +0000, John Garry wrote:
-> On 21/03/2018 23:39, Bjorn Helgaas wrote:
-> > On Thu, Mar 15, 2018 at 02:15:49AM +0800, John Garry wrote:
-> > > This patchset supports the IPMI-bt device attached to the Low-Pin-Count
-> > > interface implemented on Hisilicon Hip06/Hip07 SoC.
-> > >                         -----------
-> > >                         | LPC host|
-> > >                         |         |
-> > >                         -----------
-> > >                              |
-> > >                 _____________V_______________LPC
-> > >                   |                       |
-> > >                   V                       V
-> > >                                      ------------
-> > >                                      |  BT(ipmi)|
-> > >                                      ------------
-> > > ...
-> > 
-> > > Gabriele Paoloni (2):
-> > >   PCI: Remove unused __weak attribute in pci_register_io_range()
-> > >   PCI: Add fwnode handler as input param of pci_register_io_range()
-> > > 
-> > > John Garry (4):
-> > >   ACPI / scan: rename acpi_is_serial_bus_slave() to widen use
-> > >   ACPI / scan: do not enumerate Indirect IO host children
-> > >   HISI LPC: Add ACPI support
-> > >   MAINTAINERS: Add maintainer for HiSilicon LPC driver
-> > > 
-> > > Zhichang Yuan (4):
-> > >   LIB: Introduce a generic PIO mapping method
-> > >   PCI: Apply the new generic I/O management on PCI IO hosts
-> > >   OF: Add missing I/O range exception for indirect-IO devices
-> > >   HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings
-> > > 
-> > >  .../arm/hisilicon/hisilicon-low-pin-count.txt      |  33 ++
-> > >  MAINTAINERS                                        |   7 +
-> > >  drivers/acpi/pci_root.c                            |   8 +-
-> > >  drivers/acpi/scan.c                                |  33 +-
-> > >  drivers/bus/Kconfig                                |   8 +
-> > >  drivers/bus/Makefile                               |   2 +
-> > >  drivers/bus/hisi_lpc.c                             | 623 +++++++++++++++++++++
-> > >  drivers/of/address.c                               |  96 +++-
-> > >  drivers/pci/pci.c                                  |  95 +---
-> > >  include/acpi/acpi_bus.h                            |   2 +-
-> > >  include/asm-generic/io.h                           |   4 +-
-> > >  include/linux/logic_pio.h                          | 124 ++++
-> > >  include/linux/pci.h                                |   3 +-
-> > >  lib/Kconfig                                        |  15 +
-> > >  lib/Makefile                                       |   2 +
-> > >  lib/logic_pio.c                                    | 282 ++++++++++
-> > >  16 files changed, 1229 insertions(+), 108 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> > >  create mode 100644 drivers/bus/hisi_lpc.c
-> > >  create mode 100644 include/linux/logic_pio.h
-> > >  create mode 100644 lib/logic_pio.c
-> > 
-> > I applied this whole series to pci/lpc for v4.17.
-> > 
-> > I made the following whitespace and other trivial corrections.
-> > Hopefully I didn't break anything.
-> > 
-> 
-> Hi Bjorn,
-> 
-> Super thanks for doing this. In general the changes look ok. However a build
-> issue has appeared, below.
-
-It didn't just "appear"; I added it myself!  I fixed it and repushed the
-branch.
+SGksCgpDaGFuZ2VzIHNpbmNlIHYxOgotIHJlYmFzZWQgb24gZHJtLW5leHQKLSBjb21tZW50cyBm
+b3IgdGhlIHYxIChodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzgzNTg3NDEvKSBh
+ZGRyZXNzZWQKIC0gdTMyIC0+IGRtYV9hZGRyX3Qgd2hlbiBhcHBsaWNhYmxlCiAtIGFkZGl0aW9u
+YWwgd21iKCkvcm1iKCkgYWRkZWQgdG8gbWFrZSBzdXJlIHdlIGhhdmUgY29ycmVjdCBiZWhhdmlv
+cgoKRXJyYXRhIGk4Nzggc2F5cyB0aGF0IE1QVSBzaG91bGQgbm90IGJlIHVzZWQgdG8gYWNjZXNz
+IFJBTSBhbmQgRE1NIGF0CnRoZSBzYW1lIHRpbWUuIEFzIGl0J3Mgbm90IHBvc3NpYmxlIHRvIHBy
+ZXZlbnQgTVBVIGFjY2Vzc2luZyBSQU0sIHdlCm5lZWQgdG8gYWNjZXNzIERNTSB2aWEgYSBwcm94
+eS4KClJlZ2FyZHMsClBldGVyCi0tLQpUb21pIFZhbGtlaW5lbiAoMik6CiAgZHQtYmluZGluZ3M6
+IGFybTogb21hcDogZG1tOiBEb2N1bWVudCBuZXcgY29tcGF0aWJsZSBmb3IgRFJBN3h4IGZhbWls
+eQogIGRybS9vbWFwOiBwYXJ0aWFsIHdvcmthcm91bmQgZm9yIERSQTd4eCBETU0gZXJyYXRhIGk4
+NzgKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvZG1tLnR4dCB8
+ICAgMyArLQogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1fcHJpdi5oICAgICAgICAg
+ICAgfCAgIDggKysKIGRyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZG1tX3RpbGVyLmMgICAg
+ICAgICAgIHwgMTUzICsrKysrKysrKysrKysrKysrKysrLQogMyBmaWxlcyBjaGFuZ2VkLCAxNjEg
+aW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
+T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
+RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
