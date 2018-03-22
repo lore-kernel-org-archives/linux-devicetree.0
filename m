@@ -1,141 +1,105 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 7/7] remoteproc: qcom: Always assert and deassert reset
- signals in SDM845
-Date: Fri, 23 Mar 2018 03:40:17 +0530
-Message-ID: <ddc8713a-ea65-f38f-3a4e-07a7908e8be6@codeaurora.org>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-8-git-send-email-sibis@codeaurora.org>
- <20180318224631.GH5626@tuxbook-pro>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
+ on Droid 4
+Date: Thu, 22 Mar 2018 17:23:16 -0500
+Message-ID: <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
+References: <20180309023750.108942-1-tony@atomide.com>
+         <20180322135553.GA27648@amd> <20180322164633.GF5799@atomide.com>
+         <20180322192843.GA17189@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318224631.GH5626@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <20180322192843.GA17189@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-Thanks for the review
-
-On 03/19/2018 04:16 AM, Bjorn Andersson wrote:
-> On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
->> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-> [..]
->> +struct q6v5_reset_ops {
->> +	int (*reset_start)(struct q6v5 *qproc);
->> +	int (*reset_stop)(struct q6v5 *qproc);
->> +};
+On Thu, 2018-03-22 at 20:28 +0100, Pavel Machek wrote:
+> Hi!
 > 
-> Please add these two ops directly in q6v5 instead and please keep the
-> naming "reset_assert" and "reset_deassert".
+> > > user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost
+> > > $
+> > > sudo lsusb
+> > > Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> > > Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+> > > user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost
+> > > $
+> > > zcat /proc/config.gz | grep MAPPH
+> > > CONFIG_PHY_MAPPHONE_MDM6600=y
+> > > user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost
+> > > $
+> > > zcat /proc/config.gz | grep OHCI_
+> > > CONFIG_USB_OHCI_LITTLE_ENDIAN=y
+> > > CONFIG_USB_OHCI_HCD=y
+> > > CONFIG_USB_OHCI_HCD_OMAP3=y
+> > > CONFIG_USB_OHCI_HCD_PLATFORM=y
+> > > user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost
+> > > $
+> > > 
+> > > As far as I can tell,
+> > > 
+> > > +CONFIG_USB_WDM=y
+> > > +CONFIG_USB_SERIAL=y
+> > > +CONFIG_USB_SERIAL_QUALCOMM=y
+> > > +CONFIG_USB_SERIAL_WWAN=y
+> > > 
+> > > should be enabled to enable the drivers (and I did that), but
+> > > without
+> > > device showing on the bus...
+> > > 
+> > > Any ideas?
+> > 
+> > Do you have the related dts patches picked from next?
+> > 
+> > fdd192037fce ("ARM: dts: omap4-droid4: Fix USB PHY port naming")
+> > e5b9fd7bdeb5 ("ARM: dts: omap4-droid4: Configure MDM6600 USB PHY")
+> > 
+> > But yeah all you need to do is have phy-mapphone-mdm6600 and
+> > ohci-platform loaded and then ifconfig should show four wwan
+> > interfaces being added.
 > 
+> ifconfig? I thought I should get /dev/ttyUSB0..3?
 
-sure will do
+I believe they are QMI via qmi_wwan, not TTYs.
 
->> +
->>   enum {
->>   	MSS_MSM8916,
->>   	MSS_MSM8974,
->> @@ -343,6 +354,52 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->>   	return 0;
->>   }
->>   
->> +static void alt_reset_restart(struct q6v5 *qproc, u32 restart)
->> +{
->> +	writel(restart, qproc->rmb_base + RMB_MBA_ALT_RESET);
+Dan
+
+> Anyway, that does not seem to work. Something is detected now:
 > 
-> Just move this write into q6v5_sdm_reset_start()
+> [   10.819549] ALSA device list:
+> [   10.831787]   #0: HDMI 58006000.encoder
+> [   10.841186] Waiting 10 sec before mounting root device...
+> [   10.887573] usb 2-1: New USB device found, idVendor=22b8,
+> idProduct=2a70
+> [   10.897521] usb 2-1: New USB device strings: Mfr=1, Product=2,
+> SerialNumber=0
+> [   10.907684] usb 2-1: Product: Flash MZ600
+> [   10.914611] usb 2-1: Manufacturer: Motorola, Incorporated
+> [   20.967193] EXT4-fs (mmcblk0p2): couldn't mount as ext3 due to
+> feature incompatibilities
 > 
-
-sure will do
-
->> +}
->> +
->> +static int q6v5_msm_reset_stop(struct q6v5 *qproc)
->> +{
->> +	return reset_control_assert(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_msm_reset_start(struct q6v5 *qproc)
->> +{
->> +	return reset_control_deassert(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_sdm_reset_stop(struct q6v5 *qproc)
->> +{
->> +	return reset_control_reset(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_sdm_reset_start(struct q6v5 *qproc)
->> +{
->> +	int ret;
->> +
->> +	alt_reset_restart(qproc, 1);
->> +	/* Ensure alt reset is written before restart reg */
+> But qcserial driver does not bind to that. If I attempt to force it:
 > 
-> That's not what udelay does ;)
+> root@devuan:/sys/bus/usb-serial/drivers/qcserial# lsusb
+> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> Bus 002 Device 002: ID 22b8:2a70 Motorola PCS
+> Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+> root@devuan:/sys/bus/usb-serial/drivers/qcserial# echo "22b8 2a70" >
+> new_id
+> [ 2059.267730] usb 2-1: unknown number of interfaces: 9
+> [ 2059.272949] usb 2-1: unknown number of interfaces: 9
+> [ 2059.278045] usb 2-1: unknown number of interfaces: 9
+> [ 2059.283233] usb 2-1: unknown number of interfaces: 9
+> [ 2059.288330] usb 2-1: unknown number of interfaces: 9
+> [ 2059.293457] usb 2-1: unknown number of interfaces: 9
+> [ 2059.298553] usb 2-1: unknown number of interfaces: 9
+> [ 2059.303680] usb 2-1: unknown number of interfaces: 9
+> [ 2059.308776] usb 2-1: unknown number of interfaces: 9
 > 
-> If you want to make sure that the register is written and then give it
-> 100us delay until you reset the reset you have to readl() the same
-> register back after the writel()
+> I don't get anything useful. Do I need to boot android before booting
+> Linux or something? How does your lsusb look like?
 > 
-> I think the delay deserves a comment on what we're waiting for.
->
-
-the delay can be removed for the reasons stated below
-
->> +	udelay(100);
-> 
-> Use usleep_range() for delays longer than 10us.
->
->> +
->> +	ret = reset_control_reset(qproc->mss_restart);
->> +
->> +	udelay(100);
-> 
-> Same as the delay above, what are we waiting for?
->
-
-The point is to wait for 6 32khz sleep cycles both after assert and
-after de-assert of the aoss mss reset line. So moving the udelay to
-the aoss reset controller should have been right thing to do. alt_reset
-shouldn't need delays in between will remove them.
-
->> +	alt_reset_restart(qproc, 0);
->> +
->> +	return ret;
->> +}
->> +
-> [..]
->> @@ -1179,6 +1251,12 @@ static int q6v5_probe(struct platform_device *pdev)
->>   	qproc->dev = &pdev->dev;
->>   	qproc->rproc = rproc;
->>   	platform_set_drvdata(pdev, qproc);
->> +	qproc->version = desc->version;
->> +
->> +	if (qproc->version == MSS_SDM845)
->> +		qproc->ops = &q6v5_sdm_ops;
->> +	else
->> +		qproc->ops = &q6v5_msm_ops;
-> 
-> Can we carry a boolean for "has_alt_reset" or something that picks the
-> new reset ops, rather than picking by version?
->
-
-Though alt_reset is specific to SDM845 SoCs it also includes another
-reset controller (pdc_sync) in the modem bringup sequence, it isn't
-included it in the patch series since it doesn't seem to affect the
-modem start/stop functionality. Knowing that it may be added wouldn't
-version be a better choice here?
-
-> Regards,
-> Bjorn
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Thanks,
+> 								Pavel
