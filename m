@@ -1,73 +1,77 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 1/6] phy: qcom-qmp: Enable pipe_clk before checking USB3
- PHY_STATUS
-Date: Thu, 22 Mar 2018 11:43:01 -0700
-Message-ID: <152174418191.178046.10173529959609556848@swboyd.mtv.corp.google.com>
-References: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
- <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 08/10] clk: qcom: Add ACD path to CPU clock driver for
+ msm8996
+Date: Thu, 22 Mar 2018 18:56:42 +0000
+Message-ID: <d9e9e276-ba8c-7d8c-b110-da0a0b778e6d@arm.com>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-9-git-send-email-ilialin@codeaurora.org>
+ <152147863176.242365.17292287330283256524@swboyd.mtv.corp.google.com>
+ <41f3b246-43f4-450d-5c6b-34cdad7b15dd@arm.com>
+ <152149448251.242365.16980775001987673274@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152149448251.242365.16980775001987673274@swboyd.mtv.corp.google.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, Ilia Lin <ilialin@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manu Gautam (2018-03-22 01:50:41)
-> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
-> to take place. This lock is output from PHY to GCC clock_ctl and then
-
-s/lock/clock/
-
-> fed back to QMP PHY and is output from PHY only after PHY is reset
-> and initialized, hence it can't be enabled too early in initialization
-> sequence.
+On 19/03/18 21:21, Stephen Boyd wrote:
+> Quoting Robin Murphy (2018-03-19 11:16:15)
+>> On 19/03/18 16:57, Stephen Boyd wrote:
+>> [...]
+>>>> +
+>>>
+>>>> +                       writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
+>>>> +                                       PWRCL_REG_OFFSET + SSSCTL_OFFSET);
+>>>> +               /* Ensure SSSCTL config goes through before enabling ACD. */
+>>>> +               mb();
+>>>
+>>> Use writel instead.
+>>
+>> Note that writel() only gives an implicit wmb() *before* the store to
+>> ensure ordering against any previous writes. If this code really needs
+>> to ensure that the given write has definitely completed before any other
+>> accesses happen, then it still needs an explicit barrier *after* the
+>> write*(), unless perhaps the next access is always guaranteed to be a
+>> non-relaxed write (thus implicitly providing a suitable DSB).
+>>
 > 
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 6470c5d..73aa282 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -797,8 +797,13 @@ static int qcom_qmp_phy_poweron(struct phy *phy)
->  {
->         struct qmp_phy *qphy = phy_get_drvdata(phy);
->         struct qcom_qmp *qmp = qphy->qmp;
-> +       const struct qmp_phy_cfg *cfg = qmp->cfg;
->         int ret;
->  
-> +       /* Not needed for USB3 PHY as pipe_clk is enabled from phy_init */
-> +       if (cfg->type == PHY_TYPE_USB3)
-> +               return 0;
+> Ah right. So this should be a wmb() too? I suspect it's to order with
+> the write to the l2 indirect registers, but reading that register before
+> the MMIO write is not a problem. The comment above the l2 accessors
+> could be slightly more specific here and it would help immensely.
 
-Would be nice to not even assign phy_poweron when the PHY is USB3 type.
+It depends a bit on what exactly the hardware requires. If it's merely 
+that write(s) to register A (and perhaps others) arrive before any write 
+to register B, then the sensible thing to do would be to just make the 
+write to B non-relaxed, i.e.:
 
-> +
->         ret = clk_prepare_enable(qphy->pipe_clk);
->         if (ret)
->                 dev_err(qmp->dev, "pipe_clk enable failed, err=%d\n", ret);
-> @@ -1008,6 +1013,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
->         status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->         mask = cfg->mask_pcs_ready;
->  
-> +       /* USB3 PHY requires pipe_clk for PLL lock and calibration */
-> +       if (cfg->type == PHY_TYPE_USB3) {
-> +               ret = clk_prepare_enable(qphy->pipe_clk);
-> +               if (ret)
-> +                       dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
-> +               /*
-> +                * Ignore this error as pipe_clk might take some time to get
-> +                * enabled. In any case following check for PHY PLL lock would
-> +                * timeout below if there is a fatal error and clock is not fed
-> +                * to PHY
-> +                */
-> +
+	writel_relaxed(x, base + A);
+	...
+	writel(y, base + B);
 
-This is odd. If clk_enable() fails then we don't keep parent clks (or
-the clk that's being operated on) up refcounted and enabled. How is that
-going to work?
+That still only guarantees that the previous write(s) have been pushed 
+all the way to the endpoint before the write to B is issued, though - 
+for many devices that's sufficient, but in some cases the only way to be 
+totally sure that the write has both been received *and* taken effect is 
+by reading back some suitable indicator before proceeding.
+
+If we only care about making sure writes are pushed out, rather than 
+synchronising more complicated memory accesses between multiple agents, 
+then a full mb() is probably overkill (as ordering against outstanding 
+loads too only adds more overhead in the interconnect), and wmb() 
+(ideally implicit in a subsequent writel() as above) should be enough.
+
+Robin.
