@@ -1,153 +1,293 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata i878
-Date: Thu, 22 Mar 2018 15:42:06 +0200
-Message-ID: <20180322134206.22857-3-peter.ujfalusi@ti.com>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180322134206.22857-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+From: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+Subject: [RFC v2] pwm: Add Xilinx AXI Timer in PWM mode support
+Date: Thu, 22 Mar 2018 14:53:16 +0100
+Message-ID: <20180322135316.19685-1-alvaro.gamez@hazent.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KCkVycmF0YSBpODc4
-IHNheXMgdGhhdCBNUFUgc2hvdWxkIG5vdCBiZSB1c2VkIHRvIGFjY2VzcyBSQU0gYW5kIERNTSBh
-dAp0aGUgc2FtZSB0aW1lLiBBcyBpdCdzIG5vdCBwb3NzaWJsZSB0byBwcmV2ZW50IE1QVSBhY2Nl
-c3NpbmcgUkFNLCB3ZQpuZWVkIHRvIGFjY2VzcyBETU0gdmlhIGEgcHJveHkuCgpUaGlzIHBhdGNo
-IGNoYW5nZXMgRE1NIGRyaXZlciB0byBhY2Nlc3MgRE1NIHJlZ2lzdGVycyB2aWEgc0RNQS4gSW5z
-dGVhZApvZiBkb2luZyBhIG5vcm1hbCByZWFkbC93cml0ZWwgY2FsbCB0byByZWFkL3dyaXRlIGEg
-cmVnaXN0ZXIsIHdlIHVzZQpzRE1BIHRvIGNvcHkgNCBieXRlcyBmcm9tL3RvIHRoZSBETU0gcmVn
-aXN0ZXJzLgoKVGhpcyBwYXRjaCBwcm92aWRlcyBvbmx5IGEgcGFydGlhbCB3b3JrYXJvdW5kIGZv
-ciBpODc4LCBhcyBub3Qgb25seSBETU0KcmVnaXN0ZXIgcmVhZHMvd3JpdGVzIGFyZSBhZmZlY3Rl
-ZCwgYnV0IGFsc28gYWNjZXNzZXMgdG8gdGhlIERNTSBtYXBwZWQKYnVmZmVycyAoZnJhbWVidWZm
-ZXJzLCB1c3VhbGx5KS4KClNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtl
-aW5lbkB0aS5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1fcHJpdi5o
-ICB8ICAgOCArKwogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1fdGlsZXIuYyB8IDE1
-MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCiAyIGZpbGVzIGNoYW5nZWQsIDE1OSBp
-bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9vbWFwZHJtL29tYXBfZG1tX3ByaXYuaCBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBf
-ZG1tX3ByaXYuaAppbmRleCBjMjc4NWNjOThkYzkuLjljZTlkMWQ3MDM5YSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1fcHJpdi5oCisrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9vbWFwZHJtL29tYXBfZG1tX3ByaXYuaApAQCAtMTU1LDEwICsxNTUsMTIgQEAgc3RydWN0
-IHJlZmlsbF9lbmdpbmUgewogCiBzdHJ1Y3QgZG1tX3BsYXRmb3JtX2RhdGEgewogCXUzMiBjcHVf
-Y2FjaGVfZmxhZ3M7CisJYm9vbCBlcnJhdGFfaTg3OF93YTsKIH07CiAKIHN0cnVjdCBkbW0gewog
-CXN0cnVjdCBkZXZpY2UgKmRldjsKKwlkbWFfYWRkcl90IHBoeXNfYmFzZTsKIAl2b2lkIF9faW9t
-ZW0gKmJhc2U7CiAJaW50IGlycTsKIApAQCAtMTg5LDYgKzE5MSwxMiBAQCBzdHJ1Y3QgZG1tIHsK
-IAlzdHJ1Y3QgbGlzdF9oZWFkIGFsbG9jX2hlYWQ7CiAKIAljb25zdCBzdHJ1Y3QgZG1tX3BsYXRm
-b3JtX2RhdGEgKnBsYXRfZGF0YTsKKworCWJvb2wgZG1tX3dvcmthcm91bmQ7CisJc3BpbmxvY2tf
-dCB3YV9sb2NrOworCXUzMiAqd2FfZG1hX2RhdGE7CisJZG1hX2FkZHJfdCB3YV9kbWFfaGFuZGxl
-OworCXN0cnVjdCBkbWFfY2hhbiAqd2FfZG1hX2NoYW47CiB9OwogCiAjZW5kaWYKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZG1tX3RpbGVyLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vb21hcGRybS9vbWFwX2RtbV90aWxlci5jCmluZGV4IGU4NDg3MWU3NDYxNS4uMjdjNjdi
-YzM2MjAzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2RtbV90aWxl
-ci5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZG1tX3RpbGVyLmMKQEAgLTE4
-LDYgKzE4LDcgQEAKICNpbmNsdWRlIDxsaW51eC9jb21wbGV0aW9uLmg+CiAjaW5jbHVkZSA8bGlu
-dXgvZGVsYXkuaD4KICNpbmNsdWRlIDxsaW51eC9kbWEtbWFwcGluZy5oPgorI2luY2x1ZGUgPGxp
-bnV4L2RtYWVuZ2luZS5oPgogI2luY2x1ZGUgPGxpbnV4L2Vycm5vLmg+CiAjaW5jbHVkZSA8bGlu
-dXgvaW5pdC5oPgogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgpAQCAtNzksMTQgKzgwLDEz
-OCBAQCBzdGF0aWMgY29uc3QgdTMyIHJlZ1tdWzRdID0gewogCQkJRE1NX1BBVF9ERVNDUl9fMiwg
-RE1NX1BBVF9ERVNDUl9fM30sCiB9OwogCitzdGF0aWMgaW50IGRtbV9kbWFfY29weShzdHJ1Y3Qg
-ZG1tICpkbW0sIGRtYV9hZGRyX3Qgc3JjLCBkbWFfYWRkcl90IGRzdCkKK3sKKwlzdHJ1Y3QgZG1h
-X2RldmljZSAqZG1hX2RldiA9IGRtbS0+d2FfZG1hX2NoYW4tPmRldmljZTsKKwlzdHJ1Y3QgZG1h
-X2FzeW5jX3R4X2Rlc2NyaXB0b3IgKnR4OworCWVudW0gZG1hX3N0YXR1cyBzdGF0dXM7CisJZG1h
-X2Nvb2tpZV90IGNvb2tpZTsKKworCXR4ID0gZG1hX2Rldi0+ZGV2aWNlX3ByZXBfZG1hX21lbWNw
-eShkbW0tPndhX2RtYV9jaGFuLCBkc3QsIHNyYywgNCwgMCk7CisJaWYgKCF0eCkgeworCQlkZXZf
-ZXJyKGRtbS0+ZGV2LCAiRmFpbGVkIHRvIHByZXBhcmUgRE1BIG1lbWNweVxuIik7CisJCXJldHVy
-biAtRUlPOworCX0KKworCWNvb2tpZSA9IHR4LT50eF9zdWJtaXQodHgpOworCWlmIChkbWFfc3Vi
-bWl0X2Vycm9yKGNvb2tpZSkpIHsKKwkJZGV2X2VycihkbW0tPmRldiwgIkZhaWxlZCB0byBkbyBE
-TUEgdHhfc3VibWl0XG4iKTsKKwkJcmV0dXJuIC1FSU87CisJfQorCisJZG1hX2FzeW5jX2lzc3Vl
-X3BlbmRpbmcoZG1tLT53YV9kbWFfY2hhbik7CisJc3RhdHVzID0gZG1hX3N5bmNfd2FpdChkbW0t
-PndhX2RtYV9jaGFuLCBjb29raWUpOworCWlmIChzdGF0dXMgIT0gRE1BX0NPTVBMRVRFKQorCQlk
-ZXZfZXJyKGRtbS0+ZGV2LCAiaTg3OCB3YSBETUEgY29weSBmYWlsdXJlXG4iKTsKKworCWRtYWVu
-Z2luZV90ZXJtaW5hdGVfYWxsKGRtbS0+d2FfZG1hX2NoYW4pOworCXJldHVybiAwOworfQorCitz
-dGF0aWMgdTMyIGRtbV9yZWFkX3dhKHN0cnVjdCBkbW0gKmRtbSwgdTMyIHJlZykKK3sKKwlkbWFf
-YWRkcl90IHNyYywgZHN0OworCWludCByOworCisJc3JjID0gZG1tLT5waHlzX2Jhc2UgKyByZWc7
-CisJZHN0ID0gZG1tLT53YV9kbWFfaGFuZGxlOworCisJciA9IGRtbV9kbWFfY29weShkbW0sIHNy
-YywgZHN0KTsKKwlpZiAocikgeworCQlkZXZfZXJyKGRtbS0+ZGV2LCAic0RNQSByZWFkIHRyYW5z
-ZmVyIHRpbWVvdXRcbiIpOworCQlyZXR1cm4gcmVhZGwoZG1tLT5iYXNlICsgcmVnKTsKKwl9CisK
-KwkvKgorCSAqIEFzIHBlciBpODc4IHdvcmthcm91bmQsIHRoZSBETUEgaXMgdXNlZCB0byBhY2Nl
-c3MgdGhlIERNTSByZWdpc3RlcnMuCisJICogTWFrZSBzdXJlIHRoYXQgdGhlIHJlYWRsIGlzIG5v
-dCBtb3ZlZCBieSB0aGUgY29tcGlsZXIgb3IgdGhlIENQVQorCSAqIGVhcmxpZXIgdGhhbiB0aGUg
-RE1BIGZpbmlzaGVkIHdyaXRpbmcgdGhlIHZhbHVlIHRvIG1lbW9yeS4KKwkgKi8KKwlybWIoKTsK
-KwlyZXR1cm4gcmVhZGwoZG1tLT53YV9kbWFfZGF0YSk7Cit9CisKK3N0YXRpYyB2b2lkIGRtbV93
-cml0ZV93YShzdHJ1Y3QgZG1tICpkbW0sIHUzMiB2YWwsIHUzMiByZWcpCit7CisJZG1hX2FkZHJf
-dCBzcmMsIGRzdDsKKwlpbnQgcjsKKworCXdyaXRlbCh2YWwsIGRtbS0+d2FfZG1hX2RhdGEpOwor
-CS8qCisJICogQXMgcGVyIGk4Nzggd29ya2Fyb3VuZCwgdGhlIERNQSBpcyB1c2VkIHRvIGFjY2Vz
-cyB0aGUgRE1NIHJlZ2lzdGVycy4KKwkgKiBNYWtlIHN1cmUgdGhhdCB0aGUgd3JpdGVsIGlzIG5v
-dCBtb3ZlZCBieSB0aGUgY29tcGlsZXIgb3IgdGhlIENQVSwgc28KKwkgKiB0aGUgZGF0YSB3aWxs
-IGJlIGluIHBsYWNlIGJlZm9yZSB3ZSBzdGFydCB0aGUgRE1BIHRvIGRvIHRoZSBhY3R1YWwKKwkg
-KiByZWdpc3RlciB3cml0ZS4KKwkgKi8KKwl3bWIoKTsKKworCXNyYyA9IGRtbS0+d2FfZG1hX2hh
-bmRsZTsKKwlkc3QgPSBkbW0tPnBoeXNfYmFzZSArIHJlZzsKKworCXIgPSBkbW1fZG1hX2NvcHko
-ZG1tLCBzcmMsIGRzdCk7CisJaWYgKHIpIHsKKwkJZGV2X2VycihkbW0tPmRldiwgInNETUEgd3Jp
-dGUgdHJhbnNmZXIgdGltZW91dFxuIik7CisJCXdyaXRlbCh2YWwsIGRtbS0+YmFzZSArIHJlZyk7
-CisJfQorfQorCiBzdGF0aWMgdTMyIGRtbV9yZWFkKHN0cnVjdCBkbW0gKmRtbSwgdTMyIHJlZykK
-IHsKLQlyZXR1cm4gcmVhZGwoZG1tLT5iYXNlICsgcmVnKTsKKwlpZiAoZG1tLT5kbW1fd29ya2Fy
-b3VuZCkgeworCQl1MzIgdjsKKwkJdW5zaWduZWQgbG9uZyBmbGFnczsKKworCQlzcGluX2xvY2tf
-aXJxc2F2ZSgmZG1tLT53YV9sb2NrLCBmbGFncyk7CisJCXYgPSBkbW1fcmVhZF93YShkbW0sIHJl
-Zyk7CisJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRtbS0+d2FfbG9jaywgZmxhZ3MpOworCisJ
-CXJldHVybiB2OworCX0gZWxzZSB7CisJCXJldHVybiByZWFkbChkbW0tPmJhc2UgKyByZWcpOwor
-CX0KIH0KIAogc3RhdGljIHZvaWQgZG1tX3dyaXRlKHN0cnVjdCBkbW0gKmRtbSwgdTMyIHZhbCwg
-dTMyIHJlZykKIHsKLQl3cml0ZWwodmFsLCBkbW0tPmJhc2UgKyByZWcpOworCWlmIChkbW0tPmRt
-bV93b3JrYXJvdW5kKSB7CisJCXVuc2lnbmVkIGxvbmcgZmxhZ3M7CisKKwkJc3Bpbl9sb2NrX2ly
-cXNhdmUoJmRtbS0+d2FfbG9jaywgZmxhZ3MpOworCQlkbW1fd3JpdGVfd2EoZG1tLCB2YWwsIHJl
-Zyk7CisJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRtbS0+d2FfbG9jaywgZmxhZ3MpOworCX0g
-ZWxzZSB7CisJCXdyaXRlbCh2YWwsIGRtbS0+YmFzZSArIHJlZyk7CisJfQorfQorCitzdGF0aWMg
-aW50IGRtbV93b3JrYXJvdW5kX2luaXQoc3RydWN0IGRtbSAqZG1tKQoreworCWRtYV9jYXBfbWFz
-a190IG1hc2s7CisKKwlzcGluX2xvY2tfaW5pdCgmZG1tLT53YV9sb2NrKTsKKworCWRtbS0+d2Ff
-ZG1hX2RhdGEgPSBkbWFfYWxsb2NfY29oZXJlbnQoZG1tLT5kZXYsICBzaXplb2YodTMyKSwKKwkJ
-CQkJICAgICAgJmRtbS0+d2FfZG1hX2hhbmRsZSwgR0ZQX0tFUk5FTCk7CisJaWYgKCFkbW0tPndh
-X2RtYV9kYXRhKQorCQlyZXR1cm4gLUVOT01FTTsKKworCWRtYV9jYXBfemVybyhtYXNrKTsKKwlk
-bWFfY2FwX3NldChETUFfTUVNQ1BZLCBtYXNrKTsKKworCWRtbS0+d2FfZG1hX2NoYW4gPSBkbWFf
-cmVxdWVzdF9jaGFubmVsKG1hc2ssIE5VTEwsIE5VTEwpOworCWlmICghZG1tLT53YV9kbWFfY2hh
-bikgeworCQlkbWFfZnJlZV9jb2hlcmVudChkbW0tPmRldiwgNCwgZG1tLT53YV9kbWFfZGF0YSwg
-ZG1tLT53YV9kbWFfaGFuZGxlKTsKKwkJcmV0dXJuIC1FTk9ERVY7CisJfQorCisJcmV0dXJuIDA7
-Cit9CisKK3N0YXRpYyB2b2lkIGRtbV93b3JrYXJvdW5kX3VuaW5pdChzdHJ1Y3QgZG1tICpkbW0p
-Cit7CisJZG1hX3JlbGVhc2VfY2hhbm5lbChkbW0tPndhX2RtYV9jaGFuKTsKKworCWRtYV9mcmVl
-X2NvaGVyZW50KGRtbS0+ZGV2LCA0LCBkbW0tPndhX2RtYV9kYXRhLCBkbW0tPndhX2RtYV9oYW5k
-bGUpOwogfQogCiAvKiBzaW1wbGUgYWxsb2NhdG9yIHRvIGdyYWIgbmV4dCAxNiBieXRlIGFsaWdu
-ZWQgbWVtb3J5IGZyb20gdHhuICovCkBAIC02MzIsNiArNzU3LDkgQEAgc3RhdGljIGludCBvbWFw
-X2RtbV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2KQogCQlpZiAob21hcF9kbW0t
-PmR1bW15X3BhZ2UpCiAJCQlfX2ZyZWVfcGFnZShvbWFwX2RtbS0+ZHVtbXlfcGFnZSk7CiAKKwkJ
-aWYgKG9tYXBfZG1tLT5kbW1fd29ya2Fyb3VuZCkKKwkJCWRtbV93b3JrYXJvdW5kX3VuaW5pdChv
-bWFwX2RtbSk7CisKIAkJaWYgKG9tYXBfZG1tLT5pcnEgPiAwKQogCQkJZnJlZV9pcnEob21hcF9k
-bW0tPmlycSwgb21hcF9kbW0pOwogCkBAIC02ODAsNiArODA4LDcgQEAgc3RhdGljIGludCBvbWFw
-X2RtbV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpCiAJCWdvdG8gZmFpbDsKIAl9
-CiAKKwlvbWFwX2RtbS0+cGh5c19iYXNlID0gbWVtLT5zdGFydDsKIAlvbWFwX2RtbS0+YmFzZSA9
-IGlvcmVtYXAobWVtLT5zdGFydCwgU1pfMkspOwogCiAJaWYgKCFvbWFwX2RtbS0+YmFzZSkgewpA
-QCAtNjk1LDYgKzgyNCwxNyBAQCBzdGF0aWMgaW50IG9tYXBfZG1tX3Byb2JlKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKmRldikKIAogCW9tYXBfZG1tLT5kZXYgPSAmZGV2LT5kZXY7CiAKKwlpZiAo
-b21hcF9kbW0tPnBsYXRfZGF0YS0+ZXJyYXRhX2k4Nzhfd2EpIHsKKwkJaWYgKCFkbW1fd29ya2Fy
-b3VuZF9pbml0KG9tYXBfZG1tKSkgeworCQkJb21hcF9kbW0tPmRtbV93b3JrYXJvdW5kID0gdHJ1
-ZTsKKwkJCWRldl9pbmZvKCZkZXYtPmRldiwKKwkJCQkid29ya2Fyb3VuZCBmb3IgZXJyYXRhIGk4
-NzggaW4gdXNlXG4iKTsKKwkJfSBlbHNlIHsKKwkJCWRldl93YXJuKCZkZXYtPmRldiwKKwkJCQkg
-ImZhaWxlZCB0byBpbml0aWFsaXplIHdvcmstYXJvdW5kIGZvciBpODc4XG4iKTsKKwkJfQorCX0K
-KwogCWh3aW5mbyA9IGRtbV9yZWFkKG9tYXBfZG1tLCBETU1fUEFUX0hXSU5GTyk7CiAJb21hcF9k
-bW0tPm51bV9lbmdpbmVzID0gKGh3aW5mbyA+PiAyNCkgJiAweDFGOwogCW9tYXBfZG1tLT5udW1f
-bHV0ID0gKGh3aW5mbyA+PiAxNikgJiAweDFGOwpAQCAtMTA1OCw2ICsxMTk4LDExIEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZG1tX3BsYXRmb3JtX2RhdGEgZG1tX29tYXA1X3BsYXRmb3JtX2RhdGEg
-PSB7CiAJLmNwdV9jYWNoZV9mbGFncyA9IE9NQVBfQk9fVU5DQUNIRUQsCiB9OwogCitzdGF0aWMg
-Y29uc3Qgc3RydWN0IGRtbV9wbGF0Zm9ybV9kYXRhIGRtbV9kcmE3X3BsYXRmb3JtX2RhdGEgPSB7
-CisJLmNwdV9jYWNoZV9mbGFncyA9IE9NQVBfQk9fVU5DQUNIRUQsCisJLmVycmF0YV9pODc4X3dh
-ID0gdHJ1ZSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGRtbV9vZl9t
-YXRjaFtdID0gewogCXsKIAkJLmNvbXBhdGlibGUgPSAidGksb21hcDQtZG1tIiwKQEAgLTEwNjcs
-NiArMTIxMiwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkbW1fb2ZfbWF0
-Y2hbXSA9IHsKIAkJLmNvbXBhdGlibGUgPSAidGksb21hcDUtZG1tIiwKIAkJLmRhdGEgPSAmZG1t
-X29tYXA1X3BsYXRmb3JtX2RhdGEsCiAJfSwKKwl7CisJCS5jb21wYXRpYmxlID0gInRpLGRyYTct
-ZG1tIiwKKwkJLmRhdGEgPSAmZG1tX2RyYTdfcGxhdGZvcm1fZGF0YSwKKwl9LAogCXt9LAogfTsK
-ICNlbmRpZgotLSAKUGV0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxh
-bmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00
-LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patch adds support for the IP core provided by Xilinx.
+This IP core can function as a two independent timers, but also use both
+counters as values for period and duty cycle of a PWM output.
+
+There can be many instances of this IP in a design, but the first one of
+them will be used to generate system's clock. If we were to use this driver
+against the first timer instance found on the DT, we would expose it as a
+PWM controller, and reconfiguring it will break the clock.
+
+To avoid this we add an attribute pwm-outputs to this device declaration.
+This new driver will fail to probe when pwm-outputs is different than 1.
+
+We could use a boolean, but future versions of this IP core could implement
+several PWM and counters, so when (if) this happens, we would only have to
+adjust the pwm-outputs comparison to allow more than one PWM devices.
+
+Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+---
+
+This is the second proposal on getting AXI Timer PWM capability into Linux. 
+The other alternative, which was sent un June past year, didn't look for
+pwm-output attribute, so in order not to kidnap control from
+arch/microblaze/kernel/timer.c it used a different compatible string. That's
+not wrong per se, but raises the question: can one piece of hardware have
+two compatible strings depending on its intended use, rather than on the
+nature of the hardware itself?
+
+If there's interest in mainlining this or the proposal I sent last year, I'd
+be grateful to hear from the devicetree maintainers and maybe approve or
+suggest any different aproach.
+
+Best regards
+
+ drivers/pwm/Kconfig         |   9 ++
+ drivers/pwm/Makefile        |   1 +
+ drivers/pwm/pwm-axi-timer.c | 204 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 214 insertions(+)
+ create mode 100644 drivers/pwm/pwm-axi-timer.c
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 763ee50ea57d..8c246e58810f 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -74,6 +74,15 @@ config PWM_ATMEL_TCB
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-atmel-tcb.
+ 
++config PWM_AXI_TIMER
++	tristate "AXI Timer PWM support"
++	depends on ARCH_ZYNQ || MICROBLAZE
++	help
++	  Generic PWM framework driver for Xilinx's AXI Timer
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-axi-timer.
++
+ config PWM_BCM_IPROC
+ 	tristate "iProc PWM support"
+ 	depends on ARCH_BCM_IPROC || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 0258a745f30c..963bf0f64daa 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
+ obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
+ obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
+ obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
++obj-$(CONFIG_PWM_AXI_TIMER)	+= pwm-axi-timer.o
+ obj-$(CONFIG_PWM_BCM_IPROC)	+= pwm-bcm-iproc.o
+ obj-$(CONFIG_PWM_BCM_KONA)	+= pwm-bcm-kona.o
+ obj-$(CONFIG_PWM_BCM2835)	+= pwm-bcm2835.o
+diff --git a/drivers/pwm/pwm-axi-timer.c b/drivers/pwm/pwm-axi-timer.c
+new file mode 100644
+index 000000000000..6cabdd1672c3
+--- /dev/null
++++ b/drivers/pwm/pwm-axi-timer.c
+@@ -0,0 +1,204 @@
++/*
++ * Copyright 2017 Alvaro Gamez Machado <alvaro.gamez@hazent.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++
++struct axi_timer_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	void __iomem *regs;  /* virt. address of the control registers */
++};
++
++#define TCSR0   (0x00)
++#define TLR0    (0x04)
++#define TCR0    (0x08)
++#define TCSR1   (0x10)
++#define TLR1    (0x14)
++#define TCR1    (0x18)
++
++#define TCSR_MDT        BIT(0)
++#define TCSR_UDT        BIT(1)
++#define TCSR_GENT       BIT(2)
++#define TCSR_CAPT       BIT(3)
++#define TCSR_ARHT       BIT(4)
++#define TCSR_LOAD       BIT(5)
++#define TCSR_ENIT       BIT(6)
++#define TCSR_ENT        BIT(7)
++#define TCSR_TINT       BIT(8)
++#define TCSR_PWMA       BIT(9)
++#define TCSR_ENALL      BIT(10)
++#define TCSR_CASC       BIT(11)
++
++#define to_axi_timer_pwm_chip(_chip) \
++	container_of(_chip, struct axi_timer_pwm_chip, chip)
++
++static int axi_timer_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++				int duty_ns, int period_ns)
++{
++	struct axi_timer_pwm_chip *axi_timer = to_axi_timer_pwm_chip(chip);
++	unsigned long long c;
++	int period_cycles, duty_cycles;
++	u32 tcsr;
++
++	c = clk_get_rate(axi_timer->clk);
++
++	/* When counters are configured to count down, UDT=1 (see datasheet):
++	 * PWM_PERIOD = (TLR0 + 2) * AXI_CLOCK_PERIOD
++	 * PWM_HIGH_TIME = (TLR1 + 2) * AXI_CLOCK_PERIOD
++	 */
++	period_cycles = div64_u64(c * period_ns, NSEC_PER_SEC) - 2;
++	duty_cycles = div64_u64(c * duty_ns, NSEC_PER_SEC) - 2;
++
++	iowrite32(period_cycles, axi_timer->regs + TLR0);
++	iowrite32(duty_cycles, axi_timer->regs + TLR1);
++
++	/* Load timer values */
++	tcsr = ioread32(axi_timer->regs + TCSR0);
++	iowrite32(tcsr | TCSR_LOAD, axi_timer->regs + TCSR0);
++	iowrite32(tcsr, axi_timer->regs + TCSR0);
++
++	tcsr = ioread32(axi_timer->regs + TCSR1);
++	iowrite32(tcsr | TCSR_LOAD, axi_timer->regs + TCSR1);
++	iowrite32(tcsr, axi_timer->regs + TCSR1);
++
++	return 0;
++}
++
++static int axi_timer_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct axi_timer_pwm_chip *axi_timer = to_axi_timer_pwm_chip(chip);
++
++	/* see timer data sheet for detail
++	 * !CASC - disable cascaded operation
++	 * ENALL - enable all
++	 * PWMA - enable PWM
++	 * !TINT - don't care about interrupts
++	 * ENT- enable timer itself
++	 * !ENIT - disable interrupt
++	 * !LOAD - clear the bit to let go
++	 * ARHT - auto reload
++	 * !CAPT - no external trigger
++	 * GENT - required for PWM
++	 * UDT - set the timer as down counter
++	 * !MDT - generate mode
++	 */
++	iowrite32(TCSR_ENALL | TCSR_PWMA | TCSR_ENT | TCSR_ARHT |
++		  TCSR_GENT | TCSR_UDT, axi_timer->regs + TCSR0);
++	iowrite32(TCSR_ENALL | TCSR_PWMA | TCSR_ENT | TCSR_ARHT |
++		  TCSR_GENT | TCSR_UDT, axi_timer->regs + TCSR1);
++
++	return 0;
++}
++
++static void axi_timer_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct axi_timer_pwm_chip *axi_timer = to_axi_timer_pwm_chip(chip);
++
++	u32 tcsr;
++
++	tcsr = ioread32(axi_timer->regs + TCSR0);
++	iowrite32(tcsr & ~TCSR_PWMA, axi_timer->regs + TCSR0);
++
++	tcsr = ioread32(axi_timer->regs + TCSR1);
++	iowrite32(tcsr & ~TCSR_PWMA, axi_timer->regs + TCSR1);
++}
++
++static const struct pwm_ops axi_timer_pwm_ops = {
++	.config = axi_timer_pwm_config,
++	.enable = axi_timer_pwm_enable,
++	.disable = axi_timer_pwm_disable,
++	.owner = THIS_MODULE,
++};
++
++static int axi_timer_pwm_probe(struct platform_device *pdev)
++{
++	struct axi_timer_pwm_chip *axi_timer;
++	struct resource *res;
++	int ret;
++	u32 pwm_outputs = 0;
++
++	ret = of_property_read_u32(pdev->dev.of_node, "xlnx,pwm-outputs",
++				   &pwm_outputs);
++	if (!ret || pwm_outputs != 1) {
++		dev_warn(&pdev->dev, "invalid pwm-output (maybe this is your clock?)\n");
++		return -EINVAL;
++	}
++
++	axi_timer = devm_kzalloc(&pdev->dev, sizeof(*axi_timer), GFP_KERNEL);
++	if (!axi_timer)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	axi_timer->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(axi_timer->regs))
++		return PTR_ERR(axi_timer->regs);
++
++	axi_timer->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(axi_timer->clk))
++		return PTR_ERR(axi_timer->clk);
++
++	axi_timer->chip.dev = &pdev->dev;
++	axi_timer->chip.ops = &axi_timer_pwm_ops;
++	axi_timer->chip.npwm = 1;
++	axi_timer->chip.base = -1;
++
++	dev_info(&pdev->dev, "at 0x%08llX mapped to 0x%p\n",
++		 (unsigned long long)res->start, axi_timer->regs);
++
++	ret = pwmchip_add(&axi_timer->chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, axi_timer);
++
++	return 0;
++}
++
++static int axi_timer_pwm_remove(struct platform_device *pdev)
++{
++	struct axi_timer_pwm_chip *axi_timer = platform_get_drvdata(pdev);
++	unsigned int i;
++
++	for (i = 0; i < axi_timer->chip.npwm; i++)
++		pwm_disable(&axi_timer->chip.pwms[i]);
++
++	return pwmchip_remove(&axi_timer->chip);
++}
++
++static const struct of_device_id axi_timer_pwm_dt_ids[] = {
++	{ .compatible = "xlnx,axi-timer-2.0", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, axi_timer_pwm_dt_ids);
++
++static struct platform_driver axi_timer_pwm_driver = {
++	.driver = {
++		.name = "axi_timer-pwm",
++		.of_match_table = axi_timer_pwm_dt_ids,
++	},
++	.probe = axi_timer_pwm_probe,
++	.remove = axi_timer_pwm_remove,
++};
++module_platform_driver(axi_timer_pwm_driver);
++
++MODULE_ALIAS("platform:axi_timer-pwm");
++MODULE_AUTHOR("Alvaro Gamez Machado <alvaro.gamez@hazent.com>");
++MODULE_DESCRIPTION("AXI TIMER PWM Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.16.2
