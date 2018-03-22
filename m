@@ -1,139 +1,591 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v17 00/10] LPC: legacy ISA I/O support
-Date: Thu, 22 Mar 2018 10:38:37 +0000
-Message-ID: <334da3b2-5233-5ad3-728e-7ae95231bf01@huawei.com>
-References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
- <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v3 03/10] clk: qcom: Add CPU clock driver for msm8996
+Date: Thu, 22 Mar 2018 12:47:30 +0200
+Message-ID: <024f01d3c1cb$304eaa60$90ebff20$@codeaurora.org>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-4-git-send-email-ilialin@codeaurora.org>
+ <152148100496.242365.3846617702949655708@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321233940.GI38649@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "joe@perches.com" <joe@perches.com>, "benh@kernel.crashing.org" <benh@kernel.cras>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <152148100496.242365.3846617702949655708@swboyd.mtv.corp.google.com>
+Content-Language: en-us
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Stephen Boyd' <sboyd@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/03/2018 23:39, Bjorn Helgaas wrote:
-> On Thu, Mar 15, 2018 at 02:15:49AM +0800, John Garry wrote:
->> This patchset supports the IPMI-bt device attached to the Low-Pin-Count
->> interface implemented on Hisilicon Hip06/Hip07 SoC.
->>                         -----------
->>                         | LPC host|
->>                         |         |
->>                         -----------
->>                              |
->>                 _____________V_______________LPC
->>                   |                       |
->>                   V                       V
->>                                      ------------
->>                                      |  BT(ipmi)|
->>                                      ------------
->> ...
->
->> Gabriele Paoloni (2):
->>   PCI: Remove unused __weak attribute in pci_register_io_range()
->>   PCI: Add fwnode handler as input param of pci_register_io_range()
->>
->> John Garry (4):
->>   ACPI / scan: rename acpi_is_serial_bus_slave() to widen use
->>   ACPI / scan: do not enumerate Indirect IO host children
->>   HISI LPC: Add ACPI support
->>   MAINTAINERS: Add maintainer for HiSilicon LPC driver
->>
->> Zhichang Yuan (4):
->>   LIB: Introduce a generic PIO mapping method
->>   PCI: Apply the new generic I/O management on PCI IO hosts
->>   OF: Add missing I/O range exception for indirect-IO devices
->>   HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings
->>
->>  .../arm/hisilicon/hisilicon-low-pin-count.txt      |  33 ++
->>  MAINTAINERS                                        |   7 +
->>  drivers/acpi/pci_root.c                            |   8 +-
->>  drivers/acpi/scan.c                                |  33 +-
->>  drivers/bus/Kconfig                                |   8 +
->>  drivers/bus/Makefile                               |   2 +
->>  drivers/bus/hisi_lpc.c                             | 623 +++++++++++++++++++++
->>  drivers/of/address.c                               |  96 +++-
->>  drivers/pci/pci.c                                  |  95 +---
->>  include/acpi/acpi_bus.h                            |   2 +-
->>  include/asm-generic/io.h                           |   4 +-
->>  include/linux/logic_pio.h                          | 124 ++++
->>  include/linux/pci.h                                |   3 +-
->>  lib/Kconfig                                        |  15 +
->>  lib/Makefile                                       |   2 +
->>  lib/logic_pio.c                                    | 282 ++++++++++
->>  16 files changed, 1229 insertions(+), 108 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
->>  create mode 100644 drivers/bus/hisi_lpc.c
->>  create mode 100644 include/linux/logic_pio.h
->>  create mode 100644 lib/logic_pio.c
->
-> I applied this whole series to pci/lpc for v4.17.
->
-> I made the following whitespace and other trivial corrections.
-> Hopefully I didn't break anything.
->
 
-Hi Bjorn,
 
-Super thanks for doing this. In general the changes look ok. However a 
-build issue has appeared, below.
+> -----Original Message-----
+> From: Stephen Boyd <sboyd@kernel.org>
+> Sent: Monday, March 19, 2018 19:37
+> To: Ilia Lin <ilialin@codeaurora.org>; linux-arm-kernel@lists.infradead.org;
+> linux-arm-msm@vger.kernel.org; linux-clk@vger.kernel.org;
+> sboyd@codeaurora.org
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> rnayak@codeaurora.org; robh@kernel.org; will.deacon@arm.com;
+> amit.kucheria@linaro.org; tfinkel@codeaurora.org; ilialin@codeaurora.org;
+> nicolas.dechesne@linaro.org; celster@codeaurora.org
+> Subject: Re: [PATCH v3 03/10] clk: qcom: Add CPU clock driver for msm8996
+> 
+> Quoting Ilia Lin (2018-02-14 05:59:45)
+> > From: Rajendra Nayak <rnayak@codeaurora.org>
+> >
+> > Each of the CPU clusters (Power and Perf) on msm8996 are clocked via 2
+> > PLLs, a primary and alternate. There are also
+> > 2 Mux'es, a primary and secondary all connected together as shown
+> > below
+> >
+> >                              +-------+
+> >               XO             |       |
+> >           +------------------>0      |
+> >                              |       |
+> >                    PLL/2     | SMUX  +----+
+> >                      +------->1      |    |
+> >                      |       |       |    |
+> >                      |       +-------+    |    +-------+
+> >                      |                    +---->0      |
+> >                      |                         |       |
+> > +---------------+    |             +----------->1      | CPU clk
+> > |Primary PLL    +----+ PLL_EARLY   |           |       +------>
+> > |               +------+-----------+    +------>2 PMUX |
+> > +---------------+      |                |      |       |
+> >                        |   +------+     |   +-->3      |
+> >                        +--^+  ACD +-----+   |  +-------+
+> > +---------------+          +------+         |
+> > |Alt PLL        |                           |
+> > |               +---------------------------+
+> > +---------------+         PLL_EARLY
+> 
+> Thanks for the diagram. Please also put it at the top of the driver file.
+> 
+> >
+> > The primary PLL is what drives the CPU clk, except for times when we
+> > are reprogramming the PLL itself (for rate changes) when we
+> > temporarily switch to an alternate PLL. A subsequent patch adds
+> > support to switch between primary and alternate PLL during rate
+> > changes.
+> >
+> > The primary PLL operates on a single VCO range, between 600Mhz and
+> > 3Ghz. However the CPUs do support OPPs with frequencies between
+> 300Mhz
+> > and 600Mhz. In order to support running the CPUs at those frequencies
+> > we end up having to lock the PLL at twice the rate and drive the CPU
+> > clk via the PLL/2 output and SMUX.
+> >
+> > So for frequencies above 600Mhz we follow the following path  Primary
+> > PLL --> PLL_EARLY --> PMUX(1) --> CPU clk and for frequencies between
+> > 300Mhz and 600Mhz we follow
+> 
+> Capitalize 'h' in units please.
+> 
+> >  Primary PLL --> PLL/2 --> SMUX(1) --> PMUX(0) --> CPU clk Support for
+> > this is added in a subsequent patch as well.
+> >
+> > ACD stands for Adaptive Clock Distribution and is used to detect
+> > voltage droops. We do not add support for ACD as yet.
+> > This can be added at a later point as needed.
+> >
+> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > ---
+> >  drivers/clk/qcom/Kconfig        |   8 +
+> >  drivers/clk/qcom/Makefile       |   1 +
+> >  drivers/clk/qcom/clk-cpu-8996.c | 409
+> > ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 418 insertions(+)
+> >  create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+> >
+> > diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig index
+> > fbf4532..3274877 100644
+> > --- a/drivers/clk/qcom/Kconfig
+> > +++ b/drivers/clk/qcom/Kconfig
+> > @@ -226,3 +226,11 @@ config SPMI_PMIC_CLKDIV
+> >           Technologies, Inc. SPMI PMIC. It configures the frequency of
+> >           clkdiv outputs of the PMIC. These clocks are typically wired
+> >           through alternate functions on GPIO pins.
+> > +
+> > +config MSM_APCC_8996
+> > +       tristate "MSM8996 CPU Clock Controller"
+> > +       depends on COMMON_CLK_QCOM
+> > +       help
+> > +         Support for the CPU clock controller on msm8996 devices.
+> > +         Say Y if you want to support CPU clock scaling using CPUfreq
+> > +         drivers for dyanmic power management.
+> 
+> Sort?
+> 
+> > diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+> > index 230332c..57b38ba 100644
+> > --- a/drivers/clk/qcom/Makefile
+> > +++ b/drivers/clk/qcom/Makefile
+> > @@ -33,6 +33,7 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
+> >  obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
+> >  obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
+> >  obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
+> > +obj-$(CONFIG_MSM_APCC_8996) += clk-cpu-8996.o
+> 
+> This doesn't look sorted.
+> 
+> >  obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
+> >  obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
+> >  obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o diff --git
+> > a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
+> > new file mode 100644 index 0000000..42489f1
+> > --- /dev/null
+> > +++ b/drivers/clk/qcom/clk-cpu-8996.c
+> > @@ -0,0 +1,409 @@
+> > +/*
+> > + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> 
+> Can we get the SPDX tags here please?
+> 
+> > +
+> > +#include <linux/clk.h>
+> 
+> clk-provider.h?
+> 
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#include "clk-alpha-pll.h"
+> 
+> #include "clk-regmap.h"
+> 
+> > +
+> > +#define VCO(a, b, c) { \
+> > +       .val = a,\
+> > +       .min_freq = b,\
+> > +       .max_freq = c,\
+> > +}
+> 
+> Can this define go into whatever PLL header file defines the struct?
+> 
+> > +
+> > +#define DIV_2_INDEX            0
+> > +#define PLL_INDEX              1
+> > +#define ACD_INDEX              2
+> > +#define ALT_INDEX              3
+> > +
+> > +static const u8 prim_pll_regs[PLL_OFF_MAX_REGS] = {
+> > +       [PLL_OFF_L_VAL] = 0x04,
+> > +       [PLL_OFF_ALPHA_VAL] = 0x08,
+> > +       [PLL_OFF_USER_CTL] = 0x10,
+> > +       [PLL_OFF_CONFIG_CTL] = 0x18,
+> > +       [PLL_OFF_CONFIG_CTL_U] = 0x1C,
+> 
+> Please use lowercase hex throughout. Consistency is key!
+> 
+> > +       [PLL_OFF_TEST_CTL] = 0x20,
+> > +       [PLL_OFF_TEST_CTL_U] = 0x24,
+> > +       [PLL_OFF_STATUS] = 0x28,
+> > +};
+> > +
+> > +static const u8 alt_pll_regs[PLL_OFF_MAX_REGS] = {
+> > +       [PLL_OFF_L_VAL] = 0x04,
+> > +       [PLL_OFF_ALPHA_VAL] = 0x08,
+> > +       [PLL_OFF_ALPHA_VAL_U] = 0x0c,
+> > +       [PLL_OFF_USER_CTL] = 0x10,
+> > +       [PLL_OFF_USER_CTL_U] = 0x14,
+> > +       [PLL_OFF_CONFIG_CTL] = 0x18,
+> > +       [PLL_OFF_TEST_CTL] = 0x20,
+> > +       [PLL_OFF_TEST_CTL_U] = 0x24,
+> > +       [PLL_OFF_STATUS] = 0x28,
+> > +};
+> > +
+> > +/* PLLs */
+> > +
+> > +static const struct alpha_pll_config hfpll_config = {
+> > +       .l = 60,
+> > +       .config_ctl_val = 0x200d4828,
+> > +       .config_ctl_hi_val = 0x006,
+> > +       .pre_div_mask = BIT(12),
+> > +       .post_div_mask = 0x3 << 8,
+> > +       .main_output_mask = BIT(0),
+> > +       .early_output_mask = BIT(3),
+> > +};
+> > +
+> > +static struct clk_alpha_pll perfcl_pll = {
+> > +       .offset = 0x80000,
+> > +       .regs = prim_pll_regs,
+> > +       .flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_FSM_MODE,
+> > +       .clkr.hw.init = &(struct clk_init_data){
+> > +               .name = "perfcl_pll",
+> > +               .parent_names = (const char *[]){ "xo" },
+> > +               .num_parents = 1,
+> > +               .ops = &clk_alpha_pll_huayra_ops,
+> > +       },
+> > +};
+> > +
+> > +static struct clk_alpha_pll pwrcl_pll = {
+> > +       .offset = 0x0,
+> > +       .regs = prim_pll_regs,
+> > +       .flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_FSM_MODE,
+> > +       .clkr.hw.init = &(struct clk_init_data){
+> > +               .name = "pwrcl_pll",
+> > +               .parent_names = (const char *[]){ "xo" },
+> > +               .num_parents = 1,
+> > +               .ops = &clk_alpha_pll_huayra_ops,
+> > +       },
+> > +};
+> > +
+> > +static const struct pll_vco alt_pll_vco_modes[] = {
+> > +       VCO(3,  250000000,  500000000),
+> > +       VCO(2,  500000000,  750000000),
+> > +       VCO(1,  750000000, 1000000000),
+> > +       VCO(0, 1000000000, 2150400000), };
+> > +
+> > +static const struct alpha_pll_config altpll_config = {
+> > +       .l = 16,
+> > +       .vco_val = 0x3 << 20,
+> > +       .vco_mask = 0x3 << 20,
+> > +       .config_ctl_val = 0x4001051b,
+> > +       .post_div_mask = 0x3 << 8,
+> > +       .post_div_val = 0x1,
+> > +       .main_output_mask = BIT(0),
+> > +       .early_output_mask = BIT(3),
+> > +};
+> > +
+> > +static struct clk_alpha_pll perfcl_alt_pll = {
+> > +       .offset = 0x80100,
+> > +       .regs = alt_pll_regs,
+> > +       .vco_table = alt_pll_vco_modes,
+> > +       .num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+> > +       .flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+> > +       .clkr.hw.init = &(struct clk_init_data) {
+> > +               .name = "perfcl_alt_pll",
+> > +               .parent_names = (const char *[]){ "xo" },
+> > +               .num_parents = 1,
+> > +               .ops = &clk_alpha_pll_hwfsm_ops,
+> > +       },
+> > +};
+> > +
+> > +static struct clk_alpha_pll pwrcl_alt_pll = {
+> > +       .offset = 0x100,
+> > +       .regs = alt_pll_regs,
+> > +       .vco_table = alt_pll_vco_modes,
+> > +       .num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+> > +       .flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+> > +       .clkr.hw.init = &(struct clk_init_data) {
+> > +               .name = "pwrcl_alt_pll",
+> > +               .parent_names = (const char *[]){ "xo" },
+> > +               .num_parents = 1,
+> > +               .ops = &clk_alpha_pll_hwfsm_ops,
+> > +       },
+> > +};
+> > +
+> > +/* Mux'es */
+> > +
+> > +struct clk_cpu_8996_mux {
+> > +       u32     reg;
+> > +       u32     shift;
+> 
+> u8 shift?
+> 
+> > +       u32     width;
+> 
+> u8 width?
+> 
+> > +       struct clk_hw   *pll;
+> > +       struct clk_regmap clkr;
+> > +};
+> > +
+> > +static inline
+> > +struct clk_cpu_8996_mux *to_clk_cpu_8996_mux_hw(struct clk_hw
+> *hw) {
+> > +       return container_of(to_clk_regmap(hw), struct
+> > +clk_cpu_8996_mux, clkr); }
+> > +
+> > +static u8 clk_cpu_8996_mux_get_parent(struct clk_hw *hw) {
+> > +       unsigned int val;
+> > +       struct clk_regmap *clkr = to_clk_regmap(hw);
+> > +       struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+> > +       unsigned int mask = GENMASK(cpuclk->width - 1, 0);
+> > +
+> > +       regmap_read(clkr->regmap, cpuclk->reg, &val);
+> > +
+> > +       val >>= cpuclk->shift;
+> > +       val &= mask;
+> > +
+> > +       return val;
+> 
+> return val & mask;
+> 
+> > +}
+> > +
+> > +static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index) {
+> > +       unsigned int val;
+> 
+> u32 val?
+> 
+> > +       struct clk_regmap *clkr = to_clk_regmap(hw);
+> > +       struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+> > +       unsigned int mask = GENMASK(cpuclk->width + cpuclk->shift - 1,
+> > +                                   cpuclk->shift);
+> > +
+> > +       val = index;
+> > +       val <<= cpuclk->shift;
+> > +
+> > +       return regmap_update_bits(clkr->regmap, cpuclk->reg, mask,
+> > +val); }
+> > +
+> > +static int
+> > +clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, struct
+> > +clk_rate_request *req) {
+> > +       struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+> > +       struct clk_hw *parent = cpuclk->pll;
+> > +
+> > +       if (!cpuclk->pll)
+> > +               return -EINVAL;
+> 
+> Does this happen?
+> 
+> > +
+> > +       req->best_parent_rate = clk_hw_round_rate(parent, req->rate);
+> > +       req->best_parent_hw = parent;
+> 
+> Is the parent index always the same? Perhaps just call
+> clk_hw_get_parent_by_index() then instead of adding a pointer to the
+> clk_cpu_8996_mux.
+> 
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +const struct clk_ops clk_cpu_8996_mux_ops = {
+> > +       .set_parent = clk_cpu_8996_mux_set_parent,
+> > +       .get_parent = clk_cpu_8996_mux_get_parent,
+> > +       .determine_rate = clk_cpu_8996_mux_determine_rate, };
+> [...]
+> > +
+> > +static struct clk_cpu_8996_mux pwrcl_pmux = {
+> > +       .reg = 0x40,
+> > +       .shift = 0,
+> > +       .width = 2,
+> > +       .pll = &pwrcl_pll.clkr.hw,
+> > +       .clkr.hw.init = &(struct clk_init_data) {
+> > +               .name = "pwrcl_pmux",
+> > +               .parent_names = (const char *[]){
+> > +                       "pwrcl_smux",
+> > +                       "pwrcl_pll",
+> > +                       "pwrcl_pll_acd",
+> > +                       "pwrcl_alt_pll",
+> > +               },
+> > +               .num_parents = 4,
+> > +               .ops = &clk_cpu_8996_mux_ops,
+> > +               .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> > +       },
+> > +};
+> > +
+> > +static struct clk_cpu_8996_mux perfcl_pmux = {
+> > +       .reg = 0x80040,
+> > +       .shift = 0,
+> > +       .width = 2,
+> > +       .pll = &perfcl_pll.clkr.hw,
+> > +       .clkr.hw.init = &(struct clk_init_data) {
+> > +               .name = "perfcl_pmux",
+> > +               .parent_names = (const char *[]){
+> > +                       "perfcl_smux",
+> > +                       "perfcl_pll",
+> > +                       "perfcl_pll_acd",
+> > +                       "perfcl_alt_pll",
+> > +               },
+> > +               .num_parents = 4,
+> > +               .ops = &clk_cpu_8996_mux_ops,
+> > +               .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> 
+> Not sure CLK_IS_CRITICAL is the right mode. Perhaps CLK_IGNORE_UNUSED
+> for now? We don't want to force XO to stay on forever here.
+> 
+> > +       },
+> > +};
+> > +
+> > +static const struct regmap_config cpu_msm8996_regmap_config = {
+> > +       .reg_bits               = 32,
+> > +       .reg_stride             = 4,
+> > +       .val_bits               = 32,
+> > +       .max_register           = 0x80210,
+> > +       .fast_io                = true,
+> > +       .val_format_endian      = REGMAP_ENDIAN_LITTLE,
+> > +};
+> > +
+> > +static const struct of_device_id match_table[] = {
+> 
+> Move this next to driver structure and give it a more specific name.
+> 
+> > +       { .compatible = "qcom-msm8996-apcc" },
+> 
+> Bad compatible? Should be qcom,msm8996-apcc?
+> 
+> > +       {}
+> > +};
+> > +
+> > +struct clk_regmap *clks[] = {
+> > +       /* PLLs */
+> > +       &perfcl_pll.clkr,
+> > +       &pwrcl_pll.clkr,
+> > +       &perfcl_alt_pll.clkr,
+> > +       &pwrcl_alt_pll.clkr,
+> > +       /* MUXs */
+> > +       &perfcl_smux.clkr,
+> > +       &pwrcl_smux.clkr,
+> > +       &perfcl_pmux.clkr,
+> > +       &pwrcl_pmux.clkr,
+> 
+> Please drop useless comments inside this array.
+> 
+> > +};
+> > +
+> > +struct clk_hw_clks {
+> > +       unsigned int num;
+> > +       struct clk_hw *hws[];
+> > +};
+> 
+> Please just NULL terminate the list of clk_hw pointers, or keep the size
+> around instead.
+> 
+> > +
+> > +static int
+> > +qcom_cpu_clk_msm8996_register_clks(struct device *dev, struct
+> clk_hw_clks *hws,
+> > +                                  struct regmap *regmap) {
+> > +       int i, ret;
+> > +
+> > +       hws->hws[0] = clk_hw_register_fixed_factor(dev, "perfcl_pll_main",
+> > +                                                  "perfcl_pll",
+> > +                                                  CLK_SET_RATE_PARENT, 1, 2);
+> > +       perfcl_smux.pll = hws->hws[0];
+> > +
+> > +       hws->hws[1] = clk_hw_register_fixed_factor(dev, "pwrcl_pll_main",
+> > +                                                  "pwrcl_pll",
+> > +                                                  CLK_SET_RATE_PARENT, 1, 2);
+> > +       pwrcl_smux.pll = hws->hws[1];
+> > +
+> > +       hws->num = 2;
+> 
+> Maybe just open code the fixed factor clk registration? Then the
+> devm_clk_hw_register() function can be used on those static structs to make
+> removal simpler.
 
-I retested your pci/lpc branch (with the build fix), and it seems fine.
+I will have to change the clk_hw_unregister_fixed_rate() as well then, right? This will be an API change.
 
-BTW, I am also testing with a "Serial controller: MosChip Semiconductor 
-Technology Ltd. PCIe 9912 Multi-I/O Controller" in loopback mode to 
-ensure PCI host IO space is not broken and this is ok.
-
-Thanks again, and to everyone who has helped with this patchset!
-
-John
-
->
-> --- changelogs.orig	2018-03-21 18:37:47.209217927 -0500
-> +++ changelogs	2018-03-21 18:37:35.993074570 -0500
-> @@ -1,29 +1,31 @@
-> -commit cc88cacce96a
-> +commit eb3a2ff7e72e
->  Author: John Garry <john.garry@huawei.com>
->  Date:   Thu Mar 15 02:15:59 2018 +0800
->
-
-[ ... ]
-
->
-> @@ -134,21 +132,20 @@ static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
->   * logic_pio_to_hwaddr - translate logical PIO to HW address
->   * @pio: logical PIO value
->   *
-> - * Returns HW address if valid, ~0 otherwise
-> + * Returns HW address if valid, ~0 otherwise.
->   *
-> - * Translate the input logical pio to the corresponding hardware address.
-> - * The input pio should be unique in the whole logical PIO space.
-> + * Translate the input logical PIO to the corresponding hardware address.
-> + * The input PIO should be unique in the whole logical PIO space.
->   */
->  resource_size_t logic_pio_to_hwaddr(unsigned long pio)
->  {
->  	struct logic_pio_hwaddr *range;
-> -	resource_size_t hwaddr = (resource_size_t)~0;
->
->  	range = find_io_range(pio);
->  	if (range)
-> -		hwaddr = range->hw_start + pio - range->io_start;
-> +		return = range->hw_start + pio - range->io_start;
-
-Please remove '='
-
->
-> -	return hwaddr;
-> +	return (resource_size_t)~0;
->  }
->
->  /**
-> @@ -159,15 +156,14 @@ resource_size_t logic_pio_to_hwaddr(unsigned long pio)
->   *
->   * Returns Logical PIO value if successful, ~0UL otherwise
->   */
+> 
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(clks); i++) {
+> > +               ret = devm_clk_register_regmap(dev, clks[i]);
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> > +       clk_alpha_pll_configure(&perfcl_pll, regmap, &hfpll_config);
+> > +       clk_alpha_pll_configure(&pwrcl_pll, regmap, &hfpll_config);
+> > +       clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
+> > +       clk_alpha_pll_configure(&pwrcl_alt_pll, regmap,
+> > + &altpll_config);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device
+> > +*pdev) {
+> > +       int ret;
+> > +       void __iomem *base;
+> > +       struct resource *res;
+> > +       struct regmap *regmap_cpu;
+> 
+> Just call it regmap please.
+> 
+> > +       struct clk_hw_clks *hws;
+> > +       struct clk_hw_onecell_data *data;
+> > +       struct device *dev = &pdev->dev;
+> > +       struct device_node *node = dev->of_node;
+> > +
+> > +       data = devm_kzalloc(dev, sizeof(*data) + 2 * sizeof(struct clk_hw *),
+> > +                           GFP_KERNEL);
+> > +       if (!data)
+> > +               return -ENOMEM;
+> > +
+> > +       hws = devm_kzalloc(dev, sizeof(*hws) + 2 * sizeof(struct clk_hw *),
+> > +                          GFP_KERNEL);
+> > +       if (!hws)
+> > +               return -ENOMEM;
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       base = devm_ioremap_resource(dev, res);
+> > +       if (IS_ERR(base))
+> > +               return PTR_ERR(base);
+> > +
+> > +       regmap_cpu = devm_regmap_init_mmio(dev, base,
+> > +                                          &cpu_msm8996_regmap_config);
+> > +       if (IS_ERR(regmap_cpu))
+> > +               return PTR_ERR(regmap_cpu);
+> > +
+> > +       ret = qcom_cpu_clk_msm8996_register_clks(dev, hws, regmap_cpu);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       data->hws[0] = &pwrcl_pmux.clkr.hw;
+> > +       data->hws[1] = &perfcl_pmux.clkr.hw;
+> > +
+> > +       data->num = 2;
+> > +
+> > +       platform_set_drvdata(pdev, hws);
+> > +
+> > +       return of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
+> > +data); }
+> > +
+> > +static int qcom_cpu_clk_msm8996_driver_remove(struct
+> platform_device
+> > +*pdev) {
+> > +       int i;
+> > +       struct device *dev = &pdev->dev;
+> > +       struct clk_hw_clks *hws = platform_get_drvdata(pdev);
+> > +
+> > +       for (i = 0; i < hws->num; i++)
+> > +               clk_hw_unregister_fixed_rate(hws->hws[i]);
+> > +
+> > +       of_clk_del_provider(dev->of_node);
+> 
+> Use devm_of_clk_add_hw_provider() instead.
+> 
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static struct platform_driver qcom_cpu_clk_msm8996_driver = {
+> > +       .probe = qcom_cpu_clk_msm8996_driver_probe,
+> > +       .remove = qcom_cpu_clk_msm8996_driver_remove,
+> > +       .driver = {
+> > +               .name = "qcom-msm8996-apcc",
+> > +               .of_match_table = match_table,
+> > +       },
+> > +};
+> > +
+> > +module_platform_driver(qcom_cpu_clk_msm8996_driver);
+> > +
+> > +MODULE_ALIAS("platform:msm8996-apcc");
+> > +MODULE_DESCRIPTION("QCOM MSM8996 CPU clock Driver");
+> 
+> Not sure why Driver is capitalized and clock is not.
