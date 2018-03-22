@@ -1,46 +1,52 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 4/6] dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt
- to rockchip-pcie-host.txt
-Date: Thu, 22 Mar 2018 19:43:00 +0800
-Message-ID: <1521718980-160283-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1521718925-160084-1-git-send-email-shawn.lin@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1521718925-160084-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v2 1/8] DT: mfd: renesas,rzn1-sysctrl: document RZ/N1 sysctrl node
+Date: Thu, 22 Mar 2018 11:44:38 +0000
+Message-ID: <1521719091-25157-2-git-send-email-michel.pollet@bp.renesas.com>
+References: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just make it more obvious that this documentation is referenced for
-adding Rockchip PCIe controller as root complex mode.
+The Renesas RZ/N1 Family (Part #R9A06G0xx) has a multi-function
+system controller. This documents the node used to encapsulate
+it's sub drivers.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 ---
+ .../bindings/mfd/renesas,rzn1-sysctrl.txt          | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
 
-Changes in v4: None
-Changes in v2:
-- remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
-
- .../devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-rename to Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
+diff --git a/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt b/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+new file mode 100644
+index 0000000..5aaef43
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+@@ -0,0 +1,22 @@
++DT bindings for the Renesas RZ-N1 System Controller
++
++== System Controller Node ==
++
++The system controller node currently only hosts a single sub-driver to handle
++the rebooting of the CPU. Eventually it will host the clock driver, SMP
++start handler, watchdog etc.
++
++See renesas,rzn1-reboot.txt for further details.
++
++Bindings:
+++ Optional:
++	compatible = "renesas,r9a06g032-sysctrl";
+++ Required:
++	compatible = "renesas,rzn1-sysctrl";
++
++Example:
++	sysctrl: sysctrl@4000c000 {
++		compatible = "renesas,r9a06g032-sysctrl",
++			"renesas,rzn1-sysctrl", "syscon", "simple-mfd";
++		reg = <0x4000c000 0x1000>;
++	};
 -- 
-1.9.1
+2.7.4
