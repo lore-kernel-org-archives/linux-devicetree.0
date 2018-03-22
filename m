@@ -1,107 +1,71 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5,
-	5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Thu, 22 Mar 2018 21:48:05 +0100
-Message-ID: <20180322204804.GA26871@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v5] ARM: dts: wheat: Fix ADV7513 address usage
+Date: Thu, 22 Mar 2018 20:51:22 +0000
+Message-ID: <1521751882-7996-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0466700040123398249=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0466700040123398249==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Content-Disposition: inline
-
-
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Add sound support to Motorola Droid 4 using simple-soundcard
-> and CPCAP's audio codec. This does not yet correctly represent
-> the whole audio routing, since McBSP3 is also connected to
-> Bluetooth and MDM6600 modem (and probably also 4G modem).
-> These extra DAI links are not yet supported and have not been
-> tested.
-
-I applied the series on top v4.16-rc5, but I can't seem to get it
-to work:
-
-root@devuan:/sys/devices/platform/usb-phy@1# cat /proc/asound/cards
- 0 [H58006000encode]: HDMI_58006000_e - HDMI 58006000.encoder
-                       HDMI 58006000.encoder
-root@devuan:/sys/devices/platform/usb-phy@1#
-[   10.819122] ALSA device list:
-[   10.832641]   #0: HDMI 58006000.encoder
-[   10.842407] Waiting 10 sec before mounting root device...
-
-I think I should have the required options enabled...=20
-
-CONFIG_SND_OMAP_SOC=3Dy
-CONFIG_SND_OMAP_SOC_DMIC=3Dy
-CONFIG_SND_OMAP_SOC_MCBSP=3Dy
-CONFIG_SND_OMAP_SOC_MCPDM=3Dy
-CONFIG_SND_OMAP_SOC_HDMI_AUDIO=3Dy
-# CONFIG_SND_OMAP_SOC_RX51 is not set
-# CONFIG_SND_OMAP_SOC_N9 is not set
-CONFIG_SND_OMAP_SOC_OMAP_TWL4030=3Dy
-CONFIG_SND_OMAP_SOC_OMAP_ABE_TWL6040=3Dy
-# CONFIG_SND_SOC_IMG is not set
-
-#
-# STMicroelectronics STM32 SOC audio support
-#
-# CONFIG_SND_SOC_XTFPGA_I2S is not set
-# CONFIG_ZX_TDM is not set
-CONFIG_SND_SOC_I2C_AND_SPI=3Dy
-CONFIG_SND_SOC_CPCAP=3Dy
-
-Any ideas?
-
-Thanks,
-							Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq0FoQACgkQMOfwapXb+vLRDQCfdMCTN0Ps3wd+sy9Si7gxD71x
-r7YAoLAOf9meT+w8TFBgSlMMz5EuLHDg
-=X8kF
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
-
---===============0466700040123398249==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0466700040123398249==--
+VGhlIHI4YTc3OTIgV2hlYXQgYm9hcmQgaGFzIHR3byBBRFY3NTEzIGRldmljZXMgc2hhcmluZyBh
+IHNpbmdsZSBJMkMKYnVzLCBob3dldmVyIGluIGxvdyBwb3dlciBtb2RlIHRoZSBBRFY3NTEzIHdp
+bGwgcmVzZXQgaXQncyBzbGF2ZSBtYXBzIHRvCnVzZSB0aGUgaGFyZHdhcmUgZGVmaW5lZCBkZWZh
+dWx0IGFkZHJlc3Nlcy4KClRoZSBBRFY3NTExIGRyaXZlciB3YXMgYWRhcHRlZCB0byBhbGxvdyB0
+aGUgdHdvIGRldmljZXMgdG8gYmUgcmVnaXN0ZXJlZApjb3JyZWN0bHkgLSBidXQgaXQgZGlkIG5v
+dCB0YWtlIGludG8gYWNjb3VudCB0aGUgZmF1bHQgd2hlcmVieSB0aGUKZGV2aWNlcyByZXNldCB0
+aGUgYWRkcmVzc2VzLgoKVGhpcyByZXN1bHRzIGluIGFuIGFkZHJlc3MgY29uZmxpY3QgYmV0d2Vl
+biB0aGUgZGV2aWNlIHVzaW5nIHRoZSBkZWZhdWx0CmFkZHJlc3NlcywgYW5kIHRoZSBvdGhlciBk
+ZXZpY2UgaWYgaXQgaXMgaW4gbG93LXBvd2VyLW1vZGUuCgpSZXBhaXIgdGhpcyBpc3N1ZSBieSBt
+b3ZpbmcgYm90aCBkZXZpY2VzIGF3YXkgZnJvbSB0aGUgZGVmYXVsdCBhZGRyZXNzCmRlZmluaXRp
+b25zLgoKU2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVz
+YXNAaWRlYXNvbmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJl
+bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KLS0tCnYyOgogLSBBZGRpdGlvbiB0byBzZXJp
+ZXMKCnYzOgogLSBTcGxpdCBtYXAgcmVnaXN0ZXIgYWRkcmVzc2VzIGludG8gaW5kaXZpZHVhbCBk
+ZWNsYXJhdGlvbnMuCgp2NDoKIC0gTm9ybWFsaXNlIEkyQyB1c2FnZQoKdjU6CiAtIE5vIGNoYW5n
+ZSBmcm9tIHY0IGV4Y2VwdCB0byByZXBvc3QgYW5kIGRyb3AgdGhlIFtSRlRdIG5vdyB0aGF0IGl0
+J3MgdGVzdGVkCgoKVGVzdGluZyBvbiBhIHdoZWF0IGJvYXJkIHNob3dzIHRoZSBhZGRyZXNzZXMg
+Y29ycmVjdGx5IGFzc2lnbmVkLCBhbmQgdGhlCmRlZmF1bHQgYWRkcmVzc2VzICgweDM4LCAweDNl
+LCAweDNmIHdoaWNoIHdvdWxkIG90aGVyd2lzZSBjb25mbGljdCkgYXJlCnNob3duIGFzIGFjdGl2
+ZWx5IHJldHVybmluZyBkYXRhIGluIGxvdyBwb3dlciBtb2RlIGR1cmluZyB0aGUgc2Nhbi4KKHRo
+ZXkgcmV0dXJuIDApCgogICAgIDAgIDEgIDIgIDMgIDQgIDUgIDYgIDcgIDggIDkgIGEgIGIgIGMg
+IGQgIGUgIGYKMDA6ICAgICAgICAgIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0t
+IC0tCjEwOiAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQoy
+MDogLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gVVUgLS0gLS0gLS0gVVUgLS0gLS0KMzA6IC0t
+IC0tIC0tIC0tIC0tIC0tIC0tIC0tIDM4IFVVIC0tIC0tIC0tIFVVIDNlIDNmCjQwOiAtLSAtLSAt
+LSAtLSAtLSAtLSAtLSAtLSAtLSBVVSAtLSAtLSAtLSBVVSAtLSAtLQo1MDogLS0gLS0gLS0gLS0g
+LS0gLS0gLS0gLS0gLS0gVVUgLS0gLS0gLS0gVVUgLS0gLS0KNjA6IC0tIC0tIC0tIC0tIC0tIC0t
+IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCjcwOiAtLSAtLSAtLSAtLSAtLSAtLSAtLSAt
+LQotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTItd2hlYXQuZHRzIHwgMTIgKysrKysrKysr
+Ky0tCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3I4YTc3OTItd2hlYXQuZHRzCmluZGV4IDI5M2I5ZTNiM2U3MC4uM2U5ZjcwZTg3
+YTYwIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cworKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cwpAQCAtMjQ1LDkgKzI0NSwxNiBA
+QAogCXN0YXR1cyA9ICJva2F5IjsKIAljbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsKIAorCS8q
+CisJICogVGhlIGFkdjc1eHggcmVzZXRzIGl0cyBhZGRyZXNzZXMgdG8gZGVmYXVsdHMgZHVyaW5n
+IGxvdyBwb3dlciBwb3dlcgorCSAqIG1vZGUuIEJlY2F1c2Ugd2UgaGF2ZSB0d28gQURWNzUxMyBk
+ZXZpY2VzIG9uIHRoZSBzYW1lIGJ1cywgd2UgbXVzdAorCSAqIGNoYW5nZSBib3RoIG9mIHRoZW0g
+YXdheSBmcm9tIHRoZSBkZWZhdWx0cyBzbyB0aGF0IHRoZXkgZG8gbm90CisJICogY29uZmxpY3Qu
+CisJICovCiAJaGRtaUAzZCB7CiAJCWNvbXBhdGlibGUgPSAiYWRpLGFkdjc1MTMiOwotCQlyZWcg
+PSA8MHgzZD47CisJCXJlZyA9IDwweDNkPiwgPDB4MmQ+LCA8MHg0ZD4sIDwweDVkPjsKKwkJcmVn
+LW5hbWVzID0gIm1haW4iLCAiY2VjIiwgImVkaWQiLCAicGFja2V0IjsKIAogCQlhZGksaW5wdXQt
+ZGVwdGggPSA8OD47CiAJCWFkaSxpbnB1dC1jb2xvcnNwYWNlID0gInJnYiI7CkBAIC0yNzcsNyAr
+Mjg0LDggQEAKIAogCWhkbWlAMzkgewogCQljb21wYXRpYmxlID0gImFkaSxhZHY3NTEzIjsKLQkJ
+cmVnID0gPDB4Mzk+OworCQlyZWcgPSA8MHgzOT4sIDwweDI5PiwgPDB4NDk+LCA8MHg1OT47CisJ
+CXJlZy1uYW1lcyA9ICJtYWluIiwgImNlYyIsICJlZGlkIiwgInBhY2tldCI7CiAKIAkJYWRpLGlu
+cHV0LWRlcHRoID0gPDg+OwogCQlhZGksaW5wdXQtY29sb3JzcGFjZSA9ICJyZ2IiOwotLSAKMi43
+LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
