@@ -1,132 +1,105 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 2/7] reset: qcom: AOSS (always on subsystem) reset
- controller
-Date: Fri, 23 Mar 2018 04:02:53 +0530
-Message-ID: <386f26c8-2d7f-2066-758f-7bf1498cdaa6@codeaurora.org>
-References: <1521019283-32212-1-git-send-email-sibis@codeaurora.org>
- <1521019283-32212-3-git-send-email-sibis@codeaurora.org>
- <20180318224511.GD5626@tuxbook-pro>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv5,5/5] ARM: dts: omap4-droid4: add soundcard
+Date: Fri, 23 Mar 2018 00:48:32 +0100
+Message-ID: <20180322234832.o24ut5ahon46mdu4@earth.universe>
+References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
+ <20180322204804.GA26871@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y5ecaf34wtg5q27y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180318224511.GD5626@tuxbook-pro>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180322204804.GA26871@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-Thanks for the review.
 
-On 03/19/2018 04:15 AM, Bjorn Andersson wrote:
-> On Wed 14 Mar 02:21 PDT 2018, Sibi S wrote:
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index 7fc7769..d06bd1d 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -81,6 +81,16 @@ config RESET_PISTACHIO
->>   	help
->>   	  This enables the reset driver for ImgTec Pistachio SoCs.
->>   
->> +config RESET_QCOM_AOSS
->> +	bool "Qcom AOSS Reset Driver"
->> +	depends on ARCH_QCOM || COMPILE_TEST
->> +	select MFD_SYSCON
-> 
-> Drop syscon
-> 
+--y5ecaf34wtg5q27y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-will drop it
+Hi Pavel,
 
->> +	help
->> +	  This enables the AOSS (always on subsystem) reset driver
->> +	  for Qualcomm SDM845 SoCs. Say Y if you want to control
->> +	  reset signals provided by AOSS for Modem, Venus, ADSP,
->> +	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
->> +
-> [..]
->> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-> [..]
->> +static const struct regmap_config sdm845_aoss_regmap_config = {
->> +	.name		= "aoss-reset",
->> +	.reg_bits	= 32,
->> +	.reg_stride	= 4,
->> +	.val_bits	= 32,
->> +	.max_register	= 0x20000,
->> +	.fast_io	= true,
->> +};
-> 
-> Is there a particular reason why you're setting up a regmap and not just
-> operate on the ioremap region directly with readl/writel? It would save
-> you a few lines of code and some runtime memory.
-> 
+On Thu, Mar 22, 2018 at 09:48:05PM +0100, Pavel Machek wrote:
+> Hi!
+>=20
+> > Add sound support to Motorola Droid 4 using simple-soundcard
+> > and CPCAP's audio codec. This does not yet correctly represent
+> > the whole audio routing, since McBSP3 is also connected to
+> > Bluetooth and MDM6600 modem (and probably also 4G modem).
+> > These extra DAI links are not yet supported and have not been
+> > tested.
+>=20
+> I applied the series on top v4.16-rc5, but I can't seem to get it
+> to work:
+>=20
+> root@devuan:/sys/devices/platform/usb-phy@1# cat /proc/asound/cards
+>  0 [H58006000encode]: HDMI_58006000_e - HDMI 58006000.encoder
+>                        HDMI 58006000.encoder
+> root@devuan:/sys/devices/platform/usb-phy@1#
+> [   10.819122] ALSA device list:
+> [   10.832641]   #0: HDMI 58006000.encoder
+> [   10.842407] Waiting 10 sec before mounting root device...
+>=20
+> I think I should have the required options enabled...=20
+>=20
+> CONFIG_SND_OMAP_SOC=3Dy
+> CONFIG_SND_OMAP_SOC_DMIC=3Dy
+> CONFIG_SND_OMAP_SOC_MCBSP=3Dy
+> CONFIG_SND_OMAP_SOC_MCPDM=3Dy
+> CONFIG_SND_OMAP_SOC_HDMI_AUDIO=3Dy
 
-The idea here is to reuse the driver in modified configuration as
-pdc_sync restart controller which is to be used for adsp_pil. PDC sync
-reset register is a single register with multiple reset lines hence
-would warrant setting up a regmap. I can remove these changes and add
-them when I add pdc_sync reset controller though.
+That's the SoC (OMAP) side.
 
->> +
->> +static const struct qcom_aoss_reset_map sdm845_aoss_resets[] = {
->> +	[AOSS_CC_MSS_RESTART] = { 0x0, 0 },
->> +	[AOSS_CC_CAMSS_RESTART] = { 0x1000, 0 },
->> +	[AOSS_CC_VENUS_RESTART] = { 0x2000, 0 },
->> +	[AOSS_CC_GPU_RESTART] = { 0x3000, 0 },
->> +	[AOSS_CC_DISPSS_RESTART] = { 0x4000, 0 },
->> +	[AOSS_CC_WCSS_RESTART] = { 0x10000, 0 },
->> +	[AOSS_CC_LPASS_RESTART] = { 0x20000, 0 },
-> 
-> Do you have a case where bit != 0? If not please drop the bit until it's
-> necessary.
-> 
+> # CONFIG_SND_OMAP_SOC_RX51 is not set
+> # CONFIG_SND_OMAP_SOC_N9 is not set
+> CONFIG_SND_OMAP_SOC_OMAP_TWL4030=3Dy
+> CONFIG_SND_OMAP_SOC_OMAP_ABE_TWL6040=3Dy
 
-had the bit variable for the above state reason.
+That's not needed (but does not hurt). The Droid 4
+has no TWL companion chip and uses CPCAP instead.
 
->> +};
->> +
->> +static const struct qcom_aoss_desc sdm845_aoss_desc = {
->> +	.config = &sdm845_aoss_regmap_config,
->> +	.resets = sdm845_aoss_resets,
->> +	/* Wait 6 32kHz sleep cycles for reset */
->> +	.delay = 200,
-> 
-> Please move this constant into qcom_aoss_control_reset(), until there's
-> a need for it to be configurable.
-> 
->> +	.num_resets = ARRAY_SIZE(sdm845_aoss_resets),
->> +};
->> +
-> [..]
->> +static int qcom_aoss_control_reset(struct reset_controller_dev *rcdev,
->> +					unsigned long idx)
->> +{
->> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
->> +	int ret;
->> +
->> +	ret = qcom_aoss_control_assert(rcdev, idx);
->> +	if (ret)
->> +		return ret;
->> +
->> +	udelay(data->desc->delay);
-> 
-> Per Documentation/timers/timers-howto.txt please use usleep_range() when
-> delays are between 10us and 20ms.
-> 
+> # CONFIG_SND_SOC_IMG is not set
+>=20
+> #
+> # STMicroelectronics STM32 SOC audio support
+> #
+> # CONFIG_SND_SOC_XTFPGA_I2S is not set
+> # CONFIG_ZX_TDM is not set
+> CONFIG_SND_SOC_I2C_AND_SPI=3Dy
+> CONFIG_SND_SOC_CPCAP=3Dy
 
-will replace them
+That's the codec side.
 
->> +
->> +	return qcom_aoss_control_deassert(rcdev, idx);
->> +}
-> 
-> Regards,
-> Bjorn
-> 
+> Any ideas?
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+You probably did not enable the soundcard driver, that binds against
+"audio-graph-card" compatible and connects the codec driver with the
+SoC driver: CONFIG_SND_AUDIO_GRAPH_CARD
+
+-- Sebastian
+
+--y5ecaf34wtg5q27y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq0QMUACgkQ2O7X88g7
++ppWzQ/+N0e86wVGZ+cWdPiKhD18HNNtj9xaw2MrU9lgDBKHWqOqQr4Tx7ghG0os
+EKZe4dvtOaaeb2ecNh907LOWlOdmJHI/naBWbiv5ZJIVX/8TNRUDizGrCXcv+qQv
+2Z3Fdlf/74gV6yJVTyKWJ6hsMnxUrv8WGKzF3t3hCv4uBft5k3GuZZdYrYfiPebw
+v5VY5iJwY2Ai9x43ulw8OsuJBZCm+4Q01gkc76nRGQmfSB7dkqicNRa5fsq6xjuf
+WGta9XsdutJwPDg3UNON2Fgelh9x3zl8n2yL8Ooj+O/7Lz80y5ihQ+gjLygppyWy
+HDe3pNi9OzBHGBHWzJdLGVsLhhfY/2cX6yjn1d52Qcdil7iI5KRj6TeEIOckXtfC
+VX9umFJgVlso5pBrxpBFp29XN0SMe3bAjc++FnFx2kv34A97sdKyReWunVvfWaPw
+iq3lxPKxskZtir02Sfl94+EfGSgT54U1GgyL62lpu+2bj627Rp/wTmK2GDfrq1BO
+MZFDWNYyVNSmq8s0IWiTHycyOU/z0F9xfwC/LVXurV0X0dMGQ3ywSbU/einkRkuo
+ydJGb0ftTHXx8sYf1s0P1SMULdo7heV00iYLRlgtvwCZyEI0i9nXf3QrpKiKNYAg
+6FCeJdTkeDhgniiqNccv+skLvJhuusfWUJQUz/Vh+B3Zb9gHKDU=
+=gDeS
+-----END PGP SIGNATURE-----
+
+--y5ecaf34wtg5q27y--
