@@ -1,65 +1,114 @@
-From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 27/37] iommu/arm-smmu-v3: Register fault workqueue
-Date: Thu, 22 Mar 2018 09:09:51 +0800
-Message-ID: <c4f0a441-e975-395a-fc38-3686db21227d@huawei.com>
-References: <1519280641-30258-1-git-send-email-xieyisheng1@huawei.com>
-	<1519280641-30258-27-git-send-email-xieyisheng1@huawei.com>
-	<f2841aac-4c5e-4ac2-fa4d-81d6b2857503@huawei.com>
-	<cabd71fd-c54c-c21a-a5b7-227e69fa4286@arm.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
+Date: Thu, 22 Mar 2018 10:17:53 +0800
+Message-ID: <1521685073.28226.10.camel@mtkswgap22>
+References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
+         <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <cabd71fd-c54c-c21a-a5b7-227e69fa4286-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, rjw-LthD3rsA81gHJAlzAAQw8A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, matthias.bgg@gmail.com, eddie.huang@mediatek.com, Chen.Zhong@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+Hi, Dmitry and Lee
 
-On 2018/3/21 21:24, Jean-Philippe Brucker wrote:
-> Hi Yisheng,
-> 
-> On 19/03/18 11:03, Yisheng Xie wrote:
->> Hi Jean,
->>
->> [...]
->>> @@ -3168,6 +3260,13 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> +	if (smmu->features & (ARM_SMMU_FEAT_STALLS | ARM_SMMU_FEAT_PRI)) {
->>> +		smmu->faultq_nb.notifier_call = arm_smmu_flush_queues;
->>> +		ret = iommu_fault_queue_register(&smmu->faultq_nb);
->>> +		if (ret)
->>> +			return ret;
->>
->> I find a case here: CONFIG_IOMMU_FAULT=n, and smmu support feature STALLS or PRI,
->> the device probe will failed here, is this what we want?
-> 
-> Since CONFIG_ARM_SMMU_V3 selects CONFIG_IOMMU_FAULT, I don't think it
-> can happen. 
+The series seems not being got merged. Are they good enough to be ready
+into the your tree?
 
-But CONFIG_IOMMU_FAULT can be changed after select, maybe can make it as unchangeable.
+Recently I've tested the series with focusing on pwrkey event generated
+through interrupt when push and release the key on bpi-r2 board and then
+finally it's working fine. but for homekey it cannot be found on the
+board and thus I cannot have more tests more about it.
 
-Thanks
-Yisheng
+Tested-by: Sean Wang <sean.wang@mediatek.com>
 
-> I'm not sure what the best practices are, but I feel like it
-> would be too much work to guard against config combinations that violate
-> an explicit "select" in Kconfig
+	Sean
+
+
+On Thu, 2018-03-22 at 10:03 +0800, Sean Wang (王志亘) wrote:
 > 
-> Thanks,
-> Jean
-> 
-> .
-> 
+> > -----Original Message-----
+> > From: Linux-mediatek [mailto:linux-mediatek-bounces@lists.infradead.org] On
+> > Behalf Of Chen Zhong
+> > Sent: Wednesday, October 25, 2017 9:16 PM
+> > To: Dmitry Torokhov <dmitry.torokhov@gmail.com>; Rob Herring
+> > <robh+dt@kernel.org>; Lee Jones <lee.jones@linaro.org>; Alexandre Belloni
+> > <alexandre.belloni@free-electrons.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>; Alessandro Zummo
+> > <a.zummo@towertech.it>; devicetree@vger.kernel.org; Linus Walleij
+> > <linus.walleij@linaro.org>; Jaechul Lee <jcsing.lee@samsung.com>; linux-
+> > kernel@vger.kernel.org; Krzysztof Kozlowski <krzk@kernel.org>; Javier
+> > Martinez Canillas <javier@osg.samsung.com>; linux-
+> > mediatek@lists.infradead.org; linux-arm-kernel@lists.infradead.org; linux-
+> > input@vger.kernel.org; Matthias Brugger <matthias.bgg@gmail.com>; Eddie
+> > Huang (S智) <eddie.huang@mediatek.com>; Chen Zhong (钟辰)
+> > <Chen.Zhong@mediatek.com>; Beomho Seo <beomho.seo@samsung.com>;
+> > linux-rtc@vger.kernel.org
+> > Subject: [PATCH v6 0/6] Add MediaTek PMIC keys support
+> > 
+> > MediaTek PMIC are multi-function devices that can handle key interrupts,
+> > typically there are two keys attached to PMIC, which called pwrkey and
+> > homekey. PWRKEY usually used to wake up system from sleep. Homekey can
+> > used as volume down key due to board design. Long press keys can shutdown
+> > PMIC, the mode can be choose to be one key only or two keys together.
+> > This series add support for key functions for MediaTek PMIC MT6397/MT6323.
+> > 
+> > Changes since v5:
+> > - use __maybe_unused annotation instead of #ifdef guard
+> > - use of_* API instead of device_* API
+> > 
+> > Changes since v4:
+> > - rebase to Linux 4.14-rc1
+> > - add a common keyboard binding document
+> > - use child device tree node to define each key
+> > 
+> > Changes since v3:
+> > - make the naming to be consistent as mtk_pmic or MTK_PMIC
+> > - add suspend/resume functions to enable/disable irq
+> > - change binding properties to define wakeup sources
+> > 
+> > Changes since v2:
+> > - use standard properties for keycodes and debounce time
+> > - change to use platform_get_irq in leaf drivers
+> > - use better ways to define IRQ resources
+> > 
+> > Changes since v1:
+> > - create irq mappings in mfd core driver instead of leaf drivers
+> > - remove some unused parts in mtk-pmic-keys driver
+> > 
+> > Chen Zhong (6):
+> >   mfd: mt6397: create irq mappings in mfd core driver
+> >   dt-bindings: input: Add common keyboard document bindings
+> >   dt-bindings: input: Add document bindings for mtk-pmic-keys
+> >   dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
+> >   input: Add MediaTek PMIC keys support
+> >   mfd: mt6397: Add PMIC keys support to MT6397 driver
+> > 
+> >  Documentation/devicetree/bindings/input/keys.txt   |   8 +
+> >  .../devicetree/bindings/input/mtk-pmic-keys.txt    |  43 +++
+> >  Documentation/devicetree/bindings/mfd/mt6397.txt   |   6 +
+> >  drivers/input/keyboard/Kconfig                     |   9 +
+> >  drivers/input/keyboard/Makefile                    |   1 +
+> >  drivers/input/keyboard/mtk-pmic-keys.c             | 339
+> > +++++++++++++++++++++
+> >  drivers/mfd/mt6397-core.c                          |  26 +-
+> >  drivers/rtc/rtc-mt6397.c                           |   7 +-
+> >  8 files changed, 432 insertions(+), 7 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/input/keys.txt
+> >  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-
+> > keys.txt
+> >  create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
+> > 
+> > --
+> > 1.9.1
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
