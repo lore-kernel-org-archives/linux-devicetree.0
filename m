@@ -1,130 +1,109 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v2 6/8] DT: arm: Add Renesas RZ/N1 SoC base device tree file
-Date: Thu, 22 Mar 2018 11:44:43 +0000
-Message-ID: <1521719091-25157-7-git-send-email-michel.pollet@bp.renesas.com>
-References: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 6/6] dt-bindings: PCI: rockchip: Add DT bindings for
+ Rockchip PCIe endpoint controller
+Date: Thu, 22 Mar 2018 19:43:16 +0800
+Message-ID: <1521718996-163623-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1521718925-160084-1-git-send-email-shawn.lin@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1521718925-160084-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the Renesas RZ/N1 Family (Part #R9A06G0xx) SoC
-bare bone support.
+This patch documents the DT bindings for the Rockchip PCIe controller
+when configured in endpoint mode.
 
-This currently only handles generic parts (gic, architected timer)
-and a UART.
-For simplicity sake, this also relies on the bootloader to set the
-pinctrl and clocks.
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/r9a06g0xx.dtsi | 96 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 arch/arm/boot/dts/r9a06g0xx.dtsi
 
-diff --git a/arch/arm/boot/dts/r9a06g0xx.dtsi b/arch/arm/boot/dts/r9a06g0xx.dtsi
+Changes in v4: None
+Changes in v2: None
+
+ .../devicetree/bindings/pci/rockchip-pcie-ep.txt   | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
 new file mode 100644
-index 0000000..c6eeee3
+index 0000000..77846730
 --- /dev/null
-+++ b/arch/arm/boot/dts/r9a06g0xx.dtsi
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Base Device Tree Source for the Renesas RZ/N1 SoC Family of devices
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Europe Limited
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+@@ -0,0 +1,62 @@
++* Rockchip AXI PCIe Endpoint Controller DT description
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++Required properties:
++- compatible: Should contain "rockchip,rk3399-pcie-ep"
++- reg: Two register ranges as listed in the reg-names property
++- reg-names: Must include the following names
++	- "apb-base"
++	- "mem-base"
++- clocks: Must contain an entry for each entry in clock-names.
++		See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++	- "aclk"
++	- "aclk-perf"
++	- "hclk"
++	- "pm"
++- resets: Must contain seven entries for each entry in reset-names.
++	   See ../reset/reset.txt for details.
++- reset-names: Must include the following names
++	- "core"
++	- "mgmt"
++	- "mgmt-sticky"
++	- "pipe"
++	- "pm"
++	- "aclk"
++	- "pclk"
++- pinctrl-names : The pin control state names
++- pinctrl-0: The "default" pinctrl state
++- phys: Must contain an phandle to a PHY for each entry in phy-names.
++- phy-names: Must include 4 entries for all 4 lanes even if some of
++  them won't be used for your cases. Entries are of the form "pcie-phy-N":
++  where N ranges from 0 to 3.
++  (see example below and you MUST also refer to ../phy/rockchip-pcie-phy.txt
++  for changing the #phy-cells of phy node to support it)
++- rockchip,max-outbound-regions: Maximum number of outbound regions
 +
-+/ {
-+	compatible = "renesas,rzn1";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++Optional Property:
++- num-lanes: number of lanes to use
++- max-functions: Maximum number of functions that can be configured (default 1).
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <1>;
-+		};
-+	};
-+	clocks {
-+		/*
-+		 * this is fixed clock for now,
-+		 * until the clock driver is merged
-+		 */
-+		clkuarts: clkuarts {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <47619047>;
-+		};
-+	};
-+	arch-timer {
-+		compatible = "arm,cortex-a7-timer",
-+			     "arm,armv7-timer";
-+		interrupt-parent = <&gic>;
-+		arm,cpu-registers-not-fw-configured;
-+		interrupts =
-+			<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		gic: gic@44101000 {
-+			compatible = "arm,cortex-a7-gic", "arm,gic-400";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x44101000 0x1000>, /* Distributer */
-+			      <0x44102000 0x2000>, /* CPU interface */
-+			      <0x44104000 0x2000>, /* Virt interface control */
-+			      <0x44106000 0x2000>; /* Virt CPU interface */
-+			interrupts =
-+				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-+					IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+		sysctrl: sysctrl@4000c000 {
-+			compatible = "renesas,rzn1-sysctrl", "syscon",
-+					"simple-mfd";
-+			reg = <0x4000c000 0x1000>;
-+
-+			reboot {
-+				compatible = "renesas,rzn1-reboot";
-+			};
-+		};
-+		uart0: serial@40060000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x40060000 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&clkuarts>;
-+			clock-names = "baudclk";
-+			status = "disabled";
-+		};
-+	};
++pcie0-ep: pcie@f8000000 {
++	compatible = "rockchip,rk3399-pcie-ep";
++	#address-cells = <3>;
++	#size-cells = <2>;
++	rockchip,max-outbound-regions = <16>;
++	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
++		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
++	clock-names = "aclk", "aclk-perf",
++		      "hclk", "pm";
++	max-functions = /bits/ 8 <8>;
++	num-lanes = <4>;
++	reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0x80000000 0x0 0x20000>;
++	reg-names = "apb-base", "mem-base";
++	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
++		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
++		 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
++	reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
++		      "pm", "pclk", "aclk";
++	phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
++	phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_clkreq>;
 +};
 -- 
-2.7.4
+1.9.1
