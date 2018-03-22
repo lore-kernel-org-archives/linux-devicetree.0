@@ -1,72 +1,33 @@
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH v6] ARM: dts: wheat: Fix ADV7513 address usage
-Date: Thu, 22 Mar 2018 21:30:40 +0000
-Message-ID: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
+ data
+Date: Thu, 22 Mar 2018 14:32:24 -0700
+Message-ID: <20180322213224.csntaaysjy2k3v35@localhost>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+ <20180320143131.4eenixtbhciq5fwc@localhost>
+ <78806c70c85e3cecaadfc94b173cb139@codeaurora.org>
+ <20180321150743.z7edb5xkevsdi4vw@localhost>
+ <4a9891ee982b55a1e76b6143bb42853c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4a9891ee982b55a1e76b6143bb42853c@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sricharan@codeaurora.org
+Cc: mark.rutland@arm.com, robh@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, bjorn.andersson@linaro.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHI4YTc3OTIgV2hlYXQgYm9hcmQgaGFzIHR3byBBRFY3NTEzIGRldmljZXMgc2hhcmluZyBh
-IHNpbmdsZSBJMkMKYnVzLCBob3dldmVyIGluIGxvdyBwb3dlciBtb2RlIHRoZSBBRFY3NTEzIHdp
-bGwgcmVzZXQgaXQncyBzbGF2ZSBtYXBzIHRvCnVzZSB0aGUgaGFyZHdhcmUgZGVmaW5lZCBkZWZh
-dWx0IGFkZHJlc3Nlcy4KClRoZSBBRFY3NTExIGRyaXZlciB3YXMgYWRhcHRlZCB0byBhbGxvdyB0
-aGUgdHdvIGRldmljZXMgdG8gYmUgcmVnaXN0ZXJlZApjb3JyZWN0bHkgLSBidXQgaXQgZGlkIG5v
-dCB0YWtlIGludG8gYWNjb3VudCB0aGUgZmF1bHQgd2hlcmVieSB0aGUKZGV2aWNlcyByZXNldCB0
-aGUgYWRkcmVzc2VzLgoKVGhpcyByZXN1bHRzIGluIGFuIGFkZHJlc3MgY29uZmxpY3QgYmV0d2Vl
-biB0aGUgZGV2aWNlIHVzaW5nIHRoZSBkZWZhdWx0CmFkZHJlc3NlcywgYW5kIHRoZSBvdGhlciBk
-ZXZpY2UgaWYgaXQgaXMgaW4gbG93LXBvd2VyLW1vZGUuCgpSZXBhaXIgdGhpcyBpc3N1ZSBieSBt
-b3ZpbmcgYm90aCBkZXZpY2VzIGF3YXkgZnJvbSB0aGUgZGVmYXVsdCBhZGRyZXNzCmRlZmluaXRp
-b25zLgoKU2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVz
-YXNAaWRlYXNvbmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJl
-bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KLS0tCnYyOgogLSBBZGRpdGlvbiB0byBzZXJp
-ZXMKCnYzOgogLSBTcGxpdCBtYXAgcmVnaXN0ZXIgYWRkcmVzc2VzIGludG8gaW5kaXZpZHVhbCBk
-ZWNsYXJhdGlvbnMuCgp2NDoKIC0gTm9ybWFsaXNlIEkyQyB1c2FnZQoKdjU6CiAtIFJlcG9zdCB3
-aXRob3V0IFtSRlRdIG5vdyB0aGF0IGl0IGhhcyBiZWVuIHRlc3RlZAoKdjY6CiAtIHMvbG93IHBv
-d2VyIHBvd2VyL2xvdyBwb3dlci8gY29ycmVjdGlvbiBmcm9tIExhdXJlbnQuCgpUZXN0aW5nIG9u
-IGEgd2hlYXQgYm9hcmQgc2hvd3MgdGhlIGFkZHJlc3NlcyBjb3JyZWN0bHkgYXNzaWduZWQsIGFu
-ZCB0aGUKZGVmYXVsdCBhZGRyZXNzZXMgKDB4MzgsIDB4M2UsIDB4M2Ygd2hpY2ggd291bGQgb3Ro
-ZXJ3aXNlIGNvbmZsaWN0KSBhcmUKc2hvd24gYXMgYWN0aXZlbHkgcmV0dXJuaW5nIGRhdGEgaW4g
-bG93IHBvd2VyIG1vZGUgZHVyaW5nIHRoZSBzY2FuLgoodGhleSByZXR1cm4gMCkKCiAgICAgMCAg
-MSAgMiAgMyAgNCAgNSAgNiAgNyAgOCAgOSAgYSAgYiAgYyAgZCAgZSAgZgowMDogICAgICAgICAg
-LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KMTA6IC0tIC0tIC0tIC0tIC0t
-IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCjIwOiAtLSAtLSAtLSAtLSAtLSAtLSAt
-LSAtLSAtLSBVVSAtLSAtLSAtLSBVVSAtLSAtLQozMDogLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0g
-MzggVVUgLS0gLS0gLS0gVVUgM2UgM2YKNDA6IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIFVV
-IC0tIC0tIC0tIFVVIC0tIC0tCjUwOiAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSBVVSAtLSAt
-LSAtLSBVVSAtLSAtLQo2MDogLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0g
-LS0gLS0gLS0KNzA6IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCgogYXJjaC9hcm0vYm9vdC9kdHMv
-cjhhNzc5Mi13aGVhdC5kdHMgfCAxMSArKysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9yOGE3NzkyLXdoZWF0LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTItd2hlYXQuZHRz
-CmluZGV4IDI5M2I5ZTNiM2U3MC4uZGIwMWRlN2EzODExIDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9yOGE3Nzky
-LXdoZWF0LmR0cwpAQCAtMjQ1LDkgKzI0NSwxNSBAQAogCXN0YXR1cyA9ICJva2F5IjsKIAljbG9j
-ay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsKIAorCS8qCisJICogVGhlIGFkdjc1eHggcmVzZXRzIGl0
-cyBhZGRyZXNzZXMgdG8gZGVmYXVsdHMgZHVyaW5nIGxvdyBwb3dlciBtb2RlLgorCSAqIEJlY2F1
-c2Ugd2UgaGF2ZSB0d28gQURWNzUxMyBkZXZpY2VzIG9uIHRoZSBzYW1lIGJ1cywgd2UgbXVzdCBj
-aGFuZ2UKKwkgKiBib3RoIG9mIHRoZW0gYXdheSBmcm9tIHRoZSBkZWZhdWx0cyBzbyB0aGF0IHRo
-ZXkgZG8gbm90IGNvbmZsaWN0LgorCSAqLwogCWhkbWlAM2QgewogCQljb21wYXRpYmxlID0gImFk
-aSxhZHY3NTEzIjsKLQkJcmVnID0gPDB4M2Q+OworCQlyZWcgPSA8MHgzZD4sIDwweDJkPiwgPDB4
-NGQ+LCA8MHg1ZD47CisJCXJlZy1uYW1lcyA9ICJtYWluIiwgImNlYyIsICJlZGlkIiwgInBhY2tl
-dCI7CiAKIAkJYWRpLGlucHV0LWRlcHRoID0gPDg+OwogCQlhZGksaW5wdXQtY29sb3JzcGFjZSA9
-ICJyZ2IiOwpAQCAtMjc3LDcgKzI4Myw4IEBACiAKIAloZG1pQDM5IHsKIAkJY29tcGF0aWJsZSA9
-ICJhZGksYWR2NzUxMyI7Ci0JCXJlZyA9IDwweDM5PjsKKwkJcmVnID0gPDB4Mzk+LCA8MHgyOT4s
-IDwweDQ5PiwgPDB4NTk+OworCQlyZWctbmFtZXMgPSAibWFpbiIsICJjZWMiLCAiZWRpZCIsICJw
-YWNrZXQiOwogCiAJCWFkaSxpbnB1dC1kZXB0aCA9IDw4PjsKIAkJYWRpLGlucHV0LWNvbG9yc3Bh
-Y2UgPSAicmdiIjsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Thu, Mar 22, 2018 at 06:35:48PM +0530, sricharan@codeaurora.org wrote:
+>   Meanwhile i just posted a v4 (CCed you), is it possible that
+>   i can have test feedback ? . That will be great.
+
+I don't have any DK in hand, but I do have a custom design most
+similar to the DK7.  I'll gladly try to boot it with your series.
+
+Just to be clear:  You are running pure mainline with absolutely no
+out-of-tree patches or other modifications, right?
+
+Thanks,
+Richard
