@@ -1,101 +1,78 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Thu, 22 Mar 2018 09:46:33 -0700
-Message-ID: <20180322164633.GF5799@atomide.com>
-References: <20180309023750.108942-1-tony@atomide.com>
- <20180322135553.GA27648@amd>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
+Date: Thu, 22 Mar 2018 18:26:08 +0100
+Message-ID: <20180322172608.GA22179@harukaze>
+References: <1521653726-24625-1-git-send-email-p.pisati@gmail.com>
+ <1521653726-24625-3-git-send-email-p.pisati@gmail.com>
+ <1521655492.7999.13.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180322135553.GA27648@amd>
+In-Reply-To: <1521655492.7999.13.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Paolo Pisati <p.pisati@gmail.com>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 21, 2018 at 11:04:52AM -0700, Joe Perches wrote:
+> 
+> static const u8 cmd[]
+> here and everywhere else as all the tx_buf assignments 
+> of cmd are to const void *
 
---GPJrCs/72TxItFYR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok
+ 
+> Instead of multiple declarations of dump_status_reg
+> it's frequently nicer to use a style like
+> 
+> static void debug_func(args...)
+> {
+> #ifdef DEBUG
+> 	[code...]
+> #endif
+> }
+> 
+> so if function arguments ever need to be changed
+> it's only required to be changed in one spot and
+> not multiply compilation tested with and without
+> the DEBUG definition
 
-* Pavel Machek <pavel@ucw.cz> [180322 13:57]:
-> Hi!
->=20
-> > idle lcd off	phy-mapphone-mdm6600	ohci-platform
-> > 153mW		284mW			344mW
-> >=20
-> > So it seems that MDM6600 is currently not yet idling even with it's
-> > radio turned off, but that's something that is beyond the control of
-> > this USB PHY driver. This patch does get us to the point where modem
-> > data and GPS are usable with libqmi and ModemManager for example.
-> > Voice calls need more audio driver work.
->=20
-> Ok, let me try. I believe I should see the modem device on lsusb, but
-> I don't.
->=20
-> user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-> sudo lsusb
-> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-> Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
-> user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-> zcat /proc/config.gz | grep MAPPH
-> CONFIG_PHY_MAPPHONE_MDM6600=3Dy
-> user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
-> zcat /proc/config.gz | grep OHCI_
-> CONFIG_USB_OHCI_LITTLE_ENDIAN=3Dy
-> CONFIG_USB_OHCI_HCD=3Dy
-> CONFIG_USB_OHCI_HCD_OMAP3=3Dy
-> CONFIG_USB_OHCI_HCD_PLATFORM=3Dy
-> user@devuan:/sys/devices/platform/44000000.ocp/4a064000.usbhshost$
->=20
-> As far as I can tell,
->=20
-> +CONFIG_USB_WDM=3Dy
-> +CONFIG_USB_SERIAL=3Dy
-> +CONFIG_USB_SERIAL_QUALCOMM=3Dy
-> +CONFIG_USB_SERIAL_WWAN=3Dy
->=20
-> should be enabled to enable the drivers (and I did that), but without
-> device showing on the bus...
->=20
-> Any ideas?
+Ok
+ 
+> It's frequently nicer to use a static function
+> for these enum -> string conversions like:
+> 
+> static const char *get_err_string(unsigned long err)
+> {
+> 	switch (err) {
+> 	case ENOERR:	return "No Error";
+> 	case EID:	return "ID ERR";
+> 	case ECMD:	return "CMD ERR";
+> 	[...]
+> 	}
+> 	return "default switch case";
+> }
 
-Do you have the related dts patches picked from next?
+Ok - checkpatch complained when i put the "case ...: return ...;" on the same
+line as you did here, that is why i ended up with the ugly "case...: $string;
+break" all on different lines
+ 
+> > +	pr_debug("machxo2 status: 0x%08lX - done=%d, cfgena=%d, busy=%d, fail=%d, devver=%d, err=%s\n",
+> > +	       *status, test_bit(DONE, status), test_bit(ENAB, status),
+> > +	       test_bit(BUSY, status), test_bit(FAIL, status),
+> > +		   test_bit(DVER, status), ferr);
+> 
+> So instead of ferr, this could use
+> 	get_err_string(*status)
+> 
+> And please try to keep a consistent alignment for
+> indentation of multiple line statements
 
-fdd192037fce ("ARM: dts: omap4-droid4: Fix USB PHY port naming")
-e5b9fd7bdeb5 ("ARM: dts: omap4-droid4: Configure MDM6600 USB PHY")
+I tried, but then checkpatch complained again about the indentation of the above block
+and i literally had to guess...
 
-But yeah all you need to do is have phy-mapphone-mdm6600 and
-ohci-platform loaded and then ifconfig should show four wwan
-interfaces being added.
-
-Regards,
-
-Tony
-
-
---GPJrCs/72TxItFYR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkgNvrZJU/QSQYIcQG9Q+yVyrpXMFAlqz3ekACgkQG9Q+yVyr
-pXMyYg/9GEq0/SBSu5yR5kx1UrhkK5c/fyL9li145JlFob6VY2wEpBWSUqU3Mr/C
-D1pB+3H11j30Q9HwsHAK0GWKznYQUlf50sc9NZjuldfgqbp27q2LLq9VeNA+RpnE
-6zTjPSVV9iG11eYWJAR1NsajFBjgxnCleI8KFLuZE/BSKk0EwpyVqdc6fFLJ6Ap9
-0F/dkhb6OJzo1ElfPKlLK4gjmxa1OIS0086WlKvxtLrhVWhjEJrxBPNicDiD8FyZ
-HYbhC6aBbmwpzqWJKZbUVBjtbNAXMD+gfPGhzxq2aflHa/Ey26Wj0ITfyjCaCHZY
-Nz7SwgUVxpLzrpmmRAA/sSnId/vshobYs8Uki+QJpbbkxhyDmjZpZpJc6i4b85EU
-VTQ0B6Hz8efURW1LwQsk7J/TYrZqVlUIOBOyHzUUa4p996Epjs88ynXwJ1pXspem
-v8vwlFtRnzaEsMw29YppxQ/GxPMa1NkIHS/uDH04ZP5napXMMWek9GVqv2EmXjXC
-E8hwFPZ+Es1YsrzlH4+Va0x60DoL8uUadLIn8QQDyB3juxHbItW56rt5e5EQYCOb
-N18kfURYLfBzwCcLvKYT4YCs+xt9C3T0QuVU+6HkMpFO5VgrQipxiJeBcJasAve4
-h7PYWp+NTt6bI10RftBLQtm5fncWnlp5Hj5xsvbPAm88kzc61z0=
-=uw8G
------END PGP SIGNATURE-----
-
---GPJrCs/72TxItFYR--
+Anyhow, thanks, i'll send a v8 with all these style fixes.
+-- 
+bye,
+p.
