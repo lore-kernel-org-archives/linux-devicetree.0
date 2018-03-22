@@ -1,144 +1,65 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] PCI: rockchip: Create individual folder for
- rockchip drivers
-Date: Thu, 22 Mar 2018 09:03:58 +0800
-Message-ID: <7275bd77-016a-2729-482d-2855703d9b56@rock-chips.com>
-References: <1520304173-231081-1-git-send-email-shawn.lin@rock-chips.com>
- <1520304202-232891-1-git-send-email-shawn.lin@rock-chips.com>
- <20180320174633.GA137590@bhelgaas-glaptop.roam.corp.google.com>
- <879a4862-d0d5-21fd-6c47-029c795fe78e@rock-chips.com>
- <20180321181940.GA9760@e107981-ln.cambridge.arm.com>
+From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 27/37] iommu/arm-smmu-v3: Register fault workqueue
+Date: Thu, 22 Mar 2018 09:09:51 +0800
+Message-ID: <c4f0a441-e975-395a-fc38-3686db21227d@huawei.com>
+References: <1519280641-30258-1-git-send-email-xieyisheng1@huawei.com>
+	<1519280641-30258-27-git-send-email-xieyisheng1@huawei.com>
+	<f2841aac-4c5e-4ac2-fa4d-81d6b2857503@huawei.com>
+	<cabd71fd-c54c-c21a-a5b7-227e69fa4286@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180321181940.GA9760-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <cabd71fd-c54c-c21a-a5b7-227e69fa4286-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, rjw-LthD3rsA81gHJAlzAAQw8A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[+ Greg]
+Hi Jean,
 
-Dear Bjorn, Lorenzo
-
-On 2018/3/22 2:19, Lorenzo Pieralisi wrote:
-> On Wed, Mar 21, 2018 at 09:04:21AM +0800, Shawn Lin wrote:
->> Dear Bjorn, Lorenzo
+On 2018/3/21 21:24, Jean-Philippe Brucker wrote:
+> Hi Yisheng,
+> 
+> On 19/03/18 11:03, Yisheng Xie wrote:
+>> Hi Jean,
 >>
->> On 2018/3/21 1:46, Bjorn Helgaas wrote:
->>> On Tue, Mar 06, 2018 at 10:43:22AM +0800, Shawn Lin wrote:
->>>> In preparation for introducing End-Point driver for Rockchip
->>>> PCIe controller, we create a new folder to follow the convention
->>>> of dwc and cadence. Then we rename the host driver from pcie-rockchip.c
->>>> to pcie-rockchip-host.c, and only leave some common functions in
->>>> pcie-rockchip.c in order to be reused for both of host and EP drivers.
->>>>
->>>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> ...
->>>
->>>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->>>> index 34b56a8..b85ad40 100644
->>>> --- a/drivers/pci/Kconfig
->>>> +++ b/drivers/pci/Kconfig
->>>> @@ -141,4 +141,5 @@ source "drivers/pci/cadence/Kconfig"
->>>>   source "drivers/pci/dwc/Kconfig"
->>>>   source "drivers/pci/host/Kconfig"
->>>>   source "drivers/pci/endpoint/Kconfig"
->>>> +source "drivers/pci/rockchip/Kconfig"
->>>>   source "drivers/pci/switch/Kconfig"
->>>
->>> Why is this out of order?  This seems exactly analogous to
->>> drivers/pci/cadence and dwc, so they should be next to each other.
+>> [...]
+>>> @@ -3168,6 +3260,13 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> +	if (smmu->features & (ARM_SMMU_FEAT_STALLS | ARM_SMMU_FEAT_PRI)) {
+>>> +		smmu->faultq_nb.notifier_call = arm_smmu_flush_queues;
+>>> +		ret = iommu_fault_queue_register(&smmu->faultq_nb);
+>>> +		if (ret)
+>>> +			return ret;
 >>
->> This confused me as well! I just put "rockchip" before "switch"
->> to keep the order, but I didn't know why "endpoint" wasn't ordered.
->>
->>>
->>>> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
->>>> index 9419709..8434afb 100644
->>>> --- a/drivers/pci/Makefile
->>>> +++ b/drivers/pci/Makefile
->>>> @@ -55,6 +55,8 @@ obj-y += switch/
->>>>   obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
->>>> +obj-$(CONFIG_PCIE_ROCKCHIP)	+= rockchip/
->>>> +
->>>>   # Endpoint library must be initialized before its users
->>>>   obj-$(CONFIG_PCIE_CADENCE)	+= cadence/
->>>>   # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->>>
->>> Similarly here.
->>>
->>> I admit to still being a little dubious about the idea of a bunch of
->>> vendor-specific directories, each containing a completely trivial
->>> Makefile, a mostly-trivial Kconfig, a header file, a shared .c file, a
->>> host .c file, and an endpoint .c file.
->>
->> So do I.
->>
->>>
->>> One alternative would be to keep the single pcie-rockchip.c file with
->>> an #ifdef CONFIG_PCIE_ROCKCHIP_HOST section and an #ifdef
->>> CONFIG_PCIE_ROCKCHIP_EP section.
->>
->> I admit I thought this eariler, however, I don't like it personally, as
->> it confuses the new-comer to follow the convention here, if we are
->> alternatives just for "style issue" or "personal taste".
+>> I find a case here: CONFIG_IOMMU_FAULT=n, and smmu support feature STALLS or PRI,
+>> the device probe will failed here, is this what we want?
 > 
-> It would be OK for me to keep files separate too; a separate question
-> would then be whether we have to rename drivers/pci/host if we add
-> endpoint drivers in there, do we have to?
+> Since CONFIG_ARM_SMMU_V3 selects CONFIG_IOMMU_FAULT, I don't think it
+> can happen. 
+
+But CONFIG_IOMMU_FAULT can be changed after select, maybe can make it as unchangeable.
+
+Thanks
+Yisheng
+
+> I'm not sure what the best practices are, but I feel like it
+> would be too much work to guard against config combinations that violate
+> an explicit "select" in Kconfig
 > 
-> At that stage we could well move drivers/pci/dwc and drivers/pci/cadence
-> in there too.
+> Thanks,
+> Jean
 > 
-
-I add Greg to this thread, and hope he could shed a light here.
-
-That is completely the same situation annoying me when looking into
-drivers/usb where they have drivers/usb/host/ for host drivers,
-drivers/usb/gadget/ for device framwork, drivers/usb/gaget/udc for
-device drivers, and even surprisingly drivers/usb/dwc2/,
-drivers/usb/dwc3/ and drivers/usb/renesas_usbhs/ for supporting both of
-host and device functional drivers....
-
-How about renaming drivers/pci/host to drivers/pci/controller,
-and then put all pcie-rockchip* files in there, then we don't
-need add seperate directory containning trivial Kconfig, Makefile.
-
-
->> Certainly, I could do that beased on your suggestion, but I would like
->> to know if this's the final agreement both you and Lorenzo reached. :)
-> 
-> Or we can add all EP drivers into drivers/pci/endpoint but then the problem
-> is how to share code between host and endpoint directories and it starts
-> feeling like we are going round in circles.
-
-I would prefer to rename it to endpoint-framwrok or whatever to clearly
-states it is for framework but not the drivers. All the drivers
-whichever for host or endpoint should be in controller directory.
-
-> 
-> I can merge this series as-is as long as we will rework the directory
-> structure according to this discussion (given that's already late -rc6
-> so directory moves/renames can be disrupting - if feasible at all).
-
-This sounds super great to me to make this series into -next for some
-days before hitting into v4.17. Then we could simultaneously head up to
-see how we could move forward with this.
-
-
-> 
-> Lorenzo
-> 
-> 
+> .
 > 
