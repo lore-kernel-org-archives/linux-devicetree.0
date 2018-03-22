@@ -1,58 +1,73 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Thu, 22 Mar 2018 11:30:10 -0700
-Message-ID: <1521743410.7999.48.camel@perches.com>
-References: <1521653726-24625-1-git-send-email-p.pisati@gmail.com>
-         <1521653726-24625-3-git-send-email-p.pisati@gmail.com>
-         <1521655492.7999.13.camel@perches.com> <20180322172608.GA22179@harukaze>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/6] phy: qcom-qmp: Enable pipe_clk before checking USB3
+ PHY_STATUS
+Date: Thu, 22 Mar 2018 11:43:01 -0700
+Message-ID: <152174418191.178046.10173529959609556848@swboyd.mtv.corp.google.com>
+References: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
+ <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180322172608.GA22179@harukaze>
+In-Reply-To: <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-03-22 at 18:26 +0100, Paolo Pisati wrote:
-> > It's frequently nicer to use a static function
-> > for these enum -> string conversions like:
-> > 
-> > static const char *get_err_string(unsigned long err)
-> > {
-> > 	switch (err) {
-> > 	case ENOERR:	return "No Error";
-> > 	case EID:	return "ID ERR";
-> > 	case ECMD:	return "CMD ERR";
-> > 	[...]
-> > 	}
-> > 	return "default switch case";
-> > }
-> 
-> Ok - checkpatch complained when i put the "case ...: return ...;" on the same
-> line as you did here, that is why i ended up with the ugly "case...: $string;
-> break" all on different lines
+Quoting Manu Gautam (2018-03-22 01:50:41)
+> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+> to take place. This lock is output from PHY to GCC clock_ctl and then
 
-checkpatch is brainless and stupid and if it
-recommends stupid consistency over readability,
-ignore it.
- 
-> > > +	pr_debug("machxo2 status: 0x%08lX - done=%d, cfgena=%d, busy=%d, fail=%d, devver=%d, err=%s\n",
-> > > +	       *status, test_bit(DONE, status), test_bit(ENAB, status),
-> > > +	       test_bit(BUSY, status), test_bit(FAIL, status),
-> > > +		   test_bit(DVER, status), ferr);
-> > 
-> > So instead of ferr, this could use
-> > 	get_err_string(*status)
-> > 
-> > And please try to keep a consistent alignment for
-> > indentation of multiple line statements
-> 
-> I tried, but then checkpatch complained again about the indentation of the above block
-> and i literally had to guess...
+s/lock/clock/
 
-I think it only complained about the
-2nd line that starts *status because it
-doesn't align with the open parenthesis
-of pr_debug
+> fed back to QMP PHY and is output from PHY only after PHY is reset
+> and initialized, hence it can't be enabled too early in initialization
+> sequence.
+> 
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 6470c5d..73aa282 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -797,8 +797,13 @@ static int qcom_qmp_phy_poweron(struct phy *phy)
+>  {
+>         struct qmp_phy *qphy = phy_get_drvdata(phy);
+>         struct qcom_qmp *qmp = qphy->qmp;
+> +       const struct qmp_phy_cfg *cfg = qmp->cfg;
+>         int ret;
+>  
+> +       /* Not needed for USB3 PHY as pipe_clk is enabled from phy_init */
+> +       if (cfg->type == PHY_TYPE_USB3)
+> +               return 0;
+
+Would be nice to not even assign phy_poweron when the PHY is USB3 type.
+
+> +
+>         ret = clk_prepare_enable(qphy->pipe_clk);
+>         if (ret)
+>                 dev_err(qmp->dev, "pipe_clk enable failed, err=%d\n", ret);
+> @@ -1008,6 +1013,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>         status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>         mask = cfg->mask_pcs_ready;
+>  
+> +       /* USB3 PHY requires pipe_clk for PLL lock and calibration */
+> +       if (cfg->type == PHY_TYPE_USB3) {
+> +               ret = clk_prepare_enable(qphy->pipe_clk);
+> +               if (ret)
+> +                       dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
+> +               /*
+> +                * Ignore this error as pipe_clk might take some time to get
+> +                * enabled. In any case following check for PHY PLL lock would
+> +                * timeout below if there is a fatal error and clock is not fed
+> +                * to PHY
+> +                */
+> +
+
+This is odd. If clk_enable() fails then we don't keep parent clks (or
+the clk that's being operated on) up refcounted and enabled. How is that
+going to work?
