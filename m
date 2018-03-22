@@ -1,43 +1,41 @@
 From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v2 2/6] phy: qcom-qusb2: Fix crash if nvmem cell not specified
-Date: Thu, 22 Mar 2018 14:20:42 +0530
-Message-ID: <1521708646-5379-3-git-send-email-mgautam@codeaurora.org>
+Subject: [PATCH v2 3/6] dt-bindings: phy-qcom-qmp: Update bindings for sdm845
+Date: Thu, 22 Mar 2018 14:20:43 +0530
+Message-ID: <1521708646-5379-4-git-send-email-mgautam@codeaurora.org>
 References: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, stable <stable@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Krzysztof Kozlowski <krzk@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Driver currently crashes due to NULL pointer deference
-while updating PHY tune register if nvmem cell is NULL.
-Since, fused value for Tune1/2 register is optional,
-we'd rather bail out.
+Update compatible strings for USB3 PHYs on SDM845.
+One is QMPv3 DisplayPort-USB combo PHY and other one
+is USB UNI PHY which is single lane USB3 PHY without
+DP capability.
 
-Fixes: ca04d9d3e1b1 ("phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips")
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: stable <stable@vger.kernel.org> # 4.14+
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 94afeac..40fdef8 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -315,6 +315,10 @@ static void qusb2_phy_set_tune2_param(struct qusb2_phy *qphy)
- 	const struct qusb2_phy_cfg *cfg = qphy->cfg;
- 	u8 *val;
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index dcf1b8f..cef8765 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -9,7 +9,9 @@ Required properties:
+ 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+ 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+-	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
++	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
++	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
++	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
  
-+	/* efuse register is optional */
-+	if (!qphy->cell)
-+		return;
-+
- 	/*
- 	 * Read efuse register having TUNE2/1 parameter's high nibble.
- 	 * If efuse register shows value as 0x0, or if we fail to find
+  - reg: offset and length of register set for PHY's common serdes block.
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
