@@ -1,64 +1,43 @@
 From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v2 1/6] phy: qcom-qmp: Enable pipe_clk before checking USB3 PHY_STATUS
-Date: Thu, 22 Mar 2018 14:20:41 +0530
-Message-ID: <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
+Subject: [PATCH v2 2/6] phy: qcom-qusb2: Fix crash if nvmem cell not specified
+Date: Thu, 22 Mar 2018 14:20:42 +0530
+Message-ID: <1521708646-5379-3-git-send-email-mgautam@codeaurora.org>
 References: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, stable <stable@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Krzysztof Kozlowski <krzk@kernel.org>, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
-to take place. This lock is output from PHY to GCC clock_ctl and then
-fed back to QMP PHY and is output from PHY only after PHY is reset
-and initialized, hence it can't be enabled too early in initialization
-sequence.
+Driver currently crashes due to NULL pointer deference
+while updating PHY tune register if nvmem cell is NULL.
+Since, fused value for Tune1/2 register is optional,
+we'd rather bail out.
 
+Fixes: ca04d9d3e1b1 ("phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips")
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: stable <stable@vger.kernel.org> # 4.14+
 Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 6470c5d..73aa282 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -797,8 +797,13 @@ static int qcom_qmp_phy_poweron(struct phy *phy)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
- 	struct qcom_qmp *qmp = qphy->qmp;
-+	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 	int ret;
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 94afeac..40fdef8 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -315,6 +315,10 @@ static void qusb2_phy_set_tune2_param(struct qusb2_phy *qphy)
+ 	const struct qusb2_phy_cfg *cfg = qphy->cfg;
+ 	u8 *val;
  
-+	/* Not needed for USB3 PHY as pipe_clk is enabled from phy_init */
-+	if (cfg->type == PHY_TYPE_USB3)
-+		return 0;
++	/* efuse register is optional */
++	if (!qphy->cell)
++		return;
 +
- 	ret = clk_prepare_enable(qphy->pipe_clk);
- 	if (ret)
- 		dev_err(qmp->dev, "pipe_clk enable failed, err=%d\n", ret);
-@@ -1008,6 +1013,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
- 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 	mask = cfg->mask_pcs_ready;
- 
-+	/* USB3 PHY requires pipe_clk for PLL lock and calibration */
-+	if (cfg->type == PHY_TYPE_USB3) {
-+		ret = clk_prepare_enable(qphy->pipe_clk);
-+		if (ret)
-+			dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
-+		/*
-+		 * Ignore this error as pipe_clk might take some time to get
-+		 * enabled. In any case following check for PHY PLL lock would
-+		 * timeout below if there is a fatal error and clock is not fed
-+		 * to PHY
-+		 */
-+	}
-+
- 	ret = readl_poll_timeout(status, val, !(val & mask), 1,
- 				 PHY_INIT_COMPLETE_TIMEOUT);
- 	if (ret) {
+ 	/*
+ 	 * Read efuse register having TUNE2/1 parameter's high nibble.
+ 	 * If efuse register shows value as 0x0, or if we fail to find
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
