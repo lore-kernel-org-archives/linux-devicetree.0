@@ -1,88 +1,44 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 2/7] dt-bindings: add binding for the
- Allwinner A64 DE2 bus
-Date: Thu, 22 Mar 2018 14:08:43 +0800
-Message-ID: <9520BDDE-BFE3-4220-B48D-01A00CFA94DE@aosc.io>
-References: <20180316175354.21437-1-icenowy@aosc.io> <20180320184646.dynqv6qubzabroe4@flea> <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io> <2866474.lRHIcLtROC@jernej-laptop>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] net: stmmac: dwmac-sun8i: sun8i_syscon_reg_field can be
+ static
+Date: Thu, 22 Mar 2018 15:42:18 +0800
+Message-ID: <20180322074217.GA7358@ivytown2.lkp.intel.com>
+References: <20180317092857.4396-7-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBLURZXKQKGQEJ3YKRZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2866474.lRHIcLtROC@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org=?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180317092857.4396-7-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, kbuild-all@01.org, Corentin Labbe <clabbe.montjoie@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
+Fixes: e3c10deef23c ("net: stmmac: dwmac-sun8i: Use regmap_field for syscon register access")
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ dwmac-sun8i.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-=E4=BA=8E 2018=E5=B9=B43=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:=
-13:42, "Jernej =C5=A0krabec" <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi all,
->
->Dne sreda, 21. marec 2018 ob 03:18:13 CET je Icenowy Zheng napisal(a):
->> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=882:46:46, Maxime Ripard
-><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>=20
->=E5=86=99=E5=88=B0:
->> >On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
->> >> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64
->SoC
->> >
->> >to
->> >
->> >> be claimed, otherwise the whole DE2 space is inaccessible.
->> >>=20
->> >> Add a device tree binding of the DE2 part as a sub-bus.
->> >
->> >Where did you get the info that it was a bus?
->>=20
->> There's no direct evidence, just some guess.
->>=20
->> The DE2 is a whole part that is just allocated a memory
->> space at the user manual, and the SRAM controls the
->> access to all modules in the DE2.
->>=20
->> So it might be a bus.
->>=20
->> Implement it as a bus is a clear representation on A64.
->
->Since there is already syscon for same mmio region, we migh as well use
->it=20
->when loading ccu-sun8i-de2 driver on A64.
->
->Other options, like SRAM driver or bus driver, might better represent
->HW, but=20
-
-I think the device tree should properly represent the HW,
-it's a basic requirment.
-
->then we would have two DT nodes covering same mmio region, which I
->think is=20
->not really acceptable.
-
-It's acceptable, and DE2 is not the only user of SRAM controller so far.
-
-VE will also need a SRAM region to be claimed.
-
->
->Any suggestions?
->
->BTW, H6 has same design in this regard.
->
->Best regards,
->Jernej
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index de93f0f..bbc0514 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -79,7 +79,7 @@ struct sunxi_priv_data {
+ };
+ 
+ /* EMAC clock register @ 0x30 in the "system control" address range */
+-const struct reg_field sun8i_syscon_reg_field = {
++static const struct reg_field sun8i_syscon_reg_field = {
+ 	.reg = 0x30,
+ 	.lsb = 0,
+ 	.msb = 31,
