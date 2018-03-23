@@ -1,131 +1,102 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5,
-	5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Fri, 23 Mar 2018 11:09:30 +0100
-Message-ID: <20180323100930.GA21644@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 02/16] dt-bindings: rtc: mediatek: add bindings for
+ PMIC RTC
+Date: Fri, 23 Mar 2018 11:15:05 +0100
+Message-ID: <20180323101505.GF3417@piout.net>
+References: <cover.1521794176.git.sean.wang@mediatek.com>
+ <5846e8be319c4836808c8127d5bb51b7e999e896.1521794177.git.sean.wang@mediatek.com>
+ <20180323094118.GC3417@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6956086639242749605=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180322234832.o24ut5ahon46mdu4@earth.universe>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180323094118.GC3417-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 23/03/2018 at 10:41:18 +0100, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 23/03/2018 at 17:14:59 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add device-tree binding for MediaTek PMIC based RTC.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/rtc/rtc-mt6397.txt         | 39 ++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> > new file mode 100644
+> > index 0000000..83ff6be
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> > @@ -0,0 +1,39 @@
+> > +Device-Tree bindings for MediaTek PMIC based RTC
+> > +
+> > +MediaTek PMIC based RTC is an independent function of MediaTek PMIC which
+> > +is working as a multi-function device (MFD). And the RTC can be configured and
+> > +set up via PMIC wrapper bus. Which is also common resource shared among the
+> > +other functions present on the PMIC.
+> > +
+> > +For MediaTek PMIC wrapper bus bindings, see:
+> > +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> > +
+> > +Required parent node:
+> > +- pmic
+> > +  For MediaTek PMIC MFD bindings, see:
+> > +  Documentation/devicetree/bindings/mfd/mt6397.txt
+> > +
+> > +Required properties:
+> > +- compatible: Should be one of follows
+> > +	"mediatek,mt6323-rtc": for MT6323 PMIC
+> > +	"mediatek,mt6397-rtc": for MT6397 PMIC
+> > +
+> > +Optional child node:
+> > +- power-off
+> > +  For Power-Off Device for MediaTek PMIC RTC bindings, see:
+> > +  Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
+> > +
+> > +Example:
+> > +
+> > +	pmic {
+> > +		compatible = "mediatek,mt6323";
+> > +
+> > +		...
+> > +		rtc {
+> > +			compatible = "mediatek,mt6323-rtc";
+> > +
+> > +			power-off {
+> > +				compatible = "mediatek,mt6323-rtc-poweroff";
+> > +			};
+> 
+> I'm pretty sure the whole point of mfd is to avoid having the poweroff
+> controller under the rtc
+> 
 
---===============6956086639242749605==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
+BTW, I think it is enough to have that documented in only one file (the
+MFD one is enough)
 
+> 
+> -- 
+> Alexandre Belloni, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > # CONFIG_SND_OMAP_SOC_RX51 is not set
-> > # CONFIG_SND_OMAP_SOC_N9 is not set
-> > CONFIG_SND_OMAP_SOC_OMAP_TWL4030=3Dy
-> > CONFIG_SND_OMAP_SOC_OMAP_ABE_TWL6040=3Dy
->=20
-> That's not needed (but does not hurt). The Droid 4
-> has no TWL companion chip and uses CPCAP instead.
-
-Aha, thanks. I was doing wild experiments to get something that
-boots... I turned them off.
-
-> > Any ideas?
->=20
-> You probably did not enable the soundcard driver, that binds against
-> "audio-graph-card" compatible and connects the codec driver with the
-> SoC driver: CONFIG_SND_AUDIO_GRAPH_CARD
-
-Ok, that certainly changed things; I am now getting this:
-
-Mar 23 08:39:17 devuan kernel: [   11.633605] asoc-audio-graph-card soundca=
-rd: GPIO lookup for
- consumer pa
-Mar 23 08:39:17 devuan kernel: [   11.644958] asoc-audio-graph-card soundca=
-rd: using device tr
-ee for GPIO lookup
-Mar 23 08:39:17 devuan kernel: [   11.656677] of_get_named_gpiod_flags: can=
-'t parse 'pa-gpios'
- property of node '/soundcard[0]'
-Mar 23 08:39:17 devuan kernel: [   11.669738] of_get_named_gpiod_flags: can=
-'t parse 'pa-gpio'=20
-property of node '/soundcard[0]'
-Mar 23 08:39:17 devuan kernel: [   11.682617] asoc-audio-graph-card soundca=
-rd: using lookup ta
-bles for GPIO lookup
-Mar 23 08:39:17 devuan kernel: [   11.694427] asoc-audio-graph-card soundca=
-rd: lookup for GPIO
- pa failed
-
-Indeed the dts does not seem to contain any gpios
-
-        soundcard {
-                compatible =3D "audio-graph-card";
-                label =3D "Droid 4 Audio";
-
-                simple-graph-card,widgets =3D
-                        "Speaker", "Earpiece",
-                        "Speaker", "Loudspeaker",
-	                "Headphone", "Headphone Jack",
-	                "Microphone", "Internal Mic";
-
-                simple-graph-card,routing =3D
-	                "Earpiece", "EP",
-		        "Loudspeaker", "SPKR",
-                        "Headphone Jack", "HSL",
-                        "Headphone Jack", "HSR",
-	                "MICR", "Internal Mic";
-
-                dais =3D <&mcbsp2_port>, <&mcbsp3_port>;
-	};
-
-Any more ideas? :-)
-
-Thanks,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq00loACgkQMOfwapXb+vL71wCfei9Wakmc6L0+DQQ6ydjcLxIl
-d54AnAmfV0UHVbqUBgYCCLQbQS1kZVmN
-=VTw6
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
-
---===============6956086639242749605==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6956086639242749605==--
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
