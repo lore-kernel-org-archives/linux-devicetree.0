@@ -1,67 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 4/8] dt-bindings: net: add DT bindings for
- Microsemi Ocelot Switch
-Date: Fri, 23 Mar 2018 14:11:35 -0700
-Message-ID: <a5db6109-c5d9-f573-893c-f7d66c3168c2@gmail.com>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-5-alexandre.belloni@bootlin.com>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH v6] ARM: dts: wheat: Fix ADV7513 address usage
+Date: Fri, 23 Mar 2018 21:16:13 +0000
+Message-ID: <a771042b-f63a-d00f-73a1-91a7e6089fe4@ideasonboard.com>
+References: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
+ <20180323085140.g3golwdtpezo7fhi@verge.net.au>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323201117.8416-5-alexandre.belloni@bootlin.com>
-Content-Language: en-US
+In-Reply-To: <20180323085140.g3golwdtpezo7fhi@verge.net.au>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, "David S . Miller" <davem@davemloft.net>
-Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lars-Peter Clausen <lars@metafoo.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2018 01:11 PM, Alexandre Belloni wrote:
-> DT bindings for the Ethernet switch found on Microsemi Ocelot platforms.
+Hi Simon,
+
+On 23/03/18 08:51, Simon Horman wrote:
+> On Thu, Mar 22, 2018 at 09:30:40PM +0000, Kieran Bingham wrote:
+>> The r8a7792 Wheat board has two ADV7513 devices sharing a single I2C
+>> bus, however in low power mode the ADV7513 will reset it's slave maps to
+>> use the hardware defined default addresses.
+>>
+>> The ADV7511 driver was adapted to allow the two devices to be registered
+>> correctly - but it did not take into account the fault whereby the
+>> devices reset the addresses.
+>>
+>> This results in an address conflict between the device using the default
+>> addresses, and the other device if it is in low-power-mode.
+>>
+>> Repair this issue by moving both devices away from the default address
+>> definitions.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  .../devicetree/bindings/net/mscc-ocelot.txt        | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> Hi Kierean,
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-> new file mode 100644
-> index 000000000000..ee092a85b5a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-> @@ -0,0 +1,62 @@
-> +Microsemi Ocelot network Switch
-> +===============================
-> +
-> +The Microsemi Ocelot network switch can be found on Microsemi SoCs (VSC7513,
-> +VSC7514)
-> +
-> +Required properties:
-> +- compatible: Should be "mscc,ocelot-switch"
-> +- reg: Must contain an (offset, length) pair of the register set for each
-> +  entry in reg-names.
-> +- reg-names: Must include the following entries:
-> +  - "sys"
-> +  - "rew"
-> +  - "qs"
-> +  - "hsio"
-> +  - "qsys"
-> +  - "ana"
-> +  - "portX" with X from 0 to the number of last port index available on that
-> +    switch
-> +- interrupts: Should contain the switch interrupts for frame extraction and
-> +  frame injection
-> +- interrupt-names: should contain the interrupt names: "xtr", "inj"
+> as this is a fix
+> a) Does it warrant a fixes tag?
+>    Fixes: f6eea82a87db ("ARM: dts: wheat: add DU support")
+> b) Does it warrant being posted as a fix for v4.16;
+> c) or v4.17?
 
-You are not documenting the "ports" subnode(s).Please move the
-individual ports definition under a ports subnode, mainly for two reasons:
+Tricky one, yes it could but this DTS fix, will only actually 'fix' the issue if
+the corresponding driver updates to allow secondary addresses to be parsed are
+also backported.
 
-- it makes it easy at the .dtsi level to have all ports disabled by default
+It should be safe to back port the dts fix without the driver updates, but the
+addresses specified by this patch will simply be ignored.
 
-- this makes you strictly conforming to the DSA binding for Ethernet
-switches and this is good for consistency (both parsing code and just
-representation).
--- 
-Florian
+Thus if this is marked with the fixes tag the corresponding patch "drm: adv7511:
+Add support for i2c_new_secondary_device" should also be marked.
+
+It looks like that patch has yet to be picked up by the DRM subsystem, so how
+about I bundle both of these two patches together in a repost along with the
+fixes tag.
+
+In fact, I don't think the ADV7511 dt-bindings update has made any progress
+either. (dt-bindings: adv7511: Extend bindings to allow specifying slave map
+addresses). The media tree variants for the adv7604 have already been picked up
+by Mauro I believe though.
+
+I presume it would be acceptable for this dts patch (or rather all three patches
+mentioned) to get integrated through the DRM tree ?
+
+--
+Kieran
