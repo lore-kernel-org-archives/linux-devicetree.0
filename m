@@ -1,39 +1,88 @@
-Return-Path: <SRS0=zrMl=GI=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 4/4] dt-bindings: ifc: Remove "simple-bus" from ifc compatible string
-Date: Sun, 18 Mar 2018 11:17:31 -0300
-Message-Id: <1521382651-10256-4-git-send-email-festevam@gmail.com>
-In-Reply-To: <1521382651-10256-1-git-send-email-festevam@gmail.com>
-References: <1521382651-10256-1-git-send-email-festevam@gmail.com>
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=dqFC=GN=mediatek.com=argus.lin@kernel.org>
+From: <argus.lin@mediatek.com>
+Subject: [PATCH V3 0/4] Pwrap: Mediatek pwrap driver for mt6797
+Date: Fri, 23 Mar 2018 16:32:34 +0800
+Message-ID: <20180323083238.13569-1-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_008_518917506.1102085833"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>>
+--__=_Part_Boundary_008_518917506.1102085833
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_009_432532192.1580741395"
 
-DTC warnings will be seen if these examples are used in a real dts file
-due to a mismatch in the unit address notation.
+--__=_Part_Boundary_009_432532192.1580741395
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Remove "simple-bus" from the ifc compatible string to fix the warnings.  
+PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
+SGVyZSYjMzk7cyB2ZXJzaW9uIDMgb2YgdGhlIHBhdGNoIHNlcmllcywgaW5jbHVkZSA0IHBhdGNo
+ZXM6DQoxLiBtb2RpZnkgZHQtYmluZGluZyBkb2N1bWVudC4NCjIuIGFkZCBwd3JhcCBkcml2ZXIg
+Zm9yIG10Njc5Ny4NCjMuIGFkZCBtdDYzNTEgZHJpdmVyIGZvciBtdDY3OTcuDQo0LiBhZGQgcHdy
+YXAgYXQgZHRzLg0KDQpDaGFuZ2VzIGZyb20gdjIgdG8gdjM6DQoxKWFkanVzdCB1cHN0cmVhbSBw
+YXRjaCBzZXF1ZW5jZS4NCjIpZml4IGJ1aWxkIGVycm9yIGZvciBuZXcgZmlsZWQgYXQgcG1pY193
+cmFwcGVyX3R5cGUuDQozKWFkanVzdCBwbWljX3R5cGUgZW51bSBzZXF1ZW5jZS4NCg0KQ2hhbmdl
+cyBmcm9tIHYxIHRvIHYyOg0KMSkgYWRkIG5ldyBjYXBhYmlsaXR5IGZpZWxkIGFuZCBNQVJDTyBm
+b3IgZGlmZmVyZW50IHB3cmFwIHNlcmllcywgDQp0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURH
+RSwgUkVTRVQsIERDTSwgUFJJT1JJVFlfU0VMIGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0
+aW9uIGZvciBtdDY3OTcgcHdyYXAuDQozKSBhZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0
+YXJ2YWN0aW9uIGFuZCByZXF1ZXN0IGV4Y2VwdGlvbi4NCg0KDQpBcmd1cyBMaW4gKDQpOg0KICBk
+dC1iaW5kaW5nczogcHdyYXA6IG1lZGlhdGVrOiBhZGQgTVQ2MzUxIFBNSUMgc3VwcG9ydCBmb3Ig
+TVQ2Nzk3DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQgcHdyYXAgZm9yIG10Njc5NyBTb0Nz
+DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQgbXQ2MzUxIGZvciBtdDY3OTcgU29Dcw0KICBh
+cm02NDogZHRzOiBtdDY3OTc6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBtdDY3OTcNCg0KIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgICAgIHwgICAxICsNCiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpICAgICAgICAgICB8ICAxNCAr
+Kw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyAgICAgICAgICAgICAgIHwg
+MjMwICsrKysrKysrKysrKysrKysrKystLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMjMzIGluc2VydGlv
+bnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTIuNQ0KDQo8L3ByZT48IS0tdHlwZTp0
+ZXh0LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5v
+dGljZSAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0
+aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBj
+b25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1w
+dCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0
+byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkg
+dXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBv
+ciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5
+IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSAN
+CmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhp
+cyBlLW1haWwsIG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWls
+IGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVw
+bHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhp
+cyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFu
+ZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhl
+ciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--__=_Part_Boundary_009_432532192.1580741395
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-index 89427b0..2314871 100644
---- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
-@@ -31,7 +31,7 @@ like FPGAs, CPLDs, etc.
- Example:
- 
- 	ifc@ffe1e000 {
--		compatible = "fsl,ifc", "simple-bus";
-+		compatible = "fsl,ifc";
- 		#address-cells = <2>;
- 		#size-cells = <1>;
- 		reg = <0x0 0xffe1e000 0 0x2000>;
--- 
-2.7.4
+RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpIZXJlJ3MgdmVyc2lv
+biAzIG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUgNCBwYXRjaGVzOg0KMS4gbW9kaWZ5IGR0
+LWJpbmRpbmcgZG9jdW1lbnQuDQoyLiBhZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcuDQozLiBh
+ZGQgbXQ2MzUxIGRyaXZlciBmb3IgbXQ2Nzk3Lg0KNC4gYWRkIHB3cmFwIGF0IGR0cy4NCg0KQ2hh
+bmdlcyBmcm9tIHYyIHRvIHYzOg0KMSlhZGp1c3QgdXBzdHJlYW0gcGF0Y2ggc2VxdWVuY2UuDQoy
+KWZpeCBidWlsZCBlcnJvciBmb3IgbmV3IGZpbGVkIGF0IHBtaWNfd3JhcHBlcl90eXBlLg0KMylh
+ZGp1c3QgcG1pY190eXBlIGVudW0gc2VxdWVuY2UuDQoNCkNoYW5nZXMgZnJvbSB2MSB0byB2MjoN
+CjEpIGFkZCBuZXcgY2FwYWJpbGl0eSBmaWVsZCBhbmQgTUFSQ08gZm9yIGRpZmZlcmVudCBwd3Jh
+cCBzZXJpZXMsIA0KdGhlIGNhcGFiaWxpdHkgaW5jbHVkZSBCUklER0UsIFJFU0VULCBEQ00sIFBS
+SU9SSVRZX1NFTCBhbmQgSU5UMV9FTi4NCjIpIGFkZCBzdGFydmFjdGlvbiBmb3IgbXQ2Nzk3IHB3
+cmFwLg0KMykgYWRkIElOVDEgaW50ZXJydXB0IHRvIGhhbmRsZSBzdGFydmFjdGlvbiBhbmQgcmVx
+dWVzdCBleGNlcHRpb24uDQoNCg0KQXJndXMgTGluICg0KToNCiAgZHQtYmluZGluZ3M6IHB3cmFw
+OiBtZWRpYXRlazogYWRkIE1UNjM1MSBQTUlDIHN1cHBvcnQgZm9yIE1UNjc5Nw0KICBzb2M6IG1l
+ZGlhdGVrOiBwd3JhcDogYWRkIHB3cmFwIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVr
+OiBwd3JhcDogYWRkIG10NjM1MSBmb3IgbXQ2Nzk3IFNvQ3MNCiAgYXJtNjQ6IGR0czogbXQ2Nzk3
+OiBhZGQgcHdyYXAgc3VwcG9ydCBmb3IgbXQ2Nzk3DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0
+cy9tZWRpYXRlay9tdDY3OTcuZHRzaSAgICAgICAgICAgfCAgMTQgKysNCiBkcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDIzMCArKysrKysrKysrKysr
+KysrKysrLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDIzMyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
+bnMoLSkNCg0KLS0gDQoyLjEyLjUNCg==
+
+--__=_Part_Boundary_009_432532192.1580741395--
+
+--__=_Part_Boundary_008_518917506.1102085833--
