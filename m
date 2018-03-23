@@ -1,58 +1,200 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v4 4/5] pintcrl: support bias-disable of generic and
- special pins simultaneously
-Date: Fri, 23 Mar 2018 17:44:22 +0800
-Message-ID: <1521798262.28226.12.camel@mtkswgap22>
-References: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1521687523-1604-5-git-send-email-zhiyong.tao@mediatek.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 11/16] rtc: mediatek: move the declaration into a
+ globally visible header file
+Date: Fri, 23 Mar 2018 10:57:40 +0100
+Message-ID: <20180323095740.GD3417@piout.net>
+References: <cover.1521794176.git.sean.wang@mediatek.com>
+ <53afbe8172fb1afd809ce9ba1afeda924b9ea705.1521794177.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521687523-1604-5-git-send-email-zhiyong.tao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, srv_heupstream@mediatek.com, linux-gpio@vger.kernel.org, biao.huang@mediatek.com, erin.lo@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, hongzhou.yang@mediatek.com, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53afbe8172fb1afd809ce9ba1afeda924b9ea705.1521794177.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-03-22 at 10:58 +0800, Zhiyong Tao wrote:
-> For generic pins, parameter "arg" is 0 or 1.
-> For special pins, bias-disable is set by R0R1,
-> so we need transmited "00" to set bias-disable
-> When we set "bias-disable" as high-z property,
-> the parameter should be "MTK_PUPD_SET_R1R0_00".
+On 23/03/2018 at 17:15:08 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> This is in preparation for allowing other drivers can share the
+> declaration, so move the declaration into a globally visible header file.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> index 3cf384f..f991ff3 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> @@ -293,7 +293,7 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
->  		unsigned int pin, bool enable, bool isup, unsigned int arg)
->  {
->  	unsigned int bit;
-> -	unsigned int reg_pullen, reg_pullsel;
-> +	unsigned int reg_pullen, reg_pullsel, r1r0;
->  	int ret;
->  
->  	/* Some pins' pull setting are very different,
-> @@ -301,8 +301,12 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
->  	 * resistor bit, so we need this special handle.
->  	 */
->  	if (pctl->devdata->spec_pull_set) {
-> +		/* For special pins, bias-disable is set by R1R0,
-> +		 * the parameter should be "MTK_PUPD_SET_R1R0_00".
-> +		 */
-> +		r1r0 = enable ? arg : MTK_PUPD_SET_R1R0_00;
->  		ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl, pin),
-> -			pin, pctl->devdata->port_align, isup, arg);
-> +			pin, pctl->devdata->port_align, isup, r1r0);
->  		if (!ret)
->  			return 0;
->  	}
+>  drivers/rtc/rtc-mt6397.c   | 53 +---------------------------------
+>  include/linux/rtc/mt6397.h | 72 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Reviewed-by: Sean Wang <sean.wang@mediatek.com>
+This should go in include/linux/mfd/
+
+>  2 files changed, 73 insertions(+), 52 deletions(-)
+>  create mode 100644 include/linux/rtc/mt6397.h
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index d133d1f..015609d 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -19,63 +19,12 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> -#include <linux/jiffies.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/io.h>
+>  #include <linux/mfd/mt6397/core.h>
+> -
+> -#define RTC_BBPU		0x0000
+> -#define RTC_BBPU_CBUSY		BIT(6)
+> -
+> -#define RTC_WRTGR		0x003c
+> -
+> -#define RTC_IRQ_STA		0x0002
+> -#define RTC_IRQ_STA_AL		BIT(0)
+> -#define RTC_IRQ_STA_LP		BIT(3)
+> -
+> -#define RTC_IRQ_EN		0x0004
+> -#define RTC_IRQ_EN_AL		BIT(0)
+> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
+> -#define RTC_IRQ_EN_LP		BIT(3)
+> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> -
+> -#define RTC_AL_MASK		0x0008
+> -#define RTC_AL_MASK_DOW		BIT(4)
+> -
+> -#define RTC_TC_SEC		0x000a
+> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> -#define RTC_OFFSET_SEC		0
+> -#define RTC_OFFSET_MIN		1
+> -#define RTC_OFFSET_HOUR		2
+> -#define RTC_OFFSET_DOM		3
+> -#define RTC_OFFSET_DOW		4
+> -#define RTC_OFFSET_MTH		5
+> -#define RTC_OFFSET_YEAR		6
+> -#define RTC_OFFSET_COUNT	7
+> -
+> -#define RTC_AL_SEC		0x0018
+> -
+> -#define RTC_PDN2		0x002e
+> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
+> -
+> -#define RTC_MIN_YEAR		1968
+> -#define RTC_BASE_YEAR		1900
+> -#define RTC_NUM_YEARS		128
+> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> -
+> -#define MTK_RTC_POLL_DELAY_US	10
+> -#define MTK_RTC_POLL_TIMEOUT	(jiffies_to_usecs(HZ))
+> -
+> -struct mt6397_rtc {
+> -	struct device		*dev;
+> -	struct rtc_device	*rtc_dev;
+> -	struct mutex		lock;
+> -	struct regmap		*regmap;
+> -	int			irq;
+> -	u32			addr_base;
+> -};
+> +#include <linux/rtc/mt6397.h>
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> diff --git a/include/linux/rtc/mt6397.h b/include/linux/rtc/mt6397.h
+> new file mode 100644
+> index 0000000..4b19f51
+> --- /dev/null
+> +++ b/include/linux/rtc/mt6397.h
+> @@ -0,0 +1,72 @@
+> +
+
+Unnecessary empty line
+
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2014-2018 MediaTek Inc.
+> + *
+> + * Author: Tianping.Fang <tianping.fang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + */
+> +
+> +#ifndef _LINUX_RTC_MT6397_H_
+> +#define _LINUX_RTC_MT6397_H_
+> +
+> +#include <linux/jiffies.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/rtc.h>
+> +
+> +#define RTC_BBPU		0x0000
+> +#define RTC_BBPU_CBUSY		BIT(6)
+> +
+> +#define RTC_WRTGR		0x003c
+> +
+> +#define RTC_IRQ_STA		0x0002
+> +#define RTC_IRQ_STA_AL		BIT(0)
+> +#define RTC_IRQ_STA_LP		BIT(3)
+> +
+> +#define RTC_IRQ_EN		0x0004
+> +#define RTC_IRQ_EN_AL		BIT(0)
+> +#define RTC_IRQ_EN_ONESHOT	BIT(2)
+> +#define RTC_IRQ_EN_LP		BIT(3)
+> +#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> +
+> +#define RTC_AL_MASK		0x0008
+> +#define RTC_AL_MASK_DOW		BIT(4)
+> +
+> +#define RTC_TC_SEC		0x000a
+> +/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> +#define RTC_OFFSET_SEC		0
+> +#define RTC_OFFSET_MIN		1
+> +#define RTC_OFFSET_HOUR		2
+> +#define RTC_OFFSET_DOM		3
+> +#define RTC_OFFSET_DOW		4
+> +#define RTC_OFFSET_MTH		5
+> +#define RTC_OFFSET_YEAR		6
+> +#define RTC_OFFSET_COUNT	7
+> +
+> +#define RTC_AL_SEC		0x0018
+> +
+> +#define RTC_PDN2		0x002e
+> +#define RTC_PDN2_PWRON_ALARM	BIT(4)
+> +
+> +#define RTC_MIN_YEAR		1968
+> +#define RTC_BASE_YEAR		1900
+> +#define RTC_NUM_YEARS		128
+> +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> +
+> +#define MTK_RTC_POLL_DELAY_US	10
+> +#define MTK_RTC_POLL_TIMEOUT	(jiffies_to_usecs(HZ))
+> +
+> +struct mt6397_rtc {
+> +	struct device		*dev;
+> +	struct rtc_device	*rtc_dev;
+> +
+> +	/* protect registers accessing */
+> +	struct mutex		lock;
+> +	struct regmap		*regmap;
+> +	int			irq;
+> +	u32			addr_base;
+> +};
+> +
+> +#endif /* _LINUX_RTC_MT6397_H_ */
+> +
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
