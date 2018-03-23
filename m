@@ -1,34 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/5] PINCTRL: Mediatek pinctrl driver for mt2712
-Date: Fri, 23 Mar 2018 03:58:00 +0100
-Message-ID: <CACRpkdZHuNytoq_PnLJa5SWJzPruMC29XE7GH_JxsH0uZmBabQ@mail.gmail.com>
-References: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation with
+ hhi syscon
+Date: Thu, 22 Mar 2018 22:04:13 -0500
+Message-ID: <CAL_JsqKPFbA4duG8tUKwdJTtxXOG+3kMTwu2qAVxb9zgPckL3g@mail.gmail.com>
+References: <20180315115545.1884-1-jbrunet@baylibre.com> <20180315115545.1884-2-jbrunet@baylibre.com>
+ <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop> <1521385797.6569.90.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com>
+In-Reply-To: <1521385797.6569.90.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>, sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Liguo Zhang <liguo.zhang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, hongkun.cao@mediatek.com, Biao Huang <biao.huang@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 22, 2018 at 3:58 AM, Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
-
-> This series includes five patches:
-> 1.Add mt2712 pintcrl head file.
-> 2.Add mt2712 pinctrl device node.
-> 3.Add mt2712 pinctrl driver.
-> 4.Support bias-disable of generic and special pins simultaneously.
-> 5.fix check warnings.
+On Sun, Mar 18, 2018 at 10:09 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> On Sun, 2018-03-18 at 07:52 -0500, Rob Herring wrote:
+>> On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
+>> > The HHI register region hosts more than just clocks and needs to
+>> > accessed drivers other than the clock controller, such as the display
+>> > driver.
+>> >
+>> > This register region should be managed by syscon. It is already the case
+>> > on gxbb/gxl and it soon will be on axg. The clock controllers must use
+>> > this system controller instead of directly mapping the registers.
+>>
+>> Sounds like a kernel problem, not a DT one.
 >
-> Changes in patch v4:
-> 1)fix check warnings for mt2712.
-> 2)add fix check warnings patch for other ICs.
+> It's a platform problem, so it has much a kernel problem (solution already
+> merged) as a DT problem
+>
+> DT wise, we've got two devices mapping the same region
+>
+> in arch/arm64/boot/dts/amlogic/meson-gx.dtsi:
+>> system-controller@0
+>
+> which is used by the display device.
+>
+> and in arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi (same for gxl)
+>> clock-controller@0
+>
+> It has worked so far because the clock controller claims the region w/o
+> reserving it but it remains unsafe since both device may access the same region.
+> The fix is to have the clock controller go through the existing syscon.
 
-This looks good to me.
+We certainly want to avoid multiple nodes using the same mmio region.
 
-Can I get some ACK/Reviewed-by's from Sean so I can
-merge the driver for v4.17?
 
-Yours,
-Linus Walleij
+>> With a single child, there is really no point to this change. A single
+>> node can provide multiple functions. Look at nodes that are both reset
+>> and clock providers.
+>
+> There is more than a single user, as explained above and in the cover letter of
+> this series.
+
+Right, but a single node can support more than a single user (or
+provider). You don't have to have multiple nodes to have multiple
+users/providers.
+
+Rob
