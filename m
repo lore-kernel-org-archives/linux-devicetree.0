@@ -1,88 +1,97 @@
-Return-Path: <SRS0=dqFC=GN=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V3 0/4] Pwrap: Mediatek pwrap driver for mt6797
-Date: Fri, 23 Mar 2018 16:32:34 +0800
-Message-ID: <20180323083238.13569-1-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_008_518917506.1102085833"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-Path: <SRS0=b15J=GN=codeaurora.org=kramasub@kernel.org>
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v5 0/5] Introduce GENI SE Controller Driver
+Date: Fri, 23 Mar 2018 14:20:56 -0600
+Message-Id: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
+To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_008_518917506.1102085833
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_009_432532192.1580741395"
+Generic Interface (GENI) firmware based Qualcomm Universal Peripheral (QUP)
+Wrapper is a next generation programmable module for supporting a wide
+range of serial interfaces like UART, SPI, I2C, I3C, etc. A single QUP
+module can provide upto 8 Serial Interfaces using its internal Serial
+Engines (SE). The protocol supported by each interface is determined by
+the firmware loaded to the Serial Engine.
 
---__=_Part_Boundary_009_432532192.1580741395
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+This patch series introduces GENI SE Driver to manage the GENI based QUP
+Wrapper and the common aspects of all SEs inside the QUP Wrapper. This
+patch series also introduces the UART and I2C Controller drivers to
+drive the SEs that are programmed with the respective protocols.
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-SGVyZSYjMzk7cyB2ZXJzaW9uIDMgb2YgdGhlIHBhdGNoIHNlcmllcywgaW5jbHVkZSA0IHBhdGNo
-ZXM6DQoxLiBtb2RpZnkgZHQtYmluZGluZyBkb2N1bWVudC4NCjIuIGFkZCBwd3JhcCBkcml2ZXIg
-Zm9yIG10Njc5Ny4NCjMuIGFkZCBtdDYzNTEgZHJpdmVyIGZvciBtdDY3OTcuDQo0LiBhZGQgcHdy
-YXAgYXQgZHRzLg0KDQpDaGFuZ2VzIGZyb20gdjIgdG8gdjM6DQoxKWFkanVzdCB1cHN0cmVhbSBw
-YXRjaCBzZXF1ZW5jZS4NCjIpZml4IGJ1aWxkIGVycm9yIGZvciBuZXcgZmlsZWQgYXQgcG1pY193
-cmFwcGVyX3R5cGUuDQozKWFkanVzdCBwbWljX3R5cGUgZW51bSBzZXF1ZW5jZS4NCg0KQ2hhbmdl
-cyBmcm9tIHYxIHRvIHYyOg0KMSkgYWRkIG5ldyBjYXBhYmlsaXR5IGZpZWxkIGFuZCBNQVJDTyBm
-b3IgZGlmZmVyZW50IHB3cmFwIHNlcmllcywgDQp0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURH
-RSwgUkVTRVQsIERDTSwgUFJJT1JJVFlfU0VMIGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0
-aW9uIGZvciBtdDY3OTcgcHdyYXAuDQozKSBhZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0
-YXJ2YWN0aW9uIGFuZCByZXF1ZXN0IGV4Y2VwdGlvbi4NCg0KDQpBcmd1cyBMaW4gKDQpOg0KICBk
-dC1iaW5kaW5nczogcHdyYXA6IG1lZGlhdGVrOiBhZGQgTVQ2MzUxIFBNSUMgc3VwcG9ydCBmb3Ig
-TVQ2Nzk3DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQgcHdyYXAgZm9yIG10Njc5NyBTb0Nz
-DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQgbXQ2MzUxIGZvciBtdDY3OTcgU29Dcw0KICBh
-cm02NDogZHRzOiBtdDY3OTc6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBtdDY3OTcNCg0KIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgICAgIHwgICAxICsNCiBh
-cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpICAgICAgICAgICB8ICAxNCAr
-Kw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyAgICAgICAgICAgICAgIHwg
-MjMwICsrKysrKysrKysrKysrKysrKystLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMjMzIGluc2VydGlv
-bnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTIuNQ0KDQo8L3ByZT48IS0tdHlwZTp0
-ZXh0LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5v
-dGljZSAqKioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0
-aGlzIGUtbWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBj
-b25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1w
-dCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0
-byBiZSANCmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkg
-dXNlLCBkaXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBv
-ciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5
-IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSAN
-CmJlIHVubGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhp
-cyBlLW1haWwsIG9yIGJlbGlldmUgDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWls
-IGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVw
-bHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhp
-cyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFu
-ZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhl
-ciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
+[v5]
+ * Remove Linux specific property from the device tree binding
+ * Clarify I2C SCL time period documentation
+ * Remove redundant checks in I2C controller driver during timeout
+ * Use 100kHz as the default clock frequency in the I2C controller driver
+ * Disable Wrapper controller by default in the SDM845 device tree and
+   enable it explicitly for SDM845 MTP
+ * Specify I2C clock frequency in the SDM845 device tree
+ * Remove bias configuration for I2C pins under sleep state in device tree
+ * Drop the serial driver from the patch series since it is merged
+ * Specify the UART port options in the SDM845 device tree
 
---__=_Part_Boundary_009_432532192.1580741395
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+[v4]
+ * Add SPI controller information in device tree binding
+ * Add support for debug UART & I2C controllers in SDM845 device tree
+ * Remove any unnecessary parenthesis & casting
+ * Identify break character in UART line and pass it to the framework
+ * Transmit data from fault handler reliably in debug UART
+ * Map the register block when the UART port is requested
+ * Move concise exported functions as macros or inlines in public header
+ * Move the clock performance table from the wrapper to serial engines
+ * Add a lock to synchronize between IRQ & error handling in I2C controller
+ * Remove any compiler optimization hints like likely/unlikely
+ * Update documentation to clarify tables and hardware blocks
 
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpIZXJlJ3MgdmVyc2lv
-biAzIG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUgNCBwYXRjaGVzOg0KMS4gbW9kaWZ5IGR0
-LWJpbmRpbmcgZG9jdW1lbnQuDQoyLiBhZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcuDQozLiBh
-ZGQgbXQ2MzUxIGRyaXZlciBmb3IgbXQ2Nzk3Lg0KNC4gYWRkIHB3cmFwIGF0IGR0cy4NCg0KQ2hh
-bmdlcyBmcm9tIHYyIHRvIHYzOg0KMSlhZGp1c3QgdXBzdHJlYW0gcGF0Y2ggc2VxdWVuY2UuDQoy
-KWZpeCBidWlsZCBlcnJvciBmb3IgbmV3IGZpbGVkIGF0IHBtaWNfd3JhcHBlcl90eXBlLg0KMylh
-ZGp1c3QgcG1pY190eXBlIGVudW0gc2VxdWVuY2UuDQoNCkNoYW5nZXMgZnJvbSB2MSB0byB2MjoN
-CjEpIGFkZCBuZXcgY2FwYWJpbGl0eSBmaWVsZCBhbmQgTUFSQ08gZm9yIGRpZmZlcmVudCBwd3Jh
-cCBzZXJpZXMsIA0KdGhlIGNhcGFiaWxpdHkgaW5jbHVkZSBCUklER0UsIFJFU0VULCBEQ00sIFBS
-SU9SSVRZX1NFTCBhbmQgSU5UMV9FTi4NCjIpIGFkZCBzdGFydmFjdGlvbiBmb3IgbXQ2Nzk3IHB3
-cmFwLg0KMykgYWRkIElOVDEgaW50ZXJydXB0IHRvIGhhbmRsZSBzdGFydmFjdGlvbiBhbmQgcmVx
-dWVzdCBleGNlcHRpb24uDQoNCg0KQXJndXMgTGluICg0KToNCiAgZHQtYmluZGluZ3M6IHB3cmFw
-OiBtZWRpYXRlazogYWRkIE1UNjM1MSBQTUlDIHN1cHBvcnQgZm9yIE1UNjc5Nw0KICBzb2M6IG1l
-ZGlhdGVrOiBwd3JhcDogYWRkIHB3cmFwIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVr
-OiBwd3JhcDogYWRkIG10NjM1MSBmb3IgbXQ2Nzk3IFNvQ3MNCiAgYXJtNjQ6IGR0czogbXQ2Nzk3
-OiBhZGQgcHdyYXAgc3VwcG9ydCBmb3IgbXQ2Nzk3DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0
-cy9tZWRpYXRlay9tdDY3OTcuZHRzaSAgICAgICAgICAgfCAgMTQgKysNCiBkcml2ZXJzL3NvYy9t
-ZWRpYXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDIzMCArKysrKysrKysrKysr
-KysrKysrLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDIzMyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
-bnMoLSkNCg0KLS0gDQoyLjEyLjUNCg==
+[v3]
+ * Update the driver dependencies
+ * Use the SPDX License Expression
+ * Squash all the controller device tree bindings together
+ * Use kernel doc format for documentation
+ * Add additional documentation for packing configuration
+ * Use clk_bulk_* API for related clocks
+ * Remove driver references to pinctrl and their states
+ * Replace magic numbers with appropriate macros
+ * Update memory barrier usage and associated comments
+ * Reduce interlacing of register reads/writes
+ * Fix poll_get_char() operation in console UART driver under polling mode
+ * Address other comments from Bjorn Andersson to improve code readability
 
---__=_Part_Boundary_009_432532192.1580741395--
+[v2]
+ * Updated device tree bindings to describe the hardware
+ * Updated SE DT node as child node of QUP Wrapper DT node
+ * Moved common AHB clocks to QUP Wrapper DT node
+ * Use the standard "clock-frequency" I2C property
+ * Update compatible field in UART Controller to reflect hardware manual
+ * Addressed other device tree binding specific comments from Rob Herring
 
---__=_Part_Boundary_008_518917506.1102085833--
+Karthikeyan Ramasubramanian (4):
+  dt-bindings: soc: qcom: Add device tree binding for GENI SE
+  soc: qcom: Add GENI based QUP Wrapper driver
+  i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C
+    controller
+  arm64: dts: sdm845: Add support for an instance of I2C controller
+
+Rajendra Nayak (1):
+  arm64: dts: sdm845: Add serial console support
+
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 119 ++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  59 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  68 ++
+ drivers/i2c/busses/Kconfig                         |  13 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-qcom-geni.c                 | 650 ++++++++++++++++++
+ drivers/soc/qcom/Kconfig                           |   9 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/qcom-geni-se.c                    | 748 +++++++++++++++++++++
+ include/linux/qcom-geni-se.h                       | 425 ++++++++++++
+ 10 files changed, 2093 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+ create mode 100644 drivers/i2c/busses/i2c-qcom-geni.c
+ create mode 100644 drivers/soc/qcom/qcom-geni-se.c
+ create mode 100644 include/linux/qcom-geni-se.h
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
