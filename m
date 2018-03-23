@@ -1,50 +1,33 @@
-From: Trilok Soni <tsoni@codeaurora.org>
-Subject: Re: [PATCH V3] Input: pm8941-pwrkey: add resin key capabilities
-Date: Fri, 23 Mar 2018 12:34:50 -0700
-Message-ID: <6928c292-b10b-3056-af02-f1ab70d8f494@codeaurora.org>
-References: <1521786192-19487-1-git-send-email-tirupath@codeaurora.org>
- <240c6cbc-886f-94c6-cba4-3c4eb3ed0b45@codeaurora.org>
- <20180323192210.GE255819@dtor-ws>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Fri, 23 Mar 2018 20:42:59 +0100
+Message-ID: <20180323194259.GP24361@lunn.ch>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
+ <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323192210.GE255819@dtor-ws>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Tirupathi Reddy <tirupath@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+> Indeed. I'll add my settings as an example. Where should I put this
+> documentation, in the commit comment or somewhere in
+> Documents/devicetree/bindings?
 
->>
->>
->> What happens if interrupts comes as soon as you have done the key_init(..)
->> here? I see that you are registering the input device after it, right? Looks
->> like you should do this at the end of probe?
-> 
-> It should be fine, input devices properly allocated (with
-> input_allocate_device() or devm- version) are able to accept events even
-> if input device has not been registered yet. It is and advertised
-> feature:
-> 
-> drivers/input/input.c:
-> 
-> "
->   * input_event() - report new input event
-> ...
->   * NOTE: input_event() may be safely used right after input device was
->   * allocated with input_allocate_device(), even before it is registered
->   * with input_register_device(), but the event will not reach any of the
->   * input handlers. Such early invocation of input_event() may be used
->   * to 'seed' initial state of a switch or initial position of absolute
->   * axis, etc.
+Documention/devicetree/bindings/net/ethernet.txt
 
-Thanks. Looks good since input_allocate_device(...) is called before the 
-init.
+> It's what I intended to do, but there were two problems with that:
+> - of_get_mac_address() returns a pointer to constant data in memory, but the
+> nvmem functions return an allocated memory object that must be freed after
+> use. This changes the way the call is to be made.
+> - The nvmem functions need the "struct device" pointer as well, while
+> of_get_mac_address() only gets passed the DT node.
 
--- 
----Trilok Soni
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+Does of_nvmem_cell_get() help?
+
+      Andrew
