@@ -1,82 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v1 02/16] dt-bindings: rtc: mediatek: add bindings for
- PMIC RTC
-Date: Fri, 23 Mar 2018 10:41:18 +0100
-Message-ID: <20180323094118.GC3417@piout.net>
-References: <cover.1521794176.git.sean.wang@mediatek.com>
- <5846e8be319c4836808c8127d5bb51b7e999e896.1521794177.git.sean.wang@mediatek.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v4 4/5] pintcrl: support bias-disable of generic and
+ special pins simultaneously
+Date: Fri, 23 Mar 2018 17:44:22 +0800
+Message-ID: <1521798262.28226.12.camel@mtkswgap22>
+References: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com>
+         <1521687523-1604-5-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5846e8be319c4836808c8127d5bb51b7e999e896.1521794177.git.sean.wang@mediatek.com>
+In-Reply-To: <1521687523-1604-5-git-send-email-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, srv_heupstream@mediatek.com, linux-gpio@vger.kernel.org, biao.huang@mediatek.com, erin.lo@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, hongzhou.yang@mediatek.com, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 23/03/2018 at 17:14:59 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Thu, 2018-03-22 at 10:58 +0800, Zhiyong Tao wrote:
+> For generic pins, parameter "arg" is 0 or 1.
+> For special pins, bias-disable is set by R0R1,
+> so we need transmited "00" to set bias-disable
+> When we set "bias-disable" as high-z property,
+> the parameter should be "MTK_PUPD_SET_R1R0_00".
 > 
-> Add device-tree binding for MediaTek PMIC based RTC.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > ---
->  .../devicetree/bindings/rtc/rtc-mt6397.txt         | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> new file mode 100644
-> index 0000000..83ff6be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> @@ -0,0 +1,39 @@
-> +Device-Tree bindings for MediaTek PMIC based RTC
-> +
-> +MediaTek PMIC based RTC is an independent function of MediaTek PMIC which
-> +is working as a multi-function device (MFD). And the RTC can be configured and
-> +set up via PMIC wrapper bus. Which is also common resource shared among the
-> +other functions present on the PMIC.
-> +
-> +For MediaTek PMIC wrapper bus bindings, see:
-> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +
-> +Required parent node:
-> +- pmic
-> +  For MediaTek PMIC MFD bindings, see:
-> +  Documentation/devicetree/bindings/mfd/mt6397.txt
-> +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +	"mediatek,mt6323-rtc": for MT6323 PMIC
-> +	"mediatek,mt6397-rtc": for MT6397 PMIC
-> +
-> +Optional child node:
-> +- power-off
-> +  For Power-Off Device for MediaTek PMIC RTC bindings, see:
-> +  Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
-> +
-> +Example:
-> +
-> +	pmic {
-> +		compatible = "mediatek,mt6323";
-> +
-> +		...
-> +		rtc {
-> +			compatible = "mediatek,mt6323-rtc";
-> +
-> +			power-off {
-> +				compatible = "mediatek,mt6323-rtc-poweroff";
-> +			};
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> index 3cf384f..f991ff3 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> @@ -293,7 +293,7 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
+>  		unsigned int pin, bool enable, bool isup, unsigned int arg)
+>  {
+>  	unsigned int bit;
+> -	unsigned int reg_pullen, reg_pullsel;
+> +	unsigned int reg_pullen, reg_pullsel, r1r0;
+>  	int ret;
+>  
+>  	/* Some pins' pull setting are very different,
+> @@ -301,8 +301,12 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
+>  	 * resistor bit, so we need this special handle.
+>  	 */
+>  	if (pctl->devdata->spec_pull_set) {
+> +		/* For special pins, bias-disable is set by R1R0,
+> +		 * the parameter should be "MTK_PUPD_SET_R1R0_00".
+> +		 */
+> +		r1r0 = enable ? arg : MTK_PUPD_SET_R1R0_00;
+>  		ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl, pin),
+> -			pin, pctl->devdata->port_align, isup, arg);
+> +			pin, pctl->devdata->port_align, isup, r1r0);
+>  		if (!ret)
+>  			return 0;
+>  	}
 
-I'm pretty sure the whole point of mfd is to avoid having the poweroff
-controller under the rtc
-
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Sean Wang <sean.wang@mediatek.com>
