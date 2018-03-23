@@ -1,81 +1,116 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5,
-	5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Fri, 23 Mar 2018 15:11:07 +0100
-Message-ID: <20180323141107.GB23658@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2054007461423125893=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180323103006.alymgb3ywftb4gek@earth.universe>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Fri, 23 Mar 2018 15:24:34 +0100
+Message-ID: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
+It's common practice to store MAC addresses for network interfaces into
+nvmem devices. However the code to actually do this in the kernel lacks,
+so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+address from an nvmem cell provider.
 
---===============2054007461423125893==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
-Content-Disposition: inline
+This is particulary useful on devices where the ethernet interface cannot
+be configured by the bootloader, for example because it's in an FPGA.
 
+Tested by adapting the cadence macb driver to call this instead of
+of_get_mac_address().
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ drivers/of/of_net.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_net.h |  6 ++++++
+ 2 files changed, 54 insertions(+)
 
-Hi!
-
-> > Any more ideas? :-)
->=20
-> Make sure, that the device was not proped properly (cat
-> /proc/asound/cards) and post the real error? :)
-
-Oh and, audio now works for me, so
-
-Tested-by: Pavel Machek <pavel@ucw.cz>
-
-for the series.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq1CvsACgkQMOfwapXb+vKxXwCfTytipVc3xGXvXOwWxZs6IaIl
-npsAn3MkVEAatodpRCjq0aXU5w39na7W
-=83Zg
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
-
---===============2054007461423125893==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2054007461423125893==--
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index d820f3e..316a537 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -7,6 +7,7 @@
+  */
+ #include <linux/etherdevice.h>
+ #include <linux/kernel.h>
++#include <linux/nvmem-consumer.h>
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/export.h>
+@@ -80,3 +81,50 @@ const void *of_get_mac_address(struct device_node *np)
+ 	return of_get_mac_addr(np, "address");
+ }
+ EXPORT_SYMBOL(of_get_mac_address);
++
++/**
++ * Search the device tree for a MAC address, by calling of_get_mac_address
++ * and if that doesn't provide an address, fetch it from an nvmem provider
++ * using the name 'mac-address'.
++ * On success, copies the new address is into memory pointed to by addr and
++ * returns 0. Returns a negative error code otherwise.
++ * @dev:	Pointer to the device containing the device_node
++ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
++ */
++int of_get_nvmem_mac_address(struct device *dev, char *addr)
++{
++	const char *mac;
++	struct nvmem_cell *cell;
++	size_t len;
++	int ret;
++
++	mac = of_get_mac_address(dev->of_node);
++	if (mac) {
++		ether_addr_copy(addr, mac);
++		return 0;
++	}
++
++	cell = nvmem_cell_get(dev, "mac-address");
++	if (IS_ERR(cell))
++		return PTR_ERR(cell);
++
++	mac = (const char *)nvmem_cell_read(cell, &len);
++
++	nvmem_cell_put(cell);
++
++	if (IS_ERR(mac))
++		return PTR_ERR(mac);
++
++	if (len < 6 || !is_valid_ether_addr(mac)) {
++		dev_err(dev, "MAC address from NVMEM is invalid\n");
++		ret = -EINVAL;
++	} else {
++		ether_addr_copy(addr, mac);
++		ret = 0;
++	}
++
++	kfree(mac);
++
++	return ret;
++}
++EXPORT_SYMBOL(of_get_nvmem_mac_address);
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 9cd72aa..0d52e1d 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -13,6 +13,7 @@
+ struct net_device;
+ extern int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
++extern int of_get_nvmem_mac_address(struct device *dev, char *addr);
+ extern struct net_device *of_find_net_device_by_node(struct device_node *np);
+ #else
+ static inline int of_get_phy_mode(struct device_node *np)
+@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
+ 	return NULL;
+ }
+ 
++static inline int of_get_nvmem_mac_address(struct device *dev, char *addr)
++{
++	return -ENODEV;
++}
++
+ static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
+ {
+ 	return NULL;
+-- 
+1.9.1
