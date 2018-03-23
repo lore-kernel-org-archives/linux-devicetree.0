@@ -1,7 +1,7 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2 4/7] dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
-Date: Fri, 23 Mar 2018 22:38:13 +0800
-Message-ID: <20180323143816.200573-5-yixun.lan@amlogic.com>
+Subject: [PATCH v2 7/7] ARM64: dts: meson-axg: add an 32K alt aoclk
+Date: Fri, 23 Mar 2018 22:38:16 +0800
+Message-ID: <20180323143816.200573-8-yixun.lan@amlogic.com>
 References: <20180323143816.200573-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,74 +12,32 @@ To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.co
 Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt-bindings headers for the Meson-AXG's AO clock and
-reset controller.
+The ao_clk81 in AO domain have two clock source,
+one from a 32K alt crystal we name it as ao_alt_clk,
+another is the clk81 signal from EE domain.
 
 Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
- include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
- create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
-new file mode 100644
-index 000000000000..61955016a55b
---- /dev/null
-+++ b/include/dt-bindings/clock/axg-aoclkc.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright (c) 2016 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Copyright (c) 2018 Amlogic, inc.
-+ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
-+ */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index b3d394f5d95a..48584d5a329b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -109,6 +109,13 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	ao_alt_xtal: ao_alt_xtal-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <32000000>;
++		clock-output-names = "ao_alt_xtal";
++		#clock-cells = <0>;
++	};
 +
-+#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
-+#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
-+
-+#define CLKID_AO_REMOTE		0
-+#define CLKID_AO_I2C_MASTER	1
-+#define CLKID_AO_I2C_SLAVE	2
-+#define CLKID_AO_UART1		3
-+#define CLKID_AO_UART2		4
-+#define CLKID_AO_IR_BLASTER	5
-+#define CLKID_AO_SAR_ADC	6
-+#define CLKID_AO_CLK81		7
-+#define CLKID_AO_SAR_ADC_SEL	8
-+#define CLKID_AO_SAR_ADC_DIV	9
-+#define CLKID_AO_SAR_ADC_CLK	10
-+#define CLKID_AO_ALT_XTAL	11
-+
-+#endif
-diff --git a/include/dt-bindings/reset/axg-aoclkc.h b/include/dt-bindings/reset/axg-aoclkc.h
-new file mode 100644
-index 000000000000..d342c0b6b2a7
---- /dev/null
-+++ b/include/dt-bindings/reset/axg-aoclkc.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright (c) 2016 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Copyright (c) 2018 Amlogic, inc.
-+ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
-+ */
-+
-+#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
-+#define DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
-+
-+#define RESET_AO_REMOTE		0
-+#define RESET_AO_I2C_MASTER	1
-+#define RESET_AO_I2C_SLAVE	2
-+#define RESET_AO_UART1		3
-+#define RESET_AO_UART2		4
-+#define RESET_AO_IR_BLASTER	5
-+
-+#endif
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
 -- 
 2.15.1
