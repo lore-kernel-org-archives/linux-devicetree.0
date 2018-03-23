@@ -1,83 +1,90 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v2 1/2] dt-bindings: media: Binding document for OV7251 camera sensor
-Date: Fri, 23 Mar 2018 12:14:19 +0800
-Message-ID: <1521778460-8717-2-git-send-email-todor.tomov@linaro.org>
-References: <1521778460-8717-1-git-send-email-todor.tomov@linaro.org>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v2 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Fri, 23 Mar 2018 10:08:51 +0530
+Message-ID: <7bffd76a-7a14-d62c-7e12-2d4eb2ba7ff2@codeaurora.org>
+References: <1521708646-5379-1-git-send-email-mgautam@codeaurora.org>
+ <1521708646-5379-2-git-send-email-mgautam@codeaurora.org>
+ <152174418191.178046.10173529959609556848@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521778460-8717-1-git-send-email-todor.tomov@linaro.org>
+In-Reply-To: <152174418191.178046.10173529959609556848@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the document for ov7251 device tree binding.
+Hi Stephen,
 
-CC: Rob Herring <robh@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/media/i2c/ov7251.txt       | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-new file mode 100644
-index 0000000..4ee6888
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-@@ -0,0 +1,51 @@
-+* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
-+
-+The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor with
-+an active array size of 640H x 480V. It is programmable through a serial I2C
-+interface.
-+
-+Required Properties:
-+- compatible: Value should be "ovti,ov7251".
-+- clocks: Reference to the xclk clock.
-+- clock-names: Should be "xclk".
-+- clock-frequency: Frequency of the xclk clock.
-+- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-+  to the hardware pin XSHUTDOWN which is physically active low.
-+- vdddo-supply: Chip digital IO regulator.
-+- vdda-supply: Chip analog regulator.
-+- vddd-supply: Chip digital core regulator.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	&i2c1 {
-+		...
-+
-+		ov7251: camera-sensor@60 {
-+			compatible = "ovti,ov7251";
-+			reg = <0x60>;
-+
-+			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&camera_bw_default>;
-+
-+			clocks = <&clks 200>;
-+			clock-names = "xclk";
-+			clock-frequency = <24000000>;
-+
-+			vdddo-supply = <&camera_dovdd_1v8>;
-+			vdda-supply = <&camera_avdd_2v8>;
-+			vddd-supply = <&camera_dvdd_1v2>;
-+
-+			port {
-+				ov7251_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0>;
-+					remote-endpoint = <&csi0_ep>;
-+				};
-+			};
-+		};
-+	};
+On 3/23/2018 12:13 AM, Stephen Boyd wrote:
+> Quoting Manu Gautam (2018-03-22 01:50:41)
+>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+>> to take place. This lock is output from PHY to GCC clock_ctl and then
+> s/lock/clock/
+Yes, will fix typo.
+>> fed back to QMP PHY and is output from PHY only after PHY is reset
+>> and initialized, hence it can't be enabled too early in initialization
+>> sequence.
+>>
+>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>> ---
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index 6470c5d..73aa282 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> @@ -797,8 +797,13 @@ static int qcom_qmp_phy_poweron(struct phy *phy)
+>>  {
+>>         struct qmp_phy *qphy = phy_get_drvdata(phy);
+>>         struct qcom_qmp *qmp = qphy->qmp;
+>> +       const struct qmp_phy_cfg *cfg = qmp->cfg;
+>>         int ret;
+>>  
+>> +       /* Not needed for USB3 PHY as pipe_clk is enabled from phy_init */
+>> +       if (cfg->type == PHY_TYPE_USB3)
+>> +               return 0;
+> Would be nice to not even assign phy_poweron when the PHY is USB3 type.
+Yes, that should be better.
+
+>
+>> +
+>>         ret = clk_prepare_enable(qphy->pipe_clk);
+>>         if (ret)
+>>                 dev_err(qmp->dev, "pipe_clk enable failed, err=%d\n", ret);
+>> @@ -1008,6 +1013,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>         status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>>         mask = cfg->mask_pcs_ready;
+>>  
+>> +       /* USB3 PHY requires pipe_clk for PLL lock and calibration */
+>> +       if (cfg->type == PHY_TYPE_USB3) {
+>> +               ret = clk_prepare_enable(qphy->pipe_clk);
+>> +               if (ret)
+>> +                       dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
+>> +               /*
+>> +                * Ignore this error as pipe_clk might take some time to get
+>> +                * enabled. In any case following check for PHY PLL lock would
+>> +                * timeout below if there is a fatal error and clock is not fed
+>> +                * to PHY
+>> +                */
+>> +
+> This is odd. If clk_enable() fails then we don't keep parent clks (or
+> the clk that's being operated on) up refcounted and enabled. How is that
+> going to work?
+
+I agree. My intent was to ignore only halt_check errors from clock driver.
+In any case this condition (to ignore clk_enable error) should probably
+be handled in clock driver. And I see that clock driver is already using
+halt_check as BRANCH_HALT_DELAY, so I don't need to worry about that
+in phy driver.
+
+
+
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
