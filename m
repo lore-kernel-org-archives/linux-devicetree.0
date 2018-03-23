@@ -1,34 +1,122 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
- requested
-Date: Fri, 23 Mar 2018 09:03:37 -0500
-Message-ID: <819014ea-d375-5830-e32f-eeba73e6fa08@codeaurora.org>
-References: <20180321165848.89751-1-swboyd@chromium.org>
- <20180321165848.89751-4-swboyd@chromium.org>
- <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
- <b5dac2f7-eabb-6e09-2146-775b09d4eca8@codeaurora.org>
- <59df3700-c0bd-6ee8-eeab-6a49cb92d1db@codeaurora.org>
- <1521804875.23017.95.camel@linux.intel.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH 1/2] misc: ezport-firmware: new driver
+Date: Fri, 23 Mar 2018 15:06:32 +0100
+Message-ID: <20180323140631.wt75cwxxrrzdnzse@earth.universe>
+References: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
+ <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
+ <20180323131712.GA32169@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="evha4yhbgfv7a6qq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521804875.23017.95.camel@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180323131712.GA32169@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/23/18 6:34 AM, Andy Shevchenko wrote:
-> No, it seems you missed %p vs. %px discussion.
-> 
-> The pointers printed by %p nowadays are hashed values, not the original
-> ones.
 
-I totally forgot about that, thanks.
+--evha4yhbgfv7a6qq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Hi,
+
+On Fri, Mar 23, 2018 at 02:17:12PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 20, 2018 at 06:22:00PM +0100, Sebastian Reichel wrote:
+> > General Electric Healthcare's PPD has a secondary processor from
+> > NXP's Kinetis K20 series. It's firmware can be updated from Linux
+> > using the EzPort interface. This driver implements the firmware
+> > updating process.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> > ---
+> >  Documentation/devicetree/bindings/misc/ge-achc.txt |  19 +-
+>=20
+> Bindings should be in a separate patch, right?
+
+Right.
+
+> > +static int ezport_read_data(struct spi_device *spi, u32 address,
+> > +			    u8 *buffer, size_t size)
+> > +{
+> > +	struct spi_transfer xfers[2] =3D {};
+>=20
+> You can send SPI data from the stack?
+
+I don't think so:
+
+/**
+ * struct spi_transfer - a read/write buffer pair
+ * @tx_buf: data to be written (dma-safe memory), or NULL
+ * @rx_buf: data to be read (dma-safe memory), or NULL
+
+IIUIC only spi_write_then_read() may use the stack, since the
+function copies the provided buffer to a second, DMA capable
+buffer. That function is obviously not good for big buffers,
+though.
+
+> > +	u8 *query =3D kmalloc(EZPORT_FAST_READ_SIZE, GFP_KERNEL);
+> > +	int ret;
+> > +
+> > +	if (!query)
+> > +		return -ENOMEM;
+> > +
+> > +	query[0] =3D EZPORT_CMD_FAST_READ;
+> > +	query[1] =3D address >> 16;
+> > +	query[2] =3D address >> 8;
+> > +	query[3] =3D address >> 0;
+> > +	query[4] =3D EZPORT_DUMMY;
+> > +
+> > +	xfers[0].len =3D EZPORT_FAST_READ_SIZE;
+> > +	xfers[0].tx_buf =3D query;
+> > +
+> > +	xfers[1].len =3D size;
+> > +	xfers[1].rx_buf =3D buffer;
+> > +
+> > +	ret =3D spi_sync_transfer(spi, xfers, 2);
+> > +
+> > +	kfree(query);
+> > +
+> > +	return ret;
+> > +}
+> > +static DEVICE_ATTR_WO(update_fw);
+> > +static DEVICE_ATTR_RO(verify_fw);
+>=20
+> New sysfs attributes need Documentation/ABI updates please.
+
+Ok.
+
+> Also please fix up the kbuild-reported build errors.
+
+Of course.
+
+> thanks,
+
+Thanks for the review,
+
+-- Sebastian
+
+--evha4yhbgfv7a6qq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq1CeQACgkQ2O7X88g7
++posNQ//RXYEyqUN+5+0VCFjMUul+mHQDLuksYrtpuee06+lKeBF1kvCQRStgNhV
+kXzERAm/uJPSLctnqbClLhLxshf7iF1nccYyE/wqLA6jJL5LdswInRZb1iKOgi8R
+ivHanKVicNzg7Dz3ev9BpeBe/VQiV5IuVedass0pEAeXIat4+ElN6TLTrb0N8RQv
+xIWObaob1b/UZORBAQG9ywE8mi8Vs22Va87/Emx835mSzwvzRlLm7OyjvRsWLxBC
+rgu1dOtbcGbNkJV0DROo8/416kPEBT15lII8nYfqAUJKgYjyb/n0pVmtpukvX3aT
+yx0fvWaqNzeeZUzzB4+EkmewCIAfnnLpFtkw79Nyg8/oscWCvYxEiKfULDVVvDIe
+Z18CJjped5cLNMMnd55N2AMn/MyFfbuOASXJU+L5V48WIvCQ/wn280FFTlFqIACf
+u0Jn6m34ZEMIEmoipM/35PPQLo8iq5lSbzieQdkEZgRDTYgCyuGtqWvSLCyfOQmO
+uYs0EJD/bKuJSc2cZa/bILAi6Hjtpka2Kd0Ft6glPOCqLufiZWxR/cJ4giBocSwC
+X6drsD1HTfQZzskywHq4nge677WQgVUFe/DM2SU0L9uY9cjGexOGmt4c3+OMp077
+1A5W//wz6wcdYEY+pzzrFY3LE708aibnadOqfup1AyKEnSVDKuY=
+=4QPY
+-----END PGP SIGNATURE-----
+
+--evha4yhbgfv7a6qq--
