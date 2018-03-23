@@ -1,41 +1,64 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be requested
-Date: Fri, 23 Mar 2018 18:32:37 +0200
-Message-ID: <CAHp75Vcw9VkihRzwZXAvLEGYbVhrXgvDCEPyciU7d4a5G-uUow@mail.gmail.com>
-References: <20180321165848.89751-1-swboyd@chromium.org> <20180321165848.89751-4-swboyd@chromium.org>
- <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org> <1521804964.23017.96.camel@linux.intel.com>
- <152182210780.178046.13284917877743312593@swboyd.mtv.corp.google.com> <CAHp75VeTxGu-pxqde_egsqUkLBdZujoJv=0YEj9cv8ujnthyPA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v4 2/5] gpiolib: Extract mask allocation into subroutine
+Date: Fri, 23 Mar 2018 09:34:50 -0700
+Message-ID: <20180323163453.96495-3-swboyd@chromium.org>
+References: <20180323163453.96495-1-swboyd@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeTxGu-pxqde_egsqUkLBdZujoJv=0YEj9cv8ujnthyPA@mail.gmail.com>
+In-Reply-To: <20180323163453.96495-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Timur Tabi <timur@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 6:31 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Mar 23, 2018 at 6:21 PM, Stephen Boyd <swboyd@chromium.org> wrote:
->
->>        bitmap_zero(chip->valid_mask, max_gpios);
->>        for (i = 0; i < len; i++)
->>                set_bit(tmp[i], chip->valid_mask);
->
-> Looking to this code I just realized it would be nice to have
->
-> {of,device}_property_read_bitmask() where bitmask_parse() is called.
->
-> Since it related to change a binding, I would really take couple of
-> days to hear other opinions.
->
-> In the above case, you need to supply a string, like
->
-> "1-5,16,18,25"
+We're going to use similar code to allocate and set all the bits in a
+mask for valid gpios to use. Extract the code from the irqchip version
+so it can be reused.
 
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/gpio/gpiolib.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-s/bitmask/bitmap/g
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index d66de67ef307..cc0e1519da45 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -337,6 +337,20 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ 	return 0;
+ }
+ 
++static unsigned long *gpiochip_allocate_mask(struct gpio_chip *chip)
++{
++	unsigned long *p;
++
++	p = kcalloc(BITS_TO_LONGS(chip->ngpio), sizeof(long), GFP_KERNEL);
++	if (!p)
++		return NULL;
++
++	/* Assume by default all GPIOs are valid */
++	bitmap_fill(p, chip->ngpio);
++
++	return p;
++}
++
+ /*
+  * GPIO line handle management
+  */
+@@ -1506,14 +1520,10 @@ static int gpiochip_irqchip_init_valid_mask(struct gpio_chip *gpiochip)
+ 	if (!gpiochip->irq.need_valid_mask)
+ 		return 0;
+ 
+-	gpiochip->irq.valid_mask = kcalloc(BITS_TO_LONGS(gpiochip->ngpio),
+-					   sizeof(long), GFP_KERNEL);
++	gpiochip->irq.valid_mask = gpiochip_allocate_mask(gpiochip);
+ 	if (!gpiochip->irq.valid_mask)
+ 		return -ENOMEM;
+ 
+-	/* Assume by default all GPIOs are valid */
+-	bitmap_fill(gpiochip->irq.valid_mask, gpiochip->ngpio);
+-
+ 	return 0;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+Sent by a computer through tubes
