@@ -1,131 +1,79 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V3] Input: pm8941-pwrkey: add resin key capabilities
-Date: Fri, 23 Mar 2018 12:22:10 -0700
-Message-ID: <20180323192210.GE255819@dtor-ws>
-References: <1521786192-19487-1-git-send-email-tirupath@codeaurora.org>
- <240c6cbc-886f-94c6-cba4-3c4eb3ed0b45@codeaurora.org>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Fri, 23 Mar 2018 20:20:52 +0100
+Message-ID: <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <240c6cbc-886f-94c6-cba4-3c4eb3ed0b45@codeaurora.org>
+In-Reply-To: <20180323151101.GB24361@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trilok Soni <tsoni@codeaurora.org>
-Cc: Tirupathi Reddy <tirupath@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 12:14:22PM -0700, Trilok Soni wrote:
-> Hi Tirupathi,
-> 
-> > +static irqreturn_t pm8941_resinkey_irq(int irq, void *_data)
-> > +{
-> > +	struct pm8941_pwrkey *pwrkey = _data;
-> > +	unsigned int sts;
-> > +	int error;
-> > +	u32 key_code = pwrkey->resin_key_code;
-> > +
-> > +	error = regmap_read(pwrkey->regmap,
-> > +			    pwrkey->baseaddr + PON_RT_STS, &sts);
-> > +	if (error)
-> > +		return IRQ_HANDLED;
-> > +
-> > +	input_report_key(pwrkey->input, key_code, !!(sts & PON_RESIN_N_SET));
-> > +	input_sync(pwrkey->input);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> >   static int __maybe_unused pm8941_pwrkey_suspend(struct device *dev)
-> >   {
-> >   	struct pm8941_pwrkey *pwrkey = dev_get_drvdata(dev);
-> > @@ -153,9 +175,56 @@ static int __maybe_unused pm8941_pwrkey_resume(struct device *dev)
-> >   static SIMPLE_DEV_PM_OPS(pm8941_pwr_key_pm_ops,
-> >   			 pm8941_pwrkey_suspend, pm8941_pwrkey_resume);
-> > +static int pm8941_resin_key_init(struct pm8941_pwrkey *pwrkey,
-> > +			struct device_node *np)
-> > +{
-> > +	int error, irq;
-> > +	bool pull_up;
-> > +
-> > +	/*
-> > +	 * Get the standard-key parameters. This might not be
-> > +	 * specified if there is no key mapping on the reset line.
-> > +	 */
-> > +	error = of_property_read_u32(np, "linux,code", &pwrkey->resin_key_code);
-> > +	if (error) {
-> > +		dev_err(pwrkey->dev, "failed to read key-code for resin key\n");
-> > +		return error;
-> > +	}
-> > +
-> > +	pull_up = of_property_read_bool(np, "bias-pull-up");
-> > +
-> > +	irq = irq_of_parse_and_map(np, 0);
-> > +	if (irq < 0) {
-> > +		dev_err(pwrkey->dev, "failed to get resin irq\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Register key configuration */
-> > +	input_set_capability(pwrkey->input, EV_KEY, pwrkey->resin_key_code);
-> > +
-> > +	error = regmap_update_bits(pwrkey->regmap,
-> > +				   pwrkey->baseaddr + PON_PULL_CTL,
-> > +				   PON_RESIN_PULL_UP,
-> > +				   pull_up ? PON_RESIN_PULL_UP : 0);
-> > +	if (error) {
-> > +		dev_err(pwrkey->dev, "failed to set resin pull: %d\n", error);
-> > +		return error;
-> > +	}
-> > +
-> > +	error = devm_request_threaded_irq(pwrkey->dev, irq, NULL,
-> > +					  pm8941_resinkey_irq, IRQF_ONESHOT,
-> > +					  "pm8941_resinkey", pwrkey);
-> > +	if (error)
-> > +		dev_err(pwrkey->dev, "failed requesting resin key IRQ: %d\n",
-> > +			error);
-> > +
-> > +	return error;
-> > +}
-> > +
-> >   static int pm8941_pwrkey_probe(struct platform_device *pdev)
-> >   {
-> >   	struct pm8941_pwrkey *pwrkey;
-> > +	struct device_node *np = NULL;
-> >   	bool pull_up;
-> >   	u32 req_delay;
-> >   	int error;
-> > @@ -241,6 +310,18 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
-> >   		return error;
-> >   	}
-> > +	np = of_find_node_by_name(pdev->dev.of_node, "resin");
-> > +	if (np) {
-> > +		/* resin key capabilities are defined in device node */
-> > +		error = pm8941_resin_key_init(pwrkey, np);
-> 
-> 
-> What happens if interrupts comes as soon as you have done the key_init(..)
-> here? I see that you are registering the input device after it, right? Looks
-> like you should do this at the end of probe?
+On 23-3-2018 16:11, Andrew Lunn wrote:
+> On Fri, Mar 23, 2018 at 03:24:34PM +0100, Mike Looijmans wrote:
+>> It's common practice to store MAC addresses for network interfaces into
+>> nvmem devices. However the code to actually do this in the kernel lacks,
+>> so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+>> address from an nvmem cell provider.
+>>
+>> This is particulary useful on devices where the ethernet interface cannot
+>> be configured by the bootloader, for example because it's in an FPGA.
+>>
+>> Tested by adapting the cadence macb driver to call this instead of
+>> of_get_mac_address().
+>
+> Hi Mike
+>
+> Please can you document the device tree binding. I assume you are
+> adding a nvmen-cells and nvmem-cell-names to the Ethernet node in
+> device tree.
 
-It should be fine, input devices properly allocated (with
-input_allocate_device() or devm- version) are able to accept events even
-if input device has not been registered yet. It is and advertised
-feature:
+Indeed. I'll add my settings as an example. Where should I put this 
+documentation, in the commit comment or somewhere in 
+Documents/devicetree/bindings?
 
-drivers/input/input.c:
+>> +/**
+>> + * Search the device tree for a MAC address, by calling of_get_mac_address
+>> + * and if that doesn't provide an address, fetch it from an nvmem provider
+>> + * using the name 'mac-address'.
+>> + * On success, copies the new address is into memory pointed to by addr and
+>> + * returns 0. Returns a negative error code otherwise.
+>> + * @dev:	Pointer to the device containing the device_node
+>> + * @addr:	Pointer to receive the MAC address using ether_addr_copy()
+>> + */
+>> +int of_get_nvmem_mac_address(struct device *dev, char *addr)
+>> +{
+>> +	const char *mac;
+>> +	struct nvmem_cell *cell;
+>> +	size_t len;
+>> +	int ret;
+>> +
+>> +	mac = of_get_mac_address(dev->of_node);
+>> +	if (mac) {
+>> +		ether_addr_copy(addr, mac);
+>> +		return 0;
+>> +	}
+>
+> Is there a need to add a new API? Could of_get_mac_address() be
+> extended to look in NVMEM? The MAC driver does not care. It is saying,
+> using OF get me a MAC address. One API seems sufficient, and would
+> mean you don't need to change the MAC drivers.
 
-"
- * input_event() - report new input event
-...
- * NOTE: input_event() may be safely used right after input device was
- * allocated with input_allocate_device(), even before it is registered
- * with input_register_device(), but the event will not reach any of the
- * input handlers. Such early invocation of input_event() may be used
- * to 'seed' initial state of a switch or initial position of absolute
- * axis, etc.
-"
+It's what I intended to do, but there were two problems with that:
+- of_get_mac_address() returns a pointer to constant data in memory, but 
+the nvmem functions return an allocated memory object that must be freed 
+after use. This changes the way the call is to be made.
+- The nvmem functions need the "struct device" pointer as well, while 
+of_get_mac_address() only gets passed the DT node.
 
-Thanks.
+One approach would be to deprecate the of_get_mac_address() interface 
+and migrate existing drivers to the of_get_nvmem_mac_address() interface.
+
 
 -- 
-Dmitry
+Mike Looijmans
