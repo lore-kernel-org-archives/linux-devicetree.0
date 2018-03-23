@@ -1,116 +1,36 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
-Date: Fri, 23 Mar 2018 15:24:34 +0100
-Message-ID: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v2 3/7] dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
+Date: Fri, 23 Mar 2018 22:38:12 +0800
+Message-ID: <20180323143816.200573-4-yixun.lan@amlogic.com>
+References: <20180323143816.200573-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180323143816.200573-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It's common practice to store MAC addresses for network interfaces into
-nvmem devices. However the code to actually do this in the kernel lacks,
-so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
-address from an nvmem cell provider.
+Update the dt-binding documentation to support new compatible string
+for the Amlogic's Meson-AXG SoC.
 
-This is particulary useful on devices where the ethernet interface cannot
-be configured by the bootloader, for example because it's in an FPGA.
-
-Tested by adapting the cadence macb driver to call this instead of
-of_get_mac_address().
-
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- drivers/of/of_net.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_net.h |  6 ++++++
- 2 files changed, 54 insertions(+)
+ Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index d820f3e..316a537 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -7,6 +7,7 @@
-  */
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
-+#include <linux/nvmem-consumer.h>
- #include <linux/of_net.h>
- #include <linux/phy.h>
- #include <linux/export.h>
-@@ -80,3 +81,50 @@ const void *of_get_mac_address(struct device_node *np)
- 	return of_get_mac_addr(np, "address");
- }
- EXPORT_SYMBOL(of_get_mac_address);
-+
-+/**
-+ * Search the device tree for a MAC address, by calling of_get_mac_address
-+ * and if that doesn't provide an address, fetch it from an nvmem provider
-+ * using the name 'mac-address'.
-+ * On success, copies the new address is into memory pointed to by addr and
-+ * returns 0. Returns a negative error code otherwise.
-+ * @dev:	Pointer to the device containing the device_node
-+ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
-+ */
-+int of_get_nvmem_mac_address(struct device *dev, char *addr)
-+{
-+	const char *mac;
-+	struct nvmem_cell *cell;
-+	size_t len;
-+	int ret;
-+
-+	mac = of_get_mac_address(dev->of_node);
-+	if (mac) {
-+		ether_addr_copy(addr, mac);
-+		return 0;
-+	}
-+
-+	cell = nvmem_cell_get(dev, "mac-address");
-+	if (IS_ERR(cell))
-+		return PTR_ERR(cell);
-+
-+	mac = (const char *)nvmem_cell_read(cell, &len);
-+
-+	nvmem_cell_put(cell);
-+
-+	if (IS_ERR(mac))
-+		return PTR_ERR(mac);
-+
-+	if (len < 6 || !is_valid_ether_addr(mac)) {
-+		dev_err(dev, "MAC address from NVMEM is invalid\n");
-+		ret = -EINVAL;
-+	} else {
-+		ether_addr_copy(addr, mac);
-+		ret = 0;
-+	}
-+
-+	kfree(mac);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_get_nvmem_mac_address);
-diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-index 9cd72aa..0d52e1d 100644
---- a/include/linux/of_net.h
-+++ b/include/linux/of_net.h
-@@ -13,6 +13,7 @@
- struct net_device;
- extern int of_get_phy_mode(struct device_node *np);
- extern const void *of_get_mac_address(struct device_node *np);
-+extern int of_get_nvmem_mac_address(struct device *dev, char *addr);
- extern struct net_device *of_find_net_device_by_node(struct device_node *np);
- #else
- static inline int of_get_phy_mode(struct device_node *np)
-@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
- 	return NULL;
- }
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+index 786dc39ca904..3a880528030e 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+@@ -9,6 +9,7 @@ Required Properties:
+ 	- GXBB (S905) : "amlogic,meson-gxbb-aoclkc"
+ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
+ 	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
++	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
+ 	followed by the common "amlogic,meson-gx-aoclkc"
  
-+static inline int of_get_nvmem_mac_address(struct device *dev, char *addr)
-+{
-+	return -ENODEV;
-+}
-+
- static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
- {
- 	return NULL;
+ - #clock-cells: should be 1.
 -- 
-1.9.1
+2.15.1
