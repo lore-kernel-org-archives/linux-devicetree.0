@@ -1,102 +1,76 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 02/16] dt-bindings: rtc: mediatek: add bindings for
- PMIC RTC
-Date: Fri, 23 Mar 2018 11:15:05 +0100
-Message-ID: <20180323101505.GF3417@piout.net>
-References: <cover.1521794176.git.sean.wang@mediatek.com>
- <5846e8be319c4836808c8127d5bb51b7e999e896.1521794177.git.sean.wang@mediatek.com>
- <20180323094118.GC3417@piout.net>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v5 00/13] ARM: dts: ipq: updates to enable a few peripherals
+Date: Fri, 23 Mar 2018 15:48:43 +0530
+Message-ID: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180323094118.GC3417-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/2018 at 10:41:18 +0100, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 23/03/2018 at 17:14:59 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add device-tree binding for MediaTek PMIC based RTC.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/rtc/rtc-mt6397.txt         | 39 ++++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> > new file mode 100644
-> > index 0000000..83ff6be
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> > @@ -0,0 +1,39 @@
-> > +Device-Tree bindings for MediaTek PMIC based RTC
-> > +
-> > +MediaTek PMIC based RTC is an independent function of MediaTek PMIC which
-> > +is working as a multi-function device (MFD). And the RTC can be configured and
-> > +set up via PMIC wrapper bus. Which is also common resource shared among the
-> > +other functions present on the PMIC.
-> > +
-> > +For MediaTek PMIC wrapper bus bindings, see:
-> > +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> > +
-> > +Required parent node:
-> > +- pmic
-> > +  For MediaTek PMIC MFD bindings, see:
-> > +  Documentation/devicetree/bindings/mfd/mt6397.txt
-> > +
-> > +Required properties:
-> > +- compatible: Should be one of follows
-> > +	"mediatek,mt6323-rtc": for MT6323 PMIC
-> > +	"mediatek,mt6397-rtc": for MT6397 PMIC
-> > +
-> > +Optional child node:
-> > +- power-off
-> > +  For Power-Off Device for MediaTek PMIC RTC bindings, see:
-> > +  Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
-> > +
-> > +Example:
-> > +
-> > +	pmic {
-> > +		compatible = "mediatek,mt6323";
-> > +
-> > +		...
-> > +		rtc {
-> > +			compatible = "mediatek,mt6323-rtc";
-> > +
-> > +			power-off {
-> > +				compatible = "mediatek,mt6323-rtc-poweroff";
-> > +			};
-> 
-> I'm pretty sure the whole point of mfd is to avoid having the poweroff
-> controller under the rtc
-> 
-
-BTW, I think it is enough to have that documented in only one file (the
-MFD one is enough)
-
-> 
-> -- 
-> Alexandre Belloni, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+W3Y1XQogICAgKiBGaXhlZCBhIG1pbm9yIGNvbW1lbnQgdGhhdCBpIG1pc3NlZCBlYXJsaWVyLgoK
+W3Y0XQogICAgKiBGaXhlZCBtb3JlIGNvbW1lbnRzLgogICAgKiBEcm9wcGVkIHJlc2VydmVkLW1l
+bW9yeSBub2RlcyBmcm9tIGJvYXJkIGZpbGVzIGFzCiAgICAgIHRoYXQgbWlnaHQgYnJlYWsgZXhp
+c3RpbmcgdXNlcnMgd2hvc2UgdS1ib290IGRvIG5vdAogICAgICBzcGVjaWZ5IHRoZSBmZHRfaGln
+aCBhY2NvcmRpbmdseS4KICAgICogQWRkZWQgY2hvc2VuIHNlcmlhbCBub2RlIGZvciBhbGwgYm9h
+cmRzIHRvIGhhdmUKICAgICAgdGhlIGRlZmF1bHQgc2VyaWFsIGNvbnNvbGUgc3BlY2lmaWVkIGZy
+b20gRFQuCgpbdjNdCsKgwqDCoMKgKiBGaXhlZCBtaW5vciBjb21tZW50cyBmcm9tIHYyLArCoMKg
+wqDCoMKgwqBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzY0MTQ4
+MC5odG1sCgrCoMKgwqDCoCogQWRkZWQgQWJoaXNoZWsncyByZXZpZXcgdGFncwoKW3YyXQrCoMKg
+wqDCoCogQWRkcmVzc2VkIGFsbCBjb21tZW50cyBmcm9tIEFiaGlzaGVrCsKgwqDCoMKgKiBSZW1v
+dmVkIGRrMDEtYzIgYW5kIGRrMDQtYzUgc3BpbmFuZCBiYXNlZCBib2FyZHMKwqDCoMKgwqDCoMKg
+YXMgc3VwcG9ydCBmb3Igc3BpbmFuZCBpcyBub3QgY29tcGxldGUKwqDCoMKgwqAqIEJhc2VkIGFs
+bCBwYXRjaGVzIG9uIHRvcCBvZiBBbmR5J3MgZm9yLW5leHQgYnJhbmNoCgpbVjFdCsKgwqDCoMKg
+KiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzYzMTMxOC5odG1s
+CgpTcmljaGFyYW4gUiAoMTMpOgogIGZpcm13YXJlOiBxY29tOiBzY206IEFkZCBpcHE0MDE5IHNv
+YyBjb21wYXRpYmxlCiAgQVJNOiBkdHM6IGlwcTQwMTk6IEFkZCBhIGRlZmF1bHQgY2hvc2VuIG5v
+ZGUKICBBUk06IGR0czogaXBxNDAxOTogQWRkIGEgZmV3IHBlcmlwaGVyYWwgbm9kZXMKICBBUk06
+IGR0czogaXBxNDAxOTogQ2hhbmdlIHRoZSBtYXggb3BwIGZyZXF1ZW5jeQogIEFSTTogZHRzOiBp
+cHE0MDE5OiBBZGQgaXBxNDAxOS1hcC5kazA0LmR0c2kKICBBUk06IGR0czogaXBxNDAxOTogQWRk
+IGlwcTQwMTktYXAuZGswNC4xLWMxIGJvYXJkIGZpbGUKICBBUk06IGR0czogaXBxNDAxOTogQWRk
+IHFjb20taXBxNDAxOS1hcC5kazA0LjEtYzMgYm9hcmQgZmlsZQogIEFSTTogZHRzOiBpcHE0MDE5
+OiBBZGQgaXBxNDAxOS1hcC5kazA3LjEgY29tbW9uIGRhdGEKICBBUk06IGR0czogaXBxNDAxOTog
+QWRkIHFjb20taXBxNDAxOS1hcC5kazA3LjEtYzEgYm9hcmQgZmlsZQogIEFSTTogZHRzOiBpcHE0
+MDE5OiBBZGQgcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMiBib2FyZCBmaWxlCiAgQVJNOiBkdHM6
+IGlwcTgwNzQ6IEFkZCBwZXJpcGhlcmFsIG5vZGVzCiAgQVJNOiBkdHM6IGlwcTgwNzQ6IEFkZCBw
+Y2llIG5vZGVzCiAgQVJNOiBkdHM6IGlwcTgwNzQ6IEVuYWJsZSBmZXcgcGVyaXBoZXJhbHMgZm9y
+IGhrMDEgYm9hcmQKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9maXJtd2FyZS9xY29tLHNjbS50
+eHQgICAgICB8ICAgMyArLQogYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDQgKwogYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0MDE5LWFwLmRr
+MDEuMS5kdHNpICAgICAgfCAgIDggKwogYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0MDE5LWFw
+LmRrMDQuMS1jMS5kdHMgICAgfCAgMjAgKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAx
+OS1hcC5kazA0LjEtYzMuZHRzICAgIHwgICA4ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBx
+NDAxOS1hcC5kazA0LjEuZHRzaSAgICAgIHwgMTE1ICsrKysrKysrKwogYXJjaC9hcm0vYm9vdC9k
+dHMvcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMS5kdHMgICAgfCAgNjUgKysrKysKIGFyY2gvYXJt
+L2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazA3LjEtYzIuZHRzICAgIHwgIDI2ICsrCiBhcmNo
+L2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNy4xLmR0c2kgICAgICB8ICA2OCArKysr
+KysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS5kdHNpICAgICAgICAgICAgICAgIHwg
+MTQwICsrKysrKysrKystCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vaXBxODA3NC1oazAxLmR0
+cyAgICAgICAgICB8IDEwMyArKysrKysrKwogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL2lwcTgw
+NzQuZHRzaSAgICAgICAgICAgICAgfCAyNjIgKysrKysrKysrKysrKysrKysrKystCiBkcml2ZXJz
+L2Zpcm13YXJlL3Fjb21fc2NtLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMyArCiAxMyBm
+aWxlcyBjaGFuZ2VkLCA4MjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNC4xLWMxLmR0
+cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5k
+azA0LjEtYzMuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1p
+cHE0MDE5LWFwLmRrMDQuMS5kdHNpCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9k
+dHMvcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMS5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
+L2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNy4xLWMyLmR0cwogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazA3LjEuZHRzaQoKLS0g
+ClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIs
+IEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sIGhvc3RlZCBieSBUaGUgTGlu
+dXggRm91bmRhdGlvbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
