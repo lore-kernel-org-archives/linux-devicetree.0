@@ -1,48 +1,106 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
- requested
-Date: Thu, 22 Mar 2018 19:59:57 -0500
-Message-ID: <59df3700-c0bd-6ee8-eeab-6a49cb92d1db@codeaurora.org>
-References: <20180321165848.89751-1-swboyd@chromium.org>
- <20180321165848.89751-4-swboyd@chromium.org>
- <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
- <b5dac2f7-eabb-6e09-2146-775b09d4eca8@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Thu, 22 Mar 2018 20:23:18 -0500
+Message-ID: <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+ <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+ <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+ <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b5dac2f7-eabb-6e09-2146-775b09d4eca8@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/22/2018 07:23 PM, Timur Tabi wrote:
-> 
-> Also, you don't allocate chip->valid_mask anywhere.
-
-So I see now where it's allocated, but something is fishy.  I have three 
-TLMMs on my chip:
-
-[   67.107018] gpiochip_init_valid_mask:351 gpiochip->need_valid_mask=1
-[   67.153747] gpiochip_init_valid_mask:356 gpiochip->ngpio=72
-[   67.195324] gpiochip_init_valid_mask:361 
-gpiochip->valid_mask=0000000070b1a4b6
-[   68.532992] gpiochip_init_valid_mask:356 gpiochip->ngpio=44
-[   68.574496] gpiochip_init_valid_mask:361 
-gpiochip->valid_mask=000000002f33b8a3
-[   68.709378] msm_gpio_init_valid_mask:837 ret=44 max_gpios=44 
-chip->valid_mask=000000002f33b8a3
-[   69.726502] gpiochip_init_valid_mask:351 gpiochip->need_valid_mask=1
-[   69.772960] gpiochip_init_valid_mask:356 gpiochip->ngpio=54
-[   69.814084] gpiochip_init_valid_mask:361 
-gpiochip->valid_mask=000000001a53c932
-
-Are these normal addresses for kcalloc() to return?  They're not even 
-word-aligned.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+T24gTW9uLCBNYXIgMTksIDIwMTggYXQgMjoxNSBBTSwgVG9taSBWYWxrZWluZW4gPHRvbWkudmFs
+a2VpbmVuQHRpLmNvbT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gT24gMTkvMDMvMTggMDI6MDYsIFJv
+YiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBXZWQsIE1hciAxNCwgMjAxOCBhdCA2OjIzIEFNLCBUb21p
+IFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPiB3cm90ZToKPj4+IE9uIDA5LzAzLzE4
+IDIwOjI3LCBCZW5vaXQgUGFycm90IHdyb3RlOgo+Pj4KPj4+Pj4gSXMgbG9naWNhbCBwbGFuZSBh
+IGgvdyBjb25jZXB0Pwo+Pj4+Cj4+Pj4gSXQgZG9lcyByZXByZXNlbnQgYSBoYXJkd2FyZSByZXNv
+dXJjZS4KPj4+Cj4+PiBMb2dpY2FsIHBsYW5lIGlzIG5vdCBhIGh3IGNvbmNlcHQsIGl0IGp1c3Qg
+ZGVzY3JpYmVzIGEgZ3JvdXAgb2Ygb25lIG9yCj4+PiB0d28gSFcgcGxhbmVzLiBUaGVuIGFnYWlu
+LCBpbiB0aGUgY29udGV4dCBvZiAyaysgZGlzcGxheXMsIHR3byBIVyBwbGFuZXMKPj4+IG11c3Qg
+YWx3YXlzIGJlIHVzZWQgdG9nZXRoZXIsIHNvIHRoYXQgd2F5IGl0IGNvdWxkIGJlIGNvbnNpZGVy
+ZWQgYQo+Pj4gc2luZ2xlIEhXIHJlc291cmNlLgo+Pj4KPj4+Pj4gUmVhbGx5LCBJJ20gc2tlcHRp
+Y2FsIHRoYXQgYW55IG9mIHRoaXMgYmVsb25ncyBpbiBEVC4gRm9yIGV4YW1wbGUsCj4+Pj4+IGNh
+bid0IHlvdSBmaWd1cmUgb3V0IHlvdSBuZWVkIDIgcGh5c2ljYWwgcGxhbmVzIHdoZW5ldmVyIHlv
+dXIKPj4+Pj4gcGFuZWwvdGltaW5nIHdpZHRoIGlzIGdyZWF0ZXIgdGhhbiAyMDQ4Pwo+Pj4+Cj4+
+Pj4gQXMgc3RhdGVkIGluIHRoZSBkZXNjcmlwdGlvbiBJIGFkZGVkIGFib3ZlLCB3ZSBjYW5ub3Qg
+aGF2ZSByZXNvdXJjZXMKPj4+PiBleHBvc2VkIHRvIHVzZXItc3BhY2Ugd2hpY2ggY2FuICJkaXNh
+cHBlYXIiIGR5bmFtaWNhbGx5Lgo+Pj4+IERvaW5nIHNvIHdvdWxkIGJyZWFrIHVzZXItc3BhY2Ug
+YXBwbGljYXRpb25zIHdoaWNoIHJlbHkgb24gdGhlc2UKPj4+PiByZXNvdXJjZXMuCj4+Cj4+IElz
+bid0IHRoaXMgdGhlIHBvaW50IG9mIGF0b21pYyBtb2RlIHNldHRpbmc/IElmIHlvdSBoYXZlIDIg
+cGxhbmVzCj4+IGZyZWUsIHRoZW4geW91IGNhbiBzdXBwb3J0IHRoZSBtb2RlLCBvdGhlcndpc2Ug
+eW91IGZhaWwuIEhvdyB3b3VsZCBhCj4+IHBsYW5lIGJlIGluIHVzZSBpZiB5b3UgYXJlIGRvaW5n
+IG1vZGVzZXR0aW5nIHVubGVzcyBpdCBpcyBvbiBhbm90aGVyCj4+IGRpc3BsYXk/Cj4+Cj4+PiBU
+aGUgcXVlc3Rpb24gaXMsIGlmIG5vdCBpbiBEVCwgdGhlbiB3aGVyZT8gSSBhZ3JlZSB0aGF0IHRo
+aXMgaXMgbm90Cj4+PiBleGFjdGx5IGRlc2NyaWJpbmcgdGhlIEhXLiBCdXQgaXQgY2FuJ3QgYmUg
+ZG9uZSBkeW5hbWljYWxseSBlaXRoZXIgKG9yCj4+PiBhdCBsZWFzdCB3ZSBoYXZlIG5vdCBmaWd1
+cmVkIG91dCBhIHdheSkuIEFuZCBpdCBtdXN0IGJlIHVzZXIgY29uZmlndXJhYmxlLgo+Pgo+PiBJ
+ZiB5b3UgYXJlIHBsdWdnaW5nIGluIGEgbW9uaXRvciwgZG9lc24ndCBpdCBoYXZlIHRvIGJlIGR5
+bmFtaWM/Cj4+Cj4+PiBNb2R1bGUgcGFyYW1ldGVycyBhcmUgYW4gb3B0aW9uLCBidXQgaXQgd291
+bGQgYmUgc29tZXdoYXQgZGlmZmljdWx0IHRvCj4+PiBnaXZlIGFsbCB0aGlzIGluZm9ybWF0aW9u
+IHRoZXJlLiBBbmQgYWxzbywgaWYgeW91ciBib2FyZCBoYXMgYSAyaysKPj4+IGRpc3BsYXksIHlv
+dSBtdXN0IGhhdmUgdGhlc2UgY29uZmlndXJhdGlvbnMgZ2l2ZW4gdG8gdGhlIGRyaXZlciwgaXQn
+cwo+Pj4gbm90IG9wdGlvbmFsLgo+Pgo+PiBDYW4ndCB5b3UgbG9vayBhdCB0aGUgcGFuZWwgc2l6
+ZSBvbiBib290IG9yIG1vZHVsZSBsb2FkIGFuZCBkZXRlcm1pbmUKPj4gaWYgeW91IG5lZWQgdG8g
+Y29tYmluZSBwbGFuZXMgb3Igbm90LiBUaGUgbWFpbiBkaWZmZXJlbmNlIEkgc2VlIGlzCj4+IHRo
+YXQgdGhlIGRyaXZlciB3b3VsZCBoYXZlIHRvIGZpZ3VyZSBvdXQgd2hpY2ggcGxhbmVzIHRvIHVz
+ZSByYXRoZXIKPj4gdGhhbiBEVCB0ZWxsaW5nIGl0IHdoYXQgcGxhbmVzIHRvIHVzZS4gSXMgZGVj
+aWRpbmcgd2hpY2ggcGxhbmVzIGEgaGFyZAo+PiBwcm9ibGVtPwo+Cj4gT2ssIEkgdGhpbmsgdGhl
+IGRlc2NyaXB0aW9uIHdhcyBhIGJpdCB1bmNsZWFyLiBTbywgdGhlIGRyaXZlciBjYW4gZG8KPiB0
+aGlzIGp1c3QgZmluZSwgaXQgY2FuIHJlc2VydmUgaHcgcGxhbmVzIGR5bmFtaWNhbGx5IHdoZW4g
+bmVlZGVkLiBUaGUKPiBwcm9ibGVtIGlzIHRoZSB1c2Vyc3BhY2UuCj4KPiBXaGVuIGEgRFJNIGFw
+cGxpY2F0aW9uIHN0YXJ0cywgaXQgc2VlcyBhIGJ1bmNoIG9mIHBsYW5lcywgYW5kIGNhbiBzZWUg
+b24KPiB3aGljaCBjcnRjcyBlYWNoIHBsYW5lIGNhbiBiZSB1c2VkLiBUaGUgZXhwZWN0YXRpb24g
+aXMsIG9mIGNvdXJzZSwgdGhhdAo+IHRoZXNlIHBsYW5lcyBjYW4gYmUgdXNlZCBub3JtYWxseS4g
+SWYgdGhlIGRyaXZlciB3b3VsZCBkeW5hbWljYWxseQo+IHJlc2VydmUgYW4gYWRkaXRpb25hbCwg
+Y3VycmVudGx5IHVudXNlZCBwbGFuZSwgdGhlIHVzZXJzcGFjZSB3b3VsZCBiZQo+IHRvdGFsbHkg
+YmFmZmxlZCwgYXMgaXQgZmFpbHMgdG8gY29uZmlndXJlIGJhc2ljIHBsYW5lIHNldHVwcy4KPgo+
+IEZvciBleGFtcGxlLCB0aGUgdXNlcnNwYWNlIGNvdWxkIHNlZSB0aGF0IHRoZXJlIGFyZSB0d28g
+cGxhbmVzLCB1c2FibGUKPiBvbiBMQ0QgYW5kIEhETUkgY3J0Y3MuIEJ1dCBteXN0ZXJpb3VzbHkg
+bW9kZXNldHRpbmcgd291bGQgc29tZXRpbWVzIGZhaWwKPiBpZiB0aGUgSERNSSBpcyAyaysgZGlz
+cGxheS4gU2V0dGluZyB1cCBhIHBsYW5lIG9uIHRoZSBIRE1JIHdvdWxkIHdvcmssCj4gZXhjZXB0
+IHdoZW4gdGhlIExDRCBhbHJlYWR5IGhhcyBhIHBsYW5lLiBTZXR0aW5nIHVwIHR3byBwbGFuZXMg
+b24gdGhlCj4gTENEIHdvdWxkIHdvcmssIGJ1dCBtb3Zpbmcgb25lIG9yIGJvdGggcGxhbmVzIHRv
+IHRoZSBIRE1JIHdvdWxkIGZhaWwuIEV0Yy4KCkkgc3VzcGVjdCB0aGlzIGlzIGEgY29tbW9uIHBy
+b2JsZW0uIE5vdCBiZWNhdXNlIHRoZSBoL3cgcmVxdWlyZXMKZGlmZmVyZW50IGFsbG9jYXRpb24g
+b2YgcGxhbmVzLCBidXQgYmVjYXVzZSB0aGUgbWVtb3J5IGJhbmR3aWR0aCBjYW4ndApoYW5kbGUg
+aGF2aW5nIGEgMm5kIHBsYW5lIGlmIHRoZSByZXNvbHV0aW9uIGlzIGFib3ZlIGEgY2VydGFpbgpz
+aXplL2RlcHRoLiBTbyB3aGlsZSB0aGUgcGxhbmUgZG9lc24ndCBkaXNhcHBlYXIsIHRoZSBlZmZl
+Y3QgaXMgdGhlCnNhbWUuIEhvdyBkb2VzIERSTSBoYW5kbGUgdGhpcz8KCj4gV2UgY291bGQsIG9m
+IGNvdXJzZSwgY29udmV5IHRoaXMgaW5mb3JtYXRpb24gdG8gdGhlIHVzZXJzcGFjZSBhdCBydW50
+aW1lCj4gdmlhIHRoZSBEUk0gcHJvcGVydGllcywgYnV0IHRoZW4gaXQgd291bGQgbWVhbiB3ZSdk
+IG5lZWQgY3VzdG9taXplZAo+IGFwcGxpY2F0aW9ucy4KPgo+IFNvLCBhcyBmYXIgYXMgSSBjYW4g
+c2VlLCBrZWVwaW5nIG5vcm1hbCBEUk0gYmVoYXZpb3Igd2l0aCAyaysgZGlzcGxheXMKPiBvbiBP
+TUFQIERTUyByZXF1aXJlcyBhIHN0YXRpYyB2aXJ0dWFsIHBsYW5lIHNldHVwLiBUaGUgbW9zdCBz
+aW1wbGUgc2V0dXAKPiB3b3VsZCBiZSB0byBqdXN0IHNwbGl0IHRoZSBudW1iZXIgb2YgYXZhaWxh
+YmxlIHBsYW5lcyBieSAyLCBidXQgdGhlbiBpbgo+IG1hbnkgdXNlIGNhc2VzIHRoYXQgd2FzdGVz
+IG9uZSBodyBwbGFuZS4KCkZvciBIRE1JLCB5b3UgY2FuJ3Qga25vdyBpbiBhZHZhbmNlIHdoYXQg
+cmVzb2x1dGlvbiB3aWxsIGJlLiBTbyBJCnRoaW5rIHlvdSBhbHdheXMgbmVlZCB0byByZXNlcnZl
+IDIgcGxhbmVzLiBOb3csIGlmIHlvdSB3YW50IHRvIHJlZHVjZQp0aGUgbWF4IHJlc29sdXRpb24g
+Zm9yIHNvbWUgcmVhc29uLCBJIGd1ZXNzIHdlIGNvdWxkIGhhdmUgcHJvcGVydGllcwpmb3IgdGhh
+dC4gVGhhdCB3b3VsZCBiZSBtb3JlIGdlbmVyaWMgYW5kIHdvcmsgd2hldGhlciB5b3UgbmVlZCB0
+bwpjaGFuZ2UgcGxhbmUgYWxsb2NhdGlvbiBvciBoYXZlIGEgbGltaXQgZm9yIG90aGVyIHJlYXNv
+bnMuCgpGb3IgYXR0YWNoZWQgcGFuZWxzLCB5b3Uga25vdyB0aGUgcmVzb2x1dGlvbiB1cCBmcm9u
+dCBhbmQgY2FuIGFsbG9jYXRlCnBsYW5lcyBiZWZvcmUgdGhlIHVzZXJzcGFjZSBpbnRlcmZhY2Ug
+aXMgdXAuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
