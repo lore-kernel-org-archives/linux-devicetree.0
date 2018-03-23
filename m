@@ -1,36 +1,45 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v4 3/5] gpiolib: Change bitmap allocation to kmalloc_array
-Date: Fri, 23 Mar 2018 09:34:51 -0700
-Message-ID: <20180323163453.96495-4-swboyd@chromium.org>
-References: <20180323163453.96495-1-swboyd@chromium.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the reset
+ framework
+Date: Fri, 23 Mar 2018 09:49:47 -0700
+Message-ID: <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
+References: <20180323130455.11470-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323163453.96495-1-swboyd@chromium.org>
+In-Reply-To: <20180323130455.11470-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sekhar Nori <nsekhar@ti.com>
+Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We don't need to clear out these bits when we set them immediately
-after. Use kmalloc_array() to skip clearing the bits.
+Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This series converts the only user of the handcoded, mach-specific reset
+> routines in the davinci platform to using the reset framework.
+> 
+> Patch 1 modifies the way lookup entries are registered with the reset
+> framework.
+> 
+> Patches 2-4 add necessary lookups/DT-properties.
+> 
+> Patches 5-7 convert the davinci-rproc driver to the reset framework.
+> 
+> Patch 8 removes now dead code.
+> 
+> Philipp: it turned out that it's indeed better to use the reset
+> controller's device name for the entry lookup.
+> 
+> Tested both in DT and legacy modes by booting the examples from
+> ti-ipc-rtos recipe in meta-ti.
+> 
+> This series applies on top of David Lechner's common-clk-v9 branch[1]
+> with Philipp Zabel's reset/next branch[2] pulled in.
+> 
+> It can be found in my github tree as well[3].
+> 
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cc0e1519da45..db3788d17ba0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -341,7 +341,7 @@ static unsigned long *gpiochip_allocate_mask(struct gpio_chip *chip)
- {
- 	unsigned long *p;
- 
--	p = kcalloc(BITS_TO_LONGS(chip->ngpio), sizeof(long), GFP_KERNEL);
-+	p = kmalloc_array(BITS_TO_LONGS(chip->ngpio), sizeof(*p), GFP_KERNEL);
- 	if (!p)
- 		return NULL;
- 
--- 
-Sent by a computer through tubes
+What's the merge strategy for the rest of the patches? I should apply
+the clk ones after the next -rc1?
