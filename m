@@ -1,166 +1,151 @@
-Return-Path: <SRS0=xn9O=GR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  01/12] soc: renesas: rcar-sysc: Add r8a77470 support
-Date: Tue, 27 Mar 2018 15:37:12 +0100
-Message-Id: <1522161443-54428-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
-References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
+Return-Path: <SRS0=b15J=GN=codeaurora.org=kramasub@kernel.org>
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v5 1/5] dt-bindings: soc: qcom: Add device tree binding for GENI SE
+Date: Fri, 23 Mar 2018 14:20:57 -0600
+Message-Id: <1521836461-6515-2-git-send-email-kramasub@codeaurora.org>
+In-Reply-To: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
+References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
+To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for RZ/G1C (R8A77470) SoC power areas to the R-Car SYSC
-driver.
+Add device tree binding support for the QCOM GENI SE driver.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- .../bindings/power/renesas,rcar-sysc.txt           |  1 +
- drivers/soc/renesas/Kconfig                        |  5 ++++
- drivers/soc/renesas/Makefile                       |  1 +
- drivers/soc/renesas/r8a7747x-sysc.c                | 29 ++++++++++++++++++++++
- drivers/soc/renesas/rcar-sysc.c                    |  3 +++
- drivers/soc/renesas/rcar-sysc.h                    |  1 +
- include/dt-bindings/power/r8a7747x-sysc.h          | 22 ++++++++++++++++
- 7 files changed, 62 insertions(+)
- create mode 100644 drivers/soc/renesas/r8a7747x-sysc.c
- create mode 100644 include/dt-bindings/power/r8a7747x-sysc.h
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 119 +++++++++++++++++++++
+ 1 file changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
 
-diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-index ab399e5..3e91d20 100644
---- a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-+++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-@@ -9,6 +9,7 @@ Required properties:
-   - compatible: Must contain exactly one of the following:
-       - "renesas,r8a7743-sysc" (RZ/G1M)
-       - "renesas,r8a7745-sysc" (RZ/G1E)
-+      - "renesas,r8a77470-sysc" (RZ/G1C)
-       - "renesas,r8a7779-sysc" (R-Car H1)
-       - "renesas,r8a7790-sysc" (R-Car H2)
-       - "renesas,r8a7791-sysc" (R-Car M2-W)
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 3bbe611..96dd936 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -7,6 +7,7 @@ config SOC_RENESAS
- 			   ARCH_R8A77970 || ARCH_R8A77980 || ARCH_R8A77995
- 	select SYSC_R8A7743 if ARCH_R8A7743
- 	select SYSC_R8A7745 if ARCH_R8A7745
-+	select SYSC_R8A77470 if ARCH_R8A77470
- 	select SYSC_R8A7779 if ARCH_R8A7779
- 	select SYSC_R8A7790 if ARCH_R8A7790
- 	select SYSC_R8A7791 if ARCH_R8A7791 || ARCH_R8A7793
-@@ -30,6 +31,10 @@ config SYSC_R8A7745
- 	bool "RZ/G1E System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
- 
-+config SYSC_R8A77470
-+	bool "RZ/G1C System Controller support" if COMPILE_TEST
-+	select SYSC_RCAR
-+
- config SYSC_R8A7779
- 	bool "R-Car H1 System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index ccb5ec5..3dd6c41 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_SOC_RENESAS)	+= renesas-soc.o
- # SoC
- obj-$(CONFIG_SYSC_R8A7743)	+= r8a7743-sysc.o
- obj-$(CONFIG_SYSC_R8A7745)	+= r8a7745-sysc.o
-+obj-$(CONFIG_SYSC_R8A77470)	+= r8a7747x-sysc.o
- obj-$(CONFIG_SYSC_R8A7779)	+= r8a7779-sysc.o
- obj-$(CONFIG_SYSC_R8A7790)	+= r8a7790-sysc.o
- obj-$(CONFIG_SYSC_R8A7791)	+= r8a7791-sysc.o
-diff --git a/drivers/soc/renesas/r8a7747x-sysc.c b/drivers/soc/renesas/r8a7747x-sysc.c
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
 new file mode 100644
-index 0000000..2306680
+index 0000000..d330c73
 --- /dev/null
-+++ b/drivers/soc/renesas/r8a7747x-sysc.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/G1C System Controller
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+@@ -0,0 +1,119 @@
++Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
 +
-+#include <linux/bug.h>
-+#include <linux/kernel.h>
++Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
++is a programmable module for supporting a wide range of serial interfaces
++like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
++Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
++Wrapper controller is modeled as a node with zero or more child nodes each
++representing a serial engine.
 +
-+#include <dt-bindings/power/r8a7747x-sysc.h>
++Required properties:
++- compatible:		Must be "qcom,geni-se-qup".
++- reg:			Must contain QUP register address and length.
++- clock-names:		Must contain "m-ahb" and "s-ahb".
++- clocks:		AHB clocks needed by the device.
 +
-+#include "rcar-sysc.h"
++Required properties if child node exists:
++- #address-cells: 	Must be <1> for Serial Engine Address
++- #size-cells: 		Must be <1> for Serial Engine Address Size
++- ranges: 		Must be present
 +
-+static const struct rcar_sysc_area r8a77470_areas[] __initconst = {
-+	{ "always-on",	    0, 0, R8A77470_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
-+	{ "ca7-scu",	0x100, 0, R8A77470_PD_CA7_SCU,	R8A77470_PD_ALWAYS_ON,
-+	  PD_SCU },
-+	{ "ca7-cpu0",	0x1c0, 0, R8A77470_PD_CA7_CPU0,	R8A77470_PD_CA7_SCU,
-+	  PD_CPU_NOCR },
-+	{ "ca7-cpu1",	0x1c0, 1, R8A77470_PD_CA7_CPU1,	R8A77470_PD_CA7_SCU,
-+	  PD_CPU_NOCR },
-+	{ "sgx",	 0xc0, 0, R8A77470_PD_SGX, R8A77470_PD_ALWAYS_ON },
-+};
++Properties for children:
 +
-+const struct rcar_sysc_info r8a77470_sysc_info __initconst = {
-+	.areas = r8a77470_areas,
-+	.num_areas = ARRAY_SIZE(r8a77470_areas),
-+};
-diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
-index faf20e7..99203bd 100644
---- a/drivers/soc/renesas/rcar-sysc.c
-+++ b/drivers/soc/renesas/rcar-sysc.c
-@@ -261,6 +261,9 @@ static const struct of_device_id rcar_sysc_matches[] __initconst = {
- #ifdef CONFIG_SYSC_R8A7745
- 	{ .compatible = "renesas,r8a7745-sysc", .data = &r8a7745_sysc_info },
- #endif
-+#ifdef CONFIG_SYSC_R8A77470
-+	{ .compatible = "renesas,r8a77470-sysc", .data = &r8a77470_sysc_info },
-+#endif
- #ifdef CONFIG_SYSC_R8A7779
- 	{ .compatible = "renesas,r8a7779-sysc", .data = &r8a7779_sysc_info },
- #endif
-diff --git a/drivers/soc/renesas/rcar-sysc.h b/drivers/soc/renesas/rcar-sysc.h
-index dcdc9ec..9b24e3a 100644
---- a/drivers/soc/renesas/rcar-sysc.h
-+++ b/drivers/soc/renesas/rcar-sysc.h
-@@ -51,6 +51,7 @@ struct rcar_sysc_info {
- 
- extern const struct rcar_sysc_info r8a7743_sysc_info;
- extern const struct rcar_sysc_info r8a7745_sysc_info;
-+extern const struct rcar_sysc_info r8a77470_sysc_info;
- extern const struct rcar_sysc_info r8a7779_sysc_info;
- extern const struct rcar_sysc_info r8a7790_sysc_info;
- extern const struct rcar_sysc_info r8a7791_sysc_info;
-diff --git a/include/dt-bindings/power/r8a7747x-sysc.h b/include/dt-bindings/power/r8a7747x-sysc.h
-new file mode 100644
-index 0000000..5f701df
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7747x-sysc.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7747x_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7747x_SYSC_H__
++A GENI based QUP wrapper controller node can contain 0 or more child nodes
++representing serial devices.  These serial devices can be a QCOM UART, I2C
++controller, SPI controller, or some combination of aforementioned devices.
++Please refer below the child node definitions for the supported serial
++interface protocols.
 +
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
++Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
 +
-+#define R8A77470_PD_CA7_CPU0		 5
-+#define R8A77470_PD_CA7_CPU1		 6
-+#define R8A77470_PD_SGX			20
-+#define R8A77470_PD_CA7_SCU		21
++Required properties:
++- compatible:		Must be "qcom,geni-i2c".
++- reg: 			Must contain QUP register address and length.
++- interrupts: 		Must contain I2C interrupt.
++- clock-names: 		Must contain "se".
++- clocks: 		Serial engine core clock needed by the device.
++- #address-cells:	Must be <1> for I2C device address.
++- #size-cells:		Must be <0> as I2C addresses have no size component.
 +
-+/* Always-on power area */
-+#define R8A77470_PD_ALWAYS_ON		32
++Optional property:
++- clock-frequency:	Desired I2C bus clock frequency in Hz.
++			When missing default to 400000Hz.
 +
-+#endif /* __DT_BINDINGS_POWER_R8A7747x_SYSC_H__ */
++Child nodes should conform to I2C bus binding as described in i2c.txt.
++
++Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
++
++Required properties:
++- compatible:		Must be "qcom,geni-debug-uart".
++- reg: 			Must contain UART register location and length.
++- interrupts: 		Must contain UART core interrupts.
++- clock-names:		Must contain "se".
++- clocks:		Serial engine core clock needed by the device.
++
++Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
++
++Required properties:
++- compatible:		Must contain "qcom,geni-spi".
++- reg:			Must contain SPI register location and length.
++- interrupts:		Must contain SPI controller interrupts.
++- clock-names:		Must contain "se".
++- clocks:		Serial engine core clock needed by the device.
++- spi-max-frequency:	Specifies maximum SPI clock frequency, units - Hz.
++- #address-cells:	Must be <1> to define a chip select address on
++			the SPI bus.
++- #size-cells:		Must be <0>.
++
++SPI slave nodes must be children of the SPI master node and conform to SPI bus
++binding as described in Documentation/devicetree/bindings/spi/spi-bus.txt.
++
++Example:
++	geniqup@8c0000 {
++		compatible = "qcom,geni-se-qup";
++		reg = <0x8c0000 0x6000>;
++		clock-names = "m-ahb", "s-ahb";
++		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
++			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		i2c0: i2c@a94000 {
++			compatible = "qcom,geni-i2c";
++			reg = <0xa94000 0x4000>;
++			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "se";
++			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&qup_1_i2c_5_active>;
++			pinctrl-1 = <&qup_1_i2c_5_sleep>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		uart0: serial@a88000 {
++			compatible = "qcom,geni-debug-uart";
++			reg = <0xa88000 0x7000>;
++			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "se";
++			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&qup_1_uart_3_active>;
++			pinctrl-1 = <&qup_1_uart_3_sleep>;
++		};
++
++		spi0: spi@a84000 {
++			compatible = "qcom,geni-spi";
++			reg = <0xa84000 0x4000>;
++			interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "se";
++			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&qup_1_spi_2_active>;
++			pinctrl-1 = <&qup_1_spi_2_sleep>;
++			spi-max-frequency = <19200000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	}
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
