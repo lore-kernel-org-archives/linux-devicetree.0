@@ -1,53 +1,48 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Fri, 23 Mar 2018 17:55:47 +0100
-Message-ID: <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
-References: <20180323130455.11470-1-brgl@bgdev.pl> <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/6] libnvdimm: Add nd_region_destroy()
+Date: Fri, 23 Mar 2018 09:59:45 -0700
+Message-ID: <CAPcyv4iGX+2idBpWAtcruyjyxxN1NkixzKzT1+hbCm718pSb-w@mail.gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
+ <20180323081209.31387-2-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sekhar Nori <nsekhar@ti.com>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180323081209.31387-2-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-03-23 17:49 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
-> Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> This series converts the only user of the handcoded, mach-specific reset
->> routines in the davinci platform to using the reset framework.
->>
->> Patch 1 modifies the way lookup entries are registered with the reset
->> framework.
->>
->> Patches 2-4 add necessary lookups/DT-properties.
->>
->> Patches 5-7 convert the davinci-rproc driver to the reset framework.
->>
->> Patch 8 removes now dead code.
->>
->> Philipp: it turned out that it's indeed better to use the reset
->> controller's device name for the entry lookup.
->>
->> Tested both in DT and legacy modes by booting the examples from
->> ti-ipc-rtos recipe in meta-ti.
->>
->> This series applies on top of David Lechner's common-clk-v9 branch[1]
->> with Philipp Zabel's reset/next branch[2] pulled in.
->>
->> It can be found in my github tree as well[3].
->>
+On Fri, Mar 23, 2018 at 1:12 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Currently there's no way to remove a region from and nvdimm_bus without
+> tearing down the whole bus. This patch adds an API for removing a single
+> region from the bus so that we can implement a sensible unbind operation
+> for the of_nd_region platform driver.
 >
-> What's the merge strategy for the rest of the patches? I should apply
-> the clk ones after the next -rc1?
+> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/nvdimm/region_devs.c | 6 ++++++
+>  include/linux/libnvdimm.h    | 1 +
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index 2f1d5771100e..76f46fd1fae0 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -1039,6 +1039,12 @@ struct nd_region *nvdimm_blk_region_create(struct nvdimm_bus *nvdimm_bus,
+>  }
+>  EXPORT_SYMBOL_GPL(nvdimm_blk_region_create);
+>
+> +void nd_region_destroy(struct nd_region *region)
 
-Or maybe Philipp can provide us with an immutable branch with the reset patches?
-
-The you could apply the driver patches and let Sekhar take all the
-platform code?
-
-Best regards,
-Bartosz Golaszewski
+Let's put this in the "nvdimm_" namespace so it pairs with the
+nvdimm_*_region_create() apis.
