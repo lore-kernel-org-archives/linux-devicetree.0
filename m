@@ -1,59 +1,45 @@
-Return-Path: <SRS0=yttm=GG=synopsys.com=Thinh.Nguyen@kernel.org>
-Date: Fri, 16 Mar 2018 15:35:38 -0700
-Message-ID: <772528b787dc3f8c5618de982c4a4d40ab5418fe.1521239259.git.thinhn@synopsys.com>
-In-Reply-To: <cover.1521239259.git.thinhn@synopsys.com>
-References: <cover.1521239259.git.thinhn@synopsys.com>
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: [PATCH v5 07/10] usb: dwc3: Make TX/RX threshold configurable
+Return-Path: <SRS0=8UYE=GN=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 4/5] usb: typec: wcove: remove max_snk_* for sink config
+Date: Fri, 23 Mar 2018 22:58:46 +0800
+Message-Id: <1521817127-23061-5-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <John.Youn@synopsys.com>
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, hdegoede@redhat.com
+Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-DWC_usb31 periodic transfer at 48K+ bytes per interval may need
-modification to the TX/RX packet threshold to achieve optimal result.
-Add properties to make it configurable.
+Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
+variable PDO for sink config.
 
-By default, periodic ESS TX and RX threshold are not enabled. To enable
-TX or RX threshold (host mode only), both packet threshold count and max
-burst size properties must be set to a valid non-zero value 1-16.
-
-DWC_usb31 programming guide section 1.2.3 and 1.2.4.
-
-Cc: John Youn <johnyoun@synopsys.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/typec/typec_wcove.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 44e8bab159ad..0dbd3083e7dd 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -57,6 +57,22 @@ Optional properties:
-  - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
- 	register for post-silicon frame length adjustment when the
- 	fladj_30mhz_sdbnd signal is invalid or incorrect.
-+ - snps,rx-thr-num-pkt-prd: periodic ESS RX packet threshold count - host mode
-+			only. Set this and rx-max-burst-prd to a valid,
-+			non-zero value 1-16 (DWC_usb31 programming guide
-+			section 1.2.4) to enable periodic ESS RX threshold.
-+ - snps,rx-max-burst-prd: max periodic ESS RX burst size - host mode only. Set
-+			this and rx-thr-num-pkt-prd to a valid, non-zero value
-+			1-16 (DWC_usb31 programming guide section 1.2.4) to
-+			enable periodic ESS RX threshold.
-+ - snps,tx-thr-num-pkt-prd: periodic ESS TX packet threshold count - host mode
-+			only. Set this and tx-max-burst-prd to a valid,
-+			non-zero value 1-16 (DWC_usb31 programming guide
-+			section 1.2.3) to enable periodic ESS TX threshold.
-+ - snps,tx-max-burst-prd: max periodic ESS TX burst size - host mode only. Set
-+			this and tx-thr-num-pkt-prd to a valid, non-zero value
-+			1-16 (DWC_usb31 programming guide section 1.2.3) to
-+			enable periodic ESS TX threshold.
+diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
+index 19cca7f..39cff11 100644
+--- a/drivers/usb/typec/typec_wcove.c
++++ b/drivers/usb/typec/typec_wcove.c
+@@ -558,6 +558,7 @@ static const u32 src_pdo[] = {
+ static const u32 snk_pdo[] = {
+ 	PDO_FIXED(5000, 500, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP |
+ 		  PDO_FIXED_USB_COMM),
++	PDO_VAR(5000, 12000, 3000),
+ };
  
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+ static struct tcpc_config wcove_typec_config = {
+@@ -566,9 +567,6 @@ static struct tcpc_config wcove_typec_config = {
+ 	.snk_pdo = snk_pdo,
+ 	.nr_snk_pdo = ARRAY_SIZE(snk_pdo),
  
+-	.max_snk_mv = 12000,
+-	.max_snk_ma = 3000,
+-	.max_snk_mw = 36000,
+ 	.operating_snk_mw = 15000,
+ 
+ 	.type = TYPEC_PORT_DRP,
 -- 
-2.11.0
+2.7.4
