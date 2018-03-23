@@ -1,69 +1,123 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] misc: ezport-firmware: new driver
-Date: Fri, 23 Mar 2018 14:17:12 +0100
-Message-ID: <20180323131712.GA32169@kroah.com>
-References: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
- <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/8] reset: modify the way reset lookup works for
+ board files
+Date: Fri, 23 Mar 2018 14:43:18 +0100
+Message-ID: <1521812598.3406.8.camel@pengutronix.de>
+References: <20180323130455.11470-1-brgl@bgdev.pl>
+         <20180323130455.11470-2-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
+In-Reply-To: <20180323130455.11470-2-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 06:22:00PM +0100, Sebastian Reichel wrote:
-> General Electric Healthcare's PPD has a secondary processor from
-> NXP's Kinetis K20 series. It's firmware can be updated from Linux
-> using the EzPort interface. This driver implements the firmware
-> updating process.
+On Fri, 2018-03-23 at 14:04 +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> Commit 7af1bb19f1d7 ("reset: add support for non-DT systems")
+> introduced reset control lookup mechanism for boards that still use
+> board files.
+> 
+> The routine used to register lookup entries takes the corresponding
+> reset_controlled_dev structure as argument.
+> 
+> It's been determined however that for the first user of this new
+> interface - davinci psc driver - it will be easier to register the
+> lookup entries using the reset controller device name.
+> 
+> This patch changes the way lookup entries are added.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/misc/ge-achc.txt |  19 +-
-
-Bindings should be in a separate patch, right?
-
-> +static int ezport_read_data(struct spi_device *spi, u32 address,
-> +			    u8 *buffer, size_t size)
+>  drivers/reset/core.c             | 38 +++++++++++++++++++++++++++++++-------
+>  include/linux/reset-controller.h | 14 ++++++++------
+>  2 files changed, 39 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> index 06fa4907afc4..f4a29c046995 100644
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -153,12 +153,10 @@ EXPORT_SYMBOL_GPL(devm_reset_controller_register);
+>  
+>  /**
+>   * reset_controller_add_lookup - register a set of lookup entries
+> - * @rcdev: initialized reset controller device owning the reset line
+>   * @lookup: array of reset lookup entries
+>   * @num_entries: number of entries in the lookup array
+>   */
+> -void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
+> -				 struct reset_control_lookup *lookup,
+> +void reset_controller_add_lookup(struct reset_control_lookup *lookup,
+>  				 unsigned int num_entries)
+>  {
+>  	struct reset_control_lookup *entry;
+> @@ -168,13 +166,12 @@ void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
+>  	for (i = 0; i < num_entries; i++) {
+>  		entry = &lookup[i];
+>  
+> -		if (!entry->dev_id) {
+> -			pr_warn("%s(): reset lookup entry has no dev_id, skipping\n",
+> +		if (!entry->dev_id || !entry->provider) {
+> +			pr_warn("%s(): reset lookup entry badly specified, skipping\n",
+>  				__func__);
+>  			continue;
+>  		}
+>  
+> -		entry->rcdev = rcdev;
+>  		list_add_tail(&entry->list, &reset_lookup_list);
+>  	}
+>  	mutex_unlock(&reset_lookup_mutex);
+> @@ -526,11 +523,30 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+>  }
+>  EXPORT_SYMBOL_GPL(__of_reset_control_get);
+>  
+> +static struct reset_controller_dev *
+> +__reset_controller_by_name(const char *name)
 > +{
-> +	struct spi_transfer xfers[2] = {};
-
-You can send SPI data from the stack?
-
-> +	u8 *query = kmalloc(EZPORT_FAST_READ_SIZE, GFP_KERNEL);
-> +	int ret;
+> +	struct reset_controller_dev *rcdev;
 > +
-> +	if (!query)
-> +		return -ENOMEM;
+> +	lockdep_assert_held(&reset_list_mutex);
 > +
-> +	query[0] = EZPORT_CMD_FAST_READ;
-> +	query[1] = address >> 16;
-> +	query[2] = address >> 8;
-> +	query[3] = address >> 0;
-> +	query[4] = EZPORT_DUMMY;
+> +	list_for_each_entry(rcdev, &reset_controller_list, list) {
+> +		if (!rcdev->dev)
+> +			continue;
 > +
-> +	xfers[0].len = EZPORT_FAST_READ_SIZE;
-> +	xfers[0].tx_buf = query;
+> +		if (!strcmp(name, dev_name(rcdev->dev)))
+> +			return rcdev;
+> +	}
 > +
-> +	xfers[1].len = size;
-> +	xfers[1].rx_buf = buffer;
-> +
-> +	ret = spi_sync_transfer(spi, xfers, 2);
-> +
-> +	kfree(query);
-> +
-> +	return ret;
+> +	return NULL;
 > +}
-> +static DEVICE_ATTR_WO(update_fw);
-> +static DEVICE_ATTR_RO(verify_fw);
+> +
+>  static struct reset_control *
+>  __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+>  				bool shared, bool optional)
+>  {
+>  	const struct reset_control_lookup *lookup;
+> +	struct reset_controller_dev *rcdev;
+>  	const char *dev_id = dev_name(dev);
+>  	struct reset_control *rstc = NULL;
+>  
+> @@ -547,7 +563,15 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+>  		    ((con_id && lookup->con_id) &&
+>  		     !strcmp(con_id, lookup->con_id))) {
+>  			mutex_lock(&reset_list_mutex);
+> -			rstc = __reset_control_get_internal(lookup->rcdev,
+> +			rcdev = __reset_controller_by_name(lookup->provider);
+> +			if (!rcdev) {
+> +				mutex_unlock(&reset_list_mutex);
+> +				mutex_unlock(&reset_lookup_mutex);
+> +				/* Reset provider may not be ready yet. */
+> +				return -EPROBE_DEFER;
 
-New sysfs attributes need Documentation/ABI updates please.
+Thanks, I've applied this patch to reset/next with the following change:
 
-Also please fix up the kbuild-reported build errors.
+-                               return -EPROBE_DEFER;
++                               return ERR_PTR(-EPROBE_DEFER);
 
-thanks,
-
-greg k-h
+regards
+Philipp
