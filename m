@@ -1,142 +1,56 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] ata: ahci-platform: add reset control support
-Date: Fri, 23 Mar 2018 09:19:14 +0100
-Message-ID: <87cd10b9-38f8-4e16-cfcf-425e92fc126c@redhat.com>
-References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: omap: dmm: Document new
+ compatible for DRA7xx family
+Date: Fri, 23 Mar 2018 10:31:53 +0200
+Message-ID: <e51d19ce-f79d-789a-dbe5-15051307202b@ti.com>
+References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
+ <20180322134206.22857-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180322134206.22857-2-peter.ujfalusi@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 23-03-18 02:30, Kunihiko Hayashi wrote:
-> Add support to get and control a list of resets for the device
-> as optional and shared. These resets must be kept de-asserted until
-> the device is enabled.
-> 
-> This is specified as shared because some SoCs like UniPhier series
-> have common reset controls with all ahci controller instances.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-
-Patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
->   drivers/ata/ahci.h                                 |  1 +
->   drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
->   3 files changed, 23 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index c760ecb..f4006d3 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -30,6 +30,7 @@ compatible:
->   Optional properties:
->   - dma-coherent      : Present if dma operations are coherent
->   - clocks            : a list of phandle + clock specifier pairs
-> +- resets            : a list of phandle + reset specifier pairs
->   - target-supply     : regulator for SATA target power
->   - phys              : reference to the SATA PHY node
->   - phy-names         : must be "sata-phy"
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 749fd94..47ec77a2 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -347,6 +347,7 @@ struct ahci_host_priv {
->   	u32			em_msg_type;	/* EM message type */
->   	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
->   	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
-> +	struct reset_control	*rsts;		/* Optional */
->   	struct regulator	**target_pwrs;	/* Optional */
->   	/*
->   	 * If platform uses PHYs. There is a 1:1 relation between the port number and
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 341d0ef..3130db9 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -25,6 +25,7 @@
->   #include <linux/phy/phy.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/of_platform.h>
-> +#include <linux/reset.h>
->   #include "ahci.h"
->   
->   static void ahci_host_stop(struct ata_host *host);
-> @@ -195,7 +196,8 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
->    * following order:
->    * 1) Regulator
->    * 2) Clocks (through ahci_platform_enable_clks)
-> - * 3) Phys
-> + * 3) Resets
-> + * 4) Phys
->    *
->    * If resource enabling fails at any point the previous enabled resources
->    * are disabled in reverse order.
-> @@ -215,12 +217,19 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
->   	if (rc)
->   		goto disable_regulator;
->   
-> -	rc = ahci_platform_enable_phys(hpriv);
-> +	rc = reset_control_deassert(hpriv->rsts);
->   	if (rc)
->   		goto disable_clks;
->   
-> +	rc = ahci_platform_enable_phys(hpriv);
-> +	if (rc)
-> +		goto disable_resets;
-> +
->   	return 0;
->   
-> +disable_resets:
-> +	reset_control_assert(hpriv->rsts);
-> +
->   disable_clks:
->   	ahci_platform_disable_clks(hpriv);
->   
-> @@ -239,12 +248,15 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
->    * following order:
->    * 1) Phys
->    * 2) Clocks (through ahci_platform_disable_clks)
-> - * 3) Regulator
-> + * 3) Resets
-> + * 4) Regulator
->    */
->   void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
->   {
->   	ahci_platform_disable_phys(hpriv);
->   
-> +	reset_control_assert(hpriv->rsts);
-> +
->   	ahci_platform_disable_clks(hpriv);
->   
->   	ahci_platform_disable_regulators(hpriv);
-> @@ -393,6 +405,12 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
->   		hpriv->clks[i] = clk;
->   	}
->   
-> +	hpriv->rsts = devm_reset_control_array_get_optional_shared(dev);
-> +	if (IS_ERR(hpriv->rsts)) {
-> +		rc = PTR_ERR(hpriv->rsts);
-> +		goto err_out;
-> +	}
-> +
->   	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
->   
->   	/*
-> 
+CgpPbiAyMDE4LTAzLTIyIDE1OjQyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBGcm9tOiBUb21p
+IFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+IAo+IERlZmluZSB1bmlxdWUgY29t
+cGF0aWJsZSBzdHJpbmcgZm9yIHRoZSBETU0gaW4gRFJBN3h4IGZhbWlseS4KPiAKPiBUaGUgbmV3
+IGNvbXBhdGlibGUgY2FuIGJlIHVzZWQgdG8gYXBwbHkgRFJBN3h4IHNwZWNpZmljIHdvcmthcm91
+bmRzIGZvcgo+IEVSUkFUQXMsIGxpa2UgaTg3OCAoTVBVIExvY2t1cCB3aXRoIGNvbmN1cnJlbnQg
+RE1NIGFuZCBFTUlGIGFjY2Vzc2VzKQo+IAo+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2VpbmVu
+IDx0b21pLnZhbGtlaW5lbkB0aS5jb20+CgpJIGhhdmUgZmFpbGVkIHRvIGFkZDoKU2lnbmVkLW9m
+Zi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KCj4gLS0tCj4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9kbW0udHh0IHwgMyArKy0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvZG1t
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9kbW0udHh0
+Cj4gaW5kZXggOGJkNmQwYTIzOGE4Li5iYmJlN2NkYmEzMGMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9vbWFwL2RtbS50eHQKPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvZG1tLnR4dAo+IEBAIC04LDcg
+KzgsOCBAQCB0cmFuc2xhdGlvbiBmb3IgaW5pdGlhdG9ycyB3aGljaCBuZWVkIGNvbnRpZ3VvdXMg
+ZG1hIGJ1cyBhZGRyZXNzZXMuCj4gIAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIGNvbXBh
+dGlibGU6CVNob3VsZCBjb250YWluICJ0aSxvbWFwNC1kbW0iIGZvciBPTUFQNCBmYW1pbHkKPiAt
+CQlTaG91bGQgY29udGFpbiAidGksb21hcDUtZG1tIiBmb3IgT01BUDUgYW5kIERSQTd4IGZhbWls
+eQo+ICsJCVNob3VsZCBjb250YWluICJ0aSxvbWFwNS1kbW0iIGZvciBPTUFQNSBmYW1pbHkKPiAr
+CQlTaG91bGQgY29udGFpbiAidGksZHJhNy1kbW0iIGZvciBEUkE3eHggZmFtaWx5Cj4gIC0gcmVn
+OgkJQ29udGFpbnMgRE1NIHJlZ2lzdGVyIGFkZHJlc3MgcmFuZ2UgKGJhc2UgYWRkcmVzcyBhbmQg
+bGVuZ3RoKQo+ICAtIGludGVycnVwdHM6CVNob3VsZCBjb250YWluIGFuIGludGVycnVwdC1zcGVj
+aWZpZXIgZm9yIERNTV9JUlEuCj4gIC0gdGksaHdtb2RzOglOYW1lIG9mIHRoZSBod21vZCBhc3Nv
+Y2lhdGVkIHRvIERNTSwgd2hpY2ggaXMgdHlwaWNhbGx5ICJkbW0iCj4gCgotIFDDqXRlcgoKVGV4
+YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
+a2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6
+IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
