@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] arm64: dts: r8a77965: Add all MSIOF device nodes
-Date: Fri, 23 Mar 2018 10:17:32 +0100
-Message-ID: <1521796652-26136-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2] arm64: dts: renesas: r8a77965: Add all MSIOF device nodes
+Date: Fri, 23 Mar 2018 10:19:09 +0100
+Message-ID: <1521796749-26376-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -31,6 +31,9 @@ Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 [geert: Use numerical power domain indices for initial r8a77965.dtsi]
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
+v2:
+  - Add missing "renesas" to one line summary prefix.
+
 Tested with arch/arm64/boot/dts/renesas/salvator-x-exio-d-msiof3a-2xHC595.dtso
 https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/renesas-overlays&id=b52ff2b481438cedd68effcad7ea2fc85b14f5f2
 and blinkenlights.
