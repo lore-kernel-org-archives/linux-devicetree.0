@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 5/8] remoteproc: da8xx: add the missing retval check for clk_enable()
-Date: Fri, 23 Mar 2018 12:47:06 +0100
-Message-ID: <20180323114709.20330-6-brgl@bgdev.pl>
+Subject: [PATCH v3 4/8] clk: davinci: add a reset lookup table for psc0
+Date: Fri, 23 Mar 2018 12:47:05 +0100
+Message-ID: <20180323114709.20330-5-brgl@bgdev.pl>
 References: <20180323114709.20330-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180323114709.20330-1-brgl@bgdev.pl>
@@ -12,39 +12,53 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The davinci platform is being switched to using the common clock
-framework, where clk_enable() can fail. Add the return value check.
+In order to be able to use the reset framework in legacy boot mode as
+well, add the reset lookup table to the psc driver for da850 variant.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/remoteproc/da8xx_remoteproc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/clk/davinci/psc-da850.c | 7 +++++++
+ drivers/clk/davinci/psc.c       | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index bf3b9034c319..2b24291337b7 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 	struct device *dev = rproc->dev.parent;
- 	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
- 	struct clk *dsp_clk = drproc->dsp_clk;
-+	int ret;
+diff --git a/drivers/clk/davinci/psc-da850.c b/drivers/clk/davinci/psc-da850.c
+index ccc7eb17bf3a..50cc0d17df40 100644
+--- a/drivers/clk/davinci/psc-da850.c
++++ b/drivers/clk/davinci/psc-da850.c
+@@ -6,6 +6,7 @@
+  */
  
- 	/* hw requires the start (boot) address be on 1KB boundary */
- 	if (rproc->bootaddr & 0x3ff) {
-@@ -148,7 +149,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
+ #include <linux/clk-provider.h>
++#include <linux/reset-controller.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/init.h>
+@@ -66,8 +67,14 @@ LPSC_CLKDEV3(ecap_clkdev,	"fck",	"ecap.0",
+ 				"fck",	"ecap.1",
+ 				"fck",	"ecap.2");
  
- 	writel(rproc->bootaddr, drproc->bootreg);
- 
--	clk_enable(dsp_clk);
-+	ret = clk_enable(dsp_clk);
-+	if (ret) {
-+		dev_err(dev, "clk_enable() failed: %d\n", ret);
-+		return ret;
-+	}
++static struct reset_control_lookup da850_psc0_reset_lookup_table[] = {
++	RESET_LOOKUP("da850-psc0", "davinci-rproc.0", NULL, 15),
++};
 +
- 	davinci_clk_reset_deassert(dsp_clk);
+ static int da850_psc0_init(struct device *dev, void __iomem *base)
+ {
++	reset_controller_add_lookup(da850_psc0_reset_lookup_table,
++				    ARRAY_SIZE(da850_psc0_reset_lookup_table));
+ 	return davinci_psc_register_clocks(dev, da850_psc0_info, 16, base);
+ }
  
- 	return 0;
+diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
+index 3b0e59dfbdd7..063df62381ea 100644
+--- a/drivers/clk/davinci/psc.c
++++ b/drivers/clk/davinci/psc.c
+@@ -425,6 +425,7 @@ __davinci_psc_register_clocks(struct device *dev,
+ 
+ 	psc->rcdev.ops = &davinci_psc_reset_ops;
+ 	psc->rcdev.owner = THIS_MODULE;
++	psc->rcdev.dev = dev;
+ 	psc->rcdev.of_node = dev->of_node;
+ 	psc->rcdev.of_reset_n_cells = 1;
+ 	psc->rcdev.of_xlate = davinci_psc_reset_of_xlate;
 -- 
 2.16.1
