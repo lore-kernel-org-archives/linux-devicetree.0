@@ -1,66 +1,87 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH 1/2][v6] dt-bindings: mtd-physmap: Add endianness supports
-Date: Fri, 23 Mar 2018 07:59:33 +0000
-Message-ID: <VI1PR0402MB385471846E1D3B747C67B48D97A80@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-References: <20180312081128.8195-1-prabhakar.kushwaha@nxp.com>
+From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/6] libnvdimm: Add of_node to region and bus descriptors
+Date: Fri, 23 Mar 2018 19:12:04 +1100
+Message-ID: <20180323081209.31387-1-oohall@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180312081128.8195-1-prabhakar.kushwaha@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "oss@buserror.net" <oss@buserror.net>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+We want to be able to cross reference the region and bus devices
+with the device tree node that they were spawned from. libNVDIMM
+handles creating the actual devices for these internally, so we
+need to pass in a pointer to the relevant node in the descriptor.
 
+Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/nvdimm/bus.c         | 1 +
+ drivers/nvdimm/region_devs.c | 1 +
+ include/linux/libnvdimm.h    | 3 +++
+ 3 files changed, 5 insertions(+)
 
-> -----Original Message-----
-> From: Prabhakar Kushwaha
-> Sent: Monday, March 12, 2018 1:41 PM
-> To: linux-mtd@lists.infradead.org; devicetree@vger.kernel.org;
-> robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org
-> Cc: boris.brezillon@free-electrons.com; computersforpeace@gmail.com;
-> oss@buserror.net; Leo Li <leoyang.li@nxp.com>; linux-arm-
-> kernel@lists.infradead.org; Prabhakar Kushwaha
-> <prabhakar.kushwaha@nxp.com>
-> Subject: [PATCH 1/2][v6] dt-bindings: mtd-physmap: Add endianness
-> supports
-> 
-> Connection between flash and controller is not necessary to be always of
-> same type. It may varies from platform to platform.
-> 
-> Adding endianness (optional) property to provide connection type
-> information.
-> 
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes for v2: updated subject
-> Changes for v3: fixed typo for "big-endian"
-> Changes for v4: Moved binding definition in mtd-physmap.txt as discussed at
-> https://patchwork.ozlabs.org/patch/842543/
-> Changes for v5: Sending as it is
-> Changes for v6: Updated binding when endianness property is absent
-> 
-
-I hope this version is good enough to be accepted. 
-
-May I go ahead and send device tree changes for other NXP SoCs.
-
---pk
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 78eabc3a1ab1..c6106914f396 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -358,6 +358,7 @@ struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
+ 	nvdimm_bus->dev.release = nvdimm_bus_release;
+ 	nvdimm_bus->dev.groups = nd_desc->attr_groups;
+ 	nvdimm_bus->dev.bus = &nvdimm_bus_type;
++	nvdimm_bus->dev.of_node = nd_desc->of_node;
+ 	dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
+ 	rc = device_register(&nvdimm_bus->dev);
+ 	if (rc) {
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index e6d01911e092..2f1d5771100e 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -1005,6 +1005,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+ 	dev->parent = &nvdimm_bus->dev;
+ 	dev->type = dev_type;
+ 	dev->groups = ndr_desc->attr_groups;
++	dev->of_node = ndr_desc->of_node;
+ 	nd_region->ndr_size = resource_size(ndr_desc->res);
+ 	nd_region->ndr_start = ndr_desc->res->start;
+ 	nd_device_register(dev);
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index ff855ed965fb..f61cb5050297 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -76,12 +76,14 @@ typedef int (*ndctl_fn)(struct nvdimm_bus_descriptor *nd_desc,
+ 		struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+ 		unsigned int buf_len, int *cmd_rc);
+ 
++struct device_node;
+ struct nvdimm_bus_descriptor {
+ 	const struct attribute_group **attr_groups;
+ 	unsigned long bus_dsm_mask;
+ 	unsigned long cmd_mask;
+ 	struct module *module;
+ 	char *provider_name;
++	struct device_node *of_node;
+ 	ndctl_fn ndctl;
+ 	int (*flush_probe)(struct nvdimm_bus_descriptor *nd_desc);
+ 	int (*clear_to_send)(struct nvdimm_bus_descriptor *nd_desc,
+@@ -123,6 +125,7 @@ struct nd_region_desc {
+ 	int num_lanes;
+ 	int numa_node;
+ 	unsigned long flags;
++	struct device_node *of_node;
+ };
+ 
+ struct device;
+-- 
+2.9.5
