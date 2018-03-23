@@ -1,43 +1,83 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv2 2/3] drm: bridge: dw-hdmi: check the cec-disable property
-Date: Fri, 23 Mar 2018 13:59:14 +0100
-Message-ID: <20180323125915.13986-3-hverkuil@xs4all.nl>
-References: <20180323125915.13986-1-hverkuil@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180323125915.13986-1-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, Neil Armstrong <narmstrong@baylibre.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the reset framework
+Date: Fri, 23 Mar 2018 14:04:47 +0100
+Message-ID: <20180323130455.11470-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKSWYgdGhlIGNlYy1k
-aXNhYmxlIHByb3BlcnR5IHdhcyBzZXQsIHRoZW4gZGlzYWJsZSB0aGUgRFcgQ0VDCmNvbnRyb2xs
-ZXIuIFRoaXMgaXMgbmVlZGVkIGZvciBib2FyZHMgdGhhdCBoYXZlIHRoZWlyIG93bgpDRUMgY29u
-dHJvbGxlci4KClNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2Nv
-LmNvbT4KUmV2aWV3ZWQtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNv
-bT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyB8IDMgKyst
-CiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwppbmRleCBhMzhkYjQwY2U5OTAuLjU5
-NzIyMGU0MDU0MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9k
-dy1oZG1pLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMK
-QEAgLTI1MDgsNyArMjUwOCw4IEBAIF9fZHdfaGRtaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2LAogCQloZG1pLT5hdWRpbyA9IHBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcl9mdWxs
-KCZwZGV2aW5mbyk7CiAJfQogCi0JaWYgKGNvbmZpZzAgJiBIRE1JX0NPTkZJRzBfQ0VDKSB7CisJ
-aWYgKChjb25maWcwICYgSERNSV9DT05GSUcwX0NFQykgJiYKKwkgICAgIW9mX3Byb3BlcnR5X3Jl
-YWRfYm9vbChucCwgImNlYy1kaXNhYmxlIikpIHsKIAkJY2VjLmhkbWkgPSBoZG1pOwogCQljZWMu
-b3BzID0gJmR3X2hkbWlfY2VjX29wczsKIAkJY2VjLmlycSA9IGlycTsKLS0gCjIuMTUuMQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This series converts the only user of the handcoded, mach-specific reset
+routines in the davinci platform to using the reset framework.
+
+Patch 1 modifies the way lookup entries are registered with the reset
+framework.
+
+Patches 2-4 add necessary lookups/DT-properties.
+
+Patches 5-7 convert the davinci-rproc driver to the reset framework.
+
+Patch 8 removes now dead code.
+
+Philipp: it turned out that it's indeed better to use the reset
+controller's device name for the entry lookup.
+
+Tested both in DT and legacy modes by booting the examples from
+ti-ipc-rtos recipe in meta-ti.
+
+This series applies on top of David Lechner's common-clk-v9 branch[1]
+with Philipp Zabel's reset/next branch[2] pulled in.
+
+It can be found in my github tree as well[3].
+
+[1] git://github.com/dlech/ev3dev-kernel.git common-clk-v9
+[2] git://git.pengutronix.de/git/pza/linux reset/next
+[3] git@github.com:brgl/linux.git topic/davinci-reset
+
+v1 -> v2:
+- fixed the device tree patches the descriptions of which were mixed up
+- return -EPROBE_DEFER from davinci-rproc's probe() if we can't get the
+  reset provider, since it's possible that the lookup table was not yet
+  registered
+- made the local variable naming consistent in the davinci-rproc driver
+- fixed a typo in PATCH 5/8
+
+v2 -> v3:
+- modify PATCH 1/8: drop the provider argument from the function adding
+  lookup entries and instead pass the provider name to the RESET_LOOKUP
+  macro, return -EPROBE_DEFER if we locate a correct lookup entry but
+  cannot get the corresponding reset controller
+- modify the reset lookup entry in psc-da850
+- don't manually return -EPROBE_DEFER from davinci-rproc, instead don't
+  emit an error message if devm_reset_control_get_exclusive() returns
+  this error code
+
+v3 -> v4:
+- make index the second parameter in RESET_LOOKUP() (right after the
+  provider name)
+
+Bartosz Golaszewski (8):
+  reset: modify the way reset lookup works for board files
+  ARM: davinci: dts: make psc0 a reset provider
+  ARM: davinci: dts: add a reset control to the dsp node
+  clk: davinci: add a reset lookup table for psc0
+  remoteproc: da8xx: add the missing retval check for clk_enable()
+  remoteproc: da8xx: prepare and unprepare the clock where needed
+  remoteproc: da8xx: use the reset framework
+  clk: davinci: kill davinci_clk_reset_assert/deassert()
+
+ arch/arm/boot/dts/da850.dtsi               |  2 ++
+ arch/arm/mach-davinci/include/mach/clock.h | 21 ---------------
+ drivers/clk/davinci/psc-da850.c            |  7 +++++
+ drivers/clk/davinci/psc.c                  | 19 +-------------
+ drivers/remoteproc/da8xx_remoteproc.c      | 42 +++++++++++++++++++++++++-----
+ drivers/reset/core.c                       | 38 ++++++++++++++++++++++-----
+ include/linux/reset-controller.h           | 14 +++++-----
+ 7 files changed, 84 insertions(+), 59 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/clock.h
+
+-- 
+2.16.1
