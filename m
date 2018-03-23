@@ -1,42 +1,36 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 6/8] MIPS: mscc: Add switch to ocelot
-Date: Fri, 23 Mar 2018 15:11:23 -0700
-Message-ID: <171fb3db-70f4-4818-9390-8164fab5adca@gmail.com>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-7-alexandre.belloni@bootlin.com>
- <e488fd29-0094-d005-a078-873f6f5add13@gmail.com>
- <20180323212230.GA12808@piout.net> <20180323213344.GV24361@lunn.ch>
- <dcac43b7-2eb7-d409-a77c-4f671a8cfc3d@gmail.com>
- <20180323220657.GY24361@lunn.ch>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v4 0/5] Support qcom pinctrl protected pins
+Date: Fri, 23 Mar 2018 18:50:18 -0500
+Message-ID: <d7e0d2e1-c0d8-f751-7a73-71d5ab15bf52@codeaurora.org>
+References: <20180323163453.96495-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323220657.GY24361@lunn.ch>
+In-Reply-To: <20180323163453.96495-1-swboyd@chromium.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>
+To: Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2018 03:06 PM, Andrew Lunn wrote:
->>> That is the trade off of having a standalone MDIO bus driver.  Maybe
->>> add a phandle to the internal MDIO bus? The switch driver could then
->>> follow the phandle, and direct connect the internal PHYs?
->>
->> This is more or less what patch 7 does, right?
-> 
-> Patch 7 does it in DT. I'm suggesting it could be done in C. It is
-> hard wired, so there is no need to describe it in DT. Use the phandle
-> to get the mdio bus, mdiobus_get_phy(, port) to get the phydev and
-> then use phy_connect().
+On 03/23/2018 11:34 AM, Stephen Boyd wrote:
+> Stephen Boyd (5):
+>    dt-bindings: gpio: Add a gpio-reserved-ranges property
+>    gpiolib: Extract mask allocation into subroutine
+>    gpiolib: Change bitmap allocation to kmalloc_array
+>    gpiolib: Support 'gpio-reserved-ranges' property
+>    pinctrl: qcom: Don't allow protected pins to be requested
 
-That does not sound like a great idea. And to go back to your example
-about DSA, it is partially true, you will see some switch bindings
-defining the internal PHYs (e.g: qca8k), and most not doing it (b53,
-mv88e6xxx, etc.). In either case, this resolves to the same thing
-though. Being able to parse a phy-handle property is a lot more
-flexible, and if it does matter that the PHY truly is internal, then the
-'phy-mode' property can help reflect that.
+ACPI parts:
+
+Tested-by: Timur Tabi <timur@codeaurora.org>
+
+I posted a pair of patches that should be applied on top of yours.  The 
+first one fixed pinctrl-msm when there is more than one TLMM device. 
+The second adds support for my SOC.
+
 -- 
-Florian
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
