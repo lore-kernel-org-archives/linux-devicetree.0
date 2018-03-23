@@ -1,11 +1,13 @@
 From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/6] libnvdimm: Add of_node to region and bus descriptors
-Date: Fri, 23 Mar 2018 19:12:04 +1100
-Message-ID: <20180323081209.31387-1-oohall@gmail.com>
+Subject: [PATCH 2/6] libnvdimm: Add nd_region_destroy()
+Date: Fri, 23 Mar 2018 19:12:05 +1100
+Message-ID: <20180323081209.31387-2-oohall@gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180323081209.31387-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
  <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
@@ -19,69 +21,45 @@ To: linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We want to be able to cross reference the region and bus devices
-with the device tree node that they were spawned from. libNVDIMM
-handles creating the actual devices for these internally, so we
-need to pass in a pointer to the relevant node in the descriptor.
+Currently there's no way to remove a region from and nvdimm_bus without
+tearing down the whole bus. This patch adds an API for removing a single
+region from the bus so that we can implement a sensible unbind operation
+for the of_nd_region platform driver.
 
 Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/nvdimm/bus.c         | 1 +
- drivers/nvdimm/region_devs.c | 1 +
- include/linux/libnvdimm.h    | 3 +++
- 3 files changed, 5 insertions(+)
+ drivers/nvdimm/region_devs.c | 6 ++++++
+ include/linux/libnvdimm.h    | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 78eabc3a1ab1..c6106914f396 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -358,6 +358,7 @@ struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
- 	nvdimm_bus->dev.release = nvdimm_bus_release;
- 	nvdimm_bus->dev.groups = nd_desc->attr_groups;
- 	nvdimm_bus->dev.bus = &nvdimm_bus_type;
-+	nvdimm_bus->dev.of_node = nd_desc->of_node;
- 	dev_set_name(&nvdimm_bus->dev, "ndbus%d", nvdimm_bus->id);
- 	rc = device_register(&nvdimm_bus->dev);
- 	if (rc) {
 diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index e6d01911e092..2f1d5771100e 100644
+index 2f1d5771100e..76f46fd1fae0 100644
 --- a/drivers/nvdimm/region_devs.c
 +++ b/drivers/nvdimm/region_devs.c
-@@ -1005,6 +1005,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 	dev->parent = &nvdimm_bus->dev;
- 	dev->type = dev_type;
- 	dev->groups = ndr_desc->attr_groups;
-+	dev->of_node = ndr_desc->of_node;
- 	nd_region->ndr_size = resource_size(ndr_desc->res);
- 	nd_region->ndr_start = ndr_desc->res->start;
- 	nd_device_register(dev);
+@@ -1039,6 +1039,12 @@ struct nd_region *nvdimm_blk_region_create(struct nvdimm_bus *nvdimm_bus,
+ }
+ EXPORT_SYMBOL_GPL(nvdimm_blk_region_create);
+ 
++void nd_region_destroy(struct nd_region *region)
++{
++	nd_device_unregister(&region->dev, ND_SYNC);
++}
++EXPORT_SYMBOL_GPL(nd_region_destroy);
++
+ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
+ 		struct nd_region_desc *ndr_desc)
+ {
 diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index ff855ed965fb..f61cb5050297 100644
+index f61cb5050297..df21ca176e98 100644
 --- a/include/linux/libnvdimm.h
 +++ b/include/linux/libnvdimm.h
-@@ -76,12 +76,14 @@ typedef int (*ndctl_fn)(struct nvdimm_bus_descriptor *nd_desc,
- 		struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 		unsigned int buf_len, int *cmd_rc);
- 
-+struct device_node;
- struct nvdimm_bus_descriptor {
- 	const struct attribute_group **attr_groups;
- 	unsigned long bus_dsm_mask;
- 	unsigned long cmd_mask;
- 	struct module *module;
- 	char *provider_name;
-+	struct device_node *of_node;
- 	ndctl_fn ndctl;
- 	int (*flush_probe)(struct nvdimm_bus_descriptor *nd_desc);
- 	int (*clear_to_send)(struct nvdimm_bus_descriptor *nd_desc,
-@@ -123,6 +125,7 @@ struct nd_region_desc {
- 	int num_lanes;
- 	int numa_node;
- 	unsigned long flags;
-+	struct device_node *of_node;
- };
- 
- struct device;
+@@ -192,6 +192,7 @@ struct nd_region *nvdimm_blk_region_create(struct nvdimm_bus *nvdimm_bus,
+ 		struct nd_region_desc *ndr_desc);
+ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
+ 		struct nd_region_desc *ndr_desc);
++void nd_region_destroy(struct nd_region *region);
+ void *nd_region_provider_data(struct nd_region *nd_region);
+ void *nd_blk_region_provider_data(struct nd_blk_region *ndbr);
+ void nd_blk_region_set_provider_data(struct nd_blk_region *ndbr, void *data);
 -- 
 2.9.5
