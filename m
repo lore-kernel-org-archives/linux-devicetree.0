@@ -1,71 +1,69 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 0/3] iio: add unit converter
-Date: Fri, 23 Mar 2018 13:14:01 +0000
-Message-ID: <20180323141401.000031cc@huawei.com>
-References: <20180319170246.26830-1-peda@axentia.se>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/2] misc: ezport-firmware: new driver
+Date: Fri, 23 Mar 2018 14:17:12 +0100
+Message-ID: <20180323131712.GA32169@kroah.com>
+References: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
+ <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180319170246.26830-1-peda@axentia.se>
+Content-Disposition: inline
+In-Reply-To: <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Mar 2018 18:02:43 +0100
-Peter Rosin <peda@axentia.se> wrote:
+On Tue, Mar 20, 2018 at 06:22:00PM +0100, Sebastian Reichel wrote:
+> General Electric Healthcare's PPD has a secondary processor from
+> NXP's Kinetis K20 series. It's firmware can be updated from Linux
+> using the EzPort interface. This driver implements the firmware
+> updating process.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> ---
+>  Documentation/devicetree/bindings/misc/ge-achc.txt |  19 +-
 
-> Hi!
-> 
-> This moves the iio-mux driver to a new category, since I think
-> it will be the single driver in that category forever, and now
-> I'm adding a new driver that is somewhat similar in nature...
-> 
-> But that rename is not very interesting, it's just reshuffling.
-> It's the new driver that I need. Specifically, I need to allow
-> linear scaling and modification of the type of an io-channel.
-> I don't know exactly how that is accomplished in the best way,
-> but this is what I came up with.
-> 
-> The use cases are an ADC hooked up to measure a "big" voltage by
-> looking at the midpoint of a voltage divider, and an ADC used
-> to measure the current by looking at the voltage over a resistor.
-> 
-> Comments?
-It is pretty much how I would have implemented it as well.
+Bindings should be in a separate patch, right?
 
-Will probably do a detailed review over the weekend.
-Not convinced entirely on the 'wrapper' naming though.
-Will think about it...
+> +static int ezport_read_data(struct spi_device *spi, u32 address,
+> +			    u8 *buffer, size_t size)
+> +{
+> +	struct spi_transfer xfers[2] = {};
 
-Jonathan
+You can send SPI data from the stack?
 
-> 
-> Cheers,
-> Peter
-> 
-> Peter Rosin (3):
->   iio: rename the multiplexer category to wrapper
->   dt-bindings: iio: wrapper: add io-channel-unit-converter
->   iio: wrapper: unit-converter: new driver
-> 
->  .../{multiplexer => wrapper}/io-channel-mux.txt    |   0
->  .../iio/wrapper/io-channel-unit-converter.txt      |  84 +++++++
->  MAINTAINERS                                        |  11 +-
->  drivers/iio/Kconfig                                |   2 +-
->  drivers/iio/Makefile                               |   2 +-
->  drivers/iio/multiplexer/Makefile                   |   6 -
->  drivers/iio/{multiplexer => wrapper}/Kconfig       |  13 +-
->  drivers/iio/wrapper/Makefile                       |   7 +
->  drivers/iio/{multiplexer => wrapper}/iio-mux.c     |   0
->  drivers/iio/wrapper/iio-unit-converter.c           | 268 +++++++++++++++++++++
->  10 files changed, 381 insertions(+), 12 deletions(-)
->  rename Documentation/devicetree/bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt (100%)
->  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->  delete mode 100644 drivers/iio/multiplexer/Makefile
->  rename drivers/iio/{multiplexer => wrapper}/Kconfig (53%)
->  create mode 100644 drivers/iio/wrapper/Makefile
->  rename drivers/iio/{multiplexer => wrapper}/iio-mux.c (100%)
->  create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
-> 
+> +	u8 *query = kmalloc(EZPORT_FAST_READ_SIZE, GFP_KERNEL);
+> +	int ret;
+> +
+> +	if (!query)
+> +		return -ENOMEM;
+> +
+> +	query[0] = EZPORT_CMD_FAST_READ;
+> +	query[1] = address >> 16;
+> +	query[2] = address >> 8;
+> +	query[3] = address >> 0;
+> +	query[4] = EZPORT_DUMMY;
+> +
+> +	xfers[0].len = EZPORT_FAST_READ_SIZE;
+> +	xfers[0].tx_buf = query;
+> +
+> +	xfers[1].len = size;
+> +	xfers[1].rx_buf = buffer;
+> +
+> +	ret = spi_sync_transfer(spi, xfers, 2);
+> +
+> +	kfree(query);
+> +
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_WO(update_fw);
+> +static DEVICE_ATTR_RO(verify_fw);
+
+New sysfs attributes need Documentation/ABI updates please.
+
+Also please fix up the kbuild-reported build errors.
+
+thanks,
+
+greg k-h
