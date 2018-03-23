@@ -1,267 +1,130 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v11 2/2] clk: npcm7xx: Nuvoton NPCM7XX Clock Controller driver
-Date: Fri, 23 Mar 2018 10:58:56 -0700
-Message-ID: <152182793651.178046.13824776927497999970@swboyd.mtv.corp.google.com>
-References: <1521553249-6971-1-git-send-email-tali.perry1@gmail.com>
- <1521553249-6971-3-git-send-email-tali.perry1@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
+Date: Fri, 23 Mar 2018 11:54:18 -0700
+Message-ID: <20180323185418.GD255819@dtor-ws>
+References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
+ <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
+ <1521685073.28226.10.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521553249-6971-3-git-send-email-tali.perry1@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1521685073.28226.10.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com, brendanhiggins@google.com, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, raltherr@google.com, robh+dt@kernel.org, sboyd@codeaurora.org, tmaimon77@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, matthias.bgg@gmail.com, eddie.huang@mediatek.com, Chen.Zhong@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting tali.perry1@gmail.com (2018-03-20 06:40:49)
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 71ec41e6364f..353e94f2c25a 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -21,6 +21,7 @@ endif
->  obj-$(CONFIG_MACH_ASM9260)             += clk-asm9260.o
->  obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)    += clk-axi-clkgen.o
->  obj-$(CONFIG_ARCH_AXXIA)               += clk-axm5516.o
-> +obj-$(CONFIG_ARCH_NPCM7XX)             += clk-npcm7xx.o
+Hi Sean,
 
-Please sort this by filename, not config name.
+On Thu, Mar 22, 2018 at 10:17:53AM +0800, Sean Wang wrote:
+> Hi, Dmitry and Lee
+> 
+> The series seems not being got merged. Are they good enough to be ready
+> into the your tree?
+> 
+> Recently I've tested the series with focusing on pwrkey event generated
+> through interrupt when push and release the key on bpi-r2 board and then
+> finally it's working fine. but for homekey it cannot be found on the
+> board and thus I cannot have more tests more about it.
+> 
+> Tested-by: Sean Wang <sean.wang@mediatek.com>
 
->  obj-$(CONFIG_COMMON_CLK_CDCE706)       += clk-cdce706.o
->  obj-$(CONFIG_COMMON_CLK_CDCE925)       += clk-cdce925.o
->  obj-$(CONFIG_ARCH_CLPS711X)            += clk-clps711x.o
-> diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
-> new file mode 100644
-> index 000000000000..0d373f8f114b
-> --- /dev/null
-> +++ b/drivers/clk/clk-npcm7xx.c
-> @@ -0,0 +1,757 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Nuvoton NPCM7xx Clock Generator
-[..]
-> +
-> +
-> +static struct clk_hw_onecell_data *npcm7xx_clk_data;
-> +static void __iomem *clk_base;
+You have my Ack on the input patch; I expect it go through Lee's tree as
+there are some dependencies on mfd core piece.
 
-Please remove static singletons and allocate them during init.
+Thanks.
 
-> +static DEFINE_SPINLOCK(lock);
+> 
+> 	Sean
+> 
+> 
+> On Thu, 2018-03-22 at 10:03 +0800, Sean Wang (王志亘) wrote:
+> > 
+> > > -----Original Message-----
+> > > From: Linux-mediatek [mailto:linux-mediatek-bounces@lists.infradead.org] On
+> > > Behalf Of Chen Zhong
+> > > Sent: Wednesday, October 25, 2017 9:16 PM
+> > > To: Dmitry Torokhov <dmitry.torokhov@gmail.com>; Rob Herring
+> > > <robh+dt@kernel.org>; Lee Jones <lee.jones@linaro.org>; Alexandre Belloni
+> > > <alexandre.belloni@free-electrons.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>; Alessandro Zummo
+> > > <a.zummo@towertech.it>; devicetree@vger.kernel.org; Linus Walleij
+> > > <linus.walleij@linaro.org>; Jaechul Lee <jcsing.lee@samsung.com>; linux-
+> > > kernel@vger.kernel.org; Krzysztof Kozlowski <krzk@kernel.org>; Javier
+> > > Martinez Canillas <javier@osg.samsung.com>; linux-
+> > > mediatek@lists.infradead.org; linux-arm-kernel@lists.infradead.org; linux-
+> > > input@vger.kernel.org; Matthias Brugger <matthias.bgg@gmail.com>; Eddie
+> > > Huang (S智) <eddie.huang@mediatek.com>; Chen Zhong (钟辰)
+> > > <Chen.Zhong@mediatek.com>; Beomho Seo <beomho.seo@samsung.com>;
+> > > linux-rtc@vger.kernel.org
+> > > Subject: [PATCH v6 0/6] Add MediaTek PMIC keys support
+> > > 
+> > > MediaTek PMIC are multi-function devices that can handle key interrupts,
+> > > typically there are two keys attached to PMIC, which called pwrkey and
+> > > homekey. PWRKEY usually used to wake up system from sleep. Homekey can
+> > > used as volume down key due to board design. Long press keys can shutdown
+> > > PMIC, the mode can be choose to be one key only or two keys together.
+> > > This series add support for key functions for MediaTek PMIC MT6397/MT6323.
+> > > 
+> > > Changes since v5:
+> > > - use __maybe_unused annotation instead of #ifdef guard
+> > > - use of_* API instead of device_* API
+> > > 
+> > > Changes since v4:
+> > > - rebase to Linux 4.14-rc1
+> > > - add a common keyboard binding document
+> > > - use child device tree node to define each key
+> > > 
+> > > Changes since v3:
+> > > - make the naming to be consistent as mtk_pmic or MTK_PMIC
+> > > - add suspend/resume functions to enable/disable irq
+> > > - change binding properties to define wakeup sources
+> > > 
+> > > Changes since v2:
+> > > - use standard properties for keycodes and debounce time
+> > > - change to use platform_get_irq in leaf drivers
+> > > - use better ways to define IRQ resources
+> > > 
+> > > Changes since v1:
+> > > - create irq mappings in mfd core driver instead of leaf drivers
+> > > - remove some unused parts in mtk-pmic-keys driver
+> > > 
+> > > Chen Zhong (6):
+> > >   mfd: mt6397: create irq mappings in mfd core driver
+> > >   dt-bindings: input: Add common keyboard document bindings
+> > >   dt-bindings: input: Add document bindings for mtk-pmic-keys
+> > >   dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
+> > >   input: Add MediaTek PMIC keys support
+> > >   mfd: mt6397: Add PMIC keys support to MT6397 driver
+> > > 
+> > >  Documentation/devicetree/bindings/input/keys.txt   |   8 +
+> > >  .../devicetree/bindings/input/mtk-pmic-keys.txt    |  43 +++
+> > >  Documentation/devicetree/bindings/mfd/mt6397.txt   |   6 +
+> > >  drivers/input/keyboard/Kconfig                     |   9 +
+> > >  drivers/input/keyboard/Makefile                    |   1 +
+> > >  drivers/input/keyboard/mtk-pmic-keys.c             | 339
+> > > +++++++++++++++++++++
+> > >  drivers/mfd/mt6397-core.c                          |  26 +-
+> > >  drivers/rtc/rtc-mt6397.c                           |   7 +-
+> > >  8 files changed, 432 insertions(+), 7 deletions(-)  create mode 100644
+> > > Documentation/devicetree/bindings/input/keys.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-
+> > > keys.txt
+> > >  create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
+> > > 
+> > > --
+> > > 1.9.1
+> > > 
+> > > 
+> > > 
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> 
 
-Please give 'lock' a better name so that lockdep reports are
-meaningful.
-
-> +
-> +
-> +static const struct of_device_id npcm7xx_clk_match_table[] = {
-> +                               { .compatible = "nuvoton,npcm750-clk"},
-> +                               {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, npcm7xx_clk_match_table);
-
-Is this used?
-
-> +
-> +
-> +static void __init npcm7xx_clk_init(struct device_node *clk_np)
-> +{
-> +
-> +       struct resource res;
-> +       struct clk_hw *hw;
-> +       struct clk *clk;
-> +       int ret;
-> +       int i;
-> +
-> +       pr_debug("NPCM750: clock init: ");
-> +
-> +       clk_base = NULL;
-> +
-> +       ret = of_address_to_resource(clk_np, 0, &res);
-> +       if (ret) {
-> +               pr_err("\t%s: failed to get resource, ret %d\n", clk_np->name,
-> +                       ret);
-> +               return;
-> +       }
-> +
-> +
-> +       clk_base = ioremap(res.start, resource_size(&res));
-> +       if (IS_ERR(clk_base)) {
-> +               pr_err("\tnpcm7xx_clk_init: resource error\n");
-> +               goto npcm7xx_init_error;
-> +       }
-> +
-> +
-> +       npcm7xx_clk_data = kzalloc(sizeof(*npcm7xx_clk_data->hws) *
-> +               NPCM7XX_NUM_CLOCKS + sizeof(npcm7xx_clk_data), GFP_KERNEL);
-> +
-> +       npcm7xx_clk_data->num = 0;
-> +
-> +       if (!npcm7xx_clk_data->hws) {
-> +               pr_err("Can't alloc npcm7xx_clk_data\n");
-
-We don't need allocation error messages, kmalloc already prints a bunch
-of info.
-
-> +               goto npcm7xx_init_np_err;
-> +       }
-> +
-> +       npcm7xx_clk_data->num = NPCM7XX_NUM_CLOCKS;
-> +
-> +
-> +       /*
-> +        * This way all clock fetched before the platform device probes,
-
-What platform device?
-
-> +        * except those we assign here for early use, will be deferred.
-> +        */
-> +       pr_debug("\tclk init hws\n");
-> +       for (i = 0; i < NPCM7XX_NUM_CLOCKS; i++)
-> +               npcm7xx_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
-> +
-> +       /* Read fixed clocks. These 3 clocks must be defined in DT */
-> +       clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_REFCLK);
-> +       if (!IS_ERR(clk)) {
-> +               pr_err("failed to find external REFCLK: %ld\n",
-> +                       PTR_ERR(clk));
-> +               clk_put(clk);
-> +       }
-> +
-> +       clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_SYSBYPCK);
-> +       if (!IS_ERR(clk)) {
-> +               pr_err("failed to find external SYSBYPCK: %ld\n",
-> +                       PTR_ERR(clk));
-> +               clk_put(clk);
-> +       }
-> +
-> +       clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_MCBYPCK);
-> +       if (!IS_ERR(clk)) {
-> +               pr_err("failed to find external MCBYPCK: %ld\n",
-> +                       PTR_ERR(clk));
-> +               clk_put(clk);
-> +       }
-> +
-> +       /* Register plls */
-> +       pr_debug("\tclk register pll\n");
-> +       for (i = 0; i < ARRAY_SIZE(npcm7xx_plls); i++) {
-> +               const struct npcm7xx_clk_pll_data *pll_data = &npcm7xx_plls[i];
-> +
-> +               pr_debug("\tclk reg pll%d, reg=0x%x, name=%s, p=%s\n", i,
-> +               (unsigned int)pll_data->reg, pll_data->name,
-> +               pll_data->parent_name);
-> +
-> +               hw = npcm7xx_clk_register_pll(clk_base + pll_data->reg,
-> +                       pll_data->name, pll_data->parent_name, pll_data->flags);
-> +               if (IS_ERR(hw)) {
-> +                       pr_err("npcm7xx_clk: Can't register pll\n");
-> +                       goto npcm7xx_init_fail;
-> +               }
-> +
-> +               if (pll_data->onecell_idx >= 0)
-> +                       npcm7xx_clk_data->hws[pll_data->onecell_idx] = hw;
-> +       }
-> +
-> +       /* Register fixed dividers */
-> +       pr_debug("\tclk register fixed divs\n");
-> +       clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
-> +                       NPCM7XX_CLK_S_PLL1, 0, 1, 2);
-> +       if (IS_ERR(clk)) {
-> +               pr_err("npcm7xx_clk: Can't register fixed div\n");
-> +               goto npcm7xx_init_fail;
-> +       }
-> +
-> +
-> +       clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
-> +                       NPCM7XX_CLK_S_PLL2, 0, 1, 2);
-> +
-> +       if (IS_ERR(clk)) {
-> +               pr_err("npcm7xx_clk: Can't register div2\n");
-> +               goto npcm7xx_init_fail;
-> +       }
-> +
-> +       /* Register muxes */
-> +       for (i = 0; i < ARRAY_SIZE(npcm7xx_muxes); i++) {
-> +               const struct npcm7xx_clk_mux_data *mux_data = &npcm7xx_muxes[i];
-> +
-> +               pr_debug("\tadd mux%d reg=0x%x name=%s p=%s num_p=%d\n",
-> +                   i, ((u32)clk_base + (u32)NPCM7XX_CLKSEL), mux_data->name,
-> +                       mux_data->parent_names[0], mux_data->num_parents);
-> +
-> +               hw = clk_hw_register_mux_table(NULL,
-> +                       mux_data->name,
-> +                       mux_data->parent_names, mux_data->num_parents,
-> +                       mux_data->flags, clk_base + NPCM7XX_CLKSEL,
-> +                       mux_data->shift, mux_data->mask, 0,
-> +                       mux_data->table, &lock);
-> +
-> +               if (IS_ERR(hw)) {
-> +                       pr_err("npcm7xx_clk: Can't register mux\n");
-> +                       goto npcm7xx_init_fail;
-> +               }
-> +
-> +               if (mux_data->onecell_idx >= 0)
-> +                       npcm7xx_clk_data->hws[mux_data->onecell_idx] = hw;
-> +       }
-> +
-> +       /* Register clock dividers specified in npcm7xx_divs. */
-> +       pr_debug("\tclk register divs\n");
-> +       for (i = 0; i < ARRAY_SIZE(npcm7xx_divs); i++) {
-> +               const struct npcm7xx_clk_div_data *div_data = &npcm7xx_divs[i];
-> +
-> +               pr_debug("\tadd div%d reg=0x%x name=%s, parent=%s\n",
-> +                               i, (unsigned int)div_data->reg,
-> +                               div_data->name, div_data->parent_name);
-
-Please remove all these debug prints.
-
-> +
-> +               hw = clk_hw_register_divider(NULL, div_data->name,
-> +                               div_data->parent_name,
-> +                               div_data->flags,
-> +                               clk_base + div_data->reg,
-> +                               div_data->shift, div_data->width,
-> +                               div_data->clk_divider_flags, &lock);
-> +               if (IS_ERR(hw)) {
-> +                       pr_err("npcm7xx_clk: Can't register div table\n");
-> +                       goto npcm7xx_init_fail;
-> +               }
-> +
-> +               if (div_data->onecell_idx >= 0)
-> +                       npcm7xx_clk_data->hws[div_data->onecell_idx] = hw;
-> +       }
-> +
-> +       ret = of_clk_add_hw_provider(clk_np, of_clk_hw_onecell_get,
-> +                                       npcm7xx_clk_data);
-> +       if (ret)
-> +               pr_err("failed to add DT provider: %d\n", ret);
-> +
-> +       pr_info("npcm7xx clk: %d dividers, %d muxes and %d plls registered.\n",
-> +               ARRAY_SIZE(npcm7xx_divs), ARRAY_SIZE(npcm7xx_muxes),
-> +               ARRAY_SIZE(npcm7xx_plls));
-
-Please remove this "I'm alive!" message.
-
-> +
-> +       of_node_put(clk_np);
-> +
-> +       return;
-> +
-> +npcm7xx_init_fail:
-> +       pr_debug("\tclk setup fail\n");
-
-Please don't put tabs at the beginning of printks.
-
-> +       if (npcm7xx_clk_data->num)
-> +               kfree(npcm7xx_clk_data->hws);
-> +npcm7xx_init_np_err:
-> +       if (clk_base != NULL)
-> +               iounmap(clk_base);
-> +npcm7xx_init_error:
-> +       of_node_put(clk_np);
-> +}
-> +
-> +CLK_OF_DECLARE(npcm7xx_clk_init, "nuvoton,npcm750-clk", npcm7xx_clk_init);
-
-Any reason this can't be a platform driver?
+-- 
+Dmitry
