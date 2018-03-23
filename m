@@ -1,11 +1,13 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v5 00/13] ARM: dts: ipq: updates to enable a few peripherals
-Date: Fri, 23 Mar 2018 15:48:43 +0530
-Message-ID: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH v5 01/13] firmware: qcom: scm: Add ipq4019 soc compatible
+Date: Fri, 23 Mar 2018 15:48:44 +0530
+Message-ID: <1521800336-19266-2-git-send-email-sricharan@codeaurora.org>
+References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,58 +21,45 @@ To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.or
 Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-W3Y1XQogICAgKiBGaXhlZCBhIG1pbm9yIGNvbW1lbnQgdGhhdCBpIG1pc3NlZCBlYXJsaWVyLgoK
-W3Y0XQogICAgKiBGaXhlZCBtb3JlIGNvbW1lbnRzLgogICAgKiBEcm9wcGVkIHJlc2VydmVkLW1l
-bW9yeSBub2RlcyBmcm9tIGJvYXJkIGZpbGVzIGFzCiAgICAgIHRoYXQgbWlnaHQgYnJlYWsgZXhp
-c3RpbmcgdXNlcnMgd2hvc2UgdS1ib290IGRvIG5vdAogICAgICBzcGVjaWZ5IHRoZSBmZHRfaGln
-aCBhY2NvcmRpbmdseS4KICAgICogQWRkZWQgY2hvc2VuIHNlcmlhbCBub2RlIGZvciBhbGwgYm9h
-cmRzIHRvIGhhdmUKICAgICAgdGhlIGRlZmF1bHQgc2VyaWFsIGNvbnNvbGUgc3BlY2lmaWVkIGZy
-b20gRFQuCgpbdjNdCsKgwqDCoMKgKiBGaXhlZCBtaW5vciBjb21tZW50cyBmcm9tIHYyLArCoMKg
-wqDCoMKgwqBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzY0MTQ4
-MC5odG1sCgrCoMKgwqDCoCogQWRkZWQgQWJoaXNoZWsncyByZXZpZXcgdGFncwoKW3YyXQrCoMKg
-wqDCoCogQWRkcmVzc2VkIGFsbCBjb21tZW50cyBmcm9tIEFiaGlzaGVrCsKgwqDCoMKgKiBSZW1v
-dmVkIGRrMDEtYzIgYW5kIGRrMDQtYzUgc3BpbmFuZCBiYXNlZCBib2FyZHMKwqDCoMKgwqDCoMKg
-YXMgc3VwcG9ydCBmb3Igc3BpbmFuZCBpcyBub3QgY29tcGxldGUKwqDCoMKgwqAqIEJhc2VkIGFs
-bCBwYXRjaGVzIG9uIHRvcCBvZiBBbmR5J3MgZm9yLW5leHQgYnJhbmNoCgpbVjFdCsKgwqDCoMKg
-KiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzYzMTMxOC5odG1s
-CgpTcmljaGFyYW4gUiAoMTMpOgogIGZpcm13YXJlOiBxY29tOiBzY206IEFkZCBpcHE0MDE5IHNv
-YyBjb21wYXRpYmxlCiAgQVJNOiBkdHM6IGlwcTQwMTk6IEFkZCBhIGRlZmF1bHQgY2hvc2VuIG5v
-ZGUKICBBUk06IGR0czogaXBxNDAxOTogQWRkIGEgZmV3IHBlcmlwaGVyYWwgbm9kZXMKICBBUk06
-IGR0czogaXBxNDAxOTogQ2hhbmdlIHRoZSBtYXggb3BwIGZyZXF1ZW5jeQogIEFSTTogZHRzOiBp
-cHE0MDE5OiBBZGQgaXBxNDAxOS1hcC5kazA0LmR0c2kKICBBUk06IGR0czogaXBxNDAxOTogQWRk
-IGlwcTQwMTktYXAuZGswNC4xLWMxIGJvYXJkIGZpbGUKICBBUk06IGR0czogaXBxNDAxOTogQWRk
-IHFjb20taXBxNDAxOS1hcC5kazA0LjEtYzMgYm9hcmQgZmlsZQogIEFSTTogZHRzOiBpcHE0MDE5
-OiBBZGQgaXBxNDAxOS1hcC5kazA3LjEgY29tbW9uIGRhdGEKICBBUk06IGR0czogaXBxNDAxOTog
-QWRkIHFjb20taXBxNDAxOS1hcC5kazA3LjEtYzEgYm9hcmQgZmlsZQogIEFSTTogZHRzOiBpcHE0
-MDE5OiBBZGQgcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMiBib2FyZCBmaWxlCiAgQVJNOiBkdHM6
-IGlwcTgwNzQ6IEFkZCBwZXJpcGhlcmFsIG5vZGVzCiAgQVJNOiBkdHM6IGlwcTgwNzQ6IEFkZCBw
-Y2llIG5vZGVzCiAgQVJNOiBkdHM6IGlwcTgwNzQ6IEVuYWJsZSBmZXcgcGVyaXBoZXJhbHMgZm9y
-IGhrMDEgYm9hcmQKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9maXJtd2FyZS9xY29tLHNjbS50
-eHQgICAgICB8ICAgMyArLQogYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDQgKwogYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0MDE5LWFwLmRr
-MDEuMS5kdHNpICAgICAgfCAgIDggKwogYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0MDE5LWFw
-LmRrMDQuMS1jMS5kdHMgICAgfCAgMjAgKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAx
-OS1hcC5kazA0LjEtYzMuZHRzICAgIHwgICA4ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBx
-NDAxOS1hcC5kazA0LjEuZHRzaSAgICAgIHwgMTE1ICsrKysrKysrKwogYXJjaC9hcm0vYm9vdC9k
-dHMvcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMS5kdHMgICAgfCAgNjUgKysrKysKIGFyY2gvYXJt
-L2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazA3LjEtYzIuZHRzICAgIHwgIDI2ICsrCiBhcmNo
-L2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNy4xLmR0c2kgICAgICB8ICA2OCArKysr
-KysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS5kdHNpICAgICAgICAgICAgICAgIHwg
-MTQwICsrKysrKysrKystCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vaXBxODA3NC1oazAxLmR0
-cyAgICAgICAgICB8IDEwMyArKysrKysrKwogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL2lwcTgw
-NzQuZHRzaSAgICAgICAgICAgICAgfCAyNjIgKysrKysrKysrKysrKysrKysrKystCiBkcml2ZXJz
-L2Zpcm13YXJlL3Fjb21fc2NtLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMyArCiAxMyBm
-aWxlcyBjaGFuZ2VkLCA4MjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNC4xLWMxLmR0
-cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5k
-azA0LjEtYzMuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1p
-cHE0MDE5LWFwLmRrMDQuMS5kdHNpCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9k
-dHMvcWNvbS1pcHE0MDE5LWFwLmRrMDcuMS1jMS5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
-L2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswNy4xLWMyLmR0cwogY3JlYXRlIG1vZGUg
-MTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazA3LjEuZHRzaQoKLS0g
-ClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIs
-IEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sIGhvc3RlZCBieSBUaGUgTGlu
-dXggRm91bmRhdGlvbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add the compatible for ipq4019.
+This does not need clocks to do scm calls.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
+ drivers/firmware/qcom_scm.c                             | 3 +++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index 7b40054..fcf6979 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -11,9 +11,10 @@ Required properties:
+  * "qcom,scm-msm8660" for MSM8660 platforms
+  * "qcom,scm-msm8690" for MSM8690 platforms
+  * "qcom,scm-msm8996" for MSM8996 platforms
++ * "qcom,scm-ipq4019" for IPQ4019 platforms
+  * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+ - clocks: One to three clocks may be required based on compatible.
+- * No clock required for "qcom,scm-msm8996"
++ * No clock required for "qcom,scm-msm8996", "qcom,scm-ipq4019"
+  * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
+  * Core, iface, and bus clocks required for "qcom,scm"
+ - clock-names: Must contain "core" for the core clock, "iface" for the interface
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 5a7d6930..e778af7 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -603,6 +603,9 @@ static void qcom_scm_shutdown(struct platform_device *pdev)
+ 	{ .compatible = "qcom,scm-msm8996",
+ 	  .data = NULL, /* no clocks */
+ 	},
++	{ .compatible = "qcom,scm-ipq4019",
++	  .data = NULL, /* no clocks */
++	},
+ 	{ .compatible = "qcom,scm",
+ 	  .data = (void *)(SCM_HAS_CORE_CLK
+ 			   | SCM_HAS_IFACE_CLK
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
