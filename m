@@ -1,49 +1,36 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
- requested
-Date: Fri, 23 Mar 2018 13:36:04 +0200
-Message-ID: <1521804964.23017.96.camel@linux.intel.com>
-References: <20180321165848.89751-1-swboyd@chromium.org>
-         <20180321165848.89751-4-swboyd@chromium.org>
-         <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 2/8] ARM: davinci: dts: make psc0 a reset provider
+Date: Fri, 23 Mar 2018 12:47:03 +0100
+Message-ID: <20180323114709.20330-3-brgl@bgdev.pl>
+References: <20180323114709.20330-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
+In-Reply-To: <20180323114709.20330-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-03-22 at 19:16 -0500, Timur Tabi wrote:
-> On 03/21/2018 11:58 AM, Stephen Boyd wrote:
-> > +static int msm_gpio_init_valid_mask(struct gpio_chip *chip,
-> > +				    struct msm_pinctrl *pctrl)
-> > +{
-> > +	int ret;
-> > +	unsigned int len, i;
-> > +	unsigned int max_gpios = pctrl->soc->ngpios;
-> > +
-> > +	/* The number of GPIOs in the ACPI tables */
-> > +	ret = device_property_read_u16_array(pctrl->dev, "gpios",
-> > NULL, 0);
-> > +	if (ret > 0 && ret < max_gpios) {
-> 
-> This needs to be ret <= max_gpios, otherwise it will fail if every
-> GPIO 
-> is available.
-> 
-> And it should print an error message and return an error code if ret
-> > 
-> max_gpios.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Perhaps makes sense to do the opposite condition
+The psc driver registers with the reset framework as a provider. Add
+the #reset-cells property to the psc0 node.
 
-if (ret < 0 || ret > max_gpios) {
- ... error handling ...
-}
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/boot/dts/da850.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index a3b9a99b43ca..dad64dbf1f23 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -123,6 +123,7 @@
+ 			compatible = "ti,da850-psc0";
+ 			reg = <0x10000 0x1000>;
+ 			#clock-cells = <1>;
++			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+ 			clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
+ 				 <&pll0_sysclk 4>, <&pll0_sysclk 6>,
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.16.1
