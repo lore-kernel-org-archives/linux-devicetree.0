@@ -1,75 +1,184 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5,
-	5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Fri, 23 Mar 2018 12:08:31 +0100
-Message-ID: <20180323110831.GA24026@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/8] reset: modify the way reset lookup works for
+ board files
+Date: Fri, 23 Mar 2018 12:08:21 +0100
+Message-ID: <1521803301.3406.4.camel@pengutronix.de>
+References: <20180323093609.24576-1-brgl@bgdev.pl>
+ <20180323093609.24576-2-brgl@bgdev.pl>
+ <1521800670.3406.1.camel@pengutronix.de>
+ <CAMRc=Mcf18jmRAM6WFBnuuOen11+5uzy4yo3xwvLQzLBSSNvHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3267311792168619455=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180323103006.alymgb3ywftb4gek@earth.universe>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMRc=Mcf18jmRAM6WFBnuuOen11+5uzy4yo3xwvLQzLBSSNvHQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Bjorn Andersson <bjorn.andersson@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-remoteproc@vger.kernel.org, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2018-03-23 at 11:46 +0100, Bartosz Golaszewski wrote:
+> 2018-03-23 11:24 GMT+01:00 Philipp Zabel <p.zabel@pengutronix.de>:
+> > Hi Bartosz,
+> > 
+> > On Fri, 2018-03-23 at 10:36 +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > 
+> > > Commit 7af1bb19f1d7 ("reset: add support for non-DT systems")
+> > > introduced reset control lookup mechanism for boards that still use
+> > > board files.
+> > > 
+> > > The routine used to register lookup entries takes the corresponding
+> > > reset_controlled_dev structure as argument.
+> > > 
+> > > It's been determined however that for the first user of this new
+> > > interface - davinci psc driver - it will be easier to register the
+> > > lookup entries using the reset controller device name.
+> > 
+> > Thank you, this is what I expected in the first place.
+> > 
+> > > This patch changes the way lookup entries are added.
+> > > 
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > ---
+> > >  drivers/reset/core.c             | 33 +++++++++++++++++++++++++++++----
+> > >  include/linux/reset-controller.h |  8 +++++---
+> > >  2 files changed, 34 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> > > index 06fa4907afc4..f37048e55336 100644
+> > > --- a/drivers/reset/core.c
+> > > +++ b/drivers/reset/core.c
+> > > @@ -153,11 +153,11 @@ EXPORT_SYMBOL_GPL(devm_reset_controller_register);
+> > > 
+> > >  /**
+> > >   * reset_controller_add_lookup - register a set of lookup entries
+> > > - * @rcdev: initialized reset controller device owning the reset line
+> > > + * @provider: name of the reset controller provider
+> > >   * @lookup: array of reset lookup entries
+> > >   * @num_entries: number of entries in the lookup array
+> > >   */
+> > > -void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
+> > > +void reset_controller_add_lookup(const char *provider,
+> > 
+> > Is there any reason not to drop the provider parameter completely?
+> > I'd just let the user add the provider device id to the lookup, see
+> > below.
+> > 
+> > >                                struct reset_control_lookup *lookup,
+> > >                                unsigned int num_entries)
+> > >  {
+> > > @@ -174,7 +174,7 @@ void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
+> > >                       continue;
+> > >               }
+> > > 
+> > > -             entry->rcdev = rcdev;
+> > > +             entry->provider = provider;
+> > >               list_add_tail(&entry->list, &reset_lookup_list);
+> > >       }
+> > >       mutex_unlock(&reset_lookup_mutex);
+> > > @@ -526,11 +526,30 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(__of_reset_control_get);
+> > > 
+> > > +static struct reset_controller_dev *
+> > > +__reset_controller_by_name(const char *name)
+> > > +{
+> > > +     struct reset_controller_dev *rcdev;
+> > > +
+> > > +     lockdep_assert_held(&reset_list_mutex);
+> > > +
+> > > +     list_for_each_entry(rcdev, &reset_controller_list, list) {
+> > > +             if (!rcdev->dev)
+> > > +                     continue;
+> > > +
+> > > +             if (!strcmp(name, dev_name(rcdev->dev)))
+> > > +                     return rcdev;
+> > > +     }
+> > > +
+> > > +     return NULL;
+> > > +}
+> > > +
+> > >  static struct reset_control *
+> > >  __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+> > >                               bool shared, bool optional)
+> > >  {
+> > >       const struct reset_control_lookup *lookup;
+> > > +     struct reset_controller_dev *rcdev;
+> > >       const char *dev_id = dev_name(dev);
+> > >       struct reset_control *rstc = NULL;
+> > > 
+> > > @@ -547,7 +566,13 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+> > >                   ((con_id && lookup->con_id) &&
+> > >                    !strcmp(con_id, lookup->con_id))) {
+> > >                       mutex_lock(&reset_list_mutex);
+> > > -                     rstc = __reset_control_get_internal(lookup->rcdev,
+> > > +                     rcdev = __reset_controller_by_name(lookup->provider);
+> > > +                     if (!rcdev) {
+> > > +                             mutex_unlock(&reset_list_mutex);
+> > > +                             continue;
+> > 
+> > What is the reason to continue here? If we've found a matching lookup
+> > that contains a rcdev dev_id for which there is no reset controller,
+> > shouldn't we just return an error?
+> > 
+> 
+> Indeed. This could be used to indicate to drivers that the reset
+> controller may not have yet been probed() or its probe() failed. How
+> about returning -EPROBE_DEFER here?
 
---===============3267311792168619455==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
+That is a good point. The framework doesn't know whether the
+lookup->provider is bogus or whether it's correct and the corresponding
+driver just hasn't registered its reset controller yet. So we have to
+assume the latter and return -EPROBE_DEFER here.
 
+> Bart
+> 
+> > > +                     }
+> > > +
+> > > +                     rstc = __reset_control_get_internal(rcdev,
+> > >                                                           lookup->index,
+> > >                                                           shared);
+> > >                       mutex_unlock(&reset_list_mutex);
+> > > diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+> > > index 25698f6c1fae..1a6c25d825d3 100644
+> > > --- a/include/linux/reset-controller.h
+> > > +++ b/include/linux/reset-controller.h
+> > > @@ -30,14 +30,14 @@ struct of_phandle_args;
+> > >   * struct reset_control_lookup - represents a single lookup entry
+> > >   *
+> > >   * @list: internal list of all reset lookup entries
+> > > - * @rcdev: reset controller device controlling this reset line
+> > > + * @provider: name of the reset controller device controlling this reset line
+> > >   * @index: ID of the reset controller in the reset controller device
+> > >   * @dev_id: name of the device associated with this reset line
+> > >   * @con_id name of the reset line (can be NULL)
+> > >   */
+> > >  struct reset_control_lookup {
+> > >       struct list_head list;
+> > > -     struct reset_controller_dev *rcdev;
+> > > +     const char *provider;
+> > 
+> > Looks good to me, but I'd also extend RESET_LOOKUP to set the provider
+> > instead of passing it to the reset_controller_add_lookup function,
+> > similarly to PWM_LOOKUP:
+> > 
+> > #define RESET_LOOKUP(_provider, _index, _dev_id, _con_id)
+> > 
+> 
+> I did it mostly for brevity - I don't mind changing it if you prefer
+> this version.
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, please. I like the consistency, and seeing provider and index right
+next to each other will make the lookups easier to read and understand.
 
-Hi!
-
-> Make sure, that the device was not proped properly (cat
-> /proc/asound/cards) and post the real error? :)
-
-Standby... looks like I cleaned up too much of "unused" config.
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq04C8ACgkQMOfwapXb+vKFRACgoH9nortjGCLWv9nE6la9eRAo
-mOcAn2v7U2LyzkzOHU0A+vr+eGrHyh8o
-=Uhl1
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
-
---===============3267311792168619455==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3267311792168619455==--
+regards
+Philipp
