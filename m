@@ -1,62 +1,82 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 6/8] remoteproc: da8xx: prepare and unprepare the clock
- where needed
-Date: Fri, 23 Mar 2018 12:47:07 +0100
-Message-ID: <20180323114709.20330-7-brgl@bgdev.pl>
+Subject: [PATCH v3 8/8] clk: davinci: kill davinci_clk_reset_assert/deassert()
+Date: Fri, 23 Mar 2018 12:47:09 +0100
+Message-ID: <20180323114709.20330-9-brgl@bgdev.pl>
 References: <20180323114709.20330-1-brgl@bgdev.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180323114709.20330-1-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We're currently switching the platform to using the common clock
-framework. We need to explicitly prepare and unprepare the rproc
-clock.
+This code is no longer used. Remove it.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: David Lechner <david@lechnology.com>
 ---
- drivers/remoteproc/da8xx_remoteproc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/mach-davinci/include/mach/clock.h | 21 ---------------------
+ drivers/clk/davinci/psc.c                  | 18 ------------------
+ 2 files changed, 39 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/clock.h
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index 2b24291337b7..f134192922e0 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -149,9 +149,9 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 
- 	writel(rproc->bootaddr, drproc->bootreg);
- 
--	ret = clk_enable(dsp_clk);
-+	ret = clk_prepare_enable(dsp_clk);
- 	if (ret) {
--		dev_err(dev, "clk_enable() failed: %d\n", ret);
-+		dev_err(dev, "clk_prepare_enable() failed: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -165,7 +165,7 @@ static int da8xx_rproc_stop(struct rproc *rproc)
- 	struct da8xx_rproc *drproc = rproc->priv;
- 
- 	davinci_clk_reset_assert(drproc->dsp_clk);
--	clk_disable(drproc->dsp_clk);
-+	clk_disable_unprepare(drproc->dsp_clk);
- 
+diff --git a/arch/arm/mach-davinci/include/mach/clock.h b/arch/arm/mach-davinci/include/mach/clock.h
+deleted file mode 100644
+index 42ed4f2f5ce4..000000000000
+--- a/arch/arm/mach-davinci/include/mach/clock.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/*
+- * arch/arm/mach-davinci/include/mach/clock.h
+- *
+- * Clock control driver for DaVinci - header file
+- *
+- * Authors: Vladimir Barinov <source@mvista.com>
+- *
+- * 2007 (c) MontaVista Software, Inc. This file is licensed under
+- * the terms of the GNU General Public License version 2. This program
+- * is licensed "as is" without any warranty of any kind, whether express
+- * or implied.
+- */
+-#ifndef __ASM_ARCH_DAVINCI_CLOCK_H
+-#define __ASM_ARCH_DAVINCI_CLOCK_H
+-
+-struct clk;
+-
+-int davinci_clk_reset_assert(struct clk *c);
+-int davinci_clk_reset_deassert(struct clk *c);
+-
+-#endif
+diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
+index 063df62381ea..75c4bc6f23e3 100644
+--- a/drivers/clk/davinci/psc.c
++++ b/drivers/clk/davinci/psc.c
+@@ -295,24 +295,6 @@ static int davinci_lpsc_clk_reset(struct clk *clk, bool reset)
  	return 0;
  }
+ 
+-/*
+- * REVISIT: These exported functions can be removed after a non-DT lookup is
+- * added to the reset controller framework and the davinci-rproc driver is
+- * updated to use the generic reset controller framework.
+- */
+-
+-int davinci_clk_reset_assert(struct clk *clk)
+-{
+-	return davinci_lpsc_clk_reset(clk, true);
+-}
+-EXPORT_SYMBOL(davinci_clk_reset_assert);
+-
+-int davinci_clk_reset_deassert(struct clk *clk)
+-{
+-	return davinci_lpsc_clk_reset(clk, false);
+-}
+-EXPORT_SYMBOL(davinci_clk_reset_deassert);
+-
+ static int davinci_psc_reset_assert(struct reset_controller_dev *rcdev,
+ 				    unsigned long id)
+ {
 -- 
 2.16.1
