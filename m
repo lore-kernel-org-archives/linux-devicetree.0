@@ -1,57 +1,30 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the reset
- framework
-Date: Fri, 23 Mar 2018 10:08:27 -0700
-Message-ID: <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
-References: <20180323130455.11470-1-brgl@bgdev.pl>
- <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
- <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] libnvdimm/of: Symlink platform and region devices
+Date: Fri, 23 Mar 2018 10:08:32 -0700
+Message-ID: <CAPcyv4i2vXN6ib6Ofs0f-hRG93wZ3jYyBHEGQZXOqk9CprPmGw@mail.gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
+ <20180323081209.31387-4-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sekhar Nori <nsekhar@ti.com>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180323081209.31387-4-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bartosz Golaszewski (2018-03-23 09:55:47)
-> 2018-03-23 17:49 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
-> > Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
-> >> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >> This series converts the only user of the handcoded, mach-specific reset
-> >> routines in the davinci platform to using the reset framework.
-> >>
-> >> Patch 1 modifies the way lookup entries are registered with the reset
-> >> framework.
-> >>
-> >> Patches 2-4 add necessary lookups/DT-properties.
-> >>
-> >> Patches 5-7 convert the davinci-rproc driver to the reset framework.
-> >>
-> >> Patch 8 removes now dead code.
-> >>
-> >> Philipp: it turned out that it's indeed better to use the reset
-> >> controller's device name for the entry lookup.
-> >>
-> >> Tested both in DT and legacy modes by booting the examples from
-> >> ti-ipc-rtos recipe in meta-ti.
-> >>
-> >> This series applies on top of David Lechner's common-clk-v9 branch[1]
-> >> with Philipp Zabel's reset/next branch[2] pulled in.
-> >>
-> >> It can be found in my github tree as well[3].
-> >>
-> >
-> > What's the merge strategy for the rest of the patches? I should apply
-> > the clk ones after the next -rc1?
-> 
-> Or maybe Philipp can provide us with an immutable branch with the reset patches?
-> 
-> The you could apply the driver patches and let Sekhar take all the
-> platform code?
-> 
+On Fri, Mar 23, 2018 at 1:12 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add a way direct link between the region and the platform device that
+> creates the region.
+>
 
-Ok that could work too.
+This linking would not be needed if of_nd_regions each lived on their own bus.
