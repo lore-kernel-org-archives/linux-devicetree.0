@@ -1,90 +1,34 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 0/3] iio: add unit converter
-Date: Fri, 23 Mar 2018 14:59:41 +0100
-Message-ID: <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se>
-References: <20180319170246.26830-1-peda@axentia.se>
- <20180323141401.000031cc@huawei.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Fri, 23 Mar 2018 09:03:37 -0500
+Message-ID: <819014ea-d375-5830-e32f-eeba73e6fa08@codeaurora.org>
+References: <20180321165848.89751-1-swboyd@chromium.org>
+ <20180321165848.89751-4-swboyd@chromium.org>
+ <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
+ <b5dac2f7-eabb-6e09-2146-775b09d4eca8@codeaurora.org>
+ <59df3700-c0bd-6ee8-eeab-6a49cb92d1db@codeaurora.org>
+ <1521804875.23017.95.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323141401.000031cc@huawei.com>
+In-Reply-To: <1521804875.23017.95.camel@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-23 14:14, Jonathan Cameron wrote:
-> On Mon, 19 Mar 2018 18:02:43 +0100
-> Peter Rosin <peda@axentia.se> wrote:
+On 3/23/18 6:34 AM, Andy Shevchenko wrote:
+> No, it seems you missed %p vs. %px discussion.
 > 
->> Hi!
->>
->> This moves the iio-mux driver to a new category, since I think
->> it will be the single driver in that category forever, and now
->> I'm adding a new driver that is somewhat similar in nature...
->>
->> But that rename is not very interesting, it's just reshuffling.
->> It's the new driver that I need. Specifically, I need to allow
->> linear scaling and modification of the type of an io-channel.
->> I don't know exactly how that is accomplished in the best way,
->> but this is what I came up with.
->>
->> The use cases are an ADC hooked up to measure a "big" voltage by
->> looking at the midpoint of a voltage divider, and an ADC used
->> to measure the current by looking at the voltage over a resistor.
->>
->> Comments?
-> It is pretty much how I would have implemented it as well.
-> 
-> Will probably do a detailed review over the weekend.
-> Not convinced entirely on the 'wrapper' naming though.
-> Will think about it...
+> The pointers printed by %p nowadays are hashed values, not the original
+> ones.
 
-Yeah, let's put 'Wrapper' in the crapper. Not married to it.
+I totally forgot about that, thanks.
 
-Miscellaneous?
-
-So, not super-happy about that either. And maybe leave the mux
-where it is? It's just that I have the feeling that the iio-mux
-is never going to get any friends in its category, and the mux
-and the unit-converter are kind of related in that they operate
-on other channels. But maybe that's only logical it you know how
-they are implemented...
-
-Cheers,
-Peter
-
-> 
-> Jonathan
-> 
->>
->> Cheers,
->> Peter
->>
->> Peter Rosin (3):
->>   iio: rename the multiplexer category to wrapper
->>   dt-bindings: iio: wrapper: add io-channel-unit-converter
->>   iio: wrapper: unit-converter: new driver
->>
->>  .../{multiplexer => wrapper}/io-channel-mux.txt    |   0
->>  .../iio/wrapper/io-channel-unit-converter.txt      |  84 +++++++
->>  MAINTAINERS                                        |  11 +-
->>  drivers/iio/Kconfig                                |   2 +-
->>  drivers/iio/Makefile                               |   2 +-
->>  drivers/iio/multiplexer/Makefile                   |   6 -
->>  drivers/iio/{multiplexer => wrapper}/Kconfig       |  13 +-
->>  drivers/iio/wrapper/Makefile                       |   7 +
->>  drivers/iio/{multiplexer => wrapper}/iio-mux.c     |   0
->>  drivers/iio/wrapper/iio-unit-converter.c           | 268 +++++++++++++++++++++
->>  10 files changed, 381 insertions(+), 12 deletions(-)
->>  rename Documentation/devicetree/bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt (100%)
->>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->>  delete mode 100644 drivers/iio/multiplexer/Makefile
->>  rename drivers/iio/{multiplexer => wrapper}/Kconfig (53%)
->>  create mode 100644 drivers/iio/wrapper/Makefile
->>  rename drivers/iio/{multiplexer => wrapper}/iio-mux.c (100%)
->>  create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
->>
-> 
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
