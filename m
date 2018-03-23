@@ -1,48 +1,35 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 09/11] dt-bindings: i3c: Document Cadence I3C master
- bindings
-Date: Fri, 23 Mar 2018 12:10:35 +0100
-Message-ID: <20180323121035.7dc27356@windsurf>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
-        <20180323110020.19080-10-boris.brezillon@bootlin.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Fri, 23 Mar 2018 13:34:35 +0200
+Message-ID: <1521804875.23017.95.camel@linux.intel.com>
+References: <20180321165848.89751-1-swboyd@chromium.org>
+         <20180321165848.89751-4-swboyd@chromium.org>
+         <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
+         <b5dac2f7-eabb-6e09-2146-775b09d4eca8@codeaurora.org>
+         <59df3700-c0bd-6ee8-eeab-6a49cb92d1db@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323110020.19080-10-boris.brezillon@bootlin.com>
+In-Reply-To: <59df3700-c0bd-6ee8-eeab-6a49cb92d1db@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@>
+To: Timur Tabi <timur@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, 2018-03-22 at 19:59 -0500, Timur Tabi wrote:
+> On 03/22/2018 07:23 PM, Timur Tabi wrote:
+> > 
+> > Also, you don't allocate chip->valid_mask anywhere.
+> 
+> So I see now where it's allocated, but something is fishy.
 
-On Fri, 23 Mar 2018 12:00:18 +0100, Boris Brezillon wrote:
+No, it seems you missed %p vs. %px discussion.
 
-> +Optional properties defined by the generic binding (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> +
-> +- i2c-scl-frequency
-> +- i3c-scl-frequency
+The pointers printed by %p nowadays are hashed values, not the original
+ones.
 
-These properties are now named *-scl-hz.
-
-> +Example:
-> +
-> +	i3c-master@0d040000 {
-> +		compatible = "cdns,i3c-master";
-> +		clocks = <&coreclock>, <&i3csysclock>;
-> +		clock-names = "pclk", "sysclk";
-> +		interrupts = <3 0>;
-> +		reg = <0x0d040000 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-scl-frequency = <100000>;
-
-Ditto.
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
