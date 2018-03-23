@@ -1,162 +1,111 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 1/8] reset: modify the way reset lookup works for
- board files
-Date: Fri, 23 Mar 2018 13:04:23 +0100
-Message-ID: <1521806663.3406.6.camel@pengutronix.de>
-References: <20180323114709.20330-1-brgl@bgdev.pl>
- <20180323114709.20330-2-brgl@bgdev.pl>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] misc: ezport-firmware: new driver
+Date: Fri, 23 Mar 2018 20:13:01 +0800
+Message-ID: <201803232023.qttpOUFw%fengguang.wu@intel.com>
+References: <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180323114709.20330-2-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
+Hi Sebastian,
 
-On Fri, 2018-03-23 at 12:47 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Commit 7af1bb19f1d7 ("reset: add support for non-DT systems")
-> introduced reset control lookup mechanism for boards that still use
-> board files.
-> 
-> The routine used to register lookup entries takes the corresponding
-> reset_controlled_dev structure as argument.
-> 
-> It's been determined however that for the first user of this new
-> interface - davinci psc driver - it will be easier to register the
-> lookup entries using the reset controller device name.
-> 
-> This patch changes the way lookup entries are added.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/reset/core.c             | 38 +++++++++++++++++++++++++++++++-------
->  include/linux/reset-controller.h | 12 +++++++-----
->  2 files changed, 38 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 06fa4907afc4..f4a29c046995 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -153,12 +153,10 @@ EXPORT_SYMBOL_GPL(devm_reset_controller_register);
->  
->  /**
->   * reset_controller_add_lookup - register a set of lookup entries
-> - * @rcdev: initialized reset controller device owning the reset line
->   * @lookup: array of reset lookup entries
->   * @num_entries: number of entries in the lookup array
->   */
-> -void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
-> -				 struct reset_control_lookup *lookup,
-> +void reset_controller_add_lookup(struct reset_control_lookup *lookup,
->  				 unsigned int num_entries)
->  {
->  	struct reset_control_lookup *entry;
-> @@ -168,13 +166,12 @@ void reset_controller_add_lookup(struct reset_controller_dev *rcdev,
->  	for (i = 0; i < num_entries; i++) {
->  		entry = &lookup[i];
->  
-> -		if (!entry->dev_id) {
-> -			pr_warn("%s(): reset lookup entry has no dev_id, skipping\n",
-> +		if (!entry->dev_id || !entry->provider) {
-> +			pr_warn("%s(): reset lookup entry badly specified, skipping\n",
->  				__func__);
->  			continue;
->  		}
->  
-> -		entry->rcdev = rcdev;
->  		list_add_tail(&entry->list, &reset_lookup_list);
->  	}
->  	mutex_unlock(&reset_lookup_mutex);
-> @@ -526,11 +523,30 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
->  }
->  EXPORT_SYMBOL_GPL(__of_reset_control_get);
->  
-> +static struct reset_controller_dev *
-> +__reset_controller_by_name(const char *name)
-> +{
-> +	struct reset_controller_dev *rcdev;
-> +
-> +	lockdep_assert_held(&reset_list_mutex);
-> +
-> +	list_for_each_entry(rcdev, &reset_controller_list, list) {
-> +		if (!rcdev->dev)
-> +			continue;
-> +
-> +		if (!strcmp(name, dev_name(rcdev->dev)))
-> +			return rcdev;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  static struct reset_control *
->  __reset_control_get_from_lookup(struct device *dev, const char *con_id,
->  				bool shared, bool optional)
->  {
->  	const struct reset_control_lookup *lookup;
-> +	struct reset_controller_dev *rcdev;
->  	const char *dev_id = dev_name(dev);
->  	struct reset_control *rstc = NULL;
->  
-> @@ -547,7 +563,15 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
->  		    ((con_id && lookup->con_id) &&
->  		     !strcmp(con_id, lookup->con_id))) {
->  			mutex_lock(&reset_list_mutex);
-> -			rstc = __reset_control_get_internal(lookup->rcdev,
-> +			rcdev = __reset_controller_by_name(lookup->provider);
-> +			if (!rcdev) {
-> +				mutex_unlock(&reset_list_mutex);
-> +				mutex_unlock(&reset_lookup_mutex);
-> +				/* Reset provider may not be ready yet. */
-> +				return -EPROBE_DEFER;
-> +			}
-> +
-> +			rstc = __reset_control_get_internal(rcdev,
->  							    lookup->index,
->  							    shared);
->  			mutex_unlock(&reset_list_mutex);
-> diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-> index 25698f6c1fae..c870acaa2e07 100644
-> --- a/include/linux/reset-controller.h
-> +++ b/include/linux/reset-controller.h
-> @@ -30,21 +30,22 @@ struct of_phandle_args;
->   * struct reset_control_lookup - represents a single lookup entry
->   *
->   * @list: internal list of all reset lookup entries
-> - * @rcdev: reset controller device controlling this reset line
-> + * @provider: name of the reset controller device controlling this reset line
->   * @index: ID of the reset controller in the reset controller device
->   * @dev_id: name of the device associated with this reset line
->   * @con_id name of the reset line (can be NULL)
->   */
->  struct reset_control_lookup {
->  	struct list_head list;
-> -	struct reset_controller_dev *rcdev;
-> +	const char *provider;
->  	unsigned int index;
->  	const char *dev_id;
->  	const char *con_id;
->  };
->  
-> -#define RESET_LOOKUP(_dev_id, _con_id, _index)				\
-> +#define RESET_LOOKUP(_provider, _dev_id, _con_id, _index)		\
+I love your patch! Perhaps something to improve:
 
-Please move the _index before _dev_id and _con_id, right after
-_provider. Otherwise this looks fine to me.
+[auto build test WARNING on shawnguo/for-next]
+[also build test WARNING on v4.16-rc6 next-20180322]
+[cannot apply to char-misc/char-misc-testing]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-regards
-Philipp
+url:    https://github.com/0day-ci/linux/commits/Sebastian-Reichel/GE-Healthcare-PPD-firmware-upgrade-driver-for-ACHC/20180323-144836
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/misc/ezport-firmware.c:296:33: sparse: incompatible types in comparison expression (different type sizes)
+   drivers/misc/ezport-firmware.c:329:33: sparse: incompatible types in comparison expression (different type sizes)
+   In file included from include/linux/delay.h:22:0,
+                    from drivers/misc/ezport-firmware.c:12:
+   drivers/misc/ezport-firmware.c: In function 'ezport_firmware_flash_data':
+   include/linux/kernel.h:792:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&min1 == &min2);   8-                ^
+   include/linux/kernel.h:801:2: note: in expansion of macro '__min'
+     __min(typeof(x), typeof(y),   11-  ^~~~~
+   drivers/misc/ezport-firmware.c:296:19: note: in expansion of macro 'min'
+      transfer_size = min((u32) EZPORT_TRANSFER_SIZE, size - address);
+                      ^~~
+   drivers/misc/ezport-firmware.c: In function 'ezport_firmware_verify_data':
+   include/linux/kernel.h:792:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&min1 == &min2);   18-                ^
+   include/linux/kernel.h:801:2: note: in expansion of macro '__min'
+     __min(typeof(x), typeof(y),   21-  ^~~~~
+   drivers/misc/ezport-firmware.c:329:19: note: in expansion of macro 'min'
+      transfer_size = min((u32) EZPORT_TRANSFER_SIZE, size - address);
+                      ^~~
+
+vim +296 drivers/misc/ezport-firmware.c
+
+   259	
+   260	static int ezport_firmware_flash_data(struct spi_device *spi,
+   261					      const u8 *data, size_t size)
+   262	{
+   263		int ret;
+   264		u32 address = 0;
+   265		u32 transfer_size;
+   266	
+   267		ret = ezport_get_status_register(spi);
+   268		if (ret < 0)
+   269			return ret;
+   270	
+   271		if (ret & EZPORT_STATUS_FS) {
+   272			dev_dbg(&spi->dev, "bulk erase");
+   273			ret = ezport_bulk_erase(spi);
+   274			if (!ezport_ready(ret, false))
+   275				return ret;
+   276		}
+   277	
+   278		ret = ezport_get_status_register(spi);
+   279		if (!ezport_ready(ret, false)) {
+   280			dev_err(&spi->dev, "flash memory is not ready!");
+   281			return ret;
+   282		}
+   283	
+   284		while (address < size) {
+   285			if (!(address & EZPORT_SECTOR_MASK)) {
+   286				dev_dbg(&spi->dev, "section erase: %x", address);
+   287				ret = ezport_section_erase(spi, address);
+   288				if (!ezport_ready(ret, false))
+   289					return ret;
+   290			}
+   291	
+   292			ret = ezport_write_enable(spi);
+   293			if (!ezport_ready(ret, true))
+   294				return ret;
+   295	
+ > 296			transfer_size = min((u32) EZPORT_TRANSFER_SIZE, size - address);
+   297	
+   298			dev_dbg(&spi->dev, "transfer: %x", address);
+   299			ret = ezport_flash_transfer(spi, address,
+   300						    data+address, transfer_size);
+   301			if (!ezport_ready(ret, false))
+   302				return ret;
+   303	
+   304			address += transfer_size;
+   305		}
+   306	
+   307		return 0;
+   308	}
+   309	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
