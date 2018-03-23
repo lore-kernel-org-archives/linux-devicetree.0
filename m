@@ -1,85 +1,142 @@
-From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
-Date: Fri, 23 Mar 2018 19:12:09 +1100
-Message-ID: <20180323081209.31387-6-oohall@gmail.com>
-References: <20180323081209.31387-1-oohall@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Fri, 23 Mar 2018 09:19:14 +0100
+Message-ID: <87cd10b9-38f8-4e16-cfcf-425e92fc126c@redhat.com>
+References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180323081209.31387-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree binding documentation for the nvdimm region driver.
+Hi,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+On 23-03-18 02:30, Kunihiko Hayashi wrote:
+> Add support to get and control a list of resets for the device
+> as optional and shared. These resets must be kept de-asserted until
+> the device is enabled.
+> 
+> This is specified as shared because some SoCs like UniPhier series
+> have common reset controls with all ahci controller instances.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
-new file mode 100644
-index 000000000000..02091117ff16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
-@@ -0,0 +1,45 @@
-+Device-tree bindings for NVDIMM memory regions
-+-----------------------------------------------------
-+
-+Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
-+that retains its contents across power cycles. In more practical terms, they
-+are kind of storage device where the contents can be accessed by the CPU
-+directly, rather than indirectly via a storage controller or similar. The an
-+nvdimm-region specifies a physical address range that is hosted on an NVDIMM
-+device.
-+
-+Bindings for the region nodes:
-+-----------------------------
-+
-+Required properties:
-+	- compatible = "nvdimm-region"
-+
-+	- reg = <base, size>;
-+		The system physical address range of this nvdimm region.
-+
-+Optional properties:
-+	- Any relevant NUMA assocativity properties for the target platform.
-+	- A "volatile" property indicating that this region is actually in
-+	  normal DRAM and does not require cache flushes after each write.
-+
-+A complete example:
-+--------------------
-+
-+/ {
-+	#size-cells = <2>;
-+	#address-cells = <2>;
-+
-+	platform {
-+		region@5000 {
-+			compatible = "nvdimm-region;
-+			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
-+
-+		};
-+
-+		region@6000 {
-+			compatible = "nvdimm-region";
-+			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
-+			volatile;
-+		};
-+	};
-+};
--- 
-2.9.5
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+>   drivers/ata/ahci.h                                 |  1 +
+>   drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
+>   3 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index c760ecb..f4006d3 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -30,6 +30,7 @@ compatible:
+>   Optional properties:
+>   - dma-coherent      : Present if dma operations are coherent
+>   - clocks            : a list of phandle + clock specifier pairs
+> +- resets            : a list of phandle + reset specifier pairs
+>   - target-supply     : regulator for SATA target power
+>   - phys              : reference to the SATA PHY node
+>   - phy-names         : must be "sata-phy"
+> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+> index 749fd94..47ec77a2 100644
+> --- a/drivers/ata/ahci.h
+> +++ b/drivers/ata/ahci.h
+> @@ -347,6 +347,7 @@ struct ahci_host_priv {
+>   	u32			em_msg_type;	/* EM message type */
+>   	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
+>   	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
+> +	struct reset_control	*rsts;		/* Optional */
+>   	struct regulator	**target_pwrs;	/* Optional */
+>   	/*
+>   	 * If platform uses PHYs. There is a 1:1 relation between the port number and
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 341d0ef..3130db9 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/phy/phy.h>
+>   #include <linux/pm_runtime.h>
+>   #include <linux/of_platform.h>
+> +#include <linux/reset.h>
+>   #include "ahci.h"
+>   
+>   static void ahci_host_stop(struct ata_host *host);
+> @@ -195,7 +196,8 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
+>    * following order:
+>    * 1) Regulator
+>    * 2) Clocks (through ahci_platform_enable_clks)
+> - * 3) Phys
+> + * 3) Resets
+> + * 4) Phys
+>    *
+>    * If resource enabling fails at any point the previous enabled resources
+>    * are disabled in reverse order.
+> @@ -215,12 +217,19 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
+>   	if (rc)
+>   		goto disable_regulator;
+>   
+> -	rc = ahci_platform_enable_phys(hpriv);
+> +	rc = reset_control_deassert(hpriv->rsts);
+>   	if (rc)
+>   		goto disable_clks;
+>   
+> +	rc = ahci_platform_enable_phys(hpriv);
+> +	if (rc)
+> +		goto disable_resets;
+> +
+>   	return 0;
+>   
+> +disable_resets:
+> +	reset_control_assert(hpriv->rsts);
+> +
+>   disable_clks:
+>   	ahci_platform_disable_clks(hpriv);
+>   
+> @@ -239,12 +248,15 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
+>    * following order:
+>    * 1) Phys
+>    * 2) Clocks (through ahci_platform_disable_clks)
+> - * 3) Regulator
+> + * 3) Resets
+> + * 4) Regulator
+>    */
+>   void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
+>   {
+>   	ahci_platform_disable_phys(hpriv);
+>   
+> +	reset_control_assert(hpriv->rsts);
+> +
+>   	ahci_platform_disable_clks(hpriv);
+>   
+>   	ahci_platform_disable_regulators(hpriv);
+> @@ -393,6 +405,12 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
+>   		hpriv->clks[i] = clk;
+>   	}
+>   
+> +	hpriv->rsts = devm_reset_control_array_get_optional_shared(dev);
+> +	if (IS_ERR(hpriv->rsts)) {
+> +		rc = PTR_ERR(hpriv->rsts);
+> +		goto err_out;
+> +	}
+> +
+>   	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
+>   
+>   	/*
+> 
