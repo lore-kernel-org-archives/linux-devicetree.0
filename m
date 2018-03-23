@@ -1,63 +1,67 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 1/8] net: phy: Add initial support for Microsemi
- Ocelot internal PHYs.
-Date: Fri, 23 Mar 2018 14:08:10 -0700
-Message-ID: <1caa7359-9ca3-be22-fae0-475daf8b220f@gmail.com>
+Subject: Re: [PATCH net-next 4/8] dt-bindings: net: add DT bindings for
+ Microsemi Ocelot Switch
+Date: Fri, 23 Mar 2018 14:11:35 -0700
+Message-ID: <a5db6109-c5d9-f573-893c-f7d66c3168c2@gmail.com>
 References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-2-alexandre.belloni@bootlin.com>
+ <20180323201117.8416-5-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323201117.8416-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180323201117.8416-5-alexandre.belloni@bootlin.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>, "David S . Miller" <davem@davemloft.net>
-Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On 03/23/2018 01:11 PM, Alexandre Belloni wrote:
-> Add Microsemi Ocelot internal PHY ids. For now, simply use the genphy
-> functions but more features are available.
+> DT bindings for the Ethernet switch found on Microsemi Ocelot platforms.
 > 
-> Cc: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
 > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
->  drivers/net/phy/mscc.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  .../devicetree/bindings/net/mscc-ocelot.txt        | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/mscc-ocelot.txt
 > 
-> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-> index 650c2667d523..e1ab3acd1cdb 100644
-> --- a/drivers/net/phy/mscc.c
-> +++ b/drivers/net/phy/mscc.c
-> @@ -91,6 +91,7 @@ enum rgmii_rx_clock_delay {
->  #define SECURE_ON_PASSWD_LEN_4		  0x4000
->  
->  /* Microsemi PHY ID's */
-> +#define PHY_ID_OCELOT			  0x00070540
->  #define PHY_ID_VSC8530			  0x00070560
->  #define PHY_ID_VSC8531			  0x00070570
->  #define PHY_ID_VSC8540			  0x00070760
-> @@ -658,6 +659,19 @@ static int vsc85xx_probe(struct phy_device *phydev)
->  
->  /* Microsemi VSC85xx PHYs */
->  static struct phy_driver vsc85xx_driver[] = {
-> +{
-> +	.phy_id		= PHY_ID_OCELOT,
-> +	.name		= "Microsemi OCELOT",
-> +	.phy_id_mask    = 0xfffffff0,
-> +	.features	= PHY_GBIT_FEATURES,
-> +	.soft_reset	= &genphy_soft_reset,
-> +	.config_init	= &genphy_config_init,
-> +	.config_aneg	= &genphy_config_aneg,
-> +	.aneg_done	= &genphy_aneg_done,
-> +	.read_status	= &genphy_read_status,
-> +	.suspend	= &genphy_suspend,
-> +	.resume		= &genphy_resume,
+> diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> new file mode 100644
+> index 000000000000..ee092a85b5a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> @@ -0,0 +1,62 @@
+> +Microsemi Ocelot network Switch
+> +===============================
+> +
+> +The Microsemi Ocelot network switch can be found on Microsemi SoCs (VSC7513,
+> +VSC7514)
+> +
+> +Required properties:
+> +- compatible: Should be "mscc,ocelot-switch"
+> +- reg: Must contain an (offset, length) pair of the register set for each
+> +  entry in reg-names.
+> +- reg-names: Must include the following entries:
+> +  - "sys"
+> +  - "rew"
+> +  - "qs"
+> +  - "hsio"
+> +  - "qsys"
+> +  - "ana"
+> +  - "portX" with X from 0 to the number of last port index available on that
+> +    switch
+> +- interrupts: Should contain the switch interrupts for frame extraction and
+> +  frame injection
+> +- interrupt-names: should contain the interrupt names: "xtr", "inj"
 
-With the exception of config_init(), suspend and resume, everything else
-is already the default when you don't provide a callback. To echo to
-what Andrew wrote already, if the purpose is just to show a nice name,
-and do nothing else, consider using the Generic PHY driver (default).
+You are not documenting the "ports" subnode(s).Please move the
+individual ports definition under a ports subnode, mainly for two reasons:
+
+- it makes it easy at the .dtsi level to have all ports disabled by default
+
+- this makes you strictly conforming to the DSA binding for Ethernet
+switches and this is good for consistency (both parsing code and just
+representation).
 -- 
 Florian
