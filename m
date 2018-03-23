@@ -1,122 +1,68 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 1/2] misc: ezport-firmware: new driver
-Date: Fri, 23 Mar 2018 15:06:32 +0100
-Message-ID: <20180323140631.wt75cwxxrrzdnzse@earth.universe>
-References: <20180320172201.2065-1-sebastian.reichel@collabora.co.uk>
- <20180320172201.2065-2-sebastian.reichel@collabora.co.uk>
- <20180323131712.GA32169@kroah.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: reset: Add AXG AO Clock and Reset
+ Bindings
+Date: Fri, 23 Mar 2018 22:06:27 +0800
+Message-ID: <dffeba58-1326-1dbd-38fc-c3b0f51d9c73@amlogic.com>
+References: <20180209070026.193879-1-yixun.lan@amlogic.com>
+ <20180209070026.193879-2-yixun.lan@amlogic.com>
+ <CAOFm3uFj-7kZNp6b3SerOzQ8Amfa5Usod+MxwvZJ1E1Z_V9VJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="evha4yhbgfv7a6qq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180323131712.GA32169@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOFm3uFj-7kZNp6b3SerOzQ8Amfa5Usod+MxwvZJ1E1Z_V9VJA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, yixun.lan@amlogic.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Philippe
 
---evha4yhbgfv7a6qq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 02/09/2018 07:07 PM, Philippe Ombredanne wrote:
+> On Fri, Feb 9, 2018 at 8:00 AM, Yixun Lan <yixun.lan@amlogic.com> wrote:
+>> Add dt-bindings headers for the Meson-AXG's AO clock and
+>> reset controller.
+>>
+>> CC: <devicetree@vger.kernel.org>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>  include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
+>>  include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
+>>  2 files changed, 46 insertions(+)
+>>  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+>>  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+>>
+>> diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
+>> new file mode 100644
+>> index 000000000000..78683abb4247
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/axg-aoclkc.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD) */
+> 
+> nit... BSD is not a valid license id as documented in LICENSES [1] :
+> please use one of these:
+> BSD-2-Clause or BSD-3-Clause
+> 
+> Thank you!
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/LICENSES/preferred
+> 
 
-Hi,
 
-On Fri, Mar 23, 2018 at 02:17:12PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Mar 20, 2018 at 06:22:00PM +0100, Sebastian Reichel wrote:
-> > General Electric Healthcare's PPD has a secondary processor from
-> > NXP's Kinetis K20 series. It's firmware can be updated from Linux
-> > using the EzPort interface. This driver implements the firmware
-> > updating process.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > ---
-> >  Documentation/devicetree/bindings/misc/ge-achc.txt |  19 +-
->=20
-> Bindings should be in a separate patch, right?
+  Thanks for the hint
 
-Right.
+  I'll update to BSD-3-Clause, since this license is just a copy from
+previous gxbb-aoclkc.h file.
 
-> > +static int ezport_read_data(struct spi_device *spi, u32 address,
-> > +			    u8 *buffer, size_t size)
-> > +{
-> > +	struct spi_transfer xfers[2] =3D {};
->=20
-> You can send SPI data from the stack?
-
-I don't think so:
-
-/**
- * struct spi_transfer - a read/write buffer pair
- * @tx_buf: data to be written (dma-safe memory), or NULL
- * @rx_buf: data to be read (dma-safe memory), or NULL
-
-IIUIC only spi_write_then_read() may use the stack, since the
-function copies the provided buffer to a second, DMA capable
-buffer. That function is obviously not good for big buffers,
-though.
-
-> > +	u8 *query =3D kmalloc(EZPORT_FAST_READ_SIZE, GFP_KERNEL);
-> > +	int ret;
-> > +
-> > +	if (!query)
-> > +		return -ENOMEM;
-> > +
-> > +	query[0] =3D EZPORT_CMD_FAST_READ;
-> > +	query[1] =3D address >> 16;
-> > +	query[2] =3D address >> 8;
-> > +	query[3] =3D address >> 0;
-> > +	query[4] =3D EZPORT_DUMMY;
-> > +
-> > +	xfers[0].len =3D EZPORT_FAST_READ_SIZE;
-> > +	xfers[0].tx_buf =3D query;
-> > +
-> > +	xfers[1].len =3D size;
-> > +	xfers[1].rx_buf =3D buffer;
-> > +
-> > +	ret =3D spi_sync_transfer(spi, xfers, 2);
-> > +
-> > +	kfree(query);
-> > +
-> > +	return ret;
-> > +}
-> > +static DEVICE_ATTR_WO(update_fw);
-> > +static DEVICE_ATTR_RO(verify_fw);
->=20
-> New sysfs attributes need Documentation/ABI updates please.
-
-Ok.
-
-> Also please fix up the kbuild-reported build errors.
-
-Of course.
-
-> thanks,
-
-Thanks for the review,
-
--- Sebastian
-
---evha4yhbgfv7a6qq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq1CeQACgkQ2O7X88g7
-+posNQ//RXYEyqUN+5+0VCFjMUul+mHQDLuksYrtpuee06+lKeBF1kvCQRStgNhV
-kXzERAm/uJPSLctnqbClLhLxshf7iF1nccYyE/wqLA6jJL5LdswInRZb1iKOgi8R
-ivHanKVicNzg7Dz3ev9BpeBe/VQiV5IuVedass0pEAeXIat4+ElN6TLTrb0N8RQv
-xIWObaob1b/UZORBAQG9ywE8mi8Vs22Va87/Emx835mSzwvzRlLm7OyjvRsWLxBC
-rgu1dOtbcGbNkJV0DROo8/416kPEBT15lII8nYfqAUJKgYjyb/n0pVmtpukvX3aT
-yx0fvWaqNzeeZUzzB4+EkmewCIAfnnLpFtkw79Nyg8/oscWCvYxEiKfULDVVvDIe
-Z18CJjped5cLNMMnd55N2AMn/MyFfbuOASXJU+L5V48WIvCQ/wn280FFTlFqIACf
-u0Jn6m34ZEMIEmoipM/35PPQLo8iq5lSbzieQdkEZgRDTYgCyuGtqWvSLCyfOQmO
-uYs0EJD/bKuJSc2cZa/bILAi6Hjtpka2Kd0Ft6glPOCqLufiZWxR/cJ4giBocSwC
-X6drsD1HTfQZzskywHq4nge677WQgVUFe/DM2SU0L9uY9cjGexOGmt4c3+OMp077
-1A5W//wz6wcdYEY+pzzrFY3LE708aibnadOqfup1AyKEnSVDKuY=
-=4QPY
------END PGP SIGNATURE-----
-
---evha4yhbgfv7a6qq--
+Yixun
