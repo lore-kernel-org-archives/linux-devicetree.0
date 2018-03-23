@@ -1,48 +1,37 @@
-Return-Path: <SRS0=Eo6U=FY=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: net: renesas-ravb: Make stream buffer optional
-Date: Fri,  2 Mar 2018 16:01:48 +0100
-Message-Id: <1520002908-24947-1-git-send-email-geert+renesas@glider.be>
-To: "David S . Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=YHXO=GN=google.com=dianders@kernel.org>
+MIME-Version: 1.0
+Sender: dianders@google.com
+In-Reply-To: <1521836461-6515-6-git-send-email-kramasub@codeaurora.org>
+References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org> <1521836461-6515-6-git-send-email-kramasub@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 23 Mar 2018 16:38:28 -0700
+Message-ID: <CAD=FV=U46kXNfV4D3=kO6+nd6NNzuBDAEHeGJ4nJdN_255Vy7Q@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] arm64: dts: sdm845: Add support for an instance of
+ I2C controller
+Content-Type: text/plain; charset="UTF-8"
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Stream Buffer for EtherAVB-IF (STBE) is an optional component, and
-is not present on all SoCs.
+Hi,
 
-Document this in the DT bindings, including a list of SoCs that do have
-it.
+On Fri, Mar 23, 2018 at 1:21 PM, Karthikeyan Ramasubramanian
+<kramasub@codeaurora.org> wrote:
+> +                       i2c10: i2c@a88000 {
+> +                               compatible = "qcom,geni-i2c";
+> +                               reg = <0xa88000 0x4000>;
+> +                               clock-names = "se";
+> +                               clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+> +                               pinctrl-names = "default", "sleep";
+> +                               pinctrl-0 = <&qup_i2c10_default>;
+> +                               pinctrl-1 = <&qup_i2c10_sleep>;
+> +                               interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clock-frequency = <400000>;
 
-Fixes: 785ec87483d1e24a ("ravb: document R8A77970 bindings")
-Fixes: f231c4178a655b09 ("dt-bindings: net: renesas-ravb: Add support for R8A77995 RAVB")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
-  - Add Reviewed-by, Acked-by,
-  - Add R-Car M3-N.
----
- Documentation/devicetree/bindings/net/renesas,ravb.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Please move the clock-frequency to the board file.  Not all devices on
+all boards will support 400 kHz, so we should be at 100 kHz by default
+and boards should explicitly say that they support 400 kHz.
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index bf071a58f2926ad3..2b5cb655b0e93bfd 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -27,7 +27,11 @@ Required properties:
- 	SoC-specific version corresponding to the platform first followed by
- 	the generic version.
- 
--- reg: offset and length of (1) the register block and (2) the stream buffer.
-+- reg: Offset and length of (1) the register block and (2) the stream buffer.
-+       The region for the register block is mandatory.
-+       The region for the stream buffer is optional, as it is only present on
-+       R-Car Gen2 and RZ/G1 SoCs, and on R-Car H3 (R8A7795), M3-W (R8A7796),
-+       and M3-N (R8A77965).
- - interrupts: A list of interrupt-specifiers, one for each entry in
- 	      interrupt-names.
- 	      If interrupt-names is not present, an interrupt specifier
--- 
-2.7.4
+Other than that things look good to me and you can add my Reviewed-by tag.
+
+-Doug
