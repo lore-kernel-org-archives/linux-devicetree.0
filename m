@@ -1,172 +1,64 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: Add Gateworks System Controller bindings
-Date: Fri, 23 Mar 2018 10:11:35 -0700
-Message-ID: <CAJ+vNU3Nm0b30pMm-8aGCcFbTA05hU=rfyKMMOgRubf_GK1WyQ@mail.gmail.com>
-References: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
- <1520287361-12569-2-git-send-email-tharvey@gateworks.com> <20180309231433.tmlfy6vwbkvopmwd@rob-hp-laptop>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the
+ reset framework
+Date: Fri, 23 Mar 2018 18:16:06 +0100
+Message-ID: <CAMRc=MdmTAwPAAnL1+n+OXSycnyjuQ1hKmts158mPcgat1NUYQ@mail.gmail.com>
+References: <20180323130455.11470-1-brgl@bgdev.pl> <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
+ <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com> <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309231433.tmlfy6vwbkvopmwd@rob-hp-laptop>
+In-Reply-To: <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sekhar Nori <nsekhar@ti.com>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 9, 2018 at 3:14 PM, Rob Herring <robh@kernel.org> wrote:
-> On Mon, Mar 05, 2018 at 02:02:38PM -0800, Tim Harvey wrote:
->> This patch adds documentation of device-tree bindings for the
->> Gateworks System Controller (GSC).
+2018-03-23 18:08 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
+> Quoting Bartosz Golaszewski (2018-03-23 09:55:47)
+>> 2018-03-23 17:49 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
+>> > Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
+>> >> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> >>
+>> >> This series converts the only user of the handcoded, mach-specific reset
+>> >> routines in the davinci platform to using the reset framework.
+>> >>
+>> >> Patch 1 modifies the way lookup entries are registered with the reset
+>> >> framework.
+>> >>
+>> >> Patches 2-4 add necessary lookups/DT-properties.
+>> >>
+>> >> Patches 5-7 convert the davinci-rproc driver to the reset framework.
+>> >>
+>> >> Patch 8 removes now dead code.
+>> >>
+>> >> Philipp: it turned out that it's indeed better to use the reset
+>> >> controller's device name for the entry lookup.
+>> >>
+>> >> Tested both in DT and legacy modes by booting the examples from
+>> >> ti-ipc-rtos recipe in meta-ti.
+>> >>
+>> >> This series applies on top of David Lechner's common-clk-v9 branch[1]
+>> >> with Philipp Zabel's reset/next branch[2] pulled in.
+>> >>
+>> >> It can be found in my github tree as well[3].
+>> >>
+>> >
+>> > What's the merge strategy for the rest of the patches? I should apply
+>> > the clk ones after the next -rc1?
 >>
->> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->> ---
->>  Documentation/devicetree/bindings/mfd/gsc.txt | 159 ++++++++++++++++++++++++++
->>  1 file changed, 159 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/gsc.txt
+>> Or maybe Philipp can provide us with an immutable branch with the reset patches?
 >>
-<snip>
->> +
->> +* hwmon:
->> +The GSC provides a set of Analog to Digitcal Converter (ADC) pins used for
->> +temperature and/or voltage monitoring.
->> +
->> +Required properties:
->> +- compatible: must be "gw,gsc-hwmon"
->> +
-<snip>
->> +
->> +             gsc_hwmon {
+>> The you could apply the driver patches and let Sekhar take all the
+>> platform code?
+>>
 >
-> hwmon {
->
->> +                     compatible = "gw,gsc-hwmon";
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     hwmon@0 { /* A0: Board Temperature */
->> +                             type = <0>;
->
-> Not documented.
->
->> +                             reg = <0x00>;
->> +                             label = "temp";
->> +                     };
->> +
->> +                     hwmon@1 { /* A1: Input Voltage */
->> +                             type = <1>;
->> +                             reg = <0x02>;
->> +                             label = "Vin";
->> +                     };
->> +
-<snip>
->> +
->> +                     hwmon@15 { /* fan0 */
->> +                             type = <2>;
->> +                             reg = <0x2c>;
->> +                             label = "fan_50p";
->> +                     };
->> +
-<snip>
->> +             };
->> +     };
+> Ok that could work too.
 
-Hi Rob,
+Ohad, Bjorn can you ack the remoteproc patches? Are you OK with
+Stephen taking them through the clock tree? Otherwise it would get
+complicated since they depend on the first clk patch and the last clk
+patch depends on them.
 
-Thanks for the review. I will roll in your changes.
-
-I'm looking for suggestions on how to better define the child nodes of
-the hwmon sub-device:
-
-I have 4 types of hwmon child nodes supported by this device:
-1. temperature in C/10 (is that called deci-celcuis?): this is a 2byte value
-2. input voltage in mV: this is a 3 byte value pre-scaled by the GSC
-firmware from a 10bit ADC where the
-ref/bit-resolution/resistor-divider info is baked into the per-board
-firmware
-3. fan setpoint in C/10
-4. input voltage in mV: raw 2-byte value of a 12bit ADC that needs to
-be scaled based on a voltage-devider (pre-scaler), a ref voltage, and
-resolution (or bit width)
-
-The example I posted above shows use of the first three types but not
-the more complicated fourth which requires the driver know more
-details in order to present a cooked milivolt value. Note that the two
-input types above would not both be present in any single board dts as
-they represent a change in the way ADC's are reported in the overall
-GSC version. A GSC typically has up to 16 different input ADC's and
-the voltage rails monitored vary per board.
-
-You mention that I don't document 'type' and your correct. I'm
-thinking this is best done with a string using compatible within the
-child node.
-
-Something like:
-
-Required properties:
-...
-- hwmon: This is the list of child nodes that specify the hwmon nodes.
-...
-
-hwmon required properties:
-- hwmon-compatible: Must be "fan-setpoint", "temperature",
-"input-raw", "input-cooked"
-- reg: register offset of the node
-- label: name of the input node
-
-hwmon optional properties:
-- gw,voltage-divider: an array of two integers containing the resistor
-values R1 and R2 of the voltage divider in ohms
-- gw,reference-voltage: the internal reference voltage of the ADC
-input in milivolts
-- gw,resolution: the resolution of the ADC input (ie 4096 for 12bit resolution)
-...
-
-Example:
-...
-hwmon {
-  compatible = "gw,gsc-hwmon";
-  #address-cells = <1>;
-  #size-cells = <0>;
-
-  hwmon@0 {
-    compatible = "temperature";
-    reg <0x00>;
-    label = "temp";
-  };
-
-  hwmon@2 {
-    compatible = "fan-setpoint";
-    reg <0x02>;
-    label = "fan_setpoint0";
-  };
-
-  /* this one represents the 3-byte ADC value that has been
-'pre-scaled' by the GSC from a raw 10bit ADC (older GSC
-version/firmware) */
-  hwmon@4 {
-    compatible = "input-cooked";
-    reg <0x02>;
-    label = "voltage1";
-  };
-
-  /* this one represents the 2-byte 12-bit ADC value that is 'raw'
-from the GSC and needs to be scaled by driver (newer GSC
-version/firmware) */
-  hwmon@4 {
-    compatible = "input-raw";
-    reg <0x04>;
-    label = "voltage2";
-    gw,voltage-divider = <10000 10000>; /* R1=10k R2=10k div-by-2 pre-scaler */
-    gw,referance-voltage = <2500>; /* 2.5V reference */
-    gw,resolution = <4096>; /* 12bit resolution */
-  };
-};
-
-If I add a byte-size (2|3) or bit-width (16|24) I could essentially
-combine the two input types.
-
-Suggestions?
-
-Regards,
-
-Tim
+Thanks,
+Bart
