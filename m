@@ -1,160 +1,109 @@
-Return-Path: <SRS0=aoSJ=GU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:52759 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752206AbeC3UeB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Mar 2018 16:34:01 -0400
-Received: by mail-wm0-f65.google.com with SMTP id l9so17137219wmh.2
-        for <devicetree@vger.kernel.org>; Fri, 30 Mar 2018 13:34:00 -0700 (PDT)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ism330dlc
-Date: Fri, 30 Mar 2018 22:33:50 +0200
-Message-Id: <20180330203351.22681-2-lorenzo.bianconi@redhat.com>
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=8UYE=GN=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 2/5] usb: typec: fusb302:  remove max_snk_* for sink config
+Date: Fri, 23 Mar 2018 22:58:44 +0800
+Message-Id: <1521817127-23061-3-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, hdegoede@redhat.com
+Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add support to STM ISM330DLC 6-axis (acc + gyro) Mems sensor
-http://www.st.com/resource/en/datasheet/ism330dlc.pdf
+Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
+variable PDO for sink config.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/iio/imu/st_lsm6dsx/Kconfig             |  3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        |  2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 10 +++++-----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   |  3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    |  5 +++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    |  5 +++++
- 6 files changed, 21 insertions(+), 7 deletions(-)
+ drivers/usb/typec/fusb302/fusb302.c | 51 +++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index 14f2eb6e9fb7..ccc817e17eb8 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -8,7 +8,8 @@ config IIO_ST_LSM6DSX
- 	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
- 	help
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
--	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm
-+	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-+	  ism330dlc
+diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+index 7036171..db4d9cd 100644
+--- a/drivers/usb/typec/fusb302/fusb302.c
++++ b/drivers/usb/typec/fusb302/fusb302.c
+@@ -120,6 +120,7 @@ struct fusb302_chip {
+ 	enum typec_cc_polarity cc_polarity;
+ 	enum typec_cc_status cc1;
+ 	enum typec_cc_status cc2;
++	u32 snk_pdo[PDO_MAX_OBJECTS];
  
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index a3cc7cd97026..edcd838037cd 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -18,12 +18,14 @@
- #define ST_LSM6DS3H_DEV_NAME	"lsm6ds3h"
- #define ST_LSM6DSL_DEV_NAME	"lsm6dsl"
- #define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
-+#define ST_ISM330DLC_DEV_NAME	"ism330dlc"
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dentry;
+@@ -1212,11 +1213,6 @@ static const u32 snk_pdo[] = {
+ static const struct tcpc_config fusb302_tcpc_config = {
+ 	.src_pdo = src_pdo,
+ 	.nr_src_pdo = ARRAY_SIZE(src_pdo),
+-	.snk_pdo = snk_pdo,
+-	.nr_snk_pdo = ARRAY_SIZE(snk_pdo),
+-	.max_snk_mv = 5000,
+-	.max_snk_ma = 3000,
+-	.max_snk_mw = 15000,
+ 	.operating_snk_mw = 2500,
+ 	.type = TYPEC_PORT_DRP,
+ 	.data = TYPEC_PORT_DRD,
+@@ -1756,6 +1752,38 @@ static int init_gpio(struct fusb302_chip *chip)
+ 	return 0;
+ }
  
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
- 	ST_LSM6DS3H_ID,
- 	ST_LSM6DSL_ID,
- 	ST_LSM6DSM_ID,
-+	ST_ISM330DLC_ID,
- 	ST_LSM6DSX_MAX_ID,
- };
++static int fusb302_composite_snk_pdo_array(struct fusb302_chip *chip)
++{
++	struct device *dev = chip->dev;
++	u32 mv, ma, mw, min_mv;
++	unsigned int i;
++
++	/* Copy the static snk pdo */
++	for (i = 0; i < ARRAY_SIZE(snk_pdo); i++)
++		chip->snk_pdo[i] = snk_pdo[i];
++
++	if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &mv) ||
++	    device_property_read_u32(dev, "fcs,max-sink-microamp", &ma) ||
++	    device_property_read_u32(dev, "fcs,max-sink-microwatt", &mw))
++		return i;
++
++	mv = mv / 1000;
++	ma = ma / 1000;
++	mw = mw / 1000;
++
++	min_mv = 1000 * chip->tcpc_config.operating_snk_mw / ma;
++	if (pdo_type(snk_pdo[i-1] == PDO_TYPE_FIXED))
++		min_mv = max(min_mv, pdo_fixed_voltage(snk_pdo[i-1]));
++	else
++		min_mv = max(min_mv, pdo_max_voltage(snk_pdo[i-1]));
++	ma = min(ma, 1000 * mw / min_mv);
++
++	/* Insert the new pdo to the end */
++	chip->snk_pdo[i] = PDO_VAR(min_mv, mv, ma);
++
++	return i+1;
++}
++
+ static int fusb302_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -1784,18 +1812,13 @@ static int fusb302_probe(struct i2c_client *client,
+ 	chip->tcpc_dev.config = &chip->tcpc_config;
+ 	mutex_init(&chip->lock);
  
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 1045e025e92b..4994f920a836 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -1,10 +1,10 @@
- /*
-  * STMicroelectronics st_lsm6dsx FIFO buffer library driver
-  *
-- * LSM6DS3/LSM6DS3H/LSM6DSL/LSM6DSM: The FIFO buffer can be configured
-- * to store data from gyroscope and accelerometer. Samples are queued
-- * without any tag according to a specific pattern based on 'FIFO data sets'
-- * (6 bytes each):
-+ * LSM6DS3/LSM6DS3H/LSM6DSL/LSM6DSM/ISM330DLC: The FIFO buffer can be
-+ * configured to store data from gyroscope and accelerometer. Samples are
-+ * queued without any tag according to a specific pattern based on
-+ * 'FIFO data sets' (6 bytes each):
-  *  - 1st data set is reserved for gyroscope data
-  *  - 2nd data set is reserved for accelerometer data
-  * The FIFO pattern changes depending on the ODRs and decimation factors
-@@ -276,7 +276,7 @@ static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 *data,
- #define ST_LSM6DSX_IIO_BUFF_SIZE	(ALIGN(ST_LSM6DSX_SAMPLE_SIZE, \
- 					       sizeof(s64)) + sizeof(s64))
- /**
-- * st_lsm6dsx_read_fifo() - LSM6DS3-LSM6DS3H-LSM6DSL-LSM6DSM read FIFO routine
-+ * st_lsm6dsx_read_fifo() - hw FIFO read routine
-  * @hw: Pointer to instance of struct st_lsm6dsx_hw.
-  *
-  * Read samples from the hw FIFO and push them to IIO buffers.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 50d6491df484..aebbe0ddd8d8 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -17,7 +17,7 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 8KB
-  *
-- * - LSM6DS3H/LSM6DSL/LSM6DSM:
-+ * - LSM6DS3H/LSM6DSL/LSM6DSM/ISM330DLC:
-  *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-@@ -252,6 +252,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 		.id = {
- 			[0] = ST_LSM6DSL_ID,
- 			[1] = ST_LSM6DSM_ID,
-+			[2] = ST_ISM330DLC_ID,
- 		},
- 		.decimator = {
- 			[ST_LSM6DSX_ID_ACC] = {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 41525dd2aab7..377c4e9997da 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -57,6 +57,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.compatible = "st,lsm6dsm",
- 		.data = (void *)ST_LSM6DSM_ID,
- 	},
-+	{
-+		.compatible = "st,ism330dlc",
-+		.data = (void *)ST_ISM330DLC_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-@@ -66,6 +70,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
- 	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
-+	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index 2c8135834479..fec5c6ce7eb7 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -57,6 +57,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.compatible = "st,lsm6dsm",
- 		.data = (void *)ST_LSM6DSM_ID,
- 	},
-+	{
-+		.compatible = "st,ism330dlc",
-+		.data = (void *)ST_ISM330DLC_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-@@ -66,6 +70,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
- 	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
-+	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+-	if (!device_property_read_u32(dev, "fcs,max-sink-microvolt", &v))
+-		chip->tcpc_config.max_snk_mv = v / 1000;
+-
+-	if (!device_property_read_u32(dev, "fcs,max-sink-microamp", &v))
+-		chip->tcpc_config.max_snk_ma = v / 1000;
+-
+-	if (!device_property_read_u32(dev, "fcs,max-sink-microwatt", &v))
+-		chip->tcpc_config.max_snk_mw = v / 1000;
+-
+ 	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
+ 		chip->tcpc_config.operating_snk_mw = v / 1000;
+ 
++	/* Composite sink PDO */
++	chip->tcpc_config.nr_snk_pdo = fusb302_composite_snk_pdo_array(chip);
++	chip->tcpc_config.snk_pdo = chip->snk_pdo;
++
+ 	/*
+ 	 * Devicetree platforms should get extcon via phandle (not yet
+ 	 * supported). On ACPI platforms, we get the name from a device prop.
 -- 
-2.16.2
-
+2.7.4
