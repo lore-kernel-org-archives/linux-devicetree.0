@@ -1,81 +1,37 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 1/2][v6] dt-bindings: mtd-physmap: Add endianness supports
-Date: Fri, 23 Mar 2018 09:34:08 +0100
-Message-ID: <20180323093408.230a61c1@bbrezillon>
-References: <20180312081128.8195-1-prabhakar.kushwaha@nxp.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6] ARM: dts: wheat: Fix ADV7513 address usage
+Date: Fri, 23 Mar 2018 09:51:40 +0100
+Message-ID: <20180323085140.g3golwdtpezo7fhi@verge.net.au>
+References: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180312081128.8195-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, robh@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lars-Peter Clausen <lars@metafoo.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Mar 2018 13:41:28 +0530
-Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
-
-> Connection between flash and controller is not necessary to be always
-> of same type. It may varies from platform to platform.
+On Thu, Mar 22, 2018 at 09:30:40PM +0000, Kieran Bingham wrote:
+> The r8a7792 Wheat board has two ADV7513 devices sharing a single I2C
+> bus, however in low power mode the ADV7513 will reset it's slave maps to
+> use the hardware defined default addresses.
 > 
-> Adding endianness (optional) property to provide connection type
-> information.
+> The ADV7511 driver was adapted to allow the two devices to be registered
+> correctly - but it did not take into account the fault whereby the
+> devices reset the addresses.
 > 
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes for v2: updated subject
-> Changes for v3: fixed typo for "big-endian"
-> Changes for v4: Moved binding definition in mtd-physmap.txt
-> as discussed at https://patchwork.ozlabs.org/patch/842543/
-> Changes for v5: Sending as it is
-> Changes for v6: Updated binding when endianness property is absent
+> This results in an address conflict between the device using the default
+> addresses, and the other device if it is in low-power-mode.
 > 
->  Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> index 4a0a48bf4ecb..691c98f7301d 100644
-> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> @@ -41,6 +41,11 @@ additional (optional) property is defined:
->  
->   - erase-size : The chip's physical erase block size in bytes.
->  
-> + The device tree may optionally contain endianness property.
-> + little-endian or big-endian : It represents connection between controller and
+> Repair this issue by moving both devices away from the default address
+> definitions.
 
-You still haven't answered the comments I made on your v5. To me, this
-does not represent how the controller and chip pins are connected, but
-how the chip was programmed and which endianness should be used by the
-controller to correctly read the data back. Maybe I'm wrong, hence my
-question.
+Hi Kierean,
 
-> +			flash. If this property is absent, connection is described
-> +			by the CFI_DEFAULT_ENDIAN.
-
-Nope, you can't refer to linux-specific config options in a DT binding,
-because those bindings are supposed to be OS-agnostic. Maybe something
-like "If this property is missing, the endianness is chosen by the
-system (potentially based on extra configuration options).".
-
-Rob, any suggestion other suggestion?
-
-Regards,
-
-Boris
-
-
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+as this is a fix
+a) Does it warrant a fixes tag?
+   Fixes: f6eea82a87db ("ARM: dts: wheat: add DU support")
+b) Does it warrant being posted as a fix for v4.16;
+c) or v4.17?
