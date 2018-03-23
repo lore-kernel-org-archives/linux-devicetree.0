@@ -1,28 +1,40 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH v2] net: phy: Added device tree binding for dev-addr
- and dev-addr code check-up
-Date: Fri, 23 Mar 2018 16:44:41 +0100
-Message-ID: <20180323154441.GE24361@lunn.ch>
-References: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/2] Keystone2 HW random generator
+Date: Sat, 24 Mar 2018 00:02:05 +0800
+Message-ID: <20180323160205.GD2186@gondor.apana.org.au>
+References: <1520962411-18208-1-git-send-email-vitalya@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
+In-Reply-To: <1520962411-18208-1-git-send-email-vitalya@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, marcel@holtmann.org, devicetree@vger.kernel.org, madalin.bucur@nxp.com, alexandru.marginean@nxp.com
+To: Vitaly Andrianov <vitalya@ti.com>
+Cc: mpm@selenic.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, t-kristo@ti.com, m-karicheri2@ti.com
 List-Id: devicetree@vger.kernel.org
 
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -24,6 +24,8 @@
->  
->  #define DEFAULT_GPIO_RESET_DELAY	10	/* in microseconds */
->  
-> +struct phy_c45_device_ids mdio_c45_ids = {0};
+On Tue, Mar 13, 2018 at 01:33:29PM -0400, Vitaly Andrianov wrote:
+> Keyston2 Security Accelerator has a hardware random generator sub-module.
+> This series adds the driver for the sub-module.
+> 
+> Changes in v2:
+> - Changed subject prefix in 1/2 patch
+> - renamed dts node 
+> 
+> Vitaly Andrianov (2):
+>   dt-bindings: rng: add bindings doc for Keystone SA HWRNG driver
+>   hw_random: keystone2: add hw_random driver
+> 
+>  .../devicetree/bindings/rng/ks-sa-rng.txt          |  21 ++
+>  drivers/char/hw_random/Kconfig                     |   7 +
+>  drivers/char/hw_random/Makefile                    |   1 +
+>  drivers/char/hw_random/ks-sa-rng.c                 | 257 +++++++++++++++++++++
+>  4 files changed, 286 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/ks-sa-rng.txt
+>  create mode 100644 drivers/char/hw_random/ks-sa-rng.c
 
-You do know that Linux is multi-threaded. It could be probing two MDIO
-busses at once.
-
-	Andrew
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
