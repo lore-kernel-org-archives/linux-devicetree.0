@@ -1,62 +1,72 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 1/8] net: phy: Add initial support for Microsemi
- Ocelot internal PHYs.
-Date: Fri, 23 Mar 2018 21:29:42 +0100
-Message-ID: <20180323202942.GR24361@lunn.ch>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-2-alexandre.belloni@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH v5 1/2] dt-bindings: net: Add bindings for National Instruments XGE netdev
+Date: Fri, 23 Mar 2018 13:41:27 -0700
+Message-ID: <20180323204128.29783-1-mdf@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180323201117.8416-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+To: davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 09:11:10PM +0100, Alexandre Belloni wrote:
-> Add Microsemi Ocelot internal PHY ids. For now, simply use the genphy
-> functions but more features are available.
-> 
-> Cc: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/net/phy/mscc.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-> index 650c2667d523..e1ab3acd1cdb 100644
-> --- a/drivers/net/phy/mscc.c
-> +++ b/drivers/net/phy/mscc.c
-> @@ -91,6 +91,7 @@ enum rgmii_rx_clock_delay {
->  #define SECURE_ON_PASSWD_LEN_4		  0x4000
->  
->  /* Microsemi PHY ID's */
-> +#define PHY_ID_OCELOT			  0x00070540
->  #define PHY_ID_VSC8530			  0x00070560
->  #define PHY_ID_VSC8531			  0x00070570
->  #define PHY_ID_VSC8540			  0x00070760
-> @@ -658,6 +659,19 @@ static int vsc85xx_probe(struct phy_device *phydev)
->  
->  /* Microsemi VSC85xx PHYs */
->  static struct phy_driver vsc85xx_driver[] = {
-> +{
-> +	.phy_id		= PHY_ID_OCELOT,
-> +	.name		= "Microsemi OCELOT",
-> +	.phy_id_mask    = 0xfffffff0,
-> +	.features	= PHY_GBIT_FEATURES,
+This adds bindings for the NI XGE 1G/10G network device.
 
-No interrupt support? In fact, the only advantage i see this brings
-over the generic driver is that the name Microsemi OCELOT is printed.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+---
+Changes from v4:
+- None
 
-     Andrew
+Changes from v3:
+- Added Rob's Reviewed-by
 
-> +	.soft_reset	= &genphy_soft_reset,
-> +	.config_init	= &genphy_config_init,
-> +	.config_aneg	= &genphy_config_aneg,
-> +	.aneg_done	= &genphy_aneg_done,
-> +	.read_status	= &genphy_read_status,
-> +	.suspend	= &genphy_suspend,
-> +	.resume		= &genphy_resume,
-> +},
+Changes from v2:
+- Addressed Rob's comments w.r.t to IRQ names and typo
+
+Changes from v1:
+- Corrected from nixge -> nixge.txt
+
+---
+ Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
+
+diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+new file mode 100644
+index 000000000000..e55af7f0881a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nixge.txt
+@@ -0,0 +1,32 @@
++* NI XGE Ethernet controller
++
++Required properties:
++- compatible: Should be "ni,xge-enet-2.00"
++- reg: Address and length of the register set for the device
++- interrupts: Should contain tx and rx interrupt
++- interrupt-names: Should be "rx" and "tx"
++- phy-mode: See ethernet.txt file in the same directory.
++- phy-handle: See ethernet.txt file in the same directory.
++- nvmem-cells: Phandle of nvmem cell containing the MAC address
++- nvmem-cell-names: Should be "address"
++
++Examples (10G generic PHY):
++	nixge0: ethernet@40000000 {
++		compatible = "ni,xge-enet-2.00";
++		reg = <0x40000000 0x6000>;
++
++		nvmem-cells = <&eth1_addr>;
++		nvmem-cell-names = "address";
++
++		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "rx", "tx";
++		interrupt-parent = <&intc>;
++
++		phy-mode = "xgmii";
++		phy-handle = <&ethernet_phy1>;
++
++		ethernet_phy1: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			reg = <4>;
++		};
++	};
+-- 
+2.16.2
