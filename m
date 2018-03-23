@@ -1,7 +1,7 @@
 From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/6] powerpc/powernv: Create platform devs for nvdimm buses
-Date: Fri, 23 Mar 2018 19:12:08 +1100
-Message-ID: <20180323081209.31387-5-oohall@gmail.com>
+Subject: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
+Date: Fri, 23 Mar 2018 19:12:09 +1100
+Message-ID: <20180323081209.31387-6-oohall@gmail.com>
 References: <20180323081209.31387-1-oohall@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +21,65 @@ To: linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Scan the devicetree for an nvdimm-bus compatible and create
-a platform device for them.
+Add device-tree binding documentation for the nvdimm region driver.
 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/opal.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
 
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index c15182765ff5..a16f4b63ccf2 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -821,6 +821,9 @@ static int __init opal_init(void)
- 	/* Create i2c platform devices */
- 	opal_pdev_init("ibm,opal-i2c");
- 
-+	/* Handle non-volatile memory devices */
-+	opal_pdev_init("nvdimm-region");
+diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+new file mode 100644
+index 000000000000..02091117ff16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+@@ -0,0 +1,45 @@
++Device-tree bindings for NVDIMM memory regions
++-----------------------------------------------------
 +
- 	/* Setup a heatbeat thread if requested by OPAL */
- 	opal_init_heartbeat();
- 
++Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
++that retains its contents across power cycles. In more practical terms, they
++are kind of storage device where the contents can be accessed by the CPU
++directly, rather than indirectly via a storage controller or similar. The an
++nvdimm-region specifies a physical address range that is hosted on an NVDIMM
++device.
++
++Bindings for the region nodes:
++-----------------------------
++
++Required properties:
++	- compatible = "nvdimm-region"
++
++	- reg = <base, size>;
++		The system physical address range of this nvdimm region.
++
++Optional properties:
++	- Any relevant NUMA assocativity properties for the target platform.
++	- A "volatile" property indicating that this region is actually in
++	  normal DRAM and does not require cache flushes after each write.
++
++A complete example:
++--------------------
++
++/ {
++	#size-cells = <2>;
++	#address-cells = <2>;
++
++	platform {
++		region@5000 {
++			compatible = "nvdimm-region;
++			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
++
++		};
++
++		region@6000 {
++			compatible = "nvdimm-region";
++			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
++			volatile;
++		};
++	};
++};
 -- 
 2.9.5
