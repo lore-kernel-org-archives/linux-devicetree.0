@@ -1,95 +1,41 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be requested
-Date: Fri, 23 Mar 2018 09:21:47 -0700
-Message-ID: <152182210780.178046.13284917877743312593@swboyd.mtv.corp.google.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] pinctrl: qcom: Don't allow protected pins to be
+ requested
+Date: Fri, 23 Mar 2018 11:25:31 -0500
+Message-ID: <9edb00e7-51e3-68f7-c606-333b7d57d602@codeaurora.org>
 References: <20180321165848.89751-1-swboyd@chromium.org>
  <20180321165848.89751-4-swboyd@chromium.org>
  <97380342-c3aa-5d34-7b22-f6ebbab4bafe@codeaurora.org>
  <1521804964.23017.96.camel@linux.intel.com>
+ <152182210780.178046.13284917877743312593@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521804964.23017.96.camel@linux.intel.com>
+In-Reply-To: <152182210780.178046.13284917877743312593@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Timur Tabi <timur@codeaurora.org>
+To: Stephen Boyd <swboyd@chromium.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>
 Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andy Shevchenko (2018-03-23 04:36:04)
-> On Thu, 2018-03-22 at 19:16 -0500, Timur Tabi wrote:
-> > On 03/21/2018 11:58 AM, Stephen Boyd wrote:
-> > > +static int msm_gpio_init_valid_mask(struct gpio_chip *chip,
-> > > +                               struct msm_pinctrl *pctrl)
-> > > +{
-> > > +   int ret;
-> > > +   unsigned int len, i;
-> > > +   unsigned int max_gpios =3D pctrl->soc->ngpios;
-> > > +
-> > > +   /* The number of GPIOs in the ACPI tables */
-> > > +   ret =3D device_property_read_u16_array(pctrl->dev, "gpios",
-> > > NULL, 0);
-> > > +   if (ret > 0 && ret < max_gpios) {
-> > =
+On 03/23/2018 11:21 AM, Stephen Boyd wrote:
+> I'll send the updated patches now.
 
-> > This needs to be ret <=3D max_gpios, otherwise it will fail if every
-> > GPIO =
+Thanks.
 
-> > is available.
-> > =
+BTW, I just discovered that the static globals in pinctrl-msm are 
+breaking the ability to support more than one TLMM:
 
-> > And it should print an error message and return an error code if ret
-> > > =
+static struct pinctrl_desc msm_pinctrl_desc = {
 
-> > max_gpios.
-> =
+static struct irq_chip msm_gpio_irq_chip = {
 
-> Perhaps makes sense to do the opposite condition
-> =
+static struct msm_pinctrl *poweroff_pctrl;
 
-> if (ret < 0 || ret > max_gpios) {
->  ... error handling ...
-> }
-> =
+I'm going to have to fix all of these.
 
-
-Indeed. I already rewrote it like this two days ago:
-
-static int msm_gpio_init_valid_mask(struct gpio_chip *chip,
-                                   struct msm_pinctrl *pctrl)
-{
-       int ret;
-       unsigned int len, i;
-       unsigned int max_gpios =3D pctrl->soc->ngpios;
-       u16 *tmp;
-
-       /* The number of GPIOs in the ACPI tables */
-       len =3D ret =3D device_property_read_u16_array(pctrl->dev, "gpios",
-ULL, 0);
-       if (ret < 0)
-               return 0;
-
-       if (ret > max_gpios)
-               return -EINVAL;
-
-       tmp =3D kmalloc_array(len, sizeof(*tmp), GFP_KERNEL);
-       if (!tmp)
-               return -ENOMEM;
-
-       ret =3D device_property_read_u16_array(pctrl->dev, "gpios", tmp,
-en);
-       if (ret < 0) {
-               dev_err(pctrl->dev, "could not read list of GPIOs\n");
-               goto out;
-       }
-
-       bitmap_zero(chip->valid_mask, max_gpios);
-       for (i =3D 0; i < len; i++)
-               set_bit(tmp[i], chip->valid_mask);
-
-out:
-       kfree(tmp);
-       return ret;
-}
-
-I'll send the updated patches now.
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
