@@ -1,67 +1,97 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v8 09/14] dt-bindings: iommu/rockchip: Add clock property
-Date: Fri, 23 Mar 2018 15:38:09 +0800
-Message-ID: <20180323073814.5802-10-jeffy.chen@rock-chips.com>
-References: <20180323073814.5802-1-jeffy.chen@rock-chips.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Fri, 23 Mar 2018 09:53:25 +0200
+Message-ID: <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+ <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+ <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+ <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
+ <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180323073814.5802-1-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Add clock property, since we are going to control clocks in rockchip
-iommu driver.
-
-Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
-
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- Documentation/devicetree/bindings/iommu/rockchip,iommu.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-index 2098f7732264..6ecefea1c6f9 100644
---- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-+++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-@@ -14,6 +14,11 @@ Required properties:
-                     "single-master" device, and needs no additional information
-                     to associate with its master device.  See:
-                     Documentation/devicetree/bindings/iommu/iommu.txt
-+- clocks          : A list of clocks required for the IOMMU to be accessible by
-+                    the host CPU.
-+- clock-names     : Should contain the following:
-+	"iface" - Main peripheral bus clock (PCLK/HCL) (required)
-+	"aclk"  - AXI bus clock (required)
- 
- Optional properties:
- - rockchip,disable-mmu-reset : Don't use the mmu reset operation.
-@@ -27,5 +32,7 @@ Example:
- 		reg = <0xff940300 0x100>;
- 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "vopl_mmu";
-+		clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
-+		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
- 	};
--- 
-2.11.0
+SGkgUm9iLAoKT24gMjMvMDMvMTggMDM6MjMsIFJvYiBIZXJyaW5nIHdyb3RlOgoKPj4gT2ssIEkg
+dGhpbmsgdGhlIGRlc2NyaXB0aW9uIHdhcyBhIGJpdCB1bmNsZWFyLiBTbywgdGhlIGRyaXZlciBj
+YW4gZG8KPj4gdGhpcyBqdXN0IGZpbmUsIGl0IGNhbiByZXNlcnZlIGh3IHBsYW5lcyBkeW5hbWlj
+YWxseSB3aGVuIG5lZWRlZC4gVGhlCj4+IHByb2JsZW0gaXMgdGhlIHVzZXJzcGFjZS4KPj4KPj4g
+V2hlbiBhIERSTSBhcHBsaWNhdGlvbiBzdGFydHMsIGl0IHNlZXMgYSBidW5jaCBvZiBwbGFuZXMs
+IGFuZCBjYW4gc2VlIG9uCj4+IHdoaWNoIGNydGNzIGVhY2ggcGxhbmUgY2FuIGJlIHVzZWQuIFRo
+ZSBleHBlY3RhdGlvbiBpcywgb2YgY291cnNlLCB0aGF0Cj4+IHRoZXNlIHBsYW5lcyBjYW4gYmUg
+dXNlZCBub3JtYWxseS4gSWYgdGhlIGRyaXZlciB3b3VsZCBkeW5hbWljYWxseQo+PiByZXNlcnZl
+IGFuIGFkZGl0aW9uYWwsIGN1cnJlbnRseSB1bnVzZWQgcGxhbmUsIHRoZSB1c2Vyc3BhY2Ugd291
+bGQgYmUKPj4gdG90YWxseSBiYWZmbGVkLCBhcyBpdCBmYWlscyB0byBjb25maWd1cmUgYmFzaWMg
+cGxhbmUgc2V0dXBzLgo+Pgo+PiBGb3IgZXhhbXBsZSwgdGhlIHVzZXJzcGFjZSBjb3VsZCBzZWUg
+dGhhdCB0aGVyZSBhcmUgdHdvIHBsYW5lcywgdXNhYmxlCj4+IG9uIExDRCBhbmQgSERNSSBjcnRj
+cy4gQnV0IG15c3RlcmlvdXNseSBtb2Rlc2V0dGluZyB3b3VsZCBzb21ldGltZXMgZmFpbAo+PiBp
+ZiB0aGUgSERNSSBpcyAyaysgZGlzcGxheS4gU2V0dGluZyB1cCBhIHBsYW5lIG9uIHRoZSBIRE1J
+IHdvdWxkIHdvcmssCj4+IGV4Y2VwdCB3aGVuIHRoZSBMQ0QgYWxyZWFkeSBoYXMgYSBwbGFuZS4g
+U2V0dGluZyB1cCB0d28gcGxhbmVzIG9uIHRoZQo+PiBMQ0Qgd291bGQgd29yaywgYnV0IG1vdmlu
+ZyBvbmUgb3IgYm90aCBwbGFuZXMgdG8gdGhlIEhETUkgd291bGQgZmFpbC4gRXRjLgo+IAo+IEkg
+c3VzcGVjdCB0aGlzIGlzIGEgY29tbW9uIHByb2JsZW0uIE5vdCBiZWNhdXNlIHRoZSBoL3cgcmVx
+dWlyZXMKPiBkaWZmZXJlbnQgYWxsb2NhdGlvbiBvZiBwbGFuZXMsIGJ1dCBiZWNhdXNlIHRoZSBt
+ZW1vcnkgYmFuZHdpZHRoIGNhbid0Cj4gaGFuZGxlIGhhdmluZyBhIDJuZCBwbGFuZSBpZiB0aGUg
+cmVzb2x1dGlvbiBpcyBhYm92ZSBhIGNlcnRhaW4KPiBzaXplL2RlcHRoLiBTbyB3aGlsZSB0aGUg
+cGxhbmUgZG9lc24ndCBkaXNhcHBlYXIsIHRoZSBlZmZlY3QgaXMgdGhlCj4gc2FtZS4gSG93IGRv
+ZXMgRFJNIGhhbmRsZSB0aGlzPwoKSSBkb24ndCB0aGluayBEUk0gaGFuZGxlcyB0aGlzLiBFYWNo
+IGRyaXZlciBjYW4gcHJvYmFibHkgZmlsdGVyIG91dAp2aWRlb21vZGVzIHdoaWNoIGl0IGtub3dz
+IGNhbid0IGJlIHVzZWQgZXZlbiB3aXRoIHNpbmdsZSBwbGFuZSAod2UgZG8KdGhpcyBvbiBvbWFw
+ZHJtKSwgYW5kIGFsc28gY2FuIGdpdmUgYW4gZXJyb3IgaWYgdGhlIHBsYW5lIHNldHVwIHdvdWxk
+CnJlc3VsdCBpbiB0b28gaGlnaCBiYW5kd2lkdGggdXNlLgoKU28geWVzLCBwbGFuZSBzZXR1cHMg
+Y2FuIGFsd2F5cyBmYWlsLCAibXlzdGVyaW91c2x5IiBmcm9tIHVzZXJzcGFjZSdzCnBlcnNwZWN0
+aXZlLiBCdXQgSSBkb24ndCB0aGluayBpdCdzIGV4YWN0bHkgY29tcGFyYWJsZSB0byB0aGlzIG9u
+ZS4gVGhlCmRpZmZlcmVuY2UgaXMgdGhhdCBpbiB0aGlzIGNhc2Ugd2UgY2FuIGF2b2lkIGFsbCB0
+aGUgdXNlcnNwYWNlIGlzc3Vlcwp3aXRoIGEgc2ltcGxlIHN0YXRpYyBwbGFuZSBwYXJ0aXRpb25p
+bmcgZG9uZSBhdCBwcm9iZSB0aW1lLCBidXQgSSBjYW4ndApzZWUgaG93IHRoZSBiYW5kd2lkdGgg
+aXNzdWUgY291bGQgYmUgc29sdmVkIGluIGEgc2ltaWxhciB3YXkuCgo+PiBXZSBjb3VsZCwgb2Yg
+Y291cnNlLCBjb252ZXkgdGhpcyBpbmZvcm1hdGlvbiB0byB0aGUgdXNlcnNwYWNlIGF0IHJ1bnRp
+bWUKPj4gdmlhIHRoZSBEUk0gcHJvcGVydGllcywgYnV0IHRoZW4gaXQgd291bGQgbWVhbiB3ZSdk
+IG5lZWQgY3VzdG9taXplZAo+PiBhcHBsaWNhdGlvbnMuCj4+Cj4+IFNvLCBhcyBmYXIgYXMgSSBj
+YW4gc2VlLCBrZWVwaW5nIG5vcm1hbCBEUk0gYmVoYXZpb3Igd2l0aCAyaysgZGlzcGxheXMKPj4g
+b24gT01BUCBEU1MgcmVxdWlyZXMgYSBzdGF0aWMgdmlydHVhbCBwbGFuZSBzZXR1cC4gVGhlIG1v
+c3Qgc2ltcGxlIHNldHVwCj4+IHdvdWxkIGJlIHRvIGp1c3Qgc3BsaXQgdGhlIG51bWJlciBvZiBh
+dmFpbGFibGUgcGxhbmVzIGJ5IDIsIGJ1dCB0aGVuIGluCj4+IG1hbnkgdXNlIGNhc2VzIHRoYXQg
+d2FzdGVzIG9uZSBodyBwbGFuZS4KPiAKPiBGb3IgSERNSSwgeW91IGNhbid0IGtub3cgaW4gYWR2
+YW5jZSB3aGF0IHJlc29sdXRpb24gd2lsbCBiZS4gU28gSQo+IHRoaW5rIHlvdSBhbHdheXMgbmVl
+ZCB0byByZXNlcnZlIDIgcGxhbmVzLiBOb3csIGlmIHlvdSB3YW50IHRvIHJlZHVjZQoKV2UgY2Fu
+IGRlY2lkZSBub3QgdG8gc3VwcG9ydCAyaysgcmVzb2x1dGlvbnMgZm9yIEhETUksIHdoaWNoLCB3
+aXRoIHRoaXMKc2VyaWVzLCBoYXBwZW5zIGJ5IG5vdCByZXNlcnZpbmcgZHVhbC1wbGFuZSBmb3Ig
+dGhlIEhETUkuCgo+IHRoZSBtYXggcmVzb2x1dGlvbiBmb3Igc29tZSByZWFzb24sIEkgZ3Vlc3Mg
+d2UgY291bGQgaGF2ZSBwcm9wZXJ0aWVzCj4gZm9yIHRoYXQuIFRoYXQgd291bGQgYmUgbW9yZSBn
+ZW5lcmljIGFuZCB3b3JrIHdoZXRoZXIgeW91IG5lZWQgdG8KPiBjaGFuZ2UgcGxhbmUgYWxsb2Nh
+dGlvbiBvciBoYXZlIGEgbGltaXQgZm9yIG90aGVyIHJlYXNvbnMuCj4gCj4gRm9yIGF0dGFjaGVk
+IHBhbmVscywgeW91IGtub3cgdGhlIHJlc29sdXRpb24gdXAgZnJvbnQgYW5kIGNhbiBhbGxvY2F0
+ZQo+IHBsYW5lcyBiZWZvcmUgdGhlIHVzZXJzcGFjZSBpbnRlcmZhY2UgaXMgdXAuCgpCdXQgcmVz
+ZXJ2ZSBob3cgbWFueSBvZiB0aGUgcGxhbmVzPyBXZSBoYXZlIE4gcGxhbmVzIGFuZCBNIGRpc3Bs
+YXlzLiBGb3IKc29tZSBvZiB0aGUgZGlzcGxheXMgd2Uga25vdyB0aGV5J3JlIDJrKywgc29tZSBh
+cmUga25vd24gdG8gYmUgLTJrIGFuZApzb21lIGFyZSB1bmtub3duLiBUaGUgZHJpdmVyIGNhbid0
+IGluZGVwZW5kZW50bHkgbWFrZSBhbnkgc2Vuc2libGUKc3RhdGljIHJlc2VydmF0aW9uIG9mIHRo
+ZSBwbGFuZXMgZm9yIHRoZSBkaXNwbGF5cywgYmVjYXVzZSBpdCBkb2Vzbid0Cmtub3cgd2hhdCB0
+aGUgdXNlciB3YW50cyB0byBkby4KClNvIGVpdGhlciB3ZSByZXNlcnZlIHRoZSBleHRyYSBwbGFu
+ZXMgYXQgcnVudGltZSBvbiBkZW1hbmQsIG1ha2luZyBpdApkaWZmaWN1bHQgdG8gbWFuYWdlIGZv
+ciB0aGUgdXNlcnNwYWNlLCBvciB3ZSByZWx5IG9uIHRoZSB1c2VyIHRvIGdpdmUKdGhlIGRyaXZl
+ciBhIHN0YXRpYyBwYXJ0aXRpb25pbmcgb2YgdGhlIHBsYW5lcyBhY2NvcmRpbmcgdG8gdGhlIHVz
+ZXIncwp1c2UgY2FzZS4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
+UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAw
+NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
