@@ -1,151 +1,62 @@
-Return-Path: <SRS0=b15J=GN=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v5 1/5] dt-bindings: soc: qcom: Add device tree binding for GENI SE
-Date: Fri, 23 Mar 2018 14:20:57 -0600
-Message-Id: <1521836461-6515-2-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
-References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+Return-Path: <SRS0=8UYE=GN=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH 1/5] usb: typec: tcpm: source pdo selection update
+Date: Fri, 23 Mar 2018 10:50:14 +0000
+Message-ID: <VI1PR0402MB391768ED90A654D533F4AD5789A80@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1521541570-25363-1-git-send-email-jun.li@nxp.com>
+ <1521541570-25363-2-git-send-email-jun.li@nxp.com>
+ <adaf1af5-d8f4-6b8c-7258-3cb75bedc9ad@redhat.com>
+ <VI1PR0402MB39177169CD440072D318B61D89AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB39177169CD440072D318B61D89AA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Hans de Goede <hdegoede@redhat.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding support for the QCOM GENI SE driver.
-
-Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 119 +++++++++++++++++++++
- 1 file changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-new file mode 100644
-index 0000000..d330c73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-@@ -0,0 +1,119 @@
-+Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
-+
-+Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
-+is a programmable module for supporting a wide range of serial interfaces
-+like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
-+Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
-+Wrapper controller is modeled as a node with zero or more child nodes each
-+representing a serial engine.
-+
-+Required properties:
-+- compatible:		Must be "qcom,geni-se-qup".
-+- reg:			Must contain QUP register address and length.
-+- clock-names:		Must contain "m-ahb" and "s-ahb".
-+- clocks:		AHB clocks needed by the device.
-+
-+Required properties if child node exists:
-+- #address-cells: 	Must be <1> for Serial Engine Address
-+- #size-cells: 		Must be <1> for Serial Engine Address Size
-+- ranges: 		Must be present
-+
-+Properties for children:
-+
-+A GENI based QUP wrapper controller node can contain 0 or more child nodes
-+representing serial devices.  These serial devices can be a QCOM UART, I2C
-+controller, SPI controller, or some combination of aforementioned devices.
-+Please refer below the child node definitions for the supported serial
-+interface protocols.
-+
-+Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
-+
-+Required properties:
-+- compatible:		Must be "qcom,geni-i2c".
-+- reg: 			Must contain QUP register address and length.
-+- interrupts: 		Must contain I2C interrupt.
-+- clock-names: 		Must contain "se".
-+- clocks: 		Serial engine core clock needed by the device.
-+- #address-cells:	Must be <1> for I2C device address.
-+- #size-cells:		Must be <0> as I2C addresses have no size component.
-+
-+Optional property:
-+- clock-frequency:	Desired I2C bus clock frequency in Hz.
-+			When missing default to 400000Hz.
-+
-+Child nodes should conform to I2C bus binding as described in i2c.txt.
-+
-+Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
-+
-+Required properties:
-+- compatible:		Must be "qcom,geni-debug-uart".
-+- reg: 			Must contain UART register location and length.
-+- interrupts: 		Must contain UART core interrupts.
-+- clock-names:		Must contain "se".
-+- clocks:		Serial engine core clock needed by the device.
-+
-+Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
-+
-+Required properties:
-+- compatible:		Must contain "qcom,geni-spi".
-+- reg:			Must contain SPI register location and length.
-+- interrupts:		Must contain SPI controller interrupts.
-+- clock-names:		Must contain "se".
-+- clocks:		Serial engine core clock needed by the device.
-+- spi-max-frequency:	Specifies maximum SPI clock frequency, units - Hz.
-+- #address-cells:	Must be <1> to define a chip select address on
-+			the SPI bus.
-+- #size-cells:		Must be <0>.
-+
-+SPI slave nodes must be children of the SPI master node and conform to SPI bus
-+binding as described in Documentation/devicetree/bindings/spi/spi-bus.txt.
-+
-+Example:
-+	geniqup@8c0000 {
-+		compatible = "qcom,geni-se-qup";
-+		reg = <0x8c0000 0x6000>;
-+		clock-names = "m-ahb", "s-ahb";
-+		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-+			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		i2c0: i2c@a94000 {
-+			compatible = "qcom,geni-i2c";
-+			reg = <0xa94000 0x4000>;
-+			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "se";
-+			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&qup_1_i2c_5_active>;
-+			pinctrl-1 = <&qup_1_i2c_5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		uart0: serial@a88000 {
-+			compatible = "qcom,geni-debug-uart";
-+			reg = <0xa88000 0x7000>;
-+			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "se";
-+			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&qup_1_uart_3_active>;
-+			pinctrl-1 = <&qup_1_uart_3_sleep>;
-+		};
-+
-+		spi0: spi@a84000 {
-+			compatible = "qcom,geni-spi";
-+			reg = <0xa84000 0x4000>;
-+			interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "se";
-+			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&qup_1_spi_2_active>;
-+			pinctrl-1 = <&qup_1_spi_2_sleep>;
-+			spi-max-frequency = <19200000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	}
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSnVuIExpDQo+IFNlbnQ6
+IDIwMTjlubQz5pyIMjHml6UgMTk6MTQNCj4gVG86IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJl
+ZGhhdC5jb20+OyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gaGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVs
+LmNvbTsgbGludXhAcm9lY2stdXMubmV0OyBybWZyZnNAZ21haWwuY29tOw0KPiB5dWV5YW8uemh1
+QGdtYWlsLmNvbQ0KPiBDYzogbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJFOiBbUEFUQ0ggMS81XSB1c2I6IHR5cGVjOiB0Y3BtOiBzb3VyY2UgcGRvIHNlbGVj
+dGlvbiB1cGRhdGUNCj4gDQo+IEhpDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+PiBGcm9tOiBIYW5zIGRlIEdvZWRlIFttYWlsdG86aGRlZ29lZGVAcmVkaGF0LmNvbV0NCj4gPiBT
+ZW50OiAyMDE45bm0M+aciDIw5pelIDIwOjI3DQo+ID4gVG86IEp1biBMaSA8anVuLmxpQG54cC5j
+b20+OyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gPiByb2JoK2R0QGtlcm5lbC5vcmc7
+IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5j
+b207IGxpbnV4QHJvZWNrLXVzLm5ldDsgcm1mcmZzQGdtYWlsLmNvbTsNCj4gPiB5dWV5YW8uemh1
+QGdtYWlsLmNvbQ0KPiA+IENjOiBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsNCj4gPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
+PiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS81XSB1c2I6IHR5cGVjOiB0Y3BtOiBzb3VyY2UgcGRv
+IHNlbGVjdGlvbiB1cGRhdGUNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gT24gMjAtMDMtMTggMTE6
+MjYsIExpIEp1biB3cm90ZToNCj4gPiA+IEluc3RlYWQgb2Ygb25seSBjb21wYXJlIGJldHdlZW4g
+dGhlIHNhbWUgcGRvIHR5cGUgb2Ygc2luayBhbmQNCj4gPiA+IHNvdXJjZSwgdGhpcyBwYXRjaCB1
+cGRhdGUgdGhlIHNvdXJjZSBwZG8gc2VsZWN0aW9uIGJ5IGNoZWNraW5nIHRoZQ0KPiA+ID4gc291
+cmNlIHBkbyB2b2x0YWdlIHJhbmdlIGlzIHdpdGhpbiB0aGF0IG9mIHNpbmsuDQo+ID4gPg0KPiA+
+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPg0KPiA+IFRoaXMg
+cGF0Y2ggYXBwbGllcyBvbiB0b3Agb2YgdGhlIGJyb2tlbiByZXZlcnRlZCBjb21taXQsIGJ1dCB0
+aGUNCj4gPiByZXZlcnQgaGFzIGFscmVhZHkgYmVlbiBtZXJnZWQgYnkgTGludXM6DQo+ID4NCj4g
+PiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0
+dHBzJTNBJTJGJTJGZ2l0DQo+ID4gLmtlDQo+ID4NCj4gcm5lbC5vcmclMkZwdWIlMkZzY20lMkZs
+aW51eCUyRmtlcm5lbCUyRmdpdCUyRnRvcnZhbGRzJTJGbGludXguZ2l0JTINCj4gPg0KPiBGY29t
+bWl0JTJGZHJpdmVycyUyRnVzYiUyRnR5cGVjJTNGaWQlM0Q2ZjU2NmFmMzQ2Mjg5N2ZjNzQzZTNh
+ZjZlYQ0KPiA+DQo+IDhjYzc5MGExMzE0OGJhJmRhdGE9MDIlN0MwMSU3Q2p1bi5saSU0MG54cC5j
+b20lN0MxODhmMmNkZmE1ZWI0NGFmDQo+ID4NCj4gZDI3ODA4ZDU4ZTVkZDEzYyU3QzY4NmVhMWQz
+YmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlNw0KPiA+DQo+IEM2MzY1NzE0NTU5NTkz
+NjEwNTYmc2RhdGE9Q2puc0cwcnhJZkpubTBLMnRReURiRnhJUDRBbHMlMkJUVDI0M0ZoDQo+ID4g
+eTdVWXlJJTNEJnJlc2VydmVkPTANCj4gPg0KPiA+IFRoaXMgY29tbWl0IGlzIG5vdCBpbiB1c2It
+bmV4dCBiZWNhdXNlIGl0IHdlbnQgaW50byA0LjE2IGFzIGZpeCBhZnRlciA0LjE2LXJjMS4NCj4g
+PiBBcyBhbHJlYWR5IG1lbnRpb25lZCBpbiBhbm90aGVyIHJocmVhZCB0aGlzIG5lZWRzIHRvIGJl
+IGJhY2stbWVyZ2VkDQo+ID4gaW50byB1c2ItbmV4dC4NCj4gPg0KPiA+IFNvIHRoaXMgbmVlZHMg
+dG8gYmUgcmVzcHVuIHRvIGFwcGx5IG9uIHRvcCBvZiB0aGUgcmV2ZXJ0IHNvIHRoYXQgaXQNCj4g
+PiBjYW4gYmUgbWVyZ2VkIHdpdGhvdXQgaXNzdWVzIHdpdGggVG9ydmFsZCdzIHRyZWUgbGF0ZXIu
+DQoNCldoYXQncyB0aGUgcHJvcGVyIHdheSB0byBkbyB0aGlzLCBzaG91bGQgSSByZS1wb3N0IHRo
+ZSBvcmlnaW5hbCByZXZlcnRlZA0KcGF0Y2ggYW5kIG15IHVwZGF0ZSBvbmUgYmFzZWQgb24gaXQo
+c28gMiBwYXRjaGVzKSwgb3IganVzdCBhIGNvbWJpbmF0aW9uDQoob25lIHBhdGNoKT8NCg0KSnVu
+DQo+IA0KPiBPSywgSSB3aWxsIGRvIHRoZSByZWJhc2UgaW4gdjIuDQo+IA0KPiBUaGFua3MNCj4g
+SnVuDQo=
