@@ -1,94 +1,59 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Sat, 24 Mar 2018 21:02:24 +0100
-Message-ID: <20180324200224.GA17857@amd>
-References: <20180309023750.108942-1-tony@atomide.com>
- <20180322135553.GA27648@amd>
- <20180322164633.GF5799@atomide.com>
- <20180322192843.GA17189@amd>
- <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
- <20180323105455.GB21644@amd>
- <20180323113521.45va72bhzis6ym6m@earth.universe>
- <20180323201343.GC23658@amd>
- <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
- <20180324142517.GA94954@atomide.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 01/11] i2c: Export of_i2c_get_board_info()
+Date: Sat, 24 Mar 2018 23:35:18 +0100
+Message-ID: <20180324223518.g5jsi5zvoxa75psy@ninjato>
+References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
+ <20180323110020.19080-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c5y2fzlvsrcqsj2d"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180324142517.GA94954@atomide.com>
+In-Reply-To: <20180323110020.19080-2-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Dan Williams <dcbw@redhat.com>, Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
 List-Id: devicetree@vger.kernel.org
 
 
---+HP7ph2BbKc20aGI
+--c5y2fzlvsrcqsj2d
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat 2018-03-24 07:25:17, Tony Lindgren wrote:
-> * Dan Williams <dcbw@redhat.com> [180324 14:00]:
-> > On Fri, 2018-03-23 at 21:13 +0100, Pavel Machek wrote:
-> > > Does ofonod work for you? I could not get that one to work...
-> >=20
-> > Because it's looking for a Gobi modem but the MDM6600 isn't one and
-> > doesn't expose that layout (and doesn't really need to anyway).  I
-> > don't think ofono has a generic QMI driver, so you'd either need to for
-> > ce it to use the telitqmi or quectelqmi drivers, or write your own
-> > generic QMI one.
->=20
-> We also get five USB uarts if we add the device id with something
-> like the patch below. I don't quite get why we get five UARTS?
+Hi Boris,
 
-Not sure, either. Often more than one uart is useful, you get AT
-commands on one, while GPRS data flow on some other.=20
+> - rebase on v4.15-rc1
 
-> Also not sure if we should be using drivers/usb/serial/qcaux.c
-> instead of qcserial.c?
->=20
-> And from what I recall trying it out, adding the USB UARTs
-> somehow confused ModemManager I think, that needs to be retested
-> though :)
->=20
-> And the USB UARTs added do not offer the same set of AT commands
-> as the n_gsm serial mux.
+This code has changed a little meanwhile. Please check my for-next
+branch. Some changes are identical, some similar.
 
-Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it seems
-to react to AT commands, and in particular reacts to ADT123; (; is
-important).
+> -	info.archdata = &dev_ad;
 
-AT+CMGF=3D1
-AT+CMGS=3D"123"
-foo^Z
+Why did you drop this?
 
-Works for SMS sending. Good.
+Regards,
 
-(And... Thanks!)
+   Wolfram
 
-Now, if someone knows what needs to be done to get GSM audio working,
-let me know. That's something I'd really like.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---+HP7ph2BbKc20aGI
+--c5y2fzlvsrcqsj2d
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlq2rtAACgkQMOfwapXb+vIfzwCfbqg02z0w/RbRCCJLVbkTsu7v
-8doAn2cEZIYwoYurIUkBq7xfk5hI/gLE
-=mWT6
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlq20qIACgkQFA3kzBSg
+KbYuOQ//Q55O04/Ag8K+cDd7xM96TrhMguQI2QChKgKVFjYNQl9gjofsCr6+Z1NZ
+DTd8xi+J7vNUYQZyh5gJRzqQ31PaDH1CLKUKY1xvg5GEP80MyV3+cUYvz28mNgYS
+nfnbwUj2KFZcl/GdVLNg8zf3N2YOpJALkZeg/91IQQ1CPq1a4ZyO4Az2RLuJ5UMx
+gZGEPPacNHNV5VdBaOrUWYtP2TFHzaeiPrXLj1LwaHcOSrmDRoyBaXSnDTR305ow
+fB9P2lpxx/ETe3wHMk0h7UlC467qd4Im/6Rf0yM3IjOfxEXG5KZ8BsmEgLpzaa3Q
+hl/KivRMz63F+rtyniyTvFyySRplp4Yge5cX17RhnGIEGseW2MOgWCMzymm41apF
+01niaIDW4wQC4xqO9HunLEGCky9xZOxf8K3S3KiErX9XyRkphrG8DHXFkGhfg0Dk
+HNjVl9vONd/Y5pTf0gPBEkObcTUusvOGmm9HGhbbP3wHzyu2gHToCoQFV0f4yiwH
+VFKxE4WJkauSE/omX0xp6nNjdm0wA1oHUjvmwMj6pKS18Vni70yDRdWiWhh41T0f
+k4ldm6iupWPrjaFcVaJ+MgB5BE03ismMpGstvSV9+DDB7FTAQzXr4TECEpTgJlDC
+eS9G+JnJzaX1vBesKWIpvNFG1gEJKR6sEjVM0UXQVwbLH7W7Fbs=
+=A+ZD
 -----END PGP SIGNATURE-----
 
---+HP7ph2BbKc20aGI--
+--c5y2fzlvsrcqsj2d--
