@@ -1,57 +1,106 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCHv2 0/3] dw-hdmi: add property to disable CEC
-Date: Sat, 24 Mar 2018 14:41:38 +0100
-Message-ID: <3F857A55-296E-4AFF-8375-3165D0B3DAB4@baylibre.com>
-References: <20180323125915.13986-1-hverkuil@xs4all.nl>
- <CAFBinCA-x=4J_a_+oJX7fxhXO0qP=apEPFesATP=UNsH91qiCw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFBinCA-x=4J_a_+oJX7fxhXO0qP=apEPFesATP=UNsH91qiCw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media <linux-media@vger.kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 0/3] iio: add unit converter
+Date: Sat, 24 Mar 2018 13:48:01 +0000
+Message-ID: <20180324134801.0e6254ee@archlinux>
+References: <20180319170246.26830-1-peda@axentia.se>
+        <20180323141401.000031cc@huawei.com>
+        <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKPiBMZSAyNCBtYXJzIDIwMTggw6AgMTI6MDAsIE1hcnRpbiBCbHVtZW5zdGlu
-Z2wgPG1hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+IGEgw6ljcml0IDoKPiAKPiBI
-ZWxsbyBIYW5zLCBIaSBOZWlsLAo+IAo+IChhcG9sb2dpZXMgaW4gYWR2YW5jZSBpZiBhbnkgb2Yg
-dGhpcyBpcyB3cm9uZywgSSBkb24ndCBoYXZlIGFueSBDRUMKPiBjYXBhYmxlIFRWIHNvIEkgY2Fu
-J3QgdGVzdCBpdCkKPiAKPiBPbiBGcmksIE1hciAyMywgMjAxOCBhdCAxOjU5IFBNLCBIYW5zIFZl
-cmt1aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD4gd3JvdGU6Cj4+IEZyb206IEhhbnMgVmVya3VpbCA8
-aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4gCj4+IFNvbWUgYm9hcmRzIChhbWxvZ2ljKSBoYXZl
-IHR3byBDRUMgY29udHJvbGxlcnM6IHRoZSBEZXNpZ25XYXJlIGNvbnRyb2xsZXIKPj4gYW5kIHRo
-ZWlyIG93biBDRUMgY29udHJvbGxlciAobWVzb24gYW8tY2VjKS4KPiBhcyBmYXIgYXMgSSB1bmRl
-cnN0YW5kIHRoZSBBbWxvZ2ljIE1lc29uIFNvQ3MgaGF2ZSB0d28gZG9tYWluczoKPiAtIEFPIChh
-bHdheXMtb24sIHBvd2VyZWQgZXZlbiBpbiBzdXNwZW5kIG1vZGUpIHdoZXJlIG1lc29uLWFvLWNl
-YyBjYW4KPiB3YWtlIHVwIHRoZSBzeXN0ZW0gZnJvbSBzdXNwZW5kCj4gLSBFRSAoZXZlcnl0aGlu
-ZyBlbHNlLCBub3QgcG93ZXJlZCBkdXJpbmcgc3VzcGVuZCkgd2hlcmUgZHctaGRtaS1jZWMgbGl2
-ZXMKPiAKCkV4YWN0LCBleGNlcHQg4oCmIHRoZSBFRSBDRUMgaXMgbm90IGhvb2tlZCB0byB0aGUg
-RFctSERNSSBUWCBidXQgdGhlIFJYLCBhbmQgdGh1cyBjYW5ub3QgYmUgdXNlZCBvbiBHWEJCL0dY
-TC9HWE0uCgo+IHRoaXMgZmFyIGV2ZXJ5dGhpbmcgaXMgT0sKPiAKPj4gU2luY2UgdGhlIENFQyBs
-aW5lIGlzIG5vdCBob29rZWQgdXAgdG8gdGhlIERXIGNvbnRyb2xsZXIgd2UgbmVlZCBhIHdheQo+
-PiB0byBkaXNhYmxlIHRoYXQgY29udHJvbGxlci4gVGhpcyBwYXRjaCBzZXJpZXMgYWRkcyB0aGUg
-Y2VjLWRpc2FibGUKPj4gcHJvcGVydHkgZm9yIHRoYXQgcHVycG9zZS4KPiBkcml2ZXJzL3BpbmN0
-cmwvbWVzb24vcGluY3RybC1tZXNvbi1neGJiLmMgaGFzIGFvX2NlY19waW5zIGFuZAo+IGVlX2Nl
-Y19waW5zLCBib3RoIHVzZSBHUElPQU9fMTIKPiBkcml2ZXJzL3BpbmN0cmwvbWVzb24vcGluY3Ry
-bC1tZXNvbi1neGwuYyBoYXMgYW9fY2VjX3BpbnMgYW5kCj4gZWVfY2VjX3BpbnMsIGJvdGggdXNl
-IEdQSU9BT184Cj4gCj4gQE5laWw6IGRvIHlvdSBrbm93IGlmIHRoZSBDRUMgc2lnbmFsIHJvdXRp
-bmcgaXM6Cj4gYW9fY2VjX3BpbnMgLT4gbWVzb24tYW8tY2VjCj4gZWVfY2VjX3BpbnMgLT4gZHct
-aGRtaS1jZWMKCkl04oCZcyBob29rZWQgdG8gdGhlIERXLUhETUkgUlggSVAgdXNlZCBpbiB0aGUg
-VFYgU29Dcy4KCj4gCj4gSSdtIGN1cmlvdXMgYmVjYXVzZSBpZiBib3RoIENFQyBjb250cm9sbGVy
-cyBjYW4gYmUgdXNlZCB0aGVuIGl0IG1pZ2h0Cj4gYmUgd29ydGggbWVudGlvbmluZyB0aGlzIGlu
-IHRoZSBjb3Zlci1sZXR0ZXIgYW5kIHBhdGNoIGRlc2NyaXB0aW9uCj4gCgpJbml0aWFsbHkgSSB0
-aG91Z2h0IGl0IHdhcyBob29rZWQgdG8gdGhlIERXLUhETUkgVFgsIGJ1dCBubywgSSBndWVzcyBJ
-IHNob3VsZCByZW1vdmUgdGhlIGVlX2NlYyBwaW5tdXjigKYKCk5laWwKCj4gCj4gUmVnYXJkcwo+
-IE1hcnRpbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, 23 Mar 2018 14:59:41 +0100
+Peter Rosin <peda@axentia.se> wrote:
+
+> On 2018-03-23 14:14, Jonathan Cameron wrote:
+> > On Mon, 19 Mar 2018 18:02:43 +0100
+> > Peter Rosin <peda@axentia.se> wrote:
+> >   
+> >> Hi!
+> >>
+> >> This moves the iio-mux driver to a new category, since I think
+> >> it will be the single driver in that category forever, and now
+> >> I'm adding a new driver that is somewhat similar in nature...
+> >>
+> >> But that rename is not very interesting, it's just reshuffling.
+> >> It's the new driver that I need. Specifically, I need to allow
+> >> linear scaling and modification of the type of an io-channel.
+> >> I don't know exactly how that is accomplished in the best way,
+> >> but this is what I came up with.
+> >>
+> >> The use cases are an ADC hooked up to measure a "big" voltage by
+> >> looking at the midpoint of a voltage divider, and an ADC used
+> >> to measure the current by looking at the voltage over a resistor.
+> >>
+> >> Comments?  
+> > It is pretty much how I would have implemented it as well.
+> > 
+> > Will probably do a detailed review over the weekend.
+> > Not convinced entirely on the 'wrapper' naming though.
+> > Will think about it...  
+> 
+> Yeah, let's put 'Wrapper' in the crapper. Not married to it.
+> 
+> Miscellaneous?
+> 
+> So, not super-happy about that either. And maybe leave the mux
+> where it is? It's just that I have the feeling that the iio-mux
+> is never going to get any friends in its category, and the mux
+> and the unit-converter are kind of related in that they operate
+> on other channels. But maybe that's only logical it you know how
+> they are implemented...
+Perhaps Analog Front ends?
+We could move the amplifier driver into the same directory as well,
+though right now that driver is not passing the channels through
+(it's often used without there being an IIO ADC behind it I think...)
+
+Jonathan
+
+
+> 
+> Cheers,
+> Peter
+> 
+> > 
+> > Jonathan
+> >   
+> >>
+> >> Cheers,
+> >> Peter
+> >>
+> >> Peter Rosin (3):
+> >>   iio: rename the multiplexer category to wrapper
+> >>   dt-bindings: iio: wrapper: add io-channel-unit-converter
+> >>   iio: wrapper: unit-converter: new driver
+> >>
+> >>  .../{multiplexer => wrapper}/io-channel-mux.txt    |   0
+> >>  .../iio/wrapper/io-channel-unit-converter.txt      |  84 +++++++
+> >>  MAINTAINERS                                        |  11 +-
+> >>  drivers/iio/Kconfig                                |   2 +-
+> >>  drivers/iio/Makefile                               |   2 +-
+> >>  drivers/iio/multiplexer/Makefile                   |   6 -
+> >>  drivers/iio/{multiplexer => wrapper}/Kconfig       |  13 +-
+> >>  drivers/iio/wrapper/Makefile                       |   7 +
+> >>  drivers/iio/{multiplexer => wrapper}/iio-mux.c     |   0
+> >>  drivers/iio/wrapper/iio-unit-converter.c           | 268 +++++++++++++++++++++
+> >>  10 files changed, 381 insertions(+), 12 deletions(-)
+> >>  rename Documentation/devicetree/bindings/iio/{multiplexer => wrapper}/io-channel-mux.txt (100%)
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+> >>  delete mode 100644 drivers/iio/multiplexer/Makefile
+> >>  rename drivers/iio/{multiplexer => wrapper}/Kconfig (53%)
+> >>  create mode 100644 drivers/iio/wrapper/Makefile
+> >>  rename drivers/iio/{multiplexer => wrapper}/iio-mux.c (100%)
+> >>  create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
+> >>  
+> >   
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
