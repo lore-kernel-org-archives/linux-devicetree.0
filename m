@@ -1,53 +1,144 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 01/11] i2c: Export of_i2c_get_board_info()
-Date: Sat, 24 Mar 2018 23:38:32 +0100
-Message-ID: <20180324223832.7wvhghw77ech4orn@ninjato>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
- <20180323110020.19080-2-boris.brezillon@bootlin.com>
- <20180324223518.g5jsi5zvoxa75psy@ninjato>
+Subject: Re: [PATCH v5 2/2] i2c: add support for Socionext SynQuacer I2C
+ controller
+Date: Sun, 25 Mar 2018 00:19:10 +0100
+Message-ID: <20180324231910.unzvwty3xia4mqu2@ninjato>
+References: <20180302083123.7259-1-ard.biesheuvel@linaro.org>
+ <20180302083123.7259-3-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="o4bfgnh3t6tv5z4f"
+        protocol="application/pgp-signature"; boundary="xdoxo5t6zpkvtr52"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180324223518.g5jsi5zvoxa75psy@ninjato>
+In-Reply-To: <20180302083123.7259-3-ard.biesheuvel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, andy.shevchenko@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---o4bfgnh3t6tv5z4f
+--xdoxo5t6zpkvtr52
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+
+Hi Ard,
+
+> +static int synquacer_i2c_master_start(struct synquacer_i2c *i2c,
+> +				      struct i2c_msg *pmsg)
+> +{
+> +	unsigned char bsr, bcr;
+> +
+> +	if (pmsg->flags & I2C_M_RD)
+> +		writeb((pmsg->addr << 1) | 1,
+> +		       i2c->base + SYNQUACER_I2C_REG_DAR);
+> +	else
+> +		writeb(pmsg->addr << 1,
+> +		       i2c->base + SYNQUACER_I2C_REG_DAR);
+
+writeb(i2c_8bit_addr_from_msg(pmsg), i2c->base + SYNQUACER_I2C_REG_DAR);
+
+?
+
+> +static int synquacer_i2c_master_recover(struct synquacer_i2c *i2c)
+> +{
+
+This is the bus recovery mechanism with toggling SCL pulses, right?
+That should be implemented using a 'struct i2c_bus_recovery_info' and
+the core helpers.
+
+> +static int synquacer_i2c_doxfer(struct synquacer_i2c *i2c,
+> +				struct i2c_msg *msgs, int num)
+> +{
+> +	unsigned char bsr;
+> +	unsigned long timeout, bb_timeout;
+> +	int ret;
+> +
+> +	if (i2c->is_suspended)
+> +		return -EBUSY;
+> +
+> +	synquacer_i2c_hw_init(i2c);
+> +	bsr = readb(i2c->base + SYNQUACER_I2C_REG_BSR);
+> +	if (bsr & SYNQUACER_I2C_BSR_BB) {
+> +		dev_err(i2c->dev, "cannot get bus (bus busy)\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	init_completion(&i2c->completion);
+
+reinit_completion? And init_completion() in probe()?
+
+> +	/* ensure the stop has been through the bus */
+> +	bb_timeout = jiffies + HZ;
+> +	do {
+> +		bsr = readb(i2c->base + SYNQUACER_I2C_REG_BSR);
+> +		if (!(bsr & SYNQUACER_I2C_BSR_BB))
+> +			return 0;
+> +	} while (time_before(jiffies, bb_timeout));
+
+Busy looping for one second? And won't the bus_free detection at the
+beginning of a transfer do?
+
+> +static int synquacer_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +			      int num)
+> +{
+> +	struct synquacer_i2c *i2c;
+> +	int retry;
+> +	int ret;
+> +
+> +	if (!msgs)
+> +		return -EINVAL;
+> +	if (num <= 0)
+> +		return -EINVAL;
+
+Hmm, this should be done by the core. I am surprised it doesn't do that yet :/
+
+> +
+> +	i2c = i2c_get_adapdata(adap);
+> +	i2c->timeout_ms = calc_timeout_ms(i2c, msgs, num);
+> +
+> +	dev_dbg(i2c->dev, "calculated timeout %d ms\n", i2c->timeout_ms);
+> +
+> +	for (retry = 0; retry < adap->retries; retry++) {
+> +
+> +		ret = synquacer_i2c_doxfer(i2c, msgs, num);
+> +		if (ret != -EAGAIN)
+> +			return ret;
+> +
+> +		dev_dbg(i2c->dev, "Retrying transmission (%d)\n", retry);
+> +
+> +		synquacer_i2c_master_recover(i2c);
+
+Recovery is only when SDA is stuck low, held by a client. That is
+nothing you should do just on any error.
+
+If you want the driver in v4.17, I'd suggest to drop
+synquacer_i2c_master_recover() now and add it incrementally later, using
+the existing recovery infrastructure. The rest is only minor stuff and
+needs not much further discussion IMO.
+
+Regards,
+
+   Wolfram
 
 
-> > -	info.archdata =3D &dev_ad;
->=20
-> Why did you drop this?
-
-If the removal is safe, it should be a seperate patch, I mean.
-
-
---o4bfgnh3t6tv5z4f
+--xdoxo5t6zpkvtr52
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlq202gACgkQFA3kzBSg
-KbZS0A/+Lxx+NqaVVtw4RxyUPhSWqMVhhNa7swJZTt0ufwzzE9KofdnKTTx04CT5
-spVxRVG8F6vb2fg2bzzEUGlj34ZZsdoN7cno1Y5jybrrumyrUj5n4FFrn8bbG21D
-uOZanhBrEsRR10OPB+hQTNo/O7zX6d3akaqhfzxMmFRZoAJFHIKeJgokXAscv0A1
-/AV//KCOx1vBHAKQdOBnRYDi8SuK210Zi3DNs2i6k3IOsFQZiCeNMFiFCrEgOGii
-DJx6sc84xtZLHJz4F80wG2hYMH6eT1cLN2l91H2P4hqoHj6dxJIp7WZrKJZM8Q2a
-3Ps09Rsar5Bkb1O0r4PCatjJeRqizKY4FfeswIE0npGTPD9FKKgvD21k9FYHut/c
-59XvhVtFVsfER3D0pXstnlj2Amqs9fDrorhEKY5VqoFpSdkVuA5Ff60PwPsu2IJs
-CszhIxfgB0DvLj9dsMTwLrjbI2tD5EjPIytUeG/wru+B7vwCJ1Y4jLY8zVWtVnhv
-qQtGJFTcq48NEex834+nGynGGPryLN7pvMpTx8Z5wUEZ4Dzm7WBiElqkVUUthaVO
-FxtlK2yz/E1p6Kvk3Hnes2VEpjuhFKqQURLpbejEVxpDSeyqcyu7WGvHBETg2G/+
-SC08ebAJVGkUQn5FVcheAZ7t2qcZFrrIBCUoF6f7C1JHH2aZ0VI=
-=3Qtg
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlq23OoACgkQFA3kzBSg
+KbbwJxAAm1FGeUzbmwo/o5Mrx6xfwUvV0CusEuugDltUu63t94EiXXtvhe1bupY/
+XY7G9DFuWiM8VvOHRpxrje257Cl4kw0G1dn8IMQQRXUWNei8ToLH6fZtC4pQI9t/
+LalMLb1vIiP+qo67ERMb288IrjtyQvNWiSuvUczKombvjyCeTvp1oTvRUdiuqv6+
+KYLXDPzjeyGWk7MSuePKLS2qukTk1A4byJqGxIoJtZGWCUyalbwTZzFnm9f/mntT
+isFRx+HpV2sBopn71wYpYOtnKfswR8kH004DLB6AWMz/12qpGFPqAyK23dP3A/hP
+Pd9QEYpcR5skFDbl/jZtbuAJ6sG5DVDQliyJA4g2x87kBB9CbB1Y3rCvXIOyWRBm
+mCGb2TBp+dDjQ7EAJ0AwYjT6uoJN8X/czCoBVsu8693ZQ+q4d8DuGFmcan6JJ4z/
+msr0wurlcQmOvbS5bKmYH4kkTFsUW3lM3WZ2H2a6gUbxKVKXy99rX4jJIlil5Ttg
+DEDqEbJcCbYxCTO2W0zmwZFFE/E4lGzY/A9UQ0cmI7mz/l8ih+E+HTPy6LwdUvLy
+kVsBOp1wavQNYgvnZRb1nfp3bwgA8Pyzy/MCR7GRWN0v4Kqxh05HaxC1cY3IDhXj
+ynUK3H0bhZLVx6+7HcZOstpatEtOLLxRxdov7P8fnkraKzKIDdM=
+=SoKr
 -----END PGP SIGNATURE-----
 
---o4bfgnh3t6tv5z4f--
+--xdoxo5t6zpkvtr52--
