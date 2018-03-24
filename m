@@ -1,61 +1,32 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 0/3] iio: add unit converter
-Date: Sat, 24 Mar 2018 17:47:34 +0000
-Message-ID: <20180324174734.1ac1706f@archlinux>
-References: <20180319170246.26830-1-peda@axentia.se>
-        <20180323141401.000031cc@huawei.com>
-        <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se>
-        <20180324134801.0e6254ee@archlinux>
-        <CACRpkdYPayHqYdFMmts20yLRdMEy6SW-qqnC+BsYip-RdN2HSQ@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Sat, 24 Mar 2018 19:53:24 +0100
+Message-ID: <20180324185324.GG31941@lunn.ch>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
+ <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
+ <886c94ef-e2c8-2afa-307d-1924c74c6dc0@gmail.com>
+ <cb12ea29-a7b0-cf66-7f5a-c09d36f443f0@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYPayHqYdFMmts20yLRdMEy6SW-qqnC+BsYip-RdN2HSQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <cb12ea29-a7b0-cf66-7f5a-c09d36f443f0@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Michael Hennerich <michael.hennerich@analog.com>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 24 Mar 2018 17:34:17 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Sat, Mar 24, 2018 at 2:48 PM, Jonathan Cameron <jic23@kernel.org> wrote:
-> > On Fri, 23 Mar 2018 14:59:41 +0100
-> > Peter Rosin <peda@axentia.se> wrote:  
+> A quick survey for the of_get_mac_address users learns that most of them do
+> a memcpy (or similar) right after it, so for these drivers the
+> "of_get_nvmem_mac_address" style signature that performs the memcpy (or
+> better, ether_addr_copy) is a better fit, e.g.:
 > 
-> >> So, not super-happy about that either. And maybe leave the mux
-> >> where it is? It's just that I have the feeling that the iio-mux
-> >> is never going to get any friends in its category, and the mux
-> >> and the unit-converter are kind of related in that they operate
-> >> on other channels. But maybe that's only logical it you know how
-> >> they are implemented...  
-> >
-> > Perhaps Analog Front ends?
-> > We could move the amplifier driver into the same directory as well,
-> > though right now that driver is not passing the channels through
-> > (it's often used without there being an IIO ADC behind it I think...)  
-> 
-> (passive) linear scaler?
-> analog linear scaler?
-> But maybe these supersets are not broad enough.
-> 
-> Or just invent another acronym akin to "PHY" such as
-> "AIF" (analog interface)?
-AFE (analog front end) is commonly used, but I'm not sure if implies
-more than we want here.  Lars, Michael this is more your area than
-mine - what do you think?
+> int of_get_mac_address(struct device_node *np, void *addr)
 
-We could call it an amplifier and be done with it but that wouldn't
-really encompass the fact we are also changing it's apparent measurement
-from voltage to current because we know enough about the circuit to do
-so...
+Hi Mike
 
-Jonathan
+This is a nicer solution, but it is quite a lot of work, there are a
+lot of users. Maybe Coccinelle can help?
 
-
-
-
-> 
-> Yours,
-> Linus Walleij
+    Andrew
