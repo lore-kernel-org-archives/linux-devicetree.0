@@ -1,84 +1,48 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
- time stamping IP core.
-Date: Sun, 25 Mar 2018 17:59:37 +0200
-Message-ID: <20180325155937.GA12820@lunn.ch>
-References: <20180321193315.GR24516@lunn.ch>
- <20180321213636.2mmfveu2vg5qbwpp@localhost>
- <20180321214436.GX24516@lunn.ch>
- <20180321215729.engnoxpaympvvdc5@localhost>
- <20180321221652.GZ24516@lunn.ch>
- <20180321224702.cbcq3wckmojsrgjf@localhost>
- <20180321235007.GA28402@lunn.ch>
- <20180324171219.vh6wcxbem3hyhkuu@localhost>
- <20180324184858.GF31941@lunn.ch>
- <20180325045151.kq7mjopjwzo6w2vw@localhost>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCHv2 0/3] dw-hdmi: add property to disable CEC
+Date: Sat, 24 Mar 2018 12:00:26 +0100
+Message-ID: <CAFBinCA-x=4J_a_+oJX7fxhXO0qP=apEPFesATP=UNsH91qiCw@mail.gmail.com>
+References: <20180323125915.13986-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180325045151.kq7mjopjwzo6w2vw@localhost>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180323125915.13986-1-hverkuil@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 24, 2018 at 09:51:52PM -0700, Richard Cochran wrote:
-> On Sat, Mar 24, 2018 at 07:48:58PM +0100, Andrew Lunn wrote:
-> > As far as i can see, you have three basic problems:
-> > 
-> > 1) How do you associate the PTP device to the netdev?
-> > 2) How do you get the information you need to configure the PTP device
-> 
-> Yes, yes.
-> 
-> > 3) How do you limit the MAC/PHY to what the PTP device can do.
-> 
-> Hm, I don't think this is important.
-
-So you are happy that the PTP device will cause the MC/PHY link to
-break down when it is asked to do something it cannot do? Take for
-example a Marvell MAC connected to a Marvell PHY doing 2.5Gbps SGMII
-because it can. But say the PTP device cannot be clocked that fast,
-and the MII links break.... You as a PTP maintainer might be happy
-with that, but as a PHY maintainer, i'm not too happy with this.
-
-> Right, so phylib can operate on phydev->attached_dev->mdiots;
-
-So first off, it is not an MDIO device. You current code is a horrible
-hack which gets a NACK. Use a phandle, and have
-of_mdiobus_register_phy() follow the phandle to get the device.
-
-To keep lifecycle issues simple, i would also keep it in phydev, not
-netdev.
-
-mdiots as a name is completely wrong. It is not an MDIO device.  Maybe
-in the future some devices will be MDIO, or I2C, or SPI. Just call it
-ptpdev. This ptpdev needs to be control bus agnostic. You need a
-ptpdev core API exposing functions like ptpdev_hwtstamp,
-ptpdev_rxtstamp, ptpdev_txtstamp, ptpdev_link_change, which take a
-ptpdev. Have phy_link_change call ptpdev_link_change. You have the
-flexibility in that if in the future you do care that your ptpdev
-breaks the MAC-PHY link, you can add a ptpdev_validate_advertise,
-which allows the ptpdev to mask out link modes it does not support.
-
-Your ptp device, when probing needs to register with the ptpdev core,
-passing a generic ptpdev_ops for the operations its support. How it
-talks to the device, MMIO, SPI, I2C is hidden within the device
-driver.
-
-You can then clean up the code in timestamping.c. Code like:
-
-        phydev = skb->dev->phydev;
-        if (likely(phydev->drv->txtstamp)) {
-                clone = skb_clone_sk(skb);
-                if (!clone)
-                        return;
-                phydev->drv->txtstamp(phydev, clone, type);
-        }
-
-violates the layering, and the locking looks broken. Add a
-phy_txtstamp() call to phylib. It can then either call into the PHY
-driver, or use the call the ptpdev API, or -EOPNOTSUP.
-
-	Andrew
+SGVsbG8gSGFucywgSGkgTmVpbCwKCihhcG9sb2dpZXMgaW4gYWR2YW5jZSBpZiBhbnkgb2YgdGhp
+cyBpcyB3cm9uZywgSSBkb24ndCBoYXZlIGFueSBDRUMKY2FwYWJsZSBUViBzbyBJIGNhbid0IHRl
+c3QgaXQpCgpPbiBGcmksIE1hciAyMywgMjAxOCBhdCAxOjU5IFBNLCBIYW5zIFZlcmt1aWwgPGh2
+ZXJrdWlsQHhzNGFsbC5ubD4gd3JvdGU6Cj4gRnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1
+aWxAY2lzY28uY29tPgo+Cj4gU29tZSBib2FyZHMgKGFtbG9naWMpIGhhdmUgdHdvIENFQyBjb250
+cm9sbGVyczogdGhlIERlc2lnbldhcmUgY29udHJvbGxlcgo+IGFuZCB0aGVpciBvd24gQ0VDIGNv
+bnRyb2xsZXIgKG1lc29uIGFvLWNlYykuCmFzIGZhciBhcyBJIHVuZGVyc3RhbmQgdGhlIEFtbG9n
+aWMgTWVzb24gU29DcyBoYXZlIHR3byBkb21haW5zOgotIEFPIChhbHdheXMtb24sIHBvd2VyZWQg
+ZXZlbiBpbiBzdXNwZW5kIG1vZGUpIHdoZXJlIG1lc29uLWFvLWNlYyBjYW4Kd2FrZSB1cCB0aGUg
+c3lzdGVtIGZyb20gc3VzcGVuZAotIEVFIChldmVyeXRoaW5nIGVsc2UsIG5vdCBwb3dlcmVkIGR1
+cmluZyBzdXNwZW5kKSB3aGVyZSBkdy1oZG1pLWNlYyBsaXZlcwoKdGhpcyBmYXIgZXZlcnl0aGlu
+ZyBpcyBPSwoKPiBTaW5jZSB0aGUgQ0VDIGxpbmUgaXMgbm90IGhvb2tlZCB1cCB0byB0aGUgRFcg
+Y29udHJvbGxlciB3ZSBuZWVkIGEgd2F5Cj4gdG8gZGlzYWJsZSB0aGF0IGNvbnRyb2xsZXIuIFRo
+aXMgcGF0Y2ggc2VyaWVzIGFkZHMgdGhlIGNlYy1kaXNhYmxlCj4gcHJvcGVydHkgZm9yIHRoYXQg
+cHVycG9zZS4KZHJpdmVycy9waW5jdHJsL21lc29uL3BpbmN0cmwtbWVzb24tZ3hiYi5jIGhhcyBh
+b19jZWNfcGlucyBhbmQKZWVfY2VjX3BpbnMsIGJvdGggdXNlIEdQSU9BT18xMgpkcml2ZXJzL3Bp
+bmN0cmwvbWVzb24vcGluY3RybC1tZXNvbi1neGwuYyBoYXMgYW9fY2VjX3BpbnMgYW5kCmVlX2Nl
+Y19waW5zLCBib3RoIHVzZSBHUElPQU9fOAoKQE5laWw6IGRvIHlvdSBrbm93IGlmIHRoZSBDRUMg
+c2lnbmFsIHJvdXRpbmcgaXM6CmFvX2NlY19waW5zIC0+IG1lc29uLWFvLWNlYwplZV9jZWNfcGlu
+cyAtPiBkdy1oZG1pLWNlYwoKSSdtIGN1cmlvdXMgYmVjYXVzZSBpZiBib3RoIENFQyBjb250cm9s
+bGVycyBjYW4gYmUgdXNlZCB0aGVuIGl0IG1pZ2h0CmJlIHdvcnRoIG1lbnRpb25pbmcgdGhpcyBp
+biB0aGUgY292ZXItbGV0dGVyIGFuZCBwYXRjaCBkZXNjcmlwdGlvbgoKClJlZ2FyZHMKTWFydGlu
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
