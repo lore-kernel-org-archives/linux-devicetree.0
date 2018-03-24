@@ -1,53 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 6/8] MIPS: mscc: Add switch to ocelot
-Date: Sat, 24 Mar 2018 15:48:50 +0100
-Message-ID: <20180324144850.GB31941@lunn.ch>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-7-alexandre.belloni@bootlin.com>
- <e488fd29-0094-d005-a078-873f6f5add13@gmail.com>
- <20180323212230.GA12808@piout.net>
- <20180323213344.GV24361@lunn.ch>
- <dcac43b7-2eb7-d409-a77c-4f671a8cfc3d@gmail.com>
- <20180323220657.GY24361@lunn.ch>
- <171fb3db-70f4-4818-9390-8164fab5adca@gmail.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Sat, 24 Mar 2018 17:03:29 +0100
+Message-ID: <f8045062-bfb3-249f-482e-3e54524ce725@topic.nl>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
+ <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
+ <20180323194259.GP24361@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <171fb3db-70f4-4818-9390-8164fab5adca@gmail.com>
+In-Reply-To: <20180323194259.GP24361@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 03:11:23PM -0700, Florian Fainelli wrote:
-> On 03/23/2018 03:06 PM, Andrew Lunn wrote:
-> >>> That is the trade off of having a standalone MDIO bus driver.  Maybe
-> >>> add a phandle to the internal MDIO bus? The switch driver could then
-> >>> follow the phandle, and direct connect the internal PHYs?
-> >>
-> >> This is more or less what patch 7 does, right?
-> > 
-> > Patch 7 does it in DT. I'm suggesting it could be done in C. It is
-> > hard wired, so there is no need to describe it in DT. Use the phandle
-> > to get the mdio bus, mdiobus_get_phy(, port) to get the phydev and
-> > then use phy_connect().
+On 23-03-18 20:42, Andrew Lunn wrote:
+>> Indeed. I'll add my settings as an example. Where should I put this
+>> documentation, in the commit comment or somewhere in
+>> Documents/devicetree/bindings?
 > 
-> That does not sound like a great idea. And to go back to your example
-> about DSA, it is partially true, you will see some switch bindings
-> defining the internal PHYs (e.g: qca8k), and most not doing it (b53,
-> mv88e6xxx, etc.). In either case, this resolves to the same thing
-> though. Being able to parse a phy-handle property is a lot more
-> flexible, and if it does matter that the PHY truly is internal, then the
-> 'phy-mode' property can help reflect that.
+> Documention/devicetree/bindings/net/ethernet.txt
 
-Hi Florian
+Ok
 
-With DSA, you can always provide a phy-handle. It is only when there
-is nothing specified that the fallback case is used to map internal
-PHYs to ports.
+>> It's what I intended to do, but there were two problems with that:
+>> - of_get_mac_address() returns a pointer to constant data in memory, but the
+>> nvmem functions return an allocated memory object that must be freed after
+>> use. This changes the way the call is to be made.
+>> - The nvmem functions need the "struct device" pointer as well, while
+>> of_get_mac_address() only gets passed the DT node.
+> 
+> Does of_nvmem_cell_get() help?
 
-Putting internal PHYs in DT is fine, but it is a nice simplification
-if it is not needed.
+Yes, looking at the interface, it would.
 
-   Andrew
+-- 
+Mike Looijmans
