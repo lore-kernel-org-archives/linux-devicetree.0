@@ -1,95 +1,61 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 6/8] dt-bindings: counter: Document stm32 quadrature
- encoder
-Date: Sat, 24 Mar 2018 17:23:50 +0000
-Message-ID: <20180324172350.18e826f4@archlinux>
-References: <cover.1520614431.git.vilhelm.gray@gmail.com>
-        <7f160c33e6e37c13974054f3dcfea4a02f1250fb.1520614431.git.vilhelm.gray@gmail.com>
+Subject: Re: [PATCH 0/3] iio: add unit converter
+Date: Sat, 24 Mar 2018 17:47:34 +0000
+Message-ID: <20180324174734.1ac1706f@archlinux>
+References: <20180319170246.26830-1-peda@axentia.se>
+        <20180323141401.000031cc@huawei.com>
+        <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se>
+        <20180324134801.0e6254ee@archlinux>
+        <CACRpkdYPayHqYdFMmts20yLRdMEy6SW-qqnC+BsYip-RdN2HSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f160c33e6e37c13974054f3dcfea4a02f1250fb.1520614431.git.vilhelm.gray@gmail.com>
+In-Reply-To: <CACRpkdYPayHqYdFMmts20yLRdMEy6SW-qqnC+BsYip-RdN2HSQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  9 Mar 2018 13:43:32 -0500
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+On Sat, 24 Mar 2018 17:34:17 +0100
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> From: Benjamin Gaignard <benjamin.gaignard@st.com>
+> On Sat, Mar 24, 2018 at 2:48 PM, Jonathan Cameron <jic23@kernel.org> wrote:
+> > On Fri, 23 Mar 2018 14:59:41 +0100
+> > Peter Rosin <peda@axentia.se> wrote:  
 > 
-> Add bindings for STM32 Timer quadrature encoder.
-> It is a sub-node of STM32 Timer which implement the
-> counter part of the hardware.
+> >> So, not super-happy about that either. And maybe leave the mux
+> >> where it is? It's just that I have the feeling that the iio-mux
+> >> is never going to get any friends in its category, and the mux
+> >> and the unit-converter are kind of related in that they operate
+> >> on other channels. But maybe that's only logical it you know how
+> >> they are implemented...  
+> >
+> > Perhaps Analog Front ends?
+> > We could move the amplifier driver into the same directory as well,
+> > though right now that driver is not passing the channels through
+> > (it's often used without there being an IIO ADC behind it I think...)  
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-You are missing the device tree list and maintainers +CC
+> (passive) linear scaler?
+> analog linear scaler?
+> But maybe these supersets are not broad enough.
+> 
+> Or just invent another acronym akin to "PHY" such as
+> "AIF" (analog interface)?
+AFE (analog front end) is commonly used, but I'm not sure if implies
+more than we want here.  Lars, Michael this is more your area than
+mine - what do you think?
 
-looks fine to me.
+We could call it an amplifier and be done with it but that wouldn't
+really encompass the fact we are also changing it's apparent measurement
+from voltage to current because we know enough about the circuit to do
+so...
 
 Jonathan
 
-> ---
->  .../bindings/counter/stm32-timer-cnt.txt           | 26 ++++++++++++++++++++++
->  .../devicetree/bindings/mfd/stm32-timers.txt       |  7 ++++++
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+
+
+
 > 
-> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-> new file mode 100644
-> index 000000000000..377728128bef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-> @@ -0,0 +1,26 @@
-> +STMicroelectronics STM32 Timer quadrature encoder
-> +
-> +STM32 Timer provides quadrature encoder counter mode to detect
-> +angular position and direction of rotary elements,
-> +from IN1 and IN2 input signals.
-> +
-> +Must be a sub-node of an STM32 Timer device tree node.
-> +See ../mfd/stm32-timers.txt for details about the parent node.
-> +
-> +Required properties:
-> +- compatible:		Must be "st,stm32-timer-counter".
-> +- pinctrl-names: 	Set to "default".
-> +- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
-> +			to set IN1/IN2 pins in mode of operation for Low-Power
-> +			Timer input on external pin.
-> +
-> +Example:
-> +	timers@40010000  {
-> +		compatible = "st,stm32-timers";
-> +		...
-> +		counter {
-> +			compatible = "st,stm32-timer-counter";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&tim1_in_pins>;
-> +		};
-> +	};
-> diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> index 1db6e0057a63..ff9c14ada30b 100644
-> --- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> +++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> @@ -23,6 +23,7 @@ Optional parameters:
->  Optional subnodes:
->  - pwm:			See ../pwm/pwm-stm32.txt
->  - timer:		See ../iio/timer/stm32-timer-trigger.txt
-> +- counter:		See ../counter/stm32-timer-cnt.txt
->  
->  Example:
->  	timers@40010000 {
-> @@ -43,4 +44,10 @@ Example:
->  			compatible = "st,stm32-timer-trigger";
->  			reg = <0>;
->  		};
-> +
-> +		counter {
-> +			compatible = "st,stm32-timer-counter";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&tim1_in_pins>;
-> +		};
->  	};
+> Yours,
+> Linus Walleij
