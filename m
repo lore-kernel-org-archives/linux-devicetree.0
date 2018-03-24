@@ -1,40 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/3] iio: add unit converter
-Date: Sat, 24 Mar 2018 17:34:17 +0100
-Message-ID: <CACRpkdYPayHqYdFMmts20yLRdMEy6SW-qqnC+BsYip-RdN2HSQ@mail.gmail.com>
-References: <20180319170246.26830-1-peda@axentia.se> <20180323141401.000031cc@huawei.com>
- <0863dfa7-c1da-7691-a896-9b414e2fddfa@axentia.se> <20180324134801.0e6254ee@archlinux>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v5 00/13] ARM: dts: ipq: updates to enable a few
+ peripherals
+Date: Sat, 24 Mar 2018 10:16:20 -0700
+Message-ID: <20180324171620.inhscxq67vwgaway@localhost>
+References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
+ <20180324021708.onpakgbxc544cwz2@localhost>
+ <f5e3729f5de2693144d1667812b61c5d@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180324134801.0e6254ee@archlinux>
+Content-Disposition: inline
+In-Reply-To: <f5e3729f5de2693144d1667812b61c5d@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: sricharan@codeaurora.org
+Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 24, 2018 at 2:48 PM, Jonathan Cameron <jic23@kernel.org> wrote:
-> On Fri, 23 Mar 2018 14:59:41 +0100
-> Peter Rosin <peda@axentia.se> wrote:
+On Sat, Mar 24, 2018 at 11:42:32AM +0530, sricharan@codeaurora.org wrote:
+>  Can i take that as a Tested-by: Richard Cochran <richardcochran@gmail.com>
+>  on DK07 ?
 
->> So, not super-happy about that either. And maybe leave the mux
->> where it is? It's just that I have the feeling that the iio-mux
->> is never going to get any friends in its category, and the mux
->> and the unit-converter are kind of related in that they operate
->> on other channels. But maybe that's only logical it you know how
->> they are implemented...
->
-> Perhaps Analog Front ends?
-> We could move the amplifier driver into the same directory as well,
-> though right now that driver is not passing the channels through
-> (it's often used without there being an IIO ADC behind it I think...)
+I wouldn't go that far, because I only booted to the console.  I
+didn't test any peripherals beside the UART!  I am planning to test as
+much as I can, but bear in mind that a) my board isn't identical to
+the DK07 and b) it will take me a week to do it.
 
-(passive) linear scaler?
-analog linear scaler?
-But maybe these supersets are not broad enough.
-
-Or just invent another acronym akin to "PHY" such as
-"AIF" (analog interface)?
-
-Yours,
-Linus Walleij
+Thanks,
+Richard
