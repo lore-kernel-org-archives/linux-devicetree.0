@@ -1,33 +1,38 @@
-Return-Path: <SRS0=aoSJ=GU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:52757 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752427AbeC3Ud7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Mar 2018 16:33:59 -0400
-Received: by mail-wm0-f65.google.com with SMTP id l9so17137159wmh.2
-        for <devicetree@vger.kernel.org>; Fri, 30 Mar 2018 13:33:58 -0700 (PDT)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 0/2] add support to STM ISM330DLC 6-axis Mems sensor
-Date: Fri, 30 Mar 2018 22:33:49 +0200
-Message-Id: <20180330203351.22681-1-lorenzo.bianconi@redhat.com>
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=/B89=GO=gmail.com=richardcochran@kernel.org>
+Date: Sat, 24 Mar 2018 10:01:37 -0700
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next RFC V1 3/5] net: Introduce field for the MII
+ time stamper.
+Message-ID: <20180324170137.j2n7ryzifrpthj2s@localhost>
+References: <cover.1521656774.git.richardcochran@gmail.com>
+ <338f19a006839f1d00e3cfd3521bdd5fd0afc5fe.1521656774.git.richardcochran@gmail.com>
+ <cbab700a-8a4f-8c4a-b959-e356de006f6e@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cbab700a-8a4f-8c4a-b959-e356de006f6e@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Lorenzo Bianconi (2):
-  iio: imu: st_lsm6dsx: add support to ism330dlc
-  Documentation: dt: iio: imu: st_lsm6dsx: add ism330dlc sensor device
-    binding
+On Wed, Mar 21, 2018 at 12:12:00PM -0700, Florian Fainelli wrote:
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index 5fbb9f1da7fd..223d691aa0b0 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -1943,6 +1943,7 @@ struct net_device {
+> >  	struct netprio_map __rcu *priomap;
+> >  #endif
+> >  	struct phy_device	*phydev;
+> > +	struct mdio_device	*mdiots;
+> 
+> phy_device embedds a mdio_device, can you find a way to rework the PHY
+> PTP code to utilize the phy_device's mdio instance so do not introduce
+> yet another pointer in that big structure that net_device already is?
 
- Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt |  1 +
- drivers/iio/imu/st_lsm6dsx/Kconfig                       |  3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h                  |  2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c           | 10 +++++-----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c             |  3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c              |  5 +++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c              |  5 +++++
- 7 files changed, 22 insertions(+), 7 deletions(-)
+You are right in that this field is wasted space for most users.
 
--- 
-2.16.2
+In V2 this will be inside #ifdef CONFIG_NETWORK_PHY_TIMESTAMPING.
 
+Thanks,
+Richard
