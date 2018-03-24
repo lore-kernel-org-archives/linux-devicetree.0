@@ -1,119 +1,367 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Sat, 24 Mar 2018 08:59:28 -0500
-Message-ID: <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
-References: <20180309023750.108942-1-tony@atomide.com>
-         <20180322135553.GA27648@amd> <20180322164633.GF5799@atomide.com>
-         <20180322192843.GA17189@amd>
-         <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
-         <20180323105455.GB21644@amd>
-         <20180323113521.45va72bhzis6ym6m@earth.universe>
-         <20180323201343.GC23658@amd>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
+Date: Sat, 24 Mar 2018 14:03:39 +0000
+Message-ID: <20180324140339.4ec66792@archlinux>
+References: <20180319170246.26830-1-peda@axentia.se>
+        <20180319170246.26830-4-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323201343.GC23658@amd>
+In-Reply-To: <20180319170246.26830-4-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-03-23 at 21:13 +0100, Pavel Machek wrote:
-> On Fri 2018-03-23 12:35:21, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Fri, Mar 23, 2018 at 11:54:55AM +0100, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > > > Do you have the related dts patches picked from next?
-> > > > > > 
-> > > > > > fdd192037fce ("ARM: dts: omap4-droid4: Fix USB PHY port
-> > > > > > naming")
-> > > > > > e5b9fd7bdeb5 ("ARM: dts: omap4-droid4: Configure MDM6600
-> > > > > > USB PHY")
-> > > > > > 
-> > > > > > But yeah all you need to do is have phy-mapphone-mdm6600
-> > > > > > and
-> > > > > > ohci-platform loaded and then ifconfig should show four
-> > > > > > wwan
-> > > > > > interfaces being added.
-> > > > > 
-> > > > > ifconfig? I thought I should get /dev/ttyUSB0..3?
-> > > > 
-> > > > I believe they are QMI via qmi_wwan, not TTYs.
-> > > 
-> > > Well, qmicli expects device path... and I see nothing on
-> > > ifconfig. Any
-> > > idea how the device would be named?
-> > > 
-> > > But I believe it just does not work, see the qcserial experiment
-> > > with
-> > > new_id below.
-> > 
-> > Dan is right, you need qmi_wwan driver. qmicli expects
-> > /dev/cdc-wdm<num> device. I use this on Droid 4:
-> > 
-> > qmicli -d /dev/cdc-wdm0 --some-other-option
-> 
-> Aha, there's ./drivers/usb/serial/usb_wwan.c and there's
-> ./drivers/net/usb/qmi_wwan.o . That confused me.
-> 
-> qmicli now works for me, thanks!
-> 
-> Tested-by: Pavel Machek <pavel@ucw.cz>
-> 
-> Does ofonod work for you? I could not get that one to work...
+On Mon, 19 Mar 2018 18:02:46 +0100
+Peter Rosin <peda@axentia.se> wrote:
 
-Because it's looking for a Gobi modem but the MDM6600 isn't one and
-doesn't expose that layout (and doesn't really need to anyway).  I
-don't think ofono has a generic QMI driver, so you'd either need to for
-ce it to use the telitqmi or quectelqmi drivers, or write your own
-generic QMI one.
-
-Dan
-
-> ofonod[4083]: plugins/udevng.c:create_modem()
-> /sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/u
-> sb2/2-1
-> ofonod[4083]: plugins/udevng.c:create_modem() driver=gobi
-> ofonod[4083]: src/modem.c:ofono_modem_create() name: (null), type:
-> gobi
-> ofonod[4083]: plugins/udevng.c:setup_gobi()
-> /sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/u
-> sb2/2-1
-> ofonod[4083]: plugins/udevng.c:setup_gobi() /dev/cdc-wdm0 255/251/255
-> 05 (null) (null) usbmisc
-> ofonod[4083]: plugins/udevng.c:setup_gobi() wwan0 255/251/255 05
-> (null) (null) net
-> ofonod[4083]: plugins/udevng.c:setup_gobi() /dev/cdc-wdm1 255/251/255
-> 06 (null) (null) usbmisc
-> ofonod[4083]: plugins/udevng.c:setup_gobi() wwan1 255/251/255 06
-> (null) (null) net
-> ofonod[4083]: plugins/udevng.c:setup_gobi() /dev/cdc-wdm2 255/251/255
-> 07 (null) (null) usbmisc
-> ofonod[4083]: plugins/udevng.c:setup_gobi() wwan2 255/251/255 07
-> (null) (null) net
-> ofonod[4083]: plugins/udevng.c:setup_gobi() /dev/cdc-wdm3 255/251/255
-> 08 (null) (null) usbmisc
-> ofonod[4083]: plugins/udevng.c:setup_gobi() wwan3 255/251/255 08
-> (null) (null) net
-> ofonod[4083]: plugins/udevng.c:destroy_modem()
-> /sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/u
-> sb2/2-1
-> ofonod[4083]: src/modem.c:ofono_modem_remove() 0x5eb380
-> ofonod[4083]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm0
-> ofonod[4083]: plugins/udevng.c:destroy_modem() wwan0
-> ofonod[4083]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm1
-> ofonod[4083]: plugins/udevng.c:destroy_modem() wwan1
-> ofonod[4083]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm2
-> ofonod[4083]: plugins/udevng.c:destroy_modem() wwan2
-> ofonod[4083]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm3
-> ofonod[4083]: plugins/udevng.c:destroy_modem() wwan3
-> ofonod[4083]: plugins/upower.c:upower_connect() upower connect
-> ofonod[4083]: plugins/hfp_hf_bluez5.c:connect_handler() Registering
-> External Profile handler ...
+> If an ADC channel measures the midpoint of a voltage divider, the
+> interesting voltage is often the voltage over the full resistance.
+> E.g. if the full voltage it too big for the ADC to handle.
+> Likewise, if an ADC channel measures the voltage across a resistor,
+> the interesting value is often the current through the resistor.
 > 
-> 									
-> Pavel
+> This driver solves both problems by allowing to linearly scale a channel
+> and by allowing changes to the type of the channel. Or both.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+A few comments inline, but basically the code looks fine, just questions
+around naming and bindings to answer.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  MAINTAINERS                              |   1 +
+>  drivers/iio/wrapper/Kconfig              |   9 ++
+>  drivers/iio/wrapper/Makefile             |   1 +
+>  drivers/iio/wrapper/iio-unit-converter.c | 268 +++++++++++++++++++++++++++++++
+>  4 files changed, 279 insertions(+)
+>  create mode 100644 drivers/iio/wrapper/iio-unit-converter.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5dd555c7b1b0..b879289f1318 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6889,6 +6889,7 @@ M:	Peter Rosin <peda@axentia.se>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+> +F:	drivers/iio/wrapper/iio-unit-converter.c
+>  
+>  IKANOS/ADI EAGLE ADSL USB DRIVER
+>  M:	Matthieu Castet <castet.matthieu@free.fr>
+> diff --git a/drivers/iio/wrapper/Kconfig b/drivers/iio/wrapper/Kconfig
+> index f27de347c9b3..16554479264a 100644
+> --- a/drivers/iio/wrapper/Kconfig
+> +++ b/drivers/iio/wrapper/Kconfig
+> @@ -15,4 +15,13 @@ config IIO_MUX
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called iio-mux.
+>  
+> +config IIO_UNIT_CONVERTER
+> +	tristate "IIO unit converter"
+> +	depends on OF || COMPILE_TEST
+> +	help
+> +	  Say yes here to build support for the IIO unit converter.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called iio-unit-converter.
+> +
+>  endmenu
+> diff --git a/drivers/iio/wrapper/Makefile b/drivers/iio/wrapper/Makefile
+> index 53a7b78734e3..1b9db53bd420 100644
+> --- a/drivers/iio/wrapper/Makefile
+> +++ b/drivers/iio/wrapper/Makefile
+> @@ -4,3 +4,4 @@
+>  
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_IIO_MUX) += iio-mux.o
+> +obj-$(CONFIG_IIO_UNIT_CONVERTER) += iio-unit-converter.o
+> diff --git a/drivers/iio/wrapper/iio-unit-converter.c b/drivers/iio/wrapper/iio-unit-converter.c
+> new file mode 100644
+> index 000000000000..53c126f39e4e
+> --- /dev/null
+> +++ b/drivers/iio/wrapper/iio-unit-converter.c
+> @@ -0,0 +1,268 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * IIO unit converter
+> + *
+> + * Copyright (C) 2018 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda@axentia.se>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +
+> +struct unit_converter {
+> +	struct iio_channel *parent;
+> +	struct iio_dev *indio_dev;
+> +	struct iio_chan_spec chan;
+> +	struct iio_chan_spec_ext_info *ext_info;
+> +	s32 numerator;
+> +	s32 denominator;
+> +};
+> +
+> +static int unit_converter_read_raw(struct iio_dev *indio_dev,
+> +				   struct iio_chan_spec const *chan,
+> +				   int *val, int *val2, long mask)
+> +{
+> +	struct unit_converter *uc = iio_priv(indio_dev);
+> +	unsigned long long tmp;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		return iio_read_channel_raw(uc->parent, val);
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = iio_read_channel_scale(uc->parent, val, val2);
+> +		switch (ret) {
+> +		case IIO_VAL_FRACTIONAL:
+> +			*val *= uc->numerator;
+> +			*val2 *= uc->denominator;
+> +			return ret;
+> +		case IIO_VAL_INT:
+> +			*val *= uc->numerator;
+> +			if (uc->denominator == 1)
+> +				return ret;
+> +			*val2 = uc->denominator;
+> +			return IIO_VAL_FRACTIONAL;
+> +		case IIO_VAL_FRACTIONAL_LOG2:
+> +			tmp = *val * 1000000000LL;
+> +			do_div(tmp, uc->denominator);
+> +			tmp *= uc->numerator;
+> +			do_div(tmp, 1000000000LL);
+> +			*val = tmp;
+> +			return ret;
+> +		}
+> +		return -EOPNOTSUPP;
+Slightly clearer and less likely to give warningss from static checkers
+if you put that return in a default:
+
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int unit_converter_read_avail(struct iio_dev *indio_dev,
+> +				     struct iio_chan_spec const *chan,
+> +				     const int **vals, int *type, int *length,
+> +				     long mask)
+> +{
+> +	struct unit_converter *uc = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		*type = IIO_VAL_INT;
+> +		return iio_read_avail_channel_raw(uc->parent, vals, length);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int unit_converter_write_raw(struct iio_dev *indio_dev,
+> +				    struct iio_chan_spec const *chan,
+> +				    int val, int val2, long mask)
+> +{
+> +	struct unit_converter *uc = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		return iio_write_channel_raw(uc->parent, val);
+Talk me through the logic of having this...  Supporting a DAC?
+Bindings don't talk about that possibility...
+
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info unit_converter_info = {
+> +	.read_raw = unit_converter_read_raw,
+> +	.read_avail = unit_converter_read_avail,
+> +	.write_raw = unit_converter_write_raw,
+> +};
+> +
+> +static ssize_t unit_converter_read_ext_info(struct iio_dev *indio_dev,
+> +					    uintptr_t private,
+> +					    struct iio_chan_spec const *chan,
+> +					    char *buf)
+> +{
+> +	struct unit_converter *uc = iio_priv(indio_dev);
+> +
+> +	return iio_read_channel_ext_info(uc->parent,
+> +					 uc->ext_info[private].name,
+> +					 buf);
+> +}
+> +
+> +static ssize_t unit_converter_write_ext_info(struct iio_dev *indio_dev,
+> +					     uintptr_t private,
+> +					     struct iio_chan_spec const *chan,
+> +					     const char *buf, size_t len)
+> +{
+> +	struct unit_converter *uc = iio_priv(indio_dev);
+> +
+> +	return iio_write_channel_ext_info(uc->parent,
+> +					  uc->ext_info[private].name,
+> +					  buf, len);
+> +}
+> +
+> +static int unit_converter_configure_channel(struct device *dev,
+> +					    struct unit_converter *uc,
+> +					    enum iio_chan_type type)
+> +{
+> +	struct iio_chan_spec *chan = &uc->chan;
+> +	struct iio_chan_spec const *pchan = uc->parent->channel;
+> +	int ret;
+> +
+> +	chan->indexed = 1;
+> +	chan->output = pchan->output;
+> +	chan->ext_info = uc->ext_info;
+> +
+> +	if (type == -1) {
+> +		ret = iio_get_channel_type(uc->parent, &type);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to get parent channel type\n");
+> +			return ret;
+> +		}
+> +	}
+> +	chan->type = type;
+> +
+> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
+> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
+if the parent doesn't support RAW, is there a lot of point in carrying on?
+
+> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
+> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
+> +
+> +	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
+> +		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
+> +
+> +	chan->channel = 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int unit_converter_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct iio_channel *parent;
+> +	struct unit_converter *uc;
+> +	const char *type_name;
+> +	enum iio_chan_type type = -1; /* default to same as parent */
+> +	int sizeof_ext_info;
+> +	int sizeof_priv;
+> +	int i;
+> +	int ret;
+> +
+> +	if (!device_property_read_string(dev, "type", &type_name)) {
+> +		if (!strcmp(type_name, "voltage"))
+> +			type = IIO_VOLTAGE;
+> +		else if (!strcmp(type_name, "current"))
+> +			type = IIO_CURRENT;
+> +		else
+> +			return -EINVAL;
+> +	}
+> +
+> +	parent = devm_iio_channel_get(dev, "parent");
+> +	if (IS_ERR(parent)) {
+> +		if (PTR_ERR(parent) != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get parent channel\n");
+> +		return PTR_ERR(parent);
+> +	}
+> +
+> +	sizeof_ext_info = iio_get_channel_ext_info_count(parent);
+> +	if (sizeof_ext_info) {
+> +		sizeof_ext_info += 1; /* one extra entry for the sentinel */
+> +		sizeof_ext_info *= sizeof(*uc->ext_info);
+> +	}
+> +
+> +	sizeof_priv = sizeof(*uc) + sizeof_ext_info;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof_priv);
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	uc = iio_priv(indio_dev);
+> +
+> +	uc->numerator = 1;
+> +	uc->denominator = 1;
+> +	device_property_read_u32(dev, "numerator", &uc->numerator);
+> +	device_property_read_u32(dev, "denominator", &uc->denominator);
+> +	if (!uc->numerator || !uc->denominator) {
+> +		dev_err(dev, "invalid scaling factor.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	uc->parent = parent;
+> +
+> +	indio_dev->name = dev_name(dev);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->info = &unit_converter_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = &uc->chan;
+> +	indio_dev->num_channels = 1;
+> +	if (sizeof_ext_info) {
+> +		uc->ext_info = devm_kmemdup(dev,
+> +					    parent->channel->ext_info,
+> +					    sizeof_ext_info, GFP_KERNEL);
+> +		if (!uc->ext_info)
+> +			return -ENOMEM;
+> +
+> +		for (i = 0; uc->ext_info[i].name; ++i) {
+> +			if (parent->channel->ext_info[i].read)
+> +				uc->ext_info[i].read = unit_converter_read_ext_info;
+> +			if (parent->channel->ext_info[i].write)
+> +				uc->ext_info[i].write = unit_converter_write_ext_info;
+> +			uc->ext_info[i].private = i;
+> +		}
+> +	}
+> +
+> +	ret = unit_converter_configure_channel(dev, uc, type);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_iio_device_register(dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register iio device\n");
+> +		return ret;
+> +	}
+Drop the return out of the brackets and get rid of return 0 below.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id unit_converter_match[] = {
+> +	{ .compatible = "io-channel-unit-converter" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, unit_converter_match);
+> +
+> +static struct platform_driver unit_converter_driver = {
+> +	.probe = unit_converter_probe,
+> +	.driver = {
+> +		.name = "iio-unit-converter",
+> +		.of_match_table = unit_converter_match,
+> +	},
+> +};
+> +module_platform_driver(unit_converter_driver);
+> +
+> +MODULE_DESCRIPTION("IIO unit converter driver");
+> +MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
+> +MODULE_LICENSE("GPL v2");
