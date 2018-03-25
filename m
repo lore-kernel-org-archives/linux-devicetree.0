@@ -1,7 +1,7 @@
 From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] libnvdimm: Add device-tree based driver
-Date: Sun, 25 Mar 2018 12:27:52 +0800
-Message-ID: <201803251241.H0O3ZUaT%fengguang.wu@intel.com>
+Subject: [RFC PATCH] libnvdimm: bus_desc can be static
+Date: Sun, 25 Mar 2018 12:28:12 +0800
+Message-ID: <20180325042812.GA28332@lkp-ib03.lkp.intel.com>
 References: <20180323081209.31387-3-oohall@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,29 +22,23 @@ To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Oliver,
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linux-nvdimm/libnvdimm-for-next]
-[also build test WARNING on v4.16-rc6 next-20180323]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Oliver-O-Halloran/libnvdimm-Add-of_node-to-region-and-bus-descriptors/20180325-082036
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git libnvdimm-for-next
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/nvdimm/of_nvdimm.c:18:30: sparse: symbol 'bus_desc' was not declared. Should it be static?
-   drivers/nvdimm/of_nvdimm.c:19:19: sparse: symbol 'bus' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
+Fixes: 6cb2b51b9b76 ("libnvdimm: Add device-tree based driver")
+Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ of_nvdimm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nvdimm/of_nvdimm.c b/drivers/nvdimm/of_nvdimm.c
+index 79c2829..4ed373d 100644
+--- a/drivers/nvdimm/of_nvdimm.c
++++ b/drivers/nvdimm/of_nvdimm.c
+@@ -15,7 +15,7 @@
+  * for dispatching regions into the correct bus type, but this is useful
+  * for now.
+  */
+-struct nvdimm_bus_descriptor bus_desc;
++static struct nvdimm_bus_descriptor bus_desc;
+ struct nvdimm_bus *bus;
+ 
+ /* region driver */
