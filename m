@@ -1,43 +1,52 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
-Date: Sun, 25 Mar 2018 10:17:26 +0200
-Message-ID: <d2dfee96-cd30-fa16-6c83-b55773e3aa91@topic.nl>
-References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
- <20180323151101.GB24361@lunn.ch>
- <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
- <886c94ef-e2c8-2afa-307d-1924c74c6dc0@gmail.com>
- <cb12ea29-a7b0-cf66-7f5a-c09d36f443f0@topic.nl>
- <20180324185324.GG31941@lunn.ch>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v3 01/11] i2c: Export of_i2c_get_board_info()
+Date: Sun, 25 Mar 2018 12:19:32 +0200
+Message-ID: <20180325121932.6b0e5e5f@bbrezillon>
+References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
+        <20180323110020.19080-2-boris.brezillon@bootlin.com>
+        <20180324223518.g5jsi5zvoxa75psy@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180324185324.GG31941@lunn.ch>
-Content-Language: en-US
+In-Reply-To: <20180324223518.g5jsi5zvoxa75psy@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-On 24-03-18 19:53, Andrew Lunn wrote:
->> A quick survey for the of_get_mac_address users learns that most of them do
->> a memcpy (or similar) right after it, so for these drivers the
->> "of_get_nvmem_mac_address" style signature that performs the memcpy (or
->> better, ether_addr_copy) is a better fit, e.g.:
->>
->> int of_get_mac_address(struct device_node *np, void *addr)
+Hi Wolfram,
+
+On Sat, 24 Mar 2018 23:35:18 +0100
+Wolfram Sang <wsa@the-dreams.de> wrote:
+
+> Hi Boris,
 > 
-> Hi Mike
+> > - rebase on v4.15-rc1  
 > 
-> This is a nicer solution, but it is quite a lot of work, there are a
-> lot of users. Maybe Coccinelle can help?
+> This code has changed a little meanwhile. Please check my for-next
+> branch. Some changes are identical, some similar.
 
-About 58 of them, yeah. And this looked like such a simple thing when I 
-started it...
-https://elixir.bootlin.com/linux/v4.16-rc6/ident/of_get_mac_address
-I have no experience with Coccinelle though.
+Actually it was rebased on top of v4.16-rc1, but I'll check if this
+patch applies correctly on top of your for-next branch.
 
+> 
+> > -	info.archdata = &dev_ad;  
+> 
+> Why did you drop this?
 
+Well, this line could have been moved in of_i2c_register_device(), but
+I realized dev_ad was zero initialized without any further
+modification, and leaving info->archdata to NULL has the exact same
+effect (see [1]).
+
+Regards,
+
+Boris
+
+[1]https://elixir.bootlin.com/linux/v4.16-rc6/source/drivers/i2c/i2c-core-base.c#L711
 
 -- 
-Mike Looijmans
+Boris Brezillon, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
