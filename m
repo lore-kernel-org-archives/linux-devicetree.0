@@ -1,157 +1,51 @@
-From: Alban Bedel <albeu@free.fr>
-Subject: [PATCH v3 3/3] mtd: Add support for reading MTD devices via the nvmem API
-Date: Sun, 25 Mar 2018 00:24:59 +0100
-Message-ID: <1521933899-362-4-git-send-email-albeu@free.fr>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521933899-362-1-git-send-email-albeu@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Alban Bedel <albeu@free.fr>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] libnvdimm: Add device-tree based driver
+Date: Sun, 25 Mar 2018 10:51:02 +0800
+Message-ID: <201803251052.dEMfON8K%fengguang.wu@intel.com>
+References: <20180323081209.31387-3-oohall@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180323081209.31387-3-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allow drivers that use the nvmem API to read data stored on MTD devices.
-For this the mtd devices are registered as read-only NVMEM providers.
-On OF systems only devices that have the 'nvmem-provider' property
-are registered, on non-OF system all MTD devices are registered.
+Hi Oliver,
 
-Signed-off-by: Alban Bedel <albeu@free.fr>
----
-Changelog:
-v2: * Moved to the MTD core instead of using notifiers
-    * Fixed the Kconfig description
-v3: * Rebased on current kernel
-    * Moved the code to mtdcore.c and removed the conditional
-      compilation as suggested by Boris Brezillon
-    * Fixed my name in From and Signed-off-by
-    * Only allow root to read from the nvmem sysfs interface
----
- drivers/mtd/Kconfig     |  1 +
- drivers/mtd/mtdcore.c   | 59 +++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/mtd.h |  2 ++
- 3 files changed, 62 insertions(+)
+I love your patch! Yet something to improve:
 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 2a8ac68..911d869 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -1,5 +1,6 @@
- menuconfig MTD
- 	tristate "Memory Technology Device (MTD) support"
-+	imply NVMEM
- 	help
- 	  Memory Technology Devices are flash, RAM and similar chips, often
- 	  used for solid state file systems on embedded devices. This option
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 28553c8..d2a127c 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -478,6 +478,48 @@ int mtd_pairing_groups(struct mtd_info *mtd)
- }
- EXPORT_SYMBOL_GPL(mtd_pairing_groups);
- 
-+static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
-+			      void *val, size_t bytes)
-+{
-+	struct mtd_info *mtd = priv;
-+	size_t retlen;
-+	int err;
-+
-+	err = mtd_read(mtd, offset, bytes, &retlen, val);
-+	if (err && err != -EUCLEAN)
-+		return err;
-+
-+	return retlen == bytes ? 0 : -EIO;
-+}
-+
-+static int mtd_nvmem_add(struct mtd_info *mtd)
-+{
-+	struct nvmem_config config = {};
-+
-+	config.dev = &mtd->dev;
-+	config.owner = THIS_MODULE;
-+	config.reg_read = mtd_nvmem_reg_read;
-+	config.size = mtd->size;
-+	config.word_size = 1;
-+	config.stride = 1;
-+	config.read_only = true;
-+	config.root_only = true;
-+	config.priv = mtd;
-+
-+	mtd->nvmem = nvmem_register(&config);
-+	if (IS_ERR(mtd->nvmem)) {
-+		/* Just ignore if there is no NVMEM support in the kernel */
-+		if (PTR_ERR(mtd->nvmem) == -ENOSYS) {
-+			mtd->nvmem = NULL;
-+		} else {
-+			dev_err(&mtd->dev, "Failed to register NVMEM device\n");
-+			return PTR_ERR(mtd->nvmem);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct dentry *dfs_dir_mtd;
- 
- /**
-@@ -560,6 +602,11 @@ int add_mtd_device(struct mtd_info *mtd)
- 	if (error)
- 		goto fail_added;
- 
-+	/* Add the nvmem provider */
-+	error = mtd_nvmem_add(mtd);
-+	if (error)
-+		goto fail_nvmem_add;
-+
- 	if (!IS_ERR_OR_NULL(dfs_dir_mtd)) {
- 		mtd->dbg.dfs_dir = debugfs_create_dir(dev_name(&mtd->dev), dfs_dir_mtd);
- 		if (IS_ERR_OR_NULL(mtd->dbg.dfs_dir)) {
-@@ -585,6 +632,8 @@ int add_mtd_device(struct mtd_info *mtd)
- 	__module_get(THIS_MODULE);
- 	return 0;
- 
-+fail_nvmem_add:
-+	device_unregister(&mtd->dev);
- fail_added:
- 	of_node_put(mtd_get_of_node(mtd));
- 	idr_remove(&mtd_idr, i);
-@@ -627,6 +676,16 @@ int del_mtd_device(struct mtd_info *mtd)
- 		       mtd->index, mtd->name, mtd->usecount);
- 		ret = -EBUSY;
- 	} else {
-+		/* Try to remove the NVMEM provider */
-+		if (mtd->nvmem) {
-+			ret = nvmem_unregister(mtd->nvmem);
-+			if (ret) {
-+				dev_err(&mtd->dev,
-+					"Failed to unregister NVMEM device\n");
-+				goto out_error;
-+			}
-+		}
-+
- 		device_unregister(&mtd->dev);
- 
- 		idr_remove(&mtd_idr, mtd->index);
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 205eded..660b8e7 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -25,6 +25,7 @@
- #include <linux/notifier.h>
- #include <linux/device.h>
- #include <linux/of.h>
-+#include <linux/nvmem-provider.h>
- 
- #include <mtd/mtd-abi.h>
- 
-@@ -352,6 +353,7 @@ struct mtd_info {
- 	struct device dev;
- 	int usecount;
- 	struct mtd_debug_info dbg;
-+	struct nvmem_device *nvmem;
- };
- 
- int mtd_ooblayout_ecc(struct mtd_info *mtd, int section,
--- 
-2.7.4
+[auto build test ERROR on linux-nvdimm/libnvdimm-for-next]
+[also build test ERROR on v4.16-rc6 next-20180323]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Oliver-O-Halloran/libnvdimm-Add-of_node-to-region-and-bus-descriptors/20180325-082036
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git libnvdimm-for-next
+config: ia64-allmodconfig (attached as .config)
+compiler: ia64-linux-gcc (GCC) 7.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=ia64 
+
+All errors (new ones prefixed by >>):
+
+   ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
+>> ERROR: "of_node_to_nid" [drivers/nvdimm/of_nvdimm.ko] undefined!
+   ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
