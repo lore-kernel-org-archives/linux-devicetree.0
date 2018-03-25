@@ -1,82 +1,84 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Sun, 25 Mar 2018 08:45:12 -0700
-Message-ID: <20180325154512.GC5700@atomide.com>
-References: <20180322135553.GA27648@amd>
- <20180322164633.GF5799@atomide.com>
- <20180322192843.GA17189@amd>
- <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
- <20180323105455.GB21644@amd>
- <20180323113521.45va72bhzis6ym6m@earth.universe>
- <20180323201343.GC23658@amd>
- <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
- <20180324142517.GA94954@atomide.com>
- <20180324200224.GA17857@amd>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
+ time stamping IP core.
+Date: Sun, 25 Mar 2018 17:59:37 +0200
+Message-ID: <20180325155937.GA12820@lunn.ch>
+References: <20180321193315.GR24516@lunn.ch>
+ <20180321213636.2mmfveu2vg5qbwpp@localhost>
+ <20180321214436.GX24516@lunn.ch>
+ <20180321215729.engnoxpaympvvdc5@localhost>
+ <20180321221652.GZ24516@lunn.ch>
+ <20180321224702.cbcq3wckmojsrgjf@localhost>
+ <20180321235007.GA28402@lunn.ch>
+ <20180324171219.vh6wcxbem3hyhkuu@localhost>
+ <20180324184858.GF31941@lunn.ch>
+ <20180325045151.kq7mjopjwzo6w2vw@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180324200224.GA17857@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Williams <dcbw@redhat.com>, Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20180325045151.kq7mjopjwzo6w2vw@localhost>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [180324 20:03]:
-> On Sat 2018-03-24 07:25:17, Tony Lindgren wrote:
-> > * Dan Williams <dcbw@redhat.com> [180324 14:00]:
-> > > On Fri, 2018-03-23 at 21:13 +0100, Pavel Machek wrote:
-> > > > Does ofonod work for you? I could not get that one to work...
-> > > 
-> > > Because it's looking for a Gobi modem but the MDM6600 isn't one and
-> > > doesn't expose that layout (and doesn't really need to anyway).  I
-> > > don't think ofono has a generic QMI driver, so you'd either need to for
-> > > ce it to use the telitqmi or quectelqmi drivers, or write your own
-> > > generic QMI one.
+On Sat, Mar 24, 2018 at 09:51:52PM -0700, Richard Cochran wrote:
+> On Sat, Mar 24, 2018 at 07:48:58PM +0100, Andrew Lunn wrote:
+> > As far as i can see, you have three basic problems:
 > > 
-> > We also get five USB uarts if we add the device id with something
-> > like the patch below. I don't quite get why we get five UARTS?
+> > 1) How do you associate the PTP device to the netdev?
+> > 2) How do you get the information you need to configure the PTP device
 > 
-> Not sure, either. Often more than one uart is useful, you get AT
-> commands on one, while GPRS data flow on some other. 
+> Yes, yes.
 > 
-> > Also not sure if we should be using drivers/usb/serial/qcaux.c
-> > instead of qcserial.c?
-> > 
-> > And from what I recall trying it out, adding the USB UARTs
-> > somehow confused ModemManager I think, that needs to be retested
-> > though :)
-> > 
-> > And the USB UARTs added do not offer the same set of AT commands
-> > as the n_gsm serial mux.
+> > 3) How do you limit the MAC/PHY to what the PTP device can do.
 > 
-> Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it seems
-> to react to AT commands, and in particular reacts to ADT123; (; is
-> important).
+> Hm, I don't think this is important.
 
-Is that to dial a voice call?
+So you are happy that the PTP device will cause the MC/PHY link to
+break down when it is asked to do something it cannot do? Take for
+example a Marvell MAC connected to a Marvell PHY doing 2.5Gbps SGMII
+because it can. But say the PTP device cannot be clocked that fast,
+and the MII links break.... You as a PTP maintainer might be happy
+with that, but as a PHY maintainer, i'm not too happy with this.
 
-> AT+CMGF=1
-> AT+CMGS="123"
-> foo^Z
-> 
-> Works for SMS sending. Good.
+> Right, so phylib can operate on phydev->attached_dev->mdiots;
 
-So what do you use for reading notifying and reading sms?
+So first off, it is not an MDIO device. You current code is a horrible
+hack which gets a NACK. Use a phandle, and have
+of_mdiobus_register_phy() follow the phandle to get the device.
 
-> Now, if someone knows what needs to be done to get GSM audio working,
-> let me know. That's something I'd really like.
+To keep lifecycle issues simple, i would also keep it in phydev, not
+netdev.
 
-I think it's the cpcap based config to route voice call audio
-to SoC, Sebastian knows the details :)
+mdiots as a name is completely wrong. It is not an MDIO device.  Maybe
+in the future some devices will be MDIO, or I2C, or SPI. Just call it
+ptpdev. This ptpdev needs to be control bus agnostic. You need a
+ptpdev core API exposing functions like ptpdev_hwtstamp,
+ptpdev_rxtstamp, ptpdev_txtstamp, ptpdev_link_change, which take a
+ptpdev. Have phy_link_change call ptpdev_link_change. You have the
+flexibility in that if in the future you do care that your ptpdev
+breaks the MAC-PHY link, you can add a ptpdev_validate_advertise,
+which allows the ptpdev to mask out link modes it does not support.
 
-The way to figure that one out is to dump the cpcap registers
-before and during voice call on android with cpcaprw, then
-diff the output for the audio registers. Probably some SoC
-registers need to be diffed too with rwmem or similar tool
-for the mcbsp instance(s) used.
+Your ptp device, when probing needs to register with the ptpdev core,
+passing a generic ptpdev_ops for the operations its support. How it
+talks to the device, MMIO, SPI, I2C is hidden within the device
+driver.
 
-Regards,
+You can then clean up the code in timestamping.c. Code like:
 
-Tony
+        phydev = skb->dev->phydev;
+        if (likely(phydev->drv->txtstamp)) {
+                clone = skb_clone_sk(skb);
+                if (!clone)
+                        return;
+                phydev->drv->txtstamp(phydev, clone, type);
+        }
+
+violates the layering, and the locking looks broken. Add a
+phy_txtstamp() call to phylib. It can then either call into the PHY
+driver, or use the call the ptpdev API, or -EOPNOTSUP.
+
+	Andrew
