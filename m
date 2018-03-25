@@ -1,101 +1,139 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Mon, 26 Mar 2018 00:55:56 +0200
-Message-ID: <20180325225556.GA18141@amd>
-References: <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
- <20180323105455.GB21644@amd>
- <20180323113521.45va72bhzis6ym6m@earth.universe>
- <20180323201343.GC23658@amd>
- <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
- <20180324142517.GA94954@atomide.com>
- <20180324200224.GA17857@amd>
- <20180325154512.GC5700@atomide.com>
- <20180325185857.GA7582@amd>
- <20180325205232.GD5700@atomide.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES time
+ stamping IP core.
+Date: Sun, 25 Mar 2018 16:01:49 -0700
+Message-ID: <4c3c939f-4cbe-51db-c141-950b85a5b4de@gmail.com>
+References: <20180321213636.2mmfveu2vg5qbwpp@localhost>
+ <20180321214436.GX24516@lunn.ch> <20180321215729.engnoxpaympvvdc5@localhost>
+ <20180321221652.GZ24516@lunn.ch> <20180321224702.cbcq3wckmojsrgjf@localhost>
+ <20180321235007.GA28402@lunn.ch> <20180324171219.vh6wcxbem3hyhkuu@localhost>
+ <20180324184858.GF31941@lunn.ch> <20180325045151.kq7mjopjwzo6w2vw@localhost>
+ <20180325155937.GA12820@lunn.ch> <20180325221004.6svjbx54yghwuk7w@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180325205232.GD5700@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Dan Williams <dcbw@redhat.com>, Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180325221004.6svjbx54yghwuk7w@localhost>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 03/25/2018 03:10 PM, Richard Cochran wrote:
+> On Sun, Mar 25, 2018 at 05:59:37PM +0200, Andrew Lunn wrote:
+>>>> 3) How do you limit the MAC/PHY to what the PTP device can do.
+>>>
+>>> Hm, I don't think this is important.
+>>
+>> So you are happy that the PTP device will cause the MC/PHY link to
+>> break down when it is asked to do something it cannot do?
+> 
+> No, but I do expect the system designer to use common sense.  No need
+> to over engineer this now just to catch hypothetical future problems.
+> 
+>>> Right, so phylib can operate on phydev->attached_dev->mdiots;
+>>
+>> So first off, it is not an MDIO device.
+> 
+> ...
+> 
+>> To keep lifecycle issues simple, i would also keep it in phydev, not
+>> netdev.
+>>
+>> mdiots as a name is completely wrong. It is not an MDIO device.
+> 
+> I am well aware of what terms MDIO and MII represent, but our current
+> code is hopelessly confused.  Case in point:
+> 
+> 	static inline struct mii_bus *mdiobus_alloc(void);
+> 
+> The kernel's 'struct mii_bus' is really only about MDIO and not about
+> the rest of MII.  Clearly MII time stamping devices belong on the MII
+> bus, so that is where I put them.
 
-> > > > Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it seems
-> > > > to react to AT commands, and in particular reacts to ADT123; (; is
-> > > > important).
-> > >=20
-> > > Is that to dial a voice call?
-> >=20
-> > Yes. And it is ATD123; not ATD.
->=20
-> Strange, no semicolon is needed when using /dev/gsmtty to
-> dial a voice call with my current pile of pending changes,
-> just doing ATD123 dials..
+They do, if and only if their control path goes through the MDIO bus,
+this one does not, see below.
 
-Interesting. Maybe I made some mistake in experiment.
+> 
+> Or maybe mii_bus should first be renamed to mdio_bus?  That you pave
+> the way for introducing a representation of the MII bus.
 
-> Anyways, looks like qmi_wwan needs to be loaded before
-> qcserial module, otherwise we get nine ttyUSB instances
-> and ModemManager can't find any modems.
->=20
-> With qcserial module loaded after qmi_wwan, it still takes
-> a long time for ModemManager to find the modem.
->=20
-> Then unrelated to the qcserial module, also looks like I can
-> no longer use the GPS with ModemManager:
->=20
-> $ mmcli -m 0 --enable
-> $ mmcli -m 0 --location-enable-gps-raw
->=20
-> And then chmod a+r /dev/cdc-wdm0 and pointing gpsd to use
-> /dev/cdc-wdm0 used to work, but now it seems that gpsd
-> can no longer read it. Trying to start gpsd manually produces:
+It would have been ideal to name this structure mdio_bus, because that
+is what it indeed is. An argument could be made this is true about a lot
+of devices though, e.g: PCIe end point drivers do register a
+pci_driver/device, not a pcie_driver/device...
 
-Thanks for hints, it would not be bad to get gps working. But .. voice
-calls. Those are important :-).
+Andrew still has a valid point though that devices are child of their
+control bus, not data bus. The data bus here is MII, but the control bus
+is here through MMIO register, therefore platform device in Linux's
+device driver model so we would expect the
 
-> # gpsd -b -n -N /dev/cdc-wdm0
-> gpsd:ERROR: SER: /dev/cdc-wdm0 already opened by another process
-> gpsd:ERROR: initial GPS device /dev/cdc-wdm0 open failed
-> gpsd:ERROR: can't run with neither control socket nor devices open
->=20
-> And lsof shows /usr/libexec/qmi-proxy having it open.
->=20
-> Anybody know what I might be doing wrong? Sounds like something
-> now needs to be done with qmi-proxy to get access to GPS?
+The best that I can think about and it still is a hack in some way, is
+to you have your time stamping driver create a proxy mii_bus whose
+purpose is just to hook to mdio/phy_device events (such as link changes)
+in order to do what is necessary, or at least, this would indicate its
+transparent nature towards the MDIO/MDC lines...
 
-Maybe kill the proxy and then look at cdc-wdm0 by hand? NMEA can be
-parsed by hand... quite easily.
+What is not great in your current binding is that you created a notion
+of "port" which is tied to the timestamper device, whereas it really
+seems to be a property of the Ethernet controller, where the datapath
+being timestamped resides.
 
-Good night,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Tangential: the existing PHY time stamping logic should probably be
+generalized to a mdio_device (which the phy_device is a specialized
+superset of) instead of to the phy_device. This would still allow
+existing use cases but it would also allow us to support possible "pure
+MDIO" devices would that become some thing in the future.
 
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+>> in the future some devices will be MDIO, or I2C, or SPI. Just call it
+>> ptpdev. This ptpdev needs to be control bus agnostic. You need a
+>> ptpdev core API exposing functions like ptpdev_hwtstamp,
+>> ptpdev_rxtstamp, ptpdev_txtstamp, ptpdev_link_change, which take a
+>> ptpdev.
+> 
+> Well, this name is not ideal, since time stamping devices in general
+> can time stamp any frame, not just PTP frames.
+> 
+>> You can then clean up the code in timestamping.c. Code like:
+>>
+>>         phydev = skb->dev->phydev;
+>>         if (likely(phydev->drv->txtstamp)) {
+>>                 clone = skb_clone_sk(skb);
+>>                 if (!clone)
+>>                         return;
+>>                 phydev->drv->txtstamp(phydev, clone, type);
+>>         }
+>>
+>> violates the layering, and the locking looks broken.
+> 
+> Are you sure the locking is broken?  If so, how?
+> 
+> (This code path has been reviewed more than once.)
+> 
+> Can you please explain the layering and how this code breaks it?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I see it both ways, you either invoke an operation to timestamp which
+goes into an abstract "timestamping device" which invokes a driver to
+determine the actual operation, or you can do what you did which was to
+augment struct net_device with a phy_device, under the premise this will
+be the only type of timestamping capable device we will ever see.
 
-iEYEARECAAYFAlq4KPwACgkQMOfwapXb+vLlXQCfW69Yooxx1KfGR/ikR+B4U4Rr
-KHAAnjdk+rTRZRKE4r7qSkPmUV9MZpI8
-=U8HG
------END PGP SIGNATURE-----
+This is no longer holding true, your patches are a testament to that, so
+now you need another member: mdiots, as you can see, there is now
+overlap between the two, because a phy_device should arguably be
+encapsulating a mdiots device object...
 
---mYCpIKhGyMATD0i+--
+> 
+> (This code goes back to 2.6.36 and perhaps predates the layers that
+> were added later on.)
+> 
+> Thanks,
+> Richard
+> 
+
+-- 
+Florian
