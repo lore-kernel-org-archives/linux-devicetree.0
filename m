@@ -1,115 +1,123 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v5 2/2] i2c: add support for Socionext SynQuacer I2C controller
-Date: Sun, 25 Mar 2018 11:30:21 +0100
-Message-ID: <CAKv+Gu_ERB+nhhrWJ6=mLRPFvjTZD5NutgX5JDzWfS8tHiDx7Q@mail.gmail.com>
-References: <20180302083123.7259-1-ard.biesheuvel@linaro.org>
- <20180302083123.7259-3-ard.biesheuvel@linaro.org> <20180324231910.unzvwty3xia4mqu2@ninjato>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC PATCH 2/3] drm: bridge: panel: allow override of the bus
+ format
+Date: Sun, 25 Mar 2018 14:01:11 +0200
+Message-ID: <e0f5d89d-83ee-31ae-0b48-e34fe94883c5@axentia.se>
+References: <20180317221525.18534-1-peda@axentia.se>
+ <20180317221525.18534-3-peda@axentia.se> <7015227.p44CVkfgjM@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180324231910.unzvwty3xia4mqu2@ninjato>
+In-Reply-To: <7015227.p44CVkfgjM@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 March 2018 at 23:19, Wolfram Sang <wsa@the-dreams.de> wrote:
-> Hi Ard,
->
->> +static int synquacer_i2c_master_start(struct synquacer_i2c *i2c,
->> +                                   struct i2c_msg *pmsg)
->> +{
->> +     unsigned char bsr, bcr;
->> +
->> +     if (pmsg->flags & I2C_M_RD)
->> +             writeb((pmsg->addr << 1) | 1,
->> +                    i2c->base + SYNQUACER_I2C_REG_DAR);
->> +     else
->> +             writeb(pmsg->addr << 1,
->> +                    i2c->base + SYNQUACER_I2C_REG_DAR);
->
-> writeb(i2c_8bit_addr_from_msg(pmsg), i2c->base + SYNQUACER_I2C_REG_DAR);
->
-> ?
->
->> +static int synquacer_i2c_master_recover(struct synquacer_i2c *i2c)
->> +{
->
-> This is the bus recovery mechanism with toggling SCL pulses, right?
-> That should be implemented using a 'struct i2c_bus_recovery_info' and
-> the core helpers.
->
->> +static int synquacer_i2c_doxfer(struct synquacer_i2c *i2c,
->> +                             struct i2c_msg *msgs, int num)
->> +{
->> +     unsigned char bsr;
->> +     unsigned long timeout, bb_timeout;
->> +     int ret;
->> +
->> +     if (i2c->is_suspended)
->> +             return -EBUSY;
->> +
->> +     synquacer_i2c_hw_init(i2c);
->> +     bsr = readb(i2c->base + SYNQUACER_I2C_REG_BSR);
->> +     if (bsr & SYNQUACER_I2C_BSR_BB) {
->> +             dev_err(i2c->dev, "cannot get bus (bus busy)\n");
->> +             return -EBUSY;
->> +     }
->> +
->> +     init_completion(&i2c->completion);
->
-> reinit_completion? And init_completion() in probe()?
->
->> +     /* ensure the stop has been through the bus */
->> +     bb_timeout = jiffies + HZ;
->> +     do {
->> +             bsr = readb(i2c->base + SYNQUACER_I2C_REG_BSR);
->> +             if (!(bsr & SYNQUACER_I2C_BSR_BB))
->> +                     return 0;
->> +     } while (time_before(jiffies, bb_timeout));
->
-> Busy looping for one second? And won't the bus_free detection at the
-> beginning of a transfer do?
->
->> +static int synquacer_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->> +                           int num)
->> +{
->> +     struct synquacer_i2c *i2c;
->> +     int retry;
->> +     int ret;
->> +
->> +     if (!msgs)
->> +             return -EINVAL;
->> +     if (num <= 0)
->> +             return -EINVAL;
->
-> Hmm, this should be done by the core. I am surprised it doesn't do that yet :/
->
->> +
->> +     i2c = i2c_get_adapdata(adap);
->> +     i2c->timeout_ms = calc_timeout_ms(i2c, msgs, num);
->> +
->> +     dev_dbg(i2c->dev, "calculated timeout %d ms\n", i2c->timeout_ms);
->> +
->> +     for (retry = 0; retry < adap->retries; retry++) {
->> +
->> +             ret = synquacer_i2c_doxfer(i2c, msgs, num);
->> +             if (ret != -EAGAIN)
->> +                     return ret;
->> +
->> +             dev_dbg(i2c->dev, "Retrying transmission (%d)\n", retry);
->> +
->> +             synquacer_i2c_master_recover(i2c);
->
-> Recovery is only when SDA is stuck low, held by a client. That is
-> nothing you should do just on any error.
->
-> If you want the driver in v4.17, I'd suggest to drop
-> synquacer_i2c_master_recover() now and add it incrementally later, using
-> the existing recovery infrastructure. The rest is only minor stuff and
-> needs not much further discussion IMO.
->
+Hi Laurent,
 
-Thanks Wolfram.
+Thanks for the feedback!
 
-I have fixed all these up and am about to send out the v6.
+On 2018-03-20 14:56, Laurent Pinchart wrote:
+> Hi Peter,
+> 
+> Thank you for the patch.
+> 
+> On Sunday, 18 March 2018 00:15:24 EET Peter Rosin wrote:
+>> Useful if the bridge does some kind of conversion of the bus format.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>> ---
+>>  drivers/gpu/drm/bridge/panel.c | 22 +++++++++++++++++++++-
+>>  include/drm/drm_bridge.h       |  1 +
+>>  2 files changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+>> index 6d99d4a3beb3..ccef0283ff41 100644
+>> --- a/drivers/gpu/drm/bridge/panel.c
+>> +++ b/drivers/gpu/drm/bridge/panel.c
+>> @@ -22,6 +22,7 @@ struct panel_bridge {
+>>  	struct drm_connector connector;
+>>  	struct drm_panel *panel;
+>>  	u32 connector_type;
+>> +	u32 bus_format;
+>>  };
+>>
+>>  static inline struct panel_bridge *
+>> @@ -40,8 +41,15 @@ static int panel_bridge_connector_get_modes(struct
+>> drm_connector *connector) {
+>>  	struct panel_bridge *panel_bridge =
+>>  		drm_connector_to_panel_bridge(connector);
+>> +	int ret;
+>> +
+>> +	ret = drm_panel_get_modes(panel_bridge->panel);
+>> +
+>> +	if (panel_bridge->bus_format)
+>> +		drm_display_info_set_bus_formats(&connector->display_info,
+>> +						 &panel_bridge->bus_format, 1);
+> 
+> While I agree with the problem statement and, to some extent, the DT bindings, 
+> I don't think this is the right implementation. You've correctly noted that 
+> display controller shouldn't blindly use the formats reported by the panel 
+> through the connector formats, and that hacking the panel driver to override 
+> the formats isn't a good idea, so I wouldn't override the formats reported by 
+> the connector. I would instead extend the drm_bridge API to report formats at 
+> bridge inputs. This would be more generic and allow each bridge to configure 
+> itself according to the next bridge in the chain.
+> 
+> I'm not sure whether this API extension should be in the form of a new bridge 
+> function, or if the formats should be stored in the drm_bridge structure 
+> directly as done for connectors in the display info structure. I'm tempted by 
+> the former, but I'm open to discussions.
+
+Ok, I can look into that, but let me check if I got this right. From the very
+little of the code that I have looked at, I have gathered that display
+controllers handle bridges explicitly, right? If so, by extending the bridge
+(with either a new function or new data) you impose changes to all display
+controllers wanting to handle this new bridge input-format. If so, I assume
+I can leave out the changes to all display controllers that I do not care
+about. Correct?
+
+Also, don't hold your breath waiting for a v2, but I'll try to get to it :-)
+
+>> -	return drm_panel_get_modes(panel_bridge->panel);
+>> +	return ret;
+>>  }
+>>
+>>  static const struct drm_connector_helper_funcs
+>> @@ -203,6 +211,18 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
+>> }
+>>  EXPORT_SYMBOL(drm_panel_bridge_remove);
+>>
+>> +void drm_panel_bridge_set_bus_format(struct drm_bridge *bridge, u32
+>> bus_format) +{
+>> +	struct panel_bridge *panel_bridge;
+>> +
+>> +	if (!bridge)
+>> +		return;
+>> +
+>> +	panel_bridge = drm_bridge_to_panel_bridge(bridge);
+>> +	panel_bridge->bus_format = bus_format;
+>> +}
+>> +EXPORT_SYMBOL(drm_panel_bridge_set_bus_format);
+>> +
+>>  static void devm_drm_panel_bridge_release(struct device *dev, void *res)
+>>  {
+>>  	struct drm_bridge **bridge = res;
+>> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+>> index 682d01ba920c..81903b92f187 100644
+>> --- a/include/drm/drm_bridge.h
+>> +++ b/include/drm/drm_bridge.h
+>> @@ -268,6 +268,7 @@ void drm_bridge_enable(struct drm_bridge *bridge);
+>>  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+>>  					u32 connector_type);
+>>  void drm_panel_bridge_remove(struct drm_bridge *bridge);
+>> +void drm_panel_bridge_set_bus_format(struct drm_bridge *bridge, u32
+>> bus_format);
+>> struct drm_bridge *devm_drm_panel_bridge_add(struct device
+>> *dev,
+>>  					     struct drm_panel *panel,
+>>  					     u32 connector_type);
+> 
