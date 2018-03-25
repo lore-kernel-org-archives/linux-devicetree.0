@@ -1,123 +1,122 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC PATCH 2/3] drm: bridge: panel: allow override of the bus
- format
-Date: Sun, 25 Mar 2018 14:01:11 +0200
-Message-ID: <e0f5d89d-83ee-31ae-0b48-e34fe94883c5@axentia.se>
-References: <20180317221525.18534-1-peda@axentia.se>
- <20180317221525.18534-3-peda@axentia.se> <7015227.p44CVkfgjM@avalon>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH 4/7] ARM: dts: sun7i: Add pinmux settings for LCD0
+ RGB888 output.
+Date: Sun, 25 Mar 2018 16:09:13 +0200
+Message-ID: <1521986953.5301.4.camel@paulk.fr>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-4-git-send-email-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7015227.p44CVkfgjM@avalon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1672045686=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1521662593-25468-4-git-send-email-giulio.benetti@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-Thanks for the feedback!
+--===============1672045686==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-5Aab1FspCjS0Hic48SE1"
 
-On 2018-03-20 14:56, Laurent Pinchart wrote:
-> Hi Peter,
-> 
-> Thank you for the patch.
-> 
-> On Sunday, 18 March 2018 00:15:24 EET Peter Rosin wrote:
->> Useful if the bridge does some kind of conversion of the bus format.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  drivers/gpu/drm/bridge/panel.c | 22 +++++++++++++++++++++-
->>  include/drm/drm_bridge.h       |  1 +
->>  2 files changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
->> index 6d99d4a3beb3..ccef0283ff41 100644
->> --- a/drivers/gpu/drm/bridge/panel.c
->> +++ b/drivers/gpu/drm/bridge/panel.c
->> @@ -22,6 +22,7 @@ struct panel_bridge {
->>  	struct drm_connector connector;
->>  	struct drm_panel *panel;
->>  	u32 connector_type;
->> +	u32 bus_format;
->>  };
->>
->>  static inline struct panel_bridge *
->> @@ -40,8 +41,15 @@ static int panel_bridge_connector_get_modes(struct
->> drm_connector *connector) {
->>  	struct panel_bridge *panel_bridge =
->>  		drm_connector_to_panel_bridge(connector);
->> +	int ret;
->> +
->> +	ret = drm_panel_get_modes(panel_bridge->panel);
->> +
->> +	if (panel_bridge->bus_format)
->> +		drm_display_info_set_bus_formats(&connector->display_info,
->> +						 &panel_bridge->bus_format, 1);
-> 
-> While I agree with the problem statement and, to some extent, the DT bindings, 
-> I don't think this is the right implementation. You've correctly noted that 
-> display controller shouldn't blindly use the formats reported by the panel 
-> through the connector formats, and that hacking the panel driver to override 
-> the formats isn't a good idea, so I wouldn't override the formats reported by 
-> the connector. I would instead extend the drm_bridge API to report formats at 
-> bridge inputs. This would be more generic and allow each bridge to configure 
-> itself according to the next bridge in the chain.
-> 
-> I'm not sure whether this API extension should be in the form of a new bridge 
-> function, or if the formats should be stored in the drm_bridge structure 
-> directly as done for connectors in the display info structure. I'm tempted by 
-> the former, but I'm open to discussions.
 
-Ok, I can look into that, but let me check if I got this right. From the very
-little of the code that I have looked at, I have gathered that display
-controllers handle bridges explicitly, right? If so, by extending the bridge
-(with either a new function or new data) you impose changes to all display
-controllers wanting to handle this new bridge input-format. If so, I assume
-I can leave out the changes to all display controllers that I do not care
-about. Correct?
+--=-5Aab1FspCjS0Hic48SE1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Also, don't hold your breath waiting for a v2, but I'll try to get to it :-)
+Hi,
 
->> -	return drm_panel_get_modes(panel_bridge->panel);
->> +	return ret;
->>  }
->>
->>  static const struct drm_connector_helper_funcs
->> @@ -203,6 +211,18 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
->> }
->>  EXPORT_SYMBOL(drm_panel_bridge_remove);
->>
->> +void drm_panel_bridge_set_bus_format(struct drm_bridge *bridge, u32
->> bus_format) +{
->> +	struct panel_bridge *panel_bridge;
->> +
->> +	if (!bridge)
->> +		return;
->> +
->> +	panel_bridge = drm_bridge_to_panel_bridge(bridge);
->> +	panel_bridge->bus_format = bus_format;
->> +}
->> +EXPORT_SYMBOL(drm_panel_bridge_set_bus_format);
->> +
->>  static void devm_drm_panel_bridge_release(struct device *dev, void *res)
->>  {
->>  	struct drm_bridge **bridge = res;
->> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
->> index 682d01ba920c..81903b92f187 100644
->> --- a/include/drm/drm_bridge.h
->> +++ b/include/drm/drm_bridge.h
->> @@ -268,6 +268,7 @@ void drm_bridge_enable(struct drm_bridge *bridge);
->>  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
->>  					u32 connector_type);
->>  void drm_panel_bridge_remove(struct drm_bridge *bridge);
->> +void drm_panel_bridge_set_bus_format(struct drm_bridge *bridge, u32
->> bus_format);
->> struct drm_bridge *devm_drm_panel_bridge_add(struct device
->> *dev,
->>  					     struct drm_panel *panel,
->>  					     u32 connector_type);
-> 
+Le mercredi 21 mars 2018 =C3=A0 21:03 +0100, Giulio Benetti a =C3=A9crit :
+> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
+> for the needed pins.
+>=20
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
+> b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index efb5607..bfe6728 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -922,6 +922,14 @@
+>  				pins =3D "PI20", "PI21";
+>  				function =3D "uart7";
+>  			};
+> +
+> +			lcd0_rgb888_pins: lcd0-rgb888-pins {
+
+It would be more consistent with other pins definitions to have
+underscores in both names and to indicate the index, such as:
+lcd0_rgb888_pins: lcd0_rgb888_pins@0 {
+
+This way, other set of pins for LCD (PH0-PH27) can be declared as @1
+when they are needed in the future.
+
+> +				pins =3D "PD0", "PD1", "PD2", "PD3",
+> "PD4", "PD5", "PD6", "PD7",
+> +				       "PD8", "PD9", "PD10", "PD11",
+> "PD12", "PD13", "PD14", "PD15",
+> +				       "PD16", "PD17", "PD18",
+> "PD19", "PD20", "PD21", "PD22", "PD23",
+> +				       "PD24", "PD25", "PD26",
+> "PD27";
+> +				function =3D "lcd0";
+> +			};
+>  		};
+> =20
+>  		timer@1c20c00 {
+
+--=20
+Paul Kocialkowski,
+
+developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+--=-5Aab1FspCjS0Hic48SE1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlq3rYkACgkQhP3B6o/u
+lQyFPA/+Jq5sS60mJuYOB7A13KfzwH1rfVlhJN8VkAaTONyxAyhhv1nwUROI61v0
+A/+k7FI6cfMKjjO9vh4g9WZo95EUgkzt6SkEwrhxX0/10U2Wp8ruUhAxT/JsOHX5
+ETOIIzOKP2FIrx5KKFCKAayIxiyH272Dshtcr7hfUj+SIVF5FU+ccxPZEyXbk3fH
+MnFhNvwg2EWDZSq0jdXfMQnlKIympTustwG09oOrHhZLW6J56RCcZbNrCI5AggvZ
+b+IxQGjkfYcbuW704QWhyLAKJo53EEF5szPxrbN6KEa3WXXBK2w5wu8ys5XAHXH8
+D6ULM60z+8/5dQ0cL1t3+8srvMLwjxrj3NbygD4dmMd6k27/4/XGNerHeAERIsiq
+8+FgjRsp5LzjoSbL6GIYG6XkQ55w4D0j/jlOkg9EoiSt2uHGFi23GhmQGwIyb9q+
+rZCv8tnU7jkWswKwofNlMHq5WRlx4dfeD6jeRHzF9jQNhCl8baq/1zRs2scxjvXe
+xkGgEb4QP5xTKl2IcFAPtBNQUjQEPbs6mnVTb6Jf6B3jx7Z98KSD2Osi4quoh44y
+s1NVkeI+YUICcdpG8OzyxaHBVQOj1+1LCKAmeF2JbZD7TUUgplpksGjfOHG5/5rM
+ABAbj0IXioEpRiYIy4ZHfRR6IJkkUIWrAA/IAl0EBs7hx2OW6oE=
+=H5Th
+-----END PGP SIGNATURE-----
+
+--=-5Aab1FspCjS0Hic48SE1--
+
+
+--===============1672045686==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1672045686==--
