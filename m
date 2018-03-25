@@ -1,8 +1,8 @@
 From: Andrew Lunn <andrew@lunn.ch>
 Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
  time stamping IP core.
-Date: Mon, 26 Mar 2018 01:01:58 +0200
-Message-ID: <20180325230158.GB19365@lunn.ch>
+Date: Mon, 26 Mar 2018 01:06:18 +0200
+Message-ID: <20180325230618.GC19365@lunn.ch>
 References: <20180321214436.GX24516@lunn.ch>
  <20180321215729.engnoxpaympvvdc5@localhost>
  <20180321221652.GZ24516@lunn.ch>
@@ -23,35 +23,18 @@ To: Richard Cochran <richardcochran@gmail.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-> > You can then clean up the code in timestamping.c. Code like:
-> > 
-> >         phydev = skb->dev->phydev;
-> >         if (likely(phydev->drv->txtstamp)) {
-> >                 clone = skb_clone_sk(skb);
-> >                 if (!clone)
-> >                         return;
-> >                 phydev->drv->txtstamp(phydev, clone, type);
-> >         }
-> > 
-> > violates the layering, and the locking looks broken.
+> > in the future some devices will be MDIO, or I2C, or SPI. Just call it
+> > ptpdev. This ptpdev needs to be control bus agnostic. You need a
+> > ptpdev core API exposing functions like ptpdev_hwtstamp,
+> > ptpdev_rxtstamp, ptpdev_txtstamp, ptpdev_link_change, which take a
+> > ptpdev.
 > 
-> Are you sure the locking is broken?  If so, how?
+> Well, this name is not ideal, since time stamping devices in general
+> can time stamp any frame, not just PTP frames.
 
-As a general rule of thumb, locking is performed in the core when
-possible. Experience has shown that device driver writers get locking
-wrong more often than core code writers. So doing it once in the core
-results in less bugs.
+Hi Richard
 
-The phylib core code will take the phydev lock before calling into the
-driver. By violating the layering, we are missing on this lock.
+I don't really care about the name. I care about the semantics of the
+API. How about ieee1588_rxtstamp, ieee1588_txtstamp, etc.
 
-Maybe the one driver which currently implements these calls does not
-need locking. But after the Marvell DSA work, we have most of the code
-needed to implement support for the Marvell PHY PTP. It has pretty
-similar registers. That would need the phydev lock to be held, because
-we need to swap to different pages, so any other calls happening in
-parallel are going to see registers from the wrong page. I don't want
-to have to put these locks in the driver, that leads to bugs. The core
-should do it.
-
-       Andrew
+      Andrew
