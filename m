@@ -1,40 +1,36 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
- time stamping IP core.
-Date: Mon, 26 Mar 2018 01:06:18 +0200
-Message-ID: <20180325230618.GC19365@lunn.ch>
-References: <20180321214436.GX24516@lunn.ch>
- <20180321215729.engnoxpaympvvdc5@localhost>
- <20180321221652.GZ24516@lunn.ch>
- <20180321224702.cbcq3wckmojsrgjf@localhost>
- <20180321235007.GA28402@lunn.ch>
- <20180324171219.vh6wcxbem3hyhkuu@localhost>
- <20180324184858.GF31941@lunn.ch>
- <20180325045151.kq7mjopjwzo6w2vw@localhost>
- <20180325155937.GA12820@lunn.ch>
- <20180325221004.6svjbx54yghwuk7w@localhost>
+From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] libnvdimm: Add of_node to region and bus descriptors
+Date: Mon, 26 Mar 2018 10:16:47 +1100
+Message-ID: <20180326101647.07673304@gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180325221004.6svjbx54yghwuk7w@localhost>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180323081209.31387-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > in the future some devices will be MDIO, or I2C, or SPI. Just call it
-> > ptpdev. This ptpdev needs to be control bus agnostic. You need a
-> > ptpdev core API exposing functions like ptpdev_hwtstamp,
-> > ptpdev_rxtstamp, ptpdev_txtstamp, ptpdev_link_change, which take a
-> > ptpdev.
+On Fri, 23 Mar 2018 19:12:04 +1100
+Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> We want to be able to cross reference the region and bus devices
+> with the device tree node that they were spawned from. libNVDIMM
+> handles creating the actual devices for these internally, so we
+> need to pass in a pointer to the relevant node in the descriptor.
 > 
-> Well, this name is not ideal, since time stamping devices in general
-> can time stamp any frame, not just PTP frames.
+> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
 
-Hi Richard
-
-I don't really care about the name. I care about the semantics of the
-API. How about ieee1588_rxtstamp, ieee1588_txtstamp, etc.
-
-      Andrew
+Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
