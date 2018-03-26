@@ -1,50 +1,50 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 0/1] arm: dts: modify Nuvoton NPCM750 device tree
-Date: Mon, 26 Mar 2018 13:11:52 +0300
-Message-ID: <1522059113-20418-1-git-send-email-tmaimon77@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 11/11] dt-bindings: gpio: Add bindings for Cadence I3C
+ gpio expander
+Date: Mon, 26 Mar 2018 12:12:54 +0200
+Message-ID: <CAMuHMdX3TLmaN14gM4fTgzXwy1dgsMxCFBs_3wCFWM8rX=+8vA@mail.gmail.com>
+References: <20180323110020.19080-1-boris.brezillon@bootlin.com> <20180323110020.19080-12-boris.brezillon@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180323110020.19080-12-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
 List-Id: devicetree@vger.kernel.org
 
-The NPCM7xx are a family of BMC's that include several chips as:
-NPCM750, NPCM730 etc.
+Hi Boris,
 
-All of the NPCM7xx BMC's have the common modules like Cortex-A9,
-WDT, timers, etc, and there are a optional modules that can be added.
+On Fri, Mar 23, 2018 at 12:00 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> Document the Cadence I3C gpio expander bindings.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 
-NPCM750 device tree already pushed to arm-soc.git:
-https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=d6bdd009c21db3f677dd1d1bbb8c20bc819074bc
+Thanks for your patch!
 
-After discussion with Rob Herring we have modified the structure
-of the NPCM7xx device tree as follow:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
 
-nuvoton-common-npcm7xx device tree include all common modules
-nuvoton-npcm750 device tree include specific npcm750 modules,
-the nuvoton-npcm750 device tree include nuvoton-common-npcm7xx device tree
+> +- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+> +  The second cell bits[3:0] is used to specify trigger type and level flags:
+> +      1 = low-to-high edge triggered.
+> +      2 = high-to-low edge triggered.
+> +      3 = triggered on both edges.
+> +      4 = active high level-sensitive.
+> +      8 = active low level-sensitive.
 
-In addition, the NPCM7xx device tree include the following changes:
-        - watchdog module added
-        - clock module modification
-        - serial module modification
-        - Modify Makefile NPCM7XX configuration name
+These are identical to the values in <dt-bindings/interrupt-controller/irq.h>.
+Perhaps you can refer to those definitions?
+I don't think we want to see the hardcoded numbers in DTS files.
 
-Sorry if it cause more work after pushing NPCM750 device tree.
+Gr{oetje,eeting}s,
 
-Thanks a lot,
-
-Tomer
-
-Tomer Maimon (1):
-  arm: dts: modify Nuvoton NPCM750 device tree
-
- arch/arm/boot/dts/Makefile                    |   2 +-
- arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 187 ++++++++++++++++++++++++++
- arch/arm/boot/dts/nuvoton-npcm750-evb.dts     |   6 +-
- arch/arm/boot/dts/nuvoton-npcm750.dtsi        | 131 +-----------------
- 4 files changed, 198 insertions(+), 128 deletions(-)
- create mode 100644 arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+                        Geert
 
 -- 
-2.14.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
