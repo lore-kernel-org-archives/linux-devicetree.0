@@ -1,36 +1,145 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt-bindings: add compatible string for
- the A64 DE2 CCU
-Date: Mon, 26 Mar 2018 17:22:56 -0500
-Message-ID: <20180326222256.fhdcodfx7ff4zyij@rob-hp-laptop>
-References: <20180316175354.21437-1-icenowy@aosc.io>
- <20180316175354.21437-2-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Mon, 26 Mar 2018 17:22:49 -0500
+Message-ID: <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+ <4060923.7DxT9ae38L@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBQXF4XKQKGQEPZTNTUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180316175354.21437-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <4060923.7DxT9ae38L@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 17, 2018 at 01:53:48AM +0800, Icenowy Zheng wrote:
-> The Allwinner A64 SoC has a DE2 CCU like the one in the DE2 of Allwinner
-> H5 SoC.
+On Tue, Mar 20, 2018 at 02:43:33PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
 > 
-> Add a compatible string for it.
+> (CC'ing Rob)
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Thank you for the patch.
+> 
+> On Friday, 16 March 2018 17:16:37 EET Jacopo Mondi wrote:
+> > Document Thine THC63LVD1024 LVDS decoder device tree bindings.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > ---
+> >  .../bindings/display/bridge/thine,thc63lvd1024.txt | 66 +++++++++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > new file mode 100644
+> > index 0000000..8225c6a
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > @@ -0,0 +1,66 @@
+> > +Thine Electronics THC63LVD1024 LVDS decoder
+> > +-------------------------------------------
+> > +
+> > +The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
+> > streams
+> > +to parallel data outputs. The chip supports single/dual input/output modes,
+> > +handling up to two two input LVDS stream and up to two digital CMOS/TTL
+> > outputs.
+> > +
+> > +Single or dual operation modes, output data mapping and DDR output modes
+> > are
+> > +configured through input signals and the chip does not expose any control
+> > bus.
+> > +
+> > +Required properties:
+> > +- compatible: Shall be "thine,thc63lvd1024"
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Power supply for TTL output and digital circuitry
+> > +- cvcc-supply: Power supply for TTL CLOCKOUT signal
+> > +- lvcc-supply: Power supply for LVDS inputs
+> > +- pvcc-supply: Power supply for PLL circuitry
+> 
+> As explained in a comment to one of the previous versions of this series, I'm 
+> tempted to make vcc-supply mandatory and drop the three other power supplies 
+> for now, as I believe there's very little chance they will be connected to 
+> separately controllable regulators (all supplies use the same voltage). In the 
+> very unlikely event that this occurs in design we need to support in the 
+> future, the cvcc, lvcc and pvcc supplies can be added later as optional 
+> without breaking backward compatibility.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I'm okay with that.
+
+> Apart from that,
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> > +- pdwn-gpios: Power down GPIO signal. Active low
+
+powerdown-gpios is the semi-standard name.
+
+> > +- oe-gpios: Output enable GPIO signal. Active high
+> > +
+> > +The THC63LVD1024 video port connections are modeled according
+> > +to OF graph bindings specified by
+> > Documentation/devicetree/bindings/graph.txt
+> > +
+> > +Required video port nodes:
+> > +- Port@0: First LVDS input port
+> > +- Port@2: First digital CMOS/TTL parallel output
+
+s/Port/port/
+
+> > +
+> > +Optional video port nodes:
+> > +- Port@1: Second LVDS input port
+> > +- Port@3: Second digital CMOS/TTL parallel output
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +	thc63lvd1024: lvds-decoder {
+> > +		compatible = "thine,thc63lvd1024";
+> > +
+> > +		vcc-supply = <&reg_lvds_vcc>;
+> > +		lvcc-supply = <&reg_lvds_lvcc>;
+> > +
+> > +		pdwn-gpio = <&gpio4 15 GPIO_ACTIVE_LOW>;
+> > +
+> > +		ports {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			port@0 {
+> > +				reg = <0>;
+> > +
+> > +				lvds_dec_in_0: endpoint {
+> > +					remote-endpoint = <&lvds_out>;
+> > +				};
+> > +			};
+> > +
+> > +			port@2{
+> > +				reg = <2>;
+> > +
+> > +				lvds_dec_out_2: endpoint {
+> > +					remote-endpoint = <&adv7511_in>;
+> > +				};
+> > +
+> > +			};
+> > +
+> > +		};
+> > +	};
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
