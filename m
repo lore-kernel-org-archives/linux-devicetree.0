@@ -1,37 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Document R-Car M3-N IPMMU DT bindings
-Date: Mon, 26 Mar 2018 17:23:35 -0500
-Message-ID: <20180326222335.yw7d3sspfvi5deyc@rob-hp-laptop>
-References: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/3] dt-bindings: net: bluetooth: Add
+ qualcomm-bluetooth
+Date: Mon, 26 Mar 2018 17:23:33 -0500
+Message-ID: <20180326222333.mety3fcwcgcfcaqv@rob-hp-laptop>
+References: <20180320032331.29865-1-thierry.escande@linaro.org>
+ <20180320032331.29865-3-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <152152849171.7720.4760459385074072620.sendpatchset@little-apple>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+In-Reply-To: <20180320032331.29865-3-thierry.escande@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Escande <thierry.escande@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 03:48:11PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+On Tue, Mar 20, 2018 at 04:23:30AM +0100, Thierry Escande wrote:
+> Add binding document for serial bluetooth chips using Qualcomm protocol.
 > 
-> Update the IPMMU DT binding documentation to include the r8a77965 compat
-> string for the IPMMU devices included in the R-Car M3-N SoC.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
 > ---
 > 
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
->  1 file changed, 1 insertion(+)
+> v5:
+> - Rename 'bt-disable-n' gpio as 'enable'
+> 
+> v4:
+> - Move bt-disable-n-gpios to required properties section
+> - Add clocks and pinctrl-0 as required properties
+> 
+> v3: no change
+> v2: no change
+> 
+>  .../devicetree/bindings/net/qualcomm-bluetooth.txt | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
