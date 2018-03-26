@@ -1,82 +1,30 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH] ARM64: dts: meson-axg: add saradc support
-Date: Mon, 26 Mar 2018 17:21:17 +0800
-Message-ID: <20180326092117.208416-1-yixun.lan@amlogic.com>
+From: sricharan@codeaurora.org
+Subject: Re: [v9,04/15] clk: qcom: Add HFPLL driver
+Date: Mon, 26 Mar 2018 15:17:46 +0530
+Message-ID: <0132a9e1371c7e690d174cb4d65bc951@codeaurora.org>
+References: <520347148-27852-5-git-send-email-sricharan@codeaurora.org>
+ <20180325193341.27845-1-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180325193341.27845-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Xingyu Chen <xingyu.chen@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen@amlogic.com>
+On 2018-03-26 01:03, Craig Tatlor wrote:
+> This doesn't seem to work correctly with the higher clocks on 8974pro,
+> specifically 2150400000 hz or above, maybe its something to do with
+> being bigger than an unsigned long.
+> 
+> When i try to set any higher frequency it jumps down to 300mhz.
 
-Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
 
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+  Thanks for testing this series. Not sure i got dropped from the list.
+  So i will check on this and come back.
 
----
-Hi Kevin:
-
-  Please note, the saradc driver in Meson-AXG platfrom actually
-depend on the AO clock driver [0] & saradc patch itself [1].
-  And I've rebased this patch on top of your v4.17/dt64 branch
-
-[0] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-[1] https://lkml.kernel.org/r/20180326084629.100070-1-yixun.lan@amlogic.com
-
-Yixun
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  5 +++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 21 +++++++++++++++++++++
- 2 files changed, 26 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 57eedced5a51..bbb88debbc04 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -47,3 +47,8 @@
- 	pinctrl-0 = <&i2c1_z_pins>;
- 	pinctrl-names = "default";
- };
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 40ca49fb94a6..105884efc033 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -818,6 +818,27 @@
- 				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
- 			};
-+
-+			saradc: adc@9000 {
-+				compatible = "amlogic,meson-axg-saradc",
-+					"amlogic,meson-saradc";
-+				reg = <0x0 0x9000 0x0 0x38>;
-+				#io-channel-cells = <1>;
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>,
-+					<&clkc_AO CLKID_AO_SAR_ADC>,
-+					<&clkc_AO CLKID_AO_SAR_ADC_CLK>,
-+					<&clkc_AO CLKID_AO_SAR_ADC_SEL>;
-+				clock-names = "clkin", "core", "adc_clk", "adc_sel";
-+				status = "disabled";
-+			};
- 		};
- 	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
- };
--- 
-2.15.1
+Regards,
+  Sricharan
