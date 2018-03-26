@@ -1,109 +1,62 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Mon, 26 Mar 2018 10:16:43 -0500
-Message-ID: <e756d74aaff6b0a4546944393e1b98bf51ae4900.camel@redhat.com>
-References: <20180322192843.GA17189@amd>
-         <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
-         <20180323105455.GB21644@amd>
-         <20180323113521.45va72bhzis6ym6m@earth.universe>
-         <20180323201343.GC23658@amd>
-         <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
-         <20180324142517.GA94954@atomide.com> <20180324200224.GA17857@amd>
-         <20180325154512.GC5700@atomide.com> <20180325185857.GA7582@amd>
-         <20180325205232.GD5700@atomide.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v6 1/5] pwm-backlight: enable/disable the PWM
+ before/after LCD enable toggle.
+Date: Mon, 26 Mar 2018 16:18:05 +0100
+Message-ID: <20180326151805.dzqqar36npmwzpdr@holly.lan>
+References: <20180326095213.18362-1-enric.balletbo@collabora.com>
+ <20180326104205.GA12425@amd>
+ <CAFqH_52fFLhuj6gkRNJsPozNfLSAKd0OpQKMjrdhqHRYU4xZ3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180325205232.GD5700@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_52fFLhuj6gkRNJsPozNfLSAKd0OpQKMjrdhqHRYU4xZ3Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-fbdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-03-25 at 13:52 -0700, Tony Lindgren wrote:
-> * Pavel Machek <pavel@ucw.cz> [180325 19:00]:
-> > Hi!
-> > 
-> > > > Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it
-> > > > seems
-> > > > to react to AT commands, and in particular reacts to ADT123; (;
-> > > > is
-> > > > important).
-> > > 
-> > > Is that to dial a voice call?
-> > 
-> > Yes. And it is ATD123; not ATD.
+On Mon, Mar 26, 2018 at 04:40:21PM +0200, Enric Balletbo Serra wrote:
+> Hi Pavel,
 > 
-> Strange, no semicolon is needed when using /dev/gsmtty to
-> dial a voice call with my current pile of pending changes,
-> just doing ATD123 dials..
+> 2018-03-26 12:42 GMT+02:00 Pavel Machek <pavel@ucw.cz>:
+> > On Mon 2018-03-26 11:52:09, Enric Balletbo i Serra wrote:
+> >> Before this patch the enable signal was set before the PWM signal and
+> >> vice-versa on power off. This sequence is wrong, at least, it is on
+> >> the different panels datasheets that I checked, so I inverted the sequence
+> >> to follow the specs.
+> >>
+> >> For reference the following panels have the mentioned sequence:
+> >>   - N133HSE-EA1 (Innolux)
+> >>   - N116BGE (Innolux)
+> >>   - N156BGE-L21 (Innolux)
+> >>   - B101EAN0 (Auo)
+> >>   - B101AW03 (Auo)
+> >>   - LTN101NT05 (Samsung)
+> >>   - CLAA101WA01A (Chunghwa)
+> >
+> > Ok, but this changes behaviour for other panels, too. Are you sure you
+> > are not breaking one of those?
 > 
-> Anyways, looks like qmi_wwan needs to be loaded before
-> qcserial module, otherwise we get nine ttyUSB instances
-> and ModemManager can't find any modems.
+> I can't say that I am 100% sure because I didn't find all the
+> datasheets of all the panels supported in the kernel. But all the
+> datasheets I checked specifies this sequence as valid. In general I
+> think that doesn't really matter, but I know that at least the
+> B116XTN02 panel requires enable first the PWM, wait 10ms and then
+> enable BL_EN to avoid garbage. So the other way around is not valid
+> for this panel. That's the reason for this patchset.
 
-Use qcaux.c or option, unless the 6600 actually *does* have the same
-layout as Gobi 1K/2K/etc devices.
+This is certainly a patch that could cause regressions... but it would
+be a very odd panel that *likes* to be exposed to all the weird edges
+that might occur whilst the PWM stablizes and a panel that *needs* to
+see weird edges to work seems even less likely (since it could act
+different with each SoC).
 
-If you're going to use qcaux or optoin, then you need to use some
-variant of USB_DEVICE_AND_INTERFACE_INFO to lock the serial driver to
-the specific USB interfaces that expose the TTYs and to ignore the QMI
-interfaces and netdevs.
+So whilst the patch is not absolutely cast iron guaranteed free of
+risk, I think it is well enough argued for.
 
-Dan
+Naturally I may change my position *very* quickly on receipt of the
+first bug report ;-)
 
-> With qcserial module loaded after qmi_wwan, it still takes
-> a long time for ModemManager to find the modem.
-> 
-> Then unrelated to the qcserial module, also looks like I can
-> no longer use the GPS with ModemManager:
-> 
-> $ mmcli -m 0 --enable
-> $ mmcli -m 0 --location-enable-gps-raw
-> 
-> And then chmod a+r /dev/cdc-wdm0 and pointing gpsd to use
-> /dev/cdc-wdm0 used to work, but now it seems that gpsd
-> can no longer read it. Trying to start gpsd manually produces:
-> 
-> # gpsd -b -n -N /dev/cdc-wdm0
-> gpsd:ERROR: SER: /dev/cdc-wdm0 already opened by another process
-> gpsd:ERROR: initial GPS device /dev/cdc-wdm0 open failed
-> gpsd:ERROR: can't run with neither control socket nor devices open
-> 
-> And lsof shows /usr/libexec/qmi-proxy having it open.
-> 
-> Anybody know what I might be doing wrong? Sounds like something
-> now needs to be done with qmi-proxy to get access to GPS?
-> 
-> > > Anyway, "good" solution is to get ofonod running, then use ofone
-> > > from
-> > > here: https://github.com/pavelmachek/unicsy_demo
-> 
-> Thanks I'll take a look.
-> 
-> > > I think it's the cpcap based config to route voice call audio
-> > > to SoC, Sebastian knows the details :)
-> > > 
-> > > The way to figure that one out is to dump the cpcap registers
-> > > before and during voice call on android with cpcaprw, then
-> > > diff the output for the audio registers. Probably some SoC
-> > > registers need to be diffed too with rwmem or similar tool
-> > > for the mcbsp instance(s) used.
-> > 
-> > That sounds like hard way to do it. There's source available, I'm
-> > now
-> > trying to understand it / fit it into Sebastian's driver.
-> > 
-> > https://raw.githubusercontent.com/NotKit/android_kernel_motorola_om
-> > ap4-common/hybris-11.0/sound/soc/codecs/cpcap.c
-> 
-> Sure that hopefully helps too :)
-> 
-> Tony
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Daniel.
