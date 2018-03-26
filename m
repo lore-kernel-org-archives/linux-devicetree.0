@@ -1,36 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: gpio: Add a gpio-reserved-ranges
- property
-Date: Mon, 26 Mar 2018 17:25:11 -0500
-Message-ID: <20180326222511.hc6tzwb7n3svum2a@rob-hp-laptop>
-References: <20180323163453.96495-1-swboyd@chromium.org>
- <20180323163453.96495-2-swboyd@chromium.org>
+Subject: Re: [PATCH v2 4/7] dt-bindings: clock: reset: Add AXG AO Clock and
+ Reset Bindings
+Date: Mon, 26 Mar 2018 17:25:06 -0500
+Message-ID: <20180326222506.jkn5i7eyto3li3ws@rob-hp-laptop>
+References: <20180323143816.200573-1-yixun.lan@amlogic.com>
+ <20180323143816.200573-5-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180323163453.96495-2-swboyd@chromium.org>
+In-Reply-To: <20180323143816.200573-5-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 09:34:49AM -0700, Stephen Boyd wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
+On Fri, Mar 23, 2018 at 10:38:13PM +0800, Yixun Lan wrote:
+> Add dt-bindings headers for the Meson-AXG's AO clock and
+> reset controller.
 > 
-> Some qcom platforms make some GPIOs or pins unavailable for use
-> by non-secure operating systems, and thus reading or writing the
-> registers for those pins will cause access control issues.
-> Introduce a DT property to describe the set of GPIOs that are
-> available for use so that higher level OSes are able to know what
-> pins to avoid reading/writing.
-> 
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
+>  include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+>  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
 
 Reviewed-by: Rob Herring <robh@kernel.org>
