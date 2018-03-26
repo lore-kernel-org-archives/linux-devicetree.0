@@ -1,32 +1,74 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 4/8] dt-bindings: net: add DT bindings for
- Microsemi Ocelot Switch
-Date: Tue, 27 Mar 2018 00:50:20 +0200
-Message-ID: <20180326225020.GF5862@lunn.ch>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-5-alexandre.belloni@bootlin.com>
- <a5db6109-c5d9-f573-893c-f7d66c3168c2@gmail.com>
- <20180326222514.4eciw66aihhcjgtw@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 2/3] dt-bindings: net: bluetooth: Add
+ qualcomm-bluetooth
+Date: Tue, 27 Mar 2018 06:51:06 +0800
+Message-ID: <20180326225106.GC1403@tuxbook-pro>
+References: <20180320032331.29865-1-thierry.escande@linaro.org>
+ <20180320032331.29865-3-thierry.escande@linaro.org>
+ <FAC61078-6298-47A7-A51C-73D72BEF6E4A@holtmann.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180326222514.4eciw66aihhcjgtw@rob-hp-laptop>
+In-Reply-To: <FAC61078-6298-47A7-A51C-73D72BEF6E4A@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> ports and port collide with the OF graph binding. It would be good if 
-> this moved to ethernet-port(s) or similar.
+On Tue 20 Mar 23:58 HKT 2018, Marcel Holtmann wrote:
+> > Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+[..]
+> > + - clocks: clock phandle for SUSCLK_32KHZ
+> 
+> if I compare this with broadcom-bluetooth.txt or ti-bluetooth.txt then
+> besides compatible, everything else is optional. The
+> nokia-bluetooth.txt has everything required, but that is also a really
+> specific platform.
+> 
+> Can we be less restrictive for a QCA general purpose chip?
+> 
 
-Hi Rob
+The way we deal with this in other bindings is that we tie such
+requirements to the compatible; i.e. we would say that qcom,qca6174-bt
+requires a clock and we would have something like qcom,qca-bt that makes
+it optional.
 
-Well, we have been using port in DSA since March 2013. ports is a bit
-newer, June 2016.
+The beauty of this is that the driver will tell you if you forgot to
+specify the clock when it actually is required, which saves you
+considerable amount of debugging time.
 
-Changing DSA is not going to happen. But new switch bindings could use
-ethernet-port(s). It just makes them inconsistent with existing switch
-drivers.
 
-       Andrew
+NB. The way the bcm driver handles this is insufficient, as it treats
+any error from clk_get as "there's no clock specified". The driver
+should accept a clock not being specified, but should fail properly when
+a clock is specified but can't be acquired (e.g. due to clk_get()
+returning EPROBE_DEFER).
+
+> > +
+> > +Example:
+> > +
+> > +serial@7570000 {
+> > +	pinctrl-names = "default", "sleep";
+> > +	pinctrl-0 = <&blsp1_uart1_default>;
+> > +	pinctrl-1 = <&blsp1_uart1_sleep>;
+> > +
+> > +	bluetooth {
+> > +		compatible = "qcom,qca6174-bt";
+> > +
+> > +		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+> > +
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&bt_en_pin_a>;
+> 
+> This one I do not understand and you might want to shed some light
+> into why this is done that way.
+> 
+
+This is completely generic and only relates to getting the electrical
+properties of the gpio pin set up correctly. So I would recommend that
+we omit this from the binding and example (including the pinctrl
+properties for the serial above).
+
+Regards,
+Bjorn
