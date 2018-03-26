@@ -1,41 +1,49 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Mon, 26 Mar 2018 09:35:20 -0600
-Message-ID: <20180326153520.GC22084@codeaurora.org>
-References: <cover.1521246069.git.collinsd@codeaurora.org>
- <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
- <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v5 2/2] net: ethernet: nixge: Add support for National
+ Instruments XGE netdev
+Date: Mon, 26 Mar 2018 11:38:30 -0400 (EDT)
+Message-ID: <20180326.113830.932262386304702367.davem@davemloft.net>
+References: <20180323204128.29783-1-mdf@kernel.org>
+        <20180323204128.29783-2-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
+In-Reply-To: <20180323204128.29783-2-mdf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org
+To: mdf@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 22 2018 at 19:30 -0600, David Collins wrote:
->Hello Stephen,
->
->Thank you for the very detailed review feedback.
->
->On 03/21/2018 12:07 PM, Stephen Boyd wrote:
->> Quoting David Collins (2018-03-16 18:09:10)
+From: Moritz Fischer <mdf@kernel.org>
+Date: Fri, 23 Mar 2018 13:41:28 -0700
 
->>> +static int rpmh_regulator_remove(struct platform_device *pdev)
->>> +{
->>> +       struct rpmh_pmic *pmic = platform_get_drvdata(pdev);
->>> +
->>> +       rpmh_release(pmic->rpmh_client);
->>
->> I'm still lost on what rpmh_client is giving us besides more code we
->> don't need. I'll ping the rpmh thread again.
->
->Let's see if Lina is willing to add some devm_* calls so that no cleanup
->is required.
->
-I will look into this.
+> +static void nixge_hw_dma_bd_release(struct net_device *ndev)
+> +{
+> +	int i;
+> +	struct nixge_priv *priv = netdev_priv(ndev);
 
--- Lina
+Please order local variables from longest to shortest line (ie. reverse
+christmas tree layout).
+
+> +static int nixge_hw_dma_bd_init(struct net_device *ndev)
+> +{
+> +	u32 cr;
+> +	int i;
+> +	struct sk_buff *skb;
+> +	struct nixge_priv *priv = netdev_priv(ndev);
+
+Likewise.
+
+> +static void __nixge_device_reset(struct nixge_priv *priv, off_t offset)
+> +{
+> +	u32 status;
+> +	int err;
+> +	/* Reset Axi DMA. This would reset NIXGE Ethernet core as well.
+> +	 * The reset process of Axi DMA takes a while to complete as all
+> +	 * pending commands/transfers will be flushed or completed during
+> +	 * this reset process.
+> +	 */
+
+Please put an empty line between the local variable declarations
+and this comment.
