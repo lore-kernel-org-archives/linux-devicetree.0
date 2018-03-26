@@ -1,91 +1,73 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 3/3] ARM64: dts: meson: fix clock source of the pclk for UART_AO
-Date: Mon, 26 Mar 2018 16:18:09 +0800
-Message-ID: <20180326081809.49493-4-yixun.lan@amlogic.com>
-References: <20180326081809.49493-1-yixun.lan@amlogic.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6] ARM: dts: wheat: Fix ADV7513 address usage
+Date: Mon, 26 Mar 2018 10:31:43 +0200
+Message-ID: <20180326083143.r6jz6csckd4ljnpu@verge.net.au>
+References: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
+ <20180323085140.g3golwdtpezo7fhi@verge.net.au>
+ <a771042b-f63a-d00f-73a1-91a7e6089fe4@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326081809.49493-1-yixun.lan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <a771042b-f63a-d00f-73a1-91a7e6089fe4@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: kieran.bingham@ideasonboard.com
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lars-Peter Clausen <lars@metafoo.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->From the hardware perspective, the clk81 is the parent of
-the UART_AO clocks. So it make more sense to mark
-the CLKID_AO_UART1/2 as the pclk.
+On Fri, Mar 23, 2018 at 09:16:13PM +0000, Kieran Bingham wrote:
+> Hi Simon,
+> 
+> On 23/03/18 08:51, Simon Horman wrote:
+> > On Thu, Mar 22, 2018 at 09:30:40PM +0000, Kieran Bingham wrote:
+> >> The r8a7792 Wheat board has two ADV7513 devices sharing a single I2C
+> >> bus, however in low power mode the ADV7513 will reset it's slave maps to
+> >> use the hardware defined default addresses.
+> >>
+> >> The ADV7511 driver was adapted to allow the two devices to be registered
+> >> correctly - but it did not take into account the fault whereby the
+> >> devices reset the addresses.
+> >>
+> >> This results in an address conflict between the device using the default
+> >> addresses, and the other device if it is in low-power-mode.
+> >>
+> >> Repair this issue by moving both devices away from the default address
+> >> definitions.
+> > 
+> > Hi Kierean,
+> > 
+> > as this is a fix
+> > a) Does it warrant a fixes tag?
+> >    Fixes: f6eea82a87db ("ARM: dts: wheat: add DU support")
+> > b) Does it warrant being posted as a fix for v4.16;
+> > c) or v4.17?
+> 
+> Tricky one, yes it could but this DTS fix, will only actually 'fix' the issue if
+> the corresponding driver updates to allow secondary addresses to be parsed are
+> also backported.
+> 
+> It should be safe to back port the dts fix without the driver updates, but the
+> addresses specified by this patch will simply be ignored.
 
-Previous we had flag=CLK_IGNORE_UNUSED in AO clock driver.
-This will make kernel leave clock as it is while bootloader
-set the clock on.
+In that case I think its safe to add the fixes tag and take the DTS patch
+via the renesas tree. Perhaps applying it for v4.18 and allowing automatic
+backporting to take its course is the cleanest option.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+> Thus if this is marked with the fixes tag the corresponding patch "drm: adv7511:
+> Add support for i2c_new_secondary_device" should also be marked.
+> 
+> It looks like that patch has yet to be picked up by the DRM subsystem, so how
+> about I bundle both of these two patches together in a repost along with the
+> fixes tag.
+> 
+> In fact, I don't think the ADV7511 dt-bindings update has made any progress
+> either. (dt-bindings: adv7511: Extend bindings to allow specifying slave map
+> addresses). The media tree variants for the adv7604 have already been picked up
+> by Mauro I believe though.
+> 
+> I presume it would be acceptable for this dts patch (or rather all three patches
+> mentioned) to get integrated through the DRM tree ?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 48584d5a329b..e538e2448bb5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -533,7 +533,7 @@
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
- 				reg = <0x0 0x3000 0x0 0x18>;
- 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-@@ -542,7 +542,7 @@
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
- 				reg = <0x0 0x4000 0x0 0x18>;
- 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 3290a4dc3522..a458ea50c2ef 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -783,12 +783,12 @@
- };
- 
- &uart_AO {
--	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
- 	clock-names = "xtal", "pclk", "baud";
- };
- 
- &uart_AO_B {
--	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
- 	clock-names = "xtal", "pclk", "baud";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 4f355f17eed6..474f4f9630e4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -733,12 +733,12 @@
- };
- 
- &uart_AO {
--	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
- 	clock-names = "xtal", "pclk", "baud";
- };
- 
- &uart_AO_B {
--	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
- 	clock-names = "xtal", "pclk", "baud";
- };
- 
--- 
-2.15.1
+Unless there is a strong reason I would prefer the dts patch to go via
+my tree. The reason is to avoid merge conflicts bubbling up to Linus,
+which really is something best avoided.
