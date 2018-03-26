@@ -1,144 +1,48 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v4 7/8] remoteproc: da8xx: use the reset framework
-Date: Mon, 26 Mar 2018 16:28:41 -0500
-Message-ID: <c09d4838-4938-4744-7ce9-4de99080cbe3@ti.com>
-References: <20180323130455.11470-1-brgl@bgdev.pl>
- <20180323130455.11470-8-brgl@bgdev.pl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Mon, 26 Mar 2018 17:22:46 -0500
+Message-ID: <20180326222246.zjildcniv4lquxft@rob-hp-laptop>
+References: <20180309232543.24636-1-ilina@codeaurora.org>
+ <20180309232543.24636-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323130455.11470-8-brgl@bgdev.pl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180309232543.24636-3-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bart,
-
-On 03/23/2018 08:04 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Mar 09, 2018 at 04:25:35PM -0700, Lina Iyer wrote:
+> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+> driver. The driver is used for communicating resource state requests for
+> shared resources.
 > 
-> Switch to using the reset framework instead of handcoded reset routines
-> we used so far.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
->  drivers/remoteproc/da8xx_remoteproc.c | 32 +++++++++++++++++++++++++++-----
->  1 file changed, 27 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-> index f134192922e0..3689473f8b49 100644
-> --- a/drivers/remoteproc/da8xx_remoteproc.c
-> +++ b/drivers/remoteproc/da8xx_remoteproc.c
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/bitops.h>
->  #include <linux/clk.h>
-> +#include <linux/reset.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> @@ -20,8 +21,6 @@
->  #include <linux/platform_device.h>
->  #include <linux/remoteproc.h>
->  
-> -#include <mach/clock.h>   /* for davinci_clk_reset_assert/deassert() */
-> -
->  #include "remoteproc_internal.h"
->  
->  static char *da8xx_fw_name;
-> @@ -72,6 +71,7 @@ struct da8xx_rproc {
->  	struct da8xx_rproc_mem *mem;
->  	int num_mems;
->  	struct clk *dsp_clk;
-> +	struct reset_control *dsp_reset;
->  	void (*ack_fxn)(struct irq_data *data);
->  	struct irq_data *irq_data;
->  	void __iomem *chipsig;
-> @@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
->  	struct device *dev = rproc->dev.parent;
->  	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
->  	struct clk *dsp_clk = drproc->dsp_clk;
-> +	struct reset_control *dsp_reset = drproc->dsp_reset;
->  	int ret;
->  
->  	/* hw requires the start (boot) address be on 1KB boundary */
-> @@ -155,7 +156,11 @@ static int da8xx_rproc_start(struct rproc *rproc)
->  		return ret;
->  	}
->  
-> -	davinci_clk_reset_deassert(dsp_clk);
-> +	ret = reset_control_deassert(dsp_reset);
-> +	if (ret) {
-> +		dev_err(dev, "reset_control_deassert() failed: %d\n", ret);
-> +		return ret;
+> Changes in v3:
+> 	- Move to soc/qcom
+> 	- Amend text per Stephen's suggestions
+> 
+> Changes in v2:
+> 	- Amend text to describe the registers in reg property
+> 	- Add reg-names for the registers
+> 	- Update examples to use GIC_SPI in interrupts instead of 0
+> 	- Rephrase incorrect description
+> 
+> Changes in v3:
+> 	- Fix unwanted capitalization
+> 	- Remove clients from the examples, this doc does not describe
+> 	  them
+> 	- Rephrase introductory paragraph
+> 	- Remove hardware specifics from DT bindings
+> ---
+>  .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
 
-need to unwind the clk_prepare_enable() here.
-
-> +	}
->  
->  	return 0;
->  }
-> @@ -163,8 +168,15 @@ static int da8xx_rproc_start(struct rproc *rproc)
->  static int da8xx_rproc_stop(struct rproc *rproc)
->  {
->  	struct da8xx_rproc *drproc = rproc->priv;
-> +	int ret;
-> +
-> +	ret = reset_control_assert(drproc->dsp_reset);
-> +	if (ret) {
-> +		dev_err(rproc->dev.parent,
-> +			"reset_control_assert() failed: %d\n", ret);
-
-prefer the trace statement to be on the same line as dev_err, you can
-just keep the ret on the next line. I am fine with defining a local dev
-variable as well (mirrors da8xx_rproc_start() to have the trace in a
-single line).
-
-> +		return ret;
-> +	}
->  
-> -	davinci_clk_reset_assert(drproc->dsp_clk);
->  	clk_disable_unprepare(drproc->dsp_clk);
->  
->  	return 0;
-> @@ -232,6 +244,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->  	struct resource *bootreg_res;
->  	struct resource *chipsig_res;
->  	struct clk *dsp_clk;
-> +	struct reset_control *dsp_reset;
->  	void __iomem *chipsig;
->  	void __iomem *bootreg;
->  	int irq;
-> @@ -268,6 +281,15 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->  		return PTR_ERR(dsp_clk);
->  	}
->  
-> +	dsp_reset = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(dsp_reset)) {
-> +		if (PTR_ERR(dsp_reset) != -EPROBE_DEFER)
-> +			dev_err(dev, "unable to get reset control: %ld\n",
-> +				PTR_ERR(dsp_reset));
-> +
-> +		return PTR_ERR(dsp_reset);
-> +	}
-> +
->  	if (dev->of_node) {
->  		ret = of_reserved_mem_device_init(dev);
->  		if (ret) {
-> @@ -309,7 +331,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->  	 * *not* in reset, but da8xx_rproc_start() needs the DSP to be
->  	 * held in reset at the time it is called.
->  	 */
-> -	ret = davinci_clk_reset_assert(drproc->dsp_clk);
-> +	ret = reset_control_assert(dsp_reset);
->  	if (ret)
->  		goto free_rproc;
->  
-
-The reset API usage changes themselves look good otherwise.
-
-regards
-Suman
+Reviewed-by: Rob Herring <robh@kernel.org>
