@@ -1,42 +1,83 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: sunxi: Stop supporting ECC_HW_SYNDROME mode
-Date: Mon, 26 Mar 2018 15:04:51 +0200
-Message-ID: <20180326150451.0d398bdd@xps13>
-References: <20180321083618.18355-1-boris.brezillon@bootlin.com>
- <20180321105327.27a28987@bbrezillon>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
+ receiver) power control driver
+Date: Mon, 26 Mar 2018 15:59:20 +0200
+Message-ID: <20180326135920.GA1450@amd>
+References: <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
+ <20171222124427.GI3374@localhost>
+ <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
+ <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
+ <20180112153903.GB5992@localhost>
+ <20180212152618.GC13962@amd>
+ <20180227070415.GB18666@localhost>
+ <22A8F5FE-C8B9-46EB-B98D-A94EA4170131@goldelico.com>
+ <20180319135418.GL18359@localhost>
+ <FCD404C1-3DD4-45BD-9242-3F7A7C44F6C9@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180321105327.27a28987@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <FCD404C1-3DD4-45BD-9242-3F7A7C44F6C9@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsCgpPbiBXZWQsIDIxIE1hciAyMDE4IDEwOjUzOjI3ICswMTAwLCBCb3JpcyBCcmV6
-aWxsb24KPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4gd3JvdGU6Cgo+IE9uIFdlZCwgMjEg
-TWFyIDIwMTggMDk6MzY6MTggKzAxMDAKPiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxv
-bkBib290bGluLmNvbT4gd3JvdGU6Cj4gCj4gPiBUaGlzIG1vZGUgaXMgbm90IHVzZWQgYnkgYW55
-IGV4aXN0aW5nIHNldHVwIGFuZCBzaG91bGQgbm90IGJlIHVzZWQKPiA+IGJlY2F1c2UgaXQgb3Zl
-cnJpZGVzIHRoZSBCQk1zLiBMZXQncyBqdXN0IHJlbW92ZSBpdCBiZWZvcmUgc29tZW9uZSAgCj4g
-Cj4gCSAgICAgXiAnb3ZlcndyaXRlcycgbm90ICdvdmVycmlkZXMnCj4gCj4gPiBzdGFydHMgdXNp
-bmcgaXQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJl
-emlsbG9uQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bXRkL3N1bnhpLW5hbmQudHh0ICAgICAgICAgfCAgIDQgKy0KPiA+ICBkcml2ZXJzL210ZC9uYW5k
-L3Jhdy9zdW54aV9uYW5kLmMgICAgICAgICAgICAgICAgICB8IDE1NSArKystLS0tLS0tLS0tLS0t
-LS0tLS0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDEzNyBkZWxldGlv
-bnMoLSkKClRlc3RlZC1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNv
-bT4KClRoYW5rcywKTWlxdcOobAoKLS0gCk1pcXVlbCBSYXluYWwsIEJvb3RsaW4gKGZvcm1lcmx5
-IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0
-dHBzOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > No, we need some kind of at least rudimentary gps framework even if we
+> > allow for a raw (NMEA) interface for the time being (possibly
+> > indefinitely).
+>=20
+> Ok, that would be fine if we can get that!
+>=20
+> For a minimal set of API I think something like this (following hci_dev) =
+would suffice:
+>=20
+> struct gps_dev {
+> 	...
+> 	int (*open)(struct gps_dev *gdev);
+> 	int (*close)(struct gps_dev *gdev);
+> 	int (*send)(struct gps_dev *gdev, char *data, int length);
+> };
+>=20
+> int gps_register_dev(struct gps_dev *gdev);
+> void gps_unregister_dev(struct gps_dev *gdev);
+> int gps_recv_nmea_chars(struct gps_dev *gdev, char *data, int length);
+>=20
+> If that would wrap all creation of some /dev/ttyGPS0 (or however it is ca=
+lled),
+> it would fit our needs for a driver and user-space for our system.
+>=20
+> And I would be happy to get rid of creating and registering a /dev/ttyGPS0
+> in the w2sg0004 driver.
+
+Sounds like a good start.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlq4/LgACgkQMOfwapXb+vL8hgCfS0UWaS1wC9bm/jIlnajYRwgo
+ReUAoIYO2jKAA99I3pDDwchvNGTzCbEZ
+=IReX
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
