@@ -1,101 +1,90 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] clocksource/drivers/imx-tpm: add different counter width support
-Date: Mon, 26 Mar 2018 15:47:41 +0800
-Message-ID: <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
-References: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v4] ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
+Date: Mon, 26 Mar 2018 13:35:53 +0530
+Message-ID: <20180326080554.11559-1-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com
-Cc: Linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Different TPM modules have different width counters which
-is 16-bit or 32-bit, the counter width can be read from
-TPM_PARAM register bit[23:16], this patch adds dynamic
-check for counter width to support both 16-bit and 32-bit
-TPM modules.
+Switch to use koe_tx31d200vm0baa LVDS timings from
+panel-simple instead hard coding the same in dts.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/clocksource/timer-imx-tpm.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+Changes for v4:
+- Send as seprate patch from previous series
+  https://patchwork.kernel.org/patch/10199423/
+Changes for v3, v2:
+- none
 
-diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
-index 7403e49..5063b77 100644
---- a/drivers/clocksource/timer-imx-tpm.c
-+++ b/drivers/clocksource/timer-imx-tpm.c
-@@ -17,6 +17,9 @@
- #include <linux/of_irq.h>
- #include <linux/sched_clock.h>
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 31 +++++++++++++++++--------------
+ arch/arm/boot/dts/imx6qdl-icore.dtsi      |  2 +-
+ 2 files changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+index 9e230f56c5fb..6e27c8143f82 100644
+--- a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+@@ -48,28 +48,31 @@
+ / {
+ 	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 12 Kit";
+ 	compatible = "engicam,imx6-icore", "fsl,imx6q";
++
++	panel {
++		compatible = "koe,tx31d200vm0baa";
++		backlight = <&backlight_lvds>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
+ };
  
-+#define TPM_PARAM			0x4
-+#define TPM_PARAM_WIDTH_SHIFT		16
-+#define TPM_PARAM_WIDTH_MASK		(0xff << 16)
- #define TPM_SC				0x10
- #define TPM_SC_CMOD_INC_PER_CNT		(0x1 << 3)
- #define TPM_SC_CMOD_DIV_DEFAULT		0x3
-@@ -33,6 +36,7 @@
- #define TPM_C0SC_CHF_MASK		(0x1 << 7)
- #define TPM_C0V				0x24
+ &ldb {
+ 	status = "okay";
  
-+static int counter_width;
- static void __iomem *timer_base;
- static struct clock_event_device clockevent_tpm;
+ 	lvds-channel@0 {
+-		fsl,data-mapping = "spwg";
+-		fsl,data-width = <18>;
++		reg = <0>;
+ 		status = "okay";
  
-@@ -66,7 +70,7 @@ static struct delay_timer tpm_delay_timer;
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <46800000>;
+-				hactive = <1280>;
+-				vactive = <480>;
+-				hback-porch = <353>;
+-				hfront-porch = <47>;
+-				vback-porch = <39>;
+-				vfront-porch = <4>;
+-				hsync-len = <8>;
+-				vsync-len = <2>;
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index b3a463a5908b..1bce85c3376b 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -49,7 +49,7 @@
+ 		reg = <0x10000000 0x80000000>;
+ 	};
  
- static inline unsigned long tpm_read_counter(void)
- {
--	return readl(timer_base + TPM_CNT);
-+	return readl(timer_base + TPM_CNT) & GENMASK(counter_width - 1, 0);
- }
- 
- static unsigned long tpm_read_current_timer(void)
-@@ -85,10 +89,11 @@ static int __init tpm_clocksource_init(unsigned long rate)
- 	tpm_delay_timer.freq = rate;
- 	register_current_timer_delay(&tpm_delay_timer);
- 
--	sched_clock_register(tpm_read_sched_clock, 32, rate);
-+	sched_clock_register(tpm_read_sched_clock, counter_width, rate);
- 
- 	return clocksource_mmio_init(timer_base + TPM_CNT, "imx-tpm",
--				     rate, 200, 32, clocksource_mmio_readl_up);
-+				     rate, 200, counter_width,
-+				     clocksource_mmio_readl_up);
- }
- 
- static int tpm_set_next_event(unsigned long delta,
-@@ -153,8 +158,8 @@ static int __init tpm_clockevent_init(unsigned long rate, int irq)
- 
- 	clockevent_tpm.cpumask = cpumask_of(0);
- 	clockevent_tpm.irq = irq;
--	clockevents_config_and_register(&clockevent_tpm,
--					rate, 300, 0xfffffffe);
-+	clockevents_config_and_register(&clockevent_tpm, rate, 300,
-+					GENMASK(counter_width - 1, 1));
- 
- 	return ret;
- }
-@@ -199,6 +204,8 @@ static int __init tpm_timer_init(struct device_node *np)
- 		goto err_per_clk_enable;
- 	}
- 
-+	counter_width = (readl(timer_base + TPM_PARAM) & TPM_PARAM_WIDTH_MASK)
-+		>> TPM_PARAM_WIDTH_SHIFT;
- 	/*
- 	 * Initialize tpm module to a known state
- 	 * 1) Counter disabled
-@@ -220,7 +227,7 @@ static int __init tpm_timer_init(struct device_node *np)
- 		     timer_base + TPM_SC);
- 
- 	/* set MOD register to maximum for free running mode */
--	writel(0xffffffff, timer_base + TPM_MOD);
-+	writel(GENMASK(counter_width - 1, 0), timer_base + TPM_MOD);
- 
- 	rate = clk_get_rate(per) >> 3;
- 	ret = tpm_clocksource_init(rate);
+-	backlight {
++	backlight_lvds: backlight-lvds {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm3 0 100000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
 -- 
-2.7.4
+2.14.3
