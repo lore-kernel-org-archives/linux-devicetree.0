@@ -1,100 +1,69 @@
-Return-Path: <SRS0=dGTv=GC=nvidia.com=pchandru@kernel.org>
-From: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Subject: [PATCH V8 6/9] ata: ahci_tegra: disable devslp for Tegra124
-Date: Mon, 12 Mar 2018 17:10:35 +0530
-Message-ID: <1520854838-21779-7-git-send-email-pchandru@nvidia.com>
-In-Reply-To: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
-References: <1520854838-21779-1-git-send-email-pchandru@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: preetham260@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com, Preetham Ramchandra <pchandru@nvidia.com>
+Return-Path: <SRS0=tXJj=GQ=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V3 1/3] dt-binding: can: mcp25xxfd: document device tree bindings
+Date: Mon, 26 Mar 2018 16:06:22 +0000
+Message-Id: <20180326160624.32230-2-kernel@martin.sperl.org>
+In-Reply-To: <20180326160624.32230-1-kernel@martin.sperl.org>
+References: <20180326160624.32230-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Preetham Ramchandra <pchandru@nvidia.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Tegra124 does not support devslp and it should be disabled.
+Add device-tree bindings for Microcip CanFD Controller mcp2517fd
 
-Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+
+--
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of dt custom properties removing (most) gpio functions
+  V2 -> V3: added vendor-prefix for gpio-opendrain
+            s/_/-/
+            added gpio-controller
 ---
-v8:
-* spelled out t124 as Tegra124
-* changed u32 quirks to boolean supports_devslp
-* moved the aux register comments above platform_get_resource()
----
- drivers/ata/ahci_tegra.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
 
-diff --git a/drivers/ata/ahci_tegra.c b/drivers/ata/ahci_tegra.c
-index 547a6f93922c..620cdd16ef2f 100644
---- a/drivers/ata/ahci_tegra.c
-+++ b/drivers/ata/ahci_tegra.c
-@@ -166,12 +166,14 @@ struct tegra_ahci_ops {
- struct tegra_ahci_soc {
- 	const char *const		*supply_names;
- 	u32				num_supplies;
-+	bool				supports_devslp;
- 	const struct tegra_ahci_ops	*ops;
- };
- 
- struct tegra_ahci_priv {
- 	struct platform_device	   *pdev;
- 	void __iomem		   *sata_regs;
-+	void __iomem		   *sata_aux_regs;
- 	struct reset_control	   *sata_rst;
- 	struct reset_control	   *sata_oob_rst;
- 	struct reset_control	   *sata_cold_rst;
-@@ -181,6 +183,18 @@ struct tegra_ahci_priv {
- 	const struct tegra_ahci_soc *soc;
- };
- 
-+static void tegra_ahci_handle_quirks(struct ahci_host_priv *hpriv)
-+{
-+	struct tegra_ahci_priv *tegra = hpriv->plat_data;
-+	u32 val;
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+new file mode 100644
+index 000000000000..b388b3eb3905
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+@@ -0,0 +1,32 @@
++* Microchip MCP2517 stand-alone CAN controller device tree bindings
 +
-+	if (tegra->sata_aux_regs && !tegra->soc->supports_devslp) {
-+		val = readl(tegra->sata_aux_regs + SATA_AUX_MISC_CNTL_1_0);
-+		val &= ~SATA_AUX_MISC_CNTL_1_0_SDS_SUPPORT;
-+		writel(val, tegra->sata_aux_regs + SATA_AUX_MISC_CNTL_1_0);
-+	}
-+}
++Required properties:
++ - compatible: Should be one of the following:
++   - "microchip,mcp2517fd" for MCP2517fd.
++ - reg: SPI chip select.
++ - clocks: The clock feeding the CAN controller.
++ - interrupt-parent: The parent interrupt controller.
++ - interrupts: Should contain IRQ line for the CAN controller.
++ - gpio-controller: Marks the device node as a GPIO controller
 +
- static int tegra124_ahci_init(struct ahci_host_priv *hpriv)
- {
- 	struct tegra_ahci_priv *tegra = hpriv->plat_data;
-@@ -401,6 +415,7 @@ static int tegra_ahci_controller_init(struct ahci_host_priv *hpriv)
- 	val &= ~SATA_CONFIGURATION_0_CLK_OVERRIDE;
- 	writel(val, tegra->sata_regs + SATA_CONFIGURATION_0);
- 
-+	tegra_ahci_handle_quirks(hpriv);
- 
- 	/* Unmask SATA interrupts */
- 
-@@ -446,6 +461,7 @@ static const struct tegra_ahci_ops tegra124_ahci_ops = {
- static const struct tegra_ahci_soc tegra124_ahci_soc = {
- 	.supply_names = tegra124_supply_names,
- 	.num_supplies = ARRAY_SIZE(tegra124_supply_names),
-+	.supports_devslp = false,
- 	.ops = &tegra124_ahci_ops,
- };
- 
-@@ -488,6 +504,16 @@ static int tegra_ahci_probe(struct platform_device *pdev)
- 	if (IS_ERR(tegra->sata_regs))
- 		return PTR_ERR(tegra->sata_regs);
- 
-+	/*
-+	 * AUX registers is optional.
-+	 */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	if (res) {
-+		tegra->sata_aux_regs = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(tegra->sata_aux_regs))
-+			return PTR_ERR(tegra->sata_aux_regs);
-+	}
++Optional properties:
++ - vdd-supply: Regulator that powers the CAN controller.
++ - xceiver-supply: Regulator that powers the CAN transceiver.
++ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
++					   0 = Start of Frame output
++					   default: 10
++ - microchip,clock-div2: bool: divide the internal clock by 2
++ - microchip,gpio-open-drain: bool: enable open-drain for all pins
++                                    (except cantx)
 +
- 	tegra->sata_rst = devm_reset_control_get(&pdev->dev, "sata");
- 	if (IS_ERR(tegra->sata_rst)) {
- 		dev_err(&pdev->dev, "Failed to get sata reset\n");
--- 
-2.7.4
++Example:
++	can0: can@1 {
++		compatible = "microchip,mcp2517fd";
++		reg = <1>;
++		clocks = <&clk24m>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <13 0x8>;
++		vdd-supply = <&reg5v0>;
++		xceiver-supply = <&reg5v0>;
++		gpio-controller;
++	};
+--
+2.11.0
