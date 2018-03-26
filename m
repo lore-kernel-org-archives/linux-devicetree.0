@@ -1,30 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/7] dt-bindings: clock: reset: Add AXG AO Clock and
- Reset Bindings
-Date: Mon, 26 Mar 2018 17:25:06 -0500
-Message-ID: <20180326222506.jkn5i7eyto3li3ws@rob-hp-laptop>
-References: <20180323143816.200573-1-yixun.lan@amlogic.com>
- <20180323143816.200573-5-yixun.lan@amlogic.com>
+Subject: Re: [PATCH] mtd: rawnand: sunxi: Stop supporting ECC_HW_SYNDROME mode
+Date: Mon, 26 Mar 2018 17:24:23 -0500
+Message-ID: <20180326222423.ilj3dv6jxkwtulev@rob-hp-laptop>
+References: <20180321083618.18355-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180323143816.200573-5-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180321083618.18355-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Kumar Gala <galak@codeaurora.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 10:38:13PM +0800, Yixun Lan wrote:
-> Add dt-bindings headers for the Meson-AXG's AO clock and
-> reset controller.
+On Wed, Mar 21, 2018 at 09:36:18AM +0100, Boris Brezillon wrote:
+> This mode is not used by any existing setup and should not be used
+> because it overrides the BBMs. Let's just remove it before someone
+> starts using it.
 > 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 > ---
->  include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
->  include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
->  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
+>  .../devicetree/bindings/mtd/sunxi-nand.txt         |   4 +-
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  drivers/mtd/nand/raw/sunxi_nand.c                  | 155 +++------------------
+>  2 files changed, 22 insertions(+), 137 deletions(-)
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
