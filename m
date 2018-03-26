@@ -1,97 +1,232 @@
-Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0083.outbound.protection.outlook.com ([104.47.2.83]:39452
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751490AbeCEIlC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 5 Mar 2018 03:41:02 -0500
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 02/12] usb: typec: add API to get sink and source
- config
-Date: Mon, 5 Mar 2018 08:40:57 +0000
-Message-ID: <VI1PR0402MB3917AFDD69DD2645002C5FB289DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
- <1519645759-12701-3-git-send-email-jun.li@nxp.com>
- <20180226133213.GC25535@kuha.fi.intel.com>
-In-Reply-To: <20180226133213.GC25535@kuha.fi.intel.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <shawnguo@kernel.org>
+Date: Mon, 26 Mar 2018 22:44:46 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/4] Revert "arm64: dts: fsl: fix ifc simple-bus unit
+ address format warnings"
+Message-ID: <20180326144445.GE8857@dragon>
+References: <1521382651-10256-1-git-send-email-festevam@gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1521382651-10256-1-git-send-email-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
-IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
-MtTCMjbI1SAyMTozMg0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdr
-aEBsaW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4QHJvZWNrLXVz
-Lm5ldDsNCj4gYS5oYWpkYUBzYW1zdW5nLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHl1ZXlh
-b0Bnb29nbGUuY29tOw0KPiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2
-YUBlbWJlZGRlZG9yLmNvbTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsgc2h1ZmFuX2xlZUByaWNo
-dGVrLmNvbTsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjIgMDIvMTJdIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHNpbmsgYW5kIHNv
-dXJjZQ0KPiBjb25maWcNCj4gDQo+IEhpLA0KPiANCj4gT24gTW9uLCBGZWIgMjYsIDIwMTggYXQg
-MDc6NDk6MDlQTSArMDgwMCwgTGkgSnVuIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkIDIgQVBJ
-cyB0byBnZXQgc2luayBhbmQgc291cmNlIHBvd2VyIGNvbmZpZyBmcm9tDQo+ID4gZmlybXdhcmUg
-ZGVzY3JpcHRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCA0Mw0KPiA+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9s
-aW51eC91c2IvdGNwbS5oIHwgIDIgKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0NSBpbnNlcnRp
-b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGIv
-ZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGluZGV4DQo+ID4gZjRkNTYzZS4uNDA5ZjFkMCAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4gPiArKysgYi9kcml2ZXJz
-L3VzYi90eXBlYy90Y3BtLmMNCj4gPiBAQCAtMTIsNiArMTIsNyBAQA0KPiA+ICAjaW5jbHVkZSA8
-bGludXgva2VybmVsLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2lu
-Y2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiANCj4g
-Tm8gbmVlZCBmb3IgdGhhdC4gVGhlcmUgaXMgbm90aGluZyBEVCBvbmx5IHNwZWNpZmljIGhlcmUu
-DQo+IA0KPiBBcyBpbiAwMS8xMiwgeW91IG9ubHkgaGF2ZSBkZXZpY2UgcHJvcGVydGllcyBoZXJl
-LCBzbyB1c2UgdGhlIHVuaWZpZWQgZGV2aWNlDQo+IHByb3BlcnR5IEFQSSBpbnN0ZWFkIG9mIG9m
-X3Byb3BlcnR5XyogZnVuY3Rpb25zLg0KDQpJIHdpbGwgdXNlIGRldmljZSBwcm9wZXJ0eSBBUEks
-IGFsc28gYXMgdGhlIGJlbG93IHNpbmsgcHJvcHM6DQoibWF4LXNuay1taWNyb3ZvbHQiDQoibWF4
-LXNuay1taWNyb2FtcCINCiJtYXgtc25rLW1pY3Jvd2F0dC1ob3VycyINCiJvcC1zbmstbWljcm93
-YXR0LWhvdXJzIg0KYXJlIHJlZHVuZGFudCBub3csIG9ubHkgUERPIGlzIHJlcXVpcmVkLCBJIHdp
-bGwgY29tYmluZSB0aGUgYmVsb3cgMiBBUElzDQp0byBiZSBvbmU6DQppbnQgdGNwbV9nZXRfcGRv
-cyhzdHJ1Y3QgZGV2aWNlICpkZXYsIGJvb2wgc2luaywgc3RydWN0IHRjcGNfY29uZmlnICp0Y2Zn
-KQ0KDQpKdW4gTGkNCj4gDQo+ID4gICNpbmNsdWRlIDxsaW51eC9wcm9jX2ZzLmg+DQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9zY2hlZC9jbG9jay5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2VxX2Zp
-bGUuaD4NCj4gPiBAQCAtMzU4OSw2ICszNTkwLDQ4IEBAIHN0YXRpYyBpbnQgdGNwbV9jb3B5X3Zk
-b3ModTMyICpkZXN0X3ZkbywNCj4gY29uc3QgdTMyICpzcmNfdmRvLA0KPiA+ICAJcmV0dXJuIG5y
-X3ZkbzsNCj4gPiAgfQ0KPiA+DQo+ID4gK2ludCB0Y3BtX29mX2dldF9zcmNfY29uZmlnKHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbnAsIHN0cnVjdCB0Y3BjX2NvbmZpZw0KPiA+ICsqdGNmZykgew0KPiA+
-ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3ZhcmlhYmxl
-X3UzMl9hcnJheShucCwgInNyYy1wZG9zIiwNCj4gPiArCQkJCXRjZmctPnNyY19wZG8sIDEsIFBE
-T19NQVhfT0JKRUNUUyk7DQo+ID4gKwlpZiAocmV0ID4gMCkNCj4gPiArCQl0Y2ZnLT5ucl9zcmNf
-cGRvID0gcmV0Ow0KPiA+ICsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArRVhQT1JU
-X1NZTUJPTF9HUEwodGNwbV9vZl9nZXRfcGRvcyk7DQo+ID4gKw0KPiA+ICtpbnQgdGNwbV9vZl9n
-ZXRfc25rX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCBzdHJ1Y3QgdGNwY19jb25maWcN
-Cj4gPiArKnRjZmcpIHsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gb2ZfcHJv
-cGVydHlfcmVhZF92YXJpYWJsZV91MzJfYXJyYXkobnAsICJzbmstcGRvcyIsDQo+ID4gKwkJCQl0
-Y2ZnLT5zbmtfcGRvLCAxLCBQRE9fTUFYX09CSkVDVFMpOw0KPiA+ICsJaWYgKHJldCA+IDApDQo+
-ID4gKwkJdGNmZy0+bnJfc25rX3BkbyA9IHJldDsNCj4gPiArCWVsc2UNCj4gPiArCQlyZXR1cm4g
-cmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAibWF4LXNu
-ay1taWNyb3ZvbHQiLA0KPiAmdGNmZy0+bWF4X3Nua19tdik7DQo+ID4gKwlpZiAocmV0KQ0KPiA+
-ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIo
-bnAsICJtYXgtc25rLW1pY3JvYW1wIiwNCj4gJnRjZmctPm1heF9zbmtfbWEpOw0KPiA+ICsJaWYg
-KHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5
-X3JlYWRfdTMyKG5wLCAibWF4LXNuay1taWNyb3dhdHQtaG91cnMiLA0KPiA+ICsJCQkJICAgJnRj
-ZmctPm1heF9zbmtfbXcpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+
-ICsNCj4gPiArCXJldHVybiBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm9wLXNuay1taWNyb3dh
-dHQtaG91cnMiLA0KPiA+ICsJCQkJICAgICZ0Y2ZnLT5vcGVyYXRpbmdfc25rX213KTsNCj4gPiAr
-fQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTCh0Y3BtX29mX2dldF9wZG9zKTsNCj4gPiArDQo+ID4g
-IGludCB0Y3BtX3VwZGF0ZV9zb3VyY2VfY2FwYWJpbGl0aWVzKHN0cnVjdCB0Y3BtX3BvcnQgKnBv
-cnQsIGNvbnN0IHUzMg0KPiAqcGRvLA0KPiA+ICAJCQkJICAgIHVuc2lnbmVkIGludCBucl9wZG8p
-DQo+ID4gIHsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC91c2IvdGNwbS5oIGIvaW5j
-bHVkZS9saW51eC91c2IvdGNwbS5oIGluZGV4DQo+ID4gY2ExYzBiNS4uOTYyZWZmMSAxMDA2NDQN
-Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3VzYi90Y3BtLmgNCj4gPiArKysgYi9pbmNsdWRlL2xp
-bnV4L3VzYi90Y3BtLmgNCj4gPiBAQCAtMTkxLDYgKzE5MSw4IEBAIGludCB0Y3BtX3VwZGF0ZV9z
-aW5rX2NhcGFiaWxpdGllcyhzdHJ1Y3QNCj4gdGNwbV9wb3J0ICpwb3J0LCBjb25zdCB1MzIgKnBk
-bywNCj4gPiAgCQkJCSAgdW5zaWduZWQgaW50IG1heF9zbmtfbWEsDQo+ID4gIAkJCQkgIHVuc2ln
-bmVkIGludCBtYXhfc25rX213LA0KPiA+ICAJCQkJICB1bnNpZ25lZCBpbnQgb3BlcmF0aW5nX3Nu
-a19tdyk7DQo+ID4gK2ludCB0Y3BtX29mX2dldF9zcmNfY29uZmlnKHN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqbnAsIHN0cnVjdCB0Y3BjX2NvbmZpZw0KPiA+ICsqdGNmZyk7IGludCB0Y3BtX29mX2dldF9z
-bmtfY29uZmlnKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHN0cnVjdA0KPiA+ICt0Y3BjX2NvbmZp
-ZyAqdGNmZyk7DQo+ID4NCj4gPiAgdm9pZCB0Y3BtX3ZidXNfY2hhbmdlKHN0cnVjdCB0Y3BtX3Bv
-cnQgKnBvcnQpOyAgdm9pZA0KPiA+IHRjcG1fY2NfY2hhbmdlKHN0cnVjdCB0Y3BtX3BvcnQgKnBv
-cnQpOw0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
+On Sun, Mar 18, 2018 at 11:17:28AM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+> 
+> This reverts commit f81d7af7957539b7808961f929f945381530acb9.
+> 
+> As explained by Rob Herring:
+> 
+> "This "fix" is wrong. Memory controllers with chip selects should have
+> the chip select in the unit-address. The correct fix here is you should
+> drop "simple-bus"."
+
+Right, Rob talked to me about this last week during Linaro Connect.
+
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+
+The series should be copied to LAKML as well.  Also, I suspect that we
+will have regressions if we drop "simple-bus" from IFC node right now,
+because the child devices will likely not get populated.  I would
+suggest that you resend two reverting patches firstly, and send the
+other two separately later with someone being able to test the changes
+on copy, to make sure we do not break things.
+
+Shawn
+
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  | 6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  | 6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 4 ++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts  | 6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts  | 4 ++--
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 6 +++---
+>  7 files changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> index 3a09297..6341281 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> @@ -84,19 +84,19 @@
+>  		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
+>  	status = "okay";
+>  
+> -	nor@0 {
+> +	nor@0,0 {
+>  		compatible = "cfi-flash";
+>  		reg = <0x0 0x0 0x8000000>;
+>  		bank-width = <2>;
+>  		device-width = <1>;
+>  	};
+>  
+> -	nand@100000000 {
+> +	nand@1,0 {
+>  		compatible = "fsl,ifc-nand";
+>  		reg = <0x1 0x0 0x10000>;
+>  	};
+>  
+> -	fpga: board-control@200000000 {
+> +	fpga: board-control@2,0 {
+>  		compatible = "fsl,ls1043aqds-fpga", "fsl,fpga-qixis";
+>  		reg = <0x2 0x0 0x0000100>;
+>  	};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> index 0a82bf9..3dc0c8e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+> @@ -97,7 +97,7 @@
+>  		  0x1 0x0 0x0 0x7e800000 0x00010000
+>  		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
+>  
+> -		nor@0 {
+> +		nor@0,0 {
+>  			compatible = "cfi-flash";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> @@ -106,14 +106,14 @@
+>  			device-width = <1>;
+>  		};
+>  
+> -		nand@100000000 {
+> +		nand@1,0 {
+>  			compatible = "fsl,ifc-nand";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			reg = <0x1 0x0 0x10000>;
+>  		};
+>  
+> -		cpld: board-control@200000000 {
+> +		cpld: board-control@2,0 {
+>  			compatible = "fsl,ls1043ardb-cpld";
+>  			reg = <0x2 0x0 0x0000100>;
+>  		};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> index 410dc61..434383b 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+> @@ -175,19 +175,19 @@
+>  		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
+>  	status = "okay";
+>  
+> -	nor@0 {
+> +	nor@0,0 {
+>  		compatible = "cfi-flash";
+>  		reg = <0x0 0x0 0x8000000>;
+>  		bank-width = <2>;
+>  		device-width = <1>;
+>  	};
+>  
+> -	nand@100000000 {
+> +	nand@1,0 {
+>  		compatible = "fsl,ifc-nand";
+>  		reg = <0x1 0x0 0x10000>;
+>  	};
+>  
+> -	fpga: board-control@200000000 {
+> +	fpga: board-control@2,0 {
+>  		compatible = "fsl,ls1046aqds-fpga", "fsl,fpga-qixis";
+>  		reg = <0x2 0x0 0x0000100>;
+>  	};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> index 18d3c5b..5dc2782 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+> @@ -122,14 +122,14 @@
+>  		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
+>  	status = "okay";
+>  
+> -	nand@0 {
+> +	nand@0,0 {
+>  		compatible = "fsl,ifc-nand";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		reg = <0x0 0x0 0x10000>;
+>  	};
+>  
+> -	cpld: board-control@200000000 {
+> +	cpld: board-control@2,0 {
+>  		compatible = "fsl,ls1046ardb-cpld";
+>  		reg = <0x2 0x0 0x0000100>;
+>  	};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+> index 0b96d6d..3012805 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+> @@ -116,19 +116,19 @@
+>  		  3 0 0x5 0x20000000 0x00010000>;
+>  	status = "okay";
+>  
+> -	nor@0 {
+> +	nor@0,0 {
+>  		compatible = "cfi-flash";
+>  		reg = <0x0 0x0 0x8000000>;
+>  		bank-width = <2>;
+>  		device-width = <1>;
+>  	};
+>  
+> -	nand@200000000 {
+> +	nand@2,0 {
+>  		compatible = "fsl,ifc-nand";
+>  		reg = <0x2 0x0 0x10000>;
+>  	};
+>  
+> -	fpga: board-control@300000000 {
+> +	fpga: board-control@3,0 {
+>  		compatible = "fsl,ls1088aqds-fpga", "fsl,fpga-qixis";
+>  		reg = <0x3 0x0 0x0000100>;
+>  	};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> index 3d57008e..4f17601 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> @@ -99,12 +99,12 @@
+>  		  2 0 0x5 0x20000000 0x00010000>;
+>  	status = "okay";
+>  
+> -	nand@0 {
+> +	nand@0,0 {
+>  		compatible = "fsl,ifc-nand";
+>  		reg = <0x0 0x0 0x10000>;
+>  	};
+>  
+> -	fpga: board-control@200000000 {
+> +	fpga: board-control@2,0 {
+>  		compatible = "fsl,ls1088ardb-fpga", "fsl,fpga-qixis";
+>  		reg = <0x2 0x0 0x0000100>;
+>  	};
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+> index 5ac3412..1de6188 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+> @@ -58,7 +58,7 @@
+>  		  0x2 0x0 0x5 0x30000000 0x00010000
+>  		  0x3 0x0 0x5 0x20000000 0x00010000>;
+>  
+> -	nor@0 {
+> +	nor@0,0 {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		compatible = "cfi-flash";
+> @@ -67,12 +67,12 @@
+>  		device-width = <1>;
+>  	};
+>  
+> -	nand@200000000 {
+> +	nand@2,0 {
+>  	     compatible = "fsl,ifc-nand";
+>  	     reg = <0x2 0x0 0x10000>;
+>  	};
+>  
+> -	cpld@300000000 {
+> +	cpld@3,0 {
+>  	     reg = <0x3 0x0 0x10000>;
+>  	     compatible = "fsl,ls2080aqds-fpga", "fsl,fpga-qixis";
+>  	};
+> -- 
+> 2.7.4
+> 
