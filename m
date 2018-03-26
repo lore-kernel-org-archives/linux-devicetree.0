@@ -1,30 +1,51 @@
-From: sricharan@codeaurora.org
-Subject: Re: [v9,04/15] clk: qcom: Add HFPLL driver
-Date: Mon, 26 Mar 2018 15:17:46 +0530
-Message-ID: <0132a9e1371c7e690d174cb4d65bc951@codeaurora.org>
-References: <520347148-27852-5-git-send-email-sricharan@codeaurora.org>
- <20180325193341.27845-1-ctatlor97@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v6 4/5] ARM: dts: rockchip: set PWM delay backlight settings for Veyron.
+Date: Mon, 26 Mar 2018 11:52:12 +0200
+Message-ID: <20180326095213.18362-4-enric.balletbo@collabora.com>
+References: <20180326095213.18362-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180325193341.27845-1-ctatlor97@gmail.com>
+In-Reply-To: <20180326095213.18362-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
+To: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-26 01:03, Craig Tatlor wrote:
-> This doesn't seem to work correctly with the higher clocks on 8974pro,
-> specifically 2150400000 hz or above, maybe its something to do with
-> being bigger than an unsigned long.
-> 
-> When i try to set any higher frequency it jumps down to 300mhz.
+For veyron the binding should provide both PWM timings, the delay between
+you enable the PWM and set the enable signal, and the delay between you
+disable the PWM signal and clear the enable signal. Update the binding
+accordingly, in this case the panels connected to the veyron boards have
+a symmetric power sequence, hence the same value is used.
 
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
+Changes since v5:
+ - None.
+Changes since v4:
+ - Rebased on top of mainline.
+Changes since v3:
+ - Use new -ms names for proprieties.
+Changes since v2:
+ - Use new names for proprieties.
+Changes since v1:
+ - Add this new patch to fix current binding on veyron.
+---
+ arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  Thanks for testing this series. Not sure i got dropped from the list.
-  So i will check on this and come back.
-
-Regards,
-  Sricharan
+diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+index d752a315f884..5a8c7f3abb38 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+@@ -96,7 +96,8 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&bl_en>;
+ 		pwms = <&pwm0 0 1000000 0>;
+-		pwm-delay-us = <10000>;
++		post-pwm-on-delay-ms = <10>;
++		pwm-off-delay-ms = <10>;
+ 	};
+ 
+ 	gpio-charger {
+-- 
+2.16.2
