@@ -1,133 +1,84 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 4/7] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888
- output.
-Date: Mon, 26 Mar 2018 13:46:45 +0200
-Message-ID: <20180326114645.lxvw5twhfzwfsswz@flea>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-4-git-send-email-giulio.benetti@micronovasrl.com>
- <1521986953.5301.4.camel@paulk.fr>
- <20180326100114.fa7vjw342ad6vrb6@flea>
- <e3e51afb-bb32-7f2f-877e-b6c74d71ab06@micronovasrl.com>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENIIHY4IDIvNV0gZHQtYmlu?=
+ =?utf-8?Q?dings:_scsi:_ufs:_add_document_for_hisi-ufs?=
+Date: Mon, 26 Mar 2018 12:01:56 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA587B5@DGGEMM506-MBS.china.huawei.com>
+References: <20180213101412.5717-1-liwei213@huawei.com>
+ <20180213101412.5717-3-liwei213@huawei.com>
+ <CAK8P3a2b3rLHyM+vMppCkAR3VYbhw-b0LpuWfLCqjs7z9n+hyw@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA584ED@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a3NdHLDf2vOMyZ1qcWNW1Jg5T47qR0qWhWEeDn+90S4ug@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA58798@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a29sDaEj=iTkru-3mc9NpjNvZos3Z+h5UsT1cAeULoGHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1019134883=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e3e51afb-bb32-7f2f-877e-b6c74d71ab06@micronovasrl.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Paul Kocialkowski <contact@paulk.fr>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a29sDaEj=iTkru-3mc9NpjNvZos3Z+h5UsT1cAeULoGHw@mail.gmail.com>
+Content-Language: zh-CN
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1019134883==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nmuan7bpy7aqwqnc"
-Content-Disposition: inline
-
-
---nmuan7bpy7aqwqnc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 26, 2018 at 01:27:05PM +0200, Giulio Benetti wrote:
-> Hi,
->=20
-> Il 26/03/2018 12:01, Maxime Ripard ha scritto:
-> > Hi,
-> >=20
-> > On Sun, Mar 25, 2018 at 04:09:13PM +0200, Paul Kocialkowski wrote:
-> > > Le mercredi 21 mars 2018 =E0 21:03 +0100, Giulio Benetti a =E9crit :
-> > > > The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setti=
-ng
-> > > > for the needed pins.
-> > > >=20
-> > > > Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> > > > ---
-> > > >   arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
-> > > >   1 file changed, 8 insertions(+)
-> > > >=20
-> > > > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
-> > > > b/arch/arm/boot/dts/sun7i-a20.dtsi
-> > > > index efb5607..bfe6728 100644
-> > > > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> > > > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> > > > @@ -922,6 +922,14 @@
-> > > >   				pins =3D "PI20", "PI21";
-> > > >   				function =3D "uart7";
-> > > >   			};
-> > > > +
-> > > > +			lcd0_rgb888_pins: lcd0-rgb888-pins {
-> > >=20
-> > > It would be more consistent with other pins definitions to have
-> > > underscores in both names and to indicate the index, such as:
-> > > lcd0_rgb888_pins: lcd0_rgb888_pins@0 {
-> >=20
-> > Both your suggestions will generate DTC warnings, and we'd like to get
-> > rid of them eventually :)
-> >=20
-> > > This way, other set of pins for LCD (PH0-PH27) can be declared as @1
-> > > when they are needed in the future.
-> >=20
-> > A better idea would be to call it lcd0-rgb888-pd-pins, and introduce
-> > the ph variant when it's done.
->=20
-> As I know, only PD is muxed with LCD0.
-> And PH is for LCD1 only.
->=20
-> And LCD0 seems to come out only from PD port according to datasheet,
-> this is why I didn't put @0 after lcd0-rgb888-pins.
->=20
-> So I don't think it makes sense to handle pins in the way Paul suggests.
->=20
-> What do you all think?
-y
-That seems sensible in this case, yes.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---nmuan7bpy7aqwqnc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlq43aUACgkQ0rTAlCFN
-r3Q4OA//fyGcKzs88JAjhcgSMW8Etvgnu+u6zQXlRaqXNkCT5+tdwaseextkdKuu
-+TxmCwdzYRKxemRKQDLWa9xTszOMLQs89AshL9kG5DfVtdiJ/tQUyOOJCHUEm7W8
-EpSNb9pGEpZHq/AEFQv591ESYehaC5OZQ362cNua+/jR4R/EKOlNUFkwywfVuhkt
-nAhpUC2DjLJRN8A3VzVOm3uNUzp/OcTjHmjm7DdyzXZ7uNGwT6Xbo7ikthUYQxnm
-EKbUmUYx5/mHvBgLh3MM9NRhLCxc69ARDqXVTsQ8usyK68TXgW2lW0VwsWivlzY9
-BgUwHyLFNUlZabblpSdiA3SVD5FO3QiJ+o2HQztENhIEKcdGAWCK4h2UdnSkC7sF
-3mmUir0ZfCMt3Wkl6kZTwbq/RleGJD311NxIEvXzBC1QciuES9V/d+MhvvM1b449
-Jpy3kLr/sWfckG3J5wJzDbrY5N/wsci8gjpQTAmx5ZM1i3lV0shu1xC4WCsaCpN0
-xisYvVLx6+PJKyXZG7ClR+s2oEiMyh/eCZr6zQUhOgnEE5fCeWkJY64j+87hiih5
-dMNV2Kz+mhsCP/juizjfwrC+wiO81/+5VDh1iMI5FQM5LNpRSF6Ewka3/zO/EdFE
-LLMlIJkmw0PQ69zumEH2kxpI5tvwjR3fJat+SGHSxBhk57xYoJQ=
-=gjNK
------END PGP SIGNATURE-----
-
---nmuan7bpy7aqwqnc--
-
---===============1019134883==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1019134883==--
+SGksIEFybmQNCg0KSSdsbCBhc2sgb3VyIHNvYyBjb2xsZWFndWVzIGZvciBoZWxwIGFuZCBnaXZl
+IGEgZGV0YWlsZWQgYW5kIGFjY3VyYXRlIGV4cGxhbmF0aW9uIGFvc3AuDQoNClRoYW5rcyENCg0K
+DQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IGFybmRiZXJnbWFubkBnbWFpbC5j
+b20gW21haWx0bzphcm5kYmVyZ21hbm5AZ21haWwuY29tXSDku6PooaggQXJuZCBCZXJnbWFubg0K
+5Y+R6YCB5pe26Ze0OiAyMDE45bm0M+aciDI25pelIDE4OjQyDQrmlLbku7bkuro6IGxpd2VpIChD
+TSkNCuaKhOmAgTogUm9iIEhlcnJpbmc7IE1hcmsgUnV0bGFuZDsgeHV3ZWkgKE8pOyBDYXRhbGlu
+IE1hcmluYXM7IFdpbGwgRGVhY29uOyBWaW5heWFrIEhvbGlrYXR0aTsgSmFtZXMgRS5KLiBCb3R0
+b21sZXk7IE1hcnRpbiBLLiBQZXRlcnNlbjsgS2V2aW4gSGlsbWFuOyBHcmVnb3J5IENMRU1FTlQ7
+IFRob21hcyBQZXRhenpvbmk7IE1hc2FoaXJvIFlhbWFkYTsgUmlrdSBWb2lwaW87IFRoaWVycnkg
+UmVkaW5nOyBLcnp5c3p0b2YgS296bG93c2tpOyBFcmljIEFuaG9sdDsgRFRNTDsgTGludXggS2Vy
+bmVsIE1haWxpbmcgTGlzdDsgTGludXggQVJNOyBsaW51eC1zY3NpOyB6YW5nbGVpZ2FuZzsgR2Vu
+Z2ppYW5mZW5nOyBHdW9kb25nIFh1OyBaaGFuZ2ZlaSBHYW87IEZlbmdiYW9wZW5nIChrZXZpbiwg
+S2lyaW4gU29sdXRpb24gRGVwdCk7IFlhbml2IEdhcmRpDQrkuLvpopg6IFJlOiDnrZTlpI06IOet
+lOWkjTogW1BBVENIIHY4IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50
+IGZvciBoaXNpLXVmcw0KDQpPbiBNb24sIE1hciAyNiwgMjAxOCBhdCAxMjoyNiBQTSwgbGl3ZWkg
+KENNKSA8bGl3ZWkyMTNAaHVhd2VpLmNvbT4gd3JvdGU6DQo+IOWPkeS7tuS6ujogYXJuZGJlcmdt
+YW5uQGdtYWlsLmNvbSBbbWFpbHRvOmFybmRiZXJnbWFubkBnbWFpbC5jb21dIOS7o+ihqCBBcm5k
+IA0KPiBCZXJnbWFubg0KPiA+IOS4u+mimDogUmU6IOetlOWkjTogW1BBVENIIHY4IDIvNV0gZHQt
+YmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50IGZvciANCj4gPiBoaXNpLXVmcyBPbiBG
+cmksIE1hciAyMywgMjAxOCBhdCAzOjIyIEFNLCBsaXdlaSAoQ00pIDxsaXdlaTIxM0BodWF3ZWku
+Y29tPiB3cm90ZToNCj4gPj4gVGhlIGNsb2NrIG5hbWVzIHNvdW5kIGdlbmVyaWMgZW5vdWdoLCBz
+aG91bGQgd2UgaGF2ZSBib3RoIGluIHRoZSBnZW5lcmljIGJpbmRpbmc/DQo+ID4+DQo+ID4+IERv
+IHlvdSBtZWFuIHRoYXQgYWRkIGEgInBoeV9jbGsiIHRvIHVmc2hjZC1wbHRmcm0gJ3MgYmluZGlu
+Z3M/DQo+ID4+IEF0IHByZXNlbnQsIGl0IHNlZW1zIHRoYXQgaW4gdGhlIGltcGxlbWVudGF0aW9u
+IG9mIGdlbmVyaWMgY29kZSwgDQo+ID4+IGFwYXJ0IGZyb20gInJlZl9jbGsiIG1heSBoYXZlIHNw
+ZWNpYWwgcHJvY2Vzc2luZywgb3RoZXIgY2xrIHdpbGwgDQo+ID4+IG5vdCBoYXZlIHNwZWNpYWwg
+cHJvY2Vzc2luZyBhbmQgc2ltcGx5IHBhcnNlIGFuZCBlbmFibGU7IFJlZmVycmluZyANCj4gPj4g
+dG8gdWZzLXFjb20gYmluZGluZywgSSB0aGluayAicGh5X2NsayIgY2FuIGJlIG5hbWVkICJpZmFj
+ZV9jbGsiLCANCj4gPj4gdGhpcyAiaWZhY2VfY2xrIiBleGlzdHMgaW4gdWZzaGNkLXBsdGZybSBi
+aW5kaW5ncztJZiBzbywgInJlZl9jbGsiLCAiaWZhY2VfY2xrIiBhcmUgYm90aCBpbiB0aGUgZ2Vu
+ZXJpYyBiaW5kaW5nLHdlIHdpbGwgcmVtb3ZlIHRoZW0gaGVyZS4gSXMgdGhhdCBva2F5Pw0KPg0K
+PiA+IEknbSBsb29raW5nIGF0IHRoZSBnZW5lcmljIGJpbmRpbmcgYWdhaW4sIGFuZCBpdCBzZWVt
+cyB3ZSBuZXZlciANCj4gPiBxdWl0ZSBtYW5hZ2VkIHRvIGZpeCBzb21lIG1pbm9yIHByb2JsZW1z
+IHdpdGggaXQuIFNlZSBiZWxvdyBmb3IgYSBwb3NzaWJsZSB3YXkgdG8gY2xhcmlmeSBpdC4NCj4N
+Cj4gcGh5X2NsayBpcyBhY3R1YWxseSBnaXZlbiB0byB0aGUgcGh5LiBCdXQgYXMgcHJldmlvdXNs
+eSBtZW50aW9uZWQgLCB3ZSANCj4gZG8gbm90IGhhdmUgYSBzZXBhcmF0ZSBwaHkgdG8gY29uZmln
+dXJlIDsgVGhlIGNsa3MgaW4gdGhlIHBhdGNoIHlvdSANCj4gZ2l2ZSBhcHBlYXIgdG8gYmUgdW5z
+dWl0YWJsZSBmb3IgZGVzY3JpYmluZyB0aGlzIC4NCj4gSGVyZSB3ZSBjYW4ndCBkZXNjcmliZSBw
+aHlfY2xrIGluIHRoZSBub2RlICJ1ZnNwaHkxOiB1ZnNwaHlAZmM1OTcwMDAiIGxpa2UgcWNvbS4N
+Cj4gU28gY2FuIHdlIHB1dCBpdCBoZXJlIGluIG91ciBvd24gYmluZGluZyBsaWtlIHRoaXM/DQoN
+CkkgdGhpbmsgdGhlIGNvbmNlcHQgb2YgaGF2aW5nIGEgcGh5IGNsayBpcyBnZW5lcmljIGVub3Vn
+aCB0aGF0IGl0J3MgYmV0dGVyIHRvIGhhdmUgdGhhdCBpbiB0aGUgY29tbW9uIHBhcnQsIG90aGVy
+cyB3aWxsIHN1cmVseSBoYXZlIHRoZSBzYW1lIHRoaW5nLCBhbmQgaW4gdGhpcyBjYXNlLCBxY29t
+IHdvdWxkIGJlIHRoZSBleGNlcHRpb24gdGhhdCBkb2VzIG5vdCB1c2Ugb25lLg0KDQpUaGVyZSBh
+cmUgYXBwYXJlbnRseSBhIGNvdXBsZSBvZiB0aGluZ3MgcmVsYXRlZCB0byB0aGUgcGh5IHRoYXQg
+bWF5IG9yIG1heSBub3QgcmVxdWlyZSBhIGNsazoNCg0KLSByZWZfY2xrOiBUaGUgcmVmZXJlbmNl
+IGNsb2NrIG9uIHRoZSBtaXBpIGJ1cywgdGhpcyBpcyB3aGF0IHFjb20gaGF2ZSwgdGhpcyB3b3Vs
+ZA0KICBiZSB0aGUgMTkuMiBNSHogY2xvY2sgc2lnbmFsLg0KLSBvbmUgY2xvY2sgdG8gZHJpdmUg
+dGhlIGxvZ2ljIGJsb2NrIGZvciB0aGUgUEhZIGl0c2VsZiwgaWYgaXQgaXMgaW5jbHVkZWQgd2l0
+aGluDQogIHRoZSBzYW1lIGxvZ2ljYWwgcG9ydGlvbiBvZiBhbiBTb0MgYXMgdGhlIHVmc2hjZCwg
+YnV0IHVzZXMgYSBzZXBhcmF0ZSBjbG9jay4NCi0gTG9va2luZyBhdCB0aGUgQW5kcm9pZCBrZXJu
+ZWwgYXMgZGlzdHJpYnV0ZWQgYnkgZ29vZ2xlL3F1YWxjb21tLCB0aGV5IGhhdmUNCiAgZm91ciBz
+ZXBhcmF0ZSBjbG9ja3MgZGVzY3JpYmVkIGFzDQoNCiAgICBQSFkgdG8gY29udHJvbGxlciBzeW1i
+b2wgc3luY2hyb25pemF0aW9uIGNsb2NrczoNCiAgICAgICAgInJ4X2xhbmUwX3N5bmNfY2xrIiAt
+IFJYIExhbmUgMA0KICAgICAgICAicnhfbGFuZTFfc3luY19jbGsiIC0gUlggTGFuZSAxDQogICAg
+ICAgICJ0eF9sYW5lMF9zeW5jX2NsayIgLSBUWCBMYW5lIDANCiAgICAgICAgInR4X2xhbmUxX3N5
+bmNfY2xrIiAtIFRYIExhbmUgMQ0KDQpXaGljaCBvZiB0aGUgYWJvdmUgd291bGQgeW91ciBwaHlf
+Y2xrIHJlZmVyIHRvPw0KDQogICAgICAgQXJuZA0KDQpbMV0gaHR0cHM6Ly9hbmRyb2lkLmdvb2ds
+ZXNvdXJjZS5jb20va2VybmVsL21zbS8rL2FuZHJvaWQtbXNtLWJ1bGxoZWFkLTMuMTAtbWFyc2ht
+YWxsb3ctZHIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0
+ZnJtLnR4dD9hdXRvZGl2ZT0wJTJGJTJGJTJGJTJGJTJGDQo=
