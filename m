@@ -1,79 +1,67 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v6] ARM: dts: wheat: Fix ADV7513 address usage
-Date: Mon, 26 Mar 2018 10:04:24 +0100
-Message-ID: <d2c5d935-da1f-038b-a0e6-ce390273e21a@ideasonboard.com>
-References: <1521754240-10470-1-git-send-email-kieran.bingham+renesas@ideasonboard.com>
- <20180323085140.g3golwdtpezo7fhi@verge.net.au>
- <a771042b-f63a-d00f-73a1-91a7e6089fe4@ideasonboard.com>
- <20180326083143.r6jz6csckd4ljnpu@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/3] arm64: dts: renesas: salvator-common: Configure
+ PMIC for DDR Backup Power
+Date: Mon, 26 Mar 2018 11:06:25 +0200
+Message-ID: <20180326090625.espsuzblp7gy767t@verge.net.au>
+References: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
+ <1521029386-29975-3-git-send-email-geert+renesas@glider.be>
+ <9c6289e4-23dd-c79b-bd1f-058d843739d2@cogentembedded.com>
+ <CAMuHMdUO-Op4u44naZJ37VgzN1GJBL33yRWnF11D9a24y8+x1g@mail.gmail.com>
+ <1ae32fee-578e-1091-561a-200a8036b670@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180326083143.r6jz6csckd4ljnpu@verge.net.au>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1ae32fee-578e-1091-561a-200a8036b670@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ltb24sCgpPbiAyNi8wMy8xOCAwOTozMSwgU2ltb24gSG9ybWFuIHdyb3RlOgo+IE9uIEZy
-aSwgTWFyIDIzLCAyMDE4IGF0IDA5OjE2OjEzUE0gKzAwMDAsIEtpZXJhbiBCaW5naGFtIHdyb3Rl
-Ogo+PiBIaSBTaW1vbiwKPj4KPj4gT24gMjMvMDMvMTggMDg6NTEsIFNpbW9uIEhvcm1hbiB3cm90
-ZToKPj4+IE9uIFRodSwgTWFyIDIyLCAyMDE4IGF0IDA5OjMwOjQwUE0gKzAwMDAsIEtpZXJhbiBC
-aW5naGFtIHdyb3RlOgo+Pj4+IFRoZSByOGE3NzkyIFdoZWF0IGJvYXJkIGhhcyB0d28gQURWNzUx
-MyBkZXZpY2VzIHNoYXJpbmcgYSBzaW5nbGUgSTJDCj4+Pj4gYnVzLCBob3dldmVyIGluIGxvdyBw
-b3dlciBtb2RlIHRoZSBBRFY3NTEzIHdpbGwgcmVzZXQgaXQncyBzbGF2ZSBtYXBzIHRvCj4+Pj4g
-dXNlIHRoZSBoYXJkd2FyZSBkZWZpbmVkIGRlZmF1bHQgYWRkcmVzc2VzLgo+Pj4+Cj4+Pj4gVGhl
-IEFEVjc1MTEgZHJpdmVyIHdhcyBhZGFwdGVkIHRvIGFsbG93IHRoZSB0d28gZGV2aWNlcyB0byBi
-ZSByZWdpc3RlcmVkCj4+Pj4gY29ycmVjdGx5IC0gYnV0IGl0IGRpZCBub3QgdGFrZSBpbnRvIGFj
-Y291bnQgdGhlIGZhdWx0IHdoZXJlYnkgdGhlCj4+Pj4gZGV2aWNlcyByZXNldCB0aGUgYWRkcmVz
-c2VzLgo+Pj4+Cj4+Pj4gVGhpcyByZXN1bHRzIGluIGFuIGFkZHJlc3MgY29uZmxpY3QgYmV0d2Vl
-biB0aGUgZGV2aWNlIHVzaW5nIHRoZSBkZWZhdWx0Cj4+Pj4gYWRkcmVzc2VzLCBhbmQgdGhlIG90
-aGVyIGRldmljZSBpZiBpdCBpcyBpbiBsb3ctcG93ZXItbW9kZS4KPj4+Pgo+Pj4+IFJlcGFpciB0
-aGlzIGlzc3VlIGJ5IG1vdmluZyBib3RoIGRldmljZXMgYXdheSBmcm9tIHRoZSBkZWZhdWx0IGFk
-ZHJlc3MKPj4+PiBkZWZpbml0aW9ucy4KPj4+Cj4+PiBIaSBLaWVyZWFuLAo+Pj4KPj4+IGFzIHRo
-aXMgaXMgYSBmaXgKPj4+IGEpIERvZXMgaXQgd2FycmFudCBhIGZpeGVzIHRhZz8KPj4+ICAgIEZp
-eGVzOiBmNmVlYTgyYTg3ZGIgKCJBUk06IGR0czogd2hlYXQ6IGFkZCBEVSBzdXBwb3J0IikKPj4+
-IGIpIERvZXMgaXQgd2FycmFudCBiZWluZyBwb3N0ZWQgYXMgYSBmaXggZm9yIHY0LjE2Owo+Pj4g
-Yykgb3IgdjQuMTc/Cj4+Cj4+IFRyaWNreSBvbmUsIHllcyBpdCBjb3VsZCBidXQgdGhpcyBEVFMg
-Zml4LCB3aWxsIG9ubHkgYWN0dWFsbHkgJ2ZpeCcgdGhlIGlzc3VlIGlmCj4+IHRoZSBjb3JyZXNw
-b25kaW5nIGRyaXZlciB1cGRhdGVzIHRvIGFsbG93IHNlY29uZGFyeSBhZGRyZXNzZXMgdG8gYmUg
-cGFyc2VkIGFyZQo+PiBhbHNvIGJhY2twb3J0ZWQuCj4+Cj4+IEl0IHNob3VsZCBiZSBzYWZlIHRv
-IGJhY2sgcG9ydCB0aGUgZHRzIGZpeCB3aXRob3V0IHRoZSBkcml2ZXIgdXBkYXRlcywgYnV0IHRo
-ZQo+PiBhZGRyZXNzZXMgc3BlY2lmaWVkIGJ5IHRoaXMgcGF0Y2ggd2lsbCBzaW1wbHkgYmUgaWdu
-b3JlZC4KPiAKPiBJbiB0aGF0IGNhc2UgSSB0aGluayBpdHMgc2FmZSB0byBhZGQgdGhlIGZpeGVz
-IHRhZyBhbmQgdGFrZSB0aGUgRFRTIHBhdGNoCj4gdmlhIHRoZSByZW5lc2FzIHRyZWUuIFBlcmhh
-cHMgYXBwbHlpbmcgaXQgZm9yIHY0LjE4IGFuZCBhbGxvd2luZyBhdXRvbWF0aWMKPiBiYWNrcG9y
-dGluZyB0byB0YWtlIGl0cyBjb3Vyc2UgaXMgdGhlIGNsZWFuZXN0IG9wdGlvbi4KPiAKPj4gVGh1
-cyBpZiB0aGlzIGlzIG1hcmtlZCB3aXRoIHRoZSBmaXhlcyB0YWcgdGhlIGNvcnJlc3BvbmRpbmcg
-cGF0Y2ggImRybTogYWR2NzUxMToKPj4gQWRkIHN1cHBvcnQgZm9yIGkyY19uZXdfc2Vjb25kYXJ5
-X2RldmljZSIgc2hvdWxkIGFsc28gYmUgbWFya2VkLgo+Pgo+PiBJdCBsb29rcyBsaWtlIHRoYXQg
-cGF0Y2ggaGFzIHlldCB0byBiZSBwaWNrZWQgdXAgYnkgdGhlIERSTSBzdWJzeXN0ZW0sIHNvIGhv
-dwo+PiBhYm91dCBJIGJ1bmRsZSBib3RoIG9mIHRoZXNlIHR3byBwYXRjaGVzIHRvZ2V0aGVyIGlu
-IGEgcmVwb3N0IGFsb25nIHdpdGggdGhlCj4+IGZpeGVzIHRhZy4KPj4KPj4gSW4gZmFjdCwgSSBk
-b24ndCB0aGluayB0aGUgQURWNzUxMSBkdC1iaW5kaW5ncyB1cGRhdGUgaGFzIG1hZGUgYW55IHBy
-b2dyZXNzCj4+IGVpdGhlci4gKGR0LWJpbmRpbmdzOiBhZHY3NTExOiBFeHRlbmQgYmluZGluZ3Mg
-dG8gYWxsb3cgc3BlY2lmeWluZyBzbGF2ZSBtYXAKPj4gYWRkcmVzc2VzKS4gVGhlIG1lZGlhIHRy
-ZWUgdmFyaWFudHMgZm9yIHRoZSBhZHY3NjA0IGhhdmUgYWxyZWFkeSBiZWVuIHBpY2tlZCB1cAo+
-PiBieSBNYXVybyBJIGJlbGlldmUgdGhvdWdoLgo+Pgo+PiBJIHByZXN1bWUgaXQgd291bGQgYmUg
-YWNjZXB0YWJsZSBmb3IgdGhpcyBkdHMgcGF0Y2ggKG9yIHJhdGhlciBhbGwgdGhyZWUgcGF0Y2hl
-cwo+PiBtZW50aW9uZWQpIHRvIGdldCBpbnRlZ3JhdGVkIHRocm91Z2ggdGhlIERSTSB0cmVlID8K
-PiAKPiBVbmxlc3MgdGhlcmUgaXMgYSBzdHJvbmcgcmVhc29uIEkgd291bGQgcHJlZmVyIHRoZSBk
-dHMgcGF0Y2ggdG8gZ28gdmlhCj4gbXkgdHJlZS4gVGhlIHJlYXNvbiBpcyB0byBhdm9pZCBtZXJn
-ZSBjb25mbGljdHMgYnViYmxpbmcgdXAgdG8gTGludXMsCj4gd2hpY2ggcmVhbGx5IGlzIHNvbWV0
-aGluZyBiZXN0IGF2b2lkZWQuCgpUaGF0J3MgcGVyZmVjdGx5IGZpbmUgd2l0aCBtZS4KCkZlZWwg
-ZnJlZSB0byBhZGQ6CgpGaXhlczogZjZlZWE4MmE4N2RiICgiQVJNOiBkdHM6IHdoZWF0OiBhZGQg
-RFUgc3VwcG9ydCIpCgphcyB5b3Ugc3VnZ2VzdGVkIHdoZW4geW91IGFwcGx5LCBvciBhbHRlcm5h
-dGl2ZWx5IGxldCBtZSBrbm93IGlmIHlvdSBuZWVkIGEgcmVwb3N0LgoKUmVnYXJkcwotLQpLaWVy
-YW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Mar 16, 2018 at 03:08:13PM +0300, Sergei Shtylyov wrote:
+> On 03/16/2018 03:00 PM, Geert Uytterhoeven wrote:
+> 
+> >>> On Salvator-X(S), all of the DDR0, DDR1, DDR0C, and DDR1C power rails
+> >>> need to be kept powered when backup mode is enabled.  Reflect this in
+> >>> the "rohm,ddr-backup-power" property for the BD9571MWV PMIC node.
+> >>>
+> >>> The accessory power switch (SW23) is a toggle switch, hense specify
+> >>> "rohm,rstbmode-level".
+> >>>
+> >>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>> ---
+> >>> v2:
+> >>>   - Add rohm,rstbmode-level.
+> >>> ---
+> >>>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >>> index 2a7f36abd2dd85c6..80794c38c2669d75 100644
+> >>> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >>> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >>> @@ -376,6 +376,8 @@
+> >>>               #interrupt-cells = <2>;
+> >>>               gpio-controller;
+> >>>               #gpio-cells = <2>;
+> >>> +             rohm,ddr-backup-power = <15>;
+> >>
+> >>   Why not 0xf if those are all bit flags?
+> > 
+> > Because it's a small number?
+> > Does it matter?
+> 
+>    I think hex is preferable for the bit flags. Decimal makes one think it's something
+> else -- some magnitude, etc...
+
+Geert, it seems that Rob Herring is of the same opinion.
+Would you care to respin this series?
