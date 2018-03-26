@@ -1,84 +1,150 @@
-From: "liwei (CM)" <liwei213@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENIIHY4IDIvNV0gZHQtYmlu?=
- =?utf-8?Q?dings:_scsi:_ufs:_add_document_for_hisi-ufs?=
-Date: Mon, 26 Mar 2018 12:01:56 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140FA587B5@DGGEMM506-MBS.china.huawei.com>
-References: <20180213101412.5717-1-liwei213@huawei.com>
- <20180213101412.5717-3-liwei213@huawei.com>
- <CAK8P3a2b3rLHyM+vMppCkAR3VYbhw-b0LpuWfLCqjs7z9n+hyw@mail.gmail.com>
- <1699CE87DE933F49876AD744B5DC140FA584ED@DGGEMM506-MBS.china.huawei.com>
- <CAK8P3a3NdHLDf2vOMyZ1qcWNW1Jg5T47qR0qWhWEeDn+90S4ug@mail.gmail.com>
- <1699CE87DE933F49876AD744B5DC140FA58798@DGGEMM506-MBS.china.huawei.com>
- <CAK8P3a29sDaEj=iTkru-3mc9NpjNvZos3Z+h5UsT1cAeULoGHw@mail.gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Mon, 26 Mar 2018 14:08:27 +0200
+Message-ID: <20180326120827.GG27746@w540>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+ <4060923.7DxT9ae38L@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a29sDaEj=iTkru-3mc9NpjNvZos3Z+h5UsT1cAeULoGHw@mail.gmail.com>
-Content-Language: zh-CN
+Content-Disposition: inline
+In-Reply-To: <4060923.7DxT9ae38L@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, a.hajda@samsung.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEFybmQNCg0KSSdsbCBhc2sgb3VyIHNvYyBjb2xsZWFndWVzIGZvciBoZWxwIGFuZCBnaXZl
-IGEgZGV0YWlsZWQgYW5kIGFjY3VyYXRlIGV4cGxhbmF0aW9uIGFvc3AuDQoNClRoYW5rcyENCg0K
-DQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IGFybmRiZXJnbWFubkBnbWFpbC5j
-b20gW21haWx0bzphcm5kYmVyZ21hbm5AZ21haWwuY29tXSDku6PooaggQXJuZCBCZXJnbWFubg0K
-5Y+R6YCB5pe26Ze0OiAyMDE45bm0M+aciDI25pelIDE4OjQyDQrmlLbku7bkuro6IGxpd2VpIChD
-TSkNCuaKhOmAgTogUm9iIEhlcnJpbmc7IE1hcmsgUnV0bGFuZDsgeHV3ZWkgKE8pOyBDYXRhbGlu
-IE1hcmluYXM7IFdpbGwgRGVhY29uOyBWaW5heWFrIEhvbGlrYXR0aTsgSmFtZXMgRS5KLiBCb3R0
-b21sZXk7IE1hcnRpbiBLLiBQZXRlcnNlbjsgS2V2aW4gSGlsbWFuOyBHcmVnb3J5IENMRU1FTlQ7
-IFRob21hcyBQZXRhenpvbmk7IE1hc2FoaXJvIFlhbWFkYTsgUmlrdSBWb2lwaW87IFRoaWVycnkg
-UmVkaW5nOyBLcnp5c3p0b2YgS296bG93c2tpOyBFcmljIEFuaG9sdDsgRFRNTDsgTGludXggS2Vy
-bmVsIE1haWxpbmcgTGlzdDsgTGludXggQVJNOyBsaW51eC1zY3NpOyB6YW5nbGVpZ2FuZzsgR2Vu
-Z2ppYW5mZW5nOyBHdW9kb25nIFh1OyBaaGFuZ2ZlaSBHYW87IEZlbmdiYW9wZW5nIChrZXZpbiwg
-S2lyaW4gU29sdXRpb24gRGVwdCk7IFlhbml2IEdhcmRpDQrkuLvpopg6IFJlOiDnrZTlpI06IOet
-lOWkjTogW1BBVENIIHY4IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50
-IGZvciBoaXNpLXVmcw0KDQpPbiBNb24sIE1hciAyNiwgMjAxOCBhdCAxMjoyNiBQTSwgbGl3ZWkg
-KENNKSA8bGl3ZWkyMTNAaHVhd2VpLmNvbT4gd3JvdGU6DQo+IOWPkeS7tuS6ujogYXJuZGJlcmdt
-YW5uQGdtYWlsLmNvbSBbbWFpbHRvOmFybmRiZXJnbWFubkBnbWFpbC5jb21dIOS7o+ihqCBBcm5k
-IA0KPiBCZXJnbWFubg0KPiA+IOS4u+mimDogUmU6IOetlOWkjTogW1BBVENIIHY4IDIvNV0gZHQt
-YmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50IGZvciANCj4gPiBoaXNpLXVmcyBPbiBG
-cmksIE1hciAyMywgMjAxOCBhdCAzOjIyIEFNLCBsaXdlaSAoQ00pIDxsaXdlaTIxM0BodWF3ZWku
-Y29tPiB3cm90ZToNCj4gPj4gVGhlIGNsb2NrIG5hbWVzIHNvdW5kIGdlbmVyaWMgZW5vdWdoLCBz
-aG91bGQgd2UgaGF2ZSBib3RoIGluIHRoZSBnZW5lcmljIGJpbmRpbmc/DQo+ID4+DQo+ID4+IERv
-IHlvdSBtZWFuIHRoYXQgYWRkIGEgInBoeV9jbGsiIHRvIHVmc2hjZC1wbHRmcm0gJ3MgYmluZGlu
-Z3M/DQo+ID4+IEF0IHByZXNlbnQsIGl0IHNlZW1zIHRoYXQgaW4gdGhlIGltcGxlbWVudGF0aW9u
-IG9mIGdlbmVyaWMgY29kZSwgDQo+ID4+IGFwYXJ0IGZyb20gInJlZl9jbGsiIG1heSBoYXZlIHNw
-ZWNpYWwgcHJvY2Vzc2luZywgb3RoZXIgY2xrIHdpbGwgDQo+ID4+IG5vdCBoYXZlIHNwZWNpYWwg
-cHJvY2Vzc2luZyBhbmQgc2ltcGx5IHBhcnNlIGFuZCBlbmFibGU7IFJlZmVycmluZyANCj4gPj4g
-dG8gdWZzLXFjb20gYmluZGluZywgSSB0aGluayAicGh5X2NsayIgY2FuIGJlIG5hbWVkICJpZmFj
-ZV9jbGsiLCANCj4gPj4gdGhpcyAiaWZhY2VfY2xrIiBleGlzdHMgaW4gdWZzaGNkLXBsdGZybSBi
-aW5kaW5ncztJZiBzbywgInJlZl9jbGsiLCAiaWZhY2VfY2xrIiBhcmUgYm90aCBpbiB0aGUgZ2Vu
-ZXJpYyBiaW5kaW5nLHdlIHdpbGwgcmVtb3ZlIHRoZW0gaGVyZS4gSXMgdGhhdCBva2F5Pw0KPg0K
-PiA+IEknbSBsb29raW5nIGF0IHRoZSBnZW5lcmljIGJpbmRpbmcgYWdhaW4sIGFuZCBpdCBzZWVt
-cyB3ZSBuZXZlciANCj4gPiBxdWl0ZSBtYW5hZ2VkIHRvIGZpeCBzb21lIG1pbm9yIHByb2JsZW1z
-IHdpdGggaXQuIFNlZSBiZWxvdyBmb3IgYSBwb3NzaWJsZSB3YXkgdG8gY2xhcmlmeSBpdC4NCj4N
-Cj4gcGh5X2NsayBpcyBhY3R1YWxseSBnaXZlbiB0byB0aGUgcGh5LiBCdXQgYXMgcHJldmlvdXNs
-eSBtZW50aW9uZWQgLCB3ZSANCj4gZG8gbm90IGhhdmUgYSBzZXBhcmF0ZSBwaHkgdG8gY29uZmln
-dXJlIDsgVGhlIGNsa3MgaW4gdGhlIHBhdGNoIHlvdSANCj4gZ2l2ZSBhcHBlYXIgdG8gYmUgdW5z
-dWl0YWJsZSBmb3IgZGVzY3JpYmluZyB0aGlzIC4NCj4gSGVyZSB3ZSBjYW4ndCBkZXNjcmliZSBw
-aHlfY2xrIGluIHRoZSBub2RlICJ1ZnNwaHkxOiB1ZnNwaHlAZmM1OTcwMDAiIGxpa2UgcWNvbS4N
-Cj4gU28gY2FuIHdlIHB1dCBpdCBoZXJlIGluIG91ciBvd24gYmluZGluZyBsaWtlIHRoaXM/DQoN
-CkkgdGhpbmsgdGhlIGNvbmNlcHQgb2YgaGF2aW5nIGEgcGh5IGNsayBpcyBnZW5lcmljIGVub3Vn
-aCB0aGF0IGl0J3MgYmV0dGVyIHRvIGhhdmUgdGhhdCBpbiB0aGUgY29tbW9uIHBhcnQsIG90aGVy
-cyB3aWxsIHN1cmVseSBoYXZlIHRoZSBzYW1lIHRoaW5nLCBhbmQgaW4gdGhpcyBjYXNlLCBxY29t
-IHdvdWxkIGJlIHRoZSBleGNlcHRpb24gdGhhdCBkb2VzIG5vdCB1c2Ugb25lLg0KDQpUaGVyZSBh
-cmUgYXBwYXJlbnRseSBhIGNvdXBsZSBvZiB0aGluZ3MgcmVsYXRlZCB0byB0aGUgcGh5IHRoYXQg
-bWF5IG9yIG1heSBub3QgcmVxdWlyZSBhIGNsazoNCg0KLSByZWZfY2xrOiBUaGUgcmVmZXJlbmNl
-IGNsb2NrIG9uIHRoZSBtaXBpIGJ1cywgdGhpcyBpcyB3aGF0IHFjb20gaGF2ZSwgdGhpcyB3b3Vs
-ZA0KICBiZSB0aGUgMTkuMiBNSHogY2xvY2sgc2lnbmFsLg0KLSBvbmUgY2xvY2sgdG8gZHJpdmUg
-dGhlIGxvZ2ljIGJsb2NrIGZvciB0aGUgUEhZIGl0c2VsZiwgaWYgaXQgaXMgaW5jbHVkZWQgd2l0
-aGluDQogIHRoZSBzYW1lIGxvZ2ljYWwgcG9ydGlvbiBvZiBhbiBTb0MgYXMgdGhlIHVmc2hjZCwg
-YnV0IHVzZXMgYSBzZXBhcmF0ZSBjbG9jay4NCi0gTG9va2luZyBhdCB0aGUgQW5kcm9pZCBrZXJu
-ZWwgYXMgZGlzdHJpYnV0ZWQgYnkgZ29vZ2xlL3F1YWxjb21tLCB0aGV5IGhhdmUNCiAgZm91ciBz
-ZXBhcmF0ZSBjbG9ja3MgZGVzY3JpYmVkIGFzDQoNCiAgICBQSFkgdG8gY29udHJvbGxlciBzeW1i
-b2wgc3luY2hyb25pemF0aW9uIGNsb2NrczoNCiAgICAgICAgInJ4X2xhbmUwX3N5bmNfY2xrIiAt
-IFJYIExhbmUgMA0KICAgICAgICAicnhfbGFuZTFfc3luY19jbGsiIC0gUlggTGFuZSAxDQogICAg
-ICAgICJ0eF9sYW5lMF9zeW5jX2NsayIgLSBUWCBMYW5lIDANCiAgICAgICAgInR4X2xhbmUxX3N5
-bmNfY2xrIiAtIFRYIExhbmUgMQ0KDQpXaGljaCBvZiB0aGUgYWJvdmUgd291bGQgeW91ciBwaHlf
-Y2xrIHJlZmVyIHRvPw0KDQogICAgICAgQXJuZA0KDQpbMV0gaHR0cHM6Ly9hbmRyb2lkLmdvb2ds
-ZXNvdXJjZS5jb20va2VybmVsL21zbS8rL2FuZHJvaWQtbXNtLWJ1bGxoZWFkLTMuMTAtbWFyc2ht
-YWxsb3ctZHIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0
-ZnJtLnR4dD9hdXRvZGl2ZT0wJTJGJTJGJTJGJTJGJTJGDQo=
+Hi Laurent,
+
+On Tue, Mar 20, 2018 at 02:43:33PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> (CC'ing Rob)
+>
+> Thank you for the patch.
+>
+> On Friday, 16 March 2018 17:16:37 EET Jacopo Mondi wrote:
+> > Document Thine THC63LVD1024 LVDS decoder device tree bindings.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > ---
+> >  .../bindings/display/bridge/thine,thc63lvd1024.txt | 66 +++++++++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > new file mode 100644
+> > index 0000000..8225c6a
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> > @@ -0,0 +1,66 @@
+> > +Thine Electronics THC63LVD1024 LVDS decoder
+> > +-------------------------------------------
+> > +
+> > +The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
+> > streams
+> > +to parallel data outputs. The chip supports single/dual input/output modes,
+> > +handling up to two two input LVDS stream and up to two digital CMOS/TTL
+> > outputs.
+> > +
+> > +Single or dual operation modes, output data mapping and DDR output modes
+> > are
+> > +configured through input signals and the chip does not expose any control
+> > bus.
+> > +
+> > +Required properties:
+> > +- compatible: Shall be "thine,thc63lvd1024"
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Power supply for TTL output and digital circuitry
+> > +- cvcc-supply: Power supply for TTL CLOCKOUT signal
+> > +- lvcc-supply: Power supply for LVDS inputs
+> > +- pvcc-supply: Power supply for PLL circuitry
+>
+> As explained in a comment to one of the previous versions of this series, I'm
+> tempted to make vcc-supply mandatory and drop the three other power supplies
+> for now, as I believe there's very little chance they will be connected to
+> separately controllable regulators (all supplies use the same voltage). In the
+> very unlikely event that this occurs in design we need to support in the
+> future, the cvcc, lvcc and pvcc supplies can be added later as optional
+> without breaking backward compatibility.
+
+Fine, you and Andrzej both agree on this, and I actually do, as all
+the supplies have the same voltage.
+
+I'll make vcc the only and mandatory supply.
+
+I'll keep Andrzej Reviwed-by as he suggested it, and add yours.
+
+Thanks
+   j
+
+>
+> Apart from that,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +- pdwn-gpios: Power down GPIO signal. Active low
+> > +- oe-gpios: Output enable GPIO signal. Active high
+> > +
+> > +The THC63LVD1024 video port connections are modeled according
+> > +to OF graph bindings specified by
+> > Documentation/devicetree/bindings/graph.txt
+> > +
+> > +Required video port nodes:
+> > +- Port@0: First LVDS input port
+> > +- Port@2: First digital CMOS/TTL parallel output
+> > +
+> > +Optional video port nodes:
+> > +- Port@1: Second LVDS input port
+> > +- Port@3: Second digital CMOS/TTL parallel output
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +	thc63lvd1024: lvds-decoder {
+> > +		compatible = "thine,thc63lvd1024";
+> > +
+> > +		vcc-supply = <&reg_lvds_vcc>;
+> > +		lvcc-supply = <&reg_lvds_lvcc>;
+> > +
+> > +		pdwn-gpio = <&gpio4 15 GPIO_ACTIVE_LOW>;
+> > +
+> > +		ports {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			port@0 {
+> > +				reg = <0>;
+> > +
+> > +				lvds_dec_in_0: endpoint {
+> > +					remote-endpoint = <&lvds_out>;
+> > +				};
+> > +			};
+> > +
+> > +			port@2{
+> > +				reg = <2>;
+> > +
+> > +				lvds_dec_out_2: endpoint {
+> > +					remote-endpoint = <&adv7511_in>;
+> > +				};
+> > +
+> > +			};
+> > +
+> > +		};
+> > +	};
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
