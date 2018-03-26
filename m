@@ -1,15 +1,15 @@
-Return-Path: <SRS0=h742=GR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.220.in.ua ([89.184.67.205]:34519 "EHLO smtp.220.in.ua"
+Return-Path: <SRS0=zJ12=GQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:53738 "EHLO smtp.220.in.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753202AbeC0QtP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 27 Mar 2018 12:49:15 -0400
+        id S1751099AbeCZMPT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Mar 2018 08:15:19 -0400
 From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH 2/2] leds: add LED driver for CR0014114 board
-Date: Tue, 27 Mar 2018 19:49:03 +0300
-Message-Id: <20180327164903.6307-2-oleg@kaa.org.ua>
-In-Reply-To: <20180327164903.6307-1-oleg@kaa.org.ua>
-References: <20180326121506.9528-1-oleg@kaa.org.ua>
- <20180327164903.6307-1-oleg@kaa.org.ua>
+Subject: [PATCH v4 2/2] leds: add LED driver for CR0014114 board
+Date: Mon, 26 Mar 2018 15:15:06 +0300
+Message-Id: <20180326121506.9528-2-oleg@kaa.org.ua>
+In-Reply-To: <20180326121506.9528-1-oleg@kaa.org.ua>
+References: <d676d163-49ea-0164-d399-1f6d50767125@kaa.org.ua>
+ <20180326121506.9528-1-oleg@kaa.org.ua>
 Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 Cc: Oleh Kravchenko <oleg@kaa.org.ua>
