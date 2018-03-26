@@ -1,76 +1,63 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY initialization
-Date: Thu, 29 Mar 2018 17:28:46 +0000
-Message-ID: <CAE=gft5+xXk0BOEDTm5k7JLUrp63ARsROKoe68kMRdDqBkC11Q@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org> <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
+Date: Mon, 26 Mar 2018 08:54:03 +0200
+Message-ID: <3d719f25-fced-e934-04c0-b821807ac69b@topic.nl>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
+ <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
+ <886c94ef-e2c8-2afa-307d-1924c74c6dc0@gmail.com>
+ <cb12ea29-a7b0-cf66-7f5a-c09d36f443f0@topic.nl>
+ <20180324185324.GG31941@lunn.ch>
+ <d2dfee96-cd30-fa16-6c83-b55773e3aa91@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <d2dfee96-cd30-fa16-6c83-b55773e3aa91@topic.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: kishon@ti.com, robh@kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, vivek.gautam@codeaurora.org, Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, varada@codeaurora.org, weiyongjun1@huawei.com, fengguang.wu@intel.com
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Manu,
+﻿On 25-03-18 10:17, Mike Looijmans wrote:
+> On 24-03-18 19:53, Andrew Lunn wrote:
+>>> A quick survey for the of_get_mac_address users learns that most of them do
+>>> a memcpy (or similar) right after it, so for these drivers the
+>>> "of_get_nvmem_mac_address" style signature that performs the memcpy (or
+>>> better, ether_addr_copy) is a better fit, e.g.:
+>>>
+>>> int of_get_mac_address(struct device_node *np, void *addr)
+>>
+>> Hi Mike
+>>
+>> This is a nicer solution, but it is quite a lot of work, there are a
+>> lot of users. Maybe Coccinelle can help?
+> 
+> About 58 of them, yeah. And this looked like such a simple thing when I 
+> started it...
+> https://elixir.bootlin.com/linux/v4.16-rc6/ident/of_get_mac_address
+> I have no experience with Coccinelle though.
+> 
 
-On Thu, Mar 29, 2018 at 4:06 AM Manu Gautam <mgautam@codeaurora.org> wrote:
+I'll at least post a v2 patch with what we've discussed so far.
 
-> QMP PHY for USB/PCIE requires pipe_clk for locking of
-> retime buffers at the pipe interface. Driver checks for
-> PHY_STATUS without enabling pipe_clk due to which
-> phy_init() fails with initialization timeout.
-> Though pipe_clk is output from PHY (after PLL is programmed
-> during initialization sequence) to GCC clock_ctl and then fed
-> back to PHY but for PHY_STATUS register to reflect successful
-> initialization pipe_clk from GCC must be present.
-> Since, clock driver now ignores status_check for pipe_clk on
-> clk_enable/disable, driver can safely enable/disable pipe_clk
-> from phy_init/exit.
+Another thing that just occurred to me is that the nvmem interface would also 
+allow a MAC address to be written to NV storage. Haven't looked at that path, 
+but it would be nice to be able to permanently program the MAC address using 
+standard interfaces.
 
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
->   1 file changed, 8 insertions(+), 14 deletions(-)
 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
-b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 6470c5d..fddb1c9 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -793,19 +793,6 @@ static void qcom_qmp_phy_configure(void __iomem
-*base,
->          }
->   }
+Kind regards,
 
-> -static int qcom_qmp_phy_poweron(struct phy *phy)
-> -{
-> -       struct qmp_phy *qphy = phy_get_drvdata(phy);
-> -       struct qcom_qmp *qmp = qphy->qmp;
-> -       int ret;
-> -
-> -       ret = clk_prepare_enable(qphy->pipe_clk);
-> -       if (ret)
-> -               dev_err(qmp->dev, "pipe_clk enable failed, err=%d\n",
-ret);
-> -
-> -       return ret;
-> -}
-> -
->   static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
->   {
+Mike Looijmans
+System Expert
 
-This change looks good to me, it has much nicer symmetry. It did get me
-looking at qcom_qmp_phy_com_init though. This isn't directly related to
-your change, but I think there might be an issue with qmp->init_count. We
-increment it at the start of the function, but then if init fails we don't
-decrement it. So if we then try init again later, it magically succeeds
-without actually initing anything. The other side, qcom_qmp_phy_com_exit
-doesn't have this problem because exit doesn't fail (which begs the
-question of why it has a return value).
+TOPIC Products
+Materiaalweg 4, NL-5681 RJ Best
+Postbus 440, NL-5680 AK Best
+Telefoon: +31 (0) 499 33 69 79
+E-mail: mike.looijmans@topicproducts.com
+Website: www.topicproducts.com
 
-I don't need to hold up this series, since this isn't strictly related to
-your changes, but if you do spin again, you could include it. Otherwise you
-or I could send it along as a followup.
-
--Evan
+Please consider the environment before printing this e-mail
