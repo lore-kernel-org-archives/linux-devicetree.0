@@ -1,67 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 01/16] dt-bindings: power: reset: mediatek: add
- bindings for power device
-Date: Mon, 26 Mar 2018 17:24:55 -0500
-Message-ID: <20180326222455.6kou2rdn76k6p6ct@rob-hp-laptop>
-References: <cover.1521794176.git.sean.wang@mediatek.com>
- <c5527464207b02d40f1c2682feb97ebf5dd443be.1521794176.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH 3/7] drm/panel: add panel CDTech S043WQ26H-CT7 to
+ panel-simple
+Date: Mon, 26 Mar 2018 17:24:35 -0500
+Message-ID: <20180326222435.uip56y2w6wetycam@rob-hp-laptop>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-3-git-send-email-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c5527464207b02d40f1c2682feb97ebf5dd443be.1521794176.git.sean.wang@mediatek.com>
+In-Reply-To: <1521662593-25468-3-git-send-email-giulio.benetti@micronovasrl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 05:14:58PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add device-tree binding for the power device responsible for shutdown a
-> remote SoC, which is a tiny circuit block present on MediaTek PMIC based
-> RTC.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+On Wed, Mar 21, 2018 at 09:03:09PM +0100, Giulio Benetti wrote:
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 > ---
->  .../bindings/power/reset/mt6397-rtc-poweroff.txt   | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
+>  .../display/panel/cdtech,s043wq26h-ct7.txt         |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s043wq26h-ct7.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
+> diff --git a/Documentation/devicetree/bindings/display/panel/cdtech,s043wq26h-ct7.txt b/Documentation/devicetree/bindings/display/panel/cdtech,s043wq26h-ct7.txt
 > new file mode 100644
-> index 0000000..75a9d7d
+> index 0000000..a22af85
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mt6397-rtc-poweroff.txt
-> @@ -0,0 +1,24 @@
-> +Device-Tree bindings for Power Device on MediaTek PMIC RTC
-> +
-> +The power device is responsible for externally power off or on the remote
-> +MediaTek SoC through the a tiny circuit block BBPU inside PMIC RTC.
-> +
-> +Required parent node:
-> +- rtc
-> +	For MediaTek PMIC RTC bindings, see:
-> +	Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/cdtech,s043wq26h-ct7.txt
+> @@ -0,0 +1,7 @@
+> +CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
 > +
 > +Required properties:
-> +- compatible: Should be one of follows
-> +	"mediatek,mt6323-rtc-poweroff": for MT6323 PMIC
-> +	"mediatek,mt6397-rtc-poweroff": for MT6397 PMIC
+> +- compatible: should be "cdtech,s043wq26h-ct7"
 > +
-> +Example:
-> +
-> +	rtc {
-> +		compatible = "mediatek,mt6323-rtc";
-> +
-> +		power-off {
-> +			compatible = "mediatek,mt6323-rtc-poweroff";
-> +		};
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
 
-There's no need for this node. The OS can register a device in the rtc 
-driver.
+Same comment here.
 
-> +	};
-> -- 
-> 2.7.4
-> 
+Also, please split bindings to separate patches.
+
+Rob
