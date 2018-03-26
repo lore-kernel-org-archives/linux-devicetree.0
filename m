@@ -1,132 +1,114 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-Date: Tue, 27 Mar 2018 01:10:22 +0200
-Message-ID: <20180326231022.vilvxwqkniffk775@earth.universe>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
- <20180326141638.GB1450@amd>
- <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180326203154.GA9334@amd>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: Re: [PATCH 2/7] dt-bindings: add binding for the
+ Allwinner A64 DE2 bus
+Date: Tue, 27 Mar 2018 07:31:18 +0800
+Message-ID: <9A6A8961-D45C-4033-962E-83CCE8F01651@aosc.io>
+References: <20180316175354.21437-1-icenowy@aosc.io> <20180320184646.dynqv6qubzabroe4@flea> <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io> <2866474.lRHIcLtROC@jernej-laptop> <9520BDDE-BFE3-4220-B48D-01A00CFA94DE@aosc.io> <20180326222258.uxpgj4bk4pg56b7o@rob-hp-laptop>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i5uadt65azdtfiis"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180326203154.GA9334@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBU4F43KQKGQEDWXPMLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180326222258.uxpgj4bk4pg56b7o@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---i5uadt65azdtfiis
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+=E4=BA=8E 2018=E5=B9=B43=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=886:=
+22:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Thu, Mar 22, 2018 at 02:08:43PM +0800, Icenowy Zheng wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
+=881:13:42, "Jernej =C5=A0krabec"
+><jernej.skrabec-gGgVlfcn5nU@public.gmane.org> =E5=86=99=E5=88=B0:
+>> >Hi all,
+>> >
+>> >Dne sreda, 21. marec 2018 ob 03:18:13 CET je Icenowy Zheng
+>napisal(a):
+>> >> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=
+=8D=882:46:46, Maxime Ripard
+>> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>=20
+>> >=E5=86=99=E5=88=B0:
+>> >> >On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
+>> >> >> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64
+>> >SoC
+>> >> >
+>> >> >to
+>> >> >
+>> >> >> be claimed, otherwise the whole DE2 space is inaccessible.
+>> >> >>=20
+>> >> >> Add a device tree binding of the DE2 part as a sub-bus.
+>> >> >
+>> >> >Where did you get the info that it was a bus?
+>> >>=20
+>> >> There's no direct evidence, just some guess.
+>> >>=20
+>> >> The DE2 is a whole part that is just allocated a memory
+>> >> space at the user manual, and the SRAM controls the
+>> >> access to all modules in the DE2.
+>> >>=20
+>> >> So it might be a bus.
+>> >>=20
+>> >> Implement it as a bus is a clear representation on A64.
+>> >
+>> >Since there is already syscon for same mmio region, we migh as well
+>use
+>> >it=20
+>> >when loading ccu-sun8i-de2 driver on A64.
+>> >
+>> >Other options, like SRAM driver or bus driver, might better
+>represent
+>> >HW, but=20
+>>=20
+>> I think the device tree should properly represent the HW,
+>> it's a basic requirment.
+>>=20
+>> >then we would have two DT nodes covering same mmio region, which I
+>> >think is=20
+>> >not really acceptable.
+>>=20
+>> It's acceptable, and DE2 is not the only user of SRAM controller so
+>far.
+>
+>No, it's not acceptable. Don't create overlapping mmio regions in DT.
 
-On Mon, Mar 26, 2018 at 10:31:54PM +0200, Pavel Machek wrote:
-> Hi!
->=20
-> > On Mon, Mar 26, 2018 at 04:16:38PM +0200, Pavel Machek wrote:
-> > > Do you have any ideas what needs to be done for voice calls
-> > > support?
-> >=20
-> > Sure.
->=20
-> :-).
->=20
-> > > I can talk to the modem and start a call.
-> >=20
-> > Doing an AT query is the easy part :)
->=20
-> Well, yes. Doing it right (ofono, etc) is not that easy.
+Then should the SRAM controller driver be configured to take the syscon?
 
-I agree. That can be worked on independently.
+>
+>>=20
+>> VE will also need a SRAM region to be claimed.
+>>=20
+>> >
+>> >Any suggestions?
+>> >
+>> >BTW, H6 has same design in this regard.
+>> >
+>> >Best regards,
+>> >Jernej
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree"
+>in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> > > Then something like this (untested!) is certainly needed.
-> > > Probably more...
-> >=20
-> > I intentionally left this part out. The CPCAP codec has two DAIs
-> > and not 3+. The code you just added is a hack from Motorola. Their
-> > driver is full of hacks and it's obvious its author(s) did not
-> > fully understand the ASoC APIs.
->=20
-> Ok.
->=20
-> > My understanding is, that we only need to replace the audio-graph-card
-> > driver to something more complex. The VOICE DAI needs to be configured
-> > differently based on the use case:
-> >=20
-> > call:
-> > 	* mode=3Di2s
-> > 	* freq=3D26000000
-> > 	* samprate=3D16000 or samprate=3D8000
->=20
-> Ok, lets ignore bluetooth for now. There is "normal" mode, and then
-> there's "call" mode, right? Where's "normal" mode configured?
-
-mcbsp3_port: port {
-	cpu_dai3: endpoint {
-		dai-format =3D "dsp_a";
-		frame-master =3D <&cpcap_audio_codec1>;
-		bitclock-master =3D <&cpcap_audio_codec1>;
-		remote-endpoint =3D <&cpcap_audio_codec1>;
-	};
-};
-
-> Could we simply always configure the VOICE DAI in the call mode? Yes,
-> it would limit samplerates to 8 or 16k, but .. that's not too
-> important limitation for voice codec...?
-
-I think we could configure "normal" mode to use the same settings
-as call mode. But ASoC will disable CPCAP, since there will be no
-active user without ASoC knowing about the modem.
-
-> > "audio-graph-card" is not capable of doing this. I was planning to
-> > try "audio-graph-scu-card" in combination with adding codecs for the
-> > modem and BT to DT. If that does not work we need a Droid 4 specific
-> > soundcard driver.
-> >=20
-> > Either way "audio-graph-card" is not the correct driver for D4. I
-> > added it nevertheless, since it gets audio working for now and there
-> > is no risk of DT breakage. Old *.dtb will continue to work with the
-> > "audio-graph-card" even after we switch to something else.
->=20
-> Well, you'll still cause regressions when you change the dts, as
-> people will have wrong .config for new dts.
-
-That's correct, the .config needs to change. I think that's
-ok, because the only alternative is having no audio support
-at all until the soundcard driver is ready. This means, that
-you also need to change .config once its ready (in case you
-want to use it).
-
--- Sebastian
-
---i5uadt65azdtfiis
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq5fdsACgkQ2O7X88g7
-+prhZRAApQkHNTKBiekdTd0mHMdQBdikbMO5XeqxlFQ98eR0aXm0tKf6Akf0ogLh
-pPIp8NOjCJhAG3oSQbK9ouuc12GhEqHZXBwYbHl9GUudpOrR3eBCjwQ/6/KBFu28
-pRye5PXGK1aTWYco2+QPqFYfJAvkXlOYfgf26DvphSGsRwuvn/O48YVljbFRRjWx
-cQv6lFWT68S4Wes+2OO7KEO6a6OiS3SMvK0D6KzQ5VImTaARtN/H8eZ0qTs7KSYn
-7XRmepBhvp1IEjZsfjmo2pvbo/AmA0PrO/QVmXl2PsQSPGt79l/jZnxOj6Hynyl2
-QHcWp2PHevxQVfOnuZCVud4DFwe4VZrADMOCcjcBuHbS0uLIJPL/xOyDOvBi+TIW
-KPtQX0vc3Pi+6xFE3nYRukp7rPh+vs30Z8v4tt5sMDJzJHvInLrQX2Wbxm/1WRc5
-g0k1SREexBPfgn5mulrFH6VY0SWAvG2EvWl9mw9ZwjAS6u1EARHT87CGY7H1kegx
-w0fOkMrTvcHkNwZq4V7ETzsmVCdCgCiyksQLgeI8olK6oc20SQRn5BdjF6ajUVoV
-Yj46zhSoERZsZ5u2bcL25UuDd8t/n/LwKN5O4BD8ECOHA7Dnf+tlS9LkyHhnqL/j
-DN8NWLVgCeFnyvn758PD2E2l6S8IWbxFfX2yEnISTSU0KfXvPO0=
-=PU4x
------END PGP SIGNATURE-----
-
---i5uadt65azdtfiis--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
