@@ -1,54 +1,113 @@
-From: Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v12 0/2] clk: npcm750: Add NPCM7XX Clock driver and binding
-Date: Mon, 26 Mar 2018 13:16:24 +0300
-Message-ID: <1522059386-20601-1-git-send-email-tali.perry1@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 05/11] dt-bindings: i3c: Document core bindings
+Date: Mon, 26 Mar 2018 12:22:24 +0200
+Message-ID: <CAMuHMdV9xW8o6zuOmOxB+=h1XTdi-VFq2mp897SUjZKtRMOWOw@mail.gmail.com>
+References: <20180323110020.19080-1-boris.brezillon@bootlin.com> <20180323110020.19080-6-boris.brezillon@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180323110020.19080-6-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Tali Perry <tali.perry1@gmail.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
-Nuvoton NPCM7XX Clock Controller
+On Fri, Mar 23, 2018 at 12:00 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> From: Boris Brezillon <boris.brezillon@free-electrons.com>
+>
+> A new I3C subsystem has been added and a generic description has been
+> created to represent the I3C bus and the devices connected on it.
+>
+> Document this generic representation.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-generates and supplies clocks to all modules within the BMC.
+Thanks for your patch!
 
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+> @@ -0,0 +1,140 @@
 
-11 ==> 12
-Update review comments:
-- remove all pr_debug
-- eliminate static declerations of parameters.
-- change lock name.
-- remove double definition for compatible string.
+> +I3C devices
+> +===========
+> +
+> +All I3C devices are supposed to support DAA (Dynamic Address Assignment), and
+> +are thus discoverable. So, by default, I3C devices do not have to be described
+> +in the device tree.
 
-10 ==> 11
-update documentation. "eth" replaced with "ethernet" in use case eaxample.
+But if they're described, they should have a compatible value, no?
 
-2 ==> 10
-update documentation. add external clocks as inputs to clk driver.
-fix SPDX comment.
+> +This being said, one might want to attach extra resources to these devices,
+> +and those resources may have to be described in the device tree, which in turn
+> +means we have to describe I3C devices.
+> +
+> +Another use case for describing an I3C device in the device tree is when this
+> +I3C device has a static address and we want to assign it a specific dynamic
+> +address before the DAA takes place (so that other devices on the bus can't
+> +take this dynamic address).
+> +
+> +The I3C device should be names <device-type>@<static-address>,<i3c-pid>,
 
-1 ==> 2
-This patch includes fix request described here:
-https://patchwork.kernel.org/patch/10200033/
-(move fixed clocks to DT)
+named
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+So the i3c-pid in the unit address is represented as a 64-bit number, not as two
+comma-separated 32-bit numbers?
 
-Tali Perry (2):
-  dt-binding: clk: npcm750: add binding
-  clk: npcm7xx: add clock controller
+> +Example:
+> +
+> +       i3c-master@d040000 {
+> +               compatible = "cdns,i3c-master";
+> +               clocks = <&coreclock>, <&i3csysclock>;
+> +               clock-names = "pclk", "sysclk";
+> +               interrupts = <3 0>;
+> +               reg = <0x0d040000 0x1000>;
+> +               #address-cells = <3>;
+> +               #size-cells = <0>;
+> +
+> +               status = "okay";
+> +               i2c-scl-frequency = <100000>;
+> +
+> +               /* I2C device. */
+> +               nunchuk: nunchuk@52 {
 
- .../bindings/clock/nuvoton,npcm750-clk.txt         | 100 +++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-npcm7xx.c                          | 722 +++++++++++++++++++++
- include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  44 ++
- 4 files changed, 867 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
- create mode 100644 drivers/clk/clk-npcm7xx.c
- create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+@52,8000001000000000?
+
+> +                       compatible = "nintendo,nunchuk";
+> +                       reg = <0x52 0x80000010 0x0>;
+> +               };
+> +
+> +               /* I3C device with a static address. */
+> +               thermal_sensor: sensor@68,39200144004 {
+
+No compatible value?
+
+> +                       reg = <0x68 0x392 0x144004>;
+> +                       assigned-address = <0xa>;
+> +               };
+> +
+> +               /*
+> +                * I3C device without a static address but requiring resources
+> +                * described in the DT.
+> +                */
+> +               sensor@0,39200154004 {
+
+No compatible value?
+
+> +                       reg = <0x0 0x392 0x154004>;
+> +                       clocks = <&clock_provider 0>;
+> +               };
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.14.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
