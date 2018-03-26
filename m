@@ -1,136 +1,249 @@
-Return-Path: <SRS0=rVm7=GQ=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v7 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-Date: Mon, 26 Mar 2018 15:34:55 +0200
-Message-Id: <20180326133456.16584-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20180326133456.16584-1-maxime.ripard@bootlin.com>
-References: <20180326133456.16584-1-maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=tXJj=GQ=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V3 3/3] can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
+Date: Mon, 26 Mar 2018 16:06:24 +0000
+Message-Id: <20180326160624.32230-4-kernel@martin.sperl.org>
+In-Reply-To: <20180326160624.32230-1-kernel@martin.sperl.org>
+References: <20180326160624.32230-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-ID: <devicetree@vger.kernel.org>
 
-The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
-video streams and can output on up to 4 CSI-2 lanes, depending on the
-hardware implementation.
+From: Martin Sperl <kernel@martin.sperl.org>
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+Add GPIOLIB support to mcp25xxfd.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Tested-by: Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
+
 ---
- .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+Changelog:
+  V1 -> V2: implemented support as per feedback
+  V2 -> V3: moved dt-binding changes to patch 1
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-new file mode 100644
-index 000000000000..459c6e332f52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -0,0 +1,98 @@
-+Cadence MIPI-CSI2 TX controller
-+===============================
+---
+ drivers/net/can/spi/mcp25xxfd.c | 185 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 185 insertions(+)
+
+diff --git a/drivers/net/can/spi/mcp25xxfd.c b/drivers/net/can/spi/mcp25xxfd.c
+index 49a454da2196..10b60baddfb2 100644
+--- a/drivers/net/can/spi/mcp25xxfd.c
++++ b/drivers/net/can/spi/mcp25xxfd.c
+@@ -20,6 +20,7 @@
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/freezer.h>
++#include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/jiffies.h>
+@@ -806,9 +807,15 @@ struct mcp25xxfd_priv {
+ 	struct mutex clk_user_lock; /* lock for enabling/disabling the clock */
+ 	int clk_user_mask;
+ #define MCP25XXFD_CLK_USER_CAN BIT(0)
++#define MCP25XXFD_CLK_USER_GPIO0 BIT(1)
++#define MCP25XXFD_CLK_USER_GPIO1 BIT(2)
+
+ 	struct dentry *debugfs_dir;
+
++#ifdef CONFIG_GPIOLIB
++	struct gpio_chip gpio;
++#endif
 +
-+The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-+4 CSI lanes in output, and up to 4 different pixel streams in input.
+ 	/* the actual model of the mcp25xxfd */
+ 	enum mcp25xxfd_model model;
+
+@@ -1494,6 +1501,179 @@ static int mcp25xxfd_stop_clock(struct spi_device *spi, int requestor_mask)
+ 	return 0;
+ }
+
++/* mcp25xxfd GPIO helper functions */
++#ifdef CONFIG_GPIOLIB
 +
-+Required properties:
-+  - compatible: must be set to "cdns,csi2tx"
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * esc_clk: escape mode clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties
-+  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-+  - phy-names: must contain "dphy"
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes are numbered as follows.
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 output
-+           1    Stream 0 input
-+           2    Stream 1 input
-+           3    Stream 2 input
-+           4    Stream 3 input
-+
-+           The stream input port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design. Since there is only one endpoint per port,
-+           the endpoints are not numbered.
-+
-+Example:
-+
-+csi2tx: csi-bridge@0d0e1000 {
-+	compatible = "cdns,csi2tx";
-+	reg = <0x0d0e1000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>,
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "p_clk", "esc_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2tx_out: endpoint {
-+				remote-endpoint = <&remote_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2tx_in_stream0: endpoint {
-+				remote-endpoint = <&stream0_out>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2tx_in_stream1: endpoint {
-+				remote-endpoint = <&stream1_out>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2tx_in_stream2: endpoint {
-+				remote-endpoint = <&stream2_out>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2tx_in_stream3: endpoint {
-+				remote-endpoint = <&stream3_out>;
-+			};
-+		};
-+	};
++enum mcp25xxfd_gpio_pins {
++	MCP25XXFD_GPIO_GPIO0 = 0,
++	MCP25XXFD_GPIO_GPIO1 = 1,
 +};
--- 
-2.14.3
++
++static int mcp25xxfd_gpio_request(struct gpio_chip *chip,
++				  unsigned int offset)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	int clock_requestor = offset ?
++		MCP25XXFD_CLK_USER_GPIO1 : MCP25XXFD_CLK_USER_GPIO0;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return -EINVAL;
++
++	mcp25xxfd_start_clock(priv->spi, clock_requestor);
++
++	return 0;
++}
++
++static void mcp25xxfd_gpio_free(struct gpio_chip *chip,
++				unsigned int offset)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	int clock_requestor = offset ?
++		MCP25XXFD_CLK_USER_GPIO1 : MCP25XXFD_CLK_USER_GPIO0;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return;
++
++	mcp25xxfd_stop_clock(priv->spi, clock_requestor);
++}
++
++static int mcp25xxfd_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	u32 mask = (offset) ? MCP25XXFD_IOCON_GPIO1 : MCP25XXFD_IOCON_GPIO0;
++	int ret;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return -EINVAL;
++
++	/* read the relevant gpio Latch */
++	ret = mcp25xxfd_cmd_read_mask(priv->spi, MCP25XXFD_IOCON,
++				      &priv->regs.iocon, mask,
++				      priv->spi_setup_speed_hz);
++	if (ret)
++		return ret;
++
++	/* return the match */
++	return priv->regs.iocon & mask;
++}
++
++static void mcp25xxfd_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			       int value)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	u32 mask = (offset) ? MCP25XXFD_IOCON_LAT1 : MCP25XXFD_IOCON_LAT0;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return;
++
++	/* update in memory representation with the corresponding value */
++	if (value)
++		priv->regs.iocon |= mask;
++	else
++		priv->regs.iocon &= ~mask;
++
++	mcp25xxfd_cmd_write_mask(priv->spi, MCP25XXFD_IOCON,
++				 priv->regs.iocon, mask,
++				 priv->spi_setup_speed_hz);
++}
++
++static int mcp25xxfd_gpio_direction_input(struct gpio_chip *chip,
++					  unsigned int offset)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	u32 mask_tri = (offset) ?
++		MCP25XXFD_IOCON_TRIS1 : MCP25XXFD_IOCON_TRIS0;
++	u32 mask_stby = (offset) ?
++		0 : MCP25XXFD_IOCON_XSTBYEN;
++	u32 mask_pm = (offset) ?
++		MCP25XXFD_IOCON_PM1 : MCP25XXFD_IOCON_PM0;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return -EINVAL;
++
++	/* set the mask */
++	priv->regs.iocon |= mask_tri | mask_pm;
++
++	/* clear stby */
++	priv->regs.iocon &= ~mask_stby;
++
++	return mcp25xxfd_cmd_write_mask(priv->spi, MCP25XXFD_IOCON,
++					priv->regs.iocon,
++					mask_tri | mask_stby | mask_pm,
++					priv->spi_setup_speed_hz);
++}
++
++static int mcp25xxfd_gpio_direction_output(struct gpio_chip *chip,
++					   unsigned int offset, int value)
++{
++	struct mcp25xxfd_priv *priv = gpiochip_get_data(chip);
++	u32 mask_tri = (offset) ?
++		MCP25XXFD_IOCON_TRIS1 : MCP25XXFD_IOCON_TRIS0;
++	u32 mask_lat = (offset) ?
++		MCP25XXFD_IOCON_LAT1 : MCP25XXFD_IOCON_LAT0;
++	u32 mask_pm = (offset) ?
++		MCP25XXFD_IOCON_PM1 : MCP25XXFD_IOCON_PM0;
++	u32 mask_stby = (offset) ?
++		0 : MCP25XXFD_IOCON_XSTBYEN;
++
++	/* only handle gpio 0/1 */
++	if (offset > 1)
++		return -EINVAL;
++
++	/* clear the tristate bit and also clear stby */
++	priv->regs.iocon &= ~(mask_tri | mask_stby);
++
++	/* set GPIO mode */
++	priv->regs.iocon |= mask_pm;
++
++	/* set the value */
++	if (value)
++		priv->regs.iocon |= mask_lat;
++	else
++		priv->regs.iocon &= ~mask_lat;
++
++	return mcp25xxfd_cmd_write_mask(priv->spi, MCP25XXFD_IOCON,
++					priv->regs.iocon,
++					mask_tri | mask_lat |
++					mask_pm | mask_stby,
++					priv->spi_setup_speed_hz);
++}
++
++static int mcp25xxfd_gpio_setup(struct spi_device *spi)
++{
++	struct mcp25xxfd_priv *priv = spi_get_drvdata(spi);
++
++	/* gpiochip only handles GPIO0 and GPIO1 */
++	priv->gpio.owner		= THIS_MODULE;
++	priv->gpio.parent		= &spi->dev;
++	priv->gpio.label		= dev_name(&spi->dev);
++	priv->gpio.direction_input	= mcp25xxfd_gpio_direction_input;
++	priv->gpio.get			= mcp25xxfd_gpio_get;
++	priv->gpio.direction_output	= mcp25xxfd_gpio_direction_output;
++	priv->gpio.set			= mcp25xxfd_gpio_set;
++	priv->gpio.request		= mcp25xxfd_gpio_request;
++	priv->gpio.free			= mcp25xxfd_gpio_free;
++	priv->gpio.base			= -1;
++	priv->gpio.ngpio		= 2;
++	priv->gpio.can_sleep		= 1;
++
++	return devm_gpiochip_add_data(&spi->dev, &priv->gpio, priv);
++}
++
++#else
++
++static int mcp25xxfd_gpio_setup(struct spi_device *spi)
++{
++	return 0;
++}
++
++#endif
++
+ /* ideally these would be defined in uapi/linux/can.h */
+ #define CAN_EFF_SID_SHIFT		(CAN_EFF_ID_BITS - CAN_SFF_ID_BITS)
+ #define CAN_EFF_SID_BITS		CAN_SFF_ID_BITS
+@@ -4104,6 +4284,11 @@ static int mcp25xxfd_can_probe(struct spi_device *spi)
+ 	if (ret)
+ 		goto out_free;
+
++	/* Setup GPIO controller */
++	ret = mcp25xxfd_gpio_setup(spi);
++	if (ret)
++		goto out_clk;
++
+ 	/* all by default as push/pull */
+ 	priv->config.gpio_opendrain = false;
+
+--
+2.11.0
