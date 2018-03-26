@@ -1,111 +1,109 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 2/3] drm: bridge: panel: allow override of the bus
- format
-Date: Mon, 26 Mar 2018 22:03:31 +0300
-Message-ID: <1986009.iWteaM7My3@avalon>
-References: <20180317221525.18534-1-peda@axentia.se>
- <7015227.p44CVkfgjM@avalon> <e0f5d89d-83ee-31ae-0b48-e34fe94883c5@axentia.se>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
+Date: Tue, 27 Mar 2018 03:13:28 +0800
+Message-ID: <201803270232.QvYkUzOs%fengguang.wu@intel.com>
+References: <20180323201117.8416-6-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e0f5d89d-83ee-31ae-0b48-e34fe94883c5@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180323201117.8416-6-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsCgooQ0MnaW5nIEphY29wbyBNb25kaSkKCk9uIFN1bmRheSwgMjUgTWFyY2ggMjAx
-OCAxNTowMToxMSBFRVNUIFBldGVyIFJvc2luIHdyb3RlOgo+IE9uIDIwMTgtMDMtMjAgMTQ6NTYs
-IExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBIaSBQZXRlciwKPiA+IAo+ID4gVGhhbmsgeW91
-IGZvciB0aGUgcGF0Y2guCj4gPiAKPiA+IE9uIFN1bmRheSwgMTggTWFyY2ggMjAxOCAwMDoxNToy
-NCBFRVQgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gPj4gVXNlZnVsIGlmIHRoZSBicmlkZ2UgZG9lcyBz
-b21lIGtpbmQgb2YgY29udmVyc2lvbiBvZiB0aGUgYnVzIGZvcm1hdC4KPiA+PiAKPiA+PiBTaWdu
-ZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+ID4+IC0tLQo+ID4+IAo+
-ID4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMgfCAyMiArKysrKysrKysrKysrKysr
-KysrKystCj4gPj4gIGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAgICB8ICAxICsKPiA+PiAg
-MiBmaWxlcyBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPj4gCj4g
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYwo+ID4+IGIvZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9wYW5lbC5jIGluZGV4IDZkOTlkNGEzYmViMy4uY2NlZjAyODNm
-ZjQxIDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYwo+ID4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYwo+ID4+IEBAIC0yMiw2ICsyMiw3
-IEBAIHN0cnVjdCBwYW5lbF9icmlkZ2Ugewo+ID4+ICAJc3RydWN0IGRybV9jb25uZWN0b3IgY29u
-bmVjdG9yOwo+ID4+ICAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gPj4gIAl1MzIgY29ubmVj
-dG9yX3R5cGU7Cj4gPj4gKwl1MzIgYnVzX2Zvcm1hdDsKPiA+PiAgfTsKPiA+PiAgCj4gPj4gIHN0
-YXRpYyBpbmxpbmUgc3RydWN0IHBhbmVsX2JyaWRnZSAqCj4gPj4gQEAgLTQwLDggKzQxLDE1IEBA
-IHN0YXRpYyBpbnQgcGFuZWxfYnJpZGdlX2Nvbm5lY3Rvcl9nZXRfbW9kZXMoc3RydWN0Cj4gPj4g
-ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKSB7Cj4gPj4gIAlzdHJ1Y3QgcGFuZWxfYnJpZGdlICpw
-YW5lbF9icmlkZ2UgPQo+ID4+ICAJCWRybV9jb25uZWN0b3JfdG9fcGFuZWxfYnJpZGdlKGNvbm5l
-Y3Rvcik7Cj4gPj4gCj4gPj4gKwlpbnQgcmV0Owo+ID4+ICsKPiA+PiArCXJldCA9IGRybV9wYW5l
-bF9nZXRfbW9kZXMocGFuZWxfYnJpZGdlLT5wYW5lbCk7Cj4gPj4gKwo+ID4+ICsJaWYgKHBhbmVs
-X2JyaWRnZS0+YnVzX2Zvcm1hdCkKPiA+PiArCQlkcm1fZGlzcGxheV9pbmZvX3NldF9idXNfZm9y
-bWF0cygmY29ubmVjdG9yLT5kaXNwbGF5X2luZm8sCj4gPj4gKwkJCQkJCSAmcGFuZWxfYnJpZGdl
-LT5idXNfZm9ybWF0LCAxKTsKPiA+IAo+ID4gV2hpbGUgSSBhZ3JlZSB3aXRoIHRoZSBwcm9ibGVt
-IHN0YXRlbWVudCBhbmQsIHRvIHNvbWUgZXh0ZW50LCB0aGUgRFQKPiA+IGJpbmRpbmdzLCBJIGRv
-bid0IHRoaW5rIHRoaXMgaXMgdGhlIHJpZ2h0IGltcGxlbWVudGF0aW9uLiBZb3UndmUKPiA+IGNv
-cnJlY3RseSBub3RlZCB0aGF0IGRpc3BsYXkgY29udHJvbGxlciBzaG91bGRuJ3QgYmxpbmRseSB1
-c2UgdGhlIGZvcm1hdHMKPiA+IHJlcG9ydGVkIGJ5IHRoZSBwYW5lbCB0aHJvdWdoIHRoZSBjb25u
-ZWN0b3IgZm9ybWF0cywgYW5kIHRoYXQgaGFja2luZyB0aGUKPiA+IHBhbmVsIGRyaXZlciB0byBv
-dmVycmlkZSB0aGUgZm9ybWF0cyBpc24ndCBhIGdvb2QgaWRlYSwgc28gSSB3b3VsZG4ndAo+ID4g
-b3ZlcnJpZGUgdGhlIGZvcm1hdHMgcmVwb3J0ZWQgYnkgdGhlIGNvbm5lY3Rvci4gSSB3b3VsZCBp
-bnN0ZWFkIGV4dGVuZAo+ID4gdGhlIGRybV9icmlkZ2UgQVBJIHRvIHJlcG9ydCBmb3JtYXRzIGF0
-IGJyaWRnZSBpbnB1dHMuIFRoaXMgd291bGQgYmUgbW9yZQo+ID4gZ2VuZXJpYyBhbmQgYWxsb3cg
-ZWFjaCBicmlkZ2UgdG8gY29uZmlndXJlIGl0c2VsZiBhY2NvcmRpbmcgdG8gdGhlIG5leHQKPiA+
-IGJyaWRnZSBpbiB0aGUgY2hhaW4uCj4gPiAKPiA+IEknbSBub3Qgc3VyZSB3aGV0aGVyIHRoaXMg
-QVBJIGV4dGVuc2lvbiBzaG91bGQgYmUgaW4gdGhlIGZvcm0gb2YgYSBuZXcKPiA+IGJyaWRnZSBm
-dW5jdGlvbiwgb3IgaWYgdGhlIGZvcm1hdHMgc2hvdWxkIGJlIHN0b3JlZCBpbiB0aGUgZHJtX2Jy
-aWRnZQo+ID4gc3RydWN0dXJlIGRpcmVjdGx5IGFzIGRvbmUgZm9yIGNvbm5lY3RvcnMgaW4gdGhl
-IGRpc3BsYXkgaW5mbyBzdHJ1Y3R1cmUuCj4gPiBJJ20gdGVtcHRlZCBieSB0aGUgZm9ybWVyLCBi
-dXQgSSdtIG9wZW4gdG8gZGlzY3Vzc2lvbnMuCj4gCj4gT2ssIEkgY2FuIGxvb2sgaW50byB0aGF0
-LCBidXQgbGV0IG1lIGNoZWNrIGlmIEkgZ290IHRoaXMgcmlnaHQuIEZyb20gdGhlCj4gdmVyeSBs
-aXR0bGUgb2YgdGhlIGNvZGUgdGhhdCBJIGhhdmUgbG9va2VkIGF0LCBJIGhhdmUgZ2F0aGVyZWQg
-dGhhdCBkaXNwbGF5Cj4gY29udHJvbGxlcnMgaGFuZGxlIGJyaWRnZXMgZXhwbGljaXRseSwgcmln
-aHQ/CgpUaGF0J3MgY29ycmVjdCwgeWVzLiBPciwgcmF0aGVyLCB0aGV5IGhhbmRsZSB0aGUgZmly
-c3QgYnJpZGdlIGluIHRoZSBjaGFpbiwgCmFuZCB0aGVuIG90aGVyIGJyaWRnZXMgYXJlIGhhbmRs
-ZWQgcmVjdXJzaXZlbHkuCgo+IElmIHNvLCBieSBleHRlbmRpbmcgdGhlIGJyaWRnZSAod2l0aCBl
-aXRoZXIgYSBuZXcgZnVuY3Rpb24gb3IgbmV3IGRhdGEpIHlvdQo+IGltcG9zZSBjaGFuZ2VzIHRv
-IGFsbCBkaXNwbGF5IGNvbnRyb2xsZXJzIHdhbnRpbmcgdG8gaGFuZGxlIHRoaXMgbmV3IGJyaWRn
-ZQo+IGlucHV0LWZvcm1hdC4gSWYgc28sIEkgYXNzdW1lIEkgY2FuIGxlYXZlIG91dCB0aGUgY2hh
-bmdlcyB0byBhbGwgZGlzcGxheQo+IGNvbnRyb2xsZXJzIHRoYXQgSSBkbyBub3QgY2FyZSBhYm91
-dC4gQ29ycmVjdD8KClRoYXQncyBjb3JyZWN0LgoKPiBBbHNvLCBkb24ndCBob2xkIHlvdXIgYnJl
-YXRoIHdhaXRpbmcgZm9yIGEgdjIsIGJ1dCBJJ2xsIHRyeSB0byBnZXQgdG8gaXQgOi0pCgpJIHdv
-bid0IGhvbGQgbXkgYnJlYXRoLCBidXQgSmFjb3BvIG1pZ2h0IDotKSBIZSBoYXMgYSBzaW1pbGFy
-IGlzc3VlIHRvIHNvbHZlIAoocmVwb3J0aW5nIHRoZSBMVkRTIG1vZGVzIHN1cHBvcnRlZCBieSB0
-aGUgYnJpZGdlKS4KCj4gPj4gLQlyZXR1cm4gZHJtX3BhbmVsX2dldF9tb2RlcyhwYW5lbF9icmlk
-Z2UtPnBhbmVsKTsKPiA+PiArCXJldHVybiByZXQ7Cj4gPj4gIH0KPiA+PiAgCj4gPj4gIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MKPiA+PiBAQCAtMjAzLDYg
-KzIxMSwxOCBAQCB2b2lkIGRybV9wYW5lbF9icmlkZ2VfcmVtb3ZlKHN0cnVjdCBkcm1fYnJpZGdl
-Cj4gPj4gKmJyaWRnZSkKPiA+PiAgfQo+ID4+ICBFWFBPUlRfU1lNQk9MKGRybV9wYW5lbF9icmlk
-Z2VfcmVtb3ZlKTsKPiA+PiAKPiA+PiArdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3NldF9idXNfZm9y
-bWF0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsIHUzMgo+ID4+IGJ1c19mb3JtYXQpCj4gPj4g
-K3sKPiA+PiArCXN0cnVjdCBwYW5lbF9icmlkZ2UgKnBhbmVsX2JyaWRnZTsKPiA+PiArCj4gPj4g
-KwlpZiAoIWJyaWRnZSkKPiA+PiArCQlyZXR1cm47Cj4gPj4gKwo+ID4+ICsJcGFuZWxfYnJpZGdl
-ID0gZHJtX2JyaWRnZV90b19wYW5lbF9icmlkZ2UoYnJpZGdlKTsKPiA+PiArCXBhbmVsX2JyaWRn
-ZS0+YnVzX2Zvcm1hdCA9IGJ1c19mb3JtYXQ7Cj4gPj4gK30KPiA+PiArRVhQT1JUX1NZTUJPTChk
-cm1fcGFuZWxfYnJpZGdlX3NldF9idXNfZm9ybWF0KTsKPiA+PiArCj4gPj4gIHN0YXRpYyB2b2lk
-IGRldm1fZHJtX3BhbmVsX2JyaWRnZV9yZWxlYXNlKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAq
-cmVzKQo+ID4+ICB7Cj4gPj4gIAlzdHJ1Y3QgZHJtX2JyaWRnZSAqKmJyaWRnZSA9IHJlczsKPiA+
-PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oIGIvaW5jbHVkZS9kcm0vZHJt
-X2JyaWRnZS5oCj4gPj4gaW5kZXggNjgyZDAxYmE5MjBjLi44MTkwM2I5MmYxODcgMTAwNjQ0Cj4g
-Pj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gPj4gKysrIGIvaW5jbHVkZS9kcm0v
-ZHJtX2JyaWRnZS5oCj4gPj4gQEAgLTI2OCw2ICsyNjgsNyBAQCB2b2lkIGRybV9icmlkZ2VfZW5h
-YmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpOwo+ID4+ICBzdHJ1Y3QgZHJtX2JyaWRnZSAq
-ZHJtX3BhbmVsX2JyaWRnZV9hZGQoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwsCj4gPj4gIAkJCQkJ
-dTMyIGNvbm5lY3Rvcl90eXBlKTsKPiA+PiAgdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3JlbW92ZShz
-dHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKTsKPiA+PiArdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3Nl
-dF9idXNfZm9ybWF0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsIHUzMgo+ID4+IGJ1c19mb3Jt
-YXQpOwo+ID4+IHN0cnVjdCBkcm1fYnJpZGdlICpkZXZtX2RybV9wYW5lbF9icmlkZ2VfYWRkKHN0
-cnVjdCBkZXZpY2UgKmRldiwKPiA+PiAgCQkJCQkgICAgIHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVs
-LAo+ID4+ICAJCQkJCSAgICAgdTMyIGNvbm5lY3Rvcl90eXBlKTsKCi0tIApSZWdhcmRzLAoKTGF1
-cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Hi Alexandre,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on next-20180323]
+[also build test WARNING on v4.16-rc7]
+[cannot apply to net-next/master net/master robh/for-next v4.16-rc6 v4.16-rc5 v4.16-rc4]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/Microsemi-Ocelot-switch-support/20180325-234932
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/net/ethernet/mscc/ocelot.c:395:17: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [unsigned] [usertype] val @@    got ed int [unsigned] [usertype] val @@
+   drivers/net/ethernet/mscc/ocelot.c:395:17:    expected unsigned int [unsigned] [usertype] val
+   drivers/net/ethernet/mscc/ocelot.c:395:17:    got restricted __le32 [usertype] <noident>
+--
+>> drivers/net/ethernet/mscc/ocelot_io.c:110:24: sparse: incorrect type in return expression (different address spaces) @@    expected struct regmap * @@    got void [noderef] <asnstruct regmap * @@
+   drivers/net/ethernet/mscc/ocelot_io.c:110:24:    expected struct regmap *
+   drivers/net/ethernet/mscc/ocelot_io.c:110:24:    got void [noderef] <asn:2>*[assigned] regs
+--
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
+>> drivers/net/ethernet/mscc/ocelot_board.c:142:34: sparse: cast to restricted __le32
+
+vim +395 drivers/net/ethernet/mscc/ocelot.c
+
+   367	
+   368	static int ocelot_port_xmit(struct sk_buff *skb, struct net_device *dev)
+   369	{
+   370		struct ocelot_port *port = netdev_priv(dev);
+   371		struct ocelot *ocelot = port->ocelot;
+   372		u32 val, ifh[IFH_LEN];
+   373		struct frame_info info = {};
+   374		u8 grp = 0; /* Send everything on CPU group 0 */
+   375		int i, count, last;
+   376	
+   377		val = ocelot_read(ocelot, QS_INJ_STATUS);
+   378		if (!(val & QS_INJ_STATUS_FIFO_RDY(BIT(grp))) ||
+   379		    (val & QS_INJ_STATUS_WMARK_REACHED(BIT(grp))))
+   380			return NETDEV_TX_BUSY;
+   381	
+   382		ocelot_write_rix(ocelot, QS_INJ_CTRL_GAP_SIZE(1) |
+   383				 QS_INJ_CTRL_SOF, QS_INJ_CTRL, grp);
+   384	
+   385		info.port = BIT(port->chip_port);
+   386		info.cpuq = 0xff;
+   387		ocelot_gen_ifh(ifh, &info);
+   388	
+   389		for (i = 0; i < IFH_LEN; i++)
+   390			ocelot_write_rix(ocelot, ifh[i], QS_INJ_WR, grp);
+   391	
+   392		count = (skb->len + 3) / 4;
+   393		last = skb->len % 4;
+   394		for (i = 0; i < count; i++) {
+ > 395			ocelot_write_rix(ocelot, cpu_to_le32(((u32 *)skb->data)[i]),
+   396					 QS_INJ_WR, grp);
+   397		}
+   398	
+   399		/* Add padding */
+   400		while (i < (OCELOT_BUFFER_CELL_SZ / 4)) {
+   401			ocelot_write_rix(ocelot, 0, QS_INJ_WR, grp);
+   402			i++;
+   403		}
+   404	
+   405		/* Indicate EOF and valid bytes in last word */
+   406		ocelot_write_rix(ocelot, QS_INJ_CTRL_GAP_SIZE(1) |
+   407				 QS_INJ_CTRL_VLD_BYTES(skb->len < OCELOT_BUFFER_CELL_SZ ? 0 : last) |
+   408				 QS_INJ_CTRL_EOF,
+   409				 QS_INJ_CTRL, grp);
+   410	
+   411		/* Add dummy CRC */
+   412		ocelot_write_rix(ocelot, 0, QS_INJ_WR, grp);
+   413		skb_tx_timestamp(skb);
+   414	
+   415		dev->stats.tx_packets++;
+   416		dev->stats.tx_bytes += skb->len;
+   417		dev_kfree_skb_any(skb);
+   418	
+   419		return NETDEV_TX_OK;
+   420	}
+   421	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
