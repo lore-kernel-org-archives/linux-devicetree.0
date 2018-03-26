@@ -1,34 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 09/14] dt-bindings: iommu/rockchip: Add clock property
-Date: Sun, 25 Mar 2018 18:52:05 -0500
-Message-ID: <20180325235205.fkrz3chbkfj7eo64@rob-hp-laptop>
-References: <20180323073814.5802-1-jeffy.chen@rock-chips.com>
-	<20180323073814.5802-10-jeffy.chen@rock-chips.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
+ on Droid 4
+Date: Sun, 25 Mar 2018 17:22:59 -0700
+Message-ID: <20180326002259.GE5700@atomide.com>
+References: <20180323105455.GB21644@amd>
+ <20180323113521.45va72bhzis6ym6m@earth.universe>
+ <20180323201343.GC23658@amd>
+ <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
+ <20180324142517.GA94954@atomide.com>
+ <20180324200224.GA17857@amd>
+ <20180325154512.GC5700@atomide.com>
+ <20180325185857.GA7582@amd>
+ <20180325205232.GD5700@atomide.com>
+ <20180325225556.GA18141@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180323073814.5802-10-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20180325225556.GA18141@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Williams <dcbw@redhat.com>, Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 03:38:09PM +0800, Jeffy Chen wrote:
-> Add clock property, since we are going to control clocks in rockchip
-> iommu driver.
+* Pavel Machek <pavel@ucw.cz> [180325 22:57]:
+> Hi!
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
+> > > > > Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it seems
+> > > > > to react to AT commands, and in particular reacts to ADT123; (; is
+> > > > > important).
+> > > > 
+> > > > Is that to dial a voice call?
+> > > 
+> > > Yes. And it is ATD123; not ATD.
+> > 
+> > Strange, no semicolon is needed when using /dev/gsmtty to
+> > dial a voice call with my current pile of pending changes,
+> > just doing ATD123 dials..
+> 
+> Interesting. Maybe I made some mistake in experiment.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Looks like on /dev/ttyUSB4 doing AT+COPS? or AT+CREG? won't work
+while on /dev/gsmtty1 they work. So /dev/ttyUSB4 seems to a subset of
+what's available over n_gsm on ch1. Anyways, good to hear that
+/dev/ttyUSB4 can be used to debug voice calls :)
+
+> Thanks for hints, it would not be bad to get gps working. But .. voice
+> calls. Those are important :-).
+
+Yup, please keep us posted :) Meanwhile, I'll slowly continue
+getting the n_gsm stuff working.
+
+Tony
