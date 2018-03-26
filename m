@@ -1,134 +1,82 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v2] of_net: Implement of_get_nvmem_mac_address helper
-Date: Mon, 26 Mar 2018 08:41:29 +0200
-Message-ID: <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl>
-References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl> <20180323151101.GB24361@lunn.ch>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation with
+ hhi syscon
+Date: Mon, 26 Mar 2018 09:49:51 +0200
+Message-ID: <8712ae70-9771-4438-68e2-9e4b37332de8@baylibre.com>
+References: <20180315115545.1884-1-jbrunet@baylibre.com>
+ <20180315115545.1884-2-jbrunet@baylibre.com>
+ <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
+ <1521385797.6569.90.camel@baylibre.com>
+ <CAL_JsqKPFbA4duG8tUKwdJTtxXOG+3kMTwu2qAVxb9zgPckL3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+In-Reply-To: <CAL_JsqKPFbA4duG8tUKwdJTtxXOG+3kMTwu2qAVxb9zgPckL3g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
+To: Rob Herring <robh@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-It's common practice to store MAC addresses for network interfaces into
-nvmem devices. However the code to actually do this in the kernel lacks,
-so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
-address from an nvmem cell provider.
+On 23/03/2018 04:04, Rob Herring wrote:
+> On Sun, Mar 18, 2018 at 10:09 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> On Sun, 2018-03-18 at 07:52 -0500, Rob Herring wrote:
+>>> On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
+>>>> The HHI register region hosts more than just clocks and needs to
+>>>> accessed drivers other than the clock controller, such as the display
+>>>> driver.
+>>>>
+>>>> This register region should be managed by syscon. It is already the case
+>>>> on gxbb/gxl and it soon will be on axg. The clock controllers must use
+>>>> this system controller instead of directly mapping the registers.
+>>>
+>>> Sounds like a kernel problem, not a DT one.
+>>
+>> It's a platform problem, so it has much a kernel problem (solution already
+>> merged) as a DT problem
+>>
+>> DT wise, we've got two devices mapping the same region
+>>
+>> in arch/arm64/boot/dts/amlogic/meson-gx.dtsi:
+>>> system-controller@0
+>>
+>> which is used by the display device.
+>>
+>> and in arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi (same for gxl)
+>>> clock-controller@0
+>>
+>> It has worked so far because the clock controller claims the region w/o
+>> reserving it but it remains unsafe since both device may access the same region.
+>> The fix is to have the clock controller go through the existing syscon.
+> 
+> We certainly want to avoid multiple nodes using the same mmio region.
+> 
+> 
+>>> With a single child, there is really no point to this change. A single
+>>> node can provide multiple functions. Look at nodes that are both reset
+>>> and clock providers.
+>>
+>> There is more than a single user, as explained above and in the cover letter of
+>> this series.
+> 
+> Right, but a single node can support more than a single user (or
+> provider). You don't have to have multiple nodes to have multiple
+> users/providers.
+> 
+> Rob
+> 
 
-This is particulary useful on devices where the ethernet interface cannot
-be configured by the bootloader, for example because it's in an FPGA.
+Hi Rob,
 
-Tested by adapting the cadence macb driver to call this instead of
-of_get_mac_address().
+It's a question about user/provider, the syscon node represents the entire mmio
+region which has multiple sparse registers for multiple features, is used
+indirectly by the display driver, ... and has multiple features, non limited to,
+clock controller, multiple power domains,... and it is simpler to represent these
+as subnodes instead of a big fat node.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Use of_nvmem_cell_get to avoid needing the assiciated device
-    Use void* instead of char*
-    Add devicetree binding doc
- Documentation/devicetree/bindings/net/ethernet.txt |  2 +
- drivers/of/of_net.c                                | 47 ++++++++++++++++++++++
- include/linux/of_net.h                             |  6 +++
- 3 files changed, 55 insertions(+)
+Today, it is already represented like this within the Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+So this binding is only an extension for the clock controller which was mis-architectured
+at the time due to a mis-knowledge of the HW architecture.
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index 2974e63..cfc376b 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
-   the boot program; should be used in cases where the MAC address assigned to
-   the device by the boot program is different from the "local-mac-address"
-   property;
-+- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
-+- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
- - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
- - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
-   the maximum frame size (there's contradiction in the Devicetree
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index d820f3e..8999745 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -7,6 +7,7 @@
-  */
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
-+#include <linux/nvmem-consumer.h>
- #include <linux/of_net.h>
- #include <linux/phy.h>
- #include <linux/export.h>
-@@ -80,3 +81,49 @@ const void *of_get_mac_address(struct device_node *np)
- 	return of_get_mac_addr(np, "address");
- }
- EXPORT_SYMBOL(of_get_mac_address);
-+
-+/**
-+ * Search the device tree for a MAC address, by calling of_get_mac_address
-+ * and if that doesn't provide an address, fetch it from an nvmem provider
-+ * using the name 'mac-address'.
-+ * On success, copies the new address is into memory pointed to by addr and
-+ * returns 0. Returns a negative error code otherwise.
-+ * @dev:	Pointer to the device containing the device_node
-+ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
-+ */
-+int of_get_nvmem_mac_address(struct device_node *np, void *addr)
-+{
-+	const void *mac;
-+	struct nvmem_cell *cell;
-+	size_t len;
-+	int ret;
-+
-+	mac = of_get_mac_address(np);
-+	if (mac) {
-+		ether_addr_copy(addr, mac);
-+		return 0;
-+	}
-+
-+	cell = of_nvmem_cell_get(np, "mac-address");
-+	if (IS_ERR(cell))
-+		return PTR_ERR(cell);
-+
-+	mac = nvmem_cell_read(cell, &len);
-+
-+	nvmem_cell_put(cell);
-+
-+	if (IS_ERR(mac))
-+		return PTR_ERR(mac);
-+
-+	if (len < 6 || !is_valid_ether_addr(mac)) {
-+		ret = -EINVAL;
-+	} else {
-+		ether_addr_copy(addr, mac);
-+		ret = 0;
-+	}
-+
-+	kfree(mac);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_get_nvmem_mac_address);
-diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-index 9cd72aa..90d81ee 100644
---- a/include/linux/of_net.h
-+++ b/include/linux/of_net.h
-@@ -13,6 +13,7 @@
- struct net_device;
- extern int of_get_phy_mode(struct device_node *np);
- extern const void *of_get_mac_address(struct device_node *np);
-+extern int of_get_nvmem_mac_address(struct device_node *np, void *addr);
- extern struct net_device *of_find_net_device_by_node(struct device_node *np);
- #else
- static inline int of_get_phy_mode(struct device_node *np)
-@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
- 	return NULL;
- }
- 
-+static inline int of_get_nvmem_mac_address(struct device_node *np, void *addr)
-+{
-+	return -ENODEV;
-+}
-+
- static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
- {
- 	return NULL;
--- 
-1.9.1
+Neil
