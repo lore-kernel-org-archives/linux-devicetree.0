@@ -1,257 +1,90 @@
-From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] libnvdimm: Add device-tree based driver
-Date: Mon, 26 Mar 2018 15:05:16 +1100
-Message-ID: <20180326150516.619a18cb@gmail.com>
-References: <20180323081209.31387-1-oohall@gmail.com>
- <20180323081209.31387-3-oohall@gmail.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v1 09/16] rtc: mediatek: convert to use device managed
+ functions
+Date: Mon, 26 Mar 2018 12:07:45 +0800
+Message-ID: <1522037265.18424.14.camel@mtkswgap22>
+References: <cover.1521794176.git.sean.wang@mediatek.com>
+         <fbfb1852838820c198d55bc74940a74f1d0b53ed.1521794177.git.sean.wang@mediatek.com>
+         <20180323105017.GI3417@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180323081209.31387-3-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180323105017.GI3417@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Mar 2018 19:12:06 +1100
-Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> This patch adds peliminary device-tree bindings for the NVDIMM driver.
-> Currently this only supports one bus (created at probe time) which all
-> regions are added to with individual regions being created by a platform
-> device driver.
+On Fri, 2018-03-23 at 11:50 +0100, Alexandre Belloni wrote:
+> On 23/03/2018 at 17:15:06 +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Use device managed operation to simplify error handling, reduce source
+> > code size, and reduce the likelyhood of bugs, and remove our removal
+> > callback which contains anything already done by device managed functions.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  drivers/rtc/rtc-mt6397.c | 31 ++++++++-----------------------
+> >  1 file changed, 8 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> > index cefb83b..bfc5d6f 100644
+> > --- a/drivers/rtc/rtc-mt6397.c
+> > +++ b/drivers/rtc/rtc-mt6397.c
+> > @@ -14,6 +14,7 @@
+> >  
+> >  #include <linux/delay.h>
+> >  #include <linux/init.h>
+> > +#include <linux/interrupt.h>
+> >  #include <linux/module.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/rtc.h>
+> > @@ -328,10 +329,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> >  
+> >  	platform_set_drvdata(pdev, rtc);
+> >  
+> > -	ret = request_threaded_irq(rtc->irq, NULL,
+> > -				   mtk_rtc_irq_handler_thread,
+> > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > -				   "mt6397-rtc", rtc);
+> > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> > +					mtk_rtc_irq_handler_thread,
+> > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > +					"mt6397-rtc", rtc);
+> >  	if (ret) {
+> >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+> >  			rtc->irq, ret);
+> > @@ -340,30 +341,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> >  
+> >  	device_init_wakeup(&pdev->dev, 1);
+> >  
+> > -	rtc->rtc_dev = rtc_device_register("mt6397-rtc", &pdev->dev,
+> > -					   &mtk_rtc_ops, THIS_MODULE);
+> > +	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, "mt6397-rtc",
+> > +						&mtk_rtc_ops, THIS_MODULE);
 > 
-> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-
-It's a good idea to keep a changelog from the previous revisions, but I'm
-just nit-picking. The reason I want to bring that up is because this revision
-has different bindings from what was proposed earlier.
-
-> I suspect the platform driver should be holding a reference to the
-> created region. I left that out here since previously Dan has said
-> he'd rather keep the struct device internal to libnvdimm and the only
-> other way a region device can disappear is when the bus is unregistered.
-
-I think the previous bindings did not have this issue, but the suggestion
-was to move regions to being platform devices so as to avoid custom
-code for tracking what is populated and what is not.
-
-Personally I liked the previous binding better, but then I am not a device
-tree expert.
-
-> ---
->  MAINTAINERS                |   8 +++
->  drivers/nvdimm/Kconfig     |  10 ++++
->  drivers/nvdimm/Makefile    |   1 +
->  drivers/nvdimm/of_nvdimm.c | 130 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 149 insertions(+)
->  create mode 100644 drivers/nvdimm/of_nvdimm.c
+> You should probably switch to devm_rtc_allocate_device() and
+> rtc_register_device instead of devm_rtc_device_register.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4e62756936fa..e3fc47fbfc7a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8035,6 +8035,14 @@ Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
->  S:	Supported
->  F:	drivers/nvdimm/pmem*
->  
-> +LIBNVDIMM: DEVICETREE BINDINGS
-> +M:	Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> +L:	linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-> +Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
-> +S:	Supported
-> +F:	drivers/nvdimm/of_nvdimm.c
-> +F:	Documentation/devicetree/bindings/nvdimm/nvdimm-bus.txt
-> +
->  LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
->  M:	Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->  L:	linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-> diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-> index a65f2e1d9f53..505a9bbbe49f 100644
-> --- a/drivers/nvdimm/Kconfig
-> +++ b/drivers/nvdimm/Kconfig
-> @@ -102,4 +102,14 @@ config NVDIMM_DAX
->  
->  	  Select Y if unsure
->  
-> +config OF_NVDIMM
-> +	tristate "Device-tree support for NVDIMMs"
-> +	depends on OF
-> +	default LIBNVDIMM
-> +	help
-> +	  Allows byte addressable persistent memory regions to be described in the
-> +	  device-tree.
 
-Again nit-picking, but I thought we supported volatile mappings too.
+Just would like to know something details
 
-> +
-> +	  Select Y if unsure.
-> +
->  endif
-> diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
-> index 70d5f3ad9909..fd6a5838aa25 100644
-> --- a/drivers/nvdimm/Makefile
-> +++ b/drivers/nvdimm/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
->  obj-$(CONFIG_ND_BTT) += nd_btt.o
->  obj-$(CONFIG_ND_BLK) += nd_blk.o
->  obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
-> +obj-$(CONFIG_OF_NVDIMM) += of_nvdimm.o
->  
->  nd_pmem-y := pmem.o
->  
-> diff --git a/drivers/nvdimm/of_nvdimm.c b/drivers/nvdimm/of_nvdimm.c
-> new file mode 100644
-> index 000000000000..79c28291f420
-> --- /dev/null
-> +++ b/drivers/nvdimm/of_nvdimm.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#define pr_fmt(fmt) "of_nvdimm: " fmt
-> +
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/libnvdimm.h>
-> +#include <linux/module.h>
-> +#include <linux/ioport.h>
-> +#include <linux/slab.h>
-> +
-> +/*
-> + * Container bus stuff.  For now we just chunk regions into a default
-> + * bus with no ndctl support. In the future we'll add some mechanism
-> + * for dispatching regions into the correct bus type, but this is useful
-> + * for now.
+It seems you just encourage me to switch into the new registration
+method and currently devm_rtc_device_register I used for the driver
+shouldn't cause any harm. right?
 
-I liked that the previous binding handled this better, it looked very
-similar to the e820 binding in terms of simplicity.
+> >  	if (IS_ERR(rtc->rtc_dev)) {
+> >  		dev_err(&pdev->dev, "register rtc device failed\n");
+> >  		ret = PTR_ERR(rtc->rtc_dev);
+> > -		goto out_free_irq;
+> > +		return ret;
+> 
+> ret doesn't seem necessary anymore here.
 
-> + */
-> +struct nvdimm_bus_descriptor bus_desc;
-> +struct nvdimm_bus *bus;
-> +
-> +/* region driver */
-> +
-> +static const struct attribute_group *region_attr_groups[] = {
-> +	&nd_region_attribute_group,
-> +	&nd_device_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group *bus_attr_groups[] = {
-> +	&nvdimm_bus_attribute_group,
-> +	NULL,
-> +};
-> +
-> +static int of_nd_region_probe(struct platform_device *pdev)
-> +{
-> +	struct nd_region_desc ndr_desc;
-> +	struct resource temp_res;
-> +	struct nd_region *region;
-> +	struct device_node *np;
-> +
-> +	np = dev_of_node(&pdev->dev);
-> +	if (!np)
-> +		return -ENXIO;
-> +
-> +	pr_err("registering region for %pOF\n", np);
-> +
-> +	if (of_address_to_resource(np, 0, &temp_res)) {
-> +		pr_warn("Unable to parse reg[0] for %pOF\n", np);
-> +		return -ENXIO;
-> +	}
-> +
-> +	memset(&ndr_desc, 0, sizeof(ndr_desc));
-> +	ndr_desc.res = &temp_res;
-> +	ndr_desc.of_node = np;
-> +	ndr_desc.attr_groups = region_attr_groups;
-> +	ndr_desc.numa_node = of_node_to_nid(np);
 
-We probably need an ndr_desc.provider
+okay, it'll be removed
 
-> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> +
-> +	/*
-> +	 * NB: libnvdimm copies the data from ndr_desc into it's own structures
-> +	 * so passing stack pointers is fine.
-> +	 */
-> +	if (of_get_property(np, "volatile", NULL))
-> +		region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> +	else
-> +		region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> +
-> +	pr_warn("registered pmem region %px\n", region);
-> +	if (!region)
-> +		return -ENXIO;
-> +
-> +	platform_set_drvdata(pdev, region);
-> +
-> +	return 0;
-> +}
-> +
-> +static int of_nd_region_remove(struct platform_device *pdev)
-> +{
-> +	struct nd_region *r = platform_get_drvdata(pdev);
-> +
-> +	nd_region_destroy(r);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_nd_region_match[] = {
-> +	{ .compatible = "nvdimm-region" },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver of_nd_region_driver = {
-> +	.probe = of_nd_region_probe,
-> +	.remove = of_nd_region_remove,
-> +	.driver = {
-> +		.name = "of_nd_region",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_nd_region_match,
-> +	},
-> +};
-> +
-> +/* bus wrangling */
-> +
-> +static int __init of_nvdimm_init(void)
-> +{
-> +	/* register  */
-> +	bus_desc.attr_groups = bus_attr_groups;
-> +	bus_desc.provider_name = "of_nvdimm";
-> +	bus_desc.module = THIS_MODULE;
-> +
-> +	/* does parent == NULL work? */
-> +	bus = nvdimm_bus_register(NULL, &bus_desc);
-> +	if (!bus)
-> +		return -ENODEV;
-> +
-> +	platform_driver_register(&of_nd_region_driver);
-> +
-> +	return 0;
-> +}
-> +module_init(of_nvdimm_init);
-> +
-> +static void __init of_nvdimm_exit(void)
-> +{
-> +	nvdimm_bus_unregister(bus);
-> +	platform_driver_unregister(&of_nd_region_driver);
-> +}
-> +module_exit(of_nvdimm_exit);
-> +
-> +MODULE_DEVICE_TABLE(of, of_nd_region_match);
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("IBM Corporation");
-
-Balbir Singh.
+> 
+> 
