@@ -1,82 +1,84 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/4] dt-bindings: clock: meson: update documentation with
- hhi syscon
-Date: Mon, 26 Mar 2018 09:49:51 +0200
-Message-ID: <8712ae70-9771-4438-68e2-9e4b37332de8@baylibre.com>
-References: <20180315115545.1884-1-jbrunet@baylibre.com>
- <20180315115545.1884-2-jbrunet@baylibre.com>
- <20180318125222.kqtybu4hiwvsx3om@rob-hp-laptop>
- <1521385797.6569.90.camel@baylibre.com>
- <CAL_JsqKPFbA4duG8tUKwdJTtxXOG+3kMTwu2qAVxb9zgPckL3g@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] clocksource/drivers/imx-tpm: correct some registers operation flow
+Date: Mon, 26 Mar 2018 15:47:40 +0800
+Message-ID: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKPFbA4duG8tUKwdJTtxXOG+3kMTwu2qAVxb9zgPckL3g@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com
+Cc: Linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/2018 04:04, Rob Herring wrote:
-> On Sun, Mar 18, 2018 at 10:09 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
->> On Sun, 2018-03-18 at 07:52 -0500, Rob Herring wrote:
->>> On Thu, Mar 15, 2018 at 12:55:42PM +0100, Jerome Brunet wrote:
->>>> The HHI register region hosts more than just clocks and needs to
->>>> accessed drivers other than the clock controller, such as the display
->>>> driver.
->>>>
->>>> This register region should be managed by syscon. It is already the case
->>>> on gxbb/gxl and it soon will be on axg. The clock controllers must use
->>>> this system controller instead of directly mapping the registers.
->>>
->>> Sounds like a kernel problem, not a DT one.
->>
->> It's a platform problem, so it has much a kernel problem (solution already
->> merged) as a DT problem
->>
->> DT wise, we've got two devices mapping the same region
->>
->> in arch/arm64/boot/dts/amlogic/meson-gx.dtsi:
->>> system-controller@0
->>
->> which is used by the display device.
->>
->> and in arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi (same for gxl)
->>> clock-controller@0
->>
->> It has worked so far because the clock controller claims the region w/o
->> reserving it but it remains unsafe since both device may access the same region.
->> The fix is to have the clock controller go through the existing syscon.
-> 
-> We certainly want to avoid multiple nodes using the same mmio region.
-> 
-> 
->>> With a single child, there is really no point to this change. A single
->>> node can provide multiple functions. Look at nodes that are both reset
->>> and clock providers.
->>
->> There is more than a single user, as explained above and in the cover letter of
->> this series.
-> 
-> Right, but a single node can support more than a single user (or
-> provider). You don't have to have multiple nodes to have multiple
-> users/providers.
-> 
-> Rob
-> 
+According to i.MX7ULP reference manual, TPM_SC_CPWMS can ONLY be
+written when counter is disabled, TPM_SC_TOF is write-1-clear,
+TPM_C0SC_CHF is also write-1-clear, correct these registers
+initialization flow;
 
-Hi Rob,
+Replace incorret clock name igp with ipg.
 
-It's a question about user/provider, the syscon node represents the entire mmio
-region which has multiple sparse registers for multiple features, is used
-indirectly by the display driver, ... and has multiple features, non limited to,
-clock controller, multiple power domains,... and it is simpler to represent these
-as subnodes instead of a big fat node.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt |  2 +-
+ drivers/clocksource/timer-imx-tpm.c                       | 10 ++++++++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-Today, it is already represented like this within the Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
-So this binding is only an extension for the clock controller which was mis-architectured
-at the time due to a mis-knowledge of the HW architecture.
-
-Neil
+diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+index b4aa7dd..f82087b 100644
+--- a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
++++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+@@ -15,7 +15,7 @@ Required properties:
+ - interrupts :	Should be the clock event device interrupt.
+ - clocks :	The clocks provided by the SoC to drive the timer, must contain
+ 		an entry for each entry in clock-names.
+-- clock-names : Must include the following entries: "igp" and "per".
++- clock-names : Must include the following entries: "ipg" and "per".
+ 
+ Example:
+ tpm5: tpm@40260000 {
+diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
+index 21bffdc..7403e49 100644
+--- a/drivers/clocksource/timer-imx-tpm.c
++++ b/drivers/clocksource/timer-imx-tpm.c
+@@ -20,6 +20,7 @@
+ #define TPM_SC				0x10
+ #define TPM_SC_CMOD_INC_PER_CNT		(0x1 << 3)
+ #define TPM_SC_CMOD_DIV_DEFAULT		0x3
++#define TPM_SC_TOF_MASK			(0x1 << 7)
+ #define TPM_CNT				0x14
+ #define TPM_MOD				0x18
+ #define TPM_STATUS			0x1c
+@@ -29,6 +30,7 @@
+ #define TPM_C0SC_MODE_SHIFT		2
+ #define TPM_C0SC_MODE_MASK		0x3c
+ #define TPM_C0SC_MODE_SW_COMPARE	0x4
++#define TPM_C0SC_CHF_MASK		(0x1 << 7)
+ #define TPM_C0V				0x24
+ 
+ static void __iomem *timer_base;
+@@ -179,7 +181,7 @@ static int __init tpm_timer_init(struct device_node *np)
+ 	ipg = of_clk_get_by_name(np, "ipg");
+ 	per = of_clk_get_by_name(np, "per");
+ 	if (IS_ERR(ipg) || IS_ERR(per)) {
+-		pr_err("tpm: failed to get igp or per clk\n");
++		pr_err("tpm: failed to get ipg or per clk\n");
+ 		ret = -ENODEV;
+ 		goto err_clk_get;
+ 	}
+@@ -205,9 +207,13 @@ static int __init tpm_timer_init(struct device_node *np)
+ 	 * 4) Channel0 disabled
+ 	 * 5) DMA transfers disabled
+ 	 */
++	/* make sure counter is disabled */
+ 	writel(0, timer_base + TPM_SC);
++	/* TOF is W1C */
++	writel(TPM_SC_TOF_MASK, timer_base + TPM_SC);
+ 	writel(0, timer_base + TPM_CNT);
+-	writel(0, timer_base + TPM_C0SC);
++	/* CHF is W1C */
++	writel(TPM_C0SC_CHF_MASK, timer_base + TPM_C0SC);
+ 
+ 	/* increase per cnt, div 8 by default */
+ 	writel(TPM_SC_CMOD_INC_PER_CNT | TPM_SC_CMOD_DIV_DEFAULT,
+-- 
+2.7.4
