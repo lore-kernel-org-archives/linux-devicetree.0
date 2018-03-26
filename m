@@ -1,174 +1,56 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-Date: Mon, 26 Mar 2018 16:16:38 +0200
-Message-ID: <20180326141638.GB1450@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v6 1/5] pwm-backlight: enable/disable the PWM before/after
+ LCD enable toggle.
+Date: Mon, 26 Mar 2018 16:40:21 +0200
+Message-ID: <CAFqH_52fFLhuj6gkRNJsPozNfLSAKd0OpQKMjrdhqHRYU4xZ3Q@mail.gmail.com>
+References: <20180326095213.18362-1-enric.balletbo@collabora.com> <20180326104205.GA12425@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180323103006.alymgb3ywftb4gek@earth.universe>
+In-Reply-To: <20180326104205.GA12425@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-fbdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Pavel,
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2018-03-26 12:42 GMT+02:00 Pavel Machek <pavel@ucw.cz>:
+> On Mon 2018-03-26 11:52:09, Enric Balletbo i Serra wrote:
+>> Before this patch the enable signal was set before the PWM signal and
+>> vice-versa on power off. This sequence is wrong, at least, it is on
+>> the different panels datasheets that I checked, so I inverted the sequence
+>> to follow the specs.
+>>
+>> For reference the following panels have the mentioned sequence:
+>>   - N133HSE-EA1 (Innolux)
+>>   - N116BGE (Innolux)
+>>   - N156BGE-L21 (Innolux)
+>>   - B101EAN0 (Auo)
+>>   - B101AW03 (Auo)
+>>   - LTN101NT05 (Samsung)
+>>   - CLAA101WA01A (Chunghwa)
+>
+> Ok, but this changes behaviour for other panels, too. Are you sure you
+> are not breaking one of those?
 
-Hi!
+I can't say that I am 100% sure because I didn't find all the
+datasheets of all the panels supported in the kernel. But all the
+datasheets I checked specifies this sequence as valid. In general I
+think that doesn't really matter, but I know that at least the
+B116XTN02 panel requires enable first the PWM, wait 10ms and then
+enable BL_EN to avoid garbage. So the other way around is not valid
+for this panel. That's the reason for this patchset.
 
-Do you have any ideas what needs to be done for voice calls support? I
-can talk to the modem and start a call.
+If anyone knows a panel that says the contrary, please let me know and
+I'll try to rework the patches to satisfy both requirements.
 
-Then something like this (untested!) is certainly needed. Probably
-more...
-
-Thanks,
-									Pavel
-
-diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
-index aedb267..7646f68 100644
---- a/sound/soc/codecs/cpcap.c
-+++ b/sound/soc/codecs/cpcap.c
-@@ -1280,6 +1280,60 @@ static int cpcap_voice_hw_params(struct snd_pcm_subs=
-tream *substream,
- 	return 0;
- }
-=20
-+static int cpcap_incall_hw_params(struct snd_pcm_substream *substream,
-+				 struct snd_pcm_hw_params *params,
-+				 struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_codec *codec =3D dai->codec;
-+	struct device *dev =3D codec->dev;
-+	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
-+	static const u16 reg_cdi =3D CPCAP_REG_CDI;
-+	int rate =3D params_rate(params);
-+	int channels =3D params_channels(params);
-+	int direction =3D substream->stream;
-+	u16 val, mask;
-+	int err;
-+
-+	dev_dbg(dev, "Incall setup HW params: rate=3D%d, direction=3D%d, chan=3D%=
-d",
-+		rate, direction, channels);
-+
-+	/* codec, 1 in original code is CPCAP_REG_CC
-+	   codec, 2 is CPCAP_REG_CDI
-+	   codec, 5 is CPCAP_REG_TXI */
-+
-+	if (/* cpcap->codec_strm_cnt =3D=3D */ 1) {
-+		/*
-+		if (pdata->voice_type !=3D VOICE_TYPE_QC)
-+			printk("FIXME: Only MDM6600 support is implemented here.\n");
-+		*/
-+
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI, 0xffff, 0xAE02);
-+		if (err) printk("cpcap error %d\n", __LINE__);
-+
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, 0xffff, 0x6120);
-+		if (err) printk("cpcap error %d\n", __LINE__);
-+
-+		err =3D cpcap_set_samprate(cpcap, CPCAP_DAI_VOICE, rate);
-+		printk("Configured stream\n");
-+	}
-+
-+	/* (direction =3D=3D SNDRV_PCM_STREAM_CAPTURE) ?? */
-+	if (substream->stream) { /* up link */
-+		unsigned int set =3D  CPCAP_BIT_AUDIHPF_1 | CPCAP_BIT_AUDIHPF_0;
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, set, set);
-+		if (err) printk("cpcap error %d\n", __LINE__);
-+
-+		set =3D CPCAP_BIT_MB_ON1L | CPCAP_BIT_MB_ON1R;
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI, set, set);
-+	} else { /* down link */
-+		unsigned int set =3D  CPCAP_BIT_AUDOHPF_1 | CPCAP_BIT_AUDOHPF_0;
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, set, set);
-+		if (err) printk("cpcap error %d\n", __LINE__);
-+	}
-+
-+	return err;
-+}
-+
- static int cpcap_voice_set_dai_sysclk(struct snd_soc_dai *codec_dai, int c=
-lk_id,
- 				      unsigned int freq, int dir)
- {
-@@ -1394,6 +1448,14 @@ static const struct snd_soc_dai_ops cpcap_dai_voice_=
-ops =3D {
- 	.digital_mute	=3D cpcap_voice_set_mute,
- };
-=20
-+static const struct snd_soc_dai_ops cpcap_dai_incall_ops =3D {
-+	/* FIXME */
-+	.hw_params	=3D cpcap_incall_hw_params,
-+	.set_sysclk	=3D cpcap_voice_set_dai_sysclk,
-+	.set_fmt	=3D cpcap_voice_set_dai_fmt,
-+	.digital_mute	=3D cpcap_voice_set_mute,
-+};
-+
- static struct snd_soc_dai_driver cpcap_dai[] =3D {
- {
- 	.id =3D 0,
-@@ -1426,6 +1488,26 @@ static struct snd_soc_dai_driver cpcap_dai[] =3D {
- 	},
- 	.ops =3D &cpcap_dai_voice_ops,
- },
-+{
-+	.id =3D 2,
-+	.name =3D "cpcap in-call",
-+	.playback =3D {
-+		.stream_name =3D "InCall DL",
-+		.channels_min =3D 1,
-+		.channels_max =3D 2,
-+		.rates =3D SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+		.formats =3D SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+	.capture =3D {
-+		.stream_name =3D "Capture",
-+		.channels_min =3D 1,
-+		.channels_max =3D 2,
-+		.rates =3D SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+		.formats =3D SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+	.ops =3D &cpcap_dai_incall_ops,
-+},
-+/* FIXME: this misses bt-call, cpcap bt, BPvoice, FM */
- };
-=20
- static int cpcap_dai_mux(struct cpcap_audio *cpcap, bool swap_dai_configur=
-ation)
+Regards,
+ Enric
 
 
-
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq5AMYACgkQMOfwapXb+vLk1QCfaPPp7awZ3duJtvTBMiP2AJvO
-Fw8AnRvnuNKcbngbLVzUqgbFrQMx6ITd
-=oK5w
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
+>                                                                 Pavel
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
