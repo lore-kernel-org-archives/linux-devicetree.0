@@ -1,60 +1,132 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 1/5] pwm-backlight: enable/disable the PWM
- before/after LCD enable toggle.
-Date: Mon, 26 Mar 2018 12:42:05 +0200
-Message-ID: <20180326104205.GA12425@amd>
-References: <20180326095213.18362-1-enric.balletbo@collabora.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 0/7] drm/sun4i: Allwinner MIPI-DSI support
+Date: Mon, 26 Mar 2018 13:14:54 +0200
+Message-ID: <20180326111454.jqq5dchw27iqhxhe@flea>
+References: <cover.14d017af44a2140bea674731b60a0dd7f992f5f6.1520344489.git-series.maxime.ripard@bootlin.com>
+ <CAD6G_RSfiPC2qPjFFukqx6ihzS=_qBOdsP1KnWTP8BJ9Zsekew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180326095213.18362-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+Content-Type: multipart/mixed; boundary="===============0530046772=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD6G_RSfiPC2qPjFFukqx6ihzS=_qBOdsP1KnWTP8BJ9Zsekew@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---mP3DRpeJDSE+ciuQ
+--===============0530046772==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o44d22k5nptwpobw"
+Content-Disposition: inline
+
+
+--o44d22k5nptwpobw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon 2018-03-26 11:52:09, Enric Balletbo i Serra wrote:
-> Before this patch the enable signal was set before the PWM signal and
-> vice-versa on power off. This sequence is wrong, at least, it is on
-> the different panels datasheets that I checked, so I inverted the sequence
-> to follow the specs.
+Hi,
+
+On Fri, Mar 23, 2018 at 10:36:35PM +0530, Jagan Teki wrote:
+> Hi Maxime,
 >=20
-> For reference the following panels have the mentioned sequence:
->   - N133HSE-EA1 (Innolux)
->   - N116BGE (Innolux)
->   - N156BGE-L21 (Innolux)
->   - B101EAN0 (Auo)
->   - B101AW03 (Auo)
->   - LTN101NT05 (Samsung)
->   - CLAA101WA01A (Chunghwa)
+> On Tue, Mar 6, 2018 at 7:25 PM, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > Hi,
+> >
+> > Here is an preliminary version of the MIPI-DSI support for the Allwinner
+> > SoCs.
+> >
+> > This controller can be found on a number of recent SoCs, such as the
+> > A31, A33 or the A64.
+> >
+> > Given the sparse documentation, there's a number of obscure areas, but
+> > the current implementation has been tested with a 4-lanes DSI panel on
+> > an A33.
+> >
+> > The support is a bit rough around the edges at the time, and some artif=
+acts
+> > are still shown on the screen for some reasons. Wider testing with
+> > different display will hopefully nail those down.
+> >
+> > Let me know what you think,
+> > Maxime
+> >
+> > Changes from v2:
+> >   - Added a ports node under the DSI node
+> >   - Changed the huarui panel driver to an ili9881c driver
+> >   - Changed the panel vendor to bananapi
+> >   - Made the init table static in the panel driver
+> >   - Dropped the huarui vendor patch for the DT doc.
+> >
+> > Changes from v1:
+> >   - Rebased on 4.16-rc1
+> >   - Constified a few function arguments and structures
+> >   - Reworked the DT binding example a bit
+> >   - Reworked the panel driver to check for DSI return codes, and use DCS
+> >     helpers when possible
+> >
+> > Maxime Ripard (7):
+> >   drm/sun4i: tcon: Add TRI finish interrupt for vblank
+> >   dt-bindings: display: Add Allwinner MIPI-DSI bindings
+> >   drm/sun4i: Add Allwinner A31 MIPI-DSI controller support
+> >   dt-bindings: panel: Add the Ilitek ILI9881c panel documentation
+> >   drm/panel: Add Ilitek ILI9881c panel driver
+> >   arm: dts: sun8i: a33: Add the DSI-related nodes
+> >   [DO NOT MERGE] arm: dts: sun8i: bpi-m2m: Add DSI display
+>=20
+> Any dependencies for this series on linux-next? it is not applying direct=
+ly.
 
-Ok, but this changes behaviour for other panels, too. Are you sure you
-are not breaking one of those?
-								Pavel
-							=09
+Last time I rebased on top of 4.16-rc4, there was no dependency but
+the regmap patch found in the v2 that got merged. I haven't tried
+rebasing on next though.
+
+Maxime
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---mP3DRpeJDSE+ciuQ
+--o44d22k5nptwpobw
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlq4zn0ACgkQMOfwapXb+vKSXACfZaOfjeF95+CzMhuUpGBOPHww
-tr8An3bjundCo47dYL3pdQr6jE33jl1s
-=7evW
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlq41i0ACgkQ0rTAlCFN
+r3Qe3w//ehSw4WAyVFs7pxvHWVrPtuTJ5YQ3ItSyDPnZaZsK/zUH4AJJj8MBGnju
+ydxiBCV8bfpbl1hqeqAcfqVA0VZXhFqspZvNUoX7BnObzqh3s77LqMSn+/Glldgr
+nTjXc9hbVA1zoQuXd8NyIzdSjTPzGLAZ81KXx/XdjqyuUJrNEGuo8FTRlNZJ/Cx6
+v8qg3cQFlz7ENulgzcL1ikHrF2IACn+HlaWLohQ8whXrHAnwW5gEea6wTREFzKuj
+gKBlF8ZkcaL8QDJ5L55AnEwfmv1CnWxbrY/5NfsggB1D/zmFTIXUn6zYKWRxIxof
+6tytgi1xx6d36aLNfRXrE73aVFHxFFW1EL1ORmndDyaORb8Xs+oFWpGR5R8++aRx
+64x8zGEnPnhbLYm0BDiHF4LW+xx49WD3FHS83Ay0iHtM+A+51CkqFz/wUYTm/ZHZ
+XA3kmdCfAiBcg72RK6VHp3iyGKUWph7Puq96vrpwzRd+PkR5p6GtnPsTkSgWqULQ
+d99CwtzixIwYuWGRF96M+MGQmSbK5eZzCLnIoyd21g6AOxBzaL08MooNvh1SeLKj
+Dc9i0ZtWdIElZyqsCyT6/WIDFyOn6fgxtJ1MUyHNxf+O3UzRXIY/bv5GIaHPsoRA
++NHn3euWojWi/wSBKw9yLAmDdB/MbdFH3PyKfZj9QYXoZRTfVU0=
+=GVvI
 -----END PGP SIGNATURE-----
 
---mP3DRpeJDSE+ciuQ--
+--o44d22k5nptwpobw--
+
+--===============0530046772==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0530046772==--
