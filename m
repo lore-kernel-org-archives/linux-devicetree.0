@@ -1,150 +1,95 @@
-Return-Path: <SRS0=dqFC=GN=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V3 3/4] soc: mediatek: pwrap: add mt6351 for mt6797 SoCs
-Date: Fri, 23 Mar 2018 16:32:37 +0800
-Message-ID: <20180323083238.13569-4-argus.lin@mediatek.com>
-In-Reply-To: <20180323083238.13569-1-argus.lin@mediatek.com>
-References: <20180323083238.13569-1-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_004_821588313.1110830632"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-Path: <SRS0=zJ12=GQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from 212-186-180-163.static.upcbusiness.at ([212.186.180.163]:37838
+        "EHLO cgate.sperl.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752560AbeCZRGn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 26 Mar 2018 13:06:43 -0400
+From: kernel@martin.sperl.org
+Subject: [PATCH V3 0/3] Microchip mcp25xxfd can controller driver
+Date: Mon, 26 Mar 2018 16:06:21 +0000
+Message-Id: <20180326160624.32230-1-kernel@martin.sperl.org>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_004_821588313.1110830632
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_005_1697640211.495409869"
+From: Martin Sperl <kernel@martin.sperl.org>
 
---__=_Part_Boundary_005_1697640211.495409869
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+This patchset adds a driver for the mcp25xxfd CanFD controller.
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-bXQ2MzUxIGlzIGEgbmV3IHBvd2VyIG1hbmFnZW1lbnQgSUMgYW5kIGl0IGlzDQp1c2VkIGZvciBt
-dDY3OTcgU29Dcy4gV2UgbmVlZCB0byBhZGQgbXQ2MzUxX3JlZ3MgZm9yDQpwbWljIHJlZ2lzdGVy
-IG1hcHBpbmcgYW5kIHBtaWNfbXQ2MzUxIGZvcg0KcmVnaXN0ZXIgYWNjZXNzaW5nIGJ5IHJlZ21h
-cC4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29t
-Jmd0Ow0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMzEgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0
-ZWsvbXRrLXBtaWMtd3JhcC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5j
-DQppbmRleCBkMGEwYTNkN2U4OGQuLmQ4MWE1ODVmYWRmNSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-c29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
-bXRrLXBtaWMtd3JhcC5jDQpAQCAtMTUzLDYgKzE1MywyMSBAQCBzdGF0aWMgY29uc3QgdTMyIG10
-NjM5N19yZWdzW10gPSB7DQogCVtQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSA9CTB4YmMyNCwNCiB9
-Ow0KIA0KK3N0YXRpYyBjb25zdCB1MzIgbXQ2MzUxX3JlZ3NbXSA9IHsNCisJW1BXUkFQX0RFV19E
-SU9fRU5dID0JCTB4MDJGMiwNCisJW1BXUkFQX0RFV19SRUFEX1RFU1RdID0JCTB4MDJGNCwNCisJ
-W1BXUkFQX0RFV19XUklURV9URVNUXSA9CTB4MDJGNiwNCisJW1BXUkFQX0RFV19DUkNfRU5dID0J
-CTB4MDJGQSwNCisJW1BXUkFQX0RFV19DUkNfVkFMXSA9CQkweDAyRkMsDQorCVtQV1JBUF9ERVdf
-Q0lQSEVSX0tFWV9TRUxdID0JMHgwMzAwLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9JVl9TRUxdID0J
-MHgwMzAyLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9FTl0gPQkJMHgwMzA0LA0KKwlbUFdSQVBfREVX
-X0NJUEhFUl9SRFldID0JMHgwMzA2LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9NT0RFXSA9CTB4MDMw
-OCwNCisJW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdID0JMHgwMzBBLA0KKwlbUFdSQVBfREVXX1JE
-RE1ZX05PXSA9CQkweDAzMEMsDQorfTsNCisNCiBlbnVtIHB3cmFwX3JlZ3Mgew0KIAlQV1JBUF9N
-VVhfU0VMLA0KIAlQV1JBUF9XUkFQX0VOLA0KQEAgLTcyMSw2ICs3MzYsNyBAQCBzdGF0aWMgaW50
-IG10ODEzNV9yZWdzW10gPSB7DQogDQogZW51bSBwbWljX3R5cGUgew0KIAlQTUlDX01UNjMyMywN
-CisJUE1JQ19NVDYzNTEsDQogCVBNSUNfTVQ2MzgwLA0KIAlQTUlDX01UNjM5NywNCiB9Ow0KQEAg
-LTExNzksOCArMTE5NSw2IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIoc3RydWN0IHBt
-aWNfd3JhcHBlciAqd3JwKQ0KIAlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rl
-d19yZWdzW1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdLCAweDApOw0KIAlwd3JhcF93cml0ZSh3cnAs
-IHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NFTF0sIDB4
-MSk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBf
-REVXX0NJUEhFUl9JVl9TRUxdLCAweDIpOw0KLQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xh
-dmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfTE9BRF0sIDB4MSk7DQotCXB3cmFwX3dy
-aXRlKHdycCwgd3JwLSZndDtzbGF2ZS0mZ3Q7ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9TVEFS
-VF0sIDB4MSk7DQogDQogCXN3aXRjaCAod3JwLSZndDtzbGF2ZS0mZ3Q7dHlwZSkgew0KIAljYXNl
-IFBNSUNfTVQ2Mzk3Og0KQEAgLTExOTAsNiArMTIwNCw3IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5p
-dF9jaXBoZXIoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwKQ0KIAkJCSAgICAweDEpOw0KIAkJYnJl
-YWs7DQogCWNhc2UgUE1JQ19NVDYzMjM6DQorCWNhc2UgUE1JQ19NVDYzNTE6DQogCQlwd3JhcF93
-cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RFV19DSVBIRVJfRU5d
-LA0KIAkJCSAgICAweDEpOw0KIAkJYnJlYWs7DQpAQCAtMTQ5Niw2ICsxNTExLDE1IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgcHdyYXBfc2x2X3R5cGUgcG1pY19tdDYzOTcgPSB7DQogCS5wd3JhcF93
-cml0ZSA9IHB3cmFwX3dyaXRlMTYsDQogfTsNCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IHB3cmFw
-X3Nsdl90eXBlIHBtaWNfbXQ2MzUxID0gew0KKwkuZGV3X3JlZ3MgPSBtdDYzNTFfcmVncywNCisJ
-LnR5cGUgPSBQTUlDX01UNjM1MSwNCisJLnJlZ21hcCA9ICZhbXA7cHdyYXBfcmVnbWFwX2NvbmZp
-ZzE2LA0KKwkuY2FwcyA9IDAsDQorCS5wd3JhcF9yZWFkID0gcHdyYXBfcmVhZDE2LA0KKwkucHdy
-YXBfd3JpdGUgPSBwd3JhcF93cml0ZTE2LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgb2Zfc2xhdmVfbWF0Y2hfdGJsW10gPSB7DQogCXsNCiAJCS5jb21wYXRpYmxl
-ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzIzJnF1b3Q7LA0KQEAgLTE1MTAsNiArMTUzNCw5IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0K
-IAkJLmNvbXBhdGlibGUgPSAmcXVvdDttZWRpYXRlayxtdDYzOTcmcXVvdDssDQogCQkuZGF0YSA9
-ICZhbXA7cG1pY19tdDYzOTcsDQogCX0sIHsNCisJCS5jb21wYXRpYmxlID0gJnF1b3Q7bWVkaWF0
-ZWssbXQ2MzUxJnF1b3Q7LA0KKwkJLmRhdGEgPSAmYW1wO3BtaWNfbXQ2MzUxLA0KKwl9LCB7DQog
-CQkvKiBzZW50aW5lbCAqLw0KIAl9DQogfTsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBl
-OnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkg
-Tm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
-IHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJl
-IGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhl
-bXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVk
-IHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFu
-eSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5n
-IG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykg
-YnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5
-IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0
-aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1h
-aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSBy
-ZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0
-aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwg
-YW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90
-aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
+Most of the features of the controller are supported by this driver release.
 
---__=_Part_Boundary_005_1697640211.495409869
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+The controller includes a few features that the current core Can(FD)
+implementation does not support:
+* Transmit Bandwidth Sharing bits
+  - this waits for a configurable number of syncronization bits before
+    atempting to transmit the next frame - for the moment controllable
+    via a module parameter
+* SID11 with CanFD frames
+  - at this moment not supported by driver
+* 3 transmit attempts in addition to ONE_SHOT
+* transmitter delay compensation configurations
+* micro second exact transmission and reception timestamps
+  - used internally by driver
+* variable number of tx-fifos
+  - exposed via module parameter at this moment
 
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDYzNTEgaXMgYSBu
-ZXcgcG93ZXIgbWFuYWdlbWVudCBJQyBhbmQgaXQgaXMNCnVzZWQgZm9yIG10Njc5NyBTb0NzLiBX
-ZSBuZWVkIHRvIGFkZCBtdDYzNTFfcmVncyBmb3INCnBtaWMgcmVnaXN0ZXIgbWFwcGluZyBhbmQg
-cG1pY19tdDYzNTEgZm9yDQpyZWdpc3RlciBhY2Nlc3NpbmcgYnkgcmVnbWFwLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgfCAzMSArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKy0tDQogMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMg
-Yi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCmluZGV4IGQwYTBhM2Q3ZTg4
-ZC4uZDgxYTU4NWZhZGY1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBt
-aWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCkBA
-IC0xNTMsNiArMTUzLDIxIEBAIHN0YXRpYyBjb25zdCB1MzIgbXQ2Mzk3X3JlZ3NbXSA9IHsNCiAJ
-W1BXUkFQX0RFV19DSVBIRVJfU1dSU1RdID0JMHhiYzI0LA0KIH07DQogDQorc3RhdGljIGNvbnN0
-IHUzMiBtdDYzNTFfcmVnc1tdID0gew0KKwlbUFdSQVBfREVXX0RJT19FTl0gPQkJMHgwMkYyLA0K
-KwlbUFdSQVBfREVXX1JFQURfVEVTVF0gPQkJMHgwMkY0LA0KKwlbUFdSQVBfREVXX1dSSVRFX1RF
-U1RdID0JMHgwMkY2LA0KKwlbUFdSQVBfREVXX0NSQ19FTl0gPQkJMHgwMkZBLA0KKwlbUFdSQVBf
-REVXX0NSQ19WQUxdID0JCTB4MDJGQywNCisJW1BXUkFQX0RFV19DSVBIRVJfS0VZX1NFTF0gPQkw
-eDAzMDAsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0gPQkweDAzMDIsDQorCVtQV1JBUF9E
-RVdfQ0lQSEVSX0VOXSA9CQkweDAzMDQsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX1JEWV0gPQkweDAz
-MDYsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX01PREVdID0JMHgwMzA4LA0KKwlbUFdSQVBfREVXX0NJ
-UEhFUl9TV1JTVF0gPQkweDAzMEEsDQorCVtQV1JBUF9ERVdfUkRETVlfTk9dID0JCTB4MDMwQywN
-Cit9Ow0KKw0KIGVudW0gcHdyYXBfcmVncyB7DQogCVBXUkFQX01VWF9TRUwsDQogCVBXUkFQX1dS
-QVBfRU4sDQpAQCAtNzIxLDYgKzczNiw3IEBAIHN0YXRpYyBpbnQgbXQ4MTM1X3JlZ3NbXSA9IHsN
-CiANCiBlbnVtIHBtaWNfdHlwZSB7DQogCVBNSUNfTVQ2MzIzLA0KKwlQTUlDX01UNjM1MSwNCiAJ
-UE1JQ19NVDYzODAsDQogCVBNSUNfTVQ2Mzk3LA0KIH07DQpAQCAtMTE3OSw4ICsxMTk1LDYgQEAg
-c3RhdGljIGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQog
-CXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9T
-V1JTVF0sIDB4MCk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdS
-QVBfREVXX0NJUEhFUl9LRVlfU0VMXSwgMHgxKTsNCiAJcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNs
-YXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0sIDB4Mik7DQotCXB3cmFwX3dy
-aXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9MT0FEXSwgMHgx
-KTsNCi0JcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQ
-SEVSX1NUQVJUXSwgMHgxKTsNCiANCiAJc3dpdGNoICh3cnAtPnNsYXZlLT50eXBlKSB7DQogCWNh
-c2UgUE1JQ19NVDYzOTc6DQpAQCAtMTE5MCw2ICsxMjA0LDcgQEAgc3RhdGljIGludCBwd3JhcF9p
-bml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQogCQkJICAgIDB4MSk7DQogCQli
-cmVhazsNCiAJY2FzZSBQTUlDX01UNjMyMzoNCisJY2FzZSBQTUlDX01UNjM1MToNCiAJCXB3cmFw
-X3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9FTl0sDQog
-CQkJICAgIDB4MSk7DQogCQlicmVhazsNCkBAIC0xNDk2LDYgKzE1MTEsMTUgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBwd3JhcF9zbHZfdHlwZSBwbWljX210NjM5NyA9IHsNCiAJLnB3cmFwX3dyaXRl
-ID0gcHdyYXBfd3JpdGUxNiwNCiB9Ow0KIA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcHdyYXBfc2x2
-X3R5cGUgcG1pY19tdDYzNTEgPSB7DQorCS5kZXdfcmVncyA9IG10NjM1MV9yZWdzLA0KKwkudHlw
-ZSA9IFBNSUNfTVQ2MzUxLA0KKwkucmVnbWFwID0gJnB3cmFwX3JlZ21hcF9jb25maWcxNiwNCisJ
-LmNhcHMgPSAwLA0KKwkucHdyYXBfcmVhZCA9IHB3cmFwX3JlYWQxNiwNCisJLnB3cmFwX3dyaXRl
-ID0gcHdyYXBfd3JpdGUxNiwNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
-X2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAl7DQogCQkuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDYzMjMiLA0KQEAgLTE1MTAsNiArMTUzNCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIG9mX3NsYXZlX21hdGNoX3RibFtdID0gew0KIAkJLmNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ2Mzk3IiwNCiAJCS5kYXRhID0gJnBtaWNfbXQ2Mzk3LA0KIAl9LCB7DQorCQku
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzNTEiLA0KKwkJLmRhdGEgPSAmcG1pY19tdDYzNTEs
-DQorCX0sIHsNCiAJCS8qIHNlbnRpbmVsICovDQogCX0NCiB9Ow0KLS0gDQoyLjEyLjUNCg==
+The driver has been heavily optimized so that it can handle
+a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=0)
+even on less powerfull SOCs like the raspberry pi 1 without
+dropping frames due to driver/spi latencies (still dropps
+are observed in the can/network stack).
 
---__=_Part_Boundary_005_1697640211.495409869--
+To achive this the driver includes several code optimization
+Two of which prefers continuous long spi transfers over multiple
+small individual spi transfers of variable length.
+This is an optimization that would favour spi dma transfers instead
+of more expensive PIO in typical SPI controllers.
+Both of them can get explicitly enabled by the use of a module parameter.
+One of those is automatically used in the case of Can2.0 only bus
+configurations.
 
---__=_Part_Boundary_004_821588313.1110830632--
+Finer details of the implementation and rational is included with
+the driver code it self for future reference.
+
+The driver has also been tested for basic CanFD transfers with
+BRS up to 5.7Mhz data bitrates - the available transceiver did
+not allow for faster rates...
+
+The driver itself exposes lots of internal data/statistics via
+debugfs.
+
+The driver implements a lock-less design for transmissions
+making use instead of prepared spi messages submitted via spi_async
+for transmission in the start_xmit_start code without requireing
+an extra workqueue and the corresponding latencies.
+
+Note that there is an extra patch in the pipeline to implement pinctrl
+but this still shows some issues, so it is not included in this patchset.
+
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of code (checkpatch)
+            address all feedback on code
+            handle (HW) systemerrors in a much better/reliable way
+            cleanup of dt custom properties removing (most) gpio related properties
+            implemented GPIOLIB support as per feedback
+  V2 -> V3: added vendor-prefix for gpio-opendrain to dt-binding
+            added gpio-controller to dt-binding
+	    added feedback by Rob Herring
+	    waited for other feedback regarding the code
+
+Martin Sperl (3):
+  dt-binding: can: mcp25xxfd: document device tree bindings
+  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
+  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
+
+ .../bindings/net/can/microchip,mcp25xxfd.txt       |   32 +
+ drivers/net/can/spi/Kconfig                        |    6 +
+ drivers/net/can/spi/Makefile                       |    1 +
+ drivers/net/can/spi/mcp25xxfd.c                    | 4509 ++++++++++++++++++++
+ 4 files changed, 4548 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+ create mode 100644 drivers/net/can/spi/mcp25xxfd.c
+
+--
+2.11.0
