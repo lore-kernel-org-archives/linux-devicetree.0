@@ -1,120 +1,174 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 2/2] clocksource/drivers/imx-tpm: add different counter
- width support
-Date: Mon, 26 Mar 2018 16:10:52 +0200
-Message-ID: <e6e6026c-37bb-35ff-bf1b-a00d47e0aa2e@linaro.org>
-References: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
- <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Mon, 26 Mar 2018 16:16:38 +0200
+Message-ID: <20180326141638.GB1450@amd>
+References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
+ <20180322204804.GA26871@amd>
+ <20180322234832.o24ut5ahon46mdu4@earth.universe>
+ <20180323100930.GA21644@amd>
+ <20180323103006.alymgb3ywftb4gek@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180323103006.alymgb3ywftb4gek@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com
-Cc: Linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 26/03/2018 09:47, Anson Huang wrote:
-> Different TPM modules have different width counters which
-> is 16-bit or 32-bit, the counter width can be read from
-> TPM_PARAM register bit[23:16], this patch adds dynamic
-> check for counter width to support both 16-bit and 32-bit
-> TPM modules.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Are you sure you shouldn't use a prescalar with 16b and reduce its
-rating? What will be the duration of the clocksource before wrapping up?
+--nVMJ2NtxeReIH9PS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, can you do the change to prevent computing the mask at each
-'read_count' call ?
+Hi!
 
-> ---
->  drivers/clocksource/timer-imx-tpm.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
-> index 7403e49..5063b77 100644
-> --- a/drivers/clocksource/timer-imx-tpm.c
-> +++ b/drivers/clocksource/timer-imx-tpm.c
-> @@ -17,6 +17,9 @@
->  #include <linux/of_irq.h>
->  #include <linux/sched_clock.h>
->  
-> +#define TPM_PARAM			0x4
-> +#define TPM_PARAM_WIDTH_SHIFT		16
-> +#define TPM_PARAM_WIDTH_MASK		(0xff << 16)
->  #define TPM_SC				0x10
->  #define TPM_SC_CMOD_INC_PER_CNT		(0x1 << 3)
->  #define TPM_SC_CMOD_DIV_DEFAULT		0x3
-> @@ -33,6 +36,7 @@
->  #define TPM_C0SC_CHF_MASK		(0x1 << 7)
->  #define TPM_C0V				0x24
->  
-> +static int counter_width;
->  static void __iomem *timer_base;
->  static struct clock_event_device clockevent_tpm;
->  
-> @@ -66,7 +70,7 @@ static struct delay_timer tpm_delay_timer;
->  
->  static inline unsigned long tpm_read_counter(void)
->  {
-> -	return readl(timer_base + TPM_CNT);
-> +	return readl(timer_base + TPM_CNT) & GENMASK(counter_width - 1, 0);
->  }
->  
->  static unsigned long tpm_read_current_timer(void)
-> @@ -85,10 +89,11 @@ static int __init tpm_clocksource_init(unsigned long rate)
->  	tpm_delay_timer.freq = rate;
->  	register_current_timer_delay(&tpm_delay_timer);
->  
-> -	sched_clock_register(tpm_read_sched_clock, 32, rate);
-> +	sched_clock_register(tpm_read_sched_clock, counter_width, rate);
->  
->  	return clocksource_mmio_init(timer_base + TPM_CNT, "imx-tpm",
-> -				     rate, 200, 32, clocksource_mmio_readl_up);
-> +				     rate, 200, counter_width,
-> +				     clocksource_mmio_readl_up);
->  }
->  
->  static int tpm_set_next_event(unsigned long delta,
-> @@ -153,8 +158,8 @@ static int __init tpm_clockevent_init(unsigned long rate, int irq)
->  
->  	clockevent_tpm.cpumask = cpumask_of(0);
->  	clockevent_tpm.irq = irq;
-> -	clockevents_config_and_register(&clockevent_tpm,
-> -					rate, 300, 0xfffffffe);
-> +	clockevents_config_and_register(&clockevent_tpm, rate, 300,
-> +					GENMASK(counter_width - 1, 1));
->  
->  	return ret;
->  }
-> @@ -199,6 +204,8 @@ static int __init tpm_timer_init(struct device_node *np)
->  		goto err_per_clk_enable;
->  	}
->  
-> +	counter_width = (readl(timer_base + TPM_PARAM) & TPM_PARAM_WIDTH_MASK)
-> +		>> TPM_PARAM_WIDTH_SHIFT;
->  	/*
->  	 * Initialize tpm module to a known state
->  	 * 1) Counter disabled
-> @@ -220,7 +227,7 @@ static int __init tpm_timer_init(struct device_node *np)
->  		     timer_base + TPM_SC);
->  
->  	/* set MOD register to maximum for free running mode */
-> -	writel(0xffffffff, timer_base + TPM_MOD);
-> +	writel(GENMASK(counter_width - 1, 0), timer_base + TPM_MOD);
->  
->  	rate = clk_get_rate(per) >> 3;
->  	ret = tpm_clocksource_init(rate);
-> 
+Do you have any ideas what needs to be done for voice calls support? I
+can talk to the modem and start a call.
+
+Then something like this (untested!) is certainly needed. Probably
+more...
+
+Thanks,
+									Pavel
+
+diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
+index aedb267..7646f68 100644
+--- a/sound/soc/codecs/cpcap.c
++++ b/sound/soc/codecs/cpcap.c
+@@ -1280,6 +1280,60 @@ static int cpcap_voice_hw_params(struct snd_pcm_subs=
+tream *substream,
+ 	return 0;
+ }
+=20
++static int cpcap_incall_hw_params(struct snd_pcm_substream *substream,
++				 struct snd_pcm_hw_params *params,
++				 struct snd_soc_dai *dai)
++{
++	struct snd_soc_codec *codec =3D dai->codec;
++	struct device *dev =3D codec->dev;
++	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
++	static const u16 reg_cdi =3D CPCAP_REG_CDI;
++	int rate =3D params_rate(params);
++	int channels =3D params_channels(params);
++	int direction =3D substream->stream;
++	u16 val, mask;
++	int err;
++
++	dev_dbg(dev, "Incall setup HW params: rate=3D%d, direction=3D%d, chan=3D%=
+d",
++		rate, direction, channels);
++
++	/* codec, 1 in original code is CPCAP_REG_CC
++	   codec, 2 is CPCAP_REG_CDI
++	   codec, 5 is CPCAP_REG_TXI */
++
++	if (/* cpcap->codec_strm_cnt =3D=3D */ 1) {
++		/*
++		if (pdata->voice_type !=3D VOICE_TYPE_QC)
++			printk("FIXME: Only MDM6600 support is implemented here.\n");
++		*/
++
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI, 0xffff, 0xAE02);
++		if (err) printk("cpcap error %d\n", __LINE__);
++
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, 0xffff, 0x6120);
++		if (err) printk("cpcap error %d\n", __LINE__);
++
++		err =3D cpcap_set_samprate(cpcap, CPCAP_DAI_VOICE, rate);
++		printk("Configured stream\n");
++	}
++
++	/* (direction =3D=3D SNDRV_PCM_STREAM_CAPTURE) ?? */
++	if (substream->stream) { /* up link */
++		unsigned int set =3D  CPCAP_BIT_AUDIHPF_1 | CPCAP_BIT_AUDIHPF_0;
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, set, set);
++		if (err) printk("cpcap error %d\n", __LINE__);
++
++		set =3D CPCAP_BIT_MB_ON1L | CPCAP_BIT_MB_ON1R;
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI, set, set);
++	} else { /* down link */
++		unsigned int set =3D  CPCAP_BIT_AUDOHPF_1 | CPCAP_BIT_AUDOHPF_0;
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_CC, set, set);
++		if (err) printk("cpcap error %d\n", __LINE__);
++	}
++
++	return err;
++}
++
+ static int cpcap_voice_set_dai_sysclk(struct snd_soc_dai *codec_dai, int c=
+lk_id,
+ 				      unsigned int freq, int dir)
+ {
+@@ -1394,6 +1448,14 @@ static const struct snd_soc_dai_ops cpcap_dai_voice_=
+ops =3D {
+ 	.digital_mute	=3D cpcap_voice_set_mute,
+ };
+=20
++static const struct snd_soc_dai_ops cpcap_dai_incall_ops =3D {
++	/* FIXME */
++	.hw_params	=3D cpcap_incall_hw_params,
++	.set_sysclk	=3D cpcap_voice_set_dai_sysclk,
++	.set_fmt	=3D cpcap_voice_set_dai_fmt,
++	.digital_mute	=3D cpcap_voice_set_mute,
++};
++
+ static struct snd_soc_dai_driver cpcap_dai[] =3D {
+ {
+ 	.id =3D 0,
+@@ -1426,6 +1488,26 @@ static struct snd_soc_dai_driver cpcap_dai[] =3D {
+ 	},
+ 	.ops =3D &cpcap_dai_voice_ops,
+ },
++{
++	.id =3D 2,
++	.name =3D "cpcap in-call",
++	.playback =3D {
++		.stream_name =3D "InCall DL",
++		.channels_min =3D 1,
++		.channels_max =3D 2,
++		.rates =3D SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
++		.formats =3D SNDRV_PCM_FMTBIT_S16_LE,
++	},
++	.capture =3D {
++		.stream_name =3D "Capture",
++		.channels_min =3D 1,
++		.channels_max =3D 2,
++		.rates =3D SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
++		.formats =3D SNDRV_PCM_FMTBIT_S16_LE,
++	},
++	.ops =3D &cpcap_dai_incall_ops,
++},
++/* FIXME: this misses bt-call, cpcap bt, BPvoice, FM */
+ };
+=20
+ static int cpcap_dai_mux(struct cpcap_audio *cpcap, bool swap_dai_configur=
+ation)
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--nVMJ2NtxeReIH9PS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlq5AMYACgkQMOfwapXb+vLk1QCfaPPp7awZ3duJtvTBMiP2AJvO
+Fw8AnRvnuNKcbngbLVzUqgbFrQMx6ITd
+=oK5w
+-----END PGP SIGNATURE-----
+
+--nVMJ2NtxeReIH9PS--
