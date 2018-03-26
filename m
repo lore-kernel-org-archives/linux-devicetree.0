@@ -1,113 +1,162 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 05/11] dt-bindings: i3c: Document core bindings
-Date: Mon, 26 Mar 2018 12:22:24 +0200
-Message-ID: <CAMuHMdV9xW8o6zuOmOxB+=h1XTdi-VFq2mp897SUjZKtRMOWOw@mail.gmail.com>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com> <20180323110020.19080-6-boris.brezillon@bootlin.com>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCB2OCAyLzVdIGR0LWJpbmRpbmdzOiBz?=
+ =?utf-8?Q?csi:_ufs:_add_document_for_hisi-ufs?=
+Date: Mon, 26 Mar 2018 10:26:10 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA58798@DGGEMM506-MBS.china.huawei.com>
+References: <20180213101412.5717-1-liwei213@huawei.com>
+ <20180213101412.5717-3-liwei213@huawei.com>
+ <CAK8P3a2b3rLHyM+vMppCkAR3VYbhw-b0LpuWfLCqjs7z9n+hyw@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA584ED@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a3NdHLDf2vOMyZ1qcWNW1Jg5T47qR0qWhWEeDn+90S4ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323110020.19080-6-boris.brezillon@bootlin.com>
+In-Reply-To: <CAK8P3a3NdHLDf2vOMyZ1qcWNW1Jg5T47qR0qWhWEeDn+90S4ug@mail.gmail.com>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On Fri, Mar 23, 2018 at 12:00 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> From: Boris Brezillon <boris.brezillon@free-electrons.com>
->
-> A new I3C subsystem has been added and a generic description has been
-> created to represent the I3C bus and the devices connected on it.
->
-> Document this generic representation.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/i3c.txt
-> @@ -0,0 +1,140 @@
-
-> +I3C devices
-> +===========
-> +
-> +All I3C devices are supposed to support DAA (Dynamic Address Assignment), and
-> +are thus discoverable. So, by default, I3C devices do not have to be described
-> +in the device tree.
-
-But if they're described, they should have a compatible value, no?
-
-> +This being said, one might want to attach extra resources to these devices,
-> +and those resources may have to be described in the device tree, which in turn
-> +means we have to describe I3C devices.
-> +
-> +Another use case for describing an I3C device in the device tree is when this
-> +I3C device has a static address and we want to assign it a specific dynamic
-> +address before the DAA takes place (so that other devices on the bus can't
-> +take this dynamic address).
-> +
-> +The I3C device should be names <device-type>@<static-address>,<i3c-pid>,
-
-named
-
-So the i3c-pid in the unit address is represented as a 64-bit number, not as two
-comma-separated 32-bit numbers?
-
-> +Example:
-> +
-> +       i3c-master@d040000 {
-> +               compatible = "cdns,i3c-master";
-> +               clocks = <&coreclock>, <&i3csysclock>;
-> +               clock-names = "pclk", "sysclk";
-> +               interrupts = <3 0>;
-> +               reg = <0x0d040000 0x1000>;
-> +               #address-cells = <3>;
-> +               #size-cells = <0>;
-> +
-> +               status = "okay";
-> +               i2c-scl-frequency = <100000>;
-> +
-> +               /* I2C device. */
-> +               nunchuk: nunchuk@52 {
-
-@52,8000001000000000?
-
-> +                       compatible = "nintendo,nunchuk";
-> +                       reg = <0x52 0x80000010 0x0>;
-> +               };
-> +
-> +               /* I3C device with a static address. */
-> +               thermal_sensor: sensor@68,39200144004 {
-
-No compatible value?
-
-> +                       reg = <0x68 0x392 0x144004>;
-> +                       assigned-address = <0xa>;
-> +               };
-> +
-> +               /*
-> +                * I3C device without a static address but requiring resources
-> +                * described in the DT.
-> +                */
-> +               sensor@0,39200154004 {
-
-No compatible value?
-
-> +                       reg = <0x0 0x392 0x154004>;
-> +                       clocks = <&clock_provider 0>;
-> +               };
-> +       };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGksIEFybmQNCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBhcm5kYmVyZ21h
+bm5AZ21haWwuY29tIFttYWlsdG86YXJuZGJlcmdtYW5uQGdtYWlsLmNvbV0g5Luj6KGoIEFybmQg
+QmVyZ21hbm4NCuWPkemAgeaXtumXtDogMjAxOOW5tDPmnIgyNuaXpSAxNzoxNA0K5pS25Lu25Lq6
+OiBsaXdlaSAoQ00pDQrmioTpgIE6IFJvYiBIZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IHh1d2VpIChP
+KTsgQ2F0YWxpbiBNYXJpbmFzOyBXaWxsIERlYWNvbjsgVmluYXlhayBIb2xpa2F0dGk7IEphbWVz
+IEUuSi4gQm90dG9tbGV5OyBNYXJ0aW4gSy4gUGV0ZXJzZW47IEtldmluIEhpbG1hbjsgR3JlZ29y
+eSBDTEVNRU5UOyBUaG9tYXMgUGV0YXp6b25pOyBNYXNhaGlybyBZYW1hZGE7IFJpa3UgVm9pcGlv
+OyBUaGllcnJ5IFJlZGluZzsgS3J6eXN6dG9mIEtvemxvd3NraTsgRXJpYyBBbmhvbHQ7IERUTUw7
+IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7IExpbnV4IEFSTTsgbGludXgtc2NzaTsgemFuZ2xl
+aWdhbmc7IEdlbmdqaWFuZmVuZzsgR3VvZG9uZyBYdTsgWmhhbmdmZWkgR2FvOyBGZW5nYmFvcGVu
+ZyAoa2V2aW4sIEtpcmluIFNvbHV0aW9uIERlcHQpOyBZYW5pdiBHYXJkaQ0K5Li76aKYOiBSZTog
+562U5aSNOiBbUEFUQ0ggdjggMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1l
+bnQgZm9yIGhpc2ktdWZzDQoNCk9uIEZyaSwgTWFyIDIzLCAyMDE4IGF0IDM6MjIgQU0sIGxpd2Vp
+IChDTSkgPGxpd2VpMjEzQGh1YXdlaS5jb20+IHdyb3RlOg0KPj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0DQo+PiBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0DQo+PiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wZDIxYjU3NDk2Y2YNCj4+IC0t
+LSAvZGV2L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91
+ZnMvdWZzLWhpc2kudHh0DQo+PiBAQCAtMCwwICsxLDM3IEBADQo+PiArKiBIaXNpbGljb24gVW5p
+dmVyc2FsIEZsYXNoIFN0b3JhZ2UgKFVGUykgSG9zdCBDb250cm9sbGVyDQo+PiArDQo+PiArVUZT
+IG5vZGVzIGFyZSBkZWZpbmVkIHRvIGRlc2NyaWJlIG9uLWNoaXAgVUZTIGhhcmR3YXJlIG1hY3Jv
+Lg0KPj4gK0VhY2ggVUZTIEhvc3QgQ29udHJvbGxlciBzaG91bGQgaGF2ZSBpdHMgb3duIG5vZGUu
+DQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICstIGNvbXBhdGlibGUgICAgICAg
+IDogY29tcGF0aWJsZSBsaXN0LCBjb250YWlucyBvbmUgb2YgdGhlIGZvbGxvd2luZyAtDQo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImhpc2lsaWNvbixoaTM2NjAt
+dWZzIiwgImplZGVjLHVmcy0xLjEiIGZvciBoaXNpIHVmcw0KPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGhvc3QgY29udHJvbGxlciBwcmVzZW50IG9uIEhpMzZ4eCBj
+aGlwc2V0Lg0KPj4gKy0gcmVnICAgICAgICAgICAgICAgOiBzaG91bGQgY29udGFpbiBVRlMgcmVn
+aXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBTWVMgQ1RSTCByZWdpc3RlciBhZGRyZXNzLA0KPj4g
+Ky0gaW50ZXJydXB0LXBhcmVudCAgOiBpbnRlcnJ1cHQgZGV2aWNlDQo+PiArLSBpbnRlcnJ1cHRz
+ICAgICAgICA6IGludGVycnVwdCBudW1iZXINCj4+ICstIGNsb2NrcyAgICAgICAgICAgICAgIDog
+TGlzdCBvZiBwaGFuZGxlIGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMNCj4+ICstIGNsb2NrLW5h
+bWVzICAgICAgIDogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mgc29ydGVkIGluIHRo
+ZSBzYW1lDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb3JkZXIg
+YXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4NCj4+ICsicmVmX2NsayIsICJwaHlfY2xrIiBpcyBvcHRp
+b25hbA0KPg0KPiBUaGUgY2xvY2sgbmFtZXMgc291bmQgZ2VuZXJpYyBlbm91Z2gsIHNob3VsZCB3
+ZSBoYXZlIGJvdGggaW4gdGhlIGdlbmVyaWMgYmluZGluZz8NCj4NCj4gRG8geW91IG1lYW4gdGhh
+dCBhZGQgYSAicGh5X2NsayIgdG8gdWZzaGNkLXBsdGZybSAncyBiaW5kaW5ncz8NCj4gQXQgcHJl
+c2VudCwgaXQgc2VlbXMgdGhhdCBpbiB0aGUgaW1wbGVtZW50YXRpb24gb2YgZ2VuZXJpYyBjb2Rl
+LCBhcGFydCANCj4gZnJvbSAicmVmX2NsayIgbWF5IGhhdmUgc3BlY2lhbCBwcm9jZXNzaW5nLCBv
+dGhlciBjbGsgd2lsbCBub3QgaGF2ZSBzcGVjaWFsIHByb2Nlc3NpbmcgYW5kIHNpbXBseSBwYXJz
+ZSBhbmQgZW5hYmxlOyBSZWZlcnJpbmcgdG8gdWZzLXFjb20gYmluZGluZywgSSB0aGluayAicGh5
+X2NsayIgY2FuIGJlIG5hbWVkICJpZmFjZV9jbGsiLCB0aGlzICJpZmFjZV9jbGsiIGV4aXN0cyBp
+biB1ZnNoY2QtcGx0ZnJtIGJpbmRpbmdzO0lmIHNvLCAicmVmX2NsayIsICJpZmFjZV9jbGsiIGFy
+ZSBib3RoIGluIHRoZSBnZW5lcmljIGJpbmRpbmcsd2Ugd2lsbCByZW1vdmUgdGhlbSBoZXJlLiBJ
+cyB0aGF0IG9rYXk/DQoNCkknbSBsb29raW5nIGF0IHRoZSBnZW5lcmljIGJpbmRpbmcgYWdhaW4s
+IGFuZCBpdCBzZWVtcyB3ZSBuZXZlciBxdWl0ZSBtYW5hZ2VkIHRvIGZpeCBzb21lIG1pbm9yIHBy
+b2JsZW1zIHdpdGggaXQuIFNlZSBiZWxvdyBmb3IgYSBwb3NzaWJsZSB3YXkgdG8gY2xhcmlmeSBp
+dC4NCg0KcGh5X2NsayBpcyBhY3R1YWxseSBnaXZlbiB0byB0aGUgcGh5LiBCdXQgYXMgcHJldmlv
+dXNseSBtZW50aW9uZWQgLCB3ZSBkbyBub3QgaGF2ZSBhIHNlcGFyYXRlIHBoeSB0byBjb25maWd1
+cmUgOyBUaGUgY2xrcyBpbiB0aGUgcGF0Y2ggeW91IGdpdmUgYXBwZWFyIHRvIGJlIHVuc3VpdGFi
+bGUgZm9yIGRlc2NyaWJpbmcgdGhpcyAuDQpIZXJlIHdlIGNhbid0IGRlc2NyaWJlIHBoeV9jbGsg
+aW4gdGhlIG5vZGUgInVmc3BoeTE6IHVmc3BoeUBmYzU5NzAwMCIgbGlrZSBxY29tLiBTbyBjYW4g
+d2UgcHV0IGl0IGhlcmUgaW4gb3VyIG93biBiaW5kaW5nIGxpa2UgdGhpcz8NCg0KPj4gKy0gcmVz
+ZXRzICAgICAgICAgICAgOiByZXNldCBub2RlIHJlZ2lzdGVyLCBvbmUgcmVzZXQgdGhlIGNsayBh
+bmQgdGhlIG90aGVyIHJlc2V0IHRoZSBjb250cm9sbGVyDQo+PiArLSByZXNldC1uYW1lcyAgICAg
+ICA6IGRlc2NyaWJlIHJlc2V0IG5vZGUgcmVnaXN0ZXINCj4NCj4gVGhpcyBsb29rcyBpbmNvbXBs
+ZXRlLiBXaGF0IGlzIHRoZSBuYW1lIG9mIHRoZSByZXNldCBsaW5lIHN1cHBvc2VkIHRvIGJlPw0K
+PiBJJ2QgYWxzbyBzdWdnZXN0IHlvdSBkb2N1bWVudCBpdCBpbiB0aGUgdWZzaGNkIGJpbmRpbmcg
+aW5zdGVhZC4NCj4NCj4gVGhlICJyc3QiIGNvcnJlc3BvbmRzIHRvIHJlc2V0IHRoZSB3aG9sZSBV
+RlMgSVAsIGFuZCAiIGFyc3QgIiBvbmx5IHJlc2V0IHRoZSBBUEIvQVhJIGJ1cy4gRGlzY3Vzc2Vk
+IHdpdGggb3VyIHNvYyBjb2xsZWFndWVzIHRoYXQgImFyc3QiIGlzIGFzc2VydCBieSBkZWZhdWx0
+IGFuZCBuZWVkcyB0byBkZWFzc2VydCAuDQo+IEJ1dCBJIHRoaW5rIGl0IG1heSBiZSBkaWZmaWN1
+bHQgdG8gYWRkIHRoaXMgdG8gY29tbW9uIGNvZGUsIG9yIGl0IG1heSANCj4gbm90IGJlIG5lY2Vz
+c2FyeTsgT3RoZXIgbWFudWZhY3R1cmVycyBtYXkgbm90IG5lZWQgdG8gZG8gdGhpcyBzb2MgaW5p
+dCBiZWNhdXNlIHRoZXkgcHJvYmFibHkgYWxyZWFkeSBkb25lIGluIHRoZSBib290bG9hZGVyIHBo
+YXNlLiBFdmVuIGlmIHRoZXkgbmVlZCB0byBkbyBpdCwgaXQncyBwcm9iYWJseSBkaWZmZXJlbnQg
+ZnJvbSB1cy4NCj4gV2UgbmVlZCB0byBtYWtlIHN1cmUgdGhhdCBvdXIgdWZzIHdvcmtzIGV2ZW4g
+aWYgbm90IGRvIHNvYyBpbml0IGR1cmluZyB0aGUgYm9vdGxvYWRlciBwaGFzZS4NCg0KSW4gdGhl
+IHN1Z2dlc3RlZCBwYXRjaCBiZWxvdywgSSBoYXZlIGRvY3VtZW50ZWQgb25lICJyc3QiIGxpbmUg
+dGhhdCBpcyB1c2VkIHRvIHJlc2V0IHRoZSB1ZnNoY2QgZGV2aWNlLiBUaGUgc2Vjb25kIHJlc2V0
+IGxpbmUgYXMgSSB1bmRlcnN0YW5kIG5vdyBpcyB1c2VkIGluIGEgcmF0aGVyIG5vbnN0YW5kYXJk
+IHdheSBhbmQgZ2V0cyBhc3NlcnRlZCBvbmx5IHdoaWxlIHNldHRpbmcgdXAgdGhlIGFkZGl0aW9u
+YWwgcmVnaXN0ZXJzIGZvciB5b3VyIGdsdWUgbG9naWMsIHNvIHRoYXQgb25lIHNlZW1zIGJldHRl
+ciBsZWZ0IGRvY3VtZW50ZWQgaW4geW91ciBvd24gYmluZGluZy4NCg0KWWVzLCB0aGUgc2Vjb25k
+IHJlc2V0IGxpbmUgaXMgdXNlZCBpbiBhIHJhdGhlciBub25zdGFuZGFyZCB3YXkgLCBpZiByc3Qg
+d2lsbCBpbnRvIHRoZSBjb21tb24gZG9jdW1lbnQsICxJIHdpbGwgbGVmdCB0aGUgc2Vjb25kIHJl
+c2V0IGxpbmUgZG9jdW1lbnRlZCBpbiBvdXIgb3duIGJpbmRpbmcuDQoNCkkndmUgYWRkZWQgYSAi
+amVkZWMsdWZzaGNpLTMuMCIgY29tcGF0aWJsZSBzdHJpbmcsIHdoaWNoIGFwcGVhcnMgdG8gYmUg
+dGhlIGxhdGVzdCB2ZXJzaW9uIG9mIHRoZSB1ZnNoY2kgaXRzZWxmLCBhbmQgSSd2ZSBkb2N1bWVu
+dGVkIGZvdXIgY2xvY2tzIHRoYXQgYXJlIGFscmVhZHkgdXNlZCBieSB0aGUgcXVhbGNvbW0gdmFy
+aWFudCBvZiB0aGUgcGxhdGZvcm0gZGV2aWNlLiBQbGVhc2UgaGF2ZSBhIGxvb2sgYXQgdGhlIGJl
+bG93LCBhbmQgc2VlIGlmIHdlIG5lZWQgYWRkaXRpb25hbCBjaGFuZ2VzIG9yIGNsYXJpZmljYXRp
+b25zLiBXaXRoIHRoaXMsIG1vc3Qgb2YgeW91ciBiaW5kaW5nIGNhbiBnZXQgZm9sZGVkIGludG8g
+dGhlIGNvbW1vbiBkb2N1bWVudCwgc28geW91IGp1c3QgbmVlZCB0byBleHBsYWluIHRoZSBwcml2
+YXRlIGNvbXBhdGlibGUgc3RyaW5nLCB0aGUgbGFyZ2VyIHJlZ2lzdGVyIGFyZWEsIGFuZCB0aGUg
+YWRkaXRpb25hbCByZXNldCBsaW5lLg0KDQogICAgICBBcm5kDQoNCmNvbW1pdCBhOTQ1ZTliYzgy
+MzUyMTI1M2M5ZmY1YTA2MWYyMmEyYWE3ZmQzMzVlDQpBdXRob3I6IEFybmQgQmVyZ21hbm4gPGFy
+bmRAYXJuZGIuZGU+DQpEYXRlOiAgIE1vbiBNYXIgMjYgMTE6MDc6NDYgMjAxOCArMDIwMA0KDQog
+ICAgdWZzaGNkOiBjbGFyaWZ5IHNvbWUgcGFydHMgb2YgdGhlIGRvY3VtZW50YXRpb24NCg0KICAg
+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmc2hjZC1wbHRmcm0u
+dHh0DQpiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzaGNkLXBsdGZy
+bS50eHQNCmluZGV4IGMzOWRmZWY3NmExOC4uYmM5MGE3ZDgzODViIDEwMDY0NA0KLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4dA0KKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4
+dA0KQEAgLTQsOCArNCwxMCBAQCBVRlNIQyBub2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmliZSBv
+bi1jaGlwIFVGUyBob3N0IGNvbnRyb2xsZXJzLg0KIEVhY2ggVUZTIGNvbnRyb2xsZXIgaW5zdGFu
+Y2Ugc2hvdWxkIGhhdmUgaXRzIG93biBub2RlLg0KDQogUmVxdWlyZWQgcHJvcGVydGllczoNCi0t
+IGNvbXBhdGlibGUgICAgICAgICAgIDogbXVzdCBjb250YWluICJqZWRlYyx1ZnMtMS4xIiBvciAi
+amVkZWMsdWZzLTIuMCIsIG1heQ0KLSAgICAgICAgICAgICAgICAgICAgICAgICBhbHNvIGxpc3Qg
+b25lIG9yIG1vcmUgb2YgdGhlIGZvbGxvd2luZzoNCistIGNvbXBhdGlibGUgICAgICAgICAgIDog
+bXVzdCBjb250YWluICJqZWRlYyx1ZnMtMS4xIiwgImplZGVjLHVmcy0yLjAiLA0KKyAgICAgICAg
+ICAgICAgICAgICAgICAgICBvciAiamVkZWMsdWZzaGNpLTMuMCIsIGFuZCBtYXkgYWxzbyBsaXN0
+IG9uZQ0KKyAgICAgICAgICAgICAgICAgICAgICAgICBvciBtb3JlIG9mIHRoZSBmb2xsb3dpbmcs
+IGFzIHdlbGwgYXMgb3RoZXJzDQorICAgICAgICAgICAgICAgICAgICAgICAgIHNwZWNpZmllZCBp
+biBkZXJpdmVkIGJpbmRpbmdzOg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgInFjb20sbXNtODk5NC11ZnNoYyINCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICJxY29tLG1zbTg5OTYtdWZzaGMiDQogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAicWNvbSx1ZnNoYyINCkBAIC0zMiw3ICszNCwyMCBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzOg0KDQogLSBjbG9ja3MgICAgICAgICAgICAgICAgOiBMaXN0IG9mIHBo
+YW5kbGUgYW5kIGNsb2NrIHNwZWNpZmllciBwYWlycw0KIC0gY2xvY2stbmFtZXMgICAgICAgICAg
+IDogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lDQot
+ICAgICAgICAgICAgICAgICAgICAgICAgICBvcmRlciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5Lg0K
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgb3JkZXIgYXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4g
+U3RhbmRhcmQNCmNsb2NrcyBpbmNsdWRlOg0KKyAgICAgICAiY29yZV9jbGsiICAgICAgOiBUaGUg
+Y2xvY2sgYXNzb2NpYXRlZCB3aXRoIHRoZSB1ZnNoY2QgSVAgYmxvY2sNCisgICAgICAgInJlZl9j
+bGsiICAgICAgIDogVGhlIHJlZmVyZW5jZSBjbG9jayBmb3IgdGhlIGV4dGVybmFsDQppbnRlcmZh
+Y2UgdG8gdGhlIGRldmljZSwNCisgICAgICAgICAgICAgICAgICAgICAgICAgdHlwaWNhbGx5IG9w
+ZXJhdGluZyBhdCAxOS4yIE1Iei4NCisgICAgICAgImlmYWNlX2NsayIgICAgIDogVGhlIGNsb2Nr
+IGZvciB0aGUgQ1BVLXNpZGUgaW50ZXJmYWNlIHRvIHRoZQ0KdWZzaGNkIG1lbW9yeQ0KKyAgICAg
+ICAgICAgICAgICAgICAgICAgICBtYXBwZWQgcmVnaXN0ZXJzDQorICAgICAgICJidXNfY2xrIiAg
+ICAgICA6IFRoZSBpbnRlcmZhY2UgY2xvY2sgZm9yIGJ1cyBtYXN0ZXIgZGF0YQ0KdHJhbnNmZXJz
+IG9uIHRvDQorICAgICAgICAgICAgICAgICAgICAgICAgIG1haW4gbWVtb3J5Lg0KKw0KKy0gcmVz
+ZXRzICAgICAgICAgICAgICAgOiBMaXN0IG9mIHNwZWNpZmllcnMgb2YgYXNzb2NpYXRlZCByZXNl
+dCBsaW5lcw0KKy0gcmVzZXQtbmFtZXMgICAgICAgICAgOiBBbiBpZGVuZmlmaWVyIGZvciBlYWNo
+IHJlc2V0IGxpbmUuIFRoZSBuYW1lDQoicnN0IiBzaG91bGQNCisgICAgICAgICAgICAgICAgICAg
+ICAgICAgYmUgdXNlZCBmb3IgdGhlIGxpbmUgdGhhdCByZXNldHMgdGhlIHVmc2hjaQ0KYmxvY2sg
+ZHVyaW5nDQorICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXJ0dXAuDQorDQogLSBmcmVxLXRh
+YmxlLWh6ICAgICAgICAgICAgICAgIDogQXJyYXkgb2YgPG1pbiBtYXg+IG9wZXJhdGluZw0KZnJl
+cXVlbmNpZXMgc3RvcmVkIGluIHRoZSBzYW1lDQogICAgICAgICAgICAgICAgICAgICAgICAgICBv
+cmRlciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5LiBJZiB0aGlzIHByb3BlcnR5IGlzIG5vdA0KICAg
+ICAgICAgICAgICAgICAgICAgICAgICBkZWZpbmVkIG9yIGEgdmFsdWUgaW4gdGhlIGFycmF5IGlz
+ICIwIiB0aGVuIGl0IGlzIGFzc3VtZWQgQEAgLTYzLDYgKzc4LDggQEAgRXhhbXBsZToNCg0KICAg
+ICAgICAgICAgICAgIGNsb2NrcyA9IDwmY29yZSAwPiwgPCZyZWYgMD4sIDwmaWZhY2UgMD47DQog
+ICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY29yZV9jbGsiLCAicmVmX2NsayIsICJpZmFj
+ZV9jbGsiOw0KKyAgICAgICAgICAgICAgIHJlc2V0cyA9IDwmcmVzZXQgMCAxPjsNCisgICAgICAg
+ICAgICAgICByZXNldC1uYW1lcyA9ICJyc3QiOw0KICAgICAgICAgICAgICAgIGZyZXEtdGFibGUt
+aHogPSA8MTAwMDAwMDAwIDIwMDAwMDAwMD4sIDwwIDA+LCA8MCAwPjsNCiAgICAgICAgICAgICAg
+ICBwaHlzID0gPCZ1ZnNwaHkxPjsNCiAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAidWZzcGh5
+IjsNCg==
