@@ -1,135 +1,35 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4] ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI
- starter kit support
-Date: Mon, 26 Mar 2018 13:35:54 +0530
-Message-ID: <20180326080554.11559-2-jagan@amarulasolutions.com>
-References: <20180326080554.11559-1-jagan@amarulasolutions.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 0/3] clk: meson: drop unnecessary AO clock flags
+Date: Mon, 26 Mar 2018 16:18:06 +0800
+Message-ID: <20180326081809.49493-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180326080554.11559-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.CoreM6 1.5 is an another i.CoreM6 QDL cpu modules which can be connected
-to EDIMM starter kit design with eMMC and MIPI-CSI interfaces suitable for
-Android and video capture application.
+  This first two patches will drop unnecessary flags for
+the AO clock driver.
+  The third DTS patch is a follow-up fix for the second patch,
+and I've tested them on P200, P212, Q200, S400 boards.
 
-notable features:
-CPU			NXP i.MX6 S/DL/D/Q, Up to 4 x Cortex-A9@800MHz
-Memory  		Up to 2 GB DDR3-1066
-Video Interfaces	Up to 1 Parallel Up to 2 LVDS HDMI 1.4
-			port 8 bit CSI INPUT MIPI-CSI INPUT
-1 x 10/100 Ethernet interface, 2 x USB, 1 x PCIe, 1 x I2S etc
+ Note: this patch series was made on top of patch [0]
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v4:
-- Send as seprate patch from previous series
-  https://patchwork.kernel.org/patch/10199429/
-Changes for v3:
-- none
-Changes for v2:
-- new patch  
+[0] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
 
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/imx6q-icore-mipi.dts | 25 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-icore.dtsi   | 23 +++++++++++++++++++++++
- 3 files changed, 49 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-mipi.dts
+Yixun Lan (3):
+  clk: meson: drop CLK_SET_RATE_PARENT flag
+  clk: meson: drop CLK_IGNORE_UNUSED flag
+  ARM64: dts: meson: fix clock source of the pclk for UART_AO
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3b4cc1b64a1e..ac188ecee1a1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -463,6 +463,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-hummingboard2-emmc-som-v15.dtb \
- 	imx6q-hummingboard2-som-v15.dtb \
- 	imx6q-icore.dtb \
-+	imx6q-icore-mipi.dtb \
- 	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-ofcap12.dtb \
- 	imx6q-icore-rqs.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-mipi.dts b/arch/arm/boot/dts/imx6q-icore-mipi.dts
-new file mode 100644
-index 000000000000..acd3d33476d4
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-mipi.dts
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2017 Engicam S.r.l.
-+ * Copyright (C) 2017 Amarula Solutions B.V.
-+ * Author: Jagan Teki <jagan@amarulasolutions.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 Quad/Dual MIPI Starter Kit";
-+	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c2>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 1bce85c3376b..0a1574998fc6 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -265,6 +265,14 @@
- 	status = "okay";
- };
- 
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "disabled";
-+};
-+
- &iomuxc {
- 	pinctrl_audmux: audmux {
- 		fsl,pins = <
-@@ -378,4 +386,19 @@
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
- 		>;
- 	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
-+			MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
-+			MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
-+			MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
-+			MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
-+		>;
-+	};
- };
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
+ drivers/clk/meson/axg-aoclk.c               | 1 -
+ drivers/clk/meson/gxbb-aoclk.c              | 1 -
+ 5 files changed, 6 insertions(+), 8 deletions(-)
+
 -- 
-2.14.3
+2.15.1
