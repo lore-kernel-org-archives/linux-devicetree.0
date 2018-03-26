@@ -1,59 +1,62 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH V10 0/3] mtd: read partitions compatible prop for "ofpart"
- type
-Date: Mon, 26 Mar 2018 13:30:15 +0200
-Message-ID: <1844604.Hq7LKkU3xk@blindfold>
-References: <20180130201059.4424-1-zajec5@gmail.com>
- <20180314121044.12033-1-zajec5@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 11/11] dt-bindings: gpio: Add bindings for Cadence I3C
+ gpio expander
+Date: Mon, 26 Mar 2018 13:35:53 +0200
+Message-ID: <CAMuHMdWXb+eSTG28eKRzfP3mq=KLXikOt94MGNaS+MYeiVdr3w@mail.gmail.com>
+References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
+ <20180323110020.19080-12-boris.brezillon@bootlin.com> <CAMuHMdX3TLmaN14gM4fTgzXwy1dgsMxCFBs_3wCFWM8rX=+8vA@mail.gmail.com>
+ <20180326132526.1634946e@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180314121044.12033-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180326132526.1634946e@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIDE0LiBNw6RyeiAyMDE4LCAxMzoxMDo0MSBDRVNUIHNjaHJpZWIgUmFmYcWC
-IE1pxYJlY2tpOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAK
-PiBUaGlzIHBhdGNoc2V0IHByb3ZpZGVzIGEgcHJvcGVyIHN1cHBvcnQgZm9yIGZsYXNoIGRldmlj
-ZSBEVCBub2RlIHdpdGgKPiAicGFydGl0aW9ucyIgc3Vibm9kZSB1c2luZyAiY29tcGF0aWJsZSIg
-cHJvcGVydHkuIEl0J3MgYWxyZWFkeQo+IGRvY3VtZW50ZWQgaW4gdGhlOiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiAKPiBXZSBiZWxpZXZlZCB0
-aGF0IHZlcnNpb24gNyB3YXMgcmVhZHkgdG8gZ28sIGJ1dCBzb29uIGFmdGVyIGxhbmRpbmcgaW4K
-PiB0aGUgbGludXgtbmV4dCB3ZSBnb3QgYSByZWdyZXNzaW9uIHJlcG9ydCBmcm9tIFBldGVyLiBM
-YXRlciB2ZXJzaW9ucwo+IHRha2VzIGEgc2FmZSBwYXRoIGJ5Ogo+IDEpIFJlc3BlY3RpbmcgcGFy
-c2VycyBvcmRlciBhcyBzcGVjaWZpZWQgaW4gdGhlIGRlZmF1bHQvZHJpdmVyLXByb3ZpZGVkCj4g
-ICAgbGlzdC4KPiAyKSBMb29raW5nIGF0ICJjb21wYXRpYmxlIiBwcm9wZXJ0eSBvbmx5IHdoZW4g
-Im9mcGFydCIgdHlwZSBnZXRzCj4gICAgc3BlY2lpZWQuCj4gCj4gVmVyc2lvbiA5IHdhcyBzdWNj
-ZXNzZnVsbHkgdGVzdGVkIGJ5IFBldGVyIGFuZCB2ZXJzaW9uIDEwIGp1c3Qgc3F1YXNoZXMKPiB0
-d28gY29tbWl0cyBpbnRvIGEgb25lLgo+IAo+IEkgZG91YmxlLWNoZWNrZWQgdGhlIGNvZGUgYW5k
-IGNhbm5vdCB0aGluayBvZiBhbnkgcmVncmVzc2lvbiB0aGlzIGNvdWxkCj4gY2F1c2UuIEkgYWxz
-byBob3BlIHRoaXMgZGVzaWduIChyb3VnaGx5IGRpc2N1c3NlZCB3aXRoIEJvcmlzKSBjYW4gYmUK
-PiBhY2NlcHRhYmxlIGZvciB0aGUgbXRkIHN1YnN5c3RlbS4KPiAKPiBUaGUgbW9zdCBpbXBvcnRh
-bnQgcGF0Y2ggZnJvbSB0aGlzIHBhdGNoc2V0ICgxLzMpIHdhcyByZXZpZXdlZCBieSBSb2IgaW4K
-PiB0aGUKPiBbUEFUQ0ggVjYgMS8yXSBtdGQ6IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJs
-ZSBwYXJzZXIgbWF0Y2hpbmcKPiBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL2NvbW1lbnQv
-MTgzMTU1MS8KPiAKPiBJZiBwb3NzaWJsZSB0aGlzIGlzIGEgNC4xNyBtYXRlcmlhbC4KPiAKPiBS
-YWZhxYIgTWnFgmVja2kgKDMpOgo+ICAgbXRkOiBwYXJ0aXRpb25zOiBhZGQgb2ZfbWF0Y2hfdGFi
-bGUgcGFyc2VyIG1hdGNoaW5nIGZvciB0aGUgIm9mcGFydCIKPiAgICAgdHlwZQo+ICAgbXRkOiBy
-ZW5hbWUgIm9mcGFydCIgcGFyc2VyIHRvICJmaXhlZC1wYXJ0aXRpb25zIiBhcyBpdCBmaXRzIGl0
-IGJldHRlcgo+ICAgbXRkOiBvZnBhcnQ6IGFkZCBvZl9tYXRjaF90YWJsZSB3aXRoICJmaXhlZC1w
-YXJ0aXRpb25zIgo+IAo+ICBkcml2ZXJzL210ZC9tdGRwYXJ0LmMgICAgICAgICAgfCAxMTYKPiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLSBkcml2ZXJzL210ZC9vZnBh
-cnQuYyAgICAgICAgICAgfCAKPiAxOCArKysrKy0tCj4gIGluY2x1ZGUvbGludXgvbXRkL3BhcnRp
-dGlvbnMuaCB8ICAgMSArCj4gIDMgZmlsZXMgY2hhbmdlZCwgMTIxIGluc2VydGlvbnMoKyksIDE0
-IGRlbGV0aW9ucygtKQoKU2VyaWVzIGxvb2tzIGdvb2QgdG8gbWUuCgpSZXZpZXdlZC1ieTogUmlj
-aGFyZCBXZWluYmVyZ2VyIDxyaWNoYXJkQG5vZC5hdD4KClRoYW5rcywKLy9yaWNoYXJkCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
-TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+Hi Boris,
+
+On Mon, Mar 26, 2018 at 1:25 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> On Mon, 26 Mar 2018 12:12:54 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Fri, Mar 23, 2018 at 12:00 PM, Boris Brezillon
+>> <boris.brezillon@bootlin.com> wrote:
+>> > Document the Cadence I3C gpio expander bindings.
+>> >
+>> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+>>
+>> Thanks for your patch!
+>>
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
+>>
+>> > +- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+>> > +  The second cell bits[3:0] is used to specify trigger type and level flags:
+>> > +      1 = low-to-high edge triggered.
+>> > +      2 = high-to-low edge triggered.
+>> > +      3 = triggered on both edges.
+>> > +      4 = active high level-sensitive.
+>> > +      8 = active low level-sensitive.
+>>
+>> These are identical to the values in <dt-bindings/interrupt-controller/irq.h>.
+>> Perhaps you can refer to those definitions?
+>
+> Well, I'm not sure this is allowed since DT bindings docs are
+> supposed to be OS-agnostic and macros defined in
+> <dt-bindings/interrupt-controller/irq.h> are, AFAIK, only available to
+> Linux.
+
+If they're under include/dt-bindings/, they're part of the DT bindings.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
