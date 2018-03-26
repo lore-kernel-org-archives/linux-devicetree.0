@@ -1,48 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Date: Mon, 26 Mar 2018 17:22:46 -0500
-Message-ID: <20180326222246.zjildcniv4lquxft@rob-hp-laptop>
-References: <20180309232543.24636-1-ilina@codeaurora.org>
- <20180309232543.24636-3-ilina@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] dt-bindings: add compatible string for
+ the A64 DE2 CCU
+Date: Mon, 26 Mar 2018 17:22:56 -0500
+Message-ID: <20180326222256.fhdcodfx7ff4zyij@rob-hp-laptop>
+References: <20180316175354.21437-1-icenowy@aosc.io>
+ <20180316175354.21437-2-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBQXF4XKQKGQEPZTNTUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180309232543.24636-3-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180316175354.21437-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 09, 2018 at 04:25:35PM -0700, Lina Iyer wrote:
-> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-> driver. The driver is used for communicating resource state requests for
-> shared resources.
+On Sat, Mar 17, 2018 at 01:53:48AM +0800, Icenowy Zheng wrote:
+> The Allwinner A64 SoC has a DE2 CCU like the one in the DE2 of Allwinner
+> H5 SoC.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Add a compatible string for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> 
-> Changes in v3:
-> 	- Move to soc/qcom
-> 	- Amend text per Stephen's suggestions
-> 
-> Changes in v2:
-> 	- Amend text to describe the registers in reg property
-> 	- Add reg-names for the registers
-> 	- Update examples to use GIC_SPI in interrupts instead of 0
-> 	- Rephrase incorrect description
-> 
-> Changes in v3:
-> 	- Fix unwanted capitalization
-> 	- Remove clients from the examples, this doc does not describe
-> 	  them
-> 	- Rephrase introductory paragraph
-> 	- Remove hardware specifics from DT bindings
-> ---
->  .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
