@@ -1,35 +1,75 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [net-next PATCH 2/5] soc: ti: K2G: provide APIs to support
- driver probe deferral
-Date: Mon, 26 Mar 2018 22:48:02 +0200
-Message-ID: <20180326204802.GC5862@lunn.ch>
-References: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
- <1522095312-23249-3-git-send-email-m-karicheri2@ti.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v4 5/8] remoteproc: da8xx: add the missing retval check
+ for clk_enable()
+Date: Mon, 26 Mar 2018 16:15:57 -0500
+Message-ID: <ceca8cdd-055a-58ef-80fa-988a6ab5fcdf@ti.com>
+References: <20180323130455.11470-1-brgl@bgdev.pl>
+ <20180323130455.11470-6-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522095312-23249-3-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180323130455.11470-6-brgl@bgdev.pl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2018 at 04:15:09PM -0400, Murali Karicheri wrote:
-> This patch provide APIs to allow client drivers to support
-> probe deferral. On K2G SoC, devices can be probed only
-> after the ti_sci_pm_domains driver is probed and ready.
-> As drivers may get probed at different order, any driver
-> that depends on knav dma and qmss drivers, for example
-> netcp network driver, needs to defer probe until
-> knav devices are probed and ready to service. To do this,
-> add an API to query the device ready status from the knav
-> dma and qmss devices.
+On 03/23/2018 08:04 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The davinci platform is being switched to using the common clock
+> framework, where clk_enable() can fail. Add the return value check.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Murali 
+This patch can be applied agnostic of the CCF change as well.
+I had been using "remoteproc/davinci: ..." on the patch subject for all
+davinci remoteproc patches. So prefer to maintain the same.
 
-Shouldn't you really re-write this to be a dma driver?  You would then
-do something like of_dma_request_slave_channel() in the ethernet
-driver probe function. That probably correctly returns EPROBE_DEFER.
+With that,
+Acked-by: Suman Anna <s-anna@ti.com>
 
-       Andrew
+regards
+Suman
+
+> ---
+>  drivers/remoteproc/da8xx_remoteproc.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+> index bf3b9034c319..2b24291337b7 100644
+> --- a/drivers/remoteproc/da8xx_remoteproc.c
+> +++ b/drivers/remoteproc/da8xx_remoteproc.c
+> @@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  	struct device *dev = rproc->dev.parent;
+>  	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
+>  	struct clk *dsp_clk = drproc->dsp_clk;
+> +	int ret;
+>  
+>  	/* hw requires the start (boot) address be on 1KB boundary */
+>  	if (rproc->bootaddr & 0x3ff) {
+> @@ -148,7 +149,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  
+>  	writel(rproc->bootaddr, drproc->bootreg);
+>  
+> -	clk_enable(dsp_clk);
+> +	ret = clk_enable(dsp_clk);
+> +	if (ret) {
+> +		dev_err(dev, "clk_enable() failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	davinci_clk_reset_deassert(dsp_clk);
+>  
+>  	return 0;
+> 
