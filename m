@@ -1,59 +1,89 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 11/11] dt-bindings: gpio: Add bindings for Cadence
- I3C gpio expander
-Date: Mon, 26 Mar 2018 13:25:26 +0200
-Message-ID: <20180326132526.1634946e@bbrezillon>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
-        <20180323110020.19080-12-boris.brezillon@bootlin.com>
-        <CAMuHMdX3TLmaN14gM4fTgzXwy1dgsMxCFBs_3wCFWM8rX=+8vA@mail.gmail.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 4/7] ARM: dts: sun7i: Add pinmux settings for LCD0 RGB888
+ output.
+Date: Mon, 26 Mar 2018 13:27:05 +0200
+Message-ID: <e3e51afb-bb32-7f2f-877e-b6c74d71ab06@micronovasrl.com>
+References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521662593-25468-4-git-send-email-giulio.benetti@micronovasrl.com>
+ <1521986953.5301.4.camel@paulk.fr> <20180326100114.fa7vjw342ad6vrb6@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX3TLmaN14gM4fTgzXwy1dgsMxCFBs_3wCFWM8rX=+8vA@mail.gmail.com>
+In-Reply-To: <20180326100114.fa7vjw342ad6vrb6@flea>
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Paul Kocialkowski <contact@paulk.fr>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Mar 2018 12:12:54 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Hi,
 
-> Hi Boris,
+Il 26/03/2018 12:01, Maxime Ripard ha scritto:
+> Hi,
 > 
-> On Fri, Mar 23, 2018 at 12:00 PM, Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> > Document the Cadence I3C gpio expander bindings.
-> >
-> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>  
+> On Sun, Mar 25, 2018 at 04:09:13PM +0200, Paul Kocialkowski wrote:
+>> Le mercredi 21 mars 2018 à 21:03 +0100, Giulio Benetti a écrit :
+>>> The A20 supports RGB888 with H/V sync from LCD0. Add a pinmux setting
+>>> for the needed pins.
+>>>
+>>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>>> ---
+>>>   arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> index efb5607..bfe6728 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> @@ -922,6 +922,14 @@
+>>>   				pins = "PI20", "PI21";
+>>>   				function = "uart7";
+>>>   			};
+>>> +
+>>> +			lcd0_rgb888_pins: lcd0-rgb888-pins {
+>>
+>> It would be more consistent with other pins definitions to have
+>> underscores in both names and to indicate the index, such as:
+>> lcd0_rgb888_pins: lcd0_rgb888_pins@0 {
 > 
-> Thanks for your patch!
+> Both your suggestions will generate DTC warnings, and we'd like to get
+> rid of them eventually :)
 > 
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt  
+>> This way, other set of pins for LCD (PH0-PH27) can be declared as @1
+>> when they are needed in the future.
 > 
-> > +- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
-> > +  The second cell bits[3:0] is used to specify trigger type and level flags:
-> > +      1 = low-to-high edge triggered.
-> > +      2 = high-to-low edge triggered.
-> > +      3 = triggered on both edges.
-> > +      4 = active high level-sensitive.
-> > +      8 = active low level-sensitive.  
-> 
-> These are identical to the values in <dt-bindings/interrupt-controller/irq.h>.
-> Perhaps you can refer to those definitions?
+> A better idea would be to call it lcd0-rgb888-pd-pins, and introduce
+> the ph variant when it's done.
 
-Well, I'm not sure this is allowed since DT bindings docs are
-supposed to be OS-agnostic and macros defined in
-<dt-bindings/interrupt-controller/irq.h> are, AFAIK, only available to
-Linux.
+As I know, only PD is muxed with LCD0.
+And PH is for LCD1 only.
 
-Note that I copied these definitions from another binding ;-).
+And LCD0 seems to come out only from PD port according to datasheet,
+this is why I didn't put @0 after lcd0-rgb888-pins.
 
-Rob, any opinion?
+So I don't think it makes sense to handle pins in the way Paul suggests.
+
+What do you all think?
+
+Giulio
+
+> 
+> Maxime
+> 
+> 
+> 
 
 
 -- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Giulio Benetti
+CTO
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
