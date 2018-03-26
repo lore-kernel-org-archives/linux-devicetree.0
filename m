@@ -1,49 +1,46 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 2/2] net: ethernet: nixge: Add support for National
- Instruments XGE netdev
-Date: Mon, 26 Mar 2018 11:38:30 -0400 (EDT)
-Message-ID: <20180326.113830.932262386304702367.davem@davemloft.net>
-References: <20180323204128.29783-1-mdf@kernel.org>
-        <20180323204128.29783-2-mdf@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2] of_net: Implement of_get_nvmem_mac_address helper
+Date: Mon, 26 Mar 2018 17:50:10 +0200
+Message-ID: <20180326155010.GC3014@lunn.ch>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
+ <20180323151101.GB24361@lunn.ch>
+ <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323204128.29783-2-mdf@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mdf@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
-Date: Fri, 23 Mar 2018 13:41:28 -0700
+On Mon, Mar 26, 2018 at 08:41:29AM +0200, Mike Looijmans wrote:
+> It's common practice to store MAC addresses for network interfaces into
+> nvmem devices. However the code to actually do this in the kernel lacks,
+> so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+> address from an nvmem cell provider.
+> 
+> This is particulary useful on devices where the ethernet interface cannot
+> be configured by the bootloader, for example because it's in an FPGA.
+> 
+> Tested by adapting the cadence macb driver to call this instead of
+> of_get_mac_address().
 
-> +static void nixge_hw_dma_bd_release(struct net_device *ndev)
-> +{
-> +	int i;
-> +	struct nixge_priv *priv = netdev_priv(ndev);
+Hi Mike
 
-Please order local variables from longest to shortest line (ie. reverse
-christmas tree layout).
+I can understand you not wanting to modify all the call sites for
+of_get_mac_address().
 
-> +static int nixge_hw_dma_bd_init(struct net_device *ndev)
-> +{
-> +	u32 cr;
-> +	int i;
-> +	struct sk_buff *skb;
-> +	struct nixge_priv *priv = netdev_priv(ndev);
+However, the name of_get_nvmem_mac_address() suggests it gets the MAC
+address from NVMEM. I think people are going to be surprised when they
+find it first tries for a MAC address directly in device tree. I would
+drop the call to of_get_mac_address(), and have the MAC driver call
+both.
 
-Likewise.
+You could also maybe take a look at fwnode_get_mac_address(). It
+should work for both OF and ACPI. It fits better because is passes a
+char * for the address. You could make that do both, and call it from
+the macb driver. dev_fwnode() probably does what you want.
 
-> +static void __nixge_device_reset(struct nixge_priv *priv, off_t offset)
-> +{
-> +	u32 status;
-> +	int err;
-> +	/* Reset Axi DMA. This would reset NIXGE Ethernet core as well.
-> +	 * The reset process of Axi DMA takes a while to complete as all
-> +	 * pending commands/transfers will be flushed or completed during
-> +	 * this reset process.
-> +	 */
-
-Please put an empty line between the local variable declarations
-and this comment.
+    Andrew
