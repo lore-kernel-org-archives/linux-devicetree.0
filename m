@@ -1,109 +1,126 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
-Date: Tue, 27 Mar 2018 03:13:28 +0800
-Message-ID: <201803270232.QvYkUzOs%fengguang.wu@intel.com>
-References: <20180323201117.8416-6-alexandre.belloni@bootlin.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [net-next PATCH 2/5] soc: ti: K2G: provide APIs to support driver probe deferral
+Date: Mon, 26 Mar 2018 16:15:09 -0400
+Message-ID: <1522095312-23249-3-git-send-email-m-karicheri2@ti.com>
+References: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180323201117.8416-6-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+This patch provide APIs to allow client drivers to support
+probe deferral. On K2G SoC, devices can be probed only
+after the ti_sci_pm_domains driver is probed and ready.
+As drivers may get probed at different order, any driver
+that depends on knav dma and qmss drivers, for example
+netcp network driver, needs to defer probe until
+knav devices are probed and ready to service. To do this,
+add an API to query the device ready status from the knav
+dma and qmss devices.
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on next-20180323]
-[also build test WARNING on v4.16-rc7]
-[cannot apply to net-next/master net/master robh/for-next v4.16-rc6 v4.16-rc5 v4.16-rc4]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/Microsemi-Ocelot-switch-support/20180325-234932
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/net/ethernet/mscc/ocelot.c:395:17: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [unsigned] [usertype] val @@    got ed int [unsigned] [usertype] val @@
-   drivers/net/ethernet/mscc/ocelot.c:395:17:    expected unsigned int [unsigned] [usertype] val
-   drivers/net/ethernet/mscc/ocelot.c:395:17:    got restricted __le32 [usertype] <noident>
---
->> drivers/net/ethernet/mscc/ocelot_io.c:110:24: sparse: incorrect type in return expression (different address spaces) @@    expected struct regmap * @@    got void [noderef] <asnstruct regmap * @@
-   drivers/net/ethernet/mscc/ocelot_io.c:110:24:    expected struct regmap *
-   drivers/net/ethernet/mscc/ocelot_io.c:110:24:    got void [noderef] <asn:2>*[assigned] regs
---
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:41:26: sparse: cast to restricted __be32
->> drivers/net/ethernet/mscc/ocelot_board.c:142:34: sparse: cast to restricted __le32
-
-vim +395 drivers/net/ethernet/mscc/ocelot.c
-
-   367	
-   368	static int ocelot_port_xmit(struct sk_buff *skb, struct net_device *dev)
-   369	{
-   370		struct ocelot_port *port = netdev_priv(dev);
-   371		struct ocelot *ocelot = port->ocelot;
-   372		u32 val, ifh[IFH_LEN];
-   373		struct frame_info info = {};
-   374		u8 grp = 0; /* Send everything on CPU group 0 */
-   375		int i, count, last;
-   376	
-   377		val = ocelot_read(ocelot, QS_INJ_STATUS);
-   378		if (!(val & QS_INJ_STATUS_FIFO_RDY(BIT(grp))) ||
-   379		    (val & QS_INJ_STATUS_WMARK_REACHED(BIT(grp))))
-   380			return NETDEV_TX_BUSY;
-   381	
-   382		ocelot_write_rix(ocelot, QS_INJ_CTRL_GAP_SIZE(1) |
-   383				 QS_INJ_CTRL_SOF, QS_INJ_CTRL, grp);
-   384	
-   385		info.port = BIT(port->chip_port);
-   386		info.cpuq = 0xff;
-   387		ocelot_gen_ifh(ifh, &info);
-   388	
-   389		for (i = 0; i < IFH_LEN; i++)
-   390			ocelot_write_rix(ocelot, ifh[i], QS_INJ_WR, grp);
-   391	
-   392		count = (skb->len + 3) / 4;
-   393		last = skb->len % 4;
-   394		for (i = 0; i < count; i++) {
- > 395			ocelot_write_rix(ocelot, cpu_to_le32(((u32 *)skb->data)[i]),
-   396					 QS_INJ_WR, grp);
-   397		}
-   398	
-   399		/* Add padding */
-   400		while (i < (OCELOT_BUFFER_CELL_SZ / 4)) {
-   401			ocelot_write_rix(ocelot, 0, QS_INJ_WR, grp);
-   402			i++;
-   403		}
-   404	
-   405		/* Indicate EOF and valid bytes in last word */
-   406		ocelot_write_rix(ocelot, QS_INJ_CTRL_GAP_SIZE(1) |
-   407				 QS_INJ_CTRL_VLD_BYTES(skb->len < OCELOT_BUFFER_CELL_SZ ? 0 : last) |
-   408				 QS_INJ_CTRL_EOF,
-   409				 QS_INJ_CTRL, grp);
-   410	
-   411		/* Add dummy CRC */
-   412		ocelot_write_rix(ocelot, 0, QS_INJ_WR, grp);
-   413		skb_tx_timestamp(skb);
-   414	
-   415		dev->stats.tx_packets++;
-   416		dev->stats.tx_bytes += skb->len;
-   417		dev_kfree_skb_any(skb);
-   418	
-   419		return NETDEV_TX_OK;
-   420	}
-   421	
-
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/soc/ti/knav_dma.c        |  8 ++++++++
+ drivers/soc/ti/knav_qmss_queue.c |  8 ++++++++
+ include/linux/soc/ti/knav_dma.h  | 12 ++++++++++++
+ include/linux/soc/ti/knav_qmss.h |  1 +
+ 4 files changed, 29 insertions(+)
+
+diff --git a/drivers/soc/ti/knav_dma.c b/drivers/soc/ti/knav_dma.c
+index 026182d..224d7dd 100644
+--- a/drivers/soc/ti/knav_dma.c
++++ b/drivers/soc/ti/knav_dma.c
+@@ -134,6 +134,13 @@ struct knav_dma_chan {
+ 
+ static struct knav_dma_pool_device *kdev;
+ 
++static bool device_ready;
++bool knav_dma_device_ready(void)
++{
++	return device_ready;
++}
++EXPORT_SYMBOL_GPL(knav_dma_device_ready);
++
+ static bool check_config(struct knav_dma_chan *chan, struct knav_dma_cfg *cfg)
+ {
+ 	if (!memcmp(&chan->cfg, cfg, sizeof(*cfg)))
+@@ -773,6 +780,7 @@ static int knav_dma_probe(struct platform_device *pdev)
+ 	debugfs_create_file("knav_dma", S_IFREG | S_IRUGO, NULL, NULL,
+ 			    &knav_dma_debug_ops);
+ 
++	device_ready = true;
+ 	return ret;
+ }
+ 
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 5b2c4e9..f0e67aa 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -74,6 +74,13 @@
+  */
+ const char *knav_acc_firmwares[] = {"ks2_qmss_pdsp_acc48.bin"};
+ 
++static bool device_ready;
++bool knav_qmss_device_ready(void)
++{
++	return device_ready;
++}
++EXPORT_SYMBOL_GPL(knav_qmss_device_ready);
++
+ /**
+  * knav_queue_notify: qmss queue notfier call
+  *
+@@ -1849,6 +1856,7 @@ static int knav_queue_probe(struct platform_device *pdev)
+ 
+ 	debugfs_create_file("qmss", S_IFREG | S_IRUGO, NULL, NULL,
+ 			    &knav_queue_debug_ops);
++	device_ready = true;
+ 	return 0;
+ 
+ err:
+diff --git a/include/linux/soc/ti/knav_dma.h b/include/linux/soc/ti/knav_dma.h
+index 66693bc..7127ec3 100644
+--- a/include/linux/soc/ti/knav_dma.h
++++ b/include/linux/soc/ti/knav_dma.h
+@@ -167,6 +167,8 @@ struct knav_dma_desc {
+ void *knav_dma_open_channel(struct device *dev, const char *name,
+ 				struct knav_dma_cfg *config);
+ void knav_dma_close_channel(void *channel);
++int knav_dma_get_flow(void *channel);
++bool knav_dma_device_ready(void);
+ #else
+ static inline void *knav_dma_open_channel(struct device *dev, const char *name,
+ 				struct knav_dma_cfg *config)
+@@ -176,6 +178,16 @@ static inline void *knav_dma_open_channel(struct device *dev, const char *name,
+ static inline void knav_dma_close_channel(void *channel)
+ {}
+ 
++static inline int knav_dma_get_flow(void *channel)
++{
++	return -EINVAL;
++}
++
++static inline bool knav_dma_device_ready(void)
++{
++	return false;
++}
++
+ #endif
+ 
+ #endif /* __SOC_TI_KEYSTONE_NAVIGATOR_DMA_H__ */
+diff --git a/include/linux/soc/ti/knav_qmss.h b/include/linux/soc/ti/knav_qmss.h
+index 9f0ebb3b..9745df6 100644
+--- a/include/linux/soc/ti/knav_qmss.h
++++ b/include/linux/soc/ti/knav_qmss.h
+@@ -86,5 +86,6 @@ int knav_pool_desc_map(void *ph, void *desc, unsigned size,
+ void *knav_pool_desc_unmap(void *ph, dma_addr_t dma, unsigned dma_sz);
+ dma_addr_t knav_pool_desc_virt_to_dma(void *ph, void *virt);
+ void *knav_pool_desc_dma_to_virt(void *ph, dma_addr_t dma);
++bool knav_qmss_device_ready(void);
+ 
+ #endif /* __SOC_TI_KNAV_QMSS_H__ */
+-- 
+1.9.1
