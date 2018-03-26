@@ -1,75 +1,109 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v6 2/5] dt-bindings: pwm-backlight: add PWM delay
- proprieties.
-Date: Mon, 26 Mar 2018 16:07:08 +0100
-Message-ID: <20180326150708.jvjewhmk3j5a6vu7@holly.lan>
-References: <20180326095213.18362-1-enric.balletbo@collabora.com>
- <20180326095213.18362-2-enric.balletbo@collabora.com>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
+ on Droid 4
+Date: Mon, 26 Mar 2018 10:16:43 -0500
+Message-ID: <e756d74aaff6b0a4546944393e1b98bf51ae4900.camel@redhat.com>
+References: <20180322192843.GA17189@amd>
+         <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
+         <20180323105455.GB21644@amd>
+         <20180323113521.45va72bhzis6ym6m@earth.universe>
+         <20180323201343.GC23658@amd>
+         <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
+         <20180324142517.GA94954@atomide.com> <20180324200224.GA17857@amd>
+         <20180325154512.GC5700@atomide.com> <20180325185857.GA7582@amd>
+         <20180325205232.GD5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180326095213.18362-2-enric.balletbo@collabora.com>
+In-Reply-To: <20180325205232.GD5700@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+To: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2018 at 11:52:10AM +0200, Enric Balletbo i Serra wrote:
-> Hardware needs a delay between setting an initial (non-zero) PWM and
-> enabling the backlight using GPIO. The post-pwm-on-delay-ms specifies
-> this delay in milli seconds. Hardware also needs a delay between disabing
-> the backlight using GPIO and setting PWM value to 0. The pwm-off-delay-ms
-> is this delay in milli seconds.
+On Sun, 2018-03-25 at 13:52 -0700, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [180325 19:00]:
+> > Hi!
+> > 
+> > > > Hmm. Interesting. Anyway, for me ttyUSB4 is interesting, as it
+> > > > seems
+> > > > to react to AT commands, and in particular reacts to ADT123; (;
+> > > > is
+> > > > important).
+> > > 
+> > > Is that to dial a voice call?
+> > 
+> > Yes. And it is ATD123; not ATD.
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Strange, no semicolon is needed when using /dev/gsmtty to
+> dial a voice call with my current pile of pending changes,
+> just doing ATD123 dials..
+> 
+> Anyways, looks like qmi_wwan needs to be loaded before
+> qcserial module, otherwise we get nine ttyUSB instances
+> and ModemManager can't find any modems.
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Use qcaux.c or option, unless the 6600 actually *does* have the same
+layout as Gobi 1K/2K/etc devices.
 
-> ---
-> Based on the original Huang Lin <hl@rock-chips.com> work.
-> Changes since v5:
->  - Add Acked-by: Thierry Reding <thierry.reding@gmail.com>
->  - CC DT mainling list (for some reason dropped at some point, my
->    fault)
-> Changes since v4:
->  - Rebase on top of mainline.
-> Changes since v3:
->  - Replace us for ms.
->  - Add Acked-by: Pavel Machek <pavel@ucw.cz>
-> Changes since v2:
->  - Use separate properties (Rob Herring)
-> Changes since v1:
->  - As suggested by Daniel Thompson
->    - Do not assume power-on delay and power-off delay will be the same
-> ---
->  Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+If you're going to use qcaux or optoin, then you need to use some
+variant of USB_DEVICE_AND_INTERFACE_INFO to lock the serial driver to
+the specific USB interfaces that expose the TTYs and to ignore the QMI
+interfaces and netdevs.
+
+Dan
+
+> With qcserial module loaded after qmi_wwan, it still takes
+> a long time for ModemManager to find the modem.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> index 764db86d441a..310810906613 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> @@ -17,6 +17,10 @@ Optional properties:
->                 "pwms" property (see PWM binding[0])
->    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
->                    and disables the backlight (see GPIO binding[1])
-> +  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
-> +                          and enabling the backlight using GPIO.
-> +  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
-> +                      and setting PWM value to 0.
->  
->  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
->  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -32,4 +36,6 @@ Example:
->  
->  		power-supply = <&vdd_bl_reg>;
->  		enable-gpios = <&gpio 58 0>;
-> +		post-pwm-on-delay-ms = <10>;
-> +		pwm-off-delay-ms = <10>;
->  	};
-> -- 
-> 2.16.2
+> Then unrelated to the qcserial module, also looks like I can
+> no longer use the GPS with ModemManager:
 > 
+> $ mmcli -m 0 --enable
+> $ mmcli -m 0 --location-enable-gps-raw
+> 
+> And then chmod a+r /dev/cdc-wdm0 and pointing gpsd to use
+> /dev/cdc-wdm0 used to work, but now it seems that gpsd
+> can no longer read it. Trying to start gpsd manually produces:
+> 
+> # gpsd -b -n -N /dev/cdc-wdm0
+> gpsd:ERROR: SER: /dev/cdc-wdm0 already opened by another process
+> gpsd:ERROR: initial GPS device /dev/cdc-wdm0 open failed
+> gpsd:ERROR: can't run with neither control socket nor devices open
+> 
+> And lsof shows /usr/libexec/qmi-proxy having it open.
+> 
+> Anybody know what I might be doing wrong? Sounds like something
+> now needs to be done with qmi-proxy to get access to GPS?
+> 
+> > > Anyway, "good" solution is to get ofonod running, then use ofone
+> > > from
+> > > here: https://github.com/pavelmachek/unicsy_demo
+> 
+> Thanks I'll take a look.
+> 
+> > > I think it's the cpcap based config to route voice call audio
+> > > to SoC, Sebastian knows the details :)
+> > > 
+> > > The way to figure that one out is to dump the cpcap registers
+> > > before and during voice call on android with cpcaprw, then
+> > > diff the output for the audio registers. Probably some SoC
+> > > registers need to be diffed too with rwmem or similar tool
+> > > for the mcbsp instance(s) used.
+> > 
+> > That sounds like hard way to do it. There's source available, I'm
+> > now
+> > trying to understand it / fit it into Sebastian's driver.
+> > 
+> > https://raw.githubusercontent.com/NotKit/android_kernel_motorola_om
+> > ap4-common/hybris-11.0/sound/soc/codecs/cpcap.c
+> 
+> Sure that hopefully helps too :)
+> 
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
