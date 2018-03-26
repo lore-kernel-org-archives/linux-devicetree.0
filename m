@@ -1,25 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/7] dt-bindings: add micronova vendor prefix
-Date: Mon, 26 Mar 2018 17:24:36 -0500
-Message-ID: <20180326222436.jgj6oc7l2swxs2uj@rob-hp-laptop>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-5-git-send-email-giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Mon, 26 Mar 2018 17:24:44 -0500
+Message-ID: <20180326222444.dclqhstvrfi6sanr@rob-hp-laptop>
+References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521662593-25468-5-git-send-email-giulio.benetti@micronovasrl.com>
+In-Reply-To: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2018 at 09:03:11PM +0100, Giulio Benetti wrote:
-> This adds a vendor prefix "micronova" for Micronova srl
+On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
+> Add support to get and control a list of resets for the device
+> as optional and shared. These resets must be kept de-asserted until
+> the device is enabled.
 > 
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> This is specified as shared because some SoCs like UniPhier series
+> have common reset controls with all ahci controller instances.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  drivers/ata/ahci.h                                 |  1 +
+>  drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
+>  3 files changed, 23 insertions(+), 3 deletions(-)
