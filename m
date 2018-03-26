@@ -1,83 +1,120 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [Letux-kernel] [PATCH v5 3/5] misc serdev: Add w2sg0004 (gps
- receiver) power control driver
-Date: Mon, 26 Mar 2018 15:59:20 +0200
-Message-ID: <20180326135920.GA1450@amd>
-References: <5494ad34b39a6c62601e3747440268dfb3be7d5a.1512114576.git.hns@goldelico.com>
- <20171222124427.GI3374@localhost>
- <91850CC3-B280-4701-9D07-96AFF3A79A6F@goldelico.com>
- <90F9A8E4-035A-4A9E-8AAB-757491D63E69@goldelico.com>
- <20180112153903.GB5992@localhost>
- <20180212152618.GC13962@amd>
- <20180227070415.GB18666@localhost>
- <22A8F5FE-C8B9-46EB-B98D-A94EA4170131@goldelico.com>
- <20180319135418.GL18359@localhost>
- <FCD404C1-3DD4-45BD-9242-3F7A7C44F6C9@goldelico.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/2] clocksource/drivers/imx-tpm: add different counter
+ width support
+Date: Mon, 26 Mar 2018 16:10:52 +0200
+Message-ID: <e6e6026c-37bb-35ff-bf1b-a00d47e0aa2e@linaro.org>
+References: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
+ <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <FCD404C1-3DD4-45BD-9242-3F7A7C44F6C9@goldelico.com>
+In-Reply-To: <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com
+Cc: Linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 26/03/2018 09:47, Anson Huang wrote:
+> Different TPM modules have different width counters which
+> is 16-bit or 32-bit, the counter width can be read from
+> TPM_PARAM register bit[23:16], this patch adds dynamic
+> check for counter width to support both 16-bit and 32-bit
+> TPM modules.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Are you sure you shouldn't use a prescalar with 16b and reduce its
+rating? What will be the duration of the clocksource before wrapping up?
 
-Hi!
+Also, can you do the change to prevent computing the mask at each
+'read_count' call ?
 
-> > No, we need some kind of at least rudimentary gps framework even if we
-> > allow for a raw (NMEA) interface for the time being (possibly
-> > indefinitely).
->=20
-> Ok, that would be fine if we can get that!
->=20
-> For a minimal set of API I think something like this (following hci_dev) =
-would suffice:
->=20
-> struct gps_dev {
-> 	...
-> 	int (*open)(struct gps_dev *gdev);
-> 	int (*close)(struct gps_dev *gdev);
-> 	int (*send)(struct gps_dev *gdev, char *data, int length);
-> };
->=20
-> int gps_register_dev(struct gps_dev *gdev);
-> void gps_unregister_dev(struct gps_dev *gdev);
-> int gps_recv_nmea_chars(struct gps_dev *gdev, char *data, int length);
->=20
-> If that would wrap all creation of some /dev/ttyGPS0 (or however it is ca=
-lled),
-> it would fit our needs for a driver and user-space for our system.
->=20
-> And I would be happy to get rid of creating and registering a /dev/ttyGPS0
-> in the w2sg0004 driver.
+> ---
+>  drivers/clocksource/timer-imx-tpm.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
+> index 7403e49..5063b77 100644
+> --- a/drivers/clocksource/timer-imx-tpm.c
+> +++ b/drivers/clocksource/timer-imx-tpm.c
+> @@ -17,6 +17,9 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/sched_clock.h>
+>  
+> +#define TPM_PARAM			0x4
+> +#define TPM_PARAM_WIDTH_SHIFT		16
+> +#define TPM_PARAM_WIDTH_MASK		(0xff << 16)
+>  #define TPM_SC				0x10
+>  #define TPM_SC_CMOD_INC_PER_CNT		(0x1 << 3)
+>  #define TPM_SC_CMOD_DIV_DEFAULT		0x3
+> @@ -33,6 +36,7 @@
+>  #define TPM_C0SC_CHF_MASK		(0x1 << 7)
+>  #define TPM_C0V				0x24
+>  
+> +static int counter_width;
+>  static void __iomem *timer_base;
+>  static struct clock_event_device clockevent_tpm;
+>  
+> @@ -66,7 +70,7 @@ static struct delay_timer tpm_delay_timer;
+>  
+>  static inline unsigned long tpm_read_counter(void)
+>  {
+> -	return readl(timer_base + TPM_CNT);
+> +	return readl(timer_base + TPM_CNT) & GENMASK(counter_width - 1, 0);
+>  }
+>  
+>  static unsigned long tpm_read_current_timer(void)
+> @@ -85,10 +89,11 @@ static int __init tpm_clocksource_init(unsigned long rate)
+>  	tpm_delay_timer.freq = rate;
+>  	register_current_timer_delay(&tpm_delay_timer);
+>  
+> -	sched_clock_register(tpm_read_sched_clock, 32, rate);
+> +	sched_clock_register(tpm_read_sched_clock, counter_width, rate);
+>  
+>  	return clocksource_mmio_init(timer_base + TPM_CNT, "imx-tpm",
+> -				     rate, 200, 32, clocksource_mmio_readl_up);
+> +				     rate, 200, counter_width,
+> +				     clocksource_mmio_readl_up);
+>  }
+>  
+>  static int tpm_set_next_event(unsigned long delta,
+> @@ -153,8 +158,8 @@ static int __init tpm_clockevent_init(unsigned long rate, int irq)
+>  
+>  	clockevent_tpm.cpumask = cpumask_of(0);
+>  	clockevent_tpm.irq = irq;
+> -	clockevents_config_and_register(&clockevent_tpm,
+> -					rate, 300, 0xfffffffe);
+> +	clockevents_config_and_register(&clockevent_tpm, rate, 300,
+> +					GENMASK(counter_width - 1, 1));
+>  
+>  	return ret;
+>  }
+> @@ -199,6 +204,8 @@ static int __init tpm_timer_init(struct device_node *np)
+>  		goto err_per_clk_enable;
+>  	}
+>  
+> +	counter_width = (readl(timer_base + TPM_PARAM) & TPM_PARAM_WIDTH_MASK)
+> +		>> TPM_PARAM_WIDTH_SHIFT;
+>  	/*
+>  	 * Initialize tpm module to a known state
+>  	 * 1) Counter disabled
+> @@ -220,7 +227,7 @@ static int __init tpm_timer_init(struct device_node *np)
+>  		     timer_base + TPM_SC);
+>  
+>  	/* set MOD register to maximum for free running mode */
+> -	writel(0xffffffff, timer_base + TPM_MOD);
+> +	writel(GENMASK(counter_width - 1, 0), timer_base + TPM_MOD);
+>  
+>  	rate = clk_get_rate(per) >> 3;
+>  	ret = tpm_clocksource_init(rate);
+> 
 
-Sounds like a good start.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq4/LgACgkQMOfwapXb+vL8hgCfS0UWaS1wC9bm/jIlnajYRwgo
-ReUAoIYO2jKAA99I3pDDwchvNGTzCbEZ
-=IReX
------END PGP SIGNATURE-----
-
---SUOF0GtieIMvvwua--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
