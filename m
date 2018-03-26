@@ -1,176 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/7] ARM: dts: sun7i: Add dts file for the
- A20-linova1-4_3 HMI
-Date: Mon, 26 Mar 2018 17:24:37 -0500
-Message-ID: <20180326064506.rdrxk5inuyv73oej@rob-hp-laptop>
-References: <1521662593-25468-1-git-send-email-giulio.benetti@micronovasrl.com>
- <1521662593-25468-6-git-send-email-giulio.benetti@micronovasrl.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document qcom,adreno-gmu
+Date: Mon, 26 Mar 2018 17:23:00 -0500
+Message-ID: <20180326222300.tls7bsnr4pz7ri2t@rob-hp-laptop>
+References: <20180316185152.32020-1-jcrouse@codeaurora.org>
+ <20180316185152.32020-2-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1521662593-25468-6-git-send-email-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180316185152.32020-2-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2018 at 09:03:12PM +0100, Giulio Benetti wrote:
-> The A20-Linova1-4_3 HMI, also called Q027_2_A which is printed on
-> production label, is an industrial Human Machine Interface.
-> It features:
-> - 512MB DDR RAM
-> - 1 Sd-card >= 4GB
-> - 1 Usb otg(programmable via software) with A-Usb Connector
-> - 1 Usb host
-> - 1 Buzzer
-> - 1 Input for LiPo
-> - 1 Relay to signal absence of power supply
-> - 1 External Rtc with 56 bytes of ram + CR2032 battery
-> - 1 4.3" 24-bits Tft 480x272 with PCap on
-> - 1 Mono audio 1-watt amplifier
-> - 1 RS485 port
-> - 1 Power On Line through +12Vdc reaching 57.600baud,
->   from where it can be supplied and placed in a network of 50 units
-> - exposed jtag pins
-> 
-> HMI is supplied from +12Vdc.
-> Ethernet is absent, so for debugging, need to enable rndis on Usb otg
-> port through an A-A usb cable.
-> It comes in different flavours for connector types and can be found with
-> umounted features as requested by customers.
-> 
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> ---
->  .../devicetree/bindings/arm/micronova.txt          |   6 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/sun7i-a20-linova1-ctp-4_3i.dts   | 192 +++++++++++++++++++++
->  3 files changed, 199 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/micronova.txt
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-linova1-ctp-4_3i.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/micronova.txt b/Documentation/devicetree/bindings/arm/micronova.txt
-> new file mode 100644
-> index 0000000..35c4127
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/micronova.txt
-> @@ -0,0 +1,6 @@
-> +Micronova Device Tree Bindings
-> +---------------------------
-> +
-> +A20-LiNova1-4_3 HMI
-> +Required root node properties:
-> +    - compatible = "micronova,a20-linova1-ctp-4_3i", "allwinner,sun7i-a20";
-
-I'd prefer that board compatibles are documented where the SoC 
-compatibles are documented, but it seems mostly allwinner platforms have 
-not done this.
-
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index ade7a38..c45a4f25 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -941,6 +941,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->  	sun7i-a20-lamobo-r1.dtb \
->  	sun7i-a20-m3.dtb \
->  	sun7i-a20-mk808c.dtb \
-> +	sun7i-a20-linova1-ctp-4_3i.dtb\
->  	sun7i-a20-olimex-som-evb.dtb \
->  	sun7i-a20-olinuxino-lime.dtb \
->  	sun7i-a20-olinuxino-lime2.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-linova1-ctp-4_3i.dts b/arch/arm/boot/dts/sun7i-a20-linova1-ctp-4_3i.dts
-> new file mode 100644
-> index 0000000..cd4ac73
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-linova1-ctp-4_3i.dts
-> @@ -0,0 +1,192 @@
-> +/*
-> + * This is based on sun7i-a20-linova1-ctp-4_3i.dts
-> + *
-> + * Copyright 2014 - Hans de Goede <hdegoede@redhat.com>
-> + * Copyright (c) 2014 FUKAUMI Naoki <naobsd@gmail.com>
-> + * Copyright (c) 2018 Giulio Benetti <giulio.benetti@micronovasrl.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-
-Use SPDX tag instead of license text. checkpatch.pl will now tell you 
-this.
-
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun7i-a20.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	model = "Micronova srl LiNova1 CTP 4.3i";
-> +	compatible = "micronova,a20-linova1-ctp-4_3i", "allwinner,sun7i-a20";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	panel: panel {
-> +		compatible = "cdtech,s043wq26h-ct7", "simple-panel";
-> +		power-supply = <&reg_vcc3v3>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			panel_input: endpoint@0 {
-> +				reg = <0>;
-
-reg is not needed if there is only one child.
-
-> +				remote-endpoint = <&tcon0_out_panel>;
-> +			};
-> +		};
-> +	};
-> +};
+T24gRnJpLCBNYXIgMTYsIDIwMTggYXQgMTI6NTE6NTFQTSAtMDYwMCwgSm9yZGFuIENyb3VzZSB3
+cm90ZToKPiBEb2N1bWVudCB0aGUgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBBZHJlbm8g
+R01VIGRldmljZQo+IGF2YWlsYWJsZSBvbiBBZHJlbm8gYTZ4eCB0YXJnZXRzLgo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQgICAgICAgIHwgNTQg
+KysrKysrKysrKysrKysrKysrKysrKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21zbS9ncHUudHh0ICAgICAgICB8IDEwICsrKy0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA2MiBpbnNl
+cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKClJldmlld2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
