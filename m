@@ -1,39 +1,24 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a77965: Add all MSIOF device
- nodes
-Date: Mon, 26 Mar 2018 10:49:22 +0200
-Message-ID: <20180326084921.srkxhjh7uk5ziuss@verge.net.au>
-References: <1521796749-26376-1-git-send-email-geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 3/5] pinctrl: add mt2712 pinctrl driver
+Date: Mon, 26 Mar 2018 10:56:08 +0200
+Message-ID: <CACRpkdaOOMMYvHde7D7QgMWK5gGc88TwxC_O+4ogD+rV_MMtfA@mail.gmail.com>
+References: <1521687523-1604-1-git-send-email-zhiyong.tao@mediatek.com> <1521687523-1604-4-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1521796749-26376-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521687523-1604-4-git-send-email-zhiyong.tao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Liguo Zhang <liguo.zhang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, hongkun.cao@mediatek.com, Biao Huang <biao.huang@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 10:19:09AM +0100, Geert Uytterhoeven wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> 
-> Add the device nodes for all MSIOF SPI controllers.
-> 
-> Based on several similar patches of the R8A7796 device tree
-> by Geert Uytterhoeven <geert+renesas@glider.be>
-> and Simon Horman <horms+renesas@verge.net.au>.
-> 
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> [geert: Use numerical power domain indices for initial r8a77965.dtsi]
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, Mar 22, 2018 at 3:58 AM, Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
 
-Thanks, applied.
+> The commit includes mt2712 pinctrl driver.
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+
+Patch applied for v4.17 stripping the whitespace error and adding Sean's ACK.
+
+Yours,
+Linus Walleij
