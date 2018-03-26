@@ -1,99 +1,144 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 5/5] drm/atmel-hlcdc: take bridges into account when selecting output format
-Date: Mon, 26 Mar 2018 23:24:47 +0200
-Message-ID: <20180326212447.7380-6-peda@axentia.se>
-References: <20180326212447.7380-1-peda@axentia.se>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v4 7/8] remoteproc: da8xx: use the reset framework
+Date: Mon, 26 Mar 2018 16:28:41 -0500
+Message-ID: <c09d4838-4938-4744-7ce9-4de99080cbe3@ti.com>
+References: <20180323130455.11470-1-brgl@bgdev.pl>
+ <20180323130455.11470-8-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326212447.7380-1-peda@axentia.se>
+In-Reply-To: <20180323130455.11470-8-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Bridges may affect the required bus output format of the encoder, in
-which case it may be wrong to use the output format of the panel or
-connector as is. So, examine if any of the intermediate bridges needs
-specific bus formats (if there are intermediate bridges).
+Hi Bart,
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 49 ++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 3 deletions(-)
+On 03/23/2018 08:04 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Switch to using the reset framework instead of handcoded reset routines
+> we used so far.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/remoteproc/da8xx_remoteproc.c | 32 +++++++++++++++++++++++++++-----
+>  1 file changed, 27 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+> index f134192922e0..3689473f8b49 100644
+> --- a/drivers/remoteproc/da8xx_remoteproc.c
+> +++ b/drivers/remoteproc/da8xx_remoteproc.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+> +#include <linux/reset.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> @@ -20,8 +21,6 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/remoteproc.h>
+>  
+> -#include <mach/clock.h>   /* for davinci_clk_reset_assert/deassert() */
+> -
+>  #include "remoteproc_internal.h"
+>  
+>  static char *da8xx_fw_name;
+> @@ -72,6 +71,7 @@ struct da8xx_rproc {
+>  	struct da8xx_rproc_mem *mem;
+>  	int num_mems;
+>  	struct clk *dsp_clk;
+> +	struct reset_control *dsp_reset;
+>  	void (*ack_fxn)(struct irq_data *data);
+>  	struct irq_data *irq_data;
+>  	void __iomem *chipsig;
+> @@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  	struct device *dev = rproc->dev.parent;
+>  	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
+>  	struct clk *dsp_clk = drproc->dsp_clk;
+> +	struct reset_control *dsp_reset = drproc->dsp_reset;
+>  	int ret;
+>  
+>  	/* hw requires the start (boot) address be on 1KB boundary */
+> @@ -155,7 +156,11 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  		return ret;
+>  	}
+>  
+> -	davinci_clk_reset_deassert(dsp_clk);
+> +	ret = reset_control_deassert(dsp_reset);
+> +	if (ret) {
+> +		dev_err(dev, "reset_control_deassert() failed: %d\n", ret);
+> +		return ret;
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index d73281095fac..920eb16c0213 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -226,6 +226,45 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
- #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
- #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
- 
-+/* We know that our connectors will only ever have one encoder. Find it. */
-+static struct drm_encoder *atmel_hlcdc_encoder(struct drm_connector *connector)
-+{
-+	struct drm_encoder *encoder;
-+	int i;
-+
-+	for (i = 0; i < DRM_CONNECTOR_MAX_ENCODER; i++) {
-+		if (!connector->encoder_ids[i])
-+			break;
-+
-+		encoder = drm_encoder_find(connector->dev, NULL,
-+					   connector->encoder_ids[i]);
-+		if (encoder)
-+			return encoder;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int atmel_hlcdc_output_formats(struct drm_connector *connector,
-+				      const u32 **bus_formats)
-+{
-+	struct drm_encoder *encoder = atmel_hlcdc_encoder(connector);
-+	int num_bus_formats;
-+
-+	if (!encoder)
-+		return 0;
-+
-+	if (encoder->bridge) {
-+		num_bus_formats = drm_bridge_input_formats(encoder->bridge,
-+							   bus_formats);
-+		if (num_bus_formats)
-+			return num_bus_formats;
-+	}
-+
-+	*bus_formats = connector->display_info.bus_formats;
-+	return connector->display_info.num_bus_formats;
-+}
-+
- static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- {
- 	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
-@@ -238,15 +277,19 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- 	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
- 
- 	for_each_new_connector_in_state(state->state, connector, cstate, i) {
--		struct drm_display_info *info = &connector->display_info;
-+		int num_bus_formats;
-+		const u32 *bus_formats;
- 		unsigned int supported_fmts = 0;
- 		int j;
- 
-+		num_bus_formats = atmel_hlcdc_output_formats(connector,
-+							     &bus_formats);
-+
- 		if (!cstate->crtc)
- 			continue;
- 
--		for (j = 0; j < info->num_bus_formats; j++) {
--			switch (info->bus_formats[j]) {
-+		for (j = 0; j < num_bus_formats; j++) {
-+			switch (bus_formats[j]) {
- 			case MEDIA_BUS_FMT_RGB444_1X12:
- 				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
- 				break;
--- 
-2.11.0
+need to unwind the clk_prepare_enable() here.
+
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -163,8 +168,15 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  static int da8xx_rproc_stop(struct rproc *rproc)
+>  {
+>  	struct da8xx_rproc *drproc = rproc->priv;
+> +	int ret;
+> +
+> +	ret = reset_control_assert(drproc->dsp_reset);
+> +	if (ret) {
+> +		dev_err(rproc->dev.parent,
+> +			"reset_control_assert() failed: %d\n", ret);
+
+prefer the trace statement to be on the same line as dev_err, you can
+just keep the ret on the next line. I am fine with defining a local dev
+variable as well (mirrors da8xx_rproc_start() to have the trace in a
+single line).
+
+> +		return ret;
+> +	}
+>  
+> -	davinci_clk_reset_assert(drproc->dsp_clk);
+>  	clk_disable_unprepare(drproc->dsp_clk);
+>  
+>  	return 0;
+> @@ -232,6 +244,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>  	struct resource *bootreg_res;
+>  	struct resource *chipsig_res;
+>  	struct clk *dsp_clk;
+> +	struct reset_control *dsp_reset;
+>  	void __iomem *chipsig;
+>  	void __iomem *bootreg;
+>  	int irq;
+> @@ -268,6 +281,15 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>  		return PTR_ERR(dsp_clk);
+>  	}
+>  
+> +	dsp_reset = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(dsp_reset)) {
+> +		if (PTR_ERR(dsp_reset) != -EPROBE_DEFER)
+> +			dev_err(dev, "unable to get reset control: %ld\n",
+> +				PTR_ERR(dsp_reset));
+> +
+> +		return PTR_ERR(dsp_reset);
+> +	}
+> +
+>  	if (dev->of_node) {
+>  		ret = of_reserved_mem_device_init(dev);
+>  		if (ret) {
+> @@ -309,7 +331,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>  	 * *not* in reset, but da8xx_rproc_start() needs the DSP to be
+>  	 * held in reset at the time it is called.
+>  	 */
+> -	ret = davinci_clk_reset_assert(drproc->dsp_clk);
+> +	ret = reset_control_assert(dsp_reset);
+>  	if (ret)
+>  		goto free_rproc;
+>  
+
+The reset API usage changes themselves look good otherwise.
+
+regards
+Suman
