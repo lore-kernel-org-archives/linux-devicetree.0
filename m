@@ -1,73 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Add binding for RAVE SP EEPROM
- driver
-Date: Mon, 26 Mar 2018 17:24:25 -0500
-Message-ID: <20180326222424.7vr2gmwwezqhiy6m@rob-hp-laptop>
-References: <20180321134710.29757-1-andrew.smirnov@gmail.com>
- <20180321134710.29757-2-andrew.smirnov@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
+Date: Mon, 26 Mar 2018 17:24:48 -0500
+Message-ID: <20180326222448.l7ukrslvccvrjnjf@rob-hp-laptop>
+References: <20180323081209.31387-1-oohall@gmail.com>
+ <20180323081209.31387-6-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180321134710.29757-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180323081209.31387-6-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 21, 2018 at 06:47:09AM -0700, Andrey Smirnov wrote:
-> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
-> parent RAVE SP driver (documented in
-> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
-
-I'd prefer to get all the child nodes at once rather than as you 
-upstream the drivers. IOW, please completely describe the device. Then I 
-may have opinions on whether you need these child nodes or not. 
-
-
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Aleksander Morgado <aleksander@aleksander.es>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+On Fri, Mar 23, 2018 at 07:12:09PM +1100, Oliver O'Halloran wrote:
+> Add device-tree binding documentation for the nvdimm region driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
 > new file mode 100644
-> index 000000000000..556abfa70524
+> index 000000000000..02091117ff16
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> @@ -0,0 +1,23 @@
-> +Zodiac Inflight Innovations RAVE EEPROM Bindings
+> +++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+> @@ -0,0 +1,45 @@
+> +Device-tree bindings for NVDIMM memory regions
+> +-----------------------------------------------------
 > +
-> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
-> +attached to RAVE Supervisory Processor. It is expected that its Device
-> +Tree node is specified as a child of the node corresponding to the
-> +parent RAVE SP device (as documented in
-> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
+> +Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
+
+Are DIMMs always going to be the only form factor for NV memory?
+
+And if you have multiple DIMMs, does each DT node correspond to a DIMM? 
+If not, then what if we want/need to provide power control to a DIMM?
+
+> +that retains its contents across power cycles. In more practical terms, they
+> +are kind of storage device where the contents can be accessed by the CPU
+> +directly, rather than indirectly via a storage controller or similar. The an
+> +nvdimm-region specifies a physical address range that is hosted on an NVDIMM
+> +device.
+> +
+> +Bindings for the region nodes:
+> +-----------------------------
 > +
 > +Required properties:
+> +	- compatible = "nvdimm-region"
 > +
-> +- compatible: Should be "zii,rave-sp-eeprom"
+> +	- reg = <base, size>;
+> +		The system physical address range of this nvdimm region.
 > +
-> +Example:
+> +Optional properties:
+> +	- Any relevant NUMA assocativity properties for the target platform.
+> +	- A "volatile" property indicating that this region is actually in
+> +	  normal DRAM and does not require cache flushes after each write.
 > +
-> +	rave-sp {
-> +		compatible = "zii,rave-sp-rdu1";
-> +		current-speed = <38400>;
+> +A complete example:
+> +--------------------
 > +
-> +		dds-eeprom {
-> +			compatible = "zii,rave-sp-eeprom";
-> +			reg = <0xA3 0x2000>;
+> +/ {
+> +	#size-cells = <2>;
+> +	#address-cells = <2>;
+> +
+> +	platform {
 
-Child nodes? #nvmem-cells? I assume you have some data in this you need. 
-If not, you don't really need a child node here.
+Perhaps we need a more well defined node here. Like we have 'memory' for 
+memory nodes.
 
-Rob
+> +		region@5000 {
+> +			compatible = "nvdimm-region;
+> +			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+> +
+> +		};
+> +
+> +		region@6000 {
+> +			compatible = "nvdimm-region";
+> +			reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+
+Your reg property and unit-address don't match and you have overlapping 
+regions.
+
+> +			volatile;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
