@@ -1,90 +1,134 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v1 09/16] rtc: mediatek: convert to use device managed
- functions
-Date: Mon, 26 Mar 2018 12:07:45 +0800
-Message-ID: <1522037265.18424.14.camel@mtkswgap22>
-References: <cover.1521794176.git.sean.wang@mediatek.com>
-         <fbfb1852838820c198d55bc74940a74f1d0b53ed.1521794177.git.sean.wang@mediatek.com>
-         <20180323105017.GI3417@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v2] of_net: Implement of_get_nvmem_mac_address helper
+Date: Mon, 26 Mar 2018 08:41:29 +0200
+Message-ID: <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl>
+References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl> <20180323151101.GB24361@lunn.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323105017.GI3417@piout.net>
+In-Reply-To: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, eddie.huang@mediatek.com, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-03-23 at 11:50 +0100, Alexandre Belloni wrote:
-> On 23/03/2018 at 17:15:06 +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Use device managed operation to simplify error handling, reduce source
-> > code size, and reduce the likelyhood of bugs, and remove our removal
-> > callback which contains anything already done by device managed functions.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> >  drivers/rtc/rtc-mt6397.c | 31 ++++++++-----------------------
-> >  1 file changed, 8 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> > index cefb83b..bfc5d6f 100644
-> > --- a/drivers/rtc/rtc-mt6397.c
-> > +++ b/drivers/rtc/rtc-mt6397.c
-> > @@ -14,6 +14,7 @@
-> >  
-> >  #include <linux/delay.h>
-> >  #include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/rtc.h>
-> > @@ -328,10 +329,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> >  
-> >  	platform_set_drvdata(pdev, rtc);
-> >  
-> > -	ret = request_threaded_irq(rtc->irq, NULL,
-> > -				   mtk_rtc_irq_handler_thread,
-> > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > -				   "mt6397-rtc", rtc);
-> > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> > +					mtk_rtc_irq_handler_thread,
-> > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > +					"mt6397-rtc", rtc);
-> >  	if (ret) {
-> >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> >  			rtc->irq, ret);
-> > @@ -340,30 +341,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> >  
-> >  	device_init_wakeup(&pdev->dev, 1);
-> >  
-> > -	rtc->rtc_dev = rtc_device_register("mt6397-rtc", &pdev->dev,
-> > -					   &mtk_rtc_ops, THIS_MODULE);
-> > +	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, "mt6397-rtc",
-> > +						&mtk_rtc_ops, THIS_MODULE);
-> 
-> You should probably switch to devm_rtc_allocate_device() and
-> rtc_register_device instead of devm_rtc_device_register.
-> 
+It's common practice to store MAC addresses for network interfaces into
+nvmem devices. However the code to actually do this in the kernel lacks,
+so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+address from an nvmem cell provider.
 
-Just would like to know something details
+This is particulary useful on devices where the ethernet interface cannot
+be configured by the bootloader, for example because it's in an FPGA.
 
-It seems you just encourage me to switch into the new registration
-method and currently devm_rtc_device_register I used for the driver
-shouldn't cause any harm. right?
+Tested by adapting the cadence macb driver to call this instead of
+of_get_mac_address().
 
-> >  	if (IS_ERR(rtc->rtc_dev)) {
-> >  		dev_err(&pdev->dev, "register rtc device failed\n");
-> >  		ret = PTR_ERR(rtc->rtc_dev);
-> > -		goto out_free_irq;
-> > +		return ret;
-> 
-> ret doesn't seem necessary anymore here.
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v2: Use of_nvmem_cell_get to avoid needing the assiciated device
+    Use void* instead of char*
+    Add devicetree binding doc
+ Documentation/devicetree/bindings/net/ethernet.txt |  2 +
+ drivers/of/of_net.c                                | 47 ++++++++++++++++++++++
+ include/linux/of_net.h                             |  6 +++
+ 3 files changed, 55 insertions(+)
 
-
-okay, it'll be removed
-
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 2974e63..cfc376b 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+   the boot program; should be used in cases where the MAC address assigned to
+   the device by the boot program is different from the "local-mac-address"
+   property;
++- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
++- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
+ - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+ - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+   the maximum frame size (there's contradiction in the Devicetree
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index d820f3e..8999745 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -7,6 +7,7 @@
+  */
+ #include <linux/etherdevice.h>
+ #include <linux/kernel.h>
++#include <linux/nvmem-consumer.h>
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/export.h>
+@@ -80,3 +81,49 @@ const void *of_get_mac_address(struct device_node *np)
+ 	return of_get_mac_addr(np, "address");
+ }
+ EXPORT_SYMBOL(of_get_mac_address);
++
++/**
++ * Search the device tree for a MAC address, by calling of_get_mac_address
++ * and if that doesn't provide an address, fetch it from an nvmem provider
++ * using the name 'mac-address'.
++ * On success, copies the new address is into memory pointed to by addr and
++ * returns 0. Returns a negative error code otherwise.
++ * @dev:	Pointer to the device containing the device_node
++ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
++ */
++int of_get_nvmem_mac_address(struct device_node *np, void *addr)
++{
++	const void *mac;
++	struct nvmem_cell *cell;
++	size_t len;
++	int ret;
++
++	mac = of_get_mac_address(np);
++	if (mac) {
++		ether_addr_copy(addr, mac);
++		return 0;
++	}
++
++	cell = of_nvmem_cell_get(np, "mac-address");
++	if (IS_ERR(cell))
++		return PTR_ERR(cell);
++
++	mac = nvmem_cell_read(cell, &len);
++
++	nvmem_cell_put(cell);
++
++	if (IS_ERR(mac))
++		return PTR_ERR(mac);
++
++	if (len < 6 || !is_valid_ether_addr(mac)) {
++		ret = -EINVAL;
++	} else {
++		ether_addr_copy(addr, mac);
++		ret = 0;
++	}
++
++	kfree(mac);
++
++	return ret;
++}
++EXPORT_SYMBOL(of_get_nvmem_mac_address);
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 9cd72aa..90d81ee 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -13,6 +13,7 @@
+ struct net_device;
+ extern int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
++extern int of_get_nvmem_mac_address(struct device_node *np, void *addr);
+ extern struct net_device *of_find_net_device_by_node(struct device_node *np);
+ #else
+ static inline int of_get_phy_mode(struct device_node *np)
+@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
+ 	return NULL;
+ }
+ 
++static inline int of_get_nvmem_mac_address(struct device_node *np, void *addr)
++{
++	return -ENODEV;
++}
++
+ static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
+ {
+ 	return NULL;
+-- 
+1.9.1
