@@ -1,8 +1,8 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
- gbe_sgmii_config() conditional
-Date: Tue, 27 Mar 2018 12:31:42 -0400
-Message-ID: <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
+Subject: [net-next PATCH v2 08/10] net: netcp: ethss: use of_get_phy_mode() to
+ support different RGMII modes
+Date: Tue, 27 Mar 2018 12:31:47 -0400
+Message-ID: <1522168309-12338-9-git-send-email-m-karicheri2@ti.com>
 References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,40 +21,59 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As a preparatory patch to add support for 2u cpsw hardware found on
-K2G SoC, make call to gbe_sgmii_config() conditional. This is required
-since 2u uses RGMII interface instead of SGMII and to allow for driver
-re-use.
+The phy used for K2G allows for internal delays to be added optionally
+to the clock circuitry based on board desing. To add this support,
+enhance the driver to use of_get_phy_mode() to read the phy-mode from
+the phy device and pass the same to phy through of_phy_connect().
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ti/netcp_ethss.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 56dbc0b..1dea891 100644
+index 26ccddb..df163ec 100644
 --- a/drivers/net/ethernet/ti/netcp_ethss.c
 +++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -2271,7 +2271,8 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+@@ -21,6 +21,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of_mdio.h>
++#include <linux/of_net.h>
+ #include <linux/of_address.h>
+ #include <linux/if_vlan.h>
+ #include <linux/ptp_classify.h>
+@@ -700,6 +701,7 @@ struct gbe_slave {
+ 	u32				link_interface;
+ 	u32				mac_control;
+ 	u8				phy_port_t;
++	struct device_node		*node;
+ 	struct device_node		*phy_node;
+ 	struct ts_ctl                   ts_ctl;
+ 	struct list_head		slave_list;
+@@ -2317,6 +2319,15 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+ 		has_phy = true;
+ 		phy_mode = PHY_INTERFACE_MODE_SGMII;
+ 		slave->phy_port_t = PORT_MII;
++	} else if (slave->link_interface == RGMII_LINK_MAC_PHY) {
++		has_phy = true;
++		phy_mode = of_get_phy_mode(slave->node);
++		/* if phy-mode is not present, default to
++		 * PHY_INTERFACE_MODE_RGMII
++		 */
++		if (phy_mode < 0)
++			phy_mode = PHY_INTERFACE_MODE_RGMII;
++		slave->phy_port_t = PORT_MII;
+ 	} else if (slave->link_interface == XGMII_LINK_MAC_PHY) {
+ 		has_phy = true;
+ 		phy_mode = PHY_INTERFACE_MODE_NA;
+@@ -2942,6 +2953,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
+ 		slave->link_interface = SGMII_LINK_MAC_PHY;
+ 	}
  
- 	void (*hndlr)(struct net_device *) = gbe_adjust_link;
- 
--	gbe_sgmii_config(priv, slave);
-+	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
-+		gbe_sgmii_config(priv, slave);
- 	gbe_port_reset(slave);
- 	gbe_sgmii_rtreset(priv, slave, false);
- 	gbe_port_config(priv, slave, priv->rx_packet_max);
-@@ -3039,7 +3040,9 @@ static void init_secondary_ports(struct gbe_priv *gbe_dev,
- 			continue;
- 		}
- 
--		gbe_sgmii_config(gbe_dev, slave);
-+		if ((gbe_dev->ss_version == GBE_SS_VERSION_14) ||
-+		    IS_SS_ID_NU(gbe_dev))
-+			gbe_sgmii_config(gbe_dev, slave);
- 		gbe_port_reset(slave);
- 		gbe_port_config(gbe_dev, slave, gbe_dev->rx_packet_max);
- 		list_add_tail(&slave->slave_list, &gbe_dev->secondary_slaves);
++	slave->node = node;
+ 	slave->open = false;
+ 	if ((slave->link_interface == SGMII_LINK_MAC_PHY) ||
+ 	    (slave->link_interface == RGMII_LINK_MAC_PHY) ||
 -- 
 1.9.1
