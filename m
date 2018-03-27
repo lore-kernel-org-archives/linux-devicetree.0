@@ -1,37 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 3/9] dt-bindings: Tegra186 tachometer device tree
- bindings
-Date: Tue, 27 Mar 2018 10:00:45 -0500
-Message-ID: <20180327150045.biqr5ue5djru2dn7@rob-hp-laptop>
-References: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
- <1521607244-29734-4-git-send-email-rrajk@nvidia.com>
- <20180327145249.xjoo42qow34ksdle@rob-hp-laptop>
+Subject: Re: [PATCH v3 5/6] dt-bindings: phy-qcom-usb2: Update bindings for
+ sdm845
+Date: Tue, 27 Mar 2018 10:01:56 -0500
+Message-ID: <20180327150156.d3vy5bf7mliso7pt@rob-hp-laptop>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-6-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180327145249.xjoo42qow34ksdle@rob-hp-laptop>
+In-Reply-To: <1521785487-29866-6-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajkumar Rampelli <rrajk@nvidia.com>
-Cc: mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 09:52:49AM -0500, Rob Herring wrote:
-> On Wed, Mar 21, 2018 at 10:10:38AM +0530, Rajkumar Rampelli wrote:
-> > Supply Device tree binding documentation for the NVIDIA
-> > Tegra186 SoC's Tachometer Controller
-> > 
-> > Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
-> > ---
-> > 
-> > V2: Renamed compatible string to "nvidia,tegra186-pwm-tachometer"
-> >     Renamed dt property values of clock-names and reset-names to "tachometer"
-> >     from "tach"
+On Fri, Mar 23, 2018 at 11:41:26AM +0530, Manu Gautam wrote:
+> Update compatible strings for USB2 PHYs on sdm845.
+> There are two QUSB2 PHYs present on sdm845. Few PHY registers
+> programming is different for these PHYs related to electrical
+> parameters, otherwise both are same.
 > 
-> Read my prior comments on v1.
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Also, I'm trying to make sense of who you Cc'ed on this. There's a ton 
-of folks I know that I'm pretty sure don't care about this series. Start 
-with get_maintainers.pl and add people you know need to see this series.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
