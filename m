@@ -1,114 +1,59 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v2 02/10] iio: Add channel for Position Relative
-Date: Tue, 27 Mar 2018 15:32:35 +0300
-Message-ID: <1522153963-1121-3-git-send-email-eugen.hristev@microchip.com>
-References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 0/3] clk: meson: drop unnecessary AO clock flags
+Date: Tue, 27 Mar 2018 20:42:02 +0800
+Message-ID: <c99b705b-f98a-4b77-7113-78dec326d9b6@amlogic.com>
+References: <20180326081809.49493-1-yixun.lan@amlogic.com>
+ <1522142509.2632.42.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com
-Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522142509.2632.42.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: yixun.lan@amlogic.com, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new channel type for relative position on a pad.
+HI Jerome
 
-These type of analog sensor offers the position of a pen
-on a touchpad, and is represented as a voltage, which can be
-converted to a position on X and Y axis on the pad.
-The channel will hand the relative position on the pad in both directions.
+On 03/27/2018 05:21 PM, Jerome Brunet wrote:
+> On Mon, 2018-03-26 at 16:18 +0800, Yixun Lan wrote:
+>>   This first two patches will drop unnecessary flags for
+>> the AO clock driver.
+>>   The third DTS patch is a follow-up fix for the second patch,
+>> and I've tested them on P200, P212, Q200, S400 boards.
+>>
+>>  Note: this patch series was made on top of patch [0]
+>>
+>> [0] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+>>
+>> Yixun Lan (3):
+>>   clk: meson: drop CLK_SET_RATE_PARENT flag
+>>   clk: meson: drop CLK_IGNORE_UNUSED flag
+>>   ARM64: dts: meson: fix clock source of the pclk for UART_AO
+> 
+> Please add patch 1 and 2 to the next version of your clkc_ao series
+> 
+I was thinking about patch 1 & 2 as independent patch of the clkc_ao
+series..
 
-The channel can then be consumed by a touchscreen driver or
-read as-is for a raw indication of the touchpen on a touchpad.
+anyway, as your suggestion in another thread,
+I could include the patch 1 into next clkc_ao series
+send patch 3 (DTS part) independently to Kevin, once patch 3 accepted
+into mainline, I will then send patch 2 as a fix
+(this will avoid breaking bisect)
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-Changes in v2:
- - modified channel name to relative position as suggested.
- - modified kernel version to 4.18 (presumable)
-
- Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
- drivers/iio/industrialio-core.c         |  1 +
- include/uapi/linux/iio/types.h          |  1 +
- tools/iio/iio_event_monitor.c           |  2 ++
- 4 files changed, 16 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 6a5f34b..42a9287 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -190,6 +190,18 @@ Description:
- 		but should match other such assignments on device).
- 		Units after application of scale and offset are m/s^2.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_x_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_y_raw
-+KernelVersion:	4.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Relative position in direction x or y on a pad (may be
-+		arbitrarily assigned but should match other such assignments on
-+		device).
-+		Units after application of scale and offset are milli percents
-+		from the pad's size in both directions. Should be calibrated by
-+		the consumer.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 19bdf3d..14bf3d24 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -85,6 +85,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_COUNT] = "count",
- 	[IIO_INDEX] = "index",
- 	[IIO_GRAVITY]  = "gravity",
-+	[IIO_POSITIONRELATIVE]  = "positionrelative",
- };
- 
- static const char * const iio_modifier_names[] = {
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index 4213cdf..033c7d2 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -44,6 +44,7 @@ enum iio_chan_type {
- 	IIO_COUNT,
- 	IIO_INDEX,
- 	IIO_GRAVITY,
-+	IIO_POSITIONRELATIVE,
- };
- 
- enum iio_modifier {
-diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-index b61245e..148f69d 100644
---- a/tools/iio/iio_event_monitor.c
-+++ b/tools/iio/iio_event_monitor.c
-@@ -58,6 +58,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_PH] = "ph",
- 	[IIO_UVINDEX] = "uvindex",
- 	[IIO_GRAVITY] = "gravity",
-+	[IIO_POSITIONRELATIVE] = "positionrelative",
- };
- 
- static const char * const iio_ev_type_text[] = {
-@@ -151,6 +152,7 @@ static bool event_is_known(struct iio_event_data *event)
- 	case IIO_PH:
- 	case IIO_UVINDEX:
- 	case IIO_GRAVITY:
-+	case IIO_POSITIONRELATIVE:
- 		break;
- 	default:
- 		return false;
--- 
-2.7.4
+> Patch 3 should sent independently to Kevin, with note warning about the
+> different dependencies (see comment in patch 3)
+> 
+>>
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
+>>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
+>>  drivers/clk/meson/axg-aoclk.c               | 1 -
+>>  drivers/clk/meson/gxbb-aoclk.c              | 1 -
+>>  5 files changed, 6 insertions(+), 8 deletions(-)
+>>
+> 
+> .
+> 
