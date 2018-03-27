@@ -1,36 +1,43 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 6/8] remoteproc/davinci: use octal permissions for module_param()
-Date: Tue, 27 Mar 2018 11:20:29 +0200
-Message-ID: <20180327092031.11251-7-brgl@bgdev.pl>
-References: <20180327092031.11251-1-brgl@bgdev.pl>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/3] clk: meson: drop unnecessary AO clock flags
+Date: Tue, 27 Mar 2018 11:21:49 +0200
+Message-ID: <1522142509.2632.42.camel@baylibre.com>
+References: <20180326081809.49493-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327092031.11251-1-brgl@bgdev.pl>
+In-Reply-To: <20180326081809.49493-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 2018-03-26 at 16:18 +0800, Yixun Lan wrote:
+>   This first two patches will drop unnecessary flags for
+> the AO clock driver.
+>   The third DTS patch is a follow-up fix for the second patch,
+> and I've tested them on P200, P212, Q200, S400 boards.
+> 
+>  Note: this patch series was made on top of patch [0]
+> 
+> [0] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+> 
+> Yixun Lan (3):
+>   clk: meson: drop CLK_SET_RATE_PARENT flag
+>   clk: meson: drop CLK_IGNORE_UNUSED flag
+>   ARM64: dts: meson: fix clock source of the pclk for UART_AO
 
-Checkpatch recommends to use octal perms instead of S_IRUGO.
+Please add patch 1 and 2 to the next version of your clkc_ao series
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/remoteproc/da8xx_remoteproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch 3 should sent independently to Kevin, with note warning about the
+different dependencies (see comment in patch 3)
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index f134192922e0..b668e32996e2 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -25,7 +25,7 @@
- #include "remoteproc_internal.h"
- 
- static char *da8xx_fw_name;
--module_param(da8xx_fw_name, charp, S_IRUGO);
-+module_param(da8xx_fw_name, charp, 0444);
- MODULE_PARM_DESC(da8xx_fw_name,
- 		 "Name of DSP firmware file in /lib/firmware (if not specified defaults to 'rproc-dsp-fw')");
- 
--- 
-2.16.1
+> 
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
+>  drivers/clk/meson/axg-aoclk.c               | 1 -
+>  drivers/clk/meson/gxbb-aoclk.c              | 1 -
+>  5 files changed, 6 insertions(+), 8 deletions(-)
+> 
