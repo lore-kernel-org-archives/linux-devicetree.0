@@ -1,95 +1,271 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: Re: [PATCH v5 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Tue, 27 Mar 2018 17:56:28 +0200
-Message-ID: <2e0db4b4-80cc-9a5b-9e0a-812f1bc9fbcf@linaro.org>
-References: <20180320032331.29865-1-thierry.escande@linaro.org>
- <20180320032331.29865-3-thierry.escande@linaro.org>
- <FAC61078-6298-47A7-A51C-73D72BEF6E4A@holtmann.org>
- <20180326225106.GC1403@tuxbook-pro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: msm8998: Add rpm and regulators for MTP
+Date: Tue, 27 Mar 2018 09:01:54 -0700
+Message-ID: <20180327160154.1938-2-bjorn.andersson@linaro.org>
+References: <20180327160154.1938-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326225106.GC1403@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <20180327160154.1938-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+This adds the rpm and rpm regulators to the msm8998 platform and mtp.
 
-On 27/03/2018 00:51, Bjorn Andersson wrote:
-> On Tue 20 Mar 23:58 HKT 2018, Marcel Holtmann wrote:
->>> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-> [..]
->>> + - clocks: clock phandle for SUSCLK_32KHZ
->>
->> if I compare this with broadcom-bluetooth.txt or ti-bluetooth.txt then
->> besides compatible, everything else is optional. The
->> nokia-bluetooth.txt has everything required, but that is also a really
->> specific platform.
->>
->> Can we be less restrictive for a QCA general purpose chip?
->>
-> 
-> The way we deal with this in other bindings is that we tie such
-> requirements to the compatible; i.e. we would say that qcom,qca6174-bt
-> requires a clock and we would have something like qcom,qca-bt that makes
-> it optional.
-> 
-> The beauty of this is that the driver will tell you if you forgot to
-> specify the clock when it actually is required, which saves you
-> considerable amount of debugging time.
-> 
-> 
-> NB. The way the bcm driver handles this is insufficient, as it treats
-> any error from clk_get as "there's no clock specified". The driver
-> should accept a clock not being specified, but should fail properly when
-> a clock is specified but can't be acquired (e.g. due to clk_get()
-> returning EPROBE_DEFER).
-> 
->>> +
->>> +Example:
->>> +
->>> +serial@7570000 {
->>> +	pinctrl-names = "default", "sleep";
->>> +	pinctrl-0 = <&blsp1_uart1_default>;
->>> +	pinctrl-1 = <&blsp1_uart1_sleep>;
->>> +
->>> +	bluetooth {
->>> +		compatible = "qcom,qca6174-bt";
->>> +
->>> +		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->>> +
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&bt_en_pin_a>;
->>
->> This one I do not understand and you might want to shed some light
->> into why this is done that way.
->>
-> 
-> This is completely generic and only relates to getting the electrical
-> properties of the gpio pin set up correctly. So I would recommend that
-> we omit this from the binding and example (including the pinctrl
-> properties for the serial above).
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 142 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     |  83 +++++++++++++++++
+ 2 files changed, 225 insertions(+)
 
-If I remove the pinctrl entry in the bluetooth node, the gpio19 is then 
-marked as unclaimed. The drive strength also defaults to low but that 
-doesn't seem to be an issue and the the chip can still be enabled 
-through gpio19. Is it ok to have it unclaimed? If so I can remove it 
-from the binding and the doc then.
-
-Regarding the blsp1_uart1_default of the serial node, I can still enable 
-the chip if I remove it but the hci commands all end in timeout. It 
-seems that the function for these pins has to be explicitly set to 
-blsp_uart2. So at least, the default pinctrl seems mandatory.
-
-Regards,
-Thierry
-
-> 
-> Regards,
-> Bjorn
-> 
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 0f2f0e0de74f..292c2dd2cb49 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -18,3 +18,145 @@
+ 		status = "okay";
+ 	};
+ };
++
++&rpm_glink {
++	rpm_requests {
++		pm8998-regulators {
++			s2 {
++				regulator-min-microvolt = <1128000>;
++				regulator-max-microvolt = <1128000>;
++			};
++			s3 {
++				regulator-min-microvolt = <1352000>;
++				regulator-max-microvolt = <1352000>;
++			};
++			s4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			s5 {
++				regulator-min-microvolt = <1904000>;
++				regulator-max-microvolt = <2040000>;
++			};
++			s7 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1028000>;
++			};
++			s8 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++			};
++			l1 {
++				regulator-min-microvolt = <880000>;
++				regulator-max-microvolt = <880000>;
++			};
++			l2 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l3 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++			l5 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++			};
++			l6 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <1808000>;
++			};
++			l7 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l8 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l9 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l10 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l11 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++			l12 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l13 {
++				regulator-min-microvolt = <1808000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l14 {
++				regulator-min-microvolt = <1880000>;
++				regulator-max-microvolt = <1880000>;
++			};
++			l15 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++			l16 {
++				regulator-min-microvolt = <2704000>;
++				regulator-max-microvolt = <2704000>;
++			};
++			l17 {
++				regulator-min-microvolt = <1304000>;
++				regulator-max-microvolt = <1304000>;
++			};
++			l18 {
++				regulator-min-microvolt = <2704000>;
++				regulator-max-microvolt = <2704000>;
++			};
++			l19 {
++				regulator-min-microvolt = <3008000>;
++				regulator-max-microvolt = <3008000>;
++			};
++			l20 {
++				regulator-min-microvolt = <2960000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l21 {
++				regulator-min-microvolt = <2960000>;
++				regulator-max-microvolt = <2960000>;
++			};
++			l22 {
++				regulator-min-microvolt = <2864000>;
++				regulator-max-microvolt = <2864000>;
++			};
++			l23 {
++				regulator-min-microvolt = <3312000>;
++				regulator-max-microvolt = <3312000>;
++			};
++			l24 {
++				regulator-min-microvolt = <3088000>;
++				regulator-max-microvolt = <3088000>;
++			};
++			l25 {
++				regulator-min-microvolt = <3104000>;
++				regulator-max-microvolt = <3312000>;
++			};
++			l26 {
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++			l28 {
++				regulator-min-microvolt = <3008000>;
++				regulator-max-microvolt = <3008000>;
++			};
++		};
++
++		pmi8998-regulators {
++			bob {
++				regulator-min-microvolt = <3312000>;
++				regulator-max-microvolt = <3600000>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 9e2c0ff7457f..69c069dbbf90 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -223,6 +223,16 @@
+ 		method = "smc";
+ 	};
+ 
++	rpm_glink: rpm-glink {
++		compatible = "qcom,glink-rpm";
++
++		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		mboxes = <&apcs_glb 0>;
++	};
++
+ 	soc: soc {};
+ };
+ 
+@@ -341,4 +351,77 @@
+ 		#interrupt-cells = <4>;
+ 		cell-index = <0>;
+ 	};
++
++	rpm_msg_ram: memory@68000 {
++		compatible = "qcom,rpm-msg-ram";
++		reg = <0x778000 0x7000>;
++	};
++
++	apcs_glb: mailbox@9820000 {
++		compatible = "qcom,msm8998-apcs-hmss-global";
++		reg = <0x17911000 0x1000>;
++
++		#mbox-cells = <1>;
++	};
++};
++
++&rpm_glink {
++	rpm_requests {
++		compatible = "qcom,rpm-msm8998";
++		qcom,glink-channels = "rpm_requests";
++
++		pm8998-regulators {
++			compatible = "qcom,rpm-pm8998-regulators";
++
++			pm8998_s1: s1 {};
++			pm8998_s2: s2 {};
++			pm8998_s3: s3 {};
++			pm8998_s4: s4 {};
++			pm8998_s5: s5 {};
++			pm8998_s6: s6 {};
++			pm8998_s7: s7 {};
++			pm8998_s8: s8 {};
++			pm8998_s9: s9 {};
++			pm8998_s10: s10 {};
++			pm8998_s11: s11 {};
++			pm8998_s12: s12 {};
++			pm8998_s13: s13 {};
++			pm8998_l1: l1 {};
++			pm8998_l2: l2 {};
++			pm8998_l3: l3 {};
++			pm8998_l4: l4 {};
++			pm8998_l5: l5 {};
++			pm8998_l6: l6 {};
++			pm8998_l7: l7 {};
++			pm8998_l8: l8 {};
++			pm8998_l9: l9 {};
++			pm8998_l10: l10 {};
++			pm8998_l11: l11 {};
++			pm8998_l12: l12 {};
++			pm8998_l13: l13 {};
++			pm8998_l14: l14 {};
++			pm8998_l15: l15 {};
++			pm8998_l16: l16 {};
++			pm8998_l17: l17 {};
++			pm8998_l18: l18 {};
++			pm8998_l19: l19 {};
++			pm8998_l20: l20 {};
++			pm8998_l21: l21 {};
++			pm8998_l22: l22 {};
++			pm8998_l23: l23 {};
++			pm8998_l24: l24 {};
++			pm8998_l25: l25 {};
++			pm8998_l26: l26 {};
++			pm8998_l27: l27 {};
++			pm8998_l28: l28 {};
++			pm8998_lvs1: lvs1 {};
++			pm8998_lvs2: lvs2 {};
++		};
++
++		pmi8998-regulators {
++			compatible = "qcom,rpm-pmi8998-regulators";
++
++			pmi8998_bob: bob {};
++		};
++	};
+ };
+-- 
+2.16.2
