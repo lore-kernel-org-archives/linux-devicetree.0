@@ -1,15 +1,15 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/9] pinctrl: sunxi: refactor irq related
- register function to have desc
-Date: Tue, 27 Mar 2018 15:05:18 +0200
-Message-ID: <CACRpkdbO0KQEG_OXbswJkmWm=Ceiutx7vux6GJp8XVun+NiRbw@mail.gmail.com>
-References: <20180316140215.28663-1-icenowy@aosc.io> <20180316140215.28663-2-icenowy@aosc.io>
+Subject: Re: [PATCH v4 2/9] pinctrl: sunxi: introduce IRQ bank
+ conversion function
+Date: Tue, 27 Mar 2018 15:07:17 +0200
+Message-ID: <CACRpkdYZQZTGm3R_Jq28mVf5krSBVyHO5WwtqO6rgAYBFHHTZw@mail.gmail.com>
+References: <20180316140215.28663-1-icenowy@aosc.io> <20180316140215.28663-3-icenowy@aosc.io>
 Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBD4D5HKQKGQEVRVXBRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBBUE5HKQKGQEUQHGFNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180316140215.28663-2-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180316140215.28663-3-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,13 +22,16 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri, Mar 16, 2018 at 3:02 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 
-> As the new H6 SoC has holes in the IRQ registers, refactor the IRQ
-> related register function for getting the full pinctrl desc structure.
+> The Allwinner H6 SoC have its pin controllers with the first IRQ-capable
+> GPIO bank at IRQ bank 1 and the second bank at IRQ bank 5. Some
+> refactors in the sunxi pinctrl framework are needed.
+>
+> This commit introduces a IRQ bank conversion function, which replaces
+> the "(bank_base + bank)" code in IRQ register access.
 >
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> Changes in v4:
-> - Adjusted parameter sequence.
+> Extracted in v4.
 
 Patch applied with Maxime's ACK.
 
