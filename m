@@ -1,79 +1,102 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Tue, 27 Mar 2018 09:36:15 +0200
-Message-ID: <CAMuHMdVWJhmxXS+mvuwjrCOzurArFurqKwQ2PJD-eRCqbLRAng@mail.gmail.com>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-3-git-send-email-jacopo+renesas@jmondi.org>
- <CGME20180327062437epcas5p3389cb070d15669febeb6f504cff2cf6f@epcas5p3.samsung.com>
- <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com> <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
+Date: Tue, 27 Mar 2018 09:42:40 +0200
+Message-ID: <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
+References: <20180319170246.26830-1-peda@axentia.se>
+ <20180319170246.26830-4-peda@axentia.se> <20180324140339.4ec66792@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
+In-Reply-To: <20180324140339.4ec66792@archlinux>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej,
-
-On Tue, Mar 27, 2018 at 9:28 AM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-
->>> +static void thc63_enable(struct drm_bridge *bridge)
->>> +{
->>> +    struct thc63_dev *thc63 = to_thc63(bridge);
->>> +    struct regulator *vcc;
->>> +    int i;
->> unsigned int i;
->
-> Why? You are introducing silly bug this way, see few lines below.
->
+On 2018-03-24 15:03, Jonathan Cameron wrote:
+> On Mon, 19 Mar 2018 18:02:46 +0100
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> If an ADC channel measures the midpoint of a voltage divider, the
+>> interesting voltage is often the voltage over the full resistance.
+>> E.g. if the full voltage it too big for the ADC to handle.
+>> Likewise, if an ADC channel measures the voltage across a resistor,
+>> the interesting value is often the current through the resistor.
 >>
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(thc63->vccs); i++) {
->>> +            vcc = thc63->vccs[i];
->>> +            if (!vcc)
->>> +                    continue;
->>> +
->>> +            if (regulator_enable(vcc))
->>> +                    goto error_vcc_enable;
->>> +    }
->>> +
->>> +    if (thc63->pdwn)
->>> +            gpiod_set_value(thc63->pdwn, 0);
->>> +
->>> +    if (thc63->oe)
->>> +            gpiod_set_value(thc63->oe, 1);
->>> +
->>> +    return;
->>> +
->>> +error_vcc_enable:
->>> +    dev_err(thc63->dev, "Failed to enable regulator %s\n",
->>> +            thc63_reg_names[i]);
->>> +
->>> +    for (i = i - 1; i >= 0; i--) {
->
-> Here, the loop will not end if you define i unsigned.
+>> This driver solves both problems by allowing to linearly scale a channel
+>> and by allowing changes to the type of the channel. Or both.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> A few comments inline, but basically the code looks fine, just questions
+> around naming and bindings to answer.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 
-True.
+*snip*
 
-> I know one can change the loop, to make it working with unsigned. But
-> this clearly shows that using unsigned is more risky.
-> What are advantages of unsigned vs int in this case. Are there some
-> guidelines/discussions about it?
+>> +static int unit_converter_write_raw(struct iio_dev *indio_dev,
+>> +				    struct iio_chan_spec const *chan,
+>> +				    int val, int val2, long mask)
+>> +{
+>> +	struct unit_converter *uc = iio_priv(indio_dev);
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		return iio_write_channel_raw(uc->parent, val);
+> Talk me through the logic of having this...  Supporting a DAC?
+> Bindings don't talk about that possibility...
 
-Some people consider signed integers harmful, as they may be converted
-silently by the compiler to the "larger" unsigned type when needed.
+There's no logic at all, and I don't need it. It's just leftovers,
+should I remove it?
 
-Gr{oetje,eeting}s,
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
 
-                        Geert
+*snip*
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>> +static int unit_converter_configure_channel(struct device *dev,
+>> +					    struct unit_converter *uc,
+>> +					    enum iio_chan_type type)
+>> +{
+>> +	struct iio_chan_spec *chan = &uc->chan;
+>> +	struct iio_chan_spec const *pchan = uc->parent->channel;
+>> +	int ret;
+>> +
+>> +	chan->indexed = 1;
+>> +	chan->output = pchan->output;
+>> +	chan->ext_info = uc->ext_info;
+>> +
+>> +	if (type == -1) {
+>> +		ret = iio_get_channel_type(uc->parent, &type);
+>> +		if (ret < 0) {
+>> +			dev_err(dev, "failed to get parent channel type\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +	chan->type = type;
+>> +
+>> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
+>> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
+> if the parent doesn't support RAW, is there a lot of point in carrying on?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Nope, better to error out I suppose. But I'm not familiar with channels
+without RAW, what alternatives are there anyway?
+
+>> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
+>> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
+>> +
+>> +	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
+>> +		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
+>> +
+>> +	chan->channel = 0;
+>> +
+>> +	return 0;
+>> +}
