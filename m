@@ -1,128 +1,124 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [RESEND PATCH v2] ata: ahci-platform: add reset control support
-Date: Tue, 27 Mar 2018 16:28:21 +0900
-Message-ID: <1522135701-9964-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v6 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Tue, 27 Mar 2018 09:28:39 +0200
+Message-ID: <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180327062437epcas5p3389cb070d15669febeb6f504cff2cf6f@epcas5p3.samsung.com>
+ <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to get and control a list of resets for the device
-as optional and shared. These resets must be kept de-asserted until
-the device is enabled.
-
-This is specified as shared because some SoCs like UniPhier series
-have common reset controls with all ahci controller instances.
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v1:
-- add 'Reviewed-by:' lines
-
- .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
- drivers/ata/ahci.h                                 |  1 +
- drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
- 3 files changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index c760ecb..f4006d3 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -30,6 +30,7 @@ compatible:
- Optional properties:
- - dma-coherent      : Present if dma operations are coherent
- - clocks            : a list of phandle + clock specifier pairs
-+- resets            : a list of phandle + reset specifier pairs
- - target-supply     : regulator for SATA target power
- - phys              : reference to the SATA PHY node
- - phy-names         : must be "sata-phy"
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 749fd94..47ec77a2 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -347,6 +347,7 @@ struct ahci_host_priv {
- 	u32			em_msg_type;	/* EM message type */
- 	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
- 	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
-+	struct reset_control	*rsts;		/* Optional */
- 	struct regulator	**target_pwrs;	/* Optional */
- 	/*
- 	 * If platform uses PHYs. There is a 1:1 relation between the port number and
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index 341d0ef..3130db9 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -25,6 +25,7 @@
- #include <linux/phy/phy.h>
- #include <linux/pm_runtime.h>
- #include <linux/of_platform.h>
-+#include <linux/reset.h>
- #include "ahci.h"
- 
- static void ahci_host_stop(struct ata_host *host);
-@@ -195,7 +196,8 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
-  * following order:
-  * 1) Regulator
-  * 2) Clocks (through ahci_platform_enable_clks)
-- * 3) Phys
-+ * 3) Resets
-+ * 4) Phys
-  *
-  * If resource enabling fails at any point the previous enabled resources
-  * are disabled in reverse order.
-@@ -215,12 +217,19 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
- 	if (rc)
- 		goto disable_regulator;
- 
--	rc = ahci_platform_enable_phys(hpriv);
-+	rc = reset_control_deassert(hpriv->rsts);
- 	if (rc)
- 		goto disable_clks;
- 
-+	rc = ahci_platform_enable_phys(hpriv);
-+	if (rc)
-+		goto disable_resets;
-+
- 	return 0;
- 
-+disable_resets:
-+	reset_control_assert(hpriv->rsts);
-+
- disable_clks:
- 	ahci_platform_disable_clks(hpriv);
- 
-@@ -239,12 +248,15 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
-  * following order:
-  * 1) Phys
-  * 2) Clocks (through ahci_platform_disable_clks)
-- * 3) Regulator
-+ * 3) Resets
-+ * 4) Regulator
-  */
- void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
- {
- 	ahci_platform_disable_phys(hpriv);
- 
-+	reset_control_assert(hpriv->rsts);
-+
- 	ahci_platform_disable_clks(hpriv);
- 
- 	ahci_platform_disable_regulators(hpriv);
-@@ -393,6 +405,12 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 		hpriv->clks[i] = clk;
- 	}
- 
-+	hpriv->rsts = devm_reset_control_array_get_optional_shared(dev);
-+	if (IS_ERR(hpriv->rsts)) {
-+		rc = PTR_ERR(hpriv->rsts);
-+		goto err_out;
-+	}
-+
- 	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
- 
- 	/*
--- 
-2.7.4
+T24gMjcuMDMuMjAxOCAwODoyNCwgVmxhZGltaXIgWmFwb2xza2l5IHdyb3RlOgo+IEhpIEphY29w
+bywKPgo+IE9uIDAzLzE2LzIwMTggMDU6MTYgUE0sIEphY29wbyBNb25kaSB3cm90ZToKPj4gQWRk
+IERSTSBicmlkZ2UgZHJpdmVyIGZvciBUaGluZSBUSEM2M0xWRDEwMjQgTFZEUyB0byBkaWdpdGFs
+IHBhcmFsbGVsCj4+IG91dHB1dCBjb252ZXJ0ZXIuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEphY29w
+byBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4gUmV2aWV3ZWQtYnk6IEFuZHJ6
+ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2
+ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPj4gLS0tCj4+
+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgIHwgICA2ICsKPj4gIGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgfCAgIDEgKwo+PiAgZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQuYyB8IDI1NSArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrCj4+ICAzIGZpbGVzIGNoYW5nZWQsIDI2MiBpbnNlcnRpb25zKCspCj4+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQuYwo+Pgo+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9LY29uZmlnCj4+IGluZGV4IDNiOTlkNWEuLjU4MTVhMjAgMTAwNjQ0Cj4+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+PiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL0tjb25maWcKPj4gQEAgLTkyLDYgKzkyLDEyIEBAIGNvbmZpZyBEUk1fU0lJ
+OTIzNAo+PiAgCSAgSXQgaXMgYW4gSTJDIGRyaXZlciwgdGhhdCBkZXRlY3RzIGNvbm5lY3Rpb24g
+b2YgTUhMIGJyaWRnZQo+PiAgCSAgYW5kIHN0YXJ0cyBlbmNhcHN1bGF0aW9uIG9mIEhETUkgc2ln
+bmFsLgo+PiAgCj4+ICtjb25maWcgRFJNX1RISU5FX1RIQzYzTFZEMTAyNAo+PiArCXRyaXN0YXRl
+ICJUaGluZSBUSEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyIGJyaWRnZSIKPj4gKwlkZXBlbmRzIG9u
+IE9GCj4+ICsJLS0taGVscC0tLQo+PiArCSAgVGhpbmUgVEhDNjNMVkQxMDI0IExWRFMvcGFyYWxs
+ZWwgY29udmVydGVyIGRyaXZlci4KPj4gKwo+PiAgY29uZmlnIERSTV9UT1NISUJBX1RDMzU4NzY3
+Cj4+ICAJdHJpc3RhdGUgIlRvc2hpYmEgVEMzNTg3NjcgZURQIGJyaWRnZSIKPj4gIAlkZXBlbmRz
+IG9uIE9GCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlIGIv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+PiBpbmRleCAzNzNlYjI4Li5mZDkwYjE2
+IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUKPj4gQEAgLTgsNiArOCw3IEBAIG9iai0k
+KENPTkZJR19EUk1fUEFSQURFX1BTODYyMikgKz0gcGFyYWRlLXBzODYyMi5vCj4+ICBvYmotJChD
+T05GSUdfRFJNX1NJTF9TSUk4NjIwKSArPSBzaWwtc2lpODYyMC5vCj4+ICBvYmotJChDT05GSUdf
+RFJNX1NJSTkwMlgpICs9IHNpaTkwMngubwo+PiAgb2JqLSQoQ09ORklHX0RSTV9TSUk5MjM0KSAr
+PSBzaWk5MjM0Lm8KPj4gK29iai0kKENPTkZJR19EUk1fVEhJTkVfVEhDNjNMVkQxMDI0KSArPSB0
+aGM2M2x2ZDEwMjQubwo+PiAgb2JqLSQoQ09ORklHX0RSTV9UT1NISUJBX1RDMzU4NzY3KSArPSB0
+YzM1ODc2Ny5vCj4+ICBvYmotJChDT05GSUdfRFJNX0FOQUxPR0lYX0RQKSArPSBhbmFsb2dpeC8K
+Pj4gIG9iai0kKENPTkZJR19EUk1fSTJDX0FEVjc1MTEpICs9IGFkdjc1MTEvCj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RoYzYzbHZkMTAyNC5jIGIvZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRl
+eCAwMDAwMDAwLi4wMmE1NGMyCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS90aGM2M2x2ZDEwMjQuYwo+PiBAQCAtMCwwICsxLDI1NSBAQAo+PiArLy8gU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPj4gKy8qCj4+ICsgKiBUSEM2M0xWRDEwMjQg
+TFZEUyB0byBwYXJhbGxlbCBkYXRhIERSTSBicmlkZ2UgZHJpdmVyLgo+PiArICoKPj4gKyAqIENv
+cHlyaWdodCAoQykgMjAxOCBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+
+Cj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4+ICsjaW5jbHVkZSA8ZHJt
+L2RybV9icmlkZ2UuaD4KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4+ICsKPj4gKyNp
+bmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3Jh
+cGguaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPj4gKwo+PiAr
+ZW51bSB7Cj4+ICsJVEhDNjNfTFZEU19JTjAsCj4+ICsJVEhDNjNfTFZEU19JTjEsCj4+ICsJVEhD
+NjNfRElHSVRBTF9PVVQwLAo+PiArCVRIQzYzX0RJR0lUQUxfT1VUMSwKPj4gK307Cj4+ICsKPj4g
+K3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdGhjNjNfcmVnX25hbWVzW10gPSB7Cj4+ICsJInZj
+YyIsICJsdmNjIiwgInB2Y2MiLCAiY3ZjYyIsCj4+ICt9Owo+PiArCj4+ICtzdHJ1Y3QgdGhjNjNf
+ZGV2IHsKPj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4+ICsKPj4gKwlzdHJ1Y3QgcmVndWxhdG9y
+ICp2Y2NzW0FSUkFZX1NJWkUodGhjNjNfcmVnX25hbWVzKV07Cj4+ICsKPj4gKwlzdHJ1Y3QgZ3Bp
+b19kZXNjICpwZHduOwo+PiArCXN0cnVjdCBncGlvX2Rlc2MgKm9lOwo+PiArCj4+ICsJc3RydWN0
+IGRybV9icmlkZ2UgYnJpZGdlOwo+PiArCXN0cnVjdCBkcm1fYnJpZGdlICpuZXh0Owo+PiArfTsK
+Pj4gKwo+PiArc3RhdGljIGlubGluZSBzdHJ1Y3QgdGhjNjNfZGV2ICp0b190aGM2MyhzdHJ1Y3Qg
+ZHJtX2JyaWRnZSAqYnJpZGdlKQo+PiArewo+PiArCXJldHVybiBjb250YWluZXJfb2YoYnJpZGdl
+LCBzdHJ1Y3QgdGhjNjNfZGV2LCBicmlkZ2UpOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgaW50IHRo
+YzYzX2F0dGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+PiArewo+PiArCXN0cnVjdCB0
+aGM2M19kZXYgKnRoYzYzID0gdG9fdGhjNjMoYnJpZGdlKTsKPj4gKwo+PiArCXJldHVybiBkcm1f
+YnJpZGdlX2F0dGFjaChicmlkZ2UtPmVuY29kZXIsIHRoYzYzLT5uZXh0LCBicmlkZ2UpOwo+PiAr
+fQo+PiArCj4+ICtzdGF0aWMgdm9pZCB0aGM2M19lbmFibGUoc3RydWN0IGRybV9icmlkZ2UgKmJy
+aWRnZSkKPj4gK3sKPj4gKwlzdHJ1Y3QgdGhjNjNfZGV2ICp0aGM2MyA9IHRvX3RoYzYzKGJyaWRn
+ZSk7Cj4+ICsJc3RydWN0IHJlZ3VsYXRvciAqdmNjOwo+PiArCWludCBpOwo+IHVuc2lnbmVkIGlu
+dCBpOwoKV2h5PyBZb3UgYXJlIGludHJvZHVjaW5nIHNpbGx5IGJ1ZyB0aGlzIHdheSwgc2VlIGZl
+dyBsaW5lcyBiZWxvdy4KCj4KPj4gKwo+PiArCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHRo
+YzYzLT52Y2NzKTsgaSsrKSB7Cj4+ICsJCXZjYyA9IHRoYzYzLT52Y2NzW2ldOwo+PiArCQlpZiAo
+IXZjYykKPj4gKwkJCWNvbnRpbnVlOwo+PiArCj4+ICsJCWlmIChyZWd1bGF0b3JfZW5hYmxlKHZj
+YykpCj4+ICsJCQlnb3RvIGVycm9yX3ZjY19lbmFibGU7Cj4+ICsJfQo+PiArCj4+ICsJaWYgKHRo
+YzYzLT5wZHduKQo+PiArCQlncGlvZF9zZXRfdmFsdWUodGhjNjMtPnBkd24sIDApOwo+PiArCj4+
+ICsJaWYgKHRoYzYzLT5vZSkKPj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKHRoYzYzLT5vZSwgMSk7Cj4+
+ICsKPj4gKwlyZXR1cm47Cj4+ICsKPj4gK2Vycm9yX3ZjY19lbmFibGU6Cj4+ICsJZGV2X2Vycih0
+aGM2My0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSByZWd1bGF0b3IgJXNcbiIsCj4+ICsJCXRoYzYz
+X3JlZ19uYW1lc1tpXSk7Cj4+ICsKPj4gKwlmb3IgKGkgPSBpIC0gMTsgaSA+PSAwOyBpLS0pIHsK
+CkhlcmUsIHRoZSBsb29wIHdpbGwgbm90IGVuZCBpZiB5b3UgZGVmaW5lIGkgdW5zaWduZWQuCgpJ
+IGtub3cgb25lIGNhbiBjaGFuZ2UgdGhlIGxvb3AsIHRvIG1ha2UgaXQgd29ya2luZyB3aXRoIHVu
+c2lnbmVkLiBCdXQKdGhpcyBjbGVhcmx5IHNob3dzIHRoYXQgdXNpbmcgdW5zaWduZWQgaXMgbW9y
+ZSByaXNreS4KV2hhdCBhcmUgYWR2YW50YWdlcyBvZiB1bnNpZ25lZCB2cyBpbnQgaW4gdGhpcyBj
+YXNlLiBBcmUgdGhlcmUgc29tZQpndWlkZWxpbmVzL2Rpc2N1c3Npb25zIGFib3V0IGl0PwoKUmVn
+YXJkcwpBbmRyemVqCgo+PiArCQl2Y2MgPSB0aGM2My0+dmNjc1tpXTsKPj4gKwkJaWYgKCF2Y2Mp
+Cj4+ICsJCQljb250aW51ZTsKPj4gKwo+PiArCQlyZWd1bGF0b3JfZGlzYWJsZSh2Y2MpOwo+PiAr
+CX0KPj4gK30KPj4gKwo+PiArc3RhdGljIHZvaWQgdGhjNjNfZGlzYWJsZShzdHJ1Y3QgZHJtX2Jy
+aWRnZSAqYnJpZGdlKQo+PiArewo+PiArCXN0cnVjdCB0aGM2M19kZXYgKnRoYzYzID0gdG9fdGhj
+NjMoYnJpZGdlKTsKPj4gKwlzdHJ1Y3QgcmVndWxhdG9yICp2Y2M7Cj4+ICsJaW50IGk7Cj4+ICsK
+Pj4gKwlpZiAodGhjNjMtPm9lKQo+PiArCQlncGlvZF9zZXRfdmFsdWUodGhjNjMtPm9lLCAwKTsK
+Pj4gKwo+PiArCWlmICh0aGM2My0+cGR3bikKPj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKHRoYzYzLT5w
+ZHduLCAxKTsKPj4gKwo+PiArCWZvciAoaSA9IEFSUkFZX1NJWkUodGhjNjMtPnZjY3MpIC0gMTsg
+aSA+PSAwOyBpLS0pIHsKPj4gKwkJdmNjID0gdGhjNjMtPnZjY3NbaV07Cj4+ICsJCWlmICghdmNj
+KQo+PiArCQkJY29udGludWU7Cj4+ICsKPj4gKwkJaWYgKHJlZ3VsYXRvcl9kaXNhYmxlKHZjYykp
+Cj4+ICsJCQlkZXZfZGJnKHRoYzYzLT5kZXYsCj4+ICsJCQkJIkZhaWxlZCB0byBkaXNhYmxlIHJl
+Z3VsYXRvciAlc1xuIiwKPj4gKwkJCQl0aGM2M19yZWdfbmFtZXNbaV0pOwo+PiArCX0KPj4gK30K
+Pj4gKwo+PiArc3RydWN0IGRybV9icmlkZ2VfZnVuY3MgdGhjNjNfYnJpZGdlX2Z1bmMgPSB7Cj4g
+QXBwYXJlbnRseSB5b3UgbWlzc2VkIGFsbCBteSBjb21tZW50cyBmcm9tIHYyIHJldmlldy4KPgo+
+IElmIHlvdSBsaWtlIHRvIGF2b2lkIG5vbi1OVUxMIGZ1bmN0aW9uIHBvaW50ZXJzIHRvIHRoZSB2
+b2lkLCBwbGVhc2UgCj4gdXNlIHN0YXRpYyBjb25zdCBzdG9yYWdlIHF1YWxpZmllci4KPgo+IC0t
+Cj4gV2l0aCBiZXN0IHdpc2hlcywKPiBWbGFkaW1pcgo+Cj4KPgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
