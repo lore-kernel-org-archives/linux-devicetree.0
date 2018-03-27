@@ -1,145 +1,193 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH v2] ata: ahci-platform: add reset control support
-Date: Tue, 27 Mar 2018 16:04:12 +0900
-Message-ID: <20180327160411.A7F7.4A936039@socionext.com>
-References: <1522133832-7760-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH] mtd: rawnand: sunxi: Remove support for GPIO-based Ready/Busy
+ polling
+Date: Tue, 27 Mar 2018 09:06:14 +0200
+Message-ID: <20180327070614.3288-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522133832-7760-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, please ignore this patch because of adding unneed lines.
-I'll resend it.
+None of the existing platforms connect the R/B pin to a GPIO (they all
+use one of the dedicated R/B pin).
+Anyway, if we ever get short of native R/B pins, it's probably better
+to fallback to STATUS reg polling than trying to poll a GPIO.
 
-Thank you,
-
-On Tue, 27 Mar 2018 15:57:12 +0900
-Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
-
-> Add support to get and control a list of resets for the device
-> as optional and shared. These resets must be kept de-asserted until
-> the device is enabled.
-> 
-> This is specified as shared because some SoCs like UniPhier series
-> have common reset controls with all ahci controller instances.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v1:
-> - add 'Reviewed-by:' lines
-> 
-> .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
->  drivers/ata/ahci.h                                 |  1 +
->  drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
->  3 files changed, 23 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index c760ecb..f4006d3 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -30,6 +30,7 @@ compatible:
->  Optional properties:
->  - dma-coherent      : Present if dma operations are coherent
->  - clocks            : a list of phandle + clock specifier pairs
-> +- resets            : a list of phandle + reset specifier pairs
->  - target-supply     : regulator for SATA target power
->  - phys              : reference to the SATA PHY node
->  - phy-names         : must be "sata-phy"
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index a9d996e..4356ef1 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -350,6 +350,7 @@ struct ahci_host_priv {
->  	u32			em_msg_type;	/* EM message type */
->  	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
->  	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
-> +	struct reset_control	*rsts;		/* Optional */
->  	struct regulator	**target_pwrs;	/* Optional */
->  	/*
->  	 * If platform uses PHYs. There is a 1:1 relation between the port number and
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 30cc8f1..46a7624 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -25,6 +25,7 @@
->  #include <linux/phy/phy.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/of_platform.h>
-> +#include <linux/reset.h>
->  #include "ahci.h"
->  
->  static void ahci_host_stop(struct ata_host *host);
-> @@ -195,7 +196,8 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
->   * following order:
->   * 1) Regulator
->   * 2) Clocks (through ahci_platform_enable_clks)
-> - * 3) Phys
-> + * 3) Resets
-> + * 4) Phys
->   *
->   * If resource enabling fails at any point the previous enabled resources
->   * are disabled in reverse order.
-> @@ -215,12 +217,19 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
->  	if (rc)
->  		goto disable_regulator;
->  
-> -	rc = ahci_platform_enable_phys(hpriv);
-> +	rc = reset_control_deassert(hpriv->rsts);
->  	if (rc)
->  		goto disable_clks;
->  
-> +	rc = ahci_platform_enable_phys(hpriv);
-> +	if (rc)
-> +		goto disable_resets;
-> +
->  	return 0;
->  
-> +disable_resets:
-> +	reset_control_assert(hpriv->rsts);
-> +
->  disable_clks:
->  	ahci_platform_disable_clks(hpriv);
->  
-> @@ -239,12 +248,15 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
->   * following order:
->   * 1) Phys
->   * 2) Clocks (through ahci_platform_disable_clks)
-> - * 3) Regulator
-> + * 3) Resets
-> + * 4) Regulator
->   */
->  void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
->  {
->  	ahci_platform_disable_phys(hpriv);
->  
-> +	reset_control_assert(hpriv->rsts);
-> +
->  	ahci_platform_disable_clks(hpriv);
->  
->  	ahci_platform_disable_regulators(hpriv);
-> @@ -393,6 +405,12 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
->  		hpriv->clks[i] = clk;
->  	}
->  
-> +	hpriv->rsts = devm_reset_control_array_get_optional_shared(dev);
-> +	if (IS_ERR(hpriv->rsts)) {
-> +		rc = PTR_ERR(hpriv->rsts);
-> +		goto err_out;
-> +	}
-> +
->  	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
->  
->  	/*
-> -- 
-> 2.7.4
-
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 ---
-Best Regards,
-Kunihiko Hayashi
+ .../devicetree/bindings/mtd/sunxi-nand.txt         |  2 -
+ drivers/mtd/nand/raw/sunxi_nand.c                  | 91 ++++------------------
+ 2 files changed, 15 insertions(+), 78 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+index 0734f03bf3d3..dcd5a5d80dc0 100644
+--- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+@@ -22,8 +22,6 @@ Optional properties:
+ - reset : phandle + reset specifier pair
+ - reset-names : must contain "ahb"
+ - allwinner,rb : shall contain the native Ready/Busy ids.
+- or
+-- rb-gpios : shall contain the gpios used as R/B pins.
+ - nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
+ 		  "none")
+ 
+diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+index aad42812a353..d831a141a196 100644
+--- a/drivers/mtd/nand/raw/sunxi_nand.c
++++ b/drivers/mtd/nand/raw/sunxi_nand.c
+@@ -165,49 +165,16 @@
+ 
+ #define NFC_MAX_CS		7
+ 
+-/*
+- * Ready/Busy detection type: describes the Ready/Busy detection modes
+- *
+- * @RB_NONE:	no external detection available, rely on STATUS command
+- *		and software timeouts
+- * @RB_NATIVE:	use sunxi NAND controller Ready/Busy support. The Ready/Busy
+- *		pin of the NAND flash chip must be connected to one of the
+- *		native NAND R/B pins (those which can be muxed to the NAND
+- *		Controller)
+- * @RB_GPIO:	use a simple GPIO to handle Ready/Busy status. The Ready/Busy
+- *		pin of the NAND flash chip must be connected to a GPIO capable
+- *		pin.
+- */
+-enum sunxi_nand_rb_type {
+-	RB_NONE,
+-	RB_NATIVE,
+-	RB_GPIO,
+-};
+-
+-/*
+- * Ready/Busy structure: stores information related to Ready/Busy detection
+- *
+- * @type:	the Ready/Busy detection mode
+- * @info:	information related to the R/B detection mode. Either a gpio
+- *		id or a native R/B id (those supported by the NAND controller).
+- */
+-struct sunxi_nand_rb {
+-	enum sunxi_nand_rb_type type;
+-	union {
+-		int gpio;
+-		int nativeid;
+-	} info;
+-};
+-
+ /*
+  * Chip Select structure: stores information related to NAND Chip Select
+  *
+  * @cs:		the NAND CS id used to communicate with a NAND Chip
+- * @rb:		the Ready/Busy description
++ * @rb:		the Ready/Busy pin ID. -1 means no R/B pin connected to the
++ *		NFC
+  */
+ struct sunxi_nand_chip_sel {
+ 	u8 cs;
+-	struct sunxi_nand_rb rb;
++	s8 rb;
+ };
+ 
+ /*
+@@ -440,30 +407,19 @@ static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
+ 	struct nand_chip *nand = mtd_to_nand(mtd);
+ 	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
+ 	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
+-	struct sunxi_nand_rb *rb;
+-	int ret;
++	u32 mask;
+ 
+ 	if (sunxi_nand->selected < 0)
+ 		return 0;
+ 
+-	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
+-
+-	switch (rb->type) {
+-	case RB_NATIVE:
+-		ret = !!(readl(nfc->regs + NFC_REG_ST) &
+-			 NFC_RB_STATE(rb->info.nativeid));
+-		break;
+-	case RB_GPIO:
+-		ret = gpio_get_value(rb->info.gpio);
+-		break;
+-	case RB_NONE:
+-	default:
+-		ret = 0;
++	if (sunxi_nand->sels[sunxi_nand->selected].rb < 0) {
+ 		dev_err(nfc->dev, "cannot check R/B NAND status!\n");
+-		break;
++		return 0;
+ 	}
+ 
+-	return ret;
++	mask = NFC_RB_STATE(sunxi_nand->sels[sunxi_nand->selected].rb);
++
++	return !!(readl(nfc->regs + NFC_REG_ST) & mask);
+ }
+ 
+ static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
+@@ -488,12 +444,11 @@ static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
+ 
+ 		ctl |= NFC_CE_SEL(sel->cs) | NFC_EN |
+ 		       NFC_PAGE_SHIFT(nand->page_shift);
+-		if (sel->rb.type == RB_NONE) {
++		if (sel->rb < 0) {
+ 			nand->dev_ready = NULL;
+ 		} else {
+ 			nand->dev_ready = sunxi_nfc_dev_ready;
+-			if (sel->rb.type == RB_NATIVE)
+-				ctl |= NFC_RB_SEL(sel->rb.info.nativeid);
++			ctl |= NFC_RB_SEL(sel->rb);
+ 		}
+ 
+ 		writel(mtd->writesize, nfc->regs + NFC_REG_SPARE_AREA);
+@@ -1946,26 +1901,10 @@ static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *nfc,
+ 		chip->sels[i].cs = tmp;
+ 
+ 		if (!of_property_read_u32_index(np, "allwinner,rb", i, &tmp) &&
+-		    tmp < 2) {
+-			chip->sels[i].rb.type = RB_NATIVE;
+-			chip->sels[i].rb.info.nativeid = tmp;
+-		} else {
+-			ret = of_get_named_gpio(np, "rb-gpios", i);
+-			if (ret >= 0) {
+-				tmp = ret;
+-				chip->sels[i].rb.type = RB_GPIO;
+-				chip->sels[i].rb.info.gpio = tmp;
+-				ret = devm_gpio_request(dev, tmp, "nand-rb");
+-				if (ret)
+-					return ret;
+-
+-				ret = gpio_direction_input(tmp);
+-				if (ret)
+-					return ret;
+-			} else {
+-				chip->sels[i].rb.type = RB_NONE;
+-			}
+-		}
++		    tmp < 2)
++			chip->sels[i].rb = tmp;
++		else
++			chip->sels[i].rb = -1;
+ 	}
+ 
+ 	nand = &chip->nand;
+-- 
+2.14.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
