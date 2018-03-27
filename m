@@ -1,133 +1,273 @@
-From: =?utf-8?B?VmljZW7Fo2l1IEdhbGFub3B1bG8=?=
-        <vicentiu.galanopulo@nxp.com>
-Subject: RE: [RFC PATCH v2] net: phy: Added device tree binding for dev-addr
- and dev-addr code check-up
-Date: Tue, 27 Mar 2018 10:02:39 +0000
-Message-ID: <HE1PR0402MB3578ED389174C370C04F3321EEAC0@HE1PR0402MB3578.eurprd04.prod.outlook.com>
-References: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
- <5726f7e4-49eb-e87e-8548-82fac6aa0452@gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Tue, 27 Mar 2018 12:10:08 +0200
+Message-ID: <20180327101008.GM27746@w540>
+References: <4060923.7DxT9ae38L@avalon>
+ <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
+ <CGME20180327061536epcas5p40faf6caf0d9825e6c33cd3e6ba9d8378@epcas5p4.samsung.com>
+ <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
+ <1dd27170-153c-90f6-e13f-949ba7d0d4a9@samsung.com>
+ <20180327073332.GI27746@w540>
+ <70826dc1-d9ea-dc98-f591-c80f1904806a@cogentembedded.com>
+ <b7d0e35e-3077-feba-dded-9b8f8422367b@mentor.com>
+ <20180327085748.GK27746@w540>
+ <871a3805-b20c-3f48-406c-145461837388@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5726f7e4-49eb-e87e-8548-82fac6aa0452@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>
+Content-Type: multipart/mixed; boundary="===============2047509050=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <871a3805-b20c-3f48-406c-145461837388@mentor.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: mark.rutland@arm.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmxvcmlhbiBGYWluZWxs
-aSBbbWFpbHRvOmYuZmFpbmVsbGlAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXJjaCAy
-NywgMjAxOCAxOjQ1IEFNDQo+IFRvOiBWaWNlbsWjaXUgR2FsYW5vcHVsbyA8dmljZW50aXUuZ2Fs
-YW5vcHVsb0BueHAuY29tPjsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJt
-LmNvbTsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgbWFyY2VsQGhvbHRtYW5uLm9yZzsNCj4gZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1hZGFsaW4tY3Jpc3RpYW4gQnVjdXIgPG1hZGFs
-aW4uYnVjdXJAbnhwLmNvbT47IEFsZXhhbmRydSBNYXJnaW5lYW4NCj4gPGFsZXhhbmRydS5tYXJn
-aW5lYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjJdIG5ldDogcGh5OiBB
-ZGRlZCBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBkZXYtYWRkcg0KPiBhbmQgZGV2LWFkZHIgY29k
-ZSBjaGVjay11cA0KPiANCj4gT24gMDMvMjMvMjAxOCAwODowNSBBTSwgVmljZW50aXUgR2FsYW5v
-cHVsbyB3cm90ZToNCj4gPiBSZWFzb24gZm9yIHRoaXMgcGF0Y2ggaXMgdGhhdCB0aGUgSW5waGkg
-UEhZIGhhcyBhIHZlbmRvciBzcGVjaWZpYw0KPiA+IGFkZHJlc3Mgc3BhY2UgZm9yIGFjY2Vzc2lu
-ZyB0aGUNCj4gPiBDNDUgTURJTyByZWdpc3RlcnMgLSBzdGFydGluZyBmcm9tIDB4MWUuDQo+ID4N
-Cj4gPiBBIHNlYXJjaCBvZiB0aGUgZGV2LWFkZHIgcHJvcGVydHkgaXMgZG9uZSBpbiBvZl9tZGlv
-YnVzX3JlZ2lzdGVyLg0KPiA+IElmIHRoZSBwcm9wZXJ0eSBpcyBmb3VuZCBpbiB0aGUgUEhZIG5v
-ZGUsDQo+ID4gb2ZfbWRpb2J1c19yZWdpc3Rlcl9zdGF0aWNfcGh5IGlzIGNhbGxlZC4gVGhpcyBp
-cyBhIHdyYXBwZXIgZnVuY3Rpb24NCj4gPiBmb3Igb2ZfbWRpb2J1c19yZWdpc3Rlcl9waHkgd2hp
-Y2ggZmluZHMgdGhlIGRldmljZSBpbiBwYWNrYWdlIGJhc2VkIG9uDQo+ID4gZGV2LWFkZHIgYW5k
-IGZpbGxzIGRldmljZXNfYWRkcnM6DQo+ID4gZGV2aWNlc19hZGRycyBpcyBhIG5ldyBmaWVsZCBh
-ZGRlZCB0byBwaHlfYzQ1X2RldmljZV9pZHMuDQo+ID4gVGhpcyBuZXcgZmllbGQgd2lsbCBzdG9y
-ZSB0aGUgZGV2LWFkZHIgcHJvcGVydHkgb24gdGhlIHNhbWUgaW5kZXgNCj4gPiB3aGVyZSB0aGUg
-ZGV2aWNlIGluIHBhY2thZ2UgaGFzIGJlZW4gZm91bmQuDQo+ID4gSW4gb3JkZXIgdG8gaGF2ZSBk
-ZXYtYWRkciBpbiBnZXRfcGh5X2M0NV9pZHMoKSwgbWRpb19jNDVfaWRzIGlzIHBhc3NlZA0KPiA+
-IGZyb20gb2ZfbWRpby5jIHRvIHBoeV9kZXZpY2UuYyBhcyBhbiBleHRlcm5hbCB2YXJpYWJsZS4N
-Cj4gPiBJbiBnZXRfcGh5X2RldmljZSBhIGNvcHkgb2YgdGhlIG1kaW9fYzQ1X2lkcyBpcyBkb25l
-IG92ZXIgdGhlIGxvY2FsDQo+ID4gYzQ1X2lkcyAod2ljaCBhcmUgZW1wdHkpLiBBZnRlciB0aGUg
-Y29weWluZywgdGhlIGM0NV9pZHMgd2lsbCBhbHNvDQo+ID4gY29udGFpbiB0aGUgc3RhdGljIGRl
-dmljZSBmb3VuZCBmcm9tIGRldi1hZGRyLg0KPiA+IEhhdmluZyBkZXYtYWRkciBzdG9yZWQgaW4g
-ZGV2aWNlc19hZGRycywgaW4gZ2V0X3BoeV9jNDVfaWRzKCksIHdoZW4NCj4gPiBwcm9iaW5nIHRo
-ZSBpZGVudGlmaWVycywgZGV2LWFkZHIgY2FuIGJlIGV4dHJhY3RlZCBmcm9tIGRldmljZXNfYWRk
-cnMNCj4gPiBhbmQgcHJvYmVkIGlmIGRldmljZXNfYWRkcnNbY3VycmVudF9pZGVudGlmaWVyXSBp
-cyBub3QgMC4NCj4gPiBUaGlzIHdheSBjaGFuZ2luZyB0aGUga2VybmVsIEFQSSBpcyBhdm9pZGVk
-IGNvbXBsZXRlbHkuDQo+ID4NCj4gPiBBcyBhIHBsdXMgdG8gdGhpcyBwYXRjaCwgbnVtX2lkcyBp
-biBnZXRfcGh5X2M0NV9pZHMsIGhhcyB0aGUgdmFsdWUgOA0KPiA+IChBUlJBWV9TSVpFKGM0NV9p
-ZHMtPmRldmljZV9pZHMpKSwNCj4gPiBidXQgdGhlIHUzMiAqZGV2cyBjYW4gc3RvcmUgMzIgZGV2
-aWNlcyBpbiB0aGUgYml0ZmllbGQuDQo+ID4gSWYgYSBkZXZpY2UgaXMgc3RvcmVkIGluICpkZXZz
-LCBpbiBiaXRzIDMyIHRvIDksIGl0IHdpbGwgbm90IGJlIGZvdW5kLg0KPiA+IFRoaXMgaXMgdGhl
-IHJlYXNvbiBmb3IgY2hhbmdpbmcgaW4gcGh5LmgsIHRoZSBzaXplIG9mIGRldmljZV9pZHMNCj4g
-PiBhcnJheS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpY2VudGl1IEdhbGFub3B1bG8gPHZp
-Y2VudGl1LmdhbGFub3B1bG9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gDQo+IENvcnJlY3QgbWUgaWYg
-SSBhbSBjb21wbGV0ZWx5IG1pc3VuZGVyc3RhbmRpbmcgIHRoZSBwcm9ibGVtLCBidXQgaGF2ZSB5
-b3UNCj4gY29uc2lkZXJlZCBkb2luZyB0aGUgZm9sbG93aW5nOg0KPiANCj4gLSBpZiBhbGwgeW91
-IG5lZWQgdG8gaXMgdG8gcmVwbGFjZSBpbnN0YW5jZXMgb2YgbG9vcHMgdGhhdCBkbzoNCj4gDQo+
-ICAgICAgICAgaWYgKHBoeWRldi0+aXNfYzQ1KSB7DQo+ICAgICAgICAgICAgICAgICBmb3IgKGkg
-PSAxOyBpIDwgbnVtX2lkczsgaSsrKSB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGlmICgh
-KHBoeWRldi0+YzQ1X2lkcy5kZXZpY2VzX2luX3BhY2thZ2UgJiAoMSA8PA0KPiBpKSkpDQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+IA0KPiB3aXRoIG9uZSB0
-aGF0IHN0YXJ0cyBhdCBkZXYtYWRkciwgYXMgc3BlY2lmaWVkIGJ5IERldmljZSBUcmVlLCB0aGVu
-IEkgc3VzcGVjdA0KPiB0aGVyZSBpcyBhbiBlYXNpZXIgd2F5IHRvIGRvIHdoYXQgeW91IHdhbnQg
-cmF0aGVyIHRoYW4geW91ciBmYWlybHkgaW50cnVzaXZlDQo+IHBhdGNoIHRvIGRvIHRoYXQ6DQo+
-IA0KDQoNClNvcnJ5IGZvciB0aGUgbGVuZ3RoeSBjb21tZW50IGFuZCBzb3JyeSBpZiB0aGlzIGlz
-IHJlZHVuZGFudCwgSSdtIGp1c3QgdHJ5aW5nIHRvIGV4cGxhaW4gDQpiZXN0IHRoYXQgSSBjYW4g
-bXkgcGF0Y2g6IA0KVGhlIGxvb3AgZ29lcyB0aHJvdWdoIHRoZSBkZXZpY2VzX2luX3BhY2thZ2Vz
-LCBhbmQgd2hlcmUgaXQgZmluZHMgYSBiaXQgdGhhdCBpcyBzZXQsIGl0DQpjb250aW51ZXMgdG8g
-Z2V0IHRoZSBQSFkgZGV2aWNlIElELg0KQnV0LCB0byBoYXZlIGRldmljZXNfaW5fcGFja2FnZSB3
-aXRoIHRob3NlIGJpdHMgc2V0LCBhIHByZXZpb3VzIHF1ZXJ5aW5nIG9mIHRoZSANCk1ESU9fREVW
-UzIgYW5kIE1ESU9fREVWUzEgaXMgbmVjZXNzYXJ5LiBBbmQgaW4gdGhlIE1ESU8gYnVzIHF1ZXJ5
-LA0KZGV2LWFkZHIsIGZyb20gdGhlIGRldmljZSB0cmVlLCAgaXMgcGFydCBvZiB0aGUgd2hvbGUg
-cmVnaXN0ZXIgYWRkcmVzczoNCnJlZ19hZGRyID0gTUlJX0FERFJfQzQ1IHwgZGV2X2FkZHIgPDwg
-MTYgfCBNRElPX0RFVlMyOyANCg0KQW5kcmV3IHN1Z2dlc3RlZCBpbiBoaXMgZmlyc3QgY29tbWVu
-dCB0aGF0IHRoZSBkZXZpY2UgdHJlZSBsb29rdXAgY291bGQgYmUgZG9uZQ0KaW4gb2ZfbWRpb2J1
-c19yZWdpc3RlcigpLCAgcHJvYmFibHkgYmVjYXVzZSBvZiB0aGUgbG9vcCB3aGljaCBhbHJlYWR5
-IGNoZWNrcyB0aGUNCjxyZWc+IHByb3BlcnR5IG9mIHRoZSBQSFkuDQpNeSB1bmRlcnN0YW5kaW5n
-IG9mIGhpcyBjb21tZW50cyB3YXMgdGhhdCBJIGNvdWxkIHByb3BhZ2F0ZSwgYXMgYSBwYXJhbWV0
-ZXIsDQpkZXYtYWRkciwgZG93biB0aGUgaGllcmFyY2h5IGNhbGwgb2ZfbWRpb2J1c19yZWdpc3Rl
-cl9waHkoKS0+IGdldF9waHlfZGV2aWNlKCktPg0KZ2V0X3BoeV9pZCgpLT5nZXRfcGh5X2M0NV9p
-ZHMoKS0+Z2V0X3BoeV9jNDVfZGV2c19pbl9wa2coZGV2X2FkZHIgcGFyYW0gZXhpc3RlZCBoZXJl
-KS4NClRoaXMgaXMgd2hlcmUgdGhlIGxvb3AgeW91J3JlIG1lbnRpb25pbmcgbmVlZGVkIHNvbWUg
-YWx0ZXJpbmcsIGJlY2F1c2UgdGhlIGxvb3AgaW5kZXggaXMNCmFjdHVhbGx5IHRoZSBkZXZfYWRk
-ciBwYXJhbWV0ZXIgZnJvbSBnZXRfcGh5X2M0NV9kZXZzX2luX3BrZygpLCBhbmQgaXQncyBmcm9t
-IDEgdG8gNyAobnVtX2lkcyA9IDgpDQoNClRoaXMgd29ya2VkIGZvciB0aGUgb3RoZXIgUEhZcyB3
-aGljaCBoYWQgZGV2LWFkZHIgaW4gdGhpcyByYW5nZSwgYnV0IGl0IGRvZXNuJ3Qgd29yayBmb3Ig
-dGhlIElOUEhJLA0Kd2hpY2ggaGFzIGRldl9hZGQgPSAzMCAoMHgxZSkuDQpBZnRlciBJIGRpZCB0
-aGUgZXh0ZW5zaW9uIG9mIHRoZSAgZGV2aWNlX2lkcyBmcm9tIDggdG8gMzIgdG8gbWF0Y2ggDQp0
-aGUgZGV2cyAodTMyICpkZXZzID0gJmM0NV9pZHMtPmRldmljZXNfaW5fcGFja2FnZTspICBpbiBn
-ZXRfcGh5X2M0NV9pZHMoKSA6DQogLQl1MzIgZGV2aWNlX2lkc1s4XTsNCiArCXUzMiBkZXZpY2Vf
-aWRzWzMyXTsNCg0KSSByZWFsaXplZCB0aGF0IGRldl9hZGRyIGZvciBvdGhlciBQSFkgdmVuZG9y
-cyBjb3VsZCBiZSBsYXJnZXIgdGhhbiAzMSAoanVzdCBhIGNvaW5jaWRlbmNlIHRoYXQgDQpmb3Ig
-SU5QSEkgaXMgMzAgYW5kIGl0IGZpdHMpLCBhbmQgdGhhdCBkZXYtYWRkciBzaG91bGQgYmUgYSBz
-ZXBhcmF0ZSBwYXJhbWV0ZXIsIHRoYXQgc3RpbGwgDQpoYXMgdG8gbWF0Y2ggdGhlIGJpdCBwb3Np
-dGlvbiBmcm9tICpkZXZzICgmYzQ1X2lkcy0+ZGV2aWNlc19pbl9wYWNrYWdlKSANCg0KU28sIEkg
-ZGlkbid0IGhhZCB0byBjaGFuZ2UgdGhlIGxvb3AgdG8gc3RhcnQgZnJvbSBkZXYtYWRkciwganVz
-dCB0byBsZXQgaXQgY2hlY2sgaWYgdGhlIGJpdCBpcyBzZXQgaW4gKmRldnMgKGFzIGJlZm9yZSks
-IA0KYW5kIGlmIHRoYXQgYml0IGNvcnJlc3BvbmRzIHRvIHRoZSBJTlBISSBQSFkgKGRldi1hZGRy
-IGhhcyBiZWVuIHNldCBpbiB0aGUgUEhZIGRldmljZSB0cmVlIG5vZGUpLCB1c2UNCmRldi1hZGRy
-IGluIGdldHRpbmcgdGhlIFBIWSBJRC4NCg0KVGhlIGxvb3Agc3RhcnQgaW5kZXggaGFzIHRvIHJl
-bWFpbiB0aGUgc2FtZSBiZWNhdXNlIG90aGVyIFBIWSB2ZW5kb3JzIGhhdmUgZGV2LWFkZHIgMSB0
-byA3LCBhbmQgDQpQSFkgZGlzY292ZXJpbmcgc3VjY2VlZHMuDQoNCkZvciBvdGhlciBpc3N1ZXMg
-dGhhdCBJIGhhZCB3aXRoIHRoZSBhYm92ZSBzb2x1dGlvbiAocGx1cyBBbmRyZXcncyBjb21tZW50
-IGFib3V0IHRoZSBTTVApLCBJIHVwbG9hZGVkIA0KYSB2My4uLiBwcm9iYWJseSBzbGlnaHRseSBi
-ZWZvcmUgeW91IG1hZGUgdGhpcyBjb21tZW50LiBQbGVhc2UgaGF2ZSBsb29rIGF0IGl0LCBhbmQg
-cGFzdGUgdGhlIGJlbG93IA0KY29tbWVudHMgaWYgdGhleSBzdGlsbCBhcHBseS4gSSB3YXMgbm90
-IGFibGUgdG8gbWF0Y2ggdGhlbSB3aXRoIG15IGxhdGVzdCBwYXRjaC4uLg0KDQpUaGFua3MsDQpW
-aWNlbnRpdQ0KDQo+IC0gcGF0Y2ggb2ZfbWRpb2J1c19yZWdpc3Rlcl9waHkoKSB0byBsb29rdXAg
-Ym90aCB0aGUgYzQ1IGNvbXBhdGlibGUgc3RyaW5nIGFzDQo+IHdlbGwgYXMgZmV0Y2ggdGhlICJk
-ZXYtYWRkciIgcHJvcGVydHkNCj4gDQo+IC0gcHJvdmlkZSBhIFBIWSBEZXZpY2UgVHJlZSBub2Rl
-IHRoYXQgaGFzIGl0cyBPVUkgYXMgYSBjb21wYXRpYmxlIHN0cmluZyAoc2VlDQo+IG9mX2dldF9w
-aHlfaWQoKSBmb3IgZGV0YWlscyksIG9yIGlmIGl0IGhhcyBhIHNwZWNpZmllZCAnZGV2LWFkZHIn
-DQo+IHByb3BlcnR5LCB1c2UgdGhhdCBpbiBsaWV1IG9mIHRoZSBkZWZhdWx0IGdldF9waHlfZGV2
-aWNlKCkgbG9naWMNCj4gDQo+IC0gcGFzcyBib3RoIHRvIHBoeV9kZXZpY2VfY3JlYXRlKCkgYW5k
-IGV2ZW50dWFsbHkgaW50cm9kdWNlIGEgaGVscGVyIGZ1bmN0aW9uDQo+IHRoYXQgbGV0cyB5b3Ug
-cG9wdWxhdGUgdGhlIGM0NV9pZHMgc3RydWN0dXJlDQo+IA0KPiBUaGVuIGZvciBlYWNoIGZ1bmN0
-aW9uIHRoYXQgZG9lcyB0aGUgbG9vcCBhYm92ZSwgYXMgbG9uZyBhcyB5b3UgaGF2ZSBhIHBoeWRl
-dg0KPiByZWZlcmVuY2UsIHlvdSBjYW4gaGF2ZSBwaHlkZXYtPmRldl9hZGRyID0gMHgxZSBiZSB3
-aGVyZSB0byBzdGFydCBmcm9tLCBpZiBpdCBpcw0KPiAwLCB0aGVuIHN0YXJ0IGF0IDEgKGxpa2Ug
-aXQgY3VycmVudGx5IGlzKS4gSWYgeW91IGRvbid0IGhhdmUgYSBwaHkgZGV2aWNlIHJlZmVyZW5j
-ZSwNCj4gd2hpY2ggd291bGQgYmUgZ2V0X3BoeV9jNDVfaWRzKCkgdGhlbiBqdXN0IG1ha2Ugc3Vy
-ZSB5b3UgZG9uJ3QgY2FsbCB0aGF0DQo+IGZ1bmN0aW9uIDopDQo+IA0KPiA+ICBzdHJ1Y3QgcGh5
-X2M0NV9kZXZpY2VfaWRzIHsNCj4gPiAgCXUzMiBkZXZpY2VzX2luX3BhY2thZ2U7DQo+ID4gLQl1
-MzIgZGV2aWNlX2lkc1s4XTsNCj4gPiArCXUzMiBkZXZpY2VfaWRzWzMyXTsNCj4gPiArCXUzMiBk
-ZXZpY2VzX2FkZHJzWzMyXTsNCj4gPiAgfTsNCj4gDQo+IFRoaXMgbG9va3MgbGlrZSBhIGZpeCBp
-biBpdHNlbGYsIHNvIGl0IGlzIHdvcnRoIGEgc2VwYXJhdGUgcGF0Y2guDQo+IC0tDQo+IEZsb3Jp
-YW4NCg==
+
+--===============2047509050==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Qz2CZ664xQdCRdPu"
+Content-Disposition: inline
+
+
+--Qz2CZ664xQdCRdPu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Vladimir,
+
+On Tue, Mar 27, 2018 at 12:37:31PM +0300, Vladimir Zapolskiy wrote:
+> Hi Jacopo,
+>
+> On 03/27/2018 11:57 AM, jacopo mondi wrote:
+> > Hi Vladimir,
+> >
+> > On Tue, Mar 27, 2018 at 11:30:29AM +0300, Vladimir Zapolskiy wrote:
+> >> Hi Sergei,
+> >>
+> >> On 03/27/2018 11:27 AM, Sergei Shtylyov wrote:
+> >>> Hello!
+> >>>
+> >>> On 3/27/2018 10:33 AM, jacopo mondi wrote:
+> >>> [...]
+> >>>>>>>>> Document Thine THC63LVD1024 LVDS decoder device tree bindings.
+> >>>>>>>>>
+> >>>>>>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>>>>>>>> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> >>>>>>>>> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ra=
+gnatech.se>
+> >>>>>>>>> ---
+> >>>>>>>>>   .../bindings/display/bridge/thine,thc63lvd1024.txt | 66 +++++=
+++++++++++++++
+> >>>>>>>>>   1 file changed, 66 insertions(+)
+> >>>>>>>>>   create mode 100644
+> >>>>>>>>> Documentation/devicetree/bindings/display/bridge/thine,thc63lvd=
+1024.txt
+> >>>>>>>>>
+> >>>>>>>>> diff --git
+> >>>>>>>>> a/Documentation/devicetree/bindings/display/bridge/thine,thc63l=
+vd1024.txt
+> >>>>>>>>> b/Documentation/devicetree/bindings/display/bridge/thine,thc63l=
+vd1024.txt
+> >>>>>>>>> new file mode 100644
+> >>>>>>>>> index 0000000..8225c6a
+> >>>>>>>>> --- /dev/null
+> >>>>>>>>> +++
+> >>>>>>>>> b/Documentation/devicetree/bindings/display/bridge/thine,thc63l=
+vd1024.txt
+> >>>>>>>>> @@ -0,0 +1,66 @@
+> >>>>>>>>> +Thine Electronics THC63LVD1024 LVDS decoder
+> >>>>>>>>> +-------------------------------------------
+> >>>>>>>>> +
+> >>>>>>>>> +The THC63LVD1024 is a dual link LVDS receiver designed to conv=
+ert LVDS
+> >>>>>>>>> streams
+> >>>>>>>>> +to parallel data outputs. The chip supports single/dual input/=
+output modes,
+> >>>>>>>>> +handling up to two two input LVDS stream and up to two digital=
+ CMOS/TTL
+> >>>>>>>>> outputs.
+> >>>>>>>>> +
+> >>>>>>>>> +Single or dual operation modes, output data mapping and DDR ou=
+tput modes
+> >>>>>>>>> are
+> >>>>>>>>> +configured through input signals and the chip does not expose =
+any control
+> >>>>>>>>> bus.
+> >>>>>>>>> +
+> >>>>>>>>> +Required properties:
+> >>>>>>>>> +- compatible: Shall be "thine,thc63lvd1024"
+> >>>>>>>>> +
+> >>>>>>>>> +Optional properties:
+> >>>>>>>>> +- vcc-supply: Power supply for TTL output and digital circuitry
+> >>>>>>>>> +- cvcc-supply: Power supply for TTL CLOCKOUT signal
+> >>>>>>>>> +- lvcc-supply: Power supply for LVDS inputs
+> >>>>>>>>> +- pvcc-supply: Power supply for PLL circuitry
+> >>>>>>>> As explained in a comment to one of the previous versions of thi=
+s series, I'm
+> >>>>>>>> tempted to make vcc-supply mandatory and drop the three other po=
+wer supplies
+> >>>>>>>> for now, as I believe there's very little chance they will be co=
+nnected to
+> >>>>>>>> separately controllable regulators (all supplies use the same vo=
+ltage). In the
+> >>>>>>>> very unlikely event that this occurs in design we need to suppor=
+t in the
+> >>>>>>>> future, the cvcc, lvcc and pvcc supplies can be added later as o=
+ptional
+> >>>>>>>> without breaking backward compatibility.
+> >>>>>>> I'm okay with that.
+> >>>>>>>
+> >>>>>>>> Apart from that,
+> >>>>>>>>
+> >>>>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>>>>>>>
+> >>>>>>>>> +- pdwn-gpios: Power down GPIO signal. Active low
+> >>>>>>> powerdown-gpios is the semi-standard name.
+> >>>>>>>
+> >>>>>> right, I've also noticed it. If possible please avoid shortenings =
+in
+> >>>>>> property names.
+> >>>>>
+> >>>>> It is not shortening, it just follow pin name from decoder's datash=
+eet.
+> >>>>>
+> >>>>>>
+> >>>>>>>>> +- oe-gpios: Output enable GPIO signal. Active high
+> >>>>>>>>> +
+> >>>>>> And this one is also a not ever met property name, please consider=
+ to
+> >>>>>> rename it to 'enable-gpios', for instance display panels define it.
+> >>>>>
+> >>>>>
+> >>>>> Again, it follows datasheet naming scheme. Has something changed in=
+ DT
+> >>>>> conventions?
+> >>>>
+> >>>> Seconded. My understanding is that the property name should reflect
+> >>>> what reported in the the chip manual. For THC63LVD1024 the enable and
+> >>>> power down pins are named 'OE' and 'PDWN' respectively.
+> >>>
+> >>>     But don't we need the vendor prefix in the prop names then, like
+> >>> "renesas,oe-gpios" then?
+> >>>
+> >>
+> >> Seconded, with a correction to "thine,oe-gpios".
+> >>
+> >
+> > mmm, okay then...
+> >
+> > A grep for that semi-standard properties names in Documentation/
+> > returns only usage examples and no actual definitions, so I assume this
+> > is why they are semi-standard.
+>
+> Here we have to be specific about a particular property, let it be 'oe-gp=
+ios'
+> vs. 'enable-gpios' and let's collect some statistics:
+>
+> % grep -Hr oe-gpios Documentation/devicetree/bindings/* | wc -l
+> 0
+>
+> $ grep -Hr enable-gpios Documentation/devicetree/bindings/* | wc -l
+> 86
+>
+> While 'thine,oe-gpios' would be correct, I see no reason to introduce a v=
+endor
+> specific property to define a pin with a common and well understood purpo=
+se.
+>
+> If you go forward with the vendor specific prefix, apparently you can set=
+ the name
+> to 'thine,oe-gpio' (single) or even to 'thine,oe', or does the datasheet =
+names
+> the pin as "OE GPIO" or "OE connected to a GPIO"? I guess no.
+>
+
+Let me clarify I don't want to push for a vendor specific name or
+similar, I'm fine with using 'semi-standard' names, I'm just confused
+by the 'semi-standard' definition. I guess from your examples, the
+usage count makes a difference here.
+
+> Standards do not define '-gpios' suffix, but partially the description is=
+ found
+> in Documentation/bindings/gpio/gpio.txt, still it is not a section in any
+> standard as far as I know.
+
+>
+> > Seems like there is some tribal knowledge involved in defining what
+> > is semi-standard and what's not, or are those properties documented som=
+ewhere?
+> >
+>
+> The point is that there is no formal standard which describes every IP,
+> every IC and every single their property, some device node names and prop=
+erty
+> names are recommended in ePAPR and Devicetree Specification though.
+>
+> Think of a confusion if 'rst-gpios' (have you seen any ICs with an RST pi=
+n?) and
+> 'reset-gpios' are different. Same applies to 'pdwn-gpios' vs. 'powerdown-=
+gpios'.
+
+I see all your points and I agree with most of them. Anyway, if the
+chip manual describes a pin as 'RST' I would not find it confusing to
+have a 'rst-gpio' defined in bindings :)
+
+Let me be a bit pesky here: what if a chip defines a reset GPIO, which
+is definitely a reset, but names it, say "XYZ" ? Would you prefer to
+see it defined as "reset-gpios" for consistency with other bindings,
+or "xyz-gpios" for consistency with documentation?
+
+Thanks
+   j
+>
+> >> If vendor agnostic properties are supposed to be used, then please fol=
+low
+> >> the referenced by Rob semi-standard notations.
+>
+> --
+> With best wishes,
+> Vladimir
+
+--Qz2CZ664xQdCRdPu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJauhiAAAoJEHI0Bo8WoVY86+8QAL0/Vfrk1XKEhgJF77qfiW1A
+Th9XqKh0hooywgaL2x7a0edahAj/AGE5carW2xMYvP6MEgQ/DCRTBH6QkJkHYO0U
+3/XlZnwzyYbybOvn6zVdxyfPnjJDMR5+ALYvTSfIvjFa4xYCd4cZS5Ewdgpro33W
+z3eg8Cd+ASBsp6rxYMj7ee+305rG3H7uYafEMq/C8kIunrBra+zqvpLt8nSfrcNc
+XdMRsm65bGvEfqotyaKRVuS1b/IRqm/PJR2nlHDfwku0NtnFl4Hhn8rbjDvhKVGX
+M2Gi/bBE18JxdLGdCPrie4UKzio9b6GrbNpHCELYtJgCqwPHv4NQAg5mwfWgldGv
+VJ5l1zigC/h+nwaHDHUiIz+j5Ip7R1/0DLOc727s3Dt1hHsFAVUBmP7Tmh4FDy8x
+oKpsWy8qAZYl5njL9YxEgCSaBidumhGUy+Bm1ygJV6CJVltCmy/AnE7fP3vY9Gnd
+hthiEJIdhoXbm4FOccZ3FkJHvJyRrfrymjA5S1i465/fOc4fS9XYZWUrPGNhlTxu
+ABPwf6qwCUmKaWqfhG8TqFC1+ShKXsLlBIwhdfjU1NZkJpxlYjIMLor7NKA5+Odb
+ExNHqMwnB+37H4DSd4XOlZblEH341eD1vSJ2pXiLoE5FWCgGngCIVOIXl+bUqVbo
+0/3w8sy53G+mT2iBV23W
+=Ftfk
+-----END PGP SIGNATURE-----
+
+--Qz2CZ664xQdCRdPu--
+
+--===============2047509050==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2047509050==--
