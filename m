@@ -1,51 +1,52 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 06/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1
- board file
-Date: Tue, 27 Mar 2018 10:12:49 -0700
-Message-ID: <20180327171249.GI1403@tuxbook-pro>
-References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
- <1521800336-19266-7-git-send-email-sricharan@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
+ gbe_sgmii_config() conditional
+Date: Tue, 27 Mar 2018 19:13:43 +0200
+Message-ID: <20180327171343.GN5862@lunn.ch>
+References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+ <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521800336-19266-7-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
-> +#include "qcom-ipq4019-ap.dk04.1.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1-C1";
-> +
+On Tue, Mar 27, 2018 at 12:31:42PM -0400, Murali Karicheri wrote:
+> As a preparatory patch to add support for 2u cpsw hardware found on
+> K2G SoC, make call to gbe_sgmii_config() conditional. This is required
+> since 2u uses RGMII interface instead of SGMII and to allow for driver
+> re-use.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>  drivers/net/ethernet/ti/netcp_ethss.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+> index 56dbc0b..1dea891 100644
+> --- a/drivers/net/ethernet/ti/netcp_ethss.c
+> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
+> @@ -2271,7 +2271,8 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+>  
+>  	void (*hndlr)(struct net_device *) = gbe_adjust_link;
+>  
+> -	gbe_sgmii_config(priv, slave);
+> +	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
+> +		gbe_sgmii_config(priv, slave);
 
-If this is the board and qcom-ipq4019-ap.dk04.1.dtsi is the platform
-file then the compatible should be here and not there. Also qcom,ipq4019
-is not an awesome compatible for a board file.
+Hi Murali
 
-> +	soc {
-> +		dma@7984000 {
-> +			status = "ok";
-> +		};
-> +
-> +		qpic-nand@79b0000 {
-> +			pinctrl-0 = <&nand_pins>;
-> +			pinctrl-names = "default";
-> +			status = "ok";
-> +		};
+So you have:
 
-nand_pins defines the muxing and is defined in the other dtsi. So please
-move these pinctrl-* properties to the dtsi.
-
-As long as the node is disabled the pinctrl state won't be applied
-anyways.
+#define IS_SS_ID_NU(d) \
+	(GBE_IDENT((d)->ss_version) == GBE_SS_ID_NU)
 
 
-If there are electrical properties that needs to be specified you can
-override the pinctrl state in the board specific file.
+Does version 14 have a name? Could you add another IS_SS_ID_XX(d)
+macro for it? That would make these statements more consistent.
 
-Regards,
-Bjorn
+	Andrew
