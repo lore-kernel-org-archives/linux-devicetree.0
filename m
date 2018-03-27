@@ -1,77 +1,87 @@
-From: "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
-Subject: Re: [PATCH] Input: add bu21029 touch driver
-Date: Tue, 27 Mar 2018 06:52:31 +0000
-Message-ID: <bf2aff8ab685473c836012bbed96c693@de.bosch.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Tue, 27 Mar 2018 12:26:08 +0530
+Message-ID: <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+ <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: de-DE
+In-Reply-To: <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hs@denx.de" <hs@denx.de>, "ZHU Yi (BT-FIR/ENG1-Zhu)" <Yi.Zhu5@cn.bosch.com>, "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
+To: Manu Gautam <mgautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, anischal@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
 
-> > +* Rohm BU21029 Touch Screen Controller
-> > +
-> > +Required properties:
-> > + - compatible              : must be "rohm,bu21029"
-> > + - reg                     : i2c device address of the chip
->=20
-> What the valid value(s)?
 
-The chip itself can be wired to 0x40 or 0x41. The driver can work with
-any valid I2C address.
+On 3/27/2018 10:37 AM, Manu Gautam wrote:
+> Hi Doug,
+>
+>
+> On 3/27/2018 9:56 AM, Doug Anderson wrote:
+>> Manu
+>>
+>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+>>> to take place. This clock is output from PHY to GCC clock_ctl and then
+>>> fed back to QMP PHY and is available from PHY only after PHY is reset
+>>> and initialized, hence it can't be enabled too early in initialization
+>>> sequence.
+>>>
+>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>> ---
+>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
+>>>   1 file changed, 32 insertions(+), 1 deletion(-)
+>> So it's now new with this patch, but it's more obvious with this
+>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
+>> controls its clock.  Specifically:
+>>
+>> * If you init the PHY but don't power it on, then you "exit" the PHY:
+>> you'll disable/unprepare "pipe_clk" even though you never
+>> prepare/enabled it.
+>>
+>> * If you init the PHY, power it on, power it off, power it on, and
+>> exit the PHY: you'll leave the clock prepared one extra time.
+>>
+>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
+>> symmetric with the enable/prepare and should be in "power off", not in
+>> exit.
+>>
+>> ...or did I miss something?
+>>
+>>
+>> Interestingly, your patch fixes this problem for USB3 (where init/exit
+>> are now symmetric), but leaves the problem there for UFS/PCIE.
+>>
+> Thanks for review.
+> One of the reason why pipe_clk is disabled as part of phy_exit is that
+> halt_check from clk_disable reports error if called after PHY has been
+> powered down or phy_exit.
+> I believe that warning should be ignored in qcom gcc-clock driver
+> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
+> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
+UFS doesn't use PIPE clock.
+But considering for PCIe, if we disable pipe clock when phy is still 
+running, then
+it shouldn't be a problem. We should also not see the halt warning as 
+the gcc
+driver should be able to just turn the gate off.
+The reason why it will throw that error is when the parent clock to that 
+gate
+is gated, i.e. the pipe clock is not flowing on that branch.
 
-Is this what you are looking for?
+Best regards
+Vivek
 
-- reg                     : i2c device address of the chip (0x40 or 0x41)
-
-> > + - interrupt-parent        : the phandle for the gpio controller
-> > + - interrupts              : (gpio) interrupt to which the chip is con=
-nected
-> > + - reset-gpios             : gpio pin to reset the chip
->=20
-> Active high or low?
-
-The chip itself needs an active low reset. But depending on whether
-there is an inverter between the touch screen controller and the CPU or
-not, the CPU's GPIO might need to be active high or active low. This
-shall be configured by the polarity given in the device tree. The
-driver uses this information to drive the reset appropriately.
-
-Are you looking for documenting the required polarity of the touch
-controller itself?
-
-- reset-gpios             : gpio pin to reset the chip (active low)
-
-> > +Example:
-> > +
-> > +	&i2c1 {
-> > +		/* ... */
-> > +
-> > +		bu21029: bu21029@40 {
-> > +			compatible =3D "rohm,bu21029";
-> > +			reg =3D <0x40>;
-> > +			interrupt-parent =3D <&gpio1>;
-> > +			interrupts =3D <4 IRQ_TYPE_EDGE_FALLING>;
-> > +			reset-gpios =3D <&gpio6 16 GPIO_ACTIVE_LOW>;
-> > +			rohm,x-plate-ohms =3D <600>;
-> > +			touchscreen-max-pressure =3D <4095>;
-> > +		};
-> > +
-> > +		/* ... */
-> > +	};
-
-Greetings,
-Mark Jonas
-
-Building Technologies, Panel Software Fire (BT-FIR/ENG1)=20
-Bosch Sicherheitssysteme GmbH | Postfach 11 11 | 85626 Grasbrunn | GERMANY =
-| www.boschsecurity.com
-
-Sitz: Stuttgart, Registergericht: Amtsgericht Stuttgart HRB 23118=20
-Aufsichtsratsvorsitzender: Stefan Hartung; Gesch=E4ftsf=FChrung: Gert van I=
-peren, Andreas Bartz, Thomas Quante, Bernhard Schuster
+>
+> I can implement that as separate patch once dependent gcc driver
+> patch(es) gets in. Would that be ok?
+>
+> -Manu
+>
