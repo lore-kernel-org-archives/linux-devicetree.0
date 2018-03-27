@@ -1,15 +1,14 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/9] pinctrl: sunxi: add support for the
- Allwinner H6 main pin controller
-Date: Tue, 27 Mar 2018 15:11:09 +0200
-Message-ID: <CACRpkdafFgRvFXwJ=5s5a_VmvUfJGC3na0zUdU95Dg5451X_0A@mail.gmail.com>
-References: <20180316140215.28663-1-icenowy@aosc.io> <20180316140215.28663-5-icenowy@aosc.io>
+Subject: Re: [PATCH v4 0/9] Initial Allwinner H6 support
+Date: Tue, 27 Mar 2018 15:12:20 +0200
+Message-ID: <CACRpkdYW4N-zuPGGz+=GHUX69xBTS3w=EYhiP7dDvr+DZNUJUw@mail.gmail.com>
+References: <20180316140215.28663-1-icenowy@aosc.io>
 Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARB34F5HKQKGQE7V3QZGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBNMG5HKQKGQEHBWWKGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180316140215.28663-5-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180316140215.28663-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,24 +21,25 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri, Mar 16, 2018 at 3:02 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 
-> The Allwinner H6 SoC has two pin controllers, one main controller
-> (called CPUX-PORT in user manual) and one controller in CPUs power
-> domain (called CPUS-PORT in user manual).
+> This patchset adds initial support for the Allwinner H6 SoC.
 >
-> This commit introduces support for the main pin controller on H6.
+> It's quite different from earlier Allwinner SoCs. For example, the
+> memory map is refactored, and the CCU is rearranged. It's also the first
+> Allwinner SoC with PCI Express interface (although the implementation
+> of the PCI Express controller is broken), and the second one with USB
+> 3.0 (the first one is A80).
 >
-> The pin bank A and B are not wired out and hidden from the SoC's
-> documents, however it's shown that the "ATE" (an AC200 chip
-> co-packaged with the H6 die) is connected to the main SoC die via these
-> pin banks. The information about these banks is just copied from the BSP
-> pinctrl driver, but re-formatted to fit the mainline pinctrl driver
-> format. The GPIO functions are dropped, as they're impossible to use --
-> except a GPIO&IRQ only pin (PB20) which might be the IRQ of ATE.
+> This patchset adds the most basical support for it, including the main pin
+> controller, the main CCU and the basical device tree.
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Icenowy Zheng (9):
+>   pinctrl: sunxi: refactor irq related register function to have desc
+>   pinctrl: sunxi: introduce IRQ bank conversion function
+>   pinctrl: sunxi: change irq_bank_base to irq_bank_map
+>   pinctrl: sunxi: add support for the Allwinner H6 main pin controller
 
-Patch applied with all the ACKs.
+I applied these pinctrl patches for v4.17 so anything dependent on that
+can now be merged.
 
 Yours,
 Linus Walleij
