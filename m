@@ -1,104 +1,188 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 13:20:07 +0530
-Message-ID: <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
- <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
- <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: wrapper: add
+ io-channel-unit-converter
+Date: Tue, 27 Mar 2018 10:01:28 +0200
+Message-ID: <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
+References: <20180319170246.26830-1-peda@axentia.se>
+ <20180319170246.26830-3-peda@axentia.se>
+ <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
+In-Reply-To: <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, anischal@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-
-On 3/27/2018 12:26 PM, Vivek Gautam wrote:
->
->
-> On 3/27/2018 10:37 AM, Manu Gautam wrote:
->> Hi Doug,
+On 2018-03-27 00:23, Rob Herring wrote:
+> On Mon, Mar 19, 2018 at 06:02:45PM +0100, Peter Rosin wrote:
+>> Allow linear scaling and modification of the type of an io-channel.
 >>
+>> When an ADC channel measures the midpoint of a voltage divider, the
+>> interesting voltage is often the voltage over the full resistance
+>> of the divider. Likewise, measuring the voltage over a resistor is
+>> often a way to get to the current through it.
 >>
->> On 3/27/2018 9:56 AM, Doug Anderson wrote:
->>> Manu
->>>
->>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
->>>> to take place. This clock is output from PHY to GCC clock_ctl and then
->>>> fed back to QMP PHY and is available from PHY only after PHY is reset
->>>> and initialized, hence it can't be enabled too early in initialization
->>>> sequence.
->>>>
->>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>>> ---
->>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->>>>   1 file changed, 32 insertions(+), 1 deletion(-)
->>> So it's now new with this patch, but it's more obvious with this
->>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
->>> controls its clock.  Specifically:
->>>
->>> * If you init the PHY but don't power it on, then you "exit" the PHY:
->>> you'll disable/unprepare "pipe_clk" even though you never
->>> prepare/enabled it.
->>>
->>> * If you init the PHY, power it on, power it off, power it on, and
->>> exit the PHY: you'll leave the clock prepared one extra time.
->>>
->>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
->>> symmetric with the enable/prepare and should be in "power off", not in
->>> exit.
->>>
->>> ...or did I miss something?
->>>
->>>
->>> Interestingly, your patch fixes this problem for USB3 (where init/exit
->>> are now symmetric), but leaves the problem there for UFS/PCIE.
->>>
->> Thanks for review.
->> One of the reason why pipe_clk is disabled as part of phy_exit is that
->> halt_check from clk_disable reports error if called after PHY has been
->> powered down or phy_exit.
->> I believe that warning should be ignored in qcom gcc-clock driver
->> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
->> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
-> UFS doesn't use PIPE clock.
-
-Yes, UFS PHY doesn't use one. But similar to pipe_clk there are rx/tx symbol_clk
-output from PHY that is used by UFS controller. I will update code comments
-to not refer UFS for pipe_clk.
-
-> But considering for PCIe, if we disable pipe clock when phy is still running, then
-> it shouldn't be a problem. We should also not see the halt warning as the gcc
-> driver should be able to just turn the gate off.
-> The reason why it will throw that error is when the parent clock to that gate
-> is gated, i.e. the pipe clock is not flowing on that branch.
-
-I got the confirmation that pipe_clk is needed for PCIE as well for its
-initialization to happen successfully. So we do need clock driver change
-to fix this in PHY driver.
-
->
-> Best regards
-> Vivek
->
+>> This binding allows description of such hardware which is external
+>> to the ADC.
 >>
->> I can implement that as separate patch once dependent gcc driver
->> patch(es) gets in. Would that be ok?
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>> ---
+>>  .../iio/wrapper/io-channel-unit-converter.txt      | 84 ++++++++++++++++++++++
+>>  MAINTAINERS                                        |  6 ++
+>>  2 files changed, 90 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
 >>
->> -Manu
->>
->
+>> diff --git a/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>> new file mode 100644
+>> index 000000000000..23af661abe32
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>> @@ -0,0 +1,84 @@
+>> +I/O channel unit converter bindings
+>> +
+>> +Allow linear scaling and modification of the type of an io-channel.
+>> +
+>> +When an ADC channel measures the midpoint of a voltage divider, the
+>> +interesting voltage is often the voltage over the full resistance
+>> +of the divider. Likewise, measuring the voltage over a resistor is
+>> +often a way to get to the current through it.
+>> +
+>> +Required properties:
+>> +- compatible : "io-channel-unit-converter"
+> 
+> Would this apply to something besides ADCs?
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Not that I can think of. At the moment.
+
+>> +- io-channels : Channel node of the parent channel.
+>> +- io-channel-names : Should be "parent".
+>> +
+>> +Optional properties:
+>> +- numerator : The parent channel scale is multiplied by this value (default 1).
+>> +- denominator : The parent channel scale is divided by this value (default 1).
+>> +- type : The type of the wrapped channel is modified to this type. The default
+>> +	 is to use the same type as the parent channel. Recognized types are:
+>> +		"voltage"
+>> +		"current"
+> 
+> This seems overly complicated for just describing a couple of resistors 
+> on an ADC. OTOH, keeping the ADC node and what's attached to the ADC 
+> separate 
+> 
+> Perhaps the type should be part of the compatible. For example, if you 
+> have a current measurement resistor/circuit, then the compatible should 
+> be based on that.
+
+Is a compatible like "current-sense-circuit" too long(ish)? Is a
+vendor prefix absolutely required? Sure, I can use "axentia,"
+because we "implemented" the circuit this time, but it seems like
+the list can grow very long if we should add every vendor that
+may use something like this? Something more generic would be good
+for something as simple as this IMHO.
+
+I propose the compatible "voltage-divider" for the other example,
+but I have the same issue with the vendor prefix. Even more so
+in this case.
+
+Then the above type can be inferred from the compatible. I suppose
+I should write the above two bindings as two separate files?
+
+>> +
+>> +Example 1:
+>> +The system voltage is circa 12V, but divided down with a 22/200
+>> +voltage divider to adjust it to the ADC range.
+>> +
+>> +SYSV        ADC       GND
+>> +  +          +         +
+>> +  |  .-----. | .----.  |
+>> +  '--| 200 |-+-| 22 |--'
+>> +     '-----'   '----'
+>> +
+>> +sysv {
+>> +	compatible = "io-channel-unit-converter";
+>> +	io-channles = <&maxadc 1>;
+>> +	io-channel-names = "parent";
+> 
+> parent doesn't seem to describe something about the h/w.
+
+Extrapolating from your first question, you are thinking "adc", right?
+
+Cheers,
+Peter
+
+>> +
+>> +	/* multiply the ADC voltage by 222/22 to get the system voltage */
+>> +	numerator = <222>; /* 200 + 22 */
+>> +	denominator = <22>;
+>> +}
+>> +
+>> +&spi {
+>> +	maxadc: adc@0 {
+>> +		compatible = "maxim,max1027";
+>> +	      	reg = <0>;
+>> +		#io-channel-cells = <1>;
+>> +		interrupt-parent = <&gpio5>;
+>> +		interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+>> +		spi-max-frequency = <1000000>;
+>> +	};
+>> +};
+>> +
+>> +Example 2:
+>> +The system current is measured by measuring the voltage over a
+>> +3.3 ohm resistor.
+>> +
+>> +sysi {
+>> +	compatible = "io-channel-unit-converter";
+>> +	io-channles = <&tiadc 0>;
+>> +	io-channel-names = "parent";
+>> +
+>> +	/* divide the ADC voltage by 33/10 (i.e. 3.3) to get current */
+>> +	numerator = <10>;
+>> +	denominator = <33>;
+>> +	type = "current";
+>> +}
+>> +
+>> +&i2c {
+>> +	tiadc: adc@48 {
+>> +		compatible = "ti,ads1015";
+>> +	      	reg = <0x48>;
+>> +		#io-channel-cells = <1>;
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		channel@0 { /* IN0,IN1 differential */
+>> +			reg = <0>;
+>> +			ti,gain = <1>;
+>> +			ti,datarate = <4>;
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 96e5503bfb60..5dd555c7b1b0 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -6884,6 +6884,12 @@ F:	drivers/staging/iio/
+>>  F:	include/linux/iio/
+>>  F:	tools/iio/
+>>  
+>> +IIO UNIT CONVERTER
+>> +M:	Peter Rosin <peda@axentia.se>
+>> +L:	linux-iio@vger.kernel.org
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>> +
+>>  IKANOS/ADI EAGLE ADSL USB DRIVER
+>>  M:	Matthieu Castet <castet.matthieu@free.fr>
+>>  M:	Stanislaw Gruszka <stf_xl@wp.pl>
+>> -- 
+>> 2.11.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
