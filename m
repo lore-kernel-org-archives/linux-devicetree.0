@@ -1,73 +1,38 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v9 8/9] pinctrl: madera: Add driver for Cirrus Logic
- Madera codecs
-Date: Tue, 27 Mar 2018 13:18:38 +0100
-Message-ID: <20180327121838.y3wcovp3vng35zw4@dell>
-References: <20180313131904.13700-9-rf@opensource.cirrus.com>
- <201803221928.QinIS1e5%fengguang.wu@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 07/10] ARM: dts: gemini: Remove "cooling-{min|max}-level"
+ for gpio-fan node
+Date: Tue, 27 Mar 2018 14:26:58 +0200
+Message-ID: <CAK8P3a3taUgJW=xBZmttH1upv+J_Pj+0XKOCjUbPuzfGTmk13g@mail.gmail.com>
+References: <cover.1518166039.git.viresh.kumar@linaro.org> <01ddf0ac8962feb63e8871a2c2c3498c763f649b.1518166039.git.viresh.kumar@linaro.org>
+ <CACRpkdaQtPOJCcXoVB0UufLDNhkkh4__XTT2sapAKWDu9jw73g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201803221928.QinIS1e5%fengguang.wu@intel.com>
+In-Reply-To: <CACRpkdaQtPOJCcXoVB0UufLDNhkkh4__XTT2sapAKWDu9jw73g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, kbuild-all@01.org, linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Mar 2018, kbuild test robot wrote:
+On Tue, Mar 20, 2018 at 4:10 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Feb 9, 2018 at 9:58 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+>> The "cooling-min-level" and "cooling-max-level" properties are not
+>> parsed by any part of the kernel currently and the max cooling state of
+>> gpio-fan cooling device is found by referring to the
+>> "gpio-fan,speed-map" instead.
+>>
+>> Remove the unused properties from the gpio-fan node.
+>>
+>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> I can queue it next week (different machine hosting the git tree)
+> but it is also OK if the ARM SoC maintainers want to pick it
+> directly for the ARM SoC DTS branch.
 
-> Hi Richard,
-> 
-> I love your patch! Yet something to improve:
+I've picked it up directly now, as we're about to run out of time
+before the merge window.
 
-Looking to apply this set soon.
-
-I guess this needs fixing first though?
-
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.16-rc6 next-20180322]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Richard-Fitzgerald/mfd-madera-Add-register-definitions-for-Cirrus-Logic-Madera-codecs/20180314-211822
-> config: i386-randconfig-x010-03221515 (attached as .config)
-> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> drivers/pinctrl/cirrus/pinctrl-madera-core.c:561:20: error: 'pinconf_generic_dt_node_to_map_all' undeclared here (not in a function); did you mean 'pinconf_generic_params'?
->      .dt_node_to_map = pinconf_generic_dt_node_to_map_all,
->                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->                        pinconf_generic_params
-> 
-> vim +561 drivers/pinctrl/cirrus/pinctrl-madera-core.c
-> 
->    555	
->    556	
->    557	static const struct pinctrl_ops madera_pin_group_ops = {
->    558		.get_groups_count = madera_get_groups_count,
->    559		.get_group_name = madera_get_group_name,
->    560		.get_group_pins = madera_get_group_pins,
->  > 561		.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
->    562		.dt_free_map = pinctrl_utils_free_map,
->    563	#if IS_ENABLED(CONFIG_DEBUG_FS)
->    564		.pin_dbg_show = madera_pin_dbg_show,
->    565	#endif
->    566	};
->    567	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
-
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+       Arnd
