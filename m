@@ -1,92 +1,137 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Tue, 27 Mar 2018 11:29:53 +0200
-Message-ID: <CAMRc=MdkfrEvMrFtf_TUDcMVHNC2O9zw8Mn0pQnyFw3iMqVmmg@mail.gmail.com>
-References: <20180323130455.11470-1-brgl@bgdev.pl> <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
- <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
- <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
- <CAMRc=MdmTAwPAAnL1+n+OXSycnyjuQ1hKmts158mPcgat1NUYQ@mail.gmail.com> <6c55e081-57ba-6c39-8494-cda5022aa927@ti.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Tue, 27 Mar 2018 12:37:31 +0300
+Message-ID: <871a3805-b20c-3f48-406c-145461837388@mentor.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+ <4060923.7DxT9ae38L@avalon> <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
+ <CGME20180327061536epcas5p40faf6caf0d9825e6c33cd3e6ba9d8378@epcas5p4.samsung.com>
+ <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
+ <1dd27170-153c-90f6-e13f-949ba7d0d4a9@samsung.com>
+ <20180327073332.GI27746@w540>
+ <70826dc1-d9ea-dc98-f591-c80f1904806a@cogentembedded.com>
+ <b7d0e35e-3077-feba-dded-9b8f8422367b@mentor.com>
+ <20180327085748.GK27746@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6c55e081-57ba-6c39-8494-cda5022aa927@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree <devicetree@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180327085748.GK27746@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: mark.rutland@arm.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-2018-03-27 8:09 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
-> Hi Bart,
->
-> On Friday 23 March 2018 10:46 PM, Bartosz Golaszewski wrote:
->> 2018-03-23 18:08 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
->>> Quoting Bartosz Golaszewski (2018-03-23 09:55:47)
->>>> 2018-03-23 17:49 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
->>>>> Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
->>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>>
->>>>>> This series converts the only user of the handcoded, mach-specific reset
->>>>>> routines in the davinci platform to using the reset framework.
->>>>>>
->>>>>> Patch 1 modifies the way lookup entries are registered with the reset
->>>>>> framework.
->>>>>>
->>>>>> Patches 2-4 add necessary lookups/DT-properties.
->>>>>>
->>>>>> Patches 5-7 convert the davinci-rproc driver to the reset framework.
->>>>>>
->>>>>> Patch 8 removes now dead code.
->>>>>>
->>>>>> Philipp: it turned out that it's indeed better to use the reset
->>>>>> controller's device name for the entry lookup.
->>>>>>
->>>>>> Tested both in DT and legacy modes by booting the examples from
->>>>>> ti-ipc-rtos recipe in meta-ti.
->>>>>>
->>>>>> This series applies on top of David Lechner's common-clk-v9 branch[1]
->>>>>> with Philipp Zabel's reset/next branch[2] pulled in.
->>>>>>
->>>>>> It can be found in my github tree as well[3].
->>>>>>
->>>>>
->>>>> What's the merge strategy for the rest of the patches? I should apply
->>>>> the clk ones after the next -rc1?
->>>>
->>>> Or maybe Philipp can provide us with an immutable branch with the reset patches?
->>>>
->>>> The you could apply the driver patches and let Sekhar take all the
->>>> platform code?
->>>>
->>>
->>> Ok that could work too.
->>
->> Ohad, Bjorn can you ack the remoteproc patches? Are you OK with
->> Stephen taking them through the clock tree? Otherwise it would get
->> complicated since they depend on the first clk patch and the last clk
->> patch depends on them.
->
-> I will not be queuing the DTS patches for v4.17. They depend on clock
-> framework DTS patches which itself I plan to queue for v4.18. Given
-> this, I think the best bet is:
->
-> Ohad/Bjorn queue remoteproc patches already acked by Suman and having no
-> dependencies. That is, 5/8 and 6/8.
->
-> If Philipp can provide an immutable branch with reset changes, it will
-> be great and Stephen can queue 4/8. If not, its best to resend that
-> patch to Stephen once v4.17-rc1 is out.
->
-> The remaining patches need to wait till v4.18 (or even v4.19 if
-> dependencies don't pan out well).
->
-> Thanks,
-> Sekhar
-
-Very good, thanks.
-
-I've just sent out a v3 with three non-reset remoteproc patches that
-can already be applied by Suman.
-
-Thanks,
-Bartosz
+SGkgSmFjb3BvLAoKT24gMDMvMjcvMjAxOCAxMTo1NyBBTSwgamFjb3BvIG1vbmRpIHdyb3RlOgo+
+IEhpIFZsYWRpbWlyLAo+IAo+IE9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDExOjMwOjI5QU0gKzAz
+MDAsIFZsYWRpbWlyIFphcG9sc2tpeSB3cm90ZToKPj4gSGkgU2VyZ2VpLAo+Pgo+PiBPbiAwMy8y
+Ny8yMDE4IDExOjI3IEFNLCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6Cj4+PiBIZWxsbyEKPj4+Cj4+
+PiBPbiAzLzI3LzIwMTggMTA6MzMgQU0sIGphY29wbyBtb25kaSB3cm90ZToKPj4+IFsuLi5dCj4+
+Pj4+Pj4+PiBEb2N1bWVudCBUaGluZSBUSEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyIGRldmljZSB0
+cmVlIGJpbmRpbmdzLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBN
+b25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4+Pj4+Pj4+IFJldmlld2VkLWJ5OiBB
+bmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+Pj4+Pj4+Pj4gUmV2aWV3ZWQtYnk6
+IE5pa2xhcyBTw7ZkZXJsdW5kIDxuaWtsYXMuc29kZXJsdW5kK3JlbmVzYXNAcmFnbmF0ZWNoLnNl
+Pgo+Pj4+Pj4+Pj4gLS0tCj4+Pj4+Pj4+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aGluZSx0aGM2M2x2ZDEwMjQudHh0IHwgNjYgKysrKysrKysrKysrKysrKysrKwo+Pj4+Pj4+Pj4g
+ICAxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0aW9ucygrKQo+Pj4+Pj4+Pj4gICBjcmVhdGUgbW9k
+ZSAxMDA2NDQKPj4+Pj4+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+Pj4+Pj4+Pgo+Pj4+Pj4+Pj4gZGlm
+ZiAtLWdpdAo+Pj4+Pj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+Pj4+Pj4+Pj4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0
+LnR4dAo+Pj4+Pj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+Pj4+Pj4+IGluZGV4IDAwMDAw
+MDAuLjgyMjVjNmEKPj4+Pj4+Pj4+IC0tLSAvZGV2L251bGwKPj4+Pj4+Pj4+ICsrKwo+Pj4+Pj4+
+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhp
+bmUsdGhjNjNsdmQxMDI0LnR4dAo+Pj4+Pj4+Pj4gQEAgLTAsMCArMSw2NiBAQAo+Pj4+Pj4+Pj4g
+K1RoaW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPj4+Pj4+Pj4+ICst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+Pj4+Pj4+PiArCj4+
+Pj4+Pj4+PiArVGhlIFRIQzYzTFZEMTAyNCBpcyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVyIGRl
+c2lnbmVkIHRvIGNvbnZlcnQgTFZEUwo+Pj4+Pj4+Pj4gc3RyZWFtcwo+Pj4+Pj4+Pj4gK3RvIHBh
+cmFsbGVsIGRhdGEgb3V0cHV0cy4gVGhlIGNoaXAgc3VwcG9ydHMgc2luZ2xlL2R1YWwgaW5wdXQv
+b3V0cHV0IG1vZGVzLAo+Pj4+Pj4+Pj4gK2hhbmRsaW5nIHVwIHRvIHR3byB0d28gaW5wdXQgTFZE
+UyBzdHJlYW0gYW5kIHVwIHRvIHR3byBkaWdpdGFsIENNT1MvVFRMCj4+Pj4+Pj4+PiBvdXRwdXRz
+Lgo+Pj4+Pj4+Pj4gKwo+Pj4+Pj4+Pj4gK1NpbmdsZSBvciBkdWFsIG9wZXJhdGlvbiBtb2Rlcywg
+b3V0cHV0IGRhdGEgbWFwcGluZyBhbmQgRERSIG91dHB1dCBtb2Rlcwo+Pj4+Pj4+Pj4gYXJlCj4+
+Pj4+Pj4+PiArY29uZmlndXJlZCB0aHJvdWdoIGlucHV0IHNpZ25hbHMgYW5kIHRoZSBjaGlwIGRv
+ZXMgbm90IGV4cG9zZSBhbnkgY29udHJvbAo+Pj4+Pj4+Pj4gYnVzLgo+Pj4+Pj4+Pj4gKwo+Pj4+
+Pj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+Pj4+PiArLSBjb21wYXRpYmxlOiBTaGFs
+bCBiZSAidGhpbmUsdGhjNjNsdmQxMDI0Igo+Pj4+Pj4+Pj4gKwo+Pj4+Pj4+Pj4gK09wdGlvbmFs
+IHByb3BlcnRpZXM6Cj4+Pj4+Pj4+PiArLSB2Y2Mtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIFRU
+TCBvdXRwdXQgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5Cj4+Pj4+Pj4+PiArLSBjdmNjLXN1cHBseTog
+UG93ZXIgc3VwcGx5IGZvciBUVEwgQ0xPQ0tPVVQgc2lnbmFsCj4+Pj4+Pj4+PiArLSBsdmNjLXN1
+cHBseTogUG93ZXIgc3VwcGx5IGZvciBMVkRTIGlucHV0cwo+Pj4+Pj4+Pj4gKy0gcHZjYy1zdXBw
+bHk6IFBvd2VyIHN1cHBseSBmb3IgUExMIGNpcmN1aXRyeQo+Pj4+Pj4+PiBBcyBleHBsYWluZWQg
+aW4gYSBjb21tZW50IHRvIG9uZSBvZiB0aGUgcHJldmlvdXMgdmVyc2lvbnMgb2YgdGhpcyBzZXJp
+ZXMsIEknbQo+Pj4+Pj4+PiB0ZW1wdGVkIHRvIG1ha2UgdmNjLXN1cHBseSBtYW5kYXRvcnkgYW5k
+IGRyb3AgdGhlIHRocmVlIG90aGVyIHBvd2VyIHN1cHBsaWVzCj4+Pj4+Pj4+IGZvciBub3csIGFz
+IEkgYmVsaWV2ZSB0aGVyZSdzIHZlcnkgbGl0dGxlIGNoYW5jZSB0aGV5IHdpbGwgYmUgY29ubmVj
+dGVkIHRvCj4+Pj4+Pj4+IHNlcGFyYXRlbHkgY29udHJvbGxhYmxlIHJlZ3VsYXRvcnMgKGFsbCBz
+dXBwbGllcyB1c2UgdGhlIHNhbWUgdm9sdGFnZSkuIEluIHRoZQo+Pj4+Pj4+PiB2ZXJ5IHVubGlr
+ZWx5IGV2ZW50IHRoYXQgdGhpcyBvY2N1cnMgaW4gZGVzaWduIHdlIG5lZWQgdG8gc3VwcG9ydCBp
+biB0aGUKPj4+Pj4+Pj4gZnV0dXJlLCB0aGUgY3ZjYywgbHZjYyBhbmQgcHZjYyBzdXBwbGllcyBj
+YW4gYmUgYWRkZWQgbGF0ZXIgYXMgb3B0aW9uYWwKPj4+Pj4+Pj4gd2l0aG91dCBicmVha2luZyBi
+YWNrd2FyZCBjb21wYXRpYmlsaXR5Lgo+Pj4+Pj4+IEknbSBva2F5IHdpdGggdGhhdC4KPj4+Pj4+
+Pgo+Pj4+Pj4+PiBBcGFydCBmcm9tIHRoYXQsCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFJldmlld2VkLWJ5
+OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4+
+Pj4+Pj4+Cj4+Pj4+Pj4+PiArLSBwZHduLWdwaW9zOiBQb3dlciBkb3duIEdQSU8gc2lnbmFsLiBB
+Y3RpdmUgbG93Cj4+Pj4+Pj4gcG93ZXJkb3duLWdwaW9zIGlzIHRoZSBzZW1pLXN0YW5kYXJkIG5h
+bWUuCj4+Pj4+Pj4KPj4+Pj4+IHJpZ2h0LCBJJ3ZlIGFsc28gbm90aWNlZCBpdC4gSWYgcG9zc2li
+bGUgcGxlYXNlIGF2b2lkIHNob3J0ZW5pbmdzIGluCj4+Pj4+PiBwcm9wZXJ0eSBuYW1lcy4KPj4+
+Pj4KPj4+Pj4gSXQgaXMgbm90IHNob3J0ZW5pbmcsIGl0IGp1c3QgZm9sbG93IHBpbiBuYW1lIGZy
+b20gZGVjb2RlcidzIGRhdGFzaGVldC4KPj4+Pj4KPj4+Pj4+Cj4+Pj4+Pj4+PiArLSBvZS1ncGlv
+czogT3V0cHV0IGVuYWJsZSBHUElPIHNpZ25hbC4gQWN0aXZlIGhpZ2gKPj4+Pj4+Pj4+ICsKPj4+
+Pj4+IEFuZCB0aGlzIG9uZSBpcyBhbHNvIGEgbm90IGV2ZXIgbWV0IHByb3BlcnR5IG5hbWUsIHBs
+ZWFzZSBjb25zaWRlciB0bwo+Pj4+Pj4gcmVuYW1lIGl0IHRvICdlbmFibGUtZ3Bpb3MnLCBmb3Ig
+aW5zdGFuY2UgZGlzcGxheSBwYW5lbHMgZGVmaW5lIGl0Lgo+Pj4+Pgo+Pj4+Pgo+Pj4+PiBBZ2Fp
+biwgaXQgZm9sbG93cyBkYXRhc2hlZXQgbmFtaW5nIHNjaGVtZS4gSGFzIHNvbWV0aGluZyBjaGFu
+Z2VkIGluIERUCj4+Pj4+IGNvbnZlbnRpb25zPwo+Pj4+Cj4+Pj4gU2Vjb25kZWQuIE15IHVuZGVy
+c3RhbmRpbmcgaXMgdGhhdCB0aGUgcHJvcGVydHkgbmFtZSBzaG91bGQgcmVmbGVjdAo+Pj4+IHdo
+YXQgcmVwb3J0ZWQgaW4gdGhlIHRoZSBjaGlwIG1hbnVhbC4gRm9yIFRIQzYzTFZEMTAyNCB0aGUg
+ZW5hYmxlIGFuZAo+Pj4+IHBvd2VyIGRvd24gcGlucyBhcmUgbmFtZWQgJ09FJyBhbmQgJ1BEV04n
+IHJlc3BlY3RpdmVseS4KPj4+Cj4+PiAgICAgQnV0IGRvbid0IHdlIG5lZWQgdGhlIHZlbmRvciBw
+cmVmaXggaW4gdGhlIHByb3AgbmFtZXMgdGhlbiwgbGlrZQo+Pj4gInJlbmVzYXMsb2UtZ3Bpb3Mi
+IHRoZW4/Cj4+Pgo+Pgo+PiBTZWNvbmRlZCwgd2l0aCBhIGNvcnJlY3Rpb24gdG8gInRoaW5lLG9l
+LWdwaW9zIi4KPj4KPiAKPiBtbW0sIG9rYXkgdGhlbi4uLgo+IAo+IEEgZ3JlcCBmb3IgdGhhdCBz
+ZW1pLXN0YW5kYXJkIHByb3BlcnRpZXMgbmFtZXMgaW4gRG9jdW1lbnRhdGlvbi8KPiByZXR1cm5z
+IG9ubHkgdXNhZ2UgZXhhbXBsZXMgYW5kIG5vIGFjdHVhbCBkZWZpbml0aW9ucywgc28gSSBhc3N1
+bWUgdGhpcwo+IGlzIHdoeSB0aGV5IGFyZSBzZW1pLXN0YW5kYXJkLgoKSGVyZSB3ZSBoYXZlIHRv
+IGJlIHNwZWNpZmljIGFib3V0IGEgcGFydGljdWxhciBwcm9wZXJ0eSwgbGV0IGl0IGJlICdvZS1n
+cGlvcycKdnMuICdlbmFibGUtZ3Bpb3MnIGFuZCBsZXQncyBjb2xsZWN0IHNvbWUgc3RhdGlzdGlj
+czoKCiUgZ3JlcCAtSHIgb2UtZ3Bpb3MgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+LyogfCB3YyAtbAowCgokIGdyZXAgLUhyIGVuYWJsZS1ncGlvcyBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvKiB8IHdjIC1sCjg2CgpXaGlsZSAndGhpbmUsb2UtZ3Bpb3MnIHdvdWxk
+IGJlIGNvcnJlY3QsIEkgc2VlIG5vIHJlYXNvbiB0byBpbnRyb2R1Y2UgYSB2ZW5kb3IKc3BlY2lm
+aWMgcHJvcGVydHkgdG8gZGVmaW5lIGEgcGluIHdpdGggYSBjb21tb24gYW5kIHdlbGwgdW5kZXJz
+dG9vZCBwdXJwb3NlLgoKSWYgeW91IGdvIGZvcndhcmQgd2l0aCB0aGUgdmVuZG9yIHNwZWNpZmlj
+IHByZWZpeCwgYXBwYXJlbnRseSB5b3UgY2FuIHNldCB0aGUgbmFtZQp0byAndGhpbmUsb2UtZ3Bp
+bycgKHNpbmdsZSkgb3IgZXZlbiB0byAndGhpbmUsb2UnLCBvciBkb2VzIHRoZSBkYXRhc2hlZXQg
+bmFtZXMKdGhlIHBpbiBhcyAiT0UgR1BJTyIgb3IgIk9FIGNvbm5lY3RlZCB0byBhIEdQSU8iPyBJ
+IGd1ZXNzIG5vLgoKU3RhbmRhcmRzIGRvIG5vdCBkZWZpbmUgJy1ncGlvcycgc3VmZml4LCBidXQg
+cGFydGlhbGx5IHRoZSBkZXNjcmlwdGlvbiBpcyBmb3VuZAppbiBEb2N1bWVudGF0aW9uL2JpbmRp
+bmdzL2dwaW8vZ3Bpby50eHQsIHN0aWxsIGl0IGlzIG5vdCBhIHNlY3Rpb24gaW4gYW55CnN0YW5k
+YXJkIGFzIGZhciBhcyBJIGtub3cuCgo+IFNlZW1zIGxpa2UgdGhlcmUgaXMgc29tZSB0cmliYWwg
+a25vd2xlZGdlIGludm9sdmVkIGluIGRlZmluaW5nIHdoYXQKPiBpcyBzZW1pLXN0YW5kYXJkIGFu
+ZCB3aGF0J3Mgbm90LCBvciBhcmUgdGhvc2UgcHJvcGVydGllcyBkb2N1bWVudGVkIHNvbWV3aGVy
+ZT8KPiAKClRoZSBwb2ludCBpcyB0aGF0IHRoZXJlIGlzIG5vIGZvcm1hbCBzdGFuZGFyZCB3aGlj
+aCBkZXNjcmliZXMgZXZlcnkgSVAsCmV2ZXJ5IElDIGFuZCBldmVyeSBzaW5nbGUgdGhlaXIgcHJv
+cGVydHksIHNvbWUgZGV2aWNlIG5vZGUgbmFtZXMgYW5kIHByb3BlcnR5Cm5hbWVzIGFyZSByZWNv
+bW1lbmRlZCBpbiBlUEFQUiBhbmQgRGV2aWNldHJlZSBTcGVjaWZpY2F0aW9uIHRob3VnaC4KClRo
+aW5rIG9mIGEgY29uZnVzaW9uIGlmICdyc3QtZ3Bpb3MnIChoYXZlIHlvdSBzZWVuIGFueSBJQ3Mg
+d2l0aCBhbiBSU1QgcGluPykgYW5kCidyZXNldC1ncGlvcycgYXJlIGRpZmZlcmVudC4gU2FtZSBh
+cHBsaWVzIHRvICdwZHduLWdwaW9zJyB2cy4gJ3Bvd2VyZG93bi1ncGlvcycuCgo+PiBJZiB2ZW5k
+b3IgYWdub3N0aWMgcHJvcGVydGllcyBhcmUgc3VwcG9zZWQgdG8gYmUgdXNlZCwgdGhlbiBwbGVh
+c2UgZm9sbG93Cj4+IHRoZSByZWZlcmVuY2VkIGJ5IFJvYiBzZW1pLXN0YW5kYXJkIG5vdGF0aW9u
+cy4KCi0tCldpdGggYmVzdCB3aXNoZXMsClZsYWRpbWlyCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
