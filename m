@@ -1,108 +1,111 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 27 Mar 2018 13:51:56 -0700
-Message-ID: <CAD=FV=XELzjc6h06MhwW-8XCOvH4vhMk1zzK_aD+94RdbCzUtw@mail.gmail.com>
-References: <cover.1521246069.git.collinsd@codeaurora.org> <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <CAD=FV=Xz01ra=WS--vtA+dkb1H8wcw3UnFzXPS=zYWAQCPP5eg@mail.gmail.com>
- <184378e4-caf8-6ce3-e089-3690588fcb28@codeaurora.org> <CAD=FV=WsVDDaV-mMUvQWUomyBFCJZunKiyDt_K81_syoNhGRZQ@mail.gmail.com>
- <20180327115606.GC29239@sirena.org.uk>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [net-next PATCH v2 05/10] net: netcp: ethss: use rgmii link
+ status for 2u cpsw hardware
+Date: Tue, 27 Mar 2018 17:07:35 -0400
+Message-ID: <33e89328-4f0b-cc9f-96cc-4b45747b9f34@ti.com>
+References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+ <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
+ <20180327172953.GP5862@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327115606.GC29239@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org, ilina@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180327172953.GP5862@lunn.ch>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/27/2018 01:29 PM, Andrew Lunn wrote:
+> On Tue, Mar 27, 2018 at 12:31:44PM -0400, Murali Karicheri wrote:
+>> Introduce rgmii link status to handle link state events for 2u
+>> cpsw hardware on K2G.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>>  drivers/net/ethernet/ti/netcp_ethss.c | 27 +++++++++++++++++++++++----
+>>  1 file changed, 23 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+>> index ab9d369..078a1b8 100644
+>> --- a/drivers/net/ethernet/ti/netcp_ethss.c
+>> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
+>> @@ -552,6 +552,7 @@ struct gbe_ss_regs {
+>>  struct gbe_ss_regs_ofs {
+>>  	u16	id_ver;
+>>  	u16	control;
+>> +	u16	rgmii_status; /* 2U */
+>>  };
+>>  
+>>  struct gbe_switch_regs {
+>> @@ -2120,23 +2121,39 @@ static bool gbe_phy_link_status(struct gbe_slave *slave)
+>>  	 return !slave->phy || slave->phy->link;
+>>  }
+>>  
+>> +#define RGMII_REG_STATUS_LINK	BIT(0)
+>> +
+>> +static void netcp_2u_rgmii_get_port_link(struct gbe_priv *gbe_dev, bool *status)
+>> +{
+>> +	u32 val = 0;
+>> +
+>> +	val = readl(GBE_REG_ADDR(gbe_dev, ss_regs, rgmii_status));
+>> +	*status = false;
+>> +	if ((val & RGMII_REG_STATUS_LINK) != 0)
+>> +		*status = true;
+> 
+>   *status = !!(val & RGMII_REG_STATUS_LINK);
+> 
+> 
+>> +}
+>> +
+>>  static void netcp_ethss_update_link_state(struct gbe_priv *gbe_dev,
+>>  					  struct gbe_slave *slave,
+>>  					  struct net_device *ndev)
+>>  {
+>> -	int sp = slave->slave_num;
+>> -	int phy_link_state, sgmii_link_state = 1, link_state;
+>> +	bool sw_link_state = true, phy_link_state;
+>> +	int sp = slave->slave_num, link_state;
+>>  
+>>  	if (!slave->open)
+>>  		return;
+>>  
+>>  	if (!SLAVE_LINK_IS_XGMII(slave)) {
+>> -		sgmii_link_state =
+>> +		if (SLAVE_LINK_IS_RGMII(slave))
+>> +			netcp_2u_rgmii_get_port_link(gbe_dev,
+>> +						     &sw_link_state);
+>> +		else
+>> +			sw_link_state =
+>>  			netcp_sgmii_get_port_link(SGMII_BASE(gbe_dev, sp), sp);
+> 
+> This would be more readable as
+> 
+>      if (SLAVE_LINK_IS_RGMII(slave))
+> 		netcp_2u_rgmii_get_port_link(gbe_dev,
+> 					     &sw_link_state);
+>      if (SLAVE_LINK_IS_SGMII(slave))
+> 	sw_link_state = netcp_sgmii_get_port_link(
+> 	   SGMII_BASE(gbe_dev, sp), sp);
+> 
+Probably better to use a switch statement in this case for better readability?
+handle only SGMII and RGMII cases in the switch statement.
 
-On Tue, Mar 27, 2018 at 4:56 AM, Mark Brown <broonie@kernel.org> wrote:
->> > Here is an explanation for why the "device tree mode" abstraction is
->> > present in the first place.  Between different Qualcomm Technologies, Inc.
->> > PMICs, regulators support a subset of the same modes (HPM/PWM, AUTO,
->> > LPM/PFM, Retention, and pass-through).  However, the register values for
->> > the same modes vary between different regulator types and different PMIC
->> > families.  This patch is adding support for several PMIC4 family PMICs.
->> > The values needed for to-be-released PMIC5 PMIC regulators are different.
->> > As an example, here are the different values for LPM/PFM across PMIC
->> > families and regulator types: PMIC4 LDO/SMPS = 5, PMIC4 BOB = 1, PMIC5
->> > LDO/HFSMPS/BOB = 4, PMIC5 FTSMPS = N/A.  Having the "device tree mode"
->> > ensures that it is not possible to inadvertently specify a PMIC specific
->> > mode in device tree which corresponds to the wrong type or family but
->> > which aliases a value that would be accepted as correct.
->
->> I'm OK with having the "device tree mode" abstraction, and in fact the
->> current regulator framework seems to want you to have this anyway.  If
->> I read the code correctly, you're required to have the conversion
->> function and there's no default.
->
-> I didn't spot this in the code but something called "device tree mode"
-> sounds like it's going to be awfully confusing...
+Murali
 
-Just to clarify this bit: The regulator framework allows for a
-callback function of_map_mode() in regulator drivers.  My reading of
-the code shows that if you wish to use the property
-"regulator-initial-mode" (like this regulator does) that it is
-_required_ to provide an of_map_mode() function.
-
-Assuming I didn't mess up my analysis, the entire job of of_map_mode()
-is to convert from one integer to another.  It should take the number
-that was specified in the device tree and convert it to a
-REGULATOR_MODE_XXX.  That means that the regulator framework is
-enforcing a distinct and per-regulator numbering system for the mode
-(I called this "device tree mode").
-
-
-Just for kicks, right now these are the REGULATOR_MODEs:
-
-#define REGULATOR_MODE_FAST 0x1
-#define REGULATOR_MODE_NORMAL 0x2
-#define REGULATOR_MODE_IDLE 0x4
-#define REGULATOR_MODE_STANDBY 0x8
-
---
-
-In cpcap_map_mode():
-
-0 (CPCAP_BIT_AUDIO_NORMAL_MODE) => 0x2 (normal)
-0x40 (CPCAP_BIT_AUDIO_LOW_PWR) ==> 0x8 (standby)
-else => error
-
---
-
-In max77802_map_mode():
-
-3 (MAX77802_OPMODE_NORMAL) ==> 0x2 (normal)
-else (intends 1 or MAX77802_OPMODE_LP) ==> 0x8 (standby)
-
---
-
-In spmi_regulator_of_map_mode():
-
-1 => 0x2 (normal)
-2 => 0x1 (fast)
-else => 0x4 (idle)
-
---
-
-In twl4030reg_map_mode():
-
-0xe (RES_STATE_ACTIVE) => 0x2 (normal)
-0x8 (RES_STATE_SLEEP) => 0x8 (standby)
-else => error
-
---
-
-So basically it sounds like everyone makes up some arbitrary numbering
-system that is only used in their device tree files and needs to be
-mapped into the standard numbering system...
-
-Perhaps the right answer is to improve the regulator core to make
-of_map_mode() optional?  We'd have to figure out where to place the
-#defines for the default of_map_mode() so they could be used in .dts
-files, but that should be possible.  Presumably it would be wise to
-add a new property that was a bitmask of valid modes...
+>    Andrew
+> 
 
 
--Doug
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
