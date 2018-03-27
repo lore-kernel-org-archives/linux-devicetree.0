@@ -1,200 +1,121 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 2/5] drm: bridge: add API to query the expected input
- formats of bridges
-Date: Tue, 27 Mar 2018 11:47:43 +0200
-Message-ID: <20180327094743.GL27746@w540>
-References: <20180326212447.7380-1-peda@axentia.se>
- <20180326212447.7380-3-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v3 1/2] of_net: Implement of_get_nvmem_mac_address helper
+Date: Tue, 27 Mar 2018 11:52:25 +0200
+Message-ID: <1522144346-32367-2-git-send-email-mike.looijmans@topic.nl>
+References: <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180326212447.7380-3-peda@axentia.se>
+In-Reply-To: <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
+It's common practice to store MAC addresses for network interfaces into
+nvmem devices. However the code to actually do this in the kernel lacks,
+so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+address from an nvmem cell provider.
 
---BI5RvnYi6R4T2M87
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+This is particulary useful on devices where the ethernet interface cannot
+be configured by the bootloader, for example because it's in an FPGA.
 
-Hi Peter,
-   thanks for the patches
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt |  2 ++
+ drivers/of/of_net.c                                | 40 ++++++++++++++++++++++
+ include/linux/of_net.h                             |  6 ++++
+ 3 files changed, 48 insertions(+)
 
-On Mon, Mar 26, 2018 at 11:24:44PM +0200, Peter Rosin wrote:
-> Bridges may affect the required bus output format of the encoder, in
-> which case it may be wrong to use the output format of the panel or
-> connector as is. Add infrastructure to address this problem.
-
-Bridges not only affect the format expected by the connector at the
-end of the display pipeline, they may perform encoding/decoding
-between protocols and their accepted input formats may be unrelated to
-the connector at the end of the pipeline as there may an arbitrary
-number of bridges in between.
-
-Eg.
-
-ENCODER                                                CONNECTOR
-  |                                                         |
-|DU LVDS| ->lvds-> |THC63| ->rgb-> |ADV7511| ->hdmi-> |HDMI connector|
-
-The fact that THC63 wants a specific LVDS input format is unrelated to
-the format required by the HDMI connector at the end of the pipeline.
-
-I would just state here that bridges need a way to report their
-accepted media bus formats, and this patch extends the DRM Bridge APIs
-to implement that.
-
->
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  drivers/gpu/drm/drm_bridge.c | 32 ++++++++++++++++++++++++++++++++
->  include/drm/drm_bridge.h     | 18 ++++++++++++++++++
->  2 files changed, 50 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 1638bfe9627c..f85e61b7416e 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -348,6 +348,38 @@ void drm_bridge_enable(struct drm_bridge *bridge)
->  }
->  EXPORT_SYMBOL(drm_bridge_enable);
->
-> +/**
-> + * drm_bridge_input_formats - get the expected bus input format of the bridge
-
-I may be biased by the V4L2 APIs, but this seems to me very much like
-similar to g_fmt/s_fmt callbacks we have there. Bridges have an input and
-an output formats, and that calls for something that takes that into
-account, as well as they may have different input ports with different
-accepted formats but I would for now simplify this to just 'g_fmt()'
-
-> + * @bridge: bridge control structure
-> + * @bus_formats: where to store a pointer to the bus input formats
-> + *
-> + * Calls the &drm_bridge_funcs.input_formats op for the frist bridge in the
-> + * chain that has registered this op.
-
-I'm not sure passing the call down the pipeline is desirable. Each
-component should make sure its output format is accepted as the next
-bridge input format, passing the call to the next bridge is not
-different that getting to the connector at the end of the pipeline and
-return to the initial caller its supported format. Do you agree with this?
-
-> + *
-> + * Note that the bridge passed should normally be the bridge closest to the
-> + * encoder, but possibly the bridge closest to an intermediate bridge in
-> + * convoluted cases.
-> + *
-
-As I see this, any bridge in the arbitrary long pipeline should call
-this operation on next bridge if it supports different output formats.
-Ie. I would not name here the encoder nor refer to the bridge position
-in the pipeline.
-
-> + * RETURNS:
-> + * The number of bus input formats the bridge accepts. Zero means that
-> + * the chain of bridges are not converting the bus format and that the
-> + * format of the drm_connector should be used.
-
-How do we get to the connector format from a bridge that has maybe
-other components in between in the pipeline?
-
-If a bridge do not report any supported format, it won't implement
-this callback and things will work as they work today.
-
-> + */
-> +int drm_bridge_input_formats(struct drm_bridge *bridge,
-> +			     const u32 **bus_formats)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!bridge)
-> +		return 0;
-> +
-> +	if (bridge->funcs->input_formats)
-> +		ret = bridge->funcs->input_formats(bridge, bus_formats);
-> +
-> +	return ret ?: drm_bridge_input_formats(bridge->next, bus_formats);
-
-See my comment on the call propagation down in the pipeline.
-
-> +}
-> +EXPORT_SYMBOL(drm_bridge_input_formats);
-> +
->  #ifdef CONFIG_OF
->  /**
->   * of_drm_find_bridge - find the bridge corresponding to the device node in
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index 682d01ba920c..ae8d3c4af0b8 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -220,6 +220,22 @@ struct drm_bridge_funcs {
->  	 * The enable callback is optional.
->  	 */
->  	void (*enable)(struct drm_bridge *bridge);
-> +
-> +	/**
-> +	 * @input_formats:
-> +	 *
-> +	 * The callback reports the expected bus input formats of the bridge.
-> +	 *
-> +	 * The @input_formats callback is optional. The bridge is assumed to
-> +	 * not convert the bus format if the callback is not installed.
-> +	 *
-> +	 * RETURNS:
-> +	 *
-> +	 * Zero if the bridge does not convert the bus format, otherwise the
-> +	 * number of bus input formats returned in &bus_formats.
-> +	 */
-> +	int (*input_formats)(struct drm_bridge *bridge,
-> +			     const u32 **bus_formats);
-
-Consider g_fmt() here as well, or a function name that captures that we want
-to know the supported format (and possibly configure it as well one
-day, if ever possible).
-
-Thanks
-   j
-
->  };
->
->  /**
-> @@ -263,6 +279,8 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
->  			struct drm_display_mode *adjusted_mode);
->  void drm_bridge_pre_enable(struct drm_bridge *bridge);
->  void drm_bridge_enable(struct drm_bridge *bridge);
-> +int drm_bridge_input_formats(struct drm_bridge *bridge,
-> +			     const u32 **bus_formats);
->
->  #ifdef CONFIG_DRM_PANEL_BRIDGE
->  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
-> --
-> 2.11.0
->
-
---BI5RvnYi6R4T2M87
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJauhM/AAoJEHI0Bo8WoVY80qUQALBcrH+ujGYDUnRL/gC6fiKs
-i8CeGyAGbaBgC+KetUzTunOwGW55m2jF7E82ZSosywODJ4tBdeOf+p9eM6ibVB3O
-ujTypppDnThh1z71cUje1XREYX6D4CD90NxqODbfMAWfW7YOCg3QvteMIgXdf21T
-959iwKWNDQRbjCtqL+pU609kPYqmyrdM8E36EjAKY4yb6gI2+1uDcjg9VOuAx7aO
-V9r1GsvQkOE1eqaf0d50Z+NAaRl2yVhrvnzLRD4+0zjFD89b2gL9MnivC/CMM5WJ
-iAep+c0UkNAAXYGBhY3H36Q1YbHrXWbIIjeBDe6r485/LFyHprVX/u8W0huIoeoW
-ADpoRFl3XSBH0drAqimREFnXnccAqvHRnntGk9PZa8mNFzKJAp5VWMlnyXvRKsCf
-qlDKnEC/butVEPc62/2dfMGwIuqVWu+TtFWZJx7QhmVl5/14bas8zF+iOtstAPjD
-JmgHn2TTBlmHpAJDEMYztxVqtfDLB/WvW3Xdih8zZ1uNgFxr1DYBAO0mGQQ/mHwA
-S4nOAyDaRzhpr7omKEfxMAQ+odlTpCyqxf45Jik4fcBFy/DsqDOKgA1nWxahklPq
-5xFnV+M6bpsjXb+MvcAK077RRpl0zMeprfeSubUONQBnifOdJPbyTexCAC1irPyS
-zFS9e5QAcmanO9BDjnMH
-=u+dg
------END PGP SIGNATURE-----
-
---BI5RvnYi6R4T2M87--
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 2974e63..cfc376b 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+   the boot program; should be used in cases where the MAC address assigned to
+   the device by the boot program is different from the "local-mac-address"
+   property;
++- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
++- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
+ - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+ - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+   the maximum frame size (there's contradiction in the Devicetree
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index d820f3e..1c5d372 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -7,6 +7,7 @@
+  */
+ #include <linux/etherdevice.h>
+ #include <linux/kernel.h>
++#include <linux/nvmem-consumer.h>
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/export.h>
+@@ -80,3 +81,42 @@ const void *of_get_mac_address(struct device_node *np)
+ 	return of_get_mac_addr(np, "address");
+ }
+ EXPORT_SYMBOL(of_get_mac_address);
++
++/**
++ * Obtain the MAC address from an nvmem provider named 'mac-address' through
++ * device tree.
++ * On success, copies the new address into memory pointed to by addr and
++ * returns 0. Returns a negative error code otherwise.
++ * @np:		Device tree node containing the nvmem-cells phandle
++ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
++ */
++int of_get_nvmem_mac_address(struct device_node *np, void *addr)
++{
++	struct nvmem_cell *cell;
++	const void *mac;
++	size_t len;
++	int ret;
++
++	cell = of_nvmem_cell_get(np, "mac-address");
++	if (IS_ERR(cell))
++		return PTR_ERR(cell);
++
++	mac = nvmem_cell_read(cell, &len);
++
++	nvmem_cell_put(cell);
++
++	if (IS_ERR(mac))
++		return PTR_ERR(mac);
++
++	if (len < 6 || !is_valid_ether_addr(mac)) {
++		ret = -EINVAL;
++	} else {
++		ether_addr_copy(addr, mac);
++		ret = 0;
++	}
++
++	kfree(mac);
++
++	return ret;
++}
++EXPORT_SYMBOL(of_get_nvmem_mac_address);
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 9cd72aa..90d81ee 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -13,6 +13,7 @@
+ struct net_device;
+ extern int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
++extern int of_get_nvmem_mac_address(struct device_node *np, void *addr);
+ extern struct net_device *of_find_net_device_by_node(struct device_node *np);
+ #else
+ static inline int of_get_phy_mode(struct device_node *np)
+@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
+ 	return NULL;
+ }
+ 
++static inline int of_get_nvmem_mac_address(struct device_node *np, void *addr)
++{
++	return -ENODEV;
++}
++
+ static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
+ {
+ 	return NULL;
+-- 
+1.9.1
