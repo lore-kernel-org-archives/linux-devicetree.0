@@ -1,111 +1,60 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [net-next PATCH v2 05/10] net: netcp: ethss: use rgmii link
- status for 2u cpsw hardware
-Date: Tue, 27 Mar 2018 17:07:35 -0400
-Message-ID: <33e89328-4f0b-cc9f-96cc-4b45747b9f34@ti.com>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
- <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
- <20180327172953.GP5862@lunn.ch>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: phy-qcom-qmp: Update bindings for sdm845
+Date: Tue, 27 Mar 2018 14:37:53 -0700
+Message-ID: <CAD=FV=Vwx2nW=pwEzJJSVXLctxOU5uGormBn=t_P6_xyfrrLAw@mail.gmail.com>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-4-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180327172953.GP5862@lunn.ch>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521785487-29866-4-git-send-email-mgautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2018 01:29 PM, Andrew Lunn wrote:
-> On Tue, Mar 27, 2018 at 12:31:44PM -0400, Murali Karicheri wrote:
->> Introduce rgmii link status to handle link state events for 2u
->> cpsw hardware on K2G.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
->>  drivers/net/ethernet/ti/netcp_ethss.c | 27 +++++++++++++++++++++++----
->>  1 file changed, 23 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
->> index ab9d369..078a1b8 100644
->> --- a/drivers/net/ethernet/ti/netcp_ethss.c
->> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
->> @@ -552,6 +552,7 @@ struct gbe_ss_regs {
->>  struct gbe_ss_regs_ofs {
->>  	u16	id_ver;
->>  	u16	control;
->> +	u16	rgmii_status; /* 2U */
->>  };
->>  
->>  struct gbe_switch_regs {
->> @@ -2120,23 +2121,39 @@ static bool gbe_phy_link_status(struct gbe_slave *slave)
->>  	 return !slave->phy || slave->phy->link;
->>  }
->>  
->> +#define RGMII_REG_STATUS_LINK	BIT(0)
->> +
->> +static void netcp_2u_rgmii_get_port_link(struct gbe_priv *gbe_dev, bool *status)
->> +{
->> +	u32 val = 0;
->> +
->> +	val = readl(GBE_REG_ADDR(gbe_dev, ss_regs, rgmii_status));
->> +	*status = false;
->> +	if ((val & RGMII_REG_STATUS_LINK) != 0)
->> +		*status = true;
-> 
->   *status = !!(val & RGMII_REG_STATUS_LINK);
-> 
-> 
->> +}
->> +
->>  static void netcp_ethss_update_link_state(struct gbe_priv *gbe_dev,
->>  					  struct gbe_slave *slave,
->>  					  struct net_device *ndev)
->>  {
->> -	int sp = slave->slave_num;
->> -	int phy_link_state, sgmii_link_state = 1, link_state;
->> +	bool sw_link_state = true, phy_link_state;
->> +	int sp = slave->slave_num, link_state;
->>  
->>  	if (!slave->open)
->>  		return;
->>  
->>  	if (!SLAVE_LINK_IS_XGMII(slave)) {
->> -		sgmii_link_state =
->> +		if (SLAVE_LINK_IS_RGMII(slave))
->> +			netcp_2u_rgmii_get_port_link(gbe_dev,
->> +						     &sw_link_state);
->> +		else
->> +			sw_link_state =
->>  			netcp_sgmii_get_port_link(SGMII_BASE(gbe_dev, sp), sp);
-> 
-> This would be more readable as
-> 
->      if (SLAVE_LINK_IS_RGMII(slave))
-> 		netcp_2u_rgmii_get_port_link(gbe_dev,
-> 					     &sw_link_state);
->      if (SLAVE_LINK_IS_SGMII(slave))
-> 	sw_link_state = netcp_sgmii_get_port_link(
-> 	   SGMII_BASE(gbe_dev, sp), sp);
-> 
-Probably better to use a switch statement in this case for better readability?
-handle only SGMII and RGMII cases in the switch statement.
+Hi,
 
-Murali
+On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+> Update compatible strings for USB3 PHYs on SDM845.
+> One is QMPv3 DisplayPort-USB combo PHY and other one
+> is USB UNI PHY which is single lane USB3 PHY without
+> DP capability.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> index dcf1b8f..cef8765 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> @@ -9,7 +9,9 @@ Required properties:
+>                "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+>                "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+>                "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+> -              "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
+> +              "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
+> +              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+> +              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
 
->    Andrew
-> 
+I'm confused.  What value does "qcom,qmp-v3-usb3-phy" have as a
+separate entry from "qcom,sdm845-qmp-usb3-phy"?  Is
+"qcom,qmp-v3-usb3-phy" expected to work on some non-SDM845 based
+device?
+
+Personally I think you should remove "qcom,qmp-v3-usb3-phy" from the
+bindings as part of this patch (replacing it with the new string
+qcom,sdm845-qmp-usb3-phy)".  Yeah, yeah bindings are forever.  ...but
+that particular string was added about a month ago and (I believe) it
+was intended for SDM845 anyway.  As per
+<https://patchwork.kernel.org/patch/10302759/> match to the exact same
+PHY data which leads extra credence to my belief.
+
+If later on you find that some future chip can use the exact same
+driver / settings as the SDM845 you can always list the
+"qcom,sdm845-qmp-usb3-phy" string as a secondary compatible anyway.
 
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+-Doug
