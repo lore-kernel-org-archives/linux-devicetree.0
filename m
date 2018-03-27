@@ -1,193 +1,309 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH] mtd: rawnand: sunxi: Remove support for GPIO-based Ready/Busy
- polling
-Date: Tue, 27 Mar 2018 09:06:14 +0200
-Message-ID: <20180327070614.3288-1-boris.brezillon@bootlin.com>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v2 1/2] phy: Add QMP phy based UFS phy support for sdm845
+Date: Tue, 27 Mar 2018 15:10:59 +0800
+Message-ID: <eb0f1acbe3c2dd0b1f4b296eaf458fa0@codeaurora.org>
+References: <20180321053720.12780-1-cang@codeaurora.org>
+ <20180321053720.12780-2-cang@codeaurora.org>
+ <383ac034-71a4-7d66-3bcb-d651ef75b4d7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <383ac034-71a4-7d66-3bcb-d651ef75b4d7@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-None of the existing platforms connect the R/B pin to a GPIO (they all
-use one of the dedicated R/B pin).
-Anyway, if we ever get short of native R/B pins, it's probably better
-to fallback to STATUS reg polling than trying to poll a GPIO.
+On 2018-03-26 22:56, Vivek Gautam wrote:
+> Hi Can,
+> 
+> 
+> On 3/21/2018 11:07 AM, Can Guo wrote:
+>> Add UFS PHY support to make SDM845 UFS work with common PHY framework.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+> 
+> Thanks for the patch. Just few minor nits, and we are good. Please see
+> comments inline.
+> 
+>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 122 
+>> +++++++++++++++++++++++++++++++++++-
+>>   drivers/phy/qualcomm/phy-qcom-qmp.h |   8 +++
+>>   2 files changed, 127 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
+>> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index 5cf2c3c..85d40d4 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> @@ -156,6 +156,11 @@ enum qphy_reg_layout {
+>>   	[QPHY_PCS_LFPS_RXTERM_IRQ_STATUS] = 0x170,
+>>   };
+>>   +static const unsigned int sdm845_ufsphy_regs_layout[] = {
+>> +	[QPHY_START_CTRL]		= 0x00,
+>> +	[QPHY_PCS_READY_STATUS]		= 0x168,
+>> +};
+>> +
+>>   static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+>>   	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
+>>   	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+>> @@ -601,6 +606,73 @@ enum qphy_reg_layout {
+>>   	QMP_PHY_INIT_CFG(QPHY_V3_PCS_REFGEN_REQ_CONFIG2, 0x60),
+>>   };
+>>   +static const struct qmp_phy_init_tbl sdm845_ufsphy_serdes_tbl[] = {
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x0f),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0xd5),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_RESETSM_CNTRL, 0x20),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x01),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x04),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x05),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_INITVAL1, 0xff),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_INITVAL2, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x82),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE1_MODE0, 0xda),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE2_MODE0, 0x01),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0xff),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0c),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE1, 0x98),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE1, 0x06),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE1, 0x16),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE1, 0x36),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE1, 0x3f),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE1, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE1_MODE1, 0xc1),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE2_MODE1, 0x00),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE1, 0x32),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE1, 0x0f),
+>> +
+>> +	/* Rate B */
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x44),
+>> +};
+>> +
+>> +static const struct qmp_phy_init_tbl sdm845_ufsphy_tx_tbl[] = {
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_TX_LANE_MODE_1, 0x06),
+>> +};
+>> +
+>> +static const struct qmp_phy_init_tbl sdm845_ufsphy_rx_tbl[] = {
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_LVL, 0x24),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_CNTRL, 0x0f),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_DEGLITCH_CNTRL, 0x1e),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_INTERFACE_MODE, 0x40),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_TERM_BW, 0x5b),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x06),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1d),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SVS_SO_GAIN_HALF, 0x04),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SVS_SO_GAIN_QUARTER, 0x04),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SVS_SO_GAIN, 0x04),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_PI_CONTROLS, 0x81),
+>> +	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_COUNT_LOW, 0x80),
+>> +};
+>> +
+>> +static const struct qmp_phy_init_tbl sdm845_ufsphy_pcs_tbl[] = {
+>> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_POWER_DOWN_CONTROL, 0x01),
+>> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MULTI_LANE_CTRL1, 0x02),
+>> +};
+>>     /* struct qmp_phy_cfg - per-PHY initialization config */
+>>   struct qmp_phy_cfg {
+>> @@ -652,6 +724,9 @@ struct qmp_phy_cfg {
+>>   	/* Register offset of secondary tx/rx lanes for USB DP combo PHY */
+>>   	unsigned int tx_b_lane_offset;
+>>   	unsigned int rx_b_lane_offset;
+>> +
+>> +	/* true, if PCS block has a separate SW_RESET register */
+>> +	bool has_sw_rst;
+>>   };
+>>     /**
+>> @@ -748,6 +823,10 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	"aux", "cfg_ahb", "ref", "com_aux",
+>>   };
+>>   +static const char * const sdm845_ufs_phy_clk_l[] = {
+>> +	"ref_clk", "ref_aux_clk",
+> 
+> Only "ref", "ref_aux" like other clock lists. No need to put explicit
+> clk suffix.
+> 
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
----
- .../devicetree/bindings/mtd/sunxi-nand.txt         |  2 -
- drivers/mtd/nand/raw/sunxi_nand.c                  | 91 ++++------------------
- 2 files changed, 15 insertions(+), 78 deletions(-)
+Done, thank you for pointing this out.
 
-diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-index 0734f03bf3d3..dcd5a5d80dc0 100644
---- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-@@ -22,8 +22,6 @@ Optional properties:
- - reset : phandle + reset specifier pair
- - reset-names : must contain "ahb"
- - allwinner,rb : shall contain the native Ready/Busy ids.
-- or
--- rb-gpios : shall contain the gpios used as R/B pins.
- - nand-ecc-mode : one of the supported ECC modes ("hw", "soft", "soft_bch" or
- 		  "none")
- 
-diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-index aad42812a353..d831a141a196 100644
---- a/drivers/mtd/nand/raw/sunxi_nand.c
-+++ b/drivers/mtd/nand/raw/sunxi_nand.c
-@@ -165,49 +165,16 @@
- 
- #define NFC_MAX_CS		7
- 
--/*
-- * Ready/Busy detection type: describes the Ready/Busy detection modes
-- *
-- * @RB_NONE:	no external detection available, rely on STATUS command
-- *		and software timeouts
-- * @RB_NATIVE:	use sunxi NAND controller Ready/Busy support. The Ready/Busy
-- *		pin of the NAND flash chip must be connected to one of the
-- *		native NAND R/B pins (those which can be muxed to the NAND
-- *		Controller)
-- * @RB_GPIO:	use a simple GPIO to handle Ready/Busy status. The Ready/Busy
-- *		pin of the NAND flash chip must be connected to a GPIO capable
-- *		pin.
-- */
--enum sunxi_nand_rb_type {
--	RB_NONE,
--	RB_NATIVE,
--	RB_GPIO,
--};
--
--/*
-- * Ready/Busy structure: stores information related to Ready/Busy detection
-- *
-- * @type:	the Ready/Busy detection mode
-- * @info:	information related to the R/B detection mode. Either a gpio
-- *		id or a native R/B id (those supported by the NAND controller).
-- */
--struct sunxi_nand_rb {
--	enum sunxi_nand_rb_type type;
--	union {
--		int gpio;
--		int nativeid;
--	} info;
--};
--
- /*
-  * Chip Select structure: stores information related to NAND Chip Select
-  *
-  * @cs:		the NAND CS id used to communicate with a NAND Chip
-- * @rb:		the Ready/Busy description
-+ * @rb:		the Ready/Busy pin ID. -1 means no R/B pin connected to the
-+ *		NFC
-  */
- struct sunxi_nand_chip_sel {
- 	u8 cs;
--	struct sunxi_nand_rb rb;
-+	s8 rb;
- };
- 
- /*
-@@ -440,30 +407,19 @@ static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
- 	struct nand_chip *nand = mtd_to_nand(mtd);
- 	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
- 	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
--	struct sunxi_nand_rb *rb;
--	int ret;
-+	u32 mask;
- 
- 	if (sunxi_nand->selected < 0)
- 		return 0;
- 
--	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
--
--	switch (rb->type) {
--	case RB_NATIVE:
--		ret = !!(readl(nfc->regs + NFC_REG_ST) &
--			 NFC_RB_STATE(rb->info.nativeid));
--		break;
--	case RB_GPIO:
--		ret = gpio_get_value(rb->info.gpio);
--		break;
--	case RB_NONE:
--	default:
--		ret = 0;
-+	if (sunxi_nand->sels[sunxi_nand->selected].rb < 0) {
- 		dev_err(nfc->dev, "cannot check R/B NAND status!\n");
--		break;
-+		return 0;
- 	}
- 
--	return ret;
-+	mask = NFC_RB_STATE(sunxi_nand->sels[sunxi_nand->selected].rb);
-+
-+	return !!(readl(nfc->regs + NFC_REG_ST) & mask);
- }
- 
- static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
-@@ -488,12 +444,11 @@ static void sunxi_nfc_select_chip(struct mtd_info *mtd, int chip)
- 
- 		ctl |= NFC_CE_SEL(sel->cs) | NFC_EN |
- 		       NFC_PAGE_SHIFT(nand->page_shift);
--		if (sel->rb.type == RB_NONE) {
-+		if (sel->rb < 0) {
- 			nand->dev_ready = NULL;
- 		} else {
- 			nand->dev_ready = sunxi_nfc_dev_ready;
--			if (sel->rb.type == RB_NATIVE)
--				ctl |= NFC_RB_SEL(sel->rb.info.nativeid);
-+			ctl |= NFC_RB_SEL(sel->rb);
- 		}
- 
- 		writel(mtd->writesize, nfc->regs + NFC_REG_SPARE_AREA);
-@@ -1946,26 +1901,10 @@ static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *nfc,
- 		chip->sels[i].cs = tmp;
- 
- 		if (!of_property_read_u32_index(np, "allwinner,rb", i, &tmp) &&
--		    tmp < 2) {
--			chip->sels[i].rb.type = RB_NATIVE;
--			chip->sels[i].rb.info.nativeid = tmp;
--		} else {
--			ret = of_get_named_gpio(np, "rb-gpios", i);
--			if (ret >= 0) {
--				tmp = ret;
--				chip->sels[i].rb.type = RB_GPIO;
--				chip->sels[i].rb.info.gpio = tmp;
--				ret = devm_gpio_request(dev, tmp, "nand-rb");
--				if (ret)
--					return ret;
--
--				ret = gpio_direction_input(tmp);
--				if (ret)
--					return ret;
--			} else {
--				chip->sels[i].rb.type = RB_NONE;
--			}
--		}
-+		    tmp < 2)
-+			chip->sels[i].rb = tmp;
-+		else
-+			chip->sels[i].rb = -1;
- 	}
- 
- 	nand = &chip->nand;
--- 
-2.14.1
+>> +};
+>> +
+>>   /* list of resets */
+>>   static const char * const msm8996_pciephy_reset_l[] = {
+>>   	"phy", "common", "cfg",
+>> @@ -762,6 +841,10 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	"vdda-phy", "vdda-pll",
+>>   };
+>>   +static const char * const sdm845_phy_vreg_l[] = {
+>> +	"vdda-phy", "vdda-pll",
+>> +};
+> 
+> We can reuse the regulator list that we already has. May be rename that
+> to something generic.
+> 
 
+Yes, shall name it to qmp_phy_vreg_l
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+>> +
+>>   static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+>>   	.type			= PHY_TYPE_PCIE,
+>>   	.nlanes			= 3,
+>> @@ -791,6 +874,7 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	.has_pwrdn_delay	= true,
+>>   	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+>>   	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
+>> +	.has_sw_rst		= true,
+>>   };
+>>     static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
+>> @@ -816,6 +900,7 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	.start_ctrl		= SERDES_START | PCS_START,
+>>   	.pwrdn_ctrl		= SW_PWRDN,
+>>   	.mask_pcs_ready		= PHYSTATUS,
+>> +	.has_sw_rst		= true,
+>>   };
+>>     /* list of resets */
+>> @@ -852,6 +937,7 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	.has_pwrdn_delay	= true,
+>>   	.pwrdn_delay_min	= 995,		/* us */
+>>   	.pwrdn_delay_max	= 1005,		/* us */
+>> +	.has_sw_rst		= true,
+>>   };
+>>     static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+>> @@ -885,6 +971,7 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	.has_phy_dp_com_ctrl	= true,
+>>   	.tx_b_lane_offset	= 0x400,
+>>   	.rx_b_lane_offset	= 0x400,
+>> +	.has_sw_rst		= true,
+>>   };
+>>     static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+>> @@ -914,6 +1001,30 @@ static inline void qphy_clrbits(void __iomem 
+>> *base, u32 offset, u32 val)
+>>   	.has_pwrdn_delay	= true,
+>>   	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+>>   	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
+>> +	.has_sw_rst		= true,
+> 
+> If every other has it and not ufs, then better name it otherwise - may
+> be "skip_sw_rst", which can be 'true' for UFS.
+> 
+> 
+> Best regards
+> Vivek
+> 
+
+Good idea!
+
+>> +};
+>> +
+>> +static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
+>> +	.type			= PHY_TYPE_UFS,
+>> +	.nlanes			= 2,
+>> +
+>> +	.serdes_tbl		= sdm845_ufsphy_serdes_tbl,
+>> +	.serdes_tbl_num		= ARRAY_SIZE(sdm845_ufsphy_serdes_tbl),
+>> +	.tx_tbl			= sdm845_ufsphy_tx_tbl,
+>> +	.tx_tbl_num		= ARRAY_SIZE(sdm845_ufsphy_tx_tbl),
+>> +	.rx_tbl			= sdm845_ufsphy_rx_tbl,
+>> +	.rx_tbl_num		= ARRAY_SIZE(sdm845_ufsphy_rx_tbl),
+>> +	.pcs_tbl		= sdm845_ufsphy_pcs_tbl,
+>> +	.pcs_tbl_num		= ARRAY_SIZE(sdm845_ufsphy_pcs_tbl),
+>> +	.clk_list		= sdm845_ufs_phy_clk_l,
+>> +	.num_clks		= ARRAY_SIZE(sdm845_ufs_phy_clk_l),
+>> +	.vreg_list		= sdm845_phy_vreg_l,
+>> +	.num_vregs		= ARRAY_SIZE(sdm845_phy_vreg_l),
+>> +	.regs			= sdm845_ufsphy_regs_layout,
+>> +
+>> +	.start_ctrl		= SERDES_START,
+>> +	.pwrdn_ctrl		= SW_PWRDN,
+>> +	.mask_pcs_ready		= PCS_READY,
+>>   };
+>>     static void qcom_qmp_phy_configure(void __iomem *base,
+>> @@ -1140,7 +1251,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>   		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+>>     	/* Pull PHY out of reset state */
+>> -	qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>> +	if (cfg->has_sw_rst)
+>> +		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>>   	if (cfg->has_phy_dp_com_ctrl)
+>>   		qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
+>>   @@ -1178,7 +1290,8 @@ static int qcom_qmp_phy_exit(struct phy *phy)
+>>   	clk_disable_unprepare(qphy->pipe_clk);
+>>     	/* PHY reset */
+>> -	qphy_setbits(qphy->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>> +	if (cfg->has_sw_rst)
+>> +		qphy_setbits(qphy->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>>     	/* stop SerDes and Phy-Coding-Sublayer */
+>>   	qphy_clrbits(qphy->pcs, cfg->regs[QPHY_START_CTRL], 
+>> cfg->start_ctrl);
+>> @@ -1531,7 +1644,10 @@ int qcom_qmp_phy_create(struct device *dev, 
+>> struct device_node *np, int id)
+>>   	}, {
+>>   		.compatible = "qcom,sdm845-qmp-usb3-uni-phy",
+>>   		.data = &qmp_v3_usb3_uniphy_cfg,
+>> -	},
+>> +	}, {
+>> +		.compatible = "qcom,sdm845-qmp-ufs-phy",
+>> +		.data = &sdm845_ufsphy_cfg,
+>> + 	},
+>>   	{ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, qcom_qmp_phy_of_match_table);
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h 
+>> b/drivers/phy/qualcomm/phy-qcom-qmp.h
+>> index 5d78d43..3cbcfe1 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+>> @@ -184,6 +184,8 @@
+>>   #define QSERDES_V3_COM_VCO_TUNE2_MODE0			0x0f8
+>>   #define QSERDES_V3_COM_VCO_TUNE1_MODE1			0x0fc
+>>   #define QSERDES_V3_COM_VCO_TUNE2_MODE1			0x100
+>> +#define QSERDES_V3_COM_VCO_TUNE_INITVAL1		0x104
+>> +#define QSERDES_V3_COM_VCO_TUNE_INITVAL2		0x108
+>>   #define QSERDES_V3_COM_VCO_TUNE_TIMER1			0x11c
+>>   #define QSERDES_V3_COM_VCO_TUNE_TIMER2			0x120
+>>   #define QSERDES_V3_COM_CLK_SELECT			0x138
+>> @@ -211,8 +213,13 @@
+>>   /* Only for QMP V3 PHY - RX registers */
+>>   #define QSERDES_V3_RX_UCDR_SO_GAIN_HALF			0x00c
+>>   #define QSERDES_V3_RX_UCDR_SO_GAIN			0x014
+>> +#define QSERDES_V3_RX_UCDR_SVS_SO_GAIN_HALF		0x024
+>> +#define QSERDES_V3_RX_UCDR_SVS_SO_GAIN_QUARTER		0x028
+>> +#define QSERDES_V3_RX_UCDR_SVS_SO_GAIN			0x02c
+>>   #define QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN		0x030
+>>   #define QSERDES_V3_RX_UCDR_SO_SATURATION_AND_ENABLE	0x034
+>> +#define QSERDES_V3_RX_UCDR_FASTLOCK_COUNT_LOW		0x03c
+>> +#define QSERDES_V3_RX_UCDR_PI_CONTROLS			0x044
+>>   #define QSERDES_V3_RX_RX_TERM_BW			0x07c
+>>   #define QSERDES_V3_RX_VGA_CAL_CNTRL1			0x0bc
+>>   #define QSERDES_V3_RX_VGA_CAL_CNTRL2			0x0c0
+>> @@ -275,6 +282,7 @@
+>>   #define QPHY_V3_PCS_FLL_CNT_VAL_L			0x0cc
+>>   #define QPHY_V3_PCS_FLL_CNT_VAL_H_TOL			0x0d0
+>>   #define QPHY_V3_PCS_FLL_MAN_CODE			0x0d4
+>> +#define QPHY_V3_PCS_MULTI_LANE_CTRL1			0x1c4
+>>   #define QPHY_V3_PCS_RX_SIGDET_LVL			0x1d8
+>>   #define QPHY_V3_PCS_REFGEN_REQ_CONFIG1			0x20c
+>>   #define QPHY_V3_PCS_REFGEN_REQ_CONFIG2			0x210
