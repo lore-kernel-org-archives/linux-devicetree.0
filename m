@@ -1,27 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: document the Meson AXG support
-Date: Tue, 27 Mar 2018 10:07:30 -0500
-Message-ID: <20180327150730.7ty6j76ym73vjth5@rob-hp-laptop>
-References: <20180326084629.100070-1-yixun.lan@amlogic.com>
- <20180326084629.100070-3-yixun.lan@amlogic.com>
+Subject: Re: [PATCH v6 2/5] dt-bindings: pwm-backlight: add PWM delay
+ proprieties.
+Date: Tue, 27 Mar 2018 10:08:27 -0500
+Message-ID: <20180327150827.i7b4urmjrf2mqj3t@rob-hp-laptop>
+References: <20180326095213.18362-1-enric.balletbo@collabora.com>
+ <20180326095213.18362-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180326084629.100070-3-yixun.lan@amlogic.com>
+In-Reply-To: <20180326095213.18362-2-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Xingyu Chen <xingyu.chen@amlogic.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-iio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2018 at 04:46:28PM +0800, Yixun Lan wrote:
-> From: Xingyu Chen <xingyu.chen@amlogic.com>
+On Mon, Mar 26, 2018 at 11:52:10AM +0200, Enric Balletbo i Serra wrote:
+> Hardware needs a delay between setting an initial (non-zero) PWM and
+> enabling the backlight using GPIO. The post-pwm-on-delay-ms specifies
+> this delay in milli seconds. Hardware also needs a delay between disabing
+> the backlight using GPIO and setting PWM value to 0. The pwm-off-delay-ms
+> is this delay in milli seconds.
 > 
-> Update the documentation to expicitly support the Meson-AXG SoC.
-> 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 > ---
->  Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Based on the original Huang Lin <hl@rock-chips.com> work.
+> Changes since v5:
+>  - Add Acked-by: Thierry Reding <thierry.reding@gmail.com>
+>  - CC DT mainling list (for some reason dropped at some point, my
+>    fault)
+> Changes since v4:
+>  - Rebase on top of mainline.
+> Changes since v3:
+>  - Replace us for ms.
+>  - Add Acked-by: Pavel Machek <pavel@ucw.cz>
+> Changes since v2:
+>  - Use separate properties (Rob Herring)
+> Changes since v1:
+>  - As suggested by Daniel Thompson
+>    - Do not assume power-on delay and power-off delay will be the same
+> ---
+>  Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org> 
