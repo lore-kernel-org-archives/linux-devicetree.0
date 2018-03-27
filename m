@@ -1,127 +1,97 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 13:14:31 -0700
-Message-ID: <CAD=FV=WsKinyZq7hRxV=y+uLS7NFP77VjTuO9OWhFobB+qQYpA@mail.gmail.com>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
- <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org> <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
- <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: richard.gong@linux.intel.com
+Subject: [PATCHv3 0/7] Add Intel Stratix10 FPGA manager and service layer
+Date: Tue, 27 Mar 2018 15:20:07 -0500
+Message-ID: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, Amit Nischal <anischal@codeaurora.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Richard Gong <richard.gong@intel.com>
 
-On Tue, Mar 27, 2018 at 12:50 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> Hi,
->
->
-> On 3/27/2018 12:26 PM, Vivek Gautam wrote:
->>
->>
->> On 3/27/2018 10:37 AM, Manu Gautam wrote:
->>> Hi Doug,
->>>
->>>
->>> On 3/27/2018 9:56 AM, Doug Anderson wrote:
->>>> Manu
->>>>
->>>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
->>>>> to take place. This clock is output from PHY to GCC clock_ctl and then
->>>>> fed back to QMP PHY and is available from PHY only after PHY is reset
->>>>> and initialized, hence it can't be enabled too early in initialization
->>>>> sequence.
->>>>>
->>>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>>>> ---
->>>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->>>>>   1 file changed, 32 insertions(+), 1 deletion(-)
->>>> So it's now new with this patch, but it's more obvious with this
->>>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
->>>> controls its clock.  Specifically:
->>>>
->>>> * If you init the PHY but don't power it on, then you "exit" the PHY:
->>>> you'll disable/unprepare "pipe_clk" even though you never
->>>> prepare/enabled it.
->>>>
->>>> * If you init the PHY, power it on, power it off, power it on, and
->>>> exit the PHY: you'll leave the clock prepared one extra time.
->>>>
->>>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
->>>> symmetric with the enable/prepare and should be in "power off", not in
->>>> exit.
->>>>
->>>> ...or did I miss something?
->>>>
->>>>
->>>> Interestingly, your patch fixes this problem for USB3 (where init/exit
->>>> are now symmetric), but leaves the problem there for UFS/PCIE.
->>>>
->>> Thanks for review.
->>> One of the reason why pipe_clk is disabled as part of phy_exit is that
->>> halt_check from clk_disable reports error if called after PHY has been
->>> powered down or phy_exit.
->>> I believe that warning should be ignored in qcom gcc-clock driver
->>> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
->>> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
->> UFS doesn't use PIPE clock.
+This is the 3rd submission of Intel service layer patches. Intel Stratix10
+FPGA manager, which is 1st service layer client, is included in this submission.
 
-Just to confirm: we no longer need to do this "BRANCH_HALT_DELAY" now
-that we've figured everything out, right?
+Service layer patches have been reviewed internally by Alan Tull and other
+colleagues at Intel.
 
+Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
+processor system (HPS) and Secure Device Manager (SDM). SDM is the hardware
+which does the FPGA configuration, QSPI, Crypto and warm reset.
 
-> Yes, UFS PHY doesn't use one. But similar to pipe_clk there are rx/tx symbol_clk
-> output from PHY that is used by UFS controller. I will update code comments
-> to not refer UFS for pipe_clk.
->
->> But considering for PCIe, if we disable pipe clock when phy is still running, then
->> it shouldn't be a problem. We should also not see the halt warning as the gcc
->> driver should be able to just turn the gate off.
->> The reason why it will throw that error is when the parent clock to that gate
->> is gated, i.e. the pipe clock is not flowing on that branch.
->
-> I got the confirmation that pipe_clk is needed for PCIE as well for its
-> initialization to happen successfully. So we do need clock driver change
-> to fix this in PHY driver.
+In order to configure the FPGA from HPS, there needs to be a way for HPS to
+notify SDM the location and size of the configuration data. Then SDM will
+get the configuration data from that location and perform the FPGA configuration.
 
-So basically if I'm understanding this correctly:
+To meet the whole system security needs and support virtual machine
+requesting communication with SDM, only the secure world of software (EL3,
+Exception Level 3) can interface with SDM. All software entities running
+on other exception levels must channel through the EL3 software whenever it
+needs service from SDM.
 
-* Both USB and PCIE need the clk_enable() in qcom_qmp_phy_init()
+Intel Stratix10 service layer driver is added to provide the service for
+FPGA configuration. Running at privileged exception level (EL1, Exception
+Level 1), Intel Stratix10 service layer driver interfaces with the service
+provider at EL1 (Intel Stratix10 FPGA Manager) and manages secure monitor
+call (SMC) to communicate with secure monitor software at secure monitor
+exception level (EL3).
 
-* UFS doesn't even use a pipe clock (pipe_clk is NULL and thus these
-calls are no-ops).
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
 
-So that means the next version of this code will simply get rid of
-qcom_qmp_phy_poweron() and we can now use the same phy_ops for both
-everything again?  That also makes everything symmetric and gets rid
-of the possible imbalance of clock enable/disable, so I'm happy.
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
+v3: change all exported functions with "intel_svc_" as the prefix
+    Increase timeout values for claiming back submitted buffer(s)
+    Rename struct intel_command_reconfig_payload to
+    struct intel_svc_command_reconfig_payload
+    Add pr_err() to provide the error return value
+    change to put fpga_mgr node under firmware/svc node
+    change to FPGA manager to align the update of service client APIs, and the
+    update of fpga_mgr device node
+    Other corrections/changes
 
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
 
-Actually: I'll also throw out a drastic idea here.  Maybe instead of
-having a NULL power_on/power_off, we should have a NULL init/exit.
-Does anything break if all the stuff that happens today in
-qcom_qmp_phy_com_init() happens at power_on() time instead of init()
-time?  I suggest this because:
+Richard Gong (4):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add service driver binding to base dtsi
+  driver, misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
 
-* It sounds like init() is supposed to be for initialization that can
-happen _before_ power on of the PHY.
+ .../bindings/firmware/intel,stratix10-svc.txt      |  57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |  17 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  34 +
+ arch/arm64/configs/defconfig                       |   5 +
+ drivers/fpga/Kconfig                               |   6 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/stratix10-soc.c                       | 534 ++++++++++++
+ drivers/misc/Kconfig                               |  12 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/intel-service.c                       | 962 +++++++++++++++++++++
+ drivers/misc/intel-smc.h                           | 205 +++++
+ include/linux/intel-service-client.h               | 188 ++++
+ 12 files changed, 2022 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/intel-service.c
+ create mode 100644 drivers/misc/intel-smc.h
+ create mode 100644 include/linux/intel-service-client.h
 
-* Any initialization that happens after the PHY has been powered on
-seems expected to just be in the power_on() function after the
-regulator was enabled.
-
-
-Presumably moving this stuff to power_on could save you some power in
-some cases (since the client of the PHY presumably turns power off to
-the PHY with the idea of saving power).
-
-
--Doug
+-- 
+2.7.4
