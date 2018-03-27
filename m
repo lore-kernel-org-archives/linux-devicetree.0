@@ -1,58 +1,126 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [net-next PATCH 3/5] net: netcp: ethss enhancements to support 2u
- cpsw h/w on K2G SoC
-Date: Tue, 27 Mar 2018 09:23:36 -0400
-Message-ID: <be58cf50-2148-cbfa-c7a2-8f4fbe6930e5@ti.com>
-References: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
- <1522095312-23249-4-git-send-email-m-karicheri2@ti.com>
- <20180326202842.GB5862@lunn.ch>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
+Date: Tue, 27 Mar 2018 14:22:56 +0100
+Message-ID: <20180327142256.00003056@huawei.com>
+References: <20180319170246.26830-1-peda@axentia.se>
+        <20180319170246.26830-4-peda@axentia.se>
+        <20180324140339.4ec66792@archlinux>
+        <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326202842.GB5862@lunn.ch>
-Content-Language: en-US
+In-Reply-To: <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2018 04:28 PM, Andrew Lunn wrote:
-> On Mon, Mar 26, 2018 at 04:15:10PM -0400, Murali Karicheri wrote:
->> K2G SoC uses 2u cpsw h/w. It uses RGMII instead of SGMII to interface with
->> Phy. This patch enhances the driver to check RGMII status instead of SGMII
->> status for link state determination. Also map all of the vlan priorities
->> to zero as the packet DMA is enabled to receive only flow id 0 which maps
->> to priority zero.
->>
->> Additionally, When a phy with rgmii interface requires internal delay, the
->> same is set in the phy driver. To support such phy devices, add a phy-mode
->> handling code in the driver using of_get_phy_mode() and pass the obtained
->> phy mode to of_phy_connect()
-> 
-> Hi Murali
-> 
-> Please break this patch up. One patch should do one thing. That makes
-> it easy to review. There are too many things going on at once here.
-> 
->    Andrew
-> 
-Hello Andrew,
+On Tue, 27 Mar 2018 09:42:40 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-Thanks for the comment. But I am not sure how to break this up as this is 
-an enhancement to the driver to support a newer version of the cspw 
-hardware. Without all these pieces together, the driver can't
-function. Probably I can make the below break up based on different functions
-added. Let me know if this looks good to you. Beware that patch #2 and
-#3 are small patches and majority of code change will be in patch #1
-which has to go together. 
+> On 2018-03-24 15:03, Jonathan Cameron wrote:
+> > On Mon, 19 Mar 2018 18:02:46 +0100
+> > Peter Rosin <peda@axentia.se> wrote:
+> >   
+> >> If an ADC channel measures the midpoint of a voltage divider, the
+> >> interesting voltage is often the voltage over the full resistance.
+> >> E.g. if the full voltage it too big for the ADC to handle.
+> >> Likewise, if an ADC channel measures the voltage across a resistor,
+> >> the interesting value is often the current through the resistor.
+> >>
+> >> This driver solves both problems by allowing to linearly scale a channel
+> >> and by allowing changes to the type of the channel. Or both.
+> >>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>  
+> > A few comments inline, but basically the code looks fine, just questions
+> > around naming and bindings to answer.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> 
+> *snip*
+> 
+> >> +static int unit_converter_write_raw(struct iio_dev *indio_dev,
+> >> +				    struct iio_chan_spec const *chan,
+> >> +				    int val, int val2, long mask)
+> >> +{
+> >> +	struct unit_converter *uc = iio_priv(indio_dev);
+> >> +
+> >> +	switch (mask) {
+> >> +	case IIO_CHAN_INFO_RAW:
+> >> +		return iio_write_channel_raw(uc->parent, val);  
+> > Talk me through the logic of having this...  Supporting a DAC?
+> > Bindings don't talk about that possibility...  
+> 
+> There's no logic at all, and I don't need it. It's just leftovers,
+> should I remove it?
+> 
+> >> +	}
+> >> +
+> >> +	return -EINVAL;
+> >> +}
+> >> +  
+> 
+> *snip*
+> 
+> >> +static int unit_converter_configure_channel(struct device *dev,
+> >> +					    struct unit_converter *uc,
+> >> +					    enum iio_chan_type type)
+> >> +{
+> >> +	struct iio_chan_spec *chan = &uc->chan;
+> >> +	struct iio_chan_spec const *pchan = uc->parent->channel;
+> >> +	int ret;
+> >> +
+> >> +	chan->indexed = 1;
+> >> +	chan->output = pchan->output;
+> >> +	chan->ext_info = uc->ext_info;
+> >> +
+> >> +	if (type == -1) {
+> >> +		ret = iio_get_channel_type(uc->parent, &type);
+> >> +		if (ret < 0) {
+> >> +			dev_err(dev, "failed to get parent channel type\n");
+> >> +			return ret;
+> >> +		}
+> >> +	}
+> >> +	chan->type = type;
+> >> +
+> >> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
+> >> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);  
+> > if the parent doesn't support RAW, is there a lot of point in carrying on?  
+> 
+> Nope, better to error out I suppose. But I'm not familiar with channels
+> without RAW, what alternatives are there anyway?
 
-Patch #1. Add support new link interface, RGMII_LINK_MAC_PHY, for K2G
-          - Most of the code is for this
-Patch #2. Add support for configuring phy_mode 
-          - This just add phy_mode handling code 
-Patch #3. map all vlan priorities to flow id 0
+Potentially _PROCESSED though that will need somewhat different handling.
+A nasty trick for that might be to map it to RAW and then have the SCALE
+reflect the divider circuit scale only.
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+It's perfectly possible to have channels with neither _RAW or _PROCESSED
+but I suspect we don't care about them here.
+
+There might be an application that needs to do buffered data flows in the
+long run, but we can figure out how to do that when one exists.
+
+It won't be a huge amount more than you have here, though we might need
+a trigger pass through as well to allow you to set the trigger for
+the front end and having it automatically applied to the backend.
+
+Jonathan
+> 
+> >> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
+> >> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
+> >> +
+> >> +	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
+> >> +		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
+> >> +
+> >> +	chan->channel = 0;
+> >> +
+> >> +	return 0;
+> >> +}  
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
