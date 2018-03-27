@@ -1,102 +1,104 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
-Date: Tue, 27 Mar 2018 09:42:40 +0200
-Message-ID: <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
-References: <20180319170246.26830-1-peda@axentia.se>
- <20180319170246.26830-4-peda@axentia.se> <20180324140339.4ec66792@archlinux>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Tue, 27 Mar 2018 13:20:07 +0530
+Message-ID: <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+ <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
+ <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180324140339.4ec66792@archlinux>
+In-Reply-To: <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, anischal@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-24 15:03, Jonathan Cameron wrote:
-> On Mon, 19 Mar 2018 18:02:46 +0100
-> Peter Rosin <peda@axentia.se> wrote:
-> 
->> If an ADC channel measures the midpoint of a voltage divider, the
->> interesting voltage is often the voltage over the full resistance.
->> E.g. if the full voltage it too big for the ADC to handle.
->> Likewise, if an ADC channel measures the voltage across a resistor,
->> the interesting value is often the current through the resistor.
+Hi,
+
+
+On 3/27/2018 12:26 PM, Vivek Gautam wrote:
+>
+>
+> On 3/27/2018 10:37 AM, Manu Gautam wrote:
+>> Hi Doug,
 >>
->> This driver solves both problems by allowing to linearly scale a channel
->> and by allowing changes to the type of the channel. Or both.
 >>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> A few comments inline, but basically the code looks fine, just questions
-> around naming and bindings to answer.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+>> On 3/27/2018 9:56 AM, Doug Anderson wrote:
+>>> Manu
+>>>
+>>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+>>>> to take place. This clock is output from PHY to GCC clock_ctl and then
+>>>> fed back to QMP PHY and is available from PHY only after PHY is reset
+>>>> and initialized, hence it can't be enabled too early in initialization
+>>>> sequence.
+>>>>
+>>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>>> ---
+>>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
+>>>>   1 file changed, 32 insertions(+), 1 deletion(-)
+>>> So it's now new with this patch, but it's more obvious with this
+>>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
+>>> controls its clock.  Specifically:
+>>>
+>>> * If you init the PHY but don't power it on, then you "exit" the PHY:
+>>> you'll disable/unprepare "pipe_clk" even though you never
+>>> prepare/enabled it.
+>>>
+>>> * If you init the PHY, power it on, power it off, power it on, and
+>>> exit the PHY: you'll leave the clock prepared one extra time.
+>>>
+>>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
+>>> symmetric with the enable/prepare and should be in "power off", not in
+>>> exit.
+>>>
+>>> ...or did I miss something?
+>>>
+>>>
+>>> Interestingly, your patch fixes this problem for USB3 (where init/exit
+>>> are now symmetric), but leaves the problem there for UFS/PCIE.
+>>>
+>> Thanks for review.
+>> One of the reason why pipe_clk is disabled as part of phy_exit is that
+>> halt_check from clk_disable reports error if called after PHY has been
+>> powered down or phy_exit.
+>> I believe that warning should be ignored in qcom gcc-clock driver
+>> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
+>> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
+> UFS doesn't use PIPE clock.
 
-*snip*
+Yes, UFS PHY doesn't use one. But similar to pipe_clk there are rx/tx symbol_clk
+output from PHY that is used by UFS controller. I will update code comments
+to not refer UFS for pipe_clk.
 
->> +static int unit_converter_write_raw(struct iio_dev *indio_dev,
->> +				    struct iio_chan_spec const *chan,
->> +				    int val, int val2, long mask)
->> +{
->> +	struct unit_converter *uc = iio_priv(indio_dev);
->> +
->> +	switch (mask) {
->> +	case IIO_CHAN_INFO_RAW:
->> +		return iio_write_channel_raw(uc->parent, val);
-> Talk me through the logic of having this...  Supporting a DAC?
-> Bindings don't talk about that possibility...
+> But considering for PCIe, if we disable pipe clock when phy is still running, then
+> it shouldn't be a problem. We should also not see the halt warning as the gcc
+> driver should be able to just turn the gate off.
+> The reason why it will throw that error is when the parent clock to that gate
+> is gated, i.e. the pipe clock is not flowing on that branch.
 
-There's no logic at all, and I don't need it. It's just leftovers,
-should I remove it?
+I got the confirmation that pipe_clk is needed for PCIE as well for its
+initialization to happen successfully. So we do need clock driver change
+to fix this in PHY driver.
 
->> +	}
->> +
->> +	return -EINVAL;
->> +}
->> +
+>
+> Best regards
+> Vivek
+>
+>>
+>> I can implement that as separate patch once dependent gcc driver
+>> patch(es) gets in. Would that be ok?
+>>
+>> -Manu
+>>
+>
 
-*snip*
-
->> +static int unit_converter_configure_channel(struct device *dev,
->> +					    struct unit_converter *uc,
->> +					    enum iio_chan_type type)
->> +{
->> +	struct iio_chan_spec *chan = &uc->chan;
->> +	struct iio_chan_spec const *pchan = uc->parent->channel;
->> +	int ret;
->> +
->> +	chan->indexed = 1;
->> +	chan->output = pchan->output;
->> +	chan->ext_info = uc->ext_info;
->> +
->> +	if (type == -1) {
->> +		ret = iio_get_channel_type(uc->parent, &type);
->> +		if (ret < 0) {
->> +			dev_err(dev, "failed to get parent channel type\n");
->> +			return ret;
->> +		}
->> +	}
->> +	chan->type = type;
->> +
->> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
->> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
-> if the parent doesn't support RAW, is there a lot of point in carrying on?
-
-Nope, better to error out I suppose. But I'm not familiar with channels
-without RAW, what alternatives are there anyway?
-
->> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
->> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
->> +
->> +	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
->> +		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
->> +
->> +	chan->channel = 0;
->> +
->> +	return 0;
->> +}
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
