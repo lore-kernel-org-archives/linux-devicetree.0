@@ -1,67 +1,39 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 01/13] firmware: qcom: scm: Add ipq4019 soc compatible
-Date: Tue, 27 Mar 2018 09:56:41 -0700
-Message-ID: <20180327165641.GG1403@tuxbook-pro>
+Subject: Re: [PATCH v5 05/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
+Date: Tue, 27 Mar 2018 10:04:50 -0700
+Message-ID: <20180327170450.GH1403@tuxbook-pro>
 References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
- <1521800336-19266-2-git-send-email-sricharan@codeaurora.org>
+ <1521800336-19266-6-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521800336-19266-2-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1521800336-19266-6-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sricharan R <sricharan@codeaurora.org>
 Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
+> +	soc {
+> +		pinctrl@1000000 {
+> +			serial_0_pins: serial0_pinmux {
 
-> Add the compatible for ipq4019.
-> This does not need clocks to do scm calls.
-> 
+Please, no underscores in the node name.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> +				mux {
+
+Fyi, you can put the pinctrl properties directly into the state node,
+omitting the "mux" level.
+
+> +					pins = "gpio16", "gpio17";
+> +					function = "blsp_uart0";
+> +					bias-disable;
+> +				};
+> +			};
+> +
+
+Apart from this the patch looks good.
 
 Regards,
 Bjorn
-
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
->  drivers/firmware/qcom_scm.c                             | 3 +++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> index 7b40054..fcf6979 100644
-> --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> @@ -11,9 +11,10 @@ Required properties:
->   * "qcom,scm-msm8660" for MSM8660 platforms
->   * "qcom,scm-msm8690" for MSM8690 platforms
->   * "qcom,scm-msm8996" for MSM8996 platforms
-> + * "qcom,scm-ipq4019" for IPQ4019 platforms
->   * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
->  - clocks: One to three clocks may be required based on compatible.
-> - * No clock required for "qcom,scm-msm8996"
-> + * No clock required for "qcom,scm-msm8996", "qcom,scm-ipq4019"
->   * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
->   * Core, iface, and bus clocks required for "qcom,scm"
->  - clock-names: Must contain "core" for the core clock, "iface" for the interface
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 5a7d6930..e778af7 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -603,6 +603,9 @@ static void qcom_scm_shutdown(struct platform_device *pdev)
->  	{ .compatible = "qcom,scm-msm8996",
->  	  .data = NULL, /* no clocks */
->  	},
-> +	{ .compatible = "qcom,scm-ipq4019",
-> +	  .data = NULL, /* no clocks */
-> +	},
->  	{ .compatible = "qcom,scm",
->  	  .data = (void *)(SCM_HAS_CORE_CLK
->  			   | SCM_HAS_IFACE_CLK
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> 
