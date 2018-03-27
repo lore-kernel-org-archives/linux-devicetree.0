@@ -1,48 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 4/6] phy: qcom-qmp: Add QMP V3 USB3 UNI PHY support for sdm845
-Date: Tue, 27 Mar 2018 14:42:31 -0700
-Message-ID: <CAD=FV=WoA+jGnrDBJ_wucFRfLC_NqdQTZtZnG96WxNBWaOP+wg@mail.gmail.com>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-5-git-send-email-mgautam@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521785487-29866-5-git-send-email-mgautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Jaehoon Chung <jh80.chung@samsung.com>, Fengguang Wu <fengguang.wu@intel.com>, Wei Yongjun <weiyongjun1@huawei.com>, Evan Green <evgreen@chromium.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH v6 1/2] dt-bindings: net: Add bindings for National Instruments XGE netdev
+Date: Tue, 27 Mar 2018 14:43:14 -0700
+Message-ID: <20180327214315.3224-1-mdf@kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds bindings for the NI XGE 1G/10G network device.
 
-On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> @@ -1414,6 +1556,12 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->         }, {
->                 .compatible = "qcom,qmp-v3-usb3-phy",
->                 .data = &qmp_v3_usb3phy_cfg,
-> +       }, {
-> +               .compatible = "qcom,sdm845-qmp-usb3-phy",
-> +               .data = &qmp_v3_usb3phy_cfg,
-> +       }, {
-> +               .compatible = "qcom,sdm845-qmp-usb3-uni-phy",
-> +               .data = &qmp_v3_usb3_uniphy_cfg,
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+---
+Changes from v5:
+- None
 
-As per my comments on the bindings patch, having two compatible
-strings that both map to "qmp_v3_usb3phy_cfg" smells a little wrong.
+Changes from v4:
+- None
 
+Changes from v3:
+- Added Rob's Reviewed-by
 
-* If the agreement in the bindings patch is that we somehow need to
-keep "qcom,qmp-v3-usb3-phy" around then the sdm845 device tree file
-should list:
+Changes from v2:
+- Addressed Rob's comments w.r.t to IRQ names and typo
 
-  compatible = "qcom,sdm845-qmp-usb3-phy", "qcom,qmp-v3-usb3-phy";
+Changes from v1:
+- Corrected from nixge -> nixge.txt
 
-...and then you can get rid of the "qcom,sdm845-qmp-usb3-phy" in this
-table (it will use the secondary compatible string to pick the right
-entry).
+---
 
+ Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
 
-* If the agreement is to get rid of "qcom,qmp-v3-usb3-phy" then it
-should go away from the table.
-
-
--Doug
+diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+new file mode 100644
+index 000000000000..e55af7f0881a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nixge.txt
+@@ -0,0 +1,32 @@
++* NI XGE Ethernet controller
++
++Required properties:
++- compatible: Should be "ni,xge-enet-2.00"
++- reg: Address and length of the register set for the device
++- interrupts: Should contain tx and rx interrupt
++- interrupt-names: Should be "rx" and "tx"
++- phy-mode: See ethernet.txt file in the same directory.
++- phy-handle: See ethernet.txt file in the same directory.
++- nvmem-cells: Phandle of nvmem cell containing the MAC address
++- nvmem-cell-names: Should be "address"
++
++Examples (10G generic PHY):
++	nixge0: ethernet@40000000 {
++		compatible = "ni,xge-enet-2.00";
++		reg = <0x40000000 0x6000>;
++
++		nvmem-cells = <&eth1_addr>;
++		nvmem-cell-names = "address";
++
++		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "rx", "tx";
++		interrupt-parent = <&intc>;
++
++		phy-mode = "xgmii";
++		phy-handle = <&ethernet_phy1>;
++
++		ethernet_phy1: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			reg = <4>;
++		};
++	};
+-- 
+2.16.2
