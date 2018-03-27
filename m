@@ -1,55 +1,42 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
- gbe_sgmii_config() conditional
-Date: Tue, 27 Mar 2018 19:18:17 +0200
-Message-ID: <20180327171817.GO5862@lunn.ch>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
- <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 08/13] ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common
+ data
+Date: Tue, 27 Mar 2018 10:20:34 -0700
+Message-ID: <20180327172034.GK1403@tuxbook-pro>
+References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
+ <1521800336-19266-9-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1521800336-19266-9-git-send-email-sricharan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 12:31:42PM -0400, Murali Karicheri wrote:
-> As a preparatory patch to add support for 2u cpsw hardware found on
-> K2G SoC, make call to gbe_sgmii_config() conditional. This is required
-> since 2u uses RGMII interface instead of SGMII and to allow for driver
-> re-use.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  drivers/net/ethernet/ti/netcp_ethss.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-> index 56dbc0b..1dea891 100644
-> --- a/drivers/net/ethernet/ti/netcp_ethss.c
-> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
-> @@ -2271,7 +2271,8 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
->  
->  	void (*hndlr)(struct net_device *) = gbe_adjust_link;
->  
-> -	gbe_sgmii_config(priv, slave);
-> +	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
-> +		gbe_sgmii_config(priv, slave);
+On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
+> +#include "qcom-ipq4019.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK07.1";
+> +	compatible = "qcom,ipq4019";
 
-Or maybe:
+The board should set these, so you shouldn't need to specify them here.
+And you should be able to find a more specific compatible for the board.
 
-   if (slave->phy_node == PHY_INTERFACE_MODE_SGMII)
-   	gbe_sgmii_config(priv, slave);
+> +
+[..]
+> +		qpic-nand@79b0000 {
+> +			status = "ok";
 
-	Andrew
+No pinmux for the qpic on these boards?
+
+> +		};
+> +	};
+> +};
+
+Regards,
+Bjorn
