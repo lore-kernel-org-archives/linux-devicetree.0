@@ -1,148 +1,79 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 13:03:35 +0530
-Message-ID: <7bd4d3d9-1317-b63b-4243-aafb2cfda8a6@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
- <e09a4059-d43b-236b-f0f4-1a45dbaa65fc@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Tue, 27 Mar 2018 09:36:15 +0200
+Message-ID: <CAMuHMdVWJhmxXS+mvuwjrCOzurArFurqKwQ2PJD-eRCqbLRAng@mail.gmail.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180327062437epcas5p3389cb070d15669febeb6f504cff2cf6f@epcas5p3.samsung.com>
+ <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com> <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e09a4059-d43b-236b-f0f4-1a45dbaa65fc@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+Hi Andrzej,
 
+On Tue, Mar 27, 2018 at 9:28 AM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
 
-On 3/27/2018 12:21 PM, Vivek Gautam wrote:
-> Hi Manu,
+>>> +static void thc63_enable(struct drm_bridge *bridge)
+>>> +{
+>>> +    struct thc63_dev *thc63 = to_thc63(bridge);
+>>> +    struct regulator *vcc;
+>>> +    int i;
+>> unsigned int i;
 >
+> Why? You are introducing silly bug this way, see few lines below.
 >
-> On 3/23/2018 11:41 AM, Manu Gautam wrote:
->> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
->> to take place.
->
-> AFAIK, that's not true. The pipe clock is the *output* of the PLL, and it's should not
-> be needed for PLL calibration and locking. The PLL locking happens when the phy is
-> configured and powered on.
-> Atleast that's what the PIPE spec also says.
->
->            CLK
->              |
->              |
->              Y
->    ----------------
->   |      PLL        |--------> PCLK (this is pipe clock 125/250/... MHz corresponding to the data width)
->    ----------------
->
-> That's the reason we were enabling it after the PLL was locked.
-
-I got this clarified by QMP PHY hardware designer that pipe_clk is indeed
-needed for PHY to complete init sequence and reflect in PHY_STATUS (mainly
-for calibration and I should remove PLL lock from commit subject).
-It might work on some platforms without this change if boot code
-leaves pipe clock enabled during bootup.
-
-
->
->> This clock is output from PHY to GCC clock_ctl and then
->> fed back to QMP PHY and is available from PHY only after PHY is reset
->> and initialized, hence it can't be enabled too early in initialization
->> sequence.
 >>
->> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->>   1 file changed, 32 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index 6470c5d..5d8df6a 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -1008,6 +1008,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
->>       status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->>       mask = cfg->mask_pcs_ready;
->>   +    /*
->> +     * USB3 PHY requires pipe_clk for PLL lock and calibration.
->> +     * Enable it from here for USB. For UFS/PCIE, it gets enabled
->> +     * from poweron.
->> +     */
->> +    if (cfg->type == PHY_TYPE_USB3) {
->> +        ret = clk_prepare_enable(qphy->pipe_clk);
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(thc63->vccs); i++) {
+>>> +            vcc = thc63->vccs[i];
+>>> +            if (!vcc)
+>>> +                    continue;
+>>> +
+>>> +            if (regulator_enable(vcc))
+>>> +                    goto error_vcc_enable;
+>>> +    }
+>>> +
+>>> +    if (thc63->pdwn)
+>>> +            gpiod_set_value(thc63->pdwn, 0);
+>>> +
+>>> +    if (thc63->oe)
+>>> +            gpiod_set_value(thc63->oe, 1);
+>>> +
+>>> +    return;
+>>> +
+>>> +error_vcc_enable:
+>>> +    dev_err(thc63->dev, "Failed to enable regulator %s\n",
+>>> +            thc63_reg_names[i]);
+>>> +
+>>> +    for (i = i - 1; i >= 0; i--) {
 >
-> As mentioned before AFAIU, pipe clock is just an output coming out of the PHY's PLL
-> and we shouldn't try to enable pipe clock before PHY even gets initialized.
-> We should may just try to first fix the unbalanced pipe clock enable/disable problem.
->
-> Moreover, lets take care of all USB, PCIe and DP phys when we want to enable/disbale
-> pipe clock as all of them use this clock.
+> Here, the loop will not end if you define i unsigned.
 
-I will get the pipe_clk requirement for PCIE as well and do it for both
-(depending on gcc change).
+True.
 
->
-> Best regards
-> Vivek
->
->> +        if (ret) {
->> +            dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
->> +            goto err_clk_enable;
->> +        }
->> +    }
->> +
->>       ret = readl_poll_timeout(status, val, !(val & mask), 1,
->>                    PHY_INIT_COMPLETE_TIMEOUT);
->>       if (ret) {
->> @@ -1019,6 +1032,9 @@ static int qcom_qmp_phy_init(struct phy *phy)
->>       return ret;
->>     err_pcs_ready:
->> +    if (cfg->type == PHY_TYPE_USB3)
->> +        clk_disable_unprepare(qphy->pipe_clk);
->> +err_clk_enable:
->>       if (cfg->has_lane_rst)
->>           reset_control_assert(qphy->lane_rst);
->>   err_lane_rst:
->> @@ -1288,10 +1304,19 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
->>       .owner        = THIS_MODULE,
->>   };
->>   +/* USB PHY doesn't require power_on op */
->> +static const struct phy_ops qcom_qmp_usb_phy_gen_ops = {
->> +    .init        = qcom_qmp_phy_init,
->> +    .exit        = qcom_qmp_phy_exit,
->> +    .set_mode    = qcom_qmp_phy_set_mode,
->> +    .owner        = THIS_MODULE,
->> +};
->> +
->>   static
->>   int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->>   {
->>       struct qcom_qmp *qmp = dev_get_drvdata(dev);
->> +    const struct phy_ops *ops;
->>       struct phy *generic_phy;
->>       struct qmp_phy *qphy;
->>       char prop_name[MAX_PROP_NAME];
->> @@ -1354,7 +1379,13 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->>           }
->>       }
->>   -    generic_phy = devm_phy_create(dev, np, &qcom_qmp_phy_gen_ops);
->> +    /* USB PHY doesn't use power_on op */
->> +    if (qmp->cfg->type == PHY_TYPE_USB3)
->> +        ops = &qcom_qmp_usb_phy_gen_ops;
->> +    else
->> +        ops = &qcom_qmp_phy_gen_ops;
->> +
->> +    generic_phy = devm_phy_create(dev, np, ops);
->>       if (IS_ERR(generic_phy)) {
->>           ret = PTR_ERR(generic_phy);
->>           dev_err(dev, "failed to create qphy %d\n", ret);
->
+> I know one can change the loop, to make it working with unsigned. But
+> this clearly shows that using unsigned is more risky.
+> What are advantages of unsigned vs int in this case. Are there some
+> guidelines/discussions about it?
+
+Some people consider signed integers harmful, as they may be converted
+silently by the compiler to the "larger" unsigned type when needed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
