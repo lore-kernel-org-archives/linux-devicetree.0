@@ -1,136 +1,77 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 12:21:18 +0530
-Message-ID: <e09a4059-d43b-236b-f0f4-1a45dbaa65fc@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+From: "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
+Subject: Re: [PATCH] Input: add bu21029 touch driver
+Date: Tue, 27 Mar 2018 06:52:31 +0000
+Message-ID: <bf2aff8ab685473c836012bbed96c693@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
-Content-Language: en-US
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hs@denx.de" <hs@denx.de>, "ZHU Yi (BT-FIR/ENG1-Zhu)" <Yi.Zhu5@cn.bosch.com>, "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manu,
+Hello Rob,
 
+> > +* Rohm BU21029 Touch Screen Controller
+> > +
+> > +Required properties:
+> > + - compatible              : must be "rohm,bu21029"
+> > + - reg                     : i2c device address of the chip
+>=20
+> What the valid value(s)?
 
-On 3/23/2018 11:41 AM, Manu Gautam wrote:
-> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
-> to take place.
+The chip itself can be wired to 0x40 or 0x41. The driver can work with
+any valid I2C address.
 
-AFAIK, that's not true. The pipe clock is the *output* of the PLL, and 
-it's should not
-be needed for PLL calibration and locking. The PLL locking happens when 
-the phy is
-configured and powered on.
-Atleast that's what the PIPE spec also says.
+Is this what you are looking for?
 
-            CLK
-              |
-              |
-              Y
-    ----------------
-   |      PLL        |--------> PCLK (this is pipe clock 125/250/... MHz 
-corresponding to the data width)
-    ----------------
+- reg                     : i2c device address of the chip (0x40 or 0x41)
 
-That's the reason we were enabling it after the PLL was locked.
+> > + - interrupt-parent        : the phandle for the gpio controller
+> > + - interrupts              : (gpio) interrupt to which the chip is con=
+nected
+> > + - reset-gpios             : gpio pin to reset the chip
+>=20
+> Active high or low?
 
-> This clock is output from PHY to GCC clock_ctl and then
-> fed back to QMP PHY and is available from PHY only after PHY is reset
-> and initialized, hence it can't be enabled too early in initialization
-> sequence.
->
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->   1 file changed, 32 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 6470c5d..5d8df6a 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1008,6 +1008,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
->   	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->   	mask = cfg->mask_pcs_ready;
->   
-> +	/*
-> +	 * USB3 PHY requires pipe_clk for PLL lock and calibration.
-> +	 * Enable it from here for USB. For UFS/PCIE, it gets enabled
-> +	 * from poweron.
-> +	 */
-> +	if (cfg->type == PHY_TYPE_USB3) {
-> +		ret = clk_prepare_enable(qphy->pipe_clk);
+The chip itself needs an active low reset. But depending on whether
+there is an inverter between the touch screen controller and the CPU or
+not, the CPU's GPIO might need to be active high or active low. This
+shall be configured by the polarity given in the device tree. The
+driver uses this information to drive the reset appropriately.
 
-As mentioned before AFAIU, pipe clock is just an output coming out of 
-the PHY's PLL
-and we shouldn't try to enable pipe clock before PHY even gets initialized.
-We should may just try to first fix the unbalanced pipe clock 
-enable/disable problem.
+Are you looking for documenting the required polarity of the touch
+controller itself?
 
-Moreover, lets take care of all USB, PCIe and DP phys when we want to 
-enable/disbale
-pipe clock as all of them use this clock.
+- reset-gpios             : gpio pin to reset the chip (active low)
 
-Best regards
-Vivek
+> > +Example:
+> > +
+> > +	&i2c1 {
+> > +		/* ... */
+> > +
+> > +		bu21029: bu21029@40 {
+> > +			compatible =3D "rohm,bu21029";
+> > +			reg =3D <0x40>;
+> > +			interrupt-parent =3D <&gpio1>;
+> > +			interrupts =3D <4 IRQ_TYPE_EDGE_FALLING>;
+> > +			reset-gpios =3D <&gpio6 16 GPIO_ACTIVE_LOW>;
+> > +			rohm,x-plate-ohms =3D <600>;
+> > +			touchscreen-max-pressure =3D <4095>;
+> > +		};
+> > +
+> > +		/* ... */
+> > +	};
 
-> +		if (ret) {
-> +			dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
-> +			goto err_clk_enable;
-> +		}
-> +	}
-> +
->   	ret = readl_poll_timeout(status, val, !(val & mask), 1,
->   				 PHY_INIT_COMPLETE_TIMEOUT);
->   	if (ret) {
-> @@ -1019,6 +1032,9 @@ static int qcom_qmp_phy_init(struct phy *phy)
->   	return ret;
->   
->   err_pcs_ready:
-> +	if (cfg->type == PHY_TYPE_USB3)
-> +		clk_disable_unprepare(qphy->pipe_clk);
-> +err_clk_enable:
->   	if (cfg->has_lane_rst)
->   		reset_control_assert(qphy->lane_rst);
->   err_lane_rst:
-> @@ -1288,10 +1304,19 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
->   	.owner		= THIS_MODULE,
->   };
->   
-> +/* USB PHY doesn't require power_on op */
-> +static const struct phy_ops qcom_qmp_usb_phy_gen_ops = {
-> +	.init		= qcom_qmp_phy_init,
-> +	.exit		= qcom_qmp_phy_exit,
-> +	.set_mode	= qcom_qmp_phy_set_mode,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
->   static
->   int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->   {
->   	struct qcom_qmp *qmp = dev_get_drvdata(dev);
-> +	const struct phy_ops *ops;
->   	struct phy *generic_phy;
->   	struct qmp_phy *qphy;
->   	char prop_name[MAX_PROP_NAME];
-> @@ -1354,7 +1379,13 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->   		}
->   	}
->   
-> -	generic_phy = devm_phy_create(dev, np, &qcom_qmp_phy_gen_ops);
-> +	/* USB PHY doesn't use power_on op */
-> +	if (qmp->cfg->type == PHY_TYPE_USB3)
-> +		ops = &qcom_qmp_usb_phy_gen_ops;
-> +	else
-> +		ops = &qcom_qmp_phy_gen_ops;
-> +
-> +	generic_phy = devm_phy_create(dev, np, ops);
->   	if (IS_ERR(generic_phy)) {
->   		ret = PTR_ERR(generic_phy);
->   		dev_err(dev, "failed to create qphy %d\n", ret);
+Greetings,
+Mark Jonas
+
+Building Technologies, Panel Software Fire (BT-FIR/ENG1)=20
+Bosch Sicherheitssysteme GmbH | Postfach 11 11 | 85626 Grasbrunn | GERMANY =
+| www.boschsecurity.com
+
+Sitz: Stuttgart, Registergericht: Amtsgericht Stuttgart HRB 23118=20
+Aufsichtsratsvorsitzender: Stefan Hartung; Gesch=E4ftsf=FChrung: Gert van I=
+peren, Andreas Bartz, Thomas Quante, Bernhard Schuster
