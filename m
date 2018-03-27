@@ -1,81 +1,127 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
- gbe_sgmii_config() conditional
-Date: Tue, 27 Mar 2018 15:39:47 -0400
-Message-ID: <1ef3864e-1cb7-ddf1-d03d-9c937736616f@ti.com>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
- <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
- <20180327171817.GO5862@lunn.ch>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Tue, 27 Mar 2018 13:14:31 -0700
+Message-ID: <CAD=FV=WsKinyZq7hRxV=y+uLS7NFP77VjTuO9OWhFobB+qQYpA@mail.gmail.com>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+ <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org> <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
+ <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180327171817.GO5862@lunn.ch>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2018 01:18 PM, Andrew Lunn wrote:
-> On Tue, Mar 27, 2018 at 12:31:42PM -0400, Murali Karicheri wrote:
->> As a preparatory patch to add support for 2u cpsw hardware found on
->> K2G SoC, make call to gbe_sgmii_config() conditional. This is required
->> since 2u uses RGMII interface instead of SGMII and to allow for driver
->> re-use.
+Hi,
+
+On Tue, Mar 27, 2018 at 12:50 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
+> Hi,
+>
+>
+> On 3/27/2018 12:26 PM, Vivek Gautam wrote:
 >>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
->>  drivers/net/ethernet/ti/netcp_ethss.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
 >>
->> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
->> index 56dbc0b..1dea891 100644
->> --- a/drivers/net/ethernet/ti/netcp_ethss.c
->> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
->> @@ -2271,7 +2271,8 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
->>  
->>  	void (*hndlr)(struct net_device *) = gbe_adjust_link;
->>  
->> -	gbe_sgmii_config(priv, slave);
->> +	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
->> +		gbe_sgmii_config(priv, slave);
-> 
-> Or maybe:
-> 
->    if (slave->phy_node == PHY_INTERFACE_MODE_SGMII)
->    	gbe_sgmii_config(priv, slave);
+>> On 3/27/2018 10:37 AM, Manu Gautam wrote:
+>>> Hi Doug,
+>>>
+>>>
+>>> On 3/27/2018 9:56 AM, Doug Anderson wrote:
+>>>> Manu
+>>>>
+>>>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+>>>>> to take place. This clock is output from PHY to GCC clock_ctl and then
+>>>>> fed back to QMP PHY and is available from PHY only after PHY is reset
+>>>>> and initialized, hence it can't be enabled too early in initialization
+>>>>> sequence.
+>>>>>
+>>>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>>>> ---
+>>>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
+>>>>>   1 file changed, 32 insertions(+), 1 deletion(-)
+>>>> So it's now new with this patch, but it's more obvious with this
+>>>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
+>>>> controls its clock.  Specifically:
+>>>>
+>>>> * If you init the PHY but don't power it on, then you "exit" the PHY:
+>>>> you'll disable/unprepare "pipe_clk" even though you never
+>>>> prepare/enabled it.
+>>>>
+>>>> * If you init the PHY, power it on, power it off, power it on, and
+>>>> exit the PHY: you'll leave the clock prepared one extra time.
+>>>>
+>>>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
+>>>> symmetric with the enable/prepare and should be in "power off", not in
+>>>> exit.
+>>>>
+>>>> ...or did I miss something?
+>>>>
+>>>>
+>>>> Interestingly, your patch fixes this problem for USB3 (where init/exit
+>>>> are now symmetric), but leaves the problem there for UFS/PCIE.
+>>>>
+>>> Thanks for review.
+>>> One of the reason why pipe_clk is disabled as part of phy_exit is that
+>>> halt_check from clk_disable reports error if called after PHY has been
+>>> powered down or phy_exit.
+>>> I believe that warning should be ignored in qcom gcc-clock driver
+>>> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
+>>> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
+>> UFS doesn't use PIPE clock.
 
-Yeah. Based on my response to your other comment, this would become
-
-if ((slave->link_interface == SGMII_LINK_MAC_PHY) &&
-    (IS_SS_ID_VER_14(priv) || IS_SS_ID_NU(priv)))
-	gbe_sgmii_config(priv, slave);
-
-We can't solely depends on phy_mode here. Phy interface is one of several
-interface possible. There is MAC_TO_MAC_FORCED, NO_MDIO etc. So we check the
-link_interface above.
-
-If we can agree, here is what will appear in v3
-
-1) Add another patch to do conversion of priv->ss_version == GBE_SS_VERSION_14 check 
-with a macro, IS_SS_ID_VER_14
-2) modify this patch as above.
-
-Murali
-> 
-> 	Andrew
-> 
+Just to confirm: we no longer need to do this "BRANCH_HALT_DELAY" now
+that we've figured everything out, right?
 
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+> Yes, UFS PHY doesn't use one. But similar to pipe_clk there are rx/tx symbol_clk
+> output from PHY that is used by UFS controller. I will update code comments
+> to not refer UFS for pipe_clk.
+>
+>> But considering for PCIe, if we disable pipe clock when phy is still running, then
+>> it shouldn't be a problem. We should also not see the halt warning as the gcc
+>> driver should be able to just turn the gate off.
+>> The reason why it will throw that error is when the parent clock to that gate
+>> is gated, i.e. the pipe clock is not flowing on that branch.
+>
+> I got the confirmation that pipe_clk is needed for PCIE as well for its
+> initialization to happen successfully. So we do need clock driver change
+> to fix this in PHY driver.
+
+So basically if I'm understanding this correctly:
+
+* Both USB and PCIE need the clk_enable() in qcom_qmp_phy_init()
+
+* UFS doesn't even use a pipe clock (pipe_clk is NULL and thus these
+calls are no-ops).
+
+So that means the next version of this code will simply get rid of
+qcom_qmp_phy_poweron() and we can now use the same phy_ops for both
+everything again?  That also makes everything symmetric and gets rid
+of the possible imbalance of clock enable/disable, so I'm happy.
+
+
+Actually: I'll also throw out a drastic idea here.  Maybe instead of
+having a NULL power_on/power_off, we should have a NULL init/exit.
+Does anything break if all the stuff that happens today in
+qcom_qmp_phy_com_init() happens at power_on() time instead of init()
+time?  I suggest this because:
+
+* It sounds like init() is supposed to be for initialization that can
+happen _before_ power on of the PHY.
+
+* Any initialization that happens after the PHY has been powered on
+seems expected to just be in the power_on() function after the
+regulator was enabled.
+
+
+Presumably moving this stuff to power_on could save you some power in
+some cases (since the client of the PHY presumably turns power off to
+the PHY with the idea of saving power).
+
+
+-Doug
