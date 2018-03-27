@@ -1,45 +1,99 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH v2] net: phy: Added device tree binding for dev-addr
- and dev-addr code check-up
-Date: Tue, 27 Mar 2018 16:24:08 +0200
-Message-ID: <20180327142408.GL5862@lunn.ch>
-References: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
- <20180326222509.ppt5aqzqdarhm44d@rob-hp-laptop>
- <HE1PR0402MB3578B3D33160EBE59C2FD7D7EEAC0@HE1PR0402MB3578.eurprd04.prod.outlook.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [net-next PATCH 2/5] soc: ti: K2G: provide APIs to support driver
+ probe deferral
+Date: Tue, 27 Mar 2018 10:31:19 -0400
+Message-ID: <cbc1b848-2b11-6953-3a2c-1650af0d99f7@ti.com>
+References: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
+ <1522095312-23249-3-git-send-email-m-karicheri2@ti.com>
+ <20180326204802.GC5862@lunn.ch> <4aeeda56-c68b-cb64-1314-a669f721ff20@ti.com>
+ <20180327140310.GK5862@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <HE1PR0402MB3578B3D33160EBE59C2FD7D7EEAC0@HE1PR0402MB3578.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VmljZW7Fo2l1?= Galanopulo <vicentiu.galanopulo@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180327140310.GK5862@lunn.ch>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> > This is a 2nd MDIO address, right? Can't you just append this to reg property?
+Hello Andrew,
 
-Hi Rob
+On 03/27/2018 10:03 AM, Andrew Lunn wrote:
+>> Could you please elaborate? These knav dma and qmss drivers are
+>> introduced to support packet DMA hardware available in Keystone
+>> NetCP which couldn't be implemented using the DMA APIs available
+>> at the time this driver was introduced. Another reason was that
+>> the performance was really bad. We had an internal implementation
+>> based on DMA API before which couldn't be upstreamed at that time
+>> due to the reason that we were mis-using the API for this driver.
+>> So we introduced these knav_dma driver to support NetCP. We don't
+>> have any plan to re-write the driver at this time.
+>>
+>> If your question is about EPROBE_DEFER being returned from an
+>> existing knav_dma API and using the return code to achieve probe
+>> defer instead of introducing these APIs, I can take a look into
+>> that and respond. So please clarify.
+>  
+> Hi Murali
+> 
+> So if i understood you right, at the time these drivers were written,
+> the linux DMA API did not do what you wanted. You could hack something
+> together by using the API wrongly, but that could not be mainlined. So
+> rather than fixing the DMA API to make it work for this hardware, you
+> ignored it, and made up your own API? This API now has its own
+> problems, it does not correctly handle ordering? So you are hacking
+> your own API further.
+> 
+> Does the Linux DMA API correctly handle probing order issues? Has the
+> Linux DMA API evolved so that it now does do what is needed by your
+> hardware?
+> 
 
-It is a sub address.
+Thanks once again for your review and response!
 
-There are two different MDIO addressing schemes. Clause 22 allowed for
-32 different addresses on an MDIO bus. Clause 45 extended that. You
-have the existing 32 addresses for a package. However, within a
-package, you can have 32 devices.
+I don't think dma API was meant to support hardware like pkt dma and was the
+reason quoted when this driver was introduced and the same is valid even
+today. AFAIK, Without hacking the API, we will not be able to support our
+driver even today. Besides Keystone itself is an old platform that is
+matured and have been there for long. K2G SoC was also introduced almost
+3 years ago and we were late to port it to upstream due to various reasons.
+We now have the SoC and most of the drivers upstreamed and this is a
+missing driver to support networking. Given that we don't have any other
+new devices planned from this SoC familty in the future, and the platform
+itself is old and matured, I don't think the extra effort needed to
+explore DMA API usage and re-write the driver is justified. 
 
-You are supposed to be able to look are registers inside the package,
-and it will tell you which devices in the packages are in use. You can
-then look at those devices and figure out what they are using ID
-registers.
+knav dma API is a TI SoC specific driver API and IMO, it should be fine\
+to extend it to support probe deferral. I have also looked at the driver
+and I don't see any other way to handle this since the channels are
+allocated and used in ndo_open() and EPROBE_DEFER is not useful here.
 
-However some vendors get this wrong, they don't fill in the devices in
-package information. So the generic probe code never finds them. We
-need to pass it a hint, go looking at this specific device in the
-package.
+Btw, I will re-write patch 3/5 as you have suggested as there is scope
+for adding one more patch besides what I have mentioned in my response.
+I will be sending v2 of the series soon with your comment on 3/5 addressed.
 
-You can mix Clause 22 and Clause 45 on the same bus. Does DT allow two
-different reg formats to be used at once? Can we have some reg
-properties with a single value, and some with two values? I thought
-#address-cells = <1> means there should be a single address in reg.
+Regards,
 
-	Andrew
+Murali
+> If this was an old hardware which is slowly going away, it would not
+> be an issue. But it seems like there are new variants of the hardware
+> being released. So maybe you should go back and re-write the DMA
+> driver, rather than paper over the cracks?
+> 
+> 	Andrew
+> 
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
