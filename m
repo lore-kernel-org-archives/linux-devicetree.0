@@ -1,87 +1,128 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 12:26:08 +0530
-Message-ID: <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
- <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] ata: ahci-platform: add reset control support
+Date: Tue, 27 Mar 2018 15:57:12 +0900
+Message-ID: <1522133832-7760-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, anischal@codeaurora.org
+To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
+Add support to get and control a list of resets for the device
+as optional and shared. These resets must be kept de-asserted until
+the device is enabled.
 
+This is specified as shared because some SoCs like UniPhier series
+have common reset controls with all ahci controller instances.
 
-On 3/27/2018 10:37 AM, Manu Gautam wrote:
-> Hi Doug,
->
->
-> On 3/27/2018 9:56 AM, Doug Anderson wrote:
->> Manu
->>
->> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
->>> to take place. This clock is output from PHY to GCC clock_ctl and then
->>> fed back to QMP PHY and is available from PHY only after PHY is reset
->>> and initialized, hence it can't be enabled too early in initialization
->>> sequence.
->>>
->>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>> ---
->>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->>>   1 file changed, 32 insertions(+), 1 deletion(-)
->> So it's now new with this patch, but it's more obvious with this
->> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
->> controls its clock.  Specifically:
->>
->> * If you init the PHY but don't power it on, then you "exit" the PHY:
->> you'll disable/unprepare "pipe_clk" even though you never
->> prepare/enabled it.
->>
->> * If you init the PHY, power it on, power it off, power it on, and
->> exit the PHY: you'll leave the clock prepared one extra time.
->>
->> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
->> symmetric with the enable/prepare and should be in "power off", not in
->> exit.
->>
->> ...or did I miss something?
->>
->>
->> Interestingly, your patch fixes this problem for USB3 (where init/exit
->> are now symmetric), but leaves the problem there for UFS/PCIE.
->>
-> Thanks for review.
-> One of the reason why pipe_clk is disabled as part of phy_exit is that
-> halt_check from clk_disable reports error if called after PHY has been
-> powered down or phy_exit.
-> I believe that warning should be ignored in qcom gcc-clock driver
-> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
-> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
-UFS doesn't use PIPE clock.
-But considering for PCIe, if we disable pipe clock when phy is still 
-running, then
-it shouldn't be a problem. We should also not see the halt warning as 
-the gcc
-driver should be able to just turn the gate off.
-The reason why it will throw that error is when the parent clock to that 
-gate
-is gated, i.e. the pipe clock is not flowing on that branch.
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v1:
+- add 'Reviewed-by:' lines
 
-Best regards
-Vivek
+.../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+ drivers/ata/ahci.h                                 |  1 +
+ drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
+ 3 files changed, 23 insertions(+), 3 deletions(-)
 
->
-> I can implement that as separate patch once dependent gcc driver
-> patch(es) gets in. Would that be ok?
->
-> -Manu
->
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index c760ecb..f4006d3 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -30,6 +30,7 @@ compatible:
+ Optional properties:
+ - dma-coherent      : Present if dma operations are coherent
+ - clocks            : a list of phandle + clock specifier pairs
++- resets            : a list of phandle + reset specifier pairs
+ - target-supply     : regulator for SATA target power
+ - phys              : reference to the SATA PHY node
+ - phy-names         : must be "sata-phy"
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index a9d996e..4356ef1 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -350,6 +350,7 @@ struct ahci_host_priv {
+ 	u32			em_msg_type;	/* EM message type */
+ 	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
+ 	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
++	struct reset_control	*rsts;		/* Optional */
+ 	struct regulator	**target_pwrs;	/* Optional */
+ 	/*
+ 	 * If platform uses PHYs. There is a 1:1 relation between the port number and
+diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+index 30cc8f1..46a7624 100644
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -25,6 +25,7 @@
+ #include <linux/phy/phy.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/of_platform.h>
++#include <linux/reset.h>
+ #include "ahci.h"
+ 
+ static void ahci_host_stop(struct ata_host *host);
+@@ -195,7 +196,8 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
+  * following order:
+  * 1) Regulator
+  * 2) Clocks (through ahci_platform_enable_clks)
+- * 3) Phys
++ * 3) Resets
++ * 4) Phys
+  *
+  * If resource enabling fails at any point the previous enabled resources
+  * are disabled in reverse order.
+@@ -215,12 +217,19 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
+ 	if (rc)
+ 		goto disable_regulator;
+ 
+-	rc = ahci_platform_enable_phys(hpriv);
++	rc = reset_control_deassert(hpriv->rsts);
+ 	if (rc)
+ 		goto disable_clks;
+ 
++	rc = ahci_platform_enable_phys(hpriv);
++	if (rc)
++		goto disable_resets;
++
+ 	return 0;
+ 
++disable_resets:
++	reset_control_assert(hpriv->rsts);
++
+ disable_clks:
+ 	ahci_platform_disable_clks(hpriv);
+ 
+@@ -239,12 +248,15 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
+  * following order:
+  * 1) Phys
+  * 2) Clocks (through ahci_platform_disable_clks)
+- * 3) Regulator
++ * 3) Resets
++ * 4) Regulator
+  */
+ void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
+ {
+ 	ahci_platform_disable_phys(hpriv);
+ 
++	reset_control_assert(hpriv->rsts);
++
+ 	ahci_platform_disable_clks(hpriv);
+ 
+ 	ahci_platform_disable_regulators(hpriv);
+@@ -393,6 +405,12 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
+ 		hpriv->clks[i] = clk;
+ 	}
+ 
++	hpriv->rsts = devm_reset_control_array_get_optional_shared(dev);
++	if (IS_ERR(hpriv->rsts)) {
++		rc = PTR_ERR(hpriv->rsts);
++		goto err_out;
++	}
++
+ 	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
+ 
+ 	/*
+-- 
+2.7.4
