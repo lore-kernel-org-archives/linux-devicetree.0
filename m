@@ -1,53 +1,82 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 7/7] ARM64: dts: meson-axg: add an 32K alt aoclk
-Date: Tue, 27 Mar 2018 11:00:49 +0200
-Message-ID: <1522141249.2632.25.camel@baylibre.com>
-References: <20180323143816.200573-1-yixun.lan@amlogic.com>
-         <20180323143816.200573-8-yixun.lan@amlogic.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
+Date: Tue, 27 Mar 2018 11:06:03 +0200
+Message-ID: <CAMuHMdVEF-6icsLXd3RU56mzGp6TZYpD1E5ViZvaOa=kWGYPvw@mail.gmail.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CGME20180327062437epcas5p3389cb070d15669febeb6f504cff2cf6f@epcas5p3.samsung.com>
+ <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com>
+ <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
+ <CAMuHMdVWJhmxXS+mvuwjrCOzurArFurqKwQ2PJD-eRCqbLRAng@mail.gmail.com>
+ <8115587a-4925-5602-43db-4285a3de7b0e@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180323143816.200573-8-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8115587a-4925-5602-43db-4285a3de7b0e@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-03-23 at 22:38 +0800, Yixun Lan wrote:
-> The ao_clk81 in AO domain have two clock source,
-> one from a 32K alt crystal we name it as ao_alt_clk,
-> another is the clk81 signal from EE domain.
-> 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index b3d394f5d95a..48584d5a329b 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -109,6 +109,13 @@
->  		#clock-cells = <0>;
->  	};
->  
-> +	ao_alt_xtal: ao_alt_xtal-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32000000>;
-> +		clock-output-names = "ao_alt_xtal";
-> +		#clock-cells = <0>;
-> +	};
-
-In DT, we seem to be using 'ao' and 'AO' to designate the Always On domain.
-Maybe we should be try be consistent about this.
-
-Anyway, this patch looks good but does not need to be part of the clkc_ao
-series, it could go in independently.
-
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
+SGkgQW5kcmV6aiwKCk9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDEwOjM2IEFNLCBBbmRyemVqIEhh
+amRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiB3cm90ZToKPiBPbiAyNy4wMy4yMDE4IDA5OjM2LCBH
+ZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+IE9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDk6Mjgg
+QU0sIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOgo+Pj4+PiAtLS0g
+L2Rldi9udWxsCj4+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0
+LmMKPj4+Pj4gK3N0YXRpYyB2b2lkIHRoYzYzX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJp
+ZGdlKQo+Pj4+PiArewo+Pj4+PiArICAgIHN0cnVjdCB0aGM2M19kZXYgKnRoYzYzID0gdG9fdGhj
+NjMoYnJpZGdlKTsKPj4+Pj4gKyAgICBzdHJ1Y3QgcmVndWxhdG9yICp2Y2M7Cj4+Pj4+ICsgICAg
+aW50IGk7Cj4+Pj4gdW5zaWduZWQgaW50IGk7Cj4+PiBXaHk/IFlvdSBhcmUgaW50cm9kdWNpbmcg
+c2lsbHkgYnVnIHRoaXMgd2F5LCBzZWUgZmV3IGxpbmVzIGJlbG93Lgo+Pj4KPj4+Pj4gKwo+Pj4+
+PiArICAgIGZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHRoYzYzLT52Y2NzKTsgaSsrKSB7Cj4+
+Pj4+ICsgICAgICAgICAgICB2Y2MgPSB0aGM2My0+dmNjc1tpXTsKPj4+Pj4gKyAgICAgICAgICAg
+IGlmICghdmNjKQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPj4+Pj4gKwo+
+Pj4+PiArICAgICAgICAgICAgaWYgKHJlZ3VsYXRvcl9lbmFibGUodmNjKSkKPj4+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgZ290byBlcnJvcl92Y2NfZW5hYmxlOwo+Pj4+PiArICAgIH0KPj4+Pj4g
+Kwo+Pj4+PiArICAgIGlmICh0aGM2My0+cGR3bikKPj4+Pj4gKyAgICAgICAgICAgIGdwaW9kX3Nl
+dF92YWx1ZSh0aGM2My0+cGR3biwgMCk7Cj4+Pj4+ICsKPj4+Pj4gKyAgICBpZiAodGhjNjMtPm9l
+KQo+Pj4+PiArICAgICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlKHRoYzYzLT5vZSwgMSk7Cj4+Pj4+
+ICsKPj4+Pj4gKyAgICByZXR1cm47Cj4+Pj4+ICsKPj4+Pj4gK2Vycm9yX3ZjY19lbmFibGU6Cj4+
+Pj4+ICsgICAgZGV2X2Vycih0aGM2My0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSByZWd1bGF0b3Ig
+JXNcbiIsCj4+Pj4+ICsgICAgICAgICAgICB0aGM2M19yZWdfbmFtZXNbaV0pOwo+Pj4+PiArCj4+
+Pj4+ICsgICAgZm9yIChpID0gaSAtIDE7IGkgPj0gMDsgaS0tKSB7Cj4+PiBIZXJlLCB0aGUgbG9v
+cCB3aWxsIG5vdCBlbmQgaWYgeW91IGRlZmluZSBpIHVuc2lnbmVkLgo+PiBUcnVlLgo+Pgo+Pj4g
+SSBrbm93IG9uZSBjYW4gY2hhbmdlIHRoZSBsb29wLCB0byBtYWtlIGl0IHdvcmtpbmcgd2l0aCB1
+bnNpZ25lZC4gQnV0Cj4+PiB0aGlzIGNsZWFybHkgc2hvd3MgdGhhdCB1c2luZyB1bnNpZ25lZCBp
+cyBtb3JlIHJpc2t5Lgo+Pj4gV2hhdCBhcmUgYWR2YW50YWdlcyBvZiB1bnNpZ25lZCB2cyBpbnQg
+aW4gdGhpcyBjYXNlLiBBcmUgdGhlcmUgc29tZQo+Pj4gZ3VpZGVsaW5lcy9kaXNjdXNzaW9ucyBh
+Ym91dCBpdD8KPj4gU29tZSBwZW9wbGUgY29uc2lkZXIgc2lnbmVkIGludGVnZXJzIGhhcm1mdWws
+IGFzIHRoZXkgbWF5IGJlIGNvbnZlcnRlZAo+PiBzaWxlbnRseSBieSB0aGUgY29tcGlsZXIgdG8g
+dGhlICJsYXJnZXIiIHVuc2lnbmVkIHR5cGUgd2hlbiBuZWVkZWQuCj4KPiBXb3csIGl0IHNvdW5k
+cyBjcmF6eSwgc2hhbGwgd2UgZXhwZWN0IGdpZ2FudGljIHBhdGNoc2V0cywgY29udmVydGluZyBh
+bGwKPiBvY2N1cnJlbmNlcyBvZiBpbnQgdG8gInVuc2lnbmVkIGludCIgPyA6KQoKTm8gd2Ugc2hh
+bGwgbm90LgoKPiBJIGtub3cgYm90aCB0eXBlcyBoYXZlIHRoZWlyIHByb3MgYW5kIGNvbnMgYW5k
+IGNhbiBiZWhhdmUgdW5leHBlY3RlZGx5Cj4gaW4gY29ybmVyIGNhc2VzLCBidXQgSSBkbyBub3Qg
+c2VlIHdoeSB1bnNpZ25lZCBzaG91bGQgYmUgcHJlZmVycmVkIG92ZXIKPiBzaWduZWQgaW4gZ2Vu
+ZXJhbCwgb3IgaW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UuCgpXaGVuIGxvb3Bpbmcgb3ZlciBhcnJh
+eSBpbmRpY2VzLCBhbmQgY29tcGFyaW5nIHdpdGggQVJSQVlfU0laRSAod2hpY2gKaXMgdW5zaWdu
+ZWQpLCB1c2luZyAidW5zaWduZWQgaW50IiBpcyBwcmVmZXJyZWQuCgpIb3dldmVyLCBpbiB0aGlz
+IGNhc2UgdGhlIGVycm9yIGNvZGUgcmVsaWVzIG9uIHRoZSBpbmRleCBiZWNvbWluZyBuZWdhdGl2
+ZSwKc28gYSBzaWduZWQgaW50ZWdlciBzaG91bGQgYmUgdXNlZC4KCj4gSSBndWVzcyB0aGVyZSB3
+ZXJlIHNvbWV3aGVyZSBkaXNjdXNzaW9uIGFib3V0IGl0LCBjb3VsZCB5b3UgcG9pbnQgbWUgdG8K
+PiBpdCBpZiBwb3NzaWJsZSwgdG8gYXZvaWQgdW5uZWNlc3Nhcnkgbm9pc2UgaW4gdGhpcyB0aHJl
+YWQuCgpOb3QgaGVyZSwgYnV0IEdvb2dsZSBwb2ludGVkIG1lIHRvCmh0dHA6Ly9ibG9nLnJvYmVy
+dGVsZGVyLm9yZy9zaWduZWQtb3ItdW5zaWduZWQvCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAg
+ICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLSAKR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
+J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoKSW4g
+cGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNl
+bGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBz
+YXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
