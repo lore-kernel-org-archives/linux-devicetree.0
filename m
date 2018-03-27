@@ -1,77 +1,78 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 03/13] ARM: dts: ipq4019: Add a few peripheral nodes
-Date: Tue, 27 Mar 2018 09:50:59 -0700
-Message-ID: <20180327165059.GE1403@tuxbook-pro>
+Subject: Re: [PATCH v5 02/13] ARM: dts: ipq4019: Add a default chosen node
+Date: Tue, 27 Mar 2018 09:56:12 -0700
+Message-ID: <20180327165612.GF1403@tuxbook-pro>
 References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
- <1521800336-19266-4-git-send-email-sricharan@codeaurora.org>
+ <1521800336-19266-3-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1521800336-19266-4-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1521800336-19266-3-git-send-email-sricharan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, richardcochran@gmail.com, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
-> @@ -172,6 +180,22 @@
->  			clock-names = "core", "iface";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> +			dmas = <&blsp_dma 5>, <&blsp_dma 4>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		spi_1: spi@78b6000 { /* BLSP1 QUP2 */
-> +			compatible = "qcom,spi-qup-v2.2.1";
-> +			reg = <0x78b6000 0x600>;
-> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
-> +				<&gcc GCC_BLSP1_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			dmas = <&blsp_dma 7>, <&blsp_dma 6>;
-> +			dma-names = "rx", "tx";
->  			status = "disabled";
->  		};
->  
-> @@ -184,9 +208,24 @@
->  			clock-names = "iface", "core";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> +			dmas = <&blsp_dma 9>, <&blsp_dma 8>;
-> +			dma-names = "rx", "tx";
->  			status = "disabled";
->  		};
->  
-> +		i2c_1: i2c@78b8000 { /* BLSP1 QUP4 */
 
-The label, comment and the core clock disagrees on which qup this is.
+> Add a 'chosen' node to select the serial console.
+> This is needed when bootloaders do not pass the
+> 'console=' bootargs.
+> 
 
-Label your nodes based on the SoC naming, not your board - as this will
-prevent a future board from using e.g. blsp1 qup2 as i2c (as you already
-used the label for that).
-
-> +			compatible = "qcom,i2c-qup-v2.2.1";
-> +			reg = <0x78b8000 0x600>;
-> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> +				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-
-QUP4?
-
-> +			clock-names = "iface", "core";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			dmas = <&blsp_dma 11>, <&blsp_dma 10>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-
-Apart from this the patch looks good.
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 8 ++++++++
+>  arch/arm/boot/dts/qcom-ipq4019.dtsi           | 2 +-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> index e413b21e..ef8d8c8 100644
+> --- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> +++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+> @@ -20,6 +20,14 @@
+>  	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
+>  	compatible = "qcom,ipq4019";
+>  
+> +	aliases {
+> +		serial0 = &blsp1_uart1;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	soc {
+>  		rng@22000 {
+>  			status = "ok";
+> diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> index 10d112a..ea9202a 100644
+> --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> @@ -256,7 +256,7 @@
+>                          regulator;
+>                  };
+>  
+> -		serial@78af000 {
+> +		blsp1_uart1: serial@78af000 {
+>  			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>  			reg = <0x78af000 0x200>;
+>  			interrupts = <0 107 0>;
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
