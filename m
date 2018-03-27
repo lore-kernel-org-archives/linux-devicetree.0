@@ -1,53 +1,31 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 0/2] add ethernet nodes for UniPhier PXs3 SoC
-Date: Wed, 28 Mar 2018 01:32:17 +0900
-Message-ID: <CAK7LNAStR8jmOUbSUKGcxRi_mZUwJgAwCN__=c6miN8Nfyd2AQ@mail.gmail.com>
-References: <1522146766-14435-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 0/8] ARM: davinci: complete the conversion to using the
+ reset framework
+Date: Tue, 27 Mar 2018 11:48:47 -0500
+Message-ID: <6166e140-b417-dd22-10cf-843db3958226@lechnology.com>
+References: <20180327092031.11251-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522146766-14435-1-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180327092031.11251-1-brgl@bgdev.pl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-03-27 19:32 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
-> This series adds ethernet nodes for UniPhier PXs3 SoC and the board,
-> and adds pinctrl groups for second ethernet instances because PXs3 has two
-> ethernet instances.
->
-> Kunihiko Hayashi (2):
->   ARM: dts: uniphier: add pinctrl groups of ethernet for second instance
->   arm64: dts: uniphier: add ethernet node for PXs3
-
-Applied.  Thanks.
+Wasn't there a v4 already? Is this really v5 instead of v3?
 
 
->  arch/arm/boot/dts/uniphier-pinctrl.dtsi            | 10 ++++++
->  .../arm64/boot/dts/socionext/uniphier-pxs3-ref.dts | 22 +++++++++++++
->  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   | 36 ++++++++++++++++++++++
->  3 files changed, 68 insertions(+)
->
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/27/2018 04:20 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This series converts the only user of the handcoded, mach-specific reset
+> routines in the davinci platform to using the reset framework.
+> 
+> Patches 1-3 add necessary lookups/DT-properties.
 
-
-
--- 
-Best Regards
-Masahiro Yamada
+Should I just squash the DT changes into my common-clock-v9 branch
+since those patches haven't been picked up yet anyway? That will be
+2 fewer patches to keep track of.
