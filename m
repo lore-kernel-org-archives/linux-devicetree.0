@@ -1,60 +1,48 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: phy-qcom-qmp: Update bindings for sdm845
-Date: Tue, 27 Mar 2018 14:37:53 -0700
-Message-ID: <CAD=FV=Vwx2nW=pwEzJJSVXLctxOU5uGormBn=t_P6_xyfrrLAw@mail.gmail.com>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-4-git-send-email-mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 4/6] phy: qcom-qmp: Add QMP V3 USB3 UNI PHY support for sdm845
+Date: Tue, 27 Mar 2018 14:42:31 -0700
+Message-ID: <CAD=FV=WoA+jGnrDBJ_wucFRfLC_NqdQTZtZnG96WxNBWaOP+wg@mail.gmail.com>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-5-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521785487-29866-4-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <1521785487-29866-5-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Jaehoon Chung <jh80.chung@samsung.com>, Fengguang Wu <fengguang.wu@intel.com>, Wei Yongjun <weiyongjun1@huawei.com>, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
 On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> Update compatible strings for USB3 PHYs on SDM845.
-> One is QMPv3 DisplayPort-USB combo PHY and other one
-> is USB UNI PHY which is single lane USB3 PHY without
-> DP capability.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index dcf1b8f..cef8765 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -9,7 +9,9 @@ Required properties:
->                "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
->                "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->                "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-> -              "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy.
-> +              "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
-> +              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
-> +              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+> @@ -1414,6 +1556,12 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+>         }, {
+>                 .compatible = "qcom,qmp-v3-usb3-phy",
+>                 .data = &qmp_v3_usb3phy_cfg,
+> +       }, {
+> +               .compatible = "qcom,sdm845-qmp-usb3-phy",
+> +               .data = &qmp_v3_usb3phy_cfg,
+> +       }, {
+> +               .compatible = "qcom,sdm845-qmp-usb3-uni-phy",
+> +               .data = &qmp_v3_usb3_uniphy_cfg,
 
-I'm confused.  What value does "qcom,qmp-v3-usb3-phy" have as a
-separate entry from "qcom,sdm845-qmp-usb3-phy"?  Is
-"qcom,qmp-v3-usb3-phy" expected to work on some non-SDM845 based
-device?
+As per my comments on the bindings patch, having two compatible
+strings that both map to "qmp_v3_usb3phy_cfg" smells a little wrong.
 
-Personally I think you should remove "qcom,qmp-v3-usb3-phy" from the
-bindings as part of this patch (replacing it with the new string
-qcom,sdm845-qmp-usb3-phy)".  Yeah, yeah bindings are forever.  ...but
-that particular string was added about a month ago and (I believe) it
-was intended for SDM845 anyway.  As per
-<https://patchwork.kernel.org/patch/10302759/> match to the exact same
-PHY data which leads extra credence to my belief.
 
-If later on you find that some future chip can use the exact same
-driver / settings as the SDM845 you can always list the
-"qcom,sdm845-qmp-usb3-phy" string as a secondary compatible anyway.
+* If the agreement in the bindings patch is that we somehow need to
+keep "qcom,qmp-v3-usb3-phy" around then the sdm845 device tree file
+should list:
+
+  compatible = "qcom,sdm845-qmp-usb3-phy", "qcom,qmp-v3-usb3-phy";
+
+...and then you can get rid of the "qcom,sdm845-qmp-usb3-phy" in this
+table (it will use the secondary compatible string to pick the right
+entry).
+
+
+* If the agreement is to get rid of "qcom,qmp-v3-usb3-phy" then it
+should go away from the table.
 
 
 -Doug
