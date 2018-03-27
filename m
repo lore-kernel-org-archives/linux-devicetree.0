@@ -1,99 +1,73 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [net-next PATCH 2/5] soc: ti: K2G: provide APIs to support driver
- probe deferral
-Date: Tue, 27 Mar 2018 10:31:19 -0400
-Message-ID: <cbc1b848-2b11-6953-3a2c-1650af0d99f7@ti.com>
-References: <1522095312-23249-1-git-send-email-m-karicheri2@ti.com>
- <1522095312-23249-3-git-send-email-m-karicheri2@ti.com>
- <20180326204802.GC5862@lunn.ch> <4aeeda56-c68b-cb64-1314-a669f721ff20@ti.com>
- <20180327140310.GK5862@lunn.ch>
+From: =?UTF-8?B?5p2O5pu45biG?= <leechu729@gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: usb: rt1711h device tree binding document
+Date: Tue, 27 Mar 2018 22:30:13 +0800
+Message-ID: <CAFaeLdQXQnE9XpAsgOPg=D_wAqEKe4dQhtKYrS1sDT5wgqSdVw@mail.gmail.com>
+References: <1521537304-7531-1-git-send-email-leechu729@gmail.com>
+ <1521537304-7531-3-git-send-email-leechu729@gmail.com> <20180326222336.jqix6k4pyqy4bg36@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180327140310.GK5862@lunn.ch>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180326222336.jqix6k4pyqy4bg36@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg KH <greg@kroah.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, mark.rutland@arm.com, =?UTF-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>, =?UTF-8?B?Y3lfaHVhbmco6buD5ZWf5Y6fKQ==?= <cy_huang@richtek.com>, Jun Li <jun.li@nxp.com>, Mats Karrman <mats.dev.list@gmail.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+Hi Rob,
 
-On 03/27/2018 10:03 AM, Andrew Lunn wrote:
->> Could you please elaborate? These knav dma and qmss drivers are
->> introduced to support packet DMA hardware available in Keystone
->> NetCP which couldn't be implemented using the DMA APIs available
->> at the time this driver was introduced. Another reason was that
->> the performance was really bad. We had an internal implementation
->> based on DMA API before which couldn't be upstreamed at that time
->> due to the reason that we were mis-using the API for this driver.
->> So we introduced these knav_dma driver to support NetCP. We don't
->> have any plan to re-write the driver at this time.
+2018-03-27 6:23 GMT+08:00 Rob Herring <robh@kernel.org>:
+> On Tue, Mar 20, 2018 at 05:15:04PM +0800, ShuFan Lee wrote:
+>> From: ShuFan Lee <shufan_lee@richtek.com>
 >>
->> If your question is about EPROBE_DEFER being returned from an
->> existing knav_dma API and using the return code to achieve probe
->> defer instead of introducing these APIs, I can take a look into
->> that and respond. So please clarify.
->  
-> Hi Murali
-> 
-> So if i understood you right, at the time these drivers were written,
-> the linux DMA API did not do what you wanted. You could hack something
-> together by using the API wrongly, but that could not be mainlined. So
-> rather than fixing the DMA API to make it work for this hardware, you
-> ignored it, and made up your own API? This API now has its own
-> problems, it does not correctly handle ordering? So you are hacking
-> your own API further.
-> 
-> Does the Linux DMA API correctly handle probing order issues? Has the
-> Linux DMA API evolved so that it now does do what is needed by your
-> hardware?
-> 
-
-Thanks once again for your review and response!
-
-I don't think dma API was meant to support hardware like pkt dma and was the
-reason quoted when this driver was introduced and the same is valid even
-today. AFAIK, Without hacking the API, we will not be able to support our
-driver even today. Besides Keystone itself is an old platform that is
-matured and have been there for long. K2G SoC was also introduced almost
-3 years ago and we were late to port it to upstream due to various reasons.
-We now have the SoC and most of the drivers upstreamed and this is a
-missing driver to support networking. Given that we don't have any other
-new devices planned from this SoC familty in the future, and the platform
-itself is old and matured, I don't think the extra effort needed to
-explore DMA API usage and re-write the driver is justified. 
-
-knav dma API is a TI SoC specific driver API and IMO, it should be fine\
-to extend it to support probe deferral. I have also looked at the driver
-and I don't see any other way to handle this since the channels are
-allocated and used in ndo_open() and EPROBE_DEFER is not useful here.
-
-Btw, I will re-write patch 3/5 as you have suggested as there is scope
-for adding one more patch besides what I have mentioned in my response.
-I will be sending v2 of the series soon with your comment on 3/5 addressed.
-
-Regards,
-
-Murali
-> If this was an old hardware which is slowly going away, it would not
-> be an issue. But it seems like there are new variants of the hardware
-> being released. So maybe you should go back and re-write the DMA
-> driver, rather than paper over the cracks?
-> 
-> 	Andrew
-> 
+>> Add device tree binding document for Richtek RT1711H Type-C chip driver
+>>
+>> Signed-off-by: ShuFan Lee <shufan_lee@richtek.com>
+>> ---
+>>  .../devicetree/bindings/usb/richtek,rt1711h.txt    | 30 +++++++++++++++=
++++++++
+>>  1 file changed, 30 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/richtek,rt1711=
+h.txt
+>>
+>>  changelogs between v2 & v3
+>>  - add dt-bindings for rt1711h typec driver
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b=
+/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+>> new file mode 100644
+>> index 000000000000..7da4dac78ea7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+>> @@ -0,0 +1,30 @@
+>> +Richtek RT1711H TypeC PD Controller.
+>> +
+>> +Required properties:
+>> + - compatible : Must be "richtek,rt1711h".
+>> + - reg : Must be 0x4e, it's slave address of RT1711H.
+>> +
+>> +Recommended properties :
+>> + - interrupt-parent : the phandle for the interrupt controller that
+>> +   provides interrupts for this device.
+>> + - interrupts : <a b> where a is the interrupt number and b represents =
+an
+>> +   encoding of the sense and level information for the interrupt.
+>> +
+>> +Optional properties :
+>> + - rt,intr-gpios : IRQ GPIO pin that's connected to RT1711H interrupt.
+>> +   if interrupt-parent & interrupts are not defined, use this property =
+instead.
+>
+> Drop this. You should simply always have interrupts property.
+Does this also imply that we could always assume client->irq is ready
+for request?
+Therefore, there's no need to check client->irq and get gpio through
+rt,intr-gpios.
+>
+> Rob
 
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+
+--=20
+Best Regards,
+=E6=9B=B8=E5=B8=86
