@@ -1,99 +1,62 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Tue, 27 Mar 2018 09:12:46 +0200
-Message-ID: <1dd27170-153c-90f6-e13f-949ba7d0d4a9@samsung.com>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
- <4060923.7DxT9ae38L@avalon> <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
- <CGME20180327061536epcas5p40faf6caf0d9825e6c33cd3e6ba9d8378@epcas5p4.samsung.com>
- <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: phy-qcom-qmp: Add UFS phy compitable
+ string for sdm845
+Date: Tue, 27 Mar 2018 15:13:15 +0800
+Message-ID: <bb8740302ee88c920811802c11306f70@codeaurora.org>
+References: <20180321053720.12780-1-cang@codeaurora.org>
+ <20180321053720.12780-3-cang@codeaurora.org>
+ <20dcdb46-deda-def5-76d1-0ed5efb40a7a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, niklas.soderlund@ragnatech.se
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20dcdb46-deda-def5-76d1-0ed5efb40a7a@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjcuMDMuMjAxOCAwODoxNSwgVmxhZGltaXIgWmFwb2xza2l5IHdyb3RlOgo+IEhpIEphY29w
-bywKPgo+IE9uIDAzLzI3LzIwMTggMDE6MjIgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBU
-dWUsIE1hciAyMCwgMjAxOCBhdCAwMjo0MzozM1BNICswMjAwLCBMYXVyZW50IFBpbmNoYXJ0IHdy
-b3RlOgo+Pj4gSGkgSmFjb3BvLAo+Pj4KPj4+IChDQydpbmcgUm9iKQo+Pj4KPj4+IFRoYW5rIHlv
-dSBmb3IgdGhlIHBhdGNoLgo+Pj4KPj4+IE9uIEZyaWRheSwgMTYgTWFyY2ggMjAxOCAxNzoxNjoz
-NyBFRVQgSmFjb3BvIE1vbmRpIHdyb3RlOgo+Pj4+IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAy
-NCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4+Pj4KPj4+PiBTaWduZWQtb2Zm
-LWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4+Pj4gUmV2aWV3
-ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+Pj4gUmV2aWV3ZWQt
-Ynk6IE5pa2xhcyBTw7ZkZXJsdW5kIDxuaWtsYXMuc29kZXJsdW5kK3JlbmVzYXNAcmFnbmF0ZWNo
-LnNlPgo+Pj4+IC0tLQo+Pj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhj
-NjNsdmQxMDI0LnR4dCB8IDY2ICsrKysrKysrKysrKysrKysrKysKPj4+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDY2IGluc2VydGlvbnMoKykKPj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZk
-MTAyNC50eHQKPj4+Pgo+Pj4+IGRpZmYgLS1naXQKPj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+Pj4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUs
-dGhjNjNsdmQxMDI0LnR4dAo+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXggMDAw
-MDAwMC4uODIyNWM2YQo+Pj4+IC0tLSAvZGV2L251bGwKPj4+PiArKysKPj4+PiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEw
-MjQudHh0Cj4+Pj4gQEAgLTAsMCArMSw2NiBAQAo+Pj4+ICtUaGluZSBFbGVjdHJvbmljcyBUSEM2
-M0xWRDEwMjQgTFZEUyBkZWNvZGVyCj4+Pj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0KPj4+PiArCj4+Pj4gK1RoZSBUSEM2M0xWRDEwMjQgaXMgYSBkdWFsIGxp
-bmsgTFZEUyByZWNlaXZlciBkZXNpZ25lZCB0byBjb252ZXJ0IExWRFMKPj4+PiBzdHJlYW1zCj4+
-Pj4gK3RvIHBhcmFsbGVsIGRhdGEgb3V0cHV0cy4gVGhlIGNoaXAgc3VwcG9ydHMgc2luZ2xlL2R1
-YWwgaW5wdXQvb3V0cHV0IG1vZGVzLAo+Pj4+ICtoYW5kbGluZyB1cCB0byB0d28gdHdvIGlucHV0
-IExWRFMgc3RyZWFtIGFuZCB1cCB0byB0d28gZGlnaXRhbCBDTU9TL1RUTAo+Pj4+IG91dHB1dHMu
-Cj4+Pj4gKwo+Pj4+ICtTaW5nbGUgb3IgZHVhbCBvcGVyYXRpb24gbW9kZXMsIG91dHB1dCBkYXRh
-IG1hcHBpbmcgYW5kIEREUiBvdXRwdXQgbW9kZXMKPj4+PiBhcmUKPj4+PiArY29uZmlndXJlZCB0
-aHJvdWdoIGlucHV0IHNpZ25hbHMgYW5kIHRoZSBjaGlwIGRvZXMgbm90IGV4cG9zZSBhbnkgY29u
-dHJvbAo+Pj4+IGJ1cy4KPj4+PiArCj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4gKy0g
-Y29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYzbHZkMTAyNCIKPj4+PiArCj4+Pj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6Cj4+Pj4gKy0gdmNjLXN1cHBseTogUG93ZXIgc3VwcGx5IGZvciBU
-VEwgb3V0cHV0IGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+Pj4+ICstIGN2Y2Mtc3VwcGx5OiBQb3dl
-ciBzdXBwbHkgZm9yIFRUTCBDTE9DS09VVCBzaWduYWwKPj4+PiArLSBsdmNjLXN1cHBseTogUG93
-ZXIgc3VwcGx5IGZvciBMVkRTIGlucHV0cwo+Pj4+ICstIHB2Y2Mtc3VwcGx5OiBQb3dlciBzdXBw
-bHkgZm9yIFBMTCBjaXJjdWl0cnkKPj4+IEFzIGV4cGxhaW5lZCBpbiBhIGNvbW1lbnQgdG8gb25l
-IG9mIHRoZSBwcmV2aW91cyB2ZXJzaW9ucyBvZiB0aGlzIHNlcmllcywgSSdtIAo+Pj4gdGVtcHRl
-ZCB0byBtYWtlIHZjYy1zdXBwbHkgbWFuZGF0b3J5IGFuZCBkcm9wIHRoZSB0aHJlZSBvdGhlciBw
-b3dlciBzdXBwbGllcyAKPj4+IGZvciBub3csIGFzIEkgYmVsaWV2ZSB0aGVyZSdzIHZlcnkgbGl0
-dGxlIGNoYW5jZSB0aGV5IHdpbGwgYmUgY29ubmVjdGVkIHRvIAo+Pj4gc2VwYXJhdGVseSBjb250
-cm9sbGFibGUgcmVndWxhdG9ycyAoYWxsIHN1cHBsaWVzIHVzZSB0aGUgc2FtZSB2b2x0YWdlKS4g
-SW4gdGhlIAo+Pj4gdmVyeSB1bmxpa2VseSBldmVudCB0aGF0IHRoaXMgb2NjdXJzIGluIGRlc2ln
-biB3ZSBuZWVkIHRvIHN1cHBvcnQgaW4gdGhlIAo+Pj4gZnV0dXJlLCB0aGUgY3ZjYywgbHZjYyBh
-bmQgcHZjYyBzdXBwbGllcyBjYW4gYmUgYWRkZWQgbGF0ZXIgYXMgb3B0aW9uYWwgCj4+PiB3aXRo
-b3V0IGJyZWFraW5nIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkuCj4+IEknbSBva2F5IHdpdGggdGhh
-dC4KPj4KPj4+IEFwYXJ0IGZyb20gdGhhdCwKPj4+Cj4+PiBSZXZpZXdlZC1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+Pj4KPj4+PiArLSBw
-ZHduLWdwaW9zOiBQb3dlciBkb3duIEdQSU8gc2lnbmFsLiBBY3RpdmUgbG93Cj4+IHBvd2VyZG93
-bi1ncGlvcyBpcyB0aGUgc2VtaS1zdGFuZGFyZCBuYW1lLgo+Pgo+IHJpZ2h0LCBJJ3ZlIGFsc28g
-bm90aWNlZCBpdC4gSWYgcG9zc2libGUgcGxlYXNlIGF2b2lkIHNob3J0ZW5pbmdzIGluCj4gcHJv
-cGVydHkgbmFtZXMuCgpJdCBpcyBub3Qgc2hvcnRlbmluZywgaXQganVzdCBmb2xsb3cgcGluIG5h
-bWUgZnJvbSBkZWNvZGVyJ3MgZGF0YXNoZWV0LgoKPgo+Pj4+ICstIG9lLWdwaW9zOiBPdXRwdXQg
-ZW5hYmxlIEdQSU8gc2lnbmFsLiBBY3RpdmUgaGlnaAo+Pj4+ICsKPiBBbmQgdGhpcyBvbmUgaXMg
-YWxzbyBhIG5vdCBldmVyIG1ldCBwcm9wZXJ0eSBuYW1lLCBwbGVhc2UgY29uc2lkZXIgdG8KPiBy
-ZW5hbWUgaXQgdG8gJ2VuYWJsZS1ncGlvcycsIGZvciBpbnN0YW5jZSBkaXNwbGF5IHBhbmVscyBk
-ZWZpbmUgaXQuCgoKQWdhaW4sIGl0IGZvbGxvd3MgZGF0YXNoZWV0IG5hbWluZyBzY2hlbWUuIEhh
-cyBzb21ldGhpbmcgY2hhbmdlZCBpbiBEVApjb252ZW50aW9ucz8KClJlZ2FyZHMKQW5kcnplagoK
-Pgo+Pj4+ICtUaGUgVEhDNjNMVkQxMDI0IHZpZGVvIHBvcnQgY29ubmVjdGlvbnMgYXJlIG1vZGVs
-ZWQgYWNjb3JkaW5nCj4+Pj4gK3RvIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBieQo+Pj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiBbc25pcF0KPgo+
-Pj4+ICsKPj4+PiArCQkJcG9ydEAyewo+Pj4+ICsJCQkJcmVnID0gPDI+Owo+Pj4+ICsKPj4+PiAr
-CQkJCWx2ZHNfZGVjX291dF8yOiBlbmRwb2ludCB7Cj4+Pj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZhZHY3NTExX2luPjsKPj4+PiArCQkJCX07Cj4+Pj4gKwo+IERyb3AgYSBzdXJwbHVzIGVt
-cHR5IGxpbmUgYWJvdmUuCj4KPj4+PiArCQkJfTsKPj4+PiArCj4gRHJvcCBhIHN1cnBsdXMgZW1w
-dHkgbGluZSBhYm92ZS4KPgo+Pj4+ICsJCX07Cj4+Pj4gKwl9Owo+IC0tCj4gV2l0aCBiZXN0IHdp
-c2hlcywKPiBWbGFkaW1pcgo+Cj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On 2018-03-26 23:00, Vivek Gautam wrote:
+> On 3/21/2018 11:07 AM, Can Guo wrote:
+>> Update the compatible string for UFS QMP PHY on SDM845.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt 
+>> b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> index cef8765..6e68a6d 100644
+>> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> @@ -11,7 +11,8 @@ Required properties:
+>>   	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+>>   	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
+>>   	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>> -	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on 
+>> sdm845.
+>> +	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on 
+>> sdm845,
+>> +	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+> 
+> We also need an entry for 'ref_aux' clock in the clock names for this 
+> phy.
+> Please add that.
+> With that,
+> Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> 
+> Thanks
+> Vivek.
+> 
+
+I realized that 'ref_aux' is not needed in the driver, shall remove it 
+from the PHY driver.
+
+Thanks
+Can.
+
+>>      - reg: offset and length of register set for PHY's common serdes 
+>> block.
+>> 
