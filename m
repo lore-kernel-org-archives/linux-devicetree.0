@@ -1,14 +1,13 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [net-next PATCH v2 08/10] net: netcp: ethss: use of_get_phy_mode() to
- support different RGMII modes
-Date: Tue, 27 Mar 2018 12:31:47 -0400
-Message-ID: <1522168309-12338-9-git-send-email-m-karicheri2@ti.com>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 0/2] add ethernet nodes for UniPhier PXs3 SoC
+Date: Wed, 28 Mar 2018 01:32:17 +0900
+Message-ID: <CAK7LNAStR8jmOUbSUKGcxRi_mZUwJgAwCN__=c6miN8Nfyd2AQ@mail.gmail.com>
+References: <1522146766-14435-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <1522146766-14435-1-git-send-email-hayashi.kunihiko@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,62 +17,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The phy used for K2G allows for internal delays to be added optionally
-to the clock circuitry based on board desing. To add this support,
-enhance the driver to use of_get_phy_mode() to read the phy-mode from
-the phy device and pass the same to phy through of_phy_connect().
+2018-03-27 19:32 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
+> This series adds ethernet nodes for UniPhier PXs3 SoC and the board,
+> and adds pinctrl groups for second ethernet instances because PXs3 has two
+> ethernet instances.
+>
+> Kunihiko Hayashi (2):
+>   ARM: dts: uniphier: add pinctrl groups of ethernet for second instance
+>   arm64: dts: uniphier: add ethernet node for PXs3
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- drivers/net/ethernet/ti/netcp_ethss.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Applied.  Thanks.
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 26ccddb..df163ec 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -21,6 +21,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of_mdio.h>
-+#include <linux/of_net.h>
- #include <linux/of_address.h>
- #include <linux/if_vlan.h>
- #include <linux/ptp_classify.h>
-@@ -700,6 +701,7 @@ struct gbe_slave {
- 	u32				link_interface;
- 	u32				mac_control;
- 	u8				phy_port_t;
-+	struct device_node		*node;
- 	struct device_node		*phy_node;
- 	struct ts_ctl                   ts_ctl;
- 	struct list_head		slave_list;
-@@ -2317,6 +2319,15 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
- 		has_phy = true;
- 		phy_mode = PHY_INTERFACE_MODE_SGMII;
- 		slave->phy_port_t = PORT_MII;
-+	} else if (slave->link_interface == RGMII_LINK_MAC_PHY) {
-+		has_phy = true;
-+		phy_mode = of_get_phy_mode(slave->node);
-+		/* if phy-mode is not present, default to
-+		 * PHY_INTERFACE_MODE_RGMII
-+		 */
-+		if (phy_mode < 0)
-+			phy_mode = PHY_INTERFACE_MODE_RGMII;
-+		slave->phy_port_t = PORT_MII;
- 	} else if (slave->link_interface == XGMII_LINK_MAC_PHY) {
- 		has_phy = true;
- 		phy_mode = PHY_INTERFACE_MODE_NA;
-@@ -2942,6 +2953,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
- 		slave->link_interface = SGMII_LINK_MAC_PHY;
- 	}
- 
-+	slave->node = node;
- 	slave->open = false;
- 	if ((slave->link_interface == SGMII_LINK_MAC_PHY) ||
- 	    (slave->link_interface == RGMII_LINK_MAC_PHY) ||
+
+>  arch/arm/boot/dts/uniphier-pinctrl.dtsi            | 10 ++++++
+>  .../arm64/boot/dts/socionext/uniphier-pxs3-ref.dts | 22 +++++++++++++
+>  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   | 36 ++++++++++++++++++++++
+>  3 files changed, 68 insertions(+)
+>
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.9.1
+Best Regards
+Masahiro Yamada
