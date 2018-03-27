@@ -1,37 +1,36 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 2/5] drm: bridge: add API to query the expected input
- formats of bridges
-Date: Tue, 27 Mar 2018 15:04:42 +0200
-Message-ID: <f35fb82a-d098-475c-4daf-cc2800a70c91@axentia.se>
-References: <20180326212447.7380-1-peda@axentia.se>
- <20180326212447.7380-3-peda@axentia.se> <20180327094743.GL27746@w540>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/9] pinctrl: sunxi: refactor irq related
+ register function to have desc
+Date: Tue, 27 Mar 2018 15:05:18 +0200
+Message-ID: <CACRpkdbO0KQEG_OXbswJkmWm=Ceiutx7vux6GJp8XVun+NiRbw@mail.gmail.com>
+References: <20180316140215.28663-1-icenowy@aosc.io> <20180316140215.28663-2-icenowy@aosc.io>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327094743.GL27746@w540>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBD4D5HKQKGQEVRVXBRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180316140215.28663-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-27 11:47, jacopo mondi wrote:
->> + * RETURNS:
->> + * The number of bus input formats the bridge accepts. Zero means that
->> + * the chain of bridges are not converting the bus format and that the
->> + * format of the drm_connector should be used.
-> 
-> How do we get to the connector format from a bridge that has maybe
-> other components in between in the pipeline?
+On Fri, Mar 16, 2018 at 3:02 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 
-Forgot to write something here in my previous reply, sorry...
+> As the new H6 SoC has holes in the IRQ registers, refactor the IRQ
+> related register function for getting the full pinctrl desc structure.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v4:
+> - Adjusted parameter sequence.
 
-The chain of bridges do not end with the connector in the in-kernel
-representation, IIUC. So, I think it is up to the caller to find the
-format desired by the connector. See patch [5/5] for an example.
+Patch applied with Maxime's ACK.
 
-Maybe the connector should be passed in as an argument?
-
-Cheers,
-Peter
+Yours,
+Linus Walleij
