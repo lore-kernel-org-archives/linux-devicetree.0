@@ -1,58 +1,200 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH V10 0/3] mtd: read partitions compatible prop for
- "ofpart" type
-Date: Tue, 27 Mar 2018 11:41:30 +0200
-Message-ID: <20180327114130.0fa3ee0e@bbrezillon>
-References: <20180130201059.4424-1-zajec5@gmail.com>
- <20180314121044.12033-1-zajec5@gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 2/5] drm: bridge: add API to query the expected input
+ formats of bridges
+Date: Tue, 27 Mar 2018 11:47:43 +0200
+Message-ID: <20180327094743.GL27746@w540>
+References: <20180326212447.7380-1-peda@axentia.se>
+ <20180326212447.7380-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180314121044.12033-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, John Crispin <john@phrozen.org>, Frank Rowand <frowand.list@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Peter Rosin <peda@axentia.se>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180326212447.7380-3-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxNCBNYXIgMjAxOCAxMzoxMDo0MSArMDEwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
-NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gCj4gVGhpcyBwYXRjaHNldCBwcm92aWRlcyBhIHByb3BlciBzdXBwb3J0IGZvciBm
-bGFzaCBkZXZpY2UgRFQgbm9kZSB3aXRoCj4gInBhcnRpdGlvbnMiIHN1Ym5vZGUgdXNpbmcgImNv
-bXBhdGlibGUiIHByb3BlcnR5LiBJdCdzIGFscmVhZHkKPiBkb2N1bWVudGVkIGluIHRoZTogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0Cj4gCj4gV2Ug
-YmVsaWV2ZWQgdGhhdCB2ZXJzaW9uIDcgd2FzIHJlYWR5IHRvIGdvLCBidXQgc29vbiBhZnRlciBs
-YW5kaW5nIGluCj4gdGhlIGxpbnV4LW5leHQgd2UgZ290IGEgcmVncmVzc2lvbiByZXBvcnQgZnJv
-bSBQZXRlci4gTGF0ZXIgdmVyc2lvbnMKPiB0YWtlcyBhIHNhZmUgcGF0aCBieToKPiAxKSBSZXNw
-ZWN0aW5nIHBhcnNlcnMgb3JkZXIgYXMgc3BlY2lmaWVkIGluIHRoZSBkZWZhdWx0L2RyaXZlci1w
-cm92aWRlZAo+ICAgIGxpc3QuCj4gMikgTG9va2luZyBhdCAiY29tcGF0aWJsZSIgcHJvcGVydHkg
-b25seSB3aGVuICJvZnBhcnQiIHR5cGUgZ2V0cwo+ICAgIHNwZWNpaWVkLgo+IAo+IFZlcnNpb24g
-OSB3YXMgc3VjY2Vzc2Z1bGx5IHRlc3RlZCBieSBQZXRlciBhbmQgdmVyc2lvbiAxMCBqdXN0IHNx
-dWFzaGVzCj4gdHdvIGNvbW1pdHMgaW50byBhIG9uZS4KPiAKPiBJIGRvdWJsZS1jaGVja2VkIHRo
-ZSBjb2RlIGFuZCBjYW5ub3QgdGhpbmsgb2YgYW55IHJlZ3Jlc3Npb24gdGhpcyBjb3VsZAo+IGNh
-dXNlLiBJIGFsc28gaG9wZSB0aGlzIGRlc2lnbiAocm91Z2hseSBkaXNjdXNzZWQgd2l0aCBCb3Jp
-cykgY2FuIGJlCj4gYWNjZXB0YWJsZSBmb3IgdGhlIG10ZCBzdWJzeXN0ZW0uCj4gCj4gVGhlIG1v
-c3QgaW1wb3J0YW50IHBhdGNoIGZyb20gdGhpcyBwYXRjaHNldCAoMS8zKSB3YXMgcmV2aWV3ZWQg
-YnkgUm9iIGluCj4gdGhlCj4gW1BBVENIIFY2IDEvMl0gbXRkOiBwYXJ0aXRpb25zOiBhZGQgb2Zf
-bWF0Y2hfdGFibGUgcGFyc2VyIG1hdGNoaW5nCj4gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9y
-Zy9jb21tZW50LzE4MzE1NTEvCj4gCj4gSWYgcG9zc2libGUgdGhpcyBpcyBhIDQuMTcgbWF0ZXJp
-YWwuCgpBcHBsaWVkLCBmaW5hbGx5LiBJJ20gc3RpbGwgY29udmluY2VkIHB1dHRpbmcgdGhpcyBp
-bmZvcm1hdGlvbiBpbiB0aGUKInBhcnRpdGlvbnMiIG5vZGUgY29tcGF0aWJsZSBpcyBhIGJhZCBp
-ZGVhIGJlY2F1c2UgaXQgYWRkcyBleHRyYQpjb21wbGV4aXR5IHRvIHNvbWV0aGluZyB0aGF0IHdh
-cyBhbHJlYWR5IHF1aXRlIGNvbXBsZXgsIGJ1dCB5b3Ugd29uIQoKTm90ZSB0aGF0IFJvYiBoYWQg
-Y29tbWVudHMgb24gWzFdIHRoYXQgeW91IG5ldmVyIGFuc3dlcmVkLCBzbyBJJ20gbm90CmV2ZW4g
-c3VyZSB3aGVuIHdlJ2xsIHN0YXJ0IHNlZWluZyBib2FyZHMgdXNpbmcgdGhpcyBpbmZyYXN0cnVj
-dHVyZS4KClsxXWh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC84NTk2OTAvCgotLSAK
-Qm9yaXMgQnJlemlsbG9uLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRk
-ZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29tCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
-TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+
+--BI5RvnYi6R4T2M87
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Peter,
+   thanks for the patches
+
+On Mon, Mar 26, 2018 at 11:24:44PM +0200, Peter Rosin wrote:
+> Bridges may affect the required bus output format of the encoder, in
+> which case it may be wrong to use the output format of the panel or
+> connector as is. Add infrastructure to address this problem.
+
+Bridges not only affect the format expected by the connector at the
+end of the display pipeline, they may perform encoding/decoding
+between protocols and their accepted input formats may be unrelated to
+the connector at the end of the pipeline as there may an arbitrary
+number of bridges in between.
+
+Eg.
+
+ENCODER                                                CONNECTOR
+  |                                                         |
+|DU LVDS| ->lvds-> |THC63| ->rgb-> |ADV7511| ->hdmi-> |HDMI connector|
+
+The fact that THC63 wants a specific LVDS input format is unrelated to
+the format required by the HDMI connector at the end of the pipeline.
+
+I would just state here that bridges need a way to report their
+accepted media bus formats, and this patch extends the DRM Bridge APIs
+to implement that.
+
+>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 32 ++++++++++++++++++++++++++++++++
+>  include/drm/drm_bridge.h     | 18 ++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index 1638bfe9627c..f85e61b7416e 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -348,6 +348,38 @@ void drm_bridge_enable(struct drm_bridge *bridge)
+>  }
+>  EXPORT_SYMBOL(drm_bridge_enable);
+>
+> +/**
+> + * drm_bridge_input_formats - get the expected bus input format of the bridge
+
+I may be biased by the V4L2 APIs, but this seems to me very much like
+similar to g_fmt/s_fmt callbacks we have there. Bridges have an input and
+an output formats, and that calls for something that takes that into
+account, as well as they may have different input ports with different
+accepted formats but I would for now simplify this to just 'g_fmt()'
+
+> + * @bridge: bridge control structure
+> + * @bus_formats: where to store a pointer to the bus input formats
+> + *
+> + * Calls the &drm_bridge_funcs.input_formats op for the frist bridge in the
+> + * chain that has registered this op.
+
+I'm not sure passing the call down the pipeline is desirable. Each
+component should make sure its output format is accepted as the next
+bridge input format, passing the call to the next bridge is not
+different that getting to the connector at the end of the pipeline and
+return to the initial caller its supported format. Do you agree with this?
+
+> + *
+> + * Note that the bridge passed should normally be the bridge closest to the
+> + * encoder, but possibly the bridge closest to an intermediate bridge in
+> + * convoluted cases.
+> + *
+
+As I see this, any bridge in the arbitrary long pipeline should call
+this operation on next bridge if it supports different output formats.
+Ie. I would not name here the encoder nor refer to the bridge position
+in the pipeline.
+
+> + * RETURNS:
+> + * The number of bus input formats the bridge accepts. Zero means that
+> + * the chain of bridges are not converting the bus format and that the
+> + * format of the drm_connector should be used.
+
+How do we get to the connector format from a bridge that has maybe
+other components in between in the pipeline?
+
+If a bridge do not report any supported format, it won't implement
+this callback and things will work as they work today.
+
+> + */
+> +int drm_bridge_input_formats(struct drm_bridge *bridge,
+> +			     const u32 **bus_formats)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!bridge)
+> +		return 0;
+> +
+> +	if (bridge->funcs->input_formats)
+> +		ret = bridge->funcs->input_formats(bridge, bus_formats);
+> +
+> +	return ret ?: drm_bridge_input_formats(bridge->next, bus_formats);
+
+See my comment on the call propagation down in the pipeline.
+
+> +}
+> +EXPORT_SYMBOL(drm_bridge_input_formats);
+> +
+>  #ifdef CONFIG_OF
+>  /**
+>   * of_drm_find_bridge - find the bridge corresponding to the device node in
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 682d01ba920c..ae8d3c4af0b8 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -220,6 +220,22 @@ struct drm_bridge_funcs {
+>  	 * The enable callback is optional.
+>  	 */
+>  	void (*enable)(struct drm_bridge *bridge);
+> +
+> +	/**
+> +	 * @input_formats:
+> +	 *
+> +	 * The callback reports the expected bus input formats of the bridge.
+> +	 *
+> +	 * The @input_formats callback is optional. The bridge is assumed to
+> +	 * not convert the bus format if the callback is not installed.
+> +	 *
+> +	 * RETURNS:
+> +	 *
+> +	 * Zero if the bridge does not convert the bus format, otherwise the
+> +	 * number of bus input formats returned in &bus_formats.
+> +	 */
+> +	int (*input_formats)(struct drm_bridge *bridge,
+> +			     const u32 **bus_formats);
+
+Consider g_fmt() here as well, or a function name that captures that we want
+to know the supported format (and possibly configure it as well one
+day, if ever possible).
+
+Thanks
+   j
+
+>  };
+>
+>  /**
+> @@ -263,6 +279,8 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
+>  			struct drm_display_mode *adjusted_mode);
+>  void drm_bridge_pre_enable(struct drm_bridge *bridge);
+>  void drm_bridge_enable(struct drm_bridge *bridge);
+> +int drm_bridge_input_formats(struct drm_bridge *bridge,
+> +			     const u32 **bus_formats);
+>
+>  #ifdef CONFIG_DRM_PANEL_BRIDGE
+>  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+> --
+> 2.11.0
+>
+
+--BI5RvnYi6R4T2M87
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJauhM/AAoJEHI0Bo8WoVY80qUQALBcrH+ujGYDUnRL/gC6fiKs
+i8CeGyAGbaBgC+KetUzTunOwGW55m2jF7E82ZSosywODJ4tBdeOf+p9eM6ibVB3O
+ujTypppDnThh1z71cUje1XREYX6D4CD90NxqODbfMAWfW7YOCg3QvteMIgXdf21T
+959iwKWNDQRbjCtqL+pU609kPYqmyrdM8E36EjAKY4yb6gI2+1uDcjg9VOuAx7aO
+V9r1GsvQkOE1eqaf0d50Z+NAaRl2yVhrvnzLRD4+0zjFD89b2gL9MnivC/CMM5WJ
+iAep+c0UkNAAXYGBhY3H36Q1YbHrXWbIIjeBDe6r485/LFyHprVX/u8W0huIoeoW
+ADpoRFl3XSBH0drAqimREFnXnccAqvHRnntGk9PZa8mNFzKJAp5VWMlnyXvRKsCf
+qlDKnEC/butVEPc62/2dfMGwIuqVWu+TtFWZJx7QhmVl5/14bas8zF+iOtstAPjD
+JmgHn2TTBlmHpAJDEMYztxVqtfDLB/WvW3Xdih8zZ1uNgFxr1DYBAO0mGQQ/mHwA
+S4nOAyDaRzhpr7omKEfxMAQ+odlTpCyqxf45Jik4fcBFy/DsqDOKgA1nWxahklPq
+5xFnV+M6bpsjXb+MvcAK077RRpl0zMeprfeSubUONQBnifOdJPbyTexCAC1irPyS
+zFS9e5QAcmanO9BDjnMH
+=u+dg
+-----END PGP SIGNATURE-----
+
+--BI5RvnYi6R4T2M87--
