@@ -1,23 +1,31 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
 Subject: Re: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
  gbe_sgmii_config() conditional
-Date: Tue, 27 Mar 2018 15:20:46 -0400
-Message-ID: <98f5d69b-5b2f-bf50-09ca-026b4c1ed15e@ti.com>
+Date: Tue, 27 Mar 2018 15:39:47 -0400
+Message-ID: <1ef3864e-1cb7-ddf1-d03d-9c937736616f@ti.com>
 References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
  <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
- <20180327171343.GN5862@lunn.ch>
+ <20180327171817.GO5862@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327171343.GN5862@lunn.ch>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180327171817.GO5862@lunn.ch>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, malat@debian.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, w-kwok2@ti.com, robh+dt@kernel.org, ssantosh@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2018 01:13 PM, Andrew Lunn wrote:
+On 03/27/2018 01:18 PM, Andrew Lunn wrote:
 > On Tue, Mar 27, 2018 at 12:31:42PM -0400, Murali Karicheri wrote:
 >> As a preparatory patch to add support for 2u cpsw hardware found on
 >> K2G SoC, make call to gbe_sgmii_config() conditional. This is required
@@ -41,28 +49,29 @@ On 03/27/2018 01:13 PM, Andrew Lunn wrote:
 >> +	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
 >> +		gbe_sgmii_config(priv, slave);
 > 
-> Hi Murali
+> Or maybe:
 > 
-> So you have:
+>    if (slave->phy_node == PHY_INTERFACE_MODE_SGMII)
+>    	gbe_sgmii_config(priv, slave);
+
+Yeah. Based on my response to your other comment, this would become
+
+if ((slave->link_interface == SGMII_LINK_MAC_PHY) &&
+    (IS_SS_ID_VER_14(priv) || IS_SS_ID_NU(priv)))
+	gbe_sgmii_config(priv, slave);
+
+We can't solely depends on phy_mode here. Phy interface is one of several
+interface possible. There is MAC_TO_MAC_FORCED, NO_MDIO etc. So we check the
+link_interface above.
+
+If we can agree, here is what will appear in v3
+
+1) Add another patch to do conversion of priv->ss_version == GBE_SS_VERSION_14 check 
+with a macro, IS_SS_ID_VER_14
+2) modify this patch as above.
+
+Murali
 > 
-> #define IS_SS_ID_NU(d) \
-> 	(GBE_IDENT((d)->ss_version) == GBE_SS_ID_NU)
-> 
-> 
-> Does version 14 have a name? Could you add another IS_SS_ID_XX(d)
-> macro for it? That would make these statements more consistent.
-> 
-unfortunately not being the first version :)
-
-Probably we can add
-
-#define IS_SS_ID_VER_14(d) \
-	(GBE_IDENT((d)->ss_version) == GBE_SS_VERSION_14)
-
-and replace all instances of (priv->ss_version == GBE_SS_VERSION_14) with
-	if (IS_SS_ID_VER_14(priv)) or equivalent. 
-
-
 > 	Andrew
 > 
 
