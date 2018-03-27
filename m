@@ -1,154 +1,83 @@
-Return-Path: <SRS0=z0JQ=GG=linux.intel.com=richard.gong@kernel.org>
-From: Richard Gong <richard.gong@linux.intel.com>
-Subject: Re: [PATCHv2 3/7] driver, misc: add Intel Stratix10 service layer
- driver
-References: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
- <1519949975-13548-4-git-send-email-richard.gong@linux.intel.com>
- <20180315164836.GB4060@kroah.com>
-Message-ID: <cf21af1f-e445-bd37-b5d6-f92c7aa00479@linux.intel.com>
-Date: Fri, 16 Mar 2018 12:39:49 -0500
-MIME-Version: 1.0
-In-Reply-To: <20180315164836.GB4060@kroah.com>
-Content-Type: multipart/alternative;
- boundary="------------771345B80174378AC29F04CD"
+Return-Path: <SRS0=h742=GR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:24558 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751935AbeC0BGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Mar 2018 21:06:18 -0400
+From: "Yeh, Andy" <andy.yeh@intel.com>
+Subject: RE: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
+Date: Tue, 27 Mar 2018 01:06:14 +0000
+Message-ID: <8E0971CCB6EA9D41AF58191A2D3978B61D559002@PGSMSX111.gar.corp.intel.com>
+References: <1521219926-15329-1-git-send-email-andy.yeh@intel.com>
+ <1521219926-15329-3-git-send-email-andy.yeh@intel.com>
+ <20180320102817.GB5372@w540>
+ <8E0971CCB6EA9D41AF58191A2D3978B61D552FBD@PGSMSX111.gar.corp.intel.com>
+ <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
+In-Reply-To: <20180321170629.biuwxykqsgvltull@kekkonen.localdomain>
 Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, Richard Gong <richard.gong@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+Cc: jacopo mondi <jacopo@jmondi.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Chiang, AlanX" <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------771345B80174378AC29F04CD
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Got it. We shall reverse the order in the later submission on list.
 
-Hi Greg,
+Regards, Andy
 
-Thanks for review.
+-----Original Message-----
+From: sakari.ailus@linux.intel.com [mailto:sakari.ailus@linux.intel.com] 
+Sent: Thursday, March 22, 2018 1:07 AM
+To: Yeh, Andy <andy.yeh@intel.com>
+Cc: jacopo mondi <jacopo@jmondi.org>; linux-media@vger.kernel.org; devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
+Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
 
+Hi Andy,
 
-On 03/15/2018 11:48 AM, Greg KH wrote:
-> On Thu, Mar 01, 2018 at 06:19:31PM -0600,richard.gong@linux.intel.com  wrote:
->> +EXPORT_SYMBOL_GPL(request_svc_channel_byname);
-> All of your global symbols should have the same prefix, not a verb.  So
-> this should be:
-> 	svc_channel_request_by_name(), right?
->
->> +EXPORT_SYMBOL_GPL(free_svc_channel);
-> svc_channel_free()?
->
->> +EXPORT_SYMBOL_GPL(intel_svc_send);
-> Wait, why doesn't the first ones have "intel_svc" in them?
->
-> What is the difference here?
->
-> Should they all just have "intel_svc_" as the prefix?
->
-> Stick to one thing for all exported functions/variables please, it's the
-> only way we can attempt to keep our namespace "sane".
-Sure, I will make changes so that all exported functions will have 
-"intel_svc_" as the prefix.
-> Also, why would a 'misc' driver be exporting things that something else
-> uses?  Why not just put this in the fpga directory next to the users of
-> this code?
-Intel Stratix10 service layer driver, running at privileged exception 
-level (EL1), interfaces with
-the service providers and providers the services for FPGA configuration, 
-QSPI, Crypto, ECC,
-and warm reset. Service layer driver also manages secure monitor call to 
-communicate
-with secure monitor code running at EL3.
+On Wed, Mar 21, 2018 at 03:58:42PM +0000, Yeh, Andy wrote:
+> Thanks for the comments. A quick question first. For the reset we need some time to address.
+> 
+> -----Original Message-----
+> From: jacopo mondi [mailto:jacopo@jmondi.org]
+> Sent: Tuesday, March 20, 2018 6:28 PM
+> To: Yeh, Andy <andy.yeh@intel.com>
+> Cc: linux-media@vger.kernel.org; sakari.ailus@linux.intel.com; 
+> devicetree@vger.kernel.org; Chiang, AlanX <alanx.chiang@intel.com>
+> Subject: Re: RESEND[PATCH v6 2/2] media: dw9807: Add dw9807 vcm driver
+> 
+> Hi Andy,
+>    a few comments on you patch below...
+> 
+> On Sat, Mar 17, 2018 at 01:05:26AM +0800, Andy Yeh wrote:
+> > From: Alan Chiang <alanx.chiang@intel.com> 
+> > a/drivers/media/i2c/dw9807.c b/drivers/media/i2c/dw9807.c new file 
+> > mode 100644 index 0000000..95626e9
+> > --- /dev/null
+> > +++ b/drivers/media/i2c/dw9807.c
+> > @@ -0,0 +1,320 @@
+> > +// Copyright (C) 2018 Intel Corporation // SPDX-License-Identifier: 
+> > +GPL-2.0
+> > +
+> 
+> Nit: my understanding is that the SPDX identifier goes first
+> 
+> https://lwn.net/Articles/739183/
+> 
+> I checked this site. And it says Copyright should be before SPDX identifier.
+> ========== file01.c ==========
+> // Copyright (c) 2012-2016 Joe Random Hacker // SPDX-License-Identifier: BSD-2-Clause ...
+> ========== file02.c ==========
+> // Copyright (c) 2017 Jon Severinsson
+> // SPDX-License-Identifier: BSD-2-Clause ...
+> ========== file03.c ==========
+> // Copyright (c) 2008 The NetBSD Foundation, Inc.
+> // SPDX-License-Identifier: BSD-2-Clause-NetBSD
 
-FPGA manager is the first service provider. Later we will add several 
-service providers, and extend
-service layer driver to provide the services for QSPI, Crypto, ECC and 
-warm reset.
+This is an example which is AFAIU purported to show the problem with various BSD licenses in a comment from someone. The order of the copyright holder and license lines might be just random. The practice in kernel at least appears to be SPDX license first.
 
+--
 Regards,
-Richard
-> thanks,
->
-> greg k-h
 
-
---------------771345B80174378AC29F04CD
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p>Hi Greg,</p>
-    <p>Thanks for review.<br>
-    </p>
-    <br>
-    <div class="moz-cite-prefix">On 03/15/2018 11:48 AM, Greg KH wrote:<br>
-    </div>
-    <blockquote type="cite" cite="mid:20180315164836.GB4060@kroah.com">
-      <pre wrap="">On Thu, Mar 01, 2018 at 06:19:31PM -0600, <a class="moz-txt-link-abbreviated" href="mailto:richard.gong@linux.intel.com">richard.gong@linux.intel.com</a> wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+EXPORT_SYMBOL_GPL(request_svc_channel_byname);
-</pre>
-      </blockquote>
-      <pre wrap="">All of your global symbols should have the same prefix, not a verb.  So
-this should be:
-	svc_channel_request_by_name(), right?
-
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+EXPORT_SYMBOL_GPL(free_svc_channel);
-</pre>
-      </blockquote>
-      <pre wrap="">svc_channel_free()?
-
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+EXPORT_SYMBOL_GPL(intel_svc_send);
-</pre>
-      </blockquote>
-      <pre wrap="">Wait, why doesn't the first ones have "intel_svc" in them?
-
-What is the difference here?
-
-Should they all just have "intel_svc_" as the prefix?
-
-Stick to one thing for all exported functions/variables please, it's the
-only way we can attempt to keep our namespace "sane".
-</pre>
-    </blockquote>
-    Sure, I will make changes so that all exported functions will have
-    "intel_svc_" as the prefix.<br>
-    <blockquote type="cite" cite="mid:20180315164836.GB4060@kroah.com">
-      <pre wrap="">Also, why would a 'misc' driver be exporting things that something else
-uses?  Why not just put this in the fpga directory next to the users of
-this code?
-</pre>
-    </blockquote>
-    Intel Stratix10 service layer driver, running at privileged
-    exception level (EL1), interfaces with<br>
-    the service providers and providers the services for FPGA
-    configuration, QSPI, Crypto, ECC,<br>
-    and warm reset. Service layer driver also manages secure monitor
-    call to communicate<br>
-    with secure monitor code running at EL3. <br>
-    <br>
-    FPGA manager is the first service provider. Later we will add
-    several service providers, and extend<br>
-    service layer driver to provide the services for QSPI, Crypto, ECC
-    and warm reset.<br>
-    <br>
-    Regards,<br>
-    Richard <br>
-    <blockquote type="cite" cite="mid:20180315164836.GB4060@kroah.com">
-      <pre wrap="">thanks,
-
-greg k-h
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------771345B80174378AC29F04CD--
+Sakari Ailus
+sakari.ailus@linux.intel.com
