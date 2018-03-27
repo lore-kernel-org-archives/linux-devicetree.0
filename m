@@ -1,82 +1,36 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 2/3] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Tue, 27 Mar 2018 11:06:03 +0200
-Message-ID: <CAMuHMdVEF-6icsLXd3RU56mzGp6TZYpD1E5ViZvaOa=kWGYPvw@mail.gmail.com>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-3-git-send-email-jacopo+renesas@jmondi.org>
- <CGME20180327062437epcas5p3389cb070d15669febeb6f504cff2cf6f@epcas5p3.samsung.com>
- <30381869-9bc8-b6aa-a37a-598d9c8f280d@mentor.com>
- <df124c8f-7c71-7941-9969-977dd19c7d1b@samsung.com>
- <CAMuHMdVWJhmxXS+mvuwjrCOzurArFurqKwQ2PJD-eRCqbLRAng@mail.gmail.com>
- <8115587a-4925-5602-43db-4285a3de7b0e@samsung.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 3/3] gpio: Add Spreadtrum PMIC EIC driver support
+Date: Tue, 27 Mar 2018 17:10:56 +0800
+Message-ID: <CAMz4ku+cvrNmCL3g7hKVO7Tj6xQuWKToytHD0Hxx1ftptMO1Jw@mail.gmail.com>
+References: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
+ <c84c05b6619a17848a11335f881f42153a4e51c0.1520218279.git.baolin.wang@linaro.org>
+ <CAHp75VdmiESNg_06iby8Y0FgK47AHkJdu1kVYiBch82zGcnv-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <8115587a-4925-5602-43db-4285a3de7b0e@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VdmiESNg_06iby8Y0FgK47AHkJdu1kVYiBch82zGcnv-g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV6aiwKCk9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDEwOjM2IEFNLCBBbmRyemVqIEhh
-amRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiB3cm90ZToKPiBPbiAyNy4wMy4yMDE4IDA5OjM2LCBH
-ZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+IE9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDk6Mjgg
-QU0sIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOgo+Pj4+PiAtLS0g
-L2Rldi9udWxsCj4+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0
-LmMKPj4+Pj4gK3N0YXRpYyB2b2lkIHRoYzYzX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJp
-ZGdlKQo+Pj4+PiArewo+Pj4+PiArICAgIHN0cnVjdCB0aGM2M19kZXYgKnRoYzYzID0gdG9fdGhj
-NjMoYnJpZGdlKTsKPj4+Pj4gKyAgICBzdHJ1Y3QgcmVndWxhdG9yICp2Y2M7Cj4+Pj4+ICsgICAg
-aW50IGk7Cj4+Pj4gdW5zaWduZWQgaW50IGk7Cj4+PiBXaHk/IFlvdSBhcmUgaW50cm9kdWNpbmcg
-c2lsbHkgYnVnIHRoaXMgd2F5LCBzZWUgZmV3IGxpbmVzIGJlbG93Lgo+Pj4KPj4+Pj4gKwo+Pj4+
-PiArICAgIGZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHRoYzYzLT52Y2NzKTsgaSsrKSB7Cj4+
-Pj4+ICsgICAgICAgICAgICB2Y2MgPSB0aGM2My0+dmNjc1tpXTsKPj4+Pj4gKyAgICAgICAgICAg
-IGlmICghdmNjKQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPj4+Pj4gKwo+
-Pj4+PiArICAgICAgICAgICAgaWYgKHJlZ3VsYXRvcl9lbmFibGUodmNjKSkKPj4+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgZ290byBlcnJvcl92Y2NfZW5hYmxlOwo+Pj4+PiArICAgIH0KPj4+Pj4g
-Kwo+Pj4+PiArICAgIGlmICh0aGM2My0+cGR3bikKPj4+Pj4gKyAgICAgICAgICAgIGdwaW9kX3Nl
-dF92YWx1ZSh0aGM2My0+cGR3biwgMCk7Cj4+Pj4+ICsKPj4+Pj4gKyAgICBpZiAodGhjNjMtPm9l
-KQo+Pj4+PiArICAgICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlKHRoYzYzLT5vZSwgMSk7Cj4+Pj4+
-ICsKPj4+Pj4gKyAgICByZXR1cm47Cj4+Pj4+ICsKPj4+Pj4gK2Vycm9yX3ZjY19lbmFibGU6Cj4+
-Pj4+ICsgICAgZGV2X2Vycih0aGM2My0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSByZWd1bGF0b3Ig
-JXNcbiIsCj4+Pj4+ICsgICAgICAgICAgICB0aGM2M19yZWdfbmFtZXNbaV0pOwo+Pj4+PiArCj4+
-Pj4+ICsgICAgZm9yIChpID0gaSAtIDE7IGkgPj0gMDsgaS0tKSB7Cj4+PiBIZXJlLCB0aGUgbG9v
-cCB3aWxsIG5vdCBlbmQgaWYgeW91IGRlZmluZSBpIHVuc2lnbmVkLgo+PiBUcnVlLgo+Pgo+Pj4g
-SSBrbm93IG9uZSBjYW4gY2hhbmdlIHRoZSBsb29wLCB0byBtYWtlIGl0IHdvcmtpbmcgd2l0aCB1
-bnNpZ25lZC4gQnV0Cj4+PiB0aGlzIGNsZWFybHkgc2hvd3MgdGhhdCB1c2luZyB1bnNpZ25lZCBp
-cyBtb3JlIHJpc2t5Lgo+Pj4gV2hhdCBhcmUgYWR2YW50YWdlcyBvZiB1bnNpZ25lZCB2cyBpbnQg
-aW4gdGhpcyBjYXNlLiBBcmUgdGhlcmUgc29tZQo+Pj4gZ3VpZGVsaW5lcy9kaXNjdXNzaW9ucyBh
-Ym91dCBpdD8KPj4gU29tZSBwZW9wbGUgY29uc2lkZXIgc2lnbmVkIGludGVnZXJzIGhhcm1mdWws
-IGFzIHRoZXkgbWF5IGJlIGNvbnZlcnRlZAo+PiBzaWxlbnRseSBieSB0aGUgY29tcGlsZXIgdG8g
-dGhlICJsYXJnZXIiIHVuc2lnbmVkIHR5cGUgd2hlbiBuZWVkZWQuCj4KPiBXb3csIGl0IHNvdW5k
-cyBjcmF6eSwgc2hhbGwgd2UgZXhwZWN0IGdpZ2FudGljIHBhdGNoc2V0cywgY29udmVydGluZyBh
-bGwKPiBvY2N1cnJlbmNlcyBvZiBpbnQgdG8gInVuc2lnbmVkIGludCIgPyA6KQoKTm8gd2Ugc2hh
-bGwgbm90LgoKPiBJIGtub3cgYm90aCB0eXBlcyBoYXZlIHRoZWlyIHByb3MgYW5kIGNvbnMgYW5k
-IGNhbiBiZWhhdmUgdW5leHBlY3RlZGx5Cj4gaW4gY29ybmVyIGNhc2VzLCBidXQgSSBkbyBub3Qg
-c2VlIHdoeSB1bnNpZ25lZCBzaG91bGQgYmUgcHJlZmVycmVkIG92ZXIKPiBzaWduZWQgaW4gZ2Vu
-ZXJhbCwgb3IgaW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UuCgpXaGVuIGxvb3Bpbmcgb3ZlciBhcnJh
-eSBpbmRpY2VzLCBhbmQgY29tcGFyaW5nIHdpdGggQVJSQVlfU0laRSAod2hpY2gKaXMgdW5zaWdu
-ZWQpLCB1c2luZyAidW5zaWduZWQgaW50IiBpcyBwcmVmZXJyZWQuCgpIb3dldmVyLCBpbiB0aGlz
-IGNhc2UgdGhlIGVycm9yIGNvZGUgcmVsaWVzIG9uIHRoZSBpbmRleCBiZWNvbWluZyBuZWdhdGl2
-ZSwKc28gYSBzaWduZWQgaW50ZWdlciBzaG91bGQgYmUgdXNlZC4KCj4gSSBndWVzcyB0aGVyZSB3
-ZXJlIHNvbWV3aGVyZSBkaXNjdXNzaW9uIGFib3V0IGl0LCBjb3VsZCB5b3UgcG9pbnQgbWUgdG8K
-PiBpdCBpZiBwb3NzaWJsZSwgdG8gYXZvaWQgdW5uZWNlc3Nhcnkgbm9pc2UgaW4gdGhpcyB0aHJl
-YWQuCgpOb3QgaGVyZSwgYnV0IEdvb2dsZSBwb2ludGVkIG1lIHRvCmh0dHA6Ly9ibG9nLnJvYmVy
-dGVsZGVyLm9yZy9zaWduZWQtb3ItdW5zaWduZWQvCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAg
-ICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLSAKR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
-J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoKSW4g
-cGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNl
-bGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBz
-YXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 5 March 2018 at 23:46, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Mon, Mar 5, 2018 at 4:56 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>> The Spreadtrum PMIC EIC controller contains only one bank of debounce EIC,
+>> and this bank contains 16 EICs. Each EIC can only be used as input mode,
+>> as well as supporting the debounce and the capability to trigger interrupts
+>> when detecting input signals.
+>>
+>
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> for entire series.
+
+Thanks Andy.
+
+Linus, could you apply this series if there are no other issues? Thanks.
+
+-- 
+Baolin.wang
+Best Regards
