@@ -1,31 +1,32 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [net-next PATCH v2 08/10] net: netcp: ethss: use
- of_get_phy_mode() to support different RGMII modes
-Date: Tue, 27 Mar 2018 19:35:09 +0200
-Message-ID: <20180327173509.GQ5862@lunn.ch>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
- <1522168309-12338-9-git-send-email-m-karicheri2@ti.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v3 2/6] phy: qcom-qusb2: Fix crash if nvmem cell not specified
+Date: Tue, 27 Mar 2018 17:35:02 +0000
+Message-ID: <CAE=gft67HuudBajKESOgZtgMz7owJqdoYPJp_6LpyB37a0-iYQ@mail.gmail.com>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-3-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522168309-12338-9-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <1521785487-29866-3-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, stable@vger.kernel.org, vivek.gautam@codeaurora.org, jh80.chung@samsung.com, yoshihiro.shimoda.uh@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-> +	} else if (slave->link_interface == RGMII_LINK_MAC_PHY) {
-> +		has_phy = true;
-> +		phy_mode = of_get_phy_mode(slave->node);
-> +		/* if phy-mode is not present, default to
-> +		 * PHY_INTERFACE_MODE_RGMII
-> +		 */
-> +		if (phy_mode < 0)
-> +			phy_mode = PHY_INTERFACE_MODE_RGMII;
+On Thu, Mar 22, 2018 at 11:13 PM Manu Gautam <mgautam@codeaurora.org> wrote:
 
-Can only do RGMII? Maybe add a call here to
-phy_interface_mode_is_rgmii() and return -EINVAL if DT contains
-something which is not RGMII?
+> Driver currently crashes due to NULL pointer deference
+> while updating PHY tune register if nvmem cell is NULL.
+> Since, fused value for Tune1/2 register is optional,
+> we'd rather bail out.
 
-	  Andrew
+> Fixes: ca04d9d3e1b1 ("phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+chips")
+> Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Cc: stable <stable@vger.kernel.org> # 4.14+
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>   drivers/phy/qualcomm/phy-qcom-qusb2.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+
+
+Reviewed-by: Evan Green <evgreen@chromium.org>
