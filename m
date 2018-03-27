@@ -1,94 +1,90 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Tue, 27 Mar 2018 11:39:54 +0530
-Message-ID: <6c55e081-57ba-6c39-8494-cda5022aa927@ti.com>
-References: <20180323130455.11470-1-brgl@bgdev.pl>
- <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
- <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
- <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
- <CAMRc=MdmTAwPAAnL1+n+OXSycnyjuQ1hKmts158mPcgat1NUYQ@mail.gmail.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Tue, 27 Mar 2018 09:15:24 +0300
+Message-ID: <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+ <4060923.7DxT9ae38L@avalon> <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMRc=MdmTAwPAAnL1+n+OXSycnyjuQ1hKmts158mPcgat1NUYQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-remoteproc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, niklas.soderlund@ragnatech.se
 List-Id: devicetree@vger.kernel.org
 
-Hi Bart,
-
-On Friday 23 March 2018 10:46 PM, Bartosz Golaszewski wrote:
-> 2018-03-23 18:08 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
->> Quoting Bartosz Golaszewski (2018-03-23 09:55:47)
->>> 2018-03-23 17:49 GMT+01:00 Stephen Boyd <sboyd@kernel.org>:
->>>> Quoting Bartosz Golaszewski (2018-03-23 06:04:47)
->>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>
->>>>> This series converts the only user of the handcoded, mach-specific reset
->>>>> routines in the davinci platform to using the reset framework.
->>>>>
->>>>> Patch 1 modifies the way lookup entries are registered with the reset
->>>>> framework.
->>>>>
->>>>> Patches 2-4 add necessary lookups/DT-properties.
->>>>>
->>>>> Patches 5-7 convert the davinci-rproc driver to the reset framework.
->>>>>
->>>>> Patch 8 removes now dead code.
->>>>>
->>>>> Philipp: it turned out that it's indeed better to use the reset
->>>>> controller's device name for the entry lookup.
->>>>>
->>>>> Tested both in DT and legacy modes by booting the examples from
->>>>> ti-ipc-rtos recipe in meta-ti.
->>>>>
->>>>> This series applies on top of David Lechner's common-clk-v9 branch[1]
->>>>> with Philipp Zabel's reset/next branch[2] pulled in.
->>>>>
->>>>> It can be found in my github tree as well[3].
->>>>>
->>>>
->>>> What's the merge strategy for the rest of the patches? I should apply
->>>> the clk ones after the next -rc1?
->>>
->>> Or maybe Philipp can provide us with an immutable branch with the reset patches?
->>>
->>> The you could apply the driver patches and let Sekhar take all the
->>> platform code?
->>>
->>
->> Ok that could work too.
-> 
-> Ohad, Bjorn can you ack the remoteproc patches? Are you OK with
-> Stephen taking them through the clock tree? Otherwise it would get
-> complicated since they depend on the first clk patch and the last clk
-> patch depends on them.
-
-I will not be queuing the DTS patches for v4.17. They depend on clock
-framework DTS patches which itself I plan to queue for v4.18. Given
-this, I think the best bet is:
-
-Ohad/Bjorn queue remoteproc patches already acked by Suman and having no
-dependencies. That is, 5/8 and 6/8.
-
-If Philipp can provide an immutable branch with reset changes, it will
-be great and Stephen can queue 4/8. If not, its best to resend that
-patch to Stephen once v4.17-rc1 is out.
-
-The remaining patches need to wait till v4.18 (or even v4.19 if
-dependencies don't pan out well).
-
-Thanks,
-Sekhar
+SGkgSmFjb3BvLAoKT24gMDMvMjcvMjAxOCAwMToyMiBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4g
+T24gVHVlLCBNYXIgMjAsIDIwMTggYXQgMDI6NDM6MzNQTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPj4gSGkgSmFjb3BvLAo+Pgo+PiAoQ0MnaW5nIFJvYikKPj4KPj4gVGhhbmsgeW91
+IGZvciB0aGUgcGF0Y2guCj4+Cj4+IE9uIEZyaWRheSwgMTYgTWFyY2ggMjAxOCAxNzoxNjozNyBF
+RVQgSmFjb3BvIE1vbmRpIHdyb3RlOgo+Pj4gRG9jdW1lbnQgVGhpbmUgVEhDNjNMVkQxMDI0IExW
+RFMgZGVjb2RlciBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBK
+YWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4+PiBSZXZpZXdlZC1ieTog
+QW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPj4+IFJldmlld2VkLWJ5OiBOaWts
+YXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPj4+
+IC0tLQo+Pj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
+dHh0IHwgNjYgKysrKysrKysrKysrKysrKysrKwo+Pj4gIDEgZmlsZSBjaGFuZ2VkLCA2NiBpbnNl
+cnRpb25zKCspCj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+PiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+Pj4K
+Pj4+IGRpZmYgLS1naXQKPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPj4+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQK
+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwLi44MjI1YzZhCj4+PiAt
+LS0gL2Rldi9udWxsCj4+PiArKysKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPj4+IEBAIC0wLDAgKzEs
+NjYgQEAKPj4+ICtUaGluZSBFbGVjdHJvbmljcyBUSEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyCj4+
+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+Pj4gKwo+Pj4g
+K1RoZSBUSEM2M0xWRDEwMjQgaXMgYSBkdWFsIGxpbmsgTFZEUyByZWNlaXZlciBkZXNpZ25lZCB0
+byBjb252ZXJ0IExWRFMKPj4+IHN0cmVhbXMKPj4+ICt0byBwYXJhbGxlbCBkYXRhIG91dHB1dHMu
+IFRoZSBjaGlwIHN1cHBvcnRzIHNpbmdsZS9kdWFsIGlucHV0L291dHB1dCBtb2RlcywKPj4+ICto
+YW5kbGluZyB1cCB0byB0d28gdHdvIGlucHV0IExWRFMgc3RyZWFtIGFuZCB1cCB0byB0d28gZGln
+aXRhbCBDTU9TL1RUTAo+Pj4gb3V0cHV0cy4KPj4+ICsKPj4+ICtTaW5nbGUgb3IgZHVhbCBvcGVy
+YXRpb24gbW9kZXMsIG91dHB1dCBkYXRhIG1hcHBpbmcgYW5kIEREUiBvdXRwdXQgbW9kZXMKPj4+
+IGFyZQo+Pj4gK2NvbmZpZ3VyZWQgdGhyb3VnaCBpbnB1dCBzaWduYWxzIGFuZCB0aGUgY2hpcCBk
+b2VzIG5vdCBleHBvc2UgYW55IGNvbnRyb2wKPj4+IGJ1cy4KPj4+ICsKPj4+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+Pj4gKy0gY29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYzbHZkMTAy
+NCIKPj4+ICsKPj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4gKy0gdmNjLXN1cHBseTogUG93
+ZXIgc3VwcGx5IGZvciBUVEwgb3V0cHV0IGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+Pj4gKy0gY3Zj
+Yy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgVFRMIENMT0NLT1VUIHNpZ25hbAo+Pj4gKy0gbHZj
+Yy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgTFZEUyBpbnB1dHMKPj4+ICstIHB2Y2Mtc3VwcGx5
+OiBQb3dlciBzdXBwbHkgZm9yIFBMTCBjaXJjdWl0cnkKPj4KPj4gQXMgZXhwbGFpbmVkIGluIGEg
+Y29tbWVudCB0byBvbmUgb2YgdGhlIHByZXZpb3VzIHZlcnNpb25zIG9mIHRoaXMgc2VyaWVzLCBJ
+J20gCj4+IHRlbXB0ZWQgdG8gbWFrZSB2Y2Mtc3VwcGx5IG1hbmRhdG9yeSBhbmQgZHJvcCB0aGUg
+dGhyZWUgb3RoZXIgcG93ZXIgc3VwcGxpZXMgCj4+IGZvciBub3csIGFzIEkgYmVsaWV2ZSB0aGVy
+ZSdzIHZlcnkgbGl0dGxlIGNoYW5jZSB0aGV5IHdpbGwgYmUgY29ubmVjdGVkIHRvIAo+PiBzZXBh
+cmF0ZWx5IGNvbnRyb2xsYWJsZSByZWd1bGF0b3JzIChhbGwgc3VwcGxpZXMgdXNlIHRoZSBzYW1l
+IHZvbHRhZ2UpLiBJbiB0aGUgCj4+IHZlcnkgdW5saWtlbHkgZXZlbnQgdGhhdCB0aGlzIG9jY3Vy
+cyBpbiBkZXNpZ24gd2UgbmVlZCB0byBzdXBwb3J0IGluIHRoZSAKPj4gZnV0dXJlLCB0aGUgY3Zj
+YywgbHZjYyBhbmQgcHZjYyBzdXBwbGllcyBjYW4gYmUgYWRkZWQgbGF0ZXIgYXMgb3B0aW9uYWwg
+Cj4+IHdpdGhvdXQgYnJlYWtpbmcgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4KPiAKPiBJJ20gb2th
+eSB3aXRoIHRoYXQuCj4gCj4+IEFwYXJ0IGZyb20gdGhhdCwKPj4KPj4gUmV2aWV3ZWQtYnk6IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPj4KPj4+
+ICstIHBkd24tZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWduYWwuIEFjdGl2ZSBsb3cKPiAKPiBw
+b3dlcmRvd24tZ3Bpb3MgaXMgdGhlIHNlbWktc3RhbmRhcmQgbmFtZS4KPiAKCnJpZ2h0LCBJJ3Zl
+IGFsc28gbm90aWNlZCBpdC4gSWYgcG9zc2libGUgcGxlYXNlIGF2b2lkIHNob3J0ZW5pbmdzIGlu
+CnByb3BlcnR5IG5hbWVzLgoKPj4+ICstIG9lLWdwaW9zOiBPdXRwdXQgZW5hYmxlIEdQSU8gc2ln
+bmFsLiBBY3RpdmUgaGlnaAo+Pj4gKwoKQW5kIHRoaXMgb25lIGlzIGFsc28gYSBub3QgZXZlciBt
+ZXQgcHJvcGVydHkgbmFtZSwgcGxlYXNlIGNvbnNpZGVyIHRvCnJlbmFtZSBpdCB0byAnZW5hYmxl
+LWdwaW9zJywgZm9yIGluc3RhbmNlIGRpc3BsYXkgcGFuZWxzIGRlZmluZSBpdC4KCj4+PiArVGhl
+IFRIQzYzTFZEMTAyNCB2aWRlbyBwb3J0IGNvbm5lY3Rpb25zIGFyZSBtb2RlbGVkIGFjY29yZGlu
+Zwo+Pj4gK3RvIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBieQo+Pj4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAoKW3NuaXBdCgo+Pj4gKwo+Pj4gKwkJCXBv
+cnRAMnsKPj4+ICsJCQkJcmVnID0gPDI+Owo+Pj4gKwo+Pj4gKwkJCQlsdmRzX2RlY19vdXRfMjog
+ZW5kcG9pbnQgewo+Pj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZhZHY3NTExX2luPjsKPj4+
+ICsJCQkJfTsKPj4+ICsKCkRyb3AgYSBzdXJwbHVzIGVtcHR5IGxpbmUgYWJvdmUuCgo+Pj4gKwkJ
+CX07Cj4+PiArCgpEcm9wIGEgc3VycGx1cyBlbXB0eSBsaW5lIGFib3ZlLgoKPj4+ICsJCX07Cj4+
+PiArCX07CgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
