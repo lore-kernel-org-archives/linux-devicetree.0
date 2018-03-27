@@ -1,89 +1,28 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [net-next PATCH v2 05/10] net: netcp: ethss: use rgmii link
- status for 2u cpsw hardware
-Date: Tue, 27 Mar 2018 19:29:53 +0200
-Message-ID: <20180327172953.GP5862@lunn.ch>
-References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
- <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v3 6/6] phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
+Date: Tue, 27 Mar 2018 17:34:36 +0000
+Message-ID: <CAE=gft72pBOvN+pHYL1LHzLbj-EifZo0+yiFc=kABHj=iOM+2A@mail.gmail.com>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org> <1521785487-29866-7-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <1521785487-29866-7-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, vivek.gautam@codeaurora.org, sboyd@codeaurora.org, krzk@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 12:31:44PM -0400, Murali Karicheri wrote:
-> Introduce rgmii link status to handle link state events for 2u
-> cpsw hardware on K2G.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+On Thu, Mar 22, 2018 at 11:12 PM Manu Gautam <mgautam@codeaurora.org> wrote:
+
+> There are two QUSB2 PHYs present on sdm845. Update PHY
+> registers programming for both the PHYs related to
+> electrical parameters to improve eye diagram.
+
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
 > ---
->  drivers/net/ethernet/ti/netcp_ethss.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-> index ab9d369..078a1b8 100644
-> --- a/drivers/net/ethernet/ti/netcp_ethss.c
-> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
-> @@ -552,6 +552,7 @@ struct gbe_ss_regs {
->  struct gbe_ss_regs_ofs {
->  	u16	id_ver;
->  	u16	control;
-> +	u16	rgmii_status; /* 2U */
->  };
->  
->  struct gbe_switch_regs {
-> @@ -2120,23 +2121,39 @@ static bool gbe_phy_link_status(struct gbe_slave *slave)
->  	 return !slave->phy || slave->phy->link;
->  }
->  
-> +#define RGMII_REG_STATUS_LINK	BIT(0)
-> +
-> +static void netcp_2u_rgmii_get_port_link(struct gbe_priv *gbe_dev, bool *status)
-> +{
-> +	u32 val = 0;
-> +
-> +	val = readl(GBE_REG_ADDR(gbe_dev, ss_regs, rgmii_status));
-> +	*status = false;
-> +	if ((val & RGMII_REG_STATUS_LINK) != 0)
-> +		*status = true;
-
-  *status = !!(val & RGMII_REG_STATUS_LINK);
+>   drivers/phy/qualcomm/phy-qcom-qusb2.c | 39
++++++++++++++++++++++++++++++++++++
+>   1 file changed, 39 insertions(+)
 
 
-> +}
-> +
->  static void netcp_ethss_update_link_state(struct gbe_priv *gbe_dev,
->  					  struct gbe_slave *slave,
->  					  struct net_device *ndev)
->  {
-> -	int sp = slave->slave_num;
-> -	int phy_link_state, sgmii_link_state = 1, link_state;
-> +	bool sw_link_state = true, phy_link_state;
-> +	int sp = slave->slave_num, link_state;
->  
->  	if (!slave->open)
->  		return;
->  
->  	if (!SLAVE_LINK_IS_XGMII(slave)) {
-> -		sgmii_link_state =
-> +		if (SLAVE_LINK_IS_RGMII(slave))
-> +			netcp_2u_rgmii_get_port_link(gbe_dev,
-> +						     &sw_link_state);
-> +		else
-> +			sw_link_state =
->  			netcp_sgmii_get_port_link(SGMII_BASE(gbe_dev, sp), sp);
-
-This would be more readable as
-
-     if (SLAVE_LINK_IS_RGMII(slave))
-		netcp_2u_rgmii_get_port_link(gbe_dev,
-					     &sw_link_state);
-     if (SLAVE_LINK_IS_SGMII(slave))
-	sw_link_state = netcp_sgmii_get_port_link(
-	   SGMII_BASE(gbe_dev, sp), sp);
-
-   Andrew
+Reviewed-by: Evan Green <evgreen@chromium.org>
