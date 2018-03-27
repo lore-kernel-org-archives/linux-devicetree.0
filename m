@@ -1,77 +1,96 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/3] arm64: dts: renesas: salvator-common: Configure
- PMIC for DDR Backup Power
-Date: Tue, 27 Mar 2018 10:17:16 +0200
-Message-ID: <20180327081715.rab6rr4xobmgwofl@verge.net.au>
-References: <1521029386-29975-1-git-send-email-geert+renesas@glider.be>
- <1521029386-29975-3-git-send-email-geert+renesas@glider.be>
- <9c6289e4-23dd-c79b-bd1f-058d843739d2@cogentembedded.com>
- <CAMuHMdUO-Op4u44naZJ37VgzN1GJBL33yRWnF11D9a24y8+x1g@mail.gmail.com>
- <1ae32fee-578e-1091-561a-200a8036b670@cogentembedded.com>
- <20180326090625.espsuzblp7gy767t@verge.net.au>
- <CAMuHMdW5ox34+_Z76T+cDyZeuJJE4OZ8=hEpdjbCcg+TwSX61A@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Tue, 27 Mar 2018 11:27:39 +0300
+Message-ID: <70826dc1-d9ea-dc98-f591-c80f1904806a@cogentembedded.com>
+References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1521213399-31947-2-git-send-email-jacopo+renesas@jmondi.org>
+ <4060923.7DxT9ae38L@avalon> <20180326222249.tvjiutyd4amlibpa@rob-hp-laptop>
+ <CGME20180327061536epcas5p40faf6caf0d9825e6c33cd3e6ba9d8378@epcas5p4.samsung.com>
+ <a1b0e678-38b8-dd29-b441-e2a09b565105@mentor.com>
+ <1dd27170-153c-90f6-e13f-949ba7d0d4a9@samsung.com>
+ <20180327073332.GI27746@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW5ox34+_Z76T+cDyZeuJJE4OZ8=hEpdjbCcg+TwSX61A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180327073332.GI27746@w540>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 26, 2018 at 11:13:54AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Mon, Mar 26, 2018 at 11:06 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Fri, Mar 16, 2018 at 03:08:13PM +0300, Sergei Shtylyov wrote:
-> >> On 03/16/2018 03:00 PM, Geert Uytterhoeven wrote:
-> >>
-> >> >>> On Salvator-X(S), all of the DDR0, DDR1, DDR0C, and DDR1C power rails
-> >> >>> need to be kept powered when backup mode is enabled.  Reflect this in
-> >> >>> the "rohm,ddr-backup-power" property for the BD9571MWV PMIC node.
-> >> >>>
-> >> >>> The accessory power switch (SW23) is a toggle switch, hense specify
-> >> >>> "rohm,rstbmode-level".
-> >> >>>
-> >> >>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> >>> ---
-> >> >>> v2:
-> >> >>>   - Add rohm,rstbmode-level.
-> >> >>> ---
-> >> >>>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 2 ++
-> >> >>>  1 file changed, 2 insertions(+)
-> >> >>>
-> >> >>> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> >>> index 2a7f36abd2dd85c6..80794c38c2669d75 100644
-> >> >>> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> >>> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> >>> @@ -376,6 +376,8 @@
-> >> >>>               #interrupt-cells = <2>;
-> >> >>>               gpio-controller;
-> >> >>>               #gpio-cells = <2>;
-> >> >>> +             rohm,ddr-backup-power = <15>;
-> >> >>
-> >> >>   Why not 0xf if those are all bit flags?
-> >> >
-> >> > Because it's a small number?
-> >> > Does it matter?
-> >>
-> >>    I think hex is preferable for the bit flags. Decimal makes one think it's something
-> >> else -- some magnitude, etc...
-> >
-> > Geert, it seems that Rob Herring is of the same opinion.
-> > Would you care to respin this series?
-> 
-> Sure, after the respun driver series has been accepted.
-
-Perfect, thanks!
+SGVsbG8hCgpPbiAzLzI3LzIwMTggMTA6MzMgQU0sIGphY29wbyBtb25kaSB3cm90ZToKWy4uLl0K
+Pj4+Pj4+IERvY3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRy
+ZWUgYmluZGluZ3MuCj4+Pj4+Pgo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxq
+YWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+Pj4+Pj4gUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFq
+ZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+Pj4+PiBSZXZpZXdlZC1ieTogTmlrbGFzIFPDtmRl
+cmx1bmQgPG5pa2xhcy5zb2Rlcmx1bmQrcmVuZXNhc0ByYWduYXRlY2guc2U+Cj4+Pj4+PiAtLS0K
+Pj4+Pj4+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50
+eHQgfCA2NiArKysrKysrKysrKysrKysrKysrCj4+Pj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA2NiBp
+bnNlcnRpb25zKCspCj4+Pj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+Pj4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAy
+NC50eHQKPj4+Pj4+Cj4+Pj4+PiBkaWZmIC0tZ2l0Cj4+Pj4+PiBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+
+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+Pj4g
+aW5kZXggMDAwMDAwMC4uODIyNWM2YQo+Pj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+Pj4gKysrCj4+
+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4+Pj4+PiBAQCAtMCwwICsxLDY2IEBACj4+Pj4+PiArVGhp
+bmUgRWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlcgo+Pj4+Pj4gKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+Pj4+ICsKPj4+Pj4+ICtUaGUg
+VEhDNjNMVkQxMDI0IGlzIGEgZHVhbCBsaW5rIExWRFMgcmVjZWl2ZXIgZGVzaWduZWQgdG8gY29u
+dmVydCBMVkRTCj4+Pj4+PiBzdHJlYW1zCj4+Pj4+PiArdG8gcGFyYWxsZWwgZGF0YSBvdXRwdXRz
+LiBUaGUgY2hpcCBzdXBwb3J0cyBzaW5nbGUvZHVhbCBpbnB1dC9vdXRwdXQgbW9kZXMsCj4+Pj4+
+PiAraGFuZGxpbmcgdXAgdG8gdHdvIHR3byBpbnB1dCBMVkRTIHN0cmVhbSBhbmQgdXAgdG8gdHdv
+IGRpZ2l0YWwgQ01PUy9UVEwKPj4+Pj4+IG91dHB1dHMuCj4+Pj4+PiArCj4+Pj4+PiArU2luZ2xl
+IG9yIGR1YWwgb3BlcmF0aW9uIG1vZGVzLCBvdXRwdXQgZGF0YSBtYXBwaW5nIGFuZCBERFIgb3V0
+cHV0IG1vZGVzCj4+Pj4+PiBhcmUKPj4+Pj4+ICtjb25maWd1cmVkIHRocm91Z2ggaW5wdXQgc2ln
+bmFscyBhbmQgdGhlIGNoaXAgZG9lcyBub3QgZXhwb3NlIGFueSBjb250cm9sCj4+Pj4+PiBidXMu
+Cj4+Pj4+PiArCj4+Pj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+Pj4+ICstIGNvbXBhdGli
+bGU6IFNoYWxsIGJlICJ0aGluZSx0aGM2M2x2ZDEwMjQiCj4+Pj4+PiArCj4+Pj4+PiArT3B0aW9u
+YWwgcHJvcGVydGllczoKPj4+Pj4+ICstIHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgVFRM
+IG91dHB1dCBhbmQgZGlnaXRhbCBjaXJjdWl0cnkKPj4+Pj4+ICstIGN2Y2Mtc3VwcGx5OiBQb3dl
+ciBzdXBwbHkgZm9yIFRUTCBDTE9DS09VVCBzaWduYWwKPj4+Pj4+ICstIGx2Y2Mtc3VwcGx5OiBQ
+b3dlciBzdXBwbHkgZm9yIExWRFMgaW5wdXRzCj4+Pj4+PiArLSBwdmNjLXN1cHBseTogUG93ZXIg
+c3VwcGx5IGZvciBQTEwgY2lyY3VpdHJ5Cj4+Pj4+IEFzIGV4cGxhaW5lZCBpbiBhIGNvbW1lbnQg
+dG8gb25lIG9mIHRoZSBwcmV2aW91cyB2ZXJzaW9ucyBvZiB0aGlzIHNlcmllcywgSSdtCj4+Pj4+
+IHRlbXB0ZWQgdG8gbWFrZSB2Y2Mtc3VwcGx5IG1hbmRhdG9yeSBhbmQgZHJvcCB0aGUgdGhyZWUg
+b3RoZXIgcG93ZXIgc3VwcGxpZXMKPj4+Pj4gZm9yIG5vdywgYXMgSSBiZWxpZXZlIHRoZXJlJ3Mg
+dmVyeSBsaXR0bGUgY2hhbmNlIHRoZXkgd2lsbCBiZSBjb25uZWN0ZWQgdG8KPj4+Pj4gc2VwYXJh
+dGVseSBjb250cm9sbGFibGUgcmVndWxhdG9ycyAoYWxsIHN1cHBsaWVzIHVzZSB0aGUgc2FtZSB2
+b2x0YWdlKS4gSW4gdGhlCj4+Pj4+IHZlcnkgdW5saWtlbHkgZXZlbnQgdGhhdCB0aGlzIG9jY3Vy
+cyBpbiBkZXNpZ24gd2UgbmVlZCB0byBzdXBwb3J0IGluIHRoZQo+Pj4+PiBmdXR1cmUsIHRoZSBj
+dmNjLCBsdmNjIGFuZCBwdmNjIHN1cHBsaWVzIGNhbiBiZSBhZGRlZCBsYXRlciBhcyBvcHRpb25h
+bAo+Pj4+PiB3aXRob3V0IGJyZWFraW5nIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkuCj4+Pj4gSSdt
+IG9rYXkgd2l0aCB0aGF0Lgo+Pj4+Cj4+Pj4+IEFwYXJ0IGZyb20gdGhhdCwKPj4+Pj4KPj4+Pj4g
+UmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
+YXJkLmNvbT4KPj4+Pj4KPj4+Pj4+ICstIHBkd24tZ3Bpb3M6IFBvd2VyIGRvd24gR1BJTyBzaWdu
+YWwuIEFjdGl2ZSBsb3cKPj4+PiBwb3dlcmRvd24tZ3Bpb3MgaXMgdGhlIHNlbWktc3RhbmRhcmQg
+bmFtZS4KPj4+Pgo+Pj4gcmlnaHQsIEkndmUgYWxzbyBub3RpY2VkIGl0LiBJZiBwb3NzaWJsZSBw
+bGVhc2UgYXZvaWQgc2hvcnRlbmluZ3MgaW4KPj4+IHByb3BlcnR5IG5hbWVzLgo+Pgo+PiBJdCBp
+cyBub3Qgc2hvcnRlbmluZywgaXQganVzdCBmb2xsb3cgcGluIG5hbWUgZnJvbSBkZWNvZGVyJ3Mg
+ZGF0YXNoZWV0Lgo+Pgo+Pj4KPj4+Pj4+ICstIG9lLWdwaW9zOiBPdXRwdXQgZW5hYmxlIEdQSU8g
+c2lnbmFsLiBBY3RpdmUgaGlnaAo+Pj4+Pj4gKwo+Pj4gQW5kIHRoaXMgb25lIGlzIGFsc28gYSBu
+b3QgZXZlciBtZXQgcHJvcGVydHkgbmFtZSwgcGxlYXNlIGNvbnNpZGVyIHRvCj4+PiByZW5hbWUg
+aXQgdG8gJ2VuYWJsZS1ncGlvcycsIGZvciBpbnN0YW5jZSBkaXNwbGF5IHBhbmVscyBkZWZpbmUg
+aXQuCj4+Cj4+Cj4+IEFnYWluLCBpdCBmb2xsb3dzIGRhdGFzaGVldCBuYW1pbmcgc2NoZW1lLiBI
+YXMgc29tZXRoaW5nIGNoYW5nZWQgaW4gRFQKPj4gY29udmVudGlvbnM/Cj4gCj4gU2Vjb25kZWQu
+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGUgcHJvcGVydHkgbmFtZSBzaG91bGQgcmVmbGVj
+dAo+IHdoYXQgcmVwb3J0ZWQgaW4gdGhlIHRoZSBjaGlwIG1hbnVhbC4gRm9yIFRIQzYzTFZEMTAy
+NCB0aGUgZW5hYmxlIGFuZAo+IHBvd2VyIGRvd24gcGlucyBhcmUgbmFtZWQgJ09FJyBhbmQgJ1BE
+V04nIHJlc3BlY3RpdmVseS4KCiAgICBCdXQgZG9uJ3Qgd2UgbmVlZCB0aGUgdmVuZG9yIHByZWZp
+eCBpbiB0aGUgcHJvcCBuYW1lcyB0aGVuLCBsaWtlIAoicmVuZXNhcyxvZS1ncGlvcyIgdGhlbj8K
+Cj4gVGhhbmtzCj4gICAgIGoKCk1CUiwgU2VyZ2VpCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
