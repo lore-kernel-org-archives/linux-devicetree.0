@@ -1,69 +1,136 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: renesas: Add LVDS decoder to R-Car V3M
- Eagle
-Date: Tue, 27 Mar 2018 09:27:22 +0300
-Message-ID: <41ccb195-09d1-5765-9344-e489e81943b1@mentor.com>
-References: <1521213399-31947-1-git-send-email-jacopo+renesas@jmondi.org>
- <1521213399-31947-4-git-send-email-jacopo+renesas@jmondi.org>
- <3127791.hHqCBynxiV@avalon>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Tue, 27 Mar 2018 12:21:18 +0530
+Message-ID: <e09a4059-d43b-236b-f0f4-1a45dbaa65fc@codeaurora.org>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3127791.hHqCBynxiV@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gMDMvMjAvMjAxOCAwMzowMSBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiBIaSBKYWNvcG8sCj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4gT24gRnJp
-ZGF5LCAxNiBNYXJjaCAyMDE4IDE3OjE2OjM5IEVFVCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4+IFRo
-ZSBSLUNhciBWM00gRWFnbGUgYm9hcmQgaW5jbHVkZXMgYSB0cmFuc3BhcmVudCBUSEM2M0xWRDEw
-MjQgTFZEUwo+PiBkZWNvZGVyLCBjb25uZWN0ZWQgdG8gdGhlIG9uLWNoaXAgTFZEUyBlbmNvZGVy
-IG91dHB1dCBvbiBvbmUgc2lkZQo+PiBhbmQgdG8gSERNSSBlbmNvZGVyIEFEVjc1MTF3IG9uIHRo
-ZSBvdGhlciBvbmUuCj4+Cj4+IEFzIHRoZSBkZWNvZGVyIGRvZXMgbm90IG5lZWQgYW55IGNvbmZp
-Z3VyYXRpb24gaXQgaGFzIGJlZW4gc28tZmFyCj4+IG9taXR0ZWQgZnJvbSBEVFMuIE5vdyB0aGF0
-IGEgZHJpdmVyIGlzIGF2YWlsYWJsZSwgZGVzY3JpYmUgaXQgaW4gRFQKPj4gYXMgd2VsbC4KPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3Jn
-Pgo+PiBSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiAK
-PiBUaGUgcGF0Y2ggbG9va3MgT0sgdG8gbWUsIGJ1dCBJIHRoaW5rIGl0IHNob3VsZCBiZSBzcXVh
-c2hlZCB3aXRoIE5pa2xhcycgcGF0Y2ggCj4gdGhhdCBhZGRlZCBkaXNwbGF5IEhETUkgb3V0cHV0
-IHN1cHBvcnQgdG8gdGhlIFYzTSBFYWdsZSBEVC4KPiAKPj4gLS0tCj4+Cj4+IExpc3Qgb2YgcGF0
-Y2ggZGVwZW5kZW5jaWVzLCBhcyBvZiByZW5lc2FzLWRyaXZlcnMtMjAxOC0wMy0xMy12NC4xNi1y
-YzU6Cj4+Cj4+IC0gW1BBVENIIHYyIDAvNV0gYXJtNjQ6IGR0czogcmVuZXNhczogcjhhNzc5NzA6
-IGVuYWJsZSBIRE1JIG91dHB1dAo+PiAgICB3aGljaCBpbmNsdWRlcyBEVSwgTFZEUyBhbmQgRkNQ
-RCBlbmFibGVtZW50IGZyb206Cj4+ICAgW1BBVENIIHYyIDAvNV0gQWRkIFI4QTc3OTcwL1YzTVNL
-IExWRFMvSERNSSBzdXBwb3J0Cj4+IC0gW1BBVENIIHY0XSB2NGw6IHZzcDE6IEZpeCB2aWRlbyBv
-dXRwdXQgb24gUjhBNzc5NzAKPj4KPj4gUGF0Y2hlcyB0byBiZSBhcHBsaWVkIG9uIHRvcCBvZgo+
-PiAiYXJtNjQ6IGR0czogcmVuZXNhczogZWFnbGU6IGFkZCBIRE1JIG91dHB1dCB1c2luZyB0aGUg
-QURWNzUxMVciCj4+Cj4+IFRoYW5rcwo+PiAgICBqCj4+IC0tLQo+PiAgYXJjaC9hcm02NC9ib290
-L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cyB8IDMzICsrKysrKysrKysrKysrKysrKysr
-LS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkK
-Pj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1l
-YWdsZS5kdHMKPj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NzAtZWFnbGUu
-ZHRzIGluZGV4IGMwZmQxNDQuLjY5ZjQzYjgKPj4gMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk3MC1lYWdsZS5kdHMKPj4gKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xlLmR0cwo+PiBAQCAtNDIsNiArNDIsMzMgQEAK
-Pj4gIAkJCX07Cj4+ICAJCX07Cj4+ICAJfTsKPj4gKwo+PiArCXRoYzYzbHZkMTAyNDogbHZkcy1k
-ZWNvZGVyIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJ0aGluZSx0aGM2M2x2ZDEwMjQiOwo+PiArCj4+
-ICsJCXBvcnRzIHsKPj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJI3NpemUtY2Vs
-bHMgPSA8MD47Cj4+ICsKPj4gKwkJCXBvcnRAMCB7Cj4+ICsJCQkJcmVnID0gPDA+Owo+PiArCj4+
-ICsJCQkJdGhjNjNsdmQxMDI0X2luXzA6IGVuZHBvaW50IHsKPj4gKwkJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZsdmRzMF9vdXQ+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+ICsJCQlwb3J0
-QDJ7Cj4+ICsJCQkJcmVnID0gPDI+Owo+PiArCj4+ICsJCQkJdGhjNjNsdmQxMDI0X291dF8yOiBl
-bmRwb2ludCB7Cj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYWR2NzUxMV9pbj47Cj4+ICsJ
-CQkJfTsKPj4gKwoKUmVtb3ZlIHRoZSBlbXB0eSBsaW5lIGFib3ZlLgoKPj4gKwkJCX07Cj4+ICsK
-ClJlbW92ZSB0aGUgZW1wdHkgbGluZSBhYm92ZS4KCj4+ICsJCX07Cj4+ICsJfTsKPj4gIH07Cj4+
-CgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Manu,
+
+
+On 3/23/2018 11:41 AM, Manu Gautam wrote:
+> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+> to take place.
+
+AFAIK, that's not true. The pipe clock is the *output* of the PLL, and 
+it's should not
+be needed for PLL calibration and locking. The PLL locking happens when 
+the phy is
+configured and powered on.
+Atleast that's what the PIPE spec also says.
+
+            CLK
+              |
+              |
+              Y
+    ----------------
+   |      PLL        |--------> PCLK (this is pipe clock 125/250/... MHz 
+corresponding to the data width)
+    ----------------
+
+That's the reason we were enabling it after the PLL was locked.
+
+> This clock is output from PHY to GCC clock_ctl and then
+> fed back to QMP PHY and is available from PHY only after PHY is reset
+> and initialized, hence it can't be enabled too early in initialization
+> sequence.
+>
+> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
+>   1 file changed, 32 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 6470c5d..5d8df6a 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1008,6 +1008,19 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>   	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>   	mask = cfg->mask_pcs_ready;
+>   
+> +	/*
+> +	 * USB3 PHY requires pipe_clk for PLL lock and calibration.
+> +	 * Enable it from here for USB. For UFS/PCIE, it gets enabled
+> +	 * from poweron.
+> +	 */
+> +	if (cfg->type == PHY_TYPE_USB3) {
+> +		ret = clk_prepare_enable(qphy->pipe_clk);
+
+As mentioned before AFAIU, pipe clock is just an output coming out of 
+the PHY's PLL
+and we shouldn't try to enable pipe clock before PHY even gets initialized.
+We should may just try to first fix the unbalanced pipe clock 
+enable/disable problem.
+
+Moreover, lets take care of all USB, PCIe and DP phys when we want to 
+enable/disbale
+pipe clock as all of them use this clock.
+
+Best regards
+Vivek
+
+> +		if (ret) {
+> +			dev_err(qmp->dev, "pipe_clk enable err=%d\n", ret);
+> +			goto err_clk_enable;
+> +		}
+> +	}
+> +
+>   	ret = readl_poll_timeout(status, val, !(val & mask), 1,
+>   				 PHY_INIT_COMPLETE_TIMEOUT);
+>   	if (ret) {
+> @@ -1019,6 +1032,9 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>   	return ret;
+>   
+>   err_pcs_ready:
+> +	if (cfg->type == PHY_TYPE_USB3)
+> +		clk_disable_unprepare(qphy->pipe_clk);
+> +err_clk_enable:
+>   	if (cfg->has_lane_rst)
+>   		reset_control_assert(qphy->lane_rst);
+>   err_lane_rst:
+> @@ -1288,10 +1304,19 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+>   	.owner		= THIS_MODULE,
+>   };
+>   
+> +/* USB PHY doesn't require power_on op */
+> +static const struct phy_ops qcom_qmp_usb_phy_gen_ops = {
+> +	.init		= qcom_qmp_phy_init,
+> +	.exit		= qcom_qmp_phy_exit,
+> +	.set_mode	= qcom_qmp_phy_set_mode,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+>   static
+>   int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+>   {
+>   	struct qcom_qmp *qmp = dev_get_drvdata(dev);
+> +	const struct phy_ops *ops;
+>   	struct phy *generic_phy;
+>   	struct qmp_phy *qphy;
+>   	char prop_name[MAX_PROP_NAME];
+> @@ -1354,7 +1379,13 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+>   		}
+>   	}
+>   
+> -	generic_phy = devm_phy_create(dev, np, &qcom_qmp_phy_gen_ops);
+> +	/* USB PHY doesn't use power_on op */
+> +	if (qmp->cfg->type == PHY_TYPE_USB3)
+> +		ops = &qcom_qmp_usb_phy_gen_ops;
+> +	else
+> +		ops = &qcom_qmp_phy_gen_ops;
+> +
+> +	generic_phy = devm_phy_create(dev, np, ops);
+>   	if (IS_ERR(generic_phy)) {
+>   		ret = PTR_ERR(generic_phy);
+>   		dev_err(dev, "failed to create qphy %d\n", ret);
