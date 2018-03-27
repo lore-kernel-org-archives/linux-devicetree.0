@@ -1,66 +1,98 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 1/2][v6] dt-bindings: mtd-physmap: Add endianness supports
-Date: Tue, 27 Mar 2018 11:03:16 -0500
-Message-ID: <1522166596.5274.6.camel@buserror.net>
-References: <20180312081128.8195-1-prabhakar.kushwaha@nxp.com>
- <20180323093408.230a61c1@bbrezillon>
- <VI1PR0402MB385456DB28FE27FCF9ACCAB997AC0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [net-next PATCH v2 05/10] net: netcp: ethss: use rgmii link status
+ for 2u cpsw hardware
+Date: Tue, 27 Mar 2018 12:31:44 -0400
+Message-ID: <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
+References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR0402MB385456DB28FE27FCF9ACCAB997AC0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Boris Brezillon <boris.brezillon@bootlin.com>, "robh@kernel.org" <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, Poonam Aggrwal <poonam.aggrwal@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-03-27 at 12:06 +0000, Prabhakar Kushwaha wrote:
-> Hi Boris,
-> 
-> > -----Original Message-----
-> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
-> > Sent: Friday, March 23, 2018 2:04 PM
-> > To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>;
-> > robh@kernel.org
-> > Cc: linux-mtd@lists.infradead.org; devicetree@vger.kernel.org;
-> > mark.rutland@arm.com; shawnguo@kernel.org; boris.brezillon@free-
-> > electrons.com; computersforpeace@gmail.com; oss@buserror.net; Leo Li
-> > <leoyang.li@nxp.com>; linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [PATCH 1/2][v6] dt-bindings: mtd-physmap: Add endianness
-> > supports
-> > 
-> > You still haven't answered the comments I made on your v5. To me, this
-> > does
-> > not represent how the controller and chip pins are connected, but how the
-> > chip was programmed and which endianness should be used by the
-> > controller to correctly read the data back. Maybe I'm wrong, hence my
-> > question.
-> > 
-> 
-> NXP's ARM SoC has IFC module which interface with NOR flash. Here IFC is big
-> endian module connected with NOR flash. 
-> As SoC has ARM processor(Littler Endian),  CONFIG_MTD_CFI_BE_BYTE_SWAP needs
-> to be enabled  to make sure data is read correctly.  
-> This is the reason, I wrote about connection between controller and flash.
-> 
-> In a way, I agree with you.  It is not about connection. 
-> It is about how controller read the data (inherently ARM processor)
+Introduce rgmii link status to handle link state events for 2u
+cpsw hardware on K2G.
 
-It is not about anything inherent to ARM (which, like PPC, is a bi-endian
-arch).  It's about the programming model of IFC on certain SoCs.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/net/ethernet/ti/netcp_ethss.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
--Scott
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index ab9d369..078a1b8 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -552,6 +552,7 @@ struct gbe_ss_regs {
+ struct gbe_ss_regs_ofs {
+ 	u16	id_ver;
+ 	u16	control;
++	u16	rgmii_status; /* 2U */
+ };
+ 
+ struct gbe_switch_regs {
+@@ -2120,23 +2121,39 @@ static bool gbe_phy_link_status(struct gbe_slave *slave)
+ 	 return !slave->phy || slave->phy->link;
+ }
+ 
++#define RGMII_REG_STATUS_LINK	BIT(0)
++
++static void netcp_2u_rgmii_get_port_link(struct gbe_priv *gbe_dev, bool *status)
++{
++	u32 val = 0;
++
++	val = readl(GBE_REG_ADDR(gbe_dev, ss_regs, rgmii_status));
++	*status = false;
++	if ((val & RGMII_REG_STATUS_LINK) != 0)
++		*status = true;
++}
++
+ static void netcp_ethss_update_link_state(struct gbe_priv *gbe_dev,
+ 					  struct gbe_slave *slave,
+ 					  struct net_device *ndev)
+ {
+-	int sp = slave->slave_num;
+-	int phy_link_state, sgmii_link_state = 1, link_state;
++	bool sw_link_state = true, phy_link_state;
++	int sp = slave->slave_num, link_state;
+ 
+ 	if (!slave->open)
+ 		return;
+ 
+ 	if (!SLAVE_LINK_IS_XGMII(slave)) {
+-		sgmii_link_state =
++		if (SLAVE_LINK_IS_RGMII(slave))
++			netcp_2u_rgmii_get_port_link(gbe_dev,
++						     &sw_link_state);
++		else
++			sw_link_state =
+ 			netcp_sgmii_get_port_link(SGMII_BASE(gbe_dev, sp), sp);
+ 	}
+ 
+ 	phy_link_state = gbe_phy_link_status(slave);
+-	link_state = phy_link_state & sgmii_link_state;
++	link_state = phy_link_state & sw_link_state;
+ 
+ 	if (atomic_xchg(&slave->link_state, link_state) != link_state)
+ 		netcp_ethss_link_state_action(gbe_dev, ndev, slave,
+@@ -3432,6 +3449,8 @@ static int set_gbenu_ethss_priv(struct gbe_priv *gbe_dev,
+ 
+ 	/* Subsystem registers */
+ 	GBENU_SET_REG_OFS(gbe_dev, ss_regs, id_ver);
++	/* ok to set for MU, but used by 2U only */
++	GBENU_SET_REG_OFS(gbe_dev, ss_regs, rgmii_status);
+ 
+ 	/* Switch module registers */
+ 	GBENU_SET_REG_OFS(gbe_dev, switch_regs, id_ver);
+-- 
+1.9.1
