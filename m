@@ -1,39 +1,70 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: bd9571mwv: Document DDR Backup
- Mode properties
-Date: Tue, 27 Mar 2018 13:15:12 +0100
-Message-ID: <20180327121512.ygwcrwexx2fmbwyz@dell>
-References: <1521025722-24205-1-git-send-email-geert+renesas@glider.be>
- <1521025722-24205-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v9 8/9] pinctrl: madera: Add driver for Cirrus Logic
+ Madera codecs
+Date: Tue, 27 Mar 2018 13:18:38 +0100
+Message-ID: <20180327121838.y3wcovp3vng35zw4@dell>
+References: <20180313131904.13700-9-rf@opensource.cirrus.com>
+ <201803221928.QinIS1e5%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521025722-24205-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <201803221928.QinIS1e5%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, kbuild-all@01.org, linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Mar 2018, Geert Uytterhoeven wrote:
+On Thu, 22 Mar 2018, kbuild test robot wrote:
 
-> Document the new optional properties related to DDR Backup Mode and
-> toggle/momentary power switches.
+> Hi Richard,
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Improve property description,
->   - Add properties for power switch type.
-> ---
->  Documentation/devicetree/bindings/mfd/bd9571mwv.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> I love your patch! Yet something to improve:
 
-Once Rob's comment has been handled:
+Looking to apply this set soon.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+I guess this needs fixing first though?
+
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.16-rc6 next-20180322]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Richard-Fitzgerald/mfd-madera-Add-register-definitions-for-Cirrus-Logic-Madera-codecs/20180314-211822
+> config: i386-randconfig-x010-03221515 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/pinctrl/cirrus/pinctrl-madera-core.c:561:20: error: 'pinconf_generic_dt_node_to_map_all' undeclared here (not in a function); did you mean 'pinconf_generic_params'?
+>      .dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+>                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>                        pinconf_generic_params
+> 
+> vim +561 drivers/pinctrl/cirrus/pinctrl-madera-core.c
+> 
+>    555	
+>    556	
+>    557	static const struct pinctrl_ops madera_pin_group_ops = {
+>    558		.get_groups_count = madera_get_groups_count,
+>    559		.get_group_name = madera_get_group_name,
+>    560		.get_group_pins = madera_get_group_pins,
+>  > 561		.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+>    562		.dt_free_map = pinctrl_utils_free_map,
+>    563	#if IS_ENABLED(CONFIG_DEBUG_FS)
+>    564		.pin_dbg_show = madera_pin_dbg_show,
+>    565	#endif
+>    566	};
+>    567	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+
 
 -- 
 Lee Jones [李琼斯]
