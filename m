@@ -1,43 +1,51 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/3] clk: meson: drop unnecessary AO clock flags
-Date: Tue, 27 Mar 2018 11:21:49 +0200
-Message-ID: <1522142509.2632.42.camel@baylibre.com>
-References: <20180326081809.49493-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 5/8] remoteproc/davinci: prepare and unprepare the clock where needed
+Date: Tue, 27 Mar 2018 11:20:28 +0200
+Message-ID: <20180327092031.11251-6-brgl@bgdev.pl>
+References: <20180327092031.11251-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326081809.49493-1-yixun.lan@amlogic.com>
+In-Reply-To: <20180327092031.11251-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-03-26 at 16:18 +0800, Yixun Lan wrote:
->   This first two patches will drop unnecessary flags for
-> the AO clock driver.
->   The third DTS patch is a follow-up fix for the second patch,
-> and I've tested them on P200, P212, Q200, S400 boards.
-> 
->  Note: this patch series was made on top of patch [0]
-> 
-> [0] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-> 
-> Yixun Lan (3):
->   clk: meson: drop CLK_SET_RATE_PARENT flag
->   clk: meson: drop CLK_IGNORE_UNUSED flag
->   ARM64: dts: meson: fix clock source of the pclk for UART_AO
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Please add patch 1 and 2 to the next version of your clkc_ao series
+We're currently switching the platform to using the common clock
+framework. We need to explicitly prepare and unprepare the rproc
+clock.
 
-Patch 3 should sent independently to Kevin, with note warning about the
-different dependencies (see comment in patch 3)
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Suman Anna <s-anna@ti.com>
+---
+ drivers/remoteproc/da8xx_remoteproc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
->  drivers/clk/meson/axg-aoclk.c               | 1 -
->  drivers/clk/meson/gxbb-aoclk.c              | 1 -
->  5 files changed, 6 insertions(+), 8 deletions(-)
-> 
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index 2b24291337b7..f134192922e0 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -149,9 +149,9 @@ static int da8xx_rproc_start(struct rproc *rproc)
+ 
+ 	writel(rproc->bootaddr, drproc->bootreg);
+ 
+-	ret = clk_enable(dsp_clk);
++	ret = clk_prepare_enable(dsp_clk);
+ 	if (ret) {
+-		dev_err(dev, "clk_enable() failed: %d\n", ret);
++		dev_err(dev, "clk_prepare_enable() failed: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -165,7 +165,7 @@ static int da8xx_rproc_stop(struct rproc *rproc)
+ 	struct da8xx_rproc *drproc = rproc->priv;
+ 
+ 	davinci_clk_reset_assert(drproc->dsp_clk);
+-	clk_disable(drproc->dsp_clk);
++	clk_disable_unprepare(drproc->dsp_clk);
+ 
+ 	return 0;
+ }
+-- 
+2.16.1
