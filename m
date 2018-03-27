@@ -1,98 +1,102 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [net-next PATCH v2 05/10] net: netcp: ethss: use rgmii link status
- for 2u cpsw hardware
-Date: Tue, 27 Mar 2018 12:31:44 -0400
-Message-ID: <1522168309-12338-6-git-send-email-m-karicheri2@ti.com>
+Subject: [net-next PATCH v2 04/10] net: netcp: ethss: add support for handling sgmii link interface
+Date: Tue, 27 Mar 2018 12:31:43 -0400
+Message-ID: <1522168309-12338-5-git-send-email-m-karicheri2@ti.com>
 References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce rgmii link status to handle link state events for 2u
-cpsw hardware on K2G.
+2u cpsw hardware on K2G uses sgmii link to interface with Phy. So add
+support for this interface in the code so that drover can be re-used
+for 2u hardware.
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/ti/netcp.h       |  2 ++
+ drivers/net/ethernet/ti/netcp_ethss.c | 18 ++++++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/net/ethernet/ti/netcp.h b/drivers/net/ethernet/ti/netcp.h
+index 8900a6f..416f732 100644
+--- a/drivers/net/ethernet/ti/netcp.h
++++ b/drivers/net/ethernet/ti/netcp.h
+@@ -33,6 +33,8 @@
+ #define SGMII_LINK_MAC_MAC_FORCED	2
+ #define SGMII_LINK_MAC_FIBER		3
+ #define SGMII_LINK_MAC_PHY_NO_MDIO	4
++#define RGMII_LINK_MAC_PHY		5
++#define RGMII_LINK_MAC_PHY_NO_MDIO	7
+ #define XGMII_LINK_MAC_PHY		10
+ #define XGMII_LINK_MAC_MAC_FORCED	11
+ 
 diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index ab9d369..078a1b8 100644
+index 1dea891..ab9d369 100644
 --- a/drivers/net/ethernet/ti/netcp_ethss.c
 +++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -552,6 +552,7 @@ struct gbe_ss_regs {
- struct gbe_ss_regs_ofs {
- 	u16	id_ver;
- 	u16	control;
-+	u16	rgmii_status; /* 2U */
- };
+@@ -166,6 +166,9 @@
+ #define	GBE_RXHOOK_ORDER			0
+ #define GBE_DEFAULT_ALE_AGEOUT			30
+ #define SLAVE_LINK_IS_XGMII(s) ((s)->link_interface >= XGMII_LINK_MAC_PHY)
++#define SLAVE_LINK_IS_RGMII(s) \
++	(((s)->link_interface >= RGMII_LINK_MAC_PHY) && \
++	 ((s)->link_interface <= RGMII_LINK_MAC_PHY_NO_MDIO))
+ #define NETCP_LINK_STATE_INVALID		-1
  
- struct gbe_switch_regs {
-@@ -2120,23 +2121,39 @@ static bool gbe_phy_link_status(struct gbe_slave *slave)
- 	 return !slave->phy || slave->phy->link;
- }
+ #define GBE_SET_REG_OFS(p, rb, rn) p->rb##_ofs.rn = \
+@@ -2091,8 +2094,9 @@ static void netcp_ethss_link_state_action(struct gbe_priv *gbe_dev,
+ 				     ALE_PORT_STATE_FORWARD);
  
-+#define RGMII_REG_STATUS_LINK	BIT(0)
-+
-+static void netcp_2u_rgmii_get_port_link(struct gbe_priv *gbe_dev, bool *status)
-+{
-+	u32 val = 0;
-+
-+	val = readl(GBE_REG_ADDR(gbe_dev, ss_regs, rgmii_status));
-+	*status = false;
-+	if ((val & RGMII_REG_STATUS_LINK) != 0)
-+		*status = true;
-+}
-+
- static void netcp_ethss_update_link_state(struct gbe_priv *gbe_dev,
- 					  struct gbe_slave *slave,
- 					  struct net_device *ndev)
- {
--	int sp = slave->slave_num;
--	int phy_link_state, sgmii_link_state = 1, link_state;
-+	bool sw_link_state = true, phy_link_state;
-+	int sp = slave->slave_num, link_state;
- 
- 	if (!slave->open)
- 		return;
- 
- 	if (!SLAVE_LINK_IS_XGMII(slave)) {
--		sgmii_link_state =
-+		if (SLAVE_LINK_IS_RGMII(slave))
-+			netcp_2u_rgmii_get_port_link(gbe_dev,
-+						     &sw_link_state);
-+		else
-+			sw_link_state =
- 			netcp_sgmii_get_port_link(SGMII_BASE(gbe_dev, sp), sp);
+ 		if (ndev && slave->open &&
+-		    slave->link_interface != SGMII_LINK_MAC_PHY &&
+-		    slave->link_interface != XGMII_LINK_MAC_PHY)
++		    ((slave->link_interface != SGMII_LINK_MAC_PHY) &&
++		    (slave->link_interface != RGMII_LINK_MAC_PHY) &&
++		    (slave->link_interface != XGMII_LINK_MAC_PHY)))
+ 			netif_carrier_on(ndev);
+ 	} else {
+ 		writel(mac_control, GBE_REG_ADDR(slave, emac_regs,
+@@ -2101,8 +2105,9 @@ static void netcp_ethss_link_state_action(struct gbe_priv *gbe_dev,
+ 				     ALE_PORT_STATE,
+ 				     ALE_PORT_STATE_DISABLE);
+ 		if (ndev &&
+-		    slave->link_interface != SGMII_LINK_MAC_PHY &&
+-		    slave->link_interface != XGMII_LINK_MAC_PHY)
++		    ((slave->link_interface != SGMII_LINK_MAC_PHY) &&
++		    (slave->link_interface != RGMII_LINK_MAC_PHY) &&
++		    (slave->link_interface != XGMII_LINK_MAC_PHY)))
+ 			netif_carrier_off(ndev);
  	}
  
- 	phy_link_state = gbe_phy_link_status(slave);
--	link_state = phy_link_state & sgmii_link_state;
-+	link_state = phy_link_state & sw_link_state;
+@@ -2914,6 +2919,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
  
- 	if (atomic_xchg(&slave->link_state, link_state) != link_state)
- 		netcp_ethss_link_state_action(gbe_dev, ndev, slave,
-@@ -3432,6 +3449,8 @@ static int set_gbenu_ethss_priv(struct gbe_priv *gbe_dev,
+ 	slave->open = false;
+ 	if ((slave->link_interface == SGMII_LINK_MAC_PHY) ||
++	    (slave->link_interface == RGMII_LINK_MAC_PHY) ||
+ 	    (slave->link_interface == XGMII_LINK_MAC_PHY))
+ 		slave->phy_node = of_parse_phandle(node, "phy-handle", 0);
+ 	slave->port_num = gbe_get_slave_port(gbe_dev, slave->slave_num);
+@@ -3076,6 +3082,9 @@ static void init_secondary_ports(struct gbe_priv *gbe_dev,
+ 	if (slave->link_interface == SGMII_LINK_MAC_PHY) {
+ 		phy_mode = PHY_INTERFACE_MODE_SGMII;
+ 		slave->phy_port_t = PORT_MII;
++	} else if (slave->link_interface == RGMII_LINK_MAC_PHY) {
++		phy_mode = PHY_INTERFACE_MODE_RGMII;
++		slave->phy_port_t = PORT_MII;
+ 	} else {
+ 		phy_mode = PHY_INTERFACE_MODE_NA;
+ 		slave->phy_port_t = PORT_FIBRE;
+@@ -3083,6 +3092,7 @@ static void init_secondary_ports(struct gbe_priv *gbe_dev,
  
- 	/* Subsystem registers */
- 	GBENU_SET_REG_OFS(gbe_dev, ss_regs, id_ver);
-+	/* ok to set for MU, but used by 2U only */
-+	GBENU_SET_REG_OFS(gbe_dev, ss_regs, rgmii_status);
- 
- 	/* Switch module registers */
- 	GBENU_SET_REG_OFS(gbe_dev, switch_regs, id_ver);
+ 	for_each_sec_slave(slave, gbe_dev) {
+ 		if ((slave->link_interface != SGMII_LINK_MAC_PHY) &&
++		    (slave->link_interface != RGMII_LINK_MAC_PHY) &&
+ 		    (slave->link_interface != XGMII_LINK_MAC_PHY))
+ 			continue;
+ 		slave->phy =
 -- 
 1.9.1
