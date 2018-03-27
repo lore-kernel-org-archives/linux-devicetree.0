@@ -1,47 +1,122 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 1/8] ARM: davinci: dts: make psc0 a reset provider
-Date: Tue, 27 Mar 2018 11:20:24 +0200
-Message-ID: <20180327092031.11251-2-brgl@bgdev.pl>
-References: <20180327092031.11251-1-brgl@bgdev.pl>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 3/3] ARM64: dts: meson: fix clock source of the pclk for
+ UART_AO
+Date: Tue, 27 Mar 2018 11:20:50 +0200
+Message-ID: <1522142450.2632.41.camel@baylibre.com>
+References: <20180326081809.49493-1-yixun.lan@amlogic.com>
+         <20180326081809.49493-4-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180327092031.11251-1-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180326081809.49493-4-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 2018-03-26 at 16:18 +0800, Yixun Lan wrote:
+> From the hardware perspective, the clk81 is the parent of
+> the UART_AO clocks. So it make more sense to mark
+> the CLKID_AO_UART1/2 as the pclk.
+> 
+> Previous we had flag=CLK_IGNORE_UNUSED in AO clock driver.
+> This will make kernel leave clock as it is while bootloader
+> set the clock on.
+> 
 
-The psc driver registers with the reset framework as a provider. Add
-the #reset-cells property to the psc0 node.
+Hi Yixun,
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/boot/dts/da850.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+I'm not sure I understand your description correctly so I'll phrase. Please tell
+me if I misunderstood something
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index a3b9a99b43ca..dad64dbf1f23 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -123,6 +123,7 @@
- 			compatible = "ti,da850-psc0";
- 			reg = <0x10000 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
- 			clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
- 				 <&pll0_sysclk 4>, <&pll0_sysclk 6>,
--- 
-2.16.1
+The actual pclk of the AO uarts is the corresponding clkc_ao uart gate, not the
+main clock controller clk81. This was not problem so far, because the uart_gate
+had the CLK_IGNORE_UNUSED flag, which kept the gate open.
+
+In another patch, you removed this flag, so you need to give the correct clock
+in DT to make things work again ? right ?
+
+If I got it correctly, please rephrase the description a bit.
+Also you need to be careful in which order patches get merged.
+
+1. You need the clkc_ao in place, exporting CLKID_AO_UARTx with
+CLK_IGNORE_UNUSED.
+
+2. This patch can be merged (still with CLK_IGNORE_UNUSED)
+
+3. Once the DT patch have reached mainline, you should a patch to remove to
+CLK_IGNORE_UNUSED flag
+
+This way, we avoid breaking bisect, with revision where CLKID_AO_UARTx would get
+disabled by the CCF clk_disable_unused() mechanism while the UART driver does
+not claim the appropriate clock.
+
+
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 48584d5a329b..e538e2448bb5 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -533,7 +533,7 @@
+>  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+>  				reg = <0x0 0x3000 0x0 0x18>;
+>  				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
+> -				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
+>  				clock-names = "xtal", "pclk", "baud";
+>  				status = "disabled";
+>  			};
+> @@ -542,7 +542,7 @@
+>  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+>  				reg = <0x0 0x4000 0x0 0x18>;
+>  				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
+> -				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
+>  				clock-names = "xtal", "pclk", "baud";
+>  				status = "disabled";
+>  			};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 3290a4dc3522..a458ea50c2ef 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -783,12 +783,12 @@
+>  };
+>  
+>  &uart_AO {
+> -	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
+>  	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+>  &uart_AO_B {
+> -	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
+>  	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> index 4f355f17eed6..474f4f9630e4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> @@ -733,12 +733,12 @@
+>  };
+>  
+>  &uart_AO {
+> -	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART1>, <&xtal>;
+>  	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+>  &uart_AO_B {
+> -	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
+>  	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
