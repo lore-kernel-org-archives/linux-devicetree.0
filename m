@@ -1,74 +1,64 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
- USB3 PHY_STATUS
-Date: Tue, 27 Mar 2018 10:37:08 +0530
-Message-ID: <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v4 0/8] ARM: davinci: complete the conversion to using the
+ reset framework
+Date: Tue, 27 Mar 2018 10:54:54 +0530
+Message-ID: <44218403-5e7f-dd12-6d01-a52987fc4cc8@ti.com>
+References: <20180323130455.11470-1-brgl@bgdev.pl>
+ <152182378792.178046.3747112581117251857@swboyd.mtv.corp.google.com>
+ <CAMRc=MfEebDk4D=t-ybRgbn+HaY7RUfOFCDAf9H8F3cZRchJmA@mail.gmail.com>
+ <152182490783.178046.1191965992600877708@swboyd.mtv.corp.google.com>
+ <CAMRc=MdmTAwPAAnL1+n+OXSycnyjuQ1hKmts158mPcgat1NUYQ@mail.gmail.com>
+ <c78817f9-02fd-0ded-609e-5014efdd4a77@ti.com>
+ <0683b11c-fefa-5fc7-793e-1a662a5f0480@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0683b11c-fefa-5fc7-793e-1a662a5f0480@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>Vivek Gautam <vivek.gautam@codeaurora.org>, anischal@codeaurora.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-remoteproc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+Hi Suman,
 
+On Tuesday 27 March 2018 06:12 AM, Suman Anna wrote:
+> I tried booting your tree [3] on the OMAPL138-LCDK board. I am using
+> NFS, and I am unable to get to the console. I don't have any issues
+> booting latest -next branch (next-20180326) which only has the reset and
+> clock driver related changes.
+> 
+> Here's the log towards the end of the boot..
+> ---
+> pinctrl-single 1c14120.pinmux: 160 pins, size 80
+> Serial: 8250/16550 driver, 3 ports, IRQ sharing disabled
+> console [ttyS2] disabled
+> 1d0d000.serial: ttyS2 at MMIO 0x1d0d000 (irq = 61, base_baud = 8250000)
+> is a TI DA8xx/66AK2x
+> console [ttyS2] enabled
+> brd: module loaded
+> libphy: Fixed MDIO Bus: probed
+> davinci_mdio 1e24000.mdio: davinci mdio revision 1.5, bus freq 2200000
+> davinci_mdio 1e24000.mdio: no live phy, scanning all
+> davinci_mdio: probe of 1e24000.mdio failed with error -5
+> i2c /dev entries driver
+> <nothing after this>
 
-On 3/27/2018 9:56 AM, Doug Anderson wrote:
-> Manu
->
-> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
->> to take place. This clock is output from PHY to GCC clock_ctl and then
->> fed back to QMP PHY and is available from PHY only after PHY is reset
->> and initialized, hence it can't be enabled too early in initialization
->> sequence.
->>
->> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
->>  1 file changed, 32 insertions(+), 1 deletion(-)
-> So it's now new with this patch, but it's more obvious with this
-> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
-> controls its clock.  Specifically:
->
-> * If you init the PHY but don't power it on, then you "exit" the PHY:
-> you'll disable/unprepare "pipe_clk" even though you never
-> prepare/enabled it.
->
-> * If you init the PHY, power it on, power it off, power it on, and
-> exit the PHY: you'll leave the clock prepared one extra time.
->
-> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
-> symmetric with the enable/prepare and should be in "power off", not in
-> exit.
->
-> ...or did I miss something?
->
->
-> Interestingly, your patch fixes this problem for USB3 (where init/exit
-> are now symmetric), but leaves the problem there for UFS/PCIE.
->
+This is because of a bug in bootloader PLL configuration which got
+uncovered only with CCF conversion. The bootloader that comes
+pre-flashed with the board or the latest U-Boot master should work fine.
 
-Thanks for review.
-One of the reason why pipe_clk is disabled as part of phy_exit is that
-halt_check from clk_disable reports error if called after PHY has been
-powered down or phy_exit.
-I believe that warning should be ignored in qcom gcc-clock driver
-(for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
-for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
+Here is the log with latest U-Boot master:
+https://pastebin.ubuntu.com/p/HkwY9g4YDc/
 
-I can implement that as separate patch once dependent gcc driver
-patch(es) gets in. Would that be ok?
-
--Manu
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+Sekhar
