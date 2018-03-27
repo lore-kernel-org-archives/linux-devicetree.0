@@ -1,119 +1,127 @@
-From: =?iso-8859-2?Q?Vicen=FEiu_Galanopulo?=
-        <vicentiu.galanopulo@nxp.com>
-Subject: RE: [RFC PATCH v2] net: phy: Added device tree binding for dev-addr
- and dev-addr code check-up
-Date: Tue, 27 Mar 2018 08:10:35 +0000
-Message-ID: <HE1PR0402MB3578B3D33160EBE59C2FD7D7EEAC0@HE1PR0402MB3578.eurprd04.prod.outlook.com>
-References: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
- <20180326222509.ppt5aqzqdarhm44d@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] Re: [PATCH 2/7] dt-bindings: add binding for the
+ Allwinner A64 DE2 bus
+Date: Tue, 27 Mar 2018 10:11:31 +0200
+Message-ID: <20180327081131.hd652vkhohez2hcc@flea>
+References: <20180316175354.21437-1-icenowy@aosc.io>
+ <20180320184646.dynqv6qubzabroe4@flea>
+ <AAC74653-C6EB-4BE3-BB19-210687C1E158@aosc.io>
+ <2866474.lRHIcLtROC@jernej-laptop>
+ <9520BDDE-BFE3-4220-B48D-01A00CFA94DE@aosc.io>
+ <20180326222258.uxpgj4bk4pg56b7o@rob-hp-laptop>
+ <9A6A8961-D45C-4033-962E-83CCE8F01651@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l7cgdzalfbw6gs6o"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326222509.ppt5aqzqdarhm44d@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9A6A8961-D45C-4033-962E-83CCE8F01651@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, jernej.skrabec@siol.net, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--l7cgdzalfbw6gs6o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, March 27, 2018 1:25 AM
-> To: Vicen=FEiu Galanopulo <vicentiu.galanopulo@nxp.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> mark.rutland@arm.com; davem@davemloft.net; marcel@holtmann.org;
-> devicetree@vger.kernel.org; Madalin-cristian Bucur <madalin.bucur@nxp.com=
->;
-> Alexandru Marginean <alexandru.marginean@nxp.com>
-> Subject: Re: [RFC PATCH v2] net: phy: Added device tree binding for dev-a=
-ddr
-> and dev-addr code check-up
+On Tue, Mar 27, 2018 at 07:31:18AM +0800, Icenowy Zheng wrote:
 >=20
-> On Fri, Mar 23, 2018 at 10:05:22AM -0500, Vicentiu Galanopulo wrote:
-> > Reason for this patch is that the Inphi PHY has a vendor specific
-> > address space for accessing the
-> > C45 MDIO registers - starting from 0x1e.
-> >
-> > A search of the dev-addr property is done in of_mdiobus_register.
-> > If the property is found in the PHY node,
-> > of_mdiobus_register_static_phy is called. This is a wrapper function
-> > for of_mdiobus_register_phy which finds the device in package based on
-> > dev-addr and fills devices_addrs:
-> > devices_addrs is a new field added to phy_c45_device_ids.
-> > This new field will store the dev-addr property on the same index
-> > where the device in package has been found.
-> > In order to have dev-addr in get_phy_c45_ids(), mdio_c45_ids is passed
-> > from of_mdio.c to phy_device.c as an external variable.
-> > In get_phy_device a copy of the mdio_c45_ids is done over the local
-> > c45_ids (wich are empty). After the copying, the c45_ids will also
-> > contain the static device found from dev-addr.
-> > Having dev-addr stored in devices_addrs, in get_phy_c45_ids(), when
-> > probing the identifiers, dev-addr can be extracted from devices_addrs
-> > and probed if devices_addrs[current_identifier] is not 0.
-> > This way changing the kernel API is avoided completely.
-> >
-> > As a plus to this patch, num_ids in get_phy_c45_ids, has the value 8
-> > (ARRAY_SIZE(c45_ids->device_ids)),
-> > but the u32 *devs can store 32 devices in the bitfield.
-> > If a device is stored in *devs, in bits 32 to 9, it will not be found.
-> > This is the reason for changing in phy.h, the size of device_ids
-> > array.
-> >
-> > Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/phy.txt |  6 ++
 >=20
-> Please split bindings to separate patch.
-
-=20
-Thanks Rob for your comments. I was considering doing that after I reach a =
-more stable, non-RFC version of the patch. I also added a v3, before
-your comments, I think... so in the next one, v4, I will split the binding =
-to a separate patch.
-
-
->=20
-> >  drivers/net/phy/phy_device.c                  | 22 +++++-
-> >  drivers/of/of_mdio.c                          | 98 +++++++++++++++++++=
-+++++++-
-> >  include/linux/phy.h                           |  5 +-
-> >  4 files changed, 125 insertions(+), 6 deletions(-)
+> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+6:22:58, Rob Herring <robh@kernel.org> =E5=86=99=E5=88=B0:
+> >On Thu, Mar 22, 2018 at 02:08:43PM +0800, Icenowy Zheng wrote:
+> >>=20
+> >>=20
+> >> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
+=881:13:42, "Jernej =C5=A0krabec"
+> ><jernej.skrabec@siol.net> =E5=86=99=E5=88=B0:
+> >> >Hi all,
+> >> >
+> >> >Dne sreda, 21. marec 2018 ob 03:18:13 CET je Icenowy Zheng
+> >napisal(a):
+> >> >> =E4=BA=8E 2018=E5=B9=B43=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=
+=8D=882:46:46, Maxime Ripard
+> >> ><maxime.ripard@bootlin.com>=20
+> >> >=E5=86=99=E5=88=B0:
+> >> >> >On Sat, Mar 17, 2018 at 01:53:49AM +0800, Icenowy Zheng wrote:
+> >> >> >> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64
+> >> >SoC
+> >> >> >
+> >> >> >to
+> >> >> >
+> >> >> >> be claimed, otherwise the whole DE2 space is inaccessible.
+> >> >> >>=20
+> >> >> >> Add a device tree binding of the DE2 part as a sub-bus.
+> >> >> >
+> >> >> >Where did you get the info that it was a bus?
+> >> >>=20
+> >> >> There's no direct evidence, just some guess.
+> >> >>=20
+> >> >> The DE2 is a whole part that is just allocated a memory
+> >> >> space at the user manual, and the SRAM controls the
+> >> >> access to all modules in the DE2.
+> >> >>=20
+> >> >> So it might be a bus.
+> >> >>=20
+> >> >> Implement it as a bus is a clear representation on A64.
+> >> >
+> >> >Since there is already syscon for same mmio region, we migh as well
+> >use
+> >> >it=20
+> >> >when loading ccu-sun8i-de2 driver on A64.
+> >> >
+> >> >Other options, like SRAM driver or bus driver, might better
+> >represent
+> >> >HW, but=20
+> >>=20
+> >> I think the device tree should properly represent the HW,
+> >> it's a basic requirment.
+> >>=20
+> >> >then we would have two DT nodes covering same mmio region, which I
+> >> >think is=20
+> >> >not really acceptable.
+> >>=20
+> >> It's acceptable, and DE2 is not the only user of SRAM controller so
+> >far.
 > >
-> > diff --git a/Documentation/devicetree/bindings/net/phy.txt
-> > b/Documentation/devicetree/bindings/net/phy.txt
-> > index d2169a5..82692e2 100644
-> > --- a/Documentation/devicetree/bindings/net/phy.txt
-> > +++ b/Documentation/devicetree/bindings/net/phy.txt
-> > @@ -61,6 +61,11 @@ Optional Properties:
-> >  - reset-deassert-us: Delay after the reset was deasserted in microseco=
-nds.
-> >    If this property is missing the delay will be skipped.
-> >
-> > +- dev-addr: If set, it indicates the device address of the PHY to be
-> > +used
-> > +  when accessing the C45 PHY registers over MDIO. It is used for
-> > +vendor specific
-> > +  register space addresses that do no conform to standard address for
-> > +the MDIO
-> > +  registers (e.g. MMD30)
+> >No, it's not acceptable. Don't create overlapping mmio regions in DT.
 >=20
-> This is a 2nd MDIO address, right? Can't you just append this to reg prop=
-erty?
->=20
-> Rob
+> Then should the SRAM controller driver be configured to take the syscon?
 
-Yes, it is a 2nd MDIO address which is coming from the PHY vendor. This add=
-ress cannot be obtained by querying the MDIO bus, it's specified in the PHY=
- datasheet. The current kernel implementation was relying on the fact that =
-this address is in the decimal 0 to 7 range. That worked for the PHYs which=
- already have a kernel driver, but for the new Inphi PHY, which I'm trying =
-to add, it didn't. =20
-If I were to append the dev-addr address to the reg property,  I would have=
- to fit two 32bit variable into a single one... in my opinion the code is c=
-learer having the two addresses as distinct variables.... And so far, the c=
-omments from Andrew or Florian didn't go in this direction.. =20
+We could have a single DT node that would export a syscon yes, just
+like you did for the R40 ethernet case.
 
-Vicentiu
+I'm not sure the SRAM controller itself needs to take the syscon, it
+just can export its own.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--l7cgdzalfbw6gs6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlq5/LIACgkQ0rTAlCFN
+r3Rqsg//bcROXUQWqCJ3N0cm6teljACF1FqkqeO/94ZIlcYMMP30HYKZ+jFU8j8n
+/mp/Mm6pE1X5YT0Jkf0WXeFP0ns9xlF0aNTITEVZ45w682EFqUgOIrxB0vsJTndv
+dYmPpIO9Rb9I5sA04umttMTh1undUL8g90Gy3uDBktcI12C81Bge7ebgbdfOM/Zt
+S08zg/Z5JD5OrF7ojggNKnJUg+hSDTAB/zB7URAIj8fuNlP5TMdEkZRV1LdHrZtd
+2Bz2uwprH8CdoeG/5Jm33cwtYximXvGtFPRkz2f2EAWICYPVTJuQA7QpZ8T8j0hB
+Kwkc+MruItlgPk/3CIGLOjYqR1181OU4N1FpwOhfGvXtNv+UhmReUwbhqJGCopBy
+leO8XTUq3G1w/X3xgLSTPCUe47akV2EAkAGMWBoOf4bopVkHE8Th4OV0mpo3ntjl
+KZJvWjGpPv3O61m3Rqw5ZEFxtO7t9xPiR/Ix4iif8lrZaWRMqVbuBQknwS7+oJbf
+ilm2+MJkZfN8rZ6RsjNYgpQVkJ5cScdf7n3iJ1ziGQX592OZfjzQORMMusvrJBhX
+Rusk68z8Ge8ZKrgZ92pB5k/PYFniUlSjBjzHMXUjKnJKDY5BR94c7k7n3G8qJS4p
+Zgl+H4c42Q2TIX4esUklJNcBCkzb1gXsVv5YGGVePlksP6FoiEg=
+=yP6i
+-----END PGP SIGNATURE-----
+
+--l7cgdzalfbw6gs6o--
