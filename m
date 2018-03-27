@@ -1,97 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 2/3] dt-bindings: net: bluetooth: Add
- qualcomm-bluetooth
-Date: Tue, 27 Mar 2018 11:47:22 -0700
-Message-ID: <20180327184722.GB18510@minitux>
-References: <20180320032331.29865-1-thierry.escande@linaro.org>
- <20180320032331.29865-3-thierry.escande@linaro.org>
- <FAC61078-6298-47A7-A51C-73D72BEF6E4A@holtmann.org>
- <20180326225106.GC1403@tuxbook-pro>
- <2e0db4b4-80cc-9a5b-9e0a-812f1bc9fbcf@linaro.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [net-next PATCH v2 03/10] net: netcp: ethss: make call to
+ gbe_sgmii_config() conditional
+Date: Tue, 27 Mar 2018 15:20:46 -0400
+Message-ID: <98f5d69b-5b2f-bf50-09ca-026b4c1ed15e@ti.com>
+References: <1522168309-12338-1-git-send-email-m-karicheri2@ti.com>
+ <1522168309-12338-4-git-send-email-m-karicheri2@ti.com>
+ <20180327171343.GN5862@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2e0db4b4-80cc-9a5b-9e0a-812f1bc9fbcf@linaro.org>
+In-Reply-To: <20180327171343.GN5862@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 27 Mar 08:56 PDT 2018, Thierry Escande wrote:
+On 03/27/2018 01:13 PM, Andrew Lunn wrote:
+> On Tue, Mar 27, 2018 at 12:31:42PM -0400, Murali Karicheri wrote:
+>> As a preparatory patch to add support for 2u cpsw hardware found on
+>> K2G SoC, make call to gbe_sgmii_config() conditional. This is required
+>> since 2u uses RGMII interface instead of SGMII and to allow for driver
+>> re-use.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>>  drivers/net/ethernet/ti/netcp_ethss.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+>> index 56dbc0b..1dea891 100644
+>> --- a/drivers/net/ethernet/ti/netcp_ethss.c
+>> +++ b/drivers/net/ethernet/ti/netcp_ethss.c
+>> @@ -2271,7 +2271,8 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
+>>  
+>>  	void (*hndlr)(struct net_device *) = gbe_adjust_link;
+>>  
+>> -	gbe_sgmii_config(priv, slave);
+>> +	if ((priv->ss_version == GBE_SS_VERSION_14) || IS_SS_ID_NU(priv))
+>> +		gbe_sgmii_config(priv, slave);
+> 
+> Hi Murali
+> 
+> So you have:
+> 
+> #define IS_SS_ID_NU(d) \
+> 	(GBE_IDENT((d)->ss_version) == GBE_SS_ID_NU)
+> 
+> 
+> Does version 14 have a name? Could you add another IS_SS_ID_XX(d)
+> macro for it? That would make these statements more consistent.
+> 
+unfortunately not being the first version :)
 
-> Hi Bjorn,
-> 
-> On 27/03/2018 00:51, Bjorn Andersson wrote:
-> > On Tue 20 Mar 23:58 HKT 2018, Marcel Holtmann wrote:
-> > > > Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-> > [..]
-> > > > + - clocks: clock phandle for SUSCLK_32KHZ
-> > > 
-> > > if I compare this with broadcom-bluetooth.txt or ti-bluetooth.txt then
-> > > besides compatible, everything else is optional. The
-> > > nokia-bluetooth.txt has everything required, but that is also a really
-> > > specific platform.
-> > > 
-> > > Can we be less restrictive for a QCA general purpose chip?
-> > > 
-> > 
-> > The way we deal with this in other bindings is that we tie such
-> > requirements to the compatible; i.e. we would say that qcom,qca6174-bt
-> > requires a clock and we would have something like qcom,qca-bt that makes
-> > it optional.
-> > 
-> > The beauty of this is that the driver will tell you if you forgot to
-> > specify the clock when it actually is required, which saves you
-> > considerable amount of debugging time.
-> > 
-> > 
-> > NB. The way the bcm driver handles this is insufficient, as it treats
-> > any error from clk_get as "there's no clock specified". The driver
-> > should accept a clock not being specified, but should fail properly when
-> > a clock is specified but can't be acquired (e.g. due to clk_get()
-> > returning EPROBE_DEFER).
-> > 
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +serial@7570000 {
-> > > > +	pinctrl-names = "default", "sleep";
-> > > > +	pinctrl-0 = <&blsp1_uart1_default>;
-> > > > +	pinctrl-1 = <&blsp1_uart1_sleep>;
-> > > > +
-> > > > +	bluetooth {
-> > > > +		compatible = "qcom,qca6174-bt";
-> > > > +
-> > > > +		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-> > > > +
-> > > > +		pinctrl-names = "default";
-> > > > +		pinctrl-0 = <&bt_en_pin_a>;
-> > > 
-> > > This one I do not understand and you might want to shed some light
-> > > into why this is done that way.
-> > > 
-> > 
-> > This is completely generic and only relates to getting the electrical
-> > properties of the gpio pin set up correctly. So I would recommend that
-> > we omit this from the binding and example (including the pinctrl
-> > properties for the serial above).
-> 
-> If I remove the pinctrl entry in the bluetooth node, the gpio19 is then
-> marked as unclaimed. The drive strength also defaults to low but that
-> doesn't seem to be an issue and the the chip can still be enabled through
-> gpio19. Is it ok to have it unclaimed? If so I can remove it from the
-> binding and the doc then.
-> 
-> Regarding the blsp1_uart1_default of the serial node, I can still enable the
-> chip if I remove it but the hci commands all end in timeout. It seems that
-> the function for these pins has to be explicitly set to blsp_uart2. So at
-> least, the default pinctrl seems mandatory.
+Probably we can add
+
+#define IS_SS_ID_VER_14(d) \
+	(GBE_IDENT((d)->ss_version) == GBE_SS_VERSION_14)
+
+and replace all instances of (priv->ss_version == GBE_SS_VERSION_14) with
+	if (IS_SS_ID_VER_14(priv)) or equivalent. 
+
+
+> 	Andrew
 > 
 
-Our board needs these properties to get the uart and gpio in the right
-state, but this is unrelated to BT - that's why I suggested that you
-omit these properties from the BT binding.
 
-Regards,
-Bjorn
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
