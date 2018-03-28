@@ -1,519 +1,305 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Wed, 28 Mar 2018 15:03:42 -0500
-Message-ID: <CANk1AXQyZdoxXnLTtwR0fkYjgdB36XABQSwdxk6eQoQJtLC80w@mail.gmail.com>
-References: <1521808032-29645-1-git-send-email-p.pisati@gmail.com>
- <1521808032-29645-3-git-send-email-p.pisati@gmail.com> <CANk1AXRAXQ8cURb+ObS5SpaBKQLdoFFB6nmLTnmA1gQowmoVbw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/4] dt-bindings: mfd: Add Gateworks System Controller
+ bindings
+Date: Wed, 28 Mar 2018 13:23:21 -0700
+Message-ID: <20180328202321.GA21664@roeck-us.net>
+References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
+ <1522250043-8065-2-git-send-email-tharvey@gateworks.com>
+ <20180328162416.GB25325@roeck-us.net>
+ <CAJ+vNU2aUN4ME3+RA3DNPO75O6vPBcQpuRSfQJ4_Ns_zQAtCCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXRAXQ8cURb+ObS5SpaBKQLdoFFB6nmLTnmA1gQowmoVbw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU2aUN4ME3+RA3DNPO75O6vPBcQpuRSfQJ4_Ns_zQAtCCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 11:26 AM, Alan Tull <atull@kernel.org> wrote:
-> On Fri, Mar 23, 2018 at 7:27 AM, Paolo Pisati <p.pisati@gmail.com> wrote:
->
-> Hi Paolo,
+On Wed, Mar 28, 2018 at 12:17:34PM -0700, Tim Harvey wrote:
+> On Wed, Mar 28, 2018 at 9:24 AM, Guenter Roeck <linux@roeck-us.net> wrote:
+> > On Wed, Mar 28, 2018 at 08:14:00AM -0700, Tim Harvey wrote:
+> >> This patch adds documentation of device-tree bindings for the
+> >> Gateworks System Controller (GSC).
+> >>
+> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> >> ---
+> >> v3:
+> >>  - replaced _ with -
+> >>  - remove input bindings
+> >>  - added full description of hwmon
+> >>  - fix unit address of hwmon child nodes
+> >>
+> >> ---
+> >>  .../devicetree/bindings/mfd/gateworks-gsc.txt      | 135 +++++++++++++++++++++
+> >>  1 file changed, 135 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt b/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
+> >> new file mode 100644
+> >> index 0000000..8f530ed
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
+> >> @@ -0,0 +1,135 @@
+> >> +Gateworks System Controller multi-function device
+> >> +
+> >> +The GSC is a Multifunction I2C slave device with the following submodules:
+> >> +- WDT
+> >> +- GPIO
+> >> +- Pushbutton controller
+> >> +- HWMON
+> >> +
+> >> +Required properties:
+> >> +- compatible : Must be "gw,gsc"
+> >> +- reg: I2C address of the device
+> >> +- interrupts: interrupt triggered by GSC_IRQ# signal
+> >> +- interrupt-parent: Interrupt controller GSC is connected to
+> >> +- #interrupt-cells: should be <1>, index of the interrupt within the
+> >> +  controller, in accordance with the "one cell" variant of
+> >> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
+> >> +
+> >> +Optional nodes:
+> >> +* watchdog:
+> >> +The GSC provides a Watchdog monitor which can power cycle the board's
+> >> +primary power supply on most board models when tripped.
+> >> +
+> >> +Required watchdog properties:
+> >> +- compatible: must be "gw,gsc-watchdog"
+> >> +
+> >> +* hwmon:
+> >> +The GSC provides a set of Analog to Digitcal Converter (ADC) pins used for
+> >> +temperature and/or voltage monitoring.
+> >> +
+> >> +Required hwmon properties:
+> >> +- compatible: must be "gw,gsc-hwmon"
+> >> +
+> >
+> > "hwmon" is a very Linux specific term. It might make sense to find a more
+> > generic term.
+> 
+> The 'hwmon' driver supports child nodes that fall into the following category:
+>  - temperature sensor (GSC internal temperature sensor - i2c registers
+> returns value in C*10)
+>  - voltage rails (two types here; cooked: i2c registers return
+> pre-scaled value in mV), raw: i2c registers return a raw ADC value
+> that must be scaled based on ADC internal ref voltage and resolution
+> and adjusted for a voltage divider to convert to mV
+>  - fan setpoints (I'll explain these below)
+> 
+> I called the node 'gw,gsc-hwmon' because the driver fits into the
+> 'hwmon' API. Isn't that appropriate here for the driver compatible
+> string?
+> 
 
-One more thing.  The api for registering a FPGA manager is changing.
-It won't be hard to adapt.  I've pushed a branch that includes the
-patches that add this change.  Please rebase on top of that branch so
-your patch can go in on top of that.
+Devicetree properties are supposed to be OS independent.
 
-My git repo is at:
-git://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git
+> >
+> >> +Optional hwmon properties:
+> >> +- gw,reference-voltage: ADC reference voltage (mV) used in scaling raw ADCs
+> >
+> > AFAIK devicetree likes to specify voltages in uV.
+> 
+> There are currently plenty of dt props specified in mV (grep -r mV
+> Documentation/devicetree/bindings/).
+> 
 
-The branch name is
-for-review-next-20180327-drvdata-v3
+"But so many others are speeding, why do I get a ticket ?"
 
-Alan
+Please discuss with Rob.
 
->
-> Looking good.  A few things below.  Also, when you post, please use
-> the '-v' parameter of 'git format-patch' to add the version to the
-> subject line such as [PATCH v9].
->
->> This patch adds support to the FPGA manager for programming
->> MachXO2 device’s internal flash memory, via slave SPI.
->>
->> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
->> ---
->>  drivers/fpga/Kconfig       |   8 +
->>  drivers/fpga/Makefile      |   1 +
->>  drivers/fpga/machxo2-spi.c | 388 +++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 397 insertions(+)
->>  create mode 100644 drivers/fpga/machxo2-spi.c
->>
->> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
->> index ad5448f..65ccbc5 100644
->> --- a/drivers/fpga/Kconfig
->> +++ b/drivers/fpga/Kconfig
->> @@ -38,6 +38,14 @@ config FPGA_MGR_ALTERA_PS_SPI
->>           FPGA manager driver support for Altera Arria/Cyclone/Stratix
->>           using the passive serial interface over SPI.
->>
->> +config FPGA_MGR_MACHXO2_SPI
->> +       tristate "Lattice MachXO2 SPI"
->> +       depends on SPI
->> +       help
->> +         FPGA manager driver support for Lattice MachXO2 configuration
->> +         over slave SPI interface.
->> +
->> +
->
-> Please move this section after FPGA_MGR_ICE40_SPI.  That keeps the two
-> lattice drivers together in the Kconfig.  You may need to rebase your
-> driver to go onto linux-next.
->
-> Also, please delete the extra line feed above.
->
->>  config FPGA_MGR_SOCFPGA
->>         tristate "Altera SOCFPGA FPGA Manager"
->>         depends on ARCH_SOCFPGA || COMPILE_TEST
->> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
->> index f98dcf1..38abb08 100644
->> --- a/drivers/fpga/Makefile
->> +++ b/drivers/fpga/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA)                    += fpga-mgr.o
->>  obj-$(CONFIG_FPGA_MGR_ALTERA_CVP)      += altera-cvp.o
->>  obj-$(CONFIG_FPGA_MGR_ALTERA_PS_SPI)   += altera-ps-spi.o
->>  obj-$(CONFIG_FPGA_MGR_ICE40_SPI)       += ice40-spi.o
->> +obj-$(CONFIG_FPGA_MGR_MACHXO2_SPI)     += machxo2-spi.o
->>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
->>  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)     += socfpga-a10.o
->>  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
->> diff --git a/drivers/fpga/machxo2-spi.c b/drivers/fpga/machxo2-spi.c
->> new file mode 100644
->> index 0000000..6a5c5c7
->> --- /dev/null
->> +++ b/drivers/fpga/machxo2-spi.c
->> @@ -0,0 +1,388 @@
->> +// SPDX-License-Identifier: GPL-2.0
->
-> The above line is good but...
->
->> +// Lattice MachXO2 Slave SPI Driver
->> +//
->> +// Manage Lattice FPGA firmware that is loaded over SPI using
->> +// the slave serial configuration interface.
->> +//
->> +// Copyright (C) 2018 Paolo Pisati <p.pisati@gmail.com>
->
-> This stuff should be as:
-> /*
->  * some stuff
->  * more stuff
->  */
->
->> +
->> +//#define DEBUG
->
-> Please remove the //#define DEBUG
->
->> +
->> +#include <linux/delay.h>
->> +#include <linux/fpga/fpga-mgr.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/spi/spi.h>
->> +
->> +/* MachXO2 Programming Guide - sysCONFIG Programming Commands */
->> +#define IDCODE_PUB                     {0xe0, 0x00, 0x00, 0x00}
->> +#define ISC_ENABLE                     {0xc6, 0x08, 0x00, 0x00}
->> +#define ISC_ERASE                      {0x0e, 0x04, 0x00, 0x00}
->> +#define ISC_PROGRAMDONE                {0x5e, 0x00, 0x00, 0x00}
->> +#define LSC_INITADDRESS                {0x46, 0x00, 0x00, 0x00}
->> +#define LSC_PROGINCRNV         {0x70, 0x00, 0x00, 0x01}
->> +#define LSC_READ_STATUS                {0x3c, 0x00, 0x00, 0x00}
->> +#define LSC_REFRESH                    {0x79, 0x00, 0x00, 0x00}
->> +
->> +/*
->> + * Max CCLK in Slave SPI mode according to 'MachXO2 Family Data
->> + * Sheet' sysCONFIG Port Timing Specifications (3-36)
->> + */
->> +#define MACHXO2_MAX_SPEED                      66000000
->> +
->> +#define MACHXO2_LOW_DELAY                      5               /* us */
->
-> I'd prefer MACHXO2_LOW_DELAY_USEC so that you don't need the comment
-> here and it's clear in the rest of the driver.  Same for the next two.
->
->> +#define MACHXO2_HIGH_DELAY                     200             /* us */
->> +#define MACHXO2_REFRESH                                4800    /* us */
->> +#define MACHXO2_MAX_BUSY_LOOP          128
->> +#define MACHXO2_MAX_REFRESH_LOOP       16
->> +
->> +#define MACHXO2_PAGE_SIZE                      16
->> +#define MACHXO2_BUF_SIZE                       (MACHXO2_PAGE_SIZE + 4)
->> +
->> +/* Status register bits, errors and error mask */
->> +#define BUSY   12
->> +#define DONE   8
->> +#define DVER   27
->> +#define ENAB   9
->> +#define ERRBITS        23
->> +#define ERRMASK        7
->> +#define FAIL   13
->> +
->> +#define ENOERR 0 /* no error */
->> +#define EID            1
->> +#define ECMD   2
->> +#define        ECRC    3
->> +#define EPREAM 4 /* preamble error */
->> +#define EABRT  5 /* abort error */
->> +#define EOVERFL 6 /* overflow error */
->> +#define ESDMEOF 7 /* SDM EOF */
->> +
->> +static inline u8 get_err(unsigned long *status)
->> +{
->> +       return (*status >> ERRBITS) & ERRMASK;
->> +}
->> +
->> +static int get_status(struct spi_device *spi, unsigned long *status)
->> +{
->> +       struct spi_message msg;
->> +       struct spi_transfer rx, tx;
->> +       static const u8 cmd[] = LSC_READ_STATUS;
->> +       int ret;
->> +
->> +       memset(&rx, 0, sizeof(rx));
->> +       memset(&tx, 0, sizeof(tx));
->> +       tx.tx_buf = cmd;
->> +       tx.len = sizeof(cmd);
->> +       rx.rx_buf = status;
->> +       rx.len = 4;
->> +       spi_message_init(&msg);
->> +       spi_message_add_tail(&tx, &msg);
->> +       spi_message_add_tail(&rx, &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               return ret;
->> +
->> +       *status = be32_to_cpu(*status);
->
-> Add a line feed before returning.
->
->> +       return 0;
->> +}
->> +
->> +#ifdef DEBUG
->> +static const char *get_err_string(u8 err)
->> +{
->> +       switch (err) {
->> +       case ENOERR:    return "No Error";
->> +       case EID:               return "ID ERR";
->> +       case ECMD:              return "CMD ERR";
->> +       case ECRC:              return "CRC ERR";
->> +       case EPREAM:    return "Preamble ERR";
->> +       case EABRT:             return "Abort ERR";
->> +       case EOVERFL:   return "Overflow ERR";
->> +       case ESDMEOF:   return "SDM EOF";
->> +       }
->
-> Line feed before returning
->
->> +       return "Default switch case";
->> +}
->> +#endif
->> +
->> +static void dump_status_reg(unsigned long *status)
->> +{
->> +#ifdef DEBUG
->> +       pr_debug("machxo2 status: 0x%08lX - done=%d, cfgena=%d, busy=%d, fail=%d, devver=%d, err=%s\n",
->> +               *status, test_bit(DONE, status), test_bit(ENAB, status),
->> +               test_bit(BUSY, status), test_bit(FAIL, status),
->> +               test_bit(DVER, status), get_err_string(get_err(status)));
->
-> Please align the the 3 lines after the pr_debug to match the above parentheses.
->
->> +#endif
->> +}
->> +
->> +static int wait_until_not_busy(struct spi_device *spi)
->> +{
->> +       unsigned long status;
->> +       int ret, loop = 0;
->> +
->> +       do {
->> +               ret = get_status(spi, &status);
->> +               if (ret)
->> +                       return ret;
->> +               if (++loop >= MACHXO2_MAX_BUSY_LOOP)
->> +                       return -EBUSY;
->> +       } while (test_bit(BUSY, &status));
->> +
->> +       return 0;
->> +}
->> +
->> +static int machxo2_cleanup(struct fpga_manager *mgr)
->> +{
->> +       struct spi_device *spi = mgr->priv;
->> +       struct spi_message msg;
->> +       struct spi_transfer tx[2];
->> +       static const u8 erase[] = ISC_ERASE;
->> +       static const u8 refresh[] = LSC_REFRESH;
->> +       int ret;
->> +
->> +       memset(tx, 0, sizeof(tx));
->> +       spi_message_init(&msg);
->> +       tx[0].tx_buf = &erase;
->> +       tx[0].len = sizeof(erase);
->> +       spi_message_add_tail(&tx[0], &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       ret = wait_until_not_busy(spi);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       spi_message_init(&msg);
->> +       tx[1].tx_buf = &refresh;
->> +       tx[1].len = sizeof(refresh);
->> +       tx[1].delay_usecs = MACHXO2_REFRESH;
->> +       spi_message_add_tail(&tx[1], &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       return 0;
->> +fail:
->> +       dev_err(&mgr->dev, "Cleanup failed\n");
->> +       return ret;
->> +}
->> +
->> +static enum fpga_mgr_states machxo2_spi_state(struct fpga_manager *mgr)
->> +{
->> +       return FPGA_MGR_STATE_UNKNOWN;
->
-> If you have a way of reporting whether the FPGA is in operating state
-> or some error state, etc here, that would be nice.
->
->> +}
->> +
->> +static int machxo2_write_init(struct fpga_manager *mgr,
->> +                             struct fpga_image_info *info,
->> +                             const char *buf, size_t count)
->> +{
->> +       struct spi_device *spi = mgr->priv;
->> +       struct spi_message msg;
->> +       struct spi_transfer tx[3];
->> +       static const u8 enable[] = ISC_ENABLE;
->> +       static const u8 erase[] = ISC_ERASE;
->> +       static const u8 initaddr[] = LSC_INITADDRESS;
->> +       unsigned long status;
->> +       int ret;
->> +
->> +       if ((info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
->> +               dev_err(&mgr->dev,
->> +                       "Partial reconfiguration is not supported\n");
->> +               return -ENOTSUPP;
->> +       }
->> +
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +       memset(tx, 0, sizeof(tx));
->> +       spi_message_init(&msg);
->> +       tx[0].tx_buf = &enable;
->> +       tx[0].len = sizeof(enable);
->> +       tx[0].delay_usecs = MACHXO2_LOW_DELAY;
->> +       spi_message_add_tail(&tx[0], &msg);
->> +
->> +       tx[1].tx_buf = &erase;
->> +       tx[1].len = sizeof(erase);
->> +       spi_message_add_tail(&tx[1], &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       ret = wait_until_not_busy(spi);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       get_status(spi, &status);
->> +       if (test_bit(FAIL, &status))
->> +               goto fail;
->> +       dump_status_reg(&status);
->> +
->> +       spi_message_init(&msg);
->> +       tx[2].tx_buf = &initaddr;
->> +       tx[2].len = sizeof(initaddr);
->> +       spi_message_add_tail(&tx[2], &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +       return 0;
->> +fail:
->> +       dev_err(&mgr->dev, "Error during FPGA init.\n");
->> +       return ret;
->> +}
->> +
->> +static int machxo2_write(struct fpga_manager *mgr, const char *buf,
->> +                        size_t count)
->> +{
->> +       struct spi_device *spi = mgr->priv;
->> +       struct spi_message msg;
->> +       struct spi_transfer tx;
->> +       static const u8 progincr[] = LSC_PROGINCRNV;
->> +       u8 payload[MACHXO2_BUF_SIZE];
->> +       unsigned long status;
->> +       int i, ret;
->> +
->> +       if (count % MACHXO2_PAGE_SIZE != 0) {
->> +               dev_err(&mgr->dev, "Malformed payload.\n");
->> +               return -EINVAL;
->> +       }
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +       memcpy(payload, &progincr, sizeof(progincr));
->> +       for (i = 0; i < count; i += MACHXO2_PAGE_SIZE) {
->> +               memcpy(&payload[sizeof(progincr)], &buf[i], MACHXO2_PAGE_SIZE);
->> +               memset(&tx, 0, sizeof(tx));
->> +               spi_message_init(&msg);
->> +               tx.tx_buf = payload;
->> +               tx.len = MACHXO2_BUF_SIZE;
->> +               tx.delay_usecs = MACHXO2_HIGH_DELAY;
->> +               spi_message_add_tail(&tx, &msg);
->> +               ret = spi_sync(spi, &msg);
->> +               if (ret) {
->> +                       dev_err(&mgr->dev, "Error loading the bitstream.\n");
->> +                       return ret;
->> +               }
->> +       }
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +
->> +       return 0;
->> +}
->> +
->> +static int machxo2_write_complete(struct fpga_manager *mgr,
->> +                                 struct fpga_image_info *info)
->> +{
->> +       struct spi_device *spi = mgr->priv;
->> +       struct spi_message msg;
->> +       struct spi_transfer tx[2];
->> +       static const u8 progdone[] = ISC_PROGRAMDONE;
->> +       static const u8 refresh[] = LSC_REFRESH;
->> +       unsigned long status;
->> +       int ret, refreshloop = 0;
->> +
->> +       memset(tx, 0, sizeof(tx));
->> +       spi_message_init(&msg);
->> +       tx[0].tx_buf = &progdone;
->> +       tx[0].len = sizeof(progdone);
->> +       spi_message_add_tail(&tx[0], &msg);
->> +       ret = spi_sync(spi, &msg);
->> +       if (ret)
->> +               goto fail;
->> +       ret = wait_until_not_busy(spi);
->> +       if (ret)
->> +               goto fail;
->> +
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +       if (!test_bit(DONE, &status)) {
->> +               machxo2_cleanup(mgr);
->> +               goto fail;
->> +       }
->> +
->> +       do {
->> +               spi_message_init(&msg);
->> +               tx[1].tx_buf = &refresh;
->> +               tx[1].len = sizeof(refresh);
->> +               tx[1].delay_usecs = MACHXO2_REFRESH;
->> +               spi_message_add_tail(&tx[1], &msg);
->> +               ret = spi_sync(spi, &msg);
->> +               if (ret)
->> +                       goto fail;
->> +
->> +               /* check refresh status */
->> +               get_status(spi, &status);
->> +               dump_status_reg(&status);
->> +               if (!test_bit(BUSY, &status) && test_bit(DONE, &status) &&
->> +                       get_err(&status) == ENOERR)
->> +                               break;
->
-> The get_err should be aligned with the above parentheses.  Then you
-> can adjust the indentation of the break.
->
->> +               if (++refreshloop == MACHXO2_MAX_REFRESH_LOOP) {
->> +                       machxo2_cleanup(mgr);
->> +                       goto fail;
->> +               }
->> +       } while (1);
->> +
->> +       get_status(spi, &status);
->> +       dump_status_reg(&status);
->> +       return 0;
->> +fail:
->> +       dev_err(&mgr->dev, "Refresh failed.\n");
->> +       return ret;
->> +}
->> +
->> +static const struct fpga_manager_ops machxo2_ops = {
->> +       .state = machxo2_spi_state,
->> +       .write_init = machxo2_write_init,
->> +       .write = machxo2_write,
->> +       .write_complete = machxo2_write_complete,
->> +};
->> +
->> +static int machxo2_spi_probe(struct spi_device *spi)
->> +{
->> +       struct device *dev = &spi->dev;
->> +
->> +       if (spi->max_speed_hz > MACHXO2_MAX_SPEED) {
->> +               dev_err(dev, "Speed is too high\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       return fpga_mgr_register(dev, "Lattice MachXO2 SPI FPGA Manager",
->> +                                &machxo2_ops, spi);
->> +}
->> +
->> +static int machxo2_spi_remove(struct spi_device *spi)
->> +{
->> +       struct device *dev = &spi->dev;
->> +
->> +       fpga_mgr_unregister(dev);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id of_match[] = {
->> +       { .compatible = "lattice,machxo2-slave-spi", },
->> +       {}
->> +};
->> +MODULE_DEVICE_TABLE(of, of_match);
->> +
->> +static const struct spi_device_id lattice_ids[] = {
->> +       { "machxo2-slave-spi", 0 },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(spi, lattice_ids);
->> +
->> +static struct spi_driver machxo2_spi_driver = {
->> +       .driver = {
->> +               .name = "machxo2-slave-spi",
->> +               .of_match_table = of_match_ptr(of_match),
->> +       },
->> +       .probe = machxo2_spi_probe,
->> +       .remove = machxo2_spi_remove,
->> +       .id_table = lattice_ids,
->> +};
->> +
->> +module_spi_driver(machxo2_spi_driver)
->> +
->> +MODULE_AUTHOR("Paolo Pisati <p.pisati@gmail.com>");
->> +MODULE_DESCRIPTION("Load Lattice FPGA firmware over SPI");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.7.4
->>
+> >
+> >> +- gw,resolution: ADC resolution (ie 4096) used in scaling raw ADCs
+> >> +
+> >
+> > 4096 what ?
+> 
+> reference-voltage and resolution are used to scale the values from the
+> nodes that report a raw ADC value:
+> 
+> V = Vadc * (reference-voltage / resolution)
+> 
+> I can provide that in bits if it makes more sense? I can also hard
+
+Yes, I think that would make more sense, and please describe what it means.
+
+> code both the resolution and the vref in the hwmon driver and remove
+> it from dt as currently the only GSC that uses raw ADC values is 12bit
+> with 2.5V ref.
+> 
+
+That would be even better.
+
+> >
+> >> +Each hwmon child node defines an ADC input on the chip which the GSC may
+> >> +report cooked values (ie temperature sensor based on thermister), raw values,
+> >> +(ie voltage rail with a pre-scaling resistor divider), or a fan controller
+> >> +setpoint.
+> >> +
+> >> +Required hwmon child properties:
+> >> +- type: one of the following ADC types:
+> >> +  "gw,hwmon-temperature" - reports temperature in C*10
+> >> +  "gw,hwmon-voltage" - reports a pre-scaled voltage value
+> >> +  "gw,hwmon-voltage-raw" - reports a raw ADC that is scaled with
+> >> +       vreference, resolution, and optional resistor divider
+> >> +  "gw,hwmon-fan" - a fan temperature setpoint in C*10
+> >
+> > What is a "fan temperature setpoint" ?
+> >
+> 
+> The GSC supports a fan controller which drives a PWM signal to vary
+> the speed of a fan based on the GSC internal temperature sensor. The
+> FAN controller has 6 setpoints each having a fixed PWM duty-cycle but
+> the temperature at which those setpoints kick in can be varies via
+> registers at the 0x29 slave address (same slave address as the
+> temperature sensor and voltage inputs which is why I have it in the
+> hwmon driver):
+> 
+> fan0_point - 50% PWM (default 300)
+> fan1_point - 60% PWM (default 330)
+> fan2_point - 70% PWM (default 360)
+> fan3_point - 80% PWM (default 390)
+> fan4_point - 90% PWM (default 420)
+> fan5_point - 100% PWM (default 450)
+> 
+> The values are C/10 thus if the internal GSC temp sensor is below 30C
+> the fan output will be 0% duty cycle and if it hits 30C it will go to
+> 50% until it hits 60% at 33C etc.
+> 
+Please do not define your own scaling factors. pwm values are 0..255,
+and temperatures are in milli-degrees C.
+
+> That is the hardware implementation that I'm trying to abstract and
+> define here. You pointed out the fact that the fan*_input ABI is
+> read-only fan PWM and I see that now. What do you suggest I use for
+
+No, it isn't. It is the fan speed in RPM.
+
+> this feature I'm trying to implement driver support for?
+> 
+
+pwm[1-*]_auto_point[1-*]_pwm
+pwm[1-*]_auto_point[1-*]_temp
+pwm[1-*]_auto_point[1-*]_temp_hyst
+
+may be relevant. From the context, something like
+
+pwm1_auto_point1_pwm	read-only, set to 128
+pwm1_auto_point1_temp	30000
+pwm1_auto_point2_pwm	read-only, set to 153
+pwm1_auto_point2_temp	33000
+pwm1_auto_point3_pwm	read-only, set to 179
+pwm1_auto_point3_temp	36000
+pwm1_auto_point4_pwm	read-only, set to 204
+pwm1_auto_point4_temp	39000
+pwm1_auto_point5_pwm	read-only, set to 230
+pwm1_auto_point5_temp	42000
+pwm1_auto_point6_pwm	read-only, set to 255
+pwm1_auto_point6_temp	45000
+
+might make sense.
+
+> I did notice that nouveau_hwmon.c has a single temperature setpoint
+> similar to this that they support with SENSOR_DEVICE_ATTR:
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/nouveau/nouveau_hwmon.c#L63
+> 
+Whatever nouveau_hwmon.c does is, for all practical purposes, absolutely
+irrelevant. This code has never been reviewed by a hwmon maintainer.
+It may (or may not) be complete junk. Please do not use anything outside
+drivers/hwmon as example.
+
+> >> +- reg: offset of the ADC register
+> >> +- label: name of the ADC input or FAN setpoint
+> >> +
+> >> +Optional hwmon child properties:
+> >> +- gw,voltage-divider: An array of two integers containing the resistor
+> >> +  values R1 and R2 of the optinal resistor divider on a raw ADC
+> >> +- gw,voltage-offset: a mV voltage offset to apply to a raw ADC (ie to
+> >> +  compensate for a diode drop)
+> >> +
+> >> +Example:
+> >> +
+> >> +     gsc: gsc@20 {
+> >> +             compatible = "gw,gsc";
+> >> +             reg = <0x20>;
+> >> +             interrupt-parent = <&gpio1>;
+> >> +             interrupts = <4 GPIO_ACTIVE_LOW>;
+> >> +             interrupt-controller;
+> >> +             #interrupt-cells = <1>;
+> >> +
+> >> +             watchdog {
+> >> +                     compatible = "gw,gsc-watchdog";
+> >> +             };
+> >> +
+> >> +             hwmon {
+> >> +                     compatible = "gw,gsc-hwmon";
+> >> +                     #address-cells = <1>;
+> >> +                     #size-cells = <0>;
+> >> +                     gw,reference-voltage = <2500>;
+> >> +                     gw,resolution = <4096>;
+> >> +
+> >> +                     hwmon@0 { /* A0: Board Temperature */
+> >> +                             type = "gw,hwmon-temperature";
+> >> +                             reg = <0x00>;
+> >> +                             label = "temp";
+> >> +                     };
+> >> +
+> >> +                     hwmon@2 { /* A1: Input Voltage (raw ADC) */
+> >> +                             type = "gw,hwmon-voltage-raw";
+> >> +                             reg = <0x02>;
+> >> +                             label = "vdd_vin";
+> >> +                             gw,voltage-divider = <22100 1000>;
+> >> +                             gw,voltage-offset = <800>;
+> >> +                     };
+> >> +
+> >> +                     hwmon@b { /* A2: Battery voltage */
+> >> +                             type = "gw,hwmon-voltage";
+> >> +                             reg = <0x0b>;
+> >> +                             label = "vdd_bat";
+> >> +                     };
+> >> +
+> >> +                     hwmon@2c { /* fan temperature setpoint for 50% duty */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x2c>;
+> >> +                             label = "fan_50p";
+> >> +                     };
+> >> +
+> >> +                     hwmon@2e { /* fan1 */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x2e>;
+> >> +                             label = "fan_60p";
+> >> +                     };
+> >> +
+> >> +                     hwmon@30 { /* fan2 */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x30>;
+> >> +                             label = "fan_70p";
+> >> +                     };
+> >> +
+> >> +                     hwmon@32 { /* fan3 */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x32>;
+> >> +                             label = "fan_80p";
+> >> +                     };
+> >> +
+> >> +                     hwmon@34 { /* fan4 */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x34>;
+> >> +                             label = "fan_90p";
+> >> +                     };
+> >> +
+> >> +                     hwmon@36 { /* fan5 */
+> >> +                             type = "gw,hwmon-fan";
+> >> +                             reg = <0x36>;
+> >> +                             label = "fan_100p";
+> >> +                     };
+> >
+> > No idea what this is supposed to be doing, but whatever it is,
+> > it appears to be wrong. I'll comment more on it in the hwmon driver.
+> >
+> 
+> ok - I'll respond to that thread.
+> 
+> Thanks for the review!
+> 
+> Tim
