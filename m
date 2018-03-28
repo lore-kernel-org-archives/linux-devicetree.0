@@ -1,138 +1,79 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 05/11] dt-bindings: i3c: Document core bindings
-Date: Wed, 28 Mar 2018 10:19:22 +0200
-Message-ID: <20180328101922.22a7039d@bbrezillon>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
-        <20180323110020.19080-6-boris.brezillon@bootlin.com>
-        <20180326071946.dtrhhxx3iwwymk73@rob-hp-laptop>
+Subject: Re: [PATCH 1/2][v7] dt-bindings: mtd-physmap: Add endianness supports
+Date: Wed, 28 Mar 2018 10:30:01 +0200
+Message-ID: <20180328103001.6f4b16d9@bbrezillon>
+References: <20180328054443.2829-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180326071946.dtrhhxx3iwwymk73@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180328054443.2829-1-prabhakar.kushwaha@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, poonam.aggrwal@nxp.com, leoyang.li@nxp.com, oss@buserror.net, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, shawnguo@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 28 Mar 2018 11:14:43 +0530
+Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
 
-On Mon, 26 Mar 2018 17:24:58 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> > +
-> > +I3C devices
-> > +===========
-> > +
-> > +All I3C devices are supposed to support DAA (Dynamic Address Assignment), and
-> > +are thus discoverable. So, by default, I3C devices do not have to be described
-> > +in the device tree.
-> > +This being said, one might want to attach extra resources to these devices,
-> > +and those resources may have to be described in the device tree, which in turn
-> > +means we have to describe I3C devices.
-> > +
-> > +Another use case for describing an I3C device in the device tree is when this
-> > +I3C device has a static address and we want to assign it a specific dynamic
-> > +address before the DAA takes place (so that other devices on the bus can't  
+> Connection between flash and controller is not necessary to be always
+> of same type. It may varies from platform to platform.
 > 
-> static is I2C address and dynamic is an I3C address. That could be 
-> clearer throughout.
+> Adding endianness (optional) property to provide connection type
+> information.
 
-I'll clarify that.
+You forgot to adjust your commit message.
+
+If you're okay, I'll replace your message by:
+
+"
+Provides a way to specify the endianness to use when accessing a
+memory-mapped flash.
+"
 
 > 
-> > +take this dynamic address).
-> > +
-> > +The I3C device should be names <device-type>@<static-address>,<i3c-pid>,  
+> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes for v2: updated subject
+> Changes for v3: fixed typo for "big-endian"
+> Changes for v4: Moved binding definition in mtd-physmap.txt
+> as discussed at https://patchwork.ozlabs.org/patch/842543/
+> Changes for v5: Sending as it is
+> Changes for v6: Updated binding when endianness property is absent
+> Changes for v7: Updated binding details
 > 
-> s/static-address/static-i2c-address/
-
-Okay.
-
+>  Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> > +where device-type is describing the type of device connected on the bus
-> > +(gpio-controller, sensor, ...).
-> > +
-> > +Required properties
-> > +-------------------
-> > +- reg: contains 3 cells
-> > +  + first cell : encodes the I2C address. Should be 0 if the device does not
-> > +		 have one (0 is not a valid I3C address).  
-> 
-> Change here to "encodes the static I2C address". 
-> 
-> 0 is not a valid I2C address?
+> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> index 4a0a48bf4ecb..232fa12e90ef 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> @@ -41,6 +41,13 @@ additional (optional) property is defined:
+>  
+>   - erase-size : The chip's physical erase block size in bytes.
+>  
+> + The device tree may optionally contain endianness property.
+> + little-endian or big-endian : It Represents the endianness that should be used
+> +                               by the controller to  properly read/write data
+> +			       from/to the flash. If this property is missing,
+> +			       the endianness is chosen by the system
+> +			       (potentially based on extra configuration options).
+> +
+>  The device tree may optionally contain sub-nodes describing partitions of the
+>  address space. See partition.txt for more detail.
+>  
 
-According to [1] it is reserved, and it's reserved in the I3C spec
-anyway (see "Table 9 I3C Slave Address Restrictions" in the I3C spec).
 
-> 
-> > +
-> > +  + second and third cells: should encode the ProvisionalID. The second cell
-> > +			    contains the manufacturer ID left-shifted by 1.
-> > +			    The third cell contains ORing of the part ID
-> > +			    left-shifted by 16, the instance ID left-shifted
-> > +			    by 12 and the extra information. This encoding is
-> > +			    following the PID definition provided by the I3C
-> > +			    specification.
-
-One extra question for you: should I refer to the I3C_DEV(),
-I3C_DEV_WITH_STATIC_ADDR() and I2C_DEV() macros in the bindings doc?
-And if I do, should I use them my example?
-
-Thanks,
-
-Boris
-
-> > +
-> > +Optional properties
-> > +-------------------
-> > +- assigned-address: dynamic address to be assigned to this device. This
-> > +		    property is only valid if the I3C device has a static
-> > +		    address (first cell of the reg property != 0).
-> > +
-> > +
-> > +Example:
-> > +
-> > +	i3c-master@d040000 {
-> > +		compatible = "cdns,i3c-master";
-> > +		clocks = <&coreclock>, <&i3csysclock>;
-> > +		clock-names = "pclk", "sysclk";
-> > +		interrupts = <3 0>;
-> > +		reg = <0x0d040000 0x1000>;
-> > +		#address-cells = <3>;
-> > +		#size-cells = <0>;
-> > +
-> > +		status = "okay";
-> > +		i2c-scl-frequency = <100000>;
-> > +
-> > +		/* I2C device. */
-> > +		nunchuk: nunchuk@52 {
-> > +			compatible = "nintendo,nunchuk";
-> > +			reg = <0x52 0x80000010 0x0>;
-> > +		};
-> > +
-> > +		/* I3C device with a static address. */
-> > +		thermal_sensor: sensor@68,39200144004 {
-> > +			reg = <0x68 0x392 0x144004>;
-> > +			assigned-address = <0xa>;
-> > +		};
-> > +
-> > +		/*
-> > +		 * I3C device without a static address but requiring resources
-> > +		 * described in the DT.
-> > +		 */
-> > +		sensor@0,39200154004 {
-> > +			reg = <0x0 0x392 0x154004>;
-> > +			clocks = <&clock_provider 0>;
-> > +		};
-> > +	};
-> > +
-> > -- 
-> > 2.14.1
-> >   
-
-[1]http://www.i2c-bus.org/addressing
 
 -- 
 Boris Brezillon, Bootlin (formerly Free Electrons)
