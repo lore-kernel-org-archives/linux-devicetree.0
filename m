@@ -1,55 +1,98 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH 2/2] dt-bindings: regulator: add QCOM RPMh regulator
- bindings
-Date: Tue, 27 Mar 2018 16:48:21 -0700
-Message-ID: <63851bce-65c2-76a2-8b75-bc268a998457@codeaurora.org>
-References: <cover.1521246069.git.collinsd@codeaurora.org>
- <b718873e5ad53a2e8df6a5103828a4c04881d564.1521246069.git.collinsd@codeaurora.org>
- <20180321024311.GW2186@sirena.org.uk>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH] dts: ARM: Add Aspeed virtual hub to SoC templates
+Date: Wed, 28 Mar 2018 11:00:45 +1030
+Message-ID: <CACPK8XdgoNLr3m_bp_Y+Cu6pNx5f0xJ5BwWL8svZPgM-YNQA8w@mail.gmail.com>
+References: <1515739918.31850.102.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180321024311.GW2186@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1515739918.31850.102.camel@kernel.crashing.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree <devicetree@vger.kernel.org>, Joel Stanley <joel.stanley@au1.ibm.com>, linux-aspeed@lists.ozlabs.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hi Ben,
 
-On 03/20/2018 07:43 PM, Mark Brown wrote:
-> On Fri, Mar 16, 2018 at 06:09:11PM -0700, David Collins wrote:
->> Introduce bindings for RPMh regulator devices found on some
->> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
-> 
-> Please use subject lines matching the style for the subsystem.  This
-> makes it easier for people to identify relevant patches.
+On 12 January 2018 at 17:21, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> We don't yet enable it in any of the boards
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Looking through the DT binding patches sent to devicetree@vger.kernel.org,
-it seemed like the preferred style is:
-[PATCH] dt-bindings: subsystem: ...
+This one slipped through the cracks. Is it still the latest version?
 
-I can change the subject line for this patch to be:
-"[PATCH 2/2] regulator: dt-bindings: add QCOM RPMh regulator bindings"
-if you prefer.
+Cheers,
 
+Joel
 
->> +=========================================
->> +Second Level Nodes - Regulators
->> +=========================================
->> +
->> +- regulator-name
-> 
-> This document appears to be reproducing the standard regulator bindings;
-> there is no need to do that, just reference them.
-
-Sure, I'll remove this.
-
-Thanks,
-David
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> ---
+>  arch/arm/boot/dts/aspeed-g4.dtsi |  8 ++++++++
+>  arch/arm/boot/dts/aspeed-g5.dtsi | 13 +++++++++++++
+>  2 files changed, 21 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+> index e55f2ad5de59..743b79014d3d 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -120,6 +120,14 @@
+>                         status = "disabled";
+>                 };
+>
+> +               vhub: usb-vhub@1e6a0000 {
+> +                       compatible = "aspeed,ast2400-usb-vhub";
+> +                       reg = <0x1e6a0000 0x300>;
+> +                       interrupts = <5>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 apb {
+>                         compatible = "simple-bus";
+>                         #address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index 655258edee24..e50d7f3e18a0 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -163,6 +163,14 @@
+>                         status = "disabled";
+>                 };
+>
+> +               vhub: usb-vhub@1e6a0000 {
+> +                       compatible = "aspeed,ast2500-usb-vhub";
+> +                       reg = <0x1e6a0000 0x300>;
+> +                       interrupts = <5>;
+> +                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 apb {
+>                         compatible = "simple-bus";
+>                         #address-cells = <1>;
+> @@ -1388,6 +1396,11 @@
+>                 groups = "USB2AH";
+>         };
+>
+> +       pinctrl_usb2ad_default: usb2ad_default {
+> +               function = "USB2AD";
+> +               groups = "USB2AD";
+> +       };
+> +
+>         pinctrl_usb11bhid_default: usb11bhid_default {
+>                 function = "USB11BHID";
+>                 groups = "USB11BHID";
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
