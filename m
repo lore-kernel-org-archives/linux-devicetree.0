@@ -1,54 +1,61 @@
-Return-Path: <SRS0=L7Ep=GS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 01/12] soc: renesas: rcar-sysc: Add r8a77470 support
-Date: Wed, 28 Mar 2018 08:51:25 +0000
-Message-ID: <OSBPR01MB2103DF1170995A812537402EB8A30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
- <1522161443-54428-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWgGNp7iUBDrqdzRdpL=wQrBq=quaze+fxqdGk+zgQtsQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWgGNp7iUBDrqdzRdpL=wQrBq=quaze+fxqdGk+zgQtsQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=BlMk=GS=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1522161443-54428-2-git-send-email-biju.das@bp.renesas.com>
+References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com> <1522161443-54428-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 28 Mar 2018 09:51:53 +0200
+Message-ID: <CAMuHMdWgGNp7iUBDrqdzRdpL=wQrBq=quaze+fxqdGk+zgQtsQ@mail.gmail.com>
+Subject: Re: [PATCH 01/12] soc: renesas: rcar-sysc: Add r8a77470 support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IE9uIFR1ZSwgTWFyIDI3
-LCAyMDE4IGF0IDQ6MzcgUE0sIEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3Jv
-dGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIFJaL0cxQyAoUjhBNzc0NzApIFNvQyBwb3dlciBhcmVh
-cyB0byB0aGUgUi1DYXIgU1lTQw0KPiA+IGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRmFi
-cml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+DQo+IFRoYW5r
-cyBmb3IgeW91ciBwYXRjaCENCj4NCj4gPiAgZHJpdmVycy9zb2MvcmVuZXNhcy9yOGE3NzQ3eC1z
-eXNjLmMgICAgICAgICAgICAgICAgfCAyOQ0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+DQo+
-IFdoaWxlIHVzaW5nICJ4IiBpbiBkcml2ZXJzIGRvZXNuJ3QgaHVydCwgYXMgaXQgY2FuIGJlIGNo
-YW5nZWQgYXQgYW55IHRpbWUgbGF0ZXIuLi4NCj4NCj4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9w
-b3dlci9yOGE3NzQ3eC1zeXNjLmggICAgICAgICAgfCAyMiArKysrKysrKysrKysrKysrDQo+DQo+
-IC4uLiB0aGlzIGlzIG5vdCB0cnVlIGZvciBEVCBiaW5kaW5ncy4NCj4NCj4gSSBrbm93IHlvdSBk
-byB0aGlzIHRvIGFudGljaXBhdGUgdGhlIHVzZSBvZiB0aGlzIGhlYWRlciBmaWxlIGZvciByOGE3
-NzQ3MSwgd2hpY2ggaXMNCj4gYWxzbyBjYWxsZWQgUlovRzFDLCBhbmQgaWRlbnRpY2FsIHRvIHI4
-YTc3NDcwLCBtb2R1bG8gYSBmZXcgb24tU29DIGRldmljZXMuDQo+IEJ1dCB1c2luZyB3aWxkY2Fy
-ZHMgaW4gRFQgYmluZGluZ3MgaXMgYSBiYWQgaWRlYSwgYXMgeW91IGNhbm5vdCBwcmVkaWN0IHdo
-YXQgZS5nLg0KPiByOGE3NzQ3NyB3aWxsIGJlIDstKQ0KPg0KPiBTbyBJJ2Qgc2V0dGxlIGZvciBy
-OGE3NzQ3MC1zeXNjLmguIFRoZSBhY3R1YWwgZGVmaW5lcyBpbiB0aGUgZmlsZSB1c2UNCj4gUjhB
-Nzc0NzBfUERfKiBhbnl3YXkuDQoNCiBXaWxsIHNlbmQgVjIgd2l0aCB0aGUgZmlsZSBuYW1lIGNo
-YW5nZWQgdG8gcjhhNzc0NzAtc3lzYy5oDQoNCj4gQlRXLCBJJ20gY29uc2lkZXJpbmcgZHJvcHBp
-bmcgYWxsIFI4QSpfUERfKiBkZWZpbml0aW9ucywgYXMgd2UgY2FuIGVhc2lseSB1c2UNCj4gdGhl
-IG51bWJlcnMgZGlyZWN0bHksIGNmci4gbW9kdWxlIGNsb2NrIGFuZCBpbnRlcnJ1cHQgbnVtYmVy
-cy4gVGhhdCB3b3VsZCBiZQ0KPiBvbmUgc3RlcCBjbG9zZXIgdG8gbW9yZSAuZHRzaSBzaGFyaW5n
-Lg0KPiBUaGUgb25seSB0aGluZyB0aGF0IGlzIGtlZXBpbmcgbWUgYmFjayBpcyB0aGF0IHRoZSB2
-YWx1ZSAiMzIiIChmb3IgdGhlIGFsd2F5cy1vbg0KPiBhcmVhKSBpcyBub3QgZGVmaW5lZCBpbiB0
-aGUgZGF0YXNoZWV0Lg0KPg0KPiBXaXRoIHRoZSBhYm92ZSBmaXhlZDoNCj4gUmV2aWV3ZWQtYnk6
-IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+DQo+IEdye29l
-dGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAt
-LQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
-YTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJz
-YXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0
-IHdoZW4NCj4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1l
-ciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUg
-THRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFt
-c2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBS
-ZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+Hi Biju,
+
+On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add support for RZ/G1C (R8A77470) SoC power areas to the R-Car SYSC
+> driver.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+>  drivers/soc/renesas/r8a7747x-sysc.c                | 29 ++++++++++++++++++++++
+
+While using "x" in drivers doesn't hurt, as it can be changed at any
+time later...
+
+>  include/dt-bindings/power/r8a7747x-sysc.h          | 22 ++++++++++++++++
+
+... this is not true for DT bindings.
+
+I know you do this to anticipate the use of this header file for r8a77471,
+which is also called RZ/G1C, and identical to r8a77470, modulo a few on-SoC
+devices. But using wildcards in DT bindings is a bad idea, as you cannot
+predict what e.g. r8a77477 will be ;-)
+
+So I'd settle for r8a77470-sysc.h. The actual defines in the file use
+R8A77470_PD_* anyway.
+
+BTW, I'm considering dropping all R8A*_PD_* definitions, as we can easily
+use the numbers directly, cfr. module clock and interrupt numbers. That
+would be one step closer to more .dtsi sharing.
+The only thing that is keeping me back is that the value "32" (for the
+always-on area) is not defined in the datasheet.
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
