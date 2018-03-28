@@ -1,64 +1,66 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: wrapper: add
- io-channel-unit-converter
-Date: Wed, 28 Mar 2018 10:29:02 +0800
-Message-ID: <69103fe3-c5dd-7987-abf4-8759b2219751@electromag.com.au>
-References: <20180319170246.26830-1-peda@axentia.se>
- <20180319170246.26830-3-peda@axentia.se>
- <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop>
- <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v3 0/6] clk: meson-axg: Add AO Cloclk and Reset driver
+Date: Wed, 28 Mar 2018 10:50:44 +0800
+Message-ID: <20180328025050.221585-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
-Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/03/2018 16:01, Peter Rosin wrote:
-> On 2018-03-27 00:23, Rob Herring wrote:
->> On Mon, Mar 19, 2018 at 06:02:45PM +0100, Peter Rosin wrote:
->>> Allow linear scaling and modification of the type of an io-channel.
->>>
->>> When an ADC channel measures the midpoint of a voltage divider, the
->>> interesting voltage is often the voltage over the full resistance
->>> of the divider. Likewise, measuring the voltage over a resistor is
->>> often a way to get to the current through it.
->>>
->>> This binding allows description of such hardware which is external
->>> to the ADC.
->>>
+  This patch try to add AO clock and Reset driver for Amlogic's
+Meson-AXG SoC.
+  Please note that patch 6 need to wait for the DTS changes[3] merged
+into mainline first, otherwise it will break the serial console.
 
-*snip*
+ patch 1: factor the common code into a dedicated file
+ patch 2-4: add the aoclk driver for AXG SoC
+ patch 5-6: drop unnecessary clock flags
 
->>> +++ b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->>> @@ -0,0 +1,84 @@
->>> +I/O channel unit converter bindings
->>> +
->>> +Allow linear scaling and modification of the type of an io-channel.
->>> +
->>> +When an ADC channel measures the midpoint of a voltage divider, the
->>> +interesting voltage is often the voltage over the full resistance
->>> +of the divider. Likewise, measuring the voltage over a resistor is
->>> +often a way to get to the current through it.
->>> +
->>> +Required properties:
->>> +- compatible : "io-channel-unit-converter"
->> Would this apply to something besides ADCs?
-> Not that I can think of. At the moment.
-> 
+changes since v2 at [2]: 
+ - rework meson_aoclkc_probe() which leverage the of_match_data
+ - merge patch 5-6 into this series
+ - seperate DTS patch, will send to Kevin Hilman independently
+ 
+changes since v1 at [0]: 
+ - rebase to clk-meson's branch 'next/drivers' [1]
+ - fix license, update to BSD-3-Clause
+ - drop un-used include header file
 
-I like the concept. I can think of use case on my end to set a RADC (digital pot)
-to set a threshold voltage. Being able to define the hardware scaling in the dt would be nice.
-Which would allow all the hardware definition to be in the dt which would nice.
-So this would be voltage -> resistance.
+[0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
+[1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
+[2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
 
-Setting a DAC voltage to set output current is also a distinct possibility.
+Qiufang Dai (1):
+  clk: meson-axg: Add AO Clock and Reset controller driver
 
+Yixun Lan (5):
+  clk: meson: aoclk: refactor common code into dedicated file
+  dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
+  dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
+  clk: meson: drop CLK_SET_RATE_PARENT flag
+  clk: meson: drop CLK_IGNORE_UNUSED flag
+
+ .../bindings/clock/amlogic,gxbb-aoclkc.txt         |   1 +
+ drivers/clk/meson/Makefile                         |   4 +-
+ drivers/clk/meson/axg-aoclk.c                      | 163 +++++++++++++++++++++
+ drivers/clk/meson/axg-aoclk.h                      |  31 ++++
+ drivers/clk/meson/gxbb-aoclk.c                     |  88 ++++-------
+ drivers/clk/meson/gxbb-aoclk.h                     |   7 +
+ drivers/clk/meson/meson-aoclk.c                    |  79 ++++++++++
+ drivers/clk/meson/meson-aoclk.h                    |  35 +++++
+ include/dt-bindings/clock/axg-aoclkc.h             |  26 ++++
+ include/dt-bindings/reset/axg-aoclkc.h             |  20 +++
+ 10 files changed, 393 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/clk/meson/axg-aoclk.c
+ create mode 100644 drivers/clk/meson/axg-aoclk.h
+ create mode 100644 drivers/clk/meson/meson-aoclk.c
+ create mode 100644 drivers/clk/meson/meson-aoclk.h
+ create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+ create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
 
 -- 
-Regards
-Phil Reid
+2.15.1
