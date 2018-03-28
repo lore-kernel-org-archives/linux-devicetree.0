@@ -1,7 +1,8 @@
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 6/8] ARM: dts: r8a77470: Initial SoC device tree
-Date: Wed, 28 Mar 2018 20:26:14 +0100
-Message-ID: <1522265176-33226-7-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH v2 7/8] ARM: dts: iwg23s-sbc: Add support for iWave G23S-SBC
+ based on RZ/G1C
+Date: Wed, 28 Mar 2018 20:26:15 +0100
+Message-ID: <1522265176-33226-8-git-send-email-biju.das@bp.renesas.com>
 References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,181 +22,73 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russe
 Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The initial R8A77470 SoC device tree including CPU0, GIC, timer, SYSC, RST,
-CPG, and the required clock descriptions.
+Add support for iWave iW-RainboW-G23S single board computer based on
+ RZ/G1C.
 
 Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 V1->V2:
-* Incorporated geert's review comment
-* Moved prr node inside soc node.
+* Incorporated review comments
 
- arch/arm/boot/dts/r8a77470.dtsi | 155 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 155 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a77470.dtsi
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 35 +++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 2b6dfee..4291638 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -781,6 +781,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
+ 	r8a7745-iwg22d-sodimm.dtb \
+ 	r8a7745-iwg22d-sodimm-dbhd-ca.dtb \
+ 	r8a7745-sk-rzg1e.dtb \
++	r8a77470-iwg23s-sbc.dtb \
+ 	r8a7778-bockw.dtb \
+ 	r8a7779-marzen.dtb \
+ 	r8a7790-lager.dtb \
+diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
 new file mode 100644
-index 0000000..f096419
+index 0000000..d21baad
 --- /dev/null
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -0,0 +1,155 @@
++++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+@@ -0,0 +1,35 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Device Tree Source for the r8a77470 SoC
++ * Device Tree Source for the iWave-RZ/G1C single board computer
 + *
 + * Copyright (C) 2018 Renesas Electronics Corp.
 + */
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/r8a77470-cpg-mssr.h>
-+#include <dt-bindings/power/r8a77470-sysc.h>
++/dts-v1/;
++#include "r8a77470.dtsi"
 +/ {
-+	compatible = "renesas,r8a77470";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++	model = "iWave iW-RainboW-G23S single board computer based on RZ/G1C";
++	compatible = "iwave,g23s", "renesas,r8a77470";
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+			clock-frequency = <1000000000>;
-+			clocks = <&cpg CPG_CORE R8A77470_CLK_Z2>;
-+			power-domains = <&sysc R8A77470_PD_CA7_CPU0>;
-+			next-level-cache = <&L2_CA7>;
-+		};
-+
-+
-+		L2_CA7: cache-controller-0 {
-+			compatible = "cache";
-+			cache-unified;
-+			cache-level = <2>;
-+			power-domains = <&sysc R8A77470_PD_CA7_SCU>;
-+		};
++	aliases {
++		serial1 = &scif1;
 +	};
 +
-+	/* External root clock */
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial1:115200n8";
 +	};
 +
-+	/* External SCIF clock */
-+	scif_clk: scif {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x20000000>;
 +	};
++};
 +
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
++&extal_clk {
++	clock-frequency = <20000000>;
++};
 +
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		cpg: clock-controller@e6150000 {
-+			compatible = "renesas,r8a77470-cpg-mssr";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>, <&usb_extal_clk>;
-+			clock-names = "extal", "usb_extal";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
-+		};
-+
-+		rst: reset-controller@e6160000 {
-+			compatible = "renesas,r8a77470-rst";
-+			reg = <0 0xe6160000 0 0x100>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a77470-sysc";
-+			reg = <0 0xe6180000 0 0x200>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		icram0:	sram@e63a0000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe63a0000 0 0x12000>;
-+		};
-+
-+		icram1:	sram@e63c0000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe63c0000 0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0xe63c0000 0x1000>;
-+
-+			smp-sram@0 {
-+				compatible = "renesas,smp-sram";
-+				reg = <0 0x100>;
-+			};
-+		};
-+
-+		icram2:	sram@e6300000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe6300000 0 0x20000>;
-+		};
-+
-+		scif1: serial@e6e68000 {
-+			compatible = "renesas,scif-r8a77470",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6e68000 0 0x40>;
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cpg CPG_MOD 720>,
-+				 <&cpg CPG_CORE R8A77470_CLK_ZS>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 720>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@f1001000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0 0xf1001000 0 0x1000>, <0 0xf1002000 0 0x2000>,
-+			      <0 0xf1004000 0 0x2000>, <0 0xf1006000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&cpg CPG_MOD 408>;
-+			clock-names = "clk";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 408>;
-+		};
-+
-+		prr: chipid@ff000044 {
-+			compatible = "renesas,prr";
-+			reg = <0 0xff000044 0 4>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	/* External USB clock - can be overridden by the board */
-+	usb_extal_clk: usb_extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <48000000>;
-+	};
++&scif1 {
++	status = "okay";
 +};
 -- 
 2.7.4
