@@ -1,16 +1,17 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
-Date: Wed, 28 Mar 2018 12:06:56 -0500
-Message-ID: <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ@mail.gmail.com>
+Date: Wed, 28 Mar 2018 10:25:28 -0700
+Message-ID: <CAPcyv4htpLN16d8JW+_pSy-ORwkQdVnv3guOS0FVmyy+ajvP=Q@mail.gmail.com>
 References: <20180323081209.31387-1-oohall@gmail.com>
  <20180323081209.31387-6-oohall@gmail.com>
  <20180326222448.l7ukrslvccvrjnjf@rob-hp-laptop>
  <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w@mail.gmail.com>
+ <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
  <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
@@ -20,143 +21,57 @@ List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
  <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
 Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 9:53 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 27, 2018 at 9:24 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Mar 23, 2018 at 07:12:09PM +1100, Oliver O'Halloran wrote:
->>> Add device-tree binding documentation for the nvdimm region driver.
->>>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
->>>  1 file changed, 45 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>> new file mode 100644
->>> index 000000000000..02091117ff16
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>> @@ -0,0 +1,45 @@
->>> +Device-tree bindings for NVDIMM memory regions
->>> +-----------------------------------------------------
->>> +
->>> +Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
->>
->> Are DIMMs always going to be the only form factor for NV memory?
->>
->> And if you have multiple DIMMs, does each DT node correspond to a DIMM?
+On Wed, Mar 28, 2018 at 10:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+[..]
+> >> Are DIMMs always going to be the only form factor for NV memory?
+> >>
+> >> And if you have multiple DIMMs, does each DT node correspond to a DIMM?
+> >
+> > A nvdimm-region might correspond to a single NVDIMM, a set of
+> > interleaved NVDIMMs, or it might just be a chunk of normal memory that
+> > you want treated as a NVDIMM for some reason. The last case is useful
+> > for provisioning install media on servers since it allows you do
+> > download a DVD image, turn it into an nvdimm-region, and kexec into
+> > the installer which can use it as a root disk. That may seem a little
+> > esoteric, but it's handy and we're using a full linux environment for
+> > our boot loader so it's easy to make use of.
 >
-> A nvdimm-region might correspond to a single NVDIMM, a set of
-> interleaved NVDIMMs, or it might just be a chunk of normal memory that
-> you want treated as a NVDIMM for some reason. The last case is useful
-> for provisioning install media on servers since it allows you do
-> download a DVD image, turn it into an nvdimm-region, and kexec into
-> the installer which can use it as a root disk. That may seem a little
-> esoteric, but it's handy and we're using a full linux environment for
-> our boot loader so it's easy to make use of.
+> I'm really just asking if we should drop the "dimm" name because it is
+> not always a DIMM. Maybe pmem instead? I don't know, naming is
+> hard(TM).
 
-I'm really just asking if we should drop the "dimm" name because it is
-not always a DIMM. Maybe pmem instead? I don't know, naming is
-hard(TM).
+The Linux enabling uses the term "memory device". The Linux device
+object name for memory devices is "nmem".
 
->> If not, then what if we want/need to provide power control to a DIMM?
+[..]
+> > special since the OS needs to know where it can allocate early in boot
+> > and I don't see non-volatile memory as being similarly significant.
+> > Fundamentally an NVDIMM is just a memory mapped storage device so we
+> > should be able to defer looking at them until later in boot.
 >
-> That would require a DIMM (and probably memory controller) specific
-> driver. I've deliberately left out how regions are mapped back to
-> DIMMs from the binding since it's not really clear to me how that
-> should work. A phandle array pointing to each DIMM device (which could
-> be anything) would do the trick, but I've found that a bit awkward to
-> plumb into the model that libnvdimm expects.
+> It's not clear if 'platform' is just an example or random name or what
+> the node is required to be called. In the latter case, we should be
+> much more specific because 'platform' could be anything. In the former
+> case, then we have no way to find or validate the node because the
+> name could be anything and there's no compatible property either.
 >
->>> +that retains its contents across power cycles. In more practical terms, they
->>> +are kind of storage device where the contents can be accessed by the CPU
->>> +directly, rather than indirectly via a storage controller or similar. The an
->>> +nvdimm-region specifies a physical address range that is hosted on an NVDIMM
->>> +device.
->>> +
->>> +Bindings for the region nodes:
->>> +-----------------------------
->>> +
->>> +Required properties:
->>> +     - compatible = "nvdimm-region"
->>> +
->>> +     - reg = <base, size>;
->>> +             The system physical address range of this nvdimm region.
->>> +
->>> +Optional properties:
->>> +     - Any relevant NUMA assocativity properties for the target platform.
->>> +     - A "volatile" property indicating that this region is actually in
->>> +       normal DRAM and does not require cache flushes after each write.
->>> +
->>> +A complete example:
->>> +--------------------
->>> +
->>> +/ {
->>> +     #size-cells = <2>;
->>> +     #address-cells = <2>;
->>> +
->>> +     platform {
->>
->> Perhaps we need a more well defined node here. Like we have 'memory' for
->> memory nodes.
+> "region" is pretty generic too.
 >
-> I think treating it as a platform device is fine. Memory nodes are
 
-Platform device is a Linux term...
+The term "nvdimm-region" has specific meaning to the libnvdimm
+sub-system. It is a contiguous physical address range backed by one or
+more memory devices, DIMMs, in an interleaved configuration
+(interleave set).
 
-> special since the OS needs to know where it can allocate early in boot
-> and I don't see non-volatile memory as being similarly significant.
-> Fundamentally an NVDIMM is just a memory mapped storage device so we
-> should be able to defer looking at them until later in boot.
-
-It's not clear if 'platform' is just an example or random name or what
-the node is required to be called. In the latter case, we should be
-much more specific because 'platform' could be anything. In the former
-case, then we have no way to find or validate the node because the
-name could be anything and there's no compatible property either.
-
-"region" is pretty generic too.
-
->
-> That said you might have problems with XIP kernels and what not. I
-> think that problem is better solved through other means though.
->
->>> +             region@5000 {
->>> +                     compatible = "nvdimm-region;
->>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
->>> +
->>> +             };
->>> +
->>> +             region@6000 {
->>> +                     compatible = "nvdimm-region";
->>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
-
-Thinking about this some more, the 2 levels of nodes is pointless.
-Just follow memory nodes structure.
-
-nv-memory@100000000 {
-  compatible = "nvdimm-region";
-  reg = <0x00000001 0x00000000 0x00000000 0x40000000>;
-};
-
-nv-memory@200000000 {
-  compatible = "nvdimm-region";
-  reg = <0x00000002 0x00000000 0x00000000 0x40000000>;
-};
-
-or:
-
-nv-memory@100000000 {
-  compatible = "nvdimm-region";
-  reg = <0x00000001 0x00000000 0x00000000 0x40000000>
-    <0x00000002 0x00000000 0x00000000 0x40000000>;
-};
-
-Both forms should be allowed.
-
-Rob
+One feature that is currently missing from libnvdimm is a management
+interface to change an interleave configuration. To date, Linux only
+reads a static region configuration published by platform firmware.
+Linux can provide dynamic provisioning of namespaces out of those
+regions, but interleave configuration has been left to vendor specific
+tooling to date. It would be great to start incorporating generic
+Linux support for that capability across platform firmware
+implementations.
