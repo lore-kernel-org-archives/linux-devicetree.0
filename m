@@ -1,183 +1,70 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: [PATCH v6 1/3] arm64: dts: apq8096-db820c: enable bluetooth node
-Date: Wed, 28 Mar 2018 11:51:31 +0200
-Message-ID: <20180328095133.14343-2-thierry.escande@linaro.org>
-References: <20180328095133.14343-1-thierry.escande@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v2 0/8] Add support for PWM input capture on STM32
+Date: Wed, 28 Mar 2018 11:03:09 +0100
+Message-ID: <20180328100309.yig4d3bmml6jvodz@dell>
+References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
+ <20180327225101.GJ28163@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset = "utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328095133.14343-1-thierry.escande@linaro.org>
-Content-Transfert-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20180327225101.GJ28163@mithrandir>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new serial node for the Qualcomm BT controller QCA6174. This
-allows automatic probing and hci registration through the serdev
-framework instead of relying on the userspace helpers.
+On Wed, 28 Mar 2018, Thierry Reding wrote:
 
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
----
+> On Wed, Feb 14, 2018 at 11:04:31AM +0100, Fabrice Gasnier wrote:
+> > This series adds support for capture to stm32-pwm driver.
+> > Capture is based on DMAs.
+> > - First two patches are precursor patches
+> > - Subsequent two patches add support for requesting DMAs to MFD core
+> > - Next three patches add support for capture to stm32-pwm driver
+> > - This has been tested on stm32429i-eval board.
+> > 
+> > ---
+> > Resend v2:
+> > - Add collected Acks
+> > 
+> > Changes in v2:
+> > - Abstract DMA handling from child driver: move it to MFD core
+> > - Rework pwm capture routines to adopt this change
+> > - Comment on optional dma support, beautify DMAs probe
+> > 
+> > Fabrice Gasnier (8):
+> >   pwm: stm32: fix, remove unused struct device
+> >   pwm: stm32: protect common prescaler for all channels
+> >   dt-bindings: mfd: stm32-timers: add support for dmas
+> >   mfd: stm32-timers: add support for dmas
+> >   pwm: stm32: add capture support
+> >   pwm: stm32: improve capture by tuning counter prescaler
+> >   pwm: stm32: use input prescaler to improve period capture
+> >   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+> > 
+> >  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+> >  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+> >  drivers/mfd/stm32-timers.c                         | 215 +++++++++++++++-
+> >  drivers/pwm/pwm-stm32.c                            | 276 ++++++++++++++++++++-
+> >  include/linux/mfd/stm32-timers.h                   |  39 +++
+> >  5 files changed, 547 insertions(+), 6 deletions(-)
+> 
+> I can't apply patches 1-2 and 5-6 since they depend on patches 3-4 for
+> which I'd need an Acked-by: from Lee if I'm to pick them up. Same goes
+> for patch 7.
+> 
+> By the looks of it there are minor conflicts with the MFD tree, but no
+> major ones. Perhaps it'd be better for Lee to pick up 3-4 for v4.17-rc1
+> and ack patch 7, then I can take the rest after v4.17-rc1?
 
-v6
-- Move gpio properties into pinconf subnode
-- move pinmux properties into mux and config subnodes
+Sounds like a faff.
 
-v5:
-- Rename 'bt-disable-n' gpio as 'enable'
+Why don't I just pick them all up (except the ARM patch)?
 
-v4: no change
-v3: no change
-
-v2:
-- Fix author email
-
- arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  | 26 +++++++++++++++++
- .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    | 21 ++++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 33 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi              | 10 +++++++
- 4 files changed, 90 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-index 24552f19b3fa..6a573875d45a 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-@@ -36,4 +36,30 @@
- 			drive-strength = <2>;	/* 2 MA */
- 		};
- 	};
-+
-+	blsp1_uart1_default: blsp1_uart1_default {
-+		mux {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			function = "blsp_uart2";
-+		};
-+
-+		config {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	blsp1_uart1_sleep: blsp1_uart1_sleep {
-+		mux {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-index 59b29ddfb6e9..0a8cf7e5974f 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-@@ -26,6 +26,27 @@
- 		};
- 	};
- 
-+	divclk4_pin_a: divclk4 {
-+		pinconf {
-+			pins = "gpio18";
-+			function = PMIC_GPIO_FUNC_FUNC2;
-+
-+			bias-disable;
-+			power-source = <PM8994_GPIO_S4>;
-+		};
-+	};
-+
-+	bt_en_pin_a: bt-en-active {
-+		pinconf {
-+			pins = "gpio19";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+
-+			output-low;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+		};
-+	};
-+
- 	usb3_vbus_det_gpio: pm8996_gpio22 {
- 		pinconf {
- 			pins = "gpio22";
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 1c8f1b86472d..8b3bcdf0d718 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -23,6 +23,7 @@
- 	aliases {
- 		serial0 = &blsp2_uart1;
- 		serial1 = &blsp2_uart2;
-+		serial2 = &blsp1_uart1;
- 		i2c0	= &blsp1_i2c2;
- 		i2c1	= &blsp2_i2c1;
- 		i2c2	= &blsp2_i2c0;
-@@ -34,7 +35,39 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	clocks {
-+		divclk4: divclk4 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+			clock-output-names = "divclk4";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&divclk4_pin_a>;
-+		};
-+	};
-+
- 	soc {
-+		serial@7570000 {
-+			label = "BT-UART";
-+			status = "okay";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp1_uart1_default>;
-+			pinctrl-1 = <&blsp1_uart1_sleep>;
-+
-+			bluetooth {
-+				compatible = "qcom,qca6174-bt";
-+
-+				/* bt_disable_n gpio */
-+				enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&bt_en_pin_a>;
-+
-+				clocks = <&divclk4>;
-+			};
-+		};
-+
- 		serial@75b0000 {
- 			label = "LS-UART1";
- 			status = "okay";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 0a6f7952bbb1..2d54a86a027f 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -408,6 +408,16 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		blsp1_uart1: serial@7570000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x07570000 0x1000>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			status = "disabled";
-+		};
-+
- 		blsp1_spi0: spi@7575000 {
- 			compatible = "qcom,spi-qup-v2.2.1";
- 			reg = <0x07575000 0x600>;
 -- 
-2.14.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
