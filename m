@@ -1,42 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 07/12] ARM: shmobile: r8a77470: basic SoC support
-Date: Wed, 28 Mar 2018 09:34:19 +0200
-Message-ID: <CAMuHMdWEEVFZUG0FkgCUY528x45PqcrnbcqpNjZ9zyx542xskg@mail.gmail.com>
-References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
- <1522161443-54428-8-git-send-email-biju.das@bp.renesas.com>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [PATCH v2 3/8] DT: arm: renesas,r9a06g032: add the RZ/N1 bindings
+Date: Wed, 28 Mar 2018 07:44:03 +0000
+Message-ID: <OSBPR01MB2054832DF4C7ACB15F49C129D2A30@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1521719091-25157-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1521719091-25157-4-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdXaRarxors3E-Jv7TLjka-p9XGYCTKyF7jM3p+UemgO+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522161443-54428-8-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXaRarxors3E-Jv7TLjka-p9XGYCTKyF7jM3p+UemgO+w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add minimal support for the RZ/G1C (R8A77470) SoC.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXchDQoNCk9uICAyMiBNYXJjaCAyMDE4
+IDEyOjM3LCBHZWVydCBzYWlkOg0KPiBIaSBNaWNoZWwsDQo+DQo+IE9uIFRodSwgTWFyIDIyLCAy
+MDE4IGF0IDEyOjQ0IFBNLCBNaWNoZWwgUG9sbGV0DQo+IDxtaWNoZWwucG9sbGV0QGJwLnJlbmVz
+YXMuY29tPiB3cm90ZToNCj4gPiBUaGlzIGRvY3VtZW50cyB0aGUgUlovTjEgYmluZGluZ3MgZm9y
+IGJvdGggdGhlIFJaL04xIGFuZCB0aGUNCj4gPiBSWk4xRDQwMC1EQiBib2FyZC4NCj4gPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IE1pY2hlbCBQb2xsZXQgPG1pY2hlbC5wb2xsZXRAYnAucmVuZXNhcy5j
+b20+DQo+DQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4NCj4gPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NobW9iaWxlLnR4dA0KPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc2htb2JpbGUudHh0DQo+ID4gQEAgLTQ3
+LDcgKzQ3LDggQEAgU29DczoNCj4gPiAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3Nzk4
+MCINCj4gPiAgICAtIFItQ2FyIEQzIChSOEE3Nzk5NSkNCj4gPiAgICAgIGNvbXBhdGlibGUgPSAi
+cmVuZXNhcyxyOGE3Nzk5NSINCj4gPiAtDQo+ID4gKyAgLSBSWi9OMUQgKFI5QTA2RzAzMikNCj4g
+PiArICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOWEwNmcwMzIiDQo+ID4NCj4gPiAgQm9hcmRz
+Og0KPiA+DQo+ID4gQEAgLTEwNCw2ICsxMDUsOCBAQCBCb2FyZHM6DQo+ID4gICAgICBjb21wYXRp
+YmxlID0gInJlbmVzYXMscG9ydGVyIiwgInJlbmVzYXMscjhhNzc5MSINCj4gPiAgICAtIFJTS1Ja
+QTEgKFlSMEs3NzIxMEMwMDBCRSkNCj4gPiAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyc2ty
+emExIiwgInJlbmVzYXMscjdzNzIxMDAiDQo+ID4gKyAgLSBSWk4xRC1EQiAoUlovTjFEIERlbW8g
+Qm9hcmQgZm9yIHRoZSBSWi9OMUQgNDAwIHBpbnMgcGFja2FnZSkNCj4NCj4gVGhlIG9mZmljaWFs
+IGJvYXJkIHBhcnQgbnVtYmVyIChiZXR3ZWVuIHBhcmVudGhlc2VzKSBzaG91bGQgYmUNCj4gWUNP
+Tk5FQ1QtSVQtUlpOMUQ/DQoNCkkndmUgY2hlY2tlZCB0aGlzLCBhbmQgdGhlIFlDT05ORUNUIGlz
+IHRoZSAvYmFzZSBib2FyZC8gZm9yIHRoaXMgJ21vZHVsZScsIHRoZSBtb2R1bGUNCmlzIGNhbGxl
+ZCBSWk4xRC1EQi4NCg0KPg0KPiA+ICsgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJ6bjFkNDAw
+LWRiIiwgInJlbmVzYXMscjlhMDZnMDMyIg0KPiA+ICAgIC0gU2FsdmF0b3ItWCAoUlRQMFJDNzc5
+NVNJUEIwMDEwUykNCj4gPiAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxzYWx2YXRvci14Iiwg
+InJlbmVzYXMscjhhNzc5NSINCj4gPiAgICAtIFNhbHZhdG9yLVggKFJUUDBSQzc3OTZTSVBCMDAx
+MVMpDQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICBHZWVydA0KDQpNaWNoZWwNCg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRk
+LCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hp
+cmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdp
+c3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
