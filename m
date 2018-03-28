@@ -1,8 +1,8 @@
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 05/13] usb: typec: add API to get typec basic port power
- and data config
-Date: Thu, 29 Mar 2018 00:06:10 +0800
-Message-ID: <1522253178-32414-6-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v4 06/13] usb: typec: tcpm: support get typec and pd config
+ from device properties
+Date: Thu, 29 Mar 2018 00:06:11 +0800
+Message-ID: <1522253178-32414-7-git-send-email-jun.li@nxp.com>
 References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,104 +22,216 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds 3 APIs to get the typec port power and data type,
-and preferred power role by its name string.
+This patch adds support of get typec and power delivery config from
+firmware description.
 
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/usb/typec/class.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  3 +++
- 2 files changed, 55 insertions(+)
+ drivers/usb/typec/tcpm.c | 140 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 115 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 53df10d..5981e18 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -9,6 +9,7 @@
- #include <linux/device.h>
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index be9b009..1744041b 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -13,6 +13,7 @@
  #include <linux/module.h>
  #include <linux/mutex.h>
+ #include <linux/proc_fs.h>
 +#include <linux/property.h>
+ #include <linux/sched/clock.h>
+ #include <linux/seq_file.h>
  #include <linux/slab.h>
- #include <linux/usb/typec.h>
- #include <linux/usb/typec_mux.h>
-@@ -802,6 +803,12 @@ static const char * const typec_port_types[] = {
- 	[TYPEC_PORT_DRP] = "dual",
- };
- 
-+static const char * const typec_data_types[] = {
-+	[TYPEC_PORT_DFP] = "host",
-+	[TYPEC_PORT_UFP] = "device",
-+	[TYPEC_PORT_DRD] = "dual",
-+};
-+
- static const char * const typec_port_types_drp[] = {
- 	[TYPEC_PORT_SRC] = "dual [source] sink",
- 	[TYPEC_PORT_SNK] = "dual source [sink]",
-@@ -1252,6 +1259,51 @@ void typec_set_pwr_opmode(struct typec_port *port,
+@@ -3569,6 +3570,82 @@ static int tcpm_copy_vdos(u32 *dest_vdo, const u32 *src_vdo,
+ 	return nr_vdo;
  }
- EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
  
-+/**
-+ * typec_find_power_type - Get the typec port power type
-+ * @name: port type string
-+ *
-+ * This routine is used to find the typec_port_type by its string name.
-+ *
-+ * Returns typec_port_type if success, otherwise negative error code.
-+ */
-+int typec_find_power_type(const char *name)
++static int tcpm_fw_get_caps(struct tcpm_port *port,
++			    struct fwnode_handle *fwnode)
 +{
-+	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-+			    name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_power_type);
++	const char *cap_str;
++	int ret;
++	u32 mw;
 +
-+/**
-+ * typec_find_preferred_role - Find the typec drp port preferred power role
-+ * @name: power role string
-+ *
-+ * This routine is used to find the typec_role by its string name of
-+ * preferred power role(Try.SRC or Try.SNK).
-+ *
-+ * Returns typec_role if success, otherwise negative error code.
-+ */
-+int typec_find_preferred_role(const char *name)
-+{
-+	return match_string(typec_roles, ARRAY_SIZE(typec_roles), name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_preferred_role);
++	if (!port || !fwnode)
++		return -EINVAL;
 +
-+/**
-+ * typec_find_data_type - Get the typec port data capability
-+ * @name: data type string
-+ *
-+ * This routine is used to find the typec_port_data by its string name.
-+ *
-+ * Returns typec_port_data if success, otherwise negative error code.
-+ */
-+int typec_find_data_type(const char *name)
-+{
-+	return match_string(typec_data_types, ARRAY_SIZE(typec_data_types),
-+			    name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_data_type);
++	/* USB data support is optional */
++	ret = fwnode_property_read_string(fwnode, "data-type", &cap_str);
++	if (ret == 0) {
++		port->typec_caps.data = typec_find_data_type(cap_str);
++		if (port->typec_caps.data < 0)
++			return -EINVAL;
++	}
 +
- /* ------------------------------------------ */
- /* API for Multiplexer/DeMultiplexer Switches */
++	ret = fwnode_property_read_string(fwnode, "power-type", &cap_str);
++	if (ret < 0)
++		return ret;
++
++	port->typec_caps.type = typec_find_power_type(cap_str);
++	if (port->typec_caps.type < 0)
++		return -EINVAL;
++	port->port_type = port->typec_caps.type;
++
++	if (port->port_type == TYPEC_PORT_SNK)
++		goto sink;
++
++	/* Get soruce pdos */
++	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
++					     NULL, 0);
++	if (ret <= 0)
++		return -EINVAL;
++
++	port->nr_src_pdo = min(ret, PDO_MAX_OBJECTS);
++	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
++					     port->src_pdo, port->nr_src_pdo);
++	if ((ret < 0) || tcpm_validate_caps(port, port->src_pdo,
++					    port->nr_src_pdo))
++		return -EINVAL;
++
++	if (port->port_type == TYPEC_PORT_SRC)
++		return 0;
++
++	/* Get the preferred power role for DRP */
++	ret = fwnode_property_read_string(fwnode, "try-power-role", &cap_str);
++	if (ret < 0)
++		return ret;
++
++	port->typec_caps.prefer_role = typec_find_preferred_role(cap_str);
++	if (port->typec_caps.prefer_role < 0)
++		return -EINVAL;
++sink:
++	/* Get sink pdos */
++	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
++					     NULL, 0);
++	if (ret <= 0)
++		return -EINVAL;
++
++	port->nr_snk_pdo = min(ret, PDO_MAX_OBJECTS);
++	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
++					     port->snk_pdo, port->nr_snk_pdo);
++	if ((ret < 0) || tcpm_validate_caps(port, port->snk_pdo,
++					    port->nr_snk_pdo))
++		return -EINVAL;
++
++	if (fwnode_property_read_u32(fwnode, "op-sink-microwatt-hours",
++				     &mw) < 0)
++		return -EINVAL;
++	port->operating_snk_mw = mw / 1000;
++
++	return 0;
++}
++
+ int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
+ 				    unsigned int nr_pdo)
+ {
+@@ -3643,12 +3720,39 @@ static int nr_type_pdos(const u32 *pdo, unsigned int nr_pdo,
+ 	return count;
+ }
  
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 672b39b..00c93e7 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -267,4 +267,7 @@ int typec_set_orientation(struct typec_port *port,
- 			  enum typec_orientation orientation);
- int typec_set_mode(struct typec_port *port, int mode);
++static int tcpm_copy_caps(struct tcpm_port *port,
++			  const struct tcpc_config *tcfg)
++{
++	if (tcpm_validate_caps(port, tcfg->src_pdo, tcfg->nr_src_pdo) ||
++	    tcpm_validate_caps(port, tcfg->snk_pdo, tcfg->nr_snk_pdo))
++		return -EINVAL;
++
++	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcfg->src_pdo,
++					  tcfg->nr_src_pdo);
++	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcfg->snk_pdo,
++					  tcfg->nr_snk_pdo);
++
++	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcfg->snk_vdo,
++					  tcfg->nr_snk_vdo);
++
++	port->max_snk_mv = tcfg->max_snk_mv;
++	port->max_snk_ma = tcfg->max_snk_ma;
++	port->max_snk_mw = tcfg->max_snk_mw;
++	port->operating_snk_mw = tcfg->operating_snk_mw;
++
++	port->typec_caps.prefer_role = tcfg->default_role;
++	port->typec_caps.type = tcfg->type;
++	port->typec_caps.data = tcfg->data;
++
++	return 0;
++}
++
+ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ {
+ 	struct tcpm_port *port;
+ 	int i, err;
  
-+int typec_find_power_type(const char *name);
-+int typec_find_preferred_role(const char *name);
-+int typec_find_data_type(const char *name);
- #endif /* __LINUX_USB_TYPEC_H */
+-	if (!dev || !tcpc || !tcpc->config ||
++	if (!dev || !tcpc ||
+ 	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
+ 	    !tcpc->set_polarity || !tcpc->set_vconn || !tcpc->set_vbus ||
+ 	    !tcpc->set_pd_rx || !tcpc->set_roles || !tcpc->pd_transmit)
+@@ -3677,17 +3781,13 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	init_completion(&port->swap_complete);
+ 	tcpm_debugfs_init(port);
+ 
+-	if (tcpm_validate_caps(port, tcpc->config->src_pdo,
+-			       tcpc->config->nr_src_pdo) ||
+-	    tcpm_validate_caps(port, tcpc->config->snk_pdo,
+-			       tcpc->config->nr_snk_pdo)) {
+-		err = -EINVAL;
++	if (tcpc->config)
++		err = tcpm_copy_caps(port, tcpc->config);
++	else
++		err = tcpm_fw_get_caps(port, tcpc->fwnode);
++	if (err < 0)
+ 		goto out_destroy_wq;
+-	}
+-	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcpc->config->src_pdo,
+-					  tcpc->config->nr_src_pdo);
+-	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcpc->config->snk_pdo,
+-					  tcpc->config->nr_snk_pdo);
++
+ 	port->nr_fixed =  nr_type_pdos(port->snk_pdo,
+ 				       port->nr_snk_pdo,
+ 				       PDO_TYPE_FIXED);
+@@ -3697,22 +3797,12 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	port->nr_batt = nr_type_pdos(port->snk_pdo,
+ 				     port->nr_snk_pdo,
+ 				     PDO_TYPE_BATT);
+-	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
+-					  tcpc->config->nr_snk_vdo);
+-
+-	port->max_snk_mv = tcpc->config->max_snk_mv;
+-	port->max_snk_ma = tcpc->config->max_snk_ma;
+-	port->max_snk_mw = tcpc->config->max_snk_mw;
+-	port->operating_snk_mw = tcpc->config->operating_snk_mw;
+-	if (!tcpc->config->try_role_hw)
+-		port->try_role = tcpc->config->default_role;
++	if (!tcpc->config || !tcpc->config->try_role_hw)
++		port->try_role = port->typec_caps.prefer_role;
+ 	else
+ 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
+ 
+ 	port->typec_caps.fwnode = tcpc->fwnode;
+-	port->typec_caps.prefer_role = tcpc->config->default_role;
+-	port->typec_caps.type = tcpc->config->type;
+-	port->typec_caps.data = tcpc->config->data;
+ 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
+ 	port->typec_caps.pd_revision = 0x0200;	/* USB-PD spec release 2.0 */
+ 	port->typec_caps.dr_set = tcpm_dr_set;
+@@ -3722,7 +3812,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	port->typec_caps.port_type_set = tcpm_port_type_set;
+ 
+ 	port->partner_desc.identity = &port->partner_ident;
+-	port->port_type = tcpc->config->type;
++	port->port_type = port->typec_caps.type;
+ 
+ 	port->role_sw = usb_role_switch_get(port->dev);
+ 	if (IS_ERR(port->role_sw)) {
+@@ -3736,7 +3826,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 		goto out_destroy_wq;
+ 	}
+ 
+-	if (tcpc->config->alt_modes) {
++	if (tcpc->config && tcpc->config->alt_modes) {
+ 		const struct typec_altmode_desc *paltmode = tcpc->config->alt_modes;
+ 
+ 		i = 0;
 -- 
 2.7.4
