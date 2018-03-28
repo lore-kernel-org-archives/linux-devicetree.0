@@ -1,180 +1,127 @@
 Return-Path: <SRS0=PuNI=GS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr0-f193.google.com ([209.85.128.193]:40407 "EHLO
-        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752965AbeC1UYe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Mar 2018 16:24:34 -0400
+Received: from smtp.220.in.ua ([89.184.67.205]:55857 "EHLO smtp.220.in.ua"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752416AbeC1Tr0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Mar 2018 15:47:26 -0400
 Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix and docs for CR0014114
 References: <20180326121506.9528-1-oleg@kaa.org.ua>
  <20180327164903.6307-1-oleg@kaa.org.ua>
  <66fb58b2-2ae7-8edf-6c48-0f78f82c31a2@gmail.com>
  <005611b1-b821-93d2-4bb5-c3f12b4fc937@kaa.org.ua>
  <83ebdd21-ed70-666d-0d20-093ff52a208b@gmail.com>
- <60ba4d40-42f3-66f9-0001-b19b57f5d1a4@kaa.org.ua>
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <d253fd08-3226-f2d9-aebf-2c2a52e27d58@gmail.com>
-Date: Wed, 28 Mar 2018 22:23:16 +0200
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Message-ID: <60ba4d40-42f3-66f9-0001-b19b57f5d1a4@kaa.org.ua>
+Date: Wed, 28 Mar 2018 22:48:47 +0300
 MIME-Version: 1.0
-In-Reply-To: <60ba4d40-42f3-66f9-0001-b19b57f5d1a4@kaa.org.ua>
+In-Reply-To: <83ebdd21-ed70-666d-0d20-093ff52a208b@gmail.com>
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 03/28/2018 09:48 PM, Oleh Kravchenko wrote:
-> 
-> 
-> On 28.03.18 22:21, Jacek Anaszewski wrote:
->> On 03/28/2018 08:36 AM, Oleh Kravchenko wrote:
->>> Hello Jacek,
+
+
+On 28.03.18 22:21, Jacek Anaszewski wrote:
+> On 03/28/2018 08:36 AM, Oleh Kravchenko wrote:
+>> Hello Jacek,
+>>
+>> On 27.03.18 23:58, Jacek Anaszewski wrote:
+>>>> +Example
+>>>> +-------
+>>>> +
+>>>> +led-controller@0 {
+>>>> +	compatible = "crane,cr0014114";
+>>>> +	reg = <0>;
+>>>> +	spi-max-frequency = <50000>;
+>>>> +	#address-cells = <1>;
+>>>> +	#size-cells = <0>;
+>>>> +
+>>>> +	led@0 {
+>>>> +		reg = <0>;
+>>>> +		label = "cr0:red:coin";
+>>>> +	};
+>>>> +	led@1 {
+>>>> +		reg = <1>;
+>>>> +		label = "cr0:green:coin";
+>>>> +	};
+>>>> +	led@2 {
+>>>> +		reg = <2>;
+>>>> +		label = "cr0:blue:coin";
+>>>> +	};
+>>>> +	led@3 {
+>>>> +		reg = <3>;
+>>>> +		label = "cr1:red:bill";
+>>>> +	};
+>>>> +	led@4 {
+>>>> +		reg = <4>;
+>>>> +		label = "cr1:green:bill";
+>>>> +	};
+>>>> +	led@5 {
+>>>> +		reg = <5>;
+>>>> +		label = "cr1:blue:bill";
+>>>> +	};
 >>>
->>> On 27.03.18 23:58, Jacek Anaszewski wrote:
->>>>> +Example
->>>>> +-------
->>>>> +
->>>>> +led-controller@0 {
->>>>> +	compatible = "crane,cr0014114";
->>>>> +	reg = <0>;
->>>>> +	spi-max-frequency = <50000>;
->>>>> +	#address-cells = <1>;
->>>>> +	#size-cells = <0>;
->>>>> +
->>>>> +	led@0 {
->>>>> +		reg = <0>;
->>>>> +		label = "cr0:red:coin";
->>>>> +	};
->>>>> +	led@1 {
->>>>> +		reg = <1>;
->>>>> +		label = "cr0:green:coin";
->>>>> +	};
->>>>> +	led@2 {
->>>>> +		reg = <2>;
->>>>> +		label = "cr0:blue:coin";
->>>>> +	};
->>>>> +	led@3 {
->>>>> +		reg = <3>;
->>>>> +		label = "cr1:red:bill";
->>>>> +	};
->>>>> +	led@4 {
->>>>> +		reg = <4>;
->>>>> +		label = "cr1:green:bill";
->>>>> +	};
->>>>> +	led@5 {
->>>>> +		reg = <5>;
->>>>> +		label = "cr1:blue:bill";
->>>>> +	};
->>>>
->>>> Why cr0 and cr1? It should be cr0014114 to stick to the
->>>> current LED naming pattern <devicename:colour:function>.
->>>>
->>>> Nonetheless, we lately came to the conclusion that devicename
->>>> segment is redundant in LED class device name, so until we change
->>>> LED naming convention officially, let's remove devicename segment
->>>> at least from DT and prepend the label with "cr0014114" in the driver.
->>>>
->>>> Please compare how it is approached in [0] (not merged yet).
+>>> Why cr0 and cr1? It should be cr0014114 to stick to the
+>>> current LED naming pattern <devicename:colour:function>.
+>>>
+>>> Nonetheless, we lately came to the conclusion that devicename
+>>> segment is redundant in LED class device name, so until we change
+>>> LED naming convention officially, let's remove devicename segment
+>>> at least from DT and prepend the label with "cr0014114" in the driver.
+>>>
+>>> Please compare how it is approached in [0] (not merged yet).
+>>>
+>>
+>> It's just example.
+>> But anyway our applications works with LEDs by numbers.
+>>
+>> Using function names instead numbers will increase code complexity,
+>> so we use numbers :)
+> 
+> This is LED class device naming convention in mainline and examples
+> also must stick to it to keep the things consistent.
+> 
+> Please switch labels so that they matched the pattern
+> 
+> label = "color:function";
+
+> Why cr0 and cr1? It should be cr0014114 to stick to the
+> current LED naming pattern <devicename:colour:function>.
+
+So how it should be? I'm confused :(
+
+
+> 
+> Regardless of how LEDs are named in your port of kernel,
+> they for sure have some functions for the vending machine
+> user. Just use those names in DT :-)
+> 
+> Best regards,
+> Jacek Anaszewski
+> 
+>>>> +};
+>>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> index ae850d6c0ad3..f17949c365f5 100644
+>>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> @@ -75,6 +75,7 @@ cnxt	Conexant Systems, Inc.
+>>>>  compulab	CompuLab Ltd.
+>>>>  cortina	Cortina Systems, Inc.
+>>>>  cosmic	Cosmic Circuits
+>>>> +crane	Crane Connectivity Solutions
+>>>>  creative	Creative Technology Ltd
+>>>>  crystalfontz	Crystalfontz America, Inc.
+>>>>  cubietech	Cubietech, Ltd.
 >>>>
 >>>
->>> It's just example.
->>> But anyway our applications works with LEDs by numbers.
->>>
->>> Using function names instead numbers will increase code complexity,
->>> so we use numbers :)
->>
->> This is LED class device naming convention in mainline and examples
->> also must stick to it to keep the things consistent.
->>
->> Please switch labels so that they matched the pattern
->>
->> label = "color:function";
-> 
->> Why cr0 and cr1? It should be cr0014114 to stick to the
->> current LED naming pattern <devicename:colour:function>.
-> 
-> So how it should be? I'm confused :(
-
-You seem to have overlooked second part of my previous message:
-
-"
-Nonetheless, we lately came to the conclusion that devicename
-segment is redundant in LED class device name, so until we change
-LED naming convention officially, let's remove devicename segment
-at least from DT and prepend the label with "cr0014114" in the driver.
-
-Please compare how it is approached in [0] (not merged yet).
-"
-
-Please note that DT label is not intended to be used as-is
-for LED class device name, but it's been frequently abused so.
-
-Here is the example of how you could modify your code:
-
-DT:
-
-led@0 {
-	reg = <0>;
-	label = "red:coin";
-};
-
-LED class driver:
-
-#include <uapi/linux/uleds.h>
-
-
-struct cr0014114_led {
-        char                    name[LED_MAX_NAME_SIZE];
-        struct cr0014114        *priv;
-        struct led_classdev     ldev;
-        u8                      brightness;
-};
-
-
-static int cr0014114_probe_dt(struct cr0014114 *priv)
-{
-...
-const char *str;
-...
-device_for_each_child_node(priv->dev, child)
-{
-...
-if (fwnode_property_read_string(child, "label", &str))
-	snprintf(led->name, sizeof(led->name), "cr0014114::"),
-else
-	snprintf(led->name, sizeof(led->name), "cr0014114:%s", str),
-
-
-I hope it makes all clear now.
-
-> 
->>
->> Regardless of how LEDs are named in your port of kernel,
->> they for sure have some functions for the vending machine
->> user. Just use those names in DT :-)
->>
->> Best regards,
->> Jacek Anaszewski
->>
->>>>> +};
->>>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>>> index ae850d6c0ad3..f17949c365f5 100644
->>>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>>> @@ -75,6 +75,7 @@ cnxt	Conexant Systems, Inc.
->>>>>  compulab	CompuLab Ltd.
->>>>>  cortina	Cortina Systems, Inc.
->>>>>  cosmic	Cosmic Circuits
->>>>> +crane	Crane Connectivity Solutions
->>>>>  creative	Creative Technology Ltd
->>>>>  crystalfontz	Crystalfontz America, Inc.
->>>>>  cubietech	Cubietech, Ltd.
->>>>>
->>>>
->>>> [0] https://www.spinics.net/lists/devicetree/msg220561.html
->>>>
+>>> [0] https://www.spinics.net/lists/devicetree/msg220561.html
 >>>
 >>
 > 
 
 -- 
 Best regards,
-Jacek Anaszewski
+Oleh Kravchenko
+Phone: +380972763224 | oleg@kaa.org.ua | Skype: oleg_krava
