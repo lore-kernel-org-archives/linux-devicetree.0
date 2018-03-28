@@ -1,37 +1,45 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 2/6] dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
-Date: Wed, 28 Mar 2018 10:50:46 +0800
-Message-ID: <20180328025050.221585-3-yixun.lan@amlogic.com>
-References: <20180328025050.221585-1-yixun.lan@amlogic.com>
+Subject: [PATCH v3 0/3] ARM64: dts: meson-axg: add AO clock driver
+Date: Wed, 28 Mar 2018 11:01:27 +0800
+Message-ID: <20180328030130.240336-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328025050.221585-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the dt-binding documentation to support new compatible string
-for the Amlogic's Meson-AXG SoC.
+  These patches try to add AO clock driver for the Amlogic's
+AXG SoC, while adding this driver, we found the pclk for uart AO
+controller was wrong, so fix it here.
+  Note, this patch actually depend on AO clock driver[2]
+Please take these patches untill AO clock driver is merged.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-index 786dc39ca904..3a880528030e 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-@@ -9,6 +9,7 @@ Required Properties:
- 	- GXBB (S905) : "amlogic,meson-gxbb-aoclkc"
- 	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
- 	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
-+	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
- 	followed by the common "amlogic,meson-gx-aoclkc"
+changes since v2 at [1]: 
+ - previous the DTS patches sit in two seperate series, merge them
+   into one patch set.
  
- - #clock-cells: should be 1.
+changes since v1 at [0]: 
+ -
+
+[0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
+[1] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
+  https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
+[2] https://lkml.kernel.org/r/20180328025050.221585-1-yixun.lan@amlogic.com
+
+
+Qiufang Dai (1):
+  arm64: dts: meson-axg: add AO clock driver DT info
+
+Yixun Lan (2):
+  ARM64: dts: meson-axg: add an 32K alt aoclk
+  ARM64: dts: meson: fix clock source of the pclk for UART_AO
+
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 23 +++++++++++++++++++++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  4 ++--
+ 3 files changed, 25 insertions(+), 6 deletions(-)
+
 -- 
 2.15.1
