@@ -1,139 +1,109 @@
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 13/13] staging: typec: tcpci: move tcpci driver out of
- staging
-Date: Thu, 29 Mar 2018 00:06:18 +0800
-Message-ID: <1522253178-32414-14-git-send-email-jun.li@nxp.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
+Date: Wed, 28 Mar 2018 18:25:46 +0200
+Message-ID: <af33e522-7f87-d62a-0a35-d56a403387b7@linaro.org>
+References: <20180110224838.16711-2-paul@crapouillou.net>
+ <20180317232901.14129-1-paul@crapouillou.net>
+ <20180317232901.14129-8-paul@crapouillou.net>
+ <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
+ <06976e4ae275c4cc0bddacc5e0c0c9a9@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <06976e4ae275c4cc0bddacc5e0c0c9a9@crapouillou.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Move TCPCI(Typec port controller interface) driver out of staging.
+On 28/03/2018 17:15, Paul Cercueil wrote:
+> Le 2018-03-24 07:26, Daniel Lezcano a écrit :
+>> On 18/03/2018 00:29, Paul Cercueil wrote:
+>>> This driver will use the TCU (Timer Counter Unit) present on the Ingenic
+>>> JZ47xx SoCs to provide the kernel with a clocksource and timers.
+>>
+>> Please provide a more detailed description about the timer.
+> 
+> There's a doc file for that :)
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/Kconfig                |  2 --
- drivers/staging/Makefile               |  1 -
- drivers/staging/typec/Kconfig          | 14 --------------
- drivers/staging/typec/Makefile         |  1 -
- drivers/staging/typec/TODO             |  5 -----
- drivers/usb/typec/Kconfig              |  7 +++++++
- drivers/usb/typec/Makefile             |  1 +
- drivers/{staging => usb}/typec/tcpci.c |  0
- drivers/{staging => usb}/typec/tcpci.h |  0
- 9 files changed, 8 insertions(+), 23 deletions(-)
+Usually, when there is a new driver I ask for a description in the
+changelog for reference.
 
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index e95ab68..751937d 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -116,8 +116,6 @@ source "drivers/staging/vc04_services/Kconfig"
- 
- source "drivers/staging/ccree/Kconfig"
- 
--source "drivers/staging/typec/Kconfig"
--
- source "drivers/staging/vboxvideo/Kconfig"
- 
- source "drivers/staging/pi433/Kconfig"
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index af8cd6a..039693e 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -2,7 +2,6 @@
- # Makefile for staging directory
- 
- obj-y				+= media/
--obj-y				+= typec/
- obj-$(CONFIG_IPX)		+= ipx/
- obj-$(CONFIG_NCP_FS)		+= ncpfs/
- obj-$(CONFIG_IRDA)		+= irda/net/
-diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
-deleted file mode 100644
-index 5359f55..0000000
---- a/drivers/staging/typec/Kconfig
-+++ /dev/null
-@@ -1,14 +0,0 @@
--menu "USB Power Delivery and Type-C drivers"
--
--if TYPEC_TCPM
--
--config TYPEC_TCPCI
--	tristate "Type-C Port Controller Interface driver"
--	depends on I2C
--	select REGMAP_I2C
--	help
--	  Type-C Port Controller driver for TCPCI-compliant controller.
--
--endif
--
--endmenu
-diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
-deleted file mode 100644
-index 53d649a..0000000
---- a/drivers/staging/typec/Makefile
-+++ /dev/null
-@@ -1 +0,0 @@
--obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
-deleted file mode 100644
-index 53fe2f7..0000000
---- a/drivers/staging/typec/TODO
-+++ /dev/null
-@@ -1,5 +0,0 @@
--tcpci:
--- Test with real hardware
--
--Please send patches to Guenter Roeck <linux@roeck-us.net> and copy
--Heikki Krogerus <heikki.krogerus@linux.intel.com>.
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index 030f88c..2b8d3c2 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -55,6 +55,13 @@ config TYPEC_TCPM
- 
- if TYPEC_TCPM
- 
-+config TYPEC_TCPCI
-+	tristate "Type-C Port Controller Interface driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Type-C Port Controller driver for TCPCI-compliant controller.
-+
- source "drivers/usb/typec/fusb302/Kconfig"
- 
- config TYPEC_WCOVE
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index 1f599a6..02758a1 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
- obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
- obj-$(CONFIG_TYPEC)		+= mux/
-+obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
-similarity index 100%
-rename from drivers/staging/typec/tcpci.c
-rename to drivers/usb/typec/tcpci.c
-diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
-similarity index 100%
-rename from drivers/staging/typec/tcpci.h
-rename to drivers/usb/typec/tcpci.h
+>> Where is the clocksource ?
+> 
+> Right, there is no clocksource, just timers.
+> 
+>> I don't see the point of using channel idx and pwm checking here.
+>>
+>> There is one clockevent, why create multiple channels ? Can't you stick
+>> to the usual init routine for a timer.
+> 
+> So the idea is that we use all the TCU channels that won't be used for PWM
+> as timers. Hence the PWM checking. Why is this bad?
+
+It is not bad but arguable. By checking the channels used by the pwm in
+the code, you introduce an adherence between two subsystems even if it
+is just related to the DT parsing part.
+
+As it is not needed to have more than one timer in the time framework
+(at least with the same characteristics), the pwm channels check is
+pointless. We can assume the author of the DT file is smart enough to
+prevent conflicts and define a pwm and a timer properly instead of
+adding more code complexity.
+
+In addition, simplifying the code will allow you to use the timer-of
+code and reduce very significantly the init function.
+
+>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>> ---
+>>>  drivers/clocksource/Kconfig         |   8 ++
+>>>  drivers/clocksource/Makefile        |   1 +
+>>>  drivers/clocksource/timer-ingenic.c | 278
+>>> ++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 287 insertions(+)
+>>>  create mode 100644 drivers/clocksource/timer-ingenic.c
+>>>
+>>>  v2: Use SPDX identifier for the license
+>>>  v3: - Move documentation to its own patch
+>>>      - Search the devicetree for PWM clients, and use all the TCU
+>>>        channels that won't be used for PWM
+>>>  v4: - Add documentation about why we search for PWM clients
+>>>      - Verify that the PWM clients are for the TCU PWM driver
+>>>
+>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+>>> index d2e5382821a4..481422145fb4 100644
+>>> --- a/drivers/clocksource/Kconfig
+>>> +++ b/drivers/clocksource/Kconfig
+>>> @@ -592,4 +592,12 @@ config CLKSRC_ST_LPC
+>>>        Enable this option to use the Low Power controller timer
+>>>        as clocksource.
+>>>
+>>> +config INGENIC_TIMER
+>>> +    bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
+>>> +    depends on MACH_INGENIC || COMPILE_TEST
+>>
+>> bool "Clocksource/timer using the TCU in Ingenic JZ SoCs" if COMPILE_TEST
+>>
+>> Remove the depends MACH_INGENIC.
+> 
+> This driver is not useful on anything else than Ingenic SoCs, why should I
+> remove MACH_INGENIC then?
+
+For COMPILE_TEST on x86.
+
+>>> +    select CLKSRC_OF
+>>> +    default y
+>>
+>> No default, Kconfig platform selects the timer.
+> 
+> Alright.
+[ ... ]
+
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
