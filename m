@@ -1,462 +1,117 @@
-Return-Path: <SRS0=+fuU=GM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50136.outbound.protection.outlook.com ([40.107.5.136]:35411
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=PuNI=GS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-by2nam01on0065.outbound.protection.outlook.com ([104.47.34.65]:26754
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753342AbeCVKYJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 22 Mar 2018 06:24:09 -0400
-From: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Subject: [RFC PATCH 1/2] iio: dac: add TI DAC5755 family support
-Date: Thu, 22 Mar 2018 11:23:35 +0100
-Message-Id: <20180322102336.32268-1-sean.nyekjaer@prevas.dk>
+        id S1752659AbeC1LZx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Mar 2018 07:25:53 -0400
+From: Janek Kotas <jank@cadence.com>
+Subject: [PATCH 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
+Date: Wed, 28 Mar 2018 11:25:51 +0000
+Message-ID: <0BFF8473-B7FC-40F3-B010-0B5CA7BE256A@global.cadence.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8571D4C55276F845A8E7E03A65D8685C@namprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support for the Texas Intruments DAC5755 Family.
-
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
----
- drivers/iio/dac/Kconfig      |  10 ++
- drivers/iio/dac/Makefile     |   1 +
- drivers/iio/dac/ti-dac5571.c | 395 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 406 insertions(+)
- create mode 100644 drivers/iio/dac/ti-dac5571.c
-
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index 965d5c0d2468..c78c02f455b9 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -320,6 +320,16 @@ config TI_DAC082S085
- 
- 	  If compiled as a module, it will be called ti-dac082s085.
- 
-+config TI_DAC5571
-+	tristate "Texas Instruments 8/10/12/16-bit 1/2/4-channel DAC driver"
-+	depends on I2C
-+	help
-+	  Driver for the Texas Instruments
-+	  DAC5571, DAC6571, DAC7571, DAC5574, DAC6574, DAC7574, DAC5573,
-+	  DAC6573, DAC7573.
-+
-+	  If compiled as a module, it will be called ti-dac5571.
-+
- config VF610_DAC
- 	tristate "Vybrid vf610 DAC driver"
- 	depends on OF
-diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
-index 81e710ed7491..1ab358d522ee 100644
---- a/drivers/iio/dac/Makefile
-+++ b/drivers/iio/dac/Makefile
-@@ -35,4 +35,5 @@ obj-$(CONFIG_MCP4922) += mcp4922.o
- obj-$(CONFIG_STM32_DAC_CORE) += stm32-dac-core.o
- obj-$(CONFIG_STM32_DAC) += stm32-dac.o
- obj-$(CONFIG_TI_DAC082S085) += ti-dac082s085.o
-+obj-$(CONFIG_TI_DAC5571) += ti-dac5571.o
- obj-$(CONFIG_VF610_DAC) += vf610_dac.o
-diff --git a/drivers/iio/dac/ti-dac5571.c b/drivers/iio/dac/ti-dac5571.c
-new file mode 100644
-index 000000000000..cf4ba151ed7e
---- /dev/null
-+++ b/drivers/iio/dac/ti-dac5571.c
-@@ -0,0 +1,395 @@
-+/*
-+ * ti-dac5571.c - Texas Instruments 8/10/12-bit 1/4-channel DAC driver
-+ *
-+ * Copyright (C) 2018 Prevas A/S
-+ *
-+ * http://www.ti.com/lit/ds/symlink/dac5571.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac6571.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac7571.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac5574.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac6574.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac7574.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac5573.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac6573.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac7573.pdf
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License (version 2) as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/of_device.h>
-+#include <linux/of.h>
-+
-+enum chip_id {
-+	single_8bit, single_10bit, single_12bit,
-+	quad_8bit, quad_10bit, quad_12bit
-+};
-+
-+struct dac5571_spec {
-+	u8 num_channels;
-+	u8 resolution;
-+};
-+
-+static const struct dac5571_spec dac5571_spec[] = {
-+	[single_8bit]  = {.num_channels = 1, .resolution =  8},
-+	[single_10bit] = {.num_channels = 1, .resolution = 10},
-+	[single_12bit] = {.num_channels = 1, .resolution = 12},
-+	[quad_8bit]    = {.num_channels = 4, .resolution =  8},
-+	[quad_10bit]   = {.num_channels = 4, .resolution = 10},
-+	[quad_12bit]   = {.num_channels = 4, .resolution = 12},
-+};
-+
-+struct dac5571_data {
-+	struct i2c_client *client;
-+	int id;
-+	struct mutex lock;
-+	struct regulator *vref;
-+	u16 val[4];
-+	bool powerdown;
-+	u8 powerdown_mode;
-+	u8 resolution;
-+	u8 channels;
-+	u8 buf[3] ____cacheline_aligned;
-+};
-+
-+#define POWERDOWN(mode)		((mode) + 1)
-+
-+static int dac5571_cmd(struct dac5571_data *data, int channel,
-+		       u8 pwrdwn, u16 val)
-+{
-+	int ret;
-+	u8 shift;
-+
-+	switch (data->channels) {
-+	case 1:
-+		shift = 12 - data->resolution;
-+		data->buf[0] = (val << shift);
-+		data->buf[1] = pwrdwn << 4 | (val >> (8 - shift));
-+		ret = i2c_master_send(data->client, data->buf, 2);
-+		break;
-+	case 4:
-+		shift = 16 - data->resolution;
-+		data->buf[0] = val << shift;
-+		data->buf[1] = val >> (8 - shift) | pwrdwn << 6;
-+		data->buf[2] = channel << 1 | 1 << 4;
-+		if (pwrdwn)
-+			data->buf[2] |= 1;
-+		ret = i2c_master_send(data->client, data->buf, 3);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	};
-+
-+	return ret;
-+}
-+
-+static const char *const dac5571_powerdown_modes[] = {
-+	"1kohm_to_gnd", "100kohm_to_gnd", "three_state",
-+};
-+
-+static int dac5571_get_powerdown_mode(struct iio_dev *indio_dev,
-+				      const struct iio_chan_spec *chan)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+
-+	return data->powerdown_mode;
-+}
-+
-+static int dac5571_set_powerdown_mode(struct iio_dev *indio_dev,
-+				      const struct iio_chan_spec *chan,
-+				      unsigned int mode)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+	int ret = 0;
-+
-+	if (data->powerdown_mode == mode)
-+		return 0;
-+
-+	mutex_lock(&data->lock);
-+	if (data->powerdown) {
-+		ret = dac5571_cmd(data, chan->channel, POWERDOWN(mode), 0);
-+		if (ret)
-+			goto out;
-+	}
-+	data->powerdown_mode = mode;
-+
-+ out:
-+	mutex_unlock(&data->lock);
-+	return ret;
-+}
-+
-+static const struct iio_enum dac5571_powerdown_mode = {
-+	.items = dac5571_powerdown_modes,
-+	.num_items = ARRAY_SIZE(dac5571_powerdown_modes),
-+	.get = dac5571_get_powerdown_mode,
-+	.set = dac5571_set_powerdown_mode,
-+};
-+
-+static ssize_t dac5571_read_powerdown(struct iio_dev *indio_dev,
-+				      uintptr_t private,
-+				      const struct iio_chan_spec *chan,
-+				      char *buf)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+
-+	return sprintf(buf, "%d\n", data->powerdown);
-+}
-+
-+static ssize_t dac5571_write_powerdown(struct iio_dev *indio_dev,
-+				       uintptr_t private,
-+				       const struct iio_chan_spec *chan,
-+				       const char *buf, size_t len)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+	bool powerdown;
-+	int ret;
-+
-+	ret = strtobool(buf, &powerdown);
-+	if (ret)
-+		return ret;
-+
-+	if (data->powerdown == powerdown)
-+		return len;
-+
-+	mutex_lock(&data->lock);
-+	if (powerdown)
-+		ret =
-+		    dac5571_cmd(data, chan->channel,
-+				POWERDOWN(data->powerdown_mode), 0);
-+	else
-+		ret = dac5571_cmd(data, chan->channel, 0, data->val[0]);
-+	if (!ret)
-+		data->powerdown = powerdown;
-+	mutex_unlock(&data->lock);
-+
-+	return ret ? ret : len;
-+}
-+
-+
-+static const struct iio_chan_spec_ext_info dac5571_ext_info[] = {
-+	{
-+		.name	   = "powerdown",
-+		.read	   = dac5571_read_powerdown,
-+		.write	   = dac5571_write_powerdown,
-+		.shared	   = IIO_SHARED_BY_TYPE,
-+	},
-+	IIO_ENUM("powerdown_mode", IIO_SHARED_BY_TYPE, &dac5571_powerdown_mode),
-+	IIO_ENUM_AVAILABLE("powerdown_mode", &dac5571_powerdown_mode),
-+	{},
-+};
-+
-+#define dac5571_CHANNEL(chan) {					\
-+	.type = IIO_VOLTAGE,					\
-+	.channel = (chan),					\
-+	.address = (chan),					\
-+	.indexed = true,					\
-+	.output = true,						\
-+	.datasheet_name = (const char[]){ 'A' + (chan), 0 },	\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+	.ext_info = dac5571_ext_info,				\
-+}
-+
-+static const struct iio_chan_spec dac5571_channels[] = {
-+	dac5571_CHANNEL(0),
-+	dac5571_CHANNEL(1),
-+	dac5571_CHANNEL(2),
-+	dac5571_CHANNEL(3),
-+};
-+
-+static int dac5571_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		*val = data->val[chan->channel];
-+		ret = IIO_VAL_INT;
-+		break;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = regulator_get_voltage(data->vref);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = ret / 1000;
-+		*val2 = data->resolution;
-+		ret = IIO_VAL_FRACTIONAL_LOG2;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int dac5571_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long mask)
-+{
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (data->val[chan->channel] == val)
-+			return 0;
-+
-+		if (val >= (1 << data->resolution) || val < 0)
-+			return -EINVAL;
-+
-+		if (data->powerdown)
-+			return -EBUSY;
-+
-+		mutex_lock(&data->lock);
-+		ret = dac5571_cmd(data, chan->channel, 0, val);
-+		if (!ret)
-+			data->val[chan->channel] = val;
-+		mutex_unlock(&data->lock);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int dac5571_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				     struct iio_chan_spec const *chan,
-+				     long mask)
-+{
-+	return IIO_VAL_INT;
-+}
-+
-+static const struct iio_info dac5571_info = {
-+	.read_raw	   = dac5571_read_raw,
-+	.write_raw	   = dac5571_write_raw,
-+	.write_raw_get_fmt = dac5571_write_raw_get_fmt,
-+};
-+
-+static int dac5571_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	const struct dac5571_spec *spec;
-+	struct dac5571_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+	if (client->dev.of_node)
-+		data->id = (enum chip_id)of_device_get_match_data(&client->dev);
-+	else
-+		data->id = id->driver_data;
-+
-+	indio_dev->dev.parent = dev;
-+	indio_dev->dev.of_node = client->dev.of_node;
-+	indio_dev->info = &dac5571_info;
-+	indio_dev->name = id->name;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = dac5571_channels;
-+
-+	spec = &dac5571_spec[id->driver_data];
-+	indio_dev->num_channels = spec->num_channels;
-+	data->resolution = spec->resolution;
-+	data->channels = spec->num_channels;
-+
-+	data->vref = devm_regulator_get(dev, "vref");
-+	if (IS_ERR(data->vref))
-+		return PTR_ERR(data->vref);
-+
-+	ret = regulator_enable(data->vref);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_init(&data->lock);
-+
-+	ret = dac5571_cmd(data, 0, 0, 0);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize outputs to 0\n");
-+		goto err;
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+ err:
-+	mutex_destroy(&data->lock);
-+	regulator_disable(data->vref);
-+	return ret;
-+}
-+
-+static int dac5571_remove(struct i2c_client *i2c)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(i2c);
-+	struct dac5571_data *data = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	mutex_destroy(&data->lock);
-+	regulator_disable(data->vref);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id dac5571_of_id[] = {
-+	{.compatible = "ti,dac5571"},
-+	{.compatible = "ti,dac6571"},
-+	{.compatible = "ti,dac7571"},
-+	{.compatible = "ti,dac5574"},
-+	{.compatible = "ti,dac6574"},
-+	{.compatible = "ti,dac7574"},
-+	{.compatible = "ti,dac5573"},
-+	{.compatible = "ti,dac6573"},
-+	{.compatible = "ti,dac7573"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, dac5571_of_id);
-+#endif
-+
-+static const struct i2c_device_id dac5571_id[] = {
-+	{"dac5571", single_8bit},
-+	{"dac6571", single_10bit},
-+	{"dac7571", single_12bit},
-+	{"dac5574", quad_8bit},
-+	{"dac6574", quad_10bit},
-+	{"dac7574", quad_12bit},
-+	{"dac5573", quad_8bit},
-+	{"dac6573", quad_10bit},
-+	{"dac7573", quad_12bit},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, dac5571_id);
-+
-+static struct i2c_driver dac5571_driver = {
-+	.driver = {
-+		   .name = "ti-dac5571",
-+	},
-+	.probe	  = dac5571_probe,
-+	.remove   = dac5571_remove,
-+	.id_table = dac5571_id,
-+};
-+module_i2c_driver(dac5571_driver);
-+
-+MODULE_AUTHOR("Sean Nyekjaer <sean.nyekjaer@prevas.dk>");
-+MODULE_DESCRIPTION("Texas Instruments 8/10/12-bit 1/4-channel DAC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.16.2
-
+VGhpcyBwYXRjaCBhZGRzIGEgZGV2aWNlIHRyZWUgcGxhdGZvcm0NCmRyaXZlciBmb3IgQ2FkZW5j
+ZSBVRlMgQ29udHJvbGxlci4NCg0KU2lnbmVkLW9mZi1ieTogSmFuIEtvdGFzIDxqYW5rQGNhZGVu
+Y2UuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy9LY29uZmlnICAgICAgIHwgICAgOCArKw0K
+IGRyaXZlcnMvc2NzaS91ZnMvTWFrZWZpbGUgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvc2NzaS91
+ZnMvY2Rucy1wbHRmcm0uYyB8ICAxNDggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgMTU3IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25z
+KC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc2NzaS91ZnMvY2Rucy1wbHRmcm0uYw0K
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy9LY29uZmlnIGIvZHJpdmVycy9zY3NpL3Vm
+cy9LY29uZmlnDQppbmRleCBlMjdiNGQ0Li41NTJmODVhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
+Y3NpL3Vmcy9LY29uZmlnDQorKysgYi9kcml2ZXJzL3Njc2kvdWZzL0tjb25maWcNCkBAIC04MCw2
+ICs4MCwxNCBAQCBjb25maWcgU0NTSV9VRlNIQ0RfUExBVEZPUk0NCiANCiAJICBJZiB1bnN1cmUs
+IHNheSBOLg0KIA0KK2NvbmZpZyBTQ1NJX1VGU19DRE5TX1BMQVRGT1JNDQorCXRyaXN0YXRlICJD
+YWRlbmNlIFVGUyBDb250cm9sbGVyIHBsYXRmb3JtIGRyaXZlciINCisJZGVwZW5kcyBvbiBTQ1NJ
+X1VGU0hDRF9QTEFURk9STQ0KKwktLS1oZWxwLS0tDQorCVRoaXMgc2VsZWN0cyB0aGUgQ2FkZW5j
+ZSBzcGVjaWZpYyBhZGRpdGlvbnMgdG8gVUZTSENEIHBsYXRmb3JtIGRyaXZlci4NCisNCisJICBJ
+ZiB1bnN1cmUsIHNheSBOLg0KKw0KIGNvbmZpZyBTQ1NJX1VGU19EV0NfVENfUExBVEZPUk0NCiAJ
+dHJpc3RhdGUgIkRlc2lnbldhcmUgcGxhdGZvcm0gc3VwcG9ydCB1c2luZyBhIEcyMTAgVGVzdCBD
+aGlwIg0KIAlkZXBlbmRzIG9uIFNDU0lfVUZTSENEX1BMQVRGT1JNDQpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9zY3NpL3Vmcy9NYWtlZmlsZSBiL2RyaXZlcnMvc2NzaS91ZnMvTWFrZWZpbGUNCmluZGV4
+IDkzMTBjNmMuLjM4NTA2MmMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL01ha2VmaWxl
+DQorKysgYi9kcml2ZXJzL3Njc2kvdWZzL01ha2VmaWxlDQpAQCAtMyw2ICszLDcgQEANCiBvYmot
+JChDT05GSUdfU0NTSV9VRlNfRFdDX1RDX1BDSSkgKz0gdGMtZHdjLWcyMTAtcGNpLm8gdWZzaGNk
+LWR3Yy5vIHRjLWR3Yy1nMjEwLm8NCiBvYmotJChDT05GSUdfU0NTSV9VRlNfRFdDX1RDX1BMQVRG
+T1JNKSArPSB0Yy1kd2MtZzIxMC1wbHRmcm0ubyB1ZnNoY2QtZHdjLm8gdGMtZHdjLWcyMTAubw0K
+IG9iai0kKENPTkZJR19TQ1NJX1VGU19RQ09NKSArPSB1ZnMtcWNvbS5vDQorb2JqLSQoQ09ORklH
+X1NDU0lfVUZTX0NETlNfUExBVEZPUk0pICs9IGNkbnMtcGx0ZnJtLm8NCiBvYmotJChDT05GSUdf
+U0NTSV9VRlNIQ0QpICs9IHVmc2hjZC5vDQogb2JqLSQoQ09ORklHX1NDU0lfVUZTSENEX1BDSSkg
+Kz0gdWZzaGNkLXBjaS5vDQogb2JqLSQoQ09ORklHX1NDU0lfVUZTSENEX1BMQVRGT1JNKSArPSB1
+ZnNoY2QtcGx0ZnJtLm8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL2NkbnMtcGx0ZnJt
+LmMgYi9kcml2ZXJzL3Njc2kvdWZzL2NkbnMtcGx0ZnJtLmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQppbmRleCAwMDAwMDAwLi4xOGRiNDQxDQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL3Nj
+c2kvdWZzL2NkbnMtcGx0ZnJtLmMNCkBAIC0wLDAgKzEsMTQ4IEBADQorLyoNCisgKiBQbGF0Zm9y
+bSBVRlMgSG9zdCBkcml2ZXIgZm9yIENhZGVuY2UgY29udHJvbGxlcg0KKyAqDQorICogQ29weXJp
+Z2h0IChDKSAyMDE4IENhZGVuY2UgRGVzaWduIFN5c3RlbXMsIEluYy4NCisgKg0KKyAqIEF1dGhv
+cnM6DQorICoJSmFuIEtvdGFzIDxqYW5rQGNhZGVuY2UuY29tPg0KKyAqDQorICovDQorDQorI2lu
+Y2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCisjaW5j
+bHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mLmg+DQor
+I2luY2x1ZGUgPGxpbnV4L3RpbWUuaD4NCisNCisjaW5jbHVkZSAidWZzaGNkLXBsdGZybS5oIg0K
+Kw0KKyNkZWZpbmUgQ0ROU19VRlNfUkVHX0hDTEtESVYgMHhGQw0KKw0KKy8qKg0KKyAqIFNldHMg
+SENMS0RJViByZWdpc3RlciB2YWx1ZSBiYXNlZCBvbiB0aGUgY29yZV9jbGsNCisgKiBAaGJhOiBo
+b3N0IGNvbnRyb2xsZXIgaW5zdGFuY2UNCisgKg0KKyAqIFJldHVybiB6ZXJvIGZvciBzdWNjZXNz
+IGFuZCBub24temVybyBmb3IgZmFpbHVyZQ0KKyAqLw0KK3N0YXRpYyBpbnQgY2Ruc191ZnNfc2V0
+X2hjbGtkaXYoc3RydWN0IHVmc19oYmEgKmhiYSkNCit7DQorCXN0cnVjdCB1ZnNfY2xrX2luZm8g
+KmNsa2k7DQorCXN0cnVjdCBsaXN0X2hlYWQgKmhlYWQgPSAmaGJhLT5jbGtfbGlzdF9oZWFkOw0K
+Kwl1bnNpZ25lZCBsb25nIGNvcmVfY2xrX3JhdGUgPSAwOw0KKwl1MzIgY29yZV9jbGtfZGl2ID0g
+MDsNCisNCisJaWYgKGxpc3RfZW1wdHkoaGVhZCkpDQorCQlyZXR1cm4gMDsNCisNCisJbGlzdF9m
+b3JfZWFjaF9lbnRyeShjbGtpLCBoZWFkLCBsaXN0KSB7DQorCQlpZiAoSVNfRVJSX09SX05VTEwo
+Y2xraS0+Y2xrKSkNCisJCQljb250aW51ZTsNCisJCWlmICghc3RyY21wKGNsa2ktPm5hbWUsICJj
+b3JlX2NsayIpKQ0KKwkJCWNvcmVfY2xrX3JhdGUgPSBjbGtfZ2V0X3JhdGUoY2xraS0+Y2xrKTsN
+CisJfQ0KKw0KKwlpZiAoIWNvcmVfY2xrX3JhdGUpIHsNCisJCWRldl9lcnIoaGJhLT5kZXYsICIl
+czogdW5hYmxlIHRvIGZpbmQgY29yZV9jbGsgcmF0ZVxuIiwNCisJCQlfX2Z1bmNfXyk7DQorCQly
+ZXR1cm4gLUVJTlZBTDsNCisJfQ0KKw0KKwljb3JlX2Nsa19kaXYgPSBjb3JlX2Nsa19yYXRlIC8g
+VVNFQ19QRVJfU0VDOw0KKw0KKwl1ZnNoY2Rfd3JpdGVsKGhiYSwgY29yZV9jbGtfZGl2LCBDRE5T
+X1VGU19SRUdfSENMS0RJVik7DQorCS8qIE1ha2Ugc3VyZSB0aGUgcmVnaXN0ZXIgd2FzIHVwZGF0
+ZWQgKi8NCisJbWIoKTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KKy8qKg0KKyAqIFNldHMgY2xv
+Y2tzIHVzZWQgYnkgdGhlIGNvbnRyb2xsZXINCisgKiBAaGJhOiBob3N0IGNvbnRyb2xsZXIgaW5z
+dGFuY2UNCisgKiBAb246IGlmIHRydWUsIGVuYWJsZSBjbG9ja3MsIG90aGVyd2lzZSBkaXNhYmxl
+DQorICogQHN0YXR1czogbm90aWZ5IHN0YWdlIChwcmUsIHBvc3QgY2hhbmdlKQ0KKyAqDQorICog
+UmV0dXJuIHplcm8gZm9yIHN1Y2Nlc3MgYW5kIG5vbi16ZXJvIGZvciBmYWlsdXJlDQorICovDQor
+c3RhdGljIGludCBjZG5zX3Vmc19zZXR1cF9jbG9ja3Moc3RydWN0IHVmc19oYmEgKmhiYSwgYm9v
+bCBvbiwNCisJCQkJIGVudW0gdWZzX25vdGlmeV9jaGFuZ2Vfc3RhdHVzIHN0YXR1cykNCit7DQor
+CWlmICgoIW9uKSB8fCAoc3RhdHVzID09IFBSRV9DSEFOR0UpKQ0KKwkJcmV0dXJuIDA7DQorDQor
+CXJldHVybiBjZG5zX3Vmc19zZXRfaGNsa2RpdihoYmEpOw0KK30NCisNCisNCitzdGF0aWMgc3Ry
+dWN0IHVmc19oYmFfdmFyaWFudF9vcHMgY2Ruc19wbHRmbV9oYmFfdm9wcyA9IHsNCisJLm5hbWUg
+PSAiY2Rucy11ZnMtcGx0Zm0iLA0KKwkuc2V0dXBfY2xvY2tzID0gY2Ruc191ZnNfc2V0dXBfY2xv
+Y2tzLA0KK307DQorDQorLyoqDQorICogY2Ruc191ZnNfcGx0ZnJtX3Byb2JlIC0gcHJvYmUgcm91
+dGluZSBvZiB0aGUgZHJpdmVyDQorICogQHBkZXY6IHBvaW50ZXIgdG8gcGxhdGZvcm0gZGV2aWNl
+IGhhbmRsZQ0KKyAqDQorICogUmV0dXJuIHplcm8gZm9yIHN1Y2Nlc3MgYW5kIG5vbi16ZXJvIGZv
+ciBmYWlsdXJlDQorICovDQorc3RhdGljIGludCBjZG5zX3Vmc19wbHRmcm1fcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCWludCBlcnI7DQorCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9ICZwZGV2LT5kZXY7DQorDQorCS8qIFBlcmZvcm0gZ2VuZXJpYyBwcm9iZSAqLw0KKwll
+cnIgPSB1ZnNoY2RfcGx0ZnJtX2luaXQocGRldiwgJmNkbnNfcGx0Zm1faGJhX3ZvcHMpOw0KKwlp
+ZiAoZXJyKQ0KKwkJZGV2X2VycihkZXYsICJ1ZnNoY2RfcGx0ZnJtX2luaXQoKSBmYWlsZWQgJWRc
+biIsIGVycik7DQorDQorCXJldHVybiBlcnI7DQorfQ0KKw0KKy8qKg0KKyAqIGNkbnNfdWZzX3Bs
+dGZybV9yZW1vdmUgLSBzZXQgZHJpdmVyX2RhdGEgb2YgdGhlIGRldmljZSB0byBOVUxMDQorICog
+QHBkZXY6IHBvaW50ZXIgdG8gcGxhdGZvcm0gZGV2aWNlIGhhbmRsZQ0KKyAqDQorICogQWx3YXlz
+IHJldHVybnMgMA0KKyAqLw0KK3N0YXRpYyBpbnQgY2Ruc191ZnNfcGx0ZnJtX3JlbW92ZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KK3sNCisJc3RydWN0IHVmc19oYmEgKmhiYSA9ICBw
+bGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCisNCisJcG1fcnVudGltZV9nZXRfc3luYygmKHBk
+ZXYpLT5kZXYpOw0KKwl1ZnNoY2RfcmVtb3ZlKGhiYSk7DQorCXJldHVybiAwOw0KK30NCisNCisN
+CitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBjZG5zX3Vmc19vZl9tYXRjaFtdID0g
+ew0KKwl7IC5jb21wYXRpYmxlID0gImNkbnMsdWZzaGMifSwNCisJe30sDQorfTsNCisNCitNT0RV
+TEVfREVWSUNFX1RBQkxFKG9mLCBjZG5zX3Vmc19vZl9tYXRjaCk7DQorDQorc3RhdGljIGNvbnN0
+IHN0cnVjdCBkZXZfcG1fb3BzIGNkbnNfdWZzX2Rldl9wbV9vcHMgPSB7DQorCS5zdXNwZW5kICAg
+ICAgICAgPSB1ZnNoY2RfcGx0ZnJtX3N1c3BlbmQsDQorCS5yZXN1bWUgICAgICAgICAgPSB1ZnNo
+Y2RfcGx0ZnJtX3Jlc3VtZSwNCisJLnJ1bnRpbWVfc3VzcGVuZCA9IHVmc2hjZF9wbHRmcm1fcnVu
+dGltZV9zdXNwZW5kLA0KKwkucnVudGltZV9yZXN1bWUgID0gdWZzaGNkX3BsdGZybV9ydW50aW1l
+X3Jlc3VtZSwNCisJLnJ1bnRpbWVfaWRsZSAgICA9IHVmc2hjZF9wbHRmcm1fcnVudGltZV9pZGxl
+LA0KK307DQorDQorc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgY2Ruc191ZnNfcGx0ZnJt
+X2RyaXZlciA9IHsNCisJLnByb2JlCT0gY2Ruc191ZnNfcGx0ZnJtX3Byb2JlLA0KKwkucmVtb3Zl
+CT0gY2Ruc191ZnNfcGx0ZnJtX3JlbW92ZSwNCisJLmRyaXZlcgk9IHsNCisJCS5uYW1lICAgPSAi
+Y2Rucy11ZnNoY2QiLA0KKwkJLm93bmVyICA9IFRISVNfTU9EVUxFLA0KKwkJLnBtICAgICA9ICZj
+ZG5zX3Vmc19kZXZfcG1fb3BzLA0KKwkJLm9mX21hdGNoX3RhYmxlID0gY2Ruc191ZnNfb2ZfbWF0
+Y2gsDQorCX0sDQorfTsNCisNCittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKGNkbnNfdWZzX3BsdGZy
+bV9kcml2ZXIpOw0KKw0KK01PRFVMRV9BVVRIT1IoIkphbiBLb3RhcyA8amFua0BjYWRlbmNlLmNv
+bT4iKTsNCitNT0RVTEVfREVTQ1JJUFRJT04oIkNhZGVuY2UgVUZTIGhvc3QgY29udHJvbGxlciBw
+bGF0Zm9ybSBkcml2ZXIiKTsNCitNT0RVTEVfTElDRU5TRSgiR1BMIik7DQorTU9EVUxFX1ZFUlNJ
+T04oVUZTSENEX0RSSVZFUl9WRVJTSU9OKTsNCi0tIA0KMS43LjENCg0KDQo=
