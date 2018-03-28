@@ -1,463 +1,411 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v3 2/4] mfd: add Gateworks System Controller core driver
-Date: Wed, 28 Mar 2018 08:14:01 -0700
-Message-ID: <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
-References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
+Date: Wed, 28 Mar 2018 17:15:56 +0200
+Message-ID: <06976e4ae275c4cc0bddacc5e0c0c9a9@crapouillou.net>
+References: <20180110224838.16711-2-paul@crapouillou.net>
+ <20180317232901.14129-1-paul@crapouillou.net>
+ <20180317232901.14129-8-paul@crapouillou.net>
+ <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
+Subject: 
+In-Reply-To: <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-watchdog@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Gateworks System Controller (GSC) is an I2C slave controller
-implemented with an MSP430 micro-controller whose firmware embeds the
-following features:
- - I/O expander (16 GPIO's) using PCA955x protocol
- - Real Time Clock using DS1672 protocol
- - User EEPROM using AT24 protocol
- - HWMON using custom protocol
- - Interrupt controller with tamper detect, user pushbotton
- - Watchdog controller capable of full board power-cycle
- - Power Control capable of full board power-cycle
+Le 2018-03-24 07:26, Daniel Lezcano a écrit :
+> On 18/03/2018 00:29, Paul Cercueil wrote:
+>> This driver will use the TCU (Timer Counter Unit) present on the 
+>> Ingenic
+>> JZ47xx SoCs to provide the kernel with a clocksource and timers.
+> 
+> Please provide a more detailed description about the timer.
 
-see http://trac.gateworks.com/wiki/gsc for more details
+There's a doc file for that :)
 
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
-v3:
-- rename gsc->gateworks-gsc
-- remove uncecessary include for linux/mfd/core.h
-- upercase I2C in comments
-- remove i2c debug
-- remove uncecessary comments
-- don't use KBUILD_MODNAME for name
-- remove unnecessary v1/v2/v3 tracking
-- unregister hwmon i2c adapter on remove
+> Where is the clocksource ?
 
-v2:
-- change license comment block style
-- remove COMPILE_TEST (Randy)
-- fixed whitespace issues
-- replaced a printk with dev_err
+Right, there is no clocksource, just timers.
 
----
- drivers/mfd/Kconfig         |  13 ++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/gateworks-gsc.c | 285 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/gsc.h     |  75 ++++++++++++
- 4 files changed, 374 insertions(+)
- create mode 100644 drivers/mfd/gateworks-gsc.c
- create mode 100644 include/linux/mfd/gsc.h
+> I don't see the point of using channel idx and pwm checking here.
+> 
+> There is one clockevent, why create multiple channels ? Can't you stick
+> to the usual init routine for a timer.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 1d20a80..013df63 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -341,6 +341,19 @@ config MFD_EXYNOS_LPASS
- 	  Select this option to enable support for Samsung Exynos Low Power
- 	  Audio Subsystem.
- 
-+config MFD_GATEWORKS_GSC
-+	tristate "Gateworks System Controller"
-+	depends on (I2C && OF)
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Enable support for the Gateworks System Controller found
-+	  on Gateworks Single Board Computers.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called gsc.
-+
- config MFD_MC13XXX
- 	tristate
- 	depends on (SPI_MASTER || I2C)
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index d9474ad..da0868ff 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec_core.o
- obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
- obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-+obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
- 
- rtsx_pci-objs			:= rtsx_pcr.o rts5209.o rts5229.o rtl8411.o rts5227.o rts5249.o
- obj-$(CONFIG_MFD_RTSX_PCI)	+= rtsx_pci.o
-diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
-new file mode 100644
-index 0000000..e081613
---- /dev/null
-+++ b/drivers/mfd/gateworks-gsc.c
-@@ -0,0 +1,285 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Gateworks Corporation
-+ *
-+ * The Gateworks System Controller (GSC) is a family of a multi-function
-+ * "Power Management and System Companion Device" chips originally designed for
-+ * use in Gateworks Single Board Computers. The control interface is I2C,
-+ * at 100kbps, with an interrupt.
-+ *
-+ */
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/gsc.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/*
-+ * The GSC suffers from an errata where occasionally during
-+ * ADC cycles the chip can NAK I2C transactions. To ensure we have reliable
-+ * register access we place retries around register access.
-+ */
-+#define I2C_RETRIES	3
-+
-+static int gsc_regmap_regwrite(void *context, unsigned int reg,
-+			       unsigned int val)
-+{
-+	struct i2c_client *client = context;
-+	int retry, ret;
-+
-+	for (retry = 0; retry < I2C_RETRIES; retry++) {
-+		ret = i2c_smbus_write_byte_data(client, reg, val);
-+		/*
-+		 * -EAGAIN returned when the i2c host controller is busy
-+		 * -EIO returned when i2c device is busy
-+		 */
-+		if (ret != -EAGAIN && ret != -EIO)
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int gsc_regmap_regread(void *context, unsigned int reg,
-+			      unsigned int *val)
-+{
-+	struct i2c_client *client = context;
-+	int retry, ret;
-+
-+	for (retry = 0; retry < I2C_RETRIES; retry++) {
-+		ret = i2c_smbus_read_byte_data(client, reg);
-+		/*
-+		 * -EAGAIN returned when the i2c host controller is busy
-+		 * -EIO returned when i2c device is busy
-+		 */
-+		if (ret != -EAGAIN && ret != -EIO)
-+			break;
-+	}
-+	*val = ret & 0xff;
-+
-+	return 0;
-+}
-+
-+static struct regmap_bus regmap_gsc = {
-+	.reg_write = gsc_regmap_regwrite,
-+	.reg_read = gsc_regmap_regread,
-+};
-+
-+/*
-+ * gsc_powerdown - API to use GSC to power down board for a specific time
-+ *
-+ * secs - number of seconds to remain powered off
-+ */
-+static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
-+{
-+	int ret;
-+	unsigned char regs[4];
-+
-+	dev_info(&gsc->i2c->dev, "GSC powerdown for %ld seconds\n",
-+		 secs);
-+	regs[0] = secs & 0xff;
-+	regs[1] = (secs >> 8) & 0xff;
-+	regs[2] = (secs >> 16) & 0xff;
-+	regs[3] = (secs >> 24) & 0xff;
-+	ret = regmap_bulk_write(gsc->regmap, GSC_TIME_ADD, regs, 4);
-+
-+	return ret;
-+}
-+
-+static ssize_t gsc_show(struct device *dev, struct device_attribute *attr,
-+			char *buf)
-+{
-+	struct gsc_dev *gsc = dev_get_drvdata(dev);
-+	const char *name = attr->attr.name;
-+	int rz = 0;
-+
-+	if (strcasecmp(name, "fw_version") == 0)
-+		rz = sprintf(buf, "%d\n", gsc->fwver);
-+	else if (strcasecmp(name, "fw_crc") == 0)
-+		rz = sprintf(buf, "0x%04x\n", gsc->fwcrc);
-+
-+	return rz;
-+}
-+
-+static ssize_t gsc_store(struct device *dev, struct device_attribute *attr,
-+			 const char *buf, size_t count)
-+{
-+	struct gsc_dev *gsc = dev_get_drvdata(dev);
-+	const char *name = attr->attr.name;
-+	int ret;
-+
-+	if (strcasecmp(name, "powerdown") == 0) {
-+		long value;
-+
-+		ret = kstrtol(buf, 0, &value);
-+		if (ret == 0)
-+			gsc_powerdown(gsc, value);
-+	} else
-+		dev_err(dev, "invalid name '%s\n", name);
-+
-+	return count;
-+}
-+
-+static struct device_attribute attr_fwver =
-+	__ATTR(fw_version, 0440, gsc_show, NULL);
-+static struct device_attribute attr_fwcrc =
-+	__ATTR(fw_crc, 0440, gsc_show, NULL);
-+static struct device_attribute attr_pwrdown =
-+	__ATTR(powerdown, 0220, NULL, gsc_store);
-+
-+static struct attribute *gsc_attrs[] = {
-+	&attr_fwver.attr,
-+	&attr_fwcrc.attr,
-+	&attr_pwrdown.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group attr_group = {
-+	.attrs = gsc_attrs,
-+};
-+
-+static const struct of_device_id gsc_of_match[] = {
-+	{ .compatible = "gw,gsc", },
-+	{ }
-+};
-+
-+static const struct regmap_config gsc_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_NONE,
-+	.max_register = 0xf,
-+};
-+
-+static const struct regmap_config gsc_regmap_hwmon_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_NONE,
-+	.max_register = 0x37,
-+};
-+
-+static const struct regmap_irq gsc_irqs[] = {
-+	REGMAP_IRQ_REG(GSC_IRQ_PB, 0, BIT(GSC_IRQ_PB)),
-+	REGMAP_IRQ_REG(GSC_IRQ_KEY_ERASED, 0, BIT(GSC_IRQ_KEY_ERASED)),
-+	REGMAP_IRQ_REG(GSC_IRQ_EEPROM_WP, 0, BIT(GSC_IRQ_EEPROM_WP)),
-+	REGMAP_IRQ_REG(GSC_IRQ_RESV, 0, BIT(GSC_IRQ_RESV)),
-+	REGMAP_IRQ_REG(GSC_IRQ_GPIO, 0, BIT(GSC_IRQ_GPIO)),
-+	REGMAP_IRQ_REG(GSC_IRQ_TAMPER, 0, BIT(GSC_IRQ_TAMPER)),
-+	REGMAP_IRQ_REG(GSC_IRQ_WDT_TIMEOUT, 0, BIT(GSC_IRQ_WDT_TIMEOUT)),
-+	REGMAP_IRQ_REG(GSC_IRQ_SWITCH_HOLD, 0, BIT(GSC_IRQ_SWITCH_HOLD)),
-+};
-+
-+static const struct regmap_irq_chip gsc_irq_chip = {
-+	.name = "gateworks-gsc",
-+	.irqs = gsc_irqs,
-+	.num_irqs = ARRAY_SIZE(gsc_irqs),
-+	.num_regs = 1,
-+	.status_base = GSC_IRQ_STATUS,
-+	.mask_base = GSC_IRQ_ENABLE,
-+	.mask_invert = true,
-+	.ack_base = GSC_IRQ_STATUS,
-+	.ack_invert = true,
-+};
-+
-+static int
-+gsc_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct gsc_dev *gsc;
-+	int ret;
-+	unsigned int reg;
-+
-+	gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
-+	if (!gsc)
-+		return -ENOMEM;
-+
-+	gsc->dev = &client->dev;
-+	gsc->i2c = client;
-+	gsc->irq = client->irq;
-+	i2c_set_clientdata(client, gsc);
-+
-+	gsc->regmap = devm_regmap_init(dev, &regmap_gsc, client,
-+				       &gsc_regmap_config);
-+	if (IS_ERR(gsc->regmap))
-+		return PTR_ERR(gsc->regmap);
-+
-+	if (regmap_read(gsc->regmap, GSC_FW_VER, &reg))
-+		return -EIO;
-+	gsc->fwver = reg;
-+
-+	regmap_read(gsc->regmap, GSC_FW_CRC, &reg);
-+	gsc->fwcrc = reg;
-+	regmap_read(gsc->regmap, GSC_FW_CRC + 1, &reg);
-+	gsc->fwcrc |= reg << 8;
-+
-+	gsc->i2c_hwmon = i2c_new_dummy(client->adapter, GSC_HWMON);
-+	if (!gsc->i2c_hwmon) {
-+		dev_err(dev, "Failed to allocate I2C device for HWMON\n");
-+		return -ENODEV;
-+	}
-+	i2c_set_clientdata(gsc->i2c_hwmon, gsc);
-+
-+	gsc->regmap_hwmon = devm_regmap_init(dev, &regmap_gsc, gsc->i2c_hwmon,
-+					     &gsc_regmap_hwmon_config);
-+	if (IS_ERR(gsc->regmap_hwmon)) {
-+		ret = PTR_ERR(gsc->regmap_hwmon);
-+		dev_err(dev, "failed to allocate register map: %d\n", ret);
-+		goto err_regmap;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(dev, gsc->regmap, gsc->irq,
-+				       IRQF_ONESHOT | IRQF_SHARED |
-+				       IRQF_TRIGGER_FALLING, 0,
-+				       &gsc_irq_chip, &gsc->irq_chip_data);
-+	if (ret)
-+		goto err_regmap;
-+
-+	dev_info(dev, "Gateworks System Controller v%d: fw 0x%04x\n",
-+		 gsc->fwver, gsc->fwcrc);
-+
-+	ret = sysfs_create_group(&dev->kobj, &attr_group);
-+	if (ret)
-+		dev_err(dev, "failed to create sysfs attrs\n");
-+
-+	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-+	if (ret)
-+		goto err_sysfs;
-+
-+	return 0;
-+
-+err_sysfs:
-+	sysfs_remove_group(&dev->kobj, &attr_group);
-+err_regmap:
-+	i2c_unregister_device(gsc->i2c_hwmon);
-+
-+	return ret;
-+}
-+
-+static int gsc_remove(struct i2c_client *client)
-+{
-+	struct gsc_dev *gsc = i2c_get_clientdata(client);
-+
-+	sysfs_remove_group(&client->dev.kobj, &attr_group);
-+	i2c_unregister_device(gsc->i2c_hwmon);
-+
-+	return 0;
-+}
-+
-+static struct i2c_driver gsc_driver = {
-+	.driver = {
-+		.name	= "gateworks-gsc",
-+		.of_match_table = of_match_ptr(gsc_of_match),
-+	},
-+	.probe		= gsc_probe,
-+	.remove		= gsc_remove,
-+};
-+
-+module_i2c_driver(gsc_driver);
-+
-+MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
-+MODULE_DESCRIPTION("I2C Core interface for GSC");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/gsc.h b/include/linux/mfd/gsc.h
-new file mode 100644
-index 0000000..dcae61b
---- /dev/null
-+++ b/include/linux/mfd/gsc.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Gateworks Corporation
-+ */
-+#ifndef __LINUX_MFD_GSC_H_
-+#define __LINUX_MFD_GSC_H_
-+
-+/* Device Addresses */
-+#define GSC_MISC	0x20
-+#define GSC_UPDATE	0x21
-+#define GSC_GPIO	0x23
-+#define GSC_HWMON	0x29
-+#define GSC_EEPROM0	0x50
-+#define GSC_EEPROM1	0x51
-+#define GSC_EEPROM2	0x52
-+#define GSC_EEPROM3	0x53
-+#define GSC_RTC		0x68
-+
-+/* Register offsets */
-+#define GSC_CTRL_0	0x00
-+#define GSC_CTRL_1	0x01
-+#define GSC_TIME	0x02
-+#define GSC_TIME_ADD	0x06
-+#define GSC_IRQ_STATUS	0x0A
-+#define GSC_IRQ_ENABLE	0x0B
-+#define GSC_FW_CRC	0x0C
-+#define GSC_FW_VER	0x0E
-+#define GSC_WP		0x0F
-+
-+/* Bit definitions */
-+#define GSC_CTRL_0_PB_HARD_RESET	0
-+#define GSC_CTRL_0_PB_CLEAR_SECURE_KEY	1
-+#define GSC_CTRL_0_PB_SOFT_POWER_DOWN	2
-+#define GSC_CTRL_0_PB_BOOT_ALTERNATE	3
-+#define GSC_CTRL_0_PERFORM_CRC		4
-+#define GSC_CTRL_0_TAMPER_DETECT	5
-+#define GSC_CTRL_0_SWITCH_HOLD		6
-+
-+#define GSC_CTRL_1_SLEEP_ENABLE		0
-+#define GSC_CTRL_1_ACTIVATE_SLEEP	1
-+#define GSC_CTRL_1_LATCH_SLEEP_ADD	2
-+#define GSC_CTRL_1_SLEEP_NOWAKEPB	3
-+#define GSC_CTRL_1_WDT_TIME		4
-+#define GSC_CTRL_1_WDT_ENABLE		5
-+#define GSC_CTRL_1_SWITCH_BOOT_ENABLE	6
-+#define GSC_CTRL_1_SWITCH_BOOT_CLEAR	7
-+
-+#define GSC_IRQ_PB			0
-+#define GSC_IRQ_KEY_ERASED		1
-+#define GSC_IRQ_EEPROM_WP		2
-+#define GSC_IRQ_RESV			3
-+#define GSC_IRQ_GPIO			4
-+#define GSC_IRQ_TAMPER			5
-+#define GSC_IRQ_WDT_TIMEOUT		6
-+#define GSC_IRQ_SWITCH_HOLD		7
-+
-+/* Max registers */
-+#define GSC_HWMON_MAX_REG	56
-+
-+struct gsc_dev {
-+	struct device *dev;
-+
-+	struct i2c_client *i2c;		/* 0x20: interrupt controller, WDT */
-+	struct i2c_client *i2c_hwmon;	/* 0x29: hwmon, fan controller */
-+
-+	struct regmap *regmap;
-+	struct regmap *regmap_hwmon;
-+	struct regmap_irq_chip_data *irq_chip_data;
-+
-+	int irq;
-+	unsigned int fwver;
-+	unsigned short fwcrc;
-+};
-+
-+#endif /* __LINUX_MFD_GSC_H_ */
--- 
-2.7.4
+So the idea is that we use all the TCU channels that won't be used for 
+PWM
+as timers. Hence the PWM checking. Why is this bad?
+
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>  drivers/clocksource/Kconfig         |   8 ++
+>>  drivers/clocksource/Makefile        |   1 +
+>>  drivers/clocksource/timer-ingenic.c | 278 
+>> ++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 287 insertions(+)
+>>  create mode 100644 drivers/clocksource/timer-ingenic.c
+>> 
+>>  v2: Use SPDX identifier for the license
+>>  v3: - Move documentation to its own patch
+>>      - Search the devicetree for PWM clients, and use all the TCU
+>> 	   channels that won't be used for PWM
+>>  v4: - Add documentation about why we search for PWM clients
+>>      - Verify that the PWM clients are for the TCU PWM driver
+>> 
+>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+>> index d2e5382821a4..481422145fb4 100644
+>> --- a/drivers/clocksource/Kconfig
+>> +++ b/drivers/clocksource/Kconfig
+>> @@ -592,4 +592,12 @@ config CLKSRC_ST_LPC
+>>  	  Enable this option to use the Low Power controller timer
+>>  	  as clocksource.
+>> 
+>> +config INGENIC_TIMER
+>> +	bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
+>> +	depends on MACH_INGENIC || COMPILE_TEST
+> 
+> bool "Clocksource/timer using the TCU in Ingenic JZ SoCs" if 
+> COMPILE_TEST
+> 
+> Remove the depends MACH_INGENIC.
+
+This driver is not useful on anything else than Ingenic SoCs, why should 
+I
+remove MACH_INGENIC then?
+
+>> +	select CLKSRC_OF
+>> +	default y
+> 
+> No default, Kconfig platform selects the timer.
+
+Alright.
+
+>> +	help
+>> +	  Support for the timer/counter unit of the Ingenic JZ SoCs.
+>> +
+>>  endmenu
+>> diff --git a/drivers/clocksource/Makefile 
+>> b/drivers/clocksource/Makefile
+>> index d6dec4489d66..98691e8999fe 100644
+>> --- a/drivers/clocksource/Makefile
+>> +++ b/drivers/clocksource/Makefile
+>> @@ -74,5 +74,6 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+>>  obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+>>  obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+>>  obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+>> +obj-$(CONFIG_INGENIC_TIMER)		+= timer-ingenic.o
+>>  obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>> diff --git a/drivers/clocksource/timer-ingenic.c 
+>> b/drivers/clocksource/timer-ingenic.c
+>> new file mode 100644
+>> index 000000000000..8c777c0c0023
+>> --- /dev/null
+>> +++ b/drivers/clocksource/timer-ingenic.c
+>> @@ -0,0 +1,278 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Ingenic JZ47xx SoC TCU clocksource driver
+>> + * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/clockchips.h>
+>> +#include <linux/err.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/mfd/syscon/ingenic-tcu.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#define NUM_CHANNELS	8
+>> +
+>> +struct ingenic_tcu;
+>> +
+>> +struct ingenic_tcu_channel {
+>> +	unsigned int idx;
+>> +	struct clk *clk;
+>> +};
+>> +
+>> +struct ingenic_tcu {
+>> +	struct ingenic_tcu_channel channels[NUM_CHANNELS];
+>> +	unsigned long requested;
+>> +	struct regmap *map;
+>> +};
+>> +
+>> +struct ingenic_clock_event_device {
+>> +	struct clock_event_device cevt;
+>> +	struct ingenic_tcu_channel *channel;
+>> +	char name[32];
+>> +};
+>> +
+>> +#define ingenic_cevt(_evt) \
+>> +	container_of(_evt, struct ingenic_clock_event_device, cevt)
+>> +
+>> +static inline struct ingenic_tcu *to_ingenic_tcu(struct 
+>> ingenic_tcu_channel *ch)
+>> +{
+>> +	return container_of(ch, struct ingenic_tcu, channels[ch->idx]);
+>> +}
+>> +
+>> +static int ingenic_tcu_cevt_set_state_shutdown(struct 
+>> clock_event_device *evt)
+>> +{
+>> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
+>> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +	unsigned int idx = channel->idx;
+>> +
+>> +	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
+>> +	return 0;
+>> +}
+>> +
+>> +static int ingenic_tcu_cevt_set_next(unsigned long next,
+>> +		struct clock_event_device *evt)
+>> +{
+>> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
+>> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +	unsigned int idx = channel->idx;
+>> +
+>> +	if (next > 0xffff)
+>> +		return -EINVAL;
+>> +
+>> +	regmap_write(tcu->map, TCU_REG_TDFRc(idx), (unsigned int) next);
+>> +	regmap_write(tcu->map, TCU_REG_TCNTc(idx), 0);
+>> +	regmap_write(tcu->map, TCU_REG_TESR, BIT(idx));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
+>> +{
+>> +	struct clock_event_device *cevt = dev_id;
+>> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(cevt);
+>> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +	unsigned int idx = channel->idx;
+>> +
+>> +	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
+>> +
+>> +	if (cevt->event_handler)
+>> +		cevt->event_handler(cevt);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int __init ingenic_tcu_req_channel(struct ingenic_tcu_channel 
+>> *channel)
+>> +{
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +	char buf[16];
+>> +	int err;
+>> +
+>> +	if (test_and_set_bit(channel->idx, &tcu->requested))
+>> +		return -EBUSY;
+>> +
+>> +	snprintf(buf, sizeof(buf), "timer%u", channel->idx);
+>> +	channel->clk = clk_get(NULL, buf);
+>> +	if (IS_ERR(channel->clk)) {
+>> +		err = PTR_ERR(channel->clk);
+>> +		goto out_release;
+>> +	}
+>> +
+>> +	err = clk_prepare_enable(channel->clk);
+>> +	if (err)
+>> +		goto out_clk_put;
+>> +
+>> +	return 0;
+>> +
+>> +out_clk_put:
+>> +	clk_put(channel->clk);
+>> +out_release:
+>> +	clear_bit(channel->idx, &tcu->requested);
+>> +	return err;
+>> +}
+>> +
+>> +static int __init ingenic_tcu_reset_channel(struct device_node *np,
+>> +		struct ingenic_tcu_channel *channel)
+>> +{
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +
+>> +	return regmap_update_bits(tcu->map, TCU_REG_TCSRc(channel->idx),
+>> +				0xffff & ~TCU_TCSR_RESERVED_BITS, 0);
+>> +}
+>> +
+>> +static void __init ingenic_tcu_free_channel(struct 
+>> ingenic_tcu_channel *channel)
+>> +{
+>> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
+>> +
+>> +	clk_disable_unprepare(channel->clk);
+>> +	clk_put(channel->clk);
+>> +	clear_bit(channel->idx, &tcu->requested);
+>> +}
+>> +
+>> +static const char * const ingenic_tcu_timer_names[] = {
+>> +	"TCU0", "TCU1", "TCU2", "TCU3", "TCU4", "TCU5", "TCU6", "TCU7",
+>> +};
+>> +
+>> +static int __init ingenic_tcu_setup_cevt(struct device_node *np,
+>> +		struct ingenic_tcu *tcu, unsigned int idx)
+>> +{
+>> +	struct ingenic_tcu_channel *channel = &tcu->channels[idx];
+>> +	struct ingenic_clock_event_device *jzcevt;
+>> +	unsigned long rate;
+>> +	int err, virq;
+>> +
+>> +	err = ingenic_tcu_req_channel(channel);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = ingenic_tcu_reset_channel(np, channel);
+>> +	if (err)
+>> +		goto err_out_free_channel;
+>> +
+>> +	rate = clk_get_rate(channel->clk);
+>> +	if (!rate) {
+>> +		err = -EINVAL;
+>> +		goto err_out_free_channel;
+>> +	}
+>> +
+>> +	jzcevt = kzalloc(sizeof(*jzcevt), GFP_KERNEL);
+>> +	if (!jzcevt) {
+>> +		err = -ENOMEM;
+>> +		goto err_out_free_channel;
+>> +	}
+>> +
+>> +	virq = irq_of_parse_and_map(np, idx);
+>> +	if (!virq) {
+>> +		err = -EINVAL;
+>> +		goto err_out_kfree_jzcevt;
+>> +	}
+>> +
+>> +	err = request_irq(virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
+>> +			ingenic_tcu_timer_names[idx], &jzcevt->cevt);
+>> +	if (err)
+>> +		goto err_out_irq_dispose_mapping;
+>> +
+>> +	jzcevt->channel = channel;
+>> +	snprintf(jzcevt->name, sizeof(jzcevt->name), "ingenic-tcu-chan%u",
+>> +		 channel->idx);
+>> +
+>> +	jzcevt->cevt.cpumask = cpumask_of(smp_processor_id());
+>> +	jzcevt->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
+>> +	jzcevt->cevt.name = jzcevt->name;
+>> +	jzcevt->cevt.rating = 200;
+>> +	jzcevt->cevt.set_state_shutdown = 
+>> ingenic_tcu_cevt_set_state_shutdown;
+>> +	jzcevt->cevt.set_next_event = ingenic_tcu_cevt_set_next;
+>> +
+>> +	clockevents_config_and_register(&jzcevt->cevt, rate, 10, (1 << 16) - 
+>> 1);
+>> +
+>> +	return 0;
+>> +
+>> +err_out_irq_dispose_mapping:
+>> +	irq_dispose_mapping(virq);
+>> +err_out_kfree_jzcevt:
+>> +	kfree(jzcevt);
+>> +err_out_free_channel:
+>> +	ingenic_tcu_free_channel(channel);
+>> +	return err;
+>> +}
+>> +
+>> +static int __init ingenic_tcu_init(struct device_node *np)
+>> +{
+>> +	unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
+>> +	struct device_node *node, *pwm_driver_node;
+>> +	struct ingenic_tcu *tcu;
+>> +	unsigned int i, channel;
+>> +	int err;
+>> +	u32 val;
+>> +
+>> +	/* Parse the devicetree for clients of the TCU PWM driver;
+>> +	 * every TCU channel not requested for PWM will be used as
+>> +	 * a timer.
+>> +	 */
+> 
+> 
+> 
+>> +	for_each_node_with_property(node, "pwms") {
+>> +		/* Get the PWM channel ID (field 1 of the "pwms" node) */
+>> +		err = of_property_read_u32_index(node, "pwms", 1, &val);
+>> +		if (!err && val >= NUM_CHANNELS)
+>> +			err = -EINVAL;
+>> +		if (err) {
+>> +			pr_err("timer-ingenic: Unable to parse PWM nodes!");
+>> +			break;
+>> +		}
+>> +
+>> +		/* Get the PWM driver node (field 0 of the "pwms" node) */
+>> +		pwm_driver_node = of_parse_phandle(node, "pwms", 0);
+>> +		if (!pwm_driver_node) {
+>> +			pr_err("timer-ingenic: Unable to find PWM driver node");
+>> +			break;
+>> +		}
+>> +
+>> +		/* Verify that the node we found is for the TCU PWM driver,
+>> +		 * by checking that this driver and the PWM driver passed
+>> +		 * as phandle share the same parent (the "ingenic,tcu"
+>> +		 * compatible MFD/syscon node).
+>> +		 */
+>> +		if (pwm_driver_node->parent != np->parent)
+>> +			continue;
+>> +
+>> +		pr_info("timer-ingenic: Reserving channel %u for PWM", val);
+>> +		available_channels &= ~BIT(val);
+>> +	}
+>> +
+>> +	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
+>> +	if (!tcu)
+>> +		return -ENOMEM;
+>> +
+>> +	tcu->map = syscon_node_to_regmap(np->parent);
+>> +	if (IS_ERR(tcu->map)) {
+>> +		err = PTR_ERR(tcu->map);
+>> +		kfree(tcu);
+>> +		return err;
+>> +	}
+>> +
+>> +	for (i = 0; i < NUM_CHANNELS; i++)
+>> +		tcu->channels[i].idx = i;
+> 
+> I'm pretty sure you can do better thaningenic_tcu_setup that :)
+
+I didn't think this would be a problem. I guess I can try.
+
+>> +	for_each_set_bit(channel, &available_channels, NUM_CHANNELS) {
+>> +		err = _cevt(np, tcu, channel);
+>> +		if (err) {
+>> +			pr_warn("timer-ingenic: Unable to init TCU channel %u: %i",
+>> +					channel, err);
+>> +			continue;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/* We only probe via devicetree, no need for a platform driver */
+>> +CLOCKSOURCE_OF_DECLARE(jz4740_tcu, "ingenic,jz4740-tcu", 
+>> ingenic_tcu_init);
+>> +CLOCKSOURCE_OF_DECLARE(jz4770_tcu, "ingenic,jz4770-tcu", 
+>> ingenic_tcu_init);
+>> +CLOCKSOURCE_OF_DECLARE(jz4780_tcu, "ingenic,jz4780-tcu", 
+>> ingenic_tcu_init);
+> 
+> s/CLOCKSOURCE_OF_DECLARE/TIMER_OF_DECLARE/
+
+Sure, OK.
+
+Thanks!
+-Paul
