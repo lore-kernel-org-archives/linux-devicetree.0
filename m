@@ -1,7 +1,8 @@
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 04/13] usb: typec: add fwnode to tcpc
-Date: Thu, 29 Mar 2018 00:06:09 +0800
-Message-ID: <1522253178-32414-5-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v4 05/13] usb: typec: add API to get typec basic port power
+ and data config
+Date: Thu, 29 Mar 2018 00:06:10 +0800
+Message-ID: <1522253178-32414-6-git-send-email-jun.li@nxp.com>
 References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,84 +22,104 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-Add fwnode handle to get the fwnode so we can get typec configs
-it contains.
+This patch adds 3 APIs to get the typec port power and data type,
+and preferred power role by its name string.
 
 Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/staging/typec/tcpci.c | 14 +++++++-------
- drivers/usb/typec/tcpm.c      |  1 +
- include/linux/usb/tcpm.h      |  2 ++
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ drivers/usb/typec/class.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/typec.h |  3 +++
+ 2 files changed, 55 insertions(+)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index ed76327..4f7ad10 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -10,6 +10,7 @@
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 53df10d..5981e18 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -9,6 +9,7 @@
+ #include <linux/device.h>
  #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
+ #include <linux/mutex.h>
 +#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/usb/pd.h>
- #include <linux/usb/tcpm.h>
-@@ -463,17 +464,16 @@ static const struct regmap_config tcpci_regmap_config = {
- 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+ #include <linux/slab.h>
+ #include <linux/usb/typec.h>
+ #include <linux/usb/typec_mux.h>
+@@ -802,6 +803,12 @@ static const char * const typec_port_types[] = {
+ 	[TYPEC_PORT_DRP] = "dual",
  };
  
--static const struct tcpc_config tcpci_tcpc_config = {
--	.type = TYPEC_PORT_DFP,
--	.default_role = TYPEC_SINK,
--};
--
- static int tcpci_parse_config(struct tcpci *tcpci)
- {
- 	tcpci->controls_vbus = true; /* XXX */
- 
--	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
--	tcpci->tcpc.config = &tcpci_tcpc_config;
-+	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
-+							 "connector");
-+	if (!tcpci->tcpc.fwnode) {
-+		dev_err(tcpci->dev, "Can't find connector node.\n");
-+		return -EINVAL;
-+	}
- 
- 	return 0;
++static const char * const typec_data_types[] = {
++	[TYPEC_PORT_DFP] = "host",
++	[TYPEC_PORT_UFP] = "device",
++	[TYPEC_PORT_DRD] = "dual",
++};
++
+ static const char * const typec_port_types_drp[] = {
+ 	[TYPEC_PORT_SRC] = "dual [source] sink",
+ 	[TYPEC_PORT_SNK] = "dual source [sink]",
+@@ -1252,6 +1259,51 @@ void typec_set_pwr_opmode(struct typec_port *port,
  }
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index a7b82d9..be9b009 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -3709,6 +3709,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	else
- 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
+ EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
  
-+	port->typec_caps.fwnode = tcpc->fwnode;
- 	port->typec_caps.prefer_role = tcpc->config->default_role;
- 	port->typec_caps.type = tcpc->config->type;
- 	port->typec_caps.data = tcpc->config->data;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index f0d839d..e2e2db3 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -115,6 +115,7 @@ enum tcpc_mux_mode {
- /**
-  * struct tcpc_dev - Port configuration and callback functions
-  * @config:	Pointer to port configuration
-+ * @fwnode:	Pointer to port fwnode
-  * @get_vbus:	Called to read current VBUS state
-  * @get_current_limit:
-  *		Optional; called by the tcpm core when configured as a snk
-@@ -143,6 +144,7 @@ enum tcpc_mux_mode {
-  */
- struct tcpc_dev {
- 	const struct tcpc_config *config;
-+	struct fwnode_handle *fwnode;
++/**
++ * typec_find_power_type - Get the typec port power type
++ * @name: port type string
++ *
++ * This routine is used to find the typec_port_type by its string name.
++ *
++ * Returns typec_port_type if success, otherwise negative error code.
++ */
++int typec_find_power_type(const char *name)
++{
++	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
++			    name);
++}
++EXPORT_SYMBOL_GPL(typec_find_power_type);
++
++/**
++ * typec_find_preferred_role - Find the typec drp port preferred power role
++ * @name: power role string
++ *
++ * This routine is used to find the typec_role by its string name of
++ * preferred power role(Try.SRC or Try.SNK).
++ *
++ * Returns typec_role if success, otherwise negative error code.
++ */
++int typec_find_preferred_role(const char *name)
++{
++	return match_string(typec_roles, ARRAY_SIZE(typec_roles), name);
++}
++EXPORT_SYMBOL_GPL(typec_find_preferred_role);
++
++/**
++ * typec_find_data_type - Get the typec port data capability
++ * @name: data type string
++ *
++ * This routine is used to find the typec_port_data by its string name.
++ *
++ * Returns typec_port_data if success, otherwise negative error code.
++ */
++int typec_find_data_type(const char *name)
++{
++	return match_string(typec_data_types, ARRAY_SIZE(typec_data_types),
++			    name);
++}
++EXPORT_SYMBOL_GPL(typec_find_data_type);
++
+ /* ------------------------------------------ */
+ /* API for Multiplexer/DeMultiplexer Switches */
  
- 	int (*init)(struct tcpc_dev *dev);
- 	int (*get_vbus)(struct tcpc_dev *dev);
+diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+index 672b39b..00c93e7 100644
+--- a/include/linux/usb/typec.h
++++ b/include/linux/usb/typec.h
+@@ -267,4 +267,7 @@ int typec_set_orientation(struct typec_port *port,
+ 			  enum typec_orientation orientation);
+ int typec_set_mode(struct typec_port *port, int mode);
+ 
++int typec_find_power_type(const char *name);
++int typec_find_preferred_role(const char *name);
++int typec_find_data_type(const char *name);
+ #endif /* __LINUX_USB_TYPEC_H */
 -- 
 2.7.4
