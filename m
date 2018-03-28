@@ -1,58 +1,27 @@
-Return-Path: <SRS0=KgiW=GU=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v2 3/3] arm64: dts: renesas: r8a77995: add thermal device support
-Date: Fri, 30 Mar 2018 12:13:03 +0900
-Message-Id: <1522379583-4503-4-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=YFli=GS=verge.net.au=horms@kernel.org>
+Date: Wed, 28 Mar 2018 10:14:28 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 04/12] serial: sh-sci: Document r8a77470 bindings
+Message-ID: <20180328081427.icasccquozew4byb@verge.net.au>
+References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
+ <1522161443-54428-5-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVhQP4Hei0xqfcHg+6YiybMAzksvvx_UMWzGsFHnhdYbQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVhQP4Hei0xqfcHg+6YiybMAzksvvx_UMWzGsFHnhdYbQ@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+On Wed, Mar 28, 2018 at 10:03:27AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> > RZ/G1C (R8A77470) SoC also has the R-Car gen2 compatible SCIF and HSCIF
+> > ports, so document the SoC specific bindings.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index cff42cd..9a52b41 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -636,5 +636,35 @@
- 			#phy-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		thermal: thermal@e6190000 {
-+			compatible = "renesas,thermal-r8a77995";
-+			reg = <0 0xe6190000 0 0x10>, <0 0xe6190100 0 0x38>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 522>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 522>;
-+			#thermal-sensor-cells = <0>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		cpu_thermal: cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal>;
-+
-+			trips {
-+				cpu-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+			};
-+		};
- 	};
- };
--- 
-1.9.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
