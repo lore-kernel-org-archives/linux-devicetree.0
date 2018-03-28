@@ -1,119 +1,514 @@
-Return-Path: <SRS0=W1u3=GL=gmail.com=richardcochran@kernel.org>
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH net-next RFC V1 3/5] net: Introduce field for the MII time stamper.
-Date: Wed, 21 Mar 2018 11:58:16 -0700
-Message-Id: <338f19a006839f1d00e3cfd3521bdd5fd0afc5fe.1521656774.git.richardcochran@gmail.com>
-In-Reply-To: <cover.1521656774.git.richardcochran@gmail.com>
-References: <cover.1521656774.git.richardcochran@gmail.com>
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Return-Path: <SRS0=gpPy=GS=linaro.org=bjorn.andersson@kernel.org>
+Date: Wed, 28 Mar 2018 15:24:47 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V4 5/6] dts: arm64: Enable onboard SDHCI on msm8992
+Message-ID: <20180328222447.GC18510@minitux>
+References: <1485508205-1904-1-git-send-email-jeremymc@redhat.com>
+ <1485508205-1904-6-git-send-email-jeremymc@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1485508205-1904-6-git-send-email-jeremymc@redhat.com>
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a new field to the network device structure to reference
-a time stamping device on the MII bus.  By decoupling the time stamping
-function from the PHY device, we pave the way to allowing a non-PHY
-device to take this role.
+On Fri 27 Jan 01:10 PST 2017, Jeremy McNicoll wrote:
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/phy/mdio_bus.c | 51 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/netdevice.h  |  1 +
- 2 files changed, 51 insertions(+), 1 deletion(-)
+> This enables SDHCI on the Nexus 5X as well creates common smd_rpm node
+> which can be shared between both 5X and 6P as per HW design.
+> 
+> Given the lack of documentation, only downstream code was used as a reference
+> and it eludes to the fact that 8994-rpm-regulator is common between both msm8992
+> & msm8994.   [ see msm.git branch: msm-angler-3.10-marshmallow-mr1, msm8992.dtsi]
+> 
+> At this early stage of development it makes sense for the 8994-rpm-regulator
+> to be common until data / documentation suggests otherwise.
+> 
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 24b5511222c8..fdac8c8ac272 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -717,6 +717,47 @@ static int mdio_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	return 0;
- }
- 
-+static bool mdiodev_supports_timestamping(struct mdio_device *mdiodev)
-+{
-+	if (mdiodev->ts_info  && mdiodev->hwtstamp &&
-+	    mdiodev->rxtstamp && mdiodev->txtstamp)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static int mdiobus_netdev_notification(struct notifier_block *nb,
-+				       unsigned long msg, void *ptr)
-+{
-+	struct net_device *netdev = netdev_notifier_info_to_dev(ptr);
-+	struct phy_device *phydev = netdev->phydev;
-+	struct mdio_device *mdev;
-+	struct mii_bus *bus;
-+	int i;
-+
-+	if (netdev->mdiots || msg != NETDEV_UP || !phydev)
-+		return NOTIFY_DONE;
-+
-+	/*
-+	 * Examine the MII bus associated with the PHY that is
-+	 * attached to the MAC.  If there is a time stamping device
-+	 * on the bus, then connect it to the network device.
-+	 */
-+	bus = phydev->mdio.bus;
-+
-+	for (i = 0; i < PHY_MAX_ADDR; i++) {
-+		mdev = bus->mdio_map[i];
-+		if (!mdev)
-+			continue;
-+		if (mdiodev_supports_timestamping(mdev)) {
-+			netdev->mdiots = mdev;
-+			return NOTIFY_OK;
-+		}
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- #ifdef CONFIG_PM
- static int mdio_bus_suspend(struct device *dev)
- {
-@@ -772,6 +813,10 @@ struct bus_type mdio_bus_type = {
- };
- EXPORT_SYMBOL(mdio_bus_type);
- 
-+static struct notifier_block mdiobus_netdev_notifier __read_mostly = {
-+	.notifier_call = mdiobus_netdev_notification,
-+};
-+
- int __init mdio_bus_init(void)
- {
- 	int ret;
-@@ -782,14 +827,18 @@ int __init mdio_bus_init(void)
- 		if (ret)
- 			class_unregister(&mdio_bus_class);
- 	}
-+	if (ret)
-+		return ret;
-+
-+	return register_netdevice_notifier(&mdiobus_netdev_notifier);
- 
--	return ret;
- }
- EXPORT_SYMBOL_GPL(mdio_bus_init);
- 
- #if IS_ENABLED(CONFIG_PHYLIB)
- void mdio_bus_exit(void)
- {
-+	unregister_netdevice_notifier(&mdiobus_netdev_notifier);
- 	class_unregister(&mdio_bus_class);
- 	bus_unregister(&mdio_bus_type);
- }
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 5fbb9f1da7fd..223d691aa0b0 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -1943,6 +1943,7 @@ struct net_device {
- 	struct netprio_map __rcu *priomap;
- #endif
- 	struct phy_device	*phydev;
-+	struct mdio_device	*mdiots;
- 	struct lock_class_key	*qdisc_tx_busylock;
- 	struct lock_class_key	*qdisc_running_key;
- 	bool			proto_down;
--- 
-2.11.0
+Saw this as I looked through patchworks, still applies and compiles
+cleanly.
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
+>  .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |   2 +
+>  arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  60 +++++
+>  arch/arm64/boot/dts/qcom/msm8992.dtsi              |  87 ++++++-
+>  arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi      | 276 +++++++++++++++++++++
+>  4 files changed, 424 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+> index 4542133..3fc9a33 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+> +++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+> @@ -39,3 +39,5 @@
+>  		};
+>  	};
+>  };
+> +
+> +#include "msm8994-smd-rpm.dtsi"
+> diff --git a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+> index d2a26f0..31bc9d9 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+> @@ -35,4 +35,64 @@
+>  			bias-pull-down;
+>  		};
+>  	};
+> +
+> +	/* 0-3 for sdc1 4-6 for sdc2 */
+> +	/* Order of pins */
+> +	/* SDC1: CLK -> 0, CMD -> 1, DATA -> 2, RCLK -> 3 */
+> +	/* SDC2: CLK -> 4, CMD -> 5, DATA -> 6 */
+> +	sdc1_clk_on: clk-on {
+> +		pinconf {
+> +			pins = "sdc1_clk";
+> +			bias-disable = <0>; /* No pull */
+> +			drive-strength = <16>; /* 16mA */
+> +		};
+> +	};
+> +
+> +	sdc1_clk_off: clk-off {
+> +		pinconf {
+> +			pins = "sdc1_clk";
+> +			bias-disable = <0>; /* No pull */
+> +			drive-strength = <2>; /* 2mA */
+> +		};
+> +	};
+> +
+> +	sdc1_cmd_on: cmd-on {
+> +		pinconf {
+> +			pins = "sdc1_cmd";
+> +			bias-pull-up;
+> +			drive-strength = <8>;
+> +		};
+> +	};
+> +
+> +	sdc1_cmd_off: cmd-off {
+> +		pinconf {
+> +			pins = "sdc1_cmd";
+> +			bias-pull-up = <0x3>; /* same as 3.10 ?? */
+> +			drive-strength = <2>; /* 2mA */
+> +		};
+> +	};
+> +
+> +	sdc1_data_on: data-on {
+> +		pinconf {
+> +			pins = "sdc1_data";
+> +			bias-pull-up;
+> +			drive-strength = <8>; /* 8mA */
+> +		};
+> +	};
+> +
+> +	sdc1_data_off: data-off {
+> +		pinconf {
+> +			pins = "sdc1_data";
+> +			bias-pull-up;
+> +			drive-strength = <2>;
+> +		};
+> +	};
+> +
+> +	sdc1_rclk_on: rclk-on {
+> +		bias-pull-down; /* pull down */
+> +	};
+> +
+> +	sdc1_rclk_off: rclk-off {
+> +		bias-pull-down; /* pull down */
+> +	};
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> index 2c05ec7..623c850 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> @@ -189,6 +189,31 @@
+>  			reg = <0xfc400000 0x2000>;
+>  		};
+>  
+> +		sdhci1: mmc@f9824900 {
+> +			compatible = "qcom,sdhci-msm-v4";
+> +			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
+> +			reg-names = "hc_mem", "core_mem";
+> +
+> +			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
+> +					<GIC_SPI 138 IRQ_TYPE_NONE>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&clock_gcc GCC_SDCC1_APPS_CLK>,
+> +				<&clock_gcc GCC_SDCC1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +
+> +			pinctrl-names = "default", "sleep";
+> +			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
+> +					&sdc1_rclk_on>;
+> +			pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off
+> +					&sdc1_rclk_off>;
+> +
+> +			regulator-always-on;
+> +			bus-width = <8>;
+> +			mmc-hs400-1_8v;
+> +			status = "okay";
+> +		};
+> +
+>  		rpm_msg_ram: memory@fc428000 {
+>  			compatible = "qcom,rpm-msg-ram";
+>  			reg = <0xfc428000 0x4000>;
+> @@ -231,7 +256,67 @@
+>  		};
+>  	};
+>  
+> +	smd_rpm: smd {
+> +		compatible = "qcom,smd";
+> +		rpm {
+> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +			qcom,ipc = <&apcs 8 0>;
+> +			qcom,smd-edge = <15>;
+> +			qcom,local-pid = <0>;
+> +			qcom,remote-pid = <6>;
+> +
+> +			rpm-requests {
+> +				compatible = "qcom,rpm-msm8994";
+> +				qcom,smd-channels = "rpm_requests";
+> +
+> +				pm8994-regulators {
+> +					compatible = "qcom,rpm-pm8994-regulators";
+> +
+> +					pm8994_s1: s1 {};
+> +					pm8994_s2: s2 {};
+> +					pm8994_s3: s3 {};
+> +					pm8994_s4: s4 {};
+> +					pm8994_s5: s5 {};
+> +					pm8994_s6: s6 {};
+> +					pm8994_s7: s7 {};
+> +
+> +					pm8994_l1: l1 {};
+> +					pm8994_l2: l2 {};
+> +					pm8994_l3: l3 {};
+> +					pm8994_l4: l4 {};
+> +					pm8994_l6: l6 {};
+> +					pm8994_l8: l8 {};
+> +					pm8994_l9: l9 {};
+> +					pm8994_l10: l10 {};
+> +					pm8994_l11: l11 {};
+> +					pm8994_l12: l12 {};
+> +					pm8994_l13: l13 {};
+> +					pm8994_l14: l14 {};
+> +					pm8994_l15: l15 {};
+> +					pm8994_l16: l16 {};
+> +					pm8994_l17: l17 {};
+> +					pm8994_l18: l18 {};
+> +					pm8994_l19: l19 {};
+> +					pm8994_l20: l20 {};
+> +					pm8994_l21: l21 {};
+> +					pm8994_l22: l22 {};
+> +					pm8994_l23: l23 {};
+> +					pm8994_l24: l24 {};
+> +					pm8994_l25: l25 {};
+> +					pm8994_l26: l26 {};
+> +					pm8994_l27: l27 {};
+> +					pm8994_l28: l28 {};
+> +					pm8994_l29: l29 {};
+> +					pm8994_l30: l30 {};
+> +					pm8994_l31: l31 {};
+> +					pm8994_l32: l32 {};
+> +
+> +					pm8994_lvs1: lvs1 {};
+> +					pm8994_lvs2: lvs2 {};
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+>  
+> -
+>  #include "msm8992-pins.dtsi"
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi b/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+> new file mode 100644
+> index 0000000..47ebd16
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+> @@ -0,0 +1,276 @@
+> +/* Copyright (c) 2015, LGE Inc. All rights reserved.
+> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +&smd_rpm {
+> +	rpm {
+> +		rpm_requests {
+> +			pm8994-regulators {
+> +
+> +				vdd_l1-supply = <&pm8994_s1>;
+> +				vdd_l2_26_28-supply = <&pm8994_s3>;
+> +				vdd_l3_11-supply = <&pm8994_s3>;
+> +				vdd_l4_27_31-supply = <&pm8994_s3>;
+> +				vdd_l5_7-supply = <&pm8994_s3>;
+> +				vdd_l6_12_32-supply = <&pm8994_s5>;
+> +				vdd_l8_16_30-supply = <&vreg_vph_pwr>;
+> +				vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
+> +				vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
+> +				vdd_l14_15-supply = <&pm8994_s5>;
+> +				vdd_l17_29-supply = <&vreg_vph_pwr>;
+> +				vdd_l20_21-supply = <&vreg_vph_pwr>;
+> +				vdd_l25-supply = <&pm8994_s5>;
+> +				vdd_lvs1_2 = <&pm8994_s4>;
+> +
+> +				s1 {
+> +					regulator-min-microvolt = <800000>;
+> +					regulator-max-microvolt = <800000>;
+> +				};
+> +
+> +				s2 {
+> +					/* TODO */
+> +				};
+> +
+> +				s3 {
+> +					regulator-min-microvolt = <1300000>;
+> +					regulator-max-microvolt = <1300000>;
+> +				};
+> +
+> +				s4 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					regulator-allow-set-load;
+> +					regulator-system-load = <325000>;
+> +				};
+> +
+> +				s5 {
+> +					regulator-min-microvolt = <2150000>;
+> +					regulator-max-microvolt = <2150000>;
+> +				};
+> +
+> +				s7 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +				};
+> +
+> +				l1 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +				};
+> +
+> +				l2 {
+> +					regulator-min-microvolt = <1250000>;
+> +					regulator-max-microvolt = <1250000>;
+> +				};
+> +
+> +				l3 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +				};
+> +
+> +				l4 {
+> +					regulator-min-microvolt = <1225000>;
+> +					regulator-max-microvolt = <1225000>;
+> +				};
+> +
+> +				l5 {
+> +					/* TODO */
+> +				};
+> +
+> +				l6 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l7 {
+> +					/* TODO */
+> +				};
+> +
+> +				l8 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l9 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l10 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l11 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					qcom,init-voltage = <1200000>;
+> +				};
+> +
+> +				l12 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					proxy-supply = <&pm8994_l12>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l13 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					qcom,init-voltage = <2950000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l14 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					qcom,init-voltage = <1200000>;
+> +					proxy-supply = <&pm8994_l14>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l15 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l16 {
+> +					regulator-min-microvolt = <2700000>;
+> +					regulator-max-microvolt = <2700000>;
+> +					qcom,init-voltage = <2700000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l17 {
+> +					regulator-min-microvolt = <2700000>;
+> +					regulator-max-microvolt = <2700000>;
+> +					qcom,init-voltage = <2700000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l18 {
+> +					regulator-min-microvolt = <3000000>;
+> +					regulator-max-microvolt = <3000000>;
+> +					regulator-always-on;
+> +					qcom,init-voltage = <3000000>;
+> +					qcom,init-ldo-mode = <1>;
+> +				};
+> +
+> +				l19 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l20 {
+> +					regulator-min-microvolt = <2950000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +					regulator-allow-set-load;
+> +					regulator-system-load = <570000>;
+> +				};
+> +
+> +				l21 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					regulator-always-on;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l22 {
+> +					regulator-min-microvolt = <3100000>;
+> +					regulator-max-microvolt = <3100000>;
+> +					qcom,init-voltage = <3100000>;
+> +				};
+> +
+> +				l23 {
+> +					regulator-min-microvolt = <2800000>;
+> +					regulator-max-microvolt = <2800000>;
+> +					qcom,init-voltage = <2800000>;
+> +				};
+> +
+> +				l24 {
+> +					regulator-min-microvolt = <3075000>;
+> +					regulator-max-microvolt = <3150000>;
+> +					qcom,init-voltage = <3075000>;
+> +				};
+> +
+> +				l25 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l26 {
+> +					/* TODO: value from downstream
+> +					regulator-min-microvolt = <987500>;
+> +					fails to apply */
+> +				};
+> +
+> +				l27 {
+> +					regulator-min-microvolt = <1050000>;
+> +					regulator-max-microvolt = <1050000>;
+> +					qcom,init-voltage = <1050000>;
+> +				};
+> +
+> +				l28 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +					qcom,init-voltage = <1000000>;
+> +					proxy-supply = <&pm8994_l28>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +				};
+> +
+> +				l29 {
+> +					/* TODO: Unsupported voltage range.
+> +					regulator-min-microvolt = <2800000>;
+> +					regulator-max-microvolt = <2800000>;
+> +					qcom,init-voltage = <2800000>;
+> +					*/
+> +				};
+> +
+> +				l30 {
+> +					/* TODO: get this verified
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					*/
+> +				};
+> +
+> +				l31 {
+> +					regulator-min-microvolt = <1262500>;
+> +					regulator-max-microvolt = <1262500>;
+> +					qcom,init-voltage = <1262500>;
+> +				};
+> +
+> +				l32 {
+> +					/* TODO: get this verified
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					*/
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.6.1
+> 
