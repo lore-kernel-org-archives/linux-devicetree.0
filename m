@@ -1,61 +1,57 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH 1/2][v7] dt-bindings: mtd-physmap: Add endianness supports
-Date: Wed, 28 Mar 2018 09:48:08 +0000
-Message-ID: <VI1PR0402MB3854A5A7E389D80CCEF0197997A30@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-References: <20180328054443.2829-1-prabhakar.kushwaha@nxp.com>
- <20180328103001.6f4b16d9@bbrezillon>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v6 0/3] Bluetooth: hci_qca: Add serdev support
+Date: Wed, 28 Mar 2018 11:51:30 +0200
+Message-ID: <20180328095133.14343-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180328103001.6f4b16d9@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, Poonam Aggrwal <poonam.aggrwal@nxp.com>, Leo Li <leoyang.li@nxp.com>, "oss@buserror.net" <oss@buserror.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset = "utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfert-Encoding: 8bit
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi,
 
-> -----Original Message-----
-> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
-> Sent: Wednesday, March 28, 2018 2:00 PM
-> To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Cc: linux-mtd@lists.infradead.org; devicetree@vger.kernel.org;
-> mark.rutland@arm.com; robh@kernel.org; boris.brezillon@free-electrons.com;
-> Poonam Aggrwal <poonam.aggrwal@nxp.com>; Leo Li <leoyang.li@nxp.com>;
-> oss@buserror.net; computersforpeace@gmail.com; shawnguo@kernel.org;
-> linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH 1/2][v7] dt-bindings: mtd-physmap: Add endianness
-> supports
-> 
-> On Wed, 28 Mar 2018 11:14:43 +0530
-> Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
-> 
-> > Connection between flash and controller is not necessary to be always
-> > of same type. It may varies from platform to platform.
-> >
-> > Adding endianness (optional) property to provide connection type
-> > information.
-> 
-> You forgot to adjust your commit message.
-> 
-> If you're okay, I'll replace your message by:
-> 
-> "
-> Provides a way to specify the endianness to use when accessing a memory-
-> mapped flash.
-> "
-> 
+This patchset enables the Qualcomm BT controller QCA6174 node in the
+device tree of the db820c board. This allows the bluetooth chipset to
+be probed and registered against the hci layer by using the serdev
+framework.
 
-Thanks for catching this. Please adjust as you suggested.
+This patchset also contains the documentation for the compatible
+string "qcom,qca6174-bt" related to this chipset.
 
---prabhakar
+v6:
+- Move pinctrl properties into subnodes
+- fix binding documentation
+
+v5:
+- Rename 'bt-disable-n' gpio as 'enable'
+
+v4:
+- Fix dt binding documentation
+- Address some other issues in patch #3
+
+v3:
+- Address comments for patch #3 (details in patch)
+
+v2:
+- Fix author email
+
+Thierry Escande (3):
+  arm64: dts: apq8096-db820c: enable bluetooth node
+  dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+  Bluetooth: hci_qca: Add serdev support
+
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt |  34 +++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  26 +++++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  21 ++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  33 +++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
+ drivers/bluetooth/Kconfig                          |   1 +
+ drivers/bluetooth/hci_qca.c                        | 109 ++++++++++++++++++++-
+ 7 files changed, 232 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+
+-- 
+2.14.1
