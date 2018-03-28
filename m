@@ -1,306 +1,122 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: qcom: smd: Add pm8998 and pmi8998 regulators" to the regulator tree
-Date: Wed, 28 Mar 2018 03:21:55 +0100 (BST)
-Message-ID: <20180328022155.28AF844007A@finisterre.ee.mobilebroadband>
-References: <20180327155301.31862-1-bjorn.andersson@linaro.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/2] clocksource/drivers/imx-tpm: add different counter
+ width support
+Date: Wed, 28 Mar 2018 02:24:47 +0000
+Message-ID: <AM3PR04MB1315EAC1F314804EA79ACE29F5A30@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1522050461-19043-1-git-send-email-Anson.Huang@nxp.com>
+ <1522050461-19043-2-git-send-email-Anson.Huang@nxp.com>
+ <e6e6026c-37bb-35ff-bf1b-a00d47e0aa2e@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327155301.31862-1-bjorn.andersson@linaro.org>
+In-Reply-To: <e6e6026c-37bb-35ff-bf1b-a00d47e0aa2e@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.orglinux-kernel@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   regulator: qcom: smd: Add pm8998 and pmi8998 regulators
-
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3cdb741efa02c5053a738d5816b70de11c4d6364 Mon Sep 17 00:00:00 2001
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Date: Tue, 27 Mar 2018 08:53:01 -0700
-Subject: [PATCH] regulator: qcom: smd: Add pm8998 and pmi8998 regulators
-
-Add the pm8998 and pmi8998 regulators as used in the MSM8998 platform.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/qcom,smd-rpm-regulator.txt  |  48 ++++++++
- drivers/regulator/qcom_smd-regulator.c             | 121 +++++++++++++++++++++
- include/linux/soc/qcom/smd-rpm.h                   |   1 +
- 3 files changed, 170 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-index 4e3dfb5b5f16..58a1d97972f5 100644
---- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-@@ -23,7 +23,9 @@ Regulator nodes are identified by their compatible:
- 		    "qcom,rpm-pm8916-regulators"
- 		    "qcom,rpm-pm8941-regulators"
- 		    "qcom,rpm-pm8994-regulators"
-+		    "qcom,rpm-pm8998-regulators"
- 		    "qcom,rpm-pma8084-regulators"
-+		    "qcom,rpm-pmi8998-regulators"
- 
- - vdd_s1-supply:
- - vdd_s2-supply:
-@@ -119,6 +121,38 @@ Regulator nodes are identified by their compatible:
- 	Definition: reference to regulator supplying the input pin, as
- 		    described in the data sheet
- 
-+- vdd_s1-supply:
-+- vdd_s2-supply:
-+- vdd_s3-supply:
-+- vdd_s4-supply:
-+- vdd_s5-supply:
-+- vdd_s6-supply:
-+- vdd_s7-supply:
-+- vdd_s8-supply:
-+- vdd_s9-supply:
-+- vdd_s10-supply:
-+- vdd_s11-supply:
-+- vdd_s12-supply:
-+- vdd_s13-supply:
-+- vdd_l1_l27-supply:
-+- vdd_l20_l24-supply:
-+- vdd_l26-supply:
-+- vdd_l2_l8_l17-supply:
-+- vdd_l3_l11-supply:
-+- vdd_l4_l5-supply:
-+- vdd_l6-supply:
-+- vdd_l7_l12_l14_l15-supply:
-+- vdd_l9-supply:
-+- vdd_l10_l23_l25-supply:
-+- vdd_l13_l19_l21-supply:
-+- vdd_l16_l28-supply:
-+- vdd_l18_l22-supply:
-+- vdd_lvs1_lvs2-supply:
-+	Usage: optional (pmi8998 only)
-+	Value type: <phandle>
-+	Definition: reference to regulator supplying the input pin, as
-+		    described in the data sheet
-+
- - vdd_s1-supply:
- - vdd_s2-supply:
- - vdd_s3-supply:
-@@ -148,6 +182,12 @@ Regulator nodes are identified by their compatible:
- 	Definition: reference to regulator supplying the input pin, as
- 		    described in the data sheet
- 
-+- vdd_bob-supply:
-+	Usage: optional (pmi8998 only)
-+	Value type: <phandle>
-+	Definition: reference to regulator supplying the input pin, as
-+		    described in the data sheet
-+
- The regulator node houses sub-nodes for each regulator within the device. Each
- sub-node is identified using the node's name, with valid values listed for each
- of the pmics below.
-@@ -169,11 +209,19 @@ pm8994:
- 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
- 	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
- 
-+pm8998:
-+	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2, l3, l4,
-+	l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
-+	l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
-+
- pma8084:
- 	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
- 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
- 	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
- 
-+pmi8998:
-+	bob
-+
- The content of each sub-node is defined by the standard binding for regulators -
- see regulator.txt.
- 
-diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
-index 940fe1b78411..ef51db5f0d9b 100644
---- a/drivers/regulator/qcom_smd-regulator.c
-+++ b/drivers/regulator/qcom_smd-regulator.c
-@@ -165,6 +165,15 @@ static const struct regulator_ops rpm_switch_ops = {
- 	.is_enabled = rpm_reg_is_enabled,
- };
- 
-+static const struct regulator_ops rpm_bob_ops = {
-+	.enable = rpm_reg_enable,
-+	.disable = rpm_reg_disable,
-+	.is_enabled = rpm_reg_is_enabled,
-+
-+	.get_voltage = rpm_reg_get_voltage,
-+	.set_voltage = rpm_reg_set_voltage,
-+};
-+
- static const struct regulator_desc pma8084_hfsmps = {
- 	.linear_ranges = (struct regulator_linear_range[]) {
- 		REGULATOR_LINEAR_RANGE(375000,  0,  95, 12500),
-@@ -355,6 +364,64 @@ static const struct regulator_desc pm8994_lnldo = {
- 	.ops = &rpm_smps_ldo_ops_fixed,
- };
- 
-+static const struct regulator_desc pm8998_ftsmps = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(320000, 0, 258, 4000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 259,
-+	.ops = &rpm_smps_ldo_ops,
-+};
-+
-+static const struct regulator_desc pm8998_hfsmps = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 216,
-+	.ops = &rpm_smps_ldo_ops,
-+};
-+
-+static const struct regulator_desc pm8998_nldo = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 128,
-+	.ops = &rpm_smps_ldo_ops,
-+};
-+
-+static const struct regulator_desc pm8998_pldo = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(1664000, 0, 255, 8000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 256,
-+	.ops = &rpm_smps_ldo_ops,
-+};
-+
-+static const struct regulator_desc pm8998_pldo_lv = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(1256000, 0, 127, 8000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 128,
-+	.ops = &rpm_smps_ldo_ops,
-+};
-+
-+static const struct regulator_desc pm8998_switch = {
-+	.ops = &rpm_switch_ops,
-+};
-+
-+static const struct regulator_desc pmi8998_bob = {
-+	.linear_ranges = (struct regulator_linear_range[]) {
-+		REGULATOR_LINEAR_RANGE(1824000, 0, 83, 32000),
-+	},
-+	.n_linear_ranges = 1,
-+	.n_voltages = 84,
-+	.ops = &rpm_bob_ops,
-+};
-+
- struct rpm_regulator_data {
- 	const char *name;
- 	u32 type;
-@@ -544,12 +611,66 @@ static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
- 	{}
- };
- 
-+static const struct rpm_regulator_data rpm_pm8998_regulators[] = {
-+	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8998_ftsmps, "vdd_s1" },
-+	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8998_ftsmps, "vdd_s2" },
-+	{ "s3", QCOM_SMD_RPM_SMPA, 3, &pm8998_hfsmps, "vdd_s3" },
-+	{ "s4", QCOM_SMD_RPM_SMPA, 4, &pm8998_hfsmps, "vdd_s4" },
-+	{ "s5", QCOM_SMD_RPM_SMPA, 5, &pm8998_hfsmps, "vdd_s5" },
-+	{ "s6", QCOM_SMD_RPM_SMPA, 6, &pm8998_ftsmps, "vdd_s6" },
-+	{ "s7", QCOM_SMD_RPM_SMPA, 7, &pm8998_ftsmps, "vdd_s7" },
-+	{ "s8", QCOM_SMD_RPM_SMPA, 8, &pm8998_ftsmps, "vdd_s8" },
-+	{ "s9", QCOM_SMD_RPM_SMPA, 9, &pm8998_ftsmps, "vdd_s9" },
-+	{ "s10", QCOM_SMD_RPM_SMPA, 10, &pm8998_ftsmps, "vdd_s10" },
-+	{ "s11", QCOM_SMD_RPM_SMPA, 11, &pm8998_ftsmps, "vdd_s11" },
-+	{ "s12", QCOM_SMD_RPM_SMPA, 12, &pm8998_ftsmps, "vdd_s12" },
-+	{ "s13", QCOM_SMD_RPM_SMPA, 13, &pm8998_ftsmps, "vdd_s13" },
-+	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pm8998_nldo, "vdd_l1_l27" },
-+	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pm8998_nldo, "vdd_l2_l8_l17" },
-+	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pm8998_nldo, "vdd_l3_l11" },
-+	{ "l4", QCOM_SMD_RPM_LDOA, 4, &pm8998_nldo, "vdd_l4_l5" },
-+	{ "l5", QCOM_SMD_RPM_LDOA, 5, &pm8998_nldo, "vdd_l4_l5" },
-+	{ "l6", QCOM_SMD_RPM_LDOA, 6, &pm8998_pldo, "vdd_l6" },
-+	{ "l7", QCOM_SMD_RPM_LDOA, 7, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
-+	{ "l8", QCOM_SMD_RPM_LDOA, 8, &pm8998_nldo, "vdd_l2_l8_l17" },
-+	{ "l9", QCOM_SMD_RPM_LDOA, 9, &pm8998_pldo, "vdd_l9" },
-+	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pm8998_pldo, "vdd_l10_l23_l25" },
-+	{ "l11", QCOM_SMD_RPM_LDOA, 11, &pm8998_nldo, "vdd_l3_l11" },
-+	{ "l12", QCOM_SMD_RPM_LDOA, 12, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
-+	{ "l13", QCOM_SMD_RPM_LDOA, 13, &pm8998_pldo, "vdd_l13_l19_l21" },
-+	{ "l14", QCOM_SMD_RPM_LDOA, 14, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
-+	{ "l15", QCOM_SMD_RPM_LDOA, 15, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
-+	{ "l16", QCOM_SMD_RPM_LDOA, 16, &pm8998_pldo, "vdd_l16_l28" },
-+	{ "l17", QCOM_SMD_RPM_LDOA, 17, &pm8998_nldo, "vdd_l2_l8_l17" },
-+	{ "l18", QCOM_SMD_RPM_LDOA, 18, &pm8998_pldo, "vdd_l18_l22" },
-+	{ "l19", QCOM_SMD_RPM_LDOA, 19, &pm8998_pldo, "vdd_l13_l19_l21" },
-+	{ "l20", QCOM_SMD_RPM_LDOA, 20, &pm8998_pldo, "vdd_l20_l24" },
-+	{ "l21", QCOM_SMD_RPM_LDOA, 21, &pm8998_pldo, "vdd_l13_l19_l21" },
-+	{ "l22", QCOM_SMD_RPM_LDOA, 22, &pm8998_pldo, "vdd_l18_l22" },
-+	{ "l23", QCOM_SMD_RPM_LDOA, 23, &pm8998_pldo, "vdd_l10_l23_l25" },
-+	{ "l24", QCOM_SMD_RPM_LDOA, 24, &pm8998_pldo, "vdd_l20_l24" },
-+	{ "l25", QCOM_SMD_RPM_LDOA, 25, &pm8998_pldo, "vdd_l10_l23_l25" },
-+	{ "l26", QCOM_SMD_RPM_LDOA, 26, &pm8998_nldo, "vdd_l26" },
-+	{ "l27", QCOM_SMD_RPM_LDOA, 27, &pm8998_nldo, "vdd_l1_l27" },
-+	{ "l28", QCOM_SMD_RPM_LDOA, 28, &pm8998_pldo, "vdd_l16_l28" },
-+	{ "lvs1", QCOM_SMD_RPM_VSA, 1, &pm8998_switch, "vdd_lvs1_lvs2" },
-+	{ "lvs2", QCOM_SMD_RPM_VSA, 2, &pm8998_switch, "vdd_lvs1_lvs2" },
-+	{}
-+};
-+
-+static const struct rpm_regulator_data rpm_pmi8998_regulators[] = {
-+	{ "bob", QCOM_SMD_RPM_BOBB, 1, &pmi8998_bob, "vdd_bob" },
-+	{}
-+};
-+
- static const struct of_device_id rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
- 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
- 	{ .compatible = "qcom,rpm-pm8941-regulators", .data = &rpm_pm8941_regulators },
- 	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
-+	{ .compatible = "qcom,rpm-pm8998-regulators", .data = &rpm_pm8998_regulators },
- 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
-+	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rpm_of_match);
-diff --git a/include/linux/soc/qcom/smd-rpm.h b/include/linux/soc/qcom/smd-rpm.h
-index 9f5c6e53f3a5..9e4fdd861a51 100644
---- a/include/linux/soc/qcom/smd-rpm.h
-+++ b/include/linux/soc/qcom/smd-rpm.h
-@@ -10,6 +10,7 @@ struct qcom_smd_rpm;
- /*
-  * Constants used for addressing resources in the RPM.
-  */
-+#define QCOM_SMD_RPM_BOBB	0x62626f62
- #define QCOM_SMD_RPM_BOOST	0x61747362
- #define QCOM_SMD_RPM_BUS_CLK	0x316b6c63
- #define QCOM_SMD_RPM_BUS_MASTER	0x73616d62
--- 
-2.16.2
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBEYW5pZWwgTGV6Y2FubyBbbWFpbHRvOmRhbmllbC5sZXpjYW5vQGxp
+bmFyby5vcmddDQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMjYsIDIwMTggMTA6MTEgUE0NCj4gVG86
+IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOw0K
+PiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBBLnMuIERvbmcNCj4g
+PGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhw
+LmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBjbG9ja3NvdXJjZS9kcml2ZXJz
+L2lteC10cG06IGFkZCBkaWZmZXJlbnQgY291bnRlcg0KPiB3aWR0aCBzdXBwb3J0DQo+IA0KPiBP
+biAyNi8wMy8yMDE4IDA5OjQ3LCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBEaWZmZXJlbnQgVFBN
+IG1vZHVsZXMgaGF2ZSBkaWZmZXJlbnQgd2lkdGggY291bnRlcnMgd2hpY2ggaXMgMTYtYml0IG9y
+DQo+ID4gMzItYml0LCB0aGUgY291bnRlciB3aWR0aCBjYW4gYmUgcmVhZCBmcm9tIFRQTV9QQVJB
+TSByZWdpc3Rlcg0KPiA+IGJpdFsyMzoxNl0sIHRoaXMgcGF0Y2ggYWRkcyBkeW5hbWljIGNoZWNr
+IGZvciBjb3VudGVyIHdpZHRoIHRvIHN1cHBvcnQNCj4gPiBib3RoIDE2LWJpdCBhbmQgMzItYml0
+IFRQTSBtb2R1bGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29u
+Lkh1YW5nQG54cC5jb20+DQo+IA0KPiBBcmUgeW91IHN1cmUgeW91IHNob3VsZG4ndCB1c2UgYSBw
+cmVzY2FsYXIgd2l0aCAxNmIgYW5kIHJlZHVjZSBpdHMgcmF0aW5nPyBXaGF0DQo+IHdpbGwgYmUg
+dGhlIGR1cmF0aW9uIG9mIHRoZSBjbG9ja3NvdXJjZSBiZWZvcmUgd3JhcHBpbmcgdXA/DQogDQpU
+aGUgZHVyYXRpb24gY3VycmVudGx5IGlzIDB4ZmZmZiAvIDhNSHosIH44LjJtUywgeWVzLCBpdCBp
+cyB0b28gc2hvcnQsIEkgd2lsbCBtYWtlIHRoZSBwcmVzY2FsYXINCmhpZ2hlciB0byBpbmNyZWFz
+ZSB0aGUgZHVyYXRpb24uIA0KDQo+IA0KPiBBbHNvLCBjYW4geW91IGRvIHRoZSBjaGFuZ2UgdG8g
+cHJldmVudCBjb21wdXRpbmcgdGhlIG1hc2sgYXQgZWFjaA0KPiAncmVhZF9jb3VudCcgY2FsbCA/
+DQoNCkkgdGhpbmsgd2UgY2FuIGp1c3QgcmV0dXJuIHRoZSB2YWx1ZSByZWFkIGZyb20gdGhlIENO
+VCByZWdpc3RlciwgZXZlbiB0aGUgd2lkdGgNCmlzIDE2LCB0aGUgdXBwZXIgMTYgYml0cyBhbHdh
+eXMgMCwgc28gaXQgZG9lcyBOT1QgbWF0dGVyLCBJIHdpbGwgcmVtb3ZlIHRoZSBtYXNrIGNvbXB1
+dGF0aW9uDQppbiBWMiBwYXRjaC4NCg0KVGhhbmtzLg0KDQpBbnNvbi4NCg0KPiANCj4gPiAtLS0N
+Cj4gPiAgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtdHBtLmMgfCAxOSArKysrKysrKysr
+KysrLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCA2IGRlbGV0
+aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXIt
+aW14LXRwbS5jDQo+ID4gYi9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWlteC10cG0uYw0KPiA+
+IGluZGV4IDc0MDNlNDkuLjUwNjNiNzcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbG9ja3Nv
+dXJjZS90aW1lci1pbXgtdHBtLmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVy
+LWlteC10cG0uYw0KPiA+IEBAIC0xNyw2ICsxNyw5IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9v
+Zl9pcnEuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkX2Nsb2NrLmg+DQo+ID4NCj4gPiAr
+I2RlZmluZSBUUE1fUEFSQU0JCQkweDQNCj4gPiArI2RlZmluZSBUUE1fUEFSQU1fV0lEVEhfU0hJ
+RlQJCTE2DQo+ID4gKyNkZWZpbmUgVFBNX1BBUkFNX1dJRFRIX01BU0sJCSgweGZmIDw8IDE2KQ0K
+PiA+ICAjZGVmaW5lIFRQTV9TQwkJCQkweDEwDQo+ID4gICNkZWZpbmUgVFBNX1NDX0NNT0RfSU5D
+X1BFUl9DTlQJCSgweDEgPDwgMykNCj4gPiAgI2RlZmluZSBUUE1fU0NfQ01PRF9ESVZfREVGQVVM
+VAkJMHgzDQo+ID4gQEAgLTMzLDYgKzM2LDcgQEANCj4gPiAgI2RlZmluZSBUUE1fQzBTQ19DSEZf
+TUFTSwkJKDB4MSA8PCA3KQ0KPiA+ICAjZGVmaW5lIFRQTV9DMFYJCQkJMHgyNA0KPiA+DQo+ID4g
+K3N0YXRpYyBpbnQgY291bnRlcl93aWR0aDsNCj4gPiAgc3RhdGljIHZvaWQgX19pb21lbSAqdGlt
+ZXJfYmFzZTsNCj4gPiAgc3RhdGljIHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgY2xvY2tldmVu
+dF90cG07DQo+ID4NCj4gPiBAQCAtNjYsNyArNzAsNyBAQCBzdGF0aWMgc3RydWN0IGRlbGF5X3Rp
+bWVyIHRwbV9kZWxheV90aW1lcjsNCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHVuc2lnbmVkIGxv
+bmcgdHBtX3JlYWRfY291bnRlcih2b2lkKSAgew0KPiA+IC0JcmV0dXJuIHJlYWRsKHRpbWVyX2Jh
+c2UgKyBUUE1fQ05UKTsNCj4gPiArCXJldHVybiByZWFkbCh0aW1lcl9iYXNlICsgVFBNX0NOVCkg
+JiBHRU5NQVNLKGNvdW50ZXJfd2lkdGggLSAxLCAwKTsNCj4gPiAgfQ0KPiA+DQo+ID4gIHN0YXRp
+YyB1bnNpZ25lZCBsb25nIHRwbV9yZWFkX2N1cnJlbnRfdGltZXIodm9pZCkgQEAgLTg1LDEwICs4
+OSwxMSBAQA0KPiA+IHN0YXRpYyBpbnQgX19pbml0IHRwbV9jbG9ja3NvdXJjZV9pbml0KHVuc2ln
+bmVkIGxvbmcgcmF0ZSkNCj4gPiAgCXRwbV9kZWxheV90aW1lci5mcmVxID0gcmF0ZTsNCj4gPiAg
+CXJlZ2lzdGVyX2N1cnJlbnRfdGltZXJfZGVsYXkoJnRwbV9kZWxheV90aW1lcik7DQo+ID4NCj4g
+PiAtCXNjaGVkX2Nsb2NrX3JlZ2lzdGVyKHRwbV9yZWFkX3NjaGVkX2Nsb2NrLCAzMiwgcmF0ZSk7
+DQo+ID4gKwlzY2hlZF9jbG9ja19yZWdpc3Rlcih0cG1fcmVhZF9zY2hlZF9jbG9jaywgY291bnRl
+cl93aWR0aCwgcmF0ZSk7DQo+ID4NCj4gPiAgCXJldHVybiBjbG9ja3NvdXJjZV9tbWlvX2luaXQo
+dGltZXJfYmFzZSArIFRQTV9DTlQsICJpbXgtdHBtIiwNCj4gPiAtCQkJCSAgICAgcmF0ZSwgMjAw
+LCAzMiwgY2xvY2tzb3VyY2VfbW1pb19yZWFkbF91cCk7DQo+ID4gKwkJCQkgICAgIHJhdGUsIDIw
+MCwgY291bnRlcl93aWR0aCwNCj4gPiArCQkJCSAgICAgY2xvY2tzb3VyY2VfbW1pb19yZWFkbF91
+cCk7DQo+ID4gIH0NCj4gPg0KPiA+ICBzdGF0aWMgaW50IHRwbV9zZXRfbmV4dF9ldmVudCh1bnNp
+Z25lZCBsb25nIGRlbHRhLCBAQCAtMTUzLDggKzE1OCw4DQo+ID4gQEAgc3RhdGljIGludCBfX2lu
+aXQgdHBtX2Nsb2NrZXZlbnRfaW5pdCh1bnNpZ25lZCBsb25nIHJhdGUsIGludCBpcnEpDQo+ID4N
+Cj4gPiAgCWNsb2NrZXZlbnRfdHBtLmNwdW1hc2sgPSBjcHVtYXNrX29mKDApOw0KPiA+ICAJY2xv
+Y2tldmVudF90cG0uaXJxID0gaXJxOw0KPiA+IC0JY2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdp
+c3RlcigmY2xvY2tldmVudF90cG0sDQo+ID4gLQkJCQkJcmF0ZSwgMzAwLCAweGZmZmZmZmZlKTsN
+Cj4gPiArCWNsb2NrZXZlbnRzX2NvbmZpZ19hbmRfcmVnaXN0ZXIoJmNsb2NrZXZlbnRfdHBtLCBy
+YXRlLCAzMDAsDQo+ID4gKwkJCQkJR0VOTUFTSyhjb3VudGVyX3dpZHRoIC0gMSwgMSkpOw0KPiA+
+DQo+ID4gIAlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4gQEAgLTE5OSw2ICsyMDQsOCBAQCBzdGF0
+aWMgaW50IF9faW5pdCB0cG1fdGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUNCj4gKm5wKQ0K
+PiA+ICAJCWdvdG8gZXJyX3Blcl9jbGtfZW5hYmxlOw0KPiA+ICAJfQ0KPiA+DQo+ID4gKwljb3Vu
+dGVyX3dpZHRoID0gKHJlYWRsKHRpbWVyX2Jhc2UgKyBUUE1fUEFSQU0pICYNCj4gVFBNX1BBUkFN
+X1dJRFRIX01BU0spDQo+ID4gKwkJPj4gVFBNX1BBUkFNX1dJRFRIX1NISUZUOw0KPiA+ICAJLyoN
+Cj4gPiAgCSAqIEluaXRpYWxpemUgdHBtIG1vZHVsZSB0byBhIGtub3duIHN0YXRlDQo+ID4gIAkg
+KiAxKSBDb3VudGVyIGRpc2FibGVkDQo+ID4gQEAgLTIyMCw3ICsyMjcsNyBAQCBzdGF0aWMgaW50
+IF9faW5pdCB0cG1fdGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUNCj4gKm5wKQ0KPiA+ICAJ
+CSAgICAgdGltZXJfYmFzZSArIFRQTV9TQyk7DQo+ID4NCj4gPiAgCS8qIHNldCBNT0QgcmVnaXN0
+ZXIgdG8gbWF4aW11bSBmb3IgZnJlZSBydW5uaW5nIG1vZGUgKi8NCj4gPiAtCXdyaXRlbCgweGZm
+ZmZmZmZmLCB0aW1lcl9iYXNlICsgVFBNX01PRCk7DQo+ID4gKwl3cml0ZWwoR0VOTUFTSyhjb3Vu
+dGVyX3dpZHRoIC0gMSwgMCksIHRpbWVyX2Jhc2UgKyBUUE1fTU9EKTsNCj4gPg0KPiA+ICAJcmF0
+ZSA9IGNsa19nZXRfcmF0ZShwZXIpID4+IDM7DQo+ID4gIAlyZXQgPSB0cG1fY2xvY2tzb3VyY2Vf
+aW5pdChyYXRlKTsNCj4gPg0KPiANCj4gDQo+IC0tDQo+IA0KPiA8aHR0cHM6Ly9lbWVhMDEuc2Fm
+ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3LmxpDQo+
+IG5hcm8ub3JnJTJGJmRhdGE9MDIlN0MwMSU3Q0Fuc29uLkh1YW5nJTQwbnhwLmNvbSU3QzM0ZDQx
+MjUzMTYyZQ0KPiA0OTU2MTA1YTA4ZDU5MzIzNjQ5OSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5
+YzVjMzAxNjM1JTdDMCU3QzANCj4gJTdDNjM2NTc2NzAyNTg1ODkwNTg1JnNkYXRhPXRkJTJGTiUy
+QnBEdWMlMkJlRm41U1pqQVM2dTZ2Nk5nQ1ENCj4gQWNaa05yOUtTJTJCOFhpSzAlM0QmcmVzZXJ2
+ZWQ9MD4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yDQo+IEFSTSBTb0Nz
+DQo+IA0KPiBGb2xsb3cgTGluYXJvOg0KPiA8aHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3Rl
+Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3LmYNCj4gYWNlYm9vay5jb20l
+MkZwYWdlcyUyRkxpbmFybyZkYXRhPTAyJTdDMDElN0NBbnNvbi5IdWFuZyU0MG54cC5jbw0KPiBt
+JTdDMzRkNDEyNTMxNjJlNDk1NjEwNWEwOGQ1OTMyMzY0OTklN0M2ODZlYTFkM2JjMmI0YzZmYTky
+Y2Q5OWMNCj4gNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjU3NjcwMjU4NTg5MDU4NSZzZGF0YT1DZVBa
+TDJndUhUdWk5U2J4V3BZDQo+IFMyViUyRlJxVFpzSVVFZ1BWTHo2bTg3OTRFJTNEJnJlc2VydmVk
+PTA+IEZhY2Vib29rIHwNCj4gPGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91
+dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnR3aXR0ZXINCj4gLmNvbSUyRiUyMyElMkZsaW5h
+cm9vcmcmZGF0YT0wMiU3QzAxJTdDQW5zb24uSHVhbmclNDBueHAuY29tJTdDDQo+IDM0ZDQxMjUz
+MTYyZTQ5NTYxMDVhMDhkNTkzMjM2NDk5JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDEN
+Cj4gNjM1JTdDMCU3QzAlN0M2MzY1NzY3MDI1ODU4OTA1ODUmc2RhdGE9ZjM3VFZkdUR4azNpaFo4
+TlFBMk8xTXENCj4gTEJCNXdkTExoYmVoblFMa1FLRkElM0QmcmVzZXJ2ZWQ9MD4gVHdpdHRlciB8
+DQo+IDxodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
+PWh0dHAlM0ElMkYlMkZ3d3cubGkNCj4gbmFyby5vcmclMkZsaW5hcm8tYmxvZyUyRiZkYXRhPTAy
+JTdDMDElN0NBbnNvbi5IdWFuZyU0MG54cC5jb20lN0MNCj4gMzRkNDEyNTMxNjJlNDk1NjEwNWEw
+OGQ1OTMyMzY0OTklN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMQ0KPiA2MzUlN0MwJTdD
+MCU3QzYzNjU3NjcwMjU4NTg5MDU4NSZzZGF0YT0lMkJBT2dMUHBaSE4lMkZqWDY2cHlvOA0KPiBU
+VzVSaHliS3JQWWFpaldzNHo4T1lQNDglM0QmcmVzZXJ2ZWQ9MD4gQmxvZw0KDQo=
