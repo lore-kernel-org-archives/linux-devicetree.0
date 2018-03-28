@@ -1,79 +1,162 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [RESEND PATCH v6 2/5] dt-bindings: pwm-backlight: add PWM delay
- proprieties.
-Date: Wed, 28 Mar 2018 19:03:24 +0200
-Message-ID: <20180328170327.5395-2-enric.balletbo@collabora.com>
-References: <20180328170327.5395-1-enric.balletbo@collabora.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
+Date: Wed, 28 Mar 2018 12:06:56 -0500
+Message-ID: <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ@mail.gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
+ <20180323081209.31387-6-oohall@gmail.com>
+ <20180326222448.l7ukrslvccvrjnjf@rob-hp-laptop>
+ <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180328170327.5395-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hardware needs a delay between setting an initial (non-zero) PWM and
-enabling the backlight using GPIO. The post-pwm-on-delay-ms specifies
-this delay in milli seconds. Hardware also needs a delay between disabing
-the backlight using GPIO and setting PWM value to 0. The pwm-off-delay-ms
-is this delay in milli seconds.
+On Tue, Mar 27, 2018 at 9:53 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Mar 27, 2018 at 9:24 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Mar 23, 2018 at 07:12:09PM +1100, Oliver O'Halloran wrote:
+>>> Add device-tree binding documentation for the nvdimm region driver.
+>>>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
+>>>  1 file changed, 45 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>> new file mode 100644
+>>> index 000000000000..02091117ff16
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>> @@ -0,0 +1,45 @@
+>>> +Device-tree bindings for NVDIMM memory regions
+>>> +-----------------------------------------------------
+>>> +
+>>> +Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
+>>
+>> Are DIMMs always going to be the only form factor for NV memory?
+>>
+>> And if you have multiple DIMMs, does each DT node correspond to a DIMM?
+>
+> A nvdimm-region might correspond to a single NVDIMM, a set of
+> interleaved NVDIMMs, or it might just be a chunk of normal memory that
+> you want treated as a NVDIMM for some reason. The last case is useful
+> for provisioning install media on servers since it allows you do
+> download a DVD image, turn it into an nvdimm-region, and kexec into
+> the installer which can use it as a root disk. That may seem a little
+> esoteric, but it's handy and we're using a full linux environment for
+> our boot loader so it's easy to make use of.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Based on the original Huang Lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org> work.
-Changes since v5:
- - Add Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- - CC DT mainling list (for some reason dropped at some point, my
-   fault)
-Changes since v4:
- - Rebase on top of mainline.
-Changes since v3:
- - Replace us for ms.
- - Add Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Changes since v2:
- - Use separate properties (Rob Herring)
-Changes since v1:
- - As suggested by Daniel Thompson
-   - Do not assume power-on delay and power-off delay will be the same
----
- Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+I'm really just asking if we should drop the "dimm" name because it is
+not always a DIMM. Maybe pmem instead? I don't know, naming is
+hard(TM).
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-index 764db86d441a..310810906613 100644
---- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-@@ -17,6 +17,10 @@ Optional properties:
-                "pwms" property (see PWM binding[0])
-   - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-                   and disables the backlight (see GPIO binding[1])
-+  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
-+                          and enabling the backlight using GPIO.
-+  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
-+                      and setting PWM value to 0.
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -32,4 +36,6 @@ Example:
- 
- 		power-supply = <&vdd_bl_reg>;
- 		enable-gpios = <&gpio 58 0>;
-+		post-pwm-on-delay-ms = <10>;
-+		pwm-off-delay-ms = <10>;
- 	};
--- 
-2.16.2
+>> If not, then what if we want/need to provide power control to a DIMM?
+>
+> That would require a DIMM (and probably memory controller) specific
+> driver. I've deliberately left out how regions are mapped back to
+> DIMMs from the binding since it's not really clear to me how that
+> should work. A phandle array pointing to each DIMM device (which could
+> be anything) would do the trick, but I've found that a bit awkward to
+> plumb into the model that libnvdimm expects.
+>
+>>> +that retains its contents across power cycles. In more practical terms, they
+>>> +are kind of storage device where the contents can be accessed by the CPU
+>>> +directly, rather than indirectly via a storage controller or similar. The an
+>>> +nvdimm-region specifies a physical address range that is hosted on an NVDIMM
+>>> +device.
+>>> +
+>>> +Bindings for the region nodes:
+>>> +-----------------------------
+>>> +
+>>> +Required properties:
+>>> +     - compatible = "nvdimm-region"
+>>> +
+>>> +     - reg = <base, size>;
+>>> +             The system physical address range of this nvdimm region.
+>>> +
+>>> +Optional properties:
+>>> +     - Any relevant NUMA assocativity properties for the target platform.
+>>> +     - A "volatile" property indicating that this region is actually in
+>>> +       normal DRAM and does not require cache flushes after each write.
+>>> +
+>>> +A complete example:
+>>> +--------------------
+>>> +
+>>> +/ {
+>>> +     #size-cells = <2>;
+>>> +     #address-cells = <2>;
+>>> +
+>>> +     platform {
+>>
+>> Perhaps we need a more well defined node here. Like we have 'memory' for
+>> memory nodes.
+>
+> I think treating it as a platform device is fine. Memory nodes are
+
+Platform device is a Linux term...
+
+> special since the OS needs to know where it can allocate early in boot
+> and I don't see non-volatile memory as being similarly significant.
+> Fundamentally an NVDIMM is just a memory mapped storage device so we
+> should be able to defer looking at them until later in boot.
+
+It's not clear if 'platform' is just an example or random name or what
+the node is required to be called. In the latter case, we should be
+much more specific because 'platform' could be anything. In the former
+case, then we have no way to find or validate the node because the
+name could be anything and there's no compatible property either.
+
+"region" is pretty generic too.
+
+>
+> That said you might have problems with XIP kernels and what not. I
+> think that problem is better solved through other means though.
+>
+>>> +             region@5000 {
+>>> +                     compatible = "nvdimm-region;
+>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+>>> +
+>>> +             };
+>>> +
+>>> +             region@6000 {
+>>> +                     compatible = "nvdimm-region";
+>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+
+Thinking about this some more, the 2 levels of nodes is pointless.
+Just follow memory nodes structure.
+
+nv-memory@100000000 {
+  compatible = "nvdimm-region";
+  reg = <0x00000001 0x00000000 0x00000000 0x40000000>;
+};
+
+nv-memory@200000000 {
+  compatible = "nvdimm-region";
+  reg = <0x00000002 0x00000000 0x00000000 0x40000000>;
+};
+
+or:
+
+nv-memory@100000000 {
+  compatible = "nvdimm-region";
+  reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+    <0x00000002 0x00000000 0x00000000 0x40000000>;
+};
+
+Both forms should be allowed.
+
+Rob
