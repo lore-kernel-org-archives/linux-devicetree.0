@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in designware driver
-Date: Wed, 28 Mar 2018 12:38:33 +0100
-Message-ID: <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH 1/8] bindings: PCI: designware: Example update
+Date: Wed, 28 Mar 2018 12:38:31 +0100
+Message-ID: <33aa86ee667e8b435db080b8c683cb5df1bd6544.1522235224.git.gustavo.pimentel@synopsys.com>
 References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
@@ -12,38 +12,52 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+Changes the IP registers size to accommodate the ATU unroll space.
+
+Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers.
+
+Replaces the pcie base address example by a real pcie base address in use.
+
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 6300762..4bb2e08 100644
+index 1da7ade..6300762 100644
 --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -3,6 +3,7 @@
+@@ -1,7 +1,8 @@
+ * Synopsys DesignWare PCIe interface
+ 
  Required properties:
- - compatible:
- 	"snps,dw-pcie" for RC mode;
-+	"snps,dw-pcie-ep" for EP mode;
+-- compatible: should contain "snps,dw-pcie" to identify the core.
++- compatible:
++	"snps,dw-pcie" for RC mode;
  - reg: Should contain the configuration address space.
  - reg-names: Must be "config" for the PCIe configuration space.
      (The old way of getting the configuration address space from "ranges"
-@@ -56,3 +57,15 @@ Example configuration:
+@@ -41,11 +42,11 @@ EP mode:
+ 
+ Example configuration:
+ 
+-	pcie: pcie@dffff000 {
++	pcie: pcie@dfc00000 {
+ 		compatible = "snps,dw-pcie";
+-		reg = <0xdffff000 0x1000>, /* Controller registers */
+-		      <0xd0000000 0x2000>; /* PCI config space */
+-		reg-names = "ctrlreg", "config";
++		reg = <0xdfc00000 0x302000>, /* IP registers */
++		      <0xd0000000 0x002000>; /* Configuration space */
++		reg-names = "dbi", "config";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		device_type = "pci";
+@@ -54,5 +55,4 @@ Example configuration:
+ 		interrupts = <25>, <24>;
  		#interrupt-cells = <1>;
  		num-lanes = <1>;
+-		num-viewport = <3>;
  	};
-+or
-+	pcie_ep: pcie_ep@dfc00000 {
-+		compatible = "snps,dw-pcie-ep";
-+		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
-+		      <0xdfc01000 0x0001000>, /* IP registers 2 */
-+		      <0xd0000000 0x2000000>; /* Configuration space */
-+		reg-names = "dbi", "dbi2", "addr_space";
-+		device_type = "pci";
-+		num-ib-windows = <6>;
-+		num-ob-windows = <2>;
-+		num-lanes = <1>;
-+	};
 -- 
 2.7.4
