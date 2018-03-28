@@ -1,35 +1,68 @@
-Return-Path: <SRS0=xn9O=GR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  04/12] serial: sh-sci: Document r8a77470 bindings
-Date: Tue, 27 Mar 2018 15:37:15 +0100
-Message-Id: <1522161443-54428-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
-References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=rTDR=GS=sirena.org.uk=broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: sh-msiof: Document R-Car M3-N support" to the spi tree
+In-Reply-To: <1521795785-23825-1-git-send-email-geert+renesas@glider.be>
+Message-Id: <20180328022222.120ED44007A@finisterre.ee.mobilebroadband>
+Date: Wed, 28 Mar 2018 03:22:22 +0100 (BST)
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.orglinux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-RZ/G1C (R8A77470) SoC also has the R-Car gen2 compatible SCIF and HSCIF
-ports, so document the SoC specific bindings.
+The patch
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+   spi: sh-msiof: Document R-Car M3-N support
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 7bb5e54515dbcef7c390506c1339bff6bf220b1c Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Tue, 27 Mar 2018 15:04:25 +0200
+Subject: [PATCH] spi: sh-msiof: Document R-Car M3-N support
+
+Document support for the MSIOF module in the Renesas M3-N (r8a77965) SoC.
+
+No driver update is needed.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index ad962f4..a006ea4 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -17,6 +17,8 @@ Required properties:
-     - "renesas,scifa-r8a7745" for R8A7745 (RZ/G1E) SCIFA compatible UART.
-     - "renesas,scifb-r8a7745" for R8A7745 (RZ/G1E) SCIFB compatible UART.
-     - "renesas,hscif-r8a7745" for R8A7745 (RZ/G1E) HSCIF compatible UART.
-+    - "renesas,scif-r8a77470" for R8A77470 (RZ/G1C) SCIF compatible UART.
-+    - "renesas,hscif-r8a77470" for R8A77470 (RZ/G1C) HSCIF compatible UART.
-     - "renesas,scif-r8a7778" for R8A7778 (R-Car M1) SCIF compatible UART.
-     - "renesas,scif-r8a7779" for R8A7779 (R-Car H1) SCIF compatible UART.
-     - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 80710f0f0448..39806329c193 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 			 "renesas,msiof-r8a7794" (R-Car E2)
+ 			 "renesas,msiof-r8a7795" (R-Car H3)
+ 			 "renesas,msiof-r8a7796" (R-Car M3-W)
++			 "renesas,msiof-r8a77965" (R-Car M3-N)
+ 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+ 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
+ 			 "renesas,rcar-gen2-msiof" (generic R-Car Gen2 and RZ/G1 compatible device)
 -- 
-2.7.4
+2.16.2
