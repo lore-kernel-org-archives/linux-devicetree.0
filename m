@@ -1,197 +1,76 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 1/4] dt-bindings: mfd: Add Gateworks System Controller
- bindings
-Date: Wed, 28 Mar 2018 09:24:16 -0700
-Message-ID: <20180328162416.GB25325@roeck-us.net>
-References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
- <1522250043-8065-2-git-send-email-tharvey@gateworks.com>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v4 02/13] dt-bindings: usb: add documentation for typec port
+ controller(TCPCI)
+Date: Thu, 29 Mar 2018 00:06:07 +0800
+Message-ID: <1522253178-32414-3-git-send-email-jun.li@nxp.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522250043-8065-2-git-send-email-tharvey@gateworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 08:14:00AM -0700, Tim Harvey wrote:
-> This patch adds documentation of device-tree bindings for the
-> Gateworks System Controller (GSC).
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v3:
->  - replaced _ with -
->  - remove input bindings
->  - added full description of hwmon
->  - fix unit address of hwmon child nodes
-> 
-> ---
->  .../devicetree/bindings/mfd/gateworks-gsc.txt      | 135 +++++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt b/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
-> new file mode 100644
-> index 0000000..8f530ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.txt
-> @@ -0,0 +1,135 @@
-> +Gateworks System Controller multi-function device
-> +
-> +The GSC is a Multifunction I2C slave device with the following submodules:
-> +- WDT
-> +- GPIO
-> +- Pushbutton controller
-> +- HWMON
-> +
-> +Required properties:
-> +- compatible : Must be "gw,gsc"
-> +- reg: I2C address of the device
-> +- interrupts: interrupt triggered by GSC_IRQ# signal
-> +- interrupt-parent: Interrupt controller GSC is connected to
-> +- #interrupt-cells: should be <1>, index of the interrupt within the
-> +  controller, in accordance with the "one cell" variant of
-> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
-> +
-> +Optional nodes:
-> +* watchdog:
-> +The GSC provides a Watchdog monitor which can power cycle the board's
-> +primary power supply on most board models when tripped.
-> +
-> +Required watchdog properties:
-> +- compatible: must be "gw,gsc-watchdog"
-> +
-> +* hwmon:
-> +The GSC provides a set of Analog to Digitcal Converter (ADC) pins used for
-> +temperature and/or voltage monitoring.
-> +
-> +Required hwmon properties:
-> +- compatible: must be "gw,gsc-hwmon"
-> +
+TCPCI stands for typec port controller interface, its implementation
+has full typec port control with power delivery support, it's a
+standard i2c slave with GPIO input as irq interface, detail see spec
+"Universal Serial Bus Type-C Port Controller Interface Specification
+Revision 1.0, Version 1.1"
 
-"hwmon" is a very Linux specific term. It might make sense to find a more
-generic term.
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ .../devicetree/bindings/usb/typec-tcpci.txt        | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-> +Optional hwmon properties:
-> +- gw,reference-voltage: ADC reference voltage (mV) used in scaling raw ADCs
-
-AFAIK devicetree likes to specify voltages in uV.
-
-> +- gw,resolution: ADC resolution (ie 4096) used in scaling raw ADCs
-> +
-
-4096 what ?
-
-> +Each hwmon child node defines an ADC input on the chip which the GSC may
-> +report cooked values (ie temperature sensor based on thermister), raw values,
-> +(ie voltage rail with a pre-scaling resistor divider), or a fan controller
-> +setpoint.
-> +
-> +Required hwmon child properties:
-> +- type: one of the following ADC types:
-> +  "gw,hwmon-temperature" - reports temperature in C*10
-> +  "gw,hwmon-voltage" - reports a pre-scaled voltage value
-> +  "gw,hwmon-voltage-raw" - reports a raw ADC that is scaled with
-> +       vreference, resolution, and optional resistor divider
-> +  "gw,hwmon-fan" - a fan temperature setpoint in C*10
-
-What is a "fan temperature setpoint" ?
-
-> +- reg: offset of the ADC register
-> +- label: name of the ADC input or FAN setpoint
-> +
-> +Optional hwmon child properties:
-> +- gw,voltage-divider: An array of two integers containing the resistor
-> +  values R1 and R2 of the optinal resistor divider on a raw ADC
-> +- gw,voltage-offset: a mV voltage offset to apply to a raw ADC (ie to
-> +  compensate for a diode drop)
-> +
-> +Example:
-> +
-> +	gsc: gsc@20 {
-> +		compatible = "gw,gsc";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <4 GPIO_ACTIVE_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +
-> +		watchdog {
-> +			compatible = "gw,gsc-watchdog";
-> +		};
-> +
-> +		hwmon {
-> +			compatible = "gw,gsc-hwmon";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			gw,reference-voltage = <2500>;
-> +			gw,resolution = <4096>;
-> +
-> +			hwmon@0 { /* A0: Board Temperature */
-> +				type = "gw,hwmon-temperature";
-> +				reg = <0x00>;
-> +				label = "temp";
-> +			};
-> +
-> +			hwmon@2 { /* A1: Input Voltage (raw ADC) */
-> +				type = "gw,hwmon-voltage-raw";
-> +				reg = <0x02>;
-> +				label = "vdd_vin";
-> +				gw,voltage-divider = <22100 1000>;
-> +				gw,voltage-offset = <800>;
-> +			};
-> +
-> +			hwmon@b { /* A2: Battery voltage */
-> +				type = "gw,hwmon-voltage";
-> +				reg = <0x0b>;
-> +				label = "vdd_bat";
-> +			};
-> +
-> +			hwmon@2c { /* fan temperature setpoint for 50% duty */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x2c>;
-> +				label = "fan_50p";
-> +			};
-> +
-> +			hwmon@2e { /* fan1 */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x2e>;
-> +				label = "fan_60p";
-> +			};
-> +
-> +			hwmon@30 { /* fan2 */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x30>;
-> +				label = "fan_70p";
-> +			};
-> +
-> +			hwmon@32 { /* fan3 */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x32>;
-> +				label = "fan_80p";
-> +			};
-> +
-> +			hwmon@34 { /* fan4 */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x34>;
-> +				label = "fan_90p";
-> +			};
-> +
-> +			hwmon@36 { /* fan5 */
-> +				type = "gw,hwmon-fan";
-> +				reg = <0x36>;
-> +				label = "fan_100p";
-> +			};
-
-No idea what this is supposed to be doing, but whatever it is,
-it appears to be wrong. I'll comment more on it in the hwmon driver.
-
-Guenter
-
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+new file mode 100644
+index 0000000..7a7a8e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+@@ -0,0 +1,33 @@
++TCPCI(Typec port cotroller interface) binding
++---------------------------------------------
++
++Required properties:
++- compatible:       should be "usb-tcpci,chip-specific-string".
++- reg:              the i2c slave address of typec port controller device.
++- interrupt-parent: the phandle to the interrupt controller which provides
++                    the interrupt.
++- interrupts:       interrupt specification for tcpci alert.
++
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
++
++Example:
++
++ptn5110@50 {
++	compatible = "usb-tcpci,ptn5110";
++	reg = <0x50>;
++	interrupt-parent = <&gpio3>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		port-type = "dual";
++		try-power-role = "sink"
++		source-pdos = <0x380190c8>;
++		sink-pdos = <0x380190c8 0x3802d0c8>;
++		op-sink-microwatt-hours = <9000000>;
++	};
++};
+-- 
+2.7.4
