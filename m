@@ -1,8 +1,7 @@
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 07/13] staging: typec: tcpci: register port before request
- irq
-Date: Thu, 29 Mar 2018 00:06:12 +0800
-Message-ID: <1522253178-32414-8-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v4 08/13] staging: typec: tcpci: enable vbus detection
+Date: Thu, 29 Mar 2018 00:06:13 +0800
+Message-ID: <1522253178-32414-9-git-send-email-jun.li@nxp.com>
 References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,52 +21,31 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-With that we can clear any pending events and the port is registered
-so driver can be ready to handle typec events once we request irq.
+TCPCI implementation may need SW to enable VBUS detection to generate
+power status events.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/staging/typec/tcpci.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/staging/typec/tcpci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 4f7ad10..9e0014b 100644
+index 9e0014b..d5b4e4e 100644
 --- a/drivers/staging/typec/tcpci.c
 +++ b/drivers/staging/typec/tcpci.c
-@@ -537,25 +537,26 @@ static int tcpci_probe(struct i2c_client *client,
- 	if (IS_ERR(chip->data.regmap))
- 		return PTR_ERR(chip->data.regmap);
+@@ -373,6 +373,12 @@ static int tcpci_init(struct tcpc_dev *tcpc)
+ 	if (ret < 0)
+ 		return ret;
  
-+	i2c_set_clientdata(client, chip);
++	/* Enable Vbus detection */
++	ret = regmap_write(tcpci->regmap, TCPC_COMMAND,
++			   TCPC_CMD_ENABLE_VBUS_DETECT);
++	if (ret < 0)
++		return ret;
 +
- 	/* Disable chip interrupts before requesting irq */
- 	err = regmap_raw_write(chip->data.regmap, TCPC_ALERT_MASK, &val,
- 			       sizeof(u16));
- 	if (err < 0)
- 		return err;
- 
-+	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-+	if (PTR_ERR_OR_ZERO(chip->tcpci))
-+		return PTR_ERR(chip->tcpci);
-+
- 	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
- 					_tcpci_irq,
- 					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
- 					dev_name(&client->dev), chip);
- 	if (err < 0)
--		return err;
-+		tcpci_unregister_port(chip->tcpci);
- 
--	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
--	if (PTR_ERR_OR_ZERO(chip->tcpci))
--		return PTR_ERR(chip->tcpci);
--
--	i2c_set_clientdata(client, chip);
--	return 0;
-+	return err;
- }
- 
- static int tcpci_remove(struct i2c_client *client)
+ 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
+ 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
+ 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
 -- 
 2.7.4
