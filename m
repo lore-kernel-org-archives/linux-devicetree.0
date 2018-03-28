@@ -1,88 +1,42 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 6/6] phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
-Date: Wed, 28 Mar 2018 13:04:17 +0530
-Message-ID: <e49425b6-e7f9-5c50-b1e7-98e22dcb401e@codeaurora.org>
-References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-7-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=WjQk420k8CxeXHuxHMPHd6ZEJ+zkR2iT_Fpw8conD+pg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 07/12] ARM: shmobile: r8a77470: basic SoC support
+Date: Wed, 28 Mar 2018 09:34:19 +0200
+Message-ID: <CAMuHMdWEEVFZUG0FkgCUY528x45PqcrnbcqpNjZ9zyx542xskg@mail.gmail.com>
+References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
+ <1522161443-54428-8-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WjQk420k8CxeXHuxHMPHd6ZEJ+zkR2iT_Fpw8conD+pg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1522161443-54428-8-git-send-email-biju.das@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add minimal support for the RZ/G1C (R8A77470) SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 3/28/2018 4:22 AM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->> There are two QUSB2 PHYs present on sdm845. Update PHY
->> registers programming for both the PHYs related to
->> electrical parameters to improve eye diagram.
-> This tuning difference is truly associated with the SoC itself?  Are
-> you sure?  Are the two different PHYs in the SoC somehow using
-> different silicon processes?  ...or is one close to another IP block
-> that is noisy?  ...or something else to account for this difference?
->
-> It seems more likely that this tuning difference is associated with
-> the board.  If you're _certain_ this is really due to internal SoC
-> differences you'll have to come up with some darn good evidence to
-> convince me...
+Gr{oetje,eeting}s,
 
-This difference must be due to board only.
-
->
-> If the tuning is truly associated with the board then:
->
-> 1. You should have a single device tree compatible string.  IMHO it
-> should contain the name of the SoC in it, so "qcom,sdm845-qusb2-phy".
-> It's generally OK to name something in Linux using the name of the
-> first thing that happened to support it in Linux (even if later
-> processors use the exact same component).  Leaving it as just
-> "qcom,qusb2-v2-phy" is OK with me too if that's what everyone wants.
-I will remove "qcom,qusb2-v2-phy" as I don't expect any users of that.
->
->
-> 2. You should figure out how to describe the needed board-to-board
-> tuning in device tree.
->
-> The only two differences you have right now are:
->
-> QUSB2PHY_IMP_CTRL1: 0 => 0x8
-> QUSB2PHY_PORT_TUNE1: 0x30 => 0x48
->
-> I'm not sure I found all the correct documentation for the PHY (the
-> docs I have say that "TUNE1" bit 3 is "reserved") so I can't come up
-> with all of these for you.  But I think I found the difference
-> accounting for the upper nybble of TUNE1 changing from 0x3 to 0x4.
-> For this, I think you'd want a device tree property like:
->
-> qcom,hstx_trim_mv
->
-> ...and the values of that property would be the values from 800 to 950
-> in 8 steps, or [800, 821, 842, 864, 885, 907, 928, 950].
->
-> You'd want to do similar things for the other differences.
->
-> You don't need to encode every possible difference right now.  When
-> you come up with something that needs to be different you add a new
-> optional device tree property (defaulting to whatever the driver used
-> to do) to describe your new property.
-
-Sure. I will come up with separate device tree properties to specify
-board-to-board differences in PHY tuning.
-
-
->
-> -Doug
+                        Geert
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
