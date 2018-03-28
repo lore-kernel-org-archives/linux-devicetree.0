@@ -1,70 +1,164 @@
-Return-Path: <SRS0=hPS6=FW=gmail.com=jassisinghbrar@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWmaovpjuyzjYRRLBKk6g0WDeA8YHDCWwr94shpom0YNA@mail.gmail.com>
-References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
- <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com> <CAMuHMdWmaovpjuyzjYRRLBKk6g0WDeA8YHDCWwr94shpom0YNA@mail.gmail.com>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Thu, 1 Mar 2018 00:05:26 +0530
-Message-ID: <CABb+yY2LRqeA-_8g8Q+kwWXAoTYLKXenGLzu=ism_S--9WTJww@mail.gmail.com>
-Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer platform
-Content-Type: text/plain; charset="UTF-8"
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>, Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Return-Path: <SRS0=CRwK=GS=gmail.com=tossel@kernel.org>
+From: Anton Gerasimov <tossel@gmail.com>
+Subject: [PATCHv3] arm: dts: zynq: Add support for Z-turn board
+Date: Wed, 28 Mar 2018 16:17:34 +0200
+Message-Id: <20180328141734.9811-1-tossel@gmail.com>
+In-Reply-To: <20180306213008.32448-1-tossel@gmail.com>
+References: <20180306213008.32448-1-tossel@gmail.com>
+To: devicetree@vger.kernel.org
+Cc: michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, Anton Gerasimov <tossel@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Feb 28, 2018 at 4:47 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Jassi,
->
-> On Tue, Feb 27, 2018 at 1:58 PM,  <jassisinghbrar@gmail.com> wrote:
->> From: Jassi Brar <jaswinder.singh@linaro.org>
->>
->> This patch adds support for controller found on synquacer platforms.
->>
->> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
->
-> Thanks for your patch!
->
->> --- /dev/null
->> +++ b/drivers/spi/spi-synquacer.c
->
->> +static void read_fifo(struct synquacer_spi *sspi)
->> +{
->> +       u32 len = readl_relaxed(sspi->regs + DMSTATUS);
->> +       int i;
->
-> unsigned int, as len is unsigned.
->
->> +static void write_fifo(struct synquacer_spi *sspi)
->> +{
->> +       u32 len = readl_relaxed(sspi->regs + DMSTATUS);
->> +       int i;
->
-> unsigned int, as len is unsigned.
->
->> +static int synquacer_spi_config(struct spi_master *master,
->> +                               struct spi_device *spi,
->> +                               struct spi_transfer *xfer)
->> +{
->> +       struct synquacer_spi *sspi = spi_master_get_devdata(master);
->> +       unsigned int speed, mode, bpw, cs, bus_width;
->> +       unsigned long rate;
->
-> unsigned int, as max_speed_hz is u32, else you'll do a 64/32-bit division later.
->
->> +static int synquacer_spi_transfer_one(struct spi_master *master,
->> +                                     struct spi_device *spi,
->> +                                     struct spi_transfer *xfer)
->> +{
->> +       struct synquacer_spi *sspi = spi_master_get_devdata(master);
->> +       int ret, words, busy = 0;
->
-> unsigned int words, as xfr->len is unsigned.
->
->> +       unsigned long bpw;
->
-> unsigned int is plenty (bits_per_word is even u8).
->
-Will fix all.
+Add a dts for MYIR Z-turn board and respective target in Makefile.
 
-Thank you.
+Signed-off-by: Anton Gerasimov <tossel@gmail.com>
+---
+ arch/arm/boot/dts/Makefile       |   1 +
+ arch/arm/boot/dts/zynq-zturn.dts | 124 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 125 insertions(+)
+ create mode 100644 arch/arm/boot/dts/zynq-zturn.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ade7a38543dc..4daa7d5d4db4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1067,6 +1067,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
+ 	zynq-zc702.dtb \
+ 	zynq-zc706.dtb \
+ 	zynq-zed.dtb \
++	zynq-zturn.dtb \
+ 	zynq-zybo.dtb
+ dtb-$(CONFIG_MACH_ARMADA_370) += \
+ 	armada-370-db.dtb \
+diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
+new file mode 100644
+index 000000000000..8aa384b59b7f
+--- /dev/null
++++ b/arch/arm/boot/dts/zynq-zturn.dts
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2015 Andrea Merello <adnrea.merello@gmail.com>
++ *  Copyright (C) 2017 Alexander Graf <agraf@suse.de>
++ *
++ *  Based on zynq-zed.dts which is:
++ *  Copyright (C) 2011 - 2014 Xilinx
++ *  Copyright (C) 2012 National Instruments Corp.
++ *
++ */
++
++/dts-v1/;
++/include/ "zynq-7000.dtsi"
++
++/ {
++	model = "Zynq Z-Turn MYIR Board";
++	compatible = "myir,zynq-zturn", "xlnx,zynq-7000";
++
++	aliases {
++		ethernet0 = &gem0;
++		serial0 = &uart1;
++		serial1 = &uart0;
++		mmc0 = &sdhci0;
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x40000000>;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		usr-led1 {
++			label = "usr-led1";
++			gpios = <&gpio0 0x0 0x1>;
++			default-state = "off";
++		};
++
++		usr-led2 {
++			label = "usr-led2";
++			gpios = <&gpio0 0x9 0x1>;
++			default-state = "off";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++		K1 {
++			label = "K1";
++			gpios = <&gpio0 0x32 0x1>;
++			linux,code = <0x66>;
++			gpio-key,wakeup;
++			autorepeat;
++		};
++	};
++};
++
++&clkc {
++	ps-clk-frequency = <33333333>;
++};
++
++&qspi {
++	u-boot,dm-pre-reloc;
++	status = "okay";
++};
++
++&gem0 {
++	status = "okay";
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethernet_phy>;
++
++	ethernet_phy: ethernet-phy@0 {
++		reg = <0x0>;
++	};
++};
++
++&sdhci0 {
++	u-boot,dm-pre-reloc;
++	status = "okay";
++};
++
++&uart0 {
++	u-boot,dm-pre-reloc;
++	status = "okay";
++};
++
++&uart1 {
++	u-boot,dm-pre-reloc;
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&can0 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	stlm75@49 {
++		status = "okay";
++		compatible = "lm75";
++		reg = <0x49>;
++	};
++
++	accelerometer@53 {
++		compatible = "adi,adxl345", "adxl345", "adi,adxl34x", "adxl34x";
++		reg = <0x53>;
++		interrupt-parent = <&intc>;
++		interrupts = <0x0 0x1e 0x4>;
++	};
++};
+-- 
+2.16.2
