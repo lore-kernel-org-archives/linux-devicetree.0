@@ -1,67 +1,56 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v2 0/8] Add support for PWM input capture on STM32
-Date: Wed, 28 Mar 2018 11:03:09 +0100
-Message-ID: <20180328100309.yig4d3bmml6jvodz@dell>
-References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
- <20180327225101.GJ28163@mithrandir>
+Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
+Date: Wed, 28 Mar 2018 11:26:40 +0100
+Message-ID: <20180328102640.yx6nv5abfexmouuf@dell>
+References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
+ <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
+ <1521685073.28226.10.camel@mtkswgap22>
+ <20180323185418.GD255819@dtor-ws>
+ <20180327080507.pgil6pw2mn4y2f4d@dell>
+ <3ece050c-7573-ef4e-2c89-61645a243a33@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180327225101.GJ28163@mithrandir>
+In-Reply-To: <3ece050c-7573-ef4e-2c89-61645a243a33@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, eddie.huang@mediatek.com, Chen.Zhong@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2018, Thierry Reding wrote:
+On Tue, 27 Mar 2018, Matthias Brugger wrote:
 
-> On Wed, Feb 14, 2018 at 11:04:31AM +0100, Fabrice Gasnier wrote:
-> > This series adds support for capture to stm32-pwm driver.
-> > Capture is based on DMAs.
-> > - First two patches are precursor patches
-> > - Subsequent two patches add support for requesting DMAs to MFD core
-> > - Next three patches add support for capture to stm32-pwm driver
-> > - This has been tested on stm32429i-eval board.
-> > 
-> > ---
-> > Resend v2:
-> > - Add collected Acks
-> > 
-> > Changes in v2:
-> > - Abstract DMA handling from child driver: move it to MFD core
-> > - Rework pwm capture routines to adopt this change
-> > - Comment on optional dma support, beautify DMAs probe
-> > 
-> > Fabrice Gasnier (8):
-> >   pwm: stm32: fix, remove unused struct device
-> >   pwm: stm32: protect common prescaler for all channels
-> >   dt-bindings: mfd: stm32-timers: add support for dmas
-> >   mfd: stm32-timers: add support for dmas
-> >   pwm: stm32: add capture support
-> >   pwm: stm32: improve capture by tuning counter prescaler
-> >   pwm: stm32: use input prescaler to improve period capture
-> >   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
-> > 
-> >  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
-> >  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
-> >  drivers/mfd/stm32-timers.c                         | 215 +++++++++++++++-
-> >  drivers/pwm/pwm-stm32.c                            | 276 ++++++++++++++++++++-
-> >  include/linux/mfd/stm32-timers.h                   |  39 +++
-> >  5 files changed, 547 insertions(+), 6 deletions(-)
 > 
-> I can't apply patches 1-2 and 5-6 since they depend on patches 3-4 for
-> which I'd need an Acked-by: from Lee if I'm to pick them up. Same goes
-> for patch 7.
 > 
-> By the looks of it there are minor conflicts with the MFD tree, but no
-> major ones. Perhaps it'd be better for Lee to pick up 3-4 for v4.17-rc1
-> and ack patch 7, then I can take the rest after v4.17-rc1?
+> On 03/27/2018 10:05 AM, Lee Jones wrote:
+> > On Fri, 23 Mar 2018, Dmitry Torokhov wrote:
+> >> On Thu, Mar 22, 2018 at 10:17:53AM +0800, Sean Wang wrote:
+> >>> Hi, Dmitry and Lee
+> >>>
+> >>> The series seems not being got merged. Are they good enough to be ready
+> >>> into the your tree?
+> >>>
+> >>> Recently I've tested the series with focusing on pwrkey event generated
+> >>> through interrupt when push and release the key on bpi-r2 board and then
+> >>> finally it's working fine. but for homekey it cannot be found on the
+> >>> board and thus I cannot have more tests more about it.
+> >>>
+> >>> Tested-by: Sean Wang <sean.wang@mediatek.com>
+> >>
+> >> You have my Ack on the input patch; I expect it go through Lee's tree as
+> >> there are some dependencies on mfd core piece.
+> > 
+> > Are you happy for me to merge the Input dt-bindings without your Ack?
+> > 
+> 
+> They got both Acked in v5, but the commit message was not updated:
+> https://patchwork.kernel.org/patch/9973721/
+> https://patchwork.kernel.org/patch/9973723/
 
-Sounds like a faff.
+Thanks Matthias.
 
-Why don't I just pick them all up (except the ARM patch)?
+Chen, can you collect all the Acks and repost as a RESEND please?
 
 -- 
 Lee Jones [李琼斯]
