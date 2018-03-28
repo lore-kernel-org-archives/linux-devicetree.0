@@ -1,52 +1,81 @@
-From: Libor Pechacek <lpechacek@suse.com>
-Subject: [PATCH] devicetree: Remove dangling symlinks
-Date: Wed, 28 Mar 2018 10:32:14 +0200
-Message-ID: <20180328083213.by4sjrk3nx5s4rbk@fm.suse.cz>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Wed, 28 Mar 2018 11:00:31 +0200
+Message-ID: <20180328090031.GA17300@amd>
+References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
+ <20180322204804.GA26871@amd>
+ <20180322234832.o24ut5ahon46mdu4@earth.universe>
+ <20180323100930.GA21644@amd>
+ <20180323103006.alymgb3ywftb4gek@earth.universe>
+ <20180326141638.GB1450@amd>
+ <20180326155828.ttnduivadob4iqmd@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <20180326155828.ttnduivadob4iqmd@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: James Hogan <jhogan@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Olof Johansson <olof@lixom.net>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, trivial@kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Support for CRIS and Meta was dropped.
 
-Signed-off-by: Libor Pechacek <lpechacek@suse.com>
-Fixes: bb6fb6dfcc17 ("metag: Remove arch/metag/")
-Fixes: c690eddc2f3b ("CRIS: Drop support for the CRIS port")
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org
-Cc: trivial@kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- scripts/dtc/include-prefixes/cris  | 1 -
- scripts/dtc/include-prefixes/metag | 1 -
- 2 files changed, 2 deletions(-)
- delete mode 120000 scripts/dtc/include-prefixes/cris
- delete mode 120000 scripts/dtc/include-prefixes/metag
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/scripts/dtc/include-prefixes/cris b/scripts/dtc/include-prefixes/cris
-deleted file mode 120000
-index 736d998ba506..000000000000
---- a/scripts/dtc/include-prefixes/cris
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../arch/cris/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/metag b/scripts/dtc/include-prefixes/metag
-deleted file mode 120000
-index 87a3c847db8f..000000000000
---- a/scripts/dtc/include-prefixes/metag
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../arch/metag/boot/dts
-\ No newline at end of file
--- 
-2.13.6
+Hi!
+
+> > I can talk to the modem and start a call.
+>=20
+> Doing an AT query is the easy part :)
+>=20
+> > Then something like this (untested!) is certainly needed.
+> > Probably more...
+>=20
+> I intentionally left this part out. The CPCAP codec has two DAIs
+> and not 3+. The code you just added is a hack from Motorola. Their
+> driver is full of hacks and it's obvious its author(s) did not
+> fully understand the ASoC APIs.
+>=20
+> My understanding is, that we only need to replace the audio-graph-card
+> driver to something more complex. The VOICE DAI needs to be configured
+> differently based on the use case:
+
+Does the voice part work for you? I configured all the mixers to
+voice, and then am using
+
+sudo aplay -D plughw:CARD=3DAudio,DEV=3D1 /usr/share/sounds/alsa/Front_Cent=
+er.wav  -r 16000
+X11 connection rejected because of wrong authentication.
+xcb_connection_has_error() returned true
+Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
+Little Endian, Rate 48000 Hz, Mono
+user@devuan:/my/tui/rweb$
+
+to play the test sound. But I get white noise, not a test sound
+:-(. [This also shows problem with card naming.]
+
+Any ideas?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlq7Wa8ACgkQMOfwapXb+vIATwCeOgkbcM0d8QDXDvcFTXgp03kW
+BmUAnRiOuZwHPw3EtgKRu3+sYyYK87X/
+=pttb
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
