@@ -1,67 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2] net: phy: Added device tree binding for dev-addr
- and dev-addr code check-up
-Date: Wed, 28 Mar 2018 09:31:20 -0500
-Message-ID: <CAL_JsqJGaGdEgSnnMG8C7P6=gELnuxa-oNgBgK2Yk94HcA=LFg@mail.gmail.com>
-References: <20180323150522.9603-1-vicentiu.galanopulo@nxp.com>
- <20180326222509.ppt5aqzqdarhm44d@rob-hp-laptop> <HE1PR0402MB3578B3D33160EBE59C2FD7D7EEAC0@HE1PR0402MB3578.eurprd04.prod.outlook.com>
- <20180327142408.GL5862@lunn.ch>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 3/8] doc: Add doc for the Ingenic TCU hardware
+Date: Wed, 28 Mar 2018 16:59:22 +0200
+Message-ID: <d7afc23f2fa93abab49895b5cc4010fa@crapouillou.net>
+References: <20180110224838.16711-2-paul@crapouillou.net>
+ <20180317232901.14129-1-paul@crapouillou.net>
+ <20180317232901.14129-4-paul@crapouillou.net>
+ <1e5b82ca-5ac3-6e98-d40b-67916008b485@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327142408.GL5862@lunn.ch>
+Subject: 
+In-Reply-To: <1e5b82ca-5ac3-6e98-d40b-67916008b485@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: =?UTF-8?Q?Vicen=C5=A3iu_Galanopulo?= <vicentiu.galanopulo@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "marcel@holtmann.org" <marcel@holtmann.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 9:24 AM, Andrew Lunn <andrew@lunn.ch> wrote:
->> > This is a 2nd MDIO address, right? Can't you just append this to reg property?
->
-> Hi Rob
->
-> It is a sub address.
->
-> There are two different MDIO addressing schemes. Clause 22 allowed for
-> 32 different addresses on an MDIO bus. Clause 45 extended that. You
-> have the existing 32 addresses for a package. However, within a
-> package, you can have 32 devices.
+Le 2018-03-18 00:52, Randy Dunlap a écrit :
+> On 03/17/2018 04:28 PM, Paul Cercueil wrote:
+>> Add a documentation file about the Timer/Counter Unit (TCU)
+>> present in the Ingenic JZ47xx SoCs.
+>> 
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>  Documentation/mips/00-INDEX        |  3 +++
+>>  Documentation/mips/ingenic-tcu.txt | 50 
+>> ++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 53 insertions(+)
+>>  create mode 100644 Documentation/mips/ingenic-tcu.txt
+>> 
+>>  v4: New patch in this series
+> 
+>> diff --git a/Documentation/mips/ingenic-tcu.txt 
+>> b/Documentation/mips/ingenic-tcu.txt
+>> new file mode 100644
+>> index 000000000000..2508e5793da8
+>> --- /dev/null
+>> +++ b/Documentation/mips/ingenic-tcu.txt
+>> @@ -0,0 +1,50 @@
+>> +Ingenic JZ47xx SoCs Timer/Counter Unit hardware
+>> +-----------------------------------------------
+>> +
+>> +The Timer/Counter Unit (TCU) in Ingenic JZ47xx SoCs is a 
+>> multi-function
+>> +hardware block. It features eight channels, that can be used as 
+>> counters,
+> 
+>                     drop comma ............. ^
 
-Sounds similar to functions in PCI land (which are part of reg address).
+Ok.
 
-> You are supposed to be able to look are registers inside the package,
-> and it will tell you which devices in the packages are in use. You can
-> then look at those devices and figure out what they are using ID
-> registers.
->
-> However some vendors get this wrong, they don't fill in the devices in
-> package information. So the generic probe code never finds them. We
-> need to pass it a hint, go looking at this specific device in the
-> package.
+>> +timers, or PWM.
+>> +
+>> +- JZ4770 introduced a separate channel, called Operating System Timer 
+>> (OST).
+>> +  It is a 64-bit programmable timer.
+>> +
+>> +- Each one of the eight channels has its own clock, which can be 
+>> reparented
+>> +  to three different clocks (pclk, ext, rtc), gated, and reclocked, 
+>> through
+>> +  their TCSR register.
+>> +  * The watchdog and OST hardware blocks also feature a TCSR register 
+>> with
+>> +	the same format in their register space.
+>> +  * The TCU registers used to gate/ungate can also gate/ungate the 
+>> watchdog
+>> +	and OST clocks.
+>> +
+>> +- On SoCs >= JZ4770, there are two different modes:
+>> +  * Channels 0, 3-7 operate in TCU1 mode: they cannot work in sleep 
+>> mode,
+>> +	but are easier to operate.
+>> +  * Channels 1-2 operate in TCU2 mode: they can work in sleep mode, 
+>> but
+>> +	the operation is a bit more complicated than with TCU1 channels.
+>> +
+>> +- Each channel can generate an interrupt. Some channels share an 
+>> interrupt
+>> +  line, some don't, and this changes between SoC versions:
+>> +  * on JZ4740, timer 0 and timer 1 have their own interrupt line; 
+>> others share
+>> +	one interrupt line.
+>> +  * on JZ4770 and JZ4780, timer 5 has its own interrupt; timers 0-4 
+>> and 6-7 all
+>> +	use one interrupt line; the OST uses the last interrupt.
+> 
+> "The OST uses the last interrupt." is not clear to someone who doesn't 
+> know
+> about this hardware. (I can read it several ways.)
+> 
+> Does it mean that the 4770 and 4780 have 3 interrupt lines used like 
+> so?
+> 
+> - timer 5 uses one interrupt line
+> - timers 0-4 and 6-7 use a second interrupt line
+> - the OST uses a third interrupt line
 
-If this is a rare case and something future devices should get right,
-then I'm more inclined to use 'dev-addr' rather than extending reg.
+Correct. I'll make it more obvious.
 
-> You can mix Clause 22 and Clause 45 on the same bus. Does DT allow two
-> different reg formats to be used at once? Can we have some reg
-> properties with a single value, and some with two values? I thought
-> #address-cells = <1> means there should be a single address in reg.
-
-#address-cells is how many cells (aka u32) it takes to store an
-address, not how many addresses you have. The number of addresses is
-(sizeof(reg) / 4) / (#address-cells + #size-cells). So yes, you can
-have different number of addresses for each device, but you can't have
-different sizes of addresses (e.g. 32-bit and 64-bit) in one bus. But
-I think in this case it would logically be 1 address with 2 cells
-because it is the port and device together that make up the address.
-If you did that, you'd have to define how to express a clause 22
-device with 2 cells. You could either set a high bit in the first cell
-to indicate clause 45 address or use an illegal device address in the
-2nd cell.
-
-However, the MDIO core would need to handle 2 address cells. If more
-than 1 address cell is an error currently, that causes a compatibility
-problem with new dtb and older kernels (but could be addressed with
-stable updates).
-
-Rob
+Thanks,
+-Paul
