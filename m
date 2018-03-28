@@ -1,7 +1,7 @@
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 09/13] typec: tcpm: add starting value for drp toggling
-Date: Thu, 29 Mar 2018 00:06:14 +0800
-Message-ID: <1522253178-32414-10-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v4 10/13] usb: typec: tcpm: set cc for drp toggling attach
+Date: Thu, 29 Mar 2018 00:06:15 +0800
+Message-ID: <1522253178-32414-11-git-send-email-jun.li@nxp.com>
 References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,55 +21,43 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-As DRP port autonomously toggles the Rp/Rd need a start value to
-begin with, so add one parameter for it in tcpm_start_drp_toggling.
+In case of drp toggling, we may need set correct cc value for role control
+after attach as it may never been set.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/usb/typec/tcpm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/typec/tcpm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 1744041b..218c230 100644
+index 218c230..72d4232 100644
 --- a/drivers/usb/typec/tcpm.c
 +++ b/drivers/usb/typec/tcpm.c
-@@ -1964,15 +1964,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
- 	return 0;
+@@ -2126,6 +2126,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+ 	tcpm_set_attached_state(port, false);
+ 	port->try_src_count = 0;
+ 	port->try_snk_count = 0;
++	port->cc_req = 0;
  }
  
--static bool tcpm_start_drp_toggling(struct tcpm_port *port)
-+static bool tcpm_start_drp_toggling(struct tcpm_port *port,
-+				    enum typec_cc_status cc)
- {
- 	int ret;
+ static void tcpm_detach(struct tcpm_port *port)
+@@ -2361,6 +2362,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 		break;
  
- 	if (port->tcpc->start_drp_toggling &&
- 	    port->port_type == TYPEC_PORT_DRP) {
- 		tcpm_log_force(port, "Start DRP toggling");
--		ret = port->tcpc->start_drp_toggling(port->tcpc,
--						     tcpm_rp_cc(port));
-+		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
- 		if (!ret)
- 			return true;
- 	}
-@@ -2282,7 +2282,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_src_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
-@@ -2454,7 +2454,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_snk_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
+ 	case SRC_ATTACHED:
++		if (!port->cc_req)
++			tcpm_set_cc(port, tcpm_rp_cc(port));
+ 		ret = tcpm_src_attach(port);
+ 		tcpm_set_state(port, SRC_UNATTACHED,
+ 			       ret < 0 ? 0 : PD_T_PS_SOURCE_ON);
+@@ -2531,6 +2534,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 		tcpm_set_state(port, SNK_UNATTACHED, PD_T_PD_DEBOUNCE);
+ 		break;
+ 	case SNK_ATTACHED:
++		if (!port->cc_req)
++			tcpm_set_cc(port, TYPEC_CC_RD);
+ 		ret = tcpm_snk_attach(port);
+ 		if (ret < 0)
+ 			tcpm_set_state(port, SNK_UNATTACHED, 0);
 -- 
 2.7.4
