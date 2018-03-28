@@ -1,49 +1,61 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 1/2] mfd: arizona: Update reset pin to use GPIOD
-Date: Wed, 28 Mar 2018 12:07:53 +0100
-Message-ID: <20180328110753.vqhngsus5gpl6qld@dell>
-References: <20180312155201.30108-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v6 1/5] pwm-backlight: enable/disable the PWM
+ before/after LCD enable toggle.
+Date: Wed, 28 Mar 2018 12:12:09 +0100
+Message-ID: <20180328111209.qnce2tkisy5txbhj@dell>
+References: <20180326095213.18362-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180312155201.30108-1-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20180326095213.18362-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Mar 2018, Charles Keepax wrote:
+On Mon, 26 Mar 2018, Enric Balletbo i Serra wrote:
 
-> Now GPIOD has support for both pdata systems and for non-standard DT
-> bindings the Arizona reset GPIO can be converted to use it. Worth
-> noting gpiod_set_raw_value_cansleep is used to match the behaviour
-> of the old GPIOs. This is because the part is fairly widely used and
-> it is unknown how many DTs are correctly setting active low through
-> device tree, so to avoid breaking any existing users it is best to
-> match the previous behaviour.
+> Before this patch the enable signal was set before the PWM signal and
+> vice-versa on power off. This sequence is wrong, at least, it is on
+> the different panels datasheets that I checked, so I inverted the sequence
+> to follow the specs.
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> For reference the following panels have the mentioned sequence:
+>   - N133HSE-EA1 (Innolux)
+>   - N116BGE (Innolux)
+>   - N156BGE-L21 (Innolux)
+>   - B101EAN0 (Auo)
+>   - B101AW03 (Auo)
+>   - LTN101NT05 (Samsung)
+>   - CLAA101WA01A (Chunghwa)
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 > ---
-> 
+> Changes since v5:
+>  - Add Acked-by: Thierry Reding <thierry.reding@gmail.com>
 > Changes since v4:
->  - Don't use a switch statement for handling return values
->  - Add some comments to the handling for the older binding
->  - Use gpiod_set_raw_value_cansleep to avoid potential breakage
-> 
-> I have also removed Linus's reviewed-by was a bit border line but
-> I felt there have probably been enough code changes since he gave
-> it that it was probably safer to remove it.
-> 
-> Thanks,
-> Charles
-> 
->  drivers/mfd/arizona-core.c        | 53 ++++++++++++++++++++++++++-------------
->  include/linux/mfd/arizona/pdata.h |  3 ++-
->  2 files changed, 37 insertions(+), 19 deletions(-)
+>  - Rebase on top of mainline.
+>  - Add the acks from Daniel Thompson and Jingoo Han.
+> Changes since v3:
+>  - List the part numbers for the panel checked (Daniel Thompson)
+> Changes since v2:
+>  - Add this as a separate patch (Thierry Reding)
+> Changes since v1:
+>  - None
+> ---
+>  drivers/video/backlight/pwm_bl.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
-Applied with Linus' Ack, thanks
+Enric,
+
+Please collect all of your Acks and submit a RESEND.
+
+I will then apply the set.
 
 -- 
 Lee Jones [李琼斯]
