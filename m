@@ -1,47 +1,37 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH 0/8] Designware EP support and code clenan up
-Date: Wed, 28 Mar 2018 12:38:30 +0100
-Message-ID: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH 4/8] misc: pci_endpoint_test: Add designware EP entry
+Date: Wed, 28 Mar 2018 12:38:34 +0100
+Message-ID: <1bc09dfd205d0721366267e023550c4a5a4a84db.1522235224.git.gustavo.pimentel@synopsys.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-The patch set was made against the Bjorn's next branch.
+Adds the designware EP device ID entry to pci_endpoint_test driver table
+to allow this device to be recognize and handle by the pci_endpoint_test
+driver.
 
-Adds support Designware EP support.
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+ drivers/misc/pci_endpoint_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Increases the maximum number of interrupts allowed for Designware IP
-controller.
-
-Does a code cleanup on Designware driver:
- - Replaces magic numbers without a easy meaning by a well known define
-   that helps the human compreension.
- - Replaces a division by 2 by a simple right shift rotation of 1 bit.
- - Fixes all first letter characters on comments and debug messages to
-   upper case to maintain coherency.
-
-Gustavo Pimentel (8):
-  bindings: PCI: designware: Example update
-  PCI: dwc: designware: Add support for endpoint mode
-  bindings: PCI: designware: Add support for the EP in designware driver
-  misc: pci_endpoint_test: Add designware EP entry
-  PCI: dwc: designware: Define maximum number of vectors
-  PCI: dwc: Replace lower into upper case characters
-  PCI: dwc: Small computation improvement
-  PCI: dwc: Replace magic number by defines
-
- .../devicetree/bindings/pci/designware-pcie.txt    |  25 +++-
- drivers/misc/pci_endpoint_test.c                   |   1 +
- drivers/pci/dwc/Kconfig                            |  45 ++++--
- drivers/pci/dwc/pcie-designware-ep.c               |  16 +-
- drivers/pci/dwc/pcie-designware-host.c             |  77 +++++-----
- drivers/pci/dwc/pcie-designware-plat.c             | 163 +++++++++++++++++++--
- drivers/pci/dwc/pcie-designware.c                  |  22 +--
- drivers/pci/dwc/pcie-designware.h                  |   1 +
- drivers/pci/endpoint/functions/pci-epf-test.c      |   5 +
- 9 files changed, 276 insertions(+), 79 deletions(-)
-
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 320276f..e80c533 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -632,6 +632,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 -- 
 2.7.4
