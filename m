@@ -1,14 +1,15 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 08/12] ARM: dts: r8a77470: Initial SoC device tree
-Date: Wed, 28 Mar 2018 14:57:49 +0200
-Message-ID: <CAMuHMdVdRKpRXhd=0W3hVRt9MD0NVwBpoYa7dsZ+DAEn=sHD-A@mail.gmail.com>
+Subject: Re: [PATCH 10/12] ARM: dts: iwg23s-sbc: Add support for iWave
+ G23S-SBC based on RZ/G1C
+Date: Wed, 28 Mar 2018 15:07:18 +0200
+Message-ID: <CAMuHMdUWB8=hByJsoZhT1=7QncFexKgZQFiNaUPZrkzGgB-=tg@mail.gmail.com>
 References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
- <1522161443-54428-9-git-send-email-biju.das@bp.renesas.com>
+ <1522161443-54428-11-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522161443-54428-9-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1522161443-54428-11-git-send-email-biju.das@bp.renesas.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,48 +26,39 @@ List-Id: devicetree@vger.kernel.org
 Hi Biju,
 
 On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> The initial R8A77470 SoC device tree including CPU0, GIC, timer, SYSC, RST,
-> CPG, and the required clock descriptions.
+> Add support for iWave iW-RainboW-G23S single board computer based on
+>  RZ/G1C.
 >
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 Thanks for your patch!
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+One question below.
+
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a77470.dtsi
-> @@ -0,0 +1,156 @@
+> +++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> @@ -0,0 +1,30 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Device Tree Source for the r8a77470 SoC
+> + * Device Tree Source for the iWave-RZ/G1C single board computer
 > + *
 > + * Copyright (C) 2018 Renesas Electronics Corp.
 > + */
 > +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/r8a7747x-cpg-mssr.h>
-> +#include <dt-bindings/power/r8a7747x-sysc.h>
-
-It is better to use numerical values for the initial submission, as
-the dt-bindings
-headers and the DTS files go upstream through different maintainer paths.
-
+> +/dts-v1/;
+> +#include "r8a77470.dtsi"
 > +/ {
-> +       compatible = "renesas,r8a77470";
+> +       model = "iWave iW-RainboW-G23S single board computer based on RZ/G1C";
+> +       compatible = "iwave,g23s", "renesas,r8a77470";
+> +
+> +       aliases {
+> +               serial1 = &scif1;
+> +       };
 
-> +       soc {
-
-> +               icram2: sram@e6300000 {
-> +                       compatible = "mmio-sram";
-> +                       reg = <0 0xe6300000 0 0x40000>;
-
-Size should be 0x20000 (half of other members in the RZ/G1 family)?
-
-> +               };
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+No chosen / stdout-path?
 
 Gr{oetje,eeting}s,
 
