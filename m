@@ -1,129 +1,153 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 0/5] allow override of bus format in bridges
-Date: Wed, 28 Mar 2018 09:08:26 +0200
-Message-ID: <20180328070826.GY14155@phenom.ffwll.local>
-References: <20180326212447.7380-1-peda@axentia.se>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] phy: qcom-qmp: Enable pipe_clk before checking
+ USB3 PHY_STATUS
+Date: Wed, 28 Mar 2018 12:53:33 +0530
+Message-ID: <189cf906-c481-24b1-51cc-b1bd91c38471@codeaurora.org>
+References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
+ <1521785487-29866-2-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=V7xDh6fvG12xOV9=WwTDLiuQxdWFr7Bq6wjPJ5gShrVA@mail.gmail.com>
+ <8724ae37-5d71-4d5f-f750-da0cb8838f47@codeaurora.org>
+ <921929e2-405e-703a-038e-732f8c790a2c@codeaurora.org>
+ <2e26f672-c6d4-6f8f-00ec-231df3f71802@codeaurora.org>
+ <CAD=FV=WsKinyZq7hRxV=y+uLS7NFP77VjTuO9OWhFobB+qQYpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180326212447.7380-1-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WsKinyZq7hRxV=y+uLS7NFP77VjTuO9OWhFobB+qQYpA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMjYsIDIwMTggYXQgMTE6MjQ6NDJQTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
-dGU6Cj4gSGkhCj4gCj4gW0kgZ290IHRvIHYyIHNvb25lciB0aGFuIGV4cGVjdGVkXQo+IAo+IEkg
-aGF2ZSBhbiBBdG1lbCBzYW1hNWQzMSBob29rZWQgdXAgdG8gYW4gbHZkcyBlbmNvZGVyIGFuZCB0
-aGVuCj4gb24gdG8gYW4gbHZkcyBwYW5lbC4gV2hpY2ggc2VlbXMgbGlrZSBzb21ldGhpbmcgdGhh
-dCBoYXMgYmVlbgo+IGRvbmUgb25lIG9yIHR3byB0aW1lcyBiZWZvcmUuLi4KPiAKPiBUaGUgcHJv
-YmxlbSBpcyB0aGF0IHRoZSBidXNfZm9ybWF0IG9mIHRoZSBTb0MgYW5kIHRoZSBwYW5lbCBkbwo+
-IG5vdCBhZ3JlZS4gVGhlIFNvQyBkcml2ZXIgKGF0bWVsLWhsY2RjKSBjYW4gaGFuZGxlIHRoZQo+
-IHJnYjQ0NCwgcmdiNTY1LCByZ2I2NjYgYW5kIHJnYjg4OCBidXMgZm9ybWF0cy4gVGhlIGhhcmR3
-YXJlIGlzCj4gd2lyZWQgZm9yIHRoZSByZ2I1NjUgY2FzZS4gVGhlIGx2ZHMgZW5jb2RlciBzdXBw
-b3J0cyByZ2I4ODggb24KPiBpdHMgaW5wdXQgc2lkZSB3aXRoIHRoZSBMU0Igd2lyZXMgZm9yIGVh
-Y2ggY29sb3Igc2ltcGx5IHB1bGxlZAo+IGRvd24gaW50ZXJuYWxseSBpbiB0aGUgZW5jb2RlciBp
-biBteSBjYXNlIHdoaWNoIG1lYW5zIHRoYXQgdGhlCj4gcmdiNTY1IGJ1c19mb3JtYXQgaXMgdGhl
-IGZvcm1hdCB0aGF0IHdvcmtzIGJlc3QuIEFuZCB0aGUgcGFuZWwKPiBpcyBleHBlY3RpbmcgbHZk
-cyAodmVzYS0yNCksIHdoaWNoIGlzIHdoYXQgdGhlIGVuY29kZXIgb3V0cHV0cy4KPiAKPiBUaGUg
-cmVhc29uIEkgImJsYW1lIiB0aGUgYnVzX2Zvcm1hdCBvZiB0aGUgZHJtX2Nvbm5lY3RvciBpcyB0
-aGF0Cj4gd2l0aCB0aGUgYmVsb3cgRFQgc25pcHBldCwgdGhpbmdzIGRvIG5vdCB3b3JrICpleGFj
-dGx5KiBkdWUgdG8KPiB0aGF0LiBBdCBsZWFzdCwgaXQgc3RhcnRzIHRvIHdvcmsgaWYgSSBoYWNr
-IHRoZSBwYW5lbC1sdmRzIGRyaXZlcgo+IHRvIHJlcG9ydCB0aGUgcmdiNTY1IGJ1c19mb3JtYXQg
-aW5zdGVhZCBvZiB2ZXNhLTI0Lgo+IAo+IAlwYW5lbDogcGFuZWwgewo+IAkJY29tcGF0aWJsZSA9
-ICJwYW5lbC1sdmRzIjsKPiAKPiAJCXdpZHRoLW1tID0gPDMwND47Cj4gCQloZWlnaHQtbW0gPSA8
-MjI4Owo+IAo+IAkJZGF0YS1tYXBwaW5nID0gInZlc2EtMjQiOwo+IAo+IAkJcGFuZWwtdGltaW5n
-IHsKPiAJCQkvLyAxMDI0eDc2OCBAIDYwSHogKHR5cGljYWwpCj4gCQkJY2xvY2stZnJlcXVlbmN5
-ID0gPDUyMTQwMDAwIDY1MDAwMDAwIDcxMTAwMDAwPjsKPiAJCQloYWN0aXZlID0gPDEwMjQ+Owo+
-IAkJCXZhY3RpdmUgPSA8NzY4PjsKPiAJCQloZnJvbnQtcG9yY2ggPSA8NDggODggODg+Owo+IAkJ
-CWhiYWNrLXBvcmNoID0gPDk2IDE2OCAxNjg+Owo+IAkJCWhzeW5jLWxlbiA9IDwzMiA2NCA2ND47
-Cj4gCQkJdmZyb250LXBvcmNoID0gPDggMTMgMTQ+Owo+IAkJCXZiYWNrLXBvcmNoID0gPDggMTMg
-MTQ+Owo+IAkJCXZzeW5jLWxlbiA9IDw4IDEyIDE0PjsKPiAJCX07Cj4gCj4gCQlwb3J0IHsKPiAJ
-CQlwYW5lbF9pbnB1dDogZW5kcG9pbnQgewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNf
-ZW5jb2Rlcl9vdXRwdXQ+Owo+IAkJCX07Cj4gCQl9Owo+IAl9Owo+IAo+IAlsdmRzLWVuY29kZXIg
-ewo+IAkJY29tcGF0aWJsZSA9ICJ0aSxkczkwYzE4NSIsICJsdmRzLWVuY29kZXIiOwo+IAo+IAkJ
-cG9ydHMgewo+IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkJCSNzaXplLWNlbGxzID0gPDA+
-Owo+IAo+IAkJCXBvcnRAMCB7Cj4gCQkJCXJlZyA9IDwwPjsKPiAKPiAJCQkJbHZkc19lbmNvZGVy
-X2lucHV0OiBlbmRwb2ludCB7Cj4gCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhsY2RjX291dHB1
-dD47Cj4gCQkJCX07Cj4gCQkJfTsKPiAKPiAJCQlwb3J0QDEgewo+IAkJCQlyZWcgPSA8MT47Cj4g
-Cj4gCQkJCWx2ZHNfZW5jb2Rlcl9vdXRwdXQ6IGVuZHBvaW50IHsKPiAJCQkJCXJlbW90ZS1lbmRw
-b2ludCA9IDwmcGFuZWxfaW5wdXQ+Owo+IAkJCQl9Owo+IAkJCX07Cj4gCQl9Owo+IAl9Owo+IAo+
-IEJ1dCwgaW5zdGVhZCBvZiBwZXJ2ZXJ0aW5nIHRoZSBwYW5lbC1sdmRzIGRyaXZlciB3aXRoIHN1
-cHBvcnQKPiBmb3IgYSB0b3RhbGx5IGZha2Ugbm9uLWx2ZHMgYnVzX2Zvcm1hdCwgSSBpbnRydWR1
-Y2UgYW4gQVBJIHRoYXQgYWxsb3dzCj4gZGlzcGxheSBjb250cm9sbGVyIGRyaXZlcnMgdG8gcXVl
-cnkgdGhlIHJlcXVpcmVkIGJ1c19mb3JtYXQgb2YgYW55Cj4gaW50ZXJtZWRpYXRlIGJyaWRnZXMs
-IGFuZCBtYXRjaCB1cCB3aXRoIHRoYXQgaW5zdGVhZCBvZiB0aGUgZm9ybWF0cwo+IGdpdmVuIGJ5
-IHRoZSBkcm1fY29ubmVjdG9yLiBJIHRyaWdnZXIgdGhpcyB3aXRoIHRoaXMgYWRkaXRpb24gdG8g
-dGhlCj4gbHZkcy1lbmNvZGVyIERUIG5vZGU6Cj4gCj4gCQlpbnRlcmZhY2UtcGl4LWZtdCA9ICJy
-Z2I1NjUiOwo+IAo+IE5hbWluZyBpcyBoYXJkIHRob3VnaCwgc28gSSdtIG5vdCBzdXJlIGlmIHRo
-YXQncyBnb29kPwo+IAo+IEkgdGhyZXcgaW4gdGhlIGZpcnN0IHBhdGNoLCBzaW5jZSB0aGF0IGlz
-IHRoZSBhY3R1YWwgbHZkcyBlbmNvZGVyCj4gSSBoYXZlIGluIHRoaXMgY2FzZS4KPiAKPiBTdWdn
-ZXN0aW9ucyB3ZWxjb21lLgoKVG9vayBhIHF1aWNrIGxvb2ssIGZlZWxzIHJhdGhlciB1bi1hdG9t
-aWMuIEFuZCB0aGVyZSdzIGJlZW5kIGRpc2N1c3NpbmcKZm9yIG90aGVyIGJyaWRnZSByZWxhdGVk
-IHN0YXRlIHRoYXQgd2UgbWlnaHQgd2FudCB0byB0cmFjayAobGlrZSB0aGUgZnVsbAphZGp1c3Rl
-ZF9tb2RlIHRoYXQgbWlnaHQgbmVlZCB0byBiZSBhZGp1c3RlZCBhdCBlYWNoIHN0YWdlIGluIHRo
-ZSBjaGFpbikuClNvIGhlcmUncyBteSBzdWdnZXN0aW9uczoKCi0gQWRkIGFuIG9wdGlvbmFsIHBl
-ci1icmlkZ2UgaW50ZXJuYWwgc3RhdGUgc3RydWN0IHVzaW5nIHRoZSBzdXBwb3J0IGluCgpodHRw
-czovL2RyaS5mcmVlZGVza3RvcC5vcmcvZG9jcy9kcm0vZ3B1L2RybS1rbXMuaHRtbCNoYW5kbGlu
-Zy1kcml2ZXItcHJpdmF0ZS1zdGF0ZQoKICBZZXMgaXQgc2F5cyAiZHJpdmVyIHByaXZhdGUiLCBi
-dXQgc2luY2UgYnJpZGdlIGlzIGp1c3QgaGVscGVyIHN0dWZmCiAgdGhhdCdzIGFsbCBpbmNsdWRl
-ZC4gImRyaXZlciBwcml2YXRlIiA9PSAibm90IGV4cG9zZWQgYXMgdWFwaSIgaGVyZS4KICBJbmNs
-dWRlIGFsbCB0aGUgdXN1YWwgY29udmVuaWVuY2Ugd3JhcHBlcnMgdG8gZ2V0IGF0IHRoZSBzdGF0
-ZSBmb3IgYQogIGJyaWRnZS4KCi0gVGhlbiBzdHVmZiB5b3VyIGJ1c19mb3JtYXQgaW50byB0aGF0
-IG5ldyBkcm1fYnJpZGdlX3N0YXRlIHN0cnVjdC4KCi0gQWRkIGEgbmV3IGJyaWRnZSBjYWxsYmFj
-ayBhdG9taWNfY2hlY2ssIHdoaWNoIGdldHMgdGhhdCBicmlkZ2Ugc3RhdGUgYXMKICBwYXJhbWV0
-ZXIgKHNpbWlsYXIgdG8gYWxsIHRoZSBvdGhlciBhdG9taWNfY2hlY2sgZnVuY3Rpb25zKS4KClRo
-aXMgd2F5IHdlIGNhbiBldmVuIGhhbmRsZSB0aGUgYnVzX2Zvcm1hdCBkeW5hbWljYWxseSwgdGhy
-b3VnaCB0aGUgYXRvbWljCmZyYW1ld29yayB5b3VyIGJyaWRnZSdzIGF0b21pY19jaGVjayBjYWxs
-YmFjayBjYW4gbG9vayBhdCB0aGUgZW50aXJlCmF0b21pYyBzdGF0ZSAoYm90aCB1cCBhbmQgZG93
-biB0aGUgY2hhaW4gaWYgbmVlZGVkKSwgaXQgYWxsIG5lYXRseSBmaXRzCmludG8gYXRvbWljIG92
-ZXJhbGwgYW5kIGl0J3MgbXVjaCBlYXNpZXIgdG8gZXh0ZW5kLgoKUGxlYXNlIGFsc28gY2MgTGF1
-cmVudCBQaW5jaGFydCBvbiB0aGlzLgoKQ2hlZXJzLCBEYW5pZWwKCgo+IAo+IENoZWVycywKPiBQ
-ZXRlcgo+IAo+IENoYW5nZXMgc2luY2UgdjEgaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgvMy8x
-Ny8yMjEKPiAtIEFkZCBhIHByb3BlciBicmlkZ2UgQVBJIHRvIHF1ZXJ5IHRoZSBidXNfZm9ybWF0
-IGluc3RlYWQgb2YgYWJ1c2luZwo+ICAgdGhlIC0+Z2V0X21vZGVzIHBhcnQgb2YgdGhlIGNvZGUu
-IFRoaXMgaXMgY2xlYW5lciBidXQgcmVxdWlyZXMKPiAgIGNoYW5nZXMgdG8gYWxsIGRpc3BsYXkg
-Y29udHJvbGxlciBkcml2ZXJzIHdpc2hpbmcgdG8gcGFydGljaXBhdGUuCj4gLSBBZGQgcGF0Y2gg
-dG8gYWRqdXN0IHRoZSBhdG1lbC1obGNkYyBkcml2ZXIgYWNjb3JkaW5nIHRvIHRoZSBhYm92ZS4K
-PiAtIEhvb2sgdGhlIG5ldyBpbmZvIGludG8gdGhlIGJyaWRnZSBsb2NhbCB0byB0aGUgbHZkcy1l
-bmNvZGVyIGluc3RlYWQKPiAgIG9mIG1lc3NpbmcgYWJvdXQgd2l0aCBuZXcgaW50ZXJmYWNlcyBm
-b3IgdGhlIHBhbmVsLWJyaWRnZSBkcml2ZXIuCj4gLSBBZGQgcGF0Y2ggd2l0aCBhIERUIHBhcnNp
-bmcgZnVuY3Rpb24gb2YgYnVzX2Zvcm1hdHMgaW4gYSBjZW50cmFsIHBsYWNlLgo+IC0gUmVwaHJh
-c2UgdGhlIGFkZGl0aW9uIG9mIHRpLGRzOTBjMTg1IHRvIHRoZSBsdmRzLXRyYW5zbWl0dGVyIGJp
-bmRpbmcuCj4gCj4gUGV0ZXIgUm9zaW4gKDUpOgo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGJy
-aWRnZTogbHZkcy10cmFuc21pdHRlcjogYWRkIHRpLGRzOTBjMTg1Cj4gICBkcm06IGJyaWRnZTog
-YWRkIEFQSSB0byBxdWVyeSB0aGUgZXhwZWN0ZWQgaW5wdXQgZm9ybWF0cyBvZiBicmlkZ2VzCj4g
-ICBkcm06IG9mOiBhZGQgZGlzcGxheSBidXMtZm9ybWF0IHBhcnNlcgo+ICAgZHJtOiBicmlkZ2U6
-IGx2ZHMtZW5jb2RlcjogYWxsb3cgc3BlY2lmeWluZyB0aGUgaW5wdXQgYnVzIGZvcm1hdAo+ICAg
-ZHJtL2F0bWVsLWhsY2RjOiB0YWtlIGJyaWRnZXMgaW50byBhY2NvdW50IHdoZW4gc2VsZWN0aW5n
-IG91dHB1dAo+ICAgICBmb3JtYXQKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2
-ZHMtdHJhbnNtaXR0ZXIudHh0ICAgfCAxNCArKysrLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2J1cy1mb3JtYXQudHh0ICAgICB8IDM1ICsrKysrKysrKysrKysKPiAgZHJpdmVy
-cy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYyAgICAgfCA0OSArKysrKysr
-KysrKysrKysrLS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWVuY29kZXIuYyAgICAg
-ICAgICAgICAgfCAyNSArKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2RybV9icmlkZ2UuYyAg
-ICAgICAgICAgICAgICAgICAgICAgfCAzMiArKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJt
-L2RybV9vZi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA1OSArKysrKysrKysrKysrKysr
-KysrKysrCj4gIGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgMTggKysrKysrKwo+ICBpbmNsdWRlL2RybS9kcm1fb2YuaCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICA5ICsrKysKPiAgOCBmaWxlcyBjaGFuZ2VkLCAyMzcgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2J1cy1mb3JtYXQudHh0Cj4gCj4gLS0gCj4gMi4x
-MS4wCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-Zwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRp
-b24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi,
+
+
+On 3/28/2018 1:44 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Mar 27, 2018 at 12:50 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>> Hi,
+>>
+>>
+>> On 3/27/2018 12:26 PM, Vivek Gautam wrote:
+>>>
+>>> On 3/27/2018 10:37 AM, Manu Gautam wrote:
+>>>> Hi Doug,
+>>>>
+>>>>
+>>>> On 3/27/2018 9:56 AM, Doug Anderson wrote:
+>>>>> Manu
+>>>>>
+>>>>> On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>>>>> QMP PHY for USB mode requires pipe_clk for calibration and PLL lock
+>>>>>> to take place. This clock is output from PHY to GCC clock_ctl and then
+>>>>>> fed back to QMP PHY and is available from PHY only after PHY is reset
+>>>>>> and initialized, hence it can't be enabled too early in initialization
+>>>>>> sequence.
+>>>>>>
+>>>>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>>>>> ---
+>>>>>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 33 ++++++++++++++++++++++++++++++++-
+>>>>>>   1 file changed, 32 insertions(+), 1 deletion(-)
+>>>>> So it's now new with this patch, but it's more obvious with this
+>>>>> patch.  It seems like "UFS/PCIE" is kinda broken w/ respect to how it
+>>>>> controls its clock.  Specifically:
+>>>>>
+>>>>> * If you init the PHY but don't power it on, then you "exit" the PHY:
+>>>>> you'll disable/unprepare "pipe_clk" even though you never
+>>>>> prepare/enabled it.
+>>>>>
+>>>>> * If you init the PHY, power it on, power it off, power it on, and
+>>>>> exit the PHY: you'll leave the clock prepared one extra time.
+>>>>>
+>>>>> Specifically I'd expect: for UFS/PCIE the disable/unprepare should be
+>>>>> symmetric with the enable/prepare and should be in "power off", not in
+>>>>> exit.
+>>>>>
+>>>>> ...or did I miss something?
+>>>>>
+>>>>>
+>>>>> Interestingly, your patch fixes this problem for USB3 (where init/exit
+>>>>> are now symmetric), but leaves the problem there for UFS/PCIE.
+>>>>>
+>>>> Thanks for review.
+>>>> One of the reason why pipe_clk is disabled as part of phy_exit is that
+>>>> halt_check from clk_disable reports error if called after PHY has been
+>>>> powered down or phy_exit.
+>>>> I believe that warning should be ignored in qcom gcc-clock driver
+>>>> (for applicable platforms) by using BRANCH_HALT_DELAY as halt_check
+>>>> for pipe_clk and performing clk_disable from power_off for UFS/PCIE.
+>>> UFS doesn't use PIPE clock.
+> Just to confirm: we no longer need to do this "BRANCH_HALT_DELAY" now
+> that we've figured everything out, right?
+
+That is still needed as PHY might take some time to generate pipe_clk
+after its PLL is locked (or while initialization sequence is carried out).
+Performing clk_enable will throw a warning. Hence, it is better to
+have halt_check that will allow to club pipe_clk with other clocks and
+enable it at the beginning of phy_init.
+
+>
+>
+>> Yes, UFS PHY doesn't use one. But similar to pipe_clk there are rx/tx symbol_clk
+>> output from PHY that is used by UFS controller. I will update code comments
+>> to not refer UFS for pipe_clk.
+>>
+>>> But considering for PCIe, if we disable pipe clock when phy is still running, then
+>>> it shouldn't be a problem. We should also not see the halt warning as the gcc
+>>> driver should be able to just turn the gate off.
+>>> The reason why it will throw that error is when the parent clock to that gate
+>>> is gated, i.e. the pipe clock is not flowing on that branch.
+>> I got the confirmation that pipe_clk is needed for PCIE as well for its
+>> initialization to happen successfully. So we do need clock driver change
+>> to fix this in PHY driver.
+> So basically if I'm understanding this correctly:
+>
+> * Both USB and PCIE need the clk_enable() in qcom_qmp_phy_init()
+>
+> * UFS doesn't even use a pipe clock (pipe_clk is NULL and thus these
+> calls are no-ops).
+>
+> So that means the next version of this code will simply get rid of
+> qcom_qmp_phy_poweron() and we can now use the same phy_ops for both
+> everything again?  That also makes everything symmetric and gets rid
+> of the possible imbalance of clock enable/disable, so I'm happy.
+Yes.
+>
+>
+> Actually: I'll also throw out a drastic idea here.  Maybe instead of
+> having a NULL power_on/power_off, we should have a NULL init/exit.
+> Does anything break if all the stuff that happens today in
+> qcom_qmp_phy_com_init() happens at power_on() time instead of init()
+> time?  I suggest this because:
+>
+> * It sounds like init() is supposed to be for initialization that can
+> happen _before_ power on of the PHY.
+>
+> * Any initialization that happens after the PHY has been powered on
+> seems expected to just be in the power_on() function after the
+> regulator was enabled.
+>
+>
+> Presumably moving this stuff to power_on could save you some power in
+> some cases (since the client of the PHY presumably turns power off to
+> the PHY with the idea of saving power).
+
+This could be ok for DWC3 USB core driver which uses both phy_init and
+power_on together on init/suspend.
+But it looks like ufs-qcom and pcie-qcom (mainly ufs) handle power_on
+and phy_init differently. They also reset core while running init/power_on.
+Changing power_on/init could affect those cores.
+Regarding power_management, I think we can just update ufc/pcie
+qcom glue drivers to either use phy_init/exit for power_management.
+Or PHY runtime_PM if client doesn't want to power_down or reset phy
+during suspend/resume.
+
+>
+> -Doug
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
