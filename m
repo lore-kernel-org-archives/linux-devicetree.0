@@ -1,132 +1,150 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
- 5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Wed, 28 Mar 2018 16:02:19 +0200
-Message-ID: <20180328140219.f6667up5evrrafkv@earth.universe>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
- <20180326141638.GB1450@amd>
- <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180327121441.GH29239@sirena.org.uk>
- <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
- <20180328022910.GM29239@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3395156663064364246=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180328022910.GM29239@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH] gpio: dwapb: Add support for 32 interrupts
+Date: Wed, 28 Mar 2018 15:22:30 +0100
+Message-ID: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+The DesignWare GPIO IP can be configured for either 1 or 32 interrupts,
+but the driver currently only supports 1 interrupt. See the DesignWare
+DW_apb_gpio Databook description of the 'GPIO_INTR_IO' parameter.
 
---===============3395156663064364246==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kv4lnffrs5agllfz"
-Content-Disposition: inline
+This change allows the driver to work with up to 32 interrupts, it will
+get as many interrupts as specified in the DT 'interrupts' property.
+It doesn't do anything clever with the different interrupts, it just calls
+the same handler used for single interrupt hardware.
 
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+---
+Note: There are a few lines over 80 chars, but this is just guidance, right?
+      Especially as there are already some lines over 80 chars.
+---
+ .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   | 10 ++++-
+ drivers/gpio/gpio-dwapb.c                          | 44 +++++++++++++++++-----
+ include/linux/platform_data/gpio-dwapb.h           |  3 +-
+ 3 files changed, 45 insertions(+), 12 deletions(-)
 
---kv4lnffrs5agllfz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Mar 28, 2018 at 10:29:10AM +0800, Mark Brown wrote:
-> On Wed, Mar 28, 2018 at 12:22:37AM +0200, Sebastian Reichel wrote:
-> > On Tue, Mar 27, 2018 at 08:14:41PM +0800, Mark Brown wrote:
->=20
-> > > No, this is exactly the sort of use case with multiple DAIs that the
-> > > graph card is intended to enable over the old simple-card.
->=20
-> > +----------+         +-------------+
-> > | OMAP4    |         | CPCAP       |
-> > |          |         |             |
-> > | [McBSP2] | <-----> | [HiFi DAI]  |
-> > |          |         |             |
-> > | [McBSP3] | <--+--> | [Voice DAI] |
-> > |          |    |    |             |
-> > +----------+    |    +-------------+
-> >                 |
-> > +----------+    |    +-------------+
-> > | MDM6600  |    |    | WL1285      |
-> > |          |    |    |             |
-> > |    [DAI] | <--+--> | [DAI]       |
-> > |          |         |             |
-> > +----------+         +-------------+
->=20
-> > Legend:
-> >     OMAP4   =3D SoC running Linux
-> >     CPCAP   =3D Audio codec
-> >     MDM6600 =3D Baseband
-> >     WL1285  =3D Bluetooth
->=20
-> > Re-reading the audio-graph-card binding document I still don't see
-> > how the network (OMAP.McBSP3, CPCAP.Voice, MDM6600, WL1285) is
-> > supposed to look like. It seems to expect point-to-point DAI
-> > connections.
->=20
-> Ugh, a TDM mux?
-
-Yes, at least that's how I understood Motorola's code.
-
-> That's really unusual and not particularly supported yet, you'd
-> need to extend the graph card to do it.  It's where things should
-> end up for a generic card though.
-
-Motorola's driver provided the following modes:
-
-OMAP4 <-> CPCAP      (voice recording)
-MDM6600 <-> CPCAP    (voice call, CPU not involved)
-OMAP4 <-> WL1285     (bluetooth HFP/HSP)
-MDM6600 <-> WL1285   (bluetooth voice call)
-
-In case of the last two variants, the bus clock is provided by
-CPCAP, so it needs to be enabled for any audio stream. I suppose
-the codec <-> codec as part of TDM is out of scope for the graph
-card and we need a Droid 4 specific card driver?
-
--- Sebastian
-
---kv4lnffrs5agllfz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq7oGUACgkQ2O7X88g7
-+pq2rQ/7BsWFnlf8oYXVK859+eH8vI+FlsTQd7NiOXuIPaaTt00faOY8sJHxt+RQ
-NfR8FM0i2meCUlT+NrncqKXKb+TPBc4FzmEk5JspEFa6bZIsk0uGOGveHwy7p7lY
-yEpnHM8rcODMUXXZnfVJxQI+PImEZvSStF8jYf47snO8oL48m890gOZnAv4EzeCf
-YFvjJ0s7z7jAab1OIAX/gBzX4X8MeImjftrbgYrfvbQj3XycVrKw2DlinF7rE9Rt
-NyrGS4ieX20ff7+G+e2ZomHyJwfnedRqLzAcPRdj6P1iDDhWn4BXSXsTiSDTFAdR
-MqUq2QzjAP2RYsfxOrme3ayprzdK7LAawzDJCzZj56Noe+KMyPPIlpbGrTdxP6+/
-u98cRnp39/YA5mDgF/mQb6lsiP8ALD2+ai78N306FKtdQyJ+LYGH4KdTzpMGY6Vt
-Gpz3ikp1nOtR4Y5txQtW1uiobKuS1KUihdYy5Y0jJxQxHTnYm6mqDLCL6CXiqnng
-dpaeYXbpHja/Doi9kzYQs8IIQT5nSETYEb5nv0CRDp7bIPtdb+nnbuZW0EuRWytS
-bYKye39R+7WCLPRazVGfuLS3c0YMHgGq0iVQSeLeGuL1uMewAkxsZt0cijgWuAv2
-jVA66wXnG0vpJU/aHtgCjwgj3bPIRs1oxrp6RWDCvty4os0grAI=
-=CxnS
------END PGP SIGNATURE-----
-
---kv4lnffrs5agllfz--
-
---===============3395156663064364246==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3395156663064364246==--
+diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+index 4a75da7..e343581 100644
+--- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+@@ -26,8 +26,14 @@ controller.
+   the second encodes the triger flags encoded as described in
+   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - interrupt-parent : The parent interrupt controller.
+-- interrupts : The interrupt to the parent controller raised when GPIOs
+-  generate the interrupts.
++- interrupts : The interrupts to the parent controller raised when GPIOs
++  generate the interrupts. If the controller provides one combined interrupt
++  for all GPIOs, specify a single interrupt. If the controller provides one
++  interrupt for each GPIO, provide a list of interrupts that correspond to each
++  of the GPIO pins. When specifying multiple interrupts, if any of the GPIOs are
++  not connected to an interrupt, use the interrupt-mask property.
++- interrupt-mask : a 32-bit bit mask that specifies which interrupts in the list
++  of interrupts is valid, bit is 1 for a valid irq.
+ - snps,nr-gpios : The number of pins in the port, a single cell.
+ - resets : Reset line for the controller.
+ 
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 226977f..47d82f9 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -441,14 +441,19 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 	irq_gc->chip_types[1].handler = handle_edge_irq;
+ 
+ 	if (!pp->irq_shared) {
+-		irq_set_chained_handler_and_data(pp->irq, dwapb_irq_handler,
+-						 gpio);
++		int i;
++
++		for (i = 0; i < pp->ngpio; i++) {
++			if (pp->irq[i])
++				irq_set_chained_handler_and_data(pp->irq[i],
++						dwapb_irq_handler, gpio);
++		}
+ 	} else {
+ 		/*
+ 		 * Request a shared IRQ since where MFD would have devices
+ 		 * using the same irq pin
+ 		 */
+-		err = devm_request_irq(gpio->dev, pp->irq,
++		err = devm_request_irq(gpio->dev, pp->irq[0],
+ 				       dwapb_irq_handler_mfd,
+ 				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
+ 		if (err) {
+@@ -524,7 +529,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 	if (pp->idx == 0)
+ 		port->gc.set_config = dwapb_gpio_set_config;
+ 
+-	if (pp->irq)
++	if (pp->has_irq)
+ 		dwapb_configure_irqs(gpio, port, pp);
+ 
+ 	err = gpiochip_add_data(&port->gc, port);
+@@ -535,7 +540,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 		port->is_registered = true;
+ 
+ 	/* Add GPIO-signaled ACPI event support */
+-	if (pp->irq)
++	if (pp->has_irq)
+ 		acpi_gpiochip_request_interrupts(&port->gc);
+ 
+ 	return err;
+@@ -601,13 +606,34 @@ dwapb_gpio_get_pdata(struct device *dev)
+ 		if (dev->of_node && pp->idx == 0 &&
+ 			fwnode_property_read_bool(fwnode,
+ 						  "interrupt-controller")) {
+-			pp->irq = irq_of_parse_and_map(to_of_node(fwnode), 0);
+-			if (!pp->irq)
++			struct device_node *np = to_of_node(fwnode);
++			u32 irq_mask = 0xFFFFFFFF;
++			int j;
++
++			/* Optional irq mask */
++			fwnode_property_read_u32(fwnode, "interrupt-mask", &irq_mask);
++
++			/*
++			 * The IP has configuration options to allow a single
++			 * combined interrupt or one per gpio. If one per gpio,
++			 * some might not be used.
++			 */
++			for (j = 0; j < pp->ngpio; j++) {
++				if (irq_mask & BIT(j)) {
++					pp->irq[j] = irq_of_parse_and_map(np, j);
++					if (pp->irq[j])
++						pp->has_irq = true;
++				}
++			}
++			if (!pp->has_irq)
+ 				dev_warn(dev, "no irq for port%d\n", pp->idx);
+ 		}
+ 
+-		if (has_acpi_companion(dev) && pp->idx == 0)
+-			pp->irq = platform_get_irq(to_platform_device(dev), 0);
++		if (has_acpi_companion(dev) && pp->idx == 0) {
++			pp->irq[0] = platform_get_irq(to_platform_device(dev), 0);
++			if (pp->irq[0])
++				pp->has_irq = true;
++		}
+ 
+ 		pp->irq_shared	= false;
+ 		pp->gpio_base	= -1;
+diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
+index 2dc7f4a..5a52d69 100644
+--- a/include/linux/platform_data/gpio-dwapb.h
++++ b/include/linux/platform_data/gpio-dwapb.h
+@@ -19,7 +19,8 @@ struct dwapb_port_property {
+ 	unsigned int	idx;
+ 	unsigned int	ngpio;
+ 	unsigned int	gpio_base;
+-	unsigned int	irq;
++	unsigned int	irq[32];
++	bool		has_irq;
+ 	bool		irq_shared;
+ };
+ 
+-- 
+2.7.4
