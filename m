@@ -1,70 +1,115 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 1/8] net: phy: Add initial support for Microsemi
- Ocelot internal PHYs.
-Date: Wed, 28 Mar 2018 18:18:55 +0200
-Message-ID: <20180328161855.GJ13942@piout.net>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-2-alexandre.belloni@bootlin.com>
- <1caa7359-9ca3-be22-fae0-475daf8b220f@gmail.com>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v4 00/13] staging: typec: tcpci: move out of staging
+Date: Thu, 29 Mar 2018 00:06:05 +0800
+Message-ID: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1caa7359-9ca3-be22-fae0-475daf8b220f@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/2018 at 14:08:10 -0700, Florian Fainelli wrote:
-> On 03/23/2018 01:11 PM, Alexandre Belloni wrote:
-> > Add Microsemi Ocelot internal PHY ids. For now, simply use the genphy
-> > functions but more features are available.
-> > 
-> > Cc: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> >  drivers/net/phy/mscc.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-> > index 650c2667d523..e1ab3acd1cdb 100644
-> > --- a/drivers/net/phy/mscc.c
-> > +++ b/drivers/net/phy/mscc.c
-> > @@ -91,6 +91,7 @@ enum rgmii_rx_clock_delay {
-> >  #define SECURE_ON_PASSWD_LEN_4		  0x4000
-> >  
-> >  /* Microsemi PHY ID's */
-> > +#define PHY_ID_OCELOT			  0x00070540
-> >  #define PHY_ID_VSC8530			  0x00070560
-> >  #define PHY_ID_VSC8531			  0x00070570
-> >  #define PHY_ID_VSC8540			  0x00070760
-> > @@ -658,6 +659,19 @@ static int vsc85xx_probe(struct phy_device *phydev)
-> >  
-> >  /* Microsemi VSC85xx PHYs */
-> >  static struct phy_driver vsc85xx_driver[] = {
-> > +{
-> > +	.phy_id		= PHY_ID_OCELOT,
-> > +	.name		= "Microsemi OCELOT",
-> > +	.phy_id_mask    = 0xfffffff0,
-> > +	.features	= PHY_GBIT_FEATURES,
-> > +	.soft_reset	= &genphy_soft_reset,
-> > +	.config_init	= &genphy_config_init,
-> > +	.config_aneg	= &genphy_config_aneg,
-> > +	.aneg_done	= &genphy_aneg_done,
-> > +	.read_status	= &genphy_read_status,
-> > +	.suspend	= &genphy_suspend,
-> > +	.resume		= &genphy_resume,
-> 
-> With the exception of config_init(), suspend and resume, everything else
-> is already the default when you don't provide a callback. To echo to
-> what Andrew wrote already, if the purpose is just to show a nice name,
-> and do nothing else, consider using the Generic PHY driver (default).
+This patch set attempts to move the tcpci driver out of staging by fix
+some tcpci driver issues and define typec and power delivery device
+properties, the changes are verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config.
 
-Ok, I'll drop this patch for now, until we handle more features for that
-PHY.
+Changes for v4:
+- Remove max-sink-* properties as we will purge max_snk_* in tcpm,
+  see patch set[4].
+- Get typec power and data type value via name string(patch 5).
+- Move finding typec and pd properties code from tcpci to tcpm(patch 6)
+- Add a compatible string for nxp ptn5110 typec controller in tcpci driver.
+  (patch 3)
+- Add set cc for drp toggling without try.src/snk in tcpm(patch 10), then
+  patch 11 can only update CCx bits for keep disconnect cc line open.
+- Update op-sink-microwatt-hours example value to be the right value in
+  micorwatts, and accordingly divide 1000 to get its miliwatts value
+  in patch 6.
+- Add Guenter's Reviewed-by for patch(8/9/12)
+
+[4] https://www.spinics.net/lists/linux-usb/msg167261.html
+
+Changes for v3:
+- Use 2 properties to separate power and data capability of typec port:
+  "power-type" and "data-type", this is based on Heikki's typec class code
+  change[2]. use "try-power-role" to present if the typec port can support
+  Try.SNK or Try.SRC.
+- 4 sink properties(max_sink_mv/ma/mw and op_sink_mw) are kept because the
+  counterpart code is back, see revert patch[3], meanwhile I post a patch
+  to fix the reported problem of current source pdo select machinism(which
+  completely ignored those 4 sink settings), to see if we can keep current
+  code, once it was discussed and have conclusion I can update this
+  accordingly.
+- Use fwnode to get the connector node for dt setting parse.
+
+Main changes for v2:
+- Typec properties are based on general usb connector bindings[1] proposed
+  by Andrzej Hajda, use the standard unit suffixes as defined in
+  property-units.txt.
+- Add 2 infra APIs to get power sink and source config from dt.
+- Don't change the set_cc api, to keep the uncontacted cc line open,
+  set cc1/cc2 to be open in tcpci driver when set polarity.
+- Directly enable vbus detect in tcpci driver rather than add a API.
+- Details added in each patch.
+
+[1] https://patchwork.kernel.org/patch/10231447/
+[2] https://patchwork.kernel.org/patch/10276483/
+[3] https://www.spinics.net/lists/linux-usb/msg166366.html
+
+Li Jun (13):
+  dt-bindings: connector: add properties for typec
+  dt-bindings: usb: add documentation for typec port controller(TCPCI)
+  staging: typec: tcpci: add compatible string for nxp ptn5110
+  usb: typec: add fwnode to tcpc
+  usb: typec: add API to get typec basic port power and data config
+  usb: typec: tcpm: support get typec and pd config from device
+    properties
+  staging: typec: tcpci: register port before request irq
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  usb: typec: tcpm: set cc for drp toggling attach
+  staging: typec: tcpci: keep the not connecting cc line open
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  staging: typec: tcpci: move tcpci driver out of staging
+
+ .../bindings/connector/usb-connector.txt           |  39 ++
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  33 ++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/Kconfig                      |  14 -
+ drivers/staging/typec/Makefile                     |   1 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/staging/typec/tcpci.c                      | 596 --------------------
+ drivers/staging/typec/tcpci.h                      | 138 -----
+ drivers/usb/typec/Kconfig                          |   7 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/class.c                          |  52 ++
+ drivers/usb/typec/tcpci.c                          | 611 +++++++++++++++++++++
+ drivers/usb/typec/tcpci.h                          | 138 +++++
+ drivers/usb/typec/tcpm.c                           | 156 +++++-
+ include/linux/usb/tcpm.h                           |   2 +
+ include/linux/usb/typec.h                          |   3 +
+ 17 files changed, 1012 insertions(+), 787 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ delete mode 100644 drivers/staging/typec/Kconfig
+ delete mode 100644 drivers/staging/typec/Makefile
+ delete mode 100644 drivers/staging/typec/TODO
+ delete mode 100644 drivers/staging/typec/tcpci.c
+ delete mode 100644 drivers/staging/typec/tcpci.h
+ create mode 100644 drivers/usb/typec/tcpci.c
+ create mode 100644 drivers/usb/typec/tcpci.h
 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
