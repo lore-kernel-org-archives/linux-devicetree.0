@@ -1,59 +1,306 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Wed, 28 Mar 2018 10:08:45 +0800
-Message-ID: <20180328020845.GB29099@sirena.org.uk>
-References: <cover.1521246069.git.collinsd@codeaurora.org>
- <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <CAD=FV=Xz01ra=WS--vtA+dkb1H8wcw3UnFzXPS=zYWAQCPP5eg@mail.gmail.com>
- <184378e4-caf8-6ce3-e089-3690588fcb28@codeaurora.org>
- <CAD=FV=WsVDDaV-mMUvQWUomyBFCJZunKiyDt_K81_syoNhGRZQ@mail.gmail.com>
- <20180327115606.GC29239@sirena.org.uk>
- <172d1da4-bde0-1f0c-b907-5582c31c8156@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Subject: Applied "regulator: qcom: smd: Add pm8998 and pmi8998 regulators" to the regulator tree
+Date: Wed, 28 Mar 2018 03:21:55 +0100 (BST)
+Message-ID: <20180328022155.28AF844007A@finisterre.ee.mobilebroadband>
+References: <20180327155301.31862-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <172d1da4-bde0-1f0c-b907-5582c31c8156@codeaurora.org>
+In-Reply-To: <20180327155301.31862-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org, ilina@codeaurora.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   regulator: qcom: smd: Add pm8998 and pmi8998 regulators
 
-On Tue, Mar 27, 2018 at 04:38:07PM -0700, David Collins wrote:
-> On 03/27/2018 04:56 AM, Mark Brown wrote:
+has been applied to the regulator tree at
 
-> > I didn't spot this in the code but something called "device tree mode"
-> > sounds like it's going to be awfully confusing...
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-> As I explained in the earlier email, it makes the device tree
-> configurations much simpler and less confusing/error prone.  I'd like to
-> keep this concept around unless their are strong objections.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Like I say I didn't spot this in the code, I did give it a brief once
-over but as Doug had spotted such extensive problems I was expecting a
-resend.  It *is* setting off big alarm bells though, in general if your
-individual driver is doing something weird to make life easier that's a
-sign that it's doing things at the wrong level.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlq6+SwACgkQJNaLcl1U
-h9C+SAf/Xk5fE40iWdnaUAqxbdfK4umBb0ItVeFUEAEC5DU7mZmPPr9R+Ziqog80
-V7Kjb7qmjamPSeATF/ShzlEusjGwihXp1V8/M3Tov5Tc9pTAgFWU/2FrasWGAmXs
-upINCPMZDk7qmBfqb46sFYZd5FL8HSjr0cI4m7xWZKBQMIjRkWrt7S32USdKikiI
-6m8fXobyddNS4D9d0OfySaE7/IeOE6KqkcNvWARGrPUdnB5SjbxK5hSLIIauXE2D
-kNwPWhvGCwLABbmn97g58d2il3JtKCqS9Casek28B568yp+VWYkWRzrhdlQVjv3y
-z1S5aAniKXr6/AZdi2ti3eBV+V5Qpg==
-=rd+x
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---dTy3Mrz/UPE2dbVg--
+>From 3cdb741efa02c5053a738d5816b70de11c4d6364 Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Tue, 27 Mar 2018 08:53:01 -0700
+Subject: [PATCH] regulator: qcom: smd: Add pm8998 and pmi8998 regulators
+
+Add the pm8998 and pmi8998 regulators as used in the MSM8998 platform.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  |  48 ++++++++
+ drivers/regulator/qcom_smd-regulator.c             | 121 +++++++++++++++++++++
+ include/linux/soc/qcom/smd-rpm.h                   |   1 +
+ 3 files changed, 170 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index 4e3dfb5b5f16..58a1d97972f5 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -23,7 +23,9 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8916-regulators"
+ 		    "qcom,rpm-pm8941-regulators"
+ 		    "qcom,rpm-pm8994-regulators"
++		    "qcom,rpm-pm8998-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
++		    "qcom,rpm-pmi8998-regulators"
+ 
+ - vdd_s1-supply:
+ - vdd_s2-supply:
+@@ -119,6 +121,38 @@ Regulator nodes are identified by their compatible:
+ 	Definition: reference to regulator supplying the input pin, as
+ 		    described in the data sheet
+ 
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply:
++- vdd_s6-supply:
++- vdd_s7-supply:
++- vdd_s8-supply:
++- vdd_s9-supply:
++- vdd_s10-supply:
++- vdd_s11-supply:
++- vdd_s12-supply:
++- vdd_s13-supply:
++- vdd_l1_l27-supply:
++- vdd_l20_l24-supply:
++- vdd_l26-supply:
++- vdd_l2_l8_l17-supply:
++- vdd_l3_l11-supply:
++- vdd_l4_l5-supply:
++- vdd_l6-supply:
++- vdd_l7_l12_l14_l15-supply:
++- vdd_l9-supply:
++- vdd_l10_l23_l25-supply:
++- vdd_l13_l19_l21-supply:
++- vdd_l16_l28-supply:
++- vdd_l18_l22-supply:
++- vdd_lvs1_lvs2-supply:
++	Usage: optional (pmi8998 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
+ - vdd_s1-supply:
+ - vdd_s2-supply:
+ - vdd_s3-supply:
+@@ -148,6 +182,12 @@ Regulator nodes are identified by their compatible:
+ 	Definition: reference to regulator supplying the input pin, as
+ 		    described in the data sheet
+ 
++- vdd_bob-supply:
++	Usage: optional (pmi8998 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
+ The regulator node houses sub-nodes for each regulator within the device. Each
+ sub-node is identified using the node's name, with valid values listed for each
+ of the pmics below.
+@@ -169,11 +209,19 @@ pm8994:
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+ 	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
+ 
++pm8998:
++	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2, l3, l4,
++	l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
++	l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
++
+ pma8084:
+ 	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+ 	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
+ 
++pmi8998:
++	bob
++
+ The content of each sub-node is defined by the standard binding for regulators -
+ see regulator.txt.
+ 
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index 940fe1b78411..ef51db5f0d9b 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -165,6 +165,15 @@ static const struct regulator_ops rpm_switch_ops = {
+ 	.is_enabled = rpm_reg_is_enabled,
+ };
+ 
++static const struct regulator_ops rpm_bob_ops = {
++	.enable = rpm_reg_enable,
++	.disable = rpm_reg_disable,
++	.is_enabled = rpm_reg_is_enabled,
++
++	.get_voltage = rpm_reg_get_voltage,
++	.set_voltage = rpm_reg_set_voltage,
++};
++
+ static const struct regulator_desc pma8084_hfsmps = {
+ 	.linear_ranges = (struct regulator_linear_range[]) {
+ 		REGULATOR_LINEAR_RANGE(375000,  0,  95, 12500),
+@@ -355,6 +364,64 @@ static const struct regulator_desc pm8994_lnldo = {
+ 	.ops = &rpm_smps_ldo_ops_fixed,
+ };
+ 
++static const struct regulator_desc pm8998_ftsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(320000, 0, 258, 4000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 259,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8998_hfsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 216,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8998_nldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 128,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8998_pldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1664000, 0, 255, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 256,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8998_pldo_lv = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1256000, 0, 127, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 128,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8998_switch = {
++	.ops = &rpm_switch_ops,
++};
++
++static const struct regulator_desc pmi8998_bob = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1824000, 0, 83, 32000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 84,
++	.ops = &rpm_bob_ops,
++};
++
+ struct rpm_regulator_data {
+ 	const char *name;
+ 	u32 type;
+@@ -544,12 +611,66 @@ static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
+ 	{}
+ };
+ 
++static const struct rpm_regulator_data rpm_pm8998_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8998_ftsmps, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8998_ftsmps, "vdd_s2" },
++	{ "s3", QCOM_SMD_RPM_SMPA, 3, &pm8998_hfsmps, "vdd_s3" },
++	{ "s4", QCOM_SMD_RPM_SMPA, 4, &pm8998_hfsmps, "vdd_s4" },
++	{ "s5", QCOM_SMD_RPM_SMPA, 5, &pm8998_hfsmps, "vdd_s5" },
++	{ "s6", QCOM_SMD_RPM_SMPA, 6, &pm8998_ftsmps, "vdd_s6" },
++	{ "s7", QCOM_SMD_RPM_SMPA, 7, &pm8998_ftsmps, "vdd_s7" },
++	{ "s8", QCOM_SMD_RPM_SMPA, 8, &pm8998_ftsmps, "vdd_s8" },
++	{ "s9", QCOM_SMD_RPM_SMPA, 9, &pm8998_ftsmps, "vdd_s9" },
++	{ "s10", QCOM_SMD_RPM_SMPA, 10, &pm8998_ftsmps, "vdd_s10" },
++	{ "s11", QCOM_SMD_RPM_SMPA, 11, &pm8998_ftsmps, "vdd_s11" },
++	{ "s12", QCOM_SMD_RPM_SMPA, 12, &pm8998_ftsmps, "vdd_s12" },
++	{ "s13", QCOM_SMD_RPM_SMPA, 13, &pm8998_ftsmps, "vdd_s13" },
++	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pm8998_nldo, "vdd_l1_l27" },
++	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pm8998_nldo, "vdd_l2_l8_l17" },
++	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pm8998_nldo, "vdd_l3_l11" },
++	{ "l4", QCOM_SMD_RPM_LDOA, 4, &pm8998_nldo, "vdd_l4_l5" },
++	{ "l5", QCOM_SMD_RPM_LDOA, 5, &pm8998_nldo, "vdd_l4_l5" },
++	{ "l6", QCOM_SMD_RPM_LDOA, 6, &pm8998_pldo, "vdd_l6" },
++	{ "l7", QCOM_SMD_RPM_LDOA, 7, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
++	{ "l8", QCOM_SMD_RPM_LDOA, 8, &pm8998_nldo, "vdd_l2_l8_l17" },
++	{ "l9", QCOM_SMD_RPM_LDOA, 9, &pm8998_pldo, "vdd_l9" },
++	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pm8998_pldo, "vdd_l10_l23_l25" },
++	{ "l11", QCOM_SMD_RPM_LDOA, 11, &pm8998_nldo, "vdd_l3_l11" },
++	{ "l12", QCOM_SMD_RPM_LDOA, 12, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
++	{ "l13", QCOM_SMD_RPM_LDOA, 13, &pm8998_pldo, "vdd_l13_l19_l21" },
++	{ "l14", QCOM_SMD_RPM_LDOA, 14, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
++	{ "l15", QCOM_SMD_RPM_LDOA, 15, &pm8998_pldo_lv, "vdd_l7_l12_l14_l15" },
++	{ "l16", QCOM_SMD_RPM_LDOA, 16, &pm8998_pldo, "vdd_l16_l28" },
++	{ "l17", QCOM_SMD_RPM_LDOA, 17, &pm8998_nldo, "vdd_l2_l8_l17" },
++	{ "l18", QCOM_SMD_RPM_LDOA, 18, &pm8998_pldo, "vdd_l18_l22" },
++	{ "l19", QCOM_SMD_RPM_LDOA, 19, &pm8998_pldo, "vdd_l13_l19_l21" },
++	{ "l20", QCOM_SMD_RPM_LDOA, 20, &pm8998_pldo, "vdd_l20_l24" },
++	{ "l21", QCOM_SMD_RPM_LDOA, 21, &pm8998_pldo, "vdd_l13_l19_l21" },
++	{ "l22", QCOM_SMD_RPM_LDOA, 22, &pm8998_pldo, "vdd_l18_l22" },
++	{ "l23", QCOM_SMD_RPM_LDOA, 23, &pm8998_pldo, "vdd_l10_l23_l25" },
++	{ "l24", QCOM_SMD_RPM_LDOA, 24, &pm8998_pldo, "vdd_l20_l24" },
++	{ "l25", QCOM_SMD_RPM_LDOA, 25, &pm8998_pldo, "vdd_l10_l23_l25" },
++	{ "l26", QCOM_SMD_RPM_LDOA, 26, &pm8998_nldo, "vdd_l26" },
++	{ "l27", QCOM_SMD_RPM_LDOA, 27, &pm8998_nldo, "vdd_l1_l27" },
++	{ "l28", QCOM_SMD_RPM_LDOA, 28, &pm8998_pldo, "vdd_l16_l28" },
++	{ "lvs1", QCOM_SMD_RPM_VSA, 1, &pm8998_switch, "vdd_lvs1_lvs2" },
++	{ "lvs2", QCOM_SMD_RPM_VSA, 2, &pm8998_switch, "vdd_lvs1_lvs2" },
++	{}
++};
++
++static const struct rpm_regulator_data rpm_pmi8998_regulators[] = {
++	{ "bob", QCOM_SMD_RPM_BOBB, 1, &pmi8998_bob, "vdd_bob" },
++	{}
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
+ 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
+ 	{ .compatible = "qcom,rpm-pm8941-regulators", .data = &rpm_pm8941_regulators },
+ 	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
++	{ .compatible = "qcom,rpm-pm8998-regulators", .data = &rpm_pm8998_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
++	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, rpm_of_match);
+diff --git a/include/linux/soc/qcom/smd-rpm.h b/include/linux/soc/qcom/smd-rpm.h
+index 9f5c6e53f3a5..9e4fdd861a51 100644
+--- a/include/linux/soc/qcom/smd-rpm.h
++++ b/include/linux/soc/qcom/smd-rpm.h
+@@ -10,6 +10,7 @@ struct qcom_smd_rpm;
+ /*
+  * Constants used for addressing resources in the RPM.
+  */
++#define QCOM_SMD_RPM_BOBB	0x62626f62
+ #define QCOM_SMD_RPM_BOOST	0x61747362
+ #define QCOM_SMD_RPM_BUS_CLK	0x316b6c63
+ #define QCOM_SMD_RPM_BUS_MASTER	0x73616d62
+-- 
+2.16.2
