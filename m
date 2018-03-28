@@ -1,7 +1,8 @@
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v4 10/13] usb: typec: tcpm: set cc for drp toggling attach
-Date: Thu, 29 Mar 2018 00:06:15 +0800
-Message-ID: <1522253178-32414-11-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v4 11/13] staging: typec: tcpci: keep the not connecting cc
+ line open
+Date: Thu, 29 Mar 2018 00:06:16 +0800
+Message-ID: <1522253178-32414-12-git-send-email-jun.li@nxp.com>
 References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,43 +22,47 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, jun.li@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-In case of drp toggling, we may need set correct cc value for role control
-after attach as it may never been set.
+While set polarity, we should keep the not connecting cc line to be
+open.
 
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/usb/typec/tcpm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 218c230..72d4232 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -2126,6 +2126,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
- 	tcpm_set_attached_state(port, false);
- 	port->try_src_count = 0;
- 	port->try_snk_count = 0;
-+	port->cc_req = 0;
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index d5b4e4e..b58bd59 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+ 			      enum typec_cc_polarity polarity)
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
++	unsigned int reg;
+ 	int ret;
+ 
+-	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
+-			   (polarity == TYPEC_POLARITY_CC2) ?
+-			   TCPC_TCPC_CTRL_ORIENTATION : 0);
++	/* Keep the disconnect cc line open */
++	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return 0;
++	if (polarity == TYPEC_POLARITY_CC2)
++		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
++	else
++		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
++	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
++	if (ret < 0)
++		return ret;
++
++	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
++			   (polarity == TYPEC_POLARITY_CC2) ?
++			   TCPC_TCPC_CTRL_ORIENTATION : 0);
  }
  
- static void tcpm_detach(struct tcpm_port *port)
-@@ -2361,6 +2362,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		break;
- 
- 	case SRC_ATTACHED:
-+		if (!port->cc_req)
-+			tcpm_set_cc(port, tcpm_rp_cc(port));
- 		ret = tcpm_src_attach(port);
- 		tcpm_set_state(port, SRC_UNATTACHED,
- 			       ret < 0 ? 0 : PD_T_PS_SOURCE_ON);
-@@ -2531,6 +2534,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		tcpm_set_state(port, SNK_UNATTACHED, PD_T_PD_DEBOUNCE);
- 		break;
- 	case SNK_ATTACHED:
-+		if (!port->cc_req)
-+			tcpm_set_cc(port, TYPEC_CC_RD);
- 		ret = tcpm_snk_attach(port);
- 		if (ret < 0)
- 			tcpm_set_state(port, SNK_UNATTACHED, 0);
+ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
 -- 
 2.7.4
