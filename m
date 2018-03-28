@@ -1,148 +1,208 @@
-Return-Path: <SRS0=L7Ep=GS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 06/12] clk: renesas: cpg-mssr: Add r8a77470 support
-Date: Wed, 28 Mar 2018 18:41:31 +0000
-Message-ID: <OSBPR01MB2103B62C23A4D6F70825D1CFB8A30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com>
- <1522161443-54428-7-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdU42sZzUoiWCUUhWAUqDKHY_WT8wHNz34bN0YZLqUjOhQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdU42sZzUoiWCUUhWAUqDKHY_WT8wHNz34bN0YZLqUjOhQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=BlMk=GS=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1522161443-54428-7-git-send-email-biju.das@bp.renesas.com>
+References: <1522161443-54428-1-git-send-email-biju.das@bp.renesas.com> <1522161443-54428-7-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 28 Mar 2018 14:20:39 +0200
+Message-ID: <CAMuHMdU42sZzUoiWCUUhWAUqDKHY_WT8wHNz34bN0YZLqUjOhQ@mail.gmail.com>
+Subject: Re: [PATCH 06/12] clk: renesas: cpg-mssr: Add r8a77470 support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KPiBIaSBCaWp1LA0KPg0KPiBP
-biBUdWUsIE1hciAyNywgMjAxOCBhdCA0OjM3IFBNLCBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVu
-ZXNhcy5jb20+IHdyb3RlOg0KPiA+IEFkZCBSWi9HMUMgKFI4QTc3NDcwKSBDbG9jayBQdWxzZSBH
-ZW5lcmF0b3IgLyBNb2R1bGUgU3RhbmRieSBhbmQNCj4gPiBTb2Z0d2FyZSBSZXNldCBzdXBwb3J0
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMu
-Y29tPg0KPiA+IFJldmlld2VkLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0Bi
-cC5yZW5lc2FzLmNvbT4NCj4NCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPg0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9yZW5lc2FzL3I4YTc3NDd4LWNwZy1tc3Ny
-LmMNCj4NCj4gRm9yIGNvbnNpc3RlbmN5LCBJJ2QgY2FsbCB0aGlzIHI4YTc3NDcwLWNwZy1tc3Ny
-LmMuDQo+DQo+ID4gQEAgLTAsMCArMSwyMjkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50
-aWZpZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiArICogcjhhNzc0NyBDbG9jayBQdWxzZSBHZW5l
-cmF0b3IgLyBNb2R1bGUgU3RhbmRieSBhbmQgU29mdHdhcmUgUmVzZXQNCj4NCj4gcjhhNzc0NzAN
-Cg0KV2lsbCBkbw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNwZ19jb3JlX2NsayByOGE3NzQ3
-MF9jb3JlX2Nsa3NbXSBfX2luaXRjb25zdCA9IHsNCj4gPiArICAgICAgIC8qIEV4dGVybmFsIENs
-b2NrIElucHV0cyAqLw0KPiA+ICsgICAgICAgREVGX0lOUFVUKCJleHRhbCIsICAgICAgQ0xLX0VY
-VEFMKSwNCj4gPiArICAgICAgIERFRl9JTlBVVCgidXNiX2V4dGFsIiwgIENMS19VU0JfRVhUQUwp
-LA0KPiA+ICsNCj4gPiArICAgICAgIC8qIEludGVybmFsIENvcmUgQ2xvY2tzICovDQo+ID4gKyAg
-ICAgICBERUZfQkFTRSgiLm1haW4iLCAgICAgICBDTEtfTUFJTiwgQ0xLX1RZUEVfR0VOMl9NQUlO
-LCBDTEtfRVhUQUwpLA0KPiA+ICsgICAgICAgREVGX0JBU0UoIi5wbGwwIiwgICAgICAgQ0xLX1BM
-TDAsIENMS19UWVBFX0dFTjJfUExMMCwgQ0xLX01BSU4pLA0KPiA+ICsgICAgICAgREVGX0JBU0Uo
-Ii5wbGwxIiwgICAgICAgQ0xLX1BMTDEsIENMS19UWVBFX0dFTjJfUExMMSwgQ0xLX01BSU4pLA0K
-PiA+ICsgICAgICAgREVGX0JBU0UoIi5wbGwzIiwgICAgICAgQ0xLX1BMTDMsIENMS19UWVBFX0dF
-TjJfUExMMywgQ0xLX01BSU4pLA0KPiA+ICsNCj4gPiArICAgICAgIERFRl9GSVhFRCgiLnBsbDFf
-ZGl2MiIsIENMS19QTEwxX0RJVjIsIENMS19QTEwxLCAyLCAxKSwNCj4gPiArDQo+ID4gKyAgICAg
-ICAvKiBDb3JlIENsb2NrIE91dHB1dHMgKi8NCj4gPiArICAgICAgIERFRl9CQVNFKCJsYiIsICAg
-UjhBNzc0NzBfQ0xLX0xCLCAgIENMS19UWVBFX0dFTjJfTEIsICAgQ0xLX1BMTDEpLA0KPg0KPiBE
-RUZfRklYRUQoImxiIiwgUjhBNzc0NzBfQ0xLX0xCLCBDTEtfUExMMSwgMjQsIDEpIGFuZCBtb3Zl
-IGl0IGRvd24NCj4gYmV0d2VlbiAiYiIgYW5kICJwIi4NCg0KV2lsbCBkby4NCg0KPiBOb3RlOiBh
-cHBhcmVudGx5IHRoZSBkZXBlbmRlbmN5IG9uIE1EMTggaXMgdHJ1ZSBmb3IgUi1DYXIgSDIgb25s
-eSwgc28gSSB3aWxsIGZpeA0KPiB0aGlzIGluIHRoZSBvdGhlciBjbG9jayBkcml2ZXJzLg0KPg0K
-PiA+ICsvKg0KPiA+ICsgKiBDUEcgQ2xvY2sgRGF0YQ0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKy8q
-DQo+ID4gKyAqICAgIE1EICAgICAgIEVYVEFMICAgICAgICAgICBQTEwwICAgIFBMTDEgICAgUExM
-Mw0KPiA+ICsgKiAxNCAxMyAgICAgICAoTUh6KSAgICAgICAgICAgKjEgICAgICAqMg0KPiA+ICsg
-Ki0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+
-ICsgKiAwICAwICAgICAgICAgICAgICAgIDIwICAgICAgICAgICAgICB4ODAvMiAgIHg3OCAgICAg
-eDUwDQo+ID4gKyAqIDAgIDEgICAgICAgICAgICAgICAgMjYgICAgICAgICAgICAgIHg2MC8yICAg
-eDYwICAgICB4NTYNCj4gPiArICogMSAgMCAgICAgICAgICAgICAgICBQcm9oaWJpdHRlZCBzZXR0
-aW5nDQo+ID4gKyAqIDEgIDEgICAgICAgICAgICAgICAgMzAgICAgICAgICAgICAgIHg1Mi8yICAg
-eDUyICAgICB4NTANCj4NCj4gSXQgbG9va3MgbGlrZSBhbGwgUExMMC9QTEwxL1BMTDMgdmFsdWVz
-IGFyZSBhbHJlYWR5IHRoZSBwcmVkaXZpZGVkIHZhbHVlcywgdW5saWtlDQo+IGluIG90aGVyIGNs
-b2NrIGRyaXZlcnM/IC4uLg0KDQpZZXMsIHlvdSBhcmUgY29ycmVjdC4gd2lsbCBjb3JyZWN0IHRo
-aXMgdGFibGUuDQoNCj4gPiArICoNCj4gPiArICogKjEgOiAgICAgICAgVGFibGUgNy40IGluZGlj
-YXRlcyBWQ08gb3V0cHV0IChQTEwwID0gVkNPLzIpDQo+ID4gKyAqICoyIDogICAgICAgIFRhYmxl
-IDcuNCBpbmRpY2F0ZXMgVkNPIG91dHB1dCAoUExMMSA9IFZDTykNCj4gPiArICovDQo+ID4gKyNk
-ZWZpbmUgQ1BHX1BMTF9DT05GSUdfSU5ERVgobWQpICAgICAgICgoKChtZCkgJiBCSVQoMTQpKSA+
-PiAxMykgfCBcDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAo
-KChtZCkgJiBCSVQoMTMpKSA+PiAxMykpDQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0
-IHJjYXJfZ2VuMl9jcGdfcGxsX2NvbmZpZyBjcGdfcGxsX2NvbmZpZ3NbOF0NCj4gPiArX19pbml0
-Y29uc3QgPSB7DQo+DQo+IGNwZ19wbGxfY29uZmlnc1s0XQ0KPg0KPiA+ICsgICAgICAgLyogRVhU
-QUwgZGl2ICAgIFBMTDEgbXVsdCAgICAgICBQTEwzIG11bHQgKi8NCj4gPiArICAgICAgIHsgMSwg
-ICAgICAgICAgICA3OCwgICAgICAgICAgICAgNTAsICAgICB9LA0KPiA+ICsgICAgICAgeyAxLCAg
-ICAgICAgICAgIDYwLCAgICAgICAgICAgICA1NiwgICAgIH0sDQo+ID4gKyAgICAgICB7IC8qIElu
-dmFsaWQqLyAgICAgICAgICAgICAgICAgICAgICAgICAgfSwNCj4gPiArICAgICAgIHsgMSwgICAg
-ICAgICAgICA1MiwgICAgICAgICAgICAgNTAsICAgICB9LA0KPg0KPiAuLi4gc28gSSB0aGluayB0
-aGVzZSBzaG91bGQgYmUgbXVsdGlwbGllZCBieSB0aGUgcHJlZGl2aWRlciwgd2hpY2ggd2lsbCBh
-bGxvdyB0bw0KPiBkcm9wIHRoZSBjb3JyZXNwb25kaW5nIHRlc3QgZm9yIFJaL0cxQyBpbiByY2Fy
-X2dlbjJfY3BnX2Nsa19yZWdpc3Rlci4NCg0KV2lsbCBjb3JyZWN0IHRoaXMuDQoNCj4gPiArfTsN
-Cj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgX19pbml0IHI4YTc3NDd4X2NwZ19tc3NyX2luaXQoc3Ry
-dWN0IGRldmljZSAqZGV2KQ0KPg0KPiByOGE3NzQ3MF9jcGdfbXNzcl9pbml0DQoNCldpbGwgY29y
-cmVjdCB0aGlzDQoNCj4gPiAtLS0gYS9kcml2ZXJzL2Nsay9yZW5lc2FzL3JjYXItZ2VuMi1jcGcu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL3JlbmVzYXMvcmNhci1nZW4yLWNwZy5jDQo+ID4gQEAg
-LTE2LDYgKzE2LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPiAgI2luY2x1
-ZGUgPGxpbnV4L2lvLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC9zeXNfc29jLmg+DQo+ID4NCj4gPiAgI2luY2x1ZGUgInJlbmVzYXMtY3BnLW1z
-c3IuaCINCj4gPiAgI2luY2x1ZGUgInJjYXItZ2VuMi1jcGcuaCINCj4gPiBAQCAtMjU3LDEwICsy
-NTgsMjEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBjbGtfZGl2X3RhYmxlDQo+IGNwZ19zZDAxX2Rp
-dl90YWJsZVtdID0gew0KPiA+ICAgICAgICAgeyAgMCwgIDAgfSwNCj4gPiAgfTsNCj4gPg0KPiA+
-ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNsa19kaXZfdGFibGUgcnpfZzFjX2NwZ19zZDAxX2Rpdl90
-YWJsZVtdID0gew0KPiA+ICsgICAgICAgeyAgNSwgMTIgfSwgeyAgNiwgMTYgfSwgeyAgNywgMTgg
-fSwgeyAgOCwgMjQgfSwNCj4gPiArICAgICAgIHsgMTAsIDM2IH0sIHsgMTEsIDQ4IH0sIHsgMTIs
-IDEwIH0sIHsgIDAsICAwIH0sIH07DQo+DQo+IFRoaXMgdGFibGUgaXMgaWRlbnRpY2FsIHRvIGNw
-Z19zZDAxX2Rpdl90YWJsZVtdLCBleGNlcHQgZm9yIHRoZSBtaXNzaW5nIGZpcnN0IGVudHJ5Lg0K
-PiBTbyBwZXJoYXBzIHlvdSBjb3VsZCBqdXN0IHVzZSAmY3BnX3NkMDFfZGl2X3RhYmxlWzFdIGlu
-c3RlYWQ/DQoNCldpbGwgdGFrZSBvdXQgdGhpcyB0YWJsZS4NCg0KPiA+ICsNCj4gPiArDQo+ID4g
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9nZW4yX2NwZ19wbGxfY29uZmlnICpjcGdfcGxsX2Nv
-bmZpZw0KPiA+IF9faW5pdGRhdGE7ICBzdGF0aWMgdW5zaWduZWQgaW50IGNwZ19wbGwwX2RpdiBf
-X2luaXRkYXRhOyAgc3RhdGljIHUzMg0KPiA+IGNwZ19tb2RlIF9faW5pdGRhdGE7DQo+ID4NCj4g
-PiArc3RhdGljIGNvbnN0IHN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0ZSByOGE3NzQ3eGVzW10g
-PSB7DQo+ID4gKyAgICAgICB7IC5zb2NfaWQgPSAicjhhNzc0NzAiLCAucmV2aXNpb24gPSAiRVMy
-LioiIH0sDQo+DQo+IFNvIHRoaXMgZG9lcyBub3QgYXBwbHkgdG8gRVMzLjAgYW5kIGxhdGVyPw0K
-PiBXaGF0IGFib3V0IEVTMS4qPw0KDQpXaWxsIHRha2Ugb3V0IHRoZSByZXZpc2lvbiBmaWVsZC4g
-Q3VycmVudGx5IHdlIGdvdCBvbmx5IEVTMi4wIHZlcnNpb24sDQpBcyBwZXIgbXkga25vd2xlZGdl
-LCB0aGVyZSBpcyBubyBFUzEuMCB2ZXJzaW9uLkl0IGlzIGJhc2ljYWxseSBkZXJpdmVkIGZyb20g
-Ui1DYXIgRTJYLg0KDQo+ID4gKyAgICAgICB7IC8qIHNlbnRpbmVsICovIH0NCj4gPiArfTsNCj4N
-Cj4gPiBAQCAtMzAzLDcgKzMxNSwxMCBAQCBzdHJ1Y3QgY2xrICogX19pbml0DQo+IHJjYXJfZ2Vu
-Ml9jcGdfY2xrX3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiAgICAgICAgICAgICAg
-ICAgYnJlYWs7DQo+ID4NCj4gPiAgICAgICAgIGNhc2UgQ0xLX1RZUEVfR0VOMl9QTEwxOg0KPiA+
-IC0gICAgICAgICAgICAgICBtdWx0ID0gY3BnX3BsbF9jb25maWctPnBsbDFfbXVsdCAvIDI7DQo+
-ID4gKyAgICAgICAgICAgICAgIGlmIChzb2NfZGV2aWNlX21hdGNoKHI4YTc3NDd4ZXMpKQ0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIG11bHQgPSBjcGdfcGxsX2NvbmZpZy0+cGxsMV9tdWx0
-Ow0KPiA+ICsgICAgICAgICAgICAgICBlbHNlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-bXVsdCA9IGNwZ19wbGxfY29uZmlnLT5wbGwxX211bHQgLyAyOw0KPg0KPiBJZiB0aGluayB0aGlz
-IGNhbiBiZSBkcm9wcGVkIGlmIHRoZSB2YWx1ZXMgaW4gY3BnX3BsbF9jb25maWdzW10gYXJlIG11
-bHRpcGxpZWQgYnkgMi4NCg0KV2lsbCBkbw0KDQo+ID4gQEAgLTMxNCw3ICszMjksMTAgQEAgc3Ry
-dWN0IGNsayAqIF9faW5pdA0KPiByY2FyX2dlbjJfY3BnX2Nsa19yZWdpc3RlcihzdHJ1Y3QgZGV2
-aWNlICpkZXYsDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiBjcGdfel9jbGtfcmVnaXN0ZXIo
-Y29yZS0+bmFtZSwgcGFyZW50X25hbWUsDQo+ID4gYmFzZSk7DQo+ID4NCj4gPiAgICAgICAgIGNh
-c2UgQ0xLX1RZUEVfR0VOMl9MQjoNCj4gPiAtICAgICAgICAgICAgICAgZGl2ID0gY3BnX21vZGUg
-JiBCSVQoMTgpID8gMzYgOiAyNDsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHNvY19kZXZpY2Vf
-bWF0Y2gocjhhNzc0N3hlcykpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGl2ID0gMjQ7
-DQo+ID4gKyAgICAgICAgICAgICAgIGVsc2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBk
-aXYgPSBjcGdfbW9kZSAmIEJJVCgxOCkgPyAzNiA6IDI0Ow0KPg0KPiBDYW4gYmUgZHJvcHBlZCBp
-ZiBMQiBpcyBtb2RlbGVkIGFzIGEgZml4ZWQgY2xvY2sgaW5zdGVhZC4NCg0KV2lsbCBkby4NCj4g
-PiAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4NCj4gPiAgICAgICAgIGNhc2UgQ0xLX1RZUEVf
-R0VOMl9BRFNQOg0KPiA+IEBAIC0zMjYsMTIgKzM0NCwyMCBAQCBzdHJ1Y3QgY2xrICogX19pbml0
-DQo+IHJjYXJfZ2VuMl9jcGdfY2xrX3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiAg
-ICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4NCj4gPiAgICAgICAgIGNhc2UgQ0xLX1RZUEVfR0VO
-Ml9TRDA6DQo+ID4gLSAgICAgICAgICAgICAgIHRhYmxlID0gY3BnX3NkMDFfZGl2X3RhYmxlOw0K
-PiA+ICsgICAgICAgICAgICAgICBpZiAoc29jX2RldmljZV9tYXRjaChyOGE3NzQ3eGVzKSkNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICB0YWJsZSA9IHJ6X2cxY19jcGdfc2QwMV9kaXZfdGFi
-bGU7DQo+ID4gKyAgICAgICAgICAgICAgIGVsc2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICB0YWJsZSA9IGNwZ19zZDAxX2Rpdl90YWJsZTsNCj4NCj4gdGFibGUgPSBjcGdfc2QwMV9kaXZf
-dGFibGU7DQo+IGlmIChzb2NfZGV2aWNlX21hdGNoKHI4YTc3NDd4ZXMpKQ0KPiAgICAgICAgIHRh
-YmxlKys7DQpXaWxsIGRvDQo+ID4gKw0KPiA+ICAgICAgICAgICAgICAgICBzaGlmdCA9IDQ7DQo+
-ID4gICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+DQo+ID4gICAgICAgICBjYXNlIENMS19UWVBF
-X0dFTjJfU0QxOg0KPiA+IC0gICAgICAgICAgICAgICB0YWJsZSA9IGNwZ19zZDAxX2Rpdl90YWJs
-ZTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHNvY19kZXZpY2VfbWF0Y2gocjhhNzc0N3hlcykp
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdGFibGUgPSByel9nMWNfY3BnX3NkMDFfZGl2
-X3RhYmxlOw0KPiA+ICsgICAgICAgICAgICAgICBlbHNlDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgdGFibGUgPSBjcGdfc2QwMV9kaXZfdGFibGU7DQo+DQo+IExpa2V3aXNlLg0KPg0KPiA+
-ICsNCj4gPiAgICAgICAgICAgICAgICAgc2hpZnQgPSAwOw0KPiA+ICAgICAgICAgICAgICAgICBi
-cmVhazsNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMg
-b2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+DQo+IElu
-IHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlz
-ZWxmIGEgaGFja2VyLiBCdXQgd2hlbg0KPiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1
-c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQoNCg0KDQpSZW5lc2FzIEVs
-ZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJu
-ZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFu
-ZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+Hi Biju,
+
+On Tue, Mar 27, 2018 at 4:37 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add RZ/G1C (R8A77470) Clock Pulse Generator / Module Standby and Software
+> Reset support.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r8a7747x-cpg-mssr.c
+
+For consistency, I'd call this r8a77470-cpg-mssr.c.
+
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * r8a7747 Clock Pulse Generator / Module Standby and Software Reset
+
+r8a77470
+
+> +static const struct cpg_core_clk r8a77470_core_clks[] __initconst = {
+> +       /* External Clock Inputs */
+> +       DEF_INPUT("extal",      CLK_EXTAL),
+> +       DEF_INPUT("usb_extal",  CLK_USB_EXTAL),
+> +
+> +       /* Internal Core Clocks */
+> +       DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_GEN2_MAIN, CLK_EXTAL),
+> +       DEF_BASE(".pll0",       CLK_PLL0, CLK_TYPE_GEN2_PLL0, CLK_MAIN),
+> +       DEF_BASE(".pll1",       CLK_PLL1, CLK_TYPE_GEN2_PLL1, CLK_MAIN),
+> +       DEF_BASE(".pll3",       CLK_PLL3, CLK_TYPE_GEN2_PLL3, CLK_MAIN),
+> +
+> +       DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2, CLK_PLL1, 2, 1),
+> +
+> +       /* Core Clock Outputs */
+> +       DEF_BASE("lb",   R8A77470_CLK_LB,   CLK_TYPE_GEN2_LB,   CLK_PLL1),
+
+DEF_FIXED("lb", R8A77470_CLK_LB, CLK_PLL1, 24, 1)
+and move it down between "b" and "p".
+
+Note: apparently the dependency on MD18 is true for R-Car H2 only, so
+I will fix this in the other clock drivers.
+
+> +/*
+> + * CPG Clock Data
+> + */
+> +
+> +/*
+> + *    MD       EXTAL           PLL0    PLL1    PLL3
+> + * 14 13       (MHz)           *1      *2
+> + *---------------------------------------------------
+> + * 0  0                20              x80/2   x78     x50
+> + * 0  1                26              x60/2   x60     x56
+> + * 1  0                Prohibitted setting
+> + * 1  1                30              x52/2   x52     x50
+
+It looks like all PLL0/PLL1/PLL3 values are already the predivided values,
+unlike in other clock drivers? ...
+
+> + *
+> + * *1 :        Table 7.4 indicates VCO output (PLL0 = VCO/2)
+> + * *2 :        Table 7.4 indicates VCO output (PLL1 = VCO)
+> + */
+> +#define CPG_PLL_CONFIG_INDEX(md)       ((((md) & BIT(14)) >> 13) | \
+> +                                        (((md) & BIT(13)) >> 13))
+> +
+> +static const struct rcar_gen2_cpg_pll_config cpg_pll_configs[8] __initconst = {
+
+cpg_pll_configs[4]
+
+> +       /* EXTAL div    PLL1 mult       PLL3 mult */
+> +       { 1,            78,             50,     },
+> +       { 1,            60,             56,     },
+> +       { /* Invalid*/                          },
+> +       { 1,            52,             50,     },
+
+... so I think these should be multiplied by the predivider, which will allow
+to drop the corresponding test for RZ/G1C in rcar_gen2_cpg_clk_register.
+
+
+> +};
+> +
+> +static int __init r8a7747x_cpg_mssr_init(struct device *dev)
+
+r8a77470_cpg_mssr_init
+
+> --- a/drivers/clk/renesas/rcar-gen2-cpg.c
+> +++ b/drivers/clk/renesas/rcar-gen2-cpg.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> +#include <linux/sys_soc.h>
+>
+>  #include "renesas-cpg-mssr.h"
+>  #include "rcar-gen2-cpg.h"
+> @@ -257,10 +258,21 @@ static const struct clk_div_table cpg_sd01_div_table[] = {
+>         {  0,  0 },
+>  };
+>
+> +static const struct clk_div_table rz_g1c_cpg_sd01_div_table[] = {
+> +       {  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
+> +       { 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
+> +};
+
+This table is identical to cpg_sd01_div_table[], except for the missing first
+entry. So perhaps you could just use &cpg_sd01_div_table[1] instead?
+
+> +
+> +
+>  static const struct rcar_gen2_cpg_pll_config *cpg_pll_config __initdata;
+>  static unsigned int cpg_pll0_div __initdata;
+>  static u32 cpg_mode __initdata;
+>
+> +static const struct soc_device_attribute r8a7747xes[] = {
+> +       { .soc_id = "r8a77470", .revision = "ES2.*" },
+
+So this does not apply to ES3.0 and later?
+What about ES1.*?
+
+> +       { /* sentinel */ }
+> +};
+
+> @@ -303,7 +315,10 @@ struct clk * __init rcar_gen2_cpg_clk_register(struct device *dev,
+>                 break;
+>
+>         case CLK_TYPE_GEN2_PLL1:
+> -               mult = cpg_pll_config->pll1_mult / 2;
+> +               if (soc_device_match(r8a7747xes))
+> +                       mult = cpg_pll_config->pll1_mult;
+> +               else
+> +                       mult = cpg_pll_config->pll1_mult / 2;
+
+If think this can be dropped if the values in cpg_pll_configs[] are
+multiplied by 2.
+
+> @@ -314,7 +329,10 @@ struct clk * __init rcar_gen2_cpg_clk_register(struct device *dev,
+>                 return cpg_z_clk_register(core->name, parent_name, base);
+>
+>         case CLK_TYPE_GEN2_LB:
+> -               div = cpg_mode & BIT(18) ? 36 : 24;
+> +               if (soc_device_match(r8a7747xes))
+> +                       div = 24;
+> +               else
+> +                       div = cpg_mode & BIT(18) ? 36 : 24;
+
+Can be dropped if LB is modeled as a fixed clock instead.
+
+>                 break;
+>
+>         case CLK_TYPE_GEN2_ADSP:
+> @@ -326,12 +344,20 @@ struct clk * __init rcar_gen2_cpg_clk_register(struct device *dev,
+>                 break;
+>
+>         case CLK_TYPE_GEN2_SD0:
+> -               table = cpg_sd01_div_table;
+> +               if (soc_device_match(r8a7747xes))
+> +                       table = rz_g1c_cpg_sd01_div_table;
+> +               else
+> +                       table = cpg_sd01_div_table;
+
+table = cpg_sd01_div_table;
+if (soc_device_match(r8a7747xes))
+        table++;
+
+> +
+>                 shift = 4;
+>                 break;
+>
+>         case CLK_TYPE_GEN2_SD1:
+> -               table = cpg_sd01_div_table;
+> +               if (soc_device_match(r8a7747xes))
+> +                       table = rz_g1c_cpg_sd01_div_table;
+> +               else
+> +                       table = cpg_sd01_div_table;
+
+Likewise.
+
+> +
+>                 shift = 0;
+>                 break;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
