@@ -1,66 +1,86 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 0/6] clk: meson-axg: Add AO Cloclk and Reset driver
-Date: Wed, 28 Mar 2018 10:50:44 +0800
-Message-ID: <20180328025050.221585-1-yixun.lan@amlogic.com>
+Subject: [PATCH v3 3/6] dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
+Date: Wed, 28 Mar 2018 10:50:47 +0800
+Message-ID: <20180328025050.221585-4-yixun.lan@amlogic.com>
+References: <20180328025050.221585-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180328025050.221585-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-  This patch try to add AO clock and Reset driver for Amlogic's
-Meson-AXG SoC.
-  Please note that patch 6 need to wait for the DTS changes[3] merged
-into mainline first, otherwise it will break the serial console.
+Add dt-bindings headers for the Meson-AXG's AO clock and
+reset controller.
 
- patch 1: factor the common code into a dedicated file
- patch 2-4: add the aoclk driver for AXG SoC
- patch 5-6: drop unnecessary clock flags
-
-changes since v2 at [2]: 
- - rework meson_aoclkc_probe() which leverage the of_match_data
- - merge patch 5-6 into this series
- - seperate DTS patch, will send to Kevin Hilman independently
- 
-changes since v1 at [0]: 
- - rebase to clk-meson's branch 'next/drivers' [1]
- - fix license, update to BSD-3-Clause
- - drop un-used include header file
-
-[0] https://lkml.kernel.org/r/20180209070026.193879-1-yixun.lan@amlogic.com
-[1] git://github.com/BayLibre/clk-meson.git branch: next-drivers
-[2] https://lkml.kernel.org/r/20180323143816.200573-1-yixun.lan@amlogic.com
-[3] https://lkml.kernel.org/r/20180326081809.49493-4-yixun.lan@amlogic.com
-
-Qiufang Dai (1):
-  clk: meson-axg: Add AO Clock and Reset controller driver
-
-Yixun Lan (5):
-  clk: meson: aoclk: refactor common code into dedicated file
-  dt-bindings: clock: axg-aoclkc: New binding for Meson-AXG SoC
-  dt-bindings: clock: reset: Add AXG AO Clock and Reset Bindings
-  clk: meson: drop CLK_SET_RATE_PARENT flag
-  clk: meson: drop CLK_IGNORE_UNUSED flag
-
- .../bindings/clock/amlogic,gxbb-aoclkc.txt         |   1 +
- drivers/clk/meson/Makefile                         |   4 +-
- drivers/clk/meson/axg-aoclk.c                      | 163 +++++++++++++++++++++
- drivers/clk/meson/axg-aoclk.h                      |  31 ++++
- drivers/clk/meson/gxbb-aoclk.c                     |  88 ++++-------
- drivers/clk/meson/gxbb-aoclk.h                     |   7 +
- drivers/clk/meson/meson-aoclk.c                    |  79 ++++++++++
- drivers/clk/meson/meson-aoclk.h                    |  35 +++++
- include/dt-bindings/clock/axg-aoclkc.h             |  26 ++++
- include/dt-bindings/reset/axg-aoclkc.h             |  20 +++
- 10 files changed, 393 insertions(+), 61 deletions(-)
- create mode 100644 drivers/clk/meson/axg-aoclk.c
- create mode 100644 drivers/clk/meson/axg-aoclk.h
- create mode 100644 drivers/clk/meson/meson-aoclk.c
- create mode 100644 drivers/clk/meson/meson-aoclk.h
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
+ include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
  create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
  create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
 
+diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
+new file mode 100644
+index 000000000000..61955016a55b
+--- /dev/null
++++ b/include/dt-bindings/clock/axg-aoclkc.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
++#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
++
++#define CLKID_AO_REMOTE		0
++#define CLKID_AO_I2C_MASTER	1
++#define CLKID_AO_I2C_SLAVE	2
++#define CLKID_AO_UART1		3
++#define CLKID_AO_UART2		4
++#define CLKID_AO_IR_BLASTER	5
++#define CLKID_AO_SAR_ADC	6
++#define CLKID_AO_CLK81		7
++#define CLKID_AO_SAR_ADC_SEL	8
++#define CLKID_AO_SAR_ADC_DIV	9
++#define CLKID_AO_SAR_ADC_CLK	10
++#define CLKID_AO_ALT_XTAL	11
++
++#endif
+diff --git a/include/dt-bindings/reset/axg-aoclkc.h b/include/dt-bindings/reset/axg-aoclkc.h
+new file mode 100644
+index 000000000000..d342c0b6b2a7
+--- /dev/null
++++ b/include/dt-bindings/reset/axg-aoclkc.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
++#define DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
++
++#define RESET_AO_REMOTE		0
++#define RESET_AO_I2C_MASTER	1
++#define RESET_AO_I2C_SLAVE	2
++#define RESET_AO_UART1		3
++#define RESET_AO_UART2		4
++#define RESET_AO_IR_BLASTER	5
++
++#endif
 -- 
 2.15.1
