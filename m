@@ -1,114 +1,61 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
- 5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Wed, 28 Mar 2018 11:36:41 +0200
-Message-ID: <20180328093641.GA17774@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
- <20180326141638.GB1450@amd>
- <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180328090031.GA17300@amd>
+From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Subject: RE: [PATCH 1/2][v7] dt-bindings: mtd-physmap: Add endianness supports
+Date: Wed, 28 Mar 2018 09:48:08 +0000
+Message-ID: <VI1PR0402MB3854A5A7E389D80CCEF0197997A30@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+References: <20180328054443.2829-1-prabhakar.kushwaha@nxp.com>
+ <20180328103001.6f4b16d9@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3301934277111650717=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180328090031.GA17300@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180328103001.6f4b16d9@bbrezillon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, Poonam Aggrwal <poonam.aggrwal@nxp.com>, Leo Li <leoyang.li@nxp.com>, "oss@buserror.net" <oss@buserror.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---===============3301934277111650717==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
-Content-Disposition: inline
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Wednesday, March 28, 2018 2:00 PM
+> To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> Cc: linux-mtd@lists.infradead.org; devicetree@vger.kernel.org;
+> mark.rutland@arm.com; robh@kernel.org; boris.brezillon@free-electrons.com;
+> Poonam Aggrwal <poonam.aggrwal@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> oss@buserror.net; computersforpeace@gmail.com; shawnguo@kernel.org;
+> linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH 1/2][v7] dt-bindings: mtd-physmap: Add endianness
+> supports
+> 
+> On Wed, 28 Mar 2018 11:14:43 +0530
+> Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
+> 
+> > Connection between flash and controller is not necessary to be always
+> > of same type. It may varies from platform to platform.
+> >
+> > Adding endianness (optional) property to provide connection type
+> > information.
+> 
+> You forgot to adjust your commit message.
+> 
+> If you're okay, I'll replace your message by:
+> 
+> "
+> Provides a way to specify the endianness to use when accessing a memory-
+> mapped flash.
+> "
+> 
 
+Thanks for catching this. Please adjust as you suggested.
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > I can talk to the modem and start a call.
-> >=20
-> > Doing an AT query is the easy part :)
-> >=20
-> > > Then something like this (untested!) is certainly needed.
-> > > Probably more...
-> >=20
-> > I intentionally left this part out. The CPCAP codec has two DAIs
-> > and not 3+. The code you just added is a hack from Motorola. Their
-> > driver is full of hacks and it's obvious its author(s) did not
-> > fully understand the ASoC APIs.
-> >=20
-> > My understanding is, that we only need to replace the audio-graph-card
-> > driver to something more complex. The VOICE DAI needs to be configured
-> > differently based on the use case:
->=20
-> Does the voice part work for you? I configured all the mixers to
-> voice, and then am using
-
-I tried with 8kHz, 8-bit, too:
-
-user@devuan:/my/tui/rweb$ arecord -D plughw:CARD=3DAudio,DEV=3D1 -t wav
---max-file-time 30 mon.wav
-Recording WAVE 'mon.wav' : Unsigned 8 bit, Rate 8000 Hz, Mono
-^CAborted by signal Interrupt...
-arecord: pcm_read:2103: read error: Interrupted system call
-user@devuan:/my/tui/rweb$ aplay -D plughw:CARD=3DAudio,DEV=3D1 -t wav
-mon.wav
-Playing WAVE 'mon.wav' : Unsigned 8 bit, Rate 8000 Hz, Mono
-^CAborted by signal Interrupt...
-
-Recording works okay, but playback produces ugly noise (not white this
-time). If I copy mon.wav to PC, it playes back in pretty acceptable
-quality.
-
-So summary
-
-HIFI DAI works
-VOICE DAI recording is ok
-VOICE DAI playbacks plays noise.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq7YikACgkQMOfwapXb+vLxNwCdE/Fragqrz7l3vrPSiD4kZkYU
-mkgAnjYnKZqJYm5pviMW9kjZfIIfJ++H
-=xgf1
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
-
---===============3301934277111650717==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3301934277111650717==--
+--prabhakar
