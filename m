@@ -1,75 +1,115 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 05/11] dt-bindings: i3c: Document core bindings
-Date: Wed, 28 Mar 2018 19:28:07 +0200
-Message-ID: <20180328192807.174b794d@bbrezillon>
-References: <20180323110020.19080-1-boris.brezillon@bootlin.com>
-        <20180323110020.19080-6-boris.brezillon@bootlin.com>
-        <20180326071946.dtrhhxx3iwwymk73@rob-hp-laptop>
-        <20180328101922.22a7039d@bbrezillon>
-        <CAL_JsqKKf_Ob6AUvO5xgEFzSWakYDuPPzVKe4taoN1kzw3b1fQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 0/9] Add Actions Semi S900 pinctrl and gpio support
+Date: Wed, 28 Mar 2018 23:16:54 +0530
+Message-ID: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKKf_Ob6AUvO5xgEFzSWakYDuPPzVKe4taoN1kzw3b1fQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2018 11:42:07 -0500
-Rob Herring <robh@kernel.org> wrote:
+This patchset adds pinctrl and gpio support for Actions Semi S900 SoC.
+Pinctrl and gpio subsystems share the common set of register range but
+implemented as individual drivers for making it less complex.
 
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-> >>  
-> >> > +where device-type is describing the type of device connected on the bus
-> >> > +(gpio-controller, sensor, ...).
-> >> > +
-> >> > +Required properties
-> >> > +-------------------
-> >> > +- reg: contains 3 cells
-> >> > +  + first cell : encodes the I2C address. Should be 0 if the device does not
-> >> > +            have one (0 is not a valid I3C address).  
-> >>
-> >> Change here to "encodes the static I2C address".
-> >>
-> >> 0 is not a valid I2C address?  
-> >
-> > According to [1] it is reserved, and it's reserved in the I3C spec
-> > anyway (see "Table 9 I3C Slave Address Restrictions" in the I3C spec).  
-> 
-> Sorry, what I meant was s/I3C/I2C/. The first cell is I2C address and
-> 0 is not valid.
+gpio-line-names has been added for the Bubblegum-96 board matching the
+96Boards CE specification v1.0.
 
-Okay, got it now :-).
-> 
-> >> > +
-> >> > +  + second and third cells: should encode the ProvisionalID. The second cell
-> >> > +                       contains the manufacturer ID left-shifted by 1.
-> >> > +                       The third cell contains ORing of the part ID
-> >> > +                       left-shifted by 16, the instance ID left-shifted
-> >> > +                       by 12 and the extra information. This encoding is
-> >> > +                       following the PID definition provided by the I3C
-> >> > +                       specification.  
-> >
-> > One extra question for you: should I refer to the I3C_DEV(),
-> > I3C_DEV_WITH_STATIC_ADDR() and I2C_DEV() macros in the bindings doc?
-> > And if I do, should I use them my example?  
-> 
-> Well, I don't want to see "device@I3C_DEV(...)" for unit-addresses.
+Both pinctrl and gpio drivers are verified using the Bubblegum-96 board.
 
-That wouldn't work anyway.
+This patchset depends on the clock driver which is still under review:
+https://lkml.org/lkml/2018/2/9/831
 
-> You can use them for reg property, but it's somewhat pointless to use
-> it in one place and not the other.
+There is also S500 pinctrl and gpio driver developed by Andreas Farber
+independently to this patchset.
+https://github.com/afaerber/linux/commits/bg96-next
 
-Not sure I follow you. These macros have been added to ease definitions
-of reg, but you'll still have to manually define the unit-address
-manually. Are you saying I should not use them in dts files or just that
-I should not mention it in the doc. If this is the former, then patch 6
-should be dropped.
+If this patchseries seems to be good enough to add base OWL pinctrl and
+gpio support. Then, we may decide on adding S500 support on top of this later
+by reusing the pinctrl definitions from Andreas.
+
+Thanks,
+Mani
+
+Changes in v6:
+
+* Changed owl_gpio_set_reg to owl_gpio_update_reg in gpio driver
+* Reused owl_gpio_update_reg in owl_gpio_set in gpio driver
+* Removed ngpio property from DT for nodes with 32 gpios
+* Fixed size values in DT for gpio nodes
+* Added Reviewed-by tags from Linus for adding gpio-line-names in DT
+
+Changes in v5:
+
+* Removed alias for gpio nodes
+* Removed duplicate address from gpio nodes and modified the driver accordingly
+* Used ngpios property for specifying number of gpios per bank
+* Used generic gpio node name in DT and binding
+* Modified pinctrl driver to save space
+* Dropped pinctrl bindings patch since it got applied
+* Added Reviewed-by tags from Linus for DT and platform Kconfig changes
+
+Changes in v4:
+
+* Incorporated Andy's review for pinctrl driver
+* Used _relaxed functions for pinctrl driver
+* Added Andy's Reviewed-by tag for gpio driver
+* Added (back) Rob's Reviewed-by tag for pinctrl bindings
+
+Changes in v3:
+
+* Simplified owl_gpio_set_reg() with _relaxed functions
+* Added interrupt controller properties to gpio node bindings as suggested
+  by Rob
+* Minor code cleanups
+
+Changes in v2:
+
+* Implemented each GPIO bank as its own gpio-controller
+* Added gpio-ranges property
+* Modified pin group to follow pad names instead of register names
+* Incorporated review comments from Andy
+* Incorporated review comments from Andreas
+* Fixed the MODULE_LICENSE with respect to SPDX tag
+* Added Reviewed by tag from Rob for pinctrl binding
+
+Manivannan Sadhasivam (9):
+  arm64: dts: actions: Add pinctrl node for S900
+  arm64: actions: Enable PINCTRL in platforms Kconfig
+  pinctrl: actions: Add Actions S900 pinctrl driver
+  dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+  arm64: dts: actions: Add S900 gpio nodes
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  gpio: Add gpio driver for Actions OWL S900 SoC
+  MAINTAINERS: Add reviewer for ACTIONS platforms
+  MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
+
+ .../devicetree/bindings/gpio/actions,owl-gpio.txt  |   87 +
+ MAINTAINERS                                        |    5 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  |  195 ++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   57 +
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-owl.c                            |  168 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/actions/Kconfig                    |   12 +
+ drivers/pinctrl/actions/Makefile                   |    2 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |  579 ++++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  142 ++
+ drivers/pinctrl/actions/pinctrl-s900.c             | 1861 ++++++++++++++++++++
+ 15 files changed, 3120 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+ create mode 100644 drivers/gpio/gpio-owl.c
+ create mode 100644 drivers/pinctrl/actions/Kconfig
+ create mode 100644 drivers/pinctrl/actions/Makefile
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
 
 -- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.14.1
