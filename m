@@ -1,411 +1,402 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
-Date: Wed, 28 Mar 2018 17:15:56 +0200
-Message-ID: <06976e4ae275c4cc0bddacc5e0c0c9a9@crapouillou.net>
-References: <20180110224838.16711-2-paul@crapouillou.net>
- <20180317232901.14129-1-paul@crapouillou.net>
- <20180317232901.14129-8-paul@crapouillou.net>
- <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v2 4/8] mfd: stm32-timers: add support for dmas
+Date: Wed, 28 Mar 2018 16:22:51 +0100
+Message-ID: <20180328152251.xeh72dpeflzohn4k@dell>
+References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
+ <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Subject: 
-In-Reply-To: <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 2018-03-24 07:26, Daniel Lezcano a écrit :
-> On 18/03/2018 00:29, Paul Cercueil wrote:
->> This driver will use the TCU (Timer Counter Unit) present on the 
->> Ingenic
->> JZ47xx SoCs to provide the kernel with a clocksource and timers.
+On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
+
+> STM32 Timers can support up to 7 DMA requests:
+> - 4 channels, update, compare and trigger.
+> Optionally request part, or all DMAs from stm32-timers MFD core.
 > 
-> Please provide a more detailed description about the timer.
-
-There's a doc file for that :)
-
-> Where is the clocksource ?
-
-Right, there is no clocksource, just timers.
-
-> I don't see the point of using channel idx and pwm checking here.
+> Also add routine to implement burst reads using DMA from timer registers.
+> This is exported. So, it can be used by child drivers, PWM capture
+> for instance (but not limited to).
 > 
-> There is one clockevent, why create multiple channels ? Can't you stick
-> to the usual init routine for a timer.
-
-So the idea is that we use all the TCU channels that won't be used for 
-PWM
-as timers. Hence the PWM checking. Why is this bad?
-
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->>  drivers/clocksource/Kconfig         |   8 ++
->>  drivers/clocksource/Makefile        |   1 +
->>  drivers/clocksource/timer-ingenic.c | 278 
->> ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 287 insertions(+)
->>  create mode 100644 drivers/clocksource/timer-ingenic.c
->> 
->>  v2: Use SPDX identifier for the license
->>  v3: - Move documentation to its own patch
->>      - Search the devicetree for PWM clients, and use all the TCU
->> 	   channels that won't be used for PWM
->>  v4: - Add documentation about why we search for PWM clients
->>      - Verify that the PWM clients are for the TCU PWM driver
->> 
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index d2e5382821a4..481422145fb4 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -592,4 +592,12 @@ config CLKSRC_ST_LPC
->>  	  Enable this option to use the Low Power controller timer
->>  	  as clocksource.
->> 
->> +config INGENIC_TIMER
->> +	bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
->> +	depends on MACH_INGENIC || COMPILE_TEST
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> ---
+> Changes in v2:
+> - Abstract DMA handling from child driver: move it to MFD core
+> - Add comments on optional dma support
+> ---
+>  drivers/mfd/stm32-timers.c       | 215 ++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/stm32-timers.h |  27 +++++
+>  2 files changed, 238 insertions(+), 4 deletions(-)
 > 
-> bool "Clocksource/timer using the TCU in Ingenic JZ SoCs" if 
-> COMPILE_TEST
-> 
-> Remove the depends MACH_INGENIC.
+> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
+> index a6675a4..2cdad2c 100644
+> --- a/drivers/mfd/stm32-timers.c
+> +++ b/drivers/mfd/stm32-timers.c
+> @@ -6,16 +6,166 @@
+>   * License terms:  GNU General Public License (GPL), version 2
+>   */
+>  
+> +#include <linux/bitfield.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/mfd/stm32-timers.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/reset.h>
+>  
+> +#define STM32_TIMERS_MAX_REGISTERS	0x3fc
+> +
+> +struct stm32_timers_priv {
+> +	struct device *dev;
+> +	struct completion completion;
+> +	phys_addr_t phys_base;		/* timers physical addr for dma */
+> +	struct mutex lock;		/* protect dma access */
+> +	struct dma_chan *dma_chan;	/* dma channel in use */
 
-This driver is not useful on anything else than Ingenic SoCs, why should 
-I
-remove MACH_INGENIC then?
+I think kerneldoc would be better than inline comments.
 
->> +	select CLKSRC_OF
->> +	default y
-> 
-> No default, Kconfig platform selects the timer.
+> +	struct dma_chan *dmas[STM32_TIMERS_MAX_DMAS];
+> +	struct stm32_timers ddata;
 
-Alright.
+This looks odd to me.  Why can't you expand the current ddata
+structure?  Wouldn't it be better to create a stm32_timers_dma
+structure to place all this information in (except *dev, that should
+live in the ddata struct), then place a reference in the existing
+stm32_timers struct?
 
->> +	help
->> +	  Support for the timer/counter unit of the Ingenic JZ SoCs.
->> +
->>  endmenu
->> diff --git a/drivers/clocksource/Makefile 
->> b/drivers/clocksource/Makefile
->> index d6dec4489d66..98691e8999fe 100644
->> --- a/drivers/clocksource/Makefile
->> +++ b/drivers/clocksource/Makefile
->> @@ -74,5 +74,6 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
->>  obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
->>  obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
->>  obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
->> +obj-$(CONFIG_INGENIC_TIMER)		+= timer-ingenic.o
->>  obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
->>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
->> diff --git a/drivers/clocksource/timer-ingenic.c 
->> b/drivers/clocksource/timer-ingenic.c
->> new file mode 100644
->> index 000000000000..8c777c0c0023
->> --- /dev/null
->> +++ b/drivers/clocksource/timer-ingenic.c
->> @@ -0,0 +1,278 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Ingenic JZ47xx SoC TCU clocksource driver
->> + * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/clk.h>
->> +#include <linux/clockchips.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/mfd/syscon/ingenic-tcu.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +
->> +#define NUM_CHANNELS	8
->> +
->> +struct ingenic_tcu;
->> +
->> +struct ingenic_tcu_channel {
->> +	unsigned int idx;
->> +	struct clk *clk;
->> +};
->> +
->> +struct ingenic_tcu {
->> +	struct ingenic_tcu_channel channels[NUM_CHANNELS];
->> +	unsigned long requested;
->> +	struct regmap *map;
->> +};
->> +
->> +struct ingenic_clock_event_device {
->> +	struct clock_event_device cevt;
->> +	struct ingenic_tcu_channel *channel;
->> +	char name[32];
->> +};
->> +
->> +#define ingenic_cevt(_evt) \
->> +	container_of(_evt, struct ingenic_clock_event_device, cevt)
->> +
->> +static inline struct ingenic_tcu *to_ingenic_tcu(struct 
->> ingenic_tcu_channel *ch)
->> +{
->> +	return container_of(ch, struct ingenic_tcu, channels[ch->idx]);
->> +}
->> +
->> +static int ingenic_tcu_cevt_set_state_shutdown(struct 
->> clock_event_device *evt)
->> +{
->> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
->> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +	unsigned int idx = channel->idx;
->> +
->> +	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
->> +	return 0;
->> +}
->> +
->> +static int ingenic_tcu_cevt_set_next(unsigned long next,
->> +		struct clock_event_device *evt)
->> +{
->> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(evt);
->> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +	unsigned int idx = channel->idx;
->> +
->> +	if (next > 0xffff)
->> +		return -EINVAL;
->> +
->> +	regmap_write(tcu->map, TCU_REG_TDFRc(idx), (unsigned int) next);
->> +	regmap_write(tcu->map, TCU_REG_TCNTc(idx), 0);
->> +	regmap_write(tcu->map, TCU_REG_TESR, BIT(idx));
->> +
->> +	return 0;
->> +}
->> +
->> +static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
->> +{
->> +	struct clock_event_device *cevt = dev_id;
->> +	struct ingenic_clock_event_device *jzcevt = ingenic_cevt(cevt);
->> +	struct ingenic_tcu_channel *channel = jzcevt->channel;
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +	unsigned int idx = channel->idx;
->> +
->> +	regmap_write(tcu->map, TCU_REG_TECR, BIT(idx));
->> +
->> +	if (cevt->event_handler)
->> +		cevt->event_handler(cevt);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int __init ingenic_tcu_req_channel(struct ingenic_tcu_channel 
->> *channel)
->> +{
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +	char buf[16];
->> +	int err;
->> +
->> +	if (test_and_set_bit(channel->idx, &tcu->requested))
->> +		return -EBUSY;
->> +
->> +	snprintf(buf, sizeof(buf), "timer%u", channel->idx);
->> +	channel->clk = clk_get(NULL, buf);
->> +	if (IS_ERR(channel->clk)) {
->> +		err = PTR_ERR(channel->clk);
->> +		goto out_release;
->> +	}
->> +
->> +	err = clk_prepare_enable(channel->clk);
->> +	if (err)
->> +		goto out_clk_put;
->> +
->> +	return 0;
->> +
->> +out_clk_put:
->> +	clk_put(channel->clk);
->> +out_release:
->> +	clear_bit(channel->idx, &tcu->requested);
->> +	return err;
->> +}
->> +
->> +static int __init ingenic_tcu_reset_channel(struct device_node *np,
->> +		struct ingenic_tcu_channel *channel)
->> +{
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +
->> +	return regmap_update_bits(tcu->map, TCU_REG_TCSRc(channel->idx),
->> +				0xffff & ~TCU_TCSR_RESERVED_BITS, 0);
->> +}
->> +
->> +static void __init ingenic_tcu_free_channel(struct 
->> ingenic_tcu_channel *channel)
->> +{
->> +	struct ingenic_tcu *tcu = to_ingenic_tcu(channel);
->> +
->> +	clk_disable_unprepare(channel->clk);
->> +	clk_put(channel->clk);
->> +	clear_bit(channel->idx, &tcu->requested);
->> +}
->> +
->> +static const char * const ingenic_tcu_timer_names[] = {
->> +	"TCU0", "TCU1", "TCU2", "TCU3", "TCU4", "TCU5", "TCU6", "TCU7",
->> +};
->> +
->> +static int __init ingenic_tcu_setup_cevt(struct device_node *np,
->> +		struct ingenic_tcu *tcu, unsigned int idx)
->> +{
->> +	struct ingenic_tcu_channel *channel = &tcu->channels[idx];
->> +	struct ingenic_clock_event_device *jzcevt;
->> +	unsigned long rate;
->> +	int err, virq;
->> +
->> +	err = ingenic_tcu_req_channel(channel);
->> +	if (err)
->> +		return err;
->> +
->> +	err = ingenic_tcu_reset_channel(np, channel);
->> +	if (err)
->> +		goto err_out_free_channel;
->> +
->> +	rate = clk_get_rate(channel->clk);
->> +	if (!rate) {
->> +		err = -EINVAL;
->> +		goto err_out_free_channel;
->> +	}
->> +
->> +	jzcevt = kzalloc(sizeof(*jzcevt), GFP_KERNEL);
->> +	if (!jzcevt) {
->> +		err = -ENOMEM;
->> +		goto err_out_free_channel;
->> +	}
->> +
->> +	virq = irq_of_parse_and_map(np, idx);
->> +	if (!virq) {
->> +		err = -EINVAL;
->> +		goto err_out_kfree_jzcevt;
->> +	}
->> +
->> +	err = request_irq(virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
->> +			ingenic_tcu_timer_names[idx], &jzcevt->cevt);
->> +	if (err)
->> +		goto err_out_irq_dispose_mapping;
->> +
->> +	jzcevt->channel = channel;
->> +	snprintf(jzcevt->name, sizeof(jzcevt->name), "ingenic-tcu-chan%u",
->> +		 channel->idx);
->> +
->> +	jzcevt->cevt.cpumask = cpumask_of(smp_processor_id());
->> +	jzcevt->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
->> +	jzcevt->cevt.name = jzcevt->name;
->> +	jzcevt->cevt.rating = 200;
->> +	jzcevt->cevt.set_state_shutdown = 
->> ingenic_tcu_cevt_set_state_shutdown;
->> +	jzcevt->cevt.set_next_event = ingenic_tcu_cevt_set_next;
->> +
->> +	clockevents_config_and_register(&jzcevt->cevt, rate, 10, (1 << 16) - 
->> 1);
->> +
->> +	return 0;
->> +
->> +err_out_irq_dispose_mapping:
->> +	irq_dispose_mapping(virq);
->> +err_out_kfree_jzcevt:
->> +	kfree(jzcevt);
->> +err_out_free_channel:
->> +	ingenic_tcu_free_channel(channel);
->> +	return err;
->> +}
->> +
->> +static int __init ingenic_tcu_init(struct device_node *np)
->> +{
->> +	unsigned long available_channels = GENMASK(NUM_CHANNELS - 1, 0);
->> +	struct device_node *node, *pwm_driver_node;
->> +	struct ingenic_tcu *tcu;
->> +	unsigned int i, channel;
->> +	int err;
->> +	u32 val;
->> +
->> +	/* Parse the devicetree for clients of the TCU PWM driver;
->> +	 * every TCU channel not requested for PWM will be used as
->> +	 * a timer.
->> +	 */
-> 
-> 
-> 
->> +	for_each_node_with_property(node, "pwms") {
->> +		/* Get the PWM channel ID (field 1 of the "pwms" node) */
->> +		err = of_property_read_u32_index(node, "pwms", 1, &val);
->> +		if (!err && val >= NUM_CHANNELS)
->> +			err = -EINVAL;
->> +		if (err) {
->> +			pr_err("timer-ingenic: Unable to parse PWM nodes!");
->> +			break;
->> +		}
->> +
->> +		/* Get the PWM driver node (field 0 of the "pwms" node) */
->> +		pwm_driver_node = of_parse_phandle(node, "pwms", 0);
->> +		if (!pwm_driver_node) {
->> +			pr_err("timer-ingenic: Unable to find PWM driver node");
->> +			break;
->> +		}
->> +
->> +		/* Verify that the node we found is for the TCU PWM driver,
->> +		 * by checking that this driver and the PWM driver passed
->> +		 * as phandle share the same parent (the "ingenic,tcu"
->> +		 * compatible MFD/syscon node).
->> +		 */
->> +		if (pwm_driver_node->parent != np->parent)
->> +			continue;
->> +
->> +		pr_info("timer-ingenic: Reserving channel %u for PWM", val);
->> +		available_channels &= ~BIT(val);
->> +	}
->> +
->> +	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
->> +	if (!tcu)
->> +		return -ENOMEM;
->> +
->> +	tcu->map = syscon_node_to_regmap(np->parent);
->> +	if (IS_ERR(tcu->map)) {
->> +		err = PTR_ERR(tcu->map);
->> +		kfree(tcu);
->> +		return err;
->> +	}
->> +
->> +	for (i = 0; i < NUM_CHANNELS; i++)
->> +		tcu->channels[i].idx = i;
-> 
-> I'm pretty sure you can do better thaningenic_tcu_setup that :)
+> +};
+> +
+> +static struct stm32_timers_priv *to_stm32_timers_priv(struct stm32_timers *d)
+> +{
+> +	return container_of(d, struct stm32_timers_priv, ddata);
+> +}
 
-I didn't think this would be a problem. I guess I can try.
+If you take my other suggestions, you can remove this function.
 
->> +	for_each_set_bit(channel, &available_channels, NUM_CHANNELS) {
->> +		err = _cevt(np, tcu, channel);
->> +		if (err) {
->> +			pr_warn("timer-ingenic: Unable to init TCU channel %u: %i",
->> +					channel, err);
->> +			continue;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/* We only probe via devicetree, no need for a platform driver */
->> +CLOCKSOURCE_OF_DECLARE(jz4740_tcu, "ingenic,jz4740-tcu", 
->> ingenic_tcu_init);
->> +CLOCKSOURCE_OF_DECLARE(jz4770_tcu, "ingenic,jz4770-tcu", 
->> ingenic_tcu_init);
->> +CLOCKSOURCE_OF_DECLARE(jz4780_tcu, "ingenic,jz4780-tcu", 
->> ingenic_tcu_init);
-> 
-> s/CLOCKSOURCE_OF_DECLARE/TIMER_OF_DECLARE/
+> +/* DIER register DMA enable bits */
+> +static const u32 stm32_timers_dier_dmaen[STM32_TIMERS_MAX_DMAS] = {
+> +	TIM_DIER_CC1DE, TIM_DIER_CC2DE, TIM_DIER_CC3DE, TIM_DIER_CC4DE,
+> +	TIM_DIER_UIE, TIM_DIER_TDE, TIM_DIER_COMDE
+> +};
 
-Sure, OK.
+Maybe one per line would be kinder on the eye?
 
-Thanks!
--Paul
+> +static void stm32_timers_dma_done(void *p)
+> +{
+> +	struct stm32_timers_priv *priv = p;
+> +	struct dma_chan *dma_chan = priv->dma_chan;
+> +	struct dma_tx_state state;
+> +	enum dma_status status;
+> +
+> +	status = dmaengine_tx_status(dma_chan, dma_chan->cookie, &state);
+> +	if (status == DMA_COMPLETE)
+> +		complete(&priv->completion);
+> +}
+> +
+> +/**
+> + * stm32_timers_dma_burst_read - Read from timers registers using DMA.
+> + *
+> + * Read from STM32 timers registers using DMA on a single event.
+> + * @ddata: reference to stm32_timers
+
+It's odd to pass device data back like this.
+
+Better to pass a pointer to 'struct device', then use the normal
+helpers.
+
+> + * @buf: dma'able destination buffer
+> + * @id: stm32_timers_dmas event identifier (ch[1..4], up, trig or com)
+> + * @reg: registers start offset for DMA to read from (like CCRx for capture)
+> + * @num_reg: number of registers to read upon each dma request, starting @reg.
+> + * @bursts: number of bursts to read (e.g. like two for pwm period capture)
+> + * @tmo_ms: timeout (milliseconds)
+> + */
+> +int stm32_timers_dma_burst_read(struct stm32_timers *ddata, u32 *buf,
+> +				enum stm32_timers_dmas id, u32 reg,
+> +				unsigned int num_reg, unsigned int bursts,
+> +				unsigned long tmo_ms)
+> +{
+> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
+> +	unsigned long timeout = msecs_to_jiffies(tmo_ms);
+> +	struct regmap *regmap = priv->ddata.regmap;
+> +	size_t len = num_reg * bursts * sizeof(u32);
+> +	struct dma_async_tx_descriptor *desc;
+> +	struct dma_slave_config config;
+> +	dma_cookie_t cookie;
+> +	dma_addr_t dma_buf;
+> +	u32 dbl, dba;
+> +	long err;
+> +	int ret;
+> +
+> +	/* sanity check */
+> +	if (id < STM32_TIMERS_DMA_CH1 || id >= STM32_TIMERS_MAX_DMAS)
+> +		return -EINVAL;
+> +
+> +	if (!num_reg || !bursts || reg > STM32_TIMERS_MAX_REGISTERS ||
+> +	    (reg + num_reg * sizeof(u32)) > STM32_TIMERS_MAX_REGISTERS)
+> +		return -EINVAL;
+> +
+> +	if (!priv->dmas[id])
+> +		return -ENODEV;
+> +	mutex_lock(&priv->lock);
+> +	priv->dma_chan = priv->dmas[id];
+> +
+> +	dma_buf = dma_map_single(priv->dev, buf, len, DMA_FROM_DEVICE);
+> +	ret = dma_mapping_error(priv->dev, dma_buf);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	/* Prepare DMA read from timer registers, using DMA burst mode */
+> +	memset(&config, 0, sizeof(config));
+> +	config.src_addr = (dma_addr_t)priv->phys_base + TIM_DMAR;
+> +	config.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	ret = dmaengine_slave_config(priv->dma_chan, &config);
+> +	if (ret)
+> +		goto unmap;
+> +
+> +	desc = dmaengine_prep_slave_single(priv->dma_chan, dma_buf, len,
+> +					   DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT);
+> +	if (!desc) {
+> +		ret = -EBUSY;
+> +		goto unmap;
+> +	}
+> +
+> +	desc->callback = stm32_timers_dma_done;
+> +	desc->callback_param = priv;
+> +	cookie = dmaengine_submit(desc);
+> +	ret = dma_submit_error(cookie);
+> +	if (ret)
+> +		goto dma_term;
+> +
+> +	reinit_completion(&priv->completion);
+> +	dma_async_issue_pending(priv->dma_chan);
+> +
+> +	/* Setup and enable timer DMA burst mode */
+> +	dbl = FIELD_PREP(TIM_DCR_DBL, bursts - 1);
+> +	dba = FIELD_PREP(TIM_DCR_DBA, reg >> 2);
+> +	ret = regmap_write(regmap, TIM_DCR, dbl | dba);
+> +	if (ret)
+> +		goto dma_term;
+> +
+> +	/* Clear pending flags before enabling DMA request */
+> +	ret = regmap_write(regmap, TIM_SR, 0);
+> +	if (ret)
+> +		goto dcr_clr;
+> +
+> +	ret = regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id],
+> +				 stm32_timers_dier_dmaen[id]);
+> +	if (ret)
+> +		goto dcr_clr;
+> +
+> +	err = wait_for_completion_interruptible_timeout(&priv->completion,
+> +							timeout);
+> +	if (err == 0)
+> +		ret = -ETIMEDOUT;
+> +	else if (err < 0)
+> +		ret = err;
+> +
+> +	regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id], 0);
+> +	regmap_write(regmap, TIM_SR, 0);
+> +dcr_clr:
+> +	regmap_write(regmap, TIM_DCR, 0);
+> +dma_term:
+> +	dmaengine_terminate_all(priv->dma_chan);
+> +unmap:
+> +	dma_unmap_single(priv->dev, dma_buf, len, DMA_FROM_DEVICE);
+> +unlock:
+> +	priv->dma_chan = NULL;
+> +	mutex_unlock(&priv->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(stm32_timers_dma_burst_read);
+> +
+>  static const struct regmap_config stm32_timers_regmap_cfg = {
+>  	.reg_bits = 32,
+>  	.val_bits = 32,
+>  	.reg_stride = sizeof(u32),
+> -	.max_register = 0x3fc,
+> +	.max_register = STM32_TIMERS_MAX_REGISTERS,
+>  };
+>  
+>  static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
+> @@ -29,21 +179,55 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
+>  	regmap_write(ddata->regmap, TIM_ARR, 0x0);
+>  }
+>  
+> +static void stm32_timers_dma_probe(struct device *dev,
+> +				   struct stm32_timers_priv *priv)
+> +{
+> +	int i;
+> +	char name[4];
+> +	struct dma_chan **dmas = priv->dmas;
+> +
+> +	/* Optional DMA support: get valid dma channel(s) or NULL */
+> +	for (i = STM32_TIMERS_DMA_CH1; i <= STM32_TIMERS_DMA_CH4; i++) {
+> +		snprintf(name, ARRAY_SIZE(name), "ch%1d", i + 1);
+> +		dmas[i] = dma_request_slave_channel(dev, name);
+> +	}
+> +	dmas[STM32_TIMERS_DMA_UP] = dma_request_slave_channel(dev, "up");
+> +	dmas[STM32_TIMERS_DMA_TRIG] = dma_request_slave_channel(dev, "trig");
+> +	dmas[STM32_TIMERS_DMA_COM] = dma_request_slave_channel(dev, "com");
+> +}
+> +
+> +static void stm32_timers_dma_remove(struct device *dev,
+> +				    struct stm32_timers_priv *priv)
+> +{
+> +	int i;
+> +
+> +	for (i = STM32_TIMERS_DMA_CH1; i < STM32_TIMERS_MAX_DMAS; i++)
+> +		if (priv->dmas[i])
+> +			dma_release_channel(priv->dmas[i]);
+> +}
+> +
+>  static int stm32_timers_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct stm32_timers_priv *priv;
+>  	struct stm32_timers *ddata;
+>  	struct resource *res;
+>  	void __iomem *mmio;
+> +	int ret;
+>  
+> -	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+> -	if (!ddata)
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+>  		return -ENOMEM;
+> +	ddata = &priv->ddata;
+> +	init_completion(&priv->completion);
+> +	mutex_init(&priv->lock);
+> +	priv->dev = dev;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	mmio = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(mmio))
+>  		return PTR_ERR(mmio);
+> +	priv->phys_base = res->start;
+>  
+>  	ddata->regmap = devm_regmap_init_mmio_clk(dev, "int", mmio,
+>  						  &stm32_timers_regmap_cfg);
+> @@ -56,9 +240,31 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>  
+>  	stm32_timers_get_arr_size(ddata);
+>  
+> +	stm32_timers_dma_probe(dev, priv);
+> +
+>  	platform_set_drvdata(pdev, ddata);
+>  
+> -	return devm_of_platform_populate(&pdev->dev);
+> +	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +	if (ret)
+> +		goto dma_remove;
+> +
+> +	return 0;
+> +
+> +dma_remove:
+> +	stm32_timers_dma_remove(dev, priv);
+
+You can easily remove this label and the goto.
+
+> +	return ret;
+> +}
+> +
+> +static int stm32_timers_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
+> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
+> +
+> +	of_platform_depopulate(&pdev->dev);
+
+Why can't you continue using devm_*?
+
+> +	stm32_timers_dma_remove(&pdev->dev, priv);
+> +
+> +	return 0;
+>  }
+>  
+>  static const struct of_device_id stm32_timers_of_match[] = {
+> @@ -69,6 +275,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
+>  
+>  static struct platform_driver stm32_timers_driver = {
+>  	.probe = stm32_timers_probe,
+> +	.remove = stm32_timers_remove,
+>  	.driver	= {
+>  		.name = "stm32-timers",
+>  		.of_match_table = stm32_timers_of_match,
+> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
+> index ce7346e..5fd2d6b 100644
+> --- a/include/linux/mfd/stm32-timers.h
+> +++ b/include/linux/mfd/stm32-timers.h
+> @@ -29,6 +29,8 @@
+>  #define TIM_CCR3	0x3C	/* Capt/Comp Register 3    */
+>  #define TIM_CCR4	0x40	/* Capt/Comp Register 4    */
+>  #define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
+> +#define TIM_DCR		0x48	/* DMA control register    */
+> +#define TIM_DMAR	0x4C	/* DMA register for transfer */
+>  
+>  #define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
+>  #define TIM_CR1_DIR	BIT(4)  /* Counter Direction	   */
+> @@ -38,6 +40,13 @@
+>  #define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
+>  #define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
+>  #define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
+> +#define TIM_DIER_UDE	BIT(8)  /* Update DMA request Enable */
+> +#define TIM_DIER_CC1DE	BIT(9)  /* CC1 DMA request Enable  */
+> +#define TIM_DIER_CC2DE	BIT(10) /* CC2 DMA request Enable  */
+> +#define TIM_DIER_CC3DE	BIT(11) /* CC3 DMA request Enable  */
+> +#define TIM_DIER_CC4DE	BIT(12) /* CC4 DMA request Enable  */
+> +#define TIM_DIER_COMDE	BIT(13) /* COM DMA request Enable  */
+> +#define TIM_DIER_TDE	BIT(14) /* Trigger DMA request Enable */
+>  #define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
+>  #define TIM_EGR_UG	BIT(0)	/* Update Generation       */
+>  #define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
+> @@ -58,6 +67,8 @@
+>  #define TIM_BDTR_BK2F	(BIT(20) | BIT(21) | BIT(22) | BIT(23))
+>  #define TIM_BDTR_BK2E	BIT(24) /* Break 2 input enable	   */
+>  #define TIM_BDTR_BK2P	BIT(25) /* Break 2 input polarity  */
+> +#define TIM_DCR_DBA	GENMASK(4, 0)	/* DMA base addr */
+> +#define TIM_DCR_DBL	GENMASK(12, 8)	/* DMA burst len */
+>  
+>  #define MAX_TIM_PSC		0xFFFF
+>  #define TIM_CR2_MMS_SHIFT	4
+> @@ -67,9 +78,25 @@
+>  #define TIM_BDTR_BKF_SHIFT	16
+>  #define TIM_BDTR_BK2F_SHIFT	20
+>  
+> +enum stm32_timers_dmas {
+> +	STM32_TIMERS_DMA_CH1,
+> +	STM32_TIMERS_DMA_CH2,
+> +	STM32_TIMERS_DMA_CH3,
+> +	STM32_TIMERS_DMA_CH4,
+> +	STM32_TIMERS_DMA_UP,
+> +	STM32_TIMERS_DMA_TRIG,
+> +	STM32_TIMERS_DMA_COM,
+> +	STM32_TIMERS_MAX_DMAS,
+> +};
+> +
+>  struct stm32_timers {
+>  	struct clk *clk;
+>  	struct regmap *regmap;
+>  	u32 max_arr;
+>  };
+> +
+> +int stm32_timers_dma_burst_read(struct stm32_timers *ddata, u32 *buf,
+> +				enum stm32_timers_dmas id, u32 reg,
+> +				unsigned int num_reg, unsigned int bursts,
+> +				unsigned long tmo_ms);
+>  #endif
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
