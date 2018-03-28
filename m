@@ -1,65 +1,86 @@
 From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 5/6] dt-bindings: phy-qcom-usb2: Update bindings for
- sdm845
-Date: Wed, 28 Mar 2018 12:57:51 +0530
-Message-ID: <bd13a81d-9f8a-fa3d-11cc-561105d39257@codeaurora.org>
+Subject: Re: [PATCH v3 6/6] phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
+Date: Wed, 28 Mar 2018 13:04:17 +0530
+Message-ID: <e49425b6-e7f9-5c50-b1e7-98e22dcb401e@codeaurora.org>
 References: <1521785487-29866-1-git-send-email-mgautam@codeaurora.org>
- <1521785487-29866-6-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=U03Hijg5NPiY5=5JQJpobJnUNAkf361OOdNRLVc5joWQ@mail.gmail.com>
+ <1521785487-29866-7-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=WjQk420k8CxeXHuxHMPHd6ZEJ+zkR2iT_Fpw8conD+pg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=U03Hijg5NPiY5=5JQJpobJnUNAkf361OOdNRLVc5joWQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WjQk420k8CxeXHuxHMPHd6ZEJ+zkR2iT_Fpw8conD+pg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
 
-On 3/28/2018 3:27 AM, Doug Anderson wrote:
+On 3/28/2018 4:22 AM, Doug Anderson wrote:
 > Hi,
 >
 > On Thu, Mar 22, 2018 at 11:11 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->> Update compatible strings for USB2 PHYs on sdm845.
->> There are two QUSB2 PHYs present on sdm845. Few PHY registers
->> programming is different for these PHYs related to electrical
->> parameters, otherwise both are same.
->>
->> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> index 42c9742..b99a57f 100644
->> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> @@ -6,7 +6,9 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->>  Required properties:
->>   - compatible: compatible list, contains
->>                "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
->> -              "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
->> +              "qcom,qusb2-v2-phy" for QUSB2 V2 PHY,
->> +              "qcom,sdm845-qusb2-phy-1" for primary PHY on sdm845,
->> +              "qcom,sdm845-qusb2-phy-2" for secondary PHY on sdm845.
-> Similar question to the one I posed on
-> <https://patchwork.kernel.org/patch/10302761/> for the QMP PHY.  What
-> is "qcom,qusb2-v2-phy"?  Is it some ideal abstract version of the PHY?
->  Do we expect that anyone would actually use that compatible string?
+>> There are two QUSB2 PHYs present on sdm845. Update PHY
+>> registers programming for both the PHYs related to
+>> electrical parameters to improve eye diagram.
+> This tuning difference is truly associated with the SoC itself?  Are
+> you sure?  Are the two different PHYs in the SoC somehow using
+> different silicon processes?  ...or is one close to another IP block
+> that is noisy?  ...or something else to account for this difference?
 >
-> In this case in <https://patchwork.kernel.org/patch/10302755/> it
-> looks as if you're using the same settings as
-> "qcom,sdm845-qusb2-phy-2", so presumably "qcom,qusb2-v2-phy" should
-> just be deleted.
+> It seems more likely that this tuning difference is associated with
+> the board.  If you're _certain_ this is really due to internal SoC
+> differences you'll have to come up with some darn good evidence to
+> convince me...
+
+This difference must be due to board only.
+
 >
+> If the tuning is truly associated with the board then:
+>
+> 1. You should have a single device tree compatible string.  IMHO it
+> should contain the name of the SoC in it, so "qcom,sdm845-qusb2-phy".
+> It's generally OK to name something in Linux using the name of the
+> first thing that happened to support it in Linux (even if later
+> processors use the exact same component).  Leaving it as just
+> "qcom,qusb2-v2-phy" is OK with me too if that's what everyone wants.
+I will remove "qcom,qusb2-v2-phy" as I don't expect any users of that.
+>
+>
+> 2. You should figure out how to describe the needed board-to-board
+> tuning in device tree.
+>
+> The only two differences you have right now are:
+>
+> QUSB2PHY_IMP_CTRL1: 0 => 0x8
+> QUSB2PHY_PORT_TUNE1: 0x30 => 0x48
+>
+> I'm not sure I found all the correct documentation for the PHY (the
+> docs I have say that "TUNE1" bit 3 is "reserved") so I can't come up
+> with all of these for you.  But I think I found the difference
+> accounting for the upper nybble of TUNE1 changing from 0x3 to 0x4.
+> For this, I think you'd want a device tree property like:
+>
+> qcom,hstx_trim_mv
+>
+> ...and the values of that property would be the values from 800 to 950
+> in 8 steps, or [800, 821, 842, 864, 885, 907, 928, 950].
+>
+> You'd want to do similar things for the other differences.
+>
+> You don't need to encode every possible difference right now.  When
+> you come up with something that needs to be different you add a new
+> optional device tree property (defaulting to whatever the driver used
+> to do) to describe your new property.
 
-I will remove "qcom,qusb2-v2-phy".
+Sure. I will come up with separate device tree properties to specify
+board-to-board differences in PHY tuning.
 
 
+>
 > -Doug
 
 -- 
