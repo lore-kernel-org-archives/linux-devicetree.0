@@ -1,42 +1,23 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] devicetree: Remove dangling symlinks
-Date: Wed, 28 Mar 2018 08:04:34 -0500
-Message-ID: <CABGGiswL9Mw_viewE9v0OFrnvxOZyaYRyMW5GNEP_R0JEiWDhQ@mail.gmail.com>
-References: <20180328083213.by4sjrk3nx5s4rbk@fm.suse.cz>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V2 1/4] dt-bindings: timer: tpm: fix typo of clock name
+Date: Wed, 28 Mar 2018 08:21:51 -0500
+Message-ID: <CAL_JsqK4pmAzvJAFg5EfCdBiEywnaCy_gJ0-J7FwkPk9i8shBQ@mail.gmail.com>
+References: <1522207358-8388-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328083213.by4sjrk3nx5s4rbk@fm.suse.cz>
+In-Reply-To: <1522207358-8388-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Libor Pechacek <lpechacek@suse.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Olof Johansson <olof@lixom.net>, Heiko Stuebner <heiko@sntech.de>, trivial@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <Linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+Arnd
-
-On Wed, Mar 28, 2018 at 3:32 AM, Libor Pechacek <lpechacek@suse.com> wrote:
-> Support for CRIS and Meta was dropped.
+On Tue, Mar 27, 2018 at 10:22 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> The clock name should be ipg instead of igp.
 >
-> Signed-off-by: Libor Pechacek <lpechacek@suse.com>
-> Fixes: bb6fb6dfcc17 ("metag: Remove arch/metag/")
-> Fixes: c690eddc2f3b ("CRIS: Drop support for the CRIS port")
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: devicetree@vger.kernel.org
-> Cc: trivial@kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  scripts/dtc/include-prefixes/cris  | 1 -
->  scripts/dtc/include-prefixes/metag | 1 -
->  2 files changed, 2 deletions(-)
->  delete mode 120000 scripts/dtc/include-prefixes/cris
->  delete mode 120000 scripts/dtc/include-prefixes/metag
+>  Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm assuming Arnd will take this.
-
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
