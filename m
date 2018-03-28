@@ -1,43 +1,47 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v2 3/8] dt-bindings: mfd: stm32-timers: add
- support for dmas
-Date: Wed, 28 Mar 2018 12:16:22 +0100
-Message-ID: <20180328111622.r7f7e7duq7knvzfg@dell>
-References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
- <1518602679-3064-4-git-send-email-fabrice.gasnier@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH 0/8] Designware EP support and code clenan up
+Date: Wed, 28 Mar 2018 12:38:30 +0100
+Message-ID: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1518602679-3064-4-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
+The patch set was made against the Bjorn's next branch.
 
-> Add support for DMAs to STM32 timers. STM32 Timers can support up to 7
-> dma requests: up to 4 channels, update, compare and trigger.
-> DMAs may be used to transfer data from pwm capture for instance.
-> DMA support is made optional, PWM capture support is also an option.
-> This is much more wise system-wide to avoid shortage on DMA request
-> lines as there's significant amount of timer instances that can
-> request up to 7 channels.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> ---
->  .../devicetree/bindings/mfd/stm32-timers.txt         | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+Adds support Designware EP support.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Increases the maximum number of interrupts allowed for Designware IP
+controller.
+
+Does a code cleanup on Designware driver:
+ - Replaces magic numbers without a easy meaning by a well known define
+   that helps the human compreension.
+ - Replaces a division by 2 by a simple right shift rotation of 1 bit.
+ - Fixes all first letter characters on comments and debug messages to
+   upper case to maintain coherency.
+
+Gustavo Pimentel (8):
+  bindings: PCI: designware: Example update
+  PCI: dwc: designware: Add support for endpoint mode
+  bindings: PCI: designware: Add support for the EP in designware driver
+  misc: pci_endpoint_test: Add designware EP entry
+  PCI: dwc: designware: Define maximum number of vectors
+  PCI: dwc: Replace lower into upper case characters
+  PCI: dwc: Small computation improvement
+  PCI: dwc: Replace magic number by defines
+
+ .../devicetree/bindings/pci/designware-pcie.txt    |  25 +++-
+ drivers/misc/pci_endpoint_test.c                   |   1 +
+ drivers/pci/dwc/Kconfig                            |  45 ++++--
+ drivers/pci/dwc/pcie-designware-ep.c               |  16 +-
+ drivers/pci/dwc/pcie-designware-host.c             |  77 +++++-----
+ drivers/pci/dwc/pcie-designware-plat.c             | 163 +++++++++++++++++++--
+ drivers/pci/dwc/pcie-designware.c                  |  22 +--
+ drivers/pci/dwc/pcie-designware.h                  |   1 +
+ drivers/pci/endpoint/functions/pci-epf-test.c      |   5 +
+ 9 files changed, 276 insertions(+), 79 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
