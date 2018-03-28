@@ -1,44 +1,34 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 2/3] ARM64: dts: meson-axg: add an 32K alt aoclk
-Date: Wed, 28 Mar 2018 11:01:29 +0800
-Message-ID: <20180328030130.240336-3-yixun.lan@amlogic.com>
-References: <20180328030130.240336-1-yixun.lan@amlogic.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/4] dt-bindings: timer: tpm: fix typo of clock name
+Date: Wed, 28 Mar 2018 11:22:35 +0800
+Message-ID: <1522207358-8388-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328030130.240336-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ao_clk81 in AO domain have two clock source,
-one from a 32K alt crystal we name it as ao_alt_clk,
-another is the clk81 signal from EE domain.
+The clock name should be ipg instead of igp.
 
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index b0eff7d7f771..40ca49fb94a6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -108,6 +108,13 @@
- 		#clock-cells = <0>;
- 	};
+diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+index b4aa7dd..f82087b 100644
+--- a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
++++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+@@ -15,7 +15,7 @@ Required properties:
+ - interrupts :	Should be the clock event device interrupt.
+ - clocks :	The clocks provided by the SoC to drive the timer, must contain
+ 		an entry for each entry in clock-names.
+-- clock-names : Must include the following entries: "igp" and "per".
++- clock-names : Must include the following entries: "ipg" and "per".
  
-+	ao_alt_xtal: ao_alt_xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32000000>;
-+		clock-output-names = "ao_alt_xtal";
-+		#clock-cells = <0>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
+ Example:
+ tpm5: tpm@40260000 {
 -- 
-2.15.1
+2.7.4
