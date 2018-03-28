@@ -1,71 +1,72 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 2/2][v7] driver: mtd: update struct map_info's swap as per map
- requirement
-Date: Wed, 28 Mar 2018 11:15:52 +0530
-Message-ID: <20180328054552.2884-1-prabhakar.kushwaha@nxp.com>
+From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 5/5] iommu/arm-smmu: Add support for qcom,smmu-v2
+	variant
+Date: Wed, 28 Mar 2018 14:11:07 +0800
+Message-ID: <d97872fe-5e8e-cc27-e385-64cea8ea2458@huawei.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-6-vivek.gautam@codeaurora.org>
+	<61d30fff-1bf8-d2c1-bbe9-f93de836ae77@huawei.com>
+	<7d5af071-ef98-8461-3ce9-e84fc0b3956a@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, robh@kernel.org, boris.brezillon@free-electrons.com, poonam.aggrwal@nxp.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, computersforpeace@gmail.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <7d5af071-ef98-8461-3ce9-e84fc0b3956a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Gaojianbo <gaojianbo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
-Maps device can be Big endian or little endian.
+Hi Vivek,
 
-Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
-CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
+On 2018/3/28 12:37, Vivek Gautam wrote:
+> Hi Yisheng
+> 
+> 
+> On 3/28/2018 6:54 AM, Yisheng Xie wrote:
+>> Hi Vivek,
+>>
+>> On 2018/3/13 16:55, Vivek Gautam wrote:
+>>> +- power-domains:  Specifiers for power domains required to be powered on for
+>>> +                  the SMMU to operate, as per generic power domain bindings.
+>>> +
+>> In this patchset, power-domains is not used right? And you just do the clock gating,
+>> but not power gating, right?
+> 
+> We are handling the power-domains too. Please see the example in this binding doc.
 
-Now update struct map_info's swap field based on device characteristics
-defined in device tree.
+I see, but I do not find the point in code of these patchset, do you mean PMIC(e.g mmcc)
+will gate the power domain of SMMU(e.g. MDSS_GDSC of mmcc) when PMIC suspend?
 
-Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
----
-Changes for v2: Incorporated review comments from Boris Brezillon
-http://patchwork.ozlabs.org/patch/758381/
-Changes for v3: None
-Changes for v4: Updated code as per new defined binding of physmap.txt
-Changes for v5: Avoid map.swap set in case of endiannes not defined in dts file
-Changes for v6: Sending as it is
-Changes for v7: Sending as it is
+> 
+>>
+>> Another question is if smmu do power gating, it will reset some of its registers, so
+>> it need save at suspend and restore at resume, right?
+> 
+> Qualcomm implementation of the arm-smmu has the retenetion enabled. So the smmu doesn't
+> loose state when power is pulled out of it.
+> And now we are just selectively enabling the runtime pm. So only the platforms that can really
+> support runtime pm can enable it.
 
- drivers/mtd/maps/physmap_of_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Get it, thanks for your explain.
 
-diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-index b1bd4faecfb2..527b1682381f 100644
---- a/drivers/mtd/maps/physmap_of_core.c
-+++ b/drivers/mtd/maps/physmap_of_core.c
-@@ -20,6 +20,7 @@
- #include <linux/mtd/map.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/concat.h>
-+#include <linux/mtd/cfi_endian.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
-@@ -233,6 +234,11 @@ static int of_flash_probe(struct platform_device *dev)
- 		info->list[i].map.bankwidth = be32_to_cpup(width);
- 		info->list[i].map.device_node = dp;
- 
-+		if (of_property_read_bool(dp, "big-endian"))
-+			info->list[i].map.swap = CFI_BIG_ENDIAN;
-+		else if (of_property_read_bool(dp, "little-endian"))
-+			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-+
- 		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
- 		if (err)
- 			goto err_out;
--- 
-2.14.1
+Thanks
+Yisheng
+> 
+> Thanks
+> Vivek
+>>
+>> Thanks
+>> Yisheng
+>>
+> 
+> 
+> 
