@@ -1,38 +1,48 @@
 From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v4 0/2] of_net: Implement of_get_nvmem_mac_address helper
-Date: Thu, 29 Mar 2018 07:29:47 +0200
-Message-ID: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
-References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl> <20180323151101.GB24361@lunn.ch> <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl> <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 2/2] net: macb: Try to retrieve MAC addess from nvmem provider
+Date: Thu, 29 Mar 2018 07:29:49 +0200
+Message-ID: <1522301389-11034-3-git-send-email-mike.looijmans@topic.nl>
+References: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
+Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-Posted this as a small set now, with an (optional) second patch that shows
-how the changes work and what I've used to test the code on a Topic Miami board.
-I've taken the liberty to add appropriate "Acked" and "Review" tags.
+Call of_get_nvmem_mac_address() to fetch the MAC address from an nvmem
+cell, if one is provided in the device tree. This allows the address to
+be stored in an I2C EEPROM device for example.
 
-v4: Replaced "6" with ETH_ALEN
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-v3: Add patch that implements mac in nvmem for the Cadence MACB controller
-    Remove the integrated of_get_mac_address call
-
-v2: Use of_nvmem_cell_get to avoid needing the assiciated device
-    Use void* instead of char*
-    Add devicetree binding doc
-
-
-Mike Looijmans (2):
-  of_net: Implement of_get_nvmem_mac_address helper
-  net: macb: Try to retrieve MAC addess from nvmem provider
-
- Documentation/devicetree/bindings/net/ethernet.txt |  2 ++
- drivers/net/ethernet/cadence/macb_main.c           | 12 +++++--
- drivers/of/of_net.c                                | 40 ++++++++++++++++++++++
- include/linux/of_net.h                             |  6 ++++
- 4 files changed, 57 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index e84afcf..eabe14f 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3950,10 +3950,16 @@ static int macb_probe(struct platform_device *pdev)
+ 		dev->max_mtu = ETH_DATA_LEN;
+ 
+ 	mac = of_get_mac_address(np);
+-	if (mac)
++	if (mac) {
+ 		ether_addr_copy(bp->dev->dev_addr, mac);
+-	else
+-		macb_get_hwaddr(bp);
++	} else {
++		err = of_get_nvmem_mac_address(np, bp->dev->dev_addr);
++		if (err) {
++			if (err == -EPROBE_DEFER)
++				goto err_out_free_netdev;
++			macb_get_hwaddr(bp);
++		}
++	}
+ 
+ 	err = of_get_phy_mode(np);
+ 	if (err < 0) {
 -- 
 1.9.1
