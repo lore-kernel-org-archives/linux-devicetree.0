@@ -1,152 +1,96 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RESEND PATCH v2 4/8] mfd: stm32-timers: add support for dmas
-Date: Thu, 29 Mar 2018 17:29:45 +0200
-Message-ID: <805c6c6c-4984-1436-56a7-a44d23a06429@st.com>
-References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
- <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
- <20180328152251.xeh72dpeflzohn4k@dell>
- <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
- <20180329125912.jgasmw75qvtlszgx@dell>
- <12d53b2e-eec4-a498-1e1f-c217161c5086@st.com>
- <20180329143129.xdvw6gujghkwbjtm@dell>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Thu, 29 Mar 2018 17:46:00 +0200
+Message-ID: <20180329154600.qhels5fqzzg364gj@earth.universe>
+References: <20180323103006.alymgb3ywftb4gek@earth.universe>
+ <20180326141638.GB1450@amd>
+ <20180326155828.ttnduivadob4iqmd@earth.universe>
+ <20180327121441.GH29239@sirena.org.uk>
+ <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
+ <20180328022910.GM29239@sirena.org.uk>
+ <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com>
+ <20180329133613.khldv72w3zj63vsk@earth.universe>
+ <20180329135904.GN5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180329143129.xdvw6gujghkwbjtm@dell>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hmjo6ahyvmg6zlgq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180329135904.GN5700@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2018 04:31 PM, Lee Jones wrote:
-> On Thu, 29 Mar 2018, Fabrice Gasnier wrote:
-> 
->> On 03/29/2018 02:59 PM, Lee Jones wrote:
->>> On Wed, 28 Mar 2018, Fabrice Gasnier wrote:
->>>
->>>> On 03/28/2018 05:22 PM, Lee Jones wrote:
->>>>> On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
->>>>>
->>>>>> STM32 Timers can support up to 7 DMA requests:
->>>>>> - 4 channels, update, compare and trigger.
->>>>>> Optionally request part, or all DMAs from stm32-timers MFD core.
->>>>>>
->>>>>> Also add routine to implement burst reads using DMA from timer registers.
->>>>>> This is exported. So, it can be used by child drivers, PWM capture
->>>>>> for instance (but not limited to).
->>>>>>
->>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>>> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->>>>>> ---
->>>>>> Changes in v2:
->>>>>> - Abstract DMA handling from child driver: move it to MFD core
->>>>>> - Add comments on optional dma support
->>>>>> ---
->>>>>>  drivers/mfd/stm32-timers.c       | 215 ++++++++++++++++++++++++++++++++++++++-
->>>>>>  include/linux/mfd/stm32-timers.h |  27 +++++
->>>>>>  2 files changed, 238 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
->>>>>> index a6675a4..2cdad2c 100644
->>>>>> --- a/drivers/mfd/stm32-timers.c
->>>>>> +++ b/drivers/mfd/stm32-timers.c
->>>
->>> [...]
->>>
->>>>>> +	struct dma_chan *dmas[STM32_TIMERS_MAX_DMAS];
->>>>>> +	struct stm32_timers ddata;
->>>>>
->>>>> This looks odd to me.  Why can't you expand the current ddata
->>>>> structure?  Wouldn't it be better to create a stm32_timers_dma
->>>>> structure to place all this information in (except *dev, that should
->>>>> live in the ddata struct), then place a reference in the existing
->>>>> stm32_timers struct?
->>>>
->>>> Maybe I miss-understand you here, from what we discussed in V1:
->>>> https://lkml.org/lkml/2018/1/23/574
->>>>> ... "passing in the physical address of the parent MFD into
->>>>> a child device doesn't quite sit right with me"
->>>> I introduced this private struct in MFD parent, and completely hide it
->>>> from the child.
->>>>
->>>> So, do you suggest to add struct definition here ? But make it part of
->>>> struct stm32_timers *ddata?
->>>>
->>>> And only put declaration in include/linux/mfd/stm32-timers.h:
->>>> + struct stm32_timers_dma;
->>>>
->>>> struct stm32_timers {
->>>> 	struct clk *clk;
->>>> 	struct regmap *regmap;
->>>> 	u32 max_arr;
->>>> +	struct stm32_timers_dma;
->>>> };
->>>
->>> Yes, that's the basic idea.
->>>
->>>> I can probably spare the *dev then... use dev->parent in child driver.
->>>
->>> What would you use dev->parent for?
->>
->> Hi Lee,
->>
->> This is to follow your sugestion to use *dev instead of *ddata when
->> calling stm32_timers_dma_burst_read(), the idea is to use it on child side:
->> stm32_timers_dma_burst_read(dev->parent,...) from pwm driver.
->> Then there is no need to keep *dev inside ddata struct.
-> 
-> I'm wondering if it would be neater to us the child's *dev, then do
-> the ->parent deference in the parent MFD (with a comment to say what
-> you're doing of course).
-> 
 
-There's already dev.parent dereference in child drivers, for same
-purpose: dev_get_drvdata(pdev->dev.parent). So, I guess same can be done
-here ?
+--hmjo6ahyvmg6zlgq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for you review,
-I'll update all this and send a v3.
+Hi,
 
-Best regards,
-Fabrice
+On Thu, Mar 29, 2018 at 06:59:04AM -0700, Tony Lindgren wrote:
+> > I think cpcap is always the clock and frame master, but I think
+> > mdm6600 is the remote side and OMAP is not involved at all.
+>=20
+> OK. So could it be just an alsamixer on/off toggle then for
+> "Modem" or something similar?
 
->>> [...]
->>>
->>>>>> +static int stm32_timers_remove(struct platform_device *pdev)
->>>>>> +{
->>>>>> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
->>>>>> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
->>>>>> +
->>>>>> +	of_platform_depopulate(&pdev->dev);
->>>>>
->>>>> Why can't you continue using devm_*?
->>>>
->>>> I can use devm_of_platform_depopulate() here if you prefer, and keep
->>>> devm_of_platform_populate() in probe.
->>>
->>> The point of devm_* is that you don't have to call depopulate.
->>>
->>> It happens automatically once this driver is unbound.
->>
->> Ok, so to clarify, keeping devm_ here may be a bit racy:
->> of_platform_depopulate will happen after dma has been released (there is
->> no devm_ variant to release dma).
->> Only way to prevent race condition here, is to enforce
->> of_platform_depopulate() is called before dma release (e.g. in reverse
->> order compared to probe).
->>
->> Do you wish I add a comment about it ?
-> 
-> Best thing to do then is keep the non-devm variant and provide a
-> comment as to why is it not possible to use devm_*.
-> 
+I think so. We might want to have an "Mode" enum instead, though.
+That can be extended, once we unlock the other modes (bluetooth,
+bluetooth call).
+
+> > > Then using the n_gsm ts 27.010 uart mux, I dial:
+> > >=20
+> > > ./ngsm-rw 1 "AT+CFUN=3D1"		# connect to network
+> > > U0001+CFUN:OK
+> > > ./ngsm-rw 2 "AT+CMUT=3D0"		# unmute speaker over ch2, do this over qm=
+i?
+> > > U0001+CMUT:OK
+> > > ./ngsm-rw 1 "ATD#123"		# dial number
+> > > U0001D:OK
+>=20
+> There's a typo above, it should be just ATD123 where 123 is the
+> number.
+>=20
+> I was just doing few test calls to robots. Payback time for all
+> the robocalls, you know! :)
+>
+> > > And I do hear a voice talking over the speakerphone :) Sorry have not=
+ tested the
+> > > mic yet..
+>=20
+> And calling a person I can hear the other end but the mic is
+> not working. So maybe I need to tweak the alsamixer settings
+> too for mic?
+
+Your override kills most settings from alsamixer. You can try to
+just override CPCAP_REG_VAUDIOC, CPCAP_REG_CC and CPCAP_REG_CDI
+and setup everything else with alsamixer.
+
+-- Sebastian
+
+--hmjo6ahyvmg6zlgq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlq9CjUACgkQ2O7X88g7
++przkQ//X/5hsQChHBeVIjqlDhdUuMlOScdWIVtCkqvjvmIJ6BOuOwH1/eTaZo3S
+vPetWimm69AYWiGZVe2RH6eIQol1SaGGTT0kUrOa3drtybAyp2Ck2YCukumgk8NX
+ZNaPcg8X7eCTpHwd92bTocoThtnS7hBbLCQkpZWMYtmVRn8OibVaB7C+6wSr+tlu
+bkrtLNDa5Zy7y8lKv98Kb9+7UrDPzRXN2q8JGb3NiH2S0by6+nB6uAQvApO7XuD+
+VnhlsvnVR6BFakVdqiaM1En9omPSGdpxGhluqoroWaftgHMc2jjopahk6Yjj6UtQ
+iLkkZ5yWRVcogTNYTFKCYhfOyQiJVycYL7yf7TIiLwxBgJJi/2nuGtUWcsMQ/GAW
+lhGKcqTuoK7SBW+mM0ghzpa8QzP50KVBlwQBAkKkVzEXmL/6MP3ipUCXHnssPlt/
+57n7vgcJTG+cxM03rQsIO1ut6+Jo3ytTFuRkhBLnEOXSSwPwalxLQYDudSqaty6h
+S5XnJUfbLt4DC9e9n38lOpuLFmI5U7XtXn8nghteUxJNytKDfyavJeA0qUb0UqNN
+R3Hdy71YL2NYUWh5KfjIRosTCn66KuOnhMFbyRdTL7tMlRiix0GreDDkJQ4CIr1l
+J0XAghjRrSqzcHccvOGeQiKlBtpw6XONEX/Ka0CWrB6RqeHQ37g=
+=2Fvm
+-----END PGP SIGNATURE-----
+
+--hmjo6ahyvmg6zlgq--
