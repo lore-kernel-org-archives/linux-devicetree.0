@@ -1,71 +1,184 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: usb: rt1711h device tree binding document
-Date: Wed, 28 Mar 2018 22:09:03 -0500
-Message-ID: <CAL_JsqJvitoh-+T0JQN=-GkZzTkT7J1_NcHTSx_x1_q48sTcHg@mail.gmail.com>
-References: <1521537304-7531-1-git-send-email-leechu729@gmail.com>
- <1521537304-7531-3-git-send-email-leechu729@gmail.com> <20180326222336.jqix6k4pyqy4bg36@rob-hp-laptop>
- <CAFaeLdQXQnE9XpAsgOPg=D_wAqEKe4dQhtKYrS1sDT5wgqSdVw@mail.gmail.com>
+From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
+Date: Thu, 29 Mar 2018 14:10:40 +1100
+Message-ID: <CAOSf1CH6qUrj4SuTsYzYJCjaOecPzrwYkwCe6fL90Ot6Yto0GQ@mail.gmail.com>
+References: <20180323081209.31387-1-oohall@gmail.com>
+ <20180323081209.31387-6-oohall@gmail.com>
+ <20180326222448.l7ukrslvccvrjnjf@rob-hp-laptop>
+ <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w@mail.gmail.com>
+ <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFaeLdQXQnE9XpAsgOPg=D_wAqEKe4dQhtKYrS1sDT5wgqSdVw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?5p2O5pu45biG?= <leechu729@gmail.com>
-Cc: Greg KH <greg@kroah.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>, =?UTF-8?B?Y3lfaHVhbmco6buD5ZWf5Y6fKQ==?= <cy_huang@richtek.com>, Jun Li <jun.li@nxp.com>, Mats Karrman <mats.dev.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 9:30 AM, 李書帆 <leechu729@gmail.com> wrote:
-> Hi Rob,
->
-> 2018-03-27 6:23 GMT+08:00 Rob Herring <robh@kernel.org>:
->> On Tue, Mar 20, 2018 at 05:15:04PM +0800, ShuFan Lee wrote:
->>> From: ShuFan Lee <shufan_lee@richtek.com>
+On Thu, Mar 29, 2018 at 4:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 27, 2018 at 9:53 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, Mar 27, 2018 at 9:24 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Fri, Mar 23, 2018 at 07:12:09PM +1100, Oliver O'Halloran wrote:
+>>>> Add device-tree binding documentation for the nvdimm region driver.
+>>>>
+>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
+>>>>  1 file changed, 45 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>>> new file mode 100644
+>>>> index 000000000000..02091117ff16
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
+>>>> @@ -0,0 +1,45 @@
+>>>> +Device-tree bindings for NVDIMM memory regions
+>>>> +-----------------------------------------------------
+>>>> +
+>>>> +Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
 >>>
->>> Add device tree binding document for Richtek RT1711H Type-C chip driver
+>>> Are DIMMs always going to be the only form factor for NV memory?
 >>>
->>> Signed-off-by: ShuFan Lee <shufan_lee@richtek.com>
->>> ---
->>>  .../devicetree/bindings/usb/richtek,rt1711h.txt    | 30 ++++++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
->>>
->>>  changelogs between v2 & v3
->>>  - add dt-bindings for rt1711h typec driver
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
->>> new file mode 100644
->>> index 000000000000..7da4dac78ea7
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
->>> @@ -0,0 +1,30 @@
->>> +Richtek RT1711H TypeC PD Controller.
->>> +
->>> +Required properties:
->>> + - compatible : Must be "richtek,rt1711h".
->>> + - reg : Must be 0x4e, it's slave address of RT1711H.
->>> +
->>> +Recommended properties :
->>> + - interrupt-parent : the phandle for the interrupt controller that
->>> +   provides interrupts for this device.
->>> + - interrupts : <a b> where a is the interrupt number and b represents an
->>> +   encoding of the sense and level information for the interrupt.
->>> +
->>> +Optional properties :
->>> + - rt,intr-gpios : IRQ GPIO pin that's connected to RT1711H interrupt.
->>> +   if interrupt-parent & interrupts are not defined, use this property instead.
+>>> And if you have multiple DIMMs, does each DT node correspond to a DIMM?
 >>
->> Drop this. You should simply always have interrupts property.
-> Does this also imply that we could always assume client->irq is ready
-> for request?
+>> A nvdimm-region might correspond to a single NVDIMM, a set of
+>> interleaved NVDIMMs, or it might just be a chunk of normal memory that
+>> you want treated as a NVDIMM for some reason. The last case is useful
+>> for provisioning install media on servers since it allows you do
+>> download a DVD image, turn it into an nvdimm-region, and kexec into
+>> the installer which can use it as a root disk. That may seem a little
+>> esoteric, but it's handy and we're using a full linux environment for
+>> our boot loader so it's easy to make use of.
+>
+> I'm really just asking if we should drop the "dimm" name because it is
+> not always a DIMM. Maybe pmem instead? I don't know, naming is
+> hard(TM).
 
-No idea.
+pmem is probably a better name. I'll fix that up.
 
-> Therefore, there's no need to check client->irq and get gpio through
-> rt,intr-gpios.
+>>> If not, then what if we want/need to provide power control to a DIMM?
+>>
+>> That would require a DIMM (and probably memory controller) specific
+>> driver. I've deliberately left out how regions are mapped back to
+>> DIMMs from the binding since it's not really clear to me how that
+>> should work. A phandle array pointing to each DIMM device (which could
+>> be anything) would do the trick, but I've found that a bit awkward to
+>> plumb into the model that libnvdimm expects.
+>>
+>>>> +that retains its contents across power cycles. In more practical terms, they
+>>>> +are kind of storage device where the contents can be accessed by the CPU
+>>>> +directly, rather than indirectly via a storage controller or similar. The an
+>>>> +nvdimm-region specifies a physical address range that is hosted on an NVDIMM
+>>>> +device.
+>>>> +
+>>>> +Bindings for the region nodes:
+>>>> +-----------------------------
+>>>> +
+>>>> +Required properties:
+>>>> +     - compatible = "nvdimm-region"
+>>>> +
+>>>> +     - reg = <base, size>;
+>>>> +             The system physical address range of this nvdimm region.
+>>>> +
+>>>> +Optional properties:
+>>>> +     - Any relevant NUMA assocativity properties for the target platform.
+>>>> +     - A "volatile" property indicating that this region is actually in
+>>>> +       normal DRAM and does not require cache flushes after each write.
+>>>> +
+>>>> +A complete example:
+>>>> +--------------------
+>>>> +
+>>>> +/ {
+>>>> +     #size-cells = <2>;
+>>>> +     #address-cells = <2>;
+>>>> +
+>>>> +     platform {
+>>>
+>>> Perhaps we need a more well defined node here. Like we have 'memory' for
+>>> memory nodes.
+>>
+>> I think treating it as a platform device is fine. Memory nodes are
+>
+> Platform device is a Linux term...
+>
+>> special since the OS needs to know where it can allocate early in boot
+>> and I don't see non-volatile memory as being similarly significant.
+>> Fundamentally an NVDIMM is just a memory mapped storage device so we
+>> should be able to defer looking at them until later in boot.
+>
+> It's not clear if 'platform' is just an example or random name or what
+> the node is required to be called. In the latter case, we should be
+> much more specific because 'platform' could be anything. In the former
+> case, then we have no way to find or validate the node because the
+> name could be anything and there's no compatible property either.
 
-Looked to me like the gpio is just converted to an irq and used for
-nothing else in the driver. If that's the case, then there's no point
-in it being a gpio.
+Sorry, the platform node is just there as an example. I'll remove it.
 
-Rob
+> "region" is pretty generic too.
+
+It is, but I didn't see a compelling reason to call it something else.
+
+>> That said you might have problems with XIP kernels and what not. I
+>> think that problem is better solved through other means though.
+>>
+>>>> +             region@5000 {
+>>>> +                     compatible = "nvdimm-region;
+>>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+>>>> +
+>>>> +             };
+>>>> +
+>>>> +             region@6000 {
+>>>> +                     compatible = "nvdimm-region";
+>>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+>
+> Thinking about this some more, the 2 levels of nodes is pointless.
+> Just follow memory nodes structure.
+>
+> nv-memory@100000000 {
+>   compatible = "nvdimm-region";
+>   reg = <0x00000001 0x00000000 0x00000000 0x40000000>;
+> };
+>
+> nv-memory@200000000 {
+>   compatible = "nvdimm-region";
+>   reg = <0x00000002 0x00000000 0x00000000 0x40000000>;
+> };
+>
+> or:
+>
+> nv-memory@100000000 {
+>   compatible = "nvdimm-region";
+>   reg = <0x00000001 0x00000000 0x00000000 0x40000000>
+>     <0x00000002 0x00000000 0x00000000 0x40000000>;
+> };
+>
+> Both forms should be allowed.
+
+In the example you need two separate nodes since one has the
+"volatile" property to indicate it's backed by normal memory while the
+other doesn't. That detail is important since the OS can skip doing
+cache flushes when writing to a region that it knows is volatile.
+
+Anyway, the usefulness of having multiple ranges in the reg is a bit
+dubious since you should never see dis-contiguous ranges of memory
+backed by the same devices. Keep in mind that this binding here is
+deliberately skeletal and leaves out the parts required to map the
+region to the backing devices, once that is added there's not going to
+be a whole lot of room for coalescing nodes. That said, I'll add
+support for it anyway since it might be nice to have for hand-written
+DTs (ours are mostly generated by FW).
+
+Thanks,
+Oliver
