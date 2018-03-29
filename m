@@ -1,86 +1,60 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: RE: [PATCH v3 4/8] reset: Renesas RZ/N1 reboot driver
-Date: Thu, 29 Mar 2018 11:12:45 +0000
-Message-ID: <OSBPR01MB205430EB7EE4F338829135EDD2A20@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
- <1522309629-10152-5-git-send-email-michel.pollet@bp.renesas.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
+ i878
+Date: Thu, 29 Mar 2018 15:11:17 +0300
+Message-ID: <9d176f73-0001-502c-7fd0-afefaa214a01@ti.com>
+References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
+ <20180322134206.22857-3-peter.ujfalusi@ti.com>
+ <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522309629-10152-5-git-send-email-michel.pollet@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 29 March 2018 08:47, I messed up:
-[snip]
->
-> The Renesas RZ/N1 Family (Part #R9A06G0xx) needs a small driver to reboot
-> the Cortex-A7 cores. This driver is a sub driver of the sysctrl MFD.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  drivers/power/reset/Kconfig       |   7 +++
->  drivers/power/reset/Makefile      |   1 +
->  drivers/power/reset/rzn1-reboot.c | 105
-[snip]
-> +
-> +parent =3D pdev->dev.parent;
-> +if (!parent || !parent->of_node)
-
-Not sure what went on when I had all the patches loaded in the editor befor=
-e sending, but I've deleted a brace here. Will be fixed in v4... :/
-
-Michel
-
-
-> +dev_err(&pdev->dev, "couldn't find sysctrl node\n");
-> +return -ENODEV;
-> +}
-> +sysctrl =3D syscon_node_to_regmap(parent->of_node);
-> +if (IS_ERR(sysctrl)) {
-> +dev_err(&pdev->dev, "couldn't find find regmap\n");
-> +return PTR_ERR(sysctrl);
-> +}
-> +err =3D register_restart_handler(&rzn1_reboot_nb);
-> +if (err) {
-> +dev_err(&pdev->dev, "register restart handler
-> failed(err=3D%d)\n",
-> +err);
-> +}
-> +
-> +return err;
-> +}
-> +
-> +static const struct of_device_id rzn1_reboot_of_match[] =3D {
-> +{ .compatible =3D "renesas,rzn1-reboot" },
-> +{}
-> +};
-> +MODULE_DEVICE_TABLE(of, rzn1_reboot_of_match);
-> +
-> +static struct platform_driver rzn1_reboot_driver =3D {
-> +.probe =3D rzn1_reboot_probe,
-> +.driver =3D {
-> +.name =3D "rzn1-reboot",
-> +.of_match_table =3D rzn1_reboot_of_match,
-> +},
-> +};
-> +module_platform_driver(rzn1_reboot_driver);
-> +
-> +MODULE_DESCRIPTION("RZ/N1 reboot driver");
-> MODULE_AUTHOR("Michel Pollet
-> +<michel.pollet@bp.renesas.com>, <buserror@gmail.com>");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+CgpPbiAyMDE4LTAzLTI5IDEzOjE4LCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiBPbiAyMi8wMy8x
+OCAxNTo0MiwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4+IEZyb206IFRvbWkgVmFsa2VpbmVuIDx0
+b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4+Cj4+IEVycmF0YSBpODc4IHNheXMgdGhhdCBNUFUgc2hv
+dWxkIG5vdCBiZSB1c2VkIHRvIGFjY2VzcyBSQU0gYW5kIERNTSBhdAo+PiB0aGUgc2FtZSB0aW1l
+LiBBcyBpdCdzIG5vdCBwb3NzaWJsZSB0byBwcmV2ZW50IE1QVSBhY2Nlc3NpbmcgUkFNLCB3ZQo+
+PiBuZWVkIHRvIGFjY2VzcyBETU0gdmlhIGEgcHJveHkuCj4+Cj4+IFRoaXMgcGF0Y2ggY2hhbmdl
+cyBETU0gZHJpdmVyIHRvIGFjY2VzcyBETU0gcmVnaXN0ZXJzIHZpYSBzRE1BLiBJbnN0ZWFkCj4+
+IG9mIGRvaW5nIGEgbm9ybWFsIHJlYWRsL3dyaXRlbCBjYWxsIHRvIHJlYWQvd3JpdGUgYSByZWdp
+c3Rlciwgd2UgdXNlCj4+IHNETUEgdG8gY29weSA0IGJ5dGVzIGZyb20vdG8gdGhlIERNTSByZWdp
+c3RlcnMuCj4+Cj4+IFRoaXMgcGF0Y2ggcHJvdmlkZXMgb25seSBhIHBhcnRpYWwgd29ya2Fyb3Vu
+ZCBmb3IgaTg3OCwgYXMgbm90IG9ubHkgRE1NCj4+IHJlZ2lzdGVyIHJlYWRzL3dyaXRlcyBhcmUg
+YWZmZWN0ZWQsIGJ1dCBhbHNvIGFjY2Vzc2VzIHRvIHRoZSBETU0gbWFwcGVkCj4+IGJ1ZmZlcnMg
+KGZyYW1lYnVmZmVycywgdXN1YWxseSkuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2Vp
+bmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL29t
+YXBkcm0vb21hcF9kbW1fcHJpdi5oICB8ICAgOCArKwo+PiAgZHJpdmVycy9ncHUvZHJtL29tYXBk
+cm0vb21hcF9kbW1fdGlsZXIuYyB8IDE1MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+Cj4+ICAyIGZpbGVzIGNoYW5nZWQsIDE1OSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
+Pgo+IAo+IAo+PiArCWRtbS0+d2FfZG1hX2NoYW4gPSBkbWFfcmVxdWVzdF9jaGFubmVsKG1hc2ss
+IE5VTEwsIE5VTEwpOwo+PiArCWlmICghZG1tLT53YV9kbWFfY2hhbikgewo+PiArCQlkbWFfZnJl
+ZV9jb2hlcmVudChkbW0tPmRldiwgNCwgZG1tLT53YV9kbWFfZGF0YSwgZG1tLT53YV9kbWFfaGFu
+ZGxlKTsKPiAKPiBUaGlzIGFuZCB0aGUgb3RoZXIgZnJlZSBiZWxvdyBzaG91bGQgdXNlIHNpemVv
+Zih1MzIpIGFzIHRoZSBhbGxvYyBkb2VzLgo+IEFuZCBJIGd1ZXNzIGRldmljZV9wcmVwX2RtYV9t
+ZW1jcHkoKSB0b28uIFBlcmhhcHMgYSAjZGVmaW5lIHdvdWxkIGJlCj4gYmVzdCBoZXJlLiBETU1f
+UkVHX1NJWkU/IEkgY2FuIGRvIHRoaXMgY2hhbmdlIHdoZW4gYXBwbHlpbmcsIGlmIHlvdSBhZ3Jl
+ZS4KCk9oLCB0aGVyZSB3ZXJlIG90aGVycywgSSBoYXZlIGNoYW5nZWQgaXQgZm9yIGRtYV9hbGxv
+Y19jb2hlcmVudCgpLgpJJ2xsIHdhaXQgZm9yIGNvdXBsZSBvZiBkYXlzIGZvciBvdGhlciBjb21t
+ZW50cyBhbmQgd2lsbCByZXNlbmQgd2l0aCBhCiNkZWZpbmUKCj4gCj4gIFRvbWkKPiAKCi0gUMOp
+dGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4
+MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9E
+b21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
