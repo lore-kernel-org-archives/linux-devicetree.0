@@ -1,88 +1,49 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 2/2][v7] driver: mtd: update struct map_info's swap as
- per map requirement
-Date: Thu, 29 Mar 2018 22:23:34 +0200
-Message-ID: <20180329222334.47015bdd@bbrezillon>
-References: <20180328054552.2884-1-prabhakar.kushwaha@nxp.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 0/1] arm: dts: modify Nuvoton NPCM750 device tree
+Date: Thu, 29 Mar 2018 22:37:31 +0200
+Message-ID: <CAK8P3a2MhXOPKob++DzWrMdmDwSkUketpdv-_VAEsEQSMkkNCQ@mail.gmail.com>
+References: <1522059113-20418-1-git-send-email-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180328054552.2884-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, poonam.aggrwal@nxp.com, leoyang.li@nxp.com, oss@buserror.net, linux-mtd@lists.infradead.org, Jagdish Gediya <jagdish.gediya@nxp.com>, computersforpeace@gmail.com, shawnguo@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522059113-20418-1-git-send-email-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2018 11:15:52 +0530
-Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
+On Mon, Mar 26, 2018 at 12:11 PM, Tomer Maimon <tmaimon77@gmail.com> wrote:
+> The NPCM7xx are a family of BMC's that include several chips as:
+> NPCM750, NPCM730 etc.
+>
+> All of the NPCM7xx BMC's have the common modules like Cortex-A9,
+> WDT, timers, etc, and there are a optional modules that can be added.
+>
+> NPCM750 device tree already pushed to arm-soc.git:
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=d6bdd009c21db3f677dd1d1bbb8c20bc819074bc
+>
+> After discussion with Rob Herring we have modified the structure
+> of the NPCM7xx device tree as follow:
+>
+> nuvoton-common-npcm7xx device tree include all common modules
+> nuvoton-npcm750 device tree include specific npcm750 modules,
+> the nuvoton-npcm750 device tree include nuvoton-common-npcm7xx device tree
+>
+> In addition, the NPCM7xx device tree include the following changes:
+>         - watchdog module added
+>         - clock module modification
+>         - serial module modification
+>         - Modify Makefile NPCM7XX configuration name
+>
+> Sorry if it cause more work after pushing NPCM750 device tree.
 
-> It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
-> Maps device can be Big endian or little endian.
-> 
-> Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
-> CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
-> 
-> Now update struct map_info's swap field based on device characteristics
-> defined in device tree.
-> 
-> Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+I only see one patch here, which fails to describe the changes and
+combines all of the above changes into one commit.
 
-Applied.
+Please follow the usual style for sending patches and do one thing
+at a time. In particular, never move large parts of a file code around
+in a patch that also contains other changes, those need to be split
+up. Each patch should also have a description that explains what
+it's for.
 
-Thanks,
-
-Boris
-
-> ---
-> Changes for v2: Incorporated review comments from Boris Brezillon
-> http://patchwork.ozlabs.org/patch/758381/
-> Changes for v3: None
-> Changes for v4: Updated code as per new defined binding of physmap.txt
-> Changes for v5: Avoid map.swap set in case of endiannes not defined in dts file
-> Changes for v6: Sending as it is
-> Changes for v7: Sending as it is
-> 
->  drivers/mtd/maps/physmap_of_core.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-> index b1bd4faecfb2..527b1682381f 100644
-> --- a/drivers/mtd/maps/physmap_of_core.c
-> +++ b/drivers/mtd/maps/physmap_of_core.c
-> @@ -20,6 +20,7 @@
->  #include <linux/mtd/map.h>
->  #include <linux/mtd/partitions.h>
->  #include <linux/mtd/concat.h>
-> +#include <linux/mtd/cfi_endian.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
-> @@ -233,6 +234,11 @@ static int of_flash_probe(struct platform_device *dev)
->  		info->list[i].map.bankwidth = be32_to_cpup(width);
->  		info->list[i].map.device_node = dp;
->  
-> +		if (of_property_read_bool(dp, "big-endian"))
-> +			info->list[i].map.swap = CFI_BIG_ENDIAN;
-> +		else if (of_property_read_bool(dp, "little-endian"))
-> +			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-> +
->  		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
->  		if (err)
->  			goto err_out;
-
-
-
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+       Arnd
