@@ -1,154 +1,76 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 6/7] dt-bindings: phy-qcom-usb2: Add support to
- override tuning values
-Date: Thu, 29 Mar 2018 13:38:23 -0700
-Message-ID: <CAD=FV=VGtmWTaa_aRG6UVAtCzy3cS8sTZDCqAgRMYeg7U02qTw@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org> <1522321466-21755-7-git-send-email-mgautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY initialization
+Date: Thu, 29 Mar 2018 13:54:51 -0700
+Message-ID: <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
+References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+ <1522321466-21755-3-git-send-email-mgautam@codeaurora.org> <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522321466-21755-7-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> To improve eye diagram for PHYs on different boards of same SOC,
-> some parameters may need to be changed. Provide device tree
-> properties to override these from board specific device tree
-> files. While at it, replace "qcom,qusb2-v2-phy" with compatible
-> string for USB2 PHY on sdm845 which was earlier added for
-> sdm845 only.
+On Thu, Mar 29, 2018 at 11:44 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Hi,
 >
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt        | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>> QMP PHY for USB/PCIE requires pipe_clk for locking of
+>> retime buffers at the pipe interface. Driver checks for
+>> PHY_STATUS without enabling pipe_clk due to which
+>> phy_init() fails with initialization timeout.
+>> Though pipe_clk is output from PHY (after PLL is programmed
+>> during initialization sequence) to GCC clock_ctl and then fed
+>> back to PHY but for PHY_STATUS register to reflect successful
+>> initialization pipe_clk from GCC must be present.
+>> Since, clock driver now ignores status_check for pipe_clk on
+>> clk_enable/disable, driver can safely enable/disable pipe_clk
+>> from phy_init/exit.
+>>
+>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>> ---
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
+>>  1 file changed, 8 insertions(+), 14 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> index 42c9742..0ed140a 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> @@ -6,7 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->  Required properties:
->   - compatible: compatible list, contains
->                "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
-> -              "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
-> +              "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
+> Overall this looks much better than the previous version.  Thanks!  :)
 >
->   - reg: offset and length of the PHY register set.
->   - #phy-cells: must be 0.
-> @@ -27,6 +27,23 @@ Optional properties:
->                 tuning parameter value for qusb2 phy.
+> I wonder one thing though.  You describe the original problem as this:
 >
->   - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
+> 1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
+> never sets the "ready" status.
+>
+> 2. If you don't have the PHY powered on / out of reset (which happens
+> in qcom_qmp_phy_init()) then when you enable/disable the clock it
+> doesn't properly update the status.  That's why you needed patch #1 in
+> this series.
+>
+>
+> I wonder: could you solve the above _without_ needing to use
+> BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
+> what happens if you put the clk_prepare_enable() after you've powered
+> on the PHY and taken it out of reset but before you check the status?
+> Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
+> right before the "readl_poll_timeout" of the ready status?
+>
+>
+> If you do that, you'll turn everything on.  Then you'll check that the
+> clock's status is OK and then that the PHY's status is OK.
 
-Just to confirm: the new properties below work just fine on the old
-msm8996 PHY too, right?
+Oh!  This is what you did in the previous version of the patch, then you said:
 
+"That is still needed as PHY might take some time to generate pipe_clk
+after its PLL is locked".
 
-> + - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
-> +               added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
-> +               tuning paramter that may vary for different boards of same SOC.
-> + - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
-> +               output current. 0x0 value corresponding to 24mA which is maximum
-> +               current and 0xf corresponds to lowest current which is 15mA.
-> + - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
-> +               Possible values are:
-> +               00: NONE
-> +               01: +5%
-> +               10: +10%
-> +               11: +15%
+It's really going to take more than the 200 us that the clock driver
+is giving it?  If so, I'd prefer to increase the amount of time waited
+in the clock driver, or adding a fixed delay _before_ the clk_enable()
+so that the 200 us that the clock driver gives it would be enough.
 
-The user of the device tree will expect to specify this in decimal,
-right?  So list the above as 0, 1, 2, 3.  ...not 00, 01, 10, 11.
-(though below I suggest that specifying 0, 1, 2, 3 is probably not
-quite the right way to describe this property).
-
-
-> +- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
-> +               pre-emphasis (specified using qcom,preemphasis-level) must be in
-> +               effect. Possible values are:
-> +               0: Full-bit width
-> +               1: Half-bit width
-
-Perhaps just make this a boolean property.  If it exists then you get
-the non-default case.  AKA: if the default is full bit width, then
-you'd allow a boolean property "qcom,preemphasis-half-width" to
-override.  If the default is half bit width then you'd allow
-"qcom,preemphasis-full-width" to override.
-
-
-For all the above optional bits, please indicate what the default is
-if they aren't specified.  If you have to specify a different default
-for sdm845 vs. msm8996 then so be it (though it would be nice to avoid
-it by changing the default for sdm845 unless that's totally crazy).
-
-
-Overall this looks pretty good to me.  Certainly the descriptions are
-very understandable and this will make tuning on a per-board /
-per-port basis much easier!  Thanks!
-
-
-One last overall comment is that ideally we could make the device tree
-a little bit more human readable.  Right now we'll have a set of
-properties that looks like this (numbers made up):
-
-qcom,imp-res-offset-value = <0x13>;
-qcom,hstx-trim-value = <0x7>;
-qcom,preemphasis-level = <1>;
-qcom,preemphasis-width = <0>;
-
-
-One option to make that more readable would be to change the units, AKA:
-
-qcom,hstx-trim-ma = <18>;
-qcom,preemphasis-percent = <5>;
-
-...then the code would translate from these human-readable values to
-the real numbers.
-
-
-Another option would be to add a #include to the bindings.  I'd defer
-to the wisdom of the bindings guys about if this is better or worse
-than adding the units, but personally I like it better because:
-* You get a compile-time error if you use an unsupported value.
-* You don't need to add the code to translate.
-
-So you'd add a ".h" file as part of this bindings patch (see git
-history for other examples) and you'd have stuff like:
-
-#define SDM845_QUSB2_TRIM_24MA 0
-...
-#define SDM845_QUSB2_TRIM_15MA 0xf
-
-#define SDM845_QUSB2_PREEMPHASIS_NONE 0
-#define SDM845_QUSB2_PREEMPHASIS_5_PERCENT 1
-#define SDM845_QUSB2_PREEMPHASIS_10_PERCENT 2
-#define SDM845_QUSB2_PREEMPHASIS_15_PERCENT 3
-
-...then you'd use those #defines in the description of the properties.
-
---
-
-One last note: from the current code
-<https://patchwork.kernel.org/patch/10314925/> all of these new
-properties need to be specified as 8-bit numbers, not 32-bit.  AKA:
-
-qcom,imp-res-offset-value = /bits/ 8 <0x13>;
-qcom,hstx-trim-value = /bits/ 8 <0x7>;
-qcom,preemphasis-level = /bits/ 8 <1>;
-qcom,preemphasis-width = /bits/ 8 <0>;
-
-
-If we decide to keep it that way then it needs to be documented in the
-bindings file.  IMHO we should just specify that these are normal
-(32-bit) properties even if we expect that they'll always be 8-bits.
-That seems to be commonplace elsewhere.
-
+I'm just not a fan of ignoring status bits if it can be helped.
 
 
 -Doug
