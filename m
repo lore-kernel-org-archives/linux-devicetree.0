@@ -1,60 +1,78 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Thu, 29 Mar 2018 15:11:17 +0300
-Message-ID: <9d176f73-0001-502c-7fd0-afefaa214a01@ti.com>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <20180322134206.22857-3-peter.ujfalusi@ti.com>
- <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 04/13] usb: typec: add fwnode to tcpc
+Date: Thu, 29 Mar 2018 15:57:45 +0300
+Message-ID: <20180329125745.GA19020@kuha.fi.intel.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-5-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1522253178-32414-5-git-send-email-jun.li@nxp.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Li Jun <jun.li@nxp.com>
+Cc: devel@driverdev.osuosl.org, peter.chen@nxp.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, a.hajda@samsung.com, robh+dt@kernel.org, linux-imx@nxp.com, linux@roeck-us.net, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE4LTAzLTI5IDEzOjE4LCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiBPbiAyMi8wMy8x
-OCAxNTo0MiwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4+IEZyb206IFRvbWkgVmFsa2VpbmVuIDx0
-b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4+Cj4+IEVycmF0YSBpODc4IHNheXMgdGhhdCBNUFUgc2hv
-dWxkIG5vdCBiZSB1c2VkIHRvIGFjY2VzcyBSQU0gYW5kIERNTSBhdAo+PiB0aGUgc2FtZSB0aW1l
-LiBBcyBpdCdzIG5vdCBwb3NzaWJsZSB0byBwcmV2ZW50IE1QVSBhY2Nlc3NpbmcgUkFNLCB3ZQo+
-PiBuZWVkIHRvIGFjY2VzcyBETU0gdmlhIGEgcHJveHkuCj4+Cj4+IFRoaXMgcGF0Y2ggY2hhbmdl
-cyBETU0gZHJpdmVyIHRvIGFjY2VzcyBETU0gcmVnaXN0ZXJzIHZpYSBzRE1BLiBJbnN0ZWFkCj4+
-IG9mIGRvaW5nIGEgbm9ybWFsIHJlYWRsL3dyaXRlbCBjYWxsIHRvIHJlYWQvd3JpdGUgYSByZWdp
-c3Rlciwgd2UgdXNlCj4+IHNETUEgdG8gY29weSA0IGJ5dGVzIGZyb20vdG8gdGhlIERNTSByZWdp
-c3RlcnMuCj4+Cj4+IFRoaXMgcGF0Y2ggcHJvdmlkZXMgb25seSBhIHBhcnRpYWwgd29ya2Fyb3Vu
-ZCBmb3IgaTg3OCwgYXMgbm90IG9ubHkgRE1NCj4+IHJlZ2lzdGVyIHJlYWRzL3dyaXRlcyBhcmUg
-YWZmZWN0ZWQsIGJ1dCBhbHNvIGFjY2Vzc2VzIHRvIHRoZSBETU0gbWFwcGVkCj4+IGJ1ZmZlcnMg
-KGZyYW1lYnVmZmVycywgdXN1YWxseSkuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2Vp
-bmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL29t
-YXBkcm0vb21hcF9kbW1fcHJpdi5oICB8ICAgOCArKwo+PiAgZHJpdmVycy9ncHUvZHJtL29tYXBk
-cm0vb21hcF9kbW1fdGlsZXIuYyB8IDE1MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
-Cj4+ICAyIGZpbGVzIGNoYW5nZWQsIDE1OSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
-Pgo+IAo+IAo+PiArCWRtbS0+d2FfZG1hX2NoYW4gPSBkbWFfcmVxdWVzdF9jaGFubmVsKG1hc2ss
-IE5VTEwsIE5VTEwpOwo+PiArCWlmICghZG1tLT53YV9kbWFfY2hhbikgewo+PiArCQlkbWFfZnJl
-ZV9jb2hlcmVudChkbW0tPmRldiwgNCwgZG1tLT53YV9kbWFfZGF0YSwgZG1tLT53YV9kbWFfaGFu
-ZGxlKTsKPiAKPiBUaGlzIGFuZCB0aGUgb3RoZXIgZnJlZSBiZWxvdyBzaG91bGQgdXNlIHNpemVv
-Zih1MzIpIGFzIHRoZSBhbGxvYyBkb2VzLgo+IEFuZCBJIGd1ZXNzIGRldmljZV9wcmVwX2RtYV9t
-ZW1jcHkoKSB0b28uIFBlcmhhcHMgYSAjZGVmaW5lIHdvdWxkIGJlCj4gYmVzdCBoZXJlLiBETU1f
-UkVHX1NJWkU/IEkgY2FuIGRvIHRoaXMgY2hhbmdlIHdoZW4gYXBwbHlpbmcsIGlmIHlvdSBhZ3Jl
-ZS4KCk9oLCB0aGVyZSB3ZXJlIG90aGVycywgSSBoYXZlIGNoYW5nZWQgaXQgZm9yIGRtYV9hbGxv
-Y19jb2hlcmVudCgpLgpJJ2xsIHdhaXQgZm9yIGNvdXBsZSBvZiBkYXlzIGZvciBvdGhlciBjb21t
-ZW50cyBhbmQgd2lsbCByZXNlbmQgd2l0aCBhCiNkZWZpbmUKCj4gCj4gIFRvbWkKPiAKCi0gUMOp
-dGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4
-MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9E
-b21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Hi,
+
+On Thu, Mar 29, 2018 at 12:06:09AM +0800, Li Jun wrote:
+> Add fwnode handle to get the fwnode so we can get typec configs
+> it contains.
+> 
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>  drivers/staging/typec/tcpci.c | 14 +++++++-------
+>  drivers/usb/typec/tcpm.c      |  1 +
+>  include/linux/usb/tcpm.h      |  2 ++
+>  3 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index ed76327..4f7ad10 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/usb/pd.h>
+>  #include <linux/usb/tcpm.h>
+> @@ -463,17 +464,16 @@ static const struct regmap_config tcpci_regmap_config = {
+>  	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+>  };
+>  
+> -static const struct tcpc_config tcpci_tcpc_config = {
+> -	.type = TYPEC_PORT_DFP,
+> -	.default_role = TYPEC_SINK,
+> -};
+> -
+>  static int tcpci_parse_config(struct tcpci *tcpci)
+>  {
+>  	tcpci->controls_vbus = true; /* XXX */
+>  
+> -	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+> -	tcpci->tcpc.config = &tcpci_tcpc_config;
+
+That will break bisectablitity. tcpm.c is still accessing the config
+at this point.
+
+Just leave those untouched in here, and clean-up in separate patch
+that comes after the patch that prepares tcpm.c.
+
+
+Thanks,
+
+-- 
+heikki
