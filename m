@@ -1,115 +1,130 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v3 1/2] of_net: Implement of_get_nvmem_mac_address helper
-Date: Thu, 29 Mar 2018 07:31:27 +0200
-Message-ID: <c4531eec-9478-72c2-96cc-39c380784aa4@topic.nl>
-References: <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
- <1522144346-32367-2-git-send-email-mike.looijmans@topic.nl>
- <8623d20b-5a01-b2bd-39f2-900177f96595@gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
+ partitions
+Date: Thu, 29 Mar 2018 08:23:16 +0200
+Message-ID: <39fbb845-784b-3e73-a9c6-0729a783930f@gmail.com>
+References: <20180112093354.17593-1-zajec5@gmail.com>
+ <20180119214450.vhctphu5d4kagwkv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8623d20b-5a01-b2bd-39f2-900177f96595@gmail.com>
-Content-Language: nl
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, robh+dt@kernel.org, frowand.list@gmail.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180119214450.vhctphu5d4kagwkv@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-﻿On 28-03-18 00:50, Florian Fainelli wrote:
-> On 03/27/2018 02:52 AM, Mike Looijmans wrote:
->> It's common practice to store MAC addresses for network interfaces into
->> nvmem devices. However the code to actually do this in the kernel lacks,
->> so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
->> address from an nvmem cell provider.
->>
->> This is particulary useful on devices where the ethernet interface cannot
->> be configured by the bootloader, for example because it's in an FPGA.
->>
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->>   Documentation/devicetree/bindings/net/ethernet.txt |  2 ++
->>   drivers/of/of_net.c                                | 40 ++++++++++++++++++++++
->>   include/linux/of_net.h                             |  6 ++++
->>   3 files changed, 48 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
->> index 2974e63..cfc376b 100644
->> --- a/Documentation/devicetree/bindings/net/ethernet.txt
->> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
->> @@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
->>     the boot program; should be used in cases where the MAC address assigned to
->>     the device by the boot program is different from the "local-mac-address"
->>     property;
->> +- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
->> +- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
->>   - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
->>   - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
->>     the maximum frame size (there's contradiction in the Devicetree
->> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
->> index d820f3e..1c5d372 100644
->> --- a/drivers/of/of_net.c
->> +++ b/drivers/of/of_net.c
->> @@ -7,6 +7,7 @@
->>    */
->>   #include <linux/etherdevice.h>
->>   #include <linux/kernel.h>
->> +#include <linux/nvmem-consumer.h>
->>   #include <linux/of_net.h>
->>   #include <linux/phy.h>
->>   #include <linux/export.h>
->> @@ -80,3 +81,42 @@ const void *of_get_mac_address(struct device_node *np)
->>   	return of_get_mac_addr(np, "address");
->>   }
->>   EXPORT_SYMBOL(of_get_mac_address);
->> +
->> +/**
->> + * Obtain the MAC address from an nvmem provider named 'mac-address' through
->> + * device tree.
->> + * On success, copies the new address into memory pointed to by addr and
->> + * returns 0. Returns a negative error code otherwise.
->> + * @np:		Device tree node containing the nvmem-cells phandle
->> + * @addr:	Pointer to receive the MAC address using ether_addr_copy()
->> + */
->> +int of_get_nvmem_mac_address(struct device_node *np, void *addr)
->> +{
->> +	struct nvmem_cell *cell;
->> +	const void *mac;
->> +	size_t len;
->> +	int ret;
->> +
->> +	cell = of_nvmem_cell_get(np, "mac-address");
->> +	if (IS_ERR(cell))
->> +		return PTR_ERR(cell);
->> +
->> +	mac = nvmem_cell_read(cell, &len);
->> +
->> +	nvmem_cell_put(cell);
->> +
->> +	if (IS_ERR(mac))
->> +		return PTR_ERR(mac);
->> +
->> +	if (len < 6 || !is_valid_ether_addr(mac)) {
->> +		ret = -EINVAL;
-> 
-> Just one nit here, can you use ETH_ALEN instead of 6? With that fixed:
-> 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-
-Ok, implemented and tested it, and v4 is on the way with that change.
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+SGkgUm9iICYgc29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5LiBNeSBlYXJsaWVyIGFjY2VwdGVkIHBh
+dGNoc2V0IGFkZGluZwpvZl9tYXRjaF90YWJsZSBtYXRjaGluZyB3YXMgcmVwb3J0ZWQgdG8gY2F1
+c2UgYSByZWdyZXNzaW9uLiBJdCBoYWQgdG8gYmUKZHJvcHBlZCBhbmQgSSBoYWQgdG8gZm9jdXMg
+b24gZml4aW5nIHRoYXQgZmlyc3QuCgpPbiAwMS8xOS8yMDE4IDEwOjQ0IFBNLCBSb2IgSGVycmlu
+ZyB3cm90ZToKPiBPbiBGcmksIEphbiAxMiwgMjAxOCBhdCAxMDozMzo1M0FNICswMTAwLCBSYWZh
+xYIgTWnFgmVja2kgd3JvdGU6Cj4+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNr
+aS5wbD4KPj4KPj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgcGFydGl0
+aW9ucyB3aGljaCBoYXZlIHRvIGJlCj4+IGRpc2NvdmVyZWQgaW4gYSBzcGVjaWZpYyBub24tc3Rh
+bmRhcmQgd2F5LiBBcyB0aGVyZSBpcyBubyBwYXJ0aXRpb24KPj4gdGFibGUgdGhpcyBjb21taXQg
+YWRkcyBhbmQgZGVzY3JpYmVzIGEgbmV3IGN1c3RvbSBiaW5kaW5nLgo+Pgo+PiBTaWduZWQtb2Zm
+LWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+IC0tLQo+PiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQgICAgICAgICAgfCA0NiArKysrKysr
+KysrKysrKysrKysrKystCj4+ICAxIGZpbGUgY2hhbmdlZCwgNDQgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+PiBpbmRleCAzNmYzYjc2OWE2MjYuLmIyMDFkNDk3YjYx
+OCAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9w
+YXJ0aXRpb24udHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvcGFydGl0aW9uLnR4dAo+PiBAQCAtMTQsOCArMTQsNiBAQCBtZXRob2QgaXMgdXNlZCBmb3Ig
+YSBnaXZlbiBmbGFzaCBkZXZpY2UuIFRvIGRlc2NyaWJlIHRoZSBtZXRob2QgdGhlcmUgc2hvdWxk
+IGJlCj4+ICBhIHN1Ym5vZGUgb2YgdGhlIGZsYXNoIGRldmljZSB0aGF0IGlzIG5hbWVkICdwYXJ0
+aXRpb25zJy4gSXQgbXVzdCBoYXZlIGEKPj4gICdjb21wYXRpYmxlJyBwcm9wZXJ0eSwgd2hpY2gg
+aXMgdXNlZCB0byBpZGVudGlmeSB0aGUgbWV0aG9kIHRvIHVzZS4KPj4KPj4gLVdlIGN1cnJlbnRs
+eSBvbmx5IGRvY3VtZW50IGEgYmluZGluZyBmb3IgZml4ZWQgbGF5b3V0cy4KPj4gLQo+Pgo+PiAg
+Rml4ZWQgUGFydGl0aW9ucwo+PiAgPT09PT09PT09PT09PT09PQo+PiBAQCAtMTA5LDMgKzEwNyw0
+NyBAQCBmbGFzaEAyIHsKPj4gIAkJfTsKPj4gIAl9Owo+PiAgfTsKPj4gKwo+PiArCj4+ICtCcm9h
+ZGNvbSBCQ000N3h4IFBhcnRpdGlvbnMKPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PQo+
+PiArCj4+ICtCcm9hZGNvbSBpcyBvbmUgb2YgaGFyZHdhcmUgbWFudWZhY3R1cmVycyBwcm92aWRp
+bmcgU29DcyAoQkNNNDd4eCkgdXNlZCBpbgo+PiAraG9tZSByb3V0ZXJzLiBUaGVpciBCQ005NDd4
+eCBib2FyZHMgdXNpbmcgQ0ZFIGJvb3Rsb2FkZXIgaGF2ZSBzZXZlcmFsIHBhcnRpdGlvbnMKPj4g
+K3dpdGhvdXQgYW55IG9uLWZsYXNoIHBhcnRpdGlvbiB0YWJsZS4gT24gc29tZSBkZXZpY2VzIHRo
+ZWlyIHNpemVzIGFuZC9vcgo+PiArbWVhbmluZ3MgY2FuIGFsc28gdmFyeSBzbyBmaXhlZCBwYXJ0
+aXRpb25pbmcgY2FuJ3QgYmUgdXNlZC4KPj4gKwo+PiArRGlzY292ZXJpbmcgcGFydGl0aW9ucyBv
+biB0aGVzZSBkZXZpY2VzIGlzIHBvc3NpYmxlIHRoYW5rcyB0byBoYXZpbmcgYSBzcGVjaWFsCj4+
+ICtoZWFkZXIgYW5kL29yIG1hZ2ljIHNpZ25hdHVyZSBhdCB0aGUgYmVnaW5uaW5nIG9mIGVhY2gg
+b2YgdGhlbS4gVGhleSBhcmUgYWxzbwo+PiArYmxvY2sgYWxpZ25lZCB3aGljaCBpcyBpbXBvcnRh
+bnQgZm9yIGRldGVybWluaWcgYSBzaXplLgo+PiArCj4+ICtNb3N0IG9mIHBhcnRpdGlvbnMgdXNl
+IEFTQ0lJIHRleHQgYmFzZWQgbWFnaWMgZm9yIGRldGVybWluaW5nIGEgdHlwZS4gTW9yZQo+PiAr
+Y29tcGxleCBwYXJ0aXRpb25zIChsaWtlIFRSWCB3aXRoIGl0cyBIRFIwIG1hZ2ljKSBtYXkgaW5j
+bHVkZSBleHRyYSBoZWFkZXIKPj4gK2NvbnRhaW5pbmcgc29tZSBkZXRhaWxzLCBpbmNsdWRpbmcg
+YSBsZW5ndGguCj4+ICsKPj4gK0EgbGlzdCBvZiBzdXBwb3J0ZWQgcGFydGl0aW9ucyBpbmNsdWRl
+czoKPj4gKzEpIEJvb3Rsb2FkZXIgd2l0aCBCcm9hZGNvbSdzIENGRSAoQ29tbW9uIEZpcm13YXJl
+IEVudmlyb25tZW50KQo+PiArMikgTlZSQU0gd2l0aCBjb25maWd1cmF0aW9uL2NhbGlicmF0aW9u
+IGRhdGEKPj4gKzMpIERldmljZSBtYW51ZmFjdHVyZXIncyBkYXRhIHdpdGggc29tZSBkZWZhdWx0
+IHZhbHVlcyAoZS5nLiBTU0lEcykKPj4gKzQpIFRSWCBmaXJtd2FyZSBjb250YWluZXIgd2hpY2gg
+Y2FuIGhvbGQgdXAgdG8gNCBzdWJwYXJ0aXRpb25zCj4+ICs1KSBCYWNrdXAgVFJYIGZpcm13YXJl
+IHVzZWQgYWZ0ZXIgZmFpbGVkIHVwZ3JhZGUKPj4gKwo+PiArQXMgbWVudGlvbmVkIGVhcmxpZXIs
+IHJvbGUgb2Ygc29tZSBwYXJ0aXRpb25zIG1heSBkZXBlbmQgb24gZXh0cmEgY29uZmlndXJhdGlv
+bi4KPj4gK0ZvciBleGFtcGxlIGJvdGg6IG1haW4gZmlybXdhcmUgYW5kIGJhY2t1cCBmaXJtd2Fy
+ZSB1c2UgdGhlIHNhbWUgVFJYIGZvcm1hdCB3aXRoCj4+ICt0aGUgc2FtZSBoZWFkZXIuIFRvIGRp
+c3Rpbmd1aXNoIGN1cnJlbnRseSB1c2VkIGZpcm13YXJlIGEgQ0ZFJ3MgZW52aXJvbm1lbnQKPj4g
+K3ZhcmlhYmxlICJib290cGFydGl0aW9uIiBpcyB1c2VkLgo+PiArCj4+ICsKPj4gK0RldmljZXMg
+dXNpbmcgQnJvYWRjb20gcGFydGl0aW9ucyBkZXNjcmliZWQgYWJvdmUgc2hvdWxkIHNob3VsZCBo
+YXZlIGZsYXNoIG5vZGUKPj4gK3dpdGggYSBzdWJub2RlIG5hbWVkICJwYXJ0aXRpb25zIiB1c2lu
+ZyBmb2xsb3dpbmcgcHJvcGVydGllczoKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4g
+Ky0gY29tcGF0aWJsZSA6IChyZXF1aXJlZCkgbXVzdCBiZSAiYnJjbSxiY205NDd4eC1jZmUtcGFy
+dGl0aW9ucyIKPgo+IFNvIHlvdSBjYW4ndCBkaXNjb3ZlciB5b3UgaGF2ZSBDRkUgcGFydGl0aW9u
+cywgYnV0IHlvdSBjYW4gZGlzY292ZXIKPiBldmVyeXRoaW5nIGVsc2UgbGlrZSB3aGVyZSBwYXJ0
+aXRpb25zIHN0YXJ0PwoKSSBjb3VsZCBkaXNjb3ZlciB0aGVyZSBpcyBhIENGRSBib290bG9hZGVy
+IGF0IHRoZSBmbGFzaCBiZWdpbm5pbmcgYW5kCmFzc3VtZSB0aGVyZSBhcmUgQ0ZFLWxpa2UgcGFy
+dGl0aW9ucy4gSXQgZG9lc24ndCBzb3VuZCBzYWZlIGhvd2V2ZXIgYW5kCkkgYmVsaWV2ZSB0aGUg
+cG9pbnQgb2YgdXNpbmcgRFQgKyBjb21wYXRpYmxlIHByb3BlcnRpZXMgaXMgdG8gYXZvaWQgc3Vj
+aAovZ3Vlc3NpbmcvLiBUaGVyZSBhcmUgdG9vIG1hbnkgY2FzZXMsIGRldmljZXMsICJmb3JtYXRz
+IiB0byBqdXN0IGJsaW5kbHkKdHJ5IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4gVGhhdCdzIHdoeSB3
+ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRpYmxlIgpzdHJpbmdzLgoKVGhpcyB3YXMgYWxzbyBkZXNj
+cmliZWQgYnkgQm9yaXMgaW4gaGlzIHBhdGNoc2V0IDIrIHllYXJzIGFnbzoKW1JGQyBQQVRDSCAw
+LzddIG10ZDogcGFydGl0aW9uczogYWRkIG9mX21hdGNoX3RhYmxlIHN1cHBvcnQKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDA3
+Ni5odG1sCgogPiAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3IgYWxsIHN1cHBvcnRlZCBwYXJz
+ZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNlCiA+ICAgICAgdGhlcmUgaXMg
+YSB3aWRlIGRpdmVyc2l0eSBvZiAiZm9ybWF0cyIgKG5vIHN0YW5kYXJkaXphdGlvbiksIGFuZCBp
+dCBpcyBub3QKID4gICAgICBhbHdheXMgc2FmZSBvciBlZmZpY2llbnQgdG8gYXR0ZW1wdCB0byBk
+byBzbywgcGFydGljdWxhcmx5IHNpbmNlIG1hbnkgb2YKID4gICAgICB0aGVtIGFsbG93IHRoZWly
+IGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZsYXNoLCBhbmQK
+ID4gICAgICBzbyByZXF1aXJlIHNjYW5uaW5nIHRoZSBlbnRpcmUgZmxhc2ggZGV2aWNlIHRvIGZp
+bmQgdGhlbS4KCkkgYWxzbyBiZWxpZXZlIHRoaXMgaXMgc29sdXRpb24geW91IGFja2VkIGJhY2sg
+dGhlbjoKW1JGQyBQQVRDSCAzLzddIGRvYzogZHQ6IG10ZDogcGFydGl0aW9uOiBhZGQgb24tZmxh
+c2ggZm9ybWF0IGJpbmRpbmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xp
+bnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDEwMC5odG1sCgogPiBPbiBGcmksIERlYyAwNCwgMjAx
+NSBhdCAwOToxOToxOVBNIC0wODAwLCBCcmlhbiBOb3JyaXMgd3JvdGU6CiA+ID4gVGhlIHBsYXRm
+b3JtIGRlc2NyaXB0aW9uIChzdWNoIGFzIHRoZSB0eXBlIG9mIHBhcnRpdGlvbiBmb3JtYXRzIHVz
+ZWQgb24KID4gPiBhIGdpdmVuIGZsYXNoKSBzaG91bGQgYmUgZG9uZSBpbmRlcGVuZGVudGx5IG9m
+IHRoZSBmbGFzaCBkcml2ZXIgaW4gdXNlLgogPiA+IEhvd2V2ZXIsIHdlIGNhbid0IHJlYXNvbmFi
+bHkgaGF2ZSAqYWxsKiBwYXJ0aXRpb24gcGFyc2VycyBydW4gb24gYWxsCiA+ID4gZmxhc2ggKHVu
+dGlsIHRoZXkgZmluZCBhIG1hdGNoKSwgc28gbGV0J3Mgb3ZlcmxvYWQgdGhlICdwYXJ0aXRpb25z
+JwogPiA+IHN1Ym5vZGUgdG8gc3VwcG9ydCBzcGVjaWZ5aW5nIHdoaWNoIGZvcm1hdChzKSB0byB0
+cnkgaW4gdGhlIGRldmljZSB0cmVlLgogPiA+CiA+ID4gKC4uLikKID4KID4gTG9va3MgZ29vZCB0
+byBtZS4gSWYgeW91IGhhZCBsb3RzIG9mIHBhcnRpdGlvbnMsIEknZCBhZ3JlZSB3aXRoIGNvbW1l
+bnRzCiA+IHRoYXQgdGhleSBzaG91bGQgYmUgc2VwYXJhdGUgZmlsZXMsIGJ1dCBJIGRvdWJ0IHdl
+J2xsIGhhdmUgbWFueSAxMHMgb2YKID4gdGhlbS4gUGx1cyBhbGwgd2UgcmVhbGx5IG5lZWQgaGVy
+ZSBpcyBhIGxpc3Qgb2YgY29tcGF0aWJsZSBzdHJpbmdzLgogPgogPiBBY2tlZC1ieTogUm9iIEhl
+cnJpbmcgPHJvYmggYXQga2VybmVsLm9yZz4KClNvIEkgZ3Vlc3MgdGhlIGFuc3dlciBpczoKMSkg
+SSByZWFsbHkgZG9uJ3Qgd2FudCB0byBibGluZGx5IGxvb2sgZm9yIENGRS1saWtlIHBhcnRpdGlv
+bnMuIFRvbyBtdWNoCiAgICByaXNrIG9mIGZhbHNlIHBvc2l0aXZlcy4KMikgSSBkb24ndCB3YW50
+IHBhcnNlciB0byBiZSBibGluZGx5IGNhbGxlZCAmIHVzZSBleHRyYSBtYWdpYyBjaGVja3MgdG8K
+ICAgIG1ha2Ugc3VyZSBJJ20gZGVhbGluZyB3aXRoIGRldmljZSB1c2luZyBDRkUgYm9vdGxvYWRl
+ci4KMykgT25jZSBJIGtub3cgSSdtIGRlYWxpbmcgd2l0aCBkZXZpY2UgdXNpbmcgQ0ZFIGJvb3Rs
+b2FkZXIgSSBjYW4gZmluZAogICAgcGFydGl0aW9ucyBvbiB0aGUgZmxhc2guCgoKPiBXaHkgZG9l
+c24ndCB0aGUga2VybmVsIGp1c3QgcHJvYmUgZm9yIHRoZSBwYXJ0aXRpb24gdGFibGU/CgpJZiBi
+eSBhICJwYXJ0aXRpb24gdGFibGUiIHlvdSBtZWFuIGEgc2luZ2xlIGJsb2NrIHdpdGggZGF0YSB1
+c2luZyBhCmNsZWFyIHN0cnVjdHVyZTogaXQgZG9lc24ndCBleGlzdC4gVGhhdCdzIHRoZSB3aG9s
+ZSBwb2ludCB3aXRoIGNyYXBweQpCcm9hZGNvbSBkZXZpY2VzLgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9u
+IG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LW10ZC8K
