@@ -1,79 +1,67 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH v2] wcn36xx: Disable 5GHz for wcn3610
-Date: Thu, 29 Mar 2018 10:45:06 +0300
-Message-ID: <87k1tvl3zx.fsf@kamboji.qca.qualcomm.com>
-References: <20180329065818.9338-1-rfried@codeaurora.org>
-        <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
-        <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v3 0/8] arm: Base support for Renesas RZN1D-DB Board
+Date: Thu, 29 Mar 2018 08:46:56 +0100
+Message-ID: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org> (Ramon
-        Fried's message of "Thu, 29 Mar 2018 10:32:55 +0300")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ramon Fried <rfried@codeaurora.org>
-Cc: loic.poulain@linaro.org, wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(really adding Bjorn)
+This series adds the plain basic support for booting a bare
+kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
+minimum as a 'base', further patches that will add the
+rest of the support, pinctrl, clock architecture and quite
+a few others.
 
-Ramon Fried <rfried@codeaurora.org> writes:
+Thanks for the comments on the previous version!
 
-> (adding Bjorn Andersson)
->
->
-> On 3/29/2018 10:15 AM, Kalle Valo wrote:
->> (adding devicetree list)
->>
->> Ramon Fried <rfried@codeaurora.org> writes:
->>
->>> wcn3610 can only operate on 2.4GHz band due to RF limitation.
->>> If wcn36xx digital block is associated with an external IRIS
->>> RF module, retrieve the id and disable 5GHz band in case of
->>> wcn3610 id.
->>>
->>> Signed-off-by: Ramon Fried <rfried@codeaurora.org>
->>> ---
->>> v2: fixed wrong assignment, which is logically introduces the 
->>> 	same behaviour, but for correctness.
->>>
->>>  drivers/net/wireless/ath/wcn36xx/main.c    | 4 +++-
->>>  drivers/net/wireless/ath/wcn36xx/wcn36xx.h | 1 +
->>>  2 files changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
->>> index ab5be6d2c691..833531a68c95 100644
->>> --- a/drivers/net/wireless/ath/wcn36xx/main.c
->>> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
->>> @@ -1146,7 +1146,7 @@ static int wcn36xx_init_ieee80211(struct wcn36xx *wcn)
->>>  		BIT(NL80211_IFTYPE_MESH_POINT);
->>>  
->>>  	wcn->hw->wiphy->bands[NL80211_BAND_2GHZ] = &wcn_band_2ghz;
->>> -	if (wcn->rf_id != RF_IRIS_WCN3620)
->>> +	if (wcn->rf_id != RF_IRIS_WCN3610 && wcn->rf_id != RF_IRIS_WCN3620)
->>>  		wcn->hw->wiphy->bands[NL80211_BAND_5GHZ] = &wcn_band_5ghz;
->>>  
->>>  	wcn->hw->wiphy->max_scan_ssids = WCN36XX_MAX_SCAN_SSIDS;
->>> @@ -1248,6 +1248,8 @@ static int wcn36xx_platform_get_resources(struct wcn36xx *wcn,
->>>  	if (iris_node) {
->>>  		if (of_device_is_compatible(iris_node, "qcom,wcn3620"))
->>>  			wcn->rf_id = RF_IRIS_WCN3620;
->>> +		else if (of_device_is_compatible(iris_node, "qcom,wcn3610"))
->>> +			wcn->rf_id = RF_IRIS_WCN3610;
->>>  		of_node_put(iris_node);
->>>  	}
->> Should we document qcom,wcn3610 just like wcn3620 is:
->>
->> Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt:
->> "qcom,wcn3620",
->
-> IMHO the mentioned bindings is related to the PIL (peripheral image
-> loaded) which is just the firmware part and has
-> nothing to do with wifi frontend(IRIS).
+v3:
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed SoC Specific renesas,r9a06g032-xxx, as it's not needed for now.
+ + Kept renesas,rzn1 as a family/generic for this family.
+ + Fixed a couple of the commit messages.
+ + Added Geert's Reviewed-By where appropriate.
+v2: 
+ + Fixes for suggestions by Simon Horman
+ + Fixes for suggestions by Rob Herring
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed the mach file
+ + Added a MFD base for the sysctrl block
+ + Added a regmap based sub driver for the reboot handler
+ + Renamed the files to match shmobile conventions
+ + Adapted the compatible= strings to reflect 'family' vs 'part'
+   distinction.
+ + Removed the sysctrl.h file entirelly. 
+ + Fixed every warnings from the DTC compiler on W=12 mode.
+ + Split the device-tree patches from the code.
 
-Should we then have a bindings document for wcn36xx or is it ok to use
-compatible strings like this without any docs? I'm not very familiar
-with the devicetree stuff.
+Michel Pollet (8):
+  DT: mfd: renesas,rzn1-sysctrl: document RZ/N1 sysctrl node
+  DT: reset: renesas,rzn1-reboot: document RZ/N1 reboot driver
+  DT: arm: renesas,rzn1: add the RZ/N1 SoC and RZN1D-DB board
+  reset: Renesas RZ/N1 reboot driver
+  arm: shmobile: Add the RZ/N1 arch to the shmobile Kconfig
+  DT: arm: Add Renesas RZ/N1 SoC base device tree file
+  DT: arm: Add Renesas RZN1D-DB Board base file
+  DT: arm: Add the RZN1D-DB Board to Renesas Makefile target
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |   7 +-
+ .../bindings/mfd/renesas,rzn1-sysctrl.txt          |  19 ++++
+ .../bindings/power/renesas,rzn1-reboot.txt         |  20 ++++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts        |  26 +++++
+ arch/arm/boot/dts/r9a06g0xx.dtsi                   |  96 +++++++++++++++++++
+ arch/arm/mach-shmobile/Kconfig                     |   5 +
+ drivers/power/reset/Kconfig                        |   7 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/rzn1-reboot.c                  | 105 +++++++++++++++++++++
+ 10 files changed, 286 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
+ create mode 100644 arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
+ create mode 100644 arch/arm/boot/dts/r9a06g0xx.dtsi
+ create mode 100644 drivers/power/reset/rzn1-reboot.c
 
 -- 
-Kalle Valo
+2.7.4
