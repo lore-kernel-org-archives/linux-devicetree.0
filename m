@@ -1,61 +1,47 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH v2] wcn36xx: Disable 5GHz for wcn3610
-Date: Thu, 29 Mar 2018 10:15:25 +0300
-Message-ID: <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
-References: <20180329065818.9338-1-rfried@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 5/8] ARM: shmobile: r8a77470: basic SoC support
+Date: Thu, 29 Mar 2018 09:15:05 +0200
+Message-ID: <CAMuHMdUFhNQZckFU5vPzUYtBSOpV6GKWN1pHTtcg50wJmt2VKA@mail.gmail.com>
+References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com>
+ <1522265176-33226-6-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180329065818.9338-1-rfried@codeaurora.org> (Ramon Fried's
-        message of "Thu, 29 Mar 2018 09:58:18 +0300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramon Fried <rfried@codeaurora.org>
-Cc: loic.poulain@linaro.org, wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1522265176-33226-6-git-send-email-biju.das@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-(adding devicetree list)
-
-Ramon Fried <rfried@codeaurora.org> writes:
-
-> wcn3610 can only operate on 2.4GHz band due to RF limitation.
-> If wcn36xx digital block is associated with an external IRIS
-> RF module, retrieve the id and disable 5GHz band in case of
-> wcn3610 id.
+On Wed, Mar 28, 2018 at 9:26 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add minimal support for the RZ/G1C (R8A77470) SoC.
 >
-> Signed-off-by: Ramon Fried <rfried@codeaurora.org>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > ---
-> v2: fixed wrong assignment, which is logically introduces the 
-> 	same behaviour, but for correctness.
->
->  drivers/net/wireless/ath/wcn36xx/main.c    | 4 +++-
->  drivers/net/wireless/ath/wcn36xx/wcn36xx.h | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
-> index ab5be6d2c691..833531a68c95 100644
-> --- a/drivers/net/wireless/ath/wcn36xx/main.c
-> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
-> @@ -1146,7 +1146,7 @@ static int wcn36xx_init_ieee80211(struct wcn36xx *wcn)
->  		BIT(NL80211_IFTYPE_MESH_POINT);
->  
->  	wcn->hw->wiphy->bands[NL80211_BAND_2GHZ] = &wcn_band_2ghz;
-> -	if (wcn->rf_id != RF_IRIS_WCN3620)
-> +	if (wcn->rf_id != RF_IRIS_WCN3610 && wcn->rf_id != RF_IRIS_WCN3620)
->  		wcn->hw->wiphy->bands[NL80211_BAND_5GHZ] = &wcn_band_5ghz;
->  
->  	wcn->hw->wiphy->max_scan_ssids = WCN36XX_MAX_SCAN_SSIDS;
-> @@ -1248,6 +1248,8 @@ static int wcn36xx_platform_get_resources(struct wcn36xx *wcn,
->  	if (iris_node) {
->  		if (of_device_is_compatible(iris_node, "qcom,wcn3620"))
->  			wcn->rf_id = RF_IRIS_WCN3620;
-> +		else if (of_device_is_compatible(iris_node, "qcom,wcn3610"))
-> +			wcn->rf_id = RF_IRIS_WCN3610;
->  		of_node_put(iris_node);
->  	}
+> V1->V2:
+> * No change
 
-Should we document qcom,wcn3610 just like wcn3620 is:
+Hence my
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+for v1 is still valid.
 
-Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt:                    "qcom,wcn3620",
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Kalle Valo
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
