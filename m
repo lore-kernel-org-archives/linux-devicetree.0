@@ -1,196 +1,86 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v4 7/7] phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
-Date: Thu, 29 Mar 2018 16:34:26 +0530
-Message-ID: <1522321466-21755-8-git-send-email-mgautam@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [PATCH v3 4/8] reset: Renesas RZ/N1 reboot driver
+Date: Thu, 29 Mar 2018 11:12:45 +0000
+Message-ID: <OSBPR01MB205430EB7EE4F338829135EDD2A20@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1522309629-10152-5-git-send-email-michel.pollet@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <1522309629-10152-5-git-send-email-michel.pollet@bp.renesas.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh@kernel.org, sboyd@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, vivek.gautam@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>
+To: Michel Pollet <michel.pollet@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two QUSB2 PHYs present on sdm845. In order
-to improve eye diagram for both the PHYs some parameters
-need to be changed. Provide device tree properties to
-override these from board specific device tree files.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 112 +++++++++++++++++++++++++++++++++-
- 1 file changed, 111 insertions(+), 1 deletion(-)
+On 29 March 2018 08:47, I messed up:
+[snip]
+>
+> The Renesas RZ/N1 Family (Part #R9A06G0xx) needs a small driver to reboot
+> the Cortex-A7 cores. This driver is a sub driver of the sysctrl MFD.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  drivers/power/reset/Kconfig       |   7 +++
+>  drivers/power/reset/Makefile      |   1 +
+>  drivers/power/reset/rzn1-reboot.c | 105
+[snip]
+> +
+> +parent =3D pdev->dev.parent;
+> +if (!parent || !parent->of_node)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 40fdef8..adcc3f8 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -60,6 +60,17 @@
- #define CORE_RESET				BIT(5)
- #define CORE_RESET_MUX				BIT(6)
- 
-+/* QUSB2PHY_IMP_CTRL1 register bits */
-+#define IMP_RES_OFFSET_MASK			GENMASK(5, 0)
-+#define IMP_RES_OFFSET_SHIFT			0x0
-+
-+/* QUSB2PHY_PORT_TUNE1 register bits */
-+#define HSTX_TRIM_MASK				GENMASK(7, 4)
-+#define HSTX_TRIM_SHIFT				0x4
-+#define PREEMPH_HALF_WIDTH			BIT(2)
-+#define PREEMPHASIS_EN_MASK			GENMASK(1, 0)
-+#define PREEMPHASIS_EN_SHIFT			0x0
-+
- #define QUSB2PHY_PLL_ANALOG_CONTROLS_TWO	0x04
- #define QUSB2PHY_PLL_CLOCK_INVERTERS		0x18c
- #define QUSB2PHY_PLL_CMODE			0x2c
-@@ -241,6 +252,18 @@ struct qusb2_phy_cfg {
-  * @tcsr: TCSR syscon register map
-  * @cell: nvmem cell containing phy tuning value
-  *
-+ * @override_imp_res_offset: PHY should use different rescode offset
-+ * @imp_res_offset_value: rescode offset to be updated in IMP_CTRL1 register
-+ *
-+ * @override_hstx_trim: PHY should use different HSTX o/p current value
-+ * @hstx_trim_value: HSTX_TRIM value to be updated in TUNE1 register
-+ *
-+ * @override_preemphasis: PHY should use different pre-amphasis amplitude
-+ * @preemphasis_level: Amplitude Pre-Emphasis to be updated in TUNE1 register
-+ *
-+ * @override_preemphasis_width: PHY should use different pre-emphasis duration
-+ * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ *
-  * @cfg: phy config data
-  * @has_se_clk_scheme: indicate if PHY has single-ended ref clock scheme
-  * @phy_initialized: indicate if PHY has been initialized
-@@ -259,12 +282,35 @@ struct qusb2_phy {
- 	struct regmap *tcsr;
- 	struct nvmem_cell *cell;
- 
-+	bool override_imp_res_offset;
-+	u8 imp_res_offset_value;
-+	bool override_hstx_trim;
-+	u8 hstx_trim_value;
-+	bool override_preemphasis;
-+	u8 preemphasis_level;
-+	bool override_preemphasis_width;
-+	u8 preemphasis_width;
-+
- 	const struct qusb2_phy_cfg *cfg;
- 	bool has_se_clk_scheme;
- 	bool phy_initialized;
- 	enum phy_mode mode;
- };
- 
-+static inline void qusb2_write_mask(void __iomem *base, u32 offset,
-+				    u32 val, u32 mask)
-+{
-+	u32 reg;
-+
-+	reg = readl(base + offset);
-+	reg &= ~mask;
-+	reg |= val;
-+	writel(reg, base + offset);
-+
-+	/* Ensure above write is completed */
-+	readl(base + offset);
-+}
-+
- static inline void qusb2_setbits(void __iomem *base, u32 offset, u32 val)
- {
- 	u32 reg;
-@@ -305,6 +351,42 @@ void qcom_qusb2_phy_configure(void __iomem *base,
- }
- 
- /*
-+ * Update board specific PHY tuning override values if specified from
-+ * device tree.
-+ *
-+ */
-+static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
-+{
-+	const struct qusb2_phy_cfg *cfg = qphy->cfg;
-+
-+	if (qphy->override_imp_res_offset)
-+		qusb2_write_mask(qphy->base, QUSB2PHY_IMP_CTRL1,
-+			     qphy->imp_res_offset_value << IMP_RES_OFFSET_SHIFT,
-+			     IMP_RES_OFFSET_MASK);
-+
-+	if (qphy->override_hstx_trim)
-+		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
-+				 qphy->hstx_trim_value << HSTX_TRIM_SHIFT,
-+				 HSTX_TRIM_MASK);
-+
-+	if (qphy->override_preemphasis)
-+		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
-+				qphy->preemphasis_level << PREEMPHASIS_EN_SHIFT,
-+				PREEMPHASIS_EN_MASK);
-+
-+	if (qphy->override_preemphasis_width) {
-+		if (qphy->preemphasis_width)
-+			qusb2_setbits(qphy->base,
-+				      cfg->regs[QUSB2PHY_PORT_TUNE1],
-+				      PREEMPH_HALF_WIDTH);
-+		else
-+			qusb2_clrbits(qphy->base,
-+				      cfg->regs[QUSB2PHY_PORT_TUNE1],
-+				      PREEMPH_HALF_WIDTH);
-+	}
-+}
-+
-+/*
-  * Fetches HS Tx tuning value from nvmem and sets the
-  * QUSB2PHY_PORT_TUNE1/2 register.
-  * For error case, skip setting the value and use the default value.
-@@ -525,6 +607,9 @@ static int qusb2_phy_init(struct phy *phy)
- 	qcom_qusb2_phy_configure(qphy->base, cfg->regs, cfg->tbl,
- 				 cfg->tbl_num);
- 
-+	/* Override board specific PHY tuning values */
-+	qusb2_phy_override_phy_params(qphy);
-+
- 	/* Set efuse value for tuning the PHY */
- 	qusb2_phy_set_tune2_param(qphy);
- 
-@@ -647,7 +732,7 @@ static int qusb2_phy_exit(struct phy *phy)
- 		.compatible	= "qcom,msm8996-qusb2-phy",
- 		.data		= &msm8996_phy_cfg,
- 	}, {
--		.compatible	= "qcom,qusb2-v2-phy",
-+		.compatible	= "qcom,sdm845-qusb2-phy",
- 		.data		= &qusb2_v2_phy_cfg,
- 	},
- 	{ },
-@@ -736,6 +821,31 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 		qphy->cell = NULL;
- 		dev_dbg(dev, "failed to lookup tune2 hstx trim value\n");
- 	}
-+
-+	if (of_find_property(dev->of_node, "qcom,imp-res-offset-value", NULL)) {
-+		qphy->override_imp_res_offset = true;
-+		of_property_read_u8(dev->of_node, "qcom,imp-res-offset-value",
-+				    &qphy->imp_res_offset_value);
-+	}
-+
-+	if (of_find_property(dev->of_node, "qcom,hstx-trim-value", NULL)) {
-+		qphy->override_hstx_trim = true;
-+		of_property_read_u8(dev->of_node, "qcom,hstx-trim-value",
-+				    &qphy->hstx_trim_value);
-+	}
-+
-+	if (of_find_property(dev->of_node, "qcom,preemphasis-level", NULL)) {
-+		qphy->override_preemphasis = true;
-+		of_property_read_u8(dev->of_node, "qcom,preemphasis-level",
-+				    &qphy->preemphasis_level);
-+	}
-+
-+	if (of_find_property(dev->of_node, "qcom,preemphasis-width", NULL)) {
-+		qphy->override_preemphasis_width = true;
-+		of_property_read_u8(dev->of_node, "qcom,preemphasis-width",
-+				    &qphy->preemphasis_width);
-+	}
-+
- 	pm_runtime_set_active(dev);
- 	pm_runtime_enable(dev);
- 	/*
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Not sure what went on when I had all the patches loaded in the editor befor=
+e sending, but I've deleted a brace here. Will be fixed in v4... :/
+
+Michel
+
+
+> +dev_err(&pdev->dev, "couldn't find sysctrl node\n");
+> +return -ENODEV;
+> +}
+> +sysctrl =3D syscon_node_to_regmap(parent->of_node);
+> +if (IS_ERR(sysctrl)) {
+> +dev_err(&pdev->dev, "couldn't find find regmap\n");
+> +return PTR_ERR(sysctrl);
+> +}
+> +err =3D register_restart_handler(&rzn1_reboot_nb);
+> +if (err) {
+> +dev_err(&pdev->dev, "register restart handler
+> failed(err=3D%d)\n",
+> +err);
+> +}
+> +
+> +return err;
+> +}
+> +
+> +static const struct of_device_id rzn1_reboot_of_match[] =3D {
+> +{ .compatible =3D "renesas,rzn1-reboot" },
+> +{}
+> +};
+> +MODULE_DEVICE_TABLE(of, rzn1_reboot_of_match);
+> +
+> +static struct platform_driver rzn1_reboot_driver =3D {
+> +.probe =3D rzn1_reboot_probe,
+> +.driver =3D {
+> +.name =3D "rzn1-reboot",
+> +.of_match_table =3D rzn1_reboot_of_match,
+> +},
+> +};
+> +module_platform_driver(rzn1_reboot_driver);
+> +
+> +MODULE_DESCRIPTION("RZ/N1 reboot driver");
+> MODULE_AUTHOR("Michel Pollet
+> +<michel.pollet@bp.renesas.com>, <buserror@gmail.com>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
