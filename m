@@ -1,202 +1,162 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH 3/5] powerpc/cache: add cache flush operation for various e500
-Date: Thu, 29 Mar 2018 09:31:41 +0800
-Message-ID: <20180329013143.22527-3-ran.wang_1@nxp.com>
-References: <20180329013143.22527-1-ran.wang_1@nxp.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/2] usb: dwc3: add clock and resets
+Date: Thu, 29 Mar 2018 13:32:34 +0900
+Message-ID: <CAK7LNAQixwNS1djgn3SUp=GUsZ58c+5z-B6ou-4NQykrO6AxMw@mail.gmail.com>
+References: <1521113998-25052-1-git-send-email-yamada.masahiro@socionext.com>
+ <1521113998-25052-2-git-send-email-yamada.masahiro@socionext.com>
+ <20180318125209.juoa3gkgdv2djciw@rob-hp-laptop> <CAK7LNAQT8wfAk55c40zrZ15wPh3fnsh=B1ciNfVx4uA-oGi34g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180329013143.22527-1-ran.wang_1@nxp.com>
+In-Reply-To: <CAK7LNAQT8wfAk55c40zrZ15wPh3fnsh=B1ciNfVx4uA-oGi34g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Scott Wood <oss@buserror.net>, Kumar Gala <galak@kernel.crashing.org>, Li Yang <leoyang.li@nxp.com>
-Cc: Zhao Chenhui <chenhui.zhao@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ran Wang <ran.wang_1@nxp.com>
+To: Rob Herring <robh@kernel.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Various e500 core have different cache architecture, so they
-need different cache flush operations. Therefore, add a callback
-function cpu_flush_caches to the struct cpu_spec. The cache flush
-operation for the specific kind of e500 is selected at init time.
-The callback function will flush all caches in the current cpu.
+2018-03-19 7:37 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> Hi Rob,
+>
+> 2018-03-18 21:52 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> On Thu, Mar 15, 2018 at 08:39:58PM +0900, Masahiro Yamada wrote:
+>>> dwc3-of-simple.c only handles arbitrary number of clocks and resets.
+>>> They are both generic enough to be put into the dwc3 core.  For simple
+>>> cases, a nested node structure like follows:
+>>>
+>>>   dwc3-glue {
+>>>           compatible = "foo,dwc3";
+>>>           clocks = ...;
+>>>           resets = ...;
+>>>           ...
+>>>
+>>>           dwc3 {
+>>>                   compatible = "snps,dwc3";
+>>>                   ...
+>>>           };
+>>
+>> I'm not a fan of how this was done.
+>>
+>>
+>>>   }
+>>>
+>>> would be turned into a single node:
+>>>
+>>>   dwc3 {
+>>>           compatible = "foo,dwc3", "snps,dwc3";
+>>>           clocks = ...;
+>>>           resets = ...;
+>>>           ...
+>>>   }
+>>
+>> And yes, this is what I'd prefer.
+>
+>
+>
+> Not only dwc3-of-simple.c, but all dwc3 nodes are
+> written like this.
+>
+>
+> omap_dwc3_1: omap_dwc3_1@48880000 {
+>         compatible = "ti,dwc3";
+>         reg = <0x48880000 0x10000>;
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+>         ranges;
+>         ...
+>
+>         usb1: usb@48890000 {
+>                 compatible = "snps,dwc3";
+>                 reg = <0x48890000 0x17000>;
+>                 ...
+>         };
+> };
+>
+>
+> The glue layer initializes SoC-specific things,
+> then populates the child "snps,dwc3".
+>
+>
+> I think the following structure should work
+> by handling EPROBE_DEFER properly.
+>
+> omap_dwc3_1: omap_dwc3_1@48880000 {
+>         compatible = "ti,dwc3"; (should be "ti,dwc3-glue" or something)
+>         reg = <0x48880000 0x10000>;
+>         ...
+> };
+>
+> usb1: usb@48890000 {
+>         compatible = "snps,dwc3";
+>         reg = <0x48890000 0x17000>;
+>         ...
+> };
+>
+>
+>
+>>>
+>>> I inserted reset_control_deassert() and clk_enable() before the first
+>>> register access, i.e. dwc3_cache_hwparams().
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>> ---
+>>>
+>>>  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +
+>>>  drivers/usb/dwc3/core.c                        | 127 ++++++++++++++++++++++++-
+>>>  drivers/usb/dwc3/core.h                        |   5 +
+>>>  3 files changed, 132 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> index 44e8bab..67e9cfb 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -9,12 +9,14 @@ Required properties:
+>>>   - interrupts: Interrupts used by the dwc3 controller.
+>>>
+>>>  Optional properties:
+>>> + - clocks: list of phandle and clock specifier pairs
+>>
+>> However, this should be specific as to how many clocks and their
+>> function. This should be readily available to someone with access to
+>> Synopsys datasheet. The number of clocks should generally be the same
+>> across SoCs, it is just some SoCs either tie clocks together or don't
+>> provide s/w control of some of the clocks.
+>
+>
+> Make sense.
+> You also implies this property is mandatory.
+> The number of clocks should be available in the datasheet
+> and no hardware can work with zero clock.
+>
+> However, making it mandatory breaks the binding
+> since the existing DT files do not specify clocks at all
+> in the "snps,dwc3" node.
+>
+>
+>
+> Anyway, our current situation:
+>
+> - We have the dwc3-core under the glue layer node
+>   despite they are independent in the CPU address view
+> - We add all sorts of clocks and resets in the glue layer node,
+>   and nothing in the dwc3-core node.
+>
+> If these are design mistake, what should we do?
+>
+> Continue development based on it?
+> If we fix it, how to change the course?
+>
 
-Signed-off-by: Chenhui Zhao <chenhui.zhao@freescale.com>
-Reviewed-by: Yang Li <LeoLi@freescale.com>
-Reviewed-by: Jose Rivera <German.Rivera@freescale.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
- arch/powerpc/include/asm/cputable.h       |   12 ++++
- arch/powerpc/kernel/asm-offsets.c         |    3 +
- arch/powerpc/kernel/cpu_setup_fsl_booke.S |   81 +++++++++++++++++++++++++++++
- arch/powerpc/kernel/cputable.c            |    4 ++
- 4 files changed, 100 insertions(+), 0 deletions(-)
+Any insight about this?
 
-diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-index a2c5c95..364e6cf 100644
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -44,6 +44,14 @@ enum powerpc_pmc_type {
- extern int machine_check_e500(struct pt_regs *regs);
- extern int machine_check_e200(struct pt_regs *regs);
- extern int machine_check_47x(struct pt_regs *regs);
-+
-+#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
-+extern void __flush_caches_e500v2(void);
-+extern void __flush_caches_e500mc(void);
-+extern void __flush_caches_e5500(void);
-+extern void __flush_caches_e6500(void);
-+#endif
-+
- int machine_check_8xx(struct pt_regs *regs);
- 
- extern void cpu_down_flush_e500v2(void);
-@@ -70,6 +78,10 @@ struct cpu_spec {
- 	/* flush caches inside the current cpu */
- 	void (*cpu_down_flush)(void);
- 
-+#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
-+	/* flush caches of the cpu which is running the function */
-+	void (*cpu_flush_caches)(void);
-+#endif
- 	/* number of performance monitor counters */
- 	unsigned int	num_pmcs;
- 	enum powerpc_pmc_type pmc_type;
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index ea5eb91..cb4b869 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -351,6 +351,9 @@ int main(void)
- 	OFFSET(CPU_SPEC_FEATURES, cpu_spec, cpu_features);
- 	OFFSET(CPU_SPEC_SETUP, cpu_spec, cpu_setup);
- 	OFFSET(CPU_SPEC_RESTORE, cpu_spec, cpu_restore);
-+#if defined(CONFIG_E500) || defined(CONFIG_PPC_E500MC)
-+	OFFSET(CPU_FLUSH_CACHES, cpu_spec, cpu_flush_caches);
-+#endif
- 
- 	OFFSET(pbe_address, pbe, address);
- 	OFFSET(pbe_orig_address, pbe, orig_address);
-diff --git a/arch/powerpc/kernel/cpu_setup_fsl_booke.S b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-index 462aed9..e94eb41 100644
---- a/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-+++ b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-@@ -345,3 +345,84 @@ _GLOBAL(cpu_down_flush_e5500)
- /* L1 Data Cache of e6500 contains no modified data, no flush is required */
- _GLOBAL(cpu_down_flush_e6500)
- 	blr
-+
-+_GLOBAL(__flush_caches_e500v2)
-+	mflr r0
-+	bl	flush_dcache_L1
-+	mtlr r0
-+	blr
-+
-+_GLOBAL(__flush_caches_e500mc)
-+_GLOBAL(__flush_caches_e5500)
-+	mflr r0
-+	bl	flush_dcache_L1
-+	bl	flush_backside_L2_cache
-+	mtlr r0
-+	blr
-+
-+/* L1 Data Cache of e6500 contains no modified data, no flush is required */
-+_GLOBAL(__flush_caches_e6500)
-+	blr
-+
-+	/* r3 = virtual address of L2 controller, WIMG = 01xx */
-+_GLOBAL(flush_disable_L2)
-+	/* It's a write-through cache, so only invalidation is needed. */
-+	mbar
-+	isync
-+	lwz	r4, 0(r3)
-+	li	r5, 1
-+	rlwimi	r4, r5, 30, 0xc0000000
-+	stw	r4, 0(r3)
-+
-+	/* Wait for the invalidate to finish */
-+1:	lwz	r4, 0(r3)
-+	andis.	r4, r4, 0x4000
-+	bne	1b
-+	mbar
-+
-+	blr
-+
-+	/* r3 = virtual address of L2 controller, WIMG = 01xx */
-+_GLOBAL(invalidate_enable_L2)
-+	mbar
-+	isync
-+	lwz	r4, 0(r3)
-+	li	r5, 3
-+	rlwimi	r4, r5, 30, 0xc0000000
-+	stw	r4, 0(r3)
-+
-+	/* Wait for the invalidate to finish */
-+1:	lwz	r4, 0(r3)
-+	andis.	r4, r4, 0x4000
-+	bne	1b
-+	mbar
-+
-+	blr
-+
-+/* Flush L1 d-cache, invalidate and disable d-cache and i-cache */
-+_GLOBAL(__flush_disable_L1)
-+	mflr	r10
-+	bl	flush_dcache_L1	/* Flush L1 d-cache */
-+	mtlr	r10
-+
-+	mfspr	r4, SPRN_L1CSR0	/* Invalidate and disable d-cache */
-+	li	r5, 2
-+	rlwimi	r4, r5, 0, 3
-+
-+	msync
-+	isync
-+	mtspr	SPRN_L1CSR0, r4
-+	isync
-+
-+1:	mfspr	r4, SPRN_L1CSR0	/* Wait for the invalidate to finish */
-+	andi.	r4, r4, 2
-+	bne	1b
-+
-+	mfspr	r4, SPRN_L1CSR1	/* Invalidate and disable i-cache */
-+	li	r5, 2
-+	rlwimi	r4, r5, 0, 3
-+
-+	mtspr	SPRN_L1CSR1, r4
-+	isync
-+
-+	blr
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index c40a9fc..eec3ca7 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -2100,6 +2100,7 @@
- 		.machine_check		= machine_check_e500,
- 		.platform		= "ppc8548",
- 		.cpu_down_flush		= cpu_down_flush_e500v2,
-+		.cpu_flush_caches	= __flush_caches_e500v2,
- 	},
- #else
- 	{	/* e500mc */
-@@ -2120,6 +2121,7 @@
- 		.machine_check		= machine_check_e500mc,
- 		.platform		= "ppce500mc",
- 		.cpu_down_flush		= cpu_down_flush_e500mc,
-+		.cpu_flush_caches	= __flush_caches_e500mc,
- 	},
- #endif /* CONFIG_PPC_E500MC */
- #endif /* CONFIG_PPC32 */
-@@ -2145,6 +2147,7 @@
- 		.machine_check		= machine_check_e500mc,
- 		.platform		= "ppce5500",
- 		.cpu_down_flush		= cpu_down_flush_e5500,
-+		.cpu_flush_caches	= __flush_caches_e5500,
- 	},
- 	{	/* e6500 */
- 		.pvr_mask		= 0xffff0000,
-@@ -2168,6 +2171,7 @@
- 		.machine_check		= machine_check_e500mc,
- 		.platform		= "ppce6500",
- 		.cpu_down_flush		= cpu_down_flush_e6500,
-+		.cpu_flush_caches	= __flush_caches_e6500,
- 	},
- #endif /* CONFIG_PPC_E500MC */
- #ifdef CONFIG_PPC32
+
+I think this is rather a general question.
+
+If somebody upstreams a driver without clocks,
+then later it turns out clocks are necessary,
+adding required clocks would break existing platforms
+since clk_get() fails.
+
+
 -- 
-1.7.1
+Best Regards
+Masahiro Yamada
