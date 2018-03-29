@@ -1,153 +1,98 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv4] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Thu, 29 Mar 2018 21:44:12 +0200
-Message-ID: <20180329194411.GD27688@amd>
-References: <20180309023750.108942-1-tony@atomide.com>
- <20180322135553.GA27648@amd>
- <20180322164633.GF5799@atomide.com>
- <20180322192843.GA17189@amd>
- <a88b0c0c06a6977d8f0c329690f5335b5fb5ab36.camel@redhat.com>
- <20180323105455.GB21644@amd>
- <20180323113521.45va72bhzis6ym6m@earth.universe>
- <20180323201343.GC23658@amd>
- <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
+From: Mats Karrman <mats.dev.list@gmail.com>
+Subject: Re: [PATCH v4 01/13] dt-bindings: connector: add properties for typec
+Date: Thu, 29 Mar 2018 21:54:08 +0200
+Message-ID: <9a9f450d-c255-70c7-397d-7edbdb996462@gmail.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-2-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bd79e802944f16b844c1850572928d93f3f2c4b2.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>, ofono@ofono.org
-Cc: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1522253178-32414-2-git-send-email-jun.li@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Li,
 
---tEFtbjk+mNEviIIX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/28/2018 06:06 PM, Li Jun wrote:
 
-Hi!
+> Add bingdings supported by current typec driver, so user can pass
+> all those properties via dt.
+>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>  .../bindings/connector/usb-connector.txt           | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index e1463f1..922f22b 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -15,6 +15,29 @@ Optional properties:
+>  - type: size of the connector, should be specified in case of USB-A, USB-B
+>    non-fullsize connectors: "mini", "micro".
+>  
+> +Optional properties for usb-c-connector:
+> +- power-type: should be one of "source", "sink" or "dual"(DRP) if typec
+> +  connector has power support.
+> +- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
+> +  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
+> +- data-type: should be one of "host", "device", "dual"(DRD) if typec
+> +  connector supports USB data.
+> +
+> +Required properties for usb-c-connector with power delivery support:
+> +- source-pdos: An array of u32 with each entry providing supported power
+> +  source data object(PDO), the detailed bit definitions of PDO can be found
+> +  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
+> +  Source_Capabilities Message, the order of each entry(PDO) should follow
+> +  the PD spec chapter 6.4.1. Required for power source and power dual role.
+> +- sink-pdos: An array of u32 with each entry providing supported power
+> +  sink data object(PDO), the detailed bit definitions of PDO can be found
+> +  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
+> +  Sink Capabilities Message, the order of each entry(PDO) should follow
+> +  the PD spec chapter 6.4.1. Required for power sink and power dual role.
+> +- op-sink-microwatt-hours: Sink required operating power in micro
+> +  watt-hours, if source offered power is less then it, Capability Mismatch
+> +  is set, required for power sink and power dual role.
 
-> > Does ofonod work for you? I could not get that one to work...
->=20
-> Because it's looking for a Gobi modem but the MDM6600 isn't one and
-> doesn't expose that layout (and doesn't really need to anyway).  I
-> don't think ofono has a generic QMI driver, so you'd either need to for
-> ce it to use the telitqmi or quectelqmi drivers, or write your own
-> generic QMI one.
+This doesn't make sense. The unit of power is watt (W), watt-hour on the other hand
+is a measurement of energy. I think "op-sink-microwatt" is what we want here.
 
-You are right, it is detected as gobi now:
+// Mats
 
-user@devuan:/my/ofono$ sudo python2 test/list-modems
-[ /gobi_0 ]
-    SystemPath =3D
-    /sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/usb=
-2/2-1
- Features =3D
- Emergency =3D 0
- Powered =3D 0
- Lockdown =3D 0
- Interfaces =3D
- Online =3D 0
- Type =3D hardware
-
-=2E..and nothing works.
-
-commit db9b292f9290b97c87a8d4b4836af4763c06a39c
-Author: Bassem Boubaker <bassem.boubaker@actia.fr>
-Date:   Mon Mar 19 17:57:31 2018 +0100
-
-I tried this:
-
-diff --git a/plugins/udevng.c b/plugins/udevng.c
-index ff5d41af..6b103254 100644
---- a/plugins/udevng.c
-+++ b/plugins/udevng.c
-@@ -1578,8 +1578,6 @@ static struct {
- 	{ "mbm",	"cdc_ether",	"0930"		},
- 	{ "mbm",	"cdc_ncm",	"0930"		},
- 	{ "hso",	"hso"				},
--	{ "gobi",	"qmi_wwan"			},
--	{ "gobi",	"qcserial"			},
- 	{ "sierra",	"qmi_wwan",	"1199"		},
- 	{ "sierra",	"qcserial",	"1199"		},
- 	{ "sierra",	"sierra"			},
-@@ -1602,6 +1600,8 @@ static struct {
- 	{ "telit",	"cdc_acm",	"1bc7", "0021"	},
- 	{ "telitqmi",	"qmi_wwan",	"1bc7", "1201"	},
- 	{ "telitqmi",	"option",	"1bc7", "1201"	},
-+	{ "telitqmi",	"qmi_wwan",	"22b8", "2a70"	},
-+	{ "telitqmi",	"option",	"22b8", "2a70"	},
- 	{ "nokia",	"option",	"0421", "060e"	},
- 	{ "nokia",	"option",	"0421", "0623"	},
- 	{ "samsung",	"option",	"04e8", "6889"	},
-
-But no luck:
-
-ofonod[15879]: plugins/udevng.c:create_modem()
-/sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/usb2/2-1
-ofonod[15879]: plugins/udevng.c:create_modem() driver=3Dtelitqmi
-ofonod[15879]: src/modem.c:ofono_modem_create() name: (null), type:
-telitqmi
-ofonod[15879]: plugins/udevng.c:setup_telitqmi()
-/sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/usb2/2-1
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() /dev/cdc-wdm0
-255/251/255 05 (null) usbmisc
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() wwan0 255/251/255 05
-(null) net
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() /dev/cdc-wdm1
-255/251/255 06 (null) usbmisc
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() wwan1 255/251/255 06
-(null) net
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() /dev/cdc-wdm2
-255/251/255 07 (null) usbmisc
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() wwan2 255/251/255 07
-(null) net
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() /dev/cdc-wdm3
-255/251/255 08 (null) usbmisc
-ofonod[15879]: plugins/udevng.c:setup_telitqmi() wwan3 255/251/255 08
-(null) net
-ofonod[15879]: plugins/udevng.c:destroy_modem()
-/sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/usb2/2-1
-ofonod[15879]: src/modem.c:ofono_modem_remove() 0x596480
-ofonod[15879]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm0
-ofonod[15879]: plugins/udevng.c:destroy_modem() wwan0
-ofonod[15879]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm1
-ofonod[15879]: plugins/udevng.c:destroy_modem() wwan1
-ofonod[15879]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm2
-ofonod[15879]: plugins/udevng.c:destroy_modem() wwan2
-ofonod[15879]: plugins/udevng.c:destroy_modem() /dev/cdc-wdm3
-ofonod[15879]: plugins/udevng.c:destroy_modem() wwan3
-ofonod[15879]: plugins/upower.c:upower_connect() upower connect
-ofonod[15879]: plugins/hfp_hf_bluez5.c:connect_handler() Registering
-External Profile handler ...
-
-With quectelqmi result was similar.
-
-I know there are AT commands available at /dev/ttyUSB4. Is there easy
-way to make ofonod connect to that?
-
-Thanks,
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tEFtbjk+mNEviIIX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq9QgsACgkQMOfwapXb+vIYRwCfaMPX3tG2WfokQSGnBgAuPcdh
-GMQAoMEtLEciA7AIAasTmqdxmd/lV3Id
-=B5XZ
------END PGP SIGNATURE-----
-
---tEFtbjk+mNEviIIX--
+> +
+>  Required nodes:
+>  - any data bus to the connector should be modeled using the OF graph bindings
+>    specified in bindings/graph.txt, unless the bus is between parent node and
+> @@ -73,3 +96,19 @@ ccic: s2mm005@33 {
+>  		};
+>  	};
+>  };
+> +
+> +3. USB-C connector attached to a typec port controller(ptn5110), which has
+> +power delivery support and enables drp.
+> +
+> +typec: ptn5110@50 {
+> +	...
+> +	usb_con: connector {
+> +		compatible = "usb-c-connector";
+> +		label = "USB-C";
+> +		power-type = "dual";
+> +		try-power-role = "sink";
+> +		source-pdos = <0x380190c8>;
+> +		sink-pdos = <0x380190c8 0x3802d0c8>;
+> +		op-sink-microwatt-hours = <9000000>;
+> +	};
+> +};
+>
