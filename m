@@ -1,140 +1,81 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 4/8] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Thu, 29 Mar 2018 17:59:12 +0200
-Message-ID: <1522339152.1792.1@smtp.crapouillou.net>
-References: <20180110224838.16711-2-paul@crapouillou.net>
-        <20180317232901.14129-1-paul@crapouillou.net>
-        <20180317232901.14129-5-paul@crapouillou.net>
-        <20180327144631.j2bugsjxulkv57ws@rob-hp-laptop>
-        <3765e5a86b80b2a1888cabee623e5d0c@crapouillou.net>
-        <CAL_JsqLA8WbYZ49_oVb-uVgwUixVqDw2wtLy2tkyQwBM3ow5ew@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Thu, 29 Mar 2018 09:06:11 -0700
+Message-ID: <20180329160611.GP5700@atomide.com>
+References: <20180326141638.GB1450@amd>
+ <20180326155828.ttnduivadob4iqmd@earth.universe>
+ <20180327121441.GH29239@sirena.org.uk>
+ <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
+ <20180328022910.GM29239@sirena.org.uk>
+ <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com>
+ <20180329133613.khldv72w3zj63vsk@earth.universe>
+ <20180329135904.GN5700@atomide.com>
+ <20180329154600.qhels5fqzzg364gj@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLA8WbYZ49_oVb-uVgwUixVqDw2wtLy2tkyQwBM3ow5ew@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180329154600.qhels5fqzzg364gj@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-doc@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [180329 15:47]:
+> Hi,
+> 
+> On Thu, Mar 29, 2018 at 06:59:04AM -0700, Tony Lindgren wrote:
+> > > I think cpcap is always the clock and frame master, but I think
+> > > mdm6600 is the remote side and OMAP is not involved at all.
+> > 
+> > OK. So could it be just an alsamixer on/off toggle then for
+> > "Modem" or something similar?
+> 
+> I think so. We might want to have an "Mode" enum instead, though.
+> That can be extended, once we unlock the other modes (bluetooth,
+> bluetooth call).
 
-Le mer. 28 mars 2018 =E0 18:28, Rob Herring <robh@kernel.org> a =E9crit :
-> On Wed, Mar 28, 2018 at 10:33 AM, Paul Cercueil=20
-> <paul@crapouillou.net> wrote:
->>  Le 2018-03-27 16:46, Rob Herring a =E9crit :
->>>=20
->>>  On Sun, Mar 18, 2018 at 12:28:57AM +0100, Paul Cercueil wrote:
->>>>=20
->>>>  Add documentation about how to properly use the Ingenic TCU
->>>>  (Timer/Counter Unit) drivers from devicetree.
->>>>=20
->>>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>>  ---
->>>>   .../bindings/clock/ingenic,tcu-clocks.txt          | 42=20
->>>> ++++++++++++++++
->>>>   .../bindings/interrupt-controller/ingenic,tcu.txt  | 39=20
->>>> +++++++++++++++
->>>>   .../devicetree/bindings/mfd/ingenic,tcu.txt        | 56
->>>>  ++++++++++++++++++++++
->>>>   .../devicetree/bindings/timer/ingenic,tcu.txt      | 41=20
->>>> ++++++++++++++++
->>>>   4 files changed, 178 insertions(+)
->>>>   create mode 100644
->>>>  Documentation/devicetree/bindings/clock/ingenic,tcu-clocks.txt
->>>>   create mode 100644
->>>> =20
->>>> Documentation/devicetree/bindings/interrupt-controller/ingenic,tcu.txt
->>>>   create mode 100644=20
->>>> Documentation/devicetree/bindings/mfd/ingenic,tcu.txt
->>>>   create mode 100644
->>>>  Documentation/devicetree/bindings/timer/ingenic,tcu.txt
->>>>=20
->>>>   v4: New patch in this series. Corresponds to V2 patches 3-4-5=20
->>>> with
->>>>   added content.
->>>>  +/ {
->>>>  +       tcu: mfd@10002000 {
->>>>  +               compatible =3D "ingenic,tcu", "simple-mfd",=20
->>>> "syscon";
->>>>  +               reg =3D <0x10002000 0x1000>;
->>>>  +               #address-cells =3D <1>;
->>>>  +               #size-cells =3D <1>;
->>>>  +               ranges =3D <0x0 0x10002000 0x1000>;
->>>>  +
->>>>  +               tcu_timer: timer@10 {
->>>>  +                       compatible =3D "ingenic,jz4740-tcu";
->>>>  +                       reg =3D <0x10 0xff0>;
->>>>  +
->>>>  +                       clocks =3D <&tcu_clk 0>, <&tcu_clk 1>,=20
->>>> <&tcu_clk
->>>>  2>, <&tcu_clk 3>,
->>>>  +                                        <&tcu_clk 4>, <&tcu_clk=20
->>>> 5>,
->>>>  <&tcu_clk 6>, <&tcu_clk 7>;
->>>>  +                       clock-names =3D "timer0", "timer1",=20
->>>> "timer2",
->>>>  "timer3",
->>>>  +                                                 "timer4",=20
->>>> "timer5",
->>>>  "timer6", "timer7";
->>>>  +
->>>>  +                       interrupt-parent =3D <&tcu_irq>;
->>>>  +                       interrupts =3D <0 1 2 3 4 5 6 7>;
->>>=20
->>>=20
->>>  Thinking about this some more... You simply have 8 timers (and no=20
->>> other
->>>  functions?) with some internal clock and irq controls for each=20
->>> timer. I
->>>  don't think it really makes sense to create separate clock and irq
->>>  drivers in that case. That would be like creating clock drivers for
->>>  every clock divider in timers, pwms, uarts, etc. Unless the clocks=20
->>> get
->>>  exposed to other parts of the system, then there is no point.
->>=20
->>=20
->>  I have 8 timers with some internal clock and IRQ controls, that can=20
->> be used
->>  as PWM.
->=20
-> Please include how you plan to do the PWM support too. I need a
-> complete picture of the h/w, not piecemeal, evolving bindings.
+OK. Seems in addition to the "Mode" enum, we also need
+some other switch for modem on and off toggle?
 
-Alright.
+I guess most people want to save the preferred "Mode" enum,
+then for the duration of the call enable the selected mode.
 
->>  But the TCU also controls the IRQ of the OS Timer (which is
->>  separate),
->>  as well as masking of the clocks for the OS timer and the watchdog.
->=20
-> The OS timer and watchdog are different blocks outside the TCU? This
-> doesn't seem to be the case based on the register definitions.
+And I guess the mute is already there for the mic with 'm'
+in alsamixer for conf calls :)
 
-Their register areas are mostly separate, although contiguous. On the=20
-other
-hand, the watchdog and OST can be started/stopped from a bit within a=20
-TCU
-register, so they're probably part of the same h/w block.
+> > > > Then using the n_gsm ts 27.010 uart mux, I dial:
+> > > > 
+> > > > ./ngsm-rw 1 "AT+CFUN=1"		# connect to network
+> > > > U0001+CFUN:OK
+> > > > ./ngsm-rw 2 "AT+CMUT=0"		# unmute speaker over ch2, do this over qmi?
+> > > > U0001+CMUT:OK
+> > > > ./ngsm-rw 1 "ATD#123"		# dial number
+> > > > U0001D:OK
+> > 
+> > There's a typo above, it should be just ATD123 where 123 is the
+> > number.
+> > 
+> > I was just doing few test calls to robots. Payback time for all
+> > the robocalls, you know! :)
+> >
+> > > > And I do hear a voice talking over the speakerphone :) Sorry have not tested the
+> > > > mic yet..
+> > 
+> > And calling a person I can hear the other end but the mic is
+> > not working. So maybe I need to tweak the alsamixer settings
+> > too for mic?
+> 
+> Your override kills most settings from alsamixer. You can try to
+> just override CPCAP_REG_VAUDIOC, CPCAP_REG_CC and CPCAP_REG_CDI
+> and setup everything else with alsamixer.
 
->>  I thought having clean drivers for different frameworks working on=20
->> the same
->>  regmap was cleaner than having one big-ass driver handling=20
->> everything.
->=20
-> DT is not the only way to instantiate drivers and how one OS splits
-> drivers should not define your DT binding. An MFD driver can create
-> child devices and a single DT node can be a provider of multiple
-> things. It is appropriate for an MFD to have child nodes primarily
-> when the sub devices need their own resources defined as properties in
-> DT or when the sub device is an IP block reused in multiple devices.
-> Just to have a node per driver/provider is not what should drive the
-> decision.
-
-The idea is not to have necesarily one node per driver. I just wanted=20
-to keep
-it simple.
+OK I'll try to narrow it down and play with the mic settings
+tonight or over the weekend.
 
 Regards,
--Paul
-=
+
+Tony
