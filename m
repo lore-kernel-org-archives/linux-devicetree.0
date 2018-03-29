@@ -1,45 +1,85 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Thu, 29 Mar 2018 09:37:15 -0500
-Message-ID: <20180329143715.GA31757@hector.attlocal.net>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
- <20180320143131.4eenixtbhciq5fwc@localhost>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 3/8] net: mscc: Add MDIO driver
+Date: Thu, 29 Mar 2018 16:40:41 +0200
+Message-ID: <20180329144041.GA25752@lunn.ch>
+References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
+ <20180323201117.8416-4-alexandre.belloni@bootlin.com>
+ <20180323204939.GS24361@lunn.ch>
+ <20180329140544.GB12066@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180320143131.4eenixtbhciq5fwc@localhost>
+In-Reply-To: <20180329140544.GB12066@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Sricharan R <sricharan@codeaurora.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 07:31:31AM -0700, Richard Cochran wrote:
-> On Tue, Mar 20, 2018 at 09:28:47AM +0530, Sricharan R wrote:
-> > Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-> > Adds missing memory, reserved-memory nodes.
+On Thu, Mar 29, 2018 at 04:05:44PM +0200, Alexandre Belloni wrote:
+> On 23/03/2018 at 21:49:39 +0100, Andrew Lunn wrote:
+> > On Fri, Mar 23, 2018 at 09:11:12PM +0100, Alexandre Belloni wrote:
+> > > Add a driver for the Microsemi MII Management controller (MIIM) found on
+> > > Microsemi SoCs.
+> > > On Ocelot, there are two controllers, one is connected to the internal
+> > > PHYs, the other one can communicate with external PHYs.
 > > 
-> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > ---
-> >  arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 28 +++++++++++++++++++++++++++
+> > Hi Alexandre
+> > 
+> > This looks to be standalone. Such drivers we try to put in
+> > drivers/net/phy.
+> > 
+> > > +static int mscc_miim_read(struct mii_bus *bus, int mii_id, int regnum)
+> > > +{
+> > > +	struct mscc_miim_dev *miim = bus->priv;
+> > > +	u32 val;
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&miim->lock);
+> > 
+> > What are you locking against here?
+> > 
+> > And you don't appear to initialize the mutex anywhere.
+> > 
+> > > +static int mscc_miim_reset(struct mii_bus *bus)
+> > > +{
+> > > +	struct mscc_miim_dev *miim = bus->priv;
+> > > +	int i;
+> > > +
+> > > +	if (miim->phy_regs) {
+> > > +		writel(0, miim->phy_regs + MSCC_PHY_REG_PHY_CFG);
+> > > +		writel(0x1ff, miim->phy_regs + MSCC_PHY_REG_PHY_CFG);
+> > > +		mdelay(500);
+> > > +	}
+> > > +
+> > > +	for (i = 0; i < PHY_MAX_ADDR; i++) {
+> > > +		if (mscc_miim_read(bus, i, MII_PHYSID1) < 0)
+> > > +			bus->phy_mask |= BIT(i);
+> > > +	}
+> > 
+> > Why do this? Especially so for the external bus, where the PHYs might
+> > have a GPIO reset line, and won't respond until the gpio is
+> > released. The core code does that just before it scans the bus, or
+> > just before it scans the particular address on the bus, depending on
+> > the scope of the GPIO.
+> > 
 > 
-> Q: Does mainline Linux even boot on the DK?
-> 
-> A: No, it doesn't.
+> IIRC, this was needed when probing the bus without DT, in that case, the
+> mdiobus_scan loop of __mdiobus_register() will fail when doing the
+> get_phy_id for phys 0 to 31 because get_phy_id() transforms any error in
+> -EIO and so it is impossible to register the bus. Other drivers have a
+> similar code to handle that case.
 
-If you aren't actually testing/validating this specific board, how can you make
-a statement like this?  Unless you have tested these specifically on this board,
-I'd appreciate not getting false information about what is or is not working.
+Hi Alexandre
 
-> 
-> Please add the missing basic board support before hacking random stuff
-> into the DTS.
+Do you mean mscc_miim_read() will return -EIO if there is no device on
+the bus at the address trying to be read? Most devices just return
+0xffff because there is a pull up on the data line, nothing is driving
+it, so all 1's are read.
 
-Feel free to send your own contributions where you are adding the things that
-are important to you.
+It sounds like the correct fix is for get_phy_id() to look at the
+error code for mdiobus_read(bus, addr, MII_PHYSID1). If it is EIO and
+maybe ENODEV, set *phy_id to 0xffffffff and return. The scan code
+should then do the correct thing.
 
-Regards,
-
-Andy Gross
+       Andrew
