@@ -1,61 +1,55 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCHv3 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
-Date: Thu, 29 Mar 2018 16:12:30 -0500
-Message-ID: <CANk1AXTYZTdMHMPkz1+0zZ2f2FJ-rjJVUbtjjKW06ac1J5VAVQ@mail.gmail.com>
-References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com> <1522182014-7338-5-git-send-email-richard.gong@linux.intel.com>
+From: Mats Karrman <mats.dev.list@gmail.com>
+Subject: Re: [PATCH v4 10/13] usb: typec: tcpm: set cc for drp toggling attach
+Date: Thu, 29 Mar 2018 23:18:34 +0200
+Message-ID: <03c6ab05-7734-d7bb-4c4b-d00916032e0c@gmail.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-11-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522182014-7338-5-git-send-email-richard.gong@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Gong <richard.gong@linux.intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Yves Vandervennet <yves.vandervennet@linux.intel.com>, Richard Gong <richard.gong@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1522253178-32414-11-git-send-email-jun.li@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 27, 2018 at 3:20 PM,  <richard.gong@linux.intel.com> wrote:
-> From: Alan Tull <atull@kernel.org>
->
-> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
->
-> Signed-off-by: Alan Tull <atull@kernel.org>
-> ---
-> v2: this patch is added in patch set version 2
-> v3: change to put fpga_mgr node under firmware/svc node
-> ---
->  .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-> new file mode 100644
-> index 0000000..be7cd96
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-> @@ -0,0 +1,17 @@
-> +Intel Stratix10 SoC FPGA Manager
-> +
-> +Required properties:
-> +The fpga_mgr node has the following mandatory property, must be located under
-> +firmware/svc node.
-> +
-> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
-> +
-> +Example:
-> +
-> +       firmware {
-> +               svc {
-> +                       fpga_mgr: fpga-mgr@0 {
-
-Shouldn't have the index.  Should be:
-
-                            fpga_mgr: fpga-mgr {
-
-Alan
-
-> +                               compatible = "intel,stratix10-soc-fpga-mgr";
-> +                       };
-> +               };
-> +       };
-> --
-> 2.7.4
->
+SGkgTGksCgpPbiAwMy8yOC8yMDE4IDA2OjA2IFBNLCBMaSBKdW4gd3JvdGU6Cgo+IEluIGNhc2Ug
+b2YgZHJwIHRvZ2dsaW5nLCB3ZSBtYXkgbmVlZCBzZXQgY29ycmVjdCBjYyB2YWx1ZSBmb3Igcm9s
+ZSBjb250cm9sCj4gYWZ0ZXIgYXR0YWNoIGFzIGl0IG1heSBuZXZlciBiZWVuIHNldC4KPgo+IFNp
+Z25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvdXNi
+L3R5cGVjL3RjcG0uYyB8IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyBiL2RyaXZlcnMvdXNi
+L3R5cGVjL3RjcG0uYwo+IGluZGV4IDIxOGMyMzAuLjcyZDQyMzIgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy91c2IvdHlwZWMvdGNwbS5jCj4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jCj4g
+QEAgLTIxMjYsNiArMjEyNiw3IEBAIHN0YXRpYyB2b2lkIHRjcG1fcmVzZXRfcG9ydChzdHJ1Y3Qg
+dGNwbV9wb3J0ICpwb3J0KQo+ICAJdGNwbV9zZXRfYXR0YWNoZWRfc3RhdGUocG9ydCwgZmFsc2Up
+Owo+ICAJcG9ydC0+dHJ5X3NyY19jb3VudCA9IDA7Cj4gIAlwb3J0LT50cnlfc25rX2NvdW50ID0g
+MDsKPiArCXBvcnQtPmNjX3JlcSA9IDA7CgpJIGRvbid0IHRoaW5rIGl0J3MgT0sgdG8gdXNlICIw
+IiBoZXJlLiBjY19yZXEgaXMgYW4gZW51bSBzbyB3aHkgbm90IHVzZSAifFRZUEVDX0NDX09QRU4i
+P3wKCj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lkIHRjcG1fZGV0YWNoKHN0cnVjdCB0Y3BtX3BvcnQg
+KnBvcnQpCj4gQEAgLTIzNjEsNiArMjM2Miw4IEBAIHN0YXRpYyB2b2lkIHJ1bl9zdGF0ZV9tYWNo
+aW5lKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQpCj4gIAkJYnJlYWs7Cj4gIAo+ICAJY2FzZSBTUkNf
+QVRUQUNIRUQ6Cj4gKwkJaWYgKCFwb3J0LT5jY19yZXEpCgrCoMKgwqAgwqDCoMKgIAlpZiAocG9y
+dC0+Y2NfcmVxID09IHxUWVBFQ19DQ19PUEVOKXwKCj4gKwkJCXRjcG1fc2V0X2NjKHBvcnQsIHRj
+cG1fcnBfY2MocG9ydCkpOwo+ICAJCXJldCA9IHRjcG1fc3JjX2F0dGFjaChwb3J0KTsKPiAgCQl0
+Y3BtX3NldF9zdGF0ZShwb3J0LCBTUkNfVU5BVFRBQ0hFRCwKPiAgCQkJICAgICAgIHJldCA8IDAg
+PyAwIDogUERfVF9QU19TT1VSQ0VfT04pOwo+IEBAIC0yNTMxLDYgKzI1MzQsOCBAQCBzdGF0aWMg
+dm9pZCBydW5fc3RhdGVfbWFjaGluZShzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0KQo+ICAJCXRjcG1f
+c2V0X3N0YXRlKHBvcnQsIFNOS19VTkFUVEFDSEVELCBQRF9UX1BEX0RFQk9VTkNFKTsKPiAgCQli
+cmVhazsKPiAgCWNhc2UgU05LX0FUVEFDSEVEOgo+ICsJCWlmICghcG9ydC0+Y2NfcmVxKQoKRGl0
+dG8uCgo+ICsJCQl0Y3BtX3NldF9jYyhwb3J0LCBUWVBFQ19DQ19SRCk7Cj4gIAkJcmV0ID0gdGNw
+bV9zbmtfYXR0YWNoKHBvcnQpOwo+ICAJCWlmIChyZXQgPCAwKQo+ICAJCQl0Y3BtX3NldF9zdGF0
+ZShwb3J0LCBTTktfVU5BVFRBQ0hFRCwgMCk7CgovLyBNYXRzCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxp
+bnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qu
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
