@@ -1,98 +1,100 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Binding document for OV7251
- camera sensor
-Date: Thu, 29 Mar 2018 11:24:54 +0300
-Message-ID: <20180329082453.ww5hbrtra3um6dws@paasikivi.fi.intel.com>
-References: <1521778460-8717-1-git-send-email-todor.tomov@linaro.org>
- <1521778460-8717-2-git-send-email-todor.tomov@linaro.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v2 0/8] Add support for PWM input capture on STM32
+Date: Thu, 29 Mar 2018 10:58:37 +0200
+Message-ID: <20180329085837.GA16952@ulmo>
+References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
+ <20180327225101.GJ28163@mithrandir>
+ <20180328100309.yig4d3bmml6jvodz@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521778460-8717-2-git-send-email-todor.tomov@linaro.org>
+In-Reply-To: <20180328100309.yig4d3bmml6jvodz@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Todor Tomov <todor.tomov@linaro.org>
-Cc: mchehab@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 23, 2018 at 12:14:19PM +0800, Todor Tomov wrote:
-> Add the document for ov7251 device tree binding.
-> 
-> CC: Rob Herring <robh@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov7251.txt       | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-> new file mode 100644
-> index 0000000..4ee6888
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-> @@ -0,0 +1,51 @@
-> +* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
-> +
-> +The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor with
-> +an active array size of 640H x 480V. It is programmable through a serial I2C
-> +interface.
-> +
-> +Required Properties:
-> +- compatible: Value should be "ovti,ov7251".
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock.
-> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> +  to the hardware pin XSHUTDOWN which is physically active low.
-> +- vdddo-supply: Chip digital IO regulator.
-> +- vdda-supply: Chip analog regulator.
-> +- vddd-supply: Chip digital core regulator.
-> +
-> +The device node must contain one 'port' child node for its digital output
 
-Could you add there shall be a single endpoint node in the port node as
-well?
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	&i2c1 {
-> +		...
-> +
-> +		ov7251: camera-sensor@60 {
-> +			compatible = "ovti,ov7251";
-> +			reg = <0x60>;
-> +
-> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&camera_bw_default>;
-> +
-> +			clocks = <&clks 200>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <24000000>;
-> +
-> +			vdddo-supply = <&camera_dovdd_1v8>;
-> +			vdda-supply = <&camera_avdd_2v8>;
-> +			vddd-supply = <&camera_dvdd_1v2>;
-> +
-> +			port {
-> +				ov7251_ep: endpoint {
-> +					clock-lanes = <1>;
-> +					data-lanes = <0>;
-> +					remote-endpoint = <&csi0_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+On Wed, Mar 28, 2018 at 11:03:09AM +0100, Lee Jones wrote:
+> On Wed, 28 Mar 2018, Thierry Reding wrote:
+>=20
+> > On Wed, Feb 14, 2018 at 11:04:31AM +0100, Fabrice Gasnier wrote:
+> > > This series adds support for capture to stm32-pwm driver.
+> > > Capture is based on DMAs.
+> > > - First two patches are precursor patches
+> > > - Subsequent two patches add support for requesting DMAs to MFD core
+> > > - Next three patches add support for capture to stm32-pwm driver
+> > > - This has been tested on stm32429i-eval board.
+> > >=20
+> > > ---
+> > > Resend v2:
+> > > - Add collected Acks
+> > >=20
+> > > Changes in v2:
+> > > - Abstract DMA handling from child driver: move it to MFD core
+> > > - Rework pwm capture routines to adopt this change
+> > > - Comment on optional dma support, beautify DMAs probe
+> > >=20
+> > > Fabrice Gasnier (8):
+> > >   pwm: stm32: fix, remove unused struct device
+> > >   pwm: stm32: protect common prescaler for all channels
+> > >   dt-bindings: mfd: stm32-timers: add support for dmas
+> > >   mfd: stm32-timers: add support for dmas
+> > >   pwm: stm32: add capture support
+> > >   pwm: stm32: improve capture by tuning counter prescaler
+> > >   pwm: stm32: use input prescaler to improve period capture
+> > >   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+> > >=20
+> > >  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+> > >  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+> > >  drivers/mfd/stm32-timers.c                         | 215 +++++++++++=
+++++-
+> > >  drivers/pwm/pwm-stm32.c                            | 276 +++++++++++=
++++++++++-
+> > >  include/linux/mfd/stm32-timers.h                   |  39 +++
+> > >  5 files changed, 547 insertions(+), 6 deletions(-)
+> >=20
+> > I can't apply patches 1-2 and 5-6 since they depend on patches 3-4 for
+> > which I'd need an Acked-by: from Lee if I'm to pick them up. Same goes
+> > for patch 7.
+> >=20
+> > By the looks of it there are minor conflicts with the MFD tree, but no
+> > major ones. Perhaps it'd be better for Lee to pick up 3-4 for v4.17-rc1
+> > and ack patch 7, then I can take the rest after v4.17-rc1?
+>=20
+> Sounds like a faff.
+>=20
+> Why don't I just pick them all up (except the ARM patch)?
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Fine with me. For all the PWM patches in this series:
+
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlq8qroACgkQ3SOs138+
+s6FL7Q/+Irm05gCxo3p7ZUuuUD8ishP/EJzMPZ0j0CMLQz/I0L0YIihDwrEJiV3B
+CpvOxJYhgAiOt2/99r3E7EdXvtS0BFqbeLmsuoY3vESWyEukfjeC9zDZbZkZ0W2i
++fzbuo9KL4tpBK59NuWKAB8HTj26Zj9qdYv9FON/xN7VyauFRR1HCRJOdFzprjRK
+yNkHEBQ7BKQcpA58wOmUgFpCNAuhYro80jtw6FZEUNdEoqxDSFtqQejNyKhz23b2
+Yf+op5CG1GTkY6nNKguiZVzpM1UZ4zSSSTdnYZC8lCyaaBZ/mFVk4cS9Bvutswd8
+SazFm0pNuziAeSrO5SZ8jnJs17JrbcWa/RBN9Gwlddh7kFiXW/nX7WVW6/yIKTVq
+XSWlY+ygUTpttrtsDwtHXDBcC6nKJ02EgpR0eGbk3MJHdkEffN/NwZhWKWcyo9YU
+nEBCy2t519nSEtZXGK2uAocXEdAmcgfVXLOo/hRZrxL7HN8ppLL6feu1rwEiLLYL
+n0SrDMzYuDY7ZYZX6ioYMM1wan8Na8RMNbOYyZpmdbf9jhotTu4EFGzdFNDo7C8E
+DR+pbdCFPJtMPIlnyHgXn3H8y0OVc/CZVH9oVIKrbTyGYZxpuCt+MUmZifaTcMmy
+KdeFqpO4RU+/OzQbcfBQjh2Z/AhL9tfzkJmdE05w0wb90nP+yYY=
+=uu/R
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
