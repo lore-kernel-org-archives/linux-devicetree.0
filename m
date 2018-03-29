@@ -1,52 +1,65 @@
 From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH v4 0/7] phy: qcom: Updates for USB PHYs on SDM845
-Date: Thu, 29 Mar 2018 16:34:19 +0530
-Message-ID: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+Subject: [PATCH v4 1/7] clk: msm8996-gcc: change halt check for USB/PCIE pipe_clk
+Date: Thu, 29 Mar 2018 16:34:20 +0530
+Message-ID: <1522321466-21755-2-git-send-email-mgautam@codeaurora.org>
+References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, robh@kernel.org, sboyd@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, vivek.gautam@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, vivek.gautam@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 has two USB instances each with QUSB2 and QMP PHYs.
-One of the QMP PHY is USB-DP (DisplayPort) combo PHY where
-as other one is single lane UNI-PHY (without DP support).
-Changes are related to PHY configuration for electrical
-parameters tuning to improve eye-diagram and some fixes.
+The USB and PCIE pipe clocks are sourced from external clocks
+inside the QMP USB/PCIE PHYs. Enabling or disabling of PIPE RCG
+clocks is dependent on PHY initialization sequence hence
+update halt_check to BRANCH_HALT_DELAY for these clocks so
+that clock status bit is not polled when enabling or disabling
+the clocks. It allows to simplify PHY client driver code which
+is both user and source of the pipe_clk and avoid error logging
+related status check on clk_disable/enable.
 
-Changes since v3:
- - As per Doug's review comments added device tree parameters
-   to handle board level differences in PHY tuning values instead
-   of adding separate device tree bindings.
- - Replace PHY version specific bindings names with SOC name as
-   no one is going to use generic binding names.
- - Update halt_check to not check for pipe clock status that
-   allows to simplify pipe_clk handling in QMP driver.
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+---
+ drivers/clk/qcom/gcc-msm8996.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes since v2:
- - Use separate phy_ops for USB to not register power_on op.
- - And other minor changes as per review comments from Stephen.
-
-Changes since v1:
- - Updated qusb2 compatibility name as per comment from Vivek.
-
-Manu Gautam (7):
-  clk: msm8996-gcc: change halt check for USB/PCIE pipe_clk
-  phy: qcom-qmp: Enable pipe_clk before PHY initialization
-  phy: qcom-qusb2: Fix crash if nvmem cell not specified
-  dt-bindings: phy-qcom-qmp: Update bindings for sdm845
-  phy: qcom-qmp: Add QMP V3 USB3 UNI PHY support for sdm845
-  dt-bindings: phy-qcom-usb2: Add support to override tuning values
-  phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   3 +-
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  19 ++-
- drivers/clk/qcom/gcc-msm8996.c                     |   4 +
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 169 +++++++++++++++++++--
- drivers/phy/qualcomm/phy-qcom-qmp.h                |   5 +
- drivers/phy/qualcomm/phy-qcom-qusb2.c              | 116 +++++++++++++-
- 6 files changed, 298 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
+index 5d74512..336d12d 100644
+--- a/drivers/clk/qcom/gcc-msm8996.c
++++ b/drivers/clk/qcom/gcc-msm8996.c
+@@ -1418,6 +1418,7 @@ enum {
+ 
+ static struct clk_branch gcc_usb3_phy_pipe_clk = {
+ 	.halt_reg = 0x50004,
++	.halt_check = BRANCH_HALT_DELAY,
+ 	.clkr = {
+ 		.enable_reg = 0x50004,
+ 		.enable_mask = BIT(0),
+@@ -2472,6 +2473,7 @@ enum {
+ 
+ static struct clk_branch gcc_pcie_0_pipe_clk = {
+ 	.halt_reg = 0x6b018,
++	.halt_check = BRANCH_HALT_DELAY,
+ 	.clkr = {
+ 		.enable_reg = 0x6b018,
+ 		.enable_mask = BIT(0),
+@@ -2547,6 +2549,7 @@ enum {
+ 
+ static struct clk_branch gcc_pcie_1_pipe_clk = {
+ 	.halt_reg = 0x6d018,
++	.halt_check = BRANCH_HALT_DELAY,
+ 	.clkr = {
+ 		.enable_reg = 0x6d018,
+ 		.enable_mask = BIT(0),
+@@ -2622,6 +2625,7 @@ enum {
+ 
+ static struct clk_branch gcc_pcie_2_pipe_clk = {
+ 	.halt_reg = 0x6e018,
++	.halt_check = BRANCH_HALT_DELAY,
+ 	.clkr = {
+ 		.enable_reg = 0x6e018,
+ 		.enable_mask = BIT(0),
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
