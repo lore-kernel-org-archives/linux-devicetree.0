@@ -1,184 +1,387 @@
-From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/6] doc/devicetree: NVDIMM region documentation
-Date: Thu, 29 Mar 2018 14:10:40 +1100
-Message-ID: <CAOSf1CH6qUrj4SuTsYzYJCjaOecPzrwYkwCe6fL90Ot6Yto0GQ@mail.gmail.com>
-References: <20180323081209.31387-1-oohall@gmail.com>
- <20180323081209.31387-6-oohall@gmail.com>
- <20180326222448.l7ukrslvccvrjnjf@rob-hp-laptop>
- <CAOSf1CFpFwzLMx0xmM+JmbQCiOA=QU_S5g0uf-qx181vJ_Xc1w@mail.gmail.com>
- <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ@mail.gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 5/5] powerpc:dts:pm: add power management node
+Date: Thu, 29 Mar 2018 09:31:43 +0800
+Message-ID: <20180329013143.22527-5-ran.wang_1@nxp.com>
+References: <20180329013143.22527-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAL_Jsq+jC2mAXbKh9c8dbLXZmWbD-sFemrk+8p-oGMkXqSMfnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180329013143.22527-1-ran.wang_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Scott Wood <oss@buserror.net>, Kumar Gala <galak@kernel.crashing.org>, Li Yang <leoyang.li@nxp.com>
+Cc: Zhao Chenhui <chenhui.zhao@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 29, 2018 at 4:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 27, 2018 at 9:53 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Mar 27, 2018 at 9:24 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Fri, Mar 23, 2018 at 07:12:09PM +1100, Oliver O'Halloran wrote:
->>>> Add device-tree binding documentation for the nvdimm region driver.
->>>>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/nvdimm/nvdimm-region.txt   | 45 ++++++++++++++++++++++
->>>>  1 file changed, 45 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>>> new file mode 100644
->>>> index 000000000000..02091117ff16
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/nvdimm/nvdimm-region.txt
->>>> @@ -0,0 +1,45 @@
->>>> +Device-tree bindings for NVDIMM memory regions
->>>> +-----------------------------------------------------
->>>> +
->>>> +Non-volatile DIMMs are memory modules used to provide (cacheable) main memory
->>>
->>> Are DIMMs always going to be the only form factor for NV memory?
->>>
->>> And if you have multiple DIMMs, does each DT node correspond to a DIMM?
->>
->> A nvdimm-region might correspond to a single NVDIMM, a set of
->> interleaved NVDIMMs, or it might just be a chunk of normal memory that
->> you want treated as a NVDIMM for some reason. The last case is useful
->> for provisioning install media on servers since it allows you do
->> download a DVD image, turn it into an nvdimm-region, and kexec into
->> the installer which can use it as a root disk. That may seem a little
->> esoteric, but it's handy and we're using a full linux environment for
->> our boot loader so it's easy to make use of.
->
-> I'm really just asking if we should drop the "dimm" name because it is
-> not always a DIMM. Maybe pmem instead? I don't know, naming is
-> hard(TM).
+Enable Power Management feature on device tree, including MPC8536,
+MPC8544, MPC8548, MPC8572, P1010, P1020, P1021, P1022, P2020, P2041,
+P3041, T104X, T1024.
 
-pmem is probably a better name. I'll fix that up.
+Signed-off-by: Zhao Chenhui <chenhui.zhao@freescale.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |   14 ++++++-
+ arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi |    2 +
+ arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi |    2 +
+ arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi |    2 +
+ arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    8 ++++
+ arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    5 +++
+ arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    5 +++
+ arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    9 +++--
+ arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |   14 +++++++
+ arch/powerpc/boot/dts/fsl/pq3-power.dtsi      |   48 +++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/t1024rdb.dts        |    2 +-
+ arch/powerpc/boot/dts/fsl/t1040rdb.dts        |    2 +-
+ arch/powerpc/boot/dts/fsl/t1042rdb.dts        |    2 +-
+ arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts     |    2 +-
+ 14 files changed, 108 insertions(+), 9 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-power.dtsi
 
->>> If not, then what if we want/need to provide power control to a DIMM?
->>
->> That would require a DIMM (and probably memory controller) specific
->> driver. I've deliberately left out how regions are mapped back to
->> DIMMs from the binding since it's not really clear to me how that
->> should work. A phandle array pointing to each DIMM device (which could
->> be anything) would do the trick, but I've found that a bit awkward to
->> plumb into the model that libnvdimm expects.
->>
->>>> +that retains its contents across power cycles. In more practical terms, they
->>>> +are kind of storage device where the contents can be accessed by the CPU
->>>> +directly, rather than indirectly via a storage controller or similar. The an
->>>> +nvdimm-region specifies a physical address range that is hosted on an NVDIMM
->>>> +device.
->>>> +
->>>> +Bindings for the region nodes:
->>>> +-----------------------------
->>>> +
->>>> +Required properties:
->>>> +     - compatible = "nvdimm-region"
->>>> +
->>>> +     - reg = <base, size>;
->>>> +             The system physical address range of this nvdimm region.
->>>> +
->>>> +Optional properties:
->>>> +     - Any relevant NUMA assocativity properties for the target platform.
->>>> +     - A "volatile" property indicating that this region is actually in
->>>> +       normal DRAM and does not require cache flushes after each write.
->>>> +
->>>> +A complete example:
->>>> +--------------------
->>>> +
->>>> +/ {
->>>> +     #size-cells = <2>;
->>>> +     #address-cells = <2>;
->>>> +
->>>> +     platform {
->>>
->>> Perhaps we need a more well defined node here. Like we have 'memory' for
->>> memory nodes.
->>
->> I think treating it as a platform device is fine. Memory nodes are
->
-> Platform device is a Linux term...
->
->> special since the OS needs to know where it can allocate early in boot
->> and I don't see non-volatile memory as being similarly significant.
->> Fundamentally an NVDIMM is just a memory mapped storage device so we
->> should be able to defer looking at them until later in boot.
->
-> It's not clear if 'platform' is just an example or random name or what
-> the node is required to be called. In the latter case, we should be
-> much more specific because 'platform' could be anything. In the former
-> case, then we have no way to find or validate the node because the
-> name could be anything and there's no compatible property either.
-
-Sorry, the platform node is just there as an example. I'll remove it.
-
-> "region" is pretty generic too.
-
-It is, but I didn't see a compelling reason to call it something else.
-
->> That said you might have problems with XIP kernels and what not. I
->> think that problem is better solved through other means though.
->>
->>>> +             region@5000 {
->>>> +                     compatible = "nvdimm-region;
->>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
->>>> +
->>>> +             };
->>>> +
->>>> +             region@6000 {
->>>> +                     compatible = "nvdimm-region";
->>>> +                     reg = <0x00000001 0x00000000 0x00000000 0x40000000>
->
-> Thinking about this some more, the 2 levels of nodes is pointless.
-> Just follow memory nodes structure.
->
-> nv-memory@100000000 {
->   compatible = "nvdimm-region";
->   reg = <0x00000001 0x00000000 0x00000000 0x40000000>;
-> };
->
-> nv-memory@200000000 {
->   compatible = "nvdimm-region";
->   reg = <0x00000002 0x00000000 0x00000000 0x40000000>;
-> };
->
-> or:
->
-> nv-memory@100000000 {
->   compatible = "nvdimm-region";
->   reg = <0x00000001 0x00000000 0x00000000 0x40000000>
->     <0x00000002 0x00000000 0x00000000 0x40000000>;
-> };
->
-> Both forms should be allowed.
-
-In the example you need two separate nodes since one has the
-"volatile" property to indicate it's backed by normal memory while the
-other doesn't. That detail is important since the OS can skip doing
-cache flushes when writing to a region that it knows is volatile.
-
-Anyway, the usefulness of having multiple ranges in the reg is a bit
-dubious since you should never see dis-contiguous ranges of memory
-backed by the same devices. Keep in mind that this binding here is
-deliberately skeletal and leaves out the parts required to map the
-region to the backing devices, once that is added there's not going to
-be a whole lot of room for coalescing nodes. That said, I'll add
-support for it anyway since it might be nice to have for hand-written
-DTs (ours are mostly generated by FW).
-
-Thanks,
-Oliver
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+index 4193570..fba40a1 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+@@ -199,6 +199,10 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-etsec1-0.dtsi"
++	enet0: ethernet@24000 {
++		fsl,wake-on-filer;
++		fsl,pmc-handle = <&etsec1_clk>;
++	};
+ /include/ "pq3-etsec1-timer-0.dtsi"
+ 
+ 	usb@22000 {
+@@ -222,9 +226,10 @@
+ 	};
+ 
+ /include/ "pq3-etsec1-2.dtsi"
+-
+-	ethernet@26000 {
++	enet2: ethernet@26000 {
+ 		cell-index = <1>;
++		fsl,wake-on-filer;
++		fsl,pmc-handle = <&etsec3_clk>;
+ 	};
+ 
+ 	usb@2b000 {
+@@ -249,4 +254,9 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
++	power@e0070 {
++		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
+index b68eb11..ea7416a 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
+@@ -188,4 +188,6 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
+index 579d76c..dddb737 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
+@@ -156,4 +156,6 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
+index 49294cf..40a6cff 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
+@@ -193,4 +193,6 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+index 1b4aafc..47b62a8 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+@@ -173,6 +173,8 @@
+ 
+ /include/ "pq3-etsec2-0.dtsi"
+ 	enet0: ethernet@b0000 {
++		fsl,pmc-handle = <&etsec1_clk>;
++
+ 		queue-group@b0000 {
+ 			fsl,rx-bit-map = <0xff>;
+ 			fsl,tx-bit-map = <0xff>;
+@@ -181,6 +183,8 @@
+ 
+ /include/ "pq3-etsec2-1.dtsi"
+ 	enet1: ethernet@b1000 {
++		fsl,pmc-handle = <&etsec2_clk>;
++
+ 		queue-group@b1000 {
+ 			fsl,rx-bit-map = <0xff>;
+ 			fsl,tx-bit-map = <0xff>;
+@@ -189,6 +193,8 @@
+ 
+ /include/ "pq3-etsec2-2.dtsi"
+ 	enet2: ethernet@b2000 {
++		fsl,pmc-handle = <&etsec3_clk>;
++
+ 		queue-group@b2000 {
+ 			fsl,rx-bit-map = <0xff>;
+ 			fsl,tx-bit-map = <0xff>;
+@@ -201,4 +207,6 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+index 642dc3a..cc4c746 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+@@ -163,14 +163,17 @@
+ 
+ /include/ "pq3-etsec2-0.dtsi"
+ 	enet0: enet0_grp2: ethernet@b0000 {
++		fsl,pmc-handle = <&etsec1_clk>;
+ 	};
+ 
+ /include/ "pq3-etsec2-1.dtsi"
+ 	enet1: enet1_grp2: ethernet@b1000 {
++		fsl,pmc-handle = <&etsec2_clk>;
+ 	};
+ 
+ /include/ "pq3-etsec2-2.dtsi"
+ 	enet2: enet2_grp2: ethernet@b2000 {
++		fsl,pmc-handle = <&etsec3_clk>;
+ 	};
+ 
+ 	global-utilities@e0000 {
+@@ -178,6 +181,8 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+ 
+ /include/ "pq3-etsec2-grp2-0.dtsi"
+diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+index 407cb5f..378195d 100644
+--- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+@@ -159,14 +159,17 @@
+ 
+ /include/ "pq3-etsec2-0.dtsi"
+ 	enet0: enet0_grp2: ethernet@b0000 {
++		fsl,pmc-handle = <&etsec1_clk>;
+ 	};
+ 
+ /include/ "pq3-etsec2-1.dtsi"
+ 	enet1: enet1_grp2: ethernet@b1000 {
++		fsl,pmc-handle = <&etsec2_clk>;
+ 	};
+ 
+ /include/ "pq3-etsec2-2.dtsi"
+ 	enet2: enet2_grp2: ethernet@b2000 {
++		fsl,pmc-handle = <&etsec3_clk>;
+ 	};
+ 
+ 	global-utilities@e0000 {
+@@ -174,6 +177,8 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+ 
+ &qe {
+diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+index 5f51b7b..6ac21e8 100644
+--- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+@@ -225,11 +225,13 @@
+ /include/ "pq3-etsec2-0.dtsi"
+ 	enet0: enet0_grp2: ethernet@b0000 {
+ 		fsl,wake-on-filer;
++		fsl,pmc-handle = <&etsec1_clk>;
+ 	};
+ 
+ /include/ "pq3-etsec2-1.dtsi"
+ 	enet1: enet1_grp2: ethernet@b1000 {
+ 		fsl,wake-on-filer;
++		fsl,pmc-handle = <&etsec2_clk>;
+ 	};
+ 
+ 	global-utilities@e0000 {
+@@ -238,9 +240,10 @@
+ 		fsl,has-rstcr;
+ 	};
+ 
+-	power@e0070{
+-		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
+-		reg = <0xe0070 0x20>;
++/include/ "pq3-power.dtsi"
++	power@e0070 {
++		compatible = "fsl,p1022-pmc", "fsl,mpc8536-pmc",
++				"fsl,mpc8548-pmc";
+ 	};
+ 
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+index 884e01b..2c4787c 100644
+--- a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+@@ -175,6 +175,10 @@
+ 		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
+ 	};
+ /include/ "pq3-etsec1-0.dtsi"
++	enet0: ethernet@24000 {
++		fsl,pmc-handle = <&etsec1_clk>;
++
++	};
+ /include/ "pq3-etsec1-timer-0.dtsi"
+ 
+ 	ptp_clock@24e00 {
+@@ -183,7 +187,15 @@
+ 
+ 
+ /include/ "pq3-etsec1-1.dtsi"
++	enet1: ethernet@25000 {
++		fsl,pmc-handle = <&etsec2_clk>;
++	};
++
+ /include/ "pq3-etsec1-2.dtsi"
++	enet2: ethernet@26000 {
++		fsl,pmc-handle = <&etsec3_clk>;
++	};
++
+ /include/ "pq3-esdhc-0.dtsi"
+ 	sdhc@2e000 {
+ 		compatible = "fsl,p2020-esdhc", "fsl,esdhc";
+@@ -198,4 +210,6 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++/include/ "pq3-power.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-power.dtsi b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+new file mode 100644
+index 0000000..5a760b3
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+@@ -0,0 +1,48 @@
++/*
++ * PQ3 Power Management device tree stub
++ *
++ * Copyright 2012-2013 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++power@e0070 {
++	compatible = "fsl,mpc8548-pmc";
++	reg = <0xe0070 0x20>;
++
++	etsec1_clk: soc-clk@24 {
++		fsl,pmcdr-mask = <0x00000080>;
++	};
++	etsec2_clk: soc-clk@25 {
++		fsl,pmcdr-mask = <0x00000040>;
++	};
++	etsec3_clk: soc-clk@26 {
++		fsl,pmcdr-mask = <0x00000020>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+index 73a6453..95fc694 100644
+--- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+@@ -91,7 +91,7 @@
+ 		board-control@2,0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "fsl,t1024-cpld";
++			compatible = "fsl,t1024-cpld", "fsl,deepsleep-cpld";
+ 			reg = <3 0 0x300>;
+ 			ranges = <0 3 0 0x300>;
+ 			bank-width = <1>;
+diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+index 65ff34c..825665c 100644
+--- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+@@ -70,7 +70,7 @@
+ 
+ 	ifc: localbus@ffe124000 {
+ 		cpld@3,0 {
+-			compatible = "fsl,t1040rdb-cpld";
++			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+ 		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb.dts b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
+index 3ebb712..0997643 100644
+--- a/arch/powerpc/boot/dts/fsl/t1042rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
+@@ -68,7 +68,7 @@
+ 
+ 	ifc: localbus@ffe124000 {
+ 		cpld@3,0 {
+-			compatible = "fsl,t1042rdb-cpld";
++			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+ 		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
+index 8ec3ff4..b10cab1 100644
+--- a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
++++ b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
+@@ -41,7 +41,7 @@
+ 
+ 	ifc: localbus@ffe124000 {
+ 		cpld@3,0 {
+-			compatible = "fsl,t1042rdb_pi-cpld";
++			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+ 		};
+ 	};
+ 
+-- 
+1.7.1
