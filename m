@@ -1,63 +1,66 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] of_net: Implement of_get_nvmem_mac_address helper
-Date: Mon, 26 Mar 2018 08:54:03 +0200
-Message-ID: <3d719f25-fced-e934-04c0-b821807ac69b@topic.nl>
-References: <1521815074-30424-1-git-send-email-mike.looijmans@topic.nl>
- <20180323151101.GB24361@lunn.ch>
- <b68d4540-b15d-ec31-05a8-e1a4632bb5ee@topic.nl>
- <886c94ef-e2c8-2afa-307d-1924c74c6dc0@gmail.com>
- <cb12ea29-a7b0-cf66-7f5a-c09d36f443f0@topic.nl>
- <20180324185324.GG31941@lunn.ch>
- <d2dfee96-cd30-fa16-6c83-b55773e3aa91@topic.nl>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: Re: [PATCH v6 0/3] Bluetooth: hci_qca: Add serdev support
+Date: Thu, 29 Mar 2018 19:56:24 +0200
+Message-ID: <71ca3339-2670-5c04-0457-8c1fd6cdf7f1@linaro.org>
+References: <20180328095133.14343-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d2dfee96-cd30-fa16-6c83-b55773e3aa91@topic.nl>
+In-Reply-To: <20180328095133.14343-1-thierry.escande@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-﻿On 25-03-18 10:17, Mike Looijmans wrote:
-> On 24-03-18 19:53, Andrew Lunn wrote:
->>> A quick survey for the of_get_mac_address users learns that most of them do
->>> a memcpy (or similar) right after it, so for these drivers the
->>> "of_get_nvmem_mac_address" style signature that performs the memcpy (or
->>> better, ether_addr_copy) is a better fit, e.g.:
->>>
->>> int of_get_mac_address(struct device_node *np, void *addr)
->>
->> Hi Mike
->>
->> This is a nicer solution, but it is quite a lot of work, there are a
->> lot of users. Maybe Coccinelle can help?
+Hi,
+
+On 28/03/2018 11:51, Thierry Escande wrote:
+> Hi,
 > 
-> About 58 of them, yeah. And this looked like such a simple thing when I 
-> started it...
-> https://elixir.bootlin.com/linux/v4.16-rc6/ident/of_get_mac_address
-> I have no experience with Coccinelle though.
+> This patchset enables the Qualcomm BT controller QCA6174 node in the
+> device tree of the db820c board. This allows the bluetooth chipset to
+> be probed and registered against the hci layer by using the serdev
+> framework.
+> 
+> This patchset also contains the documentation for the compatible
+> string "qcom,qca6174-bt" related to this chipset.
+> 
+> v6:
+> - Move pinctrl properties into subnodes
+> - fix binding documentation
+> 
+> v5:
+> - Rename 'bt-disable-n' gpio as 'enable'
+> 
+> v4:
+> - Fix dt binding documentation
+> - Address some other issues in patch #3
+> 
+> v3:
+> - Address comments for patch #3 (details in patch)
+> 
+> v2:
+> - Fix author email
+> 
+> Thierry Escande (3):
+>    arm64: dts: apq8096-db820c: enable bluetooth node
+>    dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+>    Bluetooth: hci_qca: Add serdev support
+> 
+>   .../devicetree/bindings/net/qualcomm-bluetooth.txt |  34 +++++++
+>   arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  26 +++++
+>   .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  21 ++++
+>   arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  33 +++++++
+>   arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
+>   drivers/bluetooth/Kconfig                          |   1 +
+>   drivers/bluetooth/hci_qca.c                        | 109 ++++++++++++++++++++-
+>   7 files changed, 232 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
 > 
 
-I'll at least post a v2 patch with what we've discussed so far.
+Please hold this patchset as a v7 is coming soon.
 
-Another thing that just occurred to me is that the nvmem interface would also 
-allow a MAC address to be written to NV storage. Haven't looked at that path, 
-but it would be nice to be able to permanently program the MAC address using 
-standard interfaces.
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+Regards,
+Thierry
