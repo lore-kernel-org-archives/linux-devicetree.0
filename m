@@ -1,54 +1,217 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Thu, 29 Mar 2018 13:18:29 +0300
-Message-ID: <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <20180322134206.22857-3-peter.ujfalusi@ti.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 6/8] DT: arm: Add Renesas RZ/N1 SoC base device tree
+ file
+Date: Thu, 29 Mar 2018 13:04:50 +0200
+Message-ID: <20180329110450.GA24193@w540>
+References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1522309629-10152-7-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180322134206.22857-3-peter.ujfalusi@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1522309629-10152-7-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjIvMDMvMTggMTU6NDIsIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+IEZyb206IFRvbWkgVmFs
-a2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gCj4gRXJyYXRhIGk4Nzggc2F5cyB0aGF0
-IE1QVSBzaG91bGQgbm90IGJlIHVzZWQgdG8gYWNjZXNzIFJBTSBhbmQgRE1NIGF0Cj4gdGhlIHNh
-bWUgdGltZS4gQXMgaXQncyBub3QgcG9zc2libGUgdG8gcHJldmVudCBNUFUgYWNjZXNzaW5nIFJB
-TSwgd2UKPiBuZWVkIHRvIGFjY2VzcyBETU0gdmlhIGEgcHJveHkuCj4gCj4gVGhpcyBwYXRjaCBj
-aGFuZ2VzIERNTSBkcml2ZXIgdG8gYWNjZXNzIERNTSByZWdpc3RlcnMgdmlhIHNETUEuIEluc3Rl
-YWQKPiBvZiBkb2luZyBhIG5vcm1hbCByZWFkbC93cml0ZWwgY2FsbCB0byByZWFkL3dyaXRlIGEg
-cmVnaXN0ZXIsIHdlIHVzZQo+IHNETUEgdG8gY29weSA0IGJ5dGVzIGZyb20vdG8gdGhlIERNTSBy
-ZWdpc3RlcnMuCj4gCj4gVGhpcyBwYXRjaCBwcm92aWRlcyBvbmx5IGEgcGFydGlhbCB3b3JrYXJv
-dW5kIGZvciBpODc4LCBhcyBub3Qgb25seSBETU0KPiByZWdpc3RlciByZWFkcy93cml0ZXMgYXJl
-IGFmZmVjdGVkLCBidXQgYWxzbyBhY2Nlc3NlcyB0byB0aGUgRE1NIG1hcHBlZAo+IGJ1ZmZlcnMg
-KGZyYW1lYnVmZmVycywgdXN1YWxseSkuCj4gCj4gU2lnbmVkLW9mZi1ieTogVG9taSBWYWxrZWlu
-ZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL29tYXBk
-cm0vb21hcF9kbW1fcHJpdi5oICB8ICAgOCArKwo+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9v
-bWFwX2RtbV90aWxlci5jIHwgMTUzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAxNTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKCgo+
-ICsJZG1tLT53YV9kbWFfY2hhbiA9IGRtYV9yZXF1ZXN0X2NoYW5uZWwobWFzaywgTlVMTCwgTlVM
-TCk7Cj4gKwlpZiAoIWRtbS0+d2FfZG1hX2NoYW4pIHsKPiArCQlkbWFfZnJlZV9jb2hlcmVudChk
-bW0tPmRldiwgNCwgZG1tLT53YV9kbWFfZGF0YSwgZG1tLT53YV9kbWFfaGFuZGxlKTsKClRoaXMg
-YW5kIHRoZSBvdGhlciBmcmVlIGJlbG93IHNob3VsZCB1c2Ugc2l6ZW9mKHUzMikgYXMgdGhlIGFs
-bG9jIGRvZXMuCkFuZCBJIGd1ZXNzIGRldmljZV9wcmVwX2RtYV9tZW1jcHkoKSB0b28uIFBlcmhh
-cHMgYSAjZGVmaW5lIHdvdWxkIGJlCmJlc3QgaGVyZS4gRE1NX1JFR19TSVpFPyBJIGNhbiBkbyB0
-aGlzIGNoYW5nZSB3aGVuIGFwcGx5aW5nLCBpZiB5b3UgYWdyZWUuCgogVG9taQoKLS0gClRleGFz
-IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
-LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
-ZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Michel
+
+The subject of all your patches for arch/arm should start with:
+
+ARM: dts:
+
+A git log on that directory clearly shows that's the preferred one.
+
+I would also say that you are missing a symbol definition in
+arch/arm/mach-shmobile/Kconfig
+(even if you got rid of any board file)
+
+I would expect a symbol to select in menuconfig, with your
+dependencies listed there (ie, the serial interface driver)
+
+Something like this (I left the 'xx' out from the part name on purpose)
+
+diff --git a/arch/arm/mach-shmobile/Kconfig b/arch/arm/mach-shmobile/Kconfig
+index 280e731..9a519330 100644
+--- a/arch/arm/mach-shmobile/Kconfig
++++ b/arch/arm/mach-shmobile/Kconfig
+@@ -114,4 +114,8 @@ config ARCH_SH73A0
+        bool "SH-Mobile AG5 (R8A73A00)"
+        select ARCH_RMOBILE
+        select RENESAS_INTC_IRQPIN
++
++config ARCH_R9A06G0
++       bool "RZ/N1 (R9A06G0)"
++       select SERIAL_8250_DW
+ endif
+
+But please wait for others (preferibly Geert or Simon) to confim this.
+
+On Thu, Mar 29, 2018 at 08:47:02AM +0100, Michel Pollet wrote:
+> This adds the Renesas RZ/N1 Family (Part #R9A06G0xx) SoC
+> bare bone support.
+>
+> This currently only handles generic parts (gic, architected timer)
+> and a UART.
+> For simplicity sake, this also relies on the bootloader to set the
+> pinctrl and clocks.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  arch/arm/boot/dts/r9a06g0xx.dtsi | 96 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/r9a06g0xx.dtsi
+>
+> diff --git a/arch/arm/boot/dts/r9a06g0xx.dtsi b/arch/arm/boot/dts/r9a06g0xx.dtsi
+> new file mode 100644
+> index 0000000..c6eeee3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r9a06g0xx.dtsi
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Base Device Tree Source for the Renesas RZ/N1 SoC Family of devices
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Europe Limited
+> + *
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "renesas,rzn1";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0>;
+> +		};
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <1>;
+> +		};
+> +	};
+
+I see you don't like empy lines, that's fine, it is not a strict
+requiremen afaik, but I find a few empty lines here and there more
+redable, expecially if the file is going to grow, as it will be.
+
+
+> +	clocks {
+> +		/*
+> +		 * this is fixed clock for now,
+> +		 * until the clock driver is merged
+> +		 */
+> +		clkuarts: clkuarts {
+
+You can remove the node lable if it's the same as the node name afaik
+
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <47619047>;
+> +		};
+> +	};
+
+Grouping clock nodes under a "clocks" one is now deprecated.
+
+Please see, ie.
+"ARM: dts: r7s72100: stop grouping clocks under a "clocks" subnode"
+
+Thanks
+   j
+
+> +	arch-timer {
+> +		compatible = "arm,cortex-a7-timer",
+> +			     "arm,armv7-timer";
+> +		interrupt-parent = <&gic>;
+> +		arm,cpu-registers-not-fw-configured;
+> +		interrupts =
+> +			<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+> +				IRQ_TYPE_LEVEL_LOW)>,
+> +			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+> +				IRQ_TYPE_LEVEL_LOW)>,
+> +			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
+> +				IRQ_TYPE_LEVEL_LOW)>,
+> +			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
+> +				IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		interrupt-parent = <&gic>;
+> +		ranges;
+> +
+> +		gic: gic@44101000 {
+> +			compatible = "arm,cortex-a7-gic", "arm,gic-400";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = <0x44101000 0x1000>, /* Distributer */
+> +			      <0x44102000 0x2000>, /* CPU interface */
+> +			      <0x44104000 0x2000>, /* Virt interface control */
+> +			      <0x44106000 0x2000>; /* Virt CPU interface */
+> +			interrupts =
+> +				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
+> +					IRQ_TYPE_LEVEL_HIGH)>;
+> +		};
+> +		sysctrl: sysctrl@4000c000 {
+> +			compatible = "renesas,rzn1-sysctrl", "syscon",
+> +					"simple-mfd";
+> +			reg = <0x4000c000 0x1000>;
+> +
+> +			reboot {
+> +				compatible = "renesas,rzn1-reboot";
+> +			};
+> +		};
+> +		uart0: serial@40060000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x40060000 0x400>;
+> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&clkuarts>;
+> +			clock-names = "baudclk";
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> --
+> 2.7.4
+>
+
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJavMg/AAoJEHI0Bo8WoVY8BRUQAIqRZJ0nuiTPG2wCSVu/Zuxf
+knEPRieqFsBOOaXlqoFU3DB5CQo8gedjNgYGipStR3yxxMF8IOCA5/nBq68pUq5r
+EP9kMHl90wF70YNAgUXOqOka75YH9bbU2WAdePay3gx0OGqBpJY6OqgF+lFP41Ol
+hvNeW0u8ltx5YjoIFp7DndUblBZfwqUPYlyH+Tvfme/+Hu2S2Cmu9Ebs+XrxX2xo
+xwJKpbTWDHmihc4TBbDeyEyHpPOiNgdpWt083yUb67+ky5ADfI8XlZwMKysA84Jy
+dxzYfK/thu6pitamUOCehR05xCLuNh1Vj1S9NunhgMYGLiXAaFCFkmZHyvk6zLaN
+fBuYUMBNZNMVgBBZpFjBVGEzdmE090ibBZI3lZOqF4utIfrAPg/R+jl6zDHrQpoc
+UyrXenpCx6Hu74+soBF164cXZdtVwR92d+U/wtJs2cu/sE/tzwtn3kjzutmNLqSH
+blnMtn54ea7tEJ+KBeKIzhKNFTFyC55WQpmMaU9K8T3r6wgTBiWqdNdXeCzXrApS
+qETFoP408kqLZnViujkpQI5LmtaN1pnI/7XaIpbA3ZhyQr7AwmItlyCgfFopU2rZ
+qt8I12s3wB0lbYmm2rj6MM+98VFcMDg4rjvn8sQjpUG5ZOADghItyHLQpA3IoU3D
++wlHZLAj5MTO0gdU/YT9
+=PM6l
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
