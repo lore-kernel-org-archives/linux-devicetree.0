@@ -1,123 +1,115 @@
 From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v4 1/2] of_net: Implement of_get_nvmem_mac_address helper
-Date: Thu, 29 Mar 2018 07:29:48 +0200
-Message-ID: <1522301389-11034-2-git-send-email-mike.looijmans@topic.nl>
-References: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
+Subject: Re: [PATCH v3 1/2] of_net: Implement of_get_nvmem_mac_address helper
+Date: Thu, 29 Mar 2018 07:31:27 +0200
+Message-ID: <c4531eec-9478-72c2-96cc-39c380784aa4@topic.nl>
+References: <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
+ <1522144346-32367-2-git-send-email-mike.looijmans@topic.nl>
+ <8623d20b-5a01-b2bd-39f2-900177f96595@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
+In-Reply-To: <8623d20b-5a01-b2bd-39f2-900177f96595@gmail.com>
+Content-Language: nl
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, Mike Looijmans <mike.looijmans@topic.nl>
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-It's common practice to store MAC addresses for network interfaces into
-nvmem devices. However the code to actually do this in the kernel lacks,
-so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
-address from an nvmem cell provider.
+﻿On 28-03-18 00:50, Florian Fainelli wrote:
+> On 03/27/2018 02:52 AM, Mike Looijmans wrote:
+>> It's common practice to store MAC addresses for network interfaces into
+>> nvmem devices. However the code to actually do this in the kernel lacks,
+>> so this patch adds of_get_nvmem_mac_address() for drivers to obtain the
+>> address from an nvmem cell provider.
+>>
+>> This is particulary useful on devices where the ethernet interface cannot
+>> be configured by the bootloader, for example because it's in an FPGA.
+>>
+>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+>> ---
+>>   Documentation/devicetree/bindings/net/ethernet.txt |  2 ++
+>>   drivers/of/of_net.c                                | 40 ++++++++++++++++++++++
+>>   include/linux/of_net.h                             |  6 ++++
+>>   3 files changed, 48 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+>> index 2974e63..cfc376b 100644
+>> --- a/Documentation/devicetree/bindings/net/ethernet.txt
+>> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
+>> @@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+>>     the boot program; should be used in cases where the MAC address assigned to
+>>     the device by the boot program is different from the "local-mac-address"
+>>     property;
+>> +- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
+>> +- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
+>>   - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+>>   - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+>>     the maximum frame size (there's contradiction in the Devicetree
+>> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+>> index d820f3e..1c5d372 100644
+>> --- a/drivers/of/of_net.c
+>> +++ b/drivers/of/of_net.c
+>> @@ -7,6 +7,7 @@
+>>    */
+>>   #include <linux/etherdevice.h>
+>>   #include <linux/kernel.h>
+>> +#include <linux/nvmem-consumer.h>
+>>   #include <linux/of_net.h>
+>>   #include <linux/phy.h>
+>>   #include <linux/export.h>
+>> @@ -80,3 +81,42 @@ const void *of_get_mac_address(struct device_node *np)
+>>   	return of_get_mac_addr(np, "address");
+>>   }
+>>   EXPORT_SYMBOL(of_get_mac_address);
+>> +
+>> +/**
+>> + * Obtain the MAC address from an nvmem provider named 'mac-address' through
+>> + * device tree.
+>> + * On success, copies the new address into memory pointed to by addr and
+>> + * returns 0. Returns a negative error code otherwise.
+>> + * @np:		Device tree node containing the nvmem-cells phandle
+>> + * @addr:	Pointer to receive the MAC address using ether_addr_copy()
+>> + */
+>> +int of_get_nvmem_mac_address(struct device_node *np, void *addr)
+>> +{
+>> +	struct nvmem_cell *cell;
+>> +	const void *mac;
+>> +	size_t len;
+>> +	int ret;
+>> +
+>> +	cell = of_nvmem_cell_get(np, "mac-address");
+>> +	if (IS_ERR(cell))
+>> +		return PTR_ERR(cell);
+>> +
+>> +	mac = nvmem_cell_read(cell, &len);
+>> +
+>> +	nvmem_cell_put(cell);
+>> +
+>> +	if (IS_ERR(mac))
+>> +		return PTR_ERR(mac);
+>> +
+>> +	if (len < 6 || !is_valid_ether_addr(mac)) {
+>> +		ret = -EINVAL;
+> 
+> Just one nit here, can you use ETH_ALEN instead of 6? With that fixed:
+> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
 
-This is particulary useful on devices where the ethernet interface cannot
-be configured by the bootloader, for example because it's in an FPGA.
+Ok, implemented and tested it, and v4 is on the way with that change.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- Documentation/devicetree/bindings/net/ethernet.txt |  2 ++
- drivers/of/of_net.c                                | 40 ++++++++++++++++++++++
- include/linux/of_net.h                             |  6 ++++
- 3 files changed, 48 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index 2974e63..cfc376b 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
-   the boot program; should be used in cases where the MAC address assigned to
-   the device by the boot program is different from the "local-mac-address"
-   property;
-+- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
-+- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
- - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
- - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
-   the maximum frame size (there's contradiction in the Devicetree
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index d820f3e..53189d4 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -7,6 +7,7 @@
-  */
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
-+#include <linux/nvmem-consumer.h>
- #include <linux/of_net.h>
- #include <linux/phy.h>
- #include <linux/export.h>
-@@ -80,3 +81,42 @@ const void *of_get_mac_address(struct device_node *np)
- 	return of_get_mac_addr(np, "address");
- }
- EXPORT_SYMBOL(of_get_mac_address);
-+
-+/**
-+ * Obtain the MAC address from an nvmem provider named 'mac-address' through
-+ * device tree.
-+ * On success, copies the new address into memory pointed to by addr and
-+ * returns 0. Returns a negative error code otherwise.
-+ * @np:		Device tree node containing the nvmem-cells phandle
-+ * @addr:	Pointer to receive the MAC address using ether_addr_copy()
-+ */
-+int of_get_nvmem_mac_address(struct device_node *np, void *addr)
-+{
-+	struct nvmem_cell *cell;
-+	const void *mac;
-+	size_t len;
-+	int ret;
-+
-+	cell = of_nvmem_cell_get(np, "mac-address");
-+	if (IS_ERR(cell))
-+		return PTR_ERR(cell);
-+
-+	mac = nvmem_cell_read(cell, &len);
-+
-+	nvmem_cell_put(cell);
-+
-+	if (IS_ERR(mac))
-+		return PTR_ERR(mac);
-+
-+	if (len < ETH_ALEN || !is_valid_ether_addr(mac)) {
-+		ret = -EINVAL;
-+	} else {
-+		ether_addr_copy(addr, mac);
-+		ret = 0;
-+	}
-+
-+	kfree(mac);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_get_nvmem_mac_address);
-diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-index 9cd72aa..90d81ee 100644
---- a/include/linux/of_net.h
-+++ b/include/linux/of_net.h
-@@ -13,6 +13,7 @@
- struct net_device;
- extern int of_get_phy_mode(struct device_node *np);
- extern const void *of_get_mac_address(struct device_node *np);
-+extern int of_get_nvmem_mac_address(struct device_node *np, void *addr);
- extern struct net_device *of_find_net_device_by_node(struct device_node *np);
- #else
- static inline int of_get_phy_mode(struct device_node *np)
-@@ -25,6 +26,11 @@ static inline const void *of_get_mac_address(struct device_node *np)
- 	return NULL;
- }
- 
-+static inline int of_get_nvmem_mac_address(struct device_node *np, void *addr)
-+{
-+	return -ENODEV;
-+}
-+
- static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
- {
- 	return NULL;
--- 
-1.9.1
+Kind regards,
+
+Mike Looijmans
+System Expert
+
+TOPIC Products
+Materiaalweg 4, NL-5681 RJ Best
+Postbus 440, NL-5680 AK Best
+Telefoon: +31 (0) 499 33 69 79
+E-mail: mike.looijmans@topicproducts.com
+Website: www.topicproducts.com
+
+Please consider the environment before printing this e-mail
