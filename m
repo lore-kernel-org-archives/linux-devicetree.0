@@ -1,60 +1,65 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY initialization
-Date: Thu, 29 Mar 2018 11:44:20 -0700
-Message-ID: <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org> <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+From: Thierry Escande <thierry.escande@linaro.org>
+Subject: [PATCH v7 0/4] Bluetooth: hci_qca: Add serdev support
+Date: Thu, 29 Mar 2018 21:15:20 +0200
+Message-ID: <20180329191524.30225-1-thierry.escande@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset = "utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+Content-Transfert-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Loic Poulain <loic.poulain@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> QMP PHY for USB/PCIE requires pipe_clk for locking of
-> retime buffers at the pipe interface. Driver checks for
-> PHY_STATUS without enabling pipe_clk due to which
-> phy_init() fails with initialization timeout.
-> Though pipe_clk is output from PHY (after PLL is programmed
-> during initialization sequence) to GCC clock_ctl and then fed
-> back to PHY but for PHY_STATUS register to reflect successful
-> initialization pipe_clk from GCC must be present.
-> Since, clock driver now ignores status_check for pipe_clk on
-> clk_enable/disable, driver can safely enable/disable pipe_clk
-> from phy_init/exit.
->
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
->  1 file changed, 8 insertions(+), 14 deletions(-)
+This patchset enables the Qualcomm BT controller QCA6174 node in the
+device tree of the db820c board. This allows the bluetooth chipset to
+be probed and registered against the hci layer by using the serdev
+framework.
 
-Overall this looks much better than the previous version.  Thanks!  :)
+This patchset also contains the documentation for the compatible
+string "qcom,qca6174-bt" related to this chipset.
 
-I wonder one thing though.  You describe the original problem as this:
+v7:
+- Add a new patch enabling regulators and gpios for the bt/wlan
+  combo chip
 
-1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
-never sets the "ready" status.
+v6:
+- Move pinctrl properties into subnodes
+- fix binding documentation
 
-2. If you don't have the PHY powered on / out of reset (which happens
-in qcom_qmp_phy_init()) then when you enable/disable the clock it
-doesn't properly update the status.  That's why you needed patch #1 in
-this series.
+v5:
+- Rename 'bt-disable-n' gpio as 'enable'
 
+v4:
+- Fix dt binding documentation
+- Address some other issues in patch #3
 
-I wonder: could you solve the above _without_ needing to use
-BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
-what happens if you put the clk_prepare_enable() after you've powered
-on the PHY and taken it out of reset but before you check the status?
-Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
-right before the "readl_poll_timeout" of the ready status?
+v3:
+- Address comments for patch #3 (details in patch)
+
+v2:
+- Fix author email
 
 
-If you do that, you'll turn everything on.  Then you'll check that the
-clock's status is OK and then that the PHY's status is OK.
+Srinivas Kandagatla (1):
+  arm64: dts: apq8096-db820c: Enable wlan and bt en pins
 
+Thierry Escande (3):
+  arm64: dts: apq8096-db820c: enable bluetooth node
+  dt-bindings: net: bluetooth: Add qualcomm-bluetooth
+  Bluetooth: hci_qca: Add serdev support
 
--Doug
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt |  30 ++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi  |  26 +++++
+ .../boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  32 ++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |  62 ++++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |  10 ++
+ drivers/bluetooth/Kconfig                          |   1 +
+ drivers/bluetooth/hci_qca.c                        | 109 ++++++++++++++++++++-
+ 7 files changed, 268 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+
+-- 
+2.14.1
