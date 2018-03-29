@@ -1,66 +1,71 @@
-From: Chen Zhong <chen.zhong@mediatek.com>
-Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
-Date: Thu, 29 Mar 2018 10:31:15 +0800
-Message-ID: <1522290675.17084.8.camel@mhfsdcap03>
-References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
-         <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
-         <1521685073.28226.10.camel@mtkswgap22> <20180323185418.GD255819@dtor-ws>
-         <20180327080507.pgil6pw2mn4y2f4d@dell>
-         <3ece050c-7573-ef4e-2c89-61645a243a33@gmail.com>
-         <20180328102640.yx6nv5abfexmouuf@dell>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: usb: rt1711h device tree binding document
+Date: Wed, 28 Mar 2018 22:09:03 -0500
+Message-ID: <CAL_JsqJvitoh-+T0JQN=-GkZzTkT7J1_NcHTSx_x1_q48sTcHg@mail.gmail.com>
+References: <1521537304-7531-1-git-send-email-leechu729@gmail.com>
+ <1521537304-7531-3-git-send-email-leechu729@gmail.com> <20180326222336.jqix6k4pyqy4bg36@rob-hp-laptop>
+ <CAFaeLdQXQnE9XpAsgOPg=D_wAqEKe4dQhtKYrS1sDT5wgqSdVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328102640.yx6nv5abfexmouuf@dell>
+In-Reply-To: <CAFaeLdQXQnE9XpAsgOPg=D_wAqEKe4dQhtKYrS1sDT5wgqSdVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, eddie.huang@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
+To: =?UTF-8?B?5p2O5pu45biG?= <leechu729@gmail.com>
+Cc: Greg KH <greg@kroah.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>, =?UTF-8?B?Y3lfaHVhbmco6buD5ZWf5Y6fKQ==?= <cy_huang@richtek.com>, Jun Li <jun.li@nxp.com>, Mats Karrman <mats.dev.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-03-28 at 11:26 +0100, Lee Jones wrote:
-> On Tue, 27 Mar 2018, Matthias Brugger wrote:
-> 
-> > 
-> > 
-> > On 03/27/2018 10:05 AM, Lee Jones wrote:
-> > > On Fri, 23 Mar 2018, Dmitry Torokhov wrote:
-> > >> On Thu, Mar 22, 2018 at 10:17:53AM +0800, Sean Wang wrote:
-> > >>> Hi, Dmitry and Lee
-> > >>>
-> > >>> The series seems not being got merged. Are they good enough to be ready
-> > >>> into the your tree?
-> > >>>
-> > >>> Recently I've tested the series with focusing on pwrkey event generated
-> > >>> through interrupt when push and release the key on bpi-r2 board and then
-> > >>> finally it's working fine. but for homekey it cannot be found on the
-> > >>> board and thus I cannot have more tests more about it.
-> > >>>
-> > >>> Tested-by: Sean Wang <sean.wang@mediatek.com>
-> > >>
-> > >> You have my Ack on the input patch; I expect it go through Lee's tree as
-> > >> there are some dependencies on mfd core piece.
-> > > 
-> > > Are you happy for me to merge the Input dt-bindings without your Ack?
-> > > 
-> > 
-> > They got both Acked in v5, but the commit message was not updated:
-> > https://patchwork.kernel.org/patch/9973721/
-> > https://patchwork.kernel.org/patch/9973723/
-> 
-> Thanks Matthias.
-> 
-> Chen, can you collect all the Acks and repost as a RESEND please?
-> 
+On Tue, Mar 27, 2018 at 9:30 AM, 李書帆 <leechu729@gmail.com> wrote:
+> Hi Rob,
+>
+> 2018-03-27 6:23 GMT+08:00 Rob Herring <robh@kernel.org>:
+>> On Tue, Mar 20, 2018 at 05:15:04PM +0800, ShuFan Lee wrote:
+>>> From: ShuFan Lee <shufan_lee@richtek.com>
+>>>
+>>> Add device tree binding document for Richtek RT1711H Type-C chip driver
+>>>
+>>> Signed-off-by: ShuFan Lee <shufan_lee@richtek.com>
+>>> ---
+>>>  .../devicetree/bindings/usb/richtek,rt1711h.txt    | 30 ++++++++++++++++++++++
+>>>  1 file changed, 30 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+>>>
+>>>  changelogs between v2 & v3
+>>>  - add dt-bindings for rt1711h typec driver
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+>>> new file mode 100644
+>>> index 000000000000..7da4dac78ea7
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Richtek RT1711H TypeC PD Controller.
+>>> +
+>>> +Required properties:
+>>> + - compatible : Must be "richtek,rt1711h".
+>>> + - reg : Must be 0x4e, it's slave address of RT1711H.
+>>> +
+>>> +Recommended properties :
+>>> + - interrupt-parent : the phandle for the interrupt controller that
+>>> +   provides interrupts for this device.
+>>> + - interrupts : <a b> where a is the interrupt number and b represents an
+>>> +   encoding of the sense and level information for the interrupt.
+>>> +
+>>> +Optional properties :
+>>> + - rt,intr-gpios : IRQ GPIO pin that's connected to RT1711H interrupt.
+>>> +   if interrupt-parent & interrupts are not defined, use this property instead.
+>>
+>> Drop this. You should simply always have interrupts property.
+> Does this also imply that we could always assume client->irq is ready
+> for request?
 
-Thanks Matthias, Lee, Dmitry and Sean for your comments.
+No idea.
 
-Hi Lee,
+> Therefore, there's no need to check client->irq and get gpio through
+> rt,intr-gpios.
 
-I have collected the Acks by Rob and sent the v6:
-https://patchwork.kernel.org/patch/10026705
-https://patchwork.kernel.org/patch/10026707
+Looked to me like the gpio is just converted to an irq and used for
+nothing else in the driver. If that's the case, then there's no point
+in it being a gpio.
 
-Are they enough to be merged?
-
-Thank you.
+Rob
