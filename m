@@ -1,130 +1,98 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v3 6/8] DT: arm: Add Renesas RZ/N1 SoC base device tree file
-Date: Thu, 29 Mar 2018 08:47:02 +0100
-Message-ID: <1522309629-10152-7-git-send-email-michel.pollet@bp.renesas.com>
-References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Binding document for OV7251
+ camera sensor
+Date: Thu, 29 Mar 2018 11:24:54 +0300
+Message-ID: <20180329082453.ww5hbrtra3um6dws@paasikivi.fi.intel.com>
+References: <1521778460-8717-1-git-send-email-todor.tomov@linaro.org>
+ <1521778460-8717-2-git-send-email-todor.tomov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1521778460-8717-2-git-send-email-todor.tomov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the Renesas RZ/N1 Family (Part #R9A06G0xx) SoC
-bare bone support.
+On Fri, Mar 23, 2018 at 12:14:19PM +0800, Todor Tomov wrote:
+> Add the document for ov7251 device tree binding.
+> 
+> CC: Rob Herring <robh@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov7251.txt       | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> new file mode 100644
+> index 0000000..4ee6888
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> @@ -0,0 +1,51 @@
+> +* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
+> +
+> +The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor with
+> +an active array size of 640H x 480V. It is programmable through a serial I2C
+> +interface.
+> +
+> +Required Properties:
+> +- compatible: Value should be "ovti,ov7251".
+> +- clocks: Reference to the xclk clock.
+> +- clock-names: Should be "xclk".
+> +- clock-frequency: Frequency of the xclk clock.
+> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> +  to the hardware pin XSHUTDOWN which is physically active low.
+> +- vdddo-supply: Chip digital IO regulator.
+> +- vdda-supply: Chip analog regulator.
+> +- vddd-supply: Chip digital core regulator.
+> +
+> +The device node must contain one 'port' child node for its digital output
 
-This currently only handles generic parts (gic, architected timer)
-and a UART.
-For simplicity sake, this also relies on the bootloader to set the
-pinctrl and clocks.
+Could you add there shall be a single endpoint node in the port node as
+well?
 
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
----
- arch/arm/boot/dts/r9a06g0xx.dtsi | 96 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 arch/arm/boot/dts/r9a06g0xx.dtsi
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	&i2c1 {
+> +		...
+> +
+> +		ov7251: camera-sensor@60 {
+> +			compatible = "ovti,ov7251";
+> +			reg = <0x60>;
+> +
+> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&camera_bw_default>;
+> +
+> +			clocks = <&clks 200>;
+> +			clock-names = "xclk";
+> +			clock-frequency = <24000000>;
+> +
+> +			vdddo-supply = <&camera_dovdd_1v8>;
+> +			vdda-supply = <&camera_avdd_2v8>;
+> +			vddd-supply = <&camera_dvdd_1v2>;
+> +
+> +			port {
+> +				ov7251_ep: endpoint {
+> +					clock-lanes = <1>;
+> +					data-lanes = <0>;
+> +					remote-endpoint = <&csi0_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
 
-diff --git a/arch/arm/boot/dts/r9a06g0xx.dtsi b/arch/arm/boot/dts/r9a06g0xx.dtsi
-new file mode 100644
-index 0000000..c6eeee3
---- /dev/null
-+++ b/arch/arm/boot/dts/r9a06g0xx.dtsi
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Base Device Tree Source for the Renesas RZ/N1 SoC Family of devices
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Europe Limited
-+ *
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "renesas,rzn1";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <1>;
-+		};
-+	};
-+	clocks {
-+		/*
-+		 * this is fixed clock for now,
-+		 * until the clock driver is merged
-+		 */
-+		clkuarts: clkuarts {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <47619047>;
-+		};
-+	};
-+	arch-timer {
-+		compatible = "arm,cortex-a7-timer",
-+			     "arm,armv7-timer";
-+		interrupt-parent = <&gic>;
-+		arm,cpu-registers-not-fw-configured;
-+		interrupts =
-+			<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+				IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		gic: gic@44101000 {
-+			compatible = "arm,cortex-a7-gic", "arm,gic-400";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x44101000 0x1000>, /* Distributer */
-+			      <0x44102000 0x2000>, /* CPU interface */
-+			      <0x44104000 0x2000>, /* Virt interface control */
-+			      <0x44106000 0x2000>; /* Virt CPU interface */
-+			interrupts =
-+				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-+					IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+		sysctrl: sysctrl@4000c000 {
-+			compatible = "renesas,rzn1-sysctrl", "syscon",
-+					"simple-mfd";
-+			reg = <0x4000c000 0x1000>;
-+
-+			reboot {
-+				compatible = "renesas,rzn1-reboot";
-+			};
-+		};
-+		uart0: serial@40060000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x40060000 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&clkuarts>;
-+			clock-names = "baudclk";
-+			status = "disabled";
-+		};
-+	};
-+};
 -- 
-2.7.4
+Sakari Ailus
+sakari.ailus@linux.intel.com
