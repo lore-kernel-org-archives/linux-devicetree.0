@@ -1,78 +1,108 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v4 04/13] usb: typec: add fwnode to tcpc
-Date: Thu, 29 Mar 2018 15:57:45 +0300
-Message-ID: <20180329125745.GA19020@kuha.fi.intel.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-5-git-send-email-jun.li@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v2 4/8] mfd: stm32-timers: add support for dmas
+Date: Thu, 29 Mar 2018 13:59:12 +0100
+Message-ID: <20180329125912.jgasmw75qvtlszgx@dell>
+References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
+ <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
+ <20180328152251.xeh72dpeflzohn4k@dell>
+ <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1522253178-32414-5-git-send-email-jun.li@nxp.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Li Jun <jun.li@nxp.com>
-Cc: devel@driverdev.osuosl.org, peter.chen@nxp.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, a.hajda@samsung.com, robh+dt@kernel.org, linux-imx@nxp.com, linux@roeck-us.net, shufan_lee@richtek.com
+In-Reply-To: <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 28 Mar 2018, Fabrice Gasnier wrote:
 
-On Thu, Mar 29, 2018 at 12:06:09AM +0800, Li Jun wrote:
-> Add fwnode handle to get the fwnode so we can get typec configs
-> it contains.
+> On 03/28/2018 05:22 PM, Lee Jones wrote:
+> > On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
+> > 
+> >> STM32 Timers can support up to 7 DMA requests:
+> >> - 4 channels, update, compare and trigger.
+> >> Optionally request part, or all DMAs from stm32-timers MFD core.
+> >>
+> >> Also add routine to implement burst reads using DMA from timer registers.
+> >> This is exported. So, it can be used by child drivers, PWM capture
+> >> for instance (but not limited to).
+> >>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> >> ---
+> >> Changes in v2:
+> >> - Abstract DMA handling from child driver: move it to MFD core
+> >> - Add comments on optional dma support
+> >> ---
+> >>  drivers/mfd/stm32-timers.c       | 215 ++++++++++++++++++++++++++++++++++++++-
+> >>  include/linux/mfd/stm32-timers.h |  27 +++++
+> >>  2 files changed, 238 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
+> >> index a6675a4..2cdad2c 100644
+> >> --- a/drivers/mfd/stm32-timers.c
+> >> +++ b/drivers/mfd/stm32-timers.c
+
+[...]
+
+> >> +	struct dma_chan *dmas[STM32_TIMERS_MAX_DMAS];
+> >> +	struct stm32_timers ddata;
+> > 
+> > This looks odd to me.  Why can't you expand the current ddata
+> > structure?  Wouldn't it be better to create a stm32_timers_dma
+> > structure to place all this information in (except *dev, that should
+> > live in the ddata struct), then place a reference in the existing
+> > stm32_timers struct?
 > 
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-> ---
->  drivers/staging/typec/tcpci.c | 14 +++++++-------
->  drivers/usb/typec/tcpm.c      |  1 +
->  include/linux/usb/tcpm.h      |  2 ++
->  3 files changed, 10 insertions(+), 7 deletions(-)
+> Maybe I miss-understand you here, from what we discussed in V1:
+> https://lkml.org/lkml/2018/1/23/574
+> >... "passing in the physical address of the parent MFD into
+> > a child device doesn't quite sit right with me"
+> I introduced this private struct in MFD parent, and completely hide it
+> from the child.
 > 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index ed76327..4f7ad10 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/usb/pd.h>
->  #include <linux/usb/tcpm.h>
-> @@ -463,17 +464,16 @@ static const struct regmap_config tcpci_regmap_config = {
->  	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
->  };
->  
-> -static const struct tcpc_config tcpci_tcpc_config = {
-> -	.type = TYPEC_PORT_DFP,
-> -	.default_role = TYPEC_SINK,
-> -};
-> -
->  static int tcpci_parse_config(struct tcpci *tcpci)
->  {
->  	tcpci->controls_vbus = true; /* XXX */
->  
-> -	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
-> -	tcpci->tcpc.config = &tcpci_tcpc_config;
+> So, do you suggest to add struct definition here ? But make it part of
+> struct stm32_timers *ddata?
+> 
+> And only put declaration in include/linux/mfd/stm32-timers.h:
+> + struct stm32_timers_dma;
+> 
+> struct stm32_timers {
+> 	struct clk *clk;
+> 	struct regmap *regmap;
+> 	u32 max_arr;
+> +	struct stm32_timers_dma;
+> };
 
-That will break bisectablitity. tcpm.c is still accessing the config
-at this point.
+Yes, that's the basic idea.
 
-Just leave those untouched in here, and clean-up in separate patch
-that comes after the patch that prepares tcpm.c.
+> I can probably spare the *dev then... use dev->parent in child driver.
 
+What would you use dev->parent for?
 
-Thanks,
+[...]
+
+> >> +static int stm32_timers_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
+> >> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
+> >> +
+> >> +	of_platform_depopulate(&pdev->dev);
+> > 
+> > Why can't you continue using devm_*?
+> 
+> I can use devm_of_platform_depopulate() here if you prefer, and keep
+> devm_of_platform_populate() in probe.
+
+The point of devm_* is that you don't have to call depopulate.
+
+It happens automatically once this driver is unbound.
 
 -- 
-heikki
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
