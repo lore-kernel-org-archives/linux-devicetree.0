@@ -1,53 +1,52 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 3/8] net: mscc: Add MDIO driver
-Date: Thu, 29 Mar 2018 16:14:08 +0200
-Message-ID: <20180329141408.GC12066@piout.net>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-4-alexandre.belloni@bootlin.com>
- <9547b11d-147d-5029-0abe-8bf0f705c959@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Thu, 29 Mar 2018 07:21:37 -0700
+Message-ID: <20180329142137.GO5700@atomide.com>
+References: <20180323100930.GA21644@amd>
+ <20180323103006.alymgb3ywftb4gek@earth.universe>
+ <20180326141638.GB1450@amd>
+ <20180326155828.ttnduivadob4iqmd@earth.universe>
+ <20180327121441.GH29239@sirena.org.uk>
+ <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
+ <20180328022910.GM29239@sirena.org.uk>
+ <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com>
+ <20180329140948.GA27473@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9547b11d-147d-5029-0abe-8bf0f705c959@gmail.com>
+In-Reply-To: <20180329140948.GA27473@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23/03/2018 at 14:51:19 -0700, Florian Fainelli wrote:
-> > +	writel(MSCC_MIIM_CMD_VLD | (mii_id << MSCC_MIIM_CMD_PHYAD_SHIFT) |
-> > +	       (regnum << MSCC_MIIM_CMD_REGAD_SHIFT) | MSCC_MIIM_CMD_OPR_READ,
-> > +	       miim->regs + MSCC_MIIM_REG_CMD);
-> > +
-> > +	ret = mscc_miim_wait_ready(bus);
-> > +	if (ret)
-> > +		goto out;
+* Pavel Machek <pavel@ucw.cz> [180329 14:11]:
+> Hi!
 > 
-> Your example had an interrupt specified, can't you use that instead of
-> polling?
+> > Meanwhile, I can try to make voice calls more reproducable with
+> > qmi or MM for example instead of just n_gsm.. And then I'll try
+> > to fix my n_gsm pile of hacks for posting..
 > 
+> If you get something to work, that will be great.
 
-the interrupt doesn't handle that. It is used to detect when a PHY
-register has changed once the MIIM controller is configured to poll the
-phys. At some point, this could be used to replace the PHY interrupts
-but it doesn't correspond to the linux model so I didn't investigate too
-much.
+Yeah I need to at least fix a n_gsm message handling issue that
+currently causes retries and the retries have to be set artificially
+high right now to avoid timeouts.. Right now each at command takes
+about 30 seconds.. So I can't do any short calls :)
 
->  > +	for (i = 0; i < PHY_MAX_ADDR; i++) {
-> > +		if (mscc_miim_read(bus, i, MII_PHYSID1) < 0)
-> > +			bus->phy_mask |= BIT(i);
-> > +	}
-> 
-> What is this used for? You have an OF MDIO bus which would create a
-> phy_device for each node specified, is this a similar workaround to what
-> drivers/net/phy/mdio-bcm-unimac.c has to do? If so, please document it
-> as such.
-> 
+> If you get ofonod to work, that would be even better :-). [That's what
+> Jolla uses, and that's what I have graphical clients for].
 
-I replied to Andrew who had the same question.
+OK, I'll stick to picocom, qmicli and mmcli for now :)
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Oh and.. if you have reasonable windowing system, let me know.
+
+I've been just using xorg and i3.
+
+Regards,
+
+Tony
