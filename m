@@ -1,104 +1,54 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v4 07/13] staging: typec: tcpci: register port before
- request irq
-Date: Thu, 29 Mar 2018 13:52:12 +0300
-Message-ID: <20180329105212.lp5oydu4uejeo4h4@mwanda>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-8-git-send-email-jun.li@nxp.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
+ i878
+Date: Thu, 29 Mar 2018 13:18:29 +0300
+Message-ID: <7823d566-06b9-c86b-6e57-c02071b92c7e@ti.com>
+References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
+ <20180322134206.22857-3-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1522253178-32414-8-git-send-email-jun.li@nxp.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Li Jun <jun.li@nxp.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, heikki.krogerus@linux.intel.com, peter.chen@nxp.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, a.hajda@samsung.com, robh+dt@kernel.org, linux-imx@nxp.com, linux@roeck-us.net, shufan_lee@richtek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180322134206.22857-3-peter.ujfalusi@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 29, 2018 at 12:06:12AM +0800, Li Jun wrote:
-> With that we can clear any pending events and the port is registered
-> so driver can be ready to handle typec events once we request irq.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-
-These sign offs aren't clear.
-
-Sign offs mean that you handled the patch but didn't include any of
-SCO's copyrighted UNIX code into it.  Normally they're in the order of
-who touched the code.  So Peter touched the code first.  Should he get
-authorship credit?  How did he touch the code first if he didn't write
-the code?  It doesn't make sense.
-
-> ---
->  drivers/staging/typec/tcpci.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index 4f7ad10..9e0014b 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -537,25 +537,26 @@ static int tcpci_probe(struct i2c_client *client,
->  	if (IS_ERR(chip->data.regmap))
->  		return PTR_ERR(chip->data.regmap);
->  
-> +	i2c_set_clientdata(client, chip);
-> +
->  	/* Disable chip interrupts before requesting irq */
->  	err = regmap_raw_write(chip->data.regmap, TCPC_ALERT_MASK, &val,
->  			       sizeof(u16));
->  	if (err < 0)
->  		return err;
->  
-> +	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-> +	if (PTR_ERR_OR_ZERO(chip->tcpci))
-> +		return PTR_ERR(chip->tcpci);
-
-When a function returns both error pointers and NULL that means that
-NULL is a secial case of success.  Like for example:
-
-	p->my_feature = get_optional_feature();
-
-If it returns NULL that means the optional feature isn't there, but it's
-fine because it's optional.  But if it returns an error pointer that
-means the feature is there but the hardware is buggy or something so
-we shouldn't continue.
-
-If you return PTR_ERR(NULL) that means success.
-
-I don't think this code makes sense just from looking at it and also
-when I checked tcpci_register_port() doesn't return NULL.
-
-
-
-> +
->  	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
->  					_tcpci_irq,
->  					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
->  					dev_name(&client->dev), chip);
->  	if (err < 0)
-> -		return err;
-> +		tcpci_unregister_port(chip->tcpci);
-
-Can you put the "return err;" back, because that's better style.  It's
-better to keep the error path and success path separate if you can.
-
-	if (err < 0) {
-		tcpci_unregister_port(chip->tcpci);
-		return err;
-	}
-
-	return 0;
-
-
-regards,
-dan carpenter
+T24gMjIvMDMvMTggMTU6NDIsIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+IEZyb206IFRvbWkgVmFs
+a2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gCj4gRXJyYXRhIGk4Nzggc2F5cyB0aGF0
+IE1QVSBzaG91bGQgbm90IGJlIHVzZWQgdG8gYWNjZXNzIFJBTSBhbmQgRE1NIGF0Cj4gdGhlIHNh
+bWUgdGltZS4gQXMgaXQncyBub3QgcG9zc2libGUgdG8gcHJldmVudCBNUFUgYWNjZXNzaW5nIFJB
+TSwgd2UKPiBuZWVkIHRvIGFjY2VzcyBETU0gdmlhIGEgcHJveHkuCj4gCj4gVGhpcyBwYXRjaCBj
+aGFuZ2VzIERNTSBkcml2ZXIgdG8gYWNjZXNzIERNTSByZWdpc3RlcnMgdmlhIHNETUEuIEluc3Rl
+YWQKPiBvZiBkb2luZyBhIG5vcm1hbCByZWFkbC93cml0ZWwgY2FsbCB0byByZWFkL3dyaXRlIGEg
+cmVnaXN0ZXIsIHdlIHVzZQo+IHNETUEgdG8gY29weSA0IGJ5dGVzIGZyb20vdG8gdGhlIERNTSBy
+ZWdpc3RlcnMuCj4gCj4gVGhpcyBwYXRjaCBwcm92aWRlcyBvbmx5IGEgcGFydGlhbCB3b3JrYXJv
+dW5kIGZvciBpODc4LCBhcyBub3Qgb25seSBETU0KPiByZWdpc3RlciByZWFkcy93cml0ZXMgYXJl
+IGFmZmVjdGVkLCBidXQgYWxzbyBhY2Nlc3NlcyB0byB0aGUgRE1NIG1hcHBlZAo+IGJ1ZmZlcnMg
+KGZyYW1lYnVmZmVycywgdXN1YWxseSkuCj4gCj4gU2lnbmVkLW9mZi1ieTogVG9taSBWYWxrZWlu
+ZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL29tYXBk
+cm0vb21hcF9kbW1fcHJpdi5oICB8ICAgOCArKwo+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9v
+bWFwX2RtbV90aWxlci5jIHwgMTUzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiAg
+MiBmaWxlcyBjaGFuZ2VkLCAxNTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKCgo+
+ICsJZG1tLT53YV9kbWFfY2hhbiA9IGRtYV9yZXF1ZXN0X2NoYW5uZWwobWFzaywgTlVMTCwgTlVM
+TCk7Cj4gKwlpZiAoIWRtbS0+d2FfZG1hX2NoYW4pIHsKPiArCQlkbWFfZnJlZV9jb2hlcmVudChk
+bW0tPmRldiwgNCwgZG1tLT53YV9kbWFfZGF0YSwgZG1tLT53YV9kbWFfaGFuZGxlKTsKClRoaXMg
+YW5kIHRoZSBvdGhlciBmcmVlIGJlbG93IHNob3VsZCB1c2Ugc2l6ZW9mKHUzMikgYXMgdGhlIGFs
+bG9jIGRvZXMuCkFuZCBJIGd1ZXNzIGRldmljZV9wcmVwX2RtYV9tZW1jcHkoKSB0b28uIFBlcmhh
+cHMgYSAjZGVmaW5lIHdvdWxkIGJlCmJlc3QgaGVyZS4gRE1NX1JFR19TSVpFPyBJIGNhbiBkbyB0
+aGlzIGNoYW5nZSB3aGVuIGFwcGx5aW5nLCBpZiB5b3UgYWdyZWUuCgogVG9taQoKLS0gClRleGFz
+IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
+LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
