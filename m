@@ -1,40 +1,45 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Thu, 29 Mar 2018 16:33:58 +0200
-Message-ID: <20180329143358.GA4556@harukaze>
-References: <1521808032-29645-1-git-send-email-p.pisati@gmail.com>
- <1521808032-29645-3-git-send-email-p.pisati@gmail.com>
- <CANk1AXRAXQ8cURb+ObS5SpaBKQLdoFFB6nmLTnmA1gQowmoVbw@mail.gmail.com>
- <CANk1AXQyZdoxXnLTtwR0fkYjgdB36XABQSwdxk6eQoQJtLC80w@mail.gmail.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
+ data
+Date: Thu, 29 Mar 2018 09:37:15 -0500
+Message-ID: <20180329143715.GA31757@hector.attlocal.net>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+ <20180320143131.4eenixtbhciq5fwc@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANk1AXQyZdoxXnLTtwR0fkYjgdB36XABQSwdxk6eQoQJtLC80w@mail.gmail.com>
+In-Reply-To: <20180320143131.4eenixtbhciq5fwc@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Sricharan R <sricharan@codeaurora.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 03:03:42PM -0500, Alan Tull wrote:
-> On Wed, Mar 28, 2018 at 11:26 AM, Alan Tull <atull@kernel.org> wrote:
-> > On Fri, Mar 23, 2018 at 7:27 AM, Paolo Pisati <p.pisati@gmail.com> wrote:
-> >
-> > Hi Paolo,
+On Tue, Mar 20, 2018 at 07:31:31AM -0700, Richard Cochran wrote:
+> On Tue, Mar 20, 2018 at 09:28:47AM +0530, Sricharan R wrote:
+> > Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
+> > Adds missing memory, reserved-memory nodes.
+> > 
+> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> > ---
+> >  arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 28 +++++++++++++++++++++++++++
 > 
-> One more thing.  The api for registering a FPGA manager is changing.
-> It won't be hard to adapt.  I've pushed a branch that includes the
-> patches that add this change.  Please rebase on top of that branch so
-> your patch can go in on top of that.
+> Q: Does mainline Linux even boot on the DK?
 > 
-> My git repo is at:
-> git://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git
-> 
-> The branch name is
-> for-review-next-20180327-drvdata-v3
+> A: No, it doesn't.
 
-Ok, i'll fix all the issues you raised in the previous email, rebase on
-this branch and resend.
--- 
-bye,
-p.
+If you aren't actually testing/validating this specific board, how can you make
+a statement like this?  Unless you have tested these specifically on this board,
+I'd appreciate not getting false information about what is or is not working.
+
+> 
+> Please add the missing basic board support before hacking random stuff
+> into the DTS.
+
+Feel free to send your own contributions where you are adding the things that
+are important to you.
+
+Regards,
+
+Andy Gross
