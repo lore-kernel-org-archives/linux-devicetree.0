@@ -1,36 +1,79 @@
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Kalle Valo <kvalo@codeaurora.org>
 Subject: Re: [PATCH v2] wcn36xx: Disable 5GHz for wcn3610
-Date: Thu, 29 Mar 2018 09:40:33 +0200
-Message-ID: <CAMZdPi8mS92ACrZOmfnni7bnCKkU5x-Z26QKcu_-J9xYuCjq1w@mail.gmail.com>
-References: <20180329065818.9338-1-rfried@codeaurora.org> <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
- <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org>
+Date: Thu, 29 Mar 2018 10:45:06 +0300
+Message-ID: <87k1tvl3zx.fsf@kamboji.qca.qualcomm.com>
+References: <20180329065818.9338-1-rfried@codeaurora.org>
+        <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
+        <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org>
+In-Reply-To: <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org> (Ramon
+        Fried's message of "Thu, 29 Mar 2018 10:32:55 +0300")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ramon Fried <rfried@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>, wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree <devicetree@vger.kernel.org>
+Cc: loic.poulain@linaro.org, wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramon,
+(really adding Bjorn)
 
-On 29 March 2018 at 09:32, Ramon Fried <rfried@codeaurora.org> wrote:
+Ramon Fried <rfried@codeaurora.org> writes:
 
+> (adding Bjorn Andersson)
+>
+>
+> On 3/29/2018 10:15 AM, Kalle Valo wrote:
+>> (adding devicetree list)
+>>
+>> Ramon Fried <rfried@codeaurora.org> writes:
+>>
+>>> wcn3610 can only operate on 2.4GHz band due to RF limitation.
+>>> If wcn36xx digital block is associated with an external IRIS
+>>> RF module, retrieve the id and disable 5GHz band in case of
+>>> wcn3610 id.
+>>>
+>>> Signed-off-by: Ramon Fried <rfried@codeaurora.org>
+>>> ---
+>>> v2: fixed wrong assignment, which is logically introduces the 
+>>> 	same behaviour, but for correctness.
+>>>
+>>>  drivers/net/wireless/ath/wcn36xx/main.c    | 4 +++-
+>>>  drivers/net/wireless/ath/wcn36xx/wcn36xx.h | 1 +
+>>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
+>>> index ab5be6d2c691..833531a68c95 100644
+>>> --- a/drivers/net/wireless/ath/wcn36xx/main.c
+>>> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
+>>> @@ -1146,7 +1146,7 @@ static int wcn36xx_init_ieee80211(struct wcn36xx *wcn)
+>>>  		BIT(NL80211_IFTYPE_MESH_POINT);
+>>>  
+>>>  	wcn->hw->wiphy->bands[NL80211_BAND_2GHZ] = &wcn_band_2ghz;
+>>> -	if (wcn->rf_id != RF_IRIS_WCN3620)
+>>> +	if (wcn->rf_id != RF_IRIS_WCN3610 && wcn->rf_id != RF_IRIS_WCN3620)
+>>>  		wcn->hw->wiphy->bands[NL80211_BAND_5GHZ] = &wcn_band_5ghz;
+>>>  
+>>>  	wcn->hw->wiphy->max_scan_ssids = WCN36XX_MAX_SCAN_SSIDS;
+>>> @@ -1248,6 +1248,8 @@ static int wcn36xx_platform_get_resources(struct wcn36xx *wcn,
+>>>  	if (iris_node) {
+>>>  		if (of_device_is_compatible(iris_node, "qcom,wcn3620"))
+>>>  			wcn->rf_id = RF_IRIS_WCN3620;
+>>> +		else if (of_device_is_compatible(iris_node, "qcom,wcn3610"))
+>>> +			wcn->rf_id = RF_IRIS_WCN3610;
+>>>  		of_node_put(iris_node);
+>>>  	}
 >> Should we document qcom,wcn3610 just like wcn3620 is:
 >>
->> Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt:                    "qcom,wcn3620",
-> IMHO the mentioned bindings is related to the PIL (peripheral image loaded) which is just the firmware part and has
-> nothing to do with wifi frontend(IRIS).
+>> Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt:
+>> "qcom,wcn3620",
 >
+> IMHO the mentioned bindings is related to the PIL (peripheral image
+> loaded) which is just the firmware part and has
+> nothing to do with wifi frontend(IRIS).
 
-It seems that the RF is a subnode of the PIL node:
+Should we then have a bindings document for wcn36xx or is it ok to use
+compatible strings like this without any docs? I'm not very familiar
+with the devicetree stuff.
 
-"= SUBNODES
-A required subnode of the WCNSS PIL is used to describe the attached rf module
-and its resource dependencies. It is described by the following properties:"
-
-So we should add qcom,wcn3610 to the exiting list of 'compatible' rf modules.
-
-Regards,
-Loic
+-- 
+Kalle Valo
