@@ -1,32 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 3/8] net: mscc: Add MDIO driver
-Date: Thu, 29 Mar 2018 16:57:27 +0200
-Message-ID: <20180329145727.GB25752@lunn.ch>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-4-alexandre.belloni@bootlin.com>
- <20180323204939.GS24361@lunn.ch>
- <20180329140544.GB12066@piout.net>
- <20180329144041.GA25752@lunn.ch>
- <20180329145352.GD12066@piout.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [DPU PATCH 1/2] dt-bindings: msm/disp: Remove hw block offset DT
+ entries for SDM845
+Date: Thu, 29 Mar 2018 10:04:33 -0500
+Message-ID: <CAL_Jsq+d8wvrX9myO4JN6WcuSmuERRNC_uyMEzQCkSxfB5qpVA@mail.gmail.com>
+References: <1521006698-23703-1-git-send-email-skolluku@codeaurora.org>
+ <1521006698-23703-2-git-send-email-skolluku@codeaurora.org>
+ <20180318124940.7bmsancpnh6ks6fu@rob-hp-laptop>
+ <768a6274bc3b2d0df2a26f9a84b16920@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180329145352.GD12066@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <768a6274bc3b2d0df2a26f9a84b16920@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "Kristian H. Kristensen" <hoegsberg@chromium.org>, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-> > It sounds like the correct fix is for get_phy_id() to look at the
-> > error code for mdiobus_read(bus, addr, MII_PHYSID1). If it is EIO and
-> > maybe ENODEV, set *phy_id to 0xffffffff and return. The scan code
-> > should then do the correct thing.
-> > 
-> 
-> That could work indeed. Do you want me to test and send a patch?
-
-Yes please.
-
-Thanks
-	Andrew
+T24gTW9uLCBNYXIgMTksIDIwMTggYXQgMToxOSBBTSwgIDxza29sbHVrdUBjb2RlYXVyb3JhLm9y
+Zz4gd3JvdGU6Cj4gT24gMjAxOC0wMy0xOCAxODoxOSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Cj4+
+IE9uIFdlZCwgTWFyIDE0LCAyMDE4IGF0IDExOjIxOjM3QU0gKzA1MzAsIFNyYXZhbnRoaSBLb2xs
+dWt1ZHVydSB3cm90ZToKPj4+Cj4+PiBSZW1vdmUgRFQgZW50cmllcyBvZiBodyBibG9jayBvZmZz
+ZXRzIGFuZCBvdGhlciB0YXJnZXQgc3BlY2lmaWMgY2F0YWxvZwo+Pj4gaW5mb3JtYXRpb24gZm9y
+IFNETTg0NS4KPj4KPj4KPj4gVGhhdCBpcyBjbGVhciBmcm9tIHRoZSBkaWZmLiBUaGUgY29tbWl0
+IG1zZyBzaG91bGQgYW5zd2VyIHdoeT8KPj4KPiBXaWxsIHVwZGF0ZSB0aGUgY29tbWl0IG1zZyBh
+cyBiZWxvdyBpbiB0aGUgZm9sbG93IHVwIHBhdGNoIDoKPiAiQ3VycmVudGx5LCB0aGUgZG93bnN0
+cmVhbSBkcml2ZXIgZGVwZW5kcyBvbiB0aGUgRFQgZmlsZSBmb3IgdGhlIGh3IG9mZnNldHMKPiBh
+bmQgb3RoZXIgdGFyZ2V0IHNwZWNpZmljIGNhdGFsb2cgaW5mb3JtYXRpb24uCj4gVG8gYWxpZ24g
+dGhlIGRyaXZlciB3aXRoIHRoZSB1cHN0cmVhbSBEVCBkZXNpZ24sIHRoaXMgaW5mb3JtYXRpb24g
+aXMgbm93Cj4gcmVtb3ZlZCBmcm9tIERUIGZpbGUgYW5kIGFkZGVkIGluIHRoZSBkcml2ZXIgc291
+cmNlLiIKCkJhc2VkIG9uIHRoZSBhbnN3ZXIgYmVsb3csIHdyaXRlIHdoYXRldmVyIHlvdSB3YW50
+IGJlY2F1c2UgdW50aWwgaXQgaXMKaW50ZW5kZWQgZm9yIHVwc3RyZWFtIGl0IGRvZXNuJ3QgbWF0
+dGVyICh0byBtZSBhdCBsZWFzdCkuIFRob3VnaCwKd3JpdGluZyBnb29kIGNvbW1pdCBtZXNzYWdl
+cyBzaG91bGQgcGVyaGFwcyBiZSBwcmFjdGljZWQuCgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFNy
+YXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29kZWF1cm9yYS5vcmc+Cj4+PiAtLS0KPj4+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0ICAgICAgICB8IDUz
+MAo+Pj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+Cj4+Cj4+IFRoaXMgZmlsZSBpcyBub3QgdXBz
+dHJlYW0uIFdoYXQgdHJlZSBpcyB0aGlzIGZvcj8KPj4KPiBUaGlzIGlzIHBhcnQgb2YgdGhlIHF1
+YWxjb21tIGVmZm9ydHMgdG8gdXBzdHJlYW0gdGhlIGRpc3BsYXkgY29udHJvbGxlcgo+IGNvZGUu
+Cj4gVGhlIGNoYW5nZXMgYXJlIGhvc3RlZCBhdAo+IGh0dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5v
+cmcvfnNlYW5wYXVsL2RwdS1zdGFnaW5nLwoKUGxlYXNlIG1ha2UgdGhhdCBhYnVuZGFudGx5IGNs
+ZWFyIGluIGV2ZXJ5IHBhdGNoIGZvciB0aGlzIHNvIGl0IGlzCm9idmlvdXMgdG8gaWdub3JlIGl0
+LiBPciBqdXN0IGtlZXAgaXQgb24gdGhlIG1zbS9mcmVlZHJlbm8gbGlzdHMgdW50aWwKeW91IGFy
+ZSBzdWJtaXR0aW5nIHRoaW5ncyB1cHN0cmVhbS4gSWYgeW91IGhhdmUgc3BlY2lmaWMgYmluZGlu
+ZwpxdWVzdGlvbnMvaXNzdWVzIGJlZm9yZSB0aGVtLCBJJ20gaGFwcHkgdG8gZGlzY3VzcywgYnV0
+IG90aGVyd2lzZQpmb2xrcyBoYXZlIG1vcmUgdGhhbiBlbm91Z2ggdG8gcmV2aWV3IGp1c3QgZm9y
+IHVwc3RyZWFtLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
