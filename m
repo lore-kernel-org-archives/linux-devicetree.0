@@ -1,49 +1,75 @@
-From: Martin Kelly <mkelly-s2cxlsp5qxs@public.gmane.org>
-Subject: Re: [PATCH v9 0/2] Initial Allwinner V3s CSI Support
-Date: Wed, 28 Mar 2018 16:29:47 -0700
-Message-ID: <9b60dee0-2504-6ae3-fda3-64c4458025c3@xevo.com>
-References: <1520301070-48769-1-git-send-email-yong.deng@magewell.com>
-Reply-To: mkelly-s2cxlsp5qxs@public.gmane.org
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0ggdjggMi81?=
+ =?utf-8?B?XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1lbnQgZm9yIGhp?=
+ =?utf-8?Q?si-ufs?=
+Date: Thu, 29 Mar 2018 01:00:01 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA58BA1@DGGEMM506-MBS.china.huawei.com>
+References: <20180213101412.5717-1-liwei213@huawei.com>
+ <20180213101412.5717-3-liwei213@huawei.com>
+ <CAK8P3a2b3rLHyM+vMppCkAR3VYbhw-b0LpuWfLCqjs7z9n+hyw@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA584ED@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a3NdHLDf2vOMyZ1qcWNW1Jg5T47qR0qWhWEeDn+90S4ug@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA58798@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a29sDaEj=iTkru-3mc9NpjNvZos3Z+h5UsT1cAeULoGHw@mail.gmail.com>
+ <1699CE87DE933F49876AD744B5DC140FA588AD@DGGEMM506-MBS.china.huawei.com>
+ <CAK8P3a2BRXWbNzEcd9+Fi1zEkSA8aGB5ObxYrbVnaA7MKzU--w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBC2J7SGP5QOBB6GK6DKQKGQEQGLSGRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1520301070-48769-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2BRXWbNzEcd9+Fi1zEkSA8aGB5ObxYrbVnaA7MKzU--w@mail.gmail.com>
+Content-Language: zh-CN
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2018 05:51 PM, Yong Deng wrote:
-> This patchset add initial support for Allwinner V3s CSI.
-> 
-> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> interface and CSI1 is used for parallel interface. This is not
-> documented in datasheet but by test and guess.
-> 
-> This patchset implement a v4l2 framework driver and add a binding
-> documentation for it.
-> 
-> Currently, the driver only support the parallel interface. And has been
-> tested with a BT1120 signal which generating from FPGA. The following
-> fetures are not support with this patchset:
->    - ISP
->    - MIPI-CSI2
->    - Master clock for camera sensor
->    - Power regulator for the front end IC
-> 
-
-Hi Yong,
-
-Thanks so much, this driver is a great contribution!
-
-Unfortunately the board I'm working with (nanopi neo air) uses the MIPI 
-CSI-2 CSI0 interface rather than CSI1. Do you have any plans to support 
-the MIPI CSI-2 interface at some point? If not, do you know the scope of 
-what would be involved?
+SGksIEFybmQNCg0KVGhhbmtzIGZvciB5b3VyIHBhdGllbmNlcy4NCg0KLS0tLS3pgq7ku7bljp/k
+u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBhcm5kYmVyZ21hbm5AZ21haWwuY29tIFttYWlsdG86YXJuZGJl
+cmdtYW5uQGdtYWlsLmNvbV0g5Luj6KGoIEFybmQgQmVyZ21hbm4NCuWPkemAgeaXtumXtDogMjAx
+OOW5tDPmnIgyOOaXpSAyMDo1MA0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pDQrmioTpgIE6IFJvYiBI
+ZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IHh1d2VpIChPKTsgQ2F0YWxpbiBNYXJpbmFzOyBXaWxsIERl
+YWNvbjsgVmluYXlhayBIb2xpa2F0dGk7IEphbWVzIEUuSi4gQm90dG9tbGV5OyBNYXJ0aW4gSy4g
+UGV0ZXJzZW47IEtldmluIEhpbG1hbjsgR3JlZ29yeSBDTEVNRU5UOyBUaG9tYXMgUGV0YXp6b25p
+OyBNYXNhaGlybyBZYW1hZGE7IFJpa3UgVm9pcGlvOyBUaGllcnJ5IFJlZGluZzsgS3J6eXN6dG9m
+IEtvemxvd3NraTsgRXJpYyBBbmhvbHQ7IERUTUw7IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7
+IExpbnV4IEFSTTsgbGludXgtc2NzaTsgemFuZ2xlaWdhbmc7IEdlbmdqaWFuZmVuZzsgR3VvZG9u
+ZyBYdTsgWmhhbmdmZWkgR2FvOyBGZW5nYmFvcGVuZyAoa2V2aW4sIEtpcmluIFNvbHV0aW9uIERl
+cHQpOyBZYW5pdiBHYXJkaQ0K5Li76aKYOiBSZTog562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BB
+VENIIHY4IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50IGZvciBoaXNp
+LXVmcw0KDQpPbiBUdWUsIE1hciAyNywgMjAxOCBhdCA4OjE1IEFNLCBsaXdlaSAoQ00pIDxsaXdl
+aTIxM0BodWF3ZWkuY29tPiB3cm90ZToNCj4gSGksIEFybmQNCj4NCj4gQXQgcHJlc2VudCBvdXIg
+dWZzIG1vZHVsZSBtYWlubHkgaGFzIGZvdXIgY2xvY2tzIGZyb20gdGhlIG91dHNpZGU6DQo+IGhj
+bGtfdWZzOiAgICAgbWFpbiBjbG9jayBvZiB1ZnMgY29udHJvbGxlciAsZnJlcSBpcyAyMDcuNU1I
+eg0KPiBjZmdfcGh5X2NsazogIGNvbmZpZ3VyYXRpb24gY2xvY2sgb2YgTVBIWSwgZnJlcSBpcyA1
+MS44NzVNSHoNCj4gcmVmX3BoeV9jbGs6ICByZWZlcmVuY2UgY2xvY2sgb2YgTVBIWSBmcm9tIFBN
+VSwgZnJlcSBpcyAxOS4yTUh6DQo+IHJlZl9pb19jbGs6ICAgIHJlZmVyZW5jZSBjbG9jayBmb3Ig
+dGhlIGV4dGVybmFsIGludGVyZmFjZSB0byB0aGUgZGV2aWNlLCBmcmVxIGlzIDE5LjJNSHoNCj4N
+Cj4gV2UgY29udHJvbCB0d28gY2xvY2tzICJyZWZfaW9fY2xrIiBhbmQgImNmZ19waHlfY2xrIiBp
+biB0aGUgZHJpdmVyIA0KPiBiZWNhdXNlIHRoZSBvdGhlciB0d28gYXJlIGNvbnRyb2xsZWQgYnkg
+bWFpbiBjbG9jayBtb2R1bGUgYW5kIHBtdS4NCg0KSSdtIG5vdCBjb21wbGV0ZWx5IHN1cmUgd2hh
+dCB5b3UgbWVhbiB3aXRoICJjb250cm9sIiBoZXJlLiBEbyB5b3UgbWVhbiBzZXR0aW5nIHRoZSBy
+YXRlIGFuZCBkaXNhYmxpbmcgdGhlbSBkdXJpbmcgcnVudGltZSBwb3dlciBtYW5hZ2VtZW50PyBX
+aGF0IGRvZXMgaXQgbWVhbiBmb3IgdGhlIGNsb2NrIHRvIGJlIGNvbnRyb2xsZWQgYnkgdGVoICJt
+YWluIGNsb2NrIG1vZHVsZSBhbmQgcG11Ij8NCg0KSW4gdGhlIGRyaXZlciB3ZSBvbmx5IGRpc2Fi
+bGUvZW5hYmxlICJyZWZfaW9fY2xrIiBhbmQgImNmZ19waHlfY2xrIiBkdXJpbmcgcnVudGltZSBw
+b3dlciBtYW5hZ2VtZW50Lg0KDQo+IGZvciB0aGlzIHBhdGNoLCBjZmdfcGh5X2NsayBjb3JyZXNw
+b25kcyB0byAicGh5X2NsayIsIHJlZl9pb19jbGsgY29ycmVzcG9uZHMgdG8gInJlZl9jbGsiLg0K
+DQpJJ20gbm90IHN1cmUgSSB1bmRlcnN0YW5kIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gcmVmX3Bo
+eV9jbGsgYW5kIHJlZl9pb19jbGssIGJ1dCBpdCBzb3VuZHMgbGlrZSB3ZSBzaG91bGQgZ2l2ZSBi
+b3RoIG9mIHRob3NlIG5hbWVzIGluIHRoZSB1ZnMtcGxhdGZvcm0gYmluZGluZy4NCg0KWW91ciBo
+Y2xrX3VmcyB3b3VsZCBhcHBlYXIgdG8gY29ycmVzcG9uZCB0byB3aGF0IHF1YWxjb21tIGNhbGxz
+IGNvcmVfY2xrLCBzbyBtYXliZSB1c2UgdGhhdCBuYW1lIGFzIHdlbGwuDQoNCmNmZ19waHlfY2xr
+IHNlZW1zIHRvIGJlIHNvbWV0aGluZyB0aGF0IHFjb20gd291bGQgbm90IGhhdmUsIGJ1dCBpdCdz
+IGFsc28gZ2VuZXJpYyBlbm91Z2ggdG8gbGlzdCBpdCBpbiB0aGUgY29tbW9uIGJpbmRpbmcuDQoN
+Ck9rLCBsZXQncyBhZGQgYSBkZXNjcmliZSBmb3IgcGh5X2NsayBpbiB0aGUgY29tbW9uIGJpbmRp
+bmcuDQoNCj4gU28gdGhlIGNsa3MgaW4gdGhlIHBhdGNoIHlvdSBnaXZlIGFwcGVhciB0byBiZSB1
+bnN1aXRhYmxlIGZvciBkZXNjcmliaW5nIHRoaXMgLkFuZCB0aGUgZm9sbG93aW5nIGNsa3Mgb2Yg
+cWNvbSBhcmUgaW50ZXJuYWwgY2xvY2s/DQo+IFdlIGRpZG4ndCBkZXNjcmliZSBvciBwYXkgYXR0
+ZW50aW9uIHRvIHRoZSBjbG9jayBpbnNpZGUgdGhlIHVmcyBtb2R1bGUuDQo+DQo+IFBIWSB0byBj
+b250cm9sbGVyIHN5bWJvbCBzeW5jaHJvbml6YXRpb24gY2xvY2tzOg0KPiAgICAgICAgICJyeF9s
+YW5lMF9zeW5jX2NsayIgLSBSWCBMYW5lIDANCj4gICAgICAgICAicnhfbGFuZTFfc3luY19jbGsi
+IC0gUlggTGFuZSAxDQo+ICAgICAgICAgInR4X2xhbmUwX3N5bmNfY2xrIiAtIFRYIExhbmUgMA0K
+PiAgICAgICAgICJ0eF9sYW5lMV9zeW5jX2NsayIgLSBUWCBMYW5lIDENCg0KUmlnaHQsIGxldCdz
+IGxlYXZlIHRob3NlIGZvciB0aGUgcWNvbSBwcml2YXRlIGJpbmRpbmcuDQoNCiAgICAgIEFybmQN
+Cg==
