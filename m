@@ -1,36 +1,61 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 1/7] clk: msm8996-gcc: change halt check for USB/PCIE pipe_clk
-Date: Thu, 29 Mar 2018 13:55:55 -0700
-Message-ID: <CAD=FV=UXvf+_rvbFGrHAQ1N0kbrMR_c2=LBVD=AMuL6DAjWO+Q@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org> <1522321466-21755-2-git-send-email-mgautam@codeaurora.org>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCHv3 4/7] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+Date: Thu, 29 Mar 2018 16:12:30 -0500
+Message-ID: <CANk1AXTYZTdMHMPkz1+0zZ2f2FJ-rjJVUbtjjKW06ac1J5VAVQ@mail.gmail.com>
+References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com> <1522182014-7338-5-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522321466-21755-2-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <1522182014-7338-5-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+To: Richard Gong <richard.gong@linux.intel.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Yves Vandervennet <yves.vandervennet@linux.intel.com>, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> The USB and PCIE pipe clocks are sourced from external clocks
-> inside the QMP USB/PCIE PHYs. Enabling or disabling of PIPE RCG
-> clocks is dependent on PHY initialization sequence hence
-> update halt_check to BRANCH_HALT_DELAY for these clocks so
-> that clock status bit is not polled when enabling or disabling
-> the clocks. It allows to simplify PHY client driver code which
-> is both user and source of the pipe_clk and avoid error logging
-> related status check on clk_disable/enable.
+On Tue, Mar 27, 2018 at 3:20 PM,  <richard.gong@linux.intel.com> wrote:
+> From: Alan Tull <atull@kernel.org>
 >
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+>
+> Signed-off-by: Alan Tull <atull@kernel.org>
 > ---
->  drivers/clk/qcom/gcc-msm8996.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> v2: this patch is added in patch set version 2
+> v3: change to put fpga_mgr node under firmware/svc node
+> ---
+>  .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+>
+> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+> new file mode 100644
+> index 0000000..be7cd96
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+> @@ -0,0 +1,17 @@
+> +Intel Stratix10 SoC FPGA Manager
+> +
+> +Required properties:
+> +The fpga_mgr node has the following mandatory property, must be located under
+> +firmware/svc node.
+> +
+> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
+> +
+> +Example:
+> +
+> +       firmware {
+> +               svc {
+> +                       fpga_mgr: fpga-mgr@0 {
 
-As per my feedback on <https://patchwork.kernel.org/patch/10314937/>,
-I'm not a fan of this.  Hopefully we can adjust the PHY driver so it's
-not needed.
+Shouldn't have the index.  Should be:
 
--Doug
+                            fpga_mgr: fpga-mgr {
+
+Alan
+
+> +                               compatible = "intel,stratix10-soc-fpga-mgr";
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+>
