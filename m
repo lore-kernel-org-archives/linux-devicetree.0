@@ -1,158 +1,65 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 7/8] remoteproc/davinci: use the reset framework
-Date: Thu, 29 Mar 2018 09:16:33 +0200
-Message-ID: <CAMRc=Me6giXHneuuRTPSwfw8HxwbDVCTgReZ_6HBv90ushf+-Q@mail.gmail.com>
-References: <20180327092031.11251-1-brgl@bgdev.pl> <20180327092031.11251-8-brgl@bgdev.pl>
- <51e33d41-37b1-9e88-4a13-503bb39e2e40@ti.com>
+From: Ramon Fried <rfried@codeaurora.org>
+Subject: Re: [PATCH v2] wcn36xx: Disable 5GHz for wcn3610
+Date: Thu, 29 Mar 2018 10:32:55 +0300
+Message-ID: <2d978343-2057-8424-a249-83a0394da5a7@codeaurora.org>
+References: <20180329065818.9338-1-rfried@codeaurora.org>
+ <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51e33d41-37b1-9e88-4a13-503bb39e2e40@ti.com>
+In-Reply-To: <874lkzmjxu.fsf@kamboji.qca.qualcomm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: loic.poulain@linaro.org, wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-03-29 0:30 GMT+02:00 Suman Anna <s-anna@ti.com>:
-> Hi Bart,
+(adding Bjorn Andersson)
+
+
+On 3/29/2018 10:15 AM, Kalle Valo wrote:
+> (adding devicetree list)
 >
-> On 03/27/2018 04:20 AM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Ramon Fried <rfried@codeaurora.org> writes:
+>
+>> wcn3610 can only operate on 2.4GHz band due to RF limitation.
+>> If wcn36xx digital block is associated with an external IRIS
+>> RF module, retrieve the id and disable 5GHz band in case of
+>> wcn3610 id.
 >>
->> Switch to using the reset framework instead of handcoded reset routines
->> we used so far.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> Signed-off-by: Ramon Fried <rfried@codeaurora.org>
 >> ---
->>  drivers/remoteproc/da8xx_remoteproc.c | 33 ++++++++++++++++++++++++++++-----
->>  1 file changed, 28 insertions(+), 5 deletions(-)
+>> v2: fixed wrong assignment, which is logically introduces the 
+>> 	same behaviour, but for correctness.
 >>
->> diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
->> index b668e32996e2..788f59809c02 100644
->> --- a/drivers/remoteproc/da8xx_remoteproc.c
->> +++ b/drivers/remoteproc/da8xx_remoteproc.c
->> @@ -10,6 +10,7 @@
+>>  drivers/net/wireless/ath/wcn36xx/main.c    | 4 +++-
+>>  drivers/net/wireless/ath/wcn36xx/wcn36xx.h | 1 +
+>>  2 files changed, 4 insertions(+), 1 deletion(-)
 >>
->>  #include <linux/bitops.h>
->>  #include <linux/clk.h>
->> +#include <linux/reset.h>
->>  #include <linux/err.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/io.h>
->> @@ -20,8 +21,6 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/remoteproc.h>
->>
->> -#include <mach/clock.h>   /* for davinci_clk_reset_assert/deassert() */
->> -
->>  #include "remoteproc_internal.h"
->>
->>  static char *da8xx_fw_name;
->> @@ -72,6 +71,7 @@ struct da8xx_rproc {
->>       struct da8xx_rproc_mem *mem;
->>       int num_mems;
->>       struct clk *dsp_clk;
->> +     struct reset_control *dsp_reset;
->>       void (*ack_fxn)(struct irq_data *data);
->>       struct irq_data *irq_data;
->>       void __iomem *chipsig;
->> @@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
->>       struct device *dev = rproc->dev.parent;
->>       struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
->>       struct clk *dsp_clk = drproc->dsp_clk;
->> +     struct reset_control *dsp_reset = drproc->dsp_reset;
->>       int ret;
->>
->>       /* hw requires the start (boot) address be on 1KB boundary */
->> @@ -155,7 +156,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
->>               return ret;
->>       }
->>
->> -     davinci_clk_reset_deassert(dsp_clk);
->> +     ret = reset_control_deassert(dsp_reset);
->> +     if (ret) {
->> +             dev_err(dev, "reset_control_deassert() failed: %d\n", ret);
->> +             clk_disable_unprepare(dsp_clk);
->> +             return ret;
->> +     }
->>
->>       return 0;
->>  }
->> @@ -163,8 +169,15 @@ static int da8xx_rproc_start(struct rproc *rproc)
->>  static int da8xx_rproc_stop(struct rproc *rproc)
->>  {
->>       struct da8xx_rproc *drproc = rproc->priv;
->> +     struct device *dev = rproc->dev.parent;
->> +     int ret;
->> +
->> +     ret = reset_control_assert(drproc->dsp_reset);
->> +     if (ret) {
->> +             dev_err(dev, "reset_control_assert() failed: %d\n", ret);
->> +             return ret;
->> +     }
->>
->> -     davinci_clk_reset_assert(drproc->dsp_clk);
->>       clk_disable_unprepare(drproc->dsp_clk);
->>
->>       return 0;
->> @@ -232,6 +245,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->>       struct resource *bootreg_res;
->>       struct resource *chipsig_res;
->>       struct clk *dsp_clk;
->> +     struct reset_control *dsp_reset;
->>       void __iomem *chipsig;
->>       void __iomem *bootreg;
->>       int irq;
->> @@ -268,6 +282,15 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->>               return PTR_ERR(dsp_clk);
->>       }
->>
->> +     dsp_reset = devm_reset_control_get_exclusive(dev, NULL);
->> +     if (IS_ERR(dsp_reset)) {
->> +             if (PTR_ERR(dsp_reset) != -EPROBE_DEFER)
->> +                     dev_err(dev, "unable to get reset control: %ld\n",
->> +                             PTR_ERR(dsp_reset));
->> +
->> +             return PTR_ERR(dsp_reset);
->> +     }
->> +
->>       if (dev->of_node) {
->>               ret = of_reserved_mem_device_init(dev);
->>               if (ret) {
->> @@ -309,7 +332,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
->>        * *not* in reset, but da8xx_rproc_start() needs the DSP to be
->>        * held in reset at the time it is called.
->>        */
->> -     ret = davinci_clk_reset_assert(drproc->dsp_clk);
->> +     ret = reset_control_assert(dsp_reset);
->>       if (ret)
->>               goto free_rproc;
->>
+>> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
+>> index ab5be6d2c691..833531a68c95 100644
+>> --- a/drivers/net/wireless/ath/wcn36xx/main.c
+>> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
+>> @@ -1146,7 +1146,7 @@ static int wcn36xx_init_ieee80211(struct wcn36xx *wcn)
+>>  		BIT(NL80211_IFTYPE_MESH_POINT);
+>>  
+>>  	wcn->hw->wiphy->bands[NL80211_BAND_2GHZ] = &wcn_band_2ghz;
+>> -	if (wcn->rf_id != RF_IRIS_WCN3620)
+>> +	if (wcn->rf_id != RF_IRIS_WCN3610 && wcn->rf_id != RF_IRIS_WCN3620)
+>>  		wcn->hw->wiphy->bands[NL80211_BAND_5GHZ] = &wcn_band_5ghz;
+>>  
+>>  	wcn->hw->wiphy->max_scan_ssids = WCN36XX_MAX_SCAN_SSIDS;
+>> @@ -1248,6 +1248,8 @@ static int wcn36xx_platform_get_resources(struct wcn36xx *wcn,
+>>  	if (iris_node) {
+>>  		if (of_device_is_compatible(iris_node, "qcom,wcn3620"))
+>>  			wcn->rf_id = RF_IRIS_WCN3620;
+>> +		else if (of_device_is_compatible(iris_node, "qcom,wcn3610"))
+>> +			wcn->rf_id = RF_IRIS_WCN3610;
+>>  		of_node_put(iris_node);
+>>  	}
+> Should we document qcom,wcn3610 just like wcn3620 is:
 >
-> Tested your previous branch, need one more change in this patch to have
-> the remoteproc boot be actually executing some code. The acquired
-> dsp_reset is not stored in the drproc, so the start and stop were not
-> effective. The issue was masked because reset_control_assert() and
-> deassert() return 0 when a NULL pointer is passed in.
->
-> --- a/drivers/remoteproc/da8xx_remoteproc.c
-> +++ b/drivers/remoteproc/da8xx_remoteproc.c
-> @@ -311,6 +311,7 @@ static int da8xx_rproc_probe(struct platform_device
-> *pdev)
->         drproc = rproc->priv;
->         drproc->rproc = rproc;
->         drproc->dsp_clk = dsp_clk;
-> +       drproc->dsp_reset = dsp_reset;
->         rproc->has_iommu = false;
->
-> regards
-> Suman
->
-
-Oh snap, thanks for spotting it.
-
-I'll just resend last two patches, since the previous six will be
-picked up at different places.
-
-Thanks,
-Bartosz
+> Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt:                    "qcom,wcn3620",
+IMHO the mentioned bindings is related to the PIL (peripheral image loaded) which is just the firmware part and has
+nothing to do with wifi frontend(IRIS).
