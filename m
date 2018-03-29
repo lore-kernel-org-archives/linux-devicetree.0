@@ -1,55 +1,92 @@
-From: Mats Karrman <mats.dev.list@gmail.com>
-Subject: Re: [PATCH v4 10/13] usb: typec: tcpm: set cc for drp toggling attach
-Date: Thu, 29 Mar 2018 23:18:34 +0200
-Message-ID: <03c6ab05-7734-d7bb-4c4b-d00916032e0c@gmail.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-11-git-send-email-jun.li@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1522253178-32414-11-git-send-email-jun.li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, shufan_lee@richtek.com
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v4 00/14] CPU scaling support for msm8996
+Date: Fri, 30 Mar 2018 00:26:33 +0300
+Message-ID: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGksCgpPbiAwMy8yOC8yMDE4IDA2OjA2IFBNLCBMaSBKdW4gd3JvdGU6Cgo+IEluIGNhc2Ug
-b2YgZHJwIHRvZ2dsaW5nLCB3ZSBtYXkgbmVlZCBzZXQgY29ycmVjdCBjYyB2YWx1ZSBmb3Igcm9s
-ZSBjb250cm9sCj4gYWZ0ZXIgYXR0YWNoIGFzIGl0IG1heSBuZXZlciBiZWVuIHNldC4KPgo+IFNp
-Z25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvdXNi
-L3R5cGVjL3RjcG0uYyB8IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyBiL2RyaXZlcnMvdXNi
-L3R5cGVjL3RjcG0uYwo+IGluZGV4IDIxOGMyMzAuLjcyZDQyMzIgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy91c2IvdHlwZWMvdGNwbS5jCj4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jCj4g
-QEAgLTIxMjYsNiArMjEyNiw3IEBAIHN0YXRpYyB2b2lkIHRjcG1fcmVzZXRfcG9ydChzdHJ1Y3Qg
-dGNwbV9wb3J0ICpwb3J0KQo+ICAJdGNwbV9zZXRfYXR0YWNoZWRfc3RhdGUocG9ydCwgZmFsc2Up
-Owo+ICAJcG9ydC0+dHJ5X3NyY19jb3VudCA9IDA7Cj4gIAlwb3J0LT50cnlfc25rX2NvdW50ID0g
-MDsKPiArCXBvcnQtPmNjX3JlcSA9IDA7CgpJIGRvbid0IHRoaW5rIGl0J3MgT0sgdG8gdXNlICIw
-IiBoZXJlLiBjY19yZXEgaXMgYW4gZW51bSBzbyB3aHkgbm90IHVzZSAifFRZUEVDX0NDX09QRU4i
-P3wKCj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lkIHRjcG1fZGV0YWNoKHN0cnVjdCB0Y3BtX3BvcnQg
-KnBvcnQpCj4gQEAgLTIzNjEsNiArMjM2Miw4IEBAIHN0YXRpYyB2b2lkIHJ1bl9zdGF0ZV9tYWNo
-aW5lKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQpCj4gIAkJYnJlYWs7Cj4gIAo+ICAJY2FzZSBTUkNf
-QVRUQUNIRUQ6Cj4gKwkJaWYgKCFwb3J0LT5jY19yZXEpCgrCoMKgwqAgwqDCoMKgIAlpZiAocG9y
-dC0+Y2NfcmVxID09IHxUWVBFQ19DQ19PUEVOKXwKCj4gKwkJCXRjcG1fc2V0X2NjKHBvcnQsIHRj
-cG1fcnBfY2MocG9ydCkpOwo+ICAJCXJldCA9IHRjcG1fc3JjX2F0dGFjaChwb3J0KTsKPiAgCQl0
-Y3BtX3NldF9zdGF0ZShwb3J0LCBTUkNfVU5BVFRBQ0hFRCwKPiAgCQkJICAgICAgIHJldCA8IDAg
-PyAwIDogUERfVF9QU19TT1VSQ0VfT04pOwo+IEBAIC0yNTMxLDYgKzI1MzQsOCBAQCBzdGF0aWMg
-dm9pZCBydW5fc3RhdGVfbWFjaGluZShzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0KQo+ICAJCXRjcG1f
-c2V0X3N0YXRlKHBvcnQsIFNOS19VTkFUVEFDSEVELCBQRF9UX1BEX0RFQk9VTkNFKTsKPiAgCQli
-cmVhazsKPiAgCWNhc2UgU05LX0FUVEFDSEVEOgo+ICsJCWlmICghcG9ydC0+Y2NfcmVxKQoKRGl0
-dG8uCgo+ICsJCQl0Y3BtX3NldF9jYyhwb3J0LCBUWVBFQ19DQ19SRCk7Cj4gIAkJcmV0ID0gdGNw
-bV9zbmtfYXR0YWNoKHBvcnQpOwo+ICAJCWlmIChyZXQgPCAwKQo+ICAJCQl0Y3BtX3NldF9zdGF0
-ZShwb3J0LCBTTktfVU5BVFRBQ0hFRCwgMCk7CgovLyBNYXRzCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxp
-bnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qu
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+[v4]
+ * Adressed comments from Stephen
+ * Added CPU regulator support
+ * Added qcom-cpufreq-kryo driver
+
+[v3]
+ * Rebased on top of the latest PLL driver changes
+ * Addressed comment from Rob Herring for bindings
+
+[v2]
+ * Addressed comments from Rob Herring for bindings
+ * Addressed comments from Mark Rutland for memory barrier
+ * Addressed comments from Julien Thierry for clock reenabling condition
+ * Tuned the HW configuration for clock frequencies below 600MHz
+
+Clocks:
+This series adds support for the CPU clocks on msm8996 devices.
+The driver uses the existing PLL drivers and is required to control
+the CPU frequency scaling on the MSM8996.
+
+Regulators:
+Added SAW regulator support to the SPMI regulator driver. The SAW regulators
+will be controlled through special CPU registers instead of direct
+SPMI accesses.
+
+Cpufreq:
+The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
+The driver reads eFuse information and chooses the required OPP subset
+by passing the OPP supported-hw parameter.
+
+A previous post of RFC can be found here:
+https://patchwork.kernel.org/patch/10218991/
+
+
+Ilia Lin (10):
+  soc: qcom: Separate kryo l2 accessors from PMU driver
+  clk: qcom: Add DT bindings for CPU clock driver for msm8996
+  clk: qcom: Add ACD path to CPU clock driver for msm8996
+  dt: qcom: Add opp and thermal to the msm8996
+  regulator: qcom_spmi: Add support for SAW
+  dt-bindings: Add support for SAW documentation
+  dt: qcom: Add SAW regulator for 8x96 CPUs
+  cpufreq: Add Kryo CPU scaling driver
+  dt-bindings: cpufreq: Document operating-points-v2-kryo-cpu
+  dt: qcom: Add qcom-cpufreq-kryo driver configuration
+
+Rajendra Nayak (4):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
+
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ .../devicetree/bindings/cpufreq/kryo-cpufreq.txt   | 693 +++++++++++++++++++++
+ .../bindings/regulator/qcom,spmi-regulator.txt     |  45 ++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts        |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 658 ++++++++++++++++++-
+ drivers/clk/clk-fixed-factor.c                     |   2 +-
+ drivers/clk/qcom/Kconfig                           |   8 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
+ drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 520 ++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c                | 147 +++++
+ drivers/perf/qcom_l2_pmu.c                         |  44 +-
+ drivers/regulator/qcom_spmi-regulator.c            | 133 +++-
+ drivers/soc/qcom/Makefile                          |   2 +
+ drivers/soc/qcom/kryo-l2-accessors.c               |  66 ++
+ include/soc/qcom/kryo-l2-accessors.h               |  20 +
+ 20 files changed, 2324 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+ create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+ create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
+-- 
+1.9.1
