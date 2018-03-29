@@ -1,126 +1,125 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RESEND PATCH v2 4/8] mfd: stm32-timers: add support for dmas
-Date: Thu, 29 Mar 2018 15:41:24 +0200
-Message-ID: <12d53b2e-eec4-a498-1e1f-c217161c5086@st.com>
-References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
- <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
- <20180328152251.xeh72dpeflzohn4k@dell>
- <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
- <20180329125912.jgasmw75qvtlszgx@dell>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: wrapper: add io-channel-unit-converter
+Date: Thu, 29 Mar 2018 08:55:34 -0500
+Message-ID: <CAL_JsqJ3RZoMX+Q5boK-w3uHc=qgPCye7esXxJuwQcMM0HPLNw@mail.gmail.com>
+References: <20180319170246.26830-1-peda@axentia.se> <20180319170246.26830-3-peda@axentia.se>
+ <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop> <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180329125912.jgasmw75qvtlszgx@dell>
-Content-Language: en-US
+In-Reply-To: <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2018 02:59 PM, Lee Jones wrote:
-> On Wed, 28 Mar 2018, Fabrice Gasnier wrote:
-> 
->> On 03/28/2018 05:22 PM, Lee Jones wrote:
->>> On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
+On Tue, Mar 27, 2018 at 3:01 AM, Peter Rosin <peda@axentia.se> wrote:
+> On 2018-03-27 00:23, Rob Herring wrote:
+>> On Mon, Mar 19, 2018 at 06:02:45PM +0100, Peter Rosin wrote:
+>>> Allow linear scaling and modification of the type of an io-channel.
 >>>
->>>> STM32 Timers can support up to 7 DMA requests:
->>>> - 4 channels, update, compare and trigger.
->>>> Optionally request part, or all DMAs from stm32-timers MFD core.
->>>>
->>>> Also add routine to implement burst reads using DMA from timer registers.
->>>> This is exported. So, it can be used by child drivers, PWM capture
->>>> for instance (but not limited to).
->>>>
->>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->>>> ---
->>>> Changes in v2:
->>>> - Abstract DMA handling from child driver: move it to MFD core
->>>> - Add comments on optional dma support
->>>> ---
->>>>  drivers/mfd/stm32-timers.c       | 215 ++++++++++++++++++++++++++++++++++++++-
->>>>  include/linux/mfd/stm32-timers.h |  27 +++++
->>>>  2 files changed, 238 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
->>>> index a6675a4..2cdad2c 100644
->>>> --- a/drivers/mfd/stm32-timers.c
->>>> +++ b/drivers/mfd/stm32-timers.c
-> 
-> [...]
-> 
->>>> +	struct dma_chan *dmas[STM32_TIMERS_MAX_DMAS];
->>>> +	struct stm32_timers ddata;
+>>> When an ADC channel measures the midpoint of a voltage divider, the
+>>> interesting voltage is often the voltage over the full resistance
+>>> of the divider. Likewise, measuring the voltage over a resistor is
+>>> often a way to get to the current through it.
 >>>
->>> This looks odd to me.  Why can't you expand the current ddata
->>> structure?  Wouldn't it be better to create a stm32_timers_dma
->>> structure to place all this information in (except *dev, that should
->>> live in the ddata struct), then place a reference in the existing
->>> stm32_timers struct?
->>
->> Maybe I miss-understand you here, from what we discussed in V1:
->> https://lkml.org/lkml/2018/1/23/574
->>> ... "passing in the physical address of the parent MFD into
->>> a child device doesn't quite sit right with me"
->> I introduced this private struct in MFD parent, and completely hide it
->> from the child.
->>
->> So, do you suggest to add struct definition here ? But make it part of
->> struct stm32_timers *ddata?
->>
->> And only put declaration in include/linux/mfd/stm32-timers.h:
->> + struct stm32_timers_dma;
->>
->> struct stm32_timers {
->> 	struct clk *clk;
->> 	struct regmap *regmap;
->> 	u32 max_arr;
->> +	struct stm32_timers_dma;
->> };
-> 
-> Yes, that's the basic idea.
-> 
->> I can probably spare the *dev then... use dev->parent in child driver.
-> 
-> What would you use dev->parent for?
-
-Hi Lee,
-
-This is to follow your sugestion to use *dev instead of *ddata when
-calling stm32_timers_dma_burst_read(), the idea is to use it on child side:
-stm32_timers_dma_burst_read(dev->parent,...) from pwm driver.
-Then there is no need to keep *dev inside ddata struct.
-
-> 
-> [...]
-> 
->>>> +static int stm32_timers_remove(struct platform_device *pdev)
->>>> +{
->>>> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
->>>> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
->>>> +
->>>> +	of_platform_depopulate(&pdev->dev);
+>>> This binding allows description of such hardware which is external
+>>> to the ADC.
 >>>
->>> Why can't you continue using devm_*?
+>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>> ---
+>>>  .../iio/wrapper/io-channel-unit-converter.txt      | 84 ++++++++++++++++++++++
+>>>  MAINTAINERS                                        |  6 ++
+>>>  2 files changed, 90 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>> new file mode 100644
+>>> index 000000000000..23af661abe32
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>> @@ -0,0 +1,84 @@
+>>> +I/O channel unit converter bindings
+>>> +
+>>> +Allow linear scaling and modification of the type of an io-channel.
+>>> +
+>>> +When an ADC channel measures the midpoint of a voltage divider, the
+>>> +interesting voltage is often the voltage over the full resistance
+>>> +of the divider. Likewise, measuring the voltage over a resistor is
+>>> +often a way to get to the current through it.
+>>> +
+>>> +Required properties:
+>>> +- compatible : "io-channel-unit-converter"
 >>
->> I can use devm_of_platform_depopulate() here if you prefer, and keep
->> devm_of_platform_populate() in probe.
-> 
-> The point of devm_* is that you don't have to call depopulate.
-> 
-> It happens automatically once this driver is unbound.
+>> Would this apply to something besides ADCs?
+>
+> Not that I can think of. At the moment.
+>
+>>> +- io-channels : Channel node of the parent channel.
+>>> +- io-channel-names : Should be "parent".
+>>> +
+>>> +Optional properties:
+>>> +- numerator : The parent channel scale is multiplied by this value (default 1).
+>>> +- denominator : The parent channel scale is divided by this value (default 1).
+>>> +- type : The type of the wrapped channel is modified to this type. The default
+>>> +     is to use the same type as the parent channel. Recognized types are:
+>>> +            "voltage"
+>>> +            "current"
+>>
+>> This seems overly complicated for just describing a couple of resistors
+>> on an ADC. OTOH, keeping the ADC node and what's attached to the ADC
+>> separate
+>>
+>> Perhaps the type should be part of the compatible. For example, if you
+>> have a current measurement resistor/circuit, then the compatible should
+>> be based on that.
+>
+> Is a compatible like "current-sense-circuit" too long(ish)?
 
-Ok, so to clarify, keeping devm_ here may be a bit racy:
-of_platform_depopulate will happen after dma has been released (there is
-no devm_ variant to release dma).
-Only way to prevent race condition here, is to enforce
-of_platform_depopulate() is called before dma release (e.g. in reverse
-order compared to probe).
+No, that's fine.
 
-Do you wish I add a comment about it ?
+> Is a vendor prefix absolutely required?
 
-Best Regards,
-Fabrice
+No, it can be common.
 
-> 
+> Sure, I can use "axentia,"
+> because we "implemented" the circuit this time, but it seems like
+> the list can grow very long if we should add every vendor that
+> may use something like this? Something more generic would be good
+> for something as simple as this IMHO.
+>
+> I propose the compatible "voltage-divider" for the other example,
+> but I have the same issue with the vendor prefix. Even more so
+> in this case.
+
+"voltage-divider" doesn't really say what the purpose is.
+>
+> Then the above type can be inferred from the compatible. I suppose
+> I should write the above two bindings as two separate files?
+
+One is fine if the only difference is the compatible.
+
+>>> +
+>>> +Example 1:
+>>> +The system voltage is circa 12V, but divided down with a 22/200
+>>> +voltage divider to adjust it to the ADC range.
+>>> +
+>>> +SYSV        ADC       GND
+>>> +  +          +         +
+>>> +  |  .-----. | .----.  |
+>>> +  '--| 200 |-+-| 22 |--'
+>>> +     '-----'   '----'
+>>> +
+>>> +sysv {
+>>> +    compatible = "io-channel-unit-converter";
+>>> +    io-channles = <&maxadc 1>;
+>>> +    io-channel-names = "parent";
+>>
+>> parent doesn't seem to describe something about the h/w.
+>
+> Extrapolating from your first question, you are thinking "adc", right?
+
+I don't really have any suggestion. With only 1 channel, there's not
+really much point to having a name at all.
+
+Rob
