@@ -1,105 +1,76 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v2 4/8] mfd: stm32-timers: add support for dmas
-Date: Thu, 29 Mar 2018 13:59:12 +0100
-Message-ID: <20180329125912.jgasmw75qvtlszgx@dell>
-References: <1518602679-3064-1-git-send-email-fabrice.gasnier@st.com>
- <1518602679-3064-5-git-send-email-fabrice.gasnier@st.com>
- <20180328152251.xeh72dpeflzohn4k@dell>
- <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
+Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
+Date: Thu, 29 Mar 2018 14:04:02 +0100
+Message-ID: <20180329130402.6fp7nofyp6iesmbv@dell>
+References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
+ <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
+ <1521685073.28226.10.camel@mtkswgap22>
+ <20180323185418.GD255819@dtor-ws>
+ <20180327080507.pgil6pw2mn4y2f4d@dell>
+ <3ece050c-7573-ef4e-2c89-61645a243a33@gmail.com>
+ <20180328102640.yx6nv5abfexmouuf@dell>
+ <1522290675.17084.8.camel@mhfsdcap03>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <106ff518-4973-5d4a-b5bf-dd58cbd8439a@st.com>
+In-Reply-To: <1522290675.17084.8.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, eddie.huang@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Mar 2018, Fabrice Gasnier wrote:
+On Thu, 29 Mar 2018, Chen Zhong wrote:
 
-> On 03/28/2018 05:22 PM, Lee Jones wrote:
-> > On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
+> On Wed, 2018-03-28 at 11:26 +0100, Lee Jones wrote:
+> > On Tue, 27 Mar 2018, Matthias Brugger wrote:
 > > 
-> >> STM32 Timers can support up to 7 DMA requests:
-> >> - 4 channels, update, compare and trigger.
-> >> Optionally request part, or all DMAs from stm32-timers MFD core.
-> >>
-> >> Also add routine to implement burst reads using DMA from timer registers.
-> >> This is exported. So, it can be used by child drivers, PWM capture
-> >> for instance (but not limited to).
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> >> ---
-> >> Changes in v2:
-> >> - Abstract DMA handling from child driver: move it to MFD core
-> >> - Add comments on optional dma support
-> >> ---
-> >>  drivers/mfd/stm32-timers.c       | 215 ++++++++++++++++++++++++++++++++++++++-
-> >>  include/linux/mfd/stm32-timers.h |  27 +++++
-> >>  2 files changed, 238 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
-> >> index a6675a4..2cdad2c 100644
-> >> --- a/drivers/mfd/stm32-timers.c
-> >> +++ b/drivers/mfd/stm32-timers.c
-
-[...]
-
-> >> +	struct dma_chan *dmas[STM32_TIMERS_MAX_DMAS];
-> >> +	struct stm32_timers ddata;
+> > > 
+> > > 
+> > > On 03/27/2018 10:05 AM, Lee Jones wrote:
+> > > > On Fri, 23 Mar 2018, Dmitry Torokhov wrote:
+> > > >> On Thu, Mar 22, 2018 at 10:17:53AM +0800, Sean Wang wrote:
+> > > >>> Hi, Dmitry and Lee
+> > > >>>
+> > > >>> The series seems not being got merged. Are they good enough to be ready
+> > > >>> into the your tree?
+> > > >>>
+> > > >>> Recently I've tested the series with focusing on pwrkey event generated
+> > > >>> through interrupt when push and release the key on bpi-r2 board and then
+> > > >>> finally it's working fine. but for homekey it cannot be found on the
+> > > >>> board and thus I cannot have more tests more about it.
+> > > >>>
+> > > >>> Tested-by: Sean Wang <sean.wang@mediatek.com>
+> > > >>
+> > > >> You have my Ack on the input patch; I expect it go through Lee's tree as
+> > > >> there are some dependencies on mfd core piece.
+> > > > 
+> > > > Are you happy for me to merge the Input dt-bindings without your Ack?
+> > > > 
+> > > 
+> > > They got both Acked in v5, but the commit message was not updated:
+> > > https://patchwork.kernel.org/patch/9973721/
+> > > https://patchwork.kernel.org/patch/9973723/
 > > 
-> > This looks odd to me.  Why can't you expand the current ddata
-> > structure?  Wouldn't it be better to create a stm32_timers_dma
-> > structure to place all this information in (except *dev, that should
-> > live in the ddata struct), then place a reference in the existing
-> > stm32_timers struct?
-> 
-> Maybe I miss-understand you here, from what we discussed in V1:
-> https://lkml.org/lkml/2018/1/23/574
-> >... "passing in the physical address of the parent MFD into
-> > a child device doesn't quite sit right with me"
-> I introduced this private struct in MFD parent, and completely hide it
-> from the child.
-> 
-> So, do you suggest to add struct definition here ? But make it part of
-> struct stm32_timers *ddata?
-> 
-> And only put declaration in include/linux/mfd/stm32-timers.h:
-> + struct stm32_timers_dma;
-> 
-> struct stm32_timers {
-> 	struct clk *clk;
-> 	struct regmap *regmap;
-> 	u32 max_arr;
-> +	struct stm32_timers_dma;
-> };
-
-Yes, that's the basic idea.
-
-> I can probably spare the *dev then... use dev->parent in child driver.
-
-What would you use dev->parent for?
-
-[...]
-
-> >> +static int stm32_timers_remove(struct platform_device *pdev)
-> >> +{
-> >> +	struct stm32_timers *ddata = platform_get_drvdata(pdev);
-> >> +	struct stm32_timers_priv *priv = to_stm32_timers_priv(ddata);
-> >> +
-> >> +	of_platform_depopulate(&pdev->dev);
+> > Thanks Matthias.
 > > 
-> > Why can't you continue using devm_*?
+> > Chen, can you collect all the Acks and repost as a RESEND please?
+> > 
 > 
-> I can use devm_of_platform_depopulate() here if you prefer, and keep
-> devm_of_platform_populate() in probe.
+> Thanks Matthias, Lee, Dmitry and Sean for your comments.
+> 
+> Hi Lee,
+> 
+> I have collected the Acks by Rob and sent the v6:
+> https://patchwork.kernel.org/patch/10026705
+> https://patchwork.kernel.org/patch/10026707
+> 
+> Are they enough to be merged?
 
-The point of devm_* is that you don't have to call depopulate.
+Oh, I see.
 
-It happens automatically once this driver is unbound.
+I was asking about Dmitry's Ack.
 
 -- 
 Lee Jones [李琼斯]
