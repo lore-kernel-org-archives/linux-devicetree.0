@@ -1,119 +1,113 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
- 5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Thu, 29 Mar 2018 14:58:40 -0700
-Message-ID: <20180329215840.GT5700@atomide.com>
-References: <20180326141638.GB1450@amd>
- <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180327121441.GH29239@sirena.org.uk>
- <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
- <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com> <20180329160828.GA14007@amd>
- <20180329163450.GQ5700@atomide.com> <20180329180541.GA26545@amd>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Date: Thu, 29 Mar 2018 18:16:12 -0400
+Message-ID: <CAChtp77E=LfYdZ5Jv8kU1Enmw5qAWfFc4hgQWC2AMYVav4SU8g@mail.gmail.com>
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+ <20180302194155.50808-1-npcomplete13@gmail.com> <88e9d209-c45e-0e8f-53ce-4705d0b7e3c2@gmail.com>
+ <20180309220530.nz2qkuipjqabus5h@osboxes>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180329180541.GA26545@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309220530.nz2qkuipjqabus5h@osboxes>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jon Mason <jon.mason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [180329 18:07]:
-> On Thu 2018-03-29 09:34:50, Tony Lindgren wrote:
-> > * Pavel Machek <pavel@ucw.cz> [180329 16:09]:
-> > > > Then using the n_gsm ts 27.010 uart mux, I dial:
-> > > > 
-> > > > ./ngsm-rw 1 "AT+CFUN=1"		# connect to network
-> > > > U0001+CFUN:OK
-> > > > ./ngsm-rw 2 "AT+CMUT=0"		# unmute speaker over ch2, do this over qmi?
-> > > > U0001+CMUT:OK
-> > > > ./ngsm-rw 1 "ATD#123"		# dial number
-> > > > U0001D:OK
-> > > > 
-> > > > And I do hear a voice talking over the speakerphone :) Sorry have not tested the
-> > > > mic yet..
-> > > 
-> > > Hehe, ok, that's fun! I don't need +CMUT=0. It gave me error but then
-> > > the call worked, anyway... (I'm working with ttyUSB4).
-> > 
-> > Oh interesting. So maybe Android is doing AT+CMUT=0 for some other
-> > modems and it's not really needed? Or you have settings preserved
-> > from warm boot from Android?
-> 
-> No idea. But I booted from recovery, and I had to power up modem using
-> +CFUN...
-> 
-> > I did not have any luck with ttyUSB4 last night. Did you dial with
-> > ATD123; or ATD123? So is the semicolon really needed?
-> >
-> 
-> AT+CFUN=1
-> OK
-> ATD800123456
-> NO CARRIER
-> ATD800123456;
-> OK
-> 
-> I seem to need semicolon. And yes, I tried again after the call. Still
-> says no carrier.
+Hi Florian,
 
-OK thanks for confirming that.
+On Fri, Mar 9, 2018 at 5:05 PM, Vivek Unune <npcomplete13@gmail.com> wrote:
+>> > +
+>> > +           port@5 {
+>> > +                   reg = <5>;
+>> > +                   ethernet = <&gmac0>;
+>> > +                   label = "cpu";
+>> > +
+>> > +                   fixed-link {
+>> > +                           speed = <1000>;
+>> > +                           full-duplex;
+>> > +                   };
+>> > +           };
+>> > +
+>> > +           port@7 {
+>> > +                   reg = <7>;
+>> > +                   ethernet = <&gmac1>;
+>> > +                   label = "cpu";
+>> > +
+>> > +                   fixed-link {
+>> > +                           speed = <1000>;
+>> > +                           full-duplex;
+>> > +                   };
+>> > +           };
+>> > +
+>> > +           port@8 {
+>> > +                   reg = <8>;
+>> > +                   ethernet = <&gmac2>;
+>> > +                   label = "cpu";
+>> > +
+>> > +                   fixed-link {
+>> > +                           speed = <1000>;
+>> > +                           full-duplex;
+>> > +                   };
+>> > +           };
+>>
+>> None of this is wrong, but DSA effectively will take the first port
+>> specified with a "cpu" label and declare it as the one and only CPU port
+>> it supports. If the architecture on Northstar is similar to what is done
+>> on Northstar Plus, port 5 can be either internal or external PHY, port 7
+>> is indeed gmac1, and port 8 is connected to the flow accelerator, which
+>> should be in "bypass" mode by default. We can always change that later
+>> on if we have to anyway.
+>
+> From what I understand from the source is that gmac0 and gmac1 in NorthStar
+> are connected to FA while gmac2 is connected to port8
+> Although I could be completely wrong :)
+>
+> Snippet from GPL source [1]:
+>
+>  * A typical GMAC configuration is:
+>  *   GMAC#0 - port#5 - fwd0 <---> wl0 (radio 0) on CPU core0
+>  *   GMAC#1 - port#7 - fwd1 <---> wl1 (radio 1) on CPU core1
+>  *
+>  *   GMAC#2 - port#8 - eth0 <--- vlan1 ---> br0
+>
+> Note: EA9500 has three radios, fwd0 is connected to even numbered radios
+> While odd numbered radios are connected to fwd1. Also, fw0,fw1 and eth0
+> listed above are devices created by the factory firmware.
 
-> Hmm. And when calling test number, the modem failed:
-> >
-> [  438.236755] Somebody do a proper driver please cpcap_soc_work
-> [  495.496032] phy-mapphone-mdm6600 usb-phy@1: modem status: 0 off
-> [  499.406005] phy-mapphone-mdm6600 usb-phy@1: modem status: 0 off
-> [  499.407318] usb 2-1: USB disconnect, device number 2
-> [  499.424926] qcserial ttyUSB0: Qualcomm USB modem converter now
-> disconnected from ttyUSB0
-> [  499.434112] qcserial 2-1:1.0: device disconnected
-> [  499.443389] qcserial ttyUSB1: Qualcomm USB modem converter now
-> disconnected from ttyUSB1
-> [  499.451904] qcserial 2-1:1.1: device disconnected
-> [  499.460968] qcserial ttyUSB2: Qualcomm USB modem converter now
-> disconnected from ttyUSB2
-> [  499.469512] qcserial 2-1:1.2: device disconnected
-> [  499.478057] qcserial ttyUSB3: Qualcomm USB modem converter now
-> disconnected from ttyUSB3
-> [  499.486572] qcserial 2-1:1.3: device disconnected
-> [  499.504760] qcserial ttyUSB4: Qualcomm USB modem converter now
-> disconnected from ttyUSB4
-> [  499.513244] qcserial 2-1:1.4: device disconnected
-> [  499.519104] qmi_wwan 2-1:1.5 wwan0: unregister 'qmi_wwan'
-> usb-4a064800.ohci-1, WWAN/QMI device
-> [  499.611511] qmi_wwan 2-1:1.6 wwan1: unregister 'qmi_wwan'
-> usb-4a064800.ohci-1, WWAN/QMI device
-> [  499.676086] Somebody do a proper driver please cpcap_soc_work
-> [  499.688323] qmi_wwan 2-1:1.7 wwan2: unregister 'qmi_wwan'
-> usb-4a064800.ohci-1, WWAN/QMI device
-> [  499.768859] qmi_wwan 2-1:1.8 wwan3: unregister 'qmi_wwan'
-> usb-4a064800.ohci-1, WWAN/QMI device
-> 
-> That one will be fun to debug, I'm afraid. (Or does the message at
-> 495.496032 mean that we turned it off?)
+Correction: Port 5 and port 7 act as forwarders and are not connected to
+flow accelerator. And you are right, port 8 is connected to flow accelerator.
+Although, it seems it is not enabled in Linksys factory firmware.
 
-Looks like mdm6600 either entered low-power mode, or hung?
-If it hung, it's internal watchdog might bring it back after
-a while.
+Some more excerpt from GPL source:
 
-If it entered low-power mode, in theory we should see the state
-change interrupt that's handled by phy-mapphone-mdm6600.c.
-I never managed to do that so far so maybe you figured it out
-with some command.
-
-Regards,
-
-Tony
+ * Northstar router includes 3 GMAC ports from the integrated switch to the Host
+ * (single or dual core) CPU. The integrated switch provides advanced ethernet
+ * hardware switching functions, similar to that of a Linux software bridge.
+ * In Northstar, this integrated HW switch is responsible for bridging packets
+ * between the 4 LAN ports. All LAN ports are seen by the ethernet network
+ * device driver as a single "vlan1" interface. This single vlan1 interface
+ * represents the collection of physical LAN ports on the switch, without
+ * having to create a seperate interface per LAN port and  adding each one of
+ * these LAN interfaces to the default Linux software LAN bridge "br0".
+ * The hardware switch allows the LAN ports to be segregated into multiple
+ * bridges using VLAN (Independent VLAN Learning Mode). Again, each subset of
+ * physical LAN ports are represented by a single interface, namely "vlanX".
+ *
+ * The 3 GMAC configuration treats the primary WLAN interface as just another
+ * LAN interface (albeit with a WLAN 802.11 MAC as opposed to an Ethernet 802.3
+ * MAC). Two of the three GMACs are dedicated for binding the primary WLAN
+ * interfaces to the HW switch which performs the LAN to WLAN bridging function.
+ * These two GMACs are referred to as Forwarding GMACs.
+ * The third GMAC is used to connect the switch to the Linux router network
+ * stack, by making all LAN and WLAN ports appear as a single vlan1 interface
+ * that is added to the software Linux bridge "br0". This GMAC is referred to
+ * as the Networking GMAC.
+ *
+ * Similar to LAN to WAN routing, where LAN originated packets would be flooded
+ * to the WAN port via the br0, likewise, WLAN originated packets would re-enter
+ * Linux network stack via the 3rd GMAC. Software Cut-Through-Forwarding CTF
+ * will accelerate WLAN <-> WAN traffic. When the hardware Flow Accelerator is
+ * enabled, WLAN <-> WAN traffic need not re-enter the host CPU, other than the
+ * first few packets that are needed to establish the flows in the FA, post
+ * DPI or Security related flow classification functions.
