@@ -1,81 +1,92 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 2/8] DT: reset: renesas,rzn1-reboot: document RZ/N1
- reboot driver
-Date: Fri, 30 Mar 2018 10:01:14 +0200
-Message-ID: <CAMuHMdXo4wVD-b+_2WT+JUq6mpDpZoDvqMaLrs0yyjfe=Af4Dg@mail.gmail.com>
-References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com> <1522309629-10152-3-git-send-email-michel.pollet@bp.renesas.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] regulator: add support for SY8106A regulator
+Date: Fri, 30 Mar 2018 16:03:20 +0800
+Message-ID: <CAGb2v64_FhwZQCNeCa1G6bGM_mszc2BmECP+z4rKjrLB2+awmg@mail.gmail.com>
+References: <20180206044905.30508-1-icenowy@aosc.io> <20180206044905.30508-3-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522309629-10152-3-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBYG667KQKGQEHTT2KEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180206044905.30508-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
-
-On Thu, Mar 29, 2018 at 9:46 AM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver
-> as part of the sysctrl MFD to handle rebooting the CA7 cores.
-> This documents the driver bindings.
+On Tue, Feb 6, 2018 at 12:48 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 >
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
-> @@ -0,0 +1,20 @@
-> +DT bindings for the Renesas RZ/N1 Reboot Driver
+> SY8106A is an I2C attached single output regulator made by Silergy Corp,
+> which is used on several Allwinner H3/H5 SBCs to control the power
+> supply of the ARM cores.
+>
+> Add a driver for it.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> [Icenowy: Change commit message, remove enable/disable code, add default
+>  ramp_delay, add comment for go bit]
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v2:
+> - Dropped the enable/disable code.
+> - Added default ramp_delay value.
+> - Added comment for the "go bit".
+>
+>  drivers/regulator/Kconfig             |   8 +-
+>  drivers/regulator/Makefile            |   2 +-
+>  drivers/regulator/sy8106a-regulator.c | 168 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 176 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/regulator/sy8106a-regulator.c
+>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index b27417ca188a..70227230bca2 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -792,6 +792,13 @@ config REGULATOR_STW481X_VMMC
+>           This driver supports the internal VMMC regulator in the STw481x
+>           PMIC chips.
+>
+> +config REGULATOR_SY8106A
+> +       tristate "Silergy SY8106A regulator"
+> +       depends on I2C && (OF || COMPILE_TEST)
+> +       select REGMAP_I2C
+> +       help
+> +         This driver supports SY8106A single output regulator.
 > +
-> +== Reboot Driver Node ==
-> +
-> +The reboot driver is always a subnode of the system controller node, see
-> +renesas,rzn1-sysctrl.txt for details.
-> +
-> +Bindings:
-> ++ Required:
-> +       compatible = "renesas,rzn1-reboot";
+>  config REGULATOR_TPS51632
+>         tristate "TI TPS51632 Power Regulator"
+>         depends on I2C
+> @@ -966,4 +973,3 @@ config REGULATOR_WM8994
+>           WM8994 CODEC.
+>
+>  endif
+> -
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index 19fea09ba10a..7564664c64df 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -99,6 +99,7 @@ obj-$(CONFIG_REGULATOR_SC2731) += sc2731-regulator.o
+>  obj-$(CONFIG_REGULATOR_SKY81452) += sky81452-regulator.o
+>  obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
+>  obj-$(CONFIG_REGULATOR_STW481X_VMMC) += stw481x-vmmc.o
+> +obj-$(CONFIG_REGULATOR_SY8106A) += sy8106a-regulator.o
+>  obj-$(CONFIG_REGULATOR_TI_ABB) += ti-abb-regulator.o
+>  obj-$(CONFIG_REGULATOR_TPS6105X) += tps6105x-regulator.o
+>  obj-$(CONFIG_REGULATOR_TPS62360) += tps62360-regulator.o
+> @@ -124,5 +125,4 @@ obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
+>  obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
+>  obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
+>
+> -
 
-You should list the supported SoC-specific compatible values here.
+Extra whitespace change. Otherwise,
 
-Quoting what I said on IRC:
-1) DT bindings. These should list all compatible values possible/used.
-2) DTS: These should list all applicable compatible values,
-                from most-specific to least-specific (SoC-specific,
-                family-specific (if exists), generic (if exists))
-3 Driver: These should list only the least specific that is
-                sufficient to get the job done. So usually we have the
-                family-specific only, except if an SoC needs to be handled
-                specially, or for historical reasons (DTB backeards
-                compatibility)
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-> +
-> +Example:
-> +       sysctrl: sysctrl@4000c000 {
-> +               compatible = "renesas,rzn1-sysctrl", "syscon", "simple-mfd";
-
-Missing SoC-specific compatible value.
-
-> +               reg = <0x4000c000 0x1000>;
-> +
-> +               reboot {
-> +                       compatible = "renesas,rzn1-reboot";
-
-Missing SoC-specific compatible value.
-
-> +               };
-> +       };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
