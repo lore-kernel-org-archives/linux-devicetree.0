@@ -1,109 +1,91 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-Date: Fri, 30 Mar 2018 22:46:44 +0200
-Message-ID: <20180330204644.GA1804@amd>
-References: <20180329135904.GN5700@atomide.com>
- <20180329154600.qhels5fqzzg364gj@earth.universe>
- <20180329163716.GA20743@amd>
- <20180329164113.GR5700@atomide.com>
- <20180329184007.GA27688@amd>
- <20180329215612.GS5700@atomide.com>
- <20180330103744.GA17404@amd>
- <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
- <20180330175050.GA26571@amd>
- <20180330180151.GA27494@amd>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 7/9] gpio: Add gpio driver for Actions OWL S900 SoC
+Date: Sat, 31 Mar 2018 00:04:11 +0300
+Message-ID: <CAHp75VeGv04CA3f1pRDi35DsbRgrdj86TBUBZ3J+27T822cOqw@mail.gmail.com>
+References: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org> <20180328174703.19778-8-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180330180151.GA27494@amd>
+In-Reply-To: <20180328174703.19778-8-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 28, 2018 at 8:47 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Add gpio driver for Actions Semi OWL family S900 SoC. Set of registers
+> controlling the gpio shares the same register range with pinctrl block.
+>
+> GPIO registers are organized as 6 banks and each bank controls the
+> maximum of 32 gpios.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +static void owl_gpio_update_reg(void __iomem *base, unsigned int pin, int flag)
+> +{
+> +       u32 val;
+> +
+> +       val = readl_relaxed(base);
+> +
+> +       if (flag)
+> +               val |= BIT(pin);
+> +       else
+> +               val &= ~BIT(pin);
+> +
+> +       writel_relaxed(val, base);
+> +}
 
-Hi!
+Hmm... Just realized that this driver misses locking.
 
-> > > Would you mind sharing those hacks - I would like to play around with
-> > > ofonod as well. Maybe I can help with a way forward.
-> >=20
-> > Okay. Here's less hacky version of the hack, but still using AT
-> > commands. You still need to set up udev, as described in the other
-> > mail.
-> >=20
-> > And... it seems I can have a qmi connection, too, but that's topic for
-> > other email.
->=20
-> This, applied on top of previous patch, gives me some kind of qmi
-> connection, AFAICT. I can enable/online a modem, but nothing else
-> works.
->=20
-> LocationReporting is advertised but does not work. dial-number does
-> not work either. But from list-modems, it looks like some kind of
-> communication works...
+Something like
+owl_gpio_update_reg_locked()
+{
+ spin_lock();
+ owl_gpio_update_reg();
+ spin_unlock();
+}
 
-Ok, strange.
+> +
+> +static int owl_gpio_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct owl_gpio *gpio = gpiochip_get_data(chip);
+> +
+> +       /*
+> +        * GPIOs have higher priority over other modules, so either setting
+> +        * them as OUT or IN is sufficient
+> +        */
+> +       owl_gpio_update_reg(gpio->base + GPIO_OUTEN, offset, true);
 
-So there's ofonod in the maemo-leste already.
+...to use in such cases.
 
-user@devuan:~$ /usr/sbin/ofonod -v
-1.22
+> +
+> +       return 0;
+> +}
+> +
+> +static void owl_gpio_free(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct owl_gpio *gpio = gpiochip_get_data(chip);
+> +
+> +       /* disable gpio output */
+> +       owl_gpio_update_reg(gpio->base + GPIO_OUTEN, offset, false);
+> +
+> +       /* disable gpio input */
+> +       owl_gpio_update_reg(gpio->base + GPIO_INEN, offset, false);
 
-=2E..and it seems to somehow work with the droid 4, in default
-configuration, thinking it is "Gobi" modem.=20
+...or
 
-user@devuan:/my/ofono$ sudo python2 test/list-modems
-[ /gobi_0 ]
-    Features =3D sms net rat ussd sim gps
-        Emergency =3D 0
-	    Powered =3D 1
-	        Lockdown =3D 0
-		    Interfaces =3D org.ofono.SmartMessaging
-		    org.ofono.PushNotification
-		    org.ofono.MessageManager
-		    org.ofono.NetworkRegistration
-		    org.ofono.RadioSettings
-		    org.ofono.SupplementaryServices
-		    org.ofono.NetworkMonitor org.ofono.MessageWaiting
-		    org.ofono.AllowedAccessPoints org.ofono.SimManager
-		    org.ofono.LocationReporting
-		    org.ofono.VoiceCallManager
-		        Online =3D 1
-			    Model =3D 196
-			        Revision =3D M6600A-SCAUHSZ-3.1.3310T  1
-				[Jun 09 2011 17:00:00]
-				    Type =3D hardware
-=2E..
+spin_lock();
+owl_gpio_update_reg();
+owl_gpio_update_reg();
+spin_unlock();
 
-=2E.. and it seems to kind-of work. Even incoming SMSes work, which I
-could not get to work in AT mode. Otoh, voice calls do not, so...
+...in this and similar cases.
 
-Confused,
-									Pavel
+> +}
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq+ojQACgkQMOfwapXb+vKtTQCdHy9xyOIrDEAF8CvzuUqzmHei
-wuwAoLQnAXPZn3vJuz54lusymybIVXmI
-=uQ/Y
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
+-- 
+With Best Regards,
+Andy Shevchenko
