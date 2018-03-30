@@ -1,91 +1,58 @@
-From: Merlijn Wajer <merlijn@wizzup.org>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-Date: Fri, 30 Mar 2018 15:07:24 +0200
-Message-ID: <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
-References: <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com>
- <20180329133613.khldv72w3zj63vsk@earth.universe>
- <20180329135904.GN5700@atomide.com>
- <20180329154600.qhels5fqzzg364gj@earth.universe> <20180329163716.GA20743@amd>
- <20180329164113.GR5700@atomide.com> <20180329184007.GA27688@amd>
- <20180329215612.GS5700@atomide.com> <20180330103744.GA17404@amd>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
+Date: Fri, 30 Mar 2018 15:54:22 +0200
+Message-ID: <20180330135422.GA28244@lunn.ch>
+References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
+ <20180323201117.8416-6-alexandre.belloni@bootlin.com>
+ <1df0a932-f7c1-f1b5-9a35-3c16d0c551e5@gmail.com>
+ <20180330124537.GC14180@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hI0ZG3nfavXOuBdbdh9ms3DoDaBj3w1fc"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330103744.GA17404@amd>
+Content-Disposition: inline
+In-Reply-To: <20180330124537.GC14180@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hI0ZG3nfavXOuBdbdh9ms3DoDaBj3w1fc
-Content-Type: multipart/mixed; boundary="KsFUvhtn0PoJ53wI6USGpD3sGO1CJsV2E";
- protected-headers="v1"
-From: Merlijn Wajer <merlijn@wizzup.org>
-To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>,
- Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- alsa-devel@alsa-project.org, linux-omap@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, Dan Williams <dcbw@redhat.com>
-Message-ID: <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-References: <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com>
- <20180329133613.khldv72w3zj63vsk@earth.universe>
- <20180329135904.GN5700@atomide.com>
- <20180329154600.qhels5fqzzg364gj@earth.universe> <20180329163716.GA20743@amd>
- <20180329164113.GR5700@atomide.com> <20180329184007.GA27688@amd>
- <20180329215612.GS5700@atomide.com> <20180330103744.GA17404@amd>
-In-Reply-To: <20180330103744.GA17404@amd>
+> > All of this sounds like it should be moved into the br_join/leave, this
+> > does not appear to be the right place to do that.
+> > 
+> 
+> No, I've triple checked because this is a comment that both Andrew and
+> you had. Once a port is added to the PGID MASK, it will start forwarding
+> frames so we really want that to happen only when the port is in
+> BR_STATE_FORWARDING state. Else, we may forward frames between the
+> addition of the port to the bridge and setting the port to the
+> BR_STATE_BLOCKING state.
 
---KsFUvhtn0PoJ53wI6USGpD3sGO1CJsV2E
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+Hi Alexandre
 
-On 30/03/18 12:37, Pavel Machek wrote:
-> On Thu 2018-03-29 14:56:13, Tony Lindgren wrote:
->> * Pavel Machek <pavel@ucw.cz> [180329 18:41]:
->>> Thanks. I got call working including outgoing audio: in capture
->>> settings, right->mic 1, Mic1 + Mic2 in alsamixer -> 100%. But I had
->>> the other phone muted, so I don't yet know if such call would be of
->>> usable quality.
->>
->> Great, good to hear that :)
->=20
-> I also got ofonod to work, with rather crazy hacks. But I now have
-> incoming/outgoing calls with GUI :-).
+Interesting observation. I took a look at some of the other join
+implementations. mv88e6xxx does the join immediately. mt7539 does it
+immediately, if the port is enabled. lan9303 does it immediately.
+qca8k does it immediately. b53 does it immediately.
 
-Would you mind sharing those hacks - I would like to play around with
-ofonod as well. Maybe I can help with a way forward.
+Either they all get it wrong, or we make the assumption the bridge
+sets the STP state first, then has the port join the bridge.
 
-Cheers,
-Merlijn
+Looking at the code, br_add_if() it calls
+netdev_master_upper_dev_link() and then later
 
+        if (netif_running(dev) && netif_oper_up(dev) &&
+            (br->dev->flags & IFF_UP))
+                br_stp_enable_port(p);
 
---KsFUvhtn0PoJ53wI6USGpD3sGO1CJsV2E--
+So it does look like there is a window of time between the port
+joining and the STP state being set.
 
---hI0ZG3nfavXOuBdbdh9ms3DoDaBj3w1fc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I know in the past, we have run into the opposite problem. A port
+leaves the bridge, while in blocked state. The port should then
+becomes an individual port, so the STP state needs setting to
+forwarding. I don't remember where we fix this.
 
------BEGIN PGP SIGNATURE-----
+I don't like that this new driver is different, but it also looks like
+we have a real problem here. More digging needed.
 
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCWr42lQAKCRAGN09rynK8
-WqIOAPsEJaQgN9irgNhKw3gSFFCWFTUtdRRIZww8B7hKwSil0wD/ftOoBZ/qkCxQ
-hjBUIt8wHI2Cppi8doUUm7HOqyDQ6A4=
-=0iGc
------END PGP SIGNATURE-----
-
---hI0ZG3nfavXOuBdbdh9ms3DoDaBj3w1fc--
+   Andrew
