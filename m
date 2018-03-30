@@ -1,26 +1,41 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-evm: Enable usb_phy, usb0 and usb1
-Date: Fri, 30 Mar 2018 16:32:08 +0530
-Message-ID: <eec8a86a-13a6-34c2-c353-1cf6bf69e4e7@ti.com>
-References: <1521476482-23335-1-git-send-email-aford173@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: document the Meson AXG support
+Date: Fri, 30 Mar 2018 13:05:45 +0200
+Message-ID: <CAFBinCBQS779Cfu-=nmcA5CJLETy25bYbeN1XgACQpRk4Yw6sg@mail.gmail.com>
+References: <20180326084629.100070-1-yixun.lan@amlogic.com> <20180326084629.100070-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1521476482-23335-1-git-send-email-aford173@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180326084629.100070-3-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>, adam.ford@logicpd.com
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Xingyu Chen <xingyu.chen@amlogic.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-iio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 March 2018 09:51 PM, Adam Ford wrote:
-> The EVM kit has two USB ports.  This patch will enable both
-> when booting with device tree.
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+On Mon, Mar 26, 2018 at 10:46 AM, Yixun Lan <yixun.lan@amlogic.com> wrote:
+> From: Xingyu Chen <xingyu.chen@amlogic.com>
+>
+> Update the documentation to expicitly support the Meson-AXG SoC.
+>
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Applied for v4.18
-
-Thanks,
-Sekhar
+> ---
+>  Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> index 1e6ee3deb4fa..d1acd5ea2737 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>                         - "amlogic,meson-gxbb-saradc" for GXBB
+>                         - "amlogic,meson-gxl-saradc" for GXL
+>                         - "amlogic,meson-gxm-saradc" for GXM
+> +                       - "amlogic,meson-axg-saradc" for AXG
+>                 along with the generic "amlogic,meson-saradc"
+>  - reg:         the physical base address and length of the registers
+>  - interrupts:  the interrupt indicating end of sampling
+> --
+> 2.15.1
+>
