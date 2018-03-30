@@ -1,65 +1,68 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next 03/12] dt-bindings: net: dwmac-sun8i: Clean up
- clock delay chain descriptions
-Date: Fri, 30 Mar 2018 17:13:31 +0800
-Message-ID: <CAGb2v679OxYOFxz6pHa9W11EVa9ZYD6N3HfdjaTPpKkVe5qngg@mail.gmail.com>
-References: <20180317092857.4396-1-wens@csie.org> <20180317092857.4396-4-wens@csie.org>
- <eb47a027-c678-7496-ef58-fc8e96be7dd9@cogentembedded.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
+Date: Fri, 30 Mar 2018 10:24:43 +0100
+Message-ID: <20180330102443.187496bd@archlinux>
+References: <20180319170246.26830-1-peda@axentia.se>
+        <20180319170246.26830-4-peda@axentia.se>
+        <20180324140339.4ec66792@archlinux>
+        <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
+        <20180327142256.00003056@huawei.com>
+        <0c9e6fbe-cc05-1a2e-0437-dcde134e6eba@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <eb47a027-c678-7496-ef58-fc8e96be7dd9@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0c9e6fbe-cc05-1a2e-0437-dcde134e6eba@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 18, 2018 at 5:21 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello!
->
->
-> On 3/17/2018 12:28 PM, Chen-Yu Tsai wrote:
->
->> The clock delay chains found in the glue layer for dwmac-sun8i are only
->> used with RGMII PHYs. They are not intended for non-RGMII PHYs, such as
->> MII external PHYs or the internal PHY. Also, a recent SoC has a smaller
->> range of possible values for the delay chain.
->>
->> This patch reformats the delay chain section of the device tree binding
->> to make it clear that the delay chains only apply to RGMII PHYs, and
->> make it easier to add the R40-specific bits later.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->>   Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->> b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->> index 3d6d5fa0c4d5..b8a3028d6c30 100644
->> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
->> @@ -28,10 +28,13 @@ Required properties:
->>     - allwinner,sun8i-a83t-system-controller
->>     Optional properties:
->> -- allwinner,tx-delay-ps: TX clock delay chain value in ps. Range value is
->> 0-700. Default is 0)
->> -- allwinner,rx-delay-ps: RX clock delay chain value in ps. Range value is
->> 0-3100. Default is 0)
->> -Both delay properties need to be a multiple of 100. They control the
->> delay for
->> -external PHY.
->> +- allwinner,tx-delay-ps: TX clock delay chain value in ps.
->> +                        Range is 0-700. Default is 0.
->> +- allwinner,rx-delay-ps: RX clock delay chain value in ps.
->> +                        Range is 0-3100. Default is 0.
->> +Both delay properties need to be a multiple of 100. They control the
->> +clock delay for external RGMII PHY. They are do apply to the internal
->
->
->   s/are do/do not/?
+On Tue, 27 Mar 2018 15:32:13 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-Fixed. Thanks!
+> On 2018-03-27 15:22, Jonathan Cameron wrote:
+> > On Tue, 27 Mar 2018 09:42:40 +0200
+> > Peter Rosin <peda@axentia.se> wrote:  
+> >> On 2018-03-24 15:03, Jonathan Cameron wrote:  
+> >>> On Mon, 19 Mar 2018 18:02:46 +0100
+> >>> Peter Rosin <peda@axentia.se> wrote:  
+> >>>> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
+> >>>> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);    
+> >>> if the parent doesn't support RAW, is there a lot of point in carrying on?    
+> >>
+> >> Nope, better to error out I suppose. But I'm not familiar with channels
+> >> without RAW, what alternatives are there anyway?  
+> > 
+> > Potentially _PROCESSED though that will need somewhat different handling.
+> > A nasty trick for that might be to map it to RAW and then have the SCALE
+> > reflect the divider circuit scale only.  
+> 
+> Hmm, I think a lot of things might assume RAW to be a pure integer, and
+> maybe they are even correct to do so? So yes, that seems nasty indeed...
+Seems unlikely to occur often as ADCs are mostly linear, but you never
+know...  We'll figure it out when it happens.
 
-ChenYu
+> 
+> > It's perfectly possible to have channels with neither _RAW or _PROCESSED
+> > but I suspect we don't care about them here.
+> > 
+> > There might be an application that needs to do buffered data flows in the
+> > long run, but we can figure out how to do that when one exists.
+> > 
+> > It won't be a huge amount more than you have here, though we might need
+> > a trigger pass through as well to allow you to set the trigger for
+> > the front end and having it automatically applied to the backend.  
+> 
+> Yes, this is the same for the iio-mux. I don't need it, I in fact need
+> very little bandwidth for these things. Someone with an itch will have
+> to fill in the buffer/trigger handling...
+Absolutely!
+
+> 
+> Cheers,
+> Peter
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
