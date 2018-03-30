@@ -1,32 +1,70 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 5/8] remoteproc/davinci: prepare and unprepare the
- clock where needed
-Date: Fri, 30 Mar 2018 12:14:03 -0500
-Message-ID: <4122b904-ee40-db8b-ecd5-813d75b3cba2@lechnology.com>
-References: <20180330152856.12297-1-brgl@bgdev.pl>
- <20180330152856.12297-6-brgl@bgdev.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv3 0/8] omapdrm: DSI command mode panel support
+Date: Fri, 30 Mar 2018 19:18:14 +0200
+Message-ID: <20180330171822.25896-1-sebastian.reichel@collabora.co.uk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330152856.12297-6-brgl@bgdev.pl>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Sebastian Reichel <sre@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+These are the remaining patches from my previous patchset to get
+Droid 4 (OMAP4) display working. The patches have been rebased to
+linux-next tag next-20180329. I skipped the OMAP3 support patches.
+They should get their own series, once this patchset has landed.
 
-On 3/30/18 10:28 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We're currently switching the platform to using the common clock
-> framework. We need to explicitly prepare and unprepare the rproc
-> clock.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Acked-by: Suman Anna <s-anna@ti.com>
-> ---
+Working on Droid 4:
+ * Framebuffer Console, updated at 1Hz due to blinking cursor
+ * kmstest (static image)
+ * Display blanking
+ * Xorg with omap and modesetting driver
+ * No updates send when nothing needs to be sent
+ * Orientation DRM property is attached to the DSI panel
 
-Reviewed-by: David Lechner <david@lechnology.com>
+Known issues:
+ * OMAP3 support is missing
+
+Changes since PATCHv2:
+ * Drop omap3 quirk patch (OMAP3 should get its own mini-series)
+ * Rebase to current linux-next
+ * Use existing 'rotation' DT property to set DRM orientation hint
+ * Add Tested-by from Tony
+
+Changes since PATCHv1:
+ * Drop patches, that were queued by Tomi
+ * Rebase to current master
+ * Rework the omap3 workaround patch to only affect omap3
+ * Add orientation DRM property support
+
+-- Sebastian
+
+Sebastian Reichel (8):
+  drm/omap: add framedone interrupt support
+  drm/omap: add manual update detection helper
+  drm/omap: add support for manually updated displays
+  drm/omap: make omap_framebuffer_get_next_connector static
+  dt-bindings: panel: common: document orientation property
+  drm/omap: add support for rotation hints from display drivers
+  drm/omap: panel-dsi-cm: add rotation support
+  ARM: dts: omap4-droid4: Add LCD panel rotation property
+
+ .../bindings/display/panel/panel-common.txt        |  12 ++
+ .../devicetree/bindings/display/panel/panel.txt    |   4 -
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |   1 +
+ drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c    |  13 ++
+ drivers/gpu/drm/omapdrm/dss/omapdss.h              |   2 +
+ drivers/gpu/drm/omapdrm/omap_connector.c           |  42 +++++-
+ drivers/gpu/drm/omapdrm/omap_connector.h           |   1 +
+ drivers/gpu/drm/omapdrm/omap_crtc.c                | 155 +++++++++++++++++++--
+ drivers/gpu/drm/omapdrm/omap_crtc.h                |   2 +
+ drivers/gpu/drm/omapdrm/omap_fb.c                  |  74 ++++++----
+ drivers/gpu/drm/omapdrm/omap_fb.h                  |   2 -
+ drivers/gpu/drm/omapdrm/omap_irq.c                 |  25 ++++
+ drivers/gpu/drm/omapdrm/omap_irq.h                 |   1 +
+ 13 files changed, 292 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel.txt
+
+-- 
+2.16.2
