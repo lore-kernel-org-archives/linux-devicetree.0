@@ -1,76 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
-Date: Fri, 30 Mar 2018 16:50:08 +0200
-Message-ID: <20180330145008.GE28244@lunn.ch>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-6-alexandre.belloni@bootlin.com>
- <1df0a932-f7c1-f1b5-9a35-3c16d0c551e5@gmail.com>
- <20180330124537.GC14180@piout.net>
- <20180330135422.GA28244@lunn.ch>
- <20180330141634.GD14180@piout.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 11/13] staging: typec: tcpci: keep the not connecting
+ cc line open
+Date: Fri, 30 Mar 2018 08:15:46 -0700
+Message-ID: <0533e75a-e74d-8bd1-7188-3a858d21ce3a@roeck-us.net>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-12-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180330141634.GD14180@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1522253178-32414-12-git-send-email-jun.li@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, shufan_lee@richtek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 30, 2018 at 04:16:34PM +0200, Alexandre Belloni wrote:
-> On 30/03/2018 at 15:54:22 +0200, Andrew Lunn wrote:
-> > > > All of this sounds like it should be moved into the br_join/leave, this
-> > > > does not appear to be the right place to do that.
-> > > > 
-> > > 
-> > > No, I've triple checked because this is a comment that both Andrew and
-> > > you had. Once a port is added to the PGID MASK, it will start forwarding
-> > > frames so we really want that to happen only when the port is in
-> > > BR_STATE_FORWARDING state. Else, we may forward frames between the
-> > > addition of the port to the bridge and setting the port to the
-> > > BR_STATE_BLOCKING state.
-> > 
-> > Hi Alexandre
-> > 
-> > Interesting observation. I took a look at some of the other join
-> > implementations. mv88e6xxx does the join immediately. mt7539 does it
-> > immediately, if the port is enabled. lan9303 does it immediately.
-> > qca8k does it immediately. b53 does it immediately.
-> > 
+On 03/28/2018 09:06 AM, Li Jun wrote:
+> While set polarity, we should keep the not connecting cc line to be
+> open.
 > 
-> I had a look at b53, my impression was that b53_br_join() adds the port
-> to the bridge but b53_br_set_stp_state() actually enables forwarding. So
-> as long as the default on the port is PORT_CTRL_DIS_STATE, the port will
-> not be forwarding frames. And this is the case because b53_enable_port()
-> does put 0 in B53_PORT_CTRL.
 
-https://elixir.bootlin.com/linux/latest/source/drivers/net/dsa/b53/b53_regs.h#L71
+The more I look at this code, the more I am confused by it.
 
-It seems like, 0 means no STP at all. Which to me would mean, forward
-all packets. But i could be wrong. Florian?
+The original code doesn't touch the CC lines. This function only sets the polarity.
+Is it really appropriate to touch the CC lines in the same function ?
 
-> The fact is that ocelot doesn't have separate controls. The port is
-> either forwarding or not. If it is not forwarding, then there is nothing
-> to tell the HW to do.
+Guenter
 
-Think about the following sequence:
-
-ip link set lan0 up
-
-After this command, i expect to see packets on lan0 arrive at the
-host, tcpdump to work, etc. This probably means the port is in
-'forwarding' mode, or for B53, STP is disabled.
-
-ip link add name br0 type bridge
-ip link set dev br0 up
-ip link set dev lan0 master br0
-
-When the port is added to the bridge, there is a window of time
-between the join and the STP change to blocking/learning, when the
-port is in forwarding mode. You avoid this window. But the other
-drivers don't appear to.
-
-So i would like to fix this of every driver. I'm not sure how yet...
-
-   Andrew
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>   drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index d5b4e4e..b58bd59 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+>   			      enum typec_cc_polarity polarity)
+>   {
+>   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> +	unsigned int reg;
+>   	int ret;
+>   
+> -	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
+> -			   (polarity == TYPEC_POLARITY_CC2) ?
+> -			   TCPC_TCPC_CTRL_ORIENTATION : 0);
+> +	/* Keep the disconnect cc line open */
+> +	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
+>   	if (ret < 0)
+>   		return ret;
+>   
+> -	return 0;
+> +	if (polarity == TYPEC_POLARITY_CC2)
+> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
+> +	else
+> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
+> +	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
+> +			   (polarity == TYPEC_POLARITY_CC2) ?
+> +			   TCPC_TCPC_CTRL_ORIENTATION : 0);
+>   }
+>   
+>   static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
+> 
