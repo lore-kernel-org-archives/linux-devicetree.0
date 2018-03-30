@@ -1,124 +1,138 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 05/10] iio: adc: at91-sama5d2_adc: fix channel
- configuration for differential channels
-Date: Fri, 30 Mar 2018 13:17:07 +0100
-Message-ID: <20180330131707.21bc3845@archlinux>
-References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
-        <1522153963-1121-6-git-send-email-eugen.hristev@microchip.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
+Date: Fri, 30 Mar 2018 14:45:37 +0200
+Message-ID: <20180330124537.GC14180@piout.net>
+References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
+ <20180323201117.8416-6-alexandre.belloni@bootlin.com>
+ <1df0a932-f7c1-f1b5-9a35-3c16d0c551e5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522153963-1121-6-git-send-email-eugen.hristev@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <1df0a932-f7c1-f1b5-9a35-3c16d0c551e5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Mar 2018 15:32:38 +0300
-Eugen Hristev <eugen.hristev@microchip.com> wrote:
-
-> When iterating through the channels, the index in the array is not the
-> scan index. Added an xlate function to translate to the proper index.
-> This will be used also for devicetree channel xlate
+On 23/03/2018 at 14:41:25 -0700, Florian Fainelli wrote:
+> On 03/23/2018 01:11 PM, Alexandre Belloni wrote:
+> > Add a driver for Microsemi Ocelot Ethernet switch support.
+> > 
+> > This makes two modules:
+> > mscc_ocelot_common handles all the common features that doesn't depend on
+> > how the switch is integrated in the SoC. Currently, it handles offloading
+> > bridging to the hardware. ocelot_io.c handles register accesses. This is
+> > unfortunately needed because the register layout is packed and then depends
+> > on the number of ports available on the switch. The register definition
+> > files are automatically generated.
+> > 
+> > ocelot_board handles the switch integration on the SoC and on the board.
+> > 
+> > Frame injection and extraction to/from the CPU port is currently done using
+> > register accesses which is quite slow. DMA is possible but the port is not
+> > able to absorb the whole switch bandwidth.
+> > 
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-So, this is a fix for an existing bug?
-
-Please move this to the front of your set (to make it easier to backport).
-Describe the result of the bug as well.
-
-Fixes tag would be good.
-
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 41 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 37 insertions(+), 4 deletions(-)
+> Random drive by comments because this is quite a number of lines to review!
 > 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index 4eff835..8729d65 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -333,6 +333,27 @@ static const struct iio_chan_spec at91_adc_channels[] = {
->  				+ AT91_SAMA5D2_DIFF_CHAN_CNT + 1),
->  };
->  
-> +static int at91_adc_chan_xlate(struct iio_dev *indio_dev, int chan)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < indio_dev->num_channels; i++) {
-> +		if (indio_dev->channels[i].scan_index == chan)
-> +			return i;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +static inline struct iio_chan_spec const *
-> +at91_adc_chan_get(struct iio_dev *indio_dev, int chan)
-> +{
-> +	int index = at91_adc_chan_xlate(indio_dev, chan);
-> +
-> +	if (index < 0)
-> +		return NULL;
-> +	return indio_dev->channels + index;
-> +}
-> +
->  static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
->  {
->  	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
-> @@ -350,8 +371,10 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
->  	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
->  
->  	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
-> -		struct iio_chan_spec const *chan = indio->channels + bit;
-> +		struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
->  
-> +		if (!chan)
-> +			continue;
->  		if (state) {
->  			at91_adc_writel(st, AT91_SAMA5D2_CHER,
->  					BIT(chan->channel));
-> @@ -448,7 +471,11 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
->  
->  	for_each_set_bit(bit, indio_dev->active_scan_mask,
->  			 indio_dev->num_channels) {
-> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
-> +		struct iio_chan_spec const *chan =
-> +					 at91_adc_chan_get(indio_dev, bit);
-> +
-> +		if (!chan)
-> +			continue;
->  
->  		st->dma_st.rx_buf_sz += chan->scan_type.storagebits / 8;
->  	}
-> @@ -526,8 +553,11 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
->  	 */
->  	for_each_set_bit(bit, indio_dev->active_scan_mask,
->  			 indio_dev->num_channels) {
-> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
-> +		struct iio_chan_spec const *chan =
-> +					at91_adc_chan_get(indio_dev, bit);
->  
-> +		if (!chan)
-> +			continue;
->  		if (st->dma_st.dma_chan)
->  			at91_adc_readl(st, chan->address);
->  	}
-> @@ -587,8 +617,11 @@ static void at91_adc_trigger_handler_nodma(struct iio_dev *indio_dev,
->  
->  	for_each_set_bit(bit, indio_dev->active_scan_mask,
->  			 indio_dev->num_channels) {
-> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
-> +		struct iio_chan_spec const *chan =
-> +					at91_adc_chan_get(indio_dev, bit);
->  
-> +		if (!chan)
-> +			continue;
->  		st->buffer[i] = at91_adc_readl(st, chan->address);
->  		i++;
->  	}
+> Overall, looks quite good for a first version. Out of curiosity, is
+> there a particular switch test you ran this driver against? LNST?
+> 
+
+We have a really small custom test suite.
+
+> > +	/* Add dummy CRC */
+> > +	ocelot_write_rix(ocelot, 0, QS_INJ_WR, grp);
+> > +	skb_tx_timestamp(skb);
+> > +
+> > +	dev->stats.tx_packets++;
+> > +	dev->stats.tx_bytes += skb->len;
+> > +	dev_kfree_skb_any(skb);
+> 
+> No interrupt to indicate transmit completion?
+> 
+
+No, unfortunately, the TX interrupts only indicates there is room to
+start injecting frames, not that they have been transmitted.
+
+> 
+> > +static int ocelot_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
+> > +			  struct net_device *dev, const unsigned char *addr,
+> > +			  u16 vid, u16 flags)
+> > +{
+> > +	struct ocelot_port *port = netdev_priv(dev);
+> > +	struct ocelot *ocelot = port->ocelot;
+> > +
+> > +	if (!vid) {
+> > +		if (!port->vlan_aware)
+> > +			/* If the bridge is not VLAN aware and no VID was
+> > +			 * provided, set it to 1 as bridges have a default VID
+> > +			 * of 1. Otherwise the MAC entry wouldn't match incoming
+> > +			 * packets as the VID would differ (0 != 1).
+> > +			 */
+> > +			vid = 1;
+> > +		else
+> > +			/* If the bridge is VLAN aware a VID must be provided as
+> > +			 * otherwise the learnt entry wouldn't match any frame.
+> > +			 */
+> > +			return -EINVAL;
+> > +	}
+> 
+> So if we are targeting vid = 0 we end-up with vid = 1 possibly?
+> 
+
+I've removed that part that is not needed for now and will rework when
+sending VLAN support.
+
+> > +	ocelot_write_gix(ocelot, port_cfg, ANA_PORT_PORT_CFG,
+> > +			 ocelot_port->chip_port);
+> > +
+> > +	/* Apply FWD mask. The loop is needed to add/remove the current port as
+> > +	 * a source for the other ports.
+> > +	 */
+> > +	for (port = 0; port < ocelot->num_phys_ports; port++) {
+> > +		if (ocelot->bridge_fwd_mask & BIT(port)) {
+> > +			unsigned long mask = ocelot->bridge_fwd_mask & ~BIT(port);
+> > +
+> > +			for (i = 0; i < ocelot->num_phys_ports; i++) {
+> > +				unsigned long bond_mask = ocelot->lags[i];
+> > +
+> > +				if (!bond_mask)
+> > +					continue;
+> > +
+> > +				if (bond_mask & BIT(port)) {
+> > +					mask &= ~bond_mask;
+> > +					break;
+> > +				}
+> > +			}
+> > +
+> > +			ocelot_write_rix(ocelot,
+> > +					 BIT(ocelot->num_phys_ports) | mask,
+> > +					 ANA_PGID_PGID, PGID_SRC + port);
+> > +		} else {
+> > +			/* Only the CPU port, this is compatible with link
+> > +			 * aggregation.
+> > +			 */
+> > +			ocelot_write_rix(ocelot,
+> > +					 BIT(ocelot->num_phys_ports),
+> > +					 ANA_PGID_PGID, PGID_SRC + port);
+> > +		}
+> 
+> All of this sounds like it should be moved into the br_join/leave, this
+> does not appear to be the right place to do that.
+> 
+
+No, I've triple checked because this is a comment that both Andrew and
+you had. Once a port is added to the PGID MASK, it will start forwarding
+frames so we really want that to happen only when the port is in
+BR_STATE_FORWARDING state. Else, we may forward frames between the
+addition of the port to the bridge and setting the port to the
+BR_STATE_BLOCKING state.
+
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
