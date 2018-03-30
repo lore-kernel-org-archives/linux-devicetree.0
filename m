@@ -1,49 +1,166 @@
-Return-Path: <SRS0=KgiW=GU=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v2 2/3] dt-bindings: thermal: rcar-thermal: add R8A77995 support
-Date: Fri, 30 Mar 2018 12:13:02 +0900
-Message-Id: <1522379583-4503-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=aoSJ=GU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm0-f52.google.com ([74.125.82.52]:50708 "EHLO
+        mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751053AbeC3KMR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Mar 2018 06:12:17 -0400
+Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix and docs for CR0014114
+References: <20180326121506.9528-1-oleg@kaa.org.ua>
+ <20180327164903.6307-1-oleg@kaa.org.ua>
+ <66fb58b2-2ae7-8edf-6c48-0f78f82c31a2@gmail.com>
+ <005611b1-b821-93d2-4bb5-c3f12b4fc937@kaa.org.ua>
+ <83ebdd21-ed70-666d-0d20-093ff52a208b@gmail.com>
+ <60ba4d40-42f3-66f9-0001-b19b57f5d1a4@kaa.org.ua>
+ <d253fd08-3226-f2d9-aebf-2c2a52e27d58@gmail.com>
+ <d4bb7fda-3e31-1fdf-567b-945563d4e3e2@kaa.org.ua>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <7806d234-fc6b-b42d-0d2f-69007b527799@gmail.com>
+Date: Fri, 30 Mar 2018 12:10:58 +0200
+MIME-Version: 1.0
+In-Reply-To: <d4bb7fda-3e31-1fdf-567b-945563d4e3e2@kaa.org.ua>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On 03/29/2018 08:56 PM, Oleh Kravchenko wrote:
+> 
+> 
+> On 28.03.18 23:23, Jacek Anaszewski wrote:
+>> On 03/28/2018 09:48 PM, Oleh Kravchenko wrote:
+>>>
+>>>
+>>> On 28.03.18 22:21, Jacek Anaszewski wrote:
+>>>> On 03/28/2018 08:36 AM, Oleh Kravchenko wrote:
+>>>>> Hello Jacek,
+>>>>>
+>>>>> On 27.03.18 23:58, Jacek Anaszewski wrote:
+>>>>>>> +Example
+>>>>>>> +-------
+>>>>>>> +
+>>>>>>> +led-controller@0 {
+>>>>>>> +	compatible = "crane,cr0014114";
+>>>>>>> +	reg = <0>;
+>>>>>>> +	spi-max-frequency = <50000>;
+>>>>>>> +	#address-cells = <1>;
+>>>>>>> +	#size-cells = <0>;
+>>>>>>> +
+>>>>>>> +	led@0 {
+>>>>>>> +		reg = <0>;
+>>>>>>> +		label = "cr0:red:coin";
+>>>>>>> +	};
+>>>>>>> +	led@1 {
+>>>>>>> +		reg = <1>;
+>>>>>>> +		label = "cr0:green:coin";
+>>>>>>> +	};
+>>>>>>> +	led@2 {
+>>>>>>> +		reg = <2>;
+>>>>>>> +		label = "cr0:blue:coin";
+>>>>>>> +	};
+>>>>>>> +	led@3 {
+>>>>>>> +		reg = <3>;
+>>>>>>> +		label = "cr1:red:bill";
+>>>>>>> +	};
+>>>>>>> +	led@4 {
+>>>>>>> +		reg = <4>;
+>>>>>>> +		label = "cr1:green:bill";
+>>>>>>> +	};
+>>>>>>> +	led@5 {
+>>>>>>> +		reg = <5>;
+>>>>>>> +		label = "cr1:blue:bill";
+>>>>>>> +	};
+>>>>>>
+>>>>>> Why cr0 and cr1? It should be cr0014114 to stick to the
+>>>>>> current LED naming pattern <devicename:colour:function>.
+>>>>>>
+>>>>>> Nonetheless, we lately came to the conclusion that devicename
+>>>>>> segment is redundant in LED class device name, so until we change
+>>>>>> LED naming convention officially, let's remove devicename segment
+>>>>>> at least from DT and prepend the label with "cr0014114" in the driver.
+>>>>>>
+>>>>>> Please compare how it is approached in [0] (not merged yet).
+>>>>>>
+>>>>>
+>>>>> It's just example.
+>>>>> But anyway our applications works with LEDs by numbers.
+>>>>>
+>>>>> Using function names instead numbers will increase code complexity,
+>>>>> so we use numbers :)
+>>>>
+>>>> This is LED class device naming convention in mainline and examples
+>>>> also must stick to it to keep the things consistent.
+>>>>
+>>>> Please switch labels so that they matched the pattern
+>>>>
+>>>> label = "color:function";
+>>>
+>>>> Why cr0 and cr1? It should be cr0014114 to stick to the
+>>>> current LED naming pattern <devicename:colour:function>.
+>>>
+>>> So how it should be? I'm confused :(
+>>
+>> You seem to have overlooked second part of my previous message:
+>>
+>> "
+>> Nonetheless, we lately came to the conclusion that devicename
+>> segment is redundant in LED class device name, so until we change
+>> LED naming convention officially, let's remove devicename segment
+>> at least from DT and prepend the label with "cr0014114" in the driver.
+>>
+>> Please compare how it is approached in [0] (not merged yet).
+>> "
+>>
+>> Please note that DT label is not intended to be used as-is
+>> for LED class device name, but it's been frequently abused so.
+>>
+>> Here is the example of how you could modify your code:
+>>
+>> DT:
+>>
+>> led@0 {
+>> 	reg = <0>;
+>> 	label = "red:coin";
+>> };
+>>
+>> LED class driver:
+>>
+>> #include <uapi/linux/uleds.h>
+>>
+>>
+>> struct cr0014114_led {
+>>         char                    name[LED_MAX_NAME_SIZE];
+>>         struct cr0014114        *priv;
+>>         struct led_classdev     ldev;
+>>         u8                      brightness;
+>> };
+>>
+>>
+>> static int cr0014114_probe_dt(struct cr0014114 *priv)
+>> {
+>> ...
+>> const char *str;
+>> ...
+>> device_for_each_child_node(priv->dev, child)
+>> {
+>> ...
+>> if (fwnode_property_read_string(child, "label", &str))
+>> 	snprintf(led->name, sizeof(led->name), "cr0014114::"),
+>> else
+>> 	snprintf(led->name, sizeof(led->name), "cr0014114:%s", str),
+>>
+>>
+>> I hope it makes all clear now.
+> 
+> I would like to keep current implementation.
+> This is acceptable?
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 349e635..5ab5fcd 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -3,7 +3,8 @@
- Required properties:
- - compatible		: "renesas,thermal-<soctype>",
- 			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
--			   "renesas,rcar-thermal" (without thermal-zone) as fallback.
-+			   "renesas,rcar-thermal" (without thermal-zone) as
-+                           fallback except R-Car D3.
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-@@ -12,13 +13,15 @@ Required properties:
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
- 			  if it has "interrupts".
- 
- Option properties:
- 
--- interrupts		: use interrupt
-+- interrupts		: use interrupt.
-+                          Should contain 3 interrupts for R-Car D3.
- 
- Example (non interrupt support):
- 
+It heavily depends on DT label property value, since in your
+current implementation you're adopting label as-is for the
+LED class device name. I plan on removing devicename from all
+LED labels in all existing dts files and modify drivers to add
+devicename by themselves. Effectively the driver code will anyway
+end up in this form. Let's do it right at once.
+
 -- 
-1.9.1
+Best regards,
+Jacek Anaszewski
