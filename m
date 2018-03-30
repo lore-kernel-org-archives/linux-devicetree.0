@@ -1,51 +1,341 @@
-Return-Path: <SRS0=PuNI=GS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-cys01nam02on0073.outbound.protection.outlook.com ([104.47.37.73]:4736
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751219AbeC1LZg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Mar 2018 07:25:36 -0400
-From: Janek Kotas <jank@cadence.com>
-Subject: [PATCH 1/2] scsi: ufs: Add UFS platform driver for Cadence UFS
-Date: Wed, 28 Mar 2018 11:25:34 +0000
-Message-ID: <2A879077-6CAD-4DAA-8C9A-7368CB93C72D@global.cadence.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C296C6F4500B6B46868C3351361560E4@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+In-Reply-To: <486709a4-027a-8995-7d6f-217d3d029786@gmail.com>
+References: <20180312155829.12365-1-oleg@kaa.org.ua>
+	<20180313124548.12074-1-oleg@kaa.org.ua>
+	<20180318124925.i4yuxigkfu6spv26@rob-hp-laptop>
+	<fbe35381-45a6-7084-c1f9-5ede1eb88bab@gmail.com>
+	<CAL_JsqKdCa_FV13fEw8V-avojUCN_PB+2djsnCsGDH-5qAOEcA@mail.gmail.com>
+	<f8cd9de6-839b-b874-40af-d84b9f7de296@gmail.com>
+	<CAL_JsqKOB8tB20hL5WxbEsryCVaDEs=C=U-z5p6BqQCEMskPGg@mail.gmail.com>
+	<486709a4-027a-8995-7d6f-217d3d029786@gmail.com>
+Date: Fri, 30 Mar 2018 15:59:58 -0500
+Message-ID: <CAL_JsqJu=NveWdWboXWxhXAFRukKts5zam3upKtvpU4DN_-hmQ@mail.gmail.com>
+Subject: Re: Standardized LED function names [was: Re: [PATCH v3] leds: add
+ LED driver for CR0014114 board]
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-VGhpcyBwYXRjaCBhZGRzIGEgZGV2aWNlIHRyZWUgcGxhdGZvcm0NCmRyaXZlciBkZXNjcmlwdGlv
-biBmb3IgQ2FkZW5jZSBVRlMgQ29udHJvbGxlci4NCg0KU2lnbmVkLW9mZi1ieTogSmFuIEtvdGFz
-IDxqYW5rQGNhZGVuY2UuY29tPg0KLS0tDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2Nk
-bnMtdWZzLXBsdGZybS50eHQgICAgfCAgIDMxICsrKysrKysrKysrKysrKysrKysrDQogMSBmaWxl
-cyBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMtdWZzLXBs
-dGZybS50eHQNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4
-IDAwMDAwMDAuLmQxMDIyOWQNCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dA0KQEAgLTAsMCArMSwzMSBA
-QA0KKyogQ2FkZW5jZSBVbml2ZXJzYWwgRmxhc2ggU3RvcmFnZSAoVUZTKSBDb250cm9sbGVyDQor
-DQorVUZTIG5vZGVzIGFyZSBkZWZpbmVkIHRvIGRlc2NyaWJlIG9uLWNoaXAgVUZTIGhvc3QgY29u
-dHJvbGxlcnMuDQorRWFjaCBVRlMgY29udHJvbGxlciBpbnN0YW5jZSBzaG91bGQgaGF2ZSBpdHMg
-b3duIG5vZGUuDQorDQorUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGUJOiBjb21w
-YXRpYmxlIGxpc3QsIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgY29udHJvbGxlcjoNCisJCQkiY2Ru
-cyx1ZnNoYyINCisJCSAgY29tcGxlbWVudGVkIHdpdGggdGhlIEpFREVDIHZlcnNpb246DQorCQkJ
-ImplZGVjLHVmcy0yLjAiDQorDQorLSByZWcJCTogcmVnaXN0ZXJzIG1hcHBpbmcNCistIGludGVy
-cnVwdHMJOiBpbnRlcnJ1cHRzIG1hcHBpbmcNCistIGNsb2Nrcwk6IExpc3Qgb2YgcGhhbmRsZSBh
-bmQgY2xvY2sgc3BlY2lmaWVyIHBhaXJzLg0KKy0gY2xvY2stbmFtZXMJOiBMaXN0IG9mIGNsb2Nr
-IGlucHV0IG5hbWUgc3RyaW5ncyBzb3J0ZWQgaW4gdGhlIHNhbWUNCisJCSAgb3JkZXIgYXMgdGhl
-IGNsb2NrcyBwcm9wZXJ0eS4gImNvcmVfY2xrIiBpcyBtYW5kYXRvcnkuDQorLSBmcmVxLXRhYmxl
-LWh6CTogQXJyYXkgb2YgPG1pbiBtYXg+IG9wZXJhdGluZyBmcmVxdWVuY2llcyBzdG9yZWQgaW4g
-dGhlIHNhbWUNCisJCSAgb3JkZXIgYXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4gSWYgdGhpcyBwcm9w
-ZXJ0eSBpcyBub3QNCisJCSAgZGVmaW5lZCBvciBhIHZhbHVlIGluIHRoZSBhcnJheSBpcyAiMCIg
-dGhlbiBpdCBpcyBhc3N1bWVkDQorCQkgIHRoYXQgdGhlIGZyZXF1ZW5jeSBpcyBzZXQgYnkgdGhl
-IHBhcmVudCBjbG9jayBvciBhDQorCQkgIGZpeGVkIHJhdGUgY2xvY2sgc291cmNlLg0KKw0KK0V4
-YW1wbGU6DQorCXVmc0BmZDAzMDAwMCB7DQorCQljb21wYXRpYmxlID0gImNkbnMsdWZzaGMiLCAi
-amVkZWMsdWZzLTIuMCI7DQorCQlyZWcgPSA8MHhmZDAzMDAwMCAweDEwMDAwPjsNCisJCWludGVy
-cnVwdHMgPSA8MCAxIDA+Ow0KKwkJZnJlcS10YWJsZS1oeiA9IDwwIDA+Ow0KKwkJY2xvY2tzID0g
-PCZ1ZnNfY29yZV9jbGsgMD47DQorCQljbG9jay1uYW1lcyA9ICJjb3JlX2NsayI7DQorCX07DQot
-LSANCjEuNy4xDQoNCg0K
+On Fri, Mar 30, 2018 at 5:53 AM, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+> On 03/27/2018 05:31 PM, Rob Herring wrote:
+>> On Mon, Mar 19, 2018 at 4:18 PM, Jacek Anaszewski
+>> <jacek.anaszewski@gmail.com> wrote:
+>>> On 03/19/2018 12:38 AM, Rob Herring wrote:
+>>>> On Sun, Mar 18, 2018 at 3:03 PM, Jacek Anaszewski
+>>>> <jacek.anaszewski@gmail.com> wrote:
+>>>>> On 03/18/2018 01:49 PM, Rob Herring wrote:
+>>>>>> On Tue, Mar 13, 2018 at 02:45:48PM +0200, Oleh Kravchenko wrote:
+>>>>>>> This patch adds a LED class driver for the RGB LEDs found on
+>>>>>>> the Crane Merchandising System CR0014114 LEDs board.
+>>>>>>>
+>>>>>>> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
+>>>>>>> ---
+>>>>>>>  .../devicetree/bindings/leds/leds-cr0014114.txt    |  46 ++++
+>>>>>>>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>>>>>>
+>>>>>> Please split to separate patch.
+>>>>>>
+>>>>>>>  drivers/leds/Kconfig                               |  13 +
+>>>>>>>  drivers/leds/Makefile                              |   1 +
+>>>>>>>  drivers/leds/leds-cr0014114.c                      | 292 +++++++++++++++++++++
+>>>>>>>  5 files changed, 353 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>>>>>>>  create mode 100644 drivers/leds/leds-cr0014114.c
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..977a9929b04f
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>>>>>>> @@ -0,0 +1,46 @@
+>>>>>>> +Crane Merchandising System - cr0014114 LED driver
+>>>>>>> +-------------------------------------------------
+>>>>>>> +
+>>>>>>> +This LED Board is widely used in vending machines produced
+>>>>>>> +by Crane Merchandising Systems.
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +- compatible: "cms,cr0014114"
+>>>>>>> +- reg: chip select address for the device
+>>>>>>> +- spi-cpha: shifted clock phase mode is required
+>>>>>>> +
+>>>>>>> +LED sub-node properties:
+>>>>>>> +- label : (optional)
+>>>>>>> +    see Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> +- linux,default-trigger : (optional)
+>>>>>>> +    see Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> +
+>>>>>>> +Example
+>>>>>>> +-------
+>>>>>>> +
+>>>>>>> +cr0014114@0 {
+>>>>>>
+>>>>>> leds@...
+>>>>>
+>>>>> In [0] you required it to be led-controller and the rest like below:
+>>>>
+>>>> Ah yes, you're right. That's what I get for trying to go off my memory.
+>>>>
+>>>>>
+>>>>>
+>>>>> led-controller@12 {
+>>>>>   reg = <12>;
+>>>>>
+>>>>>   led@0 {
+>>>>>     reg = <0>;
+>>>>>   };
+>>>>>   led@1 {
+>>>>>     reg = <1>;
+>>>>>   };
+>>>>> };
+>>>>>
+>>>>>
+>>>>> Since that time I started to require adhering to this naming pattern
+>>>>> for LED controller node and led@address for child nodes, where
+>>>>> applicable.
+>>>>>
+>>>>> I plan on submitting a patch for common LED bindings, that will
+>>>>> switch device names to led-controller in DT examples.
+>>>>>
+>>>>> With this scheme another problem arises, because now we have:
+>>>>>
+>>>>> - label: The label for this LED. If omitted, the label is taken from
+>>>>>          the node name (excluding the unit address).
+>>>>>
+>>>>> With that DT child node name is useless, because it is "led" for
+>>>>> each sub-led. Therefore I propose to make label property required,
+>>>>> and avoid using child DT node name as a fallback.
+>>>>
+>>>> There was never any guarantee that the same child node name was not
+>>>> used elsewhere.
+>>>>
+>>>> I think the OS needs to be able to cope with no label or even that
+>>>> label is not unique. Suppose you have an overlay for a addon board and
+>>>> you can have multiple boards connected. They'd all have the same
+>>>> label.
+>>>
+>>> LED subsystem is already protected against duplicated LED names:
+>>> a96aa64cb572 ("leds/led-class: Handle LEDs with the same name").
+>>>
+>>>> So moving to label only reduces the problem. You could use the
+>>>> reg property and/or compatible of the parent to construct the names.
+>>>> Or just append an IDR value to the name like we do on platform
+>>>> devices. If the user didn't specify a label, then they shouldn't
+>>>> really care what the name is, so just use "led.X". Though likely folks
+>>>> will care if the name changes on them.
+>>>
+>>> OK, so my main intention was to get rid of the part:
+>>>
+>>> "If omitted, the label is taken from the node name (excluding
+>>> the unit address).",
+>>>
+>>> because it won't make a sense after imposing an explicit requirement
+>>> on the child nodes to have only "led" in the main part of their names.
+>>
+>> Okay, agreed. That statement never really belonged because really the
+>> OS is free to do whatever it wants.
+>
+> It implies that label property should be made required.
+>
+>>> In effect, we need to change the fallback definition to make it sane.
+>>> You proposed reg property and/or compatible, but:
+>>>
+>>> - reg property is not applicable in all cases (think of gpio LEDs).
+>>> - compatible on the other hand will have much in common with devicename,
+>>>   you once mentioned would be good to get rid of [0]:
+>>>
+>>> "
+>>> A case I care about is I have a family of boards that all have a
+>>> common defined set of 4 LEDs. They could be driven by anything, but I
+>>> want the same interface presented to userspace across boards.
+>>> "
+>>
+>> Yes, and "label" should provide me with that ability as the context
+>> was the practice of putting the controller name in the label.
+>
+> Exactly. There are two options:
+>
+> 1.
+> - label format : "<color>:<function"
+> 2.
+> - label format : "<function>"
+> - new "color" DT property
+
+This would be my preference.
+
+>>> We also had a discussion about standardized LED function names, so I
+>>> retrieved all LED function names from dts files present in kernel,
+>>> and after unifying some similar occurrences I got something like
+>>> below. Perhaps it doesn't make a sense to add all of the below
+>>> definitions to the standard header, but some of them could certainly
+>>> find their place in e.g. include/dt-bindings/leds/led-functions.h.
+>>
+>> Looks like we could further unify things though I suppose just
+>> changing dts files could break users.
+>
+> The changes in dts files would have to be accompanied by changes in
+> DT parsing part of LED class drivers. Also, I wonder if it wouldn't
+> make sense to add config option to choose between old and new LED
+> naming convention to avoid userspace breakage.
+>
+> It would allow to use dts files with old style labels with
+> newer kernels. The LED class device names would differ like below:
+>
+> Old style name (current):
+>         /sys/class/leds/netxbig:red:power
+>
+> New style name:
+>         /sys/class/leds/red:power (we could also think of dropping
+>                                    color from name and adding sysfs
+>                                    file for it)
+
+Following the sysfs principle of 1
+>
+>
+>> But at least we could document
+>> which ones to use for new dts files. Then hopefully we don't have more
+>> "bluetooth" vs. "bt".
+>>
+>> Yes, I'd certainly limit the list to ones where we have multiple
+>> similar names and leave out the oddballs.
+>>
+>>> Then we could have LED names in the form function:color, and below
+>>> defines could be used in dts files to avoid spawning similar LED names
+>>> describing the same function.
+>>>
+>>> Of course in case of the names presented here with numerical suffixes
+>>> we could skip the suffix.
+>>>
+>>>
+>>> #define LED_FUNCTION_ACTIVITY "activity"
+>>> #define LED_FUNCTION_ADSL "adsl"
+>>> #define LED_FUNCTION_ALARM "alarm"
+>>> #define LED_FUNCTION_ALIVE "alive"
+>>> #define LED_FUNCTION_ALL "all"
+>>> #define LED_FUNCTION_APP "app"
+>>> #define LED_FUNCTION_AUX "aux"
+>>> #define LED_FUNCTION_BACKUP "backup"
+>>> #define LED_FUNCTION_BEEP "beep"
+>>> #define LED_FUNCTION_BLUETOOTH "bluetooth"
+>>> #define LED_FUNCTION_BOOT "boot"
+>>> #define LED_FUNCTION_BOTTOM "bottom"
+>>> #define LED_FUNCTION_BRICK-STATUS "brick-status"
+>>> #define LED_FUNCTION_BT "bt"
+>>> #define LED_FUNCTION_CEL "cel"
+>>> #define LED_FUNCTION_CEL-PWR "cel-pwr"
+>>> #define LED_FUNCTION_CEL-RESET "cel-reset"
+>>> #define LED_FUNCTION_CHRG "chrg"
+>>> #define LED_FUNCTION_COM "com"
+>>> #define LED_FUNCTION_COPY "copy"
+>>> #define LED_FUNCTION_CORE_MODULE "core_module"
+>>> #define LED_FUNCTION_CPU "cpu"
+>>> #define LED_FUNCTION_D "d"
+>>> #define LED_FUNCTION_DEBUG "debug"
+>>> #define LED_FUNCTION_DIA "dia"
+>>> #define LED_FUNCTION_DISK "disk"
+>>> #define LED_FUNCTION_DOWN "down"
+>>> #define LED_FUNCTION_DSL "dsl"
+>>> #define LED_FUNCTION_ENOCEAN "enocean"
+>>> #define LED_FUNCTION_ENTER "enter"
+>>> #define LED_FUNCTION_ERROR "error"
+>>> #define LED_FUNCTION_ESATA "esata"
+>>> #define LED_FUNCTION_ETHERNET-STATUS "ethernet-status"
+>>> #define LED_FUNCTION_FAIL "fail"
+>>> #define LED_FUNCTION_FAULT "fault"
+>>> #define LED_FUNCTION_FRONT "front"
+>>> #define LED_FUNCTION_FUNC "func"
+>>> #define LED_FUNCTION_G "g"
+>>> #define LED_FUNCTION_GHZ "ghz"
+>>> #define LED_FUNCTION_GHZ-1 "ghz-1"
+>>> #define LED_FUNCTION_GHZ-2 "ghz-2"
+>>> #define LED_FUNCTION_GPIO "gpio"
+>>> #define LED_FUNCTION_GSM "gsm"
+>>> #define LED_FUNCTION_HD "hd"
+>>> #define LED_FUNCTION_HDD "hdd"
+>>> #define LED_FUNCTION_HDDERR "hdderr"
+>>> #define LED_FUNCTION_HEALTH "health"
+>>> #define LED_FUNCTION_HEART "heart"
+>>> #define LED_FUNCTION_HEARTBEAT "heartbeat"
+>>> #define LED_FUNCTION_HOME "home"
+>>> #define LED_FUNCTION_INET "inet"
+>>> #define LED_FUNCTION_INFO "info"
+>>> #define LED_FUNCTION_INTERNET "internet"
+>>> #define LED_FUNCTION_KEYPAD "keypad"
+>>> #define LED_FUNCTION_L "l"
+>>> #define LED_FUNCTION_LAN "lan"
+>>> #define LED_FUNCTION_LEDB "ledb"
+>>> #define LED_FUNCTION_LEFT "left"
+>>> #define LED_FUNCTION_L_HDD "l_hdd"
+>>> #define LED_FUNCTION_LIVE "live"
+>>> #define LED_FUNCTION_LOGO "logo"
+>>> #define LED_FUNCTION_MICROSD "microsd"
+>>> #define LED_FUNCTION_MISC "misc"
+>>> #define LED_FUNCTION_MMC "mmc"
+>>> #define LED_FUNCTION_NAND "nand"
+>>> #define LED_FUNCTION_NETWORK "network"
+>>> #define LED_FUNCTION_ON "on"
+>>> #define LED_FUNCTION_ORANGE "orange"
+>>> #define LED_FUNCTION_OS "os"
+>>> #define LED_FUNCTION_PANEL "panel"
+>>> #define LED_FUNCTION_PMU_STAT "pmu_stat"
+>>> #define LED_FUNCTION_POWER "power"
+>>> #define LED_FUNCTION_PROG "prog"
+>>> #define LED_FUNCTION_PROGRAMMING "programming"
+>>> #define LED_FUNCTION_PROXIMITYSENSOR "proximitysensor"
+>>> #define LED_FUNCTION_PULSE "pulse"
+>>> #define LED_FUNCTION_PWR "pwr"
+>>> #define LED_FUNCTION_QSS "qss"
+>>> #define LED_FUNCTION_REBUILD "rebuild"
+>>> #define LED_FUNCTION_R_HDD "r_hdd"
+>>> #define LED_FUNCTION_RIGHT "right"
+>>> #define LED_FUNCTION_ROUTER "router"
+>>> #define LED_FUNCTION_RS "rs"
+>>> #define LED_FUNCTION_RX "rx"
+>>> #define LED_FUNCTION_SATA "sata"
+>>> #define LED_FUNCTION_SATA-L "sata-l"
+>>> #define LED_FUNCTION_SATA-R "sata-r"
+>>> #define LED_FUNCTION_SD "sd"
+>>> #define LED_FUNCTION_SLEEP "sleep"
+>>> #define LED_FUNCTION_STANDBY "standby"
+>>> #define LED_FUNCTION_STATE "state"
+>>> #define LED_FUNCTION_STATUS "status"
+>>> #define LED_FUNCTION_SW "sw"
+>>> #define LED_FUNCTION_SWRDY "swrdy"
+>>> #define LED_FUNCTION_SYS "sys"
+>>> #define LED_FUNCTION_SYSTEM "system"
+>>> #define LED_FUNCTION_SYSTEM-STATUS "system-status"
+>>> #define LED_FUNCTION_TEL "tel"
+>>> #define LED_FUNCTION_TOP "top"
+>>> #define LED_FUNCTION_TV "tv"
+>>> #define LED_FUNCTION_TX "tx"
+>>> #define LED_FUNCTION_UP "up"
+>>> #define LED_FUNCTION_USB "usb"
+>>> #define LED_FUNCTION_USB_1 "usb_1"
+>>> #define LED_FUNCTION_USB_2 "usb_2"
+>>> #define LED_FUNCTION_USB_COPY "usb_copy"
+>>> #define LED_FUNCTION_USB-PORT1 "usb-port1"
+>>> #define LED_FUNCTION_USB-PORT2 "usb-port2"
+>>> #define LED_FUNCTION_USER "user"
+>>> #define LED_FUNCTION_USR "usr"
+>>> #define LED_FUNCTION_WAN "wan"
+>>> #define LED_FUNCTION_WIFI "wifi"
+>>> #define LED_FUNCTION_WIFI_AP "wifi_ap"
+>>> #define LED_FUNCTION_WIFI-STATUS "wifi-status"
+>>> #define LED_FUNCTION_WIRELESS "wireless"
+>>> #define LED_FUNCTION_WLAN "wlan"
+>>> #define LED_FUNCTION_WLAN_G "wlan_g"
+>>> #define LED_FUNCTION_WMODE "wmode"
+>>> #define LED_FUNCTION_WPS "wps"
+>>>
+>>>
+>>> [0] https://patchwork.kernel.org/patch/10089047/
+>>> --
+>>> Best regards,
+>>> Jacek Anaszewski
+>>
+>
+> --
+> Best regards,
+> Jacek Anaszewski
