@@ -1,25 +1,57 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next] dt-bindings: net: renesas-ravb: Add support
- for r8a77470 SoC
-Date: Fri, 30 Mar 2018 12:32:58 -0400 (EDT)
-Message-ID: <20180330.123258.681696358960701155.davem@davemloft.net>
-References: <1522317775-35671-1-git-send-email-biju.das@bp.renesas.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH] ARM: dts: da850-evm: add WP and CD to MMC
+Date: Fri, 30 Mar 2018 11:52:34 -0500
+Message-ID: <1522428754-28337-1-git-send-email-aford173@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1522317775-35671-1-git-send-email-biju.das@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: biju.das@bp.renesas.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, geert+renesas@glider.be, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, magnus.damm@gmail.com, chris.paterson2@renesas.com, fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@kernel.org, nsekhar@ti.com, linux@armlinux.org.uk, robh+dt@kernel.org, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
-Date: Thu, 29 Mar 2018 11:02:55 +0100
+The legacy mode uses the write protect and card detect but DT
+has not.  This patch enables the pinmuxing and detection for
+WP and CD.
 
-> Add a new compatible string for the RZ/G1C (R8A77470) SoC.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Applied.
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index c82368c..1030788 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -42,6 +42,12 @@
+ 					0x04 0x00011000 0x000ff000
+ 				>;
+ 			};
++			mmc0_cd_wp_pins: pinmux_mmc0_cd_wp_pins {
++				pinctrl-single,bits = <
++					/* GP4[0], GP4[1]*/
++					0x28 0x88000000 0xff000000
++					>;
++			};
+ 			nand_pins: nand_pins {
+ 				pinctrl-single,bits = <
+ 					/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
+@@ -106,7 +112,9 @@
+ 			bus-width = <4>;
+ 			status = "okay";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&mmc0_pins>;
++			pinctrl-0 = <&mmc0_pins &mmc0_cd_wp_pins>;
++			cd-gpios = <&gpio 64 GPIO_ACTIVE_LOW>;
++			wp-gpios = <&gpio 65 GPIO_ACTIVE_HIGH>;
+ 		};
+ 		spi1: spi@30e000 {
+ 			status = "okay";
+-- 
+2.7.4
