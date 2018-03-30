@@ -1,41 +1,124 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 0/8] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Fri, 30 Mar 2018 13:07:14 +0200
-Message-ID: <CAMRc=Me-+oDi7R-=sSbKU45EFDv04X2rswksLD2N1rnbYrZo2A@mail.gmail.com>
-References: <20180327092031.11251-1-brgl@bgdev.pl> <6166e140-b417-dd22-10cf-843db3958226@lechnology.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 05/10] iio: adc: at91-sama5d2_adc: fix channel
+ configuration for differential channels
+Date: Fri, 30 Mar 2018 13:17:07 +0100
+Message-ID: <20180330131707.21bc3845@archlinux>
+References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
+        <1522153963-1121-6-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6166e140-b417-dd22-10cf-843db3958226@lechnology.com>
+In-Reply-To: <1522153963-1121-6-git-send-email-eugen.hristev@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-2018-03-27 18:48 GMT+02:00 David Lechner <david@lechnology.com>:
-> Wasn't there a v4 already? Is this really v5 instead of v3?
->
+On Tue, 27 Mar 2018 15:32:38 +0300
+Eugen Hristev <eugen.hristev@microchip.com> wrote:
 
-Yes there was and Philipp applied the v4 alright.
+> When iterating through the channels, the index in the array is not the
+> scan index. Added an xlate function to translate to the proper index.
+> This will be used also for devicetree channel xlate
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+So, this is a fix for an existing bug?
 
->
-> On 03/27/2018 04:20 AM, Bartosz Golaszewski wrote:
->>
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> This series converts the only user of the handcoded, mach-specific reset
->> routines in the davinci platform to using the reset framework.
->>
->> Patches 1-3 add necessary lookups/DT-properties.
->
->
-> Should I just squash the DT changes into my common-clock-v9 branch
-> since those patches haven't been picked up yet anyway? That will be
-> 2 fewer patches to keep track of.
+Please move this to the front of your set (to make it easier to backport).
+Describe the result of the bug as well.
 
-I would personally prefer to keep the changesets thematically
-separate. The clock series is big anyway already.
+Fixes tag would be good.
 
 Thanks,
-Bartosz
+
+Jonathan
+
+
+> ---
+>  drivers/iio/adc/at91-sama5d2_adc.c | 41 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> index 4eff835..8729d65 100644
+> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> @@ -333,6 +333,27 @@ static const struct iio_chan_spec at91_adc_channels[] = {
+>  				+ AT91_SAMA5D2_DIFF_CHAN_CNT + 1),
+>  };
+>  
+> +static int at91_adc_chan_xlate(struct iio_dev *indio_dev, int chan)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < indio_dev->num_channels; i++) {
+> +		if (indio_dev->channels[i].scan_index == chan)
+> +			return i;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static inline struct iio_chan_spec const *
+> +at91_adc_chan_get(struct iio_dev *indio_dev, int chan)
+> +{
+> +	int index = at91_adc_chan_xlate(indio_dev, chan);
+> +
+> +	if (index < 0)
+> +		return NULL;
+> +	return indio_dev->channels + index;
+> +}
+> +
+>  static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
+>  {
+>  	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
+> @@ -350,8 +371,10 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
+>  	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
+>  
+>  	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
+> -		struct iio_chan_spec const *chan = indio->channels + bit;
+> +		struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
+>  
+> +		if (!chan)
+> +			continue;
+>  		if (state) {
+>  			at91_adc_writel(st, AT91_SAMA5D2_CHER,
+>  					BIT(chan->channel));
+> @@ -448,7 +471,11 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+>  
+>  	for_each_set_bit(bit, indio_dev->active_scan_mask,
+>  			 indio_dev->num_channels) {
+> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
+> +		struct iio_chan_spec const *chan =
+> +					 at91_adc_chan_get(indio_dev, bit);
+> +
+> +		if (!chan)
+> +			continue;
+>  
+>  		st->dma_st.rx_buf_sz += chan->scan_type.storagebits / 8;
+>  	}
+> @@ -526,8 +553,11 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+>  	 */
+>  	for_each_set_bit(bit, indio_dev->active_scan_mask,
+>  			 indio_dev->num_channels) {
+> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
+> +		struct iio_chan_spec const *chan =
+> +					at91_adc_chan_get(indio_dev, bit);
+>  
+> +		if (!chan)
+> +			continue;
+>  		if (st->dma_st.dma_chan)
+>  			at91_adc_readl(st, chan->address);
+>  	}
+> @@ -587,8 +617,11 @@ static void at91_adc_trigger_handler_nodma(struct iio_dev *indio_dev,
+>  
+>  	for_each_set_bit(bit, indio_dev->active_scan_mask,
+>  			 indio_dev->num_channels) {
+> -		struct iio_chan_spec const *chan = indio_dev->channels + bit;
+> +		struct iio_chan_spec const *chan =
+> +					at91_adc_chan_get(indio_dev, bit);
+>  
+> +		if (!chan)
+> +			continue;
+>  		st->buffer[i] = at91_adc_readl(st, chan->address);
+>  		i++;
+>  	}
