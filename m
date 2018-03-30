@@ -1,103 +1,30 @@
-Return-Path: <SRS0=3ecQ=GU=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v6 5/5] arm64: dts: sdm845: Add support for an instance of I2C controller
-Date: Fri, 30 Mar 2018 11:08:20 -0600
-Message-Id: <1522429700-13083-6-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1522429700-13083-1-git-send-email-kramasub@codeaurora.org>
-References: <1522429700-13083-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org, bjorn.andersson@linaro.org
+Return-Path: <SRS0=VBxg=GU=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1522379583-4503-3-git-send-email-ykaneko0929@gmail.com>
+References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com> <1522379583-4503-3-git-send-email-ykaneko0929@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Mar 2018 11:16:50 +0200
+Message-ID: <CAMuHMdU3mo_k9AtQfi3u9BQV6qPd7ZVg6eed4COaGqO5A4W=JA@mail.gmail.com>
+Subject: Re: [PATCH/RFT v2 2/3] dt-bindings: thermal: rcar-thermal: add
+ R8A77995 support
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add one instance of GENI based I2C master controller to enable testing
-I2C driver using EEPROM slave.
+On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 
-Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 19 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 28 ++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 17b2fb0..dbe3a36 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -29,9 +29,28 @@
- 		serial@a84000 {
- 			status = "okay";
- 		};
-+
-+		i2c@a88000 {
-+			clock-frequency = <400000>;
-+			status = "okay";
-+		};
- 	};
- 
- 	pinctrl@3400000 {
-+		qup-i2c10-default {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		qup-i2c10-sleep {
-+			pinconf {
-+				pins = "gpio55", "gpio56";
-+			};
-+		};
-+
- 		qup-uart2-default {
- 			pinconf_tx {
- 				pins = "gpio4";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 71801b9..d367020 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -196,6 +196,20 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 
-+			qup_i2c10_default: qup-i2c10-default {
-+				pinmux {
-+					function = "qup10";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
-+
-+			qup_i2c10_sleep: qup-i2c10-sleep {
-+				pinmux {
-+					function = "gpio";
-+					pins = "gpio55", "gpio56";
-+				};
-+			};
-+
- 			qup_uart2_default: qup-uart2-default {
- 				pinmux {
- 					function = "qup9";
-@@ -310,6 +324,20 @@
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
-+
-+			i2c10: i2c@a88000 {
-+				compatible = "qcom,geni-i2c";
-+				reg = <0xa88000 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&qup_i2c10_default>;
-+				pinctrl-1 = <&qup_i2c10_sleep>;
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
