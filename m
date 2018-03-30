@@ -1,81 +1,24 @@
-Return-Path: <SRS0=dqFC=GN=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V3 1/4] dt-bindings: pwrap: mediatek: add MT6351 PMIC support for MT6797
-Date: Fri, 23 Mar 2018 16:32:35 +0800
-Message-ID: <20180323083238.13569-2-argus.lin@mediatek.com>
-In-Reply-To: <20180323083238.13569-1-argus.lin@mediatek.com>
-References: <20180323083238.13569-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=cncA=GU=verge.net.au=horms@kernel.org>
+Date: Fri, 30 Mar 2018 08:46:50 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/8] soc: renesas: rcar-sysc: Add r8a77470 support
+Message-ID: <20180330064649.t5e5qmiir3xw3lwr@verge.net.au>
+References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com>
+ <1522265176-33226-2-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_004_1773693750.574714365"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1522265176-33226-2-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_004_1773693750.574714365
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_005_502973680.295110823"
+On Wed, Mar 28, 2018 at 08:26:09PM +0100, Biju Das wrote:
+> Add support for RZ/G1C (R8A77470) SoC power areas to the R-Car SYSC
+> driver.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---__=_Part_Boundary_005_502973680.295110823
-Content-Type: text/html
-Content-Transfer-Encoding: base64
-
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-V2UgYWRkIE1UNjM1MSBQTUlDIHN1cHBvcnQgZm9yIE1UNjc5NyBTb0NzLg0KDQpTaWduZWQtb2Zm
-LWJ5OiBBcmd1cyBMaW4gJmx0O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEg
-Kw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5k
-ZXggYmY4MGUzZjk2ZjhjLi5mOTk4N2MzMGYwZDUgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0x
-OSw2ICsxOSw3IEBAIElQIFBhaXJpbmcNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHB3cmFwIGRl
-dmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFw
-JnF1b3Q7IGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3Jh
-cCZxdW90OyBmb3IgTVQ2Nzk3IFNvQ3MNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3cmFwJnF1
-b3Q7IGZvciBNVDc2MjIgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDgxMzUtcHdyYXAmcXVvdDsg
-Zm9yIE1UODEzNSBTb0NzDQogCSZxdW90O21lZGlhdGVrLG10ODE3My1wd3JhcCZxdW90OyBmb3Ig
-TVQ4MTczIFNvQ3MNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0t
-PjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioq
-KioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1l
-c3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwg
-cHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xv
-c3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5
-ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWlu
-YXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2Yg
-dGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCBy
-ZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwu
-IElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3Ig
-YmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBs
-ZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlz
-IGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5j
-bHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlz
-Y2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhh
-bmsgeW91ITwvcHJlPjwhLS19LS0+
-
---__=_Part_Boundary_005_502973680.295110823
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpXZSBhZGQgTVQ2MzUx
-IFBNSUMgc3VwcG9ydCBmb3IgTVQ2Nzk3IFNvQ3MuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExp
-biA8YXJndXMubGluQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCBiZjgwZTNmOTZmOGMuLmY5
-OTg3YzMwZjBkNSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAgSVAgUGFp
-cmluZw0KIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQogLSBjb21w
-YXRpYmxlOg0KIAkibWVkaWF0ZWssbXQyNzAxLXB3cmFwIiBmb3IgTVQyNzAxLzc2MjMgU29Dcw0K
-KwkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlhdGVrLG10
-NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdyYXAiIGZv
-ciBNVDgxMzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTczIFNvQ3MN
-Ci0tIA0KMi4xMi41DQo=
-
---__=_Part_Boundary_005_502973680.295110823--
-
---__=_Part_Boundary_004_1773693750.574714365--
+Thanks, applied.
