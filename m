@@ -1,78 +1,97 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 11/13] staging: typec: tcpci: keep the not connecting
- cc line open
-Date: Fri, 30 Mar 2018 08:15:46 -0700
-Message-ID: <0533e75a-e74d-8bd1-7188-3a858d21ce3a@roeck-us.net>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-12-git-send-email-jun.li@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Fri, 30 Mar 2018 08:22:27 -0700
+Message-ID: <20180330152227.GU5700@atomide.com>
+References: <20180329014507.GM5700@atomide.com>
+ <20180329133613.khldv72w3zj63vsk@earth.universe>
+ <20180329135904.GN5700@atomide.com>
+ <20180329154600.qhels5fqzzg364gj@earth.universe>
+ <20180329163716.GA20743@amd>
+ <20180329164113.GR5700@atomide.com>
+ <20180329184007.GA27688@amd>
+ <20180329215612.GS5700@atomide.com>
+ <20180330103744.GA17404@amd>
+ <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1522253178-32414-12-git-send-email-jun.li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, peter.chen@nxp.com, linux-usb@vger.kernel.org, a.hajda@samsung.com, linux-imx@nxp.com, shufan_lee@richtek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2018 09:06 AM, Li Jun wrote:
-> While set polarity, we should keep the not connecting cc line to be
-> open.
+* Merlijn Wajer <merlijn@wizzup.org> [180330 13:09]:
+> On 30/03/18 12:37, Pavel Machek wrote:
+> > On Thu 2018-03-29 14:56:13, Tony Lindgren wrote:
+> >> * Pavel Machek <pavel@ucw.cz> [180329 18:41]:
+> >>> Thanks. I got call working including outgoing audio: in capture
+> >>> settings, right->mic 1, Mic1 + Mic2 in alsamixer -> 100%. But I had
+> >>> the other phone muted, so I don't yet know if such call would be of
+> >>> usable quality.
+> >>
+> >> Great, good to hear that :)
+> > 
+> > I also got ofonod to work, with rather crazy hacks. But I now have
+> > incoming/outgoing calls with GUI :-).
 > 
+> Would you mind sharing those hacks - I would like to play around with
+> ofonod as well. Maybe I can help with a way forward.
 
-The more I look at this code, the more I am confused by it.
+Yeah that would be fun to play with :)
 
-The original code doesn't touch the CC lines. This function only sets the polarity.
-Is it really appropriate to touch the CC lines in the same function ?
+Below is a patch that works better at least for ModemManager,
+does anybody have ideas what the unused three ports might be?
 
-Guenter
+I wonder if ofono can use /dev/ttyUSB0 CQDM port?
 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-> ---
->   drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index d5b4e4e..b58bd59 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
->   			      enum typec_cc_polarity polarity)
->   {
->   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> +	unsigned int reg;
->   	int ret;
->   
-> -	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
-> -			   (polarity == TYPEC_POLARITY_CC2) ?
-> -			   TCPC_TCPC_CTRL_ORIENTATION : 0);
-> +	/* Keep the disconnect cc line open */
-> +	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
->   	if (ret < 0)
->   		return ret;
->   
-> -	return 0;
-> +	if (polarity == TYPEC_POLARITY_CC2)
-> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +	else
-> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
-> +	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
-> +			   (polarity == TYPEC_POLARITY_CC2) ?
-> +			   TCPC_TCPC_CTRL_ORIENTATION : 0);
->   }
->   
->   static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
-> 
+Regards,
+
+Tony
+
+8< -------------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Sun, 19 Nov 2017 19:55:56 -0800
+Subject: [PATCH] USB: qcaux: Add droid 4 mdm6600 modem
+
+We have five USB ports on mdm6600 modem and does not have the same
+layout as layout as Gobi 1K/2K/etc devices listed in qcserial.c
+
+So we should not be adding them to qcserial.c but instead use
+qcaux.c or option.c as noted by Dan Williams <dcbw@redhat.com>.
+
+The ttyUSB ports detected by ModemManager are:
+
+ttyUSB0 CQDM-capable
+ttyUSB1 no response
+ttyUSB2 no response
+ttyUSB3 no response
+ttyUSB4 AT-capable
+
+Note that it takes a while for ModemManager to start while it's
+detecting the ports, so we may want to eventually limit the ports.
+
+So far no luck finding out what the unused three ports are, maybe
+there is NMEA there if somebody knows how to enable it.
+
+Signed-off-by: Tony Lingren <tony@atomide.com>
+---
+ drivers/usb/serial/qcaux.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/usb/serial/qcaux.c b/drivers/usb/serial/qcaux.c
+--- a/drivers/usb/serial/qcaux.c
++++ b/drivers/usb/serial/qcaux.c
+@@ -66,6 +66,7 @@ static const struct usb_device_id id_table[] = {
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(UTSTARCOM_VENDOR_ID, 0xff, 0xfe, 0xff) },  /* WMC */
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(UTSTARCOM_VENDOR_ID, 0xff, 0xff, 0xff) },  /* DIAG */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1fac, 0x0151, 0xff, 0xff, 0xff) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x2a70, 0xff, 0xff, 0xff) },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(usb, id_table);
+-- 
+2.16.3
