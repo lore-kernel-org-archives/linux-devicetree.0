@@ -1,97 +1,74 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 3/9] pinctrl: actions: Add Actions S900 pinctrl driver
-Date: Sat, 31 Mar 2018 00:16:49 +0300
-Message-ID: <CAHp75VeRh9hORs=4nPqc=rUOCRzAfp0z2_1_xpJUScAeE07yqw@mail.gmail.com>
-References: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org> <20180328174703.19778-4-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] gpio: dwapb: Add support for 32 interrupts
+Date: Sat, 31 Mar 2018 00:26:23 +0300
+Message-ID: <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
+References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328174703.19778-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 8:46 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
-> pinctrl, pinmux and pinconf functionalities through a range of registers
-> common to both gpio driver and pinctrl driver.
->
-> Pinmux functionality is available only for the pin groups while the
-> pinconf functionality is available for both pin groups and individual
-> pins.
+On Wed, Mar 28, 2018 at 5:22 PM, Phil Edworthy
+<phil.edworthy@renesas.com> wrote:
+> The DesignWare GPIO IP can be configured for either 1 or 32 interrupts,
 
-> +static void owl_update_bits(void __iomem *base, u32 mask, u32 val)
-> +{
-> +       u32 reg_val;
+1 to 32, or just a choice between two?
+
+> but the driver currently only supports 1 interrupt. See the DesignWare
+> DW_apb_gpio Databook description of the 'GPIO_INTR_IO' parameter.
+
+Will see after holiday and perhaps make more comments. Here is just a
+brief review.
+
+> +- interrupts : The interrupts to the parent controller raised when GPIOs
+> +  generate the interrupts. If the controller provides one combined interrupt
+> +  for all GPIOs, specify a single interrupt. If the controller provides one
+> +  interrupt for each GPIO, provide a list of interrupts that correspond to each
+> +  of the GPIO pins. When specifying multiple interrupts, if any of the GPIOs are
+> +  not connected to an interrupt, use the interrupt-mask property.
+> +- interrupt-mask : a 32-bit bit mask that specifies which interrupts in the list
+> +  of interrupts is valid, bit is 1 for a valid irq.
+
+So, but why one will need that in practice? GPIO driver usually
+provides a pin based IRQ chip which maps each pin to the corresponding
+offset inside specific IRQ domain.
+
+> +                       struct device_node *np = to_of_node(fwnode);
+> +                       u32 irq_mask = 0xFFFFFFFF;
+
+Why? Shouldn't it be dependent to the amount of actual pins / ports?
+Intel Quark has only 8 AFAIR.
+
+> +                       int j;
 > +
-> +       reg_val = readl_relaxed(base);
+> +                       /* Optional irq mask */
+> +                       fwnode_property_read_u32(fwnode, "interrupt-mask", &irq_mask);
 > +
-> +       reg_val &= ~mask;
-> +       reg_val |= val;
+> +                       /*
+> +                        * The IP has configuration options to allow a single
+> +                        * combined interrupt or one per gpio. If one per gpio,
+> +                        * some might not be used.
+> +                        */
 
-Usual pattern here is
+> +                       for (j = 0; j < pp->ngpio; j++) {
+> +                               if (irq_mask & BIT(j)) {
 
-reg_val = (reg_val & ~mask) | (val & mask);
+for_each_set_bit() is in kernel for ages!
 
-This will allow to avoid possible overflow.
-
-> +
-> +       writel_relaxed(reg_val, base);
-> +}
-
-> +       tmp = readl_relaxed(pctrl->base + reg);
-> +       mask = (1 << width) - 1;
-> +       arg = (tmp >> bit) & mask;
-
-This looks like a candidate for a helper function. You have at least
-one more same code.
-
-Something like
-
-..._read_field(reg, mask, shift)
+> +                                       pp->irq[j] = irq_of_parse_and_map(np, j);
+> +                                       if (pp->irq[j])
+> +                                               pp->has_irq = true;
+> +                               }
+> +                       }
 
 
-> +               mask = (1 << width) - 1;
-> +               mask = mask << bit;
-> +
-> +               owl_update_bits(pctrl->base + reg, mask, (arg << bit));
-
-Similar here,
-
-..._write_field(regm mask, shift, arg)
-
-> +       tmp = readl_relaxed(pctrl->base + reg);
-> +       mask = (1 << width) - 1;
-> +       arg = (tmp >> bit) & mask;
-
-> +               mask = (1 << width) - 1;
-> +               mask = mask << bit;
-> +
-> +               owl_update_bits(pctrl->base + reg, mask, (arg << bit));
-
-> +static const struct pinconf_ops owl_pinconf_ops = {
-> +       .is_generic = true,
-> +       .pin_config_get = owl_pin_config_get,
-> +       .pin_config_set = owl_pin_config_set,
-> +       .pin_config_group_get = owl_group_config_get,
-> +       .pin_config_group_set = owl_group_config_set
-
-It's still good idea to leave comma here...
-
-> +};
-> +
-> +static struct pinctrl_desc owl_pinctrl_desc = {
-> +       .pctlops = &owl_pinctrl_ops,
-> +       .pmxops = &owl_pinmux_ops,
-> +       .confops = &owl_pinconf_ops,
-> +       .owner = THIS_MODULE
-
-...and here, and in all similar places.
-
-> +};
-> +
+So, on the first glance the patch looks either superfluous or taking
+wrong approach. Please, elaborate more why it's done in this way and
+what the case for all this in practice.
 
 -- 
 With Best Regards,
