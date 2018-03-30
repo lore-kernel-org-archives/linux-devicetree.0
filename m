@@ -1,80 +1,143 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
- omap4-droid4: add soundcard
-Date: Sat, 31 Mar 2018 00:31:52 +0200
-Message-ID: <20180330223152.GB3389@amd>
-References: <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180327121441.GH29239@sirena.org.uk>
- <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
- <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com>
- <20180329133613.khldv72w3zj63vsk@earth.universe>
- <20180329135904.GN5700@atomide.com>
- <20180329154600.qhels5fqzzg364gj@earth.universe>
- <20180329160611.GP5700@atomide.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: wrapper: add
+ io-channel-unit-converter
+Date: Sat, 31 Mar 2018 00:38:07 +0200
+Message-ID: <96e221e1-9f6f-40cc-1b80-6d33acfdb933@axentia.se>
+References: <20180319170246.26830-1-peda@axentia.se>
+ <20180319170246.26830-3-peda@axentia.se>
+ <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop>
+ <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
+ <CAL_JsqJ3RZoMX+Q5boK-w3uHc=qgPCye7esXxJuwQcMM0HPLNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180329160611.GP5700@atomide.com>
+In-Reply-To: <CAL_JsqJ3RZoMX+Q5boK-w3uHc=qgPCye7esXxJuwQcMM0HPLNw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-03-29 15:55, Rob Herring wrote:
+> On Tue, Mar 27, 2018 at 3:01 AM, Peter Rosin <peda@axentia.se> wrote:
+>> On 2018-03-27 00:23, Rob Herring wrote:
+>>> On Mon, Mar 19, 2018 at 06:02:45PM +0100, Peter Rosin wrote:
+>>>> Allow linear scaling and modification of the type of an io-channel.
+>>>>
+>>>> When an ADC channel measures the midpoint of a voltage divider, the
+>>>> interesting voltage is often the voltage over the full resistance
+>>>> of the divider. Likewise, measuring the voltage over a resistor is
+>>>> often a way to get to the current through it.
+>>>>
+>>>> This binding allows description of such hardware which is external
+>>>> to the ADC.
+>>>>
+>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>> ---
+>>>>  .../iio/wrapper/io-channel-unit-converter.txt      | 84 ++++++++++++++++++++++
+>>>>  MAINTAINERS                                        |  6 ++
+>>>>  2 files changed, 90 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>>> new file mode 100644
+>>>> index 000000000000..23af661abe32
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
+>>>> @@ -0,0 +1,84 @@
+>>>> +I/O channel unit converter bindings
+>>>> +
+>>>> +Allow linear scaling and modification of the type of an io-channel.
+>>>> +
+>>>> +When an ADC channel measures the midpoint of a voltage divider, the
+>>>> +interesting voltage is often the voltage over the full resistance
+>>>> +of the divider. Likewise, measuring the voltage over a resistor is
+>>>> +often a way to get to the current through it.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "io-channel-unit-converter"
+>>>
+>>> Would this apply to something besides ADCs?
+>>
+>> Not that I can think of. At the moment.
+>>
+>>>> +- io-channels : Channel node of the parent channel.
+>>>> +- io-channel-names : Should be "parent".
+>>>> +
+>>>> +Optional properties:
+>>>> +- numerator : The parent channel scale is multiplied by this value (default 1).
+>>>> +- denominator : The parent channel scale is divided by this value (default 1).
+>>>> +- type : The type of the wrapped channel is modified to this type. The default
+>>>> +     is to use the same type as the parent channel. Recognized types are:
+>>>> +            "voltage"
+>>>> +            "current"
+>>>
+>>> This seems overly complicated for just describing a couple of resistors
+>>> on an ADC. OTOH, keeping the ADC node and what's attached to the ADC
+>>> separate
+>>>
+>>> Perhaps the type should be part of the compatible. For example, if you
+>>> have a current measurement resistor/circuit, then the compatible should
+>>> be based on that.
+>>
+>> Is a compatible like "current-sense-circuit" too long(ish)?
+> 
+> No, that's fine.
+> 
+>> Is a vendor prefix absolutely required?
+> 
+> No, it can be common.
+> 
+>> Sure, I can use "axentia,"
+>> because we "implemented" the circuit this time, but it seems like
+>> the list can grow very long if we should add every vendor that
+>> may use something like this? Something more generic would be good
+>> for something as simple as this IMHO.
+>>
+>> I propose the compatible "voltage-divider" for the other example,
+>> but I have the same issue with the vendor prefix. Even more so
+>> in this case.
+> 
+> "voltage-divider" doesn't really say what the purpose is.
 
---hHWLQfXTYDoKhP50
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, but it says what it *is*, which is pretty much what the compatible
+is all about? If you have, I don't know, let's pick some regulator, you
+don't expect the compatible to give any details of the purpose. Not
+other than regulating of course. But a voltage divider pretty much divides
+a voltage, much like a regulator regulates, and that's it. The node name
+should be what hints at the purpose, no?
 
-Hi!
+>>
+>> Then the above type can be inferred from the compatible. I suppose
+>> I should write the above two bindings as two separate files?
+> 
+> One is fine if the only difference is the compatible.
+> 
+>>>> +
+>>>> +Example 1:
+>>>> +The system voltage is circa 12V, but divided down with a 22/200
+>>>> +voltage divider to adjust it to the ADC range.
+>>>> +
+>>>> +SYSV        ADC       GND
+>>>> +  +          +         +
+>>>> +  |  .-----. | .----.  |
+>>>> +  '--| 200 |-+-| 22 |--'
+>>>> +     '-----'   '----'
+>>>> +
+>>>> +sysv {
+>>>> +    compatible = "io-channel-unit-converter";
+>>>> +    io-channles = <&maxadc 1>;
+>>>> +    io-channel-names = "parent";
+>>>
+>>> parent doesn't seem to describe something about the h/w.
+>>
+>> Extrapolating from your first question, you are thinking "adc", right?
+> 
+> I don't really have any suggestion. With only 1 channel, there's not
+> really much point to having a name at all.
 
-> > Your override kills most settings from alsamixer. You can try to
-> > just override CPCAP_REG_VAUDIOC, CPCAP_REG_CC and CPCAP_REG_CDI
-> > and setup everything else with alsamixer.
->=20
-> OK I'll try to narrow it down and play with the mic settings
-> tonight or over the weekend.
+Right, I'm ditching the -names line.
 
-No, just the three+alsamixer will not work. You also need to
-
-814: |=3D 400
-
-824: |=3D 400 CPCAP_REG_RXCOA : CPCAP_BIT_PGA_CDC_EN
-81c: |=3D 006 CPCAP_REG_RXOA : CPCAP_BIT_A2_LDSP_L_EN / CPCAP_BIT_A2_LDSP_R=
-_EN
-
-You can set those using sudo aplay -D plughw:CARD=3DAudio,DEV=3D1
-/usr/share/sounds/alsa/Front_Left.wav ... but that will do bad stuff
-to the rest of the bits.
-
-You might find this useful:
-
- watch 'cat /sys/kernel/debug/regmap/spi0.0/registers | grep "0800\|0804\|0=
-808\|0814\|0818\|081c\|0820\|0824\|0828"'
-
-Good luck, I need some sleep,
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq+utgACgkQMOfwapXb+vKdRwCgk42W9KTV2310PKUMvFqHFiRD
-sz0AoI4KM0o0hvQUfK+kuSG80yd5ldHp
-=498e
------END PGP SIGNATURE-----
-
---hHWLQfXTYDoKhP50--
+Cheers,
+Peter
