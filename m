@@ -1,54 +1,35 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 5/8] net: mscc: Add initial Ocelot switch support
-Date: Fri, 30 Mar 2018 16:16:34 +0200
-Message-ID: <20180330141634.GD14180@piout.net>
-References: <20180323201117.8416-1-alexandre.belloni@bootlin.com>
- <20180323201117.8416-6-alexandre.belloni@bootlin.com>
- <1df0a932-f7c1-f1b5-9a35-3c16d0c551e5@gmail.com>
- <20180330124537.GC14180@piout.net>
- <20180330135422.GA28244@lunn.ch>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4 0/2] of_net: Implement of_get_nvmem_mac_address
+ helper
+Date: Fri, 30 Mar 2018 10:40:54 -0400 (EDT)
+Message-ID: <20180330.104054.147506012234775496.davem@davemloft.net>
+References: <1522046489-19652-1-git-send-email-mike.looijmans@topic.nl>
+        <1522144346-32367-1-git-send-email-mike.looijmans@topic.nl>
+        <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180330135422.GA28244@lunn.ch>
+In-Reply-To: <1522301389-11034-1-git-send-email-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Allan Nielsen <Allan.Nielsen@microsemi.com>, razvan.stefanescu@nxp.com, po.liu@nxp.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: mike.looijmans@topic.nl
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 30/03/2018 at 15:54:22 +0200, Andrew Lunn wrote:
-> > > All of this sounds like it should be moved into the br_join/leave, this
-> > > does not appear to be the right place to do that.
-> > > 
-> > 
-> > No, I've triple checked because this is a comment that both Andrew and
-> > you had. Once a port is added to the PGID MASK, it will start forwarding
-> > frames so we really want that to happen only when the port is in
-> > BR_STATE_FORWARDING state. Else, we may forward frames between the
-> > addition of the port to the bridge and setting the port to the
-> > BR_STATE_BLOCKING state.
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Thu, 29 Mar 2018 07:29:47 +0200
+
+> Posted this as a small set now, with an (optional) second patch that shows
+> how the changes work and what I've used to test the code on a Topic Miami board.
+> I've taken the liberty to add appropriate "Acked" and "Review" tags.
 > 
-> Hi Alexandre
+> v4: Replaced "6" with ETH_ALEN
 > 
-> Interesting observation. I took a look at some of the other join
-> implementations. mv88e6xxx does the join immediately. mt7539 does it
-> immediately, if the port is enabled. lan9303 does it immediately.
-> qca8k does it immediately. b53 does it immediately.
+> v3: Add patch that implements mac in nvmem for the Cadence MACB controller
+>     Remove the integrated of_get_mac_address call
 > 
+> v2: Use of_nvmem_cell_get to avoid needing the assiciated device
+>     Use void* instead of char*
+>     Add devicetree binding doc
 
-I had a look at b53, my impression was that b53_br_join() adds the port
-to the bridge but b53_br_set_stp_state() actually enables forwarding. So
-as long as the default on the port is PORT_CTRL_DIS_STATE, the port will
-not be forwarding frames. And this is the case because b53_enable_port()
-does put 0 in B53_PORT_CTRL.
-
-The fact is that ocelot doesn't have separate controls. The port is
-either forwarding or not. If it is not forwarding, then there is nothing
-to tell the HW to do.
-
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Series applied to net-next, thank you.
