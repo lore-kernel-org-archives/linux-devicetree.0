@@ -1,124 +1,80 @@
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
- 5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Fri, 30 Mar 2018 15:25:24 +0000
-Message-ID: <CAOf5uwnF8qTqX9O6s226=Nd4FbGjGev4LDonovgoXtoEH9QdVA@mail.gmail.com>
-References: <20180329014507.GM5700@atomide.com>
- <20180329133613.khldv72w3zj63vsk@earth.universe>
- <20180329135904.GN5700@atomide.com>
- <20180329154600.qhels5fqzzg364gj@earth.universe>
- <20180329163716.GA20743@amd> <20180329164113.GR5700@atomide.com>
- <20180329184007.GA27688@amd> <20180329215612.GS5700@atomide.com>
- <20180330103744.GA17404@amd> <a2a7a65c-1794-66c7-0f69-5919d32665fb@wizzup.org>
- <20180330152227.GU5700@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180330152227.GU5700@atomide.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Dan Williams <dcbw@redhat.com>, Merlijn Wajer <merlijn@wizzup.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, kernel@collabora.com, Lee Jones <lee.jones@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v5 0/8] ARM: davinci: complete the conversion to using the reset framework
+Date: Fri, 30 Mar 2018 17:28:48 +0200
+Message-ID: <20180330152856.12297-1-brgl@bgdev.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Fri., 30 Mar. 2018, 11:22 pm Tony Lindgren, <tony@atomide.com> wrote:
+This series converts the only user of the handcoded, mach-specific reset
+routines in the davinci platform to using the reset framework.
 
-> * Merlijn Wajer <merlijn@wizzup.org> [180330 13:09]:
-> > On 30/03/18 12:37, Pavel Machek wrote:
-> > > On Thu 2018-03-29 14:56:13, Tony Lindgren wrote:
-> > >> * Pavel Machek <pavel@ucw.cz> [180329 18:41]:
-> > >>> Thanks. I got call working including outgoing audio: in capture
-> > >>> settings, right->mic 1, Mic1 + Mic2 in alsamixer -> 100%. But I had
-> > >>> the other phone muted, so I don't yet know if such call would be of
-> > >>> usable quality.
-> > >>
-> > >> Great, good to hear that :)
-> > >
-> > > I also got ofonod to work, with rather crazy hacks. But I now have
-> > > incoming/outgoing calls with GUI :-).
-> >
-> > Would you mind sharing those hacks - I would like to play around with
-> > ofonod as well. Maybe I can help with a way forward.
->
-> Yeah that would be fun to play with :)
->
-> Below is a patch that works better at least for ModemManager,
-> does anybody have ideas what the unused three ports might be?
->
-> I wonder if ofono can use /dev/ttyUSB0 CQDM port?
->
+Patches 1-3 add necessary lookups/DT-properties.
 
-One of them can be used proprably to bridge debug for modem certification.
-This is usually disable for production device. The other could used for
-unsolicited response of GPS function if exists in this modem
+Patches 4-6 fix issues found in the remoteproc davinci driver.
 
-Michael
+Patch 7 converts the davinci-rproc driver to the reset framework.
 
->
-> Regards,
->
-> Tony
->
-> 8< -------------------------
-> From tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Sun, 19 Nov 2017 19:55:56 -0800
-> Subject: [PATCH] USB: qcaux: Add droid 4 mdm6600 modem
->
-> We have five USB ports on mdm6600 modem and does not have the same
-> layout as layout as Gobi 1K/2K/etc devices listed in qcserial.c
->
-> So we should not be adding them to qcserial.c but instead use
-> qcaux.c or option.c as noted by Dan Williams <dcbw@redhat.com>.
->
-> The ttyUSB ports detected by ModemManager are:
->
-> ttyUSB0 CQDM-capable
-> ttyUSB1 no response
-> ttyUSB2 no response
-> ttyUSB3 no response
-> ttyUSB4 AT-capable
->
-> Note that it takes a while for ModemManager to start while it's
-> detecting the ports, so we may want to eventually limit the ports.
->
-> So far no luck finding out what the unused three ports are, maybe
-> there is NMEA there if somebody knows how to enable it.
->
-> Signed-off-by: Tony Lingren <tony@atomide.com>
-> ---
->  drivers/usb/serial/qcaux.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/usb/serial/qcaux.c b/drivers/usb/serial/qcaux.c
-> --- a/drivers/usb/serial/qcaux.c
-> +++ b/drivers/usb/serial/qcaux.c
-> @@ -66,6 +66,7 @@ static const struct usb_device_id id_table[] = {
->         { USB_VENDOR_AND_INTERFACE_INFO(UTSTARCOM_VENDOR_ID, 0xff, 0xfe,
-> 0xff) },  /* WMC */
->         { USB_VENDOR_AND_INTERFACE_INFO(UTSTARCOM_VENDOR_ID, 0xff, 0xff,
-> 0xff) },  /* DIAG */
->         { USB_DEVICE_AND_INTERFACE_INFO(0x1fac, 0x0151, 0xff, 0xff, 0xff)
-> },
-> +       { USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x2a70, 0xff, 0xff, 0xff)
-> },
->         { },
->  };
->  MODULE_DEVICE_TABLE(usb, id_table);
-> --
-> 2.16.3
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->
+Patch 8 removes now dead code.
+
+Tested both in DT and legacy modes by booting the examples from
+ti-ipc-rtos recipe in meta-ti.
+
+This series applies on top of David Lechner's common-clk-v9 branch[1]
+with Philipp Zabel's reset/next branch[2] pulled in.
+
+It can be found in my github tree as well[3].
+
+[1] git://github.com/dlech/ev3dev-kernel.git common-clk-v9
+[2] git://git.pengutronix.de/git/pza/linux reset/next
+[3] git@github.com:brgl/linux.git topic/davinci-reset
+
+v1 -> v2:
+- fixed the device tree patches the descriptions of which were mixed up
+- return -EPROBE_DEFER from davinci-rproc's probe() if we can't get the
+  reset provider, since it's possible that the lookup table was not yet
+  registered
+- made the local variable naming consistent in the davinci-rproc driver
+- fixed a typo in PATCH 5/8
+
+v2 -> v3:
+- modify PATCH 1/8: drop the provider argument from the function adding
+  lookup entries and instead pass the provider name to the RESET_LOOKUP
+  macro, return -EPROBE_DEFER if we locate a correct lookup entry but
+  cannot get the corresponding reset controller
+- modify the reset lookup entry in psc-da850
+- don't manually return -EPROBE_DEFER from davinci-rproc, instead don't
+  emit an error message if devm_reset_control_get_exclusive() returns
+  this error code
+
+v3 -> v4:
+- make index the second parameter in RESET_LOOKUP() (right after the
+  provider name)
+
+v4 -> v5:
+- fix a bug where the dsp_reset object correctly stored in drproc struct
+
+Bartosz Golaszewski (8):
+  ARM: davinci: dts: make psc0 a reset provider
+  ARM: davinci: dts: add a reset control to the dsp node
+  clk: davinci: add a reset lookup table for psc0
+  remoteproc/davinci: add the missing retval check for clk_enable()
+  remoteproc/davinci: prepare and unprepare the clock where needed
+  remoteproc/davinci: use octal permissions for module_param()
+  remoteproc/davinci: use the reset framework
+  clk: davinci: kill davinci_clk_reset_assert/deassert()
+
+ arch/arm/boot/dts/da850.dtsi               |  2 ++
+ arch/arm/mach-davinci/include/mach/clock.h | 21 --------------
+ drivers/clk/davinci/psc-da850.c            |  7 +++++
+ drivers/clk/davinci/psc.c                  | 19 +-----------
+ drivers/remoteproc/da8xx_remoteproc.c      | 46 ++++++++++++++++++++++++------
+ 5 files changed, 48 insertions(+), 47 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/clock.h
+
+-- 
+2.16.3
