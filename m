@@ -1,15 +1,14 @@
 From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 2/8] ARM: davinci: dts: add a reset control to the dsp
- node
-Date: Fri, 30 Mar 2018 12:10:56 -0500
-Message-ID: <72775f3d-8b89-9aae-833c-1d6779b94b5e@lechnology.com>
+Subject: Re: [PATCH v5 3/8] clk: davinci: add a reset lookup table for psc0
+Date: Fri, 30 Mar 2018 12:12:30 -0500
+Message-ID: <a96712b7-2f2d-5a6d-a37a-a43063fb801b@lechnology.com>
 References: <20180330152856.12297-1-brgl@bgdev.pl>
- <20180330152856.12297-3-brgl@bgdev.pl>
+ <20180330152856.12297-4-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330152856.12297-3-brgl@bgdev.pl>
+In-Reply-To: <20180330152856.12297-4-brgl@bgdev.pl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
@@ -21,26 +20,10 @@ List-Id: devicetree@vger.kernel.org
 On 3/30/18 10:28 AM, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> The davinci-rproc driver will soon use the reset framework. Add the
-> resets property to the dsp node in da850.dtsi.
+> In order to be able to use the reset framework in legacy boot mode as
+> well, add the reset lookup table to the psc driver for da850 variant.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->   arch/arm/boot/dts/da850.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index dad64dbf1f23..5b485e44b83e 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -109,6 +109,7 @@
->   		interrupt-parent = <&intc>;
->   		interrupts = <28>;
->   		clocks = <&psc0 15>;
-> +		resets = <&psc0 15>;
->   		status = "disabled";
->   	};
->   	soc@1c00000 {
-> 
 
 Reviewed-by: David Lechner <david@lechnology.com>
