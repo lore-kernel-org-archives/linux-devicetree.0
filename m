@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v5 4/8] remoteproc/davinci: add the missing retval check for clk_enable()
-Date: Fri, 30 Mar 2018 17:28:52 +0200
-Message-ID: <20180330152856.12297-5-brgl@bgdev.pl>
+Subject: [PATCH v5 2/8] ARM: davinci: dts: add a reset control to the dsp node
+Date: Fri, 30 Mar 2018 17:28:50 +0200
+Message-ID: <20180330152856.12297-3-brgl@bgdev.pl>
 References: <20180330152856.12297-1-brgl@bgdev.pl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180330152856.12297-1-brgl@bgdev.pl>
@@ -12,40 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The davinci platform is being switched to using the common clock
-framework, where clk_enable() can fail. Add the return value check.
+The davinci-rproc driver will soon use the reset framework. Add the
+resets property to the dsp node in da850.dtsi.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Suman Anna <s-anna@ti.com>
 ---
- drivers/remoteproc/da8xx_remoteproc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/da850.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index bf3b9034c319..2b24291337b7 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 	struct device *dev = rproc->dev.parent;
- 	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
- 	struct clk *dsp_clk = drproc->dsp_clk;
-+	int ret;
- 
- 	/* hw requires the start (boot) address be on 1KB boundary */
- 	if (rproc->bootaddr & 0x3ff) {
-@@ -148,7 +149,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 
- 	writel(rproc->bootaddr, drproc->bootreg);
- 
--	clk_enable(dsp_clk);
-+	ret = clk_enable(dsp_clk);
-+	if (ret) {
-+		dev_err(dev, "clk_enable() failed: %d\n", ret);
-+		return ret;
-+	}
-+
- 	davinci_clk_reset_deassert(dsp_clk);
- 
- 	return 0;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index dad64dbf1f23..5b485e44b83e 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -109,6 +109,7 @@
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <28>;
+ 		clocks = <&psc0 15>;
++		resets = <&psc0 15>;
+ 		status = "disabled";
+ 	};
+ 	soc@1c00000 {
 -- 
 2.16.3
