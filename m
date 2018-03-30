@@ -1,130 +1,44 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v3,4/4] watchdog: add Gateworks System Controller support
-Date: Fri, 30 Mar 2018 11:19:54 -0700
-Message-ID: <20180330181954.GA17580@roeck-us.net>
-References: <1522250043-8065-5-git-send-email-tharvey@gateworks.com>
- <20180330010757.GA12896@roeck-us.net>
- <CAJ+vNU3ARKLK5AcssEP-_P8AmwnAnS8VtAEO1ppwum2jpCqAYQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Craig Tatlor <ctatlor97@gmail.com>
+Subject: [PATCH] ARM: dts: qcom: pm8941: Add vadc nodes needed to estimate an ocv
+Date: Fri, 30 Mar 2018 21:04:08 +0100
+Message-ID: <20180330200408.12608-1-ctatlor97@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3ARKLK5AcssEP-_P8AmwnAnS8VtAEO1ppwum2jpCqAYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc: ctatlor97@gmail.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 30, 2018 at 10:49:38AM -0700, Tim Harvey wrote:
-> On Thu, Mar 29, 2018 at 6:07 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> > On Wed, Mar 28, 2018 at 08:14:03AM -0700, Tim Harvey wrote:
-> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> >> ---
-> >>  drivers/watchdog/Kconfig   |  10 ++++
-> >>  drivers/watchdog/Makefile  |   1 +
-> >>  drivers/watchdog/gsc_wdt.c | 146 +++++++++++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 157 insertions(+)
-> >>  create mode 100644 drivers/watchdog/gsc_wdt.c
-> >>
-> <snip>
-> >> +
-> >> +static const struct watchdog_info gsc_wdt_info = {
-> >> +     .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-> >
-> > Please confirm that WDIOF_MAGICCLOSE is not set on purpose.
-> >
-> >> +     .identity = "GSC Watchdog"
-> >> +};
-> >> +
-> <snip>
-> >> +
-> >> +static int gsc_wdt_probe(struct platform_device *pdev)
-> >> +{
-> >> +     struct gsc_dev *gsc = dev_get_drvdata(pdev->dev.parent);
-> >> +     struct device *dev = &pdev->dev;
-> >> +     struct gsc_wdt *wdt;
-> >> +     int ret;
-> >> +     unsigned int reg;
-> >> +
-> <snip>
-> >> +     /* ensure WD bit enabled */
-> >> +     if (regmap_read(gsc->regmap, GSC_CTRL_1, &reg))
-> >> +             return -EIO;
-> >> +     if (!(reg & (1 << GSC_CTRL_1_WDT_ENABLE))) {
-> >
-> > BIT()
-> >
-> >> +             dev_err(dev, "not enabled - must be manually enabled\n");
-> >
-> > This doesn't make sense. Bail out if the watchdog is disabled ? Why ?
-> >
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> <snip>
-> >> +
-> >> +     watchdog_set_nowayout(&wdt->wdt_dev, 1);
-> >
-> > WATCHDOG_NOWAYOUT ?
-> >
-> 
-> Guenter,
-> 
-> Thanks for the review!
-> 
-> The watchdog implementation of the GSC is such that it is enabled and
-> reset via a single non-volatile I2C register bit. If this bit is set
-> the watchdog will start ticking down automatically on board power up.
-> The register definitions don't provide a condition where it can be
-> enabled in a volatile way such that after board power-cycle it is
-> disabled again nor do they provide a separate register for enable vs
-> reset.
-> 
-> In the typical case the user boots the board, driver registers
-> watchdog, userspace watchdog daemon enables watchdog and it starts
-> ticking. User now powers down the board and later powers it back up.
-> The watchdog was enabled previously by userspace and the register is
-> non-volatile so the watchdog starts ticking before the kernel driver
-> and watchdog daemon yet the user breaks out into the bootloader or
-> boots a different OS without a watchdog daemon and the board resets
-> without them expecting it. The feature that the watchdog starts
-> ticking at board power-up before the CPU has even fetched code was
-> part of its design and was put there to work around some SoC errata
-> that can cause the CPU to fail to fetch boot code. This has caused me
-> to implement a watchdog driver that never actually 'enables' or
-> 'disables' the watchdog which is why there is no MAGIC CLOSE and why I
+vbat_sns is needed to estimate a fairly accurate on chip voltage
+and bat_therm is needed to produce an accurate percentage
+from the estimated ocv.
 
-Yet the driver does enable and disable the watchdog in its start and stop
-functions. And I have no idea what that has to do with the MAGICCLOSE
-functionality, which is quite orthogonal to the start/stop functionality.
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+---
+ arch/arm/boot/dts/qcom-pm8941.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> always set nowayout. Its possible this is a fairly unique case of a
-> watchdog. The probe failure if the watchdog isn't enabled is because I
-> don't want a non-enabled watchdog to get enabled just because the
-> driver/daemon were there.
-> 
-Huh ? The whole purpose of a watchdog is for it to be enabled when
-the watchdog device is opened.
-
-> I agree it's a very strange behavior and I'm not sure how to best
-> document or support it with the Linux watchdog API. I welcome any
-> recomendations!
-> 
-
-Sorry, I fail to understand your logic.
-
-You do not explain why your code bails out if the watchdog is not already
-running. That does not make sense.
-
-You are saying that you don't want the watchdog driver to enable the watchdog.
-Since its whole purpose is to enable the watchdog if/when the watchdog device
-is opened, that doesn't make sense either.
-
-At the same time, you do not tell the watchdog core that the watchdog is
-already running, meaning the system _will_ reboot unless the watchdog
-device is opened within the watchdog timeout period. Again, that does not
-make sense.
-
-Maybe it all makes sense to you, but not to me, sorry.
-
-Guenter
+diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+index 1d5ef55c7ee5..2515c5c217ac 100644
+--- a/arch/arm/boot/dts/qcom-pm8941.dtsi
++++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+@@ -139,6 +139,9 @@
+ 			#size-cells = <0>;
+ 			#io-channel-cells = <1>;
+ 
++			bat_temp {
++				reg = <VADC_LR_MUX1_BAT_THERM>;
++			};
+ 			die_temp {
+ 				reg = <VADC_DIE_TEMP>;
+ 			};
+@@ -154,6 +157,9 @@
+ 			ref_vdd {
+ 				reg = <VADC_VDD_VADC>;
+ 			};
++			vbat_sns {
++				reg = <VADC_VBAT_SNS>;
++			};
+ 		};
+ 
+ 		pm8941_iadc: iadc@3600 {
+-- 
+2.16.2
