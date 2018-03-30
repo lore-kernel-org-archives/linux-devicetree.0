@@ -1,386 +1,63 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 2/6] mfd: stm32-timers: add support for dmas
-Date: Fri, 30 Mar 2018 12:01:20 +0200
-Message-ID: <1522404084-24903-3-git-send-email-fabrice.gasnier@st.com>
-References: <1522404084-24903-1-git-send-email-fabrice.gasnier@st.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,5/5] ARM: dts:
+ omap4-droid4: add soundcard
+Date: Fri, 30 Mar 2018 12:37:44 +0200
+Message-ID: <20180330103744.GA17404@amd>
+References: <20180328022910.GM29239@sirena.org.uk>
+ <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com>
+ <20180329133613.khldv72w3zj63vsk@earth.universe>
+ <20180329135904.GN5700@atomide.com>
+ <20180329154600.qhels5fqzzg364gj@earth.universe>
+ <20180329163716.GA20743@amd>
+ <20180329164113.GR5700@atomide.com>
+ <20180329184007.GA27688@amd>
+ <20180329215612.GS5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522404084-24903-1-git-send-email-fabrice.gasnier@st.com>
+Content-Disposition: inline
+In-Reply-To: <20180329215612.GS5700@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, thierry.reding@gmail.com, alexandre.torgue@st.com
-Cc: benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-STM32 Timers can support up to 7 DMA requests:
-- 4 channels, update, compare and trigger.
-Optionally request part, or all DMAs from stm32-timers MFD core.
 
-Also add routine to implement burst reads using DMA from timer registers.
-This is exported. So, it can be used by child drivers, PWM capture
-for instance (but not limited to).
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
----
-Changes in v3:
-- Basically Lee's comments:
-- rather create a struct stm32_timers_dma, and place a reference to it
-  in existing ddata (instead of adding priv struct).
-- rather use a struct device in exported routine prototype, and use
-  standard helpers instead of ddata. Get rid of to_stm32_timers_priv().
-- simplify error handling in probe (remove a goto)
-- comment on devm_of_platform_*populate() usage.
+On Thu 2018-03-29 14:56:13, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [180329 18:41]:
+> > Thanks. I got call working including outgoing audio: in capture
+> > settings, right->mic 1, Mic1 + Mic2 in alsamixer -> 100%. But I had
+> > the other phone muted, so I don't yet know if such call would be of
+> > usable quality.
+>=20
+> Great, good to hear that :)
 
-Changes in v2:
-- Abstract DMA handling from child driver: move it to MFD core
-- Add comments on optional dma support
----
- drivers/mfd/stm32-timers.c       | 219 ++++++++++++++++++++++++++++++++++++++-
- include/linux/mfd/stm32-timers.h |  32 ++++++
- 2 files changed, 249 insertions(+), 2 deletions(-)
+I also got ofonod to work, with rather crazy hacks. But I now have
+incoming/outgoing calls with GUI :-).
 
-diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
-index 1d347e5..98191ec 100644
---- a/drivers/mfd/stm32-timers.c
-+++ b/drivers/mfd/stm32-timers.c
-@@ -4,16 +4,165 @@
-  * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/mfd/stm32-timers.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/reset.h>
- 
-+#define STM32_TIMERS_MAX_REGISTERS	0x3fc
-+
-+struct stm32_timers_dma {
-+	struct completion completion;
-+	phys_addr_t phys_base;
-+	struct mutex lock;		/* protect dma access */
-+	struct dma_chan *chan;
-+	struct dma_chan *chans[STM32_TIMERS_MAX_DMAS];
-+};
-+
-+/* DIER register DMA enable bits */
-+static const u32 stm32_timers_dier_dmaen[STM32_TIMERS_MAX_DMAS] = {
-+	TIM_DIER_CC1DE,
-+	TIM_DIER_CC2DE,
-+	TIM_DIER_CC3DE,
-+	TIM_DIER_CC4DE,
-+	TIM_DIER_UIE,
-+	TIM_DIER_TDE,
-+	TIM_DIER_COMDE
-+};
-+
-+static void stm32_timers_dma_done(void *p)
-+{
-+	struct stm32_timers_dma *dma = p;
-+	struct dma_tx_state state;
-+	enum dma_status status;
-+
-+	status = dmaengine_tx_status(dma->chan, dma->chan->cookie, &state);
-+	if (status == DMA_COMPLETE)
-+		complete(&dma->completion);
-+}
-+
-+/**
-+ * stm32_timers_dma_burst_read - Read from timers registers using DMA.
-+ *
-+ * Read from STM32 timers registers using DMA on a single event.
-+ * @dev: reference to stm32_timers MFD device
-+ * @buf: dma'able destination buffer
-+ * @id: stm32_timers_dmas event identifier (ch[1..4], up, trig or com)
-+ * @reg: registers start offset for DMA to read from (like CCRx for capture)
-+ * @num_reg: number of registers to read upon each dma request, starting @reg.
-+ * @bursts: number of bursts to read (e.g. like two for pwm period capture)
-+ * @tmo_ms: timeout (milliseconds)
-+ */
-+int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
-+				enum stm32_timers_dmas id, u32 reg,
-+				unsigned int num_reg, unsigned int bursts,
-+				unsigned long tmo_ms)
-+{
-+	struct stm32_timers *ddata = dev_get_drvdata(dev);
-+	unsigned long timeout = msecs_to_jiffies(tmo_ms);
-+	struct regmap *regmap = ddata->regmap;
-+	struct stm32_timers_dma *dma = ddata->dma;
-+	size_t len = num_reg * bursts * sizeof(u32);
-+	struct dma_async_tx_descriptor *desc;
-+	struct dma_slave_config config;
-+	dma_cookie_t cookie;
-+	dma_addr_t dma_buf;
-+	u32 dbl, dba;
-+	long err;
-+	int ret;
-+
-+	/* sanity check */
-+	if (id < STM32_TIMERS_DMA_CH1 || id >= STM32_TIMERS_MAX_DMAS)
-+		return -EINVAL;
-+
-+	if (!num_reg || !bursts || reg > STM32_TIMERS_MAX_REGISTERS ||
-+	    (reg + num_reg * sizeof(u32)) > STM32_TIMERS_MAX_REGISTERS)
-+		return -EINVAL;
-+
-+	if (!dma->chans[id])
-+		return -ENODEV;
-+	mutex_lock(&dma->lock);
-+
-+	/* select dma channel in use */
-+	dma->chan = dma->chans[id];
-+	dma_buf = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
-+	ret = dma_mapping_error(dev, dma_buf);
-+	if (ret)
-+		goto unlock;
-+
-+	/* Prepare DMA read from timer registers, using DMA burst mode */
-+	memset(&config, 0, sizeof(config));
-+	config.src_addr = (dma_addr_t)dma->phys_base + TIM_DMAR;
-+	config.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	ret = dmaengine_slave_config(dma->chan, &config);
-+	if (ret)
-+		goto unmap;
-+
-+	desc = dmaengine_prep_slave_single(dma->chan, dma_buf, len,
-+					   DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT);
-+	if (!desc) {
-+		ret = -EBUSY;
-+		goto unmap;
-+	}
-+
-+	desc->callback = stm32_timers_dma_done;
-+	desc->callback_param = dma;
-+	cookie = dmaengine_submit(desc);
-+	ret = dma_submit_error(cookie);
-+	if (ret)
-+		goto dma_term;
-+
-+	reinit_completion(&dma->completion);
-+	dma_async_issue_pending(dma->chan);
-+
-+	/* Setup and enable timer DMA burst mode */
-+	dbl = FIELD_PREP(TIM_DCR_DBL, bursts - 1);
-+	dba = FIELD_PREP(TIM_DCR_DBA, reg >> 2);
-+	ret = regmap_write(regmap, TIM_DCR, dbl | dba);
-+	if (ret)
-+		goto dma_term;
-+
-+	/* Clear pending flags before enabling DMA request */
-+	ret = regmap_write(regmap, TIM_SR, 0);
-+	if (ret)
-+		goto dcr_clr;
-+
-+	ret = regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id],
-+				 stm32_timers_dier_dmaen[id]);
-+	if (ret)
-+		goto dcr_clr;
-+
-+	err = wait_for_completion_interruptible_timeout(&dma->completion,
-+							timeout);
-+	if (err == 0)
-+		ret = -ETIMEDOUT;
-+	else if (err < 0)
-+		ret = err;
-+
-+	regmap_update_bits(regmap, TIM_DIER, stm32_timers_dier_dmaen[id], 0);
-+	regmap_write(regmap, TIM_SR, 0);
-+dcr_clr:
-+	regmap_write(regmap, TIM_DCR, 0);
-+dma_term:
-+	dmaengine_terminate_all(dma->chan);
-+unmap:
-+	dma_unmap_single(dev, dma_buf, len, DMA_FROM_DEVICE);
-+unlock:
-+	dma->chan = NULL;
-+	mutex_unlock(&dma->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(stm32_timers_dma_burst_read);
-+
- static const struct regmap_config stm32_timers_regmap_cfg = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
- 	.reg_stride = sizeof(u32),
--	.max_register = 0x3fc,
-+	.max_register = STM32_TIMERS_MAX_REGISTERS,
- };
- 
- static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
-@@ -27,12 +176,53 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
- 	regmap_write(ddata->regmap, TIM_ARR, 0x0);
- }
- 
-+static int stm32_timers_dma_probe(struct device *dev,
-+				  struct stm32_timers *ddata)
-+{
-+	int i;
-+	char name[4];
-+	struct stm32_timers_dma *dma;
-+
-+	dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
-+	if (!dma)
-+		return -ENOMEM;
-+
-+	init_completion(&dma->completion);
-+	mutex_init(&dma->lock);
-+
-+	/* Optional DMA support: get valid dma channel(s) or NULL */
-+	for (i = STM32_TIMERS_DMA_CH1; i <= STM32_TIMERS_DMA_CH4; i++) {
-+		snprintf(name, ARRAY_SIZE(name), "ch%1d", i + 1);
-+		dma->chans[i] = dma_request_slave_channel(dev, name);
-+	}
-+	dma->chans[STM32_TIMERS_DMA_UP] =
-+		dma_request_slave_channel(dev, "up");
-+	dma->chans[STM32_TIMERS_DMA_TRIG] =
-+		dma_request_slave_channel(dev, "trig");
-+	dma->chans[STM32_TIMERS_DMA_COM] =
-+		dma_request_slave_channel(dev, "com");
-+	ddata->dma = dma;
-+
-+	return 0;
-+}
-+
-+static void stm32_timers_dma_remove(struct device *dev,
-+				    struct stm32_timers *ddata)
-+{
-+	int i;
-+
-+	for (i = STM32_TIMERS_DMA_CH1; i < STM32_TIMERS_MAX_DMAS; i++)
-+		if (ddata->dma->chans[i])
-+			dma_release_channel(ddata->dma->chans[i]);
-+}
-+
- static int stm32_timers_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct stm32_timers *ddata;
- 	struct resource *res;
- 	void __iomem *mmio;
-+	int ret;
- 
- 	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
- 	if (!ddata)
-@@ -54,9 +244,33 @@ static int stm32_timers_probe(struct platform_device *pdev)
- 
- 	stm32_timers_get_arr_size(ddata);
- 
-+	ret = stm32_timers_dma_probe(dev, ddata);
-+	if (ret)
-+		return ret;
-+	/* timers physical addr for dma */
-+	ddata->dma->phys_base = res->start;
-+
- 	platform_set_drvdata(pdev, ddata);
- 
--	return devm_of_platform_populate(&pdev->dev);
-+	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+	if (ret)
-+		stm32_timers_dma_remove(dev, ddata);
-+
-+	return ret;
-+}
-+
-+static int stm32_timers_remove(struct platform_device *pdev)
-+{
-+	struct stm32_timers *ddata = platform_get_drvdata(pdev);
-+
-+	/*
-+	 * Don't use devm_ here: enfore of_platform_depopulate() happens before
-+	 * dma are released, to avoid race on dma.
-+	 */
-+	of_platform_depopulate(&pdev->dev);
-+	stm32_timers_dma_remove(&pdev->dev, ddata);
-+
-+	return 0;
- }
- 
- static const struct of_device_id stm32_timers_of_match[] = {
-@@ -67,6 +281,7 @@ static int stm32_timers_probe(struct platform_device *pdev)
- 
- static struct platform_driver stm32_timers_driver = {
- 	.probe = stm32_timers_probe,
-+	.remove = stm32_timers_remove,
- 	.driver	= {
- 		.name = "stm32-timers",
- 		.of_match_table = stm32_timers_of_match,
-diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
-index 2aadab6..585a4de 100644
---- a/include/linux/mfd/stm32-timers.h
-+++ b/include/linux/mfd/stm32-timers.h
-@@ -8,6 +8,8 @@
- #define _LINUX_STM32_GPTIMER_H_
- 
- #include <linux/clk.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/regmap.h>
- 
- #define TIM_CR1		0x00	/* Control Register 1      */
-@@ -27,6 +29,8 @@
- #define TIM_CCR3	0x3C	/* Capt/Comp Register 3    */
- #define TIM_CCR4	0x40	/* Capt/Comp Register 4    */
- #define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
-+#define TIM_DCR		0x48	/* DMA control register    */
-+#define TIM_DMAR	0x4C	/* DMA register for transfer */
- 
- #define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
- #define TIM_CR1_DIR	BIT(4)  /* Counter Direction	   */
-@@ -36,6 +40,13 @@
- #define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
- #define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
- #define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
-+#define TIM_DIER_UDE	BIT(8)  /* Update DMA request Enable */
-+#define TIM_DIER_CC1DE	BIT(9)  /* CC1 DMA request Enable  */
-+#define TIM_DIER_CC2DE	BIT(10) /* CC2 DMA request Enable  */
-+#define TIM_DIER_CC3DE	BIT(11) /* CC3 DMA request Enable  */
-+#define TIM_DIER_CC4DE	BIT(12) /* CC4 DMA request Enable  */
-+#define TIM_DIER_COMDE	BIT(13) /* COM DMA request Enable  */
-+#define TIM_DIER_TDE	BIT(14) /* Trigger DMA request Enable */
- #define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
- #define TIM_EGR_UG	BIT(0)	/* Update Generation       */
- #define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
-@@ -56,6 +67,8 @@
- #define TIM_BDTR_BK2F	(BIT(20) | BIT(21) | BIT(22) | BIT(23))
- #define TIM_BDTR_BK2E	BIT(24) /* Break 2 input enable	   */
- #define TIM_BDTR_BK2P	BIT(25) /* Break 2 input polarity  */
-+#define TIM_DCR_DBA	GENMASK(4, 0)	/* DMA base addr */
-+#define TIM_DCR_DBL	GENMASK(12, 8)	/* DMA burst len */
- 
- #define MAX_TIM_PSC		0xFFFF
- #define TIM_CR2_MMS_SHIFT	4
-@@ -65,9 +78,28 @@
- #define TIM_BDTR_BKF_SHIFT	16
- #define TIM_BDTR_BK2F_SHIFT	20
- 
-+enum stm32_timers_dmas {
-+	STM32_TIMERS_DMA_CH1,
-+	STM32_TIMERS_DMA_CH2,
-+	STM32_TIMERS_DMA_CH3,
-+	STM32_TIMERS_DMA_CH4,
-+	STM32_TIMERS_DMA_UP,
-+	STM32_TIMERS_DMA_TRIG,
-+	STM32_TIMERS_DMA_COM,
-+	STM32_TIMERS_MAX_DMAS,
-+};
-+
-+struct stm32_timers_dma;
-+
- struct stm32_timers {
- 	struct clk *clk;
- 	struct regmap *regmap;
- 	u32 max_arr;
-+	struct stm32_timers_dma *dma;
- };
-+
-+int stm32_timers_dma_burst_read(struct device *dev, u32 *buf,
-+				enum stm32_timers_dmas id, u32 reg,
-+				unsigned int num_reg, unsigned int bursts,
-+				unsigned long tmo_ms);
- #endif
--- 
-1.9.1
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlq+E3gACgkQMOfwapXb+vJqYgCdEIQDUYgSFcuFUK7WMjX3IWDe
+USQAoJvcUkS9oFbmkLoI7NemXj00E1V2
+=EJns
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
