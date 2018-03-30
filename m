@@ -1,30 +1,58 @@
-Return-Path: <SRS0=VBxg=GU=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <1522379583-4503-4-git-send-email-ykaneko0929@gmail.com>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com> <1522379583-4503-4-git-send-email-ykaneko0929@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Mar 2018 11:16:28 +0200
-Message-ID: <CAMuHMdXRKx_v=URPMdHDfiW=S5CkSv2JBgB8M6UYW-PhuejmHg@mail.gmail.com>
-Subject: Re: [PATCH/RFT v2 3/3] arm64: dts: renesas: r8a77995: add thermal
- device support
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-Path: <SRS0=KgiW=GU=gmail.com=ykaneko0929@kernel.org>
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Subject: [PATCH/RFT v2 3/3] arm64: dts: renesas: r8a77995: add thermal device support
+Date: Fri, 30 Mar 2018 12:13:03 +0900
+Message-Id: <1522379583-4503-4-git-send-email-ykaneko0929@gmail.com>
+In-Reply-To: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
+References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index cff42cd..9a52b41 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -636,5 +636,35 @@
+ 			#phy-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		thermal: thermal@e6190000 {
++			compatible = "renesas,thermal-r8a77995";
++			reg = <0 0xe6190000 0 0x10>, <0 0xe6190100 0 0x38>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 522>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 522>;
++			#thermal-sensor-cells = <0>;
++		};
++	};
++
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&thermal>;
++
++			trips {
++				cpu-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++			};
++		};
+ 	};
+ };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+1.9.1
