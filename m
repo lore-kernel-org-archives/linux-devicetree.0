@@ -1,75 +1,89 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v4 08/10] dt-bindings: i3c: Document Cadence I3C master bindings
-Date: Fri, 30 Mar 2018 09:47:49 +0200
-Message-ID: <20180330074751.25987-9-boris.brezillon@bootlin.com>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] ARM: sun8i: h2+: add SY8113B
+ regulator used by Orange Pi Zero board
+Date: Fri, 30 Mar 2018 15:49:01 +0800
+Message-ID: <CAGb2v66_7BmKuF_NFDP9L+wZ5h=nJm0LChCdKaYaoHy9sWUKKw@mail.gmail.com>
+References: <20180206044905.30508-1-icenowy@aosc.io> <20180206044905.30508-7-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBA6Y67KQKGQESV4TI6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180206044905.30508-7-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document Cadence I3C master DT bindings.
+On Tue, Feb 6, 2018 at 12:49 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> Orange Pi Zero board has a SY8113B regulator, which is controlled via
+> GPIO and capable of outputing 1.1V when the PL6 GPIO is set to output 0
+> or 1.3V when the PL6 GPIO is set to input or output 1, and the output is
+> the power supply of the ARM cores in H2+ SoC.
+>
+> Add the device tree node of this regulator and set the cpu's cpu-supply
+> property to it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
----
-Changes in v4:
-- Fix example to match the new representation
----
- .../devicetree/bindings/i3c/cdns,i3c-master.txt    | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-new file mode 100644
-index 000000000000..0e2b8b8770bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-@@ -0,0 +1,44 @@
-+Bindings for cadence I3C master block
-+=====================================
-+
-+Required properties:
-+--------------------
-+- compatible: shall be "cdns,i3c-master"
-+- clocks: shall reference the pclk and sysclk
-+- clock-names: shall contain "pclk" and "sysclk"
-+- interrupts: the interrupt line connected to this I3C master
-+- reg: I3C master registers
-+
-+Mandatory properties defined by the generic binding (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-+
-+- #address-cells: shall be set to 1
-+- #size-cells: shall be set to 0
-+
-+Optional properties defined by the generic binding (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-+
-+- i2c-scl-hz
-+- i3c-scl-hz
-+
-+I3C device connected on the bus follow the generic description (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-+
-+Example:
-+
-+	i3c-master@0d040000 {
-+		compatible = "cdns,i3c-master";
-+		clocks = <&coreclock>, <&i3csysclock>;
-+		clock-names = "pclk", "sysclk";
-+		interrupts = <3 0>;
-+		reg = <0x0d040000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-scl-hz = <100000>;
-+
-+		nunchuk: nunchuk@52 {
-+			compatible = "nintendo,nunchuk";
-+			reg = <0x52 0x80000010 0>;
-+		};
-+	};
-+
--- 
-2.14.1
+However,
+
+> ---
+> No changes in v2.
+>
+>  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> index 6713d0f2b3f4..34fc35737090 100644
+> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> @@ -94,6 +94,27 @@
+>                 reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
+>                 post-power-on-delay-ms = <200>;
+>         };
+> +
+> +       reg_sy8113b: gpio-regulator {
+
+You might want to change the node name to something a bit more specific,
+like vdd-cpux-regulator. This would decrease the chance of name collisions,
+either from other additions or device tree overlays.
+
+ChenYu
+
+> +               compatible = "regulator-gpio";
+> +               regulator-name = "vdd-cpux";
+> +               regulator-type = "voltage";
+> +               regulator-boot-on;
+> +               regulator-always-on;
+> +               regulator-min-microvolt = <1100000>;
+> +               regulator-max-microvolt = <1300000>;
+> +               regulator-ramp-delay = <50>; /* 4ms */
+> +
+> +               gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
+> +               enable-active-high;
+> +               gpios-states = <0x1>;
+> +               states = <1100000 0x0
+> +                         1300000 0x1>;
+> +       };
+> +};
+> +
+> +&cpu0 {
+> +       cpu-supply = <&reg_sy8113b>;
+>  };
+>
+>  &ehci0 {
+> --
+> 2.15.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
