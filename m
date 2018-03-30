@@ -1,68 +1,33 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] iio: wrapper: unit-converter: new driver
-Date: Fri, 30 Mar 2018 10:24:43 +0100
-Message-ID: <20180330102443.187496bd@archlinux>
-References: <20180319170246.26830-1-peda@axentia.se>
-        <20180319170246.26830-4-peda@axentia.se>
-        <20180324140339.4ec66792@archlinux>
-        <1e950fde-d3d9-ca9c-1055-7ab8fc57fc4a@axentia.se>
-        <20180327142256.00003056@huawei.com>
-        <0c9e6fbe-cc05-1a2e-0437-dcde134e6eba@axentia.se>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH net-next] dt-bindings: net: renesas-ravb: Add support for
+ r8a77470 SoC
+Date: Fri, 30 Mar 2018 11:26:20 +0200
+Message-ID: <CAMuHMdXpr74JA682YmrXKj5Ws9g8M6Xa4KeZ2Xi8jhNqOyGK0A@mail.gmail.com>
+References: <1522317775-35671-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c9e6fbe-cc05-1a2e-0437-dcde134e6eba@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1522317775-35671-1-git-send-email-biju.das@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Mar 2018 15:32:13 +0200
-Peter Rosin <peda@axentia.se> wrote:
+On Thu, Mar 29, 2018 at 12:02 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add a new compatible string for the RZ/G1C (R8A77470) SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-> On 2018-03-27 15:22, Jonathan Cameron wrote:
-> > On Tue, 27 Mar 2018 09:42:40 +0200
-> > Peter Rosin <peda@axentia.se> wrote:  
-> >> On 2018-03-24 15:03, Jonathan Cameron wrote:  
-> >>> On Mon, 19 Mar 2018 18:02:46 +0100
-> >>> Peter Rosin <peda@axentia.se> wrote:  
-> >>>> +	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
-> >>>> +		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);    
-> >>> if the parent doesn't support RAW, is there a lot of point in carrying on?    
-> >>
-> >> Nope, better to error out I suppose. But I'm not familiar with channels
-> >> without RAW, what alternatives are there anyway?  
-> > 
-> > Potentially _PROCESSED though that will need somewhat different handling.
-> > A nasty trick for that might be to map it to RAW and then have the SCALE
-> > reflect the divider circuit scale only.  
-> 
-> Hmm, I think a lot of things might assume RAW to be a pure integer, and
-> maybe they are even correct to do so? So yes, that seems nasty indeed...
-Seems unlikely to occur often as ADCs are mostly linear, but you never
-know...  We'll figure it out when it happens.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> 
-> > It's perfectly possible to have channels with neither _RAW or _PROCESSED
-> > but I suspect we don't care about them here.
-> > 
-> > There might be an application that needs to do buffered data flows in the
-> > long run, but we can figure out how to do that when one exists.
-> > 
-> > It won't be a huge amount more than you have here, though we might need
-> > a trigger pass through as well to allow you to set the trigger for
-> > the front end and having it automatically applied to the backend.  
-> 
-> Yes, this is the same for the iio-mux. I don't need it, I in fact need
-> very little bandwidth for these things. Someone with an itch will have
-> to fill in the buffer/trigger handling...
-Absolutely!
+Gr{oetje,eeting}s,
 
-> 
-> Cheers,
-> Peter
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
