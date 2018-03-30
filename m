@@ -1,256 +1,66 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v3 2/2] drivers: remove force dma flag from buses
-Date: Fri, 30 Mar 2018 13:24:45 +0530
-Message-ID: <1522396485-10248-2-git-send-email-nipun.gupta@nxp.com>
-References: <1520868292-2479-1-git-send-email-nipun.gupta@nxp.com>
-	<1522396485-10248-1-git-send-email-nipun.gupta@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 1/8] DT: mfd: renesas,rzn1-sysctrl: document RZ/N1
+ sysctrl node
+Date: Fri, 30 Mar 2018 09:58:31 +0200
+Message-ID: <CAMuHMdXeLNBfBaW32-UK9gx_HFrqEA7ChDPp8mtQCHD0PiJ8Ag@mail.gmail.com>
+References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com> <1522309629-10152-2-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1522396485-10248-1-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: robin.murphy-5wv7dgnIgG8@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msuchanek-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522309629-10152-2-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With each bus implementing its own DMA configuration callback,
-there is no need for bus to explicitly have force_dma in its
-global structure. This patch modifies of_dma_configure API to
-accept an input parameter which specifies if implicit DMA
-configuration is required even when it is not described by the
-firmware.
+Hi Michel,
 
-Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
----
-Changes in v2:
-  - This is a new change suggested by Robin and Christoph
-    and is added to the series.
+On Thu, Mar 29, 2018 at 9:46 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> The Renesas RZ/N1 Family (Part #R9A06G0xx) has a multi-function
+> system controller. This documents the node used to encapsulate
+> it's sub drivers.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
-Changes in v3:
-  - Rebase and changes corresponding to the changes in patch 1/2
+Thanks for your patch!
 
- drivers/amba/bus.c            | 1 -
- drivers/base/platform.c       | 3 +--
- drivers/bcma/main.c           | 2 +-
- drivers/dma/qcom/hidma_mgmt.c | 2 +-
- drivers/gpu/host1x/bus.c      | 5 ++---
- drivers/of/device.c           | 6 ++++--
- drivers/of/of_reserved_mem.c  | 2 +-
- drivers/pci/pci-driver.c      | 3 +--
- include/linux/device.h        | 4 ----
- include/linux/of_device.h     | 8 ++++++--
- 10 files changed, 17 insertions(+), 19 deletions(-)
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+> @@ -0,0 +1,19 @@
+> +DT bindings for the Renesas RZ/N1 System Controller
+> +
+> +== System Controller Node ==
+> +
+> +The system controller node currently only hosts a single sub-node to handle
+> +the rebooting of the CPU. Eventually it will host the clock driver, SMP
+> +start handler, watchdog etc.
+> +
+> +See renesas,rzn1-reboot.txt for further details.
+> +
+> +Bindings:
+> ++ Required:
+> +       compatible = "renesas,rzn1-sysctrl", "syscon", "simple-mfd";
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 867dc2b..abe73c4 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -199,7 +199,6 @@ struct bus_type amba_bustype = {
- 	.uevent		= amba_uevent,
- 	.dma_configure	= platform_dma_configure,
- 	.pm		= &amba_pm,
--	.force_dma	= true,
- };
- 
- static int __init amba_init(void)
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 72fdbf6..cfbc569 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1136,7 +1136,7 @@ int platform_dma_configure(struct device *dev)
- 	int ret = 0;
- 
- 	if (dev->of_node) {
--		ret = of_dma_configure(dev, dev->of_node);
-+		ret = of_dma_configure(dev, dev->of_node, true);
- 	} else if (has_acpi_companion(dev)) {
- 		attr = acpi_get_dma_attr(to_acpi_device_node(dev->fwnode));
- 		if (attr != DEV_DMA_NOT_SUPPORTED)
-@@ -1159,7 +1159,6 @@ struct bus_type platform_bus_type = {
- 	.uevent		= platform_uevent,
- 	.dma_configure	= platform_dma_configure,
- 	.pm		= &platform_dev_pm_ops,
--	.force_dma	= true,
- };
- EXPORT_SYMBOL_GPL(platform_bus_type);
- 
-diff --git a/drivers/bcma/main.c b/drivers/bcma/main.c
-index e6986c7..fc1f4ac 100644
---- a/drivers/bcma/main.c
-+++ b/drivers/bcma/main.c
-@@ -207,7 +207,7 @@ static void bcma_of_fill_device(struct device *parent,
- 
- 	core->irq = bcma_of_get_irq(parent, core, 0);
- 
--	of_dma_configure(&core->dev, node);
-+	of_dma_configure(&core->dev, node, false);
- }
- 
- unsigned int bcma_core_irq(struct bcma_device *core, int num)
-diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
-index 000c7019..d64edeb 100644
---- a/drivers/dma/qcom/hidma_mgmt.c
-+++ b/drivers/dma/qcom/hidma_mgmt.c
-@@ -398,7 +398,7 @@ static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
- 		}
- 		of_node_get(child);
- 		new_pdev->dev.of_node = child;
--		of_dma_configure(&new_pdev->dev, child);
-+		of_dma_configure(&new_pdev->dev, child, true);
- 		/*
- 		 * It is assumed that calling of_msi_configure is safe on
- 		 * platforms with or without MSI support.
-diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-index a9ec99d..b39c1e9 100644
---- a/drivers/gpu/host1x/bus.c
-+++ b/drivers/gpu/host1x/bus.c
-@@ -317,7 +317,7 @@ static int host1x_device_match(struct device *dev, struct device_driver *drv)
- static int host1x_dma_configure(struct device *dev)
- {
- 	if (dev->of_node)
--		return of_dma_configure(dev, dev->of_node);
-+		return of_dma_configure(dev, dev->of_node, true);
- 	return 0;
- }
- 
-@@ -335,7 +335,6 @@ struct bus_type host1x_bus_type = {
- 	.match = host1x_device_match,
- 	.dma_configure	= host1x_dma_configure,
- 	.pm = &host1x_device_pm_ops,
--	.force_dma = true,
- };
- 
- static void __host1x_device_del(struct host1x_device *device)
-@@ -424,7 +423,7 @@ static int host1x_device_add(struct host1x *host1x,
- 	device->dev.bus = &host1x_bus_type;
- 	device->dev.parent = host1x->dev;
- 
--	of_dma_configure(&device->dev, host1x->dev->of_node);
-+	of_dma_configure(&device->dev, host1x->dev->of_node, true);
- 
- 	err = host1x_device_parse_dt(device, driver);
- 	if (err < 0) {
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 064c818..33d8551 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -76,6 +76,8 @@ int of_device_add(struct platform_device *ofdev)
-  * of_dma_configure - Setup DMA configuration
-  * @dev:	Device to apply DMA configuration
-  * @np:		Pointer to OF node having DMA configuration
-+ * @force_dma:  Whether device is to be set up by of_dma_configure() even if
-+ *		DMA capability is not explicitly described by firmware.
-  *
-  * Try to get devices's DMA configuration from DT and update it
-  * accordingly.
-@@ -84,7 +86,7 @@ int of_device_add(struct platform_device *ofdev)
-  * can use a platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE events
-  * to fix up DMA configuration.
-  */
--int of_dma_configure(struct device *dev, struct device_node *np)
-+int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
- {
- 	u64 dma_addr, paddr, size = 0;
- 	int ret;
-@@ -100,7 +102,7 @@ int of_dma_configure(struct device *dev, struct device_node *np)
- 		 * DMA configuration regardless of whether "dma-ranges" is
- 		 * correctly specified or not.
- 		 */
--		if (!dev->bus->force_dma)
-+		if (!force_dma)
- 			return ret == -ENODEV ? 0 : ret;
- 
- 		dma_addr = offset = 0;
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 9a4f4246..895c83e 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -353,7 +353,7 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
- 		/* ensure that dma_ops is set for virtual devices
- 		 * using reserved memory
- 		 */
--		of_dma_configure(dev, np);
-+		of_dma_configure(dev, np, true);
- 
- 		dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
- 	} else {
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 78e507f..27c832f 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1540,7 +1540,7 @@ static int pci_dma_configure(struct device *dev)
- 
- 	if (IS_ENABLED(CONFIG_OF) && bridge->parent &&
- 	    bridge->parent->of_node) {
--		ret = of_dma_configure(dev, bridge->parent->of_node);
-+		ret = of_dma_configure(dev, bridge->parent->of_node, true);
- 	} else if (has_acpi_companion(bridge)) {
- 		struct acpi_device *adev = to_acpi_device_node(bridge->fwnode);
- 		enum dev_dma_attr attr = acpi_get_dma_attr(adev);
-@@ -1566,7 +1566,6 @@ struct bus_type pci_bus_type = {
- 	.pm		= PCI_PM_OPS_PTR,
- 	.num_vf		= pci_bus_num_vf,
- 	.dma_configure	= pci_dma_configure,
--	.force_dma	= true,
- };
- EXPORT_SYMBOL(pci_bus_type);
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 1832d90..92c530e 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -98,8 +98,6 @@ extern int __must_check bus_create_file(struct bus_type *,
-  * @p:		The private data of the driver core, only the driver core can
-  *		touch this.
-  * @lock_key:	Lock class key for use by the lock validator
-- * @force_dma:	Assume devices on this bus should be set up by dma_configure()
-- * 		even if DMA capability is not explicitly described by firmware.
-  *
-  * A bus is a channel between the processor and one or more devices. For the
-  * purposes of the device model, all devices are connected via a bus, even if
-@@ -140,8 +138,6 @@ struct bus_type {
- 
- 	struct subsys_private *p;
- 	struct lock_class_key lock_key;
--
--	bool force_dma;
- };
- 
- extern int __must_check bus_register(struct bus_type *bus);
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 8da5a1b..165fd30 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -55,7 +55,9 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
- 	return of_node_get(cpu_dev->of_node);
- }
- 
--int of_dma_configure(struct device *dev, struct device_node *np);
-+int of_dma_configure(struct device *dev,
-+		     struct device_node *np,
-+		     bool force_dma);
- void of_dma_deconfigure(struct device *dev);
- #else /* CONFIG_OF */
- 
-@@ -105,7 +107,9 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
- 	return NULL;
- }
- 
--static inline int of_dma_configure(struct device *dev, struct device_node *np)
-+static inline int of_dma_configure(struct device *dev,
-+				   struct device_node *np,
-+				   bool force_dma)
- {
- 	return 0;
- }
+You should list the supported SoC-specific compatible values here.
+
+> +
+> +Example:
+> +       sysctrl: sysctrl@4000c000 {
+> +               compatible = "renesas,rzn1-sysctrl", "syscon", "simple-mfd";
+
+Missing SoC-specific compatible value.
+
+> +               reg = <0x4000c000 0x1000>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
