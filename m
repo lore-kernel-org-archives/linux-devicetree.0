@@ -1,23 +1,43 @@
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: powerpc: wii.dts: Add drive slot LED
-Date: Sun,  1 Apr 2018 01:03:59 +1100 (AEDT)
-Message-ID: <40D0b40XzBz9s1S@ozlabs.org>
-References: <20180317150617.26913-1-j.neuschaefer@gmx.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180317150617.26913-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>
+From: Mark Kettenis <kettenis@openbsd.org>
+Subject: [PATCH] arm64: dts: marvell: mark CP110 ahci as dma-coherent
+Date: Sat, 31 Mar 2018 16:44:06 +0200
+Message-ID: <20180331144406.23030-1-kettenis@openbsd.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Kettenis <kettenis@openbsd.org>, andrew@lunn.ch, gregory.clement@bootlin.com, jason@lakedaemon.net, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-03-17 at 15:06:17 UTC, =?utf-8?q?Jonathan_Neusch=C3=A4fer?= wrote:
-> The Wii has a blue LED in the disk drive slot, which is controlled via a
-> GPIO line. Add this LED to wii.dts, and mark it as a panic-indicator.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+The hardware is clearly DMA coherent and not marking it as such leads
+to cache coherency problems, at least with the OpenBSD kernel.
 
-Applied to powerpc next, thanks.
+Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+---
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://git.kernel.org/powerpc/c/041413b88d6e9c66582d0a38d0e82f
-
-cheers
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index a8af4136dbe7..7e9177ef7b7d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -231,6 +231,7 @@
+ 			compatible = "marvell,armada-8k-ahci",
+ 			"generic-ahci";
+ 			reg = <0x540000 0x30000>;
++			dma-coherent;
+ 			interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&CP110_LABEL(clk) 1 15>;
+ 			status = "disabled";
+-- 
+2.16.2
