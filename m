@@ -1,143 +1,95 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: wrapper: add
- io-channel-unit-converter
-Date: Sat, 31 Mar 2018 00:38:07 +0200
-Message-ID: <96e221e1-9f6f-40cc-1b80-6d33acfdb933@axentia.se>
-References: <20180319170246.26830-1-peda@axentia.se>
- <20180319170246.26830-3-peda@axentia.se>
- <20180326222326.sxdeawy5x5bjkla4@rob-hp-laptop>
- <986a7404-e157-6a1b-0610-07d1e127465f@axentia.se>
- <CAL_JsqJ3RZoMX+Q5boK-w3uHc=qgPCye7esXxJuwQcMM0HPLNw@mail.gmail.com>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v4 07/13] staging: typec: tcpci: register port before
+ request irq
+Date: Sat, 31 Mar 2018 03:09:44 +0000
+Message-ID: <AM0PR0402MB3908D9613B00EA703D2B542A89A00@AM0PR0402MB3908.eurprd04.prod.outlook.com>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-8-git-send-email-jun.li@nxp.com>
+ <20180329105212.lp5oydu4uejeo4h4@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ3RZoMX+Q5boK-w3uHc=qgPCye7esXxJuwQcMM0HPLNw@mail.gmail.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180329105212.lp5oydu4uejeo4h4@mwanda>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, Peter Chen <peter.chen@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-29 15:55, Rob Herring wrote:
-> On Tue, Mar 27, 2018 at 3:01 AM, Peter Rosin <peda@axentia.se> wrote:
->> On 2018-03-27 00:23, Rob Herring wrote:
->>> On Mon, Mar 19, 2018 at 06:02:45PM +0100, Peter Rosin wrote:
->>>> Allow linear scaling and modification of the type of an io-channel.
->>>>
->>>> When an ADC channel measures the midpoint of a voltage divider, the
->>>> interesting voltage is often the voltage over the full resistance
->>>> of the divider. Likewise, measuring the voltage over a resistor is
->>>> often a way to get to the current through it.
->>>>
->>>> This binding allows description of such hardware which is external
->>>> to the ADC.
->>>>
->>>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>>> ---
->>>>  .../iio/wrapper/io-channel-unit-converter.txt      | 84 ++++++++++++++++++++++
->>>>  MAINTAINERS                                        |  6 ++
->>>>  2 files changed, 90 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->>>> new file mode 100644
->>>> index 000000000000..23af661abe32
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/wrapper/io-channel-unit-converter.txt
->>>> @@ -0,0 +1,84 @@
->>>> +I/O channel unit converter bindings
->>>> +
->>>> +Allow linear scaling and modification of the type of an io-channel.
->>>> +
->>>> +When an ADC channel measures the midpoint of a voltage divider, the
->>>> +interesting voltage is often the voltage over the full resistance
->>>> +of the divider. Likewise, measuring the voltage over a resistor is
->>>> +often a way to get to the current through it.
->>>> +
->>>> +Required properties:
->>>> +- compatible : "io-channel-unit-converter"
->>>
->>> Would this apply to something besides ADCs?
->>
->> Not that I can think of. At the moment.
->>
->>>> +- io-channels : Channel node of the parent channel.
->>>> +- io-channel-names : Should be "parent".
->>>> +
->>>> +Optional properties:
->>>> +- numerator : The parent channel scale is multiplied by this value (default 1).
->>>> +- denominator : The parent channel scale is divided by this value (default 1).
->>>> +- type : The type of the wrapped channel is modified to this type. The default
->>>> +     is to use the same type as the parent channel. Recognized types are:
->>>> +            "voltage"
->>>> +            "current"
->>>
->>> This seems overly complicated for just describing a couple of resistors
->>> on an ADC. OTOH, keeping the ADC node and what's attached to the ADC
->>> separate
->>>
->>> Perhaps the type should be part of the compatible. For example, if you
->>> have a current measurement resistor/circuit, then the compatible should
->>> be based on that.
->>
->> Is a compatible like "current-sense-circuit" too long(ish)?
-> 
-> No, that's fine.
-> 
->> Is a vendor prefix absolutely required?
-> 
-> No, it can be common.
-> 
->> Sure, I can use "axentia,"
->> because we "implemented" the circuit this time, but it seems like
->> the list can grow very long if we should add every vendor that
->> may use something like this? Something more generic would be good
->> for something as simple as this IMHO.
->>
->> I propose the compatible "voltage-divider" for the other example,
->> but I have the same issue with the vendor prefix. Even more so
->> in this case.
-> 
-> "voltage-divider" doesn't really say what the purpose is.
-
-No, but it says what it *is*, which is pretty much what the compatible
-is all about? If you have, I don't know, let's pick some regulator, you
-don't expect the compatible to give any details of the purpose. Not
-other than regulating of course. But a voltage divider pretty much divides
-a voltage, much like a regulator regulates, and that's it. The node name
-should be what hints at the purpose, no?
-
->>
->> Then the above type can be inferred from the compatible. I suppose
->> I should write the above two bindings as two separate files?
-> 
-> One is fine if the only difference is the compatible.
-> 
->>>> +
->>>> +Example 1:
->>>> +The system voltage is circa 12V, but divided down with a 22/200
->>>> +voltage divider to adjust it to the ADC range.
->>>> +
->>>> +SYSV        ADC       GND
->>>> +  +          +         +
->>>> +  |  .-----. | .----.  |
->>>> +  '--| 200 |-+-| 22 |--'
->>>> +     '-----'   '----'
->>>> +
->>>> +sysv {
->>>> +    compatible = "io-channel-unit-converter";
->>>> +    io-channles = <&maxadc 1>;
->>>> +    io-channel-names = "parent";
->>>
->>> parent doesn't seem to describe something about the h/w.
->>
->> Extrapolating from your first question, you are thinking "adc", right?
-> 
-> I don't really have any suggestion. With only 1 channel, there's not
-> really much point to having a name at all.
-
-Right, I'm ditching the -names line.
-
-Cheers,
-Peter
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuIENhcnBlbnRlciBb
+bWFpbHRvOmRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbV0NCj4gU2VudDogMjAxOMTqM9TCMjnI1SAx
+ODo1Mg0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGhlaWtraS5rcm9nZXJ1c0BsaW51
+eC5pbnRlbC5jb207IGxpbnV4QHJvZWNrLXVzLm5ldDsNCj4gZGV2ZWxAZHJpdmVyZGV2Lm9zdW9z
+bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBQZXRlciBDaGVuDQo+IDxwZXRlci5j
+aGVuQG54cC5jb20+OyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBhLmhhamRhQHNhbXN1bmcu
+Y29tOw0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgc2h1ZmFuX2xlZUByaWNo
+dGVrLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA3LzEzXSBzdGFnaW5nOiB0eXBlYzog
+dGNwY2k6IHJlZ2lzdGVyIHBvcnQgYmVmb3JlIHJlcXVlc3QNCj4gaXJxDQo+IA0KPiBPbiBUaHUs
+IE1hciAyOSwgMjAxOCBhdCAxMjowNjoxMkFNICswODAwLCBMaSBKdW4gd3JvdGU6DQo+ID4gV2l0
+aCB0aGF0IHdlIGNhbiBjbGVhciBhbnkgcGVuZGluZyBldmVudHMgYW5kIHRoZSBwb3J0IGlzIHJl
+Z2lzdGVyZWQNCj4gPiBzbyBkcml2ZXIgY2FuIGJlIHJlYWR5IHRvIGhhbmRsZSB0eXBlYyBldmVu
+dHMgb25jZSB3ZSByZXF1ZXN0IGlycS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBldGVyIENo
+ZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5s
+aUBueHAuY29tPg0KPiANCj4gVGhlc2Ugc2lnbiBvZmZzIGFyZW4ndCBjbGVhci4NCj4gDQo+IFNp
+Z24gb2ZmcyBtZWFuIHRoYXQgeW91IGhhbmRsZWQgdGhlIHBhdGNoIGJ1dCBkaWRuJ3QgaW5jbHVk
+ZSBhbnkgb2YgU0NPJ3MNCj4gY29weXJpZ2h0ZWQgVU5JWCBjb2RlIGludG8gaXQuICBOb3JtYWxs
+eSB0aGV5J3JlIGluIHRoZSBvcmRlciBvZiB3aG8gdG91Y2hlZA0KPiB0aGUgY29kZS4gIFNvIFBl
+dGVyIHRvdWNoZWQgdGhlIGNvZGUgZmlyc3QuICBTaG91bGQgaGUgZ2V0IGF1dGhvcnNoaXAgY3Jl
+ZGl0Pw0KDQpJIHdpbGwgY2hhbmdlIHRoZSBwYXRjaCBhdXRob3IgdG8gYmUgUGV0ZXIgYXMgaGUg
+dG91Y2hlZCB0aGUgY29kZSBmaXJzdC4NCg0KPiBIb3cgZGlkIGhlIHRvdWNoIHRoZSBjb2RlIGZp
+cnN0IGlmIGhlIGRpZG4ndCB3cml0ZSB0aGUgY29kZT8gIEl0IGRvZXNuJ3QgbWFrZQ0KPiBzZW5z
+ZS4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIHwgMTUg
+KysrKysrKystLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDcg
+ZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3R5cGVj
+L3RjcGNpLmMNCj4gPiBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIGluZGV4IDRmN2Fk
+MTAuLjllMDAxNGIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zdGFnaW5nL3R5cGVjL3RjcGNp
+LmMNCj4gPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYw0KPiA+IEBAIC01Mzcs
+MjUgKzUzNywyNiBAQCBzdGF0aWMgaW50IHRjcGNpX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
+bGllbnQsDQo+ID4gIAlpZiAoSVNfRVJSKGNoaXAtPmRhdGEucmVnbWFwKSkNCj4gPiAgCQlyZXR1
+cm4gUFRSX0VSUihjaGlwLT5kYXRhLnJlZ21hcCk7DQo+ID4NCj4gPiArCWkyY19zZXRfY2xpZW50
+ZGF0YShjbGllbnQsIGNoaXApOw0KPiA+ICsNCj4gPiAgCS8qIERpc2FibGUgY2hpcCBpbnRlcnJ1
+cHRzIGJlZm9yZSByZXF1ZXN0aW5nIGlycSAqLw0KPiA+ICAJZXJyID0gcmVnbWFwX3Jhd193cml0
+ZShjaGlwLT5kYXRhLnJlZ21hcCwgVENQQ19BTEVSVF9NQVNLLCAmdmFsLA0KPiA+ICAJCQkgICAg
+ICAgc2l6ZW9mKHUxNikpOw0KPiA+ICAJaWYgKGVyciA8IDApDQo+ID4gIAkJcmV0dXJuIGVycjsN
+Cj4gPg0KPiA+ICsJY2hpcC0+dGNwY2kgPSB0Y3BjaV9yZWdpc3Rlcl9wb3J0KCZjbGllbnQtPmRl
+diwgJmNoaXAtPmRhdGEpOw0KPiA+ICsJaWYgKFBUUl9FUlJfT1JfWkVSTyhjaGlwLT50Y3BjaSkp
+DQo+ID4gKwkJcmV0dXJuIFBUUl9FUlIoY2hpcC0+dGNwY2kpOw0KPiANCj4gV2hlbiBhIGZ1bmN0
+aW9uIHJldHVybnMgYm90aCBlcnJvciBwb2ludGVycyBhbmQgTlVMTCB0aGF0IG1lYW5zIHRoYXQg
+TlVMTCBpcyBhDQo+IHNlY2lhbCBjYXNlIG9mIHN1Y2Nlc3MuICBMaWtlIGZvciBleGFtcGxlOg0K
+PiANCj4gCXAtPm15X2ZlYXR1cmUgPSBnZXRfb3B0aW9uYWxfZmVhdHVyZSgpOw0KPiANCj4gSWYg
+aXQgcmV0dXJucyBOVUxMIHRoYXQgbWVhbnMgdGhlIG9wdGlvbmFsIGZlYXR1cmUgaXNuJ3QgdGhl
+cmUsIGJ1dCBpdCdzIGZpbmUgYmVjYXVzZQ0KPiBpdCdzIG9wdGlvbmFsLiAgQnV0IGlmIGl0IHJl
+dHVybnMgYW4gZXJyb3IgcG9pbnRlciB0aGF0IG1lYW5zIHRoZSBmZWF0dXJlIGlzIHRoZXJlDQo+
+IGJ1dCB0aGUgaGFyZHdhcmUgaXMgYnVnZ3kgb3Igc29tZXRoaW5nIHNvIHdlIHNob3VsZG4ndCBj
+b250aW51ZS4NCj4gDQo+IElmIHlvdSByZXR1cm4gUFRSX0VSUihOVUxMKSB0aGF0IG1lYW5zIHN1
+Y2Nlc3MuDQo+IA0KPiBJIGRvbid0IHRoaW5rIHRoaXMgY29kZSBtYWtlcyBzZW5zZSBqdXN0IGZy
+b20gbG9va2luZyBhdCBpdCBhbmQgYWxzbyB3aGVuIEkNCj4gY2hlY2tlZCB0Y3BjaV9yZWdpc3Rl
+cl9wb3J0KCkgZG9lc24ndCByZXR1cm4gTlVMTC4NCg0KVGhpcyBwYXRjaCBpcyB0byBjaGFuZ2Ug
+dGhlIHNlcXVlbmNlIG9mIHJlZ2lzdGVyIHBvcnQgYW5kIHJlcXVlc3QgaXJxLA0KaWYgZXJyb3Ig
+Y29kZSBjaGVja2luZyBvZiBvcmlnaW5hbCBjb2RlIGhhcyB0aGUgcHJvYmxlbSwgSSB0aGluayB0
+aGF0DQpzaG91bGQgYmUgYW5vdGhlciBwYXRjaCB0byBmaXggaXQsIEkgY2FuIGRvIHRoYXQgbGF0
+ZXIuDQoNCj4gDQo+IA0KPiANCj4gPiArDQo+ID4gIAllcnIgPSBkZXZtX3JlcXVlc3RfdGhyZWFk
+ZWRfaXJxKCZjbGllbnQtPmRldiwgY2xpZW50LT5pcnEsIE5VTEwsDQo+ID4gIAkJCQkJX3RjcGNp
+X2lycSwNCj4gPiAgCQkJCQlJUlFGX09ORVNIT1QgfCBJUlFGX1RSSUdHRVJfTE9XLA0KPiA+ICAJ
+CQkJCWRldl9uYW1lKCZjbGllbnQtPmRldiksIGNoaXApOw0KPiA+ICAJaWYgKGVyciA8IDApDQo+
+ID4gLQkJcmV0dXJuIGVycjsNCj4gPiArCQl0Y3BjaV91bnJlZ2lzdGVyX3BvcnQoY2hpcC0+dGNw
+Y2kpOw0KPiANCj4gQ2FuIHlvdSBwdXQgdGhlICJyZXR1cm4gZXJyOyIgYmFjaywgYmVjYXVzZSB0
+aGF0J3MgYmV0dGVyIHN0eWxlLiAgSXQncyBiZXR0ZXIgdG8NCj4ga2VlcCB0aGUgZXJyb3IgcGF0
+aCBhbmQgc3VjY2VzcyBwYXRoIHNlcGFyYXRlIGlmIHlvdSBjYW4uDQo+IA0KPiAJaWYgKGVyciA8
+IDApIHsNCj4gCQl0Y3BjaV91bnJlZ2lzdGVyX3BvcnQoY2hpcC0+dGNwY2kpOw0KPiAJCXJldHVy
+biBlcnI7DQo+IAl9DQo+IA0KPiAJcmV0dXJuIDA7DQo+IA0KDQpPSywgSSB3aWxsIGNoYW5nZSBh
+cyB5b3Ugc3VnZ2VzdGVkLCB0aGFua3MuDQoNCkxpIEp1bg0KPiANCj4gcmVnYXJkcywNCj4gZGFu
+IGNhcnBlbnRlcg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDov
+L2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVy
+ZGV2LWRldmVsCg==
