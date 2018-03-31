@@ -1,76 +1,37 @@
-From: Haiyue Wang <haiyue.wang@linux.intel.com>
-Subject: [PATCH dts/arm/aspeed-g5 v1] ARM: dts: aspeed-g5: Add IPMI KCS nodes for SMS and SMM mode
-Date: Sat, 31 Mar 2018 15:46:38 +0800
-Message-ID: <1522482398-6248-1-git-send-email-haiyue.wang@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v4 07/13] staging: typec: tcpci: register port before
+ request irq
+Date: Sat, 31 Mar 2018 11:01:57 +0300
+Message-ID: <20180331080157.p43cejithiyiutix@mwanda>
+References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
+ <1522253178-32414-8-git-send-email-jun.li@nxp.com>
+ <20180329105212.lp5oydu4uejeo4h4@mwanda>
+ <AM0PR0402MB3908D9613B00EA703D2B542A89A00@AM0PR0402MB3908.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: Haiyue Wang <haiyue.wang@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR0402MB3908D9613B00EA703D2B542A89A00@AM0PR0402MB3908.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jun Li <jun.li@nxp.com>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, Peter Chen <peter.chen@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
 List-Id: devicetree@vger.kernel.org
 
-The IPMI KCS device part of the LPC interface and is used for
-communication with the host processor.
+On Sat, Mar 31, 2018 at 03:09:44AM +0000, Jun Li wrote:
+> This patch is to change the sequence of register port and request irq,
+> if error code checking of original code has the problem, I think that
+> should be another patch to fix it, I can do that later.
 
-Keyboard Controller Style Interfaces:
-The KCS channel number is assigned by AST_usrGuide_KCS.pdf
-Name          | Use          | Address       | KCS Channel |
-SMS Interface | SMS          | 0CA2h – 0CA3h | kcs3        |
-SMM Interface | SMI handling | 0CA4h – 0CA5h | kcs4        |
+Fair enough.  That's reasonable.  Thanks!
 
-Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
----
-The kcs_bmc_aspeed driver is in linux-next now:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/char/ipmi/kcs_bmc_aspeed.c?h=next-20180329
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 17ee0fa3..8d6c4af 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -268,8 +268,22 @@
- 				ranges = <0x0 0x1e789000 0x1000>;
- 
- 				lpc_bmc: lpc-bmc@0 {
--					compatible = "aspeed,ast2500-lpc-bmc";
-+					compatible = "aspeed,ast2500-lpc-bmc", "simple-mfd", "syscon";
- 					reg = <0x0 0x80>;
-+					reg-io-width = <4>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0x0 0x0 0x80>;
-+
-+					kcs3: kcs3@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						reg = <0x0 0x80>;
-+						interrupts = <8>;
-+						kcs_chan = <3>;
-+						kcs_addr = <0xca2>;
-+						status = "disabled";
-+					};
- 				};
- 
- 				lpc_host: lpc-host@80 {
-@@ -281,6 +295,15 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
-+					kcs4: kcs4@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						reg = <0x0 0xa0>;
-+						interrupts = <8>;
-+						kcs_chan = <4>;
-+						kcs_addr = <0xca4>;
-+						status = "disabled";
-+					};
-+
- 					lpc_ctrl: lpc-ctrl@0 {
- 						compatible = "aspeed,ast2500-lpc-ctrl";
- 						reg = <0x0 0x80>;
--- 
-2.7.4
+regards,
+dan carpenter
