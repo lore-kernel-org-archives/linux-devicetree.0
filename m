@@ -1,81 +1,76 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v4 11/13] staging: typec: tcpci: keep the not connecting
- cc line open
-Date: Sat, 31 Mar 2018 04:49:03 +0000
-Message-ID: <AM0PR0402MB3908158A02FE1354BAF57EC189A00@AM0PR0402MB3908.eurprd04.prod.outlook.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-12-git-send-email-jun.li@nxp.com>
- <0533e75a-e74d-8bd1-7188-3a858d21ce3a@roeck-us.net>
+From: Haiyue Wang <haiyue.wang@linux.intel.com>
+Subject: [PATCH dts/arm/aspeed-g5 v1] ARM: dts: aspeed-g5: Add IPMI KCS nodes for SMS and SMM mode
+Date: Sat, 31 Mar 2018 15:46:38 +0800
+Message-ID: <1522482398-6248-1-git-send-email-haiyue.wang@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <0533e75a-e74d-8bd1-7188-3a858d21ce3a@roeck-us.net>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Guenter Roeck <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc: Haiyue Wang <haiyue.wang@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBb
-bWFpbHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgR3VlbnRlciBSb2Vjaw0KPiBT
-ZW50OiAyMDE45bm0M+aciDMw5pelIDIzOjE2DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29t
-Pjsgcm9iaCtkdEBrZXJuZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gaGVp
-a2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbQ0KPiBDYzogYS5oYWpkYUBzYW1zdW5nLmNvbTsg
-c2h1ZmFuX2xlZUByaWNodGVrLmNvbTsgUGV0ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29t
-PjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5v
-cmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+Ow0KPiBkZXZlbEBkcml2ZXJkZXYu
-b3N1b3NsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDExLzEzXSBzdGFnaW5nOiB0eXBl
-YzogdGNwY2k6IGtlZXAgdGhlIG5vdCBjb25uZWN0aW5nIGNjDQo+IGxpbmUgb3Blbg0KPiANCj4g
-T24gMDMvMjgvMjAxOCAwOTowNiBBTSwgTGkgSnVuIHdyb3RlOg0KPiA+IFdoaWxlIHNldCBwb2xh
-cml0eSwgd2Ugc2hvdWxkIGtlZXAgdGhlIG5vdCBjb25uZWN0aW5nIGNjIGxpbmUgdG8gYmUNCj4g
-PiBvcGVuLg0KPiA+DQo+IA0KPiBUaGUgbW9yZSBJIGxvb2sgYXQgdGhpcyBjb2RlLCB0aGUgbW9y
-ZSBJIGFtIGNvbmZ1c2VkIGJ5IGl0Lg0KPiANCj4gVGhlIG9yaWdpbmFsIGNvZGUgZG9lc24ndCB0
-b3VjaCB0aGUgQ0MgbGluZXMuIFRoaXMgZnVuY3Rpb24gb25seSBzZXRzIHRoZSBwb2xhcml0eS4N
-Cj4gSXMgaXQgcmVhbGx5IGFwcHJvcHJpYXRlIHRvIHRvdWNoIHRoZSBDQyBsaW5lcyBpbiB0aGUg
-c2FtZSBmdW5jdGlvbiA/DQo+IA0KDQpZZXMsIEkgZGlkbid0IGZpbmQgYSBtb3JlIHByb3BlciBw
-bGFjZSB0byBkbyB0aGlzLCBlaXRoZXIgSSBjaGFuZ2UgdGhlDQp0Y3BjLT5zZXRfY2MoKSBpbnRl
-cmZhY2Ugd2l0aCBvcmllbnRhdGlvbi9wb2xhcml0eSBwYXJhbWV0ZXIgdG8ga25vdw0Kd2hpY2gg
-Y2MgbGluZSBJIHNob3VsZCBrZWVwIGl0IG9wZW4sIG9yIGRvIGl0IGluIGxvdyBsZXZlbCBkcml2
-ZXIgbGlrZQ0KdGhpcywgZG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb24gaG93IHRoaXMgY2FuIGJl
-IGRvbmU/KEkgZ3Vlc3MNCmJvdGggY2MgbGluZXMgaGF2ZSB0aGUgc2FtZSBzdGF0ZSBhZnRlciBh
-dHRhY2hlZCB3aXRoIGN1cnJlbnQgY29kZQ0Kb2YgYWxsIHRjcG0gdXNlcnMsIGJ1dCB0aGlzIHNo
-b3VsZCBiZSByZXNvbHZlZCBhcyBpdCdzIGJyZWFrIFBEIGNvbXBsaWFuY2UNCnRlc3QpIA0KDQp0
-aGFua3MNCkxpIEp1bg0KDQo+IEd1ZW50ZXINCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVu
-IDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvc3RhZ2luZy90eXBlYy90
-Y3BjaS5jIHwgMTggKysrKysrKysrKysrKystLS0tDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMTQg
-aW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYw0KPiA+IGIvZHJpdmVycy9zdGFnaW5nL3R5cGVjL3Rj
-cGNpLmMgaW5kZXggZDViNGU0ZS4uYjU4YmQ1OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3N0
-YWdpbmcvdHlwZWMvdGNwY2kuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3Bj
-aS5jDQo+ID4gQEAgLTE4NSwxNSArMTg1LDI1IEBAIHN0YXRpYyBpbnQgdGNwY2lfc2V0X3BvbGFy
-aXR5KHN0cnVjdCB0Y3BjX2RldiAqdGNwYywNCj4gPiAgIAkJCSAgICAgIGVudW0gdHlwZWNfY2Nf
-cG9sYXJpdHkgcG9sYXJpdHkpDQo+ID4gICB7DQo+ID4gICAJc3RydWN0IHRjcGNpICp0Y3BjaSA9
-IHRjcGNfdG9fdGNwY2kodGNwYyk7DQo+ID4gKwl1bnNpZ25lZCBpbnQgcmVnOw0KPiA+ICAgCWlu
-dCByZXQ7DQo+ID4NCj4gPiAtCXJldCA9IHJlZ21hcF93cml0ZSh0Y3BjaS0+cmVnbWFwLCBUQ1BD
-X1RDUENfQ1RSTCwNCj4gPiAtCQkJICAgKHBvbGFyaXR5ID09IFRZUEVDX1BPTEFSSVRZX0NDMikg
-Pw0KPiA+IC0JCQkgICBUQ1BDX1RDUENfQ1RSTF9PUklFTlRBVElPTiA6IDApOw0KPiA+ICsJLyog
-S2VlcCB0aGUgZGlzY29ubmVjdCBjYyBsaW5lIG9wZW4gKi8NCj4gPiArCXJldCA9IHJlZ21hcF9y
-ZWFkKHRjcGNpLT5yZWdtYXAsIFRDUENfUk9MRV9DVFJMLCAmcmVnKTsNCj4gPiAgIAlpZiAocmV0
-IDwgMCkNCj4gPiAgIAkJcmV0dXJuIHJldDsNCj4gPg0KPiA+IC0JcmV0dXJuIDA7DQo+ID4gKwlp
-ZiAocG9sYXJpdHkgPT0gVFlQRUNfUE9MQVJJVFlfQ0MyKQ0KPiA+ICsJCXJlZyB8PSBUQ1BDX1JP
-TEVfQ1RSTF9DQ19PUEVOIDw8IFRDUENfUk9MRV9DVFJMX0NDMV9TSElGVDsNCj4gPiArCWVsc2UN
-Cj4gPiArCQlyZWcgfD0gVENQQ19ST0xFX0NUUkxfQ0NfT1BFTiA8PCBUQ1BDX1JPTEVfQ1RSTF9D
-QzJfU0hJRlQ7DQo+ID4gKwlyZXQgPSByZWdtYXBfd3JpdGUodGNwY2ktPnJlZ21hcCwgVENQQ19S
-T0xFX0NUUkwsIHJlZyk7DQo+ID4gKwlpZiAocmV0IDwgMCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0K
-PiA+ICsNCj4gPiArCXJldHVybiByZWdtYXBfd3JpdGUodGNwY2ktPnJlZ21hcCwgVENQQ19UQ1BD
-X0NUUkwsDQo+ID4gKwkJCSAgIChwb2xhcml0eSA9PSBUWVBFQ19QT0xBUklUWV9DQzIpID8NCj4g
-PiArCQkJICAgVENQQ19UQ1BDX0NUUkxfT1JJRU5UQVRJT04gOiAwKTsNCj4gPiAgIH0NCj4gPg0K
-PiA+ICAgc3RhdGljIGludCB0Y3BjaV9zZXRfdmNvbm4oc3RydWN0IHRjcGNfZGV2ICp0Y3BjLCBi
-b29sIGVuYWJsZSkNCj4gPg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9y
-ZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcml2ZXJkZXYtZGV2ZWwK
+The IPMI KCS device part of the LPC interface and is used for
+communication with the host processor.
+
+Keyboard Controller Style Interfaces:
+The KCS channel number is assigned by AST_usrGuide_KCS.pdf
+Name          | Use          | Address       | KCS Channel |
+SMS Interface | SMS          | 0CA2h – 0CA3h | kcs3        |
+SMM Interface | SMI handling | 0CA4h – 0CA5h | kcs4        |
+
+Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+---
+The kcs_bmc_aspeed driver is in linux-next now:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/char/ipmi/kcs_bmc_aspeed.c?h=next-20180329
+---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 17ee0fa3..8d6c4af 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -268,8 +268,22 @@
+ 				ranges = <0x0 0x1e789000 0x1000>;
+ 
+ 				lpc_bmc: lpc-bmc@0 {
+-					compatible = "aspeed,ast2500-lpc-bmc";
++					compatible = "aspeed,ast2500-lpc-bmc", "simple-mfd", "syscon";
+ 					reg = <0x0 0x80>;
++					reg-io-width = <4>;
++
++					#address-cells = <1>;
++					#size-cells = <1>;
++					ranges = <0x0 0x0 0x80>;
++
++					kcs3: kcs3@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						reg = <0x0 0x80>;
++						interrupts = <8>;
++						kcs_chan = <3>;
++						kcs_addr = <0xca2>;
++						status = "disabled";
++					};
+ 				};
+ 
+ 				lpc_host: lpc-host@80 {
+@@ -281,6 +295,15 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
++					kcs4: kcs4@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						reg = <0x0 0xa0>;
++						interrupts = <8>;
++						kcs_chan = <4>;
++						kcs_addr = <0xca4>;
++						status = "disabled";
++					};
++
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+ 						reg = <0x0 0x80>;
+-- 
+2.7.4
