@@ -1,84 +1,60 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] ARM: dts: qcom-apq8064: disable i2c by default at soc
- dtsi
-Date: Sun, 1 Apr 2018 14:32:10 -0700
-Message-ID: <20180401213210.GE510@tuxbook-pro>
-References: <20180315144434.14095-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] ARM: dts: qcom: pm8941: Add vadc nodes needed to
+ estimate an ocv
+Date: Sun, 1 Apr 2018 15:13:40 -0700
+Message-ID: <20180401221340.GF510@tuxbook-pro>
+References: <20180330200408.12608-1-ctatlor97@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180315144434.14095-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20180330200408.12608-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 15 Mar 07:44 PDT 2018, Srinivas Kandagatla wrote:
+On Fri 30 Mar 13:04 PDT 2018, Craig Tatlor wrote:
 
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This patch marks all the gsbi i2c node at soc level dtsi, so that kernel
-> would not assume that its enabled and result in pin conflicts when gsbi
-> is used for UART or SPI.
-> 
-> Without this patch we see below pin conflict.
-> 
-> apq8064-pinctrl 800000.pinctrl: pin GPIO_20 already requested by
->  12450000.serial; cannot claim for 12460000.i2c
-> apq8064-pinctrl 800000.pinctrl: pin-20 (12460000.i2c) status -22
-> apq8064-pinctrl 800000.pinctrl: could not request pin 20 (GPIO_20)
->  from group gpio20  on device 800000.pinctrl
-> i2c_qup 12460000.i2c: Error applying setting, reverse things back
-> i2c_qup: probe of 12460000.i2c failed with error -22
+> vbat_sns is needed to estimate a fairly accurate on chip voltage
+> and bat_therm is needed to produce an accurate percentage
+> from the estimated ocv.
 > 
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 > ---
->  arch/arm/boot/dts/qcom-apq8064.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm/boot/dts/qcom-pm8941.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 3ca96e361878..54cff79f5725 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -444,6 +444,7 @@
->  				clock-names = "core", "iface";
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> +				status = "disabled";
->  			};
+> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+> index 1d5ef55c7ee5..2515c5c217ac 100644
+> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
+> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+> @@ -139,6 +139,9 @@
+>  			#size-cells = <0>;
+>  			#io-channel-cells = <1>;
 >  
->  		};
-> @@ -472,6 +473,7 @@
->  				clock-names = "core", "iface";
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> +				status = "disabled";
+> +			bat_temp {
+> +				reg = <VADC_LR_MUX1_BAT_THERM>;
+> +			};
+>  			die_temp {
+>  				reg = <VADC_DIE_TEMP>;
 >  			};
->  		};
->  
-> @@ -497,6 +499,7 @@
->  				clock-names = "core", "iface";
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> +				status = "disabled";
+> @@ -154,6 +157,9 @@
+>  			ref_vdd {
+>  				reg = <VADC_VDD_VADC>;
 >  			};
+> +			vbat_sns {
+> +				reg = <VADC_VBAT_SNS>;
+> +			};
 >  		};
 >  
-> @@ -521,6 +524,7 @@
->  				clocks = <&gcc GSBI4_QUP_CLK>,
->  					 <&gcc GSBI4_H_CLK>;
->  				clock-names = "core", "iface";
-> +				status = "disabled";
->  			};
->  		};
->  
+>  		pm8941_iadc: iadc@3600 {
 > -- 
 > 2.16.2
 > 
