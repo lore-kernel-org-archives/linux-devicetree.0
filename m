@@ -1,112 +1,52 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 01/14] soc: qcom: Separate kryo l2 accessors from PMU
- driver
-Date: Sun, 1 Apr 2018 15:34:56 -0700
-Message-ID: <20180401223456.GG510@tuxbook-pro>
-References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
- <1522358807-10413-2-git-send-email-ilialin@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
+ 5/5] ARM: dts: omap4-droid4: add soundcard
+Date: Sun, 1 Apr 2018 16:17:46 -0700
+Message-ID: <20180401231746.GC5700@atomide.com>
+References: <20180326155828.ttnduivadob4iqmd@earth.universe>
+ <20180327121441.GH29239@sirena.org.uk>
+ <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
+ <20180328022910.GM29239@sirena.org.uk>
+ <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com> <20180329160828.GA14007@amd>
+ <20180329163450.GQ5700@atomide.com> <20180329180541.GA26545@amd>
+ <20180329215840.GT5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1522358807-10413-2-git-send-email-ilialin@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+In-Reply-To: <20180329215840.GT5700@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 29 Mar 14:26 PDT 2018, Ilia Lin wrote:
+* Tony Lindgren <tony@atomide.com> [180329 22:00]:
+> If it entered low-power mode, in theory we should see the state
+> change interrupt that's handled by phy-mapphone-mdm6600.c.
+> I never managed to do that so far so maybe you figured it out
+> with some command.
 
-> diff --git a/drivers/soc/qcom/kryo-l2-accessors.c b/drivers/soc/qcom/kryo-l2-accessors.c
-> new file mode 100644
-> index 0000000..b0356c2
-> --- /dev/null
-> +++ b/drivers/soc/qcom/kryo-l2-accessors.c
-> @@ -0,0 +1,66 @@
-> +/*
-> + * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
+And looks like the trigger to mdm6600 to enter low power states
+is done via USB:
 
-The copyright header in the C file should be:
+# echo auto > /sys/devices/platform/44000000.ocp/4a064000.usbhshost/4a064800.ohci/usb1/1-1/power/level
 
-// SPDX-License-Identifier: GPL-2.0
-/*
- * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
- */
-
-> +
-> +#include <linux/spinlock.h>
-> +#include <asm/sysreg.h>
-> +#include <soc/qcom/kryo-l2-accessors.h>
-> +
-> +#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
-> +#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
-> +
-> +static DEFINE_RAW_SPINLOCK(l2_access_lock);
-> +
-> +/**
-> + * set_l2_indirect_reg: write value to an L2 register
-
-* set_l2_indirect_reg() - write value to an L2 register
-
-> + * @reg: Address of L2 register.
-> + * @value: Value to be written to register.
-> + *
-> + * Use architecturally required barriers for ordering between system register
-> + * accesses, and system registers with respect to device memory
-> + */
-> +void set_l2_indirect_reg(u64 reg, u64 val)
-
-As these are now kernel-global functions I recommend that you give them
-a slightly more specific name; e.g. kryo_l2_set_indirect_reg() and
-kryo_l2_get_indirect_reg().
-
-[..]
-> diff --git a/include/soc/qcom/kryo-l2-accessors.h b/include/soc/qcom/kryo-l2-accessors.h
-> new file mode 100644
-> index 0000000..3c796cf
-> --- /dev/null
-> +++ b/include/soc/qcom/kryo-l2-accessors.h
-> @@ -0,0 +1,20 @@
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-
-And in the header file it should be:
-
-/* SPDX-License-Identifier: GPL-2.0 */
-/*
- * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
- */
-
-> +
-> +#ifndef __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
-> +#define __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
-> +
-> +void set_l2_indirect_reg(u64 reg_addr, u64 val);
-> +u64 get_l2_indirect_reg(u64 reg_addr);
-
-Rename "reg_addr" to "reg" to match the implementation.
+Looks like with that and modem enabled I'm seeing 207mW power
+consumption on a and idle system with screen off on my power supply.
+Opening /dev/ttyUSB4 makes the power consumption go up to 502mW..
+So now we need the wakeirqs and PM runtime to work for ohci and
+then the device can be used for few hours on batteries.
 
 Regards,
-Bjorn
+
+Tony
