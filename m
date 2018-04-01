@@ -1,64 +1,112 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] ARM: dts: qcom: pm8941: Add vadc nodes needed to
- estimate an ocv
-Date: Sun, 1 Apr 2018 15:13:40 -0700
-Message-ID: <20180401221340.GF510@tuxbook-pro>
-References: <20180330200408.12608-1-ctatlor97@gmail.com>
+Subject: Re: [PATCH v4 01/14] soc: qcom: Separate kryo l2 accessors from PMU
+ driver
+Date: Sun, 1 Apr 2018 15:34:56 -0700
+Message-ID: <20180401223456.GG510@tuxbook-pro>
+References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+ <1522358807-10413-2-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180330200408.12608-1-ctatlor97@gmail.com>
+In-Reply-To: <1522358807-10413-2-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 30 Mar 13:04 PDT 2018, Craig Tatlor wrote:
+On Thu 29 Mar 14:26 PDT 2018, Ilia Lin wrote:
 
-> vbat_sns is needed to estimate a fairly accurate on chip voltage
-> and bat_therm is needed to produce an accurate percentage
-> from the estimated ocv.
-> 
+> diff --git a/drivers/soc/qcom/kryo-l2-accessors.c b/drivers/soc/qcom/kryo-l2-accessors.c
+> new file mode 100644
+> index 0000000..b0356c2
+> --- /dev/null
+> +++ b/drivers/soc/qcom/kryo-l2-accessors.c
+> @@ -0,0 +1,66 @@
+> +/*
+> + * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The copyright header in the C file should be:
+
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
+ */
+
+> +
+> +#include <linux/spinlock.h>
+> +#include <asm/sysreg.h>
+> +#include <soc/qcom/kryo-l2-accessors.h>
+> +
+> +#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
+> +#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
+> +
+> +static DEFINE_RAW_SPINLOCK(l2_access_lock);
+> +
+> +/**
+> + * set_l2_indirect_reg: write value to an L2 register
+
+* set_l2_indirect_reg() - write value to an L2 register
+
+> + * @reg: Address of L2 register.
+> + * @value: Value to be written to register.
+> + *
+> + * Use architecturally required barriers for ordering between system register
+> + * accesses, and system registers with respect to device memory
+> + */
+> +void set_l2_indirect_reg(u64 reg, u64 val)
+
+As these are now kernel-global functions I recommend that you give them
+a slightly more specific name; e.g. kryo_l2_set_indirect_reg() and
+kryo_l2_get_indirect_reg().
+
+[..]
+> diff --git a/include/soc/qcom/kryo-l2-accessors.h b/include/soc/qcom/kryo-l2-accessors.h
+> new file mode 100644
+> index 0000000..3c796cf
+> --- /dev/null
+> +++ b/include/soc/qcom/kryo-l2-accessors.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+
+And in the header file it should be:
+
+/* SPDX-License-Identifier: GPL-2.0 */
+/*
+ * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
+ */
+
+> +
+> +#ifndef __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
+> +#define __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
+> +
+> +void set_l2_indirect_reg(u64 reg_addr, u64 val);
+> +u64 get_l2_indirect_reg(u64 reg_addr);
+
+Rename "reg_addr" to "reg" to match the implementation.
 
 Regards,
 Bjorn
-
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> ---
->  arch/arm/boot/dts/qcom-pm8941.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> index 1d5ef55c7ee5..2515c5c217ac 100644
-> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> @@ -139,6 +139,9 @@
->  			#size-cells = <0>;
->  			#io-channel-cells = <1>;
->  
-> +			bat_temp {
-> +				reg = <VADC_LR_MUX1_BAT_THERM>;
-> +			};
->  			die_temp {
->  				reg = <VADC_DIE_TEMP>;
->  			};
-> @@ -154,6 +157,9 @@
->  			ref_vdd {
->  				reg = <VADC_VDD_VADC>;
->  			};
-> +			vbat_sns {
-> +				reg = <VADC_VBAT_SNS>;
-> +			};
->  		};
->  
->  		pm8941_iadc: iadc@3600 {
-> -- 
-> 2.16.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
