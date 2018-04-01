@@ -1,107 +1,88 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice call support was
-Date: Sun, 1 Apr 2018 10:30:12 -0700
-Message-ID: <20180401173012.GB5700@atomide.com>
-References: <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com>
- <20180331145531.GA10404@amd>
- <20180331181935.GX5700@atomide.com>
- <20180331191939.GA8999@amd>
- <20180331194616.GA19388@amd>
- <20180331195524.GB19388@amd>
- <20180331234314.GZ5700@atomide.com>
- <20180401131852.GA11086@amd>
- <20180401153631.GA5700@atomide.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] ARM: dts: qcom-apq8064: disable i2c by default at soc
+ dtsi
+Date: Sun, 1 Apr 2018 14:32:10 -0700
+Message-ID: <20180401213210.GE510@tuxbook-pro>
+References: <20180315144434.14095-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180401153631.GA5700@atomide.com>
+In-Reply-To: <20180315144434.14095-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>
+To: srinivas.kandagatla@linaro.org
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180401 15:38]:
-> * Pavel Machek <pavel@ucw.cz> [180401 13:20]:
-> > On Sat 2018-03-31 16:43:14, Tony Lindgren wrote:
-> > > * Pavel Machek <pavel@ucw.cz> [180331 19:56]:
-> > > > On Sat 2018-03-31 21:46:16, Pavel Machek wrote:
-> > > > > On Sat 2018-03-31 21:19:39, Pavel Machek wrote:
-> > > > > > On Sat 2018-03-31 11:19:35, Tony Lindgren wrote:
-> > > > > > > Cool :) Microphone still does not work for me.. I tried tweaking
-> > > > > > > the alsamixer settings but no mic. This is with cold boot with
-> > > > > > > droid4-kexecboot if that might make a difference, we may have
-> > > > > > > some register uninitialized somewhere. Any ideas?
-> > > > > > 
-> > > > > > Ok, I was focusing on the speaker side.
-> > > > > > 
-> > > > > > alsamixer, tab to go to capture settings, set it to 37 37 Mic2 Mic1
-> > > > > > should work, according to my notes, but not recently tested and not
-> > > > > > tested against real human.
-> > > > > > 
-> > > > > > I'll attempt to test it, but something in my userland shuts down
-> > > > > > system just after boot 60% of time, which is rather annoying.
-> > > > > 
-> > > > > Hmm. So I tried again, and setting Mic1 and back in the capture
-> > > > > settings crashed the modem. Bang, disconnected from the USB.
-> > > > 
-> > > > Next try, and it worked this time.
-> > > > 
-> > > > _Before the call_, set mode to Normal and then Call. Then go to
-> > > > capture, and set 100 100 Mic2 Mic1. Then place a call,
-> > > > 
-> > > > AT+CFUN=1
-> > > > OK
-> > > > ATD6;
-> > > 
-> > > No luck with microphone here :( Using ttyUSB4, AT+CFUN=1
-> > > works, but ATD command on it just hangs the USB interface
-> > > and I have to reload phy-mapphone-mdm6600 to reset the
-> > > modem.
-> > 
-> > Test call with real human worked (thanks to Rolf K.), I could hear him
-> > well but he reported call was very quiet. And that was with capture
-> > settings at 100%.
-> 
-> Maybe the volume also needs to be controlled at mdm6600 end.
-> I'm seeing some AT+CLVL=n with n being between [0-7] calls on
-> DLCI2 in my Android logcat logs.
-> 
-> > If you had a register dump from android with mics working, preferably
-> > not in speaker mode, perhaps I could try to figure it out?
-> 
-> OK here are four diffs against starting the phone app for regular
-> call, speaker call, and muted versions of them:
-> 
-> http://muru.com/linux/d4/cpcap/
-> 
-> Also, I'm connected over cdma right now, not 3g, but I doubt
-> that makes a difference for the microphone.
+On Thu 15 Mar 07:44 PDT 2018, Srinivas Kandagatla wrote:
 
-Found it! Here's what I need to do over n_gsm:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> This patch marks all the gsbi i2c node at soc level dtsi, so that kernel
+> would not assume that its enabled and result in pin conflicts when gsbi
+> is used for UART or SPI.
+> 
+> Without this patch we see below pin conflict.
+> 
+> apq8064-pinctrl 800000.pinctrl: pin GPIO_20 already requested by
+>  12450000.serial; cannot claim for 12460000.i2c
+> apq8064-pinctrl 800000.pinctrl: pin-20 (12460000.i2c) status -22
+> apq8064-pinctrl 800000.pinctrl: could not request pin 20 (GPIO_20)
+>  from group gpio20  on device 800000.pinctrl
+> i2c_qup 12460000.i2c: Error applying setting, reverse things back
+> i2c_qup: probe of 12460000.i2c failed with error -22
+> 
 
-ngsm 1 "AT+CFUN=1"
-ngsm 1 "AT+CFUN?"
-ngsm 2 "AT+EACC=3,0"    # enable mic
-ngsm 2 "AT+CLVL=4"      # set speaker volume
-ngsm 2 "AT+CMUT=0"      # unmute mic
-ngsm 1 "ATD${number}"
-ngsm 1 "AT+CLCC"	# list current calls
-ngsm 2 "AT+NREC=1"	# enable noise cancellation
-ngsm 1 "AT+SCRN=0"	# ??? not sure if this does anything
-
-while [ 1 ]; do
-	date
-	ngsm 1 "AT+CLCC"
-	sleep 10
-done
-
-So speaker phone call works just fine, I just tested with a
-human at the other end :)
-
-Hmm let's hope all those also translate to some qmi calls.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
+Bjorn
 
-Tony
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 3ca96e361878..54cff79f5725 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -444,6 +444,7 @@
+>  				clock-names = "core", "iface";
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				status = "disabled";
+>  			};
+>  
+>  		};
+> @@ -472,6 +473,7 @@
+>  				clock-names = "core", "iface";
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				status = "disabled";
+>  			};
+>  		};
+>  
+> @@ -497,6 +499,7 @@
+>  				clock-names = "core", "iface";
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				status = "disabled";
+>  			};
+>  		};
+>  
+> @@ -521,6 +524,7 @@
+>  				clocks = <&gcc GSBI4_QUP_CLK>,
+>  					 <&gcc GSBI4_H_CLK>;
+>  				clock-names = "core", "iface";
+> +				status = "disabled";
+>  			};
+>  		};
+>  
+> -- 
+> 2.16.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
