@@ -1,14 +1,11 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 09/10] dt-bindings: PCI: rockchip: Add DT bindings for
- Rockchip PCIe endpoint controller
-Date: Mon,  2 Apr 2018 09:04:14 +0800
-Message-ID: <1522631054-151768-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1522630865-151344-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH v5 0/10] Add endpoint driver for Rockchip PCIe controller
+Date: Mon,  2 Apr 2018 09:01:05 +0800
+Message-ID: <1522630865-151344-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1522630865-151344-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -22,84 +19,181 @@ To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn He
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the DT bindings for the Rockchip PCIe controller
-when configured in endpoint mode.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+Hi Lorenzo,
 
- .../devicetree/bindings/pci/rockchip-pcie-ep.txt   | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+    This's the 5th try to upstream endpoint driver for Rockchip PCIe
+controller. In previous discussion, we both agree to do some directory
+reconstruction as soon as possible in 4.17 cycle. So the first 3 patches
+attempt to move forward with that.
+
+Then patch 4-9 are mostly the same as previous version, but just
+fold in the fixes found by Kbuild Robot.
+
+And patch 10 will update the defconfig for arm64 to avoid the warning,
+which may go via linux-rockchip tree.
+
+Hope it looks good to you. :)
+
+Changes in v5:
+- fix all issues found by Kbuild Robot
+- rename directory from host to controller, and move back dwc and cadence
+
+Changes in v4:
+- remove empty line
+- keep rockchip's order next to cadence and dwc, but we will
+  try to resort it later when reconstructing the directories
+
+Changes in v2:
+- remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
+- fix some error handling
+
+
+
+Shawn Lin (10):
+  PCI: Rename directory from host to controller
+  PCI: cadence: Move cadence drivers back to controller directory
+  PCI: dwc: Move dwc drivers back to controller directory
+  PCI: rockchip: Factor out common code and host code
+  PCI: rockchip: Split out common function to parse DT
+  PCI: rockchip: Split out common function to init controller
+  dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
+    rockchip-pcie-host.txt
+  PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
+    controller
+  dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
+    controller
+  arm64: defconfig: update config for Rockchip PCIe
+
+ .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  62 ++
+ .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   0
+ MAINTAINERS                                        |  65 ++-
+ arch/arm64/configs/defconfig                       |   3 +-
+ drivers/pci/Kconfig                                |   4 +-
+ drivers/pci/Makefile                               |   6 +-
+ drivers/pci/cadence/Kconfig                        |  27 -
+ drivers/pci/cadence/Makefile                       |   4 -
+ drivers/pci/{host => controller}/Kconfig           |  50 +-
+ drivers/pci/{host => controller}/Makefile          |   7 +
+ drivers/pci/{ => controller}/dwc/Kconfig           |   0
+ drivers/pci/{ => controller}/dwc/Makefile          |   0
+ drivers/pci/{ => controller}/dwc/pci-dra7xx.c      |   0
+ drivers/pci/{ => controller}/dwc/pci-exynos.c      |   0
+ drivers/pci/{ => controller}/dwc/pci-imx6.c        |   0
+ drivers/pci/{ => controller}/dwc/pci-keystone-dw.c |   0
+ drivers/pci/{ => controller}/dwc/pci-keystone.c    |   0
+ drivers/pci/{ => controller}/dwc/pci-keystone.h    |   0
+ drivers/pci/{ => controller}/dwc/pci-layerscape.c  |   0
+ drivers/pci/{ => controller}/dwc/pcie-armada8k.c   |   0
+ drivers/pci/{ => controller}/dwc/pcie-artpec6.c    |   0
+ .../pci/{ => controller}/dwc/pcie-designware-ep.c  |   0
+ .../{ => controller}/dwc/pcie-designware-host.c    |   0
+ .../{ => controller}/dwc/pcie-designware-plat.c    |   0
+ drivers/pci/{ => controller}/dwc/pcie-designware.c |   0
+ drivers/pci/{ => controller}/dwc/pcie-designware.h |   0
+ drivers/pci/{ => controller}/dwc/pcie-hisi.c       |   2 +-
+ drivers/pci/{ => controller}/dwc/pcie-histb.c      |   0
+ drivers/pci/{ => controller}/dwc/pcie-kirin.c      |   0
+ drivers/pci/{ => controller}/dwc/pcie-qcom.c       |   0
+ drivers/pci/{ => controller}/dwc/pcie-spear13xx.c  |   0
+ drivers/pci/{host => controller}/pci-aardvark.c    |   0
+ drivers/pci/{host => controller}/pci-ftpci100.c    |   0
+ drivers/pci/{host => controller}/pci-host-common.c |   0
+ .../pci/{host => controller}/pci-host-generic.c    |   0
+ drivers/pci/{host => controller}/pci-hyperv.c      |   0
+ drivers/pci/{host => controller}/pci-mvebu.c       |   0
+ drivers/pci/{host => controller}/pci-rcar-gen2.c   |   0
+ drivers/pci/{host => controller}/pci-tegra.c       |   0
+ .../pci/{host => controller}/pci-thunder-ecam.c    |   0
+ drivers/pci/{host => controller}/pci-thunder-pem.c |   0
+ drivers/pci/{host => controller}/pci-v3-semi.c     |   0
+ drivers/pci/{host => controller}/pci-versatile.c   |   0
+ drivers/pci/{host => controller}/pci-xgene-msi.c   |   0
+ drivers/pci/{host => controller}/pci-xgene.c       |   0
+ drivers/pci/{host => controller}/pcie-altera-msi.c |   0
+ drivers/pci/{host => controller}/pcie-altera.c     |   0
+ .../pci/{cadence => controller}/pcie-cadence-ep.c  |   0
+ .../{cadence => controller}/pcie-cadence-host.c    |   0
+ drivers/pci/{cadence => controller}/pcie-cadence.c |   0
+ drivers/pci/{cadence => controller}/pcie-cadence.h |   0
+ drivers/pci/{host => controller}/pcie-iproc-bcma.c |   0
+ drivers/pci/{host => controller}/pcie-iproc-msi.c  |   0
+ .../pci/{host => controller}/pcie-iproc-platform.c |   0
+ drivers/pci/{host => controller}/pcie-iproc.c      |   0
+ drivers/pci/{host => controller}/pcie-iproc.h      |   0
+ drivers/pci/{host => controller}/pcie-mediatek.c   |   0
+ drivers/pci/{host => controller}/pcie-rcar.c       |   0
+ drivers/pci/controller/pcie-rockchip-ep.c          | 639 +++++++++++++++++++++
+ .../pcie-rockchip-host.c}                          | 600 +------------------
+ drivers/pci/controller/pcie-rockchip.c             | 423 ++++++++++++++
+ drivers/pci/controller/pcie-rockchip.h             | 338 +++++++++++
+ drivers/pci/{host => controller}/pcie-tango.c      |   0
+ drivers/pci/{host => controller}/pcie-xilinx-nwl.c |   0
+ drivers/pci/{host => controller}/pcie-xilinx.c     |   0
+ drivers/pci/{host => controller}/vmd.c             |   0
+ 66 files changed, 1571 insertions(+), 659 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+ rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
+ delete mode 100644 drivers/pci/cadence/Kconfig
+ delete mode 100644 drivers/pci/cadence/Makefile
+ rename drivers/pci/{host => controller}/Kconfig (84%)
+ rename drivers/pci/{host => controller}/Makefile (84%)
+ rename drivers/pci/{ => controller}/dwc/Kconfig (100%)
+ rename drivers/pci/{ => controller}/dwc/Makefile (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-dra7xx.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-exynos.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-imx6.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-keystone-dw.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-keystone.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-keystone.h (100%)
+ rename drivers/pci/{ => controller}/dwc/pci-layerscape.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-armada8k.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-artpec6.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-designware-ep.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-designware-host.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-designware-plat.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-designware.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-designware.h (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-hisi.c (99%)
+ rename drivers/pci/{ => controller}/dwc/pcie-histb.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-kirin.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-qcom.c (100%)
+ rename drivers/pci/{ => controller}/dwc/pcie-spear13xx.c (100%)
+ rename drivers/pci/{host => controller}/pci-aardvark.c (100%)
+ rename drivers/pci/{host => controller}/pci-ftpci100.c (100%)
+ rename drivers/pci/{host => controller}/pci-host-common.c (100%)
+ rename drivers/pci/{host => controller}/pci-host-generic.c (100%)
+ rename drivers/pci/{host => controller}/pci-hyperv.c (100%)
+ rename drivers/pci/{host => controller}/pci-mvebu.c (100%)
+ rename drivers/pci/{host => controller}/pci-rcar-gen2.c (100%)
+ rename drivers/pci/{host => controller}/pci-tegra.c (100%)
+ rename drivers/pci/{host => controller}/pci-thunder-ecam.c (100%)
+ rename drivers/pci/{host => controller}/pci-thunder-pem.c (100%)
+ rename drivers/pci/{host => controller}/pci-v3-semi.c (100%)
+ rename drivers/pci/{host => controller}/pci-versatile.c (100%)
+ rename drivers/pci/{host => controller}/pci-xgene-msi.c (100%)
+ rename drivers/pci/{host => controller}/pci-xgene.c (100%)
+ rename drivers/pci/{host => controller}/pcie-altera-msi.c (100%)
+ rename drivers/pci/{host => controller}/pcie-altera.c (100%)
+ rename drivers/pci/{cadence => controller}/pcie-cadence-ep.c (100%)
+ rename drivers/pci/{cadence => controller}/pcie-cadence-host.c (100%)
+ rename drivers/pci/{cadence => controller}/pcie-cadence.c (100%)
+ rename drivers/pci/{cadence => controller}/pcie-cadence.h (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-bcma.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-msi.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc-platform.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc.c (100%)
+ rename drivers/pci/{host => controller}/pcie-iproc.h (100%)
+ rename drivers/pci/{host => controller}/pcie-mediatek.c (100%)
+ rename drivers/pci/{host => controller}/pcie-rcar.c (100%)
+ create mode 100644 drivers/pci/controller/pcie-rockchip-ep.c
+ rename drivers/pci/{host/pcie-rockchip.c => controller/pcie-rockchip-host.c} (61%)
+ create mode 100644 drivers/pci/controller/pcie-rockchip.c
+ create mode 100644 drivers/pci/controller/pcie-rockchip.h
+ rename drivers/pci/{host => controller}/pcie-tango.c (100%)
+ rename drivers/pci/{host => controller}/pcie-xilinx-nwl.c (100%)
+ rename drivers/pci/{host => controller}/pcie-xilinx.c (100%)
+ rename drivers/pci/{host => controller}/vmd.c (100%)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
-new file mode 100644
-index 0000000..77846730
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
-@@ -0,0 +1,62 @@
-+* Rockchip AXI PCIe Endpoint Controller DT description
-+
-+Required properties:
-+- compatible: Should contain "rockchip,rk3399-pcie-ep"
-+- reg: Two register ranges as listed in the reg-names property
-+- reg-names: Must include the following names
-+	- "apb-base"
-+	- "mem-base"
-+- clocks: Must contain an entry for each entry in clock-names.
-+		See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+	- "aclk"
-+	- "aclk-perf"
-+	- "hclk"
-+	- "pm"
-+- resets: Must contain seven entries for each entry in reset-names.
-+	   See ../reset/reset.txt for details.
-+- reset-names: Must include the following names
-+	- "core"
-+	- "mgmt"
-+	- "mgmt-sticky"
-+	- "pipe"
-+	- "pm"
-+	- "aclk"
-+	- "pclk"
-+- pinctrl-names : The pin control state names
-+- pinctrl-0: The "default" pinctrl state
-+- phys: Must contain an phandle to a PHY for each entry in phy-names.
-+- phy-names: Must include 4 entries for all 4 lanes even if some of
-+  them won't be used for your cases. Entries are of the form "pcie-phy-N":
-+  where N ranges from 0 to 3.
-+  (see example below and you MUST also refer to ../phy/rockchip-pcie-phy.txt
-+  for changing the #phy-cells of phy node to support it)
-+- rockchip,max-outbound-regions: Maximum number of outbound regions
-+
-+Optional Property:
-+- num-lanes: number of lanes to use
-+- max-functions: Maximum number of functions that can be configured (default 1).
-+
-+pcie0-ep: pcie@f8000000 {
-+	compatible = "rockchip,rk3399-pcie-ep";
-+	#address-cells = <3>;
-+	#size-cells = <2>;
-+	rockchip,max-outbound-regions = <16>;
-+	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-+		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-+	clock-names = "aclk", "aclk-perf",
-+		      "hclk", "pm";
-+	max-functions = /bits/ 8 <8>;
-+	num-lanes = <4>;
-+	reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0x80000000 0x0 0x20000>;
-+	reg-names = "apb-base", "mem-base";
-+	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-+		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
-+		 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
-+	reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
-+		      "pm", "pclk", "aclk";
-+	phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
-+	phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreq>;
-+};
 -- 
 1.9.1
