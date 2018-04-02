@@ -1,85 +1,39 @@
-Return-Path: <SRS0=tJus=HF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl0-f65.google.com ([209.85.160.65]:42487 "EHLO
-        mail-pl0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752630AbeDPCwY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Apr 2018 22:52:24 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v2 04/10] media: ov772x: add media controller support
-Date: Mon, 16 Apr 2018 11:51:45 +0900
-Message-Id: <1523847111-12986-5-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
-References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=d5cC=GX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail17.heteml.jp ([157.7.188.30]:33285 "EHLO mail17.heteml.jp"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754095AbeDBDvs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 1 Apr 2018 23:51:48 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by mail17.heteml.jp (Postfix) with QMQP id 836833C80C6E
+        for <devicetree@vger.kernel.org>; Mon,  2 Apr 2018 12:42:23 +0900 (JST)
+Date: 2 Apr 2018 12:42:23 +0900
+Message-ID: <20180402034223.6243.qmail@mail17.heteml.jp>
+Subject: Re: =?utf-8?Q?5=20=20=20=20=20=E6=B0=B8=E5=88=A9331428=E3=80=82COM=E9=82=80=E6=82=A8=E6=B3=A8=E5=86=8C=E9=80=8158=E8=B5=A25=E2=92=8F0=E6=8F=90?=
+ =?utf-8?Q?,=E4=B8=93=E5=91=98Q319120398=E9=A2=86?=
+References: <99c036ed54fa7141@9ee394e9e4cb7701>
+In-Reply-To: <99c036ed54fa7141@9ee394e9e4cb7701>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+From: info@saorinomori.com
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Create a source pad and set the media controller type to the sensor.
+お問合せ誠にありがとうございます。
+現在、多くのお問合せを頂いており、返信に時間がかかっております。
+頂いたお問合せには順番に対応しておりますので
+今しばらくお待ち下さいますよう、お願い申し上げます。
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v2
-- Move video_probe() before the entity initialization and remove the #ifdef
-  around the media_entity_cleanup()
+さをりの森
 
- drivers/media/i2c/ov772x.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 188f2f1..0ae2a4f 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,9 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	struct media_pad pad;
-+#endif
- };
- 
- /*
-@@ -1318,16 +1321,26 @@ static int ov772x_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		goto error_gpio_put;
- 
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
-+	if (ret < 0)
-+		goto error_gpio_put;
-+#endif
-+
- 	priv->cfmt = &ov772x_cfmts[0];
- 	priv->win = &ov772x_win_sizes[0];
- 	priv->fps = 15;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
--		goto error_gpio_put;
-+		goto error_entity_cleanup;
- 
- 	return 0;
- 
-+error_entity_cleanup:
-+	media_entity_cleanup(&priv->subdev.entity);
- error_gpio_put:
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
-@@ -1343,6 +1356,7 @@ static int ov772x_remove(struct i2c_client *client)
- {
- 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
- 
-+	media_entity_cleanup(&priv->subdev.entity);
- 	clk_put(priv->clk);
- 	if (priv->pwdn_gpio)
- 		gpiod_put(priv->pwdn_gpio);
--- 
-2.7.4
+Thank you so much for contacting us.
+You have just sent an email to info@saorinomori.com, which is the contact email account for the inquiries in Japanese language.
 
+For sending inquires in English language, would you contact us at contact@saorinomori.com so that we can get back to you as soon as possible.
+
+Thank you so much for your cooperation and warm regards,
+
+SAORI-NO-MORI / SAKAISEIKISANGYO CO. LTD.
+http://www.saorinomori.com
