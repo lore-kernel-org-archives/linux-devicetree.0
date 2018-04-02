@@ -1,56 +1,35 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v8 42/42] ARM: dts: da850: Add clocks
-Date: Mon, 2 Apr 2018 11:15:09 -0500
-Message-ID: <5502d0ee-b5dc-e90a-a041-882350c7d339@lechnology.com>
-References: <1521168778-27236-1-git-send-email-david@lechnology.com>
- <1521168778-27236-43-git-send-email-david@lechnology.com>
- <cf0c4153-b65d-da57-cd0f-0a16cb186377@lechnology.com>
- <510309d2-2df0-a915-a6f6-082b41c6b28b@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [v3,4/4] watchdog: add Gateworks System Controller support
+Date: Mon, 2 Apr 2018 18:32:42 +0200
+Message-ID: <20180402163242.GC14165@lunn.ch>
+References: <1522250043-8065-5-git-send-email-tharvey@gateworks.com>
+ <20180330010757.GA12896@roeck-us.net>
+ <CAJ+vNU3ARKLK5AcssEP-_P8AmwnAnS8VtAEO1ppwum2jpCqAYQ@mail.gmail.com>
+ <20180330181954.GA17580@roeck-us.net>
+ <CAJ+vNU1f+SH16hs3heMA_A2KcbzbXXmJtPxi0uiL4+4tNWgYoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <510309d2-2df0-a915-a6f6-082b41c6b28b@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU1f+SH16hs3heMA_A2KcbzbXXmJtPxi0uiL4+4tNWgYoQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org, linux-hwmon@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2018 06:12 AM, Sekhar Nori wrote:
-> On Friday 16 March 2018 10:50 PM, David Lechner wrote:
->> On 03/15/2018 09:52 PM, David Lechner wrote:
->>> This adds clock provider nodes for da850 and wires them up to all of the
->>> devices.
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>
->> ...
->>
->> This is the mcasp0: mcasp@100000 node...
->>
->>> @@ -560,6 +720,7 @@
->>>                dmas = <&edma0 1 1>,
->>>                    <&edma0 0 1>;
->>>                dma-names = "tx", "rx";
->>> +            clocks = <&psc1 7>;
->>
->> After some testing, it looks like it needs to be:
->>
->> +            power-domains = <&psc1 7>;
->>
->> instead of
->>
->> +            clocks = <&psc1 7>;
-> 
-> We should probably have both clocks and power-domains properties for all
-> PSC clocks. This way, the driver can change without a corresponding DT
-> update dependency.
-> 
-> Thanks,
-> Sekhar
-> 
+> The 'use case' we have been using this in for a couple years is that
+> users who want to use this watchdog will enable it externally (we have
+> a command in the bootloader) and if enabled the kernel driver (that
+> I'm proposing here which we've been using out-of-tree) will register
+> the watchdog device and the userspace watchdog process can open the
+> device and start tickling it. If the watchdog is never enabled (or
+> disabled via the bootloader command) the kernel driver fails to probe
+> and the SoC's watchdog can be used.
 
-That's fine with me. I just didn't know how people felt about using properties
-that are not documented.
+Hi Tim
+
+Is there any reason not to give the user the choice to use both
+watchdogs? Normally you write drivers to expose the hardware, and then
+let the users choice if they want to use it.
+
+	Andrew
