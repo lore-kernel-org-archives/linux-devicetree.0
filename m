@@ -1,81 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: omap4-droid4: voice call support was Re: [PATCHv5,
- 5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Mon, 2 Apr 2018 16:06:44 +0100
-Message-ID: <20180402150644.GP29239@sirena.org.uk>
-References: <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
- <20180323100930.GA21644@amd>
- <20180323103006.alymgb3ywftb4gek@earth.universe>
- <20180326141638.GB1450@amd>
- <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180327121441.GH29239@sirena.org.uk>
- <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
- <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v4 13/14] dt-bindings: cpufreq: Document
+ operating-points-v2-kryo-cpu
+Date: Mon, 2 Apr 2018 20:37:54 +0530
+Message-ID: <7ca35b7a-6078-620b-4772-091e53ef6790@codeaurora.org>
+References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+ <1522358807-10413-14-git-send-email-ilialin@codeaurora.org>
+ <20180402093018.GC3572@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6468977839626181820=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180328140219.f6667up5evrrafkv@earth.universe>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180402093018.GC3572@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Ilia Lin <ilialin@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Viresh,
 
---===============6468977839626181820==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PZYVFYZbFYjzBslI"
-Content-Disposition: inline
+On 4/2/2018 3:00 PM, Viresh Kumar wrote:
+> +Sricharan,
+> 
+> On 30-03-18, 00:26, Ilia Lin wrote:
+>> In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
+>> that have KRYO processors, the CPU ferequencies subset and voltage value
+>> of each OPP varies based on the silicon variant in use.
+>> Qualcomm Technologies, Inc. Process Voltage Scaling Tables
+>> defines the voltage and frequency value based on the msm-id in SMEM
+>> and speedbin blown in the efuse combination.
+>> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+>> to provide the OPP framework with required information.
+>> This is used to determine the voltage and frequency value for each OPP of
+>> operating-points-v2 table when it is parsed by the OPP framework.
+>>
+>> This change adds documentation.
+>>
+>> Change-Id: I1953f652a48249fb516d175f0e965a9510cd4209
+>> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/cpufreq/kryo-cpufreq.txt   | 693 +++++++++++++++++++++
+>>  1 file changed, 693 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
+> 
+> This should really go in opp directory.
+> 
+>> new file mode 100644
+>> index 0000000..20cef9d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
+>> @@ -0,0 +1,693 @@
+>> +Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
+>> +===================================
+>> +
+>> +In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
+>> +that have KRYO processors, the CPU ferequencies subset and voltage value
+>> +of each OPP varies based on the silicon variant in use.
+>> +Qualcomm Technologies, Inc. Process Voltage Scaling Tables
+>> +defines the voltage and frequency value based on the msm-id in SMEM
+>> +and speedbin blown in the efuse combination.
+>> +The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+>> +to provide the OPP framework with required information (existing HW bitmap).
+>> +This is used to determine the voltage and frequency value for each OPP of
+>> +operating-points-v2 table when it is parsed by the OPP framework.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +In 'cpus' nodes:
+>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be
+>> +	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
+>> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+>> +		efuse registers that has information about the
+>> +		speedbin that is used to select the right frequency/voltage
+>> +		value pair.
+>> +		Please refer the for nvmem-cells
+>> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+>> +		and also examples below.
+> 
+> Sricharan is also working on adding these, just make sure you guys do the same
+> thing..
+> 
+
+ Right, i was adding a similar one for krait cores [1]. There is code common in the
+ init sequence across both (little). Do you intent to make them common ?
+
+Regards,
+ Sricharan
+
+ [1] https://patchwork.kernel.org/patch/10261873/
 
 
---PZYVFYZbFYjzBslI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Mar 28, 2018 at 04:02:19PM +0200, Sebastian Reichel wrote:
-
-> In case of the last two variants, the bus clock is provided by
-> CPCAP, so it needs to be enabled for any audio stream. I suppose
-> the codec <-> codec as part of TDM is out of scope for the graph
-> card and we need a Droid 4 specific card driver?
-
-It's definitely pushing it towards being more useful to consider at
-least in the short term, basically nobody ever did these TDM muxes since
-usually you end up needing something more than just straight digital
-data muxing (mixing for example) so things usually get routed through a
-chip that can do more with the data.
-
---PZYVFYZbFYjzBslI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrCRwQACgkQJNaLcl1U
-h9Cjzgf3fkRFxkzl8WMDbR2avF91e5NwyRTrilN7DXkjZvGUmVUldiJZmSbIyGiD
-vi9wUfT1B6qO500+nHxKsTqQL4QOZsfZbNEoa6+o3RIL0wVuZB5JDzSBzsjQHxll
-4+E4xskEjlHsbDcxEifSpNUYol20PZ9B3aejjIkFdsAMhf8wfGvJ0TA0m9dM0K5x
-buhM/Gp1BnaFkviid0ygp1eT4TiCYCUCyeUi0ClNwbS3g0kYQ7Hurg/pG0oak3Uq
-AUp0CiiqFoS47+broPx1p4qVpERD584vbhj3DwtQVHSANO/9J6ZZOF+/mYcoRdPq
-onp5bPIHQjNDJbDSqFwVgZqd4w9J
-=KSVV
------END PGP SIGNATURE-----
-
---PZYVFYZbFYjzBslI--
-
---===============6468977839626181820==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6468977839626181820==--
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
