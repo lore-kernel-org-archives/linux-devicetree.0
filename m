@@ -1,42 +1,48 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/8] misc: pci_endpoint_test: Add designware EP entry
-Date: Mon, 2 Apr 2018 11:06:02 +0530
-Message-ID: <76c6e35c-5659-7313-a1b4-aa93e323ef79@ti.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <1bc09dfd205d0721366267e023550c4a5a4a84db.1522235224.git.gustavo.pimentel@synopsys.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v5 07/13] ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c3
+ board file
+Date: Mon, 2 Apr 2018 11:37:23 +0530
+Message-ID: <4af1f110-ccbf-872f-21fd-d0557b6e6b1b@codeaurora.org>
+References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
+ <1521800336-19266-8-git-send-email-sricharan@codeaurora.org>
+ <20180327171414.GJ1403@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1bc09dfd205d0721366267e023550c4a5a4a84db.1522235224.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <20180327171414.GJ1403@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, richardcochran@gmail.com, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
-> Adds the designware EP device ID entry to pci_endpoint_test driver table
-> to allow this device to be recognize and handle by the pci_endpoint_test
-> driver.
+
+On 3/27/2018 10:44 PM, Bjorn Andersson wrote:
+> On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
+>> +#include "qcom-ipq4019-ap.dk04.1.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1-C3";
 > 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/misc/pci_endpoint_test.c | 1 +
->  1 file changed, 1 insertion(+)
+> Add a compatible to the board file.
 > 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 320276f..e80c533 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -632,6 +632,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
->  static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
 
-Add device ids to include/linux/pci_ids.h and use the macro here.
+ ok.
 
-Thanks
-Kishon
+> Also, things like alias would make sense to put in the board unless
+> there's some restriction making every board having the same layout.
+> 
+>> +};
+
+ hmm. i also thought of having them in board specific files initially.
+ In this case, at-least the aliases for serial nodes seems to match across
+ dk-01/04/07 base variants. But might be if we add something else in future
+ it might not be common. Yeah, would move it to board specific files.
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
