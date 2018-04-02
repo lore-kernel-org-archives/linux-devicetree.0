@@ -1,7 +1,8 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 05/10] PCI: rockchip: Split out common function to parse DT
-Date: Mon,  2 Apr 2018 09:03:10 +0800
-Message-ID: <1522630990-151579-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH v5 06/10] PCI: rockchip: Split out common function to init
+ controller
+Date: Mon,  2 Apr 2018 09:03:26 +0800
+Message-ID: <1522631006-151626-1-git-send-email-shawn.lin@rock-chips.com>
 References: <1522630865-151344-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,331 +22,374 @@ To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Bjorn He
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Most of the DT properties are used for both of host and
-EP drivrs, so this patch spilt them out to new function,
-rockchip_pcie_parse_dt in pcie-rockchip.c and rename the
-original function to rockchip_pcie_parse_host_dt to avoid
-confusion. No functional changed intended.
+Most of the operations are used for both of host and EP driver,
+so this patch spilt them out to a new function, rockchip_pcie_init_port
+in pcie-rockchip.c and rename the original function to
+rockchip_pcie_host_init_port to avoid confusion. No functional
+changed intended.
 
 Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- drivers/pci/controller/pcie-rockchip-host.c | 119 ++-----------------------
- drivers/pci/controller/pcie-rockchip.c      | 129 ++++++++++++++++++++++++++++
- drivers/pci/controller/pcie-rockchip.h      |   2 +
- 3 files changed, 136 insertions(+), 114 deletions(-)
+ drivers/pci/controller/pcie-rockchip-host.c | 131 ++-----------------------
+ drivers/pci/controller/pcie-rockchip.c      | 142 ++++++++++++++++++++++++++++
+ drivers/pci/controller/pcie-rockchip.h      |   3 +
+ 3 files changed, 152 insertions(+), 124 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index b3bca6f..c01fdde 100644
+index c01fdde..7a0c7b9 100644
 --- a/drivers/pci/controller/pcie-rockchip-host.c
 +++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -705,130 +705,20 @@ static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
- }
- 
- /**
-- * rockchip_pcie_parse_dt - Parse Device Tree
-+ * rockchip_pcie_parse_host_dt - Parse Device Tree
+@@ -296,134 +296,17 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
+  * rockchip_pcie_init_port - Initialize hardware
   * @rockchip: PCIe port information
-  *
-  * Return: '0' on success and error value on failure
   */
--static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
-+static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+-static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
++static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
  {
  	struct device *dev = rockchip->dev;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct device_node *node = dev->of_node;
--	struct resource *regs;
- 	int err;
+-	int err, i;
++	int err, i = MAX_LANE_NUM;
+ 	u32 status;
  
--	regs = platform_get_resource_byname(pdev,
--					    IORESOURCE_MEM,
--					    "axi-base");
--	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
--	if (IS_ERR(rockchip->reg_base))
--		return PTR_ERR(rockchip->reg_base);
+ 	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
+ 
+-	err = reset_control_assert(rockchip->aclk_rst);
+-	if (err) {
+-		dev_err(dev, "assert aclk_rst err %d\n", err);
+-		return err;
+-	}
 -
--	regs = platform_get_resource_byname(pdev,
--					    IORESOURCE_MEM,
--					    "apb-base");
--	rockchip->apb_base = devm_ioremap_resource(dev, regs);
--	if (IS_ERR(rockchip->apb_base))
--		return PTR_ERR(rockchip->apb_base);
+-	err = reset_control_assert(rockchip->pclk_rst);
+-	if (err) {
+-		dev_err(dev, "assert pclk_rst err %d\n", err);
+-		return err;
+-	}
 -
--	err = rockchip_pcie_get_phys(rockchip);
-+	err = rockchip_pcie_parse_dt(rockchip);
- 	if (err)
+-	err = reset_control_assert(rockchip->pm_rst);
+-	if (err) {
+-		dev_err(dev, "assert pm_rst err %d\n", err);
++	err = rockchip_pcie_init_port(rockchip);
++	if (err)
  		return err;
+-	}
+-
+-	for (i = 0; i < MAX_LANE_NUM; i++) {
+-		err = phy_init(rockchip->phys[i]);
+-		if (err) {
+-			dev_err(dev, "init phy%d err %d\n", i, err);
+-			goto err_exit_phy;
+-		}
+-	}
+-
+-	err = reset_control_assert(rockchip->core_rst);
+-	if (err) {
+-		dev_err(dev, "assert core_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	err = reset_control_assert(rockchip->mgmt_rst);
+-	if (err) {
+-		dev_err(dev, "assert mgmt_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	err = reset_control_assert(rockchip->mgmt_sticky_rst);
+-	if (err) {
+-		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	err = reset_control_assert(rockchip->pipe_rst);
+-	if (err) {
+-		dev_err(dev, "assert pipe_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	udelay(10);
+-
+-	err = reset_control_deassert(rockchip->pm_rst);
+-	if (err) {
+-		dev_err(dev, "deassert pm_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	err = reset_control_deassert(rockchip->aclk_rst);
+-	if (err) {
+-		dev_err(dev, "deassert aclk_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	err = reset_control_deassert(rockchip->pclk_rst);
+-	if (err) {
+-		dev_err(dev, "deassert pclk_rst err %d\n", err);
+-		goto err_exit_phy;
+-	}
+-
+-	if (rockchip->link_gen == 2)
+-		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
+-				    PCIE_CLIENT_CONFIG);
+-	else
+-		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
+-				    PCIE_CLIENT_CONFIG);
+-
+-	rockchip_pcie_write(rockchip,
+-			    PCIE_CLIENT_CONF_ENABLE |
+-			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
+-			    PCIE_CLIENT_ARI_ENABLE |
+-			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
+-			    PCIE_CLIENT_MODE_RC,
+-			    PCIE_CLIENT_CONFIG);
+-
+-	for (i = 0; i < MAX_LANE_NUM; i++) {
+-		err = phy_power_on(rockchip->phys[i]);
+-		if (err) {
+-			dev_err(dev, "power on phy%d err %d\n", i, err);
+-			goto err_power_off_phy;
+-		}
+-	}
+-
+-	/*
+-	 * Please don't reorder the deassert sequence of the following
+-	 * four reset pins.
+-	 */
+-	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
+-	if (err) {
+-		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
+-		goto err_power_off_phy;
+-	}
+-
+-	err = reset_control_deassert(rockchip->core_rst);
+-	if (err) {
+-		dev_err(dev, "deassert core_rst err %d\n", err);
+-		goto err_power_off_phy;
+-	}
+-
+-	err = reset_control_deassert(rockchip->mgmt_rst);
+-	if (err) {
+-		dev_err(dev, "deassert mgmt_rst err %d\n", err);
+-		goto err_power_off_phy;
+-	}
+-
+-	err = reset_control_deassert(rockchip->pipe_rst);
+-	if (err) {
+-		dev_err(dev, "deassert pipe_rst err %d\n", err);
+-		goto err_power_off_phy;
+-	}
  
--	rockchip->lanes = 1;
--	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
--	if (!err && (rockchip->lanes == 0 ||
--		     rockchip->lanes == 3 ||
--		     rockchip->lanes > 4)) {
--		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
--		rockchip->lanes = 1;
--	}
--
--	rockchip->link_gen = of_pci_get_max_link_speed(node);
--	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
--		rockchip->link_gen = 2;
--
--	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
--	if (IS_ERR(rockchip->core_rst)) {
--		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing core reset property in node\n");
--		return PTR_ERR(rockchip->core_rst);
--	}
--
--	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
--	if (IS_ERR(rockchip->mgmt_rst)) {
--		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing mgmt reset property in node\n");
--		return PTR_ERR(rockchip->mgmt_rst);
--	}
--
--	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
--								     "mgmt-sticky");
--	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
--		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing mgmt-sticky reset property in node\n");
--		return PTR_ERR(rockchip->mgmt_sticky_rst);
--	}
--
--	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
--	if (IS_ERR(rockchip->pipe_rst)) {
--		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing pipe reset property in node\n");
--		return PTR_ERR(rockchip->pipe_rst);
--	}
--
--	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
--	if (IS_ERR(rockchip->pm_rst)) {
--		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing pm reset property in node\n");
--		return PTR_ERR(rockchip->pm_rst);
--	}
--
--	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
--	if (IS_ERR(rockchip->pclk_rst)) {
--		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing pclk reset property in node\n");
--		return PTR_ERR(rockchip->pclk_rst);
--	}
--
--	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
--	if (IS_ERR(rockchip->aclk_rst)) {
--		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
--			dev_err(dev, "missing aclk reset property in node\n");
--		return PTR_ERR(rockchip->aclk_rst);
--	}
--
--	rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
--	if (IS_ERR(rockchip->ep_gpio)) {
--		dev_err(dev, "missing ep-gpios property in node\n");
--		return PTR_ERR(rockchip->ep_gpio);
--	}
--
--	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
--	if (IS_ERR(rockchip->aclk_pcie)) {
--		dev_err(dev, "aclk clock not found\n");
--		return PTR_ERR(rockchip->aclk_pcie);
--	}
--
--	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
--	if (IS_ERR(rockchip->aclk_perf_pcie)) {
--		dev_err(dev, "aclk_perf clock not found\n");
--		return PTR_ERR(rockchip->aclk_perf_pcie);
--	}
--
--	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
--	if (IS_ERR(rockchip->hclk_pcie)) {
--		dev_err(dev, "hclk clock not found\n");
--		return PTR_ERR(rockchip->hclk_pcie);
--	}
--
--	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
--	if (IS_ERR(rockchip->clk_pcie_pm)) {
--		dev_err(dev, "pm clock not found\n");
--		return PTR_ERR(rockchip->clk_pcie_pm);
--	}
--
- 	err = rockchip_pcie_setup_irq(rockchip);
+ 	/* Fix the transmitted FTS count desired to exit from L0s. */
+ 	status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL_PLC1);
+@@ -516,8 +399,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ err_power_off_phy:
+ 	while (i--)
+ 		phy_power_off(rockchip->phys[i]);
++
+ 	i = MAX_LANE_NUM;
+-err_exit_phy:
+ 	while (i--)
+ 		phy_exit(rockchip->phys[i]);
+ 	return err;
+@@ -1036,7 +919,7 @@ static int __maybe_unused rockchip_pcie_resume_noirq(struct device *dev)
  	if (err)
- 		return err;
-@@ -1195,8 +1085,9 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 		goto err_disable_0v9;
  
- 	platform_set_drvdata(pdev, rockchip);
- 	rockchip->dev = dev;
-+	rockchip->is_rc = true;
- 
--	err = rockchip_pcie_parse_dt(rockchip);
-+	err = rockchip_pcie_parse_host_dt(rockchip);
+-	err = rockchip_pcie_init_port(rockchip);
++	err = rockchip_pcie_host_init_port(rockchip);
  	if (err)
- 		return err;
+ 		goto err_pcie_resume;
+ 
+@@ -1101,7 +984,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 		goto err_set_vpcie;
+ 	}
+ 
+-	err = rockchip_pcie_init_port(rockchip);
++	err = rockchip_pcie_host_init_port(rockchip);
+ 	if (err)
+ 		goto err_vpcie;
  
 diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 3d46da9..bcc222b 100644
+index bcc222b..e2ed10f 100644
 --- a/drivers/pci/controller/pcie-rockchip.c
 +++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -12,10 +12,139 @@
+@@ -12,6 +12,7 @@
   */
  
  #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of_pci.h>
++#include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/of_pci.h>
  #include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
+@@ -145,6 +146,147 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ }
+ EXPORT_SYMBOL_GPL(rockchip_pcie_parse_dt);
  
- #include "pcie-rockchip.h"
- 
-+int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
++int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
 +{
 +	struct device *dev = rockchip->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct device_node *node = dev->of_node;
-+	struct resource *regs;
-+	int err;
++	int err, i;
++	u32 regs;
 +
-+	regs = platform_get_resource_byname(pdev,
-+					    IORESOURCE_MEM,
-+					    "axi-base");
-+	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
-+	if (IS_ERR(rockchip->reg_base))
-+		return PTR_ERR(rockchip->reg_base);
-+
-+	regs = platform_get_resource_byname(pdev,
-+					    IORESOURCE_MEM,
-+					    "apb-base");
-+	rockchip->apb_base = devm_ioremap_resource(dev, regs);
-+	if (IS_ERR(rockchip->apb_base))
-+		return PTR_ERR(rockchip->apb_base);
-+
-+	err = rockchip_pcie_get_phys(rockchip);
-+	if (err)
++	err = reset_control_assert(rockchip->aclk_rst);
++	if (err) {
++		dev_err(dev, "assert aclk_rst err %d\n", err);
 +		return err;
-+
-+	rockchip->lanes = 1;
-+	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
-+	if (!err && (rockchip->lanes == 0 ||
-+		     rockchip->lanes == 3 ||
-+		     rockchip->lanes > 4)) {
-+		dev_warn(dev, "invalid num-lanes, default to use one lane\n");
-+		rockchip->lanes = 1;
 +	}
 +
-+	rockchip->link_gen = of_pci_get_max_link_speed(node);
-+	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
-+		rockchip->link_gen = 2;
-+
-+	rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
-+	if (IS_ERR(rockchip->core_rst)) {
-+		if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing core reset property in node\n");
-+		return PTR_ERR(rockchip->core_rst);
++	err = reset_control_assert(rockchip->pclk_rst);
++	if (err) {
++		dev_err(dev, "assert pclk_rst err %d\n", err);
++		return err;
 +	}
 +
-+	rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
-+	if (IS_ERR(rockchip->mgmt_rst)) {
-+		if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing mgmt reset property in node\n");
-+		return PTR_ERR(rockchip->mgmt_rst);
++	err = reset_control_assert(rockchip->pm_rst);
++	if (err) {
++		dev_err(dev, "assert pm_rst err %d\n", err);
++		return err;
 +	}
 +
-+	rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
-+								     "mgmt-sticky");
-+	if (IS_ERR(rockchip->mgmt_sticky_rst)) {
-+		if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing mgmt-sticky reset property in node\n");
-+		return PTR_ERR(rockchip->mgmt_sticky_rst);
-+	}
-+
-+	rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
-+	if (IS_ERR(rockchip->pipe_rst)) {
-+		if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing pipe reset property in node\n");
-+		return PTR_ERR(rockchip->pipe_rst);
-+	}
-+
-+	rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
-+	if (IS_ERR(rockchip->pm_rst)) {
-+		if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing pm reset property in node\n");
-+		return PTR_ERR(rockchip->pm_rst);
-+	}
-+
-+	rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
-+	if (IS_ERR(rockchip->pclk_rst)) {
-+		if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing pclk reset property in node\n");
-+		return PTR_ERR(rockchip->pclk_rst);
-+	}
-+
-+	rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
-+	if (IS_ERR(rockchip->aclk_rst)) {
-+		if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
-+			dev_err(dev, "missing aclk reset property in node\n");
-+		return PTR_ERR(rockchip->aclk_rst);
-+	}
-+
-+	if (rockchip->is_rc) {
-+		rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
-+		if (IS_ERR(rockchip->ep_gpio)) {
-+			dev_err(dev, "missing ep-gpios property in node\n");
-+			return PTR_ERR(rockchip->ep_gpio);
++	for (i = 0; i < MAX_LANE_NUM; i++) {
++		err = phy_init(rockchip->phys[i]);
++		if (err) {
++			dev_err(dev, "init phy%d err %d\n", i, err);
++			goto err_exit_phy;
 +		}
 +	}
 +
-+	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
-+	if (IS_ERR(rockchip->aclk_pcie)) {
-+		dev_err(dev, "aclk clock not found\n");
-+		return PTR_ERR(rockchip->aclk_pcie);
++	err = reset_control_assert(rockchip->core_rst);
++	if (err) {
++		dev_err(dev, "assert core_rst err %d\n", err);
++		goto err_exit_phy;
 +	}
 +
-+	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
-+	if (IS_ERR(rockchip->aclk_perf_pcie)) {
-+		dev_err(dev, "aclk_perf clock not found\n");
-+		return PTR_ERR(rockchip->aclk_perf_pcie);
++	err = reset_control_assert(rockchip->mgmt_rst);
++	if (err) {
++		dev_err(dev, "assert mgmt_rst err %d\n", err);
++		goto err_exit_phy;
 +	}
 +
-+	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
-+	if (IS_ERR(rockchip->hclk_pcie)) {
-+		dev_err(dev, "hclk clock not found\n");
-+		return PTR_ERR(rockchip->hclk_pcie);
++	err = reset_control_assert(rockchip->mgmt_sticky_rst);
++	if (err) {
++		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
++		goto err_exit_phy;
 +	}
 +
-+	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
-+	if (IS_ERR(rockchip->clk_pcie_pm)) {
-+		dev_err(dev, "pm clock not found\n");
-+		return PTR_ERR(rockchip->clk_pcie_pm);
++	err = reset_control_assert(rockchip->pipe_rst);
++	if (err) {
++		dev_err(dev, "assert pipe_rst err %d\n", err);
++		goto err_exit_phy;
++	}
++
++	udelay(10);
++
++	err = reset_control_deassert(rockchip->pm_rst);
++	if (err) {
++		dev_err(dev, "deassert pm_rst err %d\n", err);
++		goto err_exit_phy;
++	}
++
++	err = reset_control_deassert(rockchip->aclk_rst);
++	if (err) {
++		dev_err(dev, "deassert aclk_rst err %d\n", err);
++		goto err_exit_phy;
++	}
++
++	err = reset_control_deassert(rockchip->pclk_rst);
++	if (err) {
++		dev_err(dev, "deassert pclk_rst err %d\n", err);
++		goto err_exit_phy;
++	}
++
++	if (rockchip->link_gen == 2)
++		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
++				    PCIE_CLIENT_CONFIG);
++	else
++		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
++				    PCIE_CLIENT_CONFIG);
++
++	regs = PCIE_CLIENT_LINK_TRAIN_ENABLE | PCIE_CLIENT_ARI_ENABLE |
++		   PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes);
++
++	if (rockchip->is_rc)
++		regs |= PCIE_CLIENT_CONF_ENABLE | PCIE_CLIENT_MODE_RC;
++	else
++		regs |= PCIE_CLIENT_CONF_DISABLE | PCIE_CLIENT_MODE_EP;
++
++	rockchip_pcie_write(rockchip, regs, PCIE_CLIENT_CONFIG);
++
++	for (i = 0; i < MAX_LANE_NUM; i++) {
++		err = phy_power_on(rockchip->phys[i]);
++		if (err) {
++			dev_err(dev, "power on phy%d err %d\n", i, err);
++			goto err_power_off_phy;
++		}
++	}
++
++	/*
++	 * Please don't reorder the deassert sequence of the following
++	 * four reset pins.
++	 */
++	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
++	if (err) {
++		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
++		goto err_power_off_phy;
++	}
++
++	err = reset_control_deassert(rockchip->core_rst);
++	if (err) {
++		dev_err(dev, "deassert core_rst err %d\n", err);
++		goto err_power_off_phy;
++	}
++
++	err = reset_control_deassert(rockchip->mgmt_rst);
++	if (err) {
++		dev_err(dev, "deassert mgmt_rst err %d\n", err);
++		goto err_power_off_phy;
++	}
++
++	err = reset_control_deassert(rockchip->pipe_rst);
++	if (err) {
++		dev_err(dev, "deassert pipe_rst err %d\n", err);
++		goto err_power_off_phy;
 +	}
 +
 +	return 0;
++err_power_off_phy:
++	while (i--)
++		phy_power_off(rockchip->phys[i]);
++	i = MAX_LANE_NUM;
++err_exit_phy:
++	while (i--)
++		phy_exit(rockchip->phys[i]);
++	return err;
 +}
-+EXPORT_SYMBOL_GPL(rockchip_pcie_parse_dt);
++EXPORT_SYMBOL_GPL(rockchip_pcie_init_port);
 +
  int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
  {
  	struct device *dev = rockchip->dev;
 diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index d27941e..473e74f 100644
+index 473e74f..ebb89d5 100644
 --- a/drivers/pci/controller/pcie-rockchip.h
 +++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -222,6 +222,7 @@ struct rockchip_pcie {
- 	u32     mem_size;
- 	phys_addr_t msg_bus_addr;
- 	phys_addr_t mem_bus_addr;
-+	bool is_rc;
- };
- 
- static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
-@@ -235,6 +236,7 @@ static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
- 	writel(val, rockchip->apb_base + reg);
+@@ -27,10 +27,12 @@
+ #define PCIE_CLIENT_BASE		0x0
+ #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
+ #define   PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE_BIT(0x0001)
++#define   PCIE_CLIENT_CONF_DISABLE	  HIWORD_UPDATE(0x0001, 0)
+ #define   PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE_BIT(0x0002)
+ #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+ #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+ #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
++#define   PCIE_CLIENT_MODE_EP		  HIWORD_UPDATE(0x0040, 0)
+ #define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+ #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
+ #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
+@@ -237,6 +239,7 @@ static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
  }
  
-+int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip);
+ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip);
++int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
  int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
  void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
  int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
