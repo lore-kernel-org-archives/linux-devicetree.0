@@ -1,40 +1,50 @@
-From: sricharan@codeaurora.org
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Mon, 02 Apr 2018 15:28:47 +0530
-Message-ID: <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
- <20180320143131.4eenixtbhciq5fwc@localhost>
- <20180329143715.GA31757@hector.attlocal.net>
- <20180329163739.2fg5qxvb5j3fiy6r@localhost>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v8 42/42] ARM: dts: da850: Add clocks
+Date: Mon, 2 Apr 2018 16:42:21 +0530
+Message-ID: <510309d2-2df0-a915-a6f6-082b41c6b28b@ti.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <1521168778-27236-43-git-send-email-david@lechnology.com>
+ <cf0c4153-b65d-da57-cd0f-0a16cb186377@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180329163739.2fg5qxvb5j3fiy6r@localhost>
+In-Reply-To: <cf0c4153-b65d-da57-cd0f-0a16cb186377@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-03-29 22:07, Richard Cochran wrote:
-> On Thu, Mar 29, 2018 at 09:37:15AM -0500, Andy Gross wrote:
->> 
->> Feel free to send your own contributions where you are adding the 
->> things that
->> are important to you.
+On Friday 16 March 2018 10:50 PM, David Lechner wrote:
+> On 03/15/2018 09:52 PM, David Lechner wrote:
+>> This adds clock provider nodes for da850 and wires them up to all of the
+>> devices.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
 > 
-> You can count on it.  I am really happy that ipq4019 at least boots 
-> mainline.
+> ...
 > 
-> BTW is there any hope of getting a working mainline DTS for the
-> ipq8062, ideally for the ap145_100 board?
+> This is the mcasp0: mcasp@100000 node...
+> 
+>> @@ -560,6 +720,7 @@
+>>               dmas = <&edma0 1 1>,
+>>                   <&edma0 0 1>;
+>>               dma-names = "tx", "rx";
+>> +            clocks = <&psc1 7>;
+> 
+> After some testing, it looks like it needs to be:
+> 
+> +            power-domains = <&psc1 7>;
+> 
+> instead of
+> 
+> +            clocks = <&psc1 7>;
 
-   Yes, i will post another series for ipq806[2/4] updates and the 
-corresponding
-   boards after this.
+We should probably have both clocks and power-domains properties for all
+PSC clocks. This way, the driver can change without a corresponding DT
+update dependency.
 
-Regards,
-  Sricharan
+Thanks,
+Sekhar
