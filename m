@@ -1,64 +1,94 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/8] bindings: PCI: designware: Example update
-Date: Mon, 2 Apr 2018 10:53:23 +0530
-Message-ID: <fa001440-0dfe-b84a-e5ef-9285043b5ede@ti.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <33aa86ee667e8b435db080b8c683cb5df1bd6544.1522235224.git.gustavo.pimentel@synopsys.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v5 03/13] ARM: dts: ipq4019: Add a few peripheral nodes
+Date: Mon, 2 Apr 2018 10:57:23 +0530
+Message-ID: <83fc1482-1867-f66a-78ec-b47ba856f815@codeaurora.org>
+References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
+ <1521800336-19266-4-git-send-email-sricharan@codeaurora.org>
+ <20180327165059.GE1403@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33aa86ee667e8b435db080b8c683cb5df1bd6544.1522235224.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <20180327165059.GE1403@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, richardcochran@gmail.com, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Bjorn,
+  Thanks a lot for all the reviews.
 
-On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
-> Changes the IP registers size to accommodate the ATU unroll space.
+On 3/27/2018 10:20 PM, Bjorn Andersson wrote:
+> On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
+>> @@ -172,6 +180,22 @@
+>>  			clock-names = "core", "iface";
+>>  			#address-cells = <1>;
+>>  			#size-cells = <0>;
+>> +			dmas = <&blsp_dma 5>, <&blsp_dma 4>;
+>> +			dma-names = "rx", "tx";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		spi_1: spi@78b6000 { /* BLSP1 QUP2 */
+>> +			compatible = "qcom,spi-qup-v2.2.1";
+>> +			reg = <0x78b6000 0x600>;
+>> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
+>> +				<&gcc GCC_BLSP1_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			dmas = <&blsp_dma 7>, <&blsp_dma 6>;
+>> +			dma-names = "rx", "tx";
+>>  			status = "disabled";
+>>  		};
+>>  
+>> @@ -184,9 +208,24 @@
+>>  			clock-names = "iface", "core";
+>>  			#address-cells = <1>;
+>>  			#size-cells = <0>;
+>> +			dmas = <&blsp_dma 9>, <&blsp_dma 8>;
+>> +			dma-names = "rx", "tx";
+>>  			status = "disabled";
+>>  		};
+>>  
+>> +		i2c_1: i2c@78b8000 { /* BLSP1 QUP4 */
 > 
-> Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers.
+> The label, comment and the core clock disagrees on which qup this is.
 > 
-> Replaces the pcie base address example by a real pcie base address in use.
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 1da7ade..6300762 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -1,7 +1,8 @@
->  * Synopsys DesignWare PCIe interface
->  
->  Required properties:
-> -- compatible: should contain "snps,dw-pcie" to identify the core.
-> +- compatible:
-> +	"snps,dw-pcie" for RC mode;
+> Label your nodes based on the SoC naming, not your board - as this will
+> prevent a future board from using e.g. blsp1 qup2 as i2c (as you already
+> used the label for that).
 
-I think irrespective of RC mode or EP mode, "snps,dw-pcie" can be used to
-identify the pcie core?
->  - reg: Should contain the configuration address space.
->  - reg-names: Must be "config" for the PCIe configuration space.
->      (The old way of getting the configuration address space from "ranges"
-> @@ -41,11 +42,11 @@ EP mode:
->  
->  Example configuration:
->  
-> -	pcie: pcie@dffff000 {
-> +	pcie: pcie@dfc00000 {
->  		compatible = "snps,dw-pcie";
-> -		reg = <0xdffff000 0x1000>, /* Controller registers */
-> -		      <0xd0000000 0x2000>; /* PCI config space */
-> -		reg-names = "ctrlreg", "config";
-> +		reg = <0xdfc00000 0x302000>, /* IP registers */
+Sure. will fix. Infact this is QUP3.
 
-which version of synopsys IP is this. I think the ideal thing to do here is to
-have a separate register space for iATU.
+> 
+>> +			compatible = "qcom,i2c-qup-v2.2.1";
+>> +			reg = <0x78b8000 0x600>;
+>> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+>> +				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+> 
+> QUP4?
 
-Thanks
-Kishon
+ QUP3
+
+> 
+>> +			clock-names = "iface", "core";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			dmas = <&blsp_dma 11>, <&blsp_dma 10>;
+>> +			dma-names = "rx", "tx";
+>> +			status = "disabled";
+>> +		};
+> 
+> Apart from this the patch looks good.
+
+ Thanks.
+
+Regards,
+  Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
