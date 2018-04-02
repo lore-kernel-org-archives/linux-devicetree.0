@@ -1,75 +1,61 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-evm: add WP and CD to MMC
-Date: Mon, 2 Apr 2018 14:02:20 +0530
-Message-ID: <8dc9db0f-f5e8-42fc-d23c-662ee07714c2@ti.com>
-References: <1522428754-28337-1-git-send-email-aford173@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 08/14] dt: qcom: Add opp and thermal to the msm8996
+Date: Mon, 2 Apr 2018 14:46:17 +0530
+Message-ID: <20180402091617.GA3572@vireshk-i7>
+References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
+ <1522358807-10413-9-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1522428754-28337-1-git-send-email-aford173@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, khilman@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1522358807-10413-9-git-send-email-ilialin@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Adam,
-
-On Friday 30 March 2018 10:22 PM, Adam Ford wrote:
-> The legacy mode uses the write protect and card detect but DT
-> has not.  This patch enables the pinmuxing and detection for
-> WP and CD.
+On 30-03-18, 00:26, Ilia Lin wrote:
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 275 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 267 insertions(+), 8 deletions(-)
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index c82368c..1030788 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -42,6 +42,12 @@
->  					0x04 0x00011000 0x000ff000
->  				>;
->  			};
-> +			mmc0_cd_wp_pins: pinmux_mmc0_cd_wp_pins {
-> +				pinctrl-single,bits = <
-> +					/* GP4[0], GP4[1]*/
-> +					0x28 0x88000000 0xff000000
-> +					>;
-> +			};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 410ae78..a0792bd 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/clock/qcom,gcc-msm8996.h>
+>  #include <dt-bindings/clock/qcom,mmcc-msm8996.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	model = "Qualcomm Technologies, Inc. MSM8996";
+> @@ -97,6 +98,11 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			clocks = <&kryocc 0>;
+> +			operating-points-v2 = <&cluster0_opp>;
+> +			cooling-min-level = <0>;
+> +			cooling-max-level = <15>;
 
-A new mux node for GPIO pins should not be needed after David Lechner's
-gpio-ranges support patch[1]. I should be applying that soon after
-v4.17-rc1 is out and its dependencies merged. Can you please re-spin
-this patch then to apply on top of that?
+The min/max properties are removed from DT documentation now. You don't need to
+add them anymore.
 
-Thanks,
-Sekhar
+> +	cluster0_opp: opp_table0 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
 
-[1] https://patchwork.kernel.org/patch/10229153/
+Is Kryo like krait where CPUs do DVFS independently ? If yes, then opp-shared
+thing should be dropped.
 
->  			nand_pins: nand_pins {
->  				pinctrl-single,bits = <
->  					/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[4], EMA_CS[3] */
-> @@ -106,7 +112,9 @@
->  			bus-width = <4>;
->  			status = "okay";
->  			pinctrl-names = "default";
-> -			pinctrl-0 = <&mmc0_pins>;
-> +			pinctrl-0 = <&mmc0_pins &mmc0_cd_wp_pins>;
-> +			cd-gpios = <&gpio 64 GPIO_ACTIVE_LOW>;
-> +			wp-gpios = <&gpio 65 GPIO_ACTIVE_HIGH>;
->  		};
->  		spi1: spi@30e000 {
->  			status = "okay";
-> -- 
-> 2.7.4
-> 
+> +
+> +		opp-307200000 {
+> +			opp-hz = /bits/ 64 <  307200000 >;
+
+Why have you added spaces after < and before > here ?
+
+-- 
+viresh
