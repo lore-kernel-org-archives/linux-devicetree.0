@@ -1,65 +1,53 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v5 06/13] ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1
- board file
-Date: Mon, 2 Apr 2018 11:04:21 +0530
-Message-ID: <591f7429-e574-f983-0cdd-45aa07d5c9b1@codeaurora.org>
-References: <1521800336-19266-1-git-send-email-sricharan@codeaurora.org>
- <1521800336-19266-7-git-send-email-sricharan@codeaurora.org>
- <20180327171249.GI1403@tuxbook-pro>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
+ designware driver
+Date: Mon, 2 Apr 2018 11:05:05 +0530
+Message-ID: <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+ <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327171249.GI1403@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, richardcochran@gmail.com, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
 
-On 3/27/2018 10:42 PM, Bjorn Andersson wrote:
-> On Fri 23 Mar 03:18 PDT 2018, Sricharan R wrote:
->> +#include "qcom-ipq4019-ap.dk04.1.dtsi"
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1-C1";
->> +
-> 
-> If this is the board and qcom-ipq4019-ap.dk04.1.dtsi is the platform
-> file then the compatible should be here and not there. Also qcom,ipq4019
-> is not an awesome compatible for a board file.
-> 
 
- ok, agree. Will correct the compatible and move it here.
+On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
->> +	soc {
->> +		dma@7984000 {
->> +			status = "ok";
->> +		};
->> +
->> +		qpic-nand@79b0000 {
->> +			pinctrl-0 = <&nand_pins>;
->> +			pinctrl-names = "default";
->> +			status = "ok";
->> +		};
+Please add a commit message.
+> ---
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> nand_pins defines the muxing and is defined in the other dtsi. So please
-> move these pinctrl-* properties to the dtsi.
-> 
-> As long as the node is disabled the pinctrl state won't be applied
-> anyways.
-> 
-> 
-> If there are electrical properties that needs to be specified you can
-> override the pinctrl state in the board specific file.
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 6300762..4bb2e08 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -3,6 +3,7 @@
+>  Required properties:
+>  - compatible:
+>  	"snps,dw-pcie" for RC mode;
+> +	"snps,dw-pcie-ep" for EP mode;
+>  - reg: Should contain the configuration address space.
+>  - reg-names: Must be "config" for the PCIe configuration space.
+>      (The old way of getting the configuration address space from "ranges"
+> @@ -56,3 +57,15 @@ Example configuration:
+>  		#interrupt-cells = <1>;
+>  		num-lanes = <1>;
+>  	};
+> +or
+> +	pcie_ep: pcie_ep@dfc00000 {
+> +		compatible = "snps,dw-pcie-ep";
+> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
 
- ok, understood. Will follow these conventions in rest of the places as well.
+Doesn't this have iATU unroll space?
 
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks
+Kishon
