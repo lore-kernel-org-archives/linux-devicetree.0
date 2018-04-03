@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v5 06/13] ARM: dts: sun8i: a83t: Add CCI-400 node
-Date: Tue,  3 Apr 2018 08:18:29 +0200
-Message-ID: <20180403061836.3926-7-mylene.josserand@bootlin.com>
+Subject: [PATCH v5 05/13] ARM: dts: sun8i: Add R_CPUCFG device node for the A83T dtsi
+Date: Tue,  3 Apr 2018 08:18:28 +0200
+Message-ID: <20180403061836.3926-6-mylene.josserand@bootlin.com>
 References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,120 +13,31 @@ To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngie
 Cc: devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add CCI-400 node and control-port on CPUs needed by SMP bringup.
+The R_CPUCFG is a collection of registers needed for SMP bringup
+on clusters and cluster's reset.
+For the moment, documentation about this register is found in
+Allwinner's code only.
 
 Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 41 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 85f14f4ebeed..9ac905884d81 100644
+index 32992afa0b12..85f14f4ebeed 100644
 --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
 +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -66,6 +66,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <0>;
+@@ -933,6 +933,11 @@
+ 			#reset-cells = <1>;
  		};
  
-@@ -73,6 +74,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <1>;
- 		};
- 
-@@ -80,6 +82,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <2>;
- 		};
- 
-@@ -87,6 +90,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			cci-control-port = <&cci_control0>;
- 			reg = <3>;
- 		};
- 
-@@ -96,6 +100,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x100>;
- 		};
- 
-@@ -103,6 +108,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x101>;
- 		};
- 
-@@ -110,6 +116,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x102>;
- 		};
- 
-@@ -117,6 +124,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
-+			cci-control-port = <&cci_control1>;
- 			reg = <0x103>;
- 		};
- 	};
-@@ -354,6 +362,39 @@
- 			reg = <0x01700000 0x400>;
- 		};
- 
-+		cci@1790000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x01790000 0x10000>;
-+			ranges = <0x0 0x01790000 0x10000>;
-+
-+			cci_control0: slave-if@4000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x4000 0x1000>;
-+			};
-+
-+			cci_control1: slave-if@5000 {
-+				compatible = "arm,cci-400-ctrl-if";
-+				interface-type = "ace";
-+				reg = <0x5000 0x1000>;
-+			};
-+
-+			pmu@9000 {
-+				compatible = "arm,cci-400-pmu,r1";
-+				reg = <0x9000 0x5000>;
-+				interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-+			};
++		r_cpucfg@1f01c00 {
++			compatible = "allwinner,sun8i-a83t-r-cpucfg";
++			reg = <0x1f01c00 0x100>;
 +		};
 +
- 		syscon: syscon@1c00000 {
- 			compatible = "allwinner,sun8i-a83t-system-controller",
- 				"syscon";
+ 		r_pio: pinctrl@1f02c00 {
+ 			compatible = "allwinner,sun8i-a83t-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
 -- 
 2.11.0
