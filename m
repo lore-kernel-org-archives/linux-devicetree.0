@@ -1,41 +1,101 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v5 04/13] ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
-Date: Tue,  3 Apr 2018 08:18:27 +0200
-Message-ID: <20180403061836.3926-5-mylene.josserand@bootlin.com>
+Subject: [PATCH v5 10/13] ARM: sun9i: smp: Move structures
+Date: Tue,  3 Apr 2018 08:18:33 +0200
+Message-ID: <20180403061836.3926-11-mylene.josserand@bootlin.com>
 References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180403061836.3926-1-mylene.josserand@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QXMgd2UgZm91bmQgaW4gc3VuOWktYTgwLCBDUFVDRkcgaXMgYSBjb2xsZWN0aW9uIG9mIHJlZ2lz
-dGVycyB0aGF0IGFyZQptYXBwZWQgdG8gdGhlIFNvQydzIHNpZ25hbHMgZnJvbSBlYWNoIGluZGl2
-aWR1YWwgcHJvY2Vzc29yIGNvcmUgYW5kCmFzc29jaWF0ZWQgcGVyaXBoZXJhbHMuCgpUaGVzZSBy
-ZWdpc3RlcnMgYXJlIHVzZWQgZm9yIFNNUCBicmluZ3VwIGFuZCBDUFUgaG90cGx1Z2dpbmcuCgpT
-aWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGlu
-LmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hODN0LmR0c2kgfCA1ICsrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTgzdC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNp
-CmluZGV4IDU2ODMwNzYzOWJlOC4uMzI5OTJhZmEwYjEyIDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9zdW44aS1hODN0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgz
-dC5kdHNpCkBAIC0zNDksNiArMzQ5LDExIEBACiAJCQl9OwogCQl9OwogCisJCWNwdWNmZ0AxNzAw
-MDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3QtY3B1Y2ZnIjsKKwkJ
-CXJlZyA9IDwweDAxNzAwMDAwIDB4NDAwPjsKKwkJfTsKKwogCQlzeXNjb246IHN5c2NvbkAxYzAw
-MDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3Qtc3lzdGVtLWNvbnRy
-b2xsZXIiLAogCQkJCSJzeXNjb24iOwotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+To prepare the support for sun8i-a83t, move some structures
+at the beginning of the file.
+
+Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+---
+ arch/arm/mach-sunxi/mc_smp.c | 48 +++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 23 deletions(-)
+
+diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+index 03f021d0c73e..0a7252df207f 100644
+--- a/arch/arm/mach-sunxi/mc_smp.c
++++ b/arch/arm/mach-sunxi/mc_smp.c
+@@ -72,9 +72,34 @@ static void __iomem *cpucfg_base;
+ static void __iomem *prcm_base;
+ static void __iomem *sram_b_smp_base;
+ 
++/*
++ * This holds any device nodes that we requested resources for,
++ * so that we may easily release resources in the error path.
++ */
++struct sunxi_mc_smp_nodes {
++	struct device_node *prcm_node;
++	struct device_node *cpucfg_node;
++	struct device_node *sram_node;
++};
++
++/* This structure holds SoC-specific bits tied to an enable-method string. */
++struct sunxi_mc_smp_data {
++	const char *enable_method;
++	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
++};
++
+ extern void sunxi_mc_smp_secondary_startup(void);
+ extern void sunxi_mc_smp_resume(void);
+ 
++static int __init sun9i_a80_get_smp_nodes(struct sunxi_mc_smp_nodes *nodes);
++
++static const struct sunxi_mc_smp_data sunxi_mc_smp_data[] __initconst = {
++	{
++		.enable_method	= "allwinner,sun9i-a80-smp",
++		.get_smp_nodes	= sun9i_a80_get_smp_nodes,
++	},
++};
++
+ static bool sunxi_core_is_cortex_a15(unsigned int core, unsigned int cluster)
+ {
+ 	struct device_node *node;
+@@ -610,22 +635,6 @@ static int __init sunxi_mc_smp_loopback(void)
+ 	return ret;
+ }
+ 
+-/*
+- * This holds any device nodes that we requested resources for,
+- * so that we may easily release resources in the error path.
+- */
+-struct sunxi_mc_smp_nodes {
+-	struct device_node *prcm_node;
+-	struct device_node *cpucfg_node;
+-	struct device_node *sram_node;
+-};
+-
+-/* This structure holds SoC-specific bits tied to an enable-method string. */
+-struct sunxi_mc_smp_data {
+-	const char *enable_method;
+-	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
+-};
+-
+ static void __init sunxi_mc_smp_put_nodes(struct sunxi_mc_smp_nodes *nodes)
+ {
+ 	of_node_put(nodes->prcm_node);
+@@ -660,13 +669,6 @@ static int __init sun9i_a80_get_smp_nodes(struct sunxi_mc_smp_nodes *nodes)
+ 	return 0;
+ }
+ 
+-static const struct sunxi_mc_smp_data sunxi_mc_smp_data[] __initconst = {
+-	{
+-		.enable_method	= "allwinner,sun9i-a80-smp",
+-		.get_smp_nodes	= sun9i_a80_get_smp_nodes,
+-	},
+-};
+-
+ static int __init sunxi_mc_smp_init(void)
+ {
+ 	struct sunxi_mc_smp_nodes nodes = { 0 };
+-- 
+2.11.0
