@@ -1,124 +1,50 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v17 01/10] LIB: Introduce a generic PIO mapping method
-Date: Tue, 3 Apr 2018 17:01:37 +0100
-Message-ID: <ab748c97-2b55-d090-606f-5491551feff6@huawei.com>
-References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
- <1521051359-34473-2-git-send-email-john.garry@huawei.com>
- <20180403140410.GE27789@ulmo> <20180403143909.GA21171@ulmo>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/7] sunxi: Add DT representation for the MBUS controller
+Date: Tue, 3 Apr 2018 11:03:30 -0500
+Message-ID: <CAL_Jsq+cURC780ivftY1v3P59g5UKAHwb48raXXB6huQ2KBvuQ@mail.gmail.com>
+References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403143909.GA21171@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->>> +int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->>> +{
->>> +	struct logic_pio_hwaddr *range;
->>> +	resource_size_t start = new_range->hw_start;
->>> +	resource_size_t end = new_range->hw_start + new_range->size;
->>> +	resource_size_t mmio_sz = 0;
->>> +	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
->>> +	int ret = 0;
->>> +
->>> +	if (!new_range || !new_range->fwnode || !new_range->size)
->>> +		return -EINVAL;
->>> +
->>> +	mutex_lock(&io_range_mutex);
->>> +	list_for_each_entry_rcu(range, &io_range_list, list) {
->>> +		if (range->fwnode == new_range->fwnode) {
->>> +			/* range already there */
->>> +			ret = -EFAULT;
->>> +			goto end_register;
->>> +		}
->>
-
-Hi Thierry,
-
->> This is the -EFAULT that propagates to pci-tegra.c's ->probe() and fails
->> to bind the driver.
->>
->> I'm not exactly sure what's causing the duplicate here because it's
->> rather difficult to get at something useful from just the ->fwnode, but
->> I'm fairly sure that the reason this breaks is because the Tegra driver
->> will defer probe due to some regulators that aren't available on the
->> first try. Given the above code and the rest of this file, I can't see a
->> way to "fix" the driver and remove the I/O range on failure.
->>
->> This is doubly bad because this doesn't only leak the ranges on probe
->> deferral, but also on driver unload, and we just added support for
->> building the Tegra driver as a loadable module, so these are actually
->> cases that can happen in regular uses of the driver.
->>
->> I have no idea on how to fix this. Anyone know of a quick fix to restore
->> PCI for Tegra other than reverting all of these changes?
->>
->> I suppose an API could be added to unregister the range, but the calling
->> sequence is rather obfuscated, so removing the range will look totally
->> asymmetric, I'm afraid.
->>
->> Here's the call stack:
->>
->> 	tegra_pcie_probe()
->> 	tegra_pcie_parse_dt()
->> 	of_pci_range_to_resource()
->> 	pci_register_io_range()
->> 	logic_pio_register_range()
->>
->> So the range here is registered as part of a resource parsing function,
->> which is supposed to not have any side-effects. There's no equivalent of
->> that parsing routine (i.e. no "unparse" function that would undo the
->> effects of parsing).
->>
->> Perhaps a cleaner way would be to decouple the parsing from the actual
->> request step that has the side-effect.
-
-This could be added if we agreed that it would be useful.
-
->>
->> Going back in history a little, it looks like even before this commit
->> the I/O range registration was triggered by the parsing code and even
->> the range leak was there, except that it caused pci_register_io_range()
->> to return 0 rather than -EFAULT. Perhaps the quickest fix for this would
->> be to do the same in the new code and restore drivers that accidentally
->> depend on this behaviour.
->
-> I can confirm that the following fixes the issue for me, though I don't
-> think it's a very clean fix given that the range will remain requested
-> forever, even if the driver is gone. But since that's already been the
-> case for quite a while, probably something that can be fixed separately.
->
-
-Right, there was no way to deregister the range previously.  From 
-looking at the history here I see no reason to not support it.
-
-As for this patch, as you said, the only difference is that we fault on 
-trying to register the same range again. So this solution seems reasonable.
-
-On another point, for the tegra driver, is it possible to defer earlier 
-in the probe, before these currently irreversible steps are taken?
-
-Thanks very much,
-John
-
-> Cc'ing linux-tegra for visibility.
->
-> Thierry
->
-> --- >8 ---
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index 29cedeadb397..4664b87e1c5f 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -46,7 +46,6 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->  	list_for_each_entry_rcu(range, &io_range_list, list) {
->  		if (range->fwnode == new_range->fwnode) {
->  			/* range already there */
-> -			ret = -EFAULT;
->  			goto end_register;
->  		}
->  		if (range->flags == LOGIC_PIO_CPU_MMIO &&
->
+T24gVHVlLCBBcHIgMywgMjAxOCBhdCA4OjI5IEFNLCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
+YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPiBIaSwKPgo+IFdlJ3ZlIGhhZCBmb3IgcXVpdGUgc29t
+ZSB0aW1lIHRvIGhhY2sgYXJvdW5kIGluIG91ciBkcml2ZXJzIHRvIHRha2UgaW50bwo+IGFjY291
+bnQgdGhlIGZhY3QgdGhhdCBvdXIgRE1BIGFjY2Vzc2VzIGFyZSBub3QgZG9uZSB0aHJvdWdoIHRo
+ZSBwYXJlbnQKPiBub2RlLCBidXQgdGhyb3VnaCBhbm90aGVyIGJ1cyB3aXRoIGEgZGlmZmVyZW50
+IG1hcHBpbmcgdGhhbiB0aGUgQ1BVIGZvciB0aGUKPiBSQU0gKDAgaW5zdGVhZCBvZiAweDQwMDAw
+MDAwIGZvciBtb3N0IFNvQ3MpLgo+Cj4gQWZ0ZXIgc29tZSBkaXNjdXNzaW9uIGFmdGVyIHRoZSBz
+dWJtaXNzaW9uIG9mIGEgY2FtZXJhIGRldmljZSBzdWZmZXJpbmcgb2YKPiB0aGUgc2FtZSBoYWNr
+cywgSSd2ZSBkZWNpZGVkIHRvIHB1dCB0b2dldGhlciBhIHNlcmllIHRoYXQgaW50cm9kdWNlIGEK
+PiBwcm9wZXJ0eSBjYWxsZWQgZG1hLXBhcmVudCB0aGF0IGFsbG93cyB0byBleHByZXNzIHRoZSBE
+TUEgcmVsYXRpb25zaGlwCj4gYmV0d2VlbiBhIG1hc3RlciBhbmQgaXRzIGJ1cywgZXZlbiBpZiB0
+aGV5IGFyZSBub3QgZGlyZWN0IHBhcmVudHMgaW4gdGhlIERULgoKUmVhZGluZyB0aHJ1IHY2IG9m
+IHRoZSBjYW1lcmEgZHJpdmVyLCBpdCBzZWVtcyBsaWtlIGhhdmluZwppbnRlcm1lZGlhdGUgYnVz
+ZXMgd291bGQgc29sdmUgdGhlIHByb2JsZW0gaW4geW91ciBjYXNlPwoKQXMgQXJuZCBtZW50aW9u
+ZWQgaW4gdGhhdCB0aHJlYWQsIHNvbWV0aGluZyBuZXcgbmVlZHMgdG8gYWRkcmVzcyBhbGwKdGhl
+IGRlZmljaWVuY2llcyB3aXRoIGRtYS1yYW5nZXMgYW5kIGRlc2NyaWJpbmcgRE1BIGJ1cyB0b3Bv
+bG9naWVzLgpUaGlzIGRvZXNuJ3QgYWRkcmVzcyB0aGUgbmVlZHMgb2YgZGVzY3JpYmluZyBidXMg
+aW50ZXJjb25uZWN0cy4KVGhlcmUncyBiZWVuIHNvbWUgZWZmb3J0cyBieSB0aGUgUUNvbSBmb2xr
+cyB3aXRoIGFuIGludGVyY29ubmVjdApiaW5kaW5nLiBUaGV5J3ZlIG1vc3RseSBwdW50ZWQgKGZv
+ciBub3cgYXQgbGVhc3QpIHRvIG5vdCBkZXNjcmliaW5nCnRoZSB3aG9sZSBpbnRlcmNvbm5lY3Qg
+aW4gRFQgYW5kIGtlZXBpbmcgdGhlIGRldGFpbHMgaW4gYSBkcml2ZXIuCgpPbiB0aGUgZmxpcCBz
+aWRlLCB0aGlzIGRvZXMgbWlycm9yIHRoZSBlc3RhYmxpc2hlZCBwYXR0ZXJuIHVzZWQgYnkKaW50
+ZXJydXB0cywgc28gbWF5YmUgaXQncyBva2F5IG9uIGl0J3Mgb3duLiBJJ2xsIHdhaXQgZm9yIG90
+aGVycyB0bwpjb21tZW50LgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
