@@ -1,81 +1,40 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 5/7] drm/sun4i: Rely on dma-parent for our RAM offset
-Date: Tue, 3 Apr 2018 16:56:55 +0200
-Message-ID: <20180403145655.GU3881@phenom.ffwll.local>
-References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
- <856ea14e004a70d7d7cf9ca12485c558a966c948.1522761929.git-series.maxime.ripard@bootlin.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
+ time stamping IP core.
+Date: Tue, 3 Apr 2018 08:02:04 -0700
+Message-ID: <20180403150204.gaamvb27ssacv6r3@localhost>
+References: <20180321224702.cbcq3wckmojsrgjf@localhost>
+ <20180321235007.GA28402@lunn.ch>
+ <20180324171219.vh6wcxbem3hyhkuu@localhost>
+ <20180324184858.GF31941@lunn.ch>
+ <20180325045151.kq7mjopjwzo6w2vw@localhost>
+ <20180325155937.GA12820@lunn.ch>
+ <20180325221004.6svjbx54yghwuk7w@localhost>
+ <4c3c939f-4cbe-51db-c141-950b85a5b4de@gmail.com>
+ <20180403035527.lgcm6gql3qx4rpuv@localhost>
+ <20180403131319.GD31740@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <856ea14e004a70d7d7cf9ca12485c558a966c948.1522761929.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180403131319.GD31740@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMDMsIDIwMTggYXQgMDM6Mjk6MThQTSArMDIwMCwgTWF4aW1lIFJpcGFyZCB3
-cm90ZToKPiBOb3cgdGhhdCB3ZSBjYW4gZXhwcmVzcyBvdXIgRE1BIHRvcG9sb2d5LCByZWx5IG9u
-IHRob3NlIHByb3BlcnR5IGluc3RlYWQgb2YKPiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRo
-ZSBkbWFfYWRkcl90IHdoaWNoIHdhc24ndCByZWFsbHkgZ3JlYXQuCj4gCj4gV2Ugc3RpbGwgbmVl
-ZCB0byBhZGQgc29tZSBjb2RlIHRvIGRlYWwgd2l0aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFj
-ayB0aGF0Cj4gcHJvcGVydHksIGJ1dCB3ZSBtb3ZlIHRoZSBvZmZzZXQgdG8gdGhlIERSTSBkZXZp
-Y2UgZG1hX3Bmbl9vZmZzZXQgdG8gYmUKPiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUgZG1hX2Fk
-ZHJfdCBhc3NvY2lhdGVkIHRvIHRoZSBHRU0gb2JqZWN0Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1h
-eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+CgpZYXkgZm9yIGhpZGluZyBt
-b3JlIGJ1cyBhZGRyZXNzIGZ1bmllcyBiZWhpbmQgZG1hX21hcF8qIHN1cHBvcnQuIFRoaXMKc2hv
-dWxkIGFsc28gaGVscCB3aXRoIGNsZWFuZXIgZG1hLWJ1ZiBpbXBvcnQuCgpBY2tlZC1ieTogRGFu
-aWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiAtLS0KPiAgZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYyB8IDI4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0t
-LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4gaW5kZXggODQ3ZWVjYmU0ZDE0
-Li4wNGU4NWQzY2EzNmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRp
-X2JhY2tlbmQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMK
-PiBAQCAtMjIyLDEzICsyMjIsNiBAQCBpbnQgc3VuNGlfYmFja2VuZF91cGRhdGVfbGF5ZXJfYnVm
-ZmVyKHN0cnVjdCBzdW40aV9iYWNrZW5kICpiYWNrZW5kLAo+ICAJcGFkZHIgPSBkcm1fZmJfY21h
-X2dldF9nZW1fYWRkcihmYiwgc3RhdGUsIDApOwo+ICAJRFJNX0RFQlVHX0RSSVZFUigiU2V0dGlu
-ZyBidWZmZXIgYWRkcmVzcyB0byAlcGFkXG4iLCAmcGFkZHIpOwo+ICAKPiAtCS8qCj4gLQkgKiBi
-YWNrZW5kIERNQSBhY2Nlc3NlcyBEUkFNIGRpcmVjdGx5LCBieXBhc3NpbmcgdGhlIHN5c3RlbQo+
-IC0JICogYnVzLiBBcyBzdWNoLCB0aGUgYWRkcmVzcyByYW5nZSBpcyBkaWZmZXJlbnQgYW5kIHRo
-ZSBidWZmZXIKPiAtCSAqIGFkZHJlc3MgbmVlZHMgdG8gYmUgY29ycmVjdGVkLgo+IC0JICovCj4g
-LQlwYWRkciAtPSBQSFlTX09GRlNFVDsKPiAtCj4gIAkvKiBXcml0ZSB0aGUgMzIgbG93ZXIgYml0
-cyBvZiB0aGUgYWRkcmVzcyAoaW4gYml0cykgKi8KPiAgCWxvX3BhZGRyID0gcGFkZHIgPDwgMzsK
-PiAgCURSTV9ERUJVR19EUklWRVIoIlNldHRpbmcgYWRkcmVzcyBsb3dlciBiaXRzIHRvIDB4JXhc
-biIsIGxvX3BhZGRyKTsKPiBAQCAtMzYxLDYgKzM1NCwyNyBAQCBzdGF0aWMgaW50IHN1bjRpX2Jh
-Y2tlbmRfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAg
-CQlyZXR1cm4gLUVOT01FTTsKPiAgCWRldl9zZXRfZHJ2ZGF0YShkZXYsIGJhY2tlbmQpOwo+ICAK
-PiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgImRtYS1wYXJlbnQiLCBOVUxM
-KSkgewo+ICsJCS8qCj4gKwkJICogVGhpcyBhc3N1bWUgd2UgaGF2ZSB0aGUgc2FtZSBETUEgY29u
-c3RyYWludHMgZm9yIGFsbCBvdXIgdGhlCj4gKwkJICogZGV2aWNlcyBpbiBvdXIgcGlwZWxpbmUg
-KGFsbCB0aGUgYmFja2VuZHMsIGJ1dCBhbHNvIHRoZQo+ICsJCSAqIGZyb250ZW5kcykuIFRoaXMg
-c291bmRzIGJhZCwgYnV0IGl0IGhhcyBhbHdheXMgYmVlbiB0aGUgY2FzZQo+ICsJCSAqIGZvciB1
-cywgYW5kIERSTSBkb2Vzbid0IGRvIHBlci1kZXZpY2UgYWxsb2NhdGlvbiBlaXRoZXIsIHNvCj4g
-KwkJICogd2Ugd291bGQgbmVlZCB0byBmaXggRFJNIGZpcnN0Li4uCj4gKwkJICovCj4gKwkJcmV0
-ID0gb2ZfZG1hX2NvbmZpZ3VyZShkcm0tPmRldiwgZGV2LT5vZl9ub2RlKTsKPiArCQlpZiAocmV0
-KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJfSBlbHNlIHsKPiArCQkvKgo+ICsJCSAqIElmIHdlIGRv
-bid0IGhhdmUgdGhlIGRtYS1wYXJlbnQgcHJvcGVydHksIG1vc3QgbGlrZWx5Cj4gKwkJICogYmVj
-YXVzZSBvZiBhbiBvbGQgRFQsIHdlIG5lZWQgdG8gc2V0IHRoZSBETUEgb2Zmc2V0IGJ5IGhhbmQK
-PiArCQkgKiBvbiBvdXIgZGV2aWNlIHNpbmNlIHRoZSBSQU0gbWFwcGluZyBpcyBhdCAwIGZvciB0
-aGUgRE1BIGJ1cywKPiArCQkgKiB1bmxpa2UgdGhlIENQVS4KPiArCQkgKi8KPiArCQlkcm0tPmRl
-di0+ZG1hX3Bmbl9vZmZzZXQgPSBQSFlTX1BGTl9PRkZTRVQ7Cj4gKwl9Cj4gKwo+ICAJYmFja2Vu
-ZC0+ZW5naW5lLm5vZGUgPSBkZXYtPm9mX25vZGU7Cj4gIAliYWNrZW5kLT5lbmdpbmUub3BzID0g
-JnN1bjRpX2JhY2tlbmRfZW5naW5lX29wczsKPiAgCWJhY2tlbmQtPmVuZ2luZS5pZCA9IHN1bjRp
-X2JhY2tlbmRfb2ZfZ2V0X2lkKGRldi0+b2Zfbm9kZSk7Cj4gLS0gCj4gZ2l0LXNlcmllcyAwLjku
-MQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJp
-LWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoK
-LS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0
-dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Tue, Apr 03, 2018 at 03:13:19PM +0200, Andrew Lunn wrote:
+> Have you tried implementing it using a phandle in the phy node,
+> pointing to the time stamping device?
+
+Not yet, but I'll take this up for V2, after the merge window...
+
+Thinking about MII, it really is a 1:1 connection between the MAC and
+the PHY.  It has no representation in the current code, at least not
+yet.  It is too bad about the naming of mii_bus, oh well.  While
+hanging this thing off of the PHY isn't really great modeling (it
+isn't a sub-device of the PHY in any sense), still this will work well
+enough to enable the new functionality.
+
+Thanks,
+Richard
