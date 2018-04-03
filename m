@@ -1,101 +1,48 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v4 13/14] dt-bindings: cpufreq: Document
- operating-points-v2-kryo-cpu
-Date: Tue, 3 Apr 2018 08:11:50 +0530
-Message-ID: <06308b25-14ea-8d8b-6f95-f05c101a617b@codeaurora.org>
-References: <1522358807-10413-1-git-send-email-ilialin@codeaurora.org>
- <1522358807-10413-14-git-send-email-ilialin@codeaurora.org>
- <20180402093018.GC3572@vireshk-i7>
- <7ca35b7a-6078-620b-4772-091e53ef6790@codeaurora.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next RFC V1 5/5] net: mdio: Add a driver for InES
+ time stamping IP core.
+Date: Mon, 2 Apr 2018 20:55:27 -0700
+Message-ID: <20180403035527.lgcm6gql3qx4rpuv@localhost>
+References: <20180321215729.engnoxpaympvvdc5@localhost>
+ <20180321221652.GZ24516@lunn.ch>
+ <20180321224702.cbcq3wckmojsrgjf@localhost>
+ <20180321235007.GA28402@lunn.ch>
+ <20180324171219.vh6wcxbem3hyhkuu@localhost>
+ <20180324184858.GF31941@lunn.ch>
+ <20180325045151.kq7mjopjwzo6w2vw@localhost>
+ <20180325155937.GA12820@lunn.ch>
+ <20180325221004.6svjbx54yghwuk7w@localhost>
+ <4c3c939f-4cbe-51db-c141-950b85a5b4de@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7ca35b7a-6078-620b-4772-091e53ef6790@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4c3c939f-4cbe-51db-c141-950b85a5b4de@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+On Sun, Mar 25, 2018 at 04:01:49PM -0700, Florian Fainelli wrote:
+> The best that I can think about and it still is a hack in some way, is
+> to you have your time stamping driver create a proxy mii_bus whose
+> purpose is just to hook to mdio/phy_device events (such as link changes)
+> in order to do what is necessary, or at least, this would indicate its
+> transparent nature towards the MDIO/MDC lines...
 
-On 4/2/2018 8:37 PM, Sricharan R wrote:
-> Hi Viresh,
-> 
-> On 4/2/2018 3:00 PM, Viresh Kumar wrote:
->> +Sricharan,
->>
->> On 30-03-18, 00:26, Ilia Lin wrote:
->>> In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
->>> that have KRYO processors, the CPU ferequencies subset and voltage value
->>> of each OPP varies based on the silicon variant in use.
->>> Qualcomm Technologies, Inc. Process Voltage Scaling Tables
->>> defines the voltage and frequency value based on the msm-id in SMEM
->>> and speedbin blown in the efuse combination.
->>> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
->>> to provide the OPP framework with required information.
->>> This is used to determine the voltage and frequency value for each OPP of
->>> operating-points-v2 table when it is parsed by the OPP framework.
->>>
->>> This change adds documentation.
->>>
->>> Change-Id: I1953f652a48249fb516d175f0e965a9510cd4209
->>> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
->>> ---
->>>  .../devicetree/bindings/cpufreq/kryo-cpufreq.txt   | 693 +++++++++++++++++++++
->>>  1 file changed, 693 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
->>
->> This should really go in opp directory.
->>
->>> new file mode 100644
->>> index 0000000..20cef9d
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/cpufreq/kryo-cpufreq.txt
->>> @@ -0,0 +1,693 @@
->>> +Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
->>> +===================================
->>> +
->>> +In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
->>> +that have KRYO processors, the CPU ferequencies subset and voltage value
->>> +of each OPP varies based on the silicon variant in use.
->>> +Qualcomm Technologies, Inc. Process Voltage Scaling Tables
->>> +defines the voltage and frequency value based on the msm-id in SMEM
->>> +and speedbin blown in the efuse combination.
->>> +The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
->>> +to provide the OPP framework with required information (existing HW bitmap).
->>> +This is used to determine the voltage and frequency value for each OPP of
->>> +operating-points-v2 table when it is parsed by the OPP framework.
->>> +
->>> +Required properties:
->>> +--------------------
->>> +In 'cpus' nodes:
->>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
->>> +
->>> +In 'operating-points-v2' table:
->>> +- compatible: Should be
->>> +	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
->>> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
->>> +		efuse registers that has information about the
->>> +		speedbin that is used to select the right frequency/voltage
->>> +		value pair.
->>> +		Please refer the for nvmem-cells
->>> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
->>> +		and also examples below.
->>
->> Sricharan is also working on adding these, just make sure you guys do the same
->> thing..
->>
- Right, i was adding a similar one for krait cores [1]. There is code common in the
- init sequence across both (little). Do you suggest to make them common ?
+That won't work at all, AFAICT.  There is only one mii_bus per netdev,
+that is one that is attached to the phydev.
+ 
+> Tangential: the existing PHY time stamping logic should probably be
+> generalized to a mdio_device (which the phy_device is a specialized
+> superset of) instead of to the phy_device. This would still allow
+> existing use cases but it would also allow us to support possible "pure
+> MDIO" devices would that become some thing in the future.
 
-Regards,
- Sricharan
+So this is exactly what I did.  The time stamping methods were pushed
+down into the mdio_device.  The active device (mdiots pointer) points
+either to a non-PHY mdio_device or to the mdio_device embedded in the
+phydev.
 
- [1] https://patchwork.kernel.org/patch/10261873/
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+Richard
