@@ -1,96 +1,143 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next 02/12] clk: sunxi-ng: r40: export a regmap to
- access the GMAC register
-Date: Tue, 3 Apr 2018 17:58:05 +0800
-Message-ID: <CAGb2v65c0wFKecrNtLhJvP71iMPxio4xJ835hD91GdwtFZKXBQ@mail.gmail.com>
-References: <20180317092857.4396-1-wens@csie.org> <20180317092857.4396-3-wens@csie.org>
- <20180318213129.ucwslzvwq6khxrcd@flea> <CAGb2v67Fp20wkmqWyRowpAmm4EDwENnKFG+mccqWaPa5Jj4zBw@mail.gmail.com>
- <20180403094845.le2hfuxktlv66lre@flea> <20180403095005.skflxb7m2qzbhjix@flea>
- <CAGb2v67NO0hbATReq11Y_-2M_yF4hbj_sOtK3D_8yUQb1xi2ww@mail.gmail.com> <9982975F-0911-48F2-BEEB-CE93AB561A55@aosc.io>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
+Date: Tue, 3 Apr 2018 11:59:47 +0200
+Message-ID: <73091b00-205b-3133-6650-21b6e3fda70f@linaro.org>
+References: <20180110224838.16711-2-paul@crapouillou.net>
+ <20180317232901.14129-1-paul@crapouillou.net>
+ <20180317232901.14129-8-paul@crapouillou.net>
+ <a8d28b2b-4e40-83b9-d65e-beecbd36ad33@linaro.org>
+ <06976e4ae275c4cc0bddacc5e0c0c9a9@crapouillou.net>
+ <af33e522-7f87-d62a-0a35-d56a403387b7@linaro.org>
+ <1522335149.1792.0@smtp.crapouillou.net>
+ <2234006b-30ff-d5a8-b14a-d6e307c06145@linaro.org>
+ <4532f9e86184afab8c46e8debd8abe61@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <9982975F-0911-48F2-BEEB-CE93AB561A55@aosc.io>
-Sender: netdev-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4532f9e86184afab8c46e8debd8abe61@crapouillou.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, James Hogan <jhogan@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 5:54 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
->
->
-> 于 2018年4月3日 GMT+08:00 下午5:53:08, Chen-Yu Tsai <wens@csie.org> 写到:
->>On Tue, Apr 3, 2018 at 5:50 PM, Maxime Ripard
->><maxime.ripard@bootlin.com> wrote:
->>> On Tue, Apr 03, 2018 at 11:48:45AM +0200, Maxime Ripard wrote:
->>>> On Tue, Mar 20, 2018 at 03:15:02PM +0800, Chen-Yu Tsai wrote:
->>>> > On Mon, Mar 19, 2018 at 5:31 AM, Maxime Ripard
->>>> > <maxime.ripard@bootlin.com> wrote:
->>>> > > On Sat, Mar 17, 2018 at 05:28:47PM +0800, Chen-Yu Tsai wrote:
->>>> > >> From: Icenowy Zheng <icenowy@aosc.io>
->>>> > >>
->>>> > >> There's a GMAC configuration register, which exists on
->>A64/A83T/H3/H5 in
->>>> > >> the syscon part, in the CCU of R40 SoC.
->>>> > >>
->>>> > >> Export a regmap of the CCU.
->>>> > >>
->>>> > >> Read access is not restricted to all registers, but only the
->>GMAC
->>>> > >> register is allowed to be written.
->>>> > >>
->>>> > >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>>> > >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>>> > >
->>>> > > Gah, this is crazy. I'm really starting to regret letting that
->>syscon
->>>> > > in in the first place...
->>>> >
->>>> > IMHO syscon is really a better fit. It's part of the glue layer
->>and
->>>> > most other dwmac user platforms treat it as such and use a syscon.
->>>> > Plus the controls encompass delays (phase), inverters (polarity),
->>>> > and even signal routing. It's not really just a group of clock
->>controls,
->>>> > like what we poorly modeled for A20/A31. I think that was really a
->>>> > mistake.
->>>> >
->>>> > As I mentioned in the cover letter, a slightly saner approach
->>would
->>>> > be to let drivers add custom syscon entries, which would then
->>require
->>>> > less custom plumbing.
->>>>
->>>> A syscon is convenient, sure, but it also bypasses any abstraction
->>>> layer we have everywhere else, which means that we'll have to
->>maintain
->>>> the register layout in each and every driver that uses it.
->>>>
->>>> So far, it's only be the GMAC, but it can also be others (the SRAM
->>>> controller comes to my mind), and then, if there's any difference in
->>>> the design in a future SoC, we'll have to maintain that in the GMAC
->>>> driver as well.
+On 31/03/2018 19:46, Paul Cercueil wrote:
+> Le 2018-03-31 10:10, Daniel Lezcano a écrit :
+>> On 29/03/2018 16:52, Paul Cercueil wrote:
 >>>
->>> I guess I forgot to say something, I'm fine with using a syscon we
->>> already have.
 >>>
->>> I'm just questionning if merging any other driver using one is the
->>> right move.
+>>> Le mer. 28 mars 2018 à 18:25, Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> a écrit :
+>>>> On 28/03/2018 17:15, Paul Cercueil wrote:
+>>>>>  Le 2018-03-24 07:26, Daniel Lezcano a écrit :
+>>>>>>  On 18/03/2018 00:29, Paul Cercueil wrote:
+>>>>>>>  This driver will use the TCU (Timer Counter Unit) present on the
+>>>>>>> Ingenic
+>>>>>>>  JZ47xx SoCs to provide the kernel with a clocksource and timers.
+>>>>>>
+>>>>>>  Please provide a more detailed description about the timer.
+>>>>>
+>>>>>  There's a doc file for that :)
+>>>>
+>>>> Usually, when there is a new driver I ask for a description in the
+>>>> changelog for reference.
+>>>>
+>>>>>>  Where is the clocksource ?
+>>>>>
+>>>>>  Right, there is no clocksource, just timers.
+>>>>>
+>>>>>>  I don't see the point of using channel idx and pwm checking here.
+>>>>>>
+>>>>>>  There is one clockevent, why create multiple channels ? Can't you
+>>>>>> stick
+>>>>>>  to the usual init routine for a timer.
+>>>>>
+>>>>>  So the idea is that we use all the TCU channels that won't be used
+>>>>> for PWM
+>>>>>  as timers. Hence the PWM checking. Why is this bad?
+>>>>
+>>>> It is not bad but arguable. By checking the channels used by the pwm in
+>>>> the code, you introduce an adherence between two subsystems even if it
+>>>> is just related to the DT parsing part.
+>>>>
+>>>> As it is not needed to have more than one timer in the time framework
+>>>> (at least with the same characteristics), the pwm channels check is
+>>>> pointless. We can assume the author of the DT file is smart enough to
+>>>> prevent conflicts and define a pwm and a timer properly instead of
+>>>> adding more code complexity.
+>>>>
+>>>> In addition, simplifying the code will allow you to use the timer-of
+>>>> code and reduce very significantly the init function.
+>>>
+>>> That's what I had in my V1 and V2, my DT node for the timer-ingenic
+>>> driver
+>>> had a "timers" property (e.g. "timers = <4 5>;") to select the channels
+>>> that
+>>> should be used as timers. Then Rob told me I shouldn't do that, and
+>>> instead
+>>> detect the channels that will be used for PWM.
+>>>
 >>
->>Right. So in this case, we are not actually going through the syscon
->>API. Rather we are exporting a regmap whose properties we actually
->>define. If it makes you more acceptable to it, we could map just
->>the GMAC register in the new regmap, and also have it named. This
->>is all plumbing within the kernel so the device tree stays the same.
->
-> I think my driver has already restricted the write permission
-> only to GMAC register.
+>> [ ... ]
+>>
+>> How do you specify the channels used for PWM ?
+> 
+> To detect the channels that will be used as PWM I parse the whole
+> devicetree
+> searching for "pwms" properties; check that the PWM handle is for our
+> TCU PWM
+> driver; then read the PWM number from there.
+> 
+> Of course it's hackish, and it only works for devicetree. I preferred the
+> method with the "timers" property.
 
-Correct, but it still maps the entire region out, which means the
-consumer needs to know which offset to use. Maxime is saying this
-is something that is troublesome to maintain. So my proposal was
-to create a regmap with a base at the GMAC register offset. That
-way, the consumer doesn't need to use an offset to access it.
+Do you have a DT portion describing that? Eg somewhere in the kernel's
+git tree ?
 
-ChenYu
+>From what I understood, we can specify the channel for a pwm but not for
+a timer, there is certainly something I'm missing.
+
+>>>>>>>
+>>>>>>>  +config INGENIC_TIMER
+>>>>>>>  +    bool "Clocksource/timer using the TCU in Ingenic JZ SoCs"
+>>>>>>>  +    depends on MACH_INGENIC || COMPILE_TEST
+>>>>>>
+>>>>>>  bool "Clocksource/timer using the TCU in Ingenic JZ SoCs" if
+>>>>>> COMPILE_TEST
+>>>>>>
+>>>>>>  Remove the depends MACH_INGENIC.
+>>>>>
+>>>>>  This driver is not useful on anything else than Ingenic SoCs, why
+>>>>> should I
+>>>>>  remove MACH_INGENIC then?
+>>>>
+>>>> For COMPILE_TEST on x86.
+>>>
+>>> Well that's a logical OR right here, so it will work...
+>>
+>> Right, I missed the second part of the condition. For consistency
+>> reason, we don't add a dependency on the platform. The platform will
+>> select it. Look the other timer options and you will see there is no
+>> MACH deps. I'm trying consolidating all these options to have same
+>> format and hopefully factor them out.
+> 
+> I'm all for factorisation, but what I dislike with not depending on
+> MACH_INGENIC, is that the driver now appears in the menuconfig for
+> every arch, even if it only applies to one MIPS SoC.
+
+Can you do the following change?
+
+bool "Clocksource/timer using the TCU in Ingenic JZ SoCs" if COMPILE_TEST
+
+so it will appear only when the COMPILE_TEST option is set whatever the
+platform which is the purpose of this option to increase compile test
+coverage.
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
