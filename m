@@ -1,140 +1,41 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v5 11/13] ARM: sun9i: smp: Add is_sun9i field
-Date: Tue,  3 Apr 2018 08:18:34 +0200
-Message-ID: <20180403061836.3926-12-mylene.josserand@bootlin.com>
+Subject: [PATCH v5 04/13] ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
+Date: Tue,  3 Apr 2018 08:18:27 +0200
+Message-ID: <20180403061836.3926-5-mylene.josserand@bootlin.com>
 References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180403061836.3926-1-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To prepare the support of sun8i-a83t, add a field in the smp_data
-structure to enable the case of sun9i.
-
-Start to handle the differences between sun9i-a80 and sun8i-a83t
-by using this variable.
-Add an index to retrieve which structures we are using.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- arch/arm/mach-sunxi/mc_smp.c | 37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-index 0a7252df207f..468a6c46bfc9 100644
---- a/arch/arm/mach-sunxi/mc_smp.c
-+++ b/arch/arm/mach-sunxi/mc_smp.c
-@@ -71,6 +71,7 @@
- static void __iomem *cpucfg_base;
- static void __iomem *prcm_base;
- static void __iomem *sram_b_smp_base;
-+static int index;
- 
- /*
-  * This holds any device nodes that we requested resources for,
-@@ -86,6 +87,7 @@ struct sunxi_mc_smp_nodes {
- struct sunxi_mc_smp_data {
- 	const char *enable_method;
- 	int (*get_smp_nodes)(struct sunxi_mc_smp_nodes *nodes);
-+	int is_sun9i;
- };
- 
- extern void sunxi_mc_smp_secondary_startup(void);
-@@ -97,6 +99,7 @@ static const struct sunxi_mc_smp_data sunxi_mc_smp_data[] __initconst = {
- 	{
- 		.enable_method	= "allwinner,sun9i-a80-smp",
- 		.get_smp_nodes	= sun9i_a80_get_smp_nodes,
-+		.is_sun9i	= true,
- 	},
- };
- 
-@@ -280,7 +283,8 @@ static int sunxi_cluster_powerup(unsigned int cluster)
- 
- 	/* clear cluster power gate */
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
--	reg &= ~PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I;
-+	if (sunxi_mc_smp_data[index].is_sun9i)
-+		reg &= ~PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I;
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
-@@ -477,7 +481,8 @@ static int sunxi_cluster_powerdown(unsigned int cluster)
- 	/* gate cluster power */
- 	pr_debug("%s: gate cluster power\n", __func__);
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
--	reg |= PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I;
-+	if (sunxi_mc_smp_data[index].is_sun9i)
-+		reg |= PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I;
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
-@@ -675,6 +680,7 @@ static int __init sunxi_mc_smp_init(void)
- 	struct device_node *node;
- 	struct resource res;
- 	int i, ret;
-+	void __iomem *addr;
- 
- 	/*
- 	 * Don't bother checking the "cpus" node, as an enable-method
-@@ -699,6 +705,8 @@ static int __init sunxi_mc_smp_init(void)
- 			break;
- 	}
- 
-+	index = i;
-+
- 	of_node_put(node);
- 	if (ret)
- 		return -ENODEV;
-@@ -736,12 +744,14 @@ static int __init sunxi_mc_smp_init(void)
- 		goto err_unmap_prcm;
- 	}
- 
--	sram_b_smp_base = of_io_request_and_map(nodes.sram_node, 0,
--						"sunxi-mc-smp");
--	if (IS_ERR(sram_b_smp_base)) {
--		ret = PTR_ERR(sram_b_smp_base);
--		pr_err("%s: failed to map secure SRAM\n", __func__);
--		goto err_unmap_release_cpucfg;
-+	if (sunxi_mc_smp_data[index].is_sun9i) {
-+		sram_b_smp_base = of_io_request_and_map(nodes.sram_node, 0,
-+							"sunxi-mc-smp");
-+		if (IS_ERR(sram_b_smp_base)) {
-+			ret = PTR_ERR(sram_b_smp_base);
-+			pr_err("%s: failed to map secure SRAM\n", __func__);
-+			goto err_unmap_release_cpucfg;
-+		}
- 	}
- 
- 	/* Configure CCI-400 for boot cluster */
-@@ -756,8 +766,9 @@ static int __init sunxi_mc_smp_init(void)
- 	sunxi_mc_smp_put_nodes(&nodes);
- 
- 	/* Set the hardware entry point address */
--	writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
--	       prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
-+	if (sunxi_mc_smp_data[index].is_sun9i)
-+		addr = prcm_base + PRCM_CPU_SOFT_ENTRY_REG;
-+	writel(__pa_symbol(sunxi_mc_smp_secondary_startup), addr);
- 
- 	/* Actually enable multi cluster SMP */
- 	smp_set_ops(&sunxi_mc_smp_smp_ops);
-@@ -767,8 +778,10 @@ static int __init sunxi_mc_smp_init(void)
- 	return 0;
- 
- err_unmap_release_secure_sram:
--	iounmap(sram_b_smp_base);
--	of_address_to_resource(nodes.sram_node, 0, &res);
-+	if (sunxi_mc_smp_data[index].is_sun9i) {
-+		iounmap(sram_b_smp_base);
-+		of_address_to_resource(nodes.sram_node, 0, &res);
-+	}
- 	release_mem_region(res.start, resource_size(&res));
- err_unmap_release_cpucfg:
- 	iounmap(cpucfg_base);
--- 
-2.11.0
+QXMgd2UgZm91bmQgaW4gc3VuOWktYTgwLCBDUFVDRkcgaXMgYSBjb2xsZWN0aW9uIG9mIHJlZ2lz
+dGVycyB0aGF0IGFyZQptYXBwZWQgdG8gdGhlIFNvQydzIHNpZ25hbHMgZnJvbSBlYWNoIGluZGl2
+aWR1YWwgcHJvY2Vzc29yIGNvcmUgYW5kCmFzc29jaWF0ZWQgcGVyaXBoZXJhbHMuCgpUaGVzZSBy
+ZWdpc3RlcnMgYXJlIHVzZWQgZm9yIFNNUCBicmluZ3VwIGFuZCBDUFUgaG90cGx1Z2dpbmcuCgpT
+aWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGlu
+LmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hODN0LmR0c2kgfCA1ICsrKysrCiAx
+IGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvc3VuOGktYTgzdC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNp
+CmluZGV4IDU2ODMwNzYzOWJlOC4uMzI5OTJhZmEwYjEyIDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
+b290L2R0cy9zdW44aS1hODN0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgz
+dC5kdHNpCkBAIC0zNDksNiArMzQ5LDExIEBACiAJCQl9OwogCQl9OwogCisJCWNwdWNmZ0AxNzAw
+MDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3QtY3B1Y2ZnIjsKKwkJ
+CXJlZyA9IDwweDAxNzAwMDAwIDB4NDAwPjsKKwkJfTsKKwogCQlzeXNjb246IHN5c2NvbkAxYzAw
+MDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWE4M3Qtc3lzdGVtLWNvbnRy
+b2xsZXIiLAogCQkJCSJzeXNjb24iOwotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
