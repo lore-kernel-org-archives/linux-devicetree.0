@@ -1,57 +1,38 @@
-Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:42164 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751278AbeDFFPI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Apr 2018 01:15:08 -0400
-Received: by mail-pf0-f193.google.com with SMTP id o16so4763372pfk.9
-        for <devicetree@vger.kernel.org>; Thu, 05 Apr 2018 22:15:08 -0700 (PDT)
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: [PATCH v7 1/2] media: dt-bindings: Add bindings for panasonic,amg88xx
-Date: Thu,  5 Apr 2018 22:14:48 -0700
-Message-Id: <20180406051449.32157-2-matt.ranostay@konsulko.com>
-In-Reply-To: <20180406051449.32157-1-matt.ranostay@konsulko.com>
-References: <20180406051449.32157-1-matt.ranostay@konsulko.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Matt Ranostay <matt.ranostay@konsulko.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=QDRt=GY=chromium.org=evgreen@kernel.org>
+MIME-Version: 1.0
+References: <1522429700-13083-1-git-send-email-kramasub@codeaurora.org> <1522429700-13083-3-git-send-email-kramasub@codeaurora.org>
+In-Reply-To: <1522429700-13083-3-git-send-email-kramasub@codeaurora.org>
+From: Evan Green <evgreen@chromium.org>
+Date: Tue, 03 Apr 2018 18:47:43 +0000
+Message-ID: <CAE=gft4SVRy8DMUYpjq3Pvv6r8wMzKr=MOqqPZJNnVONc6ruQA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/5] soc: qcom: Add GENI based QUP Wrapper driver
+Content-Type: text/plain; charset="UTF-8"
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, acourbot@chromium.org, swboyd@chromium.org, Doug Anderson <dianders@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the device tree bindings for the panasonic,amg88xx i2c
-video driver.
+On Fri, Mar 30, 2018 at 10:08 AM Karthikeyan Ramasubramanian <
+kramasub@codeaurora.org> wrote:
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
----
- .../bindings/media/i2c/panasonic,amg88xx.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
+> This driver manages the Generic Interface (GENI) firmware based Qualcomm
+> Universal Peripheral (QUP) Wrapper. GENI based QUP is the next generation
+> programmable module composed of multiple Serial Engines (SE) and supports
+> a wide range of serial interfaces like UART, SPI, I2C, I3C, etc. This
+> driver also enables managing the serial interface independent aspects of
+> Serial Engines.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-new file mode 100644
-index 000000000000..4a3181a3dd7e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-@@ -0,0 +1,19 @@
-+* Panasonic AMG88xx
-+
-+The Panasonic family of AMG88xx Grid-Eye sensors allow recording
-+8x8 10Hz video which consists of thermal datapoints
-+
-+Required Properties:
-+ - compatible : Must be "panasonic,amg88xx"
-+ - reg : i2c address of the device
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		amg88xx@69 {
-+			compatible = "panasonic,amg88xx";
-+			reg = <0x69>;
-+		};
-+		...
-+	};
--- 
-2.14.1
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> ---
+>   drivers/soc/qcom/Kconfig        |   9 +
+>   drivers/soc/qcom/Makefile       |   1 +
+>   drivers/soc/qcom/qcom-geni-se.c | 748
+++++++++++++++++++++++++++++++++++++++++
+>   include/linux/qcom-geni-se.h    | 425 +++++++++++++++++++++++
+>   4 files changed, 1183 insertions(+)
+>   create mode 100644 drivers/soc/qcom/qcom-geni-se.c
+>   create mode 100644 include/linux/qcom-geni-se.h
 
+
+Reviewed-by: Evan Green <evgreen@chromium.org>
