@@ -1,219 +1,81 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v17 01/10] LIB: Introduce a generic PIO mapping method
-Date: Tue, 3 Apr 2018 16:39:09 +0200
-Message-ID: <20180403143909.GA21171@ulmo>
-References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
- <1521051359-34473-2-git-send-email-john.garry@huawei.com>
- <20180403140410.GE27789@ulmo>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 5/7] drm/sun4i: Rely on dma-parent for our RAM offset
+Date: Tue, 3 Apr 2018 16:56:55 +0200
+Message-ID: <20180403145655.GU3881@phenom.ffwll.local>
+References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
+ <856ea14e004a70d7d7cf9ca12485c558a966c948.1522761929.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180403140410.GE27789@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de, linux-tegra@vger.kernel.org
+In-Reply-To: <856ea14e004a70d7d7cf9ca12485c558a966c948.1522761929.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 03, 2018 at 04:04:10PM +0200, Thierry Reding wrote:
-> On Thu, Mar 15, 2018 at 02:15:50AM +0800, John Garry wrote:
-> > From: Zhichang Yuan <yuanzhichang@hisilicon.com>
-> >=20
-> > In commit 41f8bba7f555 ("of/pci: Add pci_register_io_range() and
-> > pci_pio_to_address()"), a new I/O space management was supported. With
-> > that driver, the I/O ranges configured for PCI/PCIe hosts on some
-> > architectures can be mapped to logical PIO, converted easily between
-> > CPU address and the corresponding logicial PIO. Based on this, PCI
-> > I/O devices can be accessed in a memory read/write way through the
-> > unified in/out accessors.
-> >=20
-> > But on some archs/platforms, there are bus hosts which access I/O
-> > peripherals with host-local I/O port addresses rather than memory
-> > addresses after memory-mapped.
-> >=20
-> > To support those devices, a more generic I/O mapping method is introduc=
-ed
-> > here. Through this patch, both the CPU addresses and the host-local port
-> > can be mapped into the logical PIO space with different logical/fake PI=
-Os.
-> > After this, all the I/O accesses to either PCI MMIO devices or host-loc=
-al
-> > I/O peripherals can be unified into the existing I/O accessors defined =
-in
-> > asm-generic/io.h and be redirected to the right device-specific hooks
-> > based on the input logical PIO.
-> >=20
-> > Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
-> > Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> > Signed-off-by: John Garry <john.garry@huawei.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Tested-by: dann frazier <dann.frazier@canonical.com>
-> > ---
-> >  include/asm-generic/io.h  |   2 +
-> >  include/linux/logic_pio.h | 124 ++++++++++++++++++++
-> >  lib/Kconfig               |  15 +++
-> >  lib/Makefile              |   2 +
-> >  lib/logic_pio.c           | 282 ++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  5 files changed, 425 insertions(+)
-> >  create mode 100644 include/linux/logic_pio.h
-> >  create mode 100644 lib/logic_pio.c
-> >=20
-> [...]
-> > diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> > new file mode 100644
-> > index 0000000..8394c2d
-> > --- /dev/null
-> > +++ b/lib/logic_pio.c
-> > @@ -0,0 +1,282 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2017 Hisilicon Limited, All Rights Reserved.
-> > + * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> > + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
-> > + *
-> > + */
-> > +
-> > +#define pr_fmt(fmt)	"LOGIC PIO: " fmt
-> > +
-> > +#include <linux/of.h>
-> > +#include <linux/io.h>
-> > +#include <linux/logic_pio.h>
-> > +#include <linux/mm.h>
-> > +#include <linux/rculist.h>
-> > +#include <linux/sizes.h>
-> > +#include <linux/slab.h>
-> > +
-> > +/* The unique hardware address list. */
-> > +static LIST_HEAD(io_range_list);
-> > +static DEFINE_MUTEX(io_range_mutex);
-> > +
-> > +/* Consider a kernel general helper for this */
-> > +#define in_range(b, first, len)        ((b) >=3D (first) && (b) < (fir=
-st) + (len))
-> > +
-> > +/**
-> > + * logic_pio_register_range - register logical PIO range for a host
-> > + * @new_range: pointer to the io range to be registered.
-> > + *
-> > + * returns 0 on success, the error code in case of failure
-> > + *
-> > + * Register a new io range node in the io range list.
-> > + */
-> > +int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
-> > +{
-> > +	struct logic_pio_hwaddr *range;
-> > +	resource_size_t start =3D new_range->hw_start;
-> > +	resource_size_t end =3D new_range->hw_start + new_range->size;
-> > +	resource_size_t mmio_sz =3D 0;
-> > +	resource_size_t iio_sz =3D MMIO_UPPER_LIMIT;
-> > +	int ret =3D 0;
-> > +
-> > +	if (!new_range || !new_range->fwnode || !new_range->size)
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&io_range_mutex);
-> > +	list_for_each_entry_rcu(range, &io_range_list, list) {
-> > +		if (range->fwnode =3D=3D new_range->fwnode) {
-> > +			/* range already there */
-> > +			ret =3D -EFAULT;
-> > +			goto end_register;
-> > +		}
->=20
-> This is the -EFAULT that propagates to pci-tegra.c's ->probe() and fails
-> to bind the driver.
->=20
-> I'm not exactly sure what's causing the duplicate here because it's
-> rather difficult to get at something useful from just the ->fwnode, but
-> I'm fairly sure that the reason this breaks is because the Tegra driver
-> will defer probe due to some regulators that aren't available on the
-> first try. Given the above code and the rest of this file, I can't see a
-> way to "fix" the driver and remove the I/O range on failure.
->=20
-> This is doubly bad because this doesn't only leak the ranges on probe
-> deferral, but also on driver unload, and we just added support for
-> building the Tegra driver as a loadable module, so these are actually
-> cases that can happen in regular uses of the driver.
->=20
-> I have no idea on how to fix this. Anyone know of a quick fix to restore
-> PCI for Tegra other than reverting all of these changes?
->=20
-> I suppose an API could be added to unregister the range, but the calling
-> sequence is rather obfuscated, so removing the range will look totally
-> asymmetric, I'm afraid.
->=20
-> Here's the call stack:
->=20
-> 	tegra_pcie_probe()
-> 	tegra_pcie_parse_dt()
-> 	of_pci_range_to_resource()
-> 	pci_register_io_range()
-> 	logic_pio_register_range()
->=20
-> So the range here is registered as part of a resource parsing function,
-> which is supposed to not have any side-effects. There's no equivalent of
-> that parsing routine (i.e. no "unparse" function that would undo the
-> effects of parsing).
->=20
-> Perhaps a cleaner way would be to decouple the parsing from the actual
-> request step that has the side-effect.
->=20
-> Going back in history a little, it looks like even before this commit
-> the I/O range registration was triggered by the parsing code and even
-> the range leak was there, except that it caused pci_register_io_range()
-> to return 0 rather than -EFAULT. Perhaps the quickest fix for this would
-> be to do the same in the new code and restore drivers that accidentally
-> depend on this behaviour.
-
-I can confirm that the following fixes the issue for me, though I don't
-think it's a very clean fix given that the range will remain requested
-forever, even if the driver is gone. But since that's already been the
-case for quite a while, probably something that can be fixed separately.
-
-Cc'ing linux-tegra for visibility.
-
-Thierry
-
---- >8 ---
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index 29cedeadb397..4664b87e1c5f 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -46,7 +46,6 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new=
-_range)
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
- 		if (range->fwnode =3D=3D new_range->fwnode) {
- 			/* range already there */
--			ret =3D -EFAULT;
- 			goto end_register;
- 		}
- 		if (range->flags =3D=3D LOGIC_PIO_CPU_MMIO &&
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrDkgoACgkQ3SOs138+
-s6FdvQ//UP5e2NbsiNCzF8UxnE6I2I9V/WRg5LfeBP3xx2Vhzxbgmp3JaiU3MqF8
-j1S4JSKJ8jBGDrdCZYzgVboJgC+QZ3b4WKR+ZP31x8bhsdZUZNkg66bgA7hVUzcI
-xeqD/Is5w+cJPE96Kk9tL8ntE83h541CM05E8h9pukubuOeeS+Y3w17CJB6xp+Ny
-bvsmV+ZVvDh/9TaZrFw8e/BQR734LUq1aDhibeJSP1HEshX7PPVER07UZVNR4pkw
-MMYhcOo58zJ5qPxlrpir7wFC6gN5kAeEF3vmc40gyxrOzU/j9La1CEmzTsC9gThw
-mBspssabK120drd3Nc4v1J3Fs3LK1qioqMs108835SXJg9U03QR4sEYlBDnA5C3y
-wLQDUsAkxbXwtPMmdz7p2piCb/mSMMe5f8UOrOpcMQGRtI5ZggQx5nbagWAjStfk
-qV8f4SUnEUidkOES01EQWJ7bt0j5FbG6Yj0NPIkjjGr/glvGyMUIpXqJyu9Hmtyf
-X6Bq9fn3njxM+P2cEJoxrwQvk26wMnSBoc/CpiVwTyZLN4eTtRSctttPgXa2U1w/
-nCtwt+q6TiIpZgYoCgR5GLwBb53iZNRH7pRLsDjEtEEaDoAGbCy97b7cS8ma+wDj
-Y8MNLaMUPrgyAh1F6XUbIrtEoeYHQWtcZUEYk084SH6eKguPt3Y=
-=aklt
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+T24gVHVlLCBBcHIgMDMsIDIwMTggYXQgMDM6Mjk6MThQTSArMDIwMCwgTWF4aW1lIFJpcGFyZCB3
+cm90ZToKPiBOb3cgdGhhdCB3ZSBjYW4gZXhwcmVzcyBvdXIgRE1BIHRvcG9sb2d5LCByZWx5IG9u
+IHRob3NlIHByb3BlcnR5IGluc3RlYWQgb2YKPiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRo
+ZSBkbWFfYWRkcl90IHdoaWNoIHdhc24ndCByZWFsbHkgZ3JlYXQuCj4gCj4gV2Ugc3RpbGwgbmVl
+ZCB0byBhZGQgc29tZSBjb2RlIHRvIGRlYWwgd2l0aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFj
+ayB0aGF0Cj4gcHJvcGVydHksIGJ1dCB3ZSBtb3ZlIHRoZSBvZmZzZXQgdG8gdGhlIERSTSBkZXZp
+Y2UgZG1hX3Bmbl9vZmZzZXQgdG8gYmUKPiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUgZG1hX2Fk
+ZHJfdCBhc3NvY2lhdGVkIHRvIHRoZSBHRU0gb2JqZWN0Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1h
+eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+CgpZYXkgZm9yIGhpZGluZyBt
+b3JlIGJ1cyBhZGRyZXNzIGZ1bmllcyBiZWhpbmQgZG1hX21hcF8qIHN1cHBvcnQuIFRoaXMKc2hv
+dWxkIGFsc28gaGVscCB3aXRoIGNsZWFuZXIgZG1hLWJ1ZiBpbXBvcnQuCgpBY2tlZC1ieTogRGFu
+aWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiAtLS0KPiAgZHJpdmVycy9ncHUv
+ZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYyB8IDI4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4gaW5kZXggODQ3ZWVjYmU0ZDE0
+Li4wNGU4NWQzY2EzNmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRp
+X2JhY2tlbmQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMK
+PiBAQCAtMjIyLDEzICsyMjIsNiBAQCBpbnQgc3VuNGlfYmFja2VuZF91cGRhdGVfbGF5ZXJfYnVm
+ZmVyKHN0cnVjdCBzdW40aV9iYWNrZW5kICpiYWNrZW5kLAo+ICAJcGFkZHIgPSBkcm1fZmJfY21h
+X2dldF9nZW1fYWRkcihmYiwgc3RhdGUsIDApOwo+ICAJRFJNX0RFQlVHX0RSSVZFUigiU2V0dGlu
+ZyBidWZmZXIgYWRkcmVzcyB0byAlcGFkXG4iLCAmcGFkZHIpOwo+ICAKPiAtCS8qCj4gLQkgKiBi
+YWNrZW5kIERNQSBhY2Nlc3NlcyBEUkFNIGRpcmVjdGx5LCBieXBhc3NpbmcgdGhlIHN5c3RlbQo+
+IC0JICogYnVzLiBBcyBzdWNoLCB0aGUgYWRkcmVzcyByYW5nZSBpcyBkaWZmZXJlbnQgYW5kIHRo
+ZSBidWZmZXIKPiAtCSAqIGFkZHJlc3MgbmVlZHMgdG8gYmUgY29ycmVjdGVkLgo+IC0JICovCj4g
+LQlwYWRkciAtPSBQSFlTX09GRlNFVDsKPiAtCj4gIAkvKiBXcml0ZSB0aGUgMzIgbG93ZXIgYml0
+cyBvZiB0aGUgYWRkcmVzcyAoaW4gYml0cykgKi8KPiAgCWxvX3BhZGRyID0gcGFkZHIgPDwgMzsK
+PiAgCURSTV9ERUJVR19EUklWRVIoIlNldHRpbmcgYWRkcmVzcyBsb3dlciBiaXRzIHRvIDB4JXhc
+biIsIGxvX3BhZGRyKTsKPiBAQCAtMzYxLDYgKzM1NCwyNyBAQCBzdGF0aWMgaW50IHN1bjRpX2Jh
+Y2tlbmRfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAg
+CQlyZXR1cm4gLUVOT01FTTsKPiAgCWRldl9zZXRfZHJ2ZGF0YShkZXYsIGJhY2tlbmQpOwo+ICAK
+PiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgImRtYS1wYXJlbnQiLCBOVUxM
+KSkgewo+ICsJCS8qCj4gKwkJICogVGhpcyBhc3N1bWUgd2UgaGF2ZSB0aGUgc2FtZSBETUEgY29u
+c3RyYWludHMgZm9yIGFsbCBvdXIgdGhlCj4gKwkJICogZGV2aWNlcyBpbiBvdXIgcGlwZWxpbmUg
+KGFsbCB0aGUgYmFja2VuZHMsIGJ1dCBhbHNvIHRoZQo+ICsJCSAqIGZyb250ZW5kcykuIFRoaXMg
+c291bmRzIGJhZCwgYnV0IGl0IGhhcyBhbHdheXMgYmVlbiB0aGUgY2FzZQo+ICsJCSAqIGZvciB1
+cywgYW5kIERSTSBkb2Vzbid0IGRvIHBlci1kZXZpY2UgYWxsb2NhdGlvbiBlaXRoZXIsIHNvCj4g
+KwkJICogd2Ugd291bGQgbmVlZCB0byBmaXggRFJNIGZpcnN0Li4uCj4gKwkJICovCj4gKwkJcmV0
+ID0gb2ZfZG1hX2NvbmZpZ3VyZShkcm0tPmRldiwgZGV2LT5vZl9ub2RlKTsKPiArCQlpZiAocmV0
+KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJfSBlbHNlIHsKPiArCQkvKgo+ICsJCSAqIElmIHdlIGRv
+bid0IGhhdmUgdGhlIGRtYS1wYXJlbnQgcHJvcGVydHksIG1vc3QgbGlrZWx5Cj4gKwkJICogYmVj
+YXVzZSBvZiBhbiBvbGQgRFQsIHdlIG5lZWQgdG8gc2V0IHRoZSBETUEgb2Zmc2V0IGJ5IGhhbmQK
+PiArCQkgKiBvbiBvdXIgZGV2aWNlIHNpbmNlIHRoZSBSQU0gbWFwcGluZyBpcyBhdCAwIGZvciB0
+aGUgRE1BIGJ1cywKPiArCQkgKiB1bmxpa2UgdGhlIENQVS4KPiArCQkgKi8KPiArCQlkcm0tPmRl
+di0+ZG1hX3Bmbl9vZmZzZXQgPSBQSFlTX1BGTl9PRkZTRVQ7Cj4gKwl9Cj4gKwo+ICAJYmFja2Vu
+ZC0+ZW5naW5lLm5vZGUgPSBkZXYtPm9mX25vZGU7Cj4gIAliYWNrZW5kLT5lbmdpbmUub3BzID0g
+JnN1bjRpX2JhY2tlbmRfZW5naW5lX29wczsKPiAgCWJhY2tlbmQtPmVuZ2luZS5pZCA9IHN1bjRp
+X2JhY2tlbmRfb2ZfZ2V0X2lkKGRldi0+b2Zfbm9kZSk7Cj4gLS0gCj4gZ2l0LXNlcmllcyAwLjku
+MQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJp
+LWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoK
+LS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0
+dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
