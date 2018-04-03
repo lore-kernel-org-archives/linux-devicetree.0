@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v1 1/7] dt-bindings: net: bluetooth: Add mediatek-bluetooth
-Date: Tue, 3 Apr 2018 15:15:51 +0800
-Message-ID: <958f8a0ef0b557fdfcc02a1e86536e1f97a16e22.1522736996.git.sean.wang@mediatek.com>
+Subject: [PATCH v1 5/7] soc: mediatek: add a fixed wait for SRAM stable
+Date: Tue, 3 Apr 2018 15:15:55 +0800
+Message-ID: <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
 References: <cover.1522736996.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,60 +9,66 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1522736996.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add binding document for a SoC built-in device using MediaTek protocol.
-Which could be found on MT7622 SoC or other similar MediaTek SoCs.
+MT7622_POWER_DOMAIN_WB doesn't send an ACK when its managed SRAM becomes
+stable, which is not like the behavior the other power domains should
+have. Therefore, it's necessary for such a power domain to have a fixed
+and well-predefined duration to wait until its managed SRAM can be allowed
+to access by all functions running on the top.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- .../devicetree/bindings/net/mediatek-bluetooth.txt | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+ drivers/soc/mediatek/mtk-scpsys.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-new file mode 100644
-index 0000000..1335429
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-@@ -0,0 +1,35 @@
-+MediaTek SoC built-in Bluetooth Devices
-+==================================
-+
-+This device is a serial attached device to BTIF device and thus it must be a
-+child node of the serial node with BTIF. The dt-bindings details for BTIF
-+device can be known via Documentation/devicetree/bindings/serial/8250.txt.
-+
-+Required properties:
-+
-+- compatible:	Must be one of
-+		  "mediatek,mt7622-bluetooth"": for MT7622 SoC
-+- clocks:	Should be the clock specifiers corresponding to the entry in
-+		clock-names property.
-+- clock-names:	Should contain "ref" entries.
-+- power-domains: Phandle to the power domain that the device is part of
-+
-+Example:
-+
-+	btif: serial@1100c000 {
-+		compatible = "mediatek,mt7622-btif",
-+			     "mediatek,mtk-btif";
-+		reg = <0 0x1100c000 0 0x1000>;
-+		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_BTIF_PD>;
-+		clock-names = "main";
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+
-+		bluetooth {
-+			compatible = "mediatek,mt7622-bluetooth";
-+			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
-+			clocks = <&clk25m>;
-+			clock-names = "ref";
-+		};
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index f9b7248..19aceb8 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -121,6 +121,7 @@ struct scp_domain_data {
+ 	u32 bus_prot_mask;
+ 	enum clk_id clk_id[MAX_CLKS];
+ 	bool active_wakeup;
++	u32 us_sram_fwait;
+ };
+ 
+ struct scp;
+@@ -234,11 +235,16 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+ 	val &= ~scpd->data->sram_pdn_bits;
+ 	writel(val, ctl_addr);
+ 
+-	/* wait until SRAM_PDN_ACK all 0 */
+-	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
+-				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+-	if (ret < 0)
+-		goto err_pwr_ack;
++	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
++	if (!scpd->data->us_sram_fwait) {
++		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
++					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++		if (ret < 0)
++			goto err_pwr_ack;
++	} else {
++		usleep_range(scpd->data->us_sram_fwait,
++			     scpd->data->us_sram_fwait + 100);
 +	};
+ 
+ 	if (scpd->data->bus_prot_mask) {
+ 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+@@ -783,6 +789,7 @@ static const struct scp_domain_data scp_domain_data_mt7622[] = {
+ 		.clk_id = {CLK_NONE},
+ 		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
+ 		.active_wakeup = true,
++		.us_sram_fwait = 12000,
+ 	},
+ };
+ 
 -- 
 2.7.4
