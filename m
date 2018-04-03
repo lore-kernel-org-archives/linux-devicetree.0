@@ -1,78 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [Question] MFD driver that handles clocks/resets and populates
- child nodes
-Date: Tue, 3 Apr 2018 09:03:35 +0100
-Message-ID: <20180403080335.ksekhxwvbzbxhmln@dell>
-References: <CAK7LNARFWDMgmWsCjUmVrm4ZeYOcKCbizijxmDXob618ABjNWg@mail.gmail.com>
- <20180402120414.GA8159@lunn.ch>
- <CAK7LNAQ6LKk3NtGLB8g07ocyvXidpTHsApeDuctvEHyyLvk2ew@mail.gmail.com>
- <20180402133219.GA10520@lunn.ch>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv2 1/3] dt-bindings: display: dw_hdmi.txt: add cec-disable
+ property
+Date: Tue, 3 Apr 2018 10:27:01 +0200
+Message-ID: <05e7ade1-89be-0f0f-18a5-88ff0310a70b@xs4all.nl>
+References: <20180323125915.13986-1-hverkuil@xs4all.nl>
+ <20180323125915.13986-2-hverkuil@xs4all.nl>
+ <20180326072830.iphtbw5mkeciv4kj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180402133219.GA10520@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180326072830.iphtbw5mkeciv4kj@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Hans Verkuil <hans.verkuil@cisco.com>, linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Apr 2018, Andrew Lunn wrote:
-
-> On Mon, Apr 02, 2018 at 10:21:01PM +0900, Masahiro Yamada wrote:
-> > 2018-04-02 21:04 GMT+09:00 Andrew Lunn <andrew@lunn.ch>:
-> > >> The maintainer of DWC3, Felipe Balbi, requested to
-> > >> split the glue layer driver into small parts such as
-> > >> reset, regulator, phy, etc.
-> > >
-> > > What exactly did Felipe ask for? Did he ask that the patch be split
-> > > up, one patch per reset, regulator, phy etc?
-> > 
-> > 
-> > Yeah.  That is what we understood from his comments.
-> > 
-> > 
-> > These are the feed-backs from him.
-> > 
-> > https://lkml.org/lkml/2018/1/23/298
-> > https://lkml.org/lkml/2018/1/24/352
-> 
-> > > Are all these resources used just by the DWC3? Or is it a true MFD,
-> > > multiple functions?
-> > 
-> > I do not think this is a real MFD.
-> > 
-> > This is a DWC3 glue layer, i.e.
-> > a collection of misc registers that control
-> > the DWC3 IP.
-> > 
-> > 
-> > Just splitting it into small pieces
-> > to use PHY, reset, regulator framework in Linux.
-> > 
-> > Of course, the price of this approach
-> > is so cluttered Device Tree,
-> > honestly I do not like it much.
-> 
-> This however the correct way to do this. You should have a phy driver,
-> and a regulator driver, and a reset driver. The DWC3 then uses
-> phandles to these drivers.
-> 
-> How is the IO map area 65b00000 split up. Can you cleanly separate it
-> into sub areas, which do not overlap, so you have a sub-area for the
-> PHY driver, a sub-area for the regulator driver and a sub-area for the
-> reset area? If you can cleanly split it up, you don't need an MFD. If
-> however the registers are in overlapping areas, you do need an
-> MFD. The MFD core provides access to the registers, while its children
-> implement PHY, reset, regulator etc.
-
-This device certainly sounds like an MFD to me.
-
-Can you share the DT you've written please?
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gMjcvMDMvMTggMDA6MjUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+IE9uIEZyaSwgTWFyIDIzLCAy
+MDE4IGF0IDAxOjU5OjEzUE0gKzAxMDAsIEhhbnMgVmVya3VpbCB3cm90ZToKPj4gRnJvbTogSGFu
+cyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+Pgo+PiBTb21lIGJvYXJkcyBoYXZl
+IGJvdGggYSBEZXNpZ25XYXJlIGFuZCB0aGVpciBvd24gQ0VDIGNvbnRyb2xsZXIuCj4+IFRoZSBD
+RUMgcGluIGlzIG9ubHkgaG9va2VkIHVwIHRvIHRoZWlyIG93biBDRUMgY29udHJvbGxlciBhbmQg
+bm90Cj4+IHRvIHRoZSBEVyBjb250cm9sbGVyLgo+Pgo+PiBBZGQgdGhlIGNlYy1kaXNhYmxlIHBy
+b3BlcnR5IHRvIGRpc2FibGUgdGhlIERXIENFQyBjb250cm9sbGVyLgo+Pgo+PiBUaGlzIHBhcnRp
+Y3VsYXIgc2l0dWF0aW9uIGhhcHBlbnMgb24gQW1sb2dpYyBib2FyZHMgdGhhdCBoYXZlIHRoZWly
+Cj4+IG93biBtZXNvbiBDRUMgY29udHJvbGxlci4KPiAKPiBTZWVtcyBsaWtlIHdlIGNvdWxkIGF2
+b2lkIHRoaXMgYnkgZGVzY3JpYmluZyBob3cgdGhlIENFQyBsaW5lIGlzIGhvb2tlZCAKPiB1cCB3
+aGljaCBjb3VsZCBiZSBuZWVkZWQgZm9yIG90aGVyIHJlYXNvbnMuCgpTbyB0aGVyZSBhcmUgdGhy
+ZWUgc2l0dWF0aW9uczoKCjEpIFRoZSBjZWMgcGluIGlzIGNvbm5lY3RlZCB0byB0aGUgRFcgSERN
+SSBUWC4gVGhhdCdzIGFscmVhZHkgc3VwcG9ydGVkLgoyKSBUaGUgY2VjIHBpbiBpcyBub3QgY29u
+bmVjdGVkIGF0IGFsbCwgYnV0IHRoZSBDRUMgSVAgaXMgaW5zdGFudGlhdGVkLgogICBXZSBuZWVk
+IHRoZSBjZWMtZGlzYWJsZSBwcm9wZXJ0eSBmb3IgdGhhdC4gVGhpcyBzaW1wbHkgc3RhdGVzIHRo
+YXQgdGhlCiAgIENFQyBwaW4gaXMgbm90IGNvbm5lY3RlZC4KMykgVGhlIGNlYyBwaW4gaXMgY29u
+bmVjdGVkIHRvIGFuIEhETUkgUlguIFdlIGRvIG5vdCBzdXBwb3J0IHRoaXMgYXQgdGhlCiAgIG1v
+bWVudC4gSWYgd2Ugd2FudCB0byBzdXBwb3J0IHRoaXMsIHRoZW4gd2UgbmVlZCBhICdoZG1pLXJ4
+JyBwaGFuZGxlCiAgIHRoYXQgcG9pbnRzIHRvIHRoZSBIRE1JIHJlY2VpdmVyIHRoYXQgdGhlIENF
+QyBwaW4gaXMgYXNzb2NpYXRlZCB3aXRoLgogICBUaGlzIHdpbGwgYmUgc2ltaWxhciB0byB0aGUg
+YWxyZWFkeSBleGlzdGluZyAnaGRtaS1waGFuZGxlJyBwcm9wZXJ0eQogICB1c2VkIHRvIGFzc29j
+aWF0ZSBhIENFQyBkcml2ZXIgd2l0aCBhbiBIRE1JIHRyYW5zbWl0dGVyLiBJbiBoaW5kc2lnaHQK
+ICAgaXQgd291bGQgaGF2ZSBiZWVuIGJldHRlciBpZiAnaGRtaS1waGFuZGxlJyB3YXMgbmFtZWQg
+J2hkbWktdHgnIDotKAoKSSBjYW4gbWFrZSBhIGJpbmRpbmcgcHJvcG9zYWwgZm9yIDMsIGJ1dCBJ
+IGhhdmUgbm8gaGFyZHdhcmUgdG8gdGVzdCBpdCwKc28gSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8g
+YWRkIHRoaXMgb25seSB3aGVuIHNvbWVvbmUgaGFzIGhhcmR3YXJlLiBJdAp3aWxsIHJlcXVpcmUg
+cXVpdGUgYSBmZXcgY2hhbmdlcyB0byB0aGUgZHJpdmVyIGFuZCBsaWtlbHkgYWxzbyB0aGUgQ0VD
+IGNvcmUuCgpSZWdhcmRzLAoKCUhhbnMKCj4gCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVy
+a3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4gQWNrZWQtYnk6IE5laWwgQXJtc3Ryb25n
+IDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KPj4gLS0tCj4+ICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfaGRtaS50eHQgfCAzICsrKwo+PiAgMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
