@@ -1,45 +1,78 @@
-From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Tue, 3 Apr 2018 10:37:51 -0700
-Message-ID: <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
-References: <20180403142415.30083-1-oohall@gmail.com>
- <20180403142415.30083-3-oohall@gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 0/2] iio: add unit converter
+Date: Tue, 3 Apr 2018 12:41:49 -0500
+Message-ID: <93a6f7fc-4a53-c65c-422c-1649732fed50@ti.com>
+References: <20180403153635.8228-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180403142415.30083-3-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180403153635.8228-1-peda@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 7:24 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Add device-tree binding documentation for the nvdimm region driver.
->
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: Changed name from nvdimm-region to pmem-region.
->     Cleaned up the example binding and fixed the overlapping regions.
->     Added support for multiple regions in a single reg.
-> ---
->  .../devicetree/bindings/pmem/pmem-region.txt       | 80 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+On 04/03/2018 10:36 AM, Peter Rosin wrote:
+> Hi!
+> 
+> This driver implements support for voltage dividers and current
+> sense circuits. It's pretty generic and should be easily adaptable
+> to other linear scaling purposes...
+> 
 
-Device-tree folks, does this look, ok?
+I really like this idea, defining channel scaling / channel type
+conversion in DT will be very useful. So much so that I would recommend
+this not be a use specific driver but instead moved into the IIO core.
 
-Oliver, is there any concept of a management interface to the
-device(s) backing these regions? libnvdimm calls these "nmem" devices
-and support operations like health status and namespace label
-management.
+This would allow defining these channel conversions in the device node
+itself, so as to not need a separate node just for the converter (the
+conversion is not a device and probably should not have it's own node
+anyway). It would also help with enabling this support for buffered
+readers/writers and not just devices only supporting _raw reads/writes.
+
+Andrew
+
+> The driver is still named "unit converter", because it was not
+> clear to me that there was a real problem with the driver being
+> named that. I got the impression that the naming discussion in
+> v1 was mainly about the category, and that it kind of looked odd
+> and non-specific with unit-converter in the DT bindings, but
+> what do I know?
+> 
+> Cheers,
+> Peter
+> 
+> Changes since v1:    https://lkml.org/lkml/2018/3/19/801
+> - Put the driver in the new afe category (Analog Front Ends) and do not
+>   move the iio-mux driver.
+> - Do not refer to the source channel as "parent", use "source" instead.
+> - Have the DT compatible drive the target unit, instead of relying on a
+>   "type" DT-property for that.
+> - In the DT bindings, use an unnamed source channel.
+> - Do not set up writes to _RAW (sorry Phil) as I don't need it and have
+>   not tested it. It's easy to add back if needed.
+> - Fail if the source channel does not support _RAW or _SCALE.
+> - Fix various spelling issues.
+> - Fix various code style issues.
+> 
+> Peter Rosin (2):
+>   dt-bindings: iio: afe: add current-sense-cuicuit and voltage-divider
+>   iio: afe: unit-converter: new driver
+> 
+>  .../bindings/iio/afe/current-sense-circuit.txt     |  45 ++++
+>  .../bindings/iio/afe/voltage-divider.txt           |  45 ++++
+>  MAINTAINERS                                        |   8 +
+>  drivers/iio/Kconfig                                |   1 +
+>  drivers/iio/Makefile                               |   1 +
+>  drivers/iio/afe/Kconfig                            |  18 ++
+>  drivers/iio/afe/Makefile                           |   6 +
+>  drivers/iio/afe/iio-unit-converter.c               | 257 +++++++++++++++++++++
+>  8 files changed, 381 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
+>  create mode 100644 drivers/iio/afe/Kconfig
+>  create mode 100644 drivers/iio/afe/Makefile
+>  create mode 100644 drivers/iio/afe/iio-unit-converter.c
+> 
