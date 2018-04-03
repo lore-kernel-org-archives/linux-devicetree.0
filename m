@@ -1,35 +1,57 @@
-Return-Path: <SRS0=g+8A=G4=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 0/6] media: ov772x: support media controller, device tree probing, etc.
-Date: Sun,  8 Apr 2018 00:48:04 +0900
-Message-Id: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=PEGO=GY=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH v2 0/5] usb: typec: remove max_snk_mv/ma/mw
+References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e7ca276c-df03-738f-7a66-5e589e20b040@redhat.com>
+Date: Tue, 3 Apr 2018 17:27:51 +0200
+MIME-Version: 1.0
+In-Reply-To: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com
+Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patchset includes support media controller, device tree probing and
-other miscellanuous changes for ov772x driver.
+Hi,
 
-Akinobu Mita (6):
-  media: ov772x: allow i2c controllers without
-    I2C_FUNC_PROTOCOL_MANGLING
-  media: ov772x: add checks for register read errors
-  media: ov772x: create subdevice device node
-  media: ov772x: add media controller support
-  media: ov772x: add device tree binding
-  media: ov772x: support device tree probing
+On 23-03-18 15:58, Li Jun wrote:
+> This patch set is to remove max_snk_mv/ma/mw configs, as we should
+> define the sink capability by sink PDOs, the first patch update
+> the source PDO match policy by compare the voltage range between
+> source and sink PDOs no matter what type they are, the following
+> patchs remove those 3 variables from 2 existing users by adding
+> a variable PDO, then finial patch remove the max_snk_* from tcpm.
+> 
+> Changes for v2:
+> - rebase the 1st patch to be based on commit 6f566af34628
+>    ("Revert "typec: tcpm: Only request matching pdos"").
+> - Convert the device properties passing max_snk_* to be a
+>    variable sink pdo for fusb302.
 
- .../devicetree/bindings/media/i2c/ov772x.txt       |  36 ++++++
- MAINTAINERS                                        |   1 +
- drivers/media/i2c/ov772x.c                         | 136 ++++++++++++++++-----
- 3 files changed, 140 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+Thank you for the new version.
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Rob Herring <robh+dt@kernel.org>
--- 
-2.7.4
+I've replied with some comments to patches 1 and 2, the other
+3 patches look good to me.
+
+Regards,
+
+Hans
+
+
+
+>   
+> Li Jun (5):
+>    usb: typec: tcpm: pdo matching optimization
+>    usb: typec: fusb302:  remove max_snk_* for sink config
+>    dt-bindings: usb: fusb302: remove max-sink-* properties
+>    usb: typec: wcove: remove max_snk_* for sink config
+>    usb: typec: tcpm: remove max_snk_mv/ma/mw
+> 
+>   .../devicetree/bindings/usb/fcs,fusb302.txt        |   6 -
+>   drivers/usb/typec/fusb302/fusb302.c                |  51 +++++---
+>   drivers/usb/typec/tcpm.c                           | 139 +++++++++++++--------
+>   drivers/usb/typec/typec_wcove.c                    |   4 +-
+>   include/linux/usb/tcpm.h                           |   9 --
+>   5 files changed, 128 insertions(+), 81 deletions(-)
+> 
