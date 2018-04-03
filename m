@@ -1,83 +1,53 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
- designware driver
-Date: Tue, 3 Apr 2018 14:20:45 +0100
-Message-ID: <331e32c4-a39b-b5a6-6fbd-6eef7ca4b27c@synopsys.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
- <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
- <87ba8936-e870-f52b-2ff1-0aea90d0a25c@synopsys.com>
- <f94889e3-ba6f-5aba-d0ab-85db5d434cc9@ti.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 0/7] sunxi: Add DT representation for the MBUS controller
+Date: Tue,  3 Apr 2018 15:29:13 +0200
+Message-ID: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f94889e3-ba6f-5aba-d0ab-85db5d434cc9@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-On 03/04/2018 11:55, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Tuesday 03 April 2018 04:13 PM, Gustavo Pimentel wrote:
->> Hi Kishon,
->>
->> On 02/04/2018 06:35, Kishon Vijay Abraham I wrote:
->>>
->>>
->>> On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
->>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>
->>> Please add a commit message.
->>
->> Ok. I'll add. Thanks for noticing it.
->>
->>>> ---
->>>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->>>>  1 file changed, 13 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> index 6300762..4bb2e08 100644
->>>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->>>> @@ -3,6 +3,7 @@
->>>>  Required properties:
->>>>  - compatible:
->>>>  	"snps,dw-pcie" for RC mode;
->>>> +	"snps,dw-pcie-ep" for EP mode;
->>>>  - reg: Should contain the configuration address space.
->>>>  - reg-names: Must be "config" for the PCIe configuration space.
->>>>      (The old way of getting the configuration address space from "ranges"
->>>> @@ -56,3 +57,15 @@ Example configuration:
->>>>  		#interrupt-cells = <1>;
->>>>  		num-lanes = <1>;
->>>>  	};
->>>> +or
->>>> +	pcie_ep: pcie_ep@dfc00000 {
->>>> +		compatible = "snps,dw-pcie-ep";
->>>> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
->>>> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
->>>
->>> Doesn't this have iATU unroll space?
->>
->> I don't think EP has it, but I'm no expert on this matter. Can you provide me
->> some example of having iATU unroll space mapping would be useful in EP scope?
-> 
-> I'm not sure. I thought if the dwc3 core version is 4.80, then it'll have a
-> separate ATU space irrespective of RC mode or EP mode.
-
-As replied on patch 1, let's leave out  any reference of iATU unroll to avoid
-any confusion. Agree?
-
-> 
-> Thanks
-> Kishon
-> 
-
-Regards,
-Gustavo
+SGksCgpXZSd2ZSBoYWQgZm9yIHF1aXRlIHNvbWUgdGltZSB0byBoYWNrIGFyb3VuZCBpbiBvdXIg
+ZHJpdmVycyB0byB0YWtlIGludG8KYWNjb3VudCB0aGUgZmFjdCB0aGF0IG91ciBETUEgYWNjZXNz
+ZXMgYXJlIG5vdCBkb25lIHRocm91Z2ggdGhlIHBhcmVudApub2RlLCBidXQgdGhyb3VnaCBhbm90
+aGVyIGJ1cyB3aXRoIGEgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiB0aGUgQ1BVIGZvciB0aGUKUkFN
+ICgwIGluc3RlYWQgb2YgMHg0MDAwMDAwMCBmb3IgbW9zdCBTb0NzKS4KCkFmdGVyIHNvbWUgZGlz
+Y3Vzc2lvbiBhZnRlciB0aGUgc3VibWlzc2lvbiBvZiBhIGNhbWVyYSBkZXZpY2Ugc3VmZmVyaW5n
+IG9mCnRoZSBzYW1lIGhhY2tzLCBJJ3ZlIGRlY2lkZWQgdG8gcHV0IHRvZ2V0aGVyIGEgc2VyaWUg
+dGhhdCBpbnRyb2R1Y2UgYQpwcm9wZXJ0eSBjYWxsZWQgZG1hLXBhcmVudCB0aGF0IGFsbG93cyB0
+byBleHByZXNzIHRoZSBETUEgcmVsYXRpb25zaGlwCmJldHdlZW4gYSBtYXN0ZXIgYW5kIGl0cyBi
+dXMsIGV2ZW4gaWYgdGhleSBhcmUgbm90IGRpcmVjdCBwYXJlbnRzIGluIHRoZSBEVC4KCkxldCBt
+ZSBrbm93IHdoYXQgeW91IHRoaW5rLApNYXhpbWUKCk1heGltZSBSaXBhcmQgKDcpOgogIGR0LWJp
+bmRpbmdzOiBBZGQgYSBkbWEtcGFyZW50IHByb3BlcnR5CiAgZHQtYmluZGluZ3M6IGJ1czogQWRk
+IGJpbmRpbmcgZm9yIHRoZSBBbGx3aW5uZXIgTUJVUyBjb250cm9sbGVyCiAgb2Y6IGFkZHJlc3M6
+IEFkZCBwYXJlbnQgcG9pbnRlciB0byB0aGUgX19vZl90cmFuc2xhdGVfYWRkcmVzcyBhcmdzCiAg
+b2Y6IGFkZHJlc3M6IEFkZCBzdXBwb3J0IGZvciB0aGUgZG1hLXBhcmVudCBwcm9wZXJ0eQogIGRy
+bS9zdW40aTogUmVseSBvbiBkbWEtcGFyZW50IGZvciBvdXIgUkFNIG9mZnNldAogIGNsazogc3Vu
+eGktbmc6IHN1bjVpOiBFeHBvcnQgdGhlIE1CVVMgY2xvY2sKICBBUk06IGR0czogc3VuNWk6IEFk
+ZCB0aGUgTUJVUyBjb250cm9sbGVyCgogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3N1bnhpLW1idXMudHh0IHwgMzUgKysrKysrKysrKysrKystCiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYm9vdGluZy13aXRob3V0LW9mLnR4dCAgfCAxMCArKysrLQogYXJjaC9hcm0vYm9vdC9k
+dHMvc3VuNWkuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgMTEgKysrKy0KIGRyaXZlcnMvY2xr
+L3N1bnhpLW5nL2NjdS1zdW41aS5oICAgICAgICAgICAgICAgICB8ICA0ICstLQogZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYyAgICAgICAgICAgIHwgMjggKysrKysrKystLS0K
+IGRyaXZlcnMvb2YvYWRkcmVzcy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQzICsr
+KysrKysrKysrKystLS0tCiBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N1bjVpLWNjdS5oICAg
+ICAgICAgICAgfCAgMiArLQogNyBmaWxlcyBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKSwgMjIg
+ZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3N1bnhpLW1idXMudHh0CgpiYXNlLWNvbW1pdDogNGEzOTI4YzZmOGE1M2ZhMWFl
+ZDI4Y2NiYTIyNzc0MjQ4NmU4ZGRjYgotLSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
