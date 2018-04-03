@@ -1,81 +1,39 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 0/2] iio: add unit converter
-Date: Tue, 3 Apr 2018 13:55:52 -0500
-Message-ID: <05f62c0d-4088-dfd1-4a6a-f3ed308824d7@ti.com>
-References: <20180403153635.8228-1-peda@axentia.se>
- <93a6f7fc-4a53-c65c-422c-1649732fed50@ti.com>
- <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: [PATCH v10 0/2] fpga: Lattice MachXO2 Slave SPI FPGA Manager support
+Date: Tue,  3 Apr 2018 21:02:30 +0200
+Message-ID: <1522782152-27300-1-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2018 01:09 PM, Peter Rosin wrote:
-> On 2018-04-03 19:41, Andrew F. Davis wrote:
->> On 04/03/2018 10:36 AM, Peter Rosin wrote:
->>> Hi!
->>>
->>> This driver implements support for voltage dividers and current
->>> sense circuits. It's pretty generic and should be easily adaptable
->>> to other linear scaling purposes...
->>>
->>
->> I really like this idea, defining channel scaling / channel type
->> conversion in DT will be very useful. So much so that I would recommend
->> this not be a use specific driver but instead moved into the IIO core.
->>
->> This would allow defining these channel conversions in the device node
->> itself, so as to not need a separate node just for the converter (the
->> conversion is not a device and probably should not have it's own node
->> anyway). It would also help with enabling this support for buffered
->> readers/writers and not just devices only supporting _raw reads/writes.
-> 
-> In my case, the voltage dividers and the current sense circuit are very
-> much real, and I can point my finger at them on the board. Sure, they
-> are not ICs, but to not call them devices is wrong IMHO, and the ADC
-> which is involved have very little to do with the voltage dividers and
-> the fact that it is involved in sensing current. 
+Hi all,
+this series adds support for the Lattice MachXO2 FPGA chip, programmed
+over slave SPI.
 
+Tested on a raspberry pi3, beaglebone black (little endian mode) and imx6
+hummingboard (big endian mode) + bugblat's pif2 fpga hat (machxo2 7000HC) or
+tinyfpga A1/A2 (machxo2 256HC / 1200HC), in SPI slave mode with varying bus
+speed.
 
-I would argue support resistors are still part of the "current sensing
-device", even if they are physically external to the ADC IC. As you say
-though, it doesn't really matter that much to this discussion.
+Changes since v9:
+* implemented machxo2_spi_state()
 
+Paolo Pisati (2):
+  dt: bindings: fpga: add lattice machxo2 slave spi binding description
+  fpga: lattice machxo2: Add Lattice MachXO2 support
 
-> This is not an argument
-> for not moving the functionally to the core though, but that has some
-> problems AFAICT. Because you need some kind of clever and generic
-> binding to make the core do its thing, and it might not be easy to come
-> up with something that fits all devices? And if we do put this in the
-> core, that opens the door for more complex unit converters later on
-> (non-linear etc), further complicating the generic bindings.
-> 
+ .../bindings/fpga/lattice-machxo2-spi.txt          |  29 ++
+ drivers/fpga/Kconfig                               |   7 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/machxo2-spi.c                         | 413 +++++++++++++++++++++
+ 4 files changed, 450 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ create mode 100644 drivers/fpga/machxo2-spi.c
 
-
-For the simple case of linear scaling of the channel input/output, and
-type conversion I don't see much problem. They will not need to be
-extended, new bindings can be added for more complex cases. When more
-complex cases show up additional bindings will be needed either way.
-
-
-> That said, I'm obviously biased since I want this to get in sooner
-> rather than later...
-> 
-
-
-Adding this functionality to the IIO core doesn't really block this
-patch-set, it will just make this patch-set unneeded in the future
-if/when support goes into the core..
-
-Andrew
-
-
-> Cheers,
-> Peter
-> 
+-- 
+2.7.4
