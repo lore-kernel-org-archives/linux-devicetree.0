@@ -1,42 +1,78 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 01/13] ARM: move cputype definitions into another file
-Date: Tue, 3 Apr 2018 15:34:21 +0800
-Message-ID: <CAGb2v67RduaktYimLAuFwYB=Q8qD8f3AbZmoX5QssAGDtWwS6Q@mail.gmail.com>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
- <20180403061836.3926-2-mylene.josserand@bootlin.com> <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
- <20180403092724.607e8e37@dell-desktop.home>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [Question] MFD driver that handles clocks/resets and populates
+ child nodes
+Date: Tue, 3 Apr 2018 09:03:35 +0100
+Message-ID: <20180403080335.ksekhxwvbzbxhmln@dell>
+References: <CAK7LNARFWDMgmWsCjUmVrm4ZeYOcKCbizijxmDXob618ABjNWg@mail.gmail.com>
+ <20180402120414.GA8159@lunn.ch>
+ <CAK7LNAQ6LKk3NtGLB8g07ocyvXidpTHsApeDuctvEHyyLvk2ew@mail.gmail.com>
+ <20180402133219.GA10520@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403092724.607e8e37@dell-desktop.home>
+Content-Disposition: inline
+In-Reply-To: <20180402133219.GA10520@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 3:27 PM, Mylène Josserand
-<mylene.josserand@bootlin.com> wrote:
-> Hi Chen-Yu,
->
-> Thank you for your review!
->
-> On Tue, 3 Apr 2018 14:52:45 +0800
-> Chen-Yu Tsai <wens@csie.org> wrote:
->
->> On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
->> <mylene.josserand@bootlin.com> wrote:
->> > To add the support for SMP on sun8i-a83t, we will use some
->> > definitions in an assembly file so move definitions into
->> > another file to separate C functions and macro defintions.
->>
->> Instead of moving the definitions, you could guard all the C
->> stuff in "#ifndef __ASSEMBLY__". AFAIK a few header files do that.
->
-> Oh, right. It is better with this check so I will use that in the next
-> iteration of my series.
+On Mon, 02 Apr 2018, Andrew Lunn wrote:
 
-I'm not sure about the policy, but I kind of assume any header under
-"asm" would be usable in assembly files, so the guard would be better.
+> On Mon, Apr 02, 2018 at 10:21:01PM +0900, Masahiro Yamada wrote:
+> > 2018-04-02 21:04 GMT+09:00 Andrew Lunn <andrew@lunn.ch>:
+> > >> The maintainer of DWC3, Felipe Balbi, requested to
+> > >> split the glue layer driver into small parts such as
+> > >> reset, regulator, phy, etc.
+> > >
+> > > What exactly did Felipe ask for? Did he ask that the patch be split
+> > > up, one patch per reset, regulator, phy etc?
+> > 
+> > 
+> > Yeah.  That is what we understood from his comments.
+> > 
+> > 
+> > These are the feed-backs from him.
+> > 
+> > https://lkml.org/lkml/2018/1/23/298
+> > https://lkml.org/lkml/2018/1/24/352
+> 
+> > > Are all these resources used just by the DWC3? Or is it a true MFD,
+> > > multiple functions?
+> > 
+> > I do not think this is a real MFD.
+> > 
+> > This is a DWC3 glue layer, i.e.
+> > a collection of misc registers that control
+> > the DWC3 IP.
+> > 
+> > 
+> > Just splitting it into small pieces
+> > to use PHY, reset, regulator framework in Linux.
+> > 
+> > Of course, the price of this approach
+> > is so cluttered Device Tree,
+> > honestly I do not like it much.
+> 
+> This however the correct way to do this. You should have a phy driver,
+> and a regulator driver, and a reset driver. The DWC3 then uses
+> phandles to these drivers.
+> 
+> How is the IO map area 65b00000 split up. Can you cleanly separate it
+> into sub areas, which do not overlap, so you have a sub-area for the
+> PHY driver, a sub-area for the regulator driver and a sub-area for the
+> reset area? If you can cleanly split it up, you don't need an MFD. If
+> however the registers are in overlapping areas, you do need an
+> MFD. The MFD core provides access to the registers, while its children
+> implement PHY, reset, regulator etc.
 
-ChenYu
+This device certainly sounds like an MFD to me.
+
+Can you share the DT you've written please?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
