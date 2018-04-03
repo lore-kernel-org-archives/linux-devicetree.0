@@ -1,48 +1,106 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 01/13] ARM: move cputype definitions into another file
-Date: Tue, 3 Apr 2018 12:56:30 -0700
-Message-ID: <4ba0f1c4-a52a-b9f5-67ac-bf348a13228a@gmail.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v5 08/13] ARM: sunxi: Add initialization of CNTVOFF
+Date: Tue, 3 Apr 2018 22:06:28 +0200
+Message-ID: <20180403220628.19c9acaf@dell-desktop.home>
 References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
- <20180403061836.3926-2-mylene.josserand@bootlin.com>
- <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
+        <20180403061836.3926-9-mylene.josserand@bootlin.com>
+        <20180403091218.t6xuq6csjp4uyy5u@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180403091218.t6xuq6csjp4uyy5u@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, Russell King <linux@armlinux.org.uk>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2018 11:52 PM, Chen-Yu Tsai wrote:
-> On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
-> <mylene.josserand@bootlin.com> wrote:
->> To add the support for SMP on sun8i-a83t, we will use some
->> definitions in an assembly file so move definitions into
->> another file to separate C functions and macro defintions.
-> 
-> Instead of moving the definitions, you could guard all the C
-> stuff in "#ifndef __ASSEMBLY__". AFAIK a few header files do that.
+Hello,
 
-Which is effectively what this patch does (still waiting for an ACK):
+Thank you for the review.
 
-https://patchwork.kernel.org/patch/10239855/
+On Tue, 3 Apr 2018 11:12:18 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+
+> On Tue, Apr 03, 2018 at 08:18:31AM +0200, Mylène Josserand wrote:
+> > Add the initialization of CNTVOFF for sun8i-a83t.
+> > 
+> > For boot CPU, Create a new machine that handles this
+> > function's call in an "init_early" callback.
+> > For secondary CPUs, add this function into secondary_startup
+> > assembly entry.
+> > 
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > ---
+> >  arch/arm/mach-sunxi/headsmp.S |  1 +
+> >  arch/arm/mach-sunxi/sunxi.c   | 18 +++++++++++++++++-
+> >  2 files changed, 18 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
+> > index 79890fbe5613..b586b7cf803a 100644
+> > --- a/arch/arm/mach-sunxi/headsmp.S
+> > +++ b/arch/arm/mach-sunxi/headsmp.S
+> > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+> >  
+> >  ENTRY(sunxi_mc_smp_secondary_startup)
+> >  	bl	sunxi_mc_smp_cluster_cache_enable
+> > +	bl	smp_init_cntvoff
+> >  	b	secondary_startup
+> >  ENDPROC(sunxi_mc_smp_secondary_startup)
+> >  
+> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> > index 5e9602ce1573..090784108c0a 100644
+> > --- a/arch/arm/mach-sunxi/sunxi.c
+> > +++ b/arch/arm/mach-sunxi/sunxi.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/platform_device.h>
+> >  
+> >  #include <asm/mach/arch.h>
+> > +#include <asm/smp_cntvoff.h>
+> >  
+> >  static const char * const sunxi_board_dt_compat[] = {
+> >  	"allwinner,sun4i-a10",
+> > @@ -62,7 +63,6 @@ MACHINE_END
+> >  static const char * const sun8i_board_dt_compat[] = {
+> >  	"allwinner,sun8i-a23",
+> >  	"allwinner,sun8i-a33",
+> > -	"allwinner,sun8i-a83t",
+> >  	"allwinner,sun8i-h2-plus",
+> >  	"allwinner,sun8i-h3",
+> >  	"allwinner,sun8i-r40",
+> > @@ -75,6 +75,22 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+> >  	.dt_compat	= sun8i_board_dt_compat,
+> >  MACHINE_END
+> >  
+> > +void __init sun8i_cntvoff_init(void)
+> > +{
+> > +	smp_init_cntvoff();  
+> 
+> Can't this be moved to the SMP setup code?
+
+I tried to put it in the first lines of "sunxi_mc_smp_init" function
+but it did not work. I tried to find some callbacks to have an
+early "init" and I only found the "init_early"'s one. There is probably
+another way to handle that so do not hesitate to tell me any ideas.
 
 > 
-> ChenYu
+> > +}
+> > +
+> > +static const char * const sun8i_cntvoff_board_dt_compat[] = {
+> > +	"allwinner,sun8i-a83t",
+> > +	NULL,
+> > +};
+> > +
+> > +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i boards needing cntvoff")  
 > 
->> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
->> ---
->>  arch/arm/include/asm/cputype.h     | 94 +-----------------------------------
->>  arch/arm/include/asm/cputype_def.h | 98 ++++++++++++++++++++++++++++++++++++++
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> All of the SoCs need CNTVOFF, so that doesn't really make sense. Why
+> not just calling it for what it is: an A83t?
 
+Sure, I will update it.
+
+Best regards,
 
 -- 
-Florian
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
