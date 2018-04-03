@@ -1,78 +1,148 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 0/2] iio: add unit converter
-Date: Tue, 3 Apr 2018 12:41:49 -0500
-Message-ID: <93a6f7fc-4a53-c65c-422c-1649732fed50@ti.com>
-References: <20180403153635.8228-1-peda@axentia.se>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v17 01/10] LIB: Introduce a generic PIO mapping method
+Date: Tue, 3 Apr 2018 12:53:11 -0500
+Message-ID: <20180403175311.GD60020@bhelgaas-glaptop.roam.corp.google.com>
+References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+ <1521051359-34473-2-git-send-email-john.garry@huawei.com>
+ <20180403140410.GE27789@ulmo>
+ <20180403143909.GA21171@ulmo>
+ <ab748c97-2b55-d090-606f-5491551feff6@huawei.com>
+ <20180403163700.GA10059@ulmo>
+ <19c46196-304a-1574-89c9-01c71d123539@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403153635.8228-1-peda@axentia.se>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <19c46196-304a-1574-89c9-01c71d123539@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2018 10:36 AM, Peter Rosin wrote:
-> Hi!
+On Tue, Apr 03, 2018 at 06:02:43PM +0100, John Garry wrote:
+> On 03/04/2018 17:37, Thierry Reding wrote:
+> > On Tue, Apr 03, 2018 at 05:01:37PM +0100, John Garry wrote:
+> > > > > > +int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+> > > > > > +{
+> > > > > > +	struct logic_pio_hwaddr *range;
+> > > > > > +	resource_size_t start = new_range->hw_start;
+> > > > > > +	resource_size_t end = new_range->hw_start + new_range->size;
+> > > > > > +	resource_size_t mmio_sz = 0;
+> > > > > > +	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+> > > > > > +	int ret = 0;
+> > > > > > +
+> > > > > > +	if (!new_range || !new_range->fwnode || !new_range->size)
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	mutex_lock(&io_range_mutex);
+> > > > > > +	list_for_each_entry_rcu(range, &io_range_list, list) {
+> > > > > > +		if (range->fwnode == new_range->fwnode) {
+> > > > > > +			/* range already there */
+> > > > > > +			ret = -EFAULT;
+> > > > > > +			goto end_register;
+> > > > > > +		}
+> > > > > 
+> > > 
+> > > Hi Thierry,
+> > > 
+> > > > > This is the -EFAULT that propagates to pci-tegra.c's ->probe() and fails
+> > > > > to bind the driver.
+> > > > > 
+> > > > > I'm not exactly sure what's causing the duplicate here because it's
+> > > > > rather difficult to get at something useful from just the ->fwnode, but
+> > > > > I'm fairly sure that the reason this breaks is because the Tegra driver
+> > > > > will defer probe due to some regulators that aren't available on the
+> > > > > first try. Given the above code and the rest of this file, I can't see a
+> > > > > way to "fix" the driver and remove the I/O range on failure.
+> > > > > 
+> > > > > This is doubly bad because this doesn't only leak the ranges on probe
+> > > > > deferral, but also on driver unload, and we just added support for
+> > > > > building the Tegra driver as a loadable module, so these are actually
+> > > > > cases that can happen in regular uses of the driver.
+> > > > > 
+> > > > > I have no idea on how to fix this. Anyone know of a quick fix to restore
+> > > > > PCI for Tegra other than reverting all of these changes?
+> > > > > 
+> > > > > I suppose an API could be added to unregister the range, but the calling
+> > > > > sequence is rather obfuscated, so removing the range will look totally
+> > > > > asymmetric, I'm afraid.
+> > > > > 
+> > > > > Here's the call stack:
+> > > > > 
+> > > > > 	tegra_pcie_probe()
+> > > > > 	tegra_pcie_parse_dt()
+> > > > > 	of_pci_range_to_resource()
+> > > > > 	pci_register_io_range()
+> > > > > 	logic_pio_register_range()
+> > > > > 
+> > > > > So the range here is registered as part of a resource parsing function,
+> > > > > which is supposed to not have any side-effects. There's no equivalent of
+> > > > > that parsing routine (i.e. no "unparse" function that would undo the
+> > > > > effects of parsing).
+> > > > > 
+> > > > > Perhaps a cleaner way would be to decouple the parsing from the actual
+> > > > > request step that has the side-effect.
+> > > 
+> > > This could be added if we agreed that it would be useful.
+> > 
+> > I guess in most cases these ranges will be static at least during one
+> > boot. But it still feels like this should be removed when the driver
+> > goes away. While this may not depend on data by the driver, and hence
+> > won't cause a crash or anything, it just seems wrong to leave it
+> > around when the driver no longer isn't.
 > 
-> This driver implements support for voltage dividers and current
-> sense circuits. It's pretty generic and should be easily adaptable
-> to other linear scaling purposes...
+> That sounds reasonable, considering we do unmap the iospace when we release
+> - so it looks like currently we're leaving some IO range reserved which does
+> not have a mapping.
 > 
+> However this change seems non-trivial, considering we're now even coupling
+> the PIO range registration into DT parsing.
+> 
+> > 
+> > > > > Going back in history a little, it looks like even before this commit
+> > > > > the I/O range registration was triggered by the parsing code and even
+> > > > > the range leak was there, except that it caused pci_register_io_range()
+> > > > > to return 0 rather than -EFAULT. Perhaps the quickest fix for this would
+> > > > > be to do the same in the new code and restore drivers that accidentally
+> > > > > depend on this behaviour.
+> > > > 
+> > > > I can confirm that the following fixes the issue for me, though I don't
+> > > > think it's a very clean fix given that the range will remain requested
+> > > > forever, even if the driver is gone. But since that's already been the
+> > > > case for quite a while, probably something that can be fixed separately.
+> > > > 
+> > > 
+> > > Right, there was no way to deregister the range previously.  From looking at
+> > > the history here I see no reason to not support it.
+> > > 
+> > > As for this patch, as you said, the only difference is that we fault on
+> > > trying to register the same range again. So this solution seems reasonable.
+> > 
+> > Okay, I can turn this into a proper patch to fix this up. I suspect that
+> > other drivers may be subject to the same regression. For the longer term
+> > I think it'd be better to properly undo the registration on failure and
+> > removal, but I suspect that it'd be quite a bit of work and not suitable
+> > for v4.17 anymore.
+> 
+> Thanks, I had started to put the patch together but if you're happy to
+> continue then that's fine. Please let me know.
 
-I really like this idea, defining channel scaling / channel type
-conversion in DT will be very useful. So much so that I would recommend
-this not be a use specific driver but instead moved into the IIO core.
+Since you seem to agree this is the right short-term fix and I would
+squash it into the original commit anyway, I went ahead and did that
+so we could get this into linux-next as soon as possible.
 
-This would allow defining these channel conversions in the device node
-itself, so as to not need a separate node just for the converter (the
-conversion is not a device and probably should not have it's own node
-anyway). It would also help with enabling this support for buffered
-readers/writers and not just devices only supporting _raw reads/writes.
+Here's the diff from my previous "next" branch with respect to this
+series:
 
-Andrew
-
-> The driver is still named "unit converter", because it was not
-> clear to me that there was a real problem with the driver being
-> named that. I got the impression that the naming discussion in
-> v1 was mainly about the category, and that it kind of looked odd
-> and non-specific with unit-converter in the DT bindings, but
-> what do I know?
-> 
-> Cheers,
-> Peter
-> 
-> Changes since v1:    https://lkml.org/lkml/2018/3/19/801
-> - Put the driver in the new afe category (Analog Front Ends) and do not
->   move the iio-mux driver.
-> - Do not refer to the source channel as "parent", use "source" instead.
-> - Have the DT compatible drive the target unit, instead of relying on a
->   "type" DT-property for that.
-> - In the DT bindings, use an unnamed source channel.
-> - Do not set up writes to _RAW (sorry Phil) as I don't need it and have
->   not tested it. It's easy to add back if needed.
-> - Fail if the source channel does not support _RAW or _SCALE.
-> - Fix various spelling issues.
-> - Fix various code style issues.
-> 
-> Peter Rosin (2):
->   dt-bindings: iio: afe: add current-sense-cuicuit and voltage-divider
->   iio: afe: unit-converter: new driver
-> 
->  .../bindings/iio/afe/current-sense-circuit.txt     |  45 ++++
->  .../bindings/iio/afe/voltage-divider.txt           |  45 ++++
->  MAINTAINERS                                        |   8 +
->  drivers/iio/Kconfig                                |   1 +
->  drivers/iio/Makefile                               |   1 +
->  drivers/iio/afe/Kconfig                            |  18 ++
->  drivers/iio/afe/Makefile                           |   6 +
->  drivers/iio/afe/iio-unit-converter.c               | 257 +++++++++++++++++++++
->  8 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
->  create mode 100644 drivers/iio/afe/Kconfig
->  create mode 100644 drivers/iio/afe/Makefile
->  create mode 100644 drivers/iio/afe/iio-unit-converter.c
-> 
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index 29cedeadb397..4664b87e1c5f 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -46,7 +46,6 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+ 		if (range->fwnode == new_range->fwnode) {
+ 			/* range already there */
+-			ret = -EFAULT;
+ 			goto end_register;
+ 		}
+ 		if (range->flags == LOGIC_PIO_CPU_MMIO &&
