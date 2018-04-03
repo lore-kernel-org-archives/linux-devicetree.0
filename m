@@ -1,50 +1,80 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/7] sunxi: Add DT representation for the MBUS controller
-Date: Tue, 3 Apr 2018 11:03:30 -0500
-Message-ID: <CAL_Jsq+cURC780ivftY1v3P59g5UKAHwb48raXXB6huQ2KBvuQ@mail.gmail.com>
-References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v8 25/42] ARM: davinci: dm644x: add new clock init using
+ common clock framework
+Date: Tue, 3 Apr 2018 11:30:45 -0500
+Message-ID: <43c266b8-c023-a1b4-c751-bd46c2fb910d@lechnology.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <1521168778-27236-26-git-send-email-david@lechnology.com>
+ <333f49c7-bafd-8e2d-65e9-7d1aff4836de@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <333f49c7-bafd-8e2d-65e9-7d1aff4836de@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMywgMjAxOCBhdCA4OjI5IEFNLCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPiBIaSwKPgo+IFdlJ3ZlIGhhZCBmb3IgcXVpdGUgc29t
-ZSB0aW1lIHRvIGhhY2sgYXJvdW5kIGluIG91ciBkcml2ZXJzIHRvIHRha2UgaW50bwo+IGFjY291
-bnQgdGhlIGZhY3QgdGhhdCBvdXIgRE1BIGFjY2Vzc2VzIGFyZSBub3QgZG9uZSB0aHJvdWdoIHRo
-ZSBwYXJlbnQKPiBub2RlLCBidXQgdGhyb3VnaCBhbm90aGVyIGJ1cyB3aXRoIGEgZGlmZmVyZW50
-IG1hcHBpbmcgdGhhbiB0aGUgQ1BVIGZvciB0aGUKPiBSQU0gKDAgaW5zdGVhZCBvZiAweDQwMDAw
-MDAwIGZvciBtb3N0IFNvQ3MpLgo+Cj4gQWZ0ZXIgc29tZSBkaXNjdXNzaW9uIGFmdGVyIHRoZSBz
-dWJtaXNzaW9uIG9mIGEgY2FtZXJhIGRldmljZSBzdWZmZXJpbmcgb2YKPiB0aGUgc2FtZSBoYWNr
-cywgSSd2ZSBkZWNpZGVkIHRvIHB1dCB0b2dldGhlciBhIHNlcmllIHRoYXQgaW50cm9kdWNlIGEK
-PiBwcm9wZXJ0eSBjYWxsZWQgZG1hLXBhcmVudCB0aGF0IGFsbG93cyB0byBleHByZXNzIHRoZSBE
-TUEgcmVsYXRpb25zaGlwCj4gYmV0d2VlbiBhIG1hc3RlciBhbmQgaXRzIGJ1cywgZXZlbiBpZiB0
-aGV5IGFyZSBub3QgZGlyZWN0IHBhcmVudHMgaW4gdGhlIERULgoKUmVhZGluZyB0aHJ1IHY2IG9m
-IHRoZSBjYW1lcmEgZHJpdmVyLCBpdCBzZWVtcyBsaWtlIGhhdmluZwppbnRlcm1lZGlhdGUgYnVz
-ZXMgd291bGQgc29sdmUgdGhlIHByb2JsZW0gaW4geW91ciBjYXNlPwoKQXMgQXJuZCBtZW50aW9u
-ZWQgaW4gdGhhdCB0aHJlYWQsIHNvbWV0aGluZyBuZXcgbmVlZHMgdG8gYWRkcmVzcyBhbGwKdGhl
-IGRlZmljaWVuY2llcyB3aXRoIGRtYS1yYW5nZXMgYW5kIGRlc2NyaWJpbmcgRE1BIGJ1cyB0b3Bv
-bG9naWVzLgpUaGlzIGRvZXNuJ3QgYWRkcmVzcyB0aGUgbmVlZHMgb2YgZGVzY3JpYmluZyBidXMg
-aW50ZXJjb25uZWN0cy4KVGhlcmUncyBiZWVuIHNvbWUgZWZmb3J0cyBieSB0aGUgUUNvbSBmb2xr
-cyB3aXRoIGFuIGludGVyY29ubmVjdApiaW5kaW5nLiBUaGV5J3ZlIG1vc3RseSBwdW50ZWQgKGZv
-ciBub3cgYXQgbGVhc3QpIHRvIG5vdCBkZXNjcmliaW5nCnRoZSB3aG9sZSBpbnRlcmNvbm5lY3Qg
-aW4gRFQgYW5kIGtlZXBpbmcgdGhlIGRldGFpbHMgaW4gYSBkcml2ZXIuCgpPbiB0aGUgZmxpcCBz
-aWRlLCB0aGlzIGRvZXMgbWlycm9yIHRoZSBlc3RhYmxpc2hlZCBwYXR0ZXJuIHVzZWQgYnkKaW50
-ZXJydXB0cywgc28gbWF5YmUgaXQncyBva2F5IG9uIGl0J3Mgb3duLiBJJ2xsIHdhaXQgZm9yIG90
-aGVycyB0bwpjb21tZW50LgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On 04/03/2018 05:26 AM, Sekhar Nori wrote:
+> On Friday 16 March 2018 08:22 AM, David Lechner wrote:
+>> +static struct resource dm644x_pll1_resources[] = {
+>> +	{
+>> +		.start	= DAVINCI_PLL1_BASE,
+>> +		.end	= DAVINCI_PLL1_BASE + SZ_4K - 1,
+> 
+> The .end should be DAVINCI_PLL1_BASE + SZ_1K - 1, otherwise it prevents
+> PLL2 from getting registered.
+> 
+>> +		.flags	= IORESOURCE_MEM,
+>> +	},
+>> +};
+>> +
+>> +static struct platform_device dm644x_pll1_device = {
+>> +	.name		= "dm644x-pll1",
+>> +	.id		= -1,
+>> +	.resource	= dm644x_pll1_resources,
+>> +	.num_resources	= ARRAY_SIZE(dm644x_pll1_resources),
+>> +};
+>> +
+>> +static struct resource dm644x_pll2_resources[] = {
+>> +	{
+>> +		.start	= DAVINCI_PLL2_BASE,
+>> +		.end	= DAVINCI_PLL2_BASE + SZ_4K - 1,
+> 
+> And this too should be fixed, else it prevents the PSC from getting
+> registered.
+> 
+>> +		.flags	= IORESOURCE_MEM,
+>> +	},
+>> +};
+> 
+> With these fixed, I still had to enable 'clk_ignore_unused' on DM644x
+> EVM to get to NFS boot. I think root of the problem is that pm_runtime()
+> APIs are not working in the legacy boot mode.
+> 
+> This can be seen even on the DA850 LCDK in legacy boot. pm_genpd_summary
+> in debugfs shows all domains are off and there are no devices registered
+> under the "da850-psc1: emac" domain. NFS mounting still works on the
+> DA850 LCDK because clk_summary shows enable and prepare count of 4 for
+> emac. Not sure how that's happening. But on DM644x EVM, the emac clock
+> enable count is 0.
+> 
+> Still looking at whats going wrong here. I am testing your v8 branch
+> with clk-davinci branch from clk-next merged to get the fixes Stephen made.
+> 
+
+In legacy mode, genpd is not being used. I didn't see any mechanism for
+genpd lookup without device tree. So, we are still relying on the
+matching in arch/arm/mach-davinci/pm_domain.c.
+
+I suspect we need to fix the clock lookups in
+drivers/clk/davinci/psc-dm644x.c.
+
+LPSC_CLKDEV2(emac_clkdev,		NULL,		"davinci_emac.1",
+					"fck",		"davinci_mdio.0");
+
+NULL might need to be changed to "fck" to be picked up by pm matching
+and "davinci_emac.1" should be verified that it matches the actual EMAC
+device name.
