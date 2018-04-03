@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v1 5/7] soc: mediatek: add a fixed wait for SRAM stable
-Date: Tue, 3 Apr 2018 15:15:55 +0800
-Message-ID: <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
+Subject: [PATCH v1 7/7] MAINTAINERS: add an entry for MediaTek Bluetooth driver
+Date: Tue, 3 Apr 2018 15:15:57 +0800
+Message-ID: <549b949ea99b5a9e53ddb163c4f9e84e5f9bde9d.1522736996.git.sean.wang@mediatek.com>
 References: <cover.1522736996.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,66 +9,36 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1522736996.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-MT7622_POWER_DOMAIN_WB doesn't send an ACK when its managed SRAM becomes
-stable, which is not like the behavior the other power domains should
-have. Therefore, it's necessary for such a power domain to have a fixed
-and well-predefined duration to wait until its managed SRAM can be allowed
-to access by all functions running on the top.
+Add an entry for the MediaTek Bluetooth driver.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index f9b7248..19aceb8 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -121,6 +121,7 @@ struct scp_domain_data {
- 	u32 bus_prot_mask;
- 	enum clk_id clk_id[MAX_CLKS];
- 	bool active_wakeup;
-+	u32 us_sram_fwait;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4923621..ea2cd52 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8832,6 +8832,14 @@ F:	include/uapi/linux/meye.h
+ F:	include/uapi/linux/ivtv*
+ F:	include/uapi/linux/uvcvideo.h
  
- struct scp;
-@@ -234,11 +235,16 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	val &= ~scpd->data->sram_pdn_bits;
- 	writel(val, ctl_addr);
- 
--	/* wait until SRAM_PDN_ACK all 0 */
--	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
--				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
--	if (ret < 0)
--		goto err_pwr_ack;
-+	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
-+	if (!scpd->data->us_sram_fwait) {
-+		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
-+					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-+		if (ret < 0)
-+			goto err_pwr_ack;
-+	} else {
-+		usleep_range(scpd->data->us_sram_fwait,
-+			     scpd->data->us_sram_fwait + 100);
-+	};
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
-@@ -783,6 +789,7 @@ static const struct scp_domain_data scp_domain_data_mt7622[] = {
- 		.clk_id = {CLK_NONE},
- 		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
- 		.active_wakeup = true,
-+		.us_sram_fwait = 12000,
- 	},
- };
- 
++MEDIATEK BLUETOOTH DRIVER
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-bluetooth@vger.kernel.org
++L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
++F:	drivers/bluetooth/hci_mediatek.c
++
+ MEDIATEK CIR DRIVER
+ M:	Sean Wang <sean.wang@mediatek.com>
+ S:	Maintained
 -- 
 2.7.4
