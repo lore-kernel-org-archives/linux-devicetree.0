@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v1 4/7] soc: mediatek: reuse regmap_read_poll_timeout helpers
-Date: Tue, 3 Apr 2018 15:15:54 +0800
-Message-ID: <2f84f7695ea3223b8626a8369aa4ae5e0d03fdce.1522736996.git.sean.wang@mediatek.com>
+Subject: [PATCH v1 3/7] soc: mediatek: reuse read[l,x]_poll_timeout helpers
+Date: Tue, 3 Apr 2018 15:15:53 +0800
+Message-ID: <2c0d233c658fa6093a18a54e82a3e51340251bc9.1522736996.git.sean.wang@mediatek.com>
 References: <cover.1522736996.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,99 +14,174 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Reuse the common helpers regmap_read_poll_timeout provided by Linux core
-instead of an open-coded handling.
+Reuse the common helpers read[l,x]_poll_timeout provided by Linux core
+instead of an open-coded handling. The name of the local variable
+sram_pdn_ack in scpsys_power_on is renamed to pdn_ack in order to be
+consistent with the one used in scpsys_power_off.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 Cc: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Cc: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-infracfg.c | 45 +++++++++----------------------------
- 1 file changed, 10 insertions(+), 35 deletions(-)
+ drivers/soc/mediatek/mtk-scpsys.c | 91 ++++++++++-----------------------------
+ 1 file changed, 23 insertions(+), 68 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-index 8c310de..b849aa5 100644
---- a/drivers/soc/mediatek/mtk-infracfg.c
-+++ b/drivers/soc/mediatek/mtk-infracfg.c
-@@ -12,6 +12,7 @@
-  */
- 
- #include <linux/export.h>
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index d762a46..f9b7248 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -13,6 +13,7 @@
+ #include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
 +#include <linux/iopoll.h>
- #include <linux/jiffies.h>
- #include <linux/regmap.h>
- #include <linux/soc/mediatek/infracfg.h>
-@@ -37,7 +38,6 @@
- int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
- 		bool reg_update)
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+@@ -27,6 +28,9 @@
+ #include <dt-bindings/power/mt7623a-power.h>
+ #include <dt-bindings/power/mt8173-power.h>
+ 
++#define MTK_POLL_DELAY_US   10
++#define MTK_POLL_TIMEOUT    (jiffies_to_usecs(HZ))
++
+ #define SPM_VDE_PWR_CON			0x0210
+ #define SPM_MFG_PWR_CON			0x0214
+ #define SPM_VEN_PWR_CON			0x0230
+@@ -184,12 +188,10 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
  {
--	unsigned long expired;
+ 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+ 	struct scp *scp = scpd->scp;
+-	unsigned long timeout;
+-	bool expired;
+ 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
+-	u32 sram_pdn_ack = scpd->data->sram_pdn_ack_bits;
++	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
  	u32 val;
- 	int ret;
+-	int ret;
++	int ret, tmp;
+ 	int i;
  
-@@ -47,22 +47,11 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
- 	else
- 		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_SET, mask);
+ 	if (scpd->supply) {
+@@ -215,23 +217,10 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+ 	writel(val, ctl_addr);
  
--	expired = jiffies + HZ;
-+	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
-+				       val, (val & mask) == mask, 10,
-+				       jiffies_to_usecs(HZ));
- 
+ 	/* wait until PWR_ACK = 1 */
+-	timeout = jiffies + HZ;
+-	expired = false;
 -	while (1) {
--		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
--		if (ret)
--			return ret;
--
--		if ((val & mask) == mask)
+-		ret = scpsys_domain_is_on(scpd);
+-		if (ret > 0)
 -			break;
 -
--		cpu_relax();
--		if (time_after(jiffies, expired))
--			return -EIO;
--	}
+-		if (expired) {
+-			ret = -ETIMEDOUT;
+-			goto err_pwr_ack;
+-		}
 -
--	return 0;
-+	return ret;
- }
+-		cpu_relax();
+-
+-		if (time_after(jiffies, timeout))
+-			expired = true;
+-	}
++	ret = readx_poll_timeout(scpsys_domain_is_on, scpd, tmp, tmp > 0,
++				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++	if (ret < 0)
++		goto err_pwr_ack;
  
- /**
-@@ -80,30 +69,16 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
- int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
- 		bool reg_update)
+ 	val &= ~PWR_CLK_DIS_BIT;
+ 	writel(val, ctl_addr);
+@@ -246,20 +235,10 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+ 	writel(val, ctl_addr);
+ 
+ 	/* wait until SRAM_PDN_ACK all 0 */
+-	timeout = jiffies + HZ;
+-	expired = false;
+-	while (sram_pdn_ack && (readl(ctl_addr) & sram_pdn_ack)) {
+-
+-		if (expired) {
+-			ret = -ETIMEDOUT;
+-			goto err_pwr_ack;
+-		}
+-
+-		cpu_relax();
+-
+-		if (time_after(jiffies, timeout))
+-			expired = true;
+-	}
++	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
++				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++	if (ret < 0)
++		goto err_pwr_ack;
+ 
+ 	if (scpd->data->bus_prot_mask) {
+ 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+@@ -289,12 +268,10 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
  {
--	unsigned long expired;
- 	int ret;
-+	u32 val;
+ 	struct scp_domain *scpd = container_of(genpd, struct scp_domain, genpd);
+ 	struct scp *scp = scpd->scp;
+-	unsigned long timeout;
+-	bool expired;
+ 	void __iomem *ctl_addr = scp->base + scpd->data->ctl_offs;
+ 	u32 pdn_ack = scpd->data->sram_pdn_ack_bits;
+ 	u32 val;
+-	int ret;
++	int ret, tmp;
+ 	int i;
  
- 	if (reg_update)
- 		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
- 	else
- 		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_CLR, mask);
+ 	if (scpd->data->bus_prot_mask) {
+@@ -310,19 +287,10 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+ 	writel(val, ctl_addr);
  
--	expired = jiffies + HZ;
--
--	while (1) {
--		u32 val;
--
--		ret = regmap_read(infracfg, INFRA_TOPAXI_PROTECTSTA1, &val);
--		if (ret)
--			return ret;
--
--		if (!(val & mask))
--			break;
+ 	/* wait until SRAM_PDN_ACK all 1 */
+-	timeout = jiffies + HZ;
+-	expired = false;
+-	while (pdn_ack && (readl(ctl_addr) & pdn_ack) != pdn_ack) {
+-		if (expired) {
+-			ret = -ETIMEDOUT;
+-			goto out;
+-		}
 -
 -		cpu_relax();
--		if (time_after(jiffies, expired))
--			return -EIO;
--	}
 -
--	return 0;
-+	ret = regmap_read_poll_timeout(infracfg, INFRA_TOPAXI_PROTECTSTA1,
-+				       val, !(val & mask), 10,
-+				       jiffies_to_usecs(HZ));
-+	return ret;
- }
+-		if (time_after(jiffies, timeout))
+-			expired = true;
+-	}
++	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == pdn_ack,
++				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++	if (ret < 0)
++		goto out;
+ 
+ 	val |= PWR_ISO_BIT;
+ 	writel(val, ctl_addr);
+@@ -340,23 +308,10 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+ 	writel(val, ctl_addr);
+ 
+ 	/* wait until PWR_ACK = 0 */
+-	timeout = jiffies + HZ;
+-	expired = false;
+-	while (1) {
+-		ret = scpsys_domain_is_on(scpd);
+-		if (ret == 0)
+-			break;
+-
+-		if (expired) {
+-			ret = -ETIMEDOUT;
+-			goto out;
+-		}
+-
+-		cpu_relax();
+-
+-		if (time_after(jiffies, timeout))
+-			expired = true;
+-	}
++	ret = readx_poll_timeout(scpsys_domain_is_on, scpd, tmp, tmp == 0,
++				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++	if (ret < 0)
++		goto out;
+ 
+ 	for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++)
+ 		clk_disable_unprepare(scpd->clk[i]);
 -- 
 2.7.4
