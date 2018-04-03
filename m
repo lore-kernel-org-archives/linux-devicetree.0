@@ -1,69 +1,27 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5,5/5] ARM: dts: omap4-droid4: add soundcard
-Date: Tue, 3 Apr 2018 10:52:18 +0200
-Message-ID: <20180403085218.GE3926@amd>
-References: <20180223200254.25685-6-sebastian.reichel@collabora.co.uk>
- <20180322204804.GA26871@amd>
- <20180322234832.o24ut5ahon46mdu4@earth.universe>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v5 09/13] ARM: sun9i: smp: Rename clusters's power-off
+Date: Tue, 3 Apr 2018 17:06:17 +0800
+Message-ID: <CAGb2v67n8DzqOJWAaWGpdb2-AS0UM+_+qFZCt4_Dzb4+ySTcRQ@mail.gmail.com>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com> <20180403061836.3926-10-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180322234832.o24ut5ahon46mdu4@earth.universe>
+In-Reply-To: <20180403061836.3926-10-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
+Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, quentin.schulz@bootlin.com, linux-kernel <linux-kernel@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
+<mylene.josserand@bootlin.com> wrote:
+> To prepare the support for sun8i-a83t, rename the variable name
+> that handles the power-off of clusters because it is different from
+> sun9i-a80 to sun8i-a83t.
+>
+> The power off register for clusters are different from a80 and a83t.
+>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
---3XA6nns4nE4KvaS/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > I think I should have the required options enabled...=20
-> >=20
-> > CONFIG_SND_OMAP_SOC=3Dy
-> > CONFIG_SND_OMAP_SOC_DMIC=3Dy
-> > CONFIG_SND_OMAP_SOC_MCBSP=3Dy
-> > CONFIG_SND_OMAP_SOC_MCPDM=3Dy
-> > CONFIG_SND_OMAP_SOC_HDMI_AUDIO=3Dy
->=20
-> That's the SoC (OMAP) side.
->=20
-> > # CONFIG_SND_OMAP_SOC_RX51 is not set
-> > # CONFIG_SND_OMAP_SOC_N9 is not set
-> > CONFIG_SND_OMAP_SOC_OMAP_TWL4030=3Dy
-> > CONFIG_SND_OMAP_SOC_OMAP_ABE_TWL6040=3Dy
->=20
-> That's not needed (but does not hurt). The Droid 4
-> has no TWL companion chip and uses CPCAP instead.
-
-Umm. AFAICT CONFIG_SND_OMAP_SOC_MCBSP=3Dy can not be selected without
-selecting one of the other options... right?
-
-Seems like bug in Kconfig.
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3XA6nns4nE4KvaS/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlrDQMIACgkQMOfwapXb+vLTiACcDv6TtEK9ryYimDnVGYlJW2hL
-EJYAoL9FdxvEmzcirNb9gF78MuPpgeNE
-=zY3Q
------END PGP SIGNATURE-----
-
---3XA6nns4nE4KvaS/--
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
