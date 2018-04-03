@@ -1,40 +1,55 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 1/3] mmc: dt-bindings: update bindings doc to support Meson-AXG SoC
-Date: Tue, 3 Apr 2018 18:06:49 +0800
-Message-ID: <20180403100652.41056-2-yixun.lan@amlogic.com>
-References: <20180403100652.41056-1-yixun.lan@amlogic.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH 4/8] misc: pci_endpoint_test: Add designware EP entry
+Date: Tue, 3 Apr 2018 11:11:04 +0100
+Message-ID: <77999353-fd50-b90f-ab00-b2cd29048257@synopsys.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+ <1bc09dfd205d0721366267e023550c4a5a4a84db.1522235224.git.gustavo.pimentel@synopsys.com>
+ <76c6e35c-5659-7313-a1b4-aa93e323ef79@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403100652.41056-1-yixun.lan@amlogic.com>
+In-Reply-To: <76c6e35c-5659-7313-a1b4-aa93e323ef79@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Nan Li <nan.li@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nan Li <nan.li@amlogic.com>
+Hi Kishon,
 
-Update the documentation to list support for Meson-AXG SoC explicitly.
-The new binding string is necessary since this SoC introduce a few
-IP difference comparing to previous old generation.
+On 02/04/2018 06:36, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
+>> Adds the designware EP device ID entry to pci_endpoint_test driver table
+>> to allow this device to be recognize and handle by the pci_endpoint_test
+>> driver.
+>>
+>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>>  drivers/misc/pci_endpoint_test.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+>> index 320276f..e80c533 100644
+>> --- a/drivers/misc/pci_endpoint_test.c
+>> +++ b/drivers/misc/pci_endpoint_test.c
+>> @@ -632,6 +632,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+>>  static const struct pci_device_id pci_endpoint_test_tbl[] = {
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+>> +	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
+> 
+> Add device ids to include/linux/pci_ids.h and use the macro here.
 
-Signed-off-by: Nan Li <nan.li@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 1 +
- 1 file changed, 1 insertion(+)
+Add device id request sent, as soon as I get a positive confirmation from them
+I'll change for the macro. It works for you?
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-index 50bf611a4d2c..5add8d7d855f 100644
---- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-@@ -12,6 +12,7 @@ Required properties:
-   - "amlogic,meson-gxbb-mmc"
-   - "amlogic,meson-gxl-mmc"
-   - "amlogic,meson-gxm-mmc"
-+  - "amlogic,meson-axg-mmc"
- - clocks     : A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
- - clock-names: Should contain the following:
- 	"core" - Main peripheral bus clock
--- 
-2.16.2
+> 
+> Thanks
+> Kishon
+> 
+
+Regards,
+Gustavo
