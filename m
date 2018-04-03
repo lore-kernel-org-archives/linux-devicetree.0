@@ -1,96 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [Question] MFD driver that handles clocks/resets and populates
- child nodes
-Date: Tue, 3 Apr 2018 13:59:53 +0100
-Message-ID: <20180403125953.qzpbnlsyuxm4w7nm@dell>
-References: <CAK7LNARFWDMgmWsCjUmVrm4ZeYOcKCbizijxmDXob618ABjNWg@mail.gmail.com>
- <20180402120414.GA8159@lunn.ch>
- <CAK7LNAQ6LKk3NtGLB8g07ocyvXidpTHsApeDuctvEHyyLvk2ew@mail.gmail.com>
- <20180402133219.GA10520@lunn.ch>
- <20180403080335.ksekhxwvbzbxhmln@dell>
- <CAK7LNAQbWUYuhow5VdNDc+SuttY+u3xh9zk92kLEy9id6TNCFg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 1/6] dt-binding: timer: document NPCM7xx timer DT bindings
+Date: Tue,  3 Apr 2018 15:00:25 +0200
+Message-ID: <1522760432-32048-1-git-send-email-daniel.lezcano@linaro.org>
+References: <b2886156-4d6e-4c0c-1047-a54da8049ef6@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQbWUYuhow5VdNDc+SuttY+u3xh9zk92kLEy9id6TNCFg@mail.gmail.com>
+In-Reply-To: <b2886156-4d6e-4c0c-1047-a54da8049ef6@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Apr 2018, Masahiro Yamada wrote:
+From: Tomer Maimon <tmaimon77@gmail.com>
 
-> 2018-04-03 17:03 GMT+09:00 Lee Jones <lee.jones@linaro.org>:
-> > On Mon, 02 Apr 2018, Andrew Lunn wrote:
-> >
-> >> On Mon, Apr 02, 2018 at 10:21:01PM +0900, Masahiro Yamada wrote:
-> >> > 2018-04-02 21:04 GMT+09:00 Andrew Lunn <andrew@lunn.ch>:
-> >> > >> The maintainer of DWC3, Felipe Balbi, requested to
-> >> > >> split the glue layer driver into small parts such as
-> >> > >> reset, regulator, phy, etc.
-> >> > >
-> >> > > What exactly did Felipe ask for? Did he ask that the patch be split
-> >> > > up, one patch per reset, regulator, phy etc?
-> >> >
-> >> >
-> >> > Yeah.  That is what we understood from his comments.
-> >> >
-> >> >
-> >> > These are the feed-backs from him.
-> >> >
-> >> > https://lkml.org/lkml/2018/1/23/298
-> >> > https://lkml.org/lkml/2018/1/24/352
-> >>
-> >> > > Are all these resources used just by the DWC3? Or is it a true MFD,
-> >> > > multiple functions?
-> >> >
-> >> > I do not think this is a real MFD.
-> >> >
-> >> > This is a DWC3 glue layer, i.e.
-> >> > a collection of misc registers that control
-> >> > the DWC3 IP.
-> >> >
-> >> >
-> >> > Just splitting it into small pieces
-> >> > to use PHY, reset, regulator framework in Linux.
-> >> >
-> >> > Of course, the price of this approach
-> >> > is so cluttered Device Tree,
-> >> > honestly I do not like it much.
-> >>
-> >> This however the correct way to do this. You should have a phy driver,
-> >> and a regulator driver, and a reset driver. The DWC3 then uses
-> >> phandles to these drivers.
-> >>
-> >> How is the IO map area 65b00000 split up. Can you cleanly separate it
-> >> into sub areas, which do not overlap, so you have a sub-area for the
-> >> PHY driver, a sub-area for the regulator driver and a sub-area for the
-> >> reset area? If you can cleanly split it up, you don't need an MFD. If
-> >> however the registers are in overlapping areas, you do need an
-> >> MFD. The MFD core provides access to the registers, while its children
-> >> implement PHY, reset, regulator etc.
-> >
-> > This device certainly sounds like an MFD to me.
-> >
-> > Can you share the DT you've written please?
-> 
-> 
-> This is still under the internal review in Socionext,
-> but I attached it below FWIW.
-> 
-> (I am not the author of this DT.
->  Written by Kunihiko Hayashi,
-> 
-> Just skimming the driver, I guess it will be possible to flatten
-> the node structure by separating the register space into sub-areas.
-> If this is success, we do not the MFD driver.
+Added device tree binding documentation for Nuvoton NPCM7xx timer.
 
-Sounds like a plan.  Pretty sure this isn't really an MFD.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../bindings/timer/nuvoton,npcm7xx-timer.txt        | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
 
+diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+new file mode 100644
+index 0000000..ea22dfe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+@@ -0,0 +1,21 @@
++Nuvoton NPCM7xx timer
++
++Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
++timer counters.
++
++Required properties:
++- compatible      : "nuvoton,npcm750-timer" for Poleg NPCM750.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the timer interrupt with flags for
++                    falling edge.
++- clocks          : phandle of timer reference clock (usually a 25 MHz clock).
++
++Example:
++
++timer@f0008000 {
++    compatible = "nuvoton,npcm750-timer";
++    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++    reg = <0xf0008000 0x50>;
++    clocks = <&clk NPCM7XX_CLK_TIMER>;
++};
++
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
