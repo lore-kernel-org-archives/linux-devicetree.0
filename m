@@ -1,183 +1,42 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [Question] MFD driver that handles clocks/resets and populates
- child nodes
-Date: Tue, 3 Apr 2018 21:14:47 +0900
-Message-ID: <CAK7LNAQbWUYuhow5VdNDc+SuttY+u3xh9zk92kLEy9id6TNCFg@mail.gmail.com>
-References: <CAK7LNARFWDMgmWsCjUmVrm4ZeYOcKCbizijxmDXob618ABjNWg@mail.gmail.com>
- <20180402120414.GA8159@lunn.ch> <CAK7LNAQ6LKk3NtGLB8g07ocyvXidpTHsApeDuctvEHyyLvk2ew@mail.gmail.com>
- <20180402133219.GA10520@lunn.ch> <20180403080335.ksekhxwvbzbxhmln@dell>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v9 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Tue, 3 Apr 2018 14:23:50 +0200
+Message-ID: <218b07cd-4490-517e-1dff-ada7d73dfcf1@xs4all.nl>
+References: <1520302562-1577-1-git-send-email-yong.deng@magewell.com>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403080335.ksekhxwvbzbxhmln@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBY7ERXLAKGQE7E45SDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1520302562-1577-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2018-04-03 17:03 GMT+09:00 Lee Jones <lee.jones@linaro.org>:
-> On Mon, 02 Apr 2018, Andrew Lunn wrote:
->
->> On Mon, Apr 02, 2018 at 10:21:01PM +0900, Masahiro Yamada wrote:
->> > 2018-04-02 21:04 GMT+09:00 Andrew Lunn <andrew@lunn.ch>:
->> > >> The maintainer of DWC3, Felipe Balbi, requested to
->> > >> split the glue layer driver into small parts such as
->> > >> reset, regulator, phy, etc.
->> > >
->> > > What exactly did Felipe ask for? Did he ask that the patch be split
->> > > up, one patch per reset, regulator, phy etc?
->> >
->> >
->> > Yeah.  That is what we understood from his comments.
->> >
->> >
->> > These are the feed-backs from him.
->> >
->> > https://lkml.org/lkml/2018/1/23/298
->> > https://lkml.org/lkml/2018/1/24/352
->>
->> > > Are all these resources used just by the DWC3? Or is it a true MFD,
->> > > multiple functions?
->> >
->> > I do not think this is a real MFD.
->> >
->> > This is a DWC3 glue layer, i.e.
->> > a collection of misc registers that control
->> > the DWC3 IP.
->> >
->> >
->> > Just splitting it into small pieces
->> > to use PHY, reset, regulator framework in Linux.
->> >
->> > Of course, the price of this approach
->> > is so cluttered Device Tree,
->> > honestly I do not like it much.
->>
->> This however the correct way to do this. You should have a phy driver,
->> and a regulator driver, and a reset driver. The DWC3 then uses
->> phandles to these drivers.
->>
->> How is the IO map area 65b00000 split up. Can you cleanly separate it
->> into sub areas, which do not overlap, so you have a sub-area for the
->> PHY driver, a sub-area for the regulator driver and a sub-area for the
->> reset area? If you can cleanly split it up, you don't need an MFD. If
->> however the registers are in overlapping areas, you do need an
->> MFD. The MFD core provides access to the registers, while its children
->> implement PHY, reset, regulator etc.
->
-> This device certainly sounds like an MFD to me.
->
-> Can you share the DT you've written please?
+On 06/03/18 03:16, Yong Deng wrote:
+> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> interface and CSI1 is used for parallel interface. This is not
+> documented in datasheet but by test and guess.
+> 
+> This patch implement a v4l2 framework driver for it.
+> 
+> Currently, the driver only support the parallel interface. MIPI-CSI2,
+> ISP's support are not included in this patch.
+> 
+> Reviewed-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
 
+Reviewed-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-This is still under the internal review in Socionext,
-but I attached it below FWIW.
+Thanks!
 
-(I am not the author of this DT.
- Written by Kunihiko Hayashi,
- and clocks/resets parts were slightly modified by me.)
-
-
-Just skimming the driver, I guess it will be possible to flatten
-the node structure by separating the register space into sub-areas.
-If this is success, we do not the MFD driver.
-
-
-usb@65b00000 {
-        compatible = "socionext,uniphier-ld20-usb3-glue",
-                     "syscon";
-        reg = <0x65b00000 0x1000>;
-        clock-names = "usb";
-        clocks = <&sys_clk 14>;
-        reset-names = "usb";
-        resets = <&sys_rst 14>;
-
-        usb_rst: reset {
-                compatible = "socionext,uniphier-ld20-usb3-reset";
-                #reset-cells = <1>;
-        };
-
-        regulators {
-                compatible = "socionext,uniphier-ld20-usb3-regulator";
-
-                usb_vbus0: vbus-0 { };
-                usb_vbus1: vbus-1 { };
-                usb_vbus2: vbus-2 { };
-                usb_vbus3: vbus-3 { };
-        };
-
-        usb_hsphy: hs-phy {
-                compatible = "socionext,uniphier-ld20-usb3-hsphy";
-                #address-cells = <1>;
-                #size-cells = <0>;
-                #phy-cells = <0>;
-                clock-names = "phy-clk0", "phy-clk1";
-                clocks = <&sys_clk 16>, <&sys_clk 17>;
-                reset-names = "phy-rst0", "phy-rst1";
-                resets = <&sys_rst 16>, <&sys_rst 17>;
-                port0-supply = <&usb_vbus0>;
-                port1-supply = <&usb_vbus1>;
-                port2-supply = <&usb_vbus2>;
-                port3-supply = <&usb_vbus3>;
-
-                port@0 {
-                        reg = <0>;
-                        nvmem-cell-names = "rterm", "sel_t",
-                                           "hs_i";
-                        nvmem-cells = <&usb_rterm0>,
-                                      <&usb_sel_t0>,
-                                      <&usb_hs_i0>;
-                };
-                port@1 {
-                        reg = <1>;
-                        nvmem-cell-names = "rterm", "sel_t",
-                                           "hs_i";
-                        nvmem-cells = <&usb_rterm1>,
-                                      <&usb_sel_t1>,
-                                      <&usb_hs_i0>;
-                };
-                port@2 {
-                        reg = <2>;
-                        nvmem-cell-names = "rterm", "sel_t",
-                                           "hs_i";
-                        nvmem-cells = <&usb_rterm2>,
-                                      <&usb_sel_t2>,
-                                      <&usb_hs_i2>;
-                };
-                port@3 {
-                        reg = <3>;
-                        nvmem-cell-names = "rterm", "sel_t",
-                                           "hs_i";
-                        nvmem-cells = <&usb_rterm3>,
-                                      <&usb_sel_t3>,
-                                      <&usb_hs_i2>;
-                };
-        };
-
-        usb_ssphy: ss-phy {
-                compatible = "socionext,uniphier-ld20-usb3-ssphy";
-                #address-cells = <1>;
-                #size-cells = <0>;
-                #phy-cells = <0>;
-                reset-names = "phy-rst0", "phy-rst1";
-                resets = <&sys_rst 18>, <&sys_rst 19>;
-                port0-supply = <&usb_vbus0>;
-                port1-supply = <&usb_vbus1>;
-
-                port@0 {
-                        reg = <0>;
-                };
-                port@1 {
-                        reg = <1>;
-                };
-        };
-};
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+	Hans
