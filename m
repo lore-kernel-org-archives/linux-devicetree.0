@@ -1,15 +1,16 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 1/8] bindings: PCI: designware: Example update
-Date: Tue, 3 Apr 2018 11:33:00 +0100
-Message-ID: <36a36857-2d79-2c2d-198d-a3b65cafc768@synopsys.com>
+Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
+ designware driver
+Date: Tue, 3 Apr 2018 11:43:32 +0100
+Message-ID: <87ba8936-e870-f52b-2ff1-0aea90d0a25c@synopsys.com>
 References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <33aa86ee667e8b435db080b8c683cb5df1bd6544.1522235224.git.gustavo.pimentel@synopsys.com>
- <fa001440-0dfe-b84a-e5ef-9285043b5ede@ti.com>
+ <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+ <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fa001440-0dfe-b84a-e5ef-9285043b5ede@ti.com>
+In-Reply-To: <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
@@ -18,66 +19,51 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Kishon,
 
-On 02/04/2018 06:23, Kishon Vijay Abraham I wrote:
-> Hi,
+On 02/04/2018 06:35, Kishon Vijay Abraham I wrote:
+> 
 > 
 > On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
->> Changes the IP registers size to accommodate the ATU unroll space.
->>
->> Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers.
->>
->> Replaces the pcie base address example by a real pcie base address in use.
->>
 >> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> 
+> Please add a commit message.
+
+Ok. I'll add. Thanks for noticing it.
+
 >> ---
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
 >>
 >> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 1da7ade..6300762 100644
+>> index 6300762..4bb2e08 100644
 >> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
 >> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -1,7 +1,8 @@
->>  * Synopsys DesignWare PCIe interface
->>  
+>> @@ -3,6 +3,7 @@
 >>  Required properties:
->> -- compatible: should contain "snps,dw-pcie" to identify the core.
->> +- compatible:
->> +	"snps,dw-pcie" for RC mode;
-> 
-> I think irrespective of RC mode or EP mode, "snps,dw-pcie" can be used to
-> identify the pcie core?
-
-I guess so. What you suggest? I was just folling the same guideline present
-here: https://lkml.org/lkml/2017/11/3/310
-
+>>  - compatible:
+>>  	"snps,dw-pcie" for RC mode;
+>> +	"snps,dw-pcie-ep" for EP mode;
 >>  - reg: Should contain the configuration address space.
 >>  - reg-names: Must be "config" for the PCIe configuration space.
 >>      (The old way of getting the configuration address space from "ranges"
->> @@ -41,11 +42,11 @@ EP mode:
->>  
->>  Example configuration:
->>  
->> -	pcie: pcie@dffff000 {
->> +	pcie: pcie@dfc00000 {
->>  		compatible = "snps,dw-pcie";
->> -		reg = <0xdffff000 0x1000>, /* Controller registers */
->> -		      <0xd0000000 0x2000>; /* PCI config space */
->> -		reg-names = "ctrlreg", "config";
->> +		reg = <0xdfc00000 0x302000>, /* IP registers */
+>> @@ -56,3 +57,15 @@ Example configuration:
+>>  		#interrupt-cells = <1>;
+>>  		num-lanes = <1>;
+>>  	};
+>> +or
+>> +	pcie_ep: pcie_ep@dfc00000 {
+>> +		compatible = "snps,dw-pcie-ep";
+>> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+>> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
 > 
-> which version of synopsys IP is this. I think the ideal thing to do here is to
-> have a separate register space for iATU.
+> Doesn't this have iATU unroll space?
 
-I also agree with that. The unroll iATU was introduced on Synopsys IP version
-4.80 and the kernel patch was release on 2016-08-10
-https://patchwork.ozlabs.org/patch/657796/
-However a separate register space for iATU implies some extra code do handle it
-(and of course some tests) that don't fit into this patch series, in my point of
-view. Can this task enter in the backlog in order to be done in another patch
-series?
+I don't think EP has it, but I'm no expert on this matter. Can you provide me
+some example of having iATU unroll space mapping would be useful in EP scope?
 
 > 
 > Thanks
 > Kishon
 > 
+
+Regards,
+Gustavo
