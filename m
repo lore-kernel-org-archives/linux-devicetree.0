@@ -1,208 +1,145 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice
-	call support was
-Date: Wed, 4 Apr 2018 00:11:13 +0200
-Message-ID: <20180403221113.GA9463@amd>
-References: <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com> <20180331145531.GA10404@amd>
- <20180331181935.GX5700@atomide.com> <20180331191939.GA8999@amd>
- <20180331194616.GA19388@amd> <20180331195524.GB19388@amd>
- <20180331234314.GZ5700@atomide.com> <20180401131852.GA11086@amd>
- <20180401153631.GA5700@atomide.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 2/3] drm: bridge: panel: allow override of the bus
+ format
+Date: Wed, 04 Apr 2018 01:18:35 +0300
+Message-ID: <39049661.yQjn2ecPlO@avalon>
+References: <20180317221525.18534-1-peda@axentia.se>
+ <1986009.iWteaM7My3@avalon> <20180327081601.GJ27746@w540>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8694900729121326978=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180401153631.GA5700@atomide.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180327081601.GJ27746@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-
---===============8694900729121326978==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-
-
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > If you had a register dump from android with mics working, preferably
-> > not in speaker mode, perhaps I could try to figure it out?
->=20
-> OK here are four diffs against starting the phone app for regular
-> call, speaker call, and muted versions of them:
->=20
-> http://muru.com/linux/d4/cpcap/
->=20
-> Also, I'm connected over cdma right now, not 3g, but I doubt
-> that makes a difference for the microphone.
-
-Thanks!
-
-When I apply register settings directly, I indeed get working "normal"
-call working. Good. Diff for illustration is below. Clearly needs some
-improvements.
-
-And it shows that alsa mixers are expected to be simple and obvious on
-D4 -- they just do not work.
-
-Current version of phone gui is at
- https://github.com/pavelmachek/unicsy_demo
-
-- ofono interface should be usable
-- AT commands need a lot more work, and they'll probably never work
-nicely in this design. They are just a temporary hack.
-
-(ouch, and it should be rewritten, in Vala or better Rust...)
-									Pavel
-
-commit 06acc26c318558ed6a50b5a22afffeb9abbe7553
-Author: Pavel <pavel@ucw.cz>
-Date:   Wed Apr 4 00:04:34 2018 +0200
-
-    Add support for "normal" (not handsfree) call.
-
-diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
-index 7aaa4db..59c02b7 100644
---- a/sound/soc/codecs/cpcap.c
-+++ b/sound/soc/codecs/cpcap.c
-@@ -331,7 +331,7 @@ static const char * const cpcap_in_left_mux_texts[] =3D=
- {
- };
-=20
- static const char * const cpcap_mode_texts[] =3D {
--	"Normal", "Call"
-+	"Normal", "Handsfree", "Call",
- };
-=20
-=20
-@@ -464,25 +464,11 @@ static int cpcap_mode_get_enum(struct snd_kcontrol *k=
-control,
- 	return 0;
- }
-=20
--static int cpcap_mode_put_enum(struct snd_kcontrol *kcontrol,
--				     struct snd_ctl_elem_value *ucontrol)
-+static int enable_call(struct cpcap_audio *cpcap, int on)
- {
--	struct snd_soc_codec *codec =3D snd_soc_dapm_kcontrol_codec(kcontrol);
--	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
--	struct snd_soc_dapm_context *dapm =3D
--		snd_soc_dapm_kcontrol_dapm(kcontrol);
--	struct soc_enum *e =3D (struct soc_enum *)kcontrol->private_value;
--	unsigned int muxval =3D ucontrol->value.enumerated.item[0];
--	unsigned int mask =3D BIT(e->shift_l);
- 	int err;
--
--	printk("Requested mode %d\n", muxval);
--
--	mode =3D muxval;
--
--	switch (muxval) {
--	case 1:
--
-+	unsigned long mask;
-+=09
- 		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_VAUDIOC,
- 					 0xffff, 0x0025);	// OK
- 		if (err)
-@@ -516,6 +502,56 @@ static int cpcap_mode_put_enum(struct snd_kcontrol *kc=
-ontrol,
- 				   0x0400, 0x0400);
- 		if (err)
- 			printk("error #1\n");
-+
-+		return 0;
-+out:
-+		printk("Error!\n");
-+		return -EIO;
-+}
-+
-+static int cpcap_mode_put_enum(struct snd_kcontrol *kcontrol,
-+				     struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_codec *codec =3D snd_soc_dapm_kcontrol_codec(kcontrol);
-+	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
-+	struct snd_soc_dapm_context *dapm =3D
-+		snd_soc_dapm_kcontrol_dapm(kcontrol);
-+	struct soc_enum *e =3D (struct soc_enum *)kcontrol->private_value;
-+	unsigned int muxval =3D ucontrol->value.enumerated.item[0];
-+	unsigned int mask =3D BIT(e->shift_l);
-+	int err;
-+
-+	printk("Requested mode %d\n", muxval);
-+
-+	mode =3D muxval;
-+
-+	switch (muxval) {
-+	case 1:
-+		enable_call(cpcap, 1);
-+		break;
-+	case 2:
-+		enable_call(cpcap, 1);
-+
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
-+					 0xffff, 0x0cc6);
-+		if (err)
-+			goto out;
-+
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXMP,
-+					 0xffff, 0x0673);
-+		if (err)
-+			goto out;
-+
-+
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_RXOA,
-+					 0xffff, 0x0001);
-+		if (err)
-+			goto out;
-+	=09
-+		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_RXCOA,
-+					 0xffff, 0x0601);
-+		if (err)
-+			goto out;
- 	=09
- 	default:
- 		break;
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlrD/AEACgkQMOfwapXb+vKvAQCeK77gxTe+RBIJ3N/CjjJ3OWAN
-oMYAoIonr0IkrxqyFhQ9wu4KmOi9ob7o
-=1m4h
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
-
---===============8694900729121326978==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8694900729121326978==--
+SGkgSmFjb3BvLAoKT24gVHVlc2RheSwgMjcgTWFyY2ggMjAxOCAxMToxNjowMSBFRVNUIGphY29w
+byBtb25kaSB3cm90ZToKPiBPbiBNb24sIE1hciAyNiwgMjAxOCBhdCAxMDowMzozMVBNICswMzAw
+LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gT24gU3VuZGF5LCAyNSBNYXJjaCAyMDE4IDE1
+OjAxOjExIEVFU1QgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gPj4gT24gMjAxOC0wMy0yMCAxNDo1Niwg
+TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+Pj4gT24gU3VuZGF5LCAxOCBNYXJjaCAyMDE4IDAw
+OjE1OjI0IEVFVCBQZXRlciBSb3NpbiB3cm90ZToKPiA+Pj4+IFVzZWZ1bCBpZiB0aGUgYnJpZGdl
+IGRvZXMgc29tZSBraW5kIG9mIGNvbnZlcnNpb24gb2YgdGhlIGJ1cyBmb3JtYXQuCj4gPj4+PiAK
+PiA+Pj4+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4gPj4+
+PiAtLS0KPiA+Pj4+IAo+ID4+Pj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYyB8IDIy
+ICsrKysrKysrKysrKysrKysrKysrKy0KPiA+Pj4+ICBpbmNsdWRlL2RybS9kcm1fYnJpZGdlLmgg
+ICAgICAgfCAgMSArCj4gPj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAx
+IGRlbGV0aW9uKC0pCj4gPj4+PiAKPiA+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL3BhbmVsLmMKPiA+Pj4+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9wYW5lbC5jIGlu
+ZGV4IDZkOTlkNGEzYmViMy4uY2NlZjAyODNmZjQxCj4gPj4+PiAxMDA2NDQKPiA+Pj4+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFuZWwuYwo+ID4+Pj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9wYW5lbC5jCj4gPj4+PiBAQCAtMjIsNiArMjIsNyBAQCBzdHJ1Y3QgcGFuZWxf
+YnJpZGdlIHsKPiA+Pj4+ICAJc3RydWN0IGRybV9jb25uZWN0b3IgY29ubmVjdG9yOwo+ID4+Pj4g
+IAlzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbDsKPiA+Pj4+ICAJdTMyIGNvbm5lY3Rvcl90eXBlOwo+
+ID4+Pj4gKwl1MzIgYnVzX2Zvcm1hdDsKPiA+Pj4+ICB9Owo+ID4+Pj4gIAo+ID4+Pj4gIHN0YXRp
+YyBpbmxpbmUgc3RydWN0IHBhbmVsX2JyaWRnZSAqCj4gPj4+PiBAQCAtNDAsOCArNDEsMTUgQEAg
+c3RhdGljIGludCBwYW5lbF9icmlkZ2VfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QKPiA+Pj4+
+IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rvcikgewo+ID4+Pj4gIAlzdHJ1Y3QgcGFuZWxfYnJpZGdl
+ICpwYW5lbF9icmlkZ2UgPQo+ID4+Pj4gIAkJZHJtX2Nvbm5lY3Rvcl90b19wYW5lbF9icmlkZ2Uo
+Y29ubmVjdG9yKTsKPiA+Pj4+ICsJaW50IHJldDsKPiA+Pj4+ICsKPiA+Pj4+ICsJcmV0ID0gZHJt
+X3BhbmVsX2dldF9tb2RlcyhwYW5lbF9icmlkZ2UtPnBhbmVsKTsKPiA+Pj4+ICsKPiA+Pj4+ICsJ
+aWYgKHBhbmVsX2JyaWRnZS0+YnVzX2Zvcm1hdCkKPiA+Pj4+ICsJCWRybV9kaXNwbGF5X2luZm9f
+c2V0X2J1c19mb3JtYXRzKCZjb25uZWN0b3ItPmRpc3BsYXlfaW5mbywKPiA+Pj4+ICsJCQkJCQkg
+JnBhbmVsX2JyaWRnZS0+YnVzX2Zvcm1hdCwgMSk7Cj4gPj4+IAo+ID4+PiBXaGlsZSBJIGFncmVl
+IHdpdGggdGhlIHByb2JsZW0gc3RhdGVtZW50IGFuZCwgdG8gc29tZSBleHRlbnQsIHRoZSBEVAo+
+ID4+PiBiaW5kaW5ncywgSSBkb24ndCB0aGluayB0aGlzIGlzIHRoZSByaWdodCBpbXBsZW1lbnRh
+dGlvbi4gWW91J3ZlCj4gPj4+IGNvcnJlY3RseSBub3RlZCB0aGF0IGRpc3BsYXkgY29udHJvbGxl
+ciBzaG91bGRuJ3QgYmxpbmRseSB1c2UgdGhlCj4gPj4+IGZvcm1hdHMgcmVwb3J0ZWQgYnkgdGhl
+IHBhbmVsIHRocm91Z2ggdGhlIGNvbm5lY3RvciBmb3JtYXRzLCBhbmQgdGhhdAo+ID4+PiBoYWNr
+aW5nIHRoZSBwYW5lbCBkcml2ZXIgdG8gb3ZlcnJpZGUgdGhlIGZvcm1hdHMgaXNuJ3QgYSBnb29k
+IGlkZWEsIHNvCj4gPj4+IEkgd291bGRuJ3Qgb3ZlcnJpZGUgdGhlIGZvcm1hdHMgcmVwb3J0ZWQg
+YnkgdGhlIGNvbm5lY3Rvci4gSSB3b3VsZAo+ID4+PiBpbnN0ZWFkIGV4dGVuZCB0aGUgZHJtX2Jy
+aWRnZSBBUEkgdG8gcmVwb3J0IGZvcm1hdHMgYXQgYnJpZGdlIGlucHV0cy4KPiA+Pj4gVGhpcyB3
+b3VsZCBiZSBtb3JlIGdlbmVyaWMgYW5kIGFsbG93IGVhY2ggYnJpZGdlIHRvIGNvbmZpZ3VyZSBp
+dHNlbGYKPiA+Pj4gYWNjb3JkaW5nIHRvIHRoZSBuZXh0IGJyaWRnZSBpbiB0aGUgY2hhaW4uCj4g
+Pj4+IAo+ID4+PiBJJ20gbm90IHN1cmUgd2hldGhlciB0aGlzIEFQSSBleHRlbnNpb24gc2hvdWxk
+IGJlIGluIHRoZSBmb3JtIG9mIGEgbmV3Cj4gPj4+IGJyaWRnZSBmdW5jdGlvbiwgb3IgaWYgdGhl
+IGZvcm1hdHMgc2hvdWxkIGJlIHN0b3JlZCBpbiB0aGUgZHJtX2JyaWRnZQo+ID4+PiBzdHJ1Y3R1
+cmUgZGlyZWN0bHkgYXMgZG9uZSBmb3IgY29ubmVjdG9ycyBpbiB0aGUgZGlzcGxheSBpbmZvCj4g
+Pj4+IHN0cnVjdHVyZS4gSSdtIHRlbXB0ZWQgYnkgdGhlIGZvcm1lciwgYnV0IEknbSBvcGVuIHRv
+IGRpc2N1c3Npb25zLgo+ID4+IAo+ID4+IE9rLCBJIGNhbiBsb29rIGludG8gdGhhdCwgYnV0IGxl
+dCBtZSBjaGVjayBpZiBJIGdvdCB0aGlzIHJpZ2h0LiBGcm9tIHRoZQo+ID4+IHZlcnkgbGl0dGxl
+IG9mIHRoZSBjb2RlIHRoYXQgSSBoYXZlIGxvb2tlZCBhdCwgSSBoYXZlIGdhdGhlcmVkIHRoYXQK
+PiA+PiBkaXNwbGF5IGNvbnRyb2xsZXJzIGhhbmRsZSBicmlkZ2VzIGV4cGxpY2l0bHksIHJpZ2h0
+Pwo+ID4gCj4gPiBUaGF0J3MgY29ycmVjdCwgeWVzLiBPciwgcmF0aGVyLCB0aGV5IGhhbmRsZSB0
+aGUgZmlyc3QgYnJpZGdlIGluIHRoZQo+ID4gY2hhaW4sIGFuZCB0aGVuIG90aGVyIGJyaWRnZXMg
+YXJlIGhhbmRsZWQgcmVjdXJzaXZlbHkuCj4gPiAKPiA+PiBJZiBzbywgYnkgZXh0ZW5kaW5nIHRo
+ZSBicmlkZ2UgKHdpdGggZWl0aGVyIGEgbmV3IGZ1bmN0aW9uIG9yIG5ldyBkYXRhKQo+ID4+IHlv
+dSBpbXBvc2UgY2hhbmdlcyB0byBhbGwgZGlzcGxheSBjb250cm9sbGVycyB3YW50aW5nIHRvIGhh
+bmRsZSB0aGlzIG5ldwo+ID4+IGJyaWRnZSBpbnB1dC1mb3JtYXQuIElmIHNvLCBJIGFzc3VtZSBJ
+IGNhbiBsZWF2ZSBvdXQgdGhlIGNoYW5nZXMgdG8gYWxsCj4gPj4gZGlzcGxheSBjb250cm9sbGVy
+cyB0aGF0IEkgZG8gbm90IGNhcmUgYWJvdXQuIENvcnJlY3Q/Cj4gPiAKPiA+IFRoYXQncyBjb3Jy
+ZWN0Lgo+ID4gCj4gPj4gQWxzbywgZG9uJ3QgaG9sZCB5b3VyIGJyZWF0aCB3YWl0aW5nIGZvciBh
+IHYyLCBidXQgSSdsbCB0cnkgdG8gZ2V0IHRvIGl0Cj4gPj4gOi0pCj4gPiAKPiA+IEkgd29uJ3Qg
+aG9sZCBteSBicmVhdGgsIGJ1dCBKYWNvcG8gbWlnaHQgOi0pIEhlIGhhcyBhIHNpbWlsYXIgaXNz
+dWUgdG8KPiA+IHNvbHZlIChyZXBvcnRpbmcgdGhlIExWRFMgbW9kZXMgc3VwcG9ydGVkIGJ5IHRo
+ZSBicmlkZ2UpLgo+IAo+IEkgd2FzIG5vdCA6KSBJIGp1bXBlZCBsYXRlIG9uIHRoaXMsIGFzIEkg
+cmVzdGFydGVkIHRoZSBEUk0gYnJpZGdlIHdvcmsKPiB5ZXN0ZXJkYXkuIFBldGVyLCBjYW4gSSBz
+dW1tYXJpemUgeW91IG15IGN1cnJlbnQgdXNlIGNhc2U/ICh3aGljaCBpcwo+IHF1aXRlIHNpbWls
+YXIgdG8geW91cnMgYWN0dWFsbHkpCj4gCj4gQXQgdGhlIFItQ2FyIERVIChEaXNwbGF5IFVuaXQp
+IG91dHB1dCwgd2UgaGF2ZSBhbiBMVkRTIGVuY29kZXIKPiBjb25uZWN0ZWQgdG8gYSAndHJhbnNw
+YXJlbnQnIExWRFMgYnJpZGdlIHRoYXQgY29udmVydHMgdGhlIGlucHV0IExWRFMKPiBzdHJlYW0g
+aW50byBkaWdpdGFsIFJHQiBvdXRwdXQgdG8gYmUgdGhlbiBIRE1JIGVuY29kZWQgYnkgYW5vdGhl
+cgo+IGNvbXBvbmVudC4KPiAKPiBUaGUgJ3RyYW5zcGFyZW50IExWRFMgZGVjb2RlcicsIGZvciB3
+aGljaCBJJ20gbm93IHdyaXRpbmcgYSBkcml2ZXIsCj4gc2hvdWxkIHJlcG9ydCB3aGF0IHBpeGVs
+IGJ1cyBmb3JtYXQgaXQgYWNjZXB0cyBhcyBpbnB1dCBhcyB0aGUgRFUgTFZEUwo+IGVuY29kZXIg
+Y2FuIG91dHB1dCBhbiBMVkRTIHN0cmVhbSB3aXRoIHNldmVyYWwgZGlmZmVyZW50IGNvbXBvbmVu
+dCBvcmRlcmluZwo+IHNjaGVtZXMuIEkgd2FzIGFib3V0IHRvIGNvbWUgdXAgd2l0aCBhIHByb3Bv
+c2FsIGxhc3Qgd2VlayBidXQgeW91IGJlYXQKPiBtZSBhdCB0aW1lLCBzbyBJJ20gaGFwcHkgdG8g
+YmFzZSBteSB3b3JrIG9uIHdoYXQgY29tZXMgb3V0IGZyb20gdGhpcwo+IHNlcmllcy4KPiAKPiAt
+LS0tIExhdXJlbnQ6IE9uIHRoZSBUSEM2M0xWRCBkcml2ZXIKPiBMYXVyZW50OiBhdCB0aGUgc2Ft
+ZSB0aW1lIEkgd291bGQgbm90IGJsb2NrIHRoZSBUSEM2M0xWRDEwMjQgZHJpdmVyLiBJCj4gY2Fu
+IGV4dGVuZCBiaW5kaW5ncyB0byBpbmNsdWRlIHRoZSAibW9kZSBtYXAiIGNvbmZpZ3VyYXRpb24g
+cHJvcGVydHksCj4gYW5kIHNxdWFzaCBteSBFYWdsZSBEVFMgcGF0Y2ggb24gdG9wIG9mIE5pa2xh
+cycgb25lLiBUaGVuIG1ha2UgdGhlIG5ld2x5Cj4gaW50cm9kdWNlZCBkcml2ZXIgdXNlIHdoYXRl
+dmVyIEFQSSBjb21lcyBvdXQgZnJvbSB0aGlzIHNlcmllcyB3aXRoIGFuCj4gaW5jcmVtZW50YWwg
+cGF0Y2guIERvZXMgdGhpcyB3b3JrIGZvciB5b3U/IEl0IGlzIHRydWUsIHRob3VnaCwgdGhhdAo+
+IHdlJ3JlIGFueXdheSBsYXRlIGZvciB2NC4xNyBhbmQgSSBjb3VsZCBzZW5kIG9uZSBzaW5nbGUg
+c2VyaWVzIGJhc2VkCj4gb24gc29tZSBmdXR1cmUgdmVyc2lvbiBvZiB0aGlzIGFuZCB0aGF0IGlu
+Y2x1ZGVzIGFsbCAoYnJpZGdlIGRyaXZlcgo+IGFuZCBiaW5kaW5ncywgRFUgTFZEUyBjaGFuZ2Vz
+IGFuZCBFYWdsZSBEVFMpLCBidXQgSSBmZWVsIGl0J3MgZWFzaWVyCj4gaWYgd2UgZ290IHRoZSBi
+cmlkZ2UgZHJpdmVyIGFjY2VwdGVkIGZpcnN0LCBhbmQgdGhlbiBkZXZlbG9wIG9uIHRvcCBvZgo+
+IHRoYXQuCgpJJ20gZmluZSB3aXRoIGJvdGggb3B0aW9ucywgeW91IGNhbiBwaWNrIHRoZSBvbmUg
+dGhhdCB3aWxsIG1hdGNoIHdoYXQgaXMgcmVhZHkgCmluIHVwc3RyZWFtIGJ5IHRoZSB0aW1lIHlv
+dSBnZXQgdG8gc3VibWl0IHRoZSBwYXRjaGVzLgoKPiA+Pj4+IC0JcmV0dXJuIGRybV9wYW5lbF9n
+ZXRfbW9kZXMocGFuZWxfYnJpZGdlLT5wYW5lbCk7Cj4gPj4+PiArCXJldHVybiByZXQ7Cj4gPj4+
+PiAgfQo+ID4+Pj4gIAo+ID4+Pj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9o
+ZWxwZXJfZnVuY3MKPiA+Pj4+IEBAIC0yMDMsNiArMjExLDE4IEBAIHZvaWQgZHJtX3BhbmVsX2Jy
+aWRnZV9yZW1vdmUoc3RydWN0IGRybV9icmlkZ2UKPiA+Pj4+ICpicmlkZ2UpCj4gPj4+PiAgfQo+
+ID4+Pj4gIEVYUE9SVF9TWU1CT0woZHJtX3BhbmVsX2JyaWRnZV9yZW1vdmUpOwo+ID4+Pj4gCj4g
+Pj4+PiArdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3NldF9idXNfZm9ybWF0KHN0cnVjdCBkcm1fYnJp
+ZGdlICpicmlkZ2UsIHUzMgo+ID4+Pj4gYnVzX2Zvcm1hdCkKPiA+Pj4+ICt7Cj4gPj4+PiArCXN0
+cnVjdCBwYW5lbF9icmlkZ2UgKnBhbmVsX2JyaWRnZTsKPiA+Pj4+ICsKPiA+Pj4+ICsJaWYgKCFi
+cmlkZ2UpCj4gPj4+PiArCQlyZXR1cm47Cj4gPj4+PiArCj4gPj4+PiArCXBhbmVsX2JyaWRnZSA9
+IGRybV9icmlkZ2VfdG9fcGFuZWxfYnJpZGdlKGJyaWRnZSk7Cj4gPj4+PiArCXBhbmVsX2JyaWRn
+ZS0+YnVzX2Zvcm1hdCA9IGJ1c19mb3JtYXQ7Cj4gPj4+PiArfQo+ID4+Pj4gK0VYUE9SVF9TWU1C
+T0woZHJtX3BhbmVsX2JyaWRnZV9zZXRfYnVzX2Zvcm1hdCk7Cj4gPj4+PiArCj4gPj4+PiAgc3Rh
+dGljIHZvaWQgZGV2bV9kcm1fcGFuZWxfYnJpZGdlX3JlbGVhc2Uoc3RydWN0IGRldmljZSAqZGV2
+LCB2b2lkCj4gPj4+PiAgKnJlcykKPiA+Pj4+ICB7Cj4gPj4+PiAgCXN0cnVjdCBkcm1fYnJpZGdl
+ICoqYnJpZGdlID0gcmVzOwo+ID4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9icmlk
+Z2UuaCBiL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ID4+Pj4gaW5kZXggNjgyZDAxYmE5MjBj
+Li44MTkwM2I5MmYxODcgMTAwNjQ0Cj4gPj4+PiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fYnJpZGdl
+LmgKPiA+Pj4+ICsrKyBiL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ID4+Pj4gQEAgLTI2OCw2
+ICsyNjgsNyBAQCB2b2lkIGRybV9icmlkZ2VfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdlCj4gPj4+
+PiAqYnJpZGdlKTsKPiA+Pj4+ICBzdHJ1Y3QgZHJtX2JyaWRnZSAqZHJtX3BhbmVsX2JyaWRnZV9h
+ZGQoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwsCj4gPj4+PiAgCQkJCQl1MzIgY29ubmVjdG9yX3R5
+cGUpOwo+ID4+Pj4gIHZvaWQgZHJtX3BhbmVsX2JyaWRnZV9yZW1vdmUoc3RydWN0IGRybV9icmlk
+Z2UgKmJyaWRnZSk7Cj4gPj4+PiArdm9pZCBkcm1fcGFuZWxfYnJpZGdlX3NldF9idXNfZm9ybWF0
+KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsIHUzMgo+ID4+Pj4gYnVzX2Zvcm1hdCk7Cj4gPj4+
+PiBzdHJ1Y3QgZHJtX2JyaWRnZSAqZGV2bV9kcm1fcGFuZWxfYnJpZGdlX2FkZChzdHJ1Y3QgZGV2
+aWNlICpkZXYsCj4gPj4+PiAgCQkJCQkgICAgIHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsLAo+ID4+
+Pj4gIAkJCQkJICAgICB1MzIgY29ubmVjdG9yX3R5cGUpOwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50
+IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
