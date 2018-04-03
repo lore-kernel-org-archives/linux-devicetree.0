@@ -1,203 +1,96 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Multiple generic PHY instances for DWC3 USB IP
-Date: Tue, 3 Apr 2018 22:31:40 +0900
-Message-ID: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH] arm64: allwinner: h6: restore the usage of CCU
+ slice macros
+Date: Tue,  3 Apr 2018 21:40:24 +0800
+Message-ID: <20180403134024.43156-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBYUJR3LAKGQEFKHI2RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+As the definition of CCU slice macros are already merged into the source
+tree, restore the usage of the macros now.
 
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-Currently, DWC3 core IP (drivers/usb/dwc3/core.c)
-can take only one PHY phandle for each of SS, HS.
-(phy-names DT property is "usb2-phy" and "usb3-phy" for each)
-
-The DWC3 core IP is provided by Synopsys,
-but some SoC-dependent parts (a.k.a glue-layer)
-are implemented by SoC venders.
-
-The number of connected PHY instances are SoC-dependent.
-
-If you look at generic drivers such as
-  drivers/usb/host/ehci-platform.c
-the driver can handle arbitrary number of PHY instances.
-
-However, as mentioned above, DWC3 core allows only one PHY phandle
-for each SS/HS.
-This can result in a strange DT structure.
-
-For example, Socionext PXs3 SoC is integrated with 2 instances of DWC3.
-
-The instance 0 of DWC3 is connected with 2 super-speed PHYs.
-The instance 1 of DWC3 is connected with 1 super-speed PHY.
-
-
-According to the feed-back from Felipe Balbe,
-(https://patchwork.kernel.org/patch/10180167/)
-Socionext is trying to split the glue layer into small chunks.
-
-
-The following is the DT under internal review of Socionext.
-The full DT is super long, so
-here is only snippet for the SS PHY parts.
-
-
-        [ instance 0  (with 2 SS PHYs) ]
-
-        dwc3@65a00000 {
-                compatible = "snps,dwc3";
-                reg = <0x65a00000 0xcd00>;
-                interrupt-names = "host", "peripheral";
-                interrupts = <0 134 4>, <0 135 4>;
-                phy-names = "usb2-phy", "usb3-phy";
-                phys = <&usb0_hsphy>, <&usb0_ssphy>;
-                dr_mode = "host";
-        };
-
-        usb0_ssphy: ss-phy {
-                compatible = "socionext,uniphier-pxs3-usb3-ssphy";
-                #address-cells = <1>;
-                #size-cells = <0>;
-                #phy-cells = <0>;
-                clock-names = "phy-clk0", "phy-clk1";
-                clocks = <&sys_clk 17>, <&sys_clk 18>;
-                reset-names = "phy-rst0", "phy-rst1";
-                resets = <&sys_rst 17>, <&sys_rst 18>;
-                port0-supply = <&usb0_vbus0>;
-                port1-supply = <&usb0_vbus1>;
-
-                port@0 {
-                        reg = <0>;
-                };
-                port@1 {
-                        reg = <1>;
-                };
-        };
-
-        [ instance 1 (with 1 SS PHY) ]
-
-        dwc3@65c00000 {
-                compatible = "snps,dwc3";
-                reg = <0x65c00000 0xcd00>;
-                interrupt-names = "host", "peripheral";
-                interrupts = <0 137 4>, <0 138 4>;
-                phy-names = "usb2-phy", "usb3-phy";
-                phys = <&usb1_hsphy>, <&usb1_ssphy>;
-                dr_mode = "host";
-        };
-
-        usb1_ssphy: ss-phy {
-                compatible = "socionext,uniphier-pxs3-usb3-ssphy";
-                #address-cells = <1>;
-                #size-cells = <0>;
-                #phy-cells = <0>;
-                clock-names = "phy-clk0";
-                clocks = <&sys_clk 21>;
-                reset-names = "phy-rst0";
-                resets = <&sys_rst 21>;
-                port0-supply = <&usb1_vbus0>;
-
-                port@0 {
-                         reg = <0>;
-                };
-        };
-
-
-I think this is strange, but the PHY driver
-counts the number of sub-nodes ("port@0", "port@1" ...)
-and iterate the port settings.
-
-
-
-
-
-In my opinion, the structure like follows
-will be more natural.
-(flattening homogeneous PHY nodes)
-
-
-        [ instance 0 (with 2 SS PHYs)]
-
-        dwc3@65a00000 {
-                compatible = "snps,dwc3";
-                reg = <0x65a00000 0xcd00>;
-                interrupt-names = "host", "peripheral";
-                interrupts = <0 134 4>, <0 135 4>;
-                phys = <&usb0_hsphy>, <&usb0_ssphy0>, <&usb0_ssphy1>;
-                dr_mode = "host";
-        };
-
-        usb0_ssphy0: ss-phy0@65b00300 {
-                compatible = "socionext,uniphier-dwc3-ssphy";
-                reg = <0x65b00300 0x10>;
-                #phy-cells = <0>;
-                clocks = <&sys_clk 17>;
-                resets = <&sys_rst 17>;
-                port-supply = <&usb0_vbus0>;
-        };
-
-        usb0_ssphy1: ss-phy1@65b00310 {
-                compatible = "socionext,uniphier-dwc3-ssphy";
-                reg = <0x65b00310 0x10>;
-                #phy-cells = <0>;
-                clocks = <&sys_clk 18>;
-                resets = <&sys_rst 18>;
-                port-supply = <&usb0_vbus1>;
-        };
-
-
-
-
-        [ instance 1 (with 1 SS PHY) ]
-
-        usb0: dwc3@65c00000 {
-                compatible = "snps,dwc3";
-                reg = <0x65c00000 0xcd00>;
-                interrupt-names = "host", "peripheral";
-                interrupts = <0 137 4>, <0 138 4>;
-                phys = <&usb1_hsphy>, <&usb1_ssphy>;
-                dr_mode = "host";
-        };
-
-        usb1_ssphy: ss-phy@65d00300 {
-                compatible = "socionext,uniphier-dwc3-ssphy";
-                reg = <0x65d00300 0x10>;
-                #phy-cells = <0>;
-                clocks = <&sys_clk 21>;
-                resets = <&sys_rst 21>;
-                port0-supply = <&usb1_vbus0>;
-        };
-
-
-To achieve this, I need driver changes.
-
-
-My proposal is to support arbitrary number of PHY instances
-like ehci-platform.c does.
-
-
-
-@@ -894,8 +894,8 @@ struct dwc3 {
-        struct usb_phy          *usb2_phy;
-        struct usb_phy          *usb3_phy;
-
--       struct phy              *usb2_generic_phy;
--       struct phy              *usb3_generic_phy;
-+       unsigned int            num_phys;
-+       struct phy              **phys;
-
-        bool                    phys_ready;
-
-
-
-Is this OK?
-
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 56563150d61a..4debc3962830 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -4,6 +4,8 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/sun50i-h6-ccu.h>
++#include <dt-bindings/reset/sun50i-h6-ccu.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -115,7 +117,7 @@
+ 				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu 26>, <&osc24M>, <&osc32k>;
++			clocks = <&ccu CLK_APB1>, <&osc24M>, <&osc32k>;
+ 			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+@@ -134,8 +136,8 @@
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&ccu 70>;
+-			resets = <&ccu 21>;
++			clocks = <&ccu CLK_BUS_UART0>;
++			resets = <&ccu RST_BUS_UART0>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -145,8 +147,8 @@
+ 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&ccu 71>;
+-			resets = <&ccu 22>;
++			clocks = <&ccu CLK_BUS_UART1>;
++			resets = <&ccu RST_BUS_UART1>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -156,8 +158,8 @@
+ 			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&ccu 72>;
+-			resets = <&ccu 23>;
++			clocks = <&ccu CLK_BUS_UART2>;
++			resets = <&ccu RST_BUS_UART2>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -167,8 +169,8 @@
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&ccu 73>;
+-			resets = <&ccu 24>;
++			clocks = <&ccu CLK_BUS_UART3>;
++			resets = <&ccu RST_BUS_UART3>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
-Best Regards
-Masahiro Yamada
+2.15.1
