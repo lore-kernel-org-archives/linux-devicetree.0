@@ -1,30 +1,57 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 01/13] ARM: move cputype definitions into another file
-Date: Tue, 3 Apr 2018 14:52:45 +0800
-Message-ID: <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com> <20180403061836.3926-2-mylene.josserand@bootlin.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v1 0/7] add support for Bluetooth on MT7622 SoC
+Date: Tue, 3 Apr 2018 15:15:50 +0800
+Message-ID: <cover.1522736996.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403061836.3926-2-mylene.josserand@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
-<mylene.josserand@bootlin.com> wrote:
-> To add the support for SMP on sun8i-a83t, we will use some
-> definitions in an assembly file so move definitions into
-> another file to separate C functions and macro defintions.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Instead of moving the definitions, you could guard all the C
-stuff in "#ifndef __ASSEMBLY__". AFAIK a few header files do that.
+Hi,
 
-ChenYu
+This patchset introduces built-in Bluetooth support on MT7622 SoC.
+And, it should be simple to make an extension to support other
+MediaTek SoCs with adjusting a few of changes on the initialization
+sequence of the device.
 
-> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> ---
->  arch/arm/include/asm/cputype.h     | 94 +-----------------------------------
->  arch/arm/include/asm/cputype_def.h | 98 ++++++++++++++++++++++++++++++++++++++
+Before the main driver is being introduced, a few of things about
+power-domain management should be re-worked for serdev core and MediaTek
+SCPSYS to allow the Bluetooth to properly power up.
+
+Patch 2: add a generic way attaching power domain to serdev
+Patch 3 and 4: add cleanups with reuse APIs from Linux core
+Patch 5: fix a limitation about power enablement Bluetooth depends on
+Patch 1, 6 and 7: the major part of adding Bluetooth support to MT7622
+	
+	Sean
+
+Sean Wang (7):
+  dt-bindings: net: bluetooth: Add mediatek-bluetooth
+  serdev: add dev_pm_domain_attach|detach()
+  soc: mediatek: reuse read[l,x]_poll_timeout helpers
+  soc: mediatek: reuse regmap_read_poll_timeout helpers
+  soc: mediatek: add a fixed wait for SRAM stable
+  Bluetooth: hci_mediatek: Add protocol support for MediaTek serial
+    devices
+  MAINTAINERS: add an entry for MediaTek Bluetooth driver
+
+ .../devicetree/bindings/net/mediatek-bluetooth.txt |  35 ++
+ MAINTAINERS                                        |   8 +
+ drivers/bluetooth/Kconfig                          |  12 +
+ drivers/bluetooth/Makefile                         |   1 +
+ drivers/bluetooth/hci_mediatek.c                   | 499 +++++++++++++++++++++
+ drivers/bluetooth/hci_uart.h                       |   3 +-
+ drivers/soc/mediatek/mtk-infracfg.c                |  45 +-
+ drivers/soc/mediatek/mtk-scpsys.c                  |  98 ++--
+ drivers/tty/serdev/core.c                          |  14 +-
+ 9 files changed, 610 insertions(+), 105 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+ create mode 100644 drivers/bluetooth/hci_mediatek.c
+
+-- 
+2.7.4
