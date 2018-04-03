@@ -1,106 +1,209 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] display: panel: Add AUO g070vvn01 display support (800x480)
-Date: Tue,  3 Apr 2018 12:15:25 +0200
-Message-ID: <20180403101525.22369-1-lukma@denx.de>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH] ARM64: dts: meson-axg: enable the eMMC controller
+Date: Tue, 3 Apr 2018 18:26:51 +0800
+Message-ID: <20180403102651.60340-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Lukasz Majewski <lukma@denx.de>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Nan Li <nan.li@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for AUO's 7.0" display.
+From: Nan Li <nan.li@amlogic.com>
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
+The IP of eMMC controller in AXG is similiar to Meson-GX series.
+Here we add the initial support of the HS200 mode with
+clock running at 166MHz (to be safe), since we found some eMMC chip
+fail to run at 200MHz due to tunning phase error.
+
+Signed-off-by: Nan Li <nan.li@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+
 ---
- .../bindings/display/panel/auo,g070vvn01           | 30 +++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01
+Hi Kevin
+  Please note this patch actually depend on the eMMC driver here [0].
+  Still a few problem to solve, to improve the tuning phase driver to make
+the clock running at 200MHz, and to further support the HS400 mode.
+Anyway, this patch itself is quite independent.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01 b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01
-new file mode 100644
-index 000000000000..bd4017362094
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01
-@@ -0,0 +1,30 @@
-+AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
+[0] http://lkml.kernel.org/r/20180403100652.41056-1-yixun.lan@amlogic.com
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 58 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 81 ++++++++++++++++++++++++++
+ 2 files changed, 139 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 57eedced5a51..f67d4e47e641 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -15,6 +15,44 @@
+ 		serial0 = &uart_AO;
+ 		serial1 = &uart_A;
+ 	};
 +
-+Required properties:
-+- compatible: should be "auo,g070vvn01"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX6Q based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "auo,g070vvn01";
-+		backlight = <&backlight_lcd>;
-+		bus-format-override = "rgb565";
-+		power-supply = <&reg_display>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
 +	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5591984a392b..62314085b635 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
- 	},
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vddio_ao18: regulator-vddio_ao18 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++	};
  };
  
-+static const struct display_timing auo_g070vvn01_timings = {
-+	.pixelclock = { 33300000, 34209000, 45000000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 20, 40, 200 },
-+	.hback_porch = { 87, 40, 1 },
-+	.hsync_len = { 1, 48, 87 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 5, 13, 200 },
-+	.vback_porch = { 31, 31, 29 },
-+	.vsync_len = { 1, 1, 3 },
-+};
+ &ethmac {
+@@ -47,3 +85,23 @@
+ 	pinctrl-0 = <&i2c1_z_pins>;
+ 	pinctrl-names = "default";
+ };
 +
-+static const struct panel_desc auo_g070vvn01 = {
-+	.timings = &auo_g070vvn01_timings,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.delay = {
-+		.prepare = 200,
-+		.enable = 50,
-+		.disable = 50,
-+		.unprepare = 1000,
-+	},
-+};
++/* emmc storage */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
 +
- static const struct display_timing auo_g133han01_timings = {
- 	.pixelclock = { 134000000, 141200000, 149000000 },
- 	.hactive = { 1920, 1920, 1920 },
-@@ -2049,6 +2077,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b133xtn01",
- 		.data = &auo_b133xtn01,
- 	}, {
-+		.compatible = "auo,g070vvn01",
-+		.data = &auo_g070vvn01,
-+	}, {
- 		.compatible = "auo,g133han01",
- 		.data = &auo_g133han01,
- 	}, {
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <180000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index b58808eb3cc8..52d65643d4b7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -113,6 +113,36 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		apb: apb@ffe00000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xffe00000 0x0 0x200000>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
++
++			sd_emmc_b: sd@5000 {
++				compatible = "amlogic,meson-axg-mmc";
++				reg = <0x0 0x5000 0x0 0x2000>;
++				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++				clocks = <&clkc CLKID_SD_EMMC_B>,
++					<&clkc CLKID_SD_EMMC_B_CLK0>,
++					<&clkc CLKID_FCLK_DIV2>;
++				clock-names = "core", "clkin0", "clkin1";
++			};
++
++			sd_emmc_c: mmc@7000 {
++				compatible = "amlogic,meson-axg-mmc";
++				reg = <0x0 0x7000 0x0 0x2000>;
++				interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++				clocks = <&clkc CLKID_SD_EMMC_C>,
++					<&clkc CLKID_SD_EMMC_C_CLK0>,
++					<&clkc CLKID_FCLK_DIV2>;
++				clock-names = "core", "clkin0", "clkin1";
++			};
++		};
++
+ 		cbus: bus@ffd00000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xffd00000 0x0 0x25000>;
+@@ -309,6 +339,57 @@
+ 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
+ 				};
+ 
++				emmc_pins: emmc {
++					mux {
++						groups = "emmc_nand_d0",
++							"emmc_nand_d1",
++							"emmc_nand_d2",
++							"emmc_nand_d3",
++							"emmc_nand_d4",
++							"emmc_nand_d5",
++							"emmc_nand_d6",
++							"emmc_nand_d7",
++							"emmc_clk",
++							"emmc_cmd",
++							"emmc_ds";
++						function = "emmc";
++					};
++				};
++
++				emmc_clk_gate_pins: emmc_clk_gate {
++					mux {
++						groups = "BOOT_8";
++						function = "gpio_periphs";
++					};
++					cfg-pull-down {
++						pins = "BOOT_8";
++						bias-pull-down;
++					};
++				};
++
++				sdio_pins: sdio {
++					mux {
++						groups = "sdio_d0",
++							"sdio_d1",
++							"sdio_d2",
++							"sdio_d3",
++							"sdio_cmd",
++							"sdio_clk";
++						function = "sdio";
++					};
++				};
++
++				sdio_clk_gate_pins: sdio_clk_gate {
++					mux {
++						groups = "GPIOX_4";
++						function = "gpio_periphs";
++					};
++					cfg-pull-down {
++						pins = "GPIOX_4";
++						bias-pull-down;
++					};
++				};
++
+ 				eth_rmii_x_pins: eth-x-rmii {
+ 					mux {
+ 						groups = "eth_mdio_x",
 -- 
-2.11.0
+2.16.2
