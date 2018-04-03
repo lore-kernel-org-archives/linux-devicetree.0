@@ -1,82 +1,79 @@
-Return-Path: <SRS0=tJus=HF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:39386 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752630AbeDPCwQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Apr 2018 22:52:16 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v2 01/10] media: ov772x: allow i2c controllers without I2C_FUNC_PROTOCOL_MANGLING
-Date: Mon, 16 Apr 2018 11:51:42 +0900
-Message-Id: <1523847111-12986-2-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
-References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=dUBc=GY=ragnatech.se=niklas.soderlund@kernel.org>
+Date: Tue, 3 Apr 2018 16:54:59 +0200
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Message-ID: <20180403145458.GL26532@bigcity.dyn.berto.se>
+References: <20180326133456.16584-1-maxime.ripard@bootlin.com>
+ <20180326133456.16584-3-maxime.ripard@bootlin.com>
+ <20180329123534.GB26532@bigcity.dyn.berto.se>
+ <20180403134859.73r3usnf6foyxncu@flea>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180403134859.73r3usnf6foyxncu@flea>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver only works when the i2c controller have
-I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don't
-support it.
+Hi Maxime,
 
-The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
-it doesn't support repeated starts.
+On 2018-04-03 15:48:59 +0200, Maxime Ripard wrote:
+> Hi Niklas,
+> 
+> On Thu, Mar 29, 2018 at 02:35:34PM +0200, Niklas S�derlund wrote:
+> > > +	/*
+> > > +	 * Create a static mapping between the CSI virtual channels
+> > > +	 * and the input streams.
+> > > +	 *
+> > > +	 * This should be enhanced, but v4l2 lacks the support for
+> > > +	 * changing that mapping dynamically at the moment.
+> > > +	 *
+> > > +	 * We're protected from the userspace setting up links at the
+> > > +	 * same time by the upper layer having called
+> > > +	 * media_pipeline_start().
+> > > +	 */
+> > > +	list_for_each_entry(link, &entity->links, list) {
+> > 
+> > I wonder is this list_for_each_entry() really needed? Can't you simply 
+> > iterate over all sink pads as with the loop bellow but drop the pad == 
+> > link->sink check? Maybe I'm missing something.
+> 
+> This was a review made by Sakari here:
+> https://patchwork.linuxtv.org/patch/44422/
+> 
+> The idea is that we need to know if the pad is enabled, and as far as
+> I know this information is only stored at the link level, not at the
+> pad level.
 
-This changes the reading ov772x register method so that it doesn't
-require I2C_FUNC_PROTOCOL_MANGLING by calling two separated i2c messages.
+Ahh I see, you are correct.
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v2
-- Replace the implementation of ov772x_read() instead of adding an
-  alternative method
+> 
+> > Apart from this and the small nit-picks (one more bellow) I think this 
+> > patch is fine. Once I understand this I be happy to add my tag to this 
+> > change, great work!
+> 
+> Is this a reviewed by? :)
 
- drivers/media/i2c/ov772x.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+Yes, I now understand what I did not before :-) Feel free to add my
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index b62860c..7e79da0 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -542,9 +542,19 @@ static struct ov772x_priv *to_ov772x(struct v4l2_subdev *sd)
- 	return container_of(sd, struct ov772x_priv, subdev);
- }
- 
--static inline int ov772x_read(struct i2c_client *client, u8 addr)
-+static int ov772x_read(struct i2c_client *client, u8 addr)
- {
--	return i2c_smbus_read_byte_data(client, addr);
-+	int ret;
-+	u8 val;
-+
-+	ret = i2c_master_send(client, &addr, 1);
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_master_recv(client, &val, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val;
- }
- 
- static inline int ov772x_write(struct i2c_client *client, u8 addr, u8 value)
-@@ -1255,10 +1265,9 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
--					      I2C_FUNC_PROTOCOL_MANGLING)) {
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
- 		dev_err(&adapter->dev,
--			"I2C-Adapter doesn't support SMBUS_BYTE_DATA or PROTOCOL_MANGLING\n");
-+			"I2C-Adapter doesn't support SMBUS_BYTE_DATA\n");
- 		return -EIO;
- 	}
- 	client->flags |= I2C_CLIENT_SCCB;
+Reviewed-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+
+> 
+> > I also think you shall consider to add a MAINTAINERS record for the RX 
+> > and TX drivers. Maybe one entry for both drivers as they live in the 
+> > same directory but I think one of the two should add it :-)
+> 
+> Right, I'll do it, thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
 -- 
-2.7.4
-
+Regards,
+Niklas S�derlund
