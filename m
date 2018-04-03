@@ -1,30 +1,28 @@
-From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Wed,  4 Apr 2018 00:24:14 +1000
-Message-ID: <20180403142415.30083-3-oohall@gmail.com>
-References: <20180403142415.30083-1-oohall@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180403142415.30083-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+From: Oliver O'Halloran <oohall@gmail.com>
+Subject: [PATCH 3/4] doc/devicetree: Persistent memory region bindings
+Date: Wed,  4 Apr 2018 00:20:30 +1000
+Message-ID: <20180403142031.28629-3-oohall@gmail.com>
+References: <20180403142031.28629-1-oohall@gmail.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20180403142031.28629-1-oohall@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, 000linux-nvdimm@lists.01.org, Oliver O'Halloran <oohall@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Add device-tree binding documentation for the nvdimm region driver.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
 ---
 v2: Changed name from nvdimm-region to pmem-region.
     Cleaned up the example binding and fixed the overlapping regions.
@@ -125,13 +123,13 @@ diff --git a/MAINTAINERS b/MAINTAINERS
 index 6ef38be700e8..fa3c9211d6ff 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -8041,6 +8041,7 @@ L:	linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+@@ -8041,6 +8041,7 @@ L:	linux-nvdimm@lists.01.org
  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
  S:	Supported
  F:	drivers/nvdimm/of_pmem.c
 +F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
  
  LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
- M:	Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+ M:	Dan Williams <dan.j.williams@intel.com>
 -- 
 2.9.5
