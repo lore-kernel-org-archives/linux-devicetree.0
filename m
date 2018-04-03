@@ -1,34 +1,50 @@
 From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] Bluetooth: hci_mediatek: mtk_recv_frame() can be static
+Subject: Re: [PATCH v1 6/7] Bluetooth: hci_mediatek: Add protocol support for
+ MediaTek serial devices
 Date: Tue, 3 Apr 2018 20:13:03 +0800
-Message-ID: <20180403121303.GA72575@lkp-sb04>
+Message-ID: <201804032020.XSC8Oqit%fengguang.wu@intel.com>
 References: <f0e0a0b7f1dc3845dc6eafb4ccd60284d1675f8d.1522736996.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
 In-Reply-To: <f0e0a0b7f1dc3845dc6eafb4ccd60284d1675f8d.1522736996.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, johan.hedberg@gmail.com, marcel@holtmann.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, kbuild-all@01.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sean,
 
-Fixes: 9f2aacacb185 ("Bluetooth: hci_mediatek: Add protocol support for MediaTek serial devices")
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on next-20180329]
+[also build test WARNING on v4.16]
+[cannot apply to linus/master bluetooth/master bluetooth-next/master v4.16 v4.16-rc7 v4.16-rc6]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/sean-wang-mediatek-com/add-support-for-Bluetooth-on-MT7622-SoC/20180403-160035
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/bluetooth/hci_mediatek.c:322:5: sparse: symbol 'mtk_recv_frame' was not declared. Should it be static?
+>> drivers/bluetooth/hci_mediatek.c:415:57: sparse: Using plain integer as NULL pointer
+
+Please review and possibly fold the followup patch.
+
 ---
- hci_mediatek.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/hci_mediatek.c b/drivers/bluetooth/hci_mediatek.c
-index 7ac1e7aa..ab02b8b 100644
---- a/drivers/bluetooth/hci_mediatek.c
-+++ b/drivers/bluetooth/hci_mediatek.c
-@@ -319,7 +319,7 @@ static int mtk_close(struct hci_uart *hu)
- 	return 0;
- }
- 
--int mtk_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
-+static int mtk_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct hci_event_hdr *hdr = (void *)skb->data;
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
