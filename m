@@ -1,69 +1,52 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
- designware driver
-Date: Tue, 3 Apr 2018 11:43:32 +0100
-Message-ID: <87ba8936-e870-f52b-2ff1-0aea90d0a25c@synopsys.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
- <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv4 06/10] mfd: ti-lmu: add PWM support
+Date: Tue, 3 Apr 2018 12:48:51 +0200
+Message-ID: <20180403104851.GC6758@amd>
+References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
+ <20180330172414.26575-7-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180330172414.26575-7-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Milo Kim <Milo.Kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-On 02/04/2018 06:35, Kishon Vijay Abraham I wrote:
-> 
-> 
-> On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> 
-> Please add a commit message.
+--raC6veAxrt5nqIoY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I'll add. Thanks for noticing it.
+On Fri 2018-03-30 19:24:10, Sebastian Reichel wrote:
+> This adds support to acquire the optional PWM channel,
+> that can be used by some of the LMU variants.
+>=20
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
->> ---
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 6300762..4bb2e08 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -3,6 +3,7 @@
->>  Required properties:
->>  - compatible:
->>  	"snps,dw-pcie" for RC mode;
->> +	"snps,dw-pcie-ep" for EP mode;
->>  - reg: Should contain the configuration address space.
->>  - reg-names: Must be "config" for the PCIe configuration space.
->>      (The old way of getting the configuration address space from "ranges"
->> @@ -56,3 +57,15 @@ Example configuration:
->>  		#interrupt-cells = <1>;
->>  		num-lanes = <1>;
->>  	};
->> +or
->> +	pcie_ep: pcie_ep@dfc00000 {
->> +		compatible = "snps,dw-pcie-ep";
->> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
->> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
-> 
-> Doesn't this have iATU unroll space?
+Patches 1-6:
 
-I don't think EP has it, but I'm no expert on this matter. Can you provide me
-some example of having iATU unroll space mapping would be useful in EP scope?
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-> 
-> Thanks
-> Kishon
-> 
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Regards,
-Gustavo
+--raC6veAxrt5nqIoY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrDXBMACgkQMOfwapXb+vI0eQCglNF+VrkOld245Pmxzn6tpTpD
+VKUAn2r/6M6FaIc7fq0mJtmPUBO5IF9G
+=g3E7
+-----END PGP SIGNATURE-----
+
+--raC6veAxrt5nqIoY--
