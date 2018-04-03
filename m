@@ -1,34 +1,74 @@
-Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:13649 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751676AbeDJPlQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Apr 2018 11:41:16 -0400
-From: Andy Yeh <andy.yeh@intel.com>
-Subject: [RESEND PATCH v7 0/2] DW9807 DT binding and driver patches
-Date: Tue, 10 Apr 2018 23:48:42 +0800
-Message-Id: <1523375324-27856-1-git-send-email-andy.yeh@intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org
+Return-Path: <SRS0=yROL=GY=bootlin.com=maxime.ripard@kernel.org>
+Date: Tue, 3 Apr 2018 16:25:13 +0200
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Message-ID: <20180403142513.435jdbs7u7nathtm@flea>
+References: <20180215133335.9335-1-maxime.ripard@bootlin.com>
+ <20180215133335.9335-3-maxime.ripard@bootlin.com>
+ <20180329133255.GD26532@bigcity.dyn.berto.se>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6ghnuyaey5gm4fhd"
+Content-Disposition: inline
+In-Reply-To: <20180329133255.GD26532@bigcity.dyn.berto.se>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sakari and Tomasz,
 
-The two patches are the DT binding and driver for DW9807 VCM controller.
+--6ghnuyaey5gm4fhd
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Alan Chiang (2):
-  media: dw9807: Add dw9807 vcm driver
-  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
+Hi Niklas,
 
- .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
- MAINTAINERS                                        |   7 +
- drivers/media/i2c/Kconfig                          |  10 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/dw9807.c                         | 320 +++++++++++++++++++++
- 5 files changed, 347 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
- create mode 100644 drivers/media/i2c/dw9807.c
+Thanks for your review,
 
--- 
-2.7.4
+On Thu, Mar 29, 2018 at 03:32:55PM +0200, Niklas S=F6derlund wrote:
+> > diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/pla=
+tform/cadence/Kconfig
+> > new file mode 100644
+> > index 000000000000..18f061e5cbd1
+> > --- /dev/null
+> > +++ b/drivers/media/platform/cadence/Kconfig
+> > @@ -0,0 +1,17 @@
+> > +config VIDEO_CADENCE
+> > +	bool "Cadence Video Devices"
+>=20
+> I'm no expert on Kconfig best practices so if nothing else I might learn=
+=20
+> something. There is no need to add a description to this option as it=20
+> only groups the Cadence drivers?
 
+You don't strictly need it, but you're right and one should be better,
+I've added it.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6ghnuyaey5gm4fhd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrDjsgACgkQ0rTAlCFN
+r3QLoQ/+Oyl6xPhBeYQjU23lTQIzC6yjPMV+l8hEv/Rr/jgwwwLoNW1iPqsCxuGa
+TNCM5BJHYovSqmaYQ3NlE+ilsMCF4vwi4md+X0IgyYsLRgw+1FblWCJBf3DSIsKG
+/oynhDw/Dw5WaQg3ncqBkmGlUZL4nDw3o+j5VZST6VoNS+4BNZPVuucdwKV7vZ8o
+aH3VkmxIIiaPMB8ncH2jXEql6EsHpuaWpbya6bdF0qIDcLSKILYMM8GUg3cGvhBk
+i5Co3MBY6YXiI8vbS5LV9wZVKuVrPqLPJjYLPqeMfLo94bFNnGuhH59xjyhCGB/C
+7fmXxicD/l46SwNL7GWaTFuAhuE29Zijtt95PY6JxmEZL/zLeSNO0PxwVtO6aO6z
+DHAtCvo2RKfxCmagGMz5HYf1aDAZDZjlpQggdJHYBSuYFGZEZCVp+c56xYTmTRm7
+8E3mt2iwD+PPgfygzRMN3YkNCUIzBQyj1n/t8c9DKfboo8WRLilI+6l6yba3gMyd
++JfHLTTdyA9XDSEjxchXIo2ZYruP5mSpOKeL5j9eWSgCaMcRuPGyTj775fnbof/E
+fPLWnl/LMb7GQxESKSXWToMjN/xIdpN9tFxOzkSS/ErAX9KWhYWeQ3HsSlTOUzPb
+N0PvwZPsjLZXV8lqzsYuSksBZ7Zk6rRsyGKZvT0IJMaG4DlkD1E=
+=rV4V
+-----END PGP SIGNATURE-----
+
+--6ghnuyaey5gm4fhd--
