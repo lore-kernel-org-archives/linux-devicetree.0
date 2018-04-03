@@ -1,85 +1,54 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v1 2/7] serdev: add dev_pm_domain_attach|detach()
-Date: Tue, 3 Apr 2018 15:15:52 +0800
-Message-ID: <f976766cd499c8d7053a1f442aba1494b4d3314f.1522736996.git.sean.wang@mediatek.com>
-References: <cover.1522736996.git.sean.wang@mediatek.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v5 01/13] ARM: move cputype definitions into another
+ file
+Date: Tue, 3 Apr 2018 09:27:24 +0200
+Message-ID: <20180403092724.607e8e37@dell-desktop.home>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
+        <20180403061836.3926-2-mylene.josserand@bootlin.com>
+        <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1522736996.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Hi Chen-Yu,
 
-In order to open up the required power gate before any operation can be
-effectively performed over the serial bus between CPU and serdev, it's
-clearly essential to add common attach functions for PM domains to serdev
-at the probe phase.
+Thank you for your review!
 
-Similarly, the relevant dettach function for the PM domains should be
-properly and reversely added at the remove phase.
+On Tue, 3 Apr 2018 14:52:45 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
----
- drivers/tty/serdev/core.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+> On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
+> <mylene.josserand@bootlin.com> wrote:
+> > To add the support for SMP on sun8i-a83t, we will use some
+> > definitions in an assembly file so move definitions into
+> > another file to separate C functions and macro defintions.  
+> 
+> Instead of moving the definitions, you could guard all the C
+> stuff in "#ifndef __ASSEMBLY__". AFAIK a few header files do that.
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index df93b72..c93d8ee 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pm_domain.h>
- #include <linux/serdev.h>
- #include <linux/slab.h>
- 
-@@ -330,8 +331,16 @@ EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
- static int serdev_drv_probe(struct device *dev)
- {
- 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-+	int ret;
-+
-+	ret = dev_pm_domain_attach(dev, true);
-+	if (ret != -EPROBE_DEFER) {
-+		ret = sdrv->probe(to_serdev_device(dev));
-+		if (ret)
-+			dev_pm_domain_detach(dev, true);
-+	}
- 
--	return sdrv->probe(to_serdev_device(dev));
-+	return ret;
- }
- 
- static int serdev_drv_remove(struct device *dev)
-@@ -339,6 +348,9 @@ static int serdev_drv_remove(struct device *dev)
- 	const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
- 	if (sdrv->remove)
- 		sdrv->remove(to_serdev_device(dev));
-+
-+	dev_pm_domain_detach(dev, true);
-+
- 	return 0;
- }
- 
+Oh, right. It is better with this check so I will use that in the next
+iteration of my series.
+
+Best regards,
+
+Mylène
+
 -- 
-2.7.4
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+
+> 
+> ChenYu
+> 
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > ---
+> >  arch/arm/include/asm/cputype.h     | 94 +-----------------------------------
+> >  arch/arm/include/asm/cputype_def.h | 98 ++++++++++++++++++++++++++++++++++++++  
