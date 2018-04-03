@@ -1,175 +1,208 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Wed, 04 Apr 2018 00:11:31 +0300
-Message-ID: <17308094.P4OCQetjOb@avalon>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <20180322134206.22857-3-peter.ujfalusi@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: call/normal switch was Re: omap4-droid4: voice
+	call support was
+Date: Wed, 4 Apr 2018 00:11:13 +0200
+Message-ID: <20180403221113.GA9463@amd>
+References: <20180328140219.f6667up5evrrafkv@earth.universe>
+ <20180329014507.GM5700@atomide.com> <20180331145531.GA10404@amd>
+ <20180331181935.GX5700@atomide.com> <20180331191939.GA8999@amd>
+ <20180331194616.GA19388@amd> <20180331195524.GB19388@amd>
+ <20180331234314.GZ5700@atomide.com> <20180401131852.GA11086@amd>
+ <20180401153631.GA5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180322134206.22857-3-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: multipart/mixed; boundary="===============8694900729121326978=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180401153631.GA5700@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFRodXJzZGF5LCAyMiBNYXJj
-aCAyMDE4IDE1OjQyOjA2IEVFU1QgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4gRnJvbTogVG9taSBW
-YWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiAKPiBFcnJhdGEgaTg3OCBzYXlzIHRo
-YXQgTVBVIHNob3VsZCBub3QgYmUgdXNlZCB0byBhY2Nlc3MgUkFNIGFuZCBETU0gYXQKPiB0aGUg
-c2FtZSB0aW1lLiBBcyBpdCdzIG5vdCBwb3NzaWJsZSB0byBwcmV2ZW50IE1QVSBhY2Nlc3Npbmcg
-UkFNLCB3ZQo+IG5lZWQgdG8gYWNjZXNzIERNTSB2aWEgYSBwcm94eS4KPiAKPiBUaGlzIHBhdGNo
-IGNoYW5nZXMgRE1NIGRyaXZlciB0byBhY2Nlc3MgRE1NIHJlZ2lzdGVycyB2aWEgc0RNQS4gSW5z
-dGVhZAo+IG9mIGRvaW5nIGEgbm9ybWFsIHJlYWRsL3dyaXRlbCBjYWxsIHRvIHJlYWQvd3JpdGUg
-YSByZWdpc3Rlciwgd2UgdXNlCj4gc0RNQSB0byBjb3B5IDQgYnl0ZXMgZnJvbS90byB0aGUgRE1N
-IHJlZ2lzdGVycy4KPiAKPiBUaGlzIHBhdGNoIHByb3ZpZGVzIG9ubHkgYSBwYXJ0aWFsIHdvcmth
-cm91bmQgZm9yIGk4NzgsIGFzIG5vdCBvbmx5IERNTQo+IHJlZ2lzdGVyIHJlYWRzL3dyaXRlcyBh
-cmUgYWZmZWN0ZWQsIGJ1dCBhbHNvIGFjY2Vzc2VzIHRvIHRoZSBETU0gbWFwcGVkCj4gYnVmZmVy
-cyAoZnJhbWVidWZmZXJzLCB1c3VhbGx5KS4KCkkgYXNzdW1lIGFjY2VzcyB0byBETU0tbWFwcGVk
-IGJ1ZmZlcnMgdG8gYmUgd2F5IG1vcmUgZnJlcXVlbnQgdGhhbiBhY2Nlc3MgdG8gCnRoZSBETU0g
-cmVnaXN0ZXJzLiBJZiB0aGF0J3MgdGhlIGNhc2UsIHRoaXMgcGFydGlhbCB3b3JrYXJvdW5kIHNo
-b3VsZCBvbmx5IApzbGlnaHRseSBsb3dlciB0aGUgcHJvYmFiaWxpdHkgb2Ygc3lzdGVtIGxvY2st
-dXAuIERvIHlvdSBoYXZlIHBsYW5zIHRvIAppbXBsZW1lbnQgYSB3b3JrYXJvdW5kIHRoYXQgd2ls
-bCBmaXggdGhlIHByb2JsZW0gY29tcGxldGVseSA/Cgo+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFs
-a2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9v
-bWFwZHJtL29tYXBfZG1tX3ByaXYuaCAgfCAgIDggKysKPiAgZHJpdmVycy9ncHUvZHJtL29tYXBk
-cm0vb21hcF9kbW1fdGlsZXIuYyB8IDE1MyArKysrKysrKysrKysrKysrKysrKysrKysrKystCj4g
-IDIgZmlsZXMgY2hhbmdlZCwgMTU5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZG1tX3ByaXYuaAo+IGIv
-ZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1fcHJpdi5oIGluZGV4IGMyNzg1Y2M5OGRj
-OS4uOWNlOWQxZDcwMzlhCj4gMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0v
-b21hcF9kbW1fcHJpdi5oCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kbW1f
-cHJpdi5oCj4gQEAgLTE1NSwxMCArMTU1LDEyIEBAIHN0cnVjdCByZWZpbGxfZW5naW5lIHsKPiAK
-PiAgc3RydWN0IGRtbV9wbGF0Zm9ybV9kYXRhIHsKPiAgCXUzMiBjcHVfY2FjaGVfZmxhZ3M7Cj4g
-Kwlib29sIGVycmF0YV9pODc4X3dhOwo+ICB9Owo+IAo+ICBzdHJ1Y3QgZG1tIHsKPiAgCXN0cnVj
-dCBkZXZpY2UgKmRldjsKPiArCWRtYV9hZGRyX3QgcGh5c19iYXNlOwo+ICAJdm9pZCBfX2lvbWVt
-ICpiYXNlOwo+ICAJaW50IGlycTsKPiAKPiBAQCAtMTg5LDYgKzE5MSwxMiBAQCBzdHJ1Y3QgZG1t
-IHsKPiAgCXN0cnVjdCBsaXN0X2hlYWQgYWxsb2NfaGVhZDsKPiAKPiAgCWNvbnN0IHN0cnVjdCBk
-bW1fcGxhdGZvcm1fZGF0YSAqcGxhdF9kYXRhOwo+ICsKPiArCWJvb2wgZG1tX3dvcmthcm91bmQ7
-Cj4gKwlzcGlubG9ja190IHdhX2xvY2s7Cj4gKwl1MzIgKndhX2RtYV9kYXRhOwo+ICsJZG1hX2Fk
-ZHJfdCB3YV9kbWFfaGFuZGxlOwo+ICsJc3RydWN0IGRtYV9jaGFuICp3YV9kbWFfY2hhbjsKPiAg
-fTsKPiAKPiAgI2VuZGlmCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29t
-YXBfZG1tX3RpbGVyLmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZG1tX3RpbGVy
-LmMgaW5kZXggZTg0ODcxZTc0NjE1Li4yN2M2N2JjMzYyMDMKPiAxMDA2NDQKPiAtLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2RtbV90aWxlci5jCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL29tYXBkcm0vb21hcF9kbW1fdGlsZXIuYwo+IEBAIC0xOCw2ICsxOCw3IEBACj4gICNpbmNs
-dWRlIDxsaW51eC9jb21wbGV0aW9uLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+ICAj
-aW5jbHVkZSA8bGludXgvZG1hLW1hcHBpbmcuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2RtYWVuZ2lu
-ZS5oPgo+ICAjaW5jbHVkZSA8bGludXgvZXJybm8uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2luaXQu
-aD4KPiAgI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+IEBAIC03OSwxNCArODAsMTM4IEBA
-IHN0YXRpYyBjb25zdCB1MzIgcmVnW11bNF0gPSB7Cj4gIAkJCURNTV9QQVRfREVTQ1JfXzIsIERN
-TV9QQVRfREVTQ1JfXzN9LAo+ICB9Owo+IAo+ICtzdGF0aWMgaW50IGRtbV9kbWFfY29weShzdHJ1
-Y3QgZG1tICpkbW0sIGRtYV9hZGRyX3Qgc3JjLCBkbWFfYWRkcl90IGRzdCkKPiArewo+ICsJc3Ry
-dWN0IGRtYV9kZXZpY2UgKmRtYV9kZXYgPSBkbW0tPndhX2RtYV9jaGFuLT5kZXZpY2U7Cj4gKwlz
-dHJ1Y3QgZG1hX2FzeW5jX3R4X2Rlc2NyaXB0b3IgKnR4Owo+ICsJZW51bSBkbWFfc3RhdHVzIHN0
-YXR1czsKPiArCWRtYV9jb29raWVfdCBjb29raWU7Cj4gKwo+ICsJdHggPSBkbWFfZGV2LT5kZXZp
-Y2VfcHJlcF9kbWFfbWVtY3B5KGRtbS0+d2FfZG1hX2NoYW4sIGRzdCwgc3JjLCA0LCAwKTsKPiAr
-CWlmICghdHgpIHsKPiArCQlkZXZfZXJyKGRtbS0+ZGV2LCAiRmFpbGVkIHRvIHByZXBhcmUgRE1B
-IG1lbWNweVxuIik7Cj4gKwkJcmV0dXJuIC1FSU87Cj4gKwl9Cj4gKwo+ICsJY29va2llID0gdHgt
-PnR4X3N1Ym1pdCh0eCk7Cj4gKwlpZiAoZG1hX3N1Ym1pdF9lcnJvcihjb29raWUpKSB7Cj4gKwkJ
-ZGV2X2VycihkbW0tPmRldiwgIkZhaWxlZCB0byBkbyBETUEgdHhfc3VibWl0XG4iKTsKPiArCQly
-ZXR1cm4gLUVJTzsKPiArCX0KPiArCj4gKwlkbWFfYXN5bmNfaXNzdWVfcGVuZGluZyhkbW0tPndh
-X2RtYV9jaGFuKTsKPiArCXN0YXR1cyA9IGRtYV9zeW5jX3dhaXQoZG1tLT53YV9kbWFfY2hhbiwg
-Y29va2llKTsKCmRtYV9zeW5jX3dhaXQoKSBoYXMgYSA1cyB0aW1lb3V0LiBZb3UncmUgY2FsbGlu
-ZyB0aGlzIGZ1bmN0aW9uIHdpdGggYSBzcGlubG9jayAKaGVsZC4gVGhlIGVuZCByZXN1bHQgbWln
-aHQgYmUgc2xpZ2h0bHkgYmV0dGVyIHRoYW4gYSBjb21wbGV0ZSBzeXN0ZW0gbG9jayBhcyAKY2F1
-c2VkIGJ5IHRoZSBidWcgZGVzY3JpYmVkIGluIGk4NzgsIGJ1dCBvbmx5IHNsaWdodGx5LgoKVW5s
-ZXNzIEknbSBtaXN0YWtlbiB0aGUgcmVhc29uIHlvdSBjYW4ndCBzbGVlcCBoZXJlIGlzIGJlY2F1
-c2Ugb2YgdGhlIG5lZWQgdG8gCmFjY2VzcyByZWdpc3RlcnMgaW4gdGhlIGludGVycnVwdCBoYW5k
-bGVyLiBDb3VsZCB3ZSB1c2UgdGhyZWFkZWQgSVJRcyB0byBzb2x2ZSAKdGhpcyA/Cgo+ICsJaWYg
-KHN0YXR1cyAhPSBETUFfQ09NUExFVEUpCj4gKwkJZGV2X2VycihkbW0tPmRldiwgImk4Nzggd2Eg
-RE1BIGNvcHkgZmFpbHVyZVxuIik7Cj4gKwo+ICsJZG1hZW5naW5lX3Rlcm1pbmF0ZV9hbGwoZG1t
-LT53YV9kbWFfY2hhbik7Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIHUzMiBkbW1f
-cmVhZF93YShzdHJ1Y3QgZG1tICpkbW0sIHUzMiByZWcpCj4gK3sKPiArCWRtYV9hZGRyX3Qgc3Jj
-LCBkc3Q7Cj4gKwlpbnQgcjsKPiArCj4gKwlzcmMgPSBkbW0tPnBoeXNfYmFzZSArIHJlZzsKPiAr
-CWRzdCA9IGRtbS0+d2FfZG1hX2hhbmRsZTsKPiArCj4gKwlyID0gZG1tX2RtYV9jb3B5KGRtbSwg
-c3JjLCBkc3QpOwo+ICsJaWYgKHIpIHsKPiArCQlkZXZfZXJyKGRtbS0+ZGV2LCAic0RNQSByZWFk
-IHRyYW5zZmVyIHRpbWVvdXRcbiIpOwo+ICsJCXJldHVybiByZWFkbChkbW0tPmJhc2UgKyByZWcp
-Owo+ICsJfQo+ICsKPiArCS8qCj4gKwkgKiBBcyBwZXIgaTg3OCB3b3JrYXJvdW5kLCB0aGUgRE1B
-IGlzIHVzZWQgdG8gYWNjZXNzIHRoZSBETU0gcmVnaXN0ZXJzLgo+ICsJICogTWFrZSBzdXJlIHRo
-YXQgdGhlIHJlYWRsIGlzIG5vdCBtb3ZlZCBieSB0aGUgY29tcGlsZXIgb3IgdGhlIENQVQo+ICsJ
-ICogZWFybGllciB0aGFuIHRoZSBETUEgZmluaXNoZWQgd3JpdGluZyB0aGUgdmFsdWUgdG8gbWVt
-b3J5Lgo+ICsJICovCj4gKwlybWIoKTsKPiArCXJldHVybiByZWFkbChkbW0tPndhX2RtYV9kYXRh
-KTsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgZG1tX3dyaXRlX3dhKHN0cnVjdCBkbW0gKmRtbSwg
-dTMyIHZhbCwgdTMyIHJlZykKPiArewo+ICsJZG1hX2FkZHJfdCBzcmMsIGRzdDsKPiArCWludCBy
-Owo+ICsKPiArCXdyaXRlbCh2YWwsIGRtbS0+d2FfZG1hX2RhdGEpOwo+ICsJLyoKPiArCSAqIEFz
-IHBlciBpODc4IHdvcmthcm91bmQsIHRoZSBETUEgaXMgdXNlZCB0byBhY2Nlc3MgdGhlIERNTSBy
-ZWdpc3RlcnMuCj4gKwkgKiBNYWtlIHN1cmUgdGhhdCB0aGUgd3JpdGVsIGlzIG5vdCBtb3ZlZCBi
-eSB0aGUgY29tcGlsZXIgb3IgdGhlIENQVSwgc28KPiArCSAqIHRoZSBkYXRhIHdpbGwgYmUgaW4g
-cGxhY2UgYmVmb3JlIHdlIHN0YXJ0IHRoZSBETUEgdG8gZG8gdGhlIGFjdHVhbAo+ICsJICogcmVn
-aXN0ZXIgd3JpdGUuCj4gKwkgKi8KPiArCXdtYigpOwo+ICsKPiArCXNyYyA9IGRtbS0+d2FfZG1h
-X2hhbmRsZTsKPiArCWRzdCA9IGRtbS0+cGh5c19iYXNlICsgcmVnOwo+ICsKPiArCXIgPSBkbW1f
-ZG1hX2NvcHkoZG1tLCBzcmMsIGRzdCk7Cj4gKwlpZiAocikgewo+ICsJCWRldl9lcnIoZG1tLT5k
-ZXYsICJzRE1BIHdyaXRlIHRyYW5zZmVyIHRpbWVvdXRcbiIpOwo+ICsJCXdyaXRlbCh2YWwsIGRt
-bS0+YmFzZSArIHJlZyk7Cj4gKwl9Cj4gK30KPiArCj4gIHN0YXRpYyB1MzIgZG1tX3JlYWQoc3Ry
-dWN0IGRtbSAqZG1tLCB1MzIgcmVnKQo+ICB7Cj4gLQlyZXR1cm4gcmVhZGwoZG1tLT5iYXNlICsg
-cmVnKTsKPiArCWlmIChkbW0tPmRtbV93b3JrYXJvdW5kKSB7Cj4gKwkJdTMyIHY7Cj4gKwkJdW5z
-aWduZWQgbG9uZyBmbGFnczsKPiArCj4gKwkJc3Bpbl9sb2NrX2lycXNhdmUoJmRtbS0+d2FfbG9j
-aywgZmxhZ3MpOwo+ICsJCXYgPSBkbW1fcmVhZF93YShkbW0sIHJlZyk7Cj4gKwkJc3Bpbl91bmxv
-Y2tfaXJxcmVzdG9yZSgmZG1tLT53YV9sb2NrLCBmbGFncyk7Cj4gKwo+ICsJCXJldHVybiB2Owo+
-ICsJfSBlbHNlIHsKPiArCQlyZXR1cm4gcmVhZGwoZG1tLT5iYXNlICsgcmVnKTsKPiArCX0KPiAg
-fQo+IAo+ICBzdGF0aWMgdm9pZCBkbW1fd3JpdGUoc3RydWN0IGRtbSAqZG1tLCB1MzIgdmFsLCB1
-MzIgcmVnKQo+ICB7Cj4gLQl3cml0ZWwodmFsLCBkbW0tPmJhc2UgKyByZWcpOwo+ICsJaWYgKGRt
-bS0+ZG1tX3dvcmthcm91bmQpIHsKPiArCQl1bnNpZ25lZCBsb25nIGZsYWdzOwo+ICsKPiArCQlz
-cGluX2xvY2tfaXJxc2F2ZSgmZG1tLT53YV9sb2NrLCBmbGFncyk7Cj4gKwkJZG1tX3dyaXRlX3dh
-KGRtbSwgdmFsLCByZWcpOwo+ICsJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRtbS0+d2FfbG9j
-aywgZmxhZ3MpOwo+ICsJfSBlbHNlIHsKPiArCQl3cml0ZWwodmFsLCBkbW0tPmJhc2UgKyByZWcp
-Owo+ICsJfQo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGRtbV93b3JrYXJvdW5kX2luaXQoc3RydWN0
-IGRtbSAqZG1tKQo+ICt7Cj4gKwlkbWFfY2FwX21hc2tfdCBtYXNrOwo+ICsKPiArCXNwaW5fbG9j
-a19pbml0KCZkbW0tPndhX2xvY2spOwo+ICsKPiArCWRtbS0+d2FfZG1hX2RhdGEgPSBkbWFfYWxs
-b2NfY29oZXJlbnQoZG1tLT5kZXYsICBzaXplb2YodTMyKSwKPiArCQkJCQkgICAgICAmZG1tLT53
-YV9kbWFfaGFuZGxlLCBHRlBfS0VSTkVMKTsKPiArCWlmICghZG1tLT53YV9kbWFfZGF0YSkKPiAr
-CQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlkbWFfY2FwX3plcm8obWFzayk7Cj4gKwlkbWFfY2Fw
-X3NldChETUFfTUVNQ1BZLCBtYXNrKTsKPiArCj4gKwlkbW0tPndhX2RtYV9jaGFuID0gZG1hX3Jl
-cXVlc3RfY2hhbm5lbChtYXNrLCBOVUxMLCBOVUxMKTsKPiArCWlmICghZG1tLT53YV9kbWFfY2hh
-bikgewo+ICsJCWRtYV9mcmVlX2NvaGVyZW50KGRtbS0+ZGV2LCA0LCBkbW0tPndhX2RtYV9kYXRh
-LCBkbW0tPndhX2RtYV9oYW5kbGUpOwo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsJfQo+ICsKPiAr
-CXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBkbW1fd29ya2Fyb3VuZF91bmluaXQo
-c3RydWN0IGRtbSAqZG1tKQo+ICt7Cj4gKwlkbWFfcmVsZWFzZV9jaGFubmVsKGRtbS0+d2FfZG1h
-X2NoYW4pOwo+ICsKPiArCWRtYV9mcmVlX2NvaGVyZW50KGRtbS0+ZGV2LCA0LCBkbW0tPndhX2Rt
-YV9kYXRhLCBkbW0tPndhX2RtYV9oYW5kbGUpOwo+ICB9Cj4gCj4gIC8qIHNpbXBsZSBhbGxvY2F0
-b3IgdG8gZ3JhYiBuZXh0IDE2IGJ5dGUgYWxpZ25lZCBtZW1vcnkgZnJvbSB0eG4gKi8KPiBAQCAt
-NjMyLDYgKzc1Nyw5IEBAIHN0YXRpYyBpbnQgb21hcF9kbW1fcmVtb3ZlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKmRldikKPiAgCQlpZiAob21hcF9kbW0tPmR1bW15X3BhZ2UpCj4gIAkJCV9fZnJl
-ZV9wYWdlKG9tYXBfZG1tLT5kdW1teV9wYWdlKTsKPiAKPiArCQlpZiAob21hcF9kbW0tPmRtbV93
-b3JrYXJvdW5kKQo+ICsJCQlkbW1fd29ya2Fyb3VuZF91bmluaXQob21hcF9kbW0pOwo+ICsKPiAg
-CQlpZiAob21hcF9kbW0tPmlycSA+IDApCj4gIAkJCWZyZWVfaXJxKG9tYXBfZG1tLT5pcnEsIG9t
-YXBfZG1tKTsKPiAKPiBAQCAtNjgwLDYgKzgwOCw3IEBAIHN0YXRpYyBpbnQgb21hcF9kbW1fcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2KQo+ICAJCWdvdG8gZmFpbDsKPiAgCX0KPiAK
-PiArCW9tYXBfZG1tLT5waHlzX2Jhc2UgPSBtZW0tPnN0YXJ0Owo+ICAJb21hcF9kbW0tPmJhc2Ug
-PSBpb3JlbWFwKG1lbS0+c3RhcnQsIFNaXzJLKTsKPiAKPiAgCWlmICghb21hcF9kbW0tPmJhc2Up
-IHsKPiBAQCAtNjk1LDYgKzgyNCwxNyBAQCBzdGF0aWMgaW50IG9tYXBfZG1tX3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKmRldikKPiAKPiAgCW9tYXBfZG1tLT5kZXYgPSAmZGV2LT5kZXY7
-Cj4gCj4gKwlpZiAob21hcF9kbW0tPnBsYXRfZGF0YS0+ZXJyYXRhX2k4Nzhfd2EpIHsKPiArCQlp
-ZiAoIWRtbV93b3JrYXJvdW5kX2luaXQob21hcF9kbW0pKSB7Cj4gKwkJCW9tYXBfZG1tLT5kbW1f
-d29ya2Fyb3VuZCA9IHRydWU7Cj4gKwkJCWRldl9pbmZvKCZkZXYtPmRldiwKPiArCQkJCSJ3b3Jr
-YXJvdW5kIGZvciBlcnJhdGEgaTg3OCBpbiB1c2VcbiIpOwo+ICsJCX0gZWxzZSB7Cj4gKwkJCWRl
-dl93YXJuKCZkZXYtPmRldiwKPiArCQkJCSAiZmFpbGVkIHRvIGluaXRpYWxpemUgd29yay1hcm91
-bmQgZm9yIGk4NzhcbiIpOwo+ICsJCX0KPiArCX0KPiArCj4gIAlod2luZm8gPSBkbW1fcmVhZChv
-bWFwX2RtbSwgRE1NX1BBVF9IV0lORk8pOwo+ICAJb21hcF9kbW0tPm51bV9lbmdpbmVzID0gKGh3
-aW5mbyA+PiAyNCkgJiAweDFGOwo+ICAJb21hcF9kbW0tPm51bV9sdXQgPSAoaHdpbmZvID4+IDE2
-KSAmIDB4MUY7Cj4gQEAgLTEwNTgsNiArMTE5OCwxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRt
-bV9wbGF0Zm9ybV9kYXRhCj4gZG1tX29tYXA1X3BsYXRmb3JtX2RhdGEgPSB7IC5jcHVfY2FjaGVf
-ZmxhZ3MgPSBPTUFQX0JPX1VOQ0FDSEVELAo+ICB9Owo+IAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0
-IGRtbV9wbGF0Zm9ybV9kYXRhIGRtbV9kcmE3X3BsYXRmb3JtX2RhdGEgPSB7Cj4gKwkuY3B1X2Nh
-Y2hlX2ZsYWdzID0gT01BUF9CT19VTkNBQ0hFRCwKPiArCS5lcnJhdGFfaTg3OF93YSA9IHRydWUs
-Cj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkbW1fb2ZfbWF0
-Y2hbXSA9IHsKPiAgCXsKPiAgCQkuY29tcGF0aWJsZSA9ICJ0aSxvbWFwNC1kbW0iLAo+IEBAIC0x
-MDY3LDYgKzEyMTIsMTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZG1tX29m
-X21hdGNoW10gPSB7Cj4gIAkJLmNvbXBhdGlibGUgPSAidGksb21hcDUtZG1tIiwKPiAgCQkuZGF0
-YSA9ICZkbW1fb21hcDVfcGxhdGZvcm1fZGF0YSwKPiAgCX0sCj4gKwl7Cj4gKwkJLmNvbXBhdGli
-bGUgPSAidGksZHJhNy1kbW0iLAo+ICsJCS5kYXRhID0gJmRtbV9kcmE3X3BsYXRmb3JtX2RhdGEs
-Cj4gKwl9LAo+ICAJe30sCj4gIH07Cj4gICNlbmRpZgoKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
-aW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============8694900729121326978==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+
+
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > If you had a register dump from android with mics working, preferably
+> > not in speaker mode, perhaps I could try to figure it out?
+>=20
+> OK here are four diffs against starting the phone app for regular
+> call, speaker call, and muted versions of them:
+>=20
+> http://muru.com/linux/d4/cpcap/
+>=20
+> Also, I'm connected over cdma right now, not 3g, but I doubt
+> that makes a difference for the microphone.
+
+Thanks!
+
+When I apply register settings directly, I indeed get working "normal"
+call working. Good. Diff for illustration is below. Clearly needs some
+improvements.
+
+And it shows that alsa mixers are expected to be simple and obvious on
+D4 -- they just do not work.
+
+Current version of phone gui is at
+ https://github.com/pavelmachek/unicsy_demo
+
+- ofono interface should be usable
+- AT commands need a lot more work, and they'll probably never work
+nicely in this design. They are just a temporary hack.
+
+(ouch, and it should be rewritten, in Vala or better Rust...)
+									Pavel
+
+commit 06acc26c318558ed6a50b5a22afffeb9abbe7553
+Author: Pavel <pavel@ucw.cz>
+Date:   Wed Apr 4 00:04:34 2018 +0200
+
+    Add support for "normal" (not handsfree) call.
+
+diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
+index 7aaa4db..59c02b7 100644
+--- a/sound/soc/codecs/cpcap.c
++++ b/sound/soc/codecs/cpcap.c
+@@ -331,7 +331,7 @@ static const char * const cpcap_in_left_mux_texts[] =3D=
+ {
+ };
+=20
+ static const char * const cpcap_mode_texts[] =3D {
+-	"Normal", "Call"
++	"Normal", "Handsfree", "Call",
+ };
+=20
+=20
+@@ -464,25 +464,11 @@ static int cpcap_mode_get_enum(struct snd_kcontrol *k=
+control,
+ 	return 0;
+ }
+=20
+-static int cpcap_mode_put_enum(struct snd_kcontrol *kcontrol,
+-				     struct snd_ctl_elem_value *ucontrol)
++static int enable_call(struct cpcap_audio *cpcap, int on)
+ {
+-	struct snd_soc_codec *codec =3D snd_soc_dapm_kcontrol_codec(kcontrol);
+-	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
+-	struct snd_soc_dapm_context *dapm =3D
+-		snd_soc_dapm_kcontrol_dapm(kcontrol);
+-	struct soc_enum *e =3D (struct soc_enum *)kcontrol->private_value;
+-	unsigned int muxval =3D ucontrol->value.enumerated.item[0];
+-	unsigned int mask =3D BIT(e->shift_l);
+ 	int err;
+-
+-	printk("Requested mode %d\n", muxval);
+-
+-	mode =3D muxval;
+-
+-	switch (muxval) {
+-	case 1:
+-
++	unsigned long mask;
++=09
+ 		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_VAUDIOC,
+ 					 0xffff, 0x0025);	// OK
+ 		if (err)
+@@ -516,6 +502,56 @@ static int cpcap_mode_put_enum(struct snd_kcontrol *kc=
+ontrol,
+ 				   0x0400, 0x0400);
+ 		if (err)
+ 			printk("error #1\n");
++
++		return 0;
++out:
++		printk("Error!\n");
++		return -EIO;
++}
++
++static int cpcap_mode_put_enum(struct snd_kcontrol *kcontrol,
++				     struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_codec *codec =3D snd_soc_dapm_kcontrol_codec(kcontrol);
++	struct cpcap_audio *cpcap =3D snd_soc_codec_get_drvdata(codec);
++	struct snd_soc_dapm_context *dapm =3D
++		snd_soc_dapm_kcontrol_dapm(kcontrol);
++	struct soc_enum *e =3D (struct soc_enum *)kcontrol->private_value;
++	unsigned int muxval =3D ucontrol->value.enumerated.item[0];
++	unsigned int mask =3D BIT(e->shift_l);
++	int err;
++
++	printk("Requested mode %d\n", muxval);
++
++	mode =3D muxval;
++
++	switch (muxval) {
++	case 1:
++		enable_call(cpcap, 1);
++		break;
++	case 2:
++		enable_call(cpcap, 1);
++
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
++					 0xffff, 0x0cc6);
++		if (err)
++			goto out;
++
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_TXMP,
++					 0xffff, 0x0673);
++		if (err)
++			goto out;
++
++
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_RXOA,
++					 0xffff, 0x0001);
++		if (err)
++			goto out;
++	=09
++		err =3D regmap_update_bits(cpcap->regmap, CPCAP_REG_RXCOA,
++					 0xffff, 0x0601);
++		if (err)
++			goto out;
+ 	=09
+ 	default:
+ 		break;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrD/AEACgkQMOfwapXb+vKvAQCeK77gxTe+RBIJ3N/CjjJ3OWAN
+oMYAoIonr0IkrxqyFhQ9wu4KmOi9ob7o
+=1m4h
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
+
+--===============8694900729121326978==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8694900729121326978==--
