@@ -1,94 +1,83 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v4 01/13] dt-bindings: connector: add properties for typec
-Date: Tue, 3 Apr 2018 10:29:35 +0200
-Message-ID: <d01a95e3-0648-7e83-19ee-15ca37041067@samsung.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <CGME20180328162422epcas1p21f05bcb06134de46065705ddbab1e5d0@epcas1p2.samsung.com>
- <1522253178-32414-2-git-send-email-jun.li@nxp.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH v2 6/8] ARM: dts: r8a77470: Initial SoC device tree
+Date: Tue, 3 Apr 2018 08:43:29 +0000
+Message-ID: <OSBPR01MB210392232C1B5393389EC3A2B8A50@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com>
+ <1522265176-33226-7-git-send-email-biju.das@bp.renesas.com>
+ <20180330065440.hbhr26aacokdivl7@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1522253178-32414-2-git-send-email-jun.li@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180330065440.hbhr26aacokdivl7@verge.net.au>
 Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: devel@driverdev.osuosl.org, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com, shufan_lee@richtek.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjguMDMuMjAxOCAxODowNiwgTGkgSnVuIHdyb3RlOgo+IEFkZCBiaW5nZGluZ3Mgc3VwcG9y
-dGVkIGJ5IGN1cnJlbnQgdHlwZWMgZHJpdmVyLCBzbyB1c2VyIGNhbiBwYXNzCj4gYWxsIHRob3Nl
-IHByb3BlcnRpZXMgdmlhIGR0Lgo+Cj4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhw
-LmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dCAg
-ICAgICAgICAgfCAzOSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAz
-OSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQKPiBpbmRleCBlMTQ2
-M2YxLi45MjJmMjJiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jb25uZWN0b3IvdXNiLWNvbm5lY3Rvci50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IudHh0Cj4gQEAgLTE1LDYg
-KzE1LDI5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gdHlwZTogc2l6ZSBvZiB0aGUgY29u
-bmVjdG9yLCBzaG91bGQgYmUgc3BlY2lmaWVkIGluIGNhc2Ugb2YgVVNCLUEsIFVTQi1CCj4gICAg
-bm9uLWZ1bGxzaXplIGNvbm5lY3RvcnM6ICJtaW5pIiwgIm1pY3JvIi4KPiAgCj4gK09wdGlvbmFs
-IHByb3BlcnRpZXMgZm9yIHVzYi1jLWNvbm5lY3RvcjoKPiArLSBwb3dlci10eXBlOiBzaG91bGQg
-YmUgb25lIG9mICJzb3VyY2UiLCAic2luayIgb3IgImR1YWwiKERSUCkgaWYgdHlwZWMKPiArICBj
-b25uZWN0b3IgaGFzIHBvd2VyIHN1cHBvcnQuCj4gKy0gdHJ5LXBvd2VyLXJvbGU6IHByZWZlcnJl
-ZCBwb3dlciByb2xlIGlmICJkdWFsIihEUlApIGNhbiBzdXBwb3J0IFRyeS5TTksKPiArICBvciBU
-cnkuU1JDLCBzaG91bGQgYmUgInNpbmsiIGZvciBUcnkuU05LIG9yICJzb3VyY2UiIGZvciBUcnku
-U1JDLgo+ICstIGRhdGEtdHlwZTogc2hvdWxkIGJlIG9uZSBvZiAiaG9zdCIsICJkZXZpY2UiLCAi
-ZHVhbCIoRFJEKSBpZiB0eXBlYwo+ICsgIGNvbm5lY3RvciBzdXBwb3J0cyBVU0IgZGF0YS4KPiAr
-Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIHVzYi1jLWNvbm5lY3RvciB3aXRoIHBvd2VyIGRl
-bGl2ZXJ5IHN1cHBvcnQ6Cj4gKy0gc291cmNlLXBkb3M6IEFuIGFycmF5IG9mIHUzMiB3aXRoIGVh
-Y2ggZW50cnkgcHJvdmlkaW5nIHN1cHBvcnRlZCBwb3dlcgo+ICsgIHNvdXJjZSBkYXRhIG9iamVj
-dChQRE8pLCB0aGUgZGV0YWlsZWQgYml0IGRlZmluaXRpb25zIG9mIFBETyBjYW4gYmUgZm91bmQK
-PiArICBpbiAiVW5pdmVyc2FsIFNlcmlhbCBCdXMgUG93ZXIgRGVsaXZlcnkgU3BlY2lmaWNhdGlv
-biIgY2hhcHRlciA2LjQuMS4yCj4gKyAgU291cmNlX0NhcGFiaWxpdGllcyBNZXNzYWdlLCB0aGUg
-b3JkZXIgb2YgZWFjaCBlbnRyeShQRE8pIHNob3VsZCBmb2xsb3cKPiArICB0aGUgUEQgc3BlYyBj
-aGFwdGVyIDYuNC4xLiBSZXF1aXJlZCBmb3IgcG93ZXIgc291cmNlIGFuZCBwb3dlciBkdWFsIHJv
-bGUuCj4gKy0gc2luay1wZG9zOiBBbiBhcnJheSBvZiB1MzIgd2l0aCBlYWNoIGVudHJ5IHByb3Zp
-ZGluZyBzdXBwb3J0ZWQgcG93ZXIKPiArICBzaW5rIGRhdGEgb2JqZWN0KFBETyksIHRoZSBkZXRh
-aWxlZCBiaXQgZGVmaW5pdGlvbnMgb2YgUERPIGNhbiBiZSBmb3VuZAo+ICsgIGluICJVbml2ZXJz
-YWwgU2VyaWFsIEJ1cyBQb3dlciBEZWxpdmVyeSBTcGVjaWZpY2F0aW9uIiBjaGFwdGVyIDYuNC4x
-LjMKPiArICBTaW5rIENhcGFiaWxpdGllcyBNZXNzYWdlLCB0aGUgb3JkZXIgb2YgZWFjaCBlbnRy
-eShQRE8pIHNob3VsZCBmb2xsb3cKPiArICB0aGUgUEQgc3BlYyBjaGFwdGVyIDYuNC4xLiBSZXF1
-aXJlZCBmb3IgcG93ZXIgc2luayBhbmQgcG93ZXIgZHVhbCByb2xlLgo+ICstIG9wLXNpbmstbWlj
-cm93YXR0LWhvdXJzOiBTaW5rIHJlcXVpcmVkIG9wZXJhdGluZyBwb3dlciBpbiBtaWNybwo+ICsg
-IHdhdHQtaG91cnMsIGlmIHNvdXJjZSBvZmZlcmVkIHBvd2VyIGlzIGxlc3MgdGhlbiBpdCwgQ2Fw
-YWJpbGl0eSBNaXNtYXRjaAo+ICsgIGlzIHNldCwgcmVxdWlyZWQgZm9yIHBvd2VyIHNpbmsgYW5k
-IHBvd2VyIGR1YWwgcm9sZS4KCkkgaGF2ZSBsdXJrZWQgaW50byBzcGVjcyBhbmQgSSBhbSBub3Qg
-c3VyZSB3aGF0IGlzIHRoZSByZWxhdGlvbiBvZiB0aGlzCmZpZWxkIHdpdGggUEQgcHJvdG9jb2ws
-IHRoZXJlIGlzIE1pbmltdW0gT3BlcmF0aW5nIFBvd2VyLCBNYXhpbXVtCk9wZXJhdGluZyBQb3dl
-ciBhbmQgT3BlcmF0aW5nIFBvd2VyIHByZXNlbnQgaW4gZGlmZmVyZW50IFJET3MsIHRoZXJlIGFy
-ZQphbHNvIHNpbWlsYXIgZmllbGRzIGluIHNpbmsgUERPcy4KSSBndWVzcyBpdCBjYW4gYmUgb25l
-IG9mIHRoZW0sIHdoaWNoIG9uZT8gd2h5IG90aGVyIG9uZXMgYXJlIG5vdApwcm92aWRlZD8gV2hh
-dCBpZiB0aGlzIG9yIGFueSBvdGhlciBwcm9wZXJ0eSBjYW4gYmUgY2FsY3VsYXRlZCBvbmx5IGlu
-CnJ1bnRpbWU/CkkgYW0gbm90IHN1cmUgaWYgYW55IG9mIHRoZW0gc2hvdWxkIGJlIG1hcmtlZCAi
-cmVxdWlyZWQiLgoKPiArCj4gIFJlcXVpcmVkIG5vZGVzOgo+ICAtIGFueSBkYXRhIGJ1cyB0byB0
-aGUgY29ubmVjdG9yIHNob3VsZCBiZSBtb2RlbGVkIHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5n
-cwo+ICAgIHNwZWNpZmllZCBpbiBiaW5kaW5ncy9ncmFwaC50eHQsIHVubGVzcyB0aGUgYnVzIGlz
-IGJldHdlZW4gcGFyZW50IG5vZGUgYW5kCj4gQEAgLTczLDMgKzk2LDE5IEBAIGNjaWM6IHMybW0w
-MDVAMzMgewo+ICAJCX07Cj4gIAl9Owo+ICB9Owo+ICsKPiArMy4gVVNCLUMgY29ubmVjdG9yIGF0
-dGFjaGVkIHRvIGEgdHlwZWMgcG9ydCBjb250cm9sbGVyKHB0bjUxMTApLCB3aGljaCBoYXMKPiAr
-cG93ZXIgZGVsaXZlcnkgc3VwcG9ydCBhbmQgZW5hYmxlcyBkcnAuCj4gKwo+ICt0eXBlYzogcHRu
-NTExMEA1MCB7Cj4gKwkuLi4KPiArCXVzYl9jb246IGNvbm5lY3RvciB7Cj4gKwkJY29tcGF0aWJs
-ZSA9ICJ1c2ItYy1jb25uZWN0b3IiOwo+ICsJCWxhYmVsID0gIlVTQi1DIjsKPiArCQlwb3dlci10
-eXBlID0gImR1YWwiOwo+ICsJCXRyeS1wb3dlci1yb2xlID0gInNpbmsiOwo+ICsJCXNvdXJjZS1w
-ZG9zID0gPDB4MzgwMTkwYzg+OwoKSSB1bmRlcnN0YW5kIGZyb20gRFQgc3BlY2lmaWNhdGlvbiBw
-b2ludCBvZiB2aWV3IGNyeXB0aWMgbnVtYmVycyBhcmUgT0ssCmJ1dCBmb3Igc2FrZSBvZiByZWFk
-YWJpbGl0eSBJIHN0cm9uZ2x5IHN1Z2dlc3QgdXNlL2RlZmluZSBtYWNyb3Mgc2ltaWxhcgp0byB0
-aGUgb25lcyBwcmVzZW50IGFscmVhZHkgaW4ga2VybmVsOgrCoMKgwqAgc291cmNlLXBkb3MgPSA8
-IFBET19GSVhFRCg1MDAwLCA0MDAsIFBET19GSVhFRF9GTEFHUykgPjsKCkl0IG11Y2ggbGVzcyBl
-cnJvciBwcm9uZSwgYW5kIG1ha2VzIHJldmlldyBwcm9jZXNzIG11Y2ggbW9yZSBlYXNpZXIuCgpS
-ZWdhcmRzCkFuZHJ6ZWoKCj4gKwkJc2luay1wZG9zID0gPDB4MzgwMTkwYzggMHgzODAyZDBjOD47
-Cj4gKwkJb3Atc2luay1taWNyb3dhdHQtaG91cnMgPSA8OTAwMDAwMD47Cj4gKwl9Owo+ICt9OwoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
-aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
-bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+Hi Simon & Geert,
+
+Thanks for feedback.
+
+> On Wed, Mar 28, 2018 at 08:26:14PM +0100, Biju Das wrote:
+> > The initial R8A77470 SoC device tree including CPU0, GIC, timer, SYSC,
+> > RST, CPG, and the required clock descriptions.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > V1->V2:
+> > * Incorporated geert's review comment
+> > * Moved prr node inside soc node.
+> >
+> >  arch/arm/boot/dts/r8a77470.dtsi | 155
+> > ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/r8a77470.dtsi
+> >
+> > diff --git a/arch/arm/boot/dts/r8a77470.dtsi
+> > b/arch/arm/boot/dts/r8a77470.dtsi new file mode 100644 index
+> > 0000000..f096419
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> > @@ -0,0 +1,155 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the r8a77470 SoC
+> > + *
+> > + * Copyright (C) 2018 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/clock/r8a77470-cpg-mssr.h>
+> > +#include <dt-bindings/power/r8a77470-sysc.h>
+>
+> As requested by Geert in his review of v1, please use numerical values for the
+> initial submission as the dt-bindings headers and the DTS files go upstream
+> through different maintainer paths.
+>
+> In other words, please do not include r8a77470-cpg-mssr.h or r8a77470-sysc.h
+> in the initial submission of this file as those header files will not be present and
+> there will be a build failure.
+> Rather, please use numeric values for now and, as a follow-up in the v4.19
+> development cycle, provide a patch to use the headers.
+>
+
+I got your point now. Will send V3 for this patch with numerical values.
+
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
