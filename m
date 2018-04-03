@@ -1,83 +1,64 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH v2 6/8] ARM: dts: r8a77470: Initial SoC device tree
-Date: Tue, 3 Apr 2018 08:43:29 +0000
-Message-ID: <OSBPR01MB210392232C1B5393389EC3A2B8A50@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1522265176-33226-1-git-send-email-biju.das@bp.renesas.com>
- <1522265176-33226-7-git-send-email-biju.das@bp.renesas.com>
- <20180330065440.hbhr26aacokdivl7@verge.net.au>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5 11/13] ARM: sun9i: smp: Add is_sun9i field
+Date: Tue, 3 Apr 2018 10:46:55 +0200
+Message-ID: <20180403084655.x6u7s4jzqdvq2eey@flea>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
+ <20180403061836.3926-12-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180330065440.hbhr26aacokdivl7@verge.net.au>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n4rkxyokbn3s45tp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180403061836.3926-12-mylene.josserand@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon & Geert,
 
-Thanks for feedback.
+--n4rkxyokbn3s45tp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Mar 28, 2018 at 08:26:14PM +0100, Biju Das wrote:
-> > The initial R8A77470 SoC device tree including CPU0, GIC, timer, SYSC,
-> > RST, CPG, and the required clock descriptions.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > V1->V2:
-> > * Incorporated geert's review comment
-> > * Moved prr node inside soc node.
-> >
-> >  arch/arm/boot/dts/r8a77470.dtsi | 155
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/r8a77470.dtsi
-> >
-> > diff --git a/arch/arm/boot/dts/r8a77470.dtsi
-> > b/arch/arm/boot/dts/r8a77470.dtsi new file mode 100644 index
-> > 0000000..f096419
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/r8a77470.dtsi
-> > @@ -0,0 +1,155 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the r8a77470 SoC
-> > + *
-> > + * Copyright (C) 2018 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/clock/r8a77470-cpg-mssr.h>
-> > +#include <dt-bindings/power/r8a77470-sysc.h>
+On Tue, Apr 03, 2018 at 08:18:34AM +0200, Myl=E8ne Josserand wrote:
+> To prepare the support of sun8i-a83t, add a field in the smp_data
+> structure to enable the case of sun9i.
+>=20
+> Start to handle the differences between sun9i-a80 and sun8i-a83t
+> by using this variable.
 >
-> As requested by Geert in his review of v1, please use numerical values for the
-> initial submission as the dt-bindings headers and the DTS files go upstream
-> through different maintainer paths.
->
-> In other words, please do not include r8a77470-cpg-mssr.h or r8a77470-sysc.h
-> in the initial submission of this file as those header files will not be present and
-> there will be a build failure.
-> Rather, please use numeric values for now and, as a follow-up in the v4.19
-> development cycle, provide a patch to use the headers.
->
+> Add an index to retrieve which structures we are using.
 
-I got your point now. Will send V3 for this patch with numerical values.
+This should have been in a separate commit, but maybe we can store a
+pointer to the array cell we're using instead of always using the
+index?
 
+Maxime
 
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
+--n4rkxyokbn3s45tp
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrDP34ACgkQ0rTAlCFN
+r3Qm4g//bPfB2331etPvExaOQPcQve6RHCxTFiq2//e1JZ+mW1KP5eTWUXZ3J9Jz
+/h+mGLy3yUoW/Vekgy1wLjEv1XMkCXSSHg9vtKck24luDHkdoBqEiOeWvPZ3jy7l
+2J2EvenU1JB22VGcKHPoxPpHazs1TfB0NWVnhk0lRWEuO6IYaqZSJIqyvpdgfgQi
+wqAsrxQ5YahNYFknOKwA1KWB/IVX+od2LEBNzSS7KiPhriG9e7m6Op8173cWNy4t
+aXmXlOMhdh+Lwd+v52czRehv8nvzlMiUAkg5afy9+G5HjVRgqngMnFIjl5Zityv9
+qd61IxKMeBKVBrBNAsp/M6LSl5bRjQFCQOznZOW0fCjFsph/DhXQyw5N9EKfMKhH
+nbbfD4BKuhTa57rgXqgfeOYv1xp0Hz7U7jno4gnPylLq0qF19opsnQx/xkkcRgzA
+GFoj88vR6LpIjfgY1vuMXXEg9Z+EW0EOxPEMyIBZv+W8d+EoYy8YdtzQs/snJAXF
+kwAEtFV1JJ36M9ludU3lqqEG43EP1DJvQR9kKWpx2R0BG+rHQfydTj3cvq1Fn24Y
+B9JMibCxAer5w3yqjmFWtaWvXe/L5lqG/NeLeDdOmNbksuf0Ccs63tczBAQTuwKX
+wgx6LVc84yK7CnUNXUT99j/T0sbd93KT3JKs+7LP5mVzz/9aLcQ=
+=6WCb
+-----END PGP SIGNATURE-----
+
+--n4rkxyokbn3s45tp--
