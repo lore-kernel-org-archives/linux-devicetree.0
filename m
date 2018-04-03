@@ -1,32 +1,31 @@
-Return-Path: <SRS0=xfRp=GZ=gmail.com=mats.dev.list@kernel.org>
+Return-Path: <SRS0=PEGO=GY=redhat.com=hdegoede@kernel.org>
 Subject: Re: [PATCH v2 2/5] usb: typec: fusb302: remove max_snk_* for sink
  config
 References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
  <1521817127-23061-3-git-send-email-jun.li@nxp.com>
-From: Mats Karrman <mats.dev.list@gmail.com>
-Message-ID: <7c857ffd-419d-bb6d-7330-4ec751f8682a@gmail.com>
-Date: Wed, 4 Apr 2018 14:06:39 +0200
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <66fb9f1a-3331-201d-9ec2-747df3c98926@redhat.com>
+Date: Tue, 3 Apr 2018 17:25:43 +0200
 MIME-Version: 1.0
 In-Reply-To: <1521817127-23061-3-git-send-email-jun.li@nxp.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com, hdegoede@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com
 Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Li,
+Hi,
 
-On 2018-03-23 15:58, Li Jun wrote:
-
+On 23-03-18 15:58, Li Jun wrote:
 > Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
 > variable PDO for sink config.
->
+> 
 > Signed-off-by: Li Jun <jun.li@nxp.com>
 > ---
 >   drivers/usb/typec/fusb302/fusb302.c | 51 +++++++++++++++++++++++++++----------
 >   1 file changed, 37 insertions(+), 14 deletions(-)
->
+> 
 > diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
 > index 7036171..db4d9cd 100644
 > --- a/drivers/usb/typec/fusb302/fusb302.c
@@ -64,44 +63,42 @@ On 2018-03-23 15:58, Li Jun wrote:
 > +	/* Copy the static snk pdo */
 > +	for (i = 0; i < ARRAY_SIZE(snk_pdo); i++)
 > +		chip->snk_pdo[i] = snk_pdo[i];
+
+The static snk PDO is constant and only contains:
+	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
+
+So you can just do:
+
+	chip->snk_pdo[0] = PDO_FIXED(5000, 400, PDO_FIXED_FLAGS);
+
+Here.
+
 > +
 > +	if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &mv) ||
 > +	    device_property_read_u32(dev, "fcs,max-sink-microamp", &ma) ||
 > +	    device_property_read_u32(dev, "fcs,max-sink-microwatt", &mw))
-> +		return i;
-> +
-> +	mv = mv / 1000;
-> +	ma = ma / 1000;
-> +	mw = mw / 1000;
-> +
-> +	min_mv = 1000 * chip->tcpc_config.operating_snk_mw / ma;
-> +	if (pdo_type(snk_pdo[i-1] == PDO_TYPE_FIXED))
 
-You've got the parentheses wrong.
+You can drop the reading of "fcs,max-sink-microwatt" here, it was only
+ever added because the tcpm code used to depend on max_mw being set,
+now that that is no longer the case, we don't need it.
 
-Apart from that I don't like/understand why the PDO's should be fixed.
-Every product should be able to have its own settings, including the first PDO (e.g. it
-might need to specify a higher current and/or set the "Higher Capability" bit).
+So this entire function can be simplified to:
 
-I think this would be best solved the same way as in your TCPCI driver patch series [1]
-with a list freely specified by a property.
+static int fusb302_composite_snk_pdo_array(struct fusb302_chip *chip)
+{
+	struct device *dev = chip->dev;
+	u32 max_uv, max_ua;
 
-[1] https://www.spinics.net/lists/linux-usb/msg167398.html
+	chip->snk_pdo[0] = PDO_FIXED(5000, 400, PDO_FIXED_FLAGS);
 
-> +		min_mv = max(min_mv, pdo_fixed_voltage(snk_pdo[i-1]));
-> +	else
-> +		min_mv = max(min_mv, pdo_max_voltage(snk_pdo[i-1]));
-> +	ma = min(ma, 1000 * mw / min_mv);
-> +
-> +	/* Insert the new pdo to the end */
-> +	chip->snk_pdo[i] = PDO_VAR(min_mv, mv, ma);
-> +
-> +	return i+1;
-> +}
-> +
->   static int fusb302_probe(struct i2c_client *client,
->   			 const struct i2c_device_id *id)
->   {
+	if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &max_uv) ||
+	    device_property_read_u32(dev, "fcs,max-sink-microamp", &max_ua))
+		return 1;
+
+	chip->snk_pdo[1] = PDO_VAR(5000, max_uv / 1000, max_ua / 1000);
+	return 2;
+}
+
 > @@ -1784,18 +1812,13 @@ static int fusb302_probe(struct i2c_client *client,
 >   	chip->tcpc_dev.config = &chip->tcpc_config;
 >   	mutex_init(&chip->lock);
@@ -125,4 +122,8 @@ with a list freely specified by a property.
 >   	/*
 >   	 * Devicetree platforms should get extcon via phandle (not yet
 >   	 * supported). On ACPI platforms, we get the name from a device prop.
->
+> 
+
+Regards,
+
+Hans
