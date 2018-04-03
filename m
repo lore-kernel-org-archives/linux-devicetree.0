@@ -1,67 +1,124 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice
-	call support was
-Date: Tue, 3 Apr 2018 17:50:24 +0200
-Message-ID: <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
-References: <20180331191939.GA8999@amd> <20180331194616.GA19388@amd>
- <20180331195524.GB19388@amd> <20180331234314.GZ5700@atomide.com>
- <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
- <20180401173012.GB5700@atomide.com>
- <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com>
- <20180403150444.GE5700@atomide.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v17 01/10] LIB: Introduce a generic PIO mapping method
+Date: Tue, 3 Apr 2018 17:01:37 +0100
+Message-ID: <ab748c97-2b55-d090-606f-5491551feff6@huawei.com>
+References: <1521051359-34473-1-git-send-email-john.garry@huawei.com>
+ <1521051359-34473-2-git-send-email-john.garry@huawei.com>
+ <20180403140410.GE27789@ulmo> <20180403143909.GA21171@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180403150444.GE5700@atomide.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180403143909.GA21171@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+>>> +int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>>> +{
+>>> +	struct logic_pio_hwaddr *range;
+>>> +	resource_size_t start = new_range->hw_start;
+>>> +	resource_size_t end = new_range->hw_start + new_range->size;
+>>> +	resource_size_t mmio_sz = 0;
+>>> +	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+>>> +	int ret = 0;
+>>> +
+>>> +	if (!new_range || !new_range->fwnode || !new_range->size)
+>>> +		return -EINVAL;
+>>> +
+>>> +	mutex_lock(&io_range_mutex);
+>>> +	list_for_each_entry_rcu(range, &io_range_list, list) {
+>>> +		if (range->fwnode == new_range->fwnode) {
+>>> +			/* range already there */
+>>> +			ret = -EFAULT;
+>>> +			goto end_register;
+>>> +		}
+>>
 
-> > OK thanks for checking. So probably only n_gsm channel 1 is for normal
-> > Qualcomm at commands, and then channel 2 and others are commands
-> > implemented by Motorola on the mdm6600.
-> > 
-> > I guess we'd have to add support for reading and writing to
-> > /dev/gsmtty2 at least as it looks like these cannot be accessed
-> > via /dev/ttyUSB4. Or at least I have not figured out any other
-> > way to access them.
-> 
-> Hmm or maybe there is some way to select where qmi to tunnels the
-> AT commands to? Some kind of channel type paramenter like n_gsm
-> has?
-> 
-> Anyways, for trying to figure out things for alsamixer, I tested
-> that ngsm 2 "AT+EACC=3,0" is not related to cpcap audio register
-> settings and the mic is enabled during the call with Pavel's patch
-> with alsamixer "Mode" set to either "Call" or "Normal". Also speaker
-> keeps working during the call toggling between "Call" and "Normal".
-> "Voice" in alsamixer does also control the speaker volume during
-> the call. And setting the second "Speaker" from "Voice" to "HiFi"
-> mutes the speaker.
+Hi Thierry,
 
-Take a look at the patch. Selecting "call" does something at hardware
-level, selecting "normal" is a nop.
+>> This is the -EFAULT that propagates to pci-tegra.c's ->probe() and fails
+>> to bind the driver.
+>>
+>> I'm not exactly sure what's causing the duplicate here because it's
+>> rather difficult to get at something useful from just the ->fwnode, but
+>> I'm fairly sure that the reason this breaks is because the Tegra driver
+>> will defer probe due to some regulators that aren't available on the
+>> first try. Given the above code and the rest of this file, I can't see a
+>> way to "fix" the driver and remove the I/O range on failure.
+>>
+>> This is doubly bad because this doesn't only leak the ranges on probe
+>> deferral, but also on driver unload, and we just added support for
+>> building the Tegra driver as a loadable module, so these are actually
+>> cases that can happen in regular uses of the driver.
+>>
+>> I have no idea on how to fix this. Anyone know of a quick fix to restore
+>> PCI for Tegra other than reverting all of these changes?
+>>
+>> I suppose an API could be added to unregister the range, but the calling
+>> sequence is rather obfuscated, so removing the range will look totally
+>> asymmetric, I'm afraid.
+>>
+>> Here's the call stack:
+>>
+>> 	tegra_pcie_probe()
+>> 	tegra_pcie_parse_dt()
+>> 	of_pci_range_to_resource()
+>> 	pci_register_io_range()
+>> 	logic_pio_register_range()
+>>
+>> So the range here is registered as part of a resource parsing function,
+>> which is supposed to not have any side-effects. There's no equivalent of
+>> that parsing routine (i.e. no "unparse" function that would undo the
+>> effects of parsing).
+>>
+>> Perhaps a cleaner way would be to decouple the parsing from the actual
+>> request step that has the side-effect.
 
-Sorry for confusion.
+This could be added if we agreed that it would be useful.
 
-Yes, that patch needs more work.
+>>
+>> Going back in history a little, it looks like even before this commit
+>> the I/O range registration was triggered by the parsing code and even
+>> the range leak was there, except that it caused pci_register_io_range()
+>> to return 0 rather than -EFAULT. Perhaps the quickest fix for this would
+>> be to do the same in the new code and restore drivers that accidentally
+>> depend on this behaviour.
+>
+> I can confirm that the following fixes the issue for me, though I don't
+> think it's a very clean fix given that the range will remain requested
+> forever, even if the driver is gone. But since that's already been the
+> case for quite a while, probably something that can be fixed separately.
+>
 
-								Pavel
+Right, there was no way to deregister the range previously.  From 
+looking at the history here I see no reason to not support it.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+As for this patch, as you said, the only difference is that we fault on 
+trying to register the same range again. So this solution seems reasonable.
+
+On another point, for the tegra driver, is it possible to defer earlier 
+in the probe, before these currently irreversible steps are taken?
+
+Thanks very much,
+John
+
+> Cc'ing linux-tegra for visibility.
+>
+> Thierry
+>
+> --- >8 ---
+> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+> index 29cedeadb397..4664b87e1c5f 100644
+> --- a/lib/logic_pio.c
+> +++ b/lib/logic_pio.c
+> @@ -46,7 +46,6 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>  	list_for_each_entry_rcu(range, &io_range_list, list) {
+>  		if (range->fwnode == new_range->fwnode) {
+>  			/* range already there */
+> -			ret = -EFAULT;
+>  			goto end_register;
+>  		}
+>  		if (range->flags == LOGIC_PIO_CPU_MMIO &&
+>
