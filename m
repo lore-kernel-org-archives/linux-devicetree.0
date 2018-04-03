@@ -1,144 +1,128 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH RESEND v6 0/6] provide power off support for iMX6 with
- external PMIC
-Date: Tue, 3 Apr 2018 07:59:31 +0200
-Message-ID: <54c5cb44-b2d9-3dab-59d5-a6a73a957e8c@pengutronix.de>
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v5 00/13] Sunxi: Add SMP support on A83T
+Date: Tue,  3 Apr 2018 08:18:23 +0200
+Message-ID: <20180403061836.3926-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="gt8JCkXlQCcv9Am5QWMEiuJd727VldRPt"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305102524.5905-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
+To: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---gt8JCkXlQCcv9Am5QWMEiuJd727VldRPt
-Content-Type: multipart/mixed; boundary="sN4iAMyDrtBdajReBDrS7us8r321BujXm";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>
-Message-ID: <54c5cb44-b2d9-3dab-59d5-a6a73a957e8c@pengutronix.de>
-Subject: Re: [PATCH RESEND v6 0/6] provide power off support for iMX6 with
- external PMIC
-References: <20180305102524.5905-1-o.rempel@pengutronix.de>
-In-Reply-To: <20180305102524.5905-1-o.rempel@pengutronix.de>
+Hello everyone,
 
---sN4iAMyDrtBdajReBDrS7us8r321BujXm
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This is a V5 of my series that adds SMP support for Allwinner sun8i-a83t.
+Based on sunxi's tree, sunxi/for-next branch.
 
-ping,
+For boot CPU, I tried to add the CNTVOFF initialization in mc_smp.c file
+(in sunxi_mc_smp_init function) but it is not working.
+Instead of adding it in timer's function of sunxi.c file, I create
+a new machine to handle this case. Thanks to that, it is specific to
+sun8i-a83t SoC. Let me know what you think.
 
-this week is a merge window. Any chance to get it in to 4.17?
+Changes since v4:
+    - Rebased my series according to new Chen-Yu series:
+       "ARM: sunxi: Clean and improvements for multi-cluster SMP"
+       https://lkml.org/lkml/2018/3/8/886
+    - Updated my series according to Marc Zyngier's reviews to add CNTVOFF
+    initialization's function into ARM's common part. Thanks to that, other
+    platforms such as Renesa can use this function.
+    - For boot CPU, create a new machine to handle the CNTVOFF initialization
+    using "init_early" callback.
+Changes since v3:
+    - Take into account Maxime's reviews:
+	- split the first patch into 4 new patches: add sun9i device tree
+	parsing, rename some variables, add a83t support and finally,
+	add hotplug support.
+	- Move the code of previous patch 07 (to disable CPU0 disabling)
+	into hotplug support patch (see patch 04)
+	- Remove the patch that added PRCM register because it is already
+	available. Because of that, update the device tree parsing to use
+	"sun8i-a83t-r-ccu".
+	- Use a variable to know which SoC we currently have
+    - Take into account Chen-Yu's reviews: create two iounmap functions
+    to release the resources of the device tree parsing.
+    - Take into account Marc's review: Update the code to initialize CNTVOFF
+    register. As there is already assembly code in the driver, I decided
+    to create an assembly file not to mix assembly and C code.
+    For that, I create 3 new patches: move the current assembly code that
+    handles the cluster cache enabling into a file, move the cpu_resume entry
+    in this file and finally, add a new assembly entry to initialize the timer
+    offset for boot CPU and secondary CPUs.
 
-On 05.03.2018 11:25, Oleksij Rempel wrote:
-> This patch series is providing power off support for Freescale/NXP iMX6=
- based
-> boards with external power management integrated circuit (PMIC).
-> As a first step the PMIC is configured to turn off the system if the
-> standby pin is asserted. On second step we assert the standby pin.
-> For this reason we need to use pm_power_off_prepare.
->=20
-> Usage of stnadby pin for power off is described in official iMX6
-> documentation.
->=20
-> 2018.03.05:
-> As this patch set touches multiple subsystems I think it would make
-> sense for Shawn Guo to take the all patch set.
-> The only part which didn't receive an ACK is regulator stuff. So I woul=
-d
-> hope that Mark Brown can ACK it.
->=20
-> Kind regards,
-> Oleksij Rempel
->=20
-> 2017.12.06:
-> Adding Linus. Probably there is no maintainer for this patch set.
-> No changes are made, tested on v4.15-rc1.
->=20
-> 2017.10.27:
-> Last version of this patch set was send at 20 Jun 2017, this is a rebas=
-e against
-> kernel v4.14-rc6. Probably this set got lost. If I forgot to address so=
-me comments,
-> please point me.
->=20
-> changes:
-> v6:
->  - rename imx6_pm_poweroff to imx6_pm_stby_poweroff
->  - fix "MPIC_STBY_REQ" typo in the comment.
->=20
-> v5:
->  - remove useless includes from pm-imx6.c patch
->  - add Acked-by to "regulator: pfuze100: add fsl,pmic-stby-poweroff pro=
-perty"
->    patch
->=20
-> v4:
->  - update comment in "regulator: pfuze100: add fsl,pmic-stby-poweroff .=
-=2E."
->    patch
->  - add Acked-by to "ARM: imx6q: provide documentation for new ..."
->    patch
->=20
-> v3:
->  - set pm_power_off_prepare =3D NULL on .remove.
->  - documentation and spelling fixes.
->  - use %pf instead of lookup_symbol_name.
->=20
->=20
-> Oleksij Rempel (6):
->   ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff
->     property
->   ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff"
->     is set
->   kernel/reboot.c: export pm_power_off_prepare
->   regulator: pfuze100: add fsl,pmic-stby-poweroff property
->   regulator: pfuze100-regulator: provide pm_power_off_prepare handler
->   ARM: dts: imx6: RIoTboard provide standby on power off option
->=20
->  .../devicetree/bindings/clock/imx6q-clock.txt      |  8 ++
->  .../devicetree/bindings/regulator/pfuze100.txt     |  7 ++
->  arch/arm/boot/dts/imx6dl-riotboard.dts             |  5 ++
->  arch/arm/mach-imx/pm-imx6.c                        | 25 ++++++
->  drivers/regulator/pfuze100-regulator.c             | 92 ++++++++++++++=
-++++++++
->  kernel/reboot.c                                    |  1 +
->  6 files changed, 138 insertions(+)
->=20
+Changes since v2:
+    - Rebased my modifications according to new Chen Yu's patch series
+    that adds SMP support for sun9i-a80 (without MCPM).
+    - Split the device-tree patches into 3 patches for CPUCFG, R_CPUCFG
+    and PRCM registers for more visibility.
+    - The hotplug of CPU0 is currently not working (even after trying what
+    Allwinner's code is doing) so remove the possibility of disabling
+    this CPU. Created a new patch for it.
 
+Changes since v1:
+    - Add Chen Yu's patch in my series (see path 01)
+    - Add new compatibles for prcm and cpucfg registers for sun8i-a83t.
+    Create two functions to separate the DT parsing of sun9i-a80 and
+    sun8i-a83t.
+    - Thanks to Maxime's review: order device tree's nodes according
+    to physical addresses, remove unused label and fix registers' sizes.
+    Update the commit log and commit title of my last patch (see
+    patch 05).
 
---sN4iAMyDrtBdajReBDrS7us8r321BujXm--
+Patch 01: To be able to use macro definition (such as ARM_CPU_PART_MASK)
+in an assembly file, we need to separate macro difinitions and C functions
+definitions. This is what this patch is doing.
+Patch 02: Move assembly code into a new assembly file
+Patch 03: Move another assembly code (resuming function) into above file
+Patch 04-06: Add registers nodes (cpucfg, r_cpucfg and cci-400) needed
+for SMP bringup.
+Patch 07: Create a new assembly file to initialize the CNTVOFF register. Can
+be used on other platform so add it in "common" ARM folder.
+Patch 08: Create a new machine to initialize the timer offset for boot CPU.
+Add a new entry to initialize the timer offset for secondary CPUs.
+Patch 09: Prepare to handle sun8i-a83t by renaming some sun9i-a80 functions.
+Patch 10: Again a preparation to support sun8i-a83t by moving some structures.
+Patch 11: Add a new field to know if we are on sun9i-a80 or sun8i-a83t.
+Patch 12: Convert the sunxi SMP driver to add support for A83T.
+This SoC has a bit flip that needs to be handled.
+Patch 13: Enable the smp support on sun8i-a83t by adding enable-method.
 
---gt8JCkXlQCcv9Am5QWMEiuJd727VldRPt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+If you have any remarks/questions, let me know.
+Thank you in advance,
+Mylène
 
------BEGIN PGP SIGNATURE-----
+Mylène Josserand (13):
+  ARM: move cputype definitions into another file
+  ARM: sunxi: smp: Move assembly code into a file
+  ARM: sunxi: smp: Move cpu_resume assembly entry into file
+  ARM: dts: sun8i: Add CPUCFG device node for A83T dtsi
+  ARM: dts: sun8i: Add R_CPUCFG device node for the A83T dtsi
+  ARM: dts: sun8i: a83t: Add CCI-400 node
+  ARM: smp: Add initialization of CNTVOFF
+  ARM: sunxi: Add initialization of CNTVOFF
+  ARM: sun9i: smp: Rename clusters's power-off
+  ARM: sun9i: smp: Move structures
+  ARM: sun9i: smp: Add is_sun9i field
+  ARM: sun8i: smp: Add support for A83T
+  ARM: dts: sun8i: Add enable-method for SMP support for the A83T SoC
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlrDGEcACgkQdQOiSHVI
-77TNVwf/QUzX/Y60TqqIZfA+LLoW0eRrMgQ/WiPyuW4crhKFDnXqg8sO6iKFX+H3
-J4u0S6B+k4kyokXSfZr2Q7bBqegDKNmIrCTMg3uX3EwBDj2Fc5kOrzXykClGz3II
-Io9jBhwYrS/DDCNHjTgVoEzYbrQdwsWRBRotqvFC/NKb92jMA4PyaFghOWA2+uJA
-05r3d5+AWLs1c+H88m0K43GWHclNSddBRe+AVkPzNTm0UNRFnUZbo79KHxgTPViG
-D/2Zk9lq6U8tTwh9rILD1+B76S28OzuaV0jJSFpOZmPQSEIxE8ss7fn8PFdSb3u4
-IMUQ2Wgb3U9HGxXhuBykRO2AJZ6uYQ==
-=3YBR
------END PGP SIGNATURE-----
+ arch/arm/boot/dts/sun8i-a83t.dtsi  |  59 ++++++++
+ arch/arm/common/Makefile           |   1 +
+ arch/arm/common/smp_cntvoff.S      |  35 +++++
+ arch/arm/include/asm/cputype.h     |  94 +-----------
+ arch/arm/include/asm/cputype_def.h |  98 +++++++++++++
+ arch/arm/include/asm/smp_cntvoff.h |   8 ++
+ arch/arm/mach-sunxi/Makefile       |   4 +-
+ arch/arm/mach-sunxi/headsmp.S      |  81 +++++++++++
+ arch/arm/mach-sunxi/mc_smp.c       | 287 ++++++++++++++++++++++---------------
+ arch/arm/mach-sunxi/sunxi.c        |  18 ++-
+ 10 files changed, 472 insertions(+), 213 deletions(-)
+ create mode 100644 arch/arm/common/smp_cntvoff.S
+ create mode 100644 arch/arm/include/asm/cputype_def.h
+ create mode 100644 arch/arm/include/asm/smp_cntvoff.h
+ create mode 100644 arch/arm/mach-sunxi/headsmp.S
 
---gt8JCkXlQCcv9Am5QWMEiuJd727VldRPt--
+-- 
+2.11.0
