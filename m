@@ -1,65 +1,67 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v3 2/4] mfd: add Gateworks System Controller core driver
-Date: Tue, 3 Apr 2018 08:48:27 -0700
-Message-ID: <CAJ+vNU3-gaTcMAzo5wB6oSfE-JQC3NBVRJS5zFMTE-nVpD4F5g@mail.gmail.com>
-References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com> <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: call/normal switch was Re: omap4-droid4: voice
+	call support was
+Date: Tue, 3 Apr 2018 17:50:24 +0200
+Message-ID: <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+References: <20180331191939.GA8999@amd> <20180331194616.GA19388@amd>
+ <20180331195524.GB19388@amd> <20180331234314.GZ5700@atomide.com>
+ <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
+ <20180401173012.GB5700@atomide.com>
+ <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+ <20180402155754.GD5700@atomide.com>
+ <20180403150444.GE5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-watchdog@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180403150444.GE5700@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 8:14 AM, Tim Harvey <tharvey@gateworks.com> wrote:
-> The Gateworks System Controller (GSC) is an I2C slave controller
-> implemented with an MSP430 micro-controller whose firmware embeds the
-> following features:
->  - I/O expander (16 GPIO's) using PCA955x protocol
->  - Real Time Clock using DS1672 protocol
->  - User EEPROM using AT24 protocol
->  - HWMON using custom protocol
->  - Interrupt controller with tamper detect, user pushbotton
->  - Watchdog controller capable of full board power-cycle
->  - Power Control capable of full board power-cycle
->
-> see http://trac.gateworks.com/wiki/gsc for more details
->
-<snip>
-> +
-> +/*
-> + * gsc_powerdown - API to use GSC to power down board for a specific time
-> + *
-> + * secs - number of seconds to remain powered off
-> + */
-> +static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
-> +{
-> +       int ret;
-> +       unsigned char regs[4];
-> +
-> +       dev_info(&gsc->i2c->dev, "GSC powerdown for %ld seconds\n",
-> +                secs);
-> +       regs[0] = secs & 0xff;
-> +       regs[1] = (secs >> 8) & 0xff;
-> +       regs[2] = (secs >> 16) & 0xff;
-> +       regs[3] = (secs >> 24) & 0xff;
-> +       ret = regmap_bulk_write(gsc->regmap, GSC_TIME_ADD, regs, 4);
-> +
-> +       return ret;
-> +}
+Hi!
 
-Any feedback on the 'powerdown' sysfs attribute that hooks to this
-function? This allows the GSC to disable the board primary power
-supply for 2^32 seconds and is often used to 'reset' the board
-although it could also be used to put the board in a power down state
-longer. I'm wondering if there is a more appropriate API for this in
-the kernel that I don't know about.
+> > OK thanks for checking. So probably only n_gsm channel 1 is for normal
+> > Qualcomm at commands, and then channel 2 and others are commands
+> > implemented by Motorola on the mdm6600.
+> > 
+> > I guess we'd have to add support for reading and writing to
+> > /dev/gsmtty2 at least as it looks like these cannot be accessed
+> > via /dev/ttyUSB4. Or at least I have not figured out any other
+> > way to access them.
+> 
+> Hmm or maybe there is some way to select where qmi to tunnels the
+> AT commands to? Some kind of channel type paramenter like n_gsm
+> has?
+> 
+> Anyways, for trying to figure out things for alsamixer, I tested
+> that ngsm 2 "AT+EACC=3,0" is not related to cpcap audio register
+> settings and the mic is enabled during the call with Pavel's patch
+> with alsamixer "Mode" set to either "Call" or "Normal". Also speaker
+> keeps working during the call toggling between "Call" and "Normal".
+> "Voice" in alsamixer does also control the speaker volume during
+> the call. And setting the second "Speaker" from "Voice" to "HiFi"
+> mutes the speaker.
 
-I would also like to register a restart handler using this but I
-believe that ARM restart handlers currently can not use I2C - is that
-correct?
+Take a look at the patch. Selecting "call" does something at hardware
+level, selecting "normal" is a nop.
 
-Regards,
+Sorry for confusion.
 
-Tim
+Yes, that patch needs more work.
+
+								Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
