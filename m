@@ -1,105 +1,66 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [Patch v2 3/6] dt-bindings: display/ti: Add plane binding to
- dispc node
-Date: Wed, 04 Apr 2018 17:36:08 +0300
-Message-ID: <2164642.vWvZsSsmr9@avalon>
-References: <20180326162128.8740-1-bparrot@ti.com>
- <20180326162128.8740-4-bparrot@ti.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 2/5] drm: bridge: add API to query the expected input
+ formats of bridges
+Date: Wed, 4 Apr 2018 16:40:03 +0200
+Message-ID: <9463e10c-120f-28f1-ef38-b0c8acedd1bd@axentia.se>
+References: <20180326212447.7380-1-peda@axentia.se>
+ <fcc47402-d758-4062-0565-f5977b85b206@axentia.se>
+ <20180327130231.GO27746@w540> <1811029.jLvDxETu2H@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180326162128.8740-4-bparrot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1811029.jLvDxETu2H@avalon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jacopo mondi <jacopo@jmondi.org>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmVub2l0LAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBNb25kYXksIDI2IE1hcmNo
-IDIwMTggMTk6MjE6MjUgRUVTVCBCZW5vaXQgUGFycm90IHdyb3RlOgo+IEN1cnJlbnRseSBhbGwg
-YXZhaWxhYmxlIGRpc3BsYXkgcGlwZWxpbmVzIChpLmUuIHBsYW5lKSBhbmQgb3V0cHV0IHBvcnQK
-PiByZXNvdXJjZXMgYXJlIGV4cG9zZWQgdG8gdXNlci1zcGFjZS4gSW4gc29tZSBjYXNlcyBpdCBp
-cyBuZWVkZWQgdG8gYmUKPiBhYmxlIHRvIHJlc3RyaWN0IHdoaWNoIHJlc291cmNlcyBhcmUgYWN0
-dWFsbHkgdmlzaWJsZSBmcm9tIHVzZXItc3BhY2UuCj4gQWxzbyBpbiBjYXNlcyB3aGVyZSBhIGRp
-c3BsYXkgd2lkZXIgdGhhbiAyMDQ4IHBpeGVscyBpcyB0byBiZSBzdXBwb3J0ZWQKPiBtb3JlIHRo
-YW4gb25lIHZpZGVvIHBpcGVsaW5lIGlzIG5lZWRlZC4gSW4gdGhpcyBjYXNlIHRoZSAybmQgaGFy
-ZHdhcmUKPiBwaXBlbGluZSBuZWVkZWQgaXMgbm90IHZpc2libGUgdG8gdXNlciBzcGFjZSBhcHBs
-aWNhdGlvbnMuCj4gCj4gVGhlc2UgdmlkZW8gcGlwZWxpbmUgZGVmaW5pdGlvbnMgbXVzdCBiZSBz
-dGF0aWNhbGx5IGRlZmluZWQgc28gdGhhdAo+IHRoZSBudW1iZXIgb2YgdmlzaWJsZSBwaXBlbGlu
-ZXMgZG9lcyBub3QgY2hhbmdlIGZyb20gdGhlIHVzZXItc3BhY2UKPiBwZXJzcGVjdGl2ZS4KPiAK
-PiBJbiBvcmRlciB0byBhbGxvdyB0aGlzIHdlIGFyZSBhZGRpbmcgYW4gb3B0aW9uYWwgJ3BsYW5l
-JyBzdWItbm9kZSB0bwo+IHRoZSBnZW5lcmljIERJU1BDIG5vZGUuCgpJJ20gc29ycnkgYnV0IHRo
-aXMgaXMgcmVhbGx5IGNvbmZpZ3VyYXRpb24gZGF0YSwgaXQgZG9lc24ndCBkZXNjcmliZSB0aGUg
-CmhhcmR3YXJlLiBJIGRvbid0IHRoaW5rIHRoZXNlIHByb3BlcnRpZXMgYmVsb25nIHRvIERULgoK
-PiBTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNvbT4KPiAtLS0KPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwLWRzcy50eHQgfCA2NSAr
-KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspCj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3RpL3RpLG9tYXAtZHNzLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGluZGV4Cj4gMjQ5ZTU4OGQ3ODY1Li4yZGQ0MTFj
-YjVhODMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gQEAgLTI4LDYgKzI4LDM2IEBA
-IE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1l
-bW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoCj4gbGltaXQgaW4gYnl0
-ZXMgcGVyIHNlY29uZAo+IAo+ICtPcHRpb25hbCBTdWJub2RlOgo+ICstIHBsYW5lOiBDaGlsZCBu
-b2RlKHMpIHdoaWNoIGRlZmluZXMgd2hpY2ggdmlkZW8gcGxhbmVzIGFyZSBhdmFpbGFibGUgdG8K
-PiArCXRoZSBzeXN0ZW0uIElmIGF0IGxlYXN0IG9uZSBwbGFuZSBjaGlsZCBub2RlIGlzIGRlZmlu
-ZWQgdGhlbgo+ICsJb25seSBwbGFuZXMgZGVmaW5lZCBieSB0aGVzZSBub2RlcyB3aWxsIGJlIGF2
-YWlsYWJsZSB0byB0aGUgc3lzdGVtLgo+ICsJUGxhbmUgbm9kZXMgbXVzdCBiZSBzZXF1ZW50aWFs
-IHN0YXJ0aW5nIHdpdGggcmVnID0gPDA+IGFzIERUIHBhcnNpbmcKPiArCXdpbGwgc3RvcCBvbiB0
-aGUgZmlyc3QgbWlzc2luZyBudW1iZXJlZCBub2RlLgo+ICsJVGhpcyBtZWFucyBpZiBwbGFuZSAj
-MSBpcyBkZWZpbmVkIGJ1dCBwbGFuZSAjMCBpcyBub3QgdGhlbiBpdCB3aWxsCj4gKwliZSBhcyBp
-ZiBub25lIG9mIHRoZSBwbGFuZSBub2RlcyB3ZXJlIGRlZmluZWQuCj4gKwo+ICsJRWFjaCBwbGFu
-ZSBub2RlIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKPiArCVJlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKwktIHJlZzogICAgICAgVXNlZCB0byBpZGVudGlmeSB0aGUgcGxhbmUKPiAr
-CS0gdmlkZW8tcGlwZWxpbmVzOiBPbmUgb3IgdHdvIEhXIHBpcGVsaW5lIG51bWJlcihzKS4KPiAr
-CQlXaGVuIDIgbnVtYmVycyBhcmUgcHJlc2VudCB0aGlzIGluZGljYXRlcyBhIHZpcnR1YWwgd2lk
-ZQo+ICsJCXBsYW5lIGNvbXBvc2VkIG9mIHR3byBwaHlzaWNhbCBwbGFuZXMgaW50ZW5kZWQgdG8g
-YmUgdXNlZAo+ICsJCXdoZW4gdGhlIGRpc3BsYXkgaXMgbGFyZ2VyIHRoZW4gdGhlIGNhcGFjaXR5
-IG9mIGEKPiArCQlzaW5nbGUgcGxhbmUgaS5lLiB3aWRlciB0aGFuIDIwNDggcGl4ZWxzLgo+ICsJ
-CVRoZSBmaXJzdCBudW1iZXIgaW4gdGhlIHBhaXIgd2lsbCBkaWN0YXRlIHRoZSBjYXBhYmlsaXRp
-ZXMKPiArCQlvZiB0aGUgcGxhbmUuIFRoaXMgbWVhbnMgdGhhdCBmb3IgcHJvcGVyCj4gKwkJb3Bl
-cmF0aW9uIHRoZSB2aXJ0dWFsIHBsYW5lIHNob3VsZCBiZSBjb21wb3NlZCBvZiBIVwo+ICsJCXBs
-YW5lcyBvZiB0aGUgc2FtZSBjYXBhYmlsaXRpZXMuCj4gKwkJSWYgR0ZYIHBpcGVsaW5lIGlzIHVz
-ZWQgaW4gYSB2aXJ0dWFsIHBsYW5lIGl0IHNob3VsZCBiZQo+ICsJCXNwZWNpZmllZCBmaXJzdCwg
-b3RoZXJ3aXNlIHVuZXhwZWN0ZWQgYmVoYXZpb3Igd291bGQKPiArCQliZSBlbmNvdW50ZXJlZC4K
-PiArCU9wdGlvbmFsIHByb3BlcnR5Ogo+ICsJLSB2aWRlby1vdXRwdXRzOiAgT25lIG9yIG1vcmUg
-SFcgb3V0cHV0IG51bWJlcihzKS4KPiArCQlEZXNjcmliZSB0aGUgbGlzdCBvZiB2aWRlbyBvdXRw
-dXQgb24gd2hpY2ggdGhpcyBwbGFuZQo+ICsJCWlzIGF2YWlsYWJsZS4gSWYgdGhpcyBub2RlIGlz
-IG5vdCBwcmVzZW50IHRoZW4gdGhlCj4gKwkJcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgb24gYWxs
-IGF2YWlsYWJsZSB2aWRlbyBvdXRwdXQuCj4gKwo+ICBWaWRlbyBQb3J0cwo+ICAtLS0tLS0tLS0t
-LQo+IAo+IEBAIC0yMTYsMyArMjQ2LDM4IEBAIE9NQVAgSERNSSAtLShIRE1JKS0tPiBUUEQxMlMw
-MTUgLS0oSERNSSktLT4gSERNSQo+IENvbm5lY3RvciB9Owo+ICAJfTsKPiAgfTsKPiArCj4gK0Eg
-c2hvcnQgZXhhbXBsZSBvbiBob3cgdG8gZGVmaW5lIGEgdmlydHVhbCBwbGFuZSBjb25maWd1cmF0
-aW9uCj4gK3RvIGVuYWJsZSB3aWRlIGRpc3BsYXkgc3VwcG9ydC4KPiArSGVyZSB3ZSBkZWZpbmU6
-Cj4gKy0gcGxhbmUjMCB0byBiZSB0aGUgSFcgcGlwZWxpbmUgIzAgKGkuZS4gR0ZYIHBpcGVsaW5l
-KQo+ICsJICBvbmx5IGF2YWlsYWJsZSBvbiB2aWRlbyBvdXRwdXQgIzAKPiArLSBwbGFuZSMxIHRv
-IGJlIGEgdmlydHVhbCB3aWRlIHBsYW5lIGNvbXBvc2VkIG9mIEhXIHBpcGVsaW5lICMxIGFuZCAj
-Mgo+ICsJICAoaS5lLiBWSUQxICYgVklEMikgYXZhaWxhYmxlIG9uIHZpZGVvIG91dHB1dCAjMCAm
-ICMxCj4gKy0gcGxhbmUjMiB0byBiZSB0aGUgSFcgcGlwZWxpbmUgIzMgKGkuZS4gVklEMyBwaXBl
-bGluZSkKPiArCSAgb25seSBhdmFpbGFibGUgb24gdmlkZW8gb3V0cHV0ICMwCj4gKwo+ICsmZHNz
-IHsKPiArICAgICAgICBkaXNwY0A1ODAwMTAwMCB7Cj4gKyAgICAgICAgICAgICAgICAjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsK
-PiArICAgICAgICAgICAgICAgIHBsYW5lQDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICBy
-ZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHZpZGVvLXBpcGVsaW5lcyA9IDww
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgdmlkZW8tb3V0cHV0cyA9IDwwPjsKPiArICAg
-ICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICAgcGxhbmVAMSB7Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAg
-dmlkZW8tcGlwZWxpbmVzID0gPDEgMj47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHZpZGVv
-LW91dHB1dHMgPSA8MCAxPjsKPiArICAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAg
-ICAgICAgcGxhbmVAMiB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwyPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgdmlkZW8tcGlwZWxpbmVzID0gPDM+Owo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICB2aWRlby1vdXRwdXRzID0gPDA+Owo+ICsgICAgICAgICAgICAgICAg
-fTsKPiArICAgICAgICB9Owo+ICt9OwoKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2018-04-04 15:07, Laurent Pinchart wrote:
+> First of all, thank you for the patch. This generates more discussion than I 
+> had anticipated, which is both good and bad. I'll comment through the e-mail, 
+> and try to explain both my initial idea, and also where it could lead us.
+
+*snip*
+
+Thank you for the long interesting mail! I will read it again, but my
+immediate reaction is that I am not the man to attempt anything heavier
+than static format information in drm bridges, and that I will hold off
+any further work until some consensus has been reached.
+
+> Finally, still regarding Peter's case, the decision to output RGB565 instead 
+> of RGB888 (which the LVDS encoder expects) is due to PCB routing between the 
+> display controller and the LVDS encoder. This isn't a property of the LVDS 
+> encoder or the display controller, but of their hardware connection. This 
+> patch series uses a DT property in the LVDS encoder DT node to convey that 
+> information, but wouldn't it be equally correct (or incorrect :-)) to instead 
+> use a DT property in the display controller DT node ?
+
+Right, it might even be more correct to do it there? Thinking about it, I
+have this in the DT
+
+#include "sama5d3_lcd.dtsi"
+
+&hlcdc {
+	hlcdc-display-controller {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+
+		port@0 {
+			hlcdc_output: endpoint {
+				remote-endpoint = <&lvds_encoder_input>;
+			};
+		};
+	};
+};
+
+Where the &pinctrl_lcd_rgb565 handle tells the chip to not even bother
+routing all of the rgb888 signals to pins and thus not waste pins that
+are in fact used for other things. Maybe it is possible for the hlcdc
+driver to look at that info and suggest rgb565 instead of rgb888 without
+anything further in the DT? But maybe it's difficult to peek into pinctrl
+bindings like that?
+
+Cheers,
+Peter
