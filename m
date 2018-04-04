@@ -1,52 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Wed, 04 Apr 2018 14:08:52 +0300
-Message-ID: <7256187.xpsYJETdA1@avalon>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <17308094.P4OCQetjOb@avalon> <1ffef122-18d8-fc85-afff-02c8ca3bb0ca@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1ffef122-18d8-fc85-afff-02c8ca3bb0ca@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 2/6] arm: dts: modify UART compatible name in NPCM750 device tree
+Date: Wed,  4 Apr 2018 14:10:58 +0300
+Message-ID: <1522840262-21635-3-git-send-email-tmaimon77@gmail.com>
+References: <1522840262-21635-1-git-send-email-tmaimon77@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522840262-21635-1-git-send-email-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIFdlZG5lc2RheSwgNCBBcHJpbCAyMDE4IDEzOjUwOjQzIEVFU1QgVG9taSBW
-YWxrZWluZW4gd3JvdGU6Cj4gT24gMDQvMDQvMTggMDA6MTEsIExhdXJlbnQgUGluY2hhcnQgd3Jv
-dGU6Cj4gPj4gKwlkbWFfYXN5bmNfaXNzdWVfcGVuZGluZyhkbW0tPndhX2RtYV9jaGFuKTsKPiA+
-PiArCXN0YXR1cyA9IGRtYV9zeW5jX3dhaXQoZG1tLT53YV9kbWFfY2hhbiwgY29va2llKTsKPiA+
-IAo+ID4gZG1hX3N5bmNfd2FpdCgpIGhhcyBhIDVzIHRpbWVvdXQuIFlvdSdyZSBjYWxsaW5nIHRo
-aXMgZnVuY3Rpb24gd2l0aCBhCj4gPiBzcGlubG9jayBoZWxkLiBUaGUgZW5kIHJlc3VsdCBtaWdo
-dCBiZSBzbGlnaHRseSBiZXR0ZXIgdGhhbiBhIGNvbXBsZXRlCj4gPiBzeXN0ZW0gbG9jayBhcyBj
-YXVzZWQgYnkgdGhlIGJ1ZyBkZXNjcmliZWQgaW4gaTg3OCwgYnV0IG9ubHkgc2xpZ2h0bHkuCj4g
-Cj4gV2hlbiBkb2VzIHRoZSB0aW1lb3V0IHRyaWdnZXI/IEkgcHJlc3VtZSBpdCBvbmx5IGhhcHBl
-bnMgd2hlbiB0aGluZ3MgYXJlCj4gYmFkbHkgYnJva2VuIG9uIHRoZSBIVyBvciBkcml2ZXIgbGV2
-ZWwsIGFuZCB3aGVuIHRoaW5ncyB3b3JrIG5vcm1hbGx5LAo+IHRoZSB3YWl0IGlzIHZlcnkgc2hv
-cnQuCgpJdCBzaG91bGRuJ3QgaGFwcGVuIHdoZW4gdGhpbmdzIGdvIHJpZ2h0LCBhbmQgSSBpbmRl
-ZWQgZXhwZWN0IHRoZSB0cmFuc2ZlciB0byAKY29tcGxldGUgcXVpdGUgZmFzdC4gSSB3b3VsZCBo
-b3dldmVyIGxpa2UgdG8gZ2V0IHJlYWwgbnVtYmVycyB0aGVyZSwgd2Ugc2hvdWxkIAptZWFzdXJl
-IGhvdyBsb25nIHRoZSB0cmFuc2ZlciB0eXBpY2FsbHkgdGFrZXMuCgo+ID4gVW5sZXNzIEknbSBt
-aXN0YWtlbiB0aGUgcmVhc29uIHlvdSBjYW4ndCBzbGVlcCBoZXJlIGlzIGJlY2F1c2Ugb2YgdGhl
-IG5lZWQKPiA+IHRvIGFjY2VzcyByZWdpc3RlcnMgaW4gdGhlIGludGVycnVwdCBoYW5kbGVyLiBD
-b3VsZCB3ZSB1c2UgdGhyZWFkZWQgSVJRcwo+ID4gdG8gc29sdmUgdGhpcyA/Cj4gCj4gWWVzLCBJ
-IHRoaW5rIHRoYXQncyB0aGUgcmVhc29uLiBQcm9iYWJseSB3ZSBjb3VsZCB1c2UgdGhyZWFkZWQg
-SVJRcy4KPiAKPiBBbHNvLCBJJ20gbm90IHN1cmUgaWYgdGhpcyBpcyBhIGJpZyBpc3N1ZS4gSWYg
-dGhlIGRtYV9zeW5jX3dhaXQKPiB0aW1lb3V0cywgdGhpbmdzIGFyZSBhbHJlYWR5IHJhdGhlciBi
-cm9rZW4uIFRoZW4gYWdhaW4sIGFueSB3YWl0IGluIGFuCj4gaXJxIGNvbnRleHQgaXMgbm90IHRo
-YXQgbmljZS4gQnV0IGlmIHRoZSB3YWl0IGlzIGp1c3QgYSBmZXcgbG9vcHMgbG9uZywKPiBpdCdz
-IG5vdCByZWFsbHkgZXZlbiBhIHdhaXQuLi4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFy
-dAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Modify UART compatible name in a common device tree for all Nuvoton
+NPCM750 BMCs.
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ arch/arm/boot/dts/nuvoton-npcm750.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
+index cacd0fde5914..286f139fdc7c 100644
+--- a/arch/arm/boot/dts/nuvoton-npcm750.dtsi
++++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
+@@ -150,7 +150,7 @@
+ 			};
+ 
+ 			serial0: serial@1000 {
+-				compatible = "ns16550a";
++				compatible = "nuvoton,npcm750-uart";
+ 				reg = <0x1000 0x1000>;
+ 				clocks = <&clk 14>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+@@ -159,7 +159,7 @@
+ 			};
+ 
+ 			serial1: serial@2000 {
+-				compatible = "ns16550a";
++				compatible = "nuvoton,npcm750-uart";
+ 				reg = <0x2000 0x1000>;
+ 				clocks = <&clk 14>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+@@ -168,7 +168,7 @@
+ 			};
+ 
+ 			serial2: serial@3000 {
+-				compatible = "ns16550a";
++				compatible = "nuvoton,npcm750-uart";
+ 				reg = <0x3000 0x1000>;
+ 				clocks = <&clk 14>;
+ 				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+@@ -177,7 +177,7 @@
+ 			};
+ 
+ 			serial3: serial@4000 {
+-				compatible = "ns16550a";
++				compatible = "nuvoton,npcm750-uart";
+ 				reg = <0x4000 0x1000>;
+ 				clocks = <&clk 14>;
+ 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.14.1
