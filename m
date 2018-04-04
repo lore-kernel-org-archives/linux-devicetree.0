@@ -1,104 +1,98 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next 02/12] clk: sunxi-ng: r40: export a regmap to
- access the GMAC register
-Date: Wed, 4 Apr 2018 15:00:48 +0800
-Message-ID: <CAGb2v64eD7H2BB3u_Gvk0EfUB8NwTJjDi6b4+Z3-k+1ok4vNcw@mail.gmail.com>
-References: <20180317092857.4396-1-wens@csie.org> <20180317092857.4396-3-wens@csie.org>
- <20180318213129.ucwslzvwq6khxrcd@flea> <CAGb2v67Fp20wkmqWyRowpAmm4EDwENnKFG+mccqWaPa5Jj4zBw@mail.gmail.com>
- <20180403094845.le2hfuxktlv66lre@flea> <20180403095005.skflxb7m2qzbhjix@flea> <1522824302.2049.7.camel@aosc.io>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: Multiple generic PHY instances for DWC3 USB IP
+Date: Wed, 4 Apr 2018 16:31:21 +0900
+Message-ID: <CAK7LNATpFZYK-f4j7sJpur-u43bK1gsz_eS1wurTq7C+n6pHAw@mail.gmail.com>
+References: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com>
+ <87vad7cz2i.fsf@linux.intel.com> <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com>
+ <87po3fcxs4.fsf@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1522824302.2049.7.camel@aosc.io>
-Sender: netdev-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87po3fcxs4.fsf@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 2:45 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
-> 在 2018-04-03二的 11:50 +0200，Maxime Ripard写道：
->> On Tue, Apr 03, 2018 at 11:48:45AM +0200, Maxime Ripard wrote:
->> > On Tue, Mar 20, 2018 at 03:15:02PM +0800, Chen-Yu Tsai wrote:
->> > > On Mon, Mar 19, 2018 at 5:31 AM, Maxime Ripard
->> > > <maxime.ripard@bootlin.com> wrote:
->> > > > On Sat, Mar 17, 2018 at 05:28:47PM +0800, Chen-Yu Tsai wrote:
->> > > > > From: Icenowy Zheng <icenowy@aosc.io>
->> > > > >
->> > > > > There's a GMAC configuration register, which exists on
->> > > > > A64/A83T/H3/H5 in
->> > > > > the syscon part, in the CCU of R40 SoC.
->> > > > >
->> > > > > Export a regmap of the CCU.
->> > > > >
->> > > > > Read access is not restricted to all registers, but only the
->> > > > > GMAC
->> > > > > register is allowed to be written.
->> > > > >
->> > > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> > > >
->> > > > Gah, this is crazy. I'm really starting to regret letting that
->> > > > syscon
->> > > > in in the first place...
->> > >
->> > > IMHO syscon is really a better fit. It's part of the glue layer
->> > > and
->> > > most other dwmac user platforms treat it as such and use a
->> > > syscon.
->> > > Plus the controls encompass delays (phase), inverters (polarity),
->> > > and even signal routing. It's not really just a group of clock
->> > > controls,
->> > > like what we poorly modeled for A20/A31. I think that was really
->> > > a
->> > > mistake.
->> > >
->> > > As I mentioned in the cover letter, a slightly saner approach
->> > > would
->> > > be to let drivers add custom syscon entries, which would then
->> > > require
->> > > less custom plumbing.
->> >
->> > A syscon is convenient, sure, but it also bypasses any abstraction
->> > layer we have everywhere else, which means that we'll have to
->> > maintain
->> > the register layout in each and every driver that uses it.
->> >
->> > So far, it's only be the GMAC, but it can also be others (the SRAM
->> > controller comes to my mind), and then, if there's any difference
->> > in
->> > the design in a future SoC, we'll have to maintain that in the GMAC
->> > driver as well.
->>
->> I guess I forgot to say something, I'm fine with using a syscon we
->> already have.
+2018-04-04 15:04 GMT+09:00 Felipe Balbi <felipe.balbi@linux.intel.com>:
 >
-> As we finally need the SRAM controller on these new SoCs (for VE on all
-> SoCs targeted by dwmac-sun8i, and for DE on A64), should we deprecate
-> the syscon and all switch to device regmap (and let sunxi-dram driver
-> to export a regmap)? (As in the A64 DE2 thread discussed, two device
-> nodes shouldn't cover the same MMIO region.)
-
-Sounds like a plan.
-
-> In addition, there might be multiple registers in the syscon/sram zone
-> that are needed (for example, if a version driver is written, it will
-> need the "0x24 Version Register"; and GMAC needs "0x30 EMAC Clock
-> Register"). How to deal with this if we export the syscon/sram zone as
-> a generic device regmap?
-
-You can have multiple regmaps for a device. And the API allows you to
-request them up by name.
-
-ChenYu
-
+> Hi,
+>
+> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>> 2018-04-04 14:36 GMT+09:00 Felipe Balbi <felipe.balbi@linux.intel.com>:
+>>>
+>>> Hi,
+>>>
+>>> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>>>> Currently, DWC3 core IP (drivers/usb/dwc3/core.c)
+>>>> can take only one PHY phandle for each of SS, HS.
+>>>> (phy-names DT property is "usb2-phy" and "usb3-phy" for each)
+>>>
+>>> We never had any other requirements :-)
+>>>
+>>>> The DWC3 core IP is provided by Synopsys,
+>>>> but some SoC-dependent parts (a.k.a glue-layer)
+>>>> are implemented by SoC venders.
+>>>>
+>>>> The number of connected PHY instances are SoC-dependent.
+>>>>
+>>>> If you look at generic drivers such as
+>>>>   drivers/usb/host/ehci-platform.c
+>>>> the driver can handle arbitrary number of PHY instances.
+>>>>
+>>>> However, as mentioned above, DWC3 core allows only one PHY phandle
+>>>> for each SS/HS.
+>>>> This can result in a strange DT structure.
+>>>>
+>>>> For example, Socionext PXs3 SoC is integrated with 2 instances of DWC3.
+>>>>
+>>>> The instance 0 of DWC3 is connected with 2 super-speed PHYs.
+>>>
+>>> why 2 super-speed phys? Is this a two-port host-only implementation?
 >>
->> I'm just questionning if merging any other driver using one is the
->> right move.
 >>
->> Maxime
+>> Socionext SoCs only support the host-mode.
 >>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>> The instance 0 has 2 ports.
+>> In our integration, 1 SS PHY is needed for each port.
+>> That's why it needs 2 SS PHYs.
+>>
+>> Each DWC3 instance is connected with
+>> multiple HS PHYs and multiple SS PHYs,
+>> depending on the number of ports.
+>
+> in that case, you shouldn't need dwc3 at all. A Host-only dwc3 is xHCI
+> compliant. If you really don't have the gadget block, there's no need
+> for you to use dwc3. Just use xhci-plat directly.
+
+Sorry, I was misunderstanding.
+
+Some of our SoCs support gadget,
+so we need to use the dwc3 driver.
+
+
+>>>> Is this OK?
+>>>
+>>> I don't know, I need a bit more details about your integration :-)
+>>
+>>
+>> I can send a patch.
+>>
+>> My concern is the following commit.
+>> I do not know which parts are using this lookups.
+>
+> Samsung SoCs, probably ;-)
+>
+> Anyway, if your IP really is host-only, then you don't need dwc3 for
+> anything. Just go for xHCI directly. If xHCI needs to be extended when
+> it comes to PHY, then you can discuss with Mathias Nyman :-)
+>
+> --
+> balbi
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
