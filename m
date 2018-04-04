@@ -1,62 +1,50 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: Multiple generic PHY instances for DWC3 USB IP
-Date: Wed, 4 Apr 2018 19:33:13 +0900
-Message-ID: <CAK7LNAQae2RAnVJtGdoQDuOHjP6MDptGrvWuQoJAzQ269p_k-Q@mail.gmail.com>
-References: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com>
- <87vad7cz2i.fsf@linux.intel.com> <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com>
- <87po3fcxs4.fsf@linux.intel.com> <CAK7LNATpFZYK-f4j7sJpur-u43bK1gsz_eS1wurTq7C+n6pHAw@mail.gmail.com>
- <87woxns8nd.fsf@linux.intel.com> <CAK8P3a0t4ooQNJrak_r_Qc2T4UeQB9k3SgStuaBptV2DcA8SBA@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
+ i878
+Date: Wed, 4 Apr 2018 13:50:43 +0300
+Message-ID: <1ffef122-18d8-fc85-afff-02c8ca3bb0ca@ti.com>
+References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
+ <20180322134206.22857-3-peter.ujfalusi@ti.com> <17308094.P4OCQetjOb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0t4ooQNJrak_r_Qc2T4UeQB9k3SgStuaBptV2DcA8SBA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <17308094.P4OCQetjOb@avalon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-2018-04-04 17:43 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wed, Apr 4, 2018 at 10:00 AM, Felipe Balbi
-> <felipe.balbi@linux.intel.com> wrote:
->>
->> Hi,
->>
->> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
->>>>> Each DWC3 instance is connected with
->>>>> multiple HS PHYs and multiple SS PHYs,
->>>>> depending on the number of ports.
->>>>
->>>> in that case, you shouldn't need dwc3 at all. A Host-only dwc3 is xHCI
->>>> compliant. If you really don't have the gadget block, there's no need
->>>> for you to use dwc3. Just use xhci-plat directly.
->>>
->>> Sorry, I was misunderstanding.
->>>
->>> Some of our SoCs support gadget,
->>> so we need to use the dwc3 driver.
->>
->> fair enough. Now we need to figure out how to pass multiply PHYs to a
->> multi-port dwc3 instance.
->>
->> Kishon, any ideas? How do you think DT should look like?
->
-> See this series from Martin Blumenstingl:
->
-> https://www.spinics.net/lists/linux-usb/msg166281.html
->
->       Arnd
-
-
-Very useful information!
-
-Not tested yet, but I quickly reviewed the series visually,
-and probably this will work for us.
-
-Thanks!
-
-
--- 
-Best Regards
-Masahiro Yamada
+T24gMDQvMDQvMTggMDA6MTEsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cgo+PiArCWRtYV9hc3lu
+Y19pc3N1ZV9wZW5kaW5nKGRtbS0+d2FfZG1hX2NoYW4pOwo+PiArCXN0YXR1cyA9IGRtYV9zeW5j
+X3dhaXQoZG1tLT53YV9kbWFfY2hhbiwgY29va2llKTsKPiAKPiBkbWFfc3luY193YWl0KCkgaGFz
+IGEgNXMgdGltZW91dC4gWW91J3JlIGNhbGxpbmcgdGhpcyBmdW5jdGlvbiB3aXRoIGEgc3Bpbmxv
+Y2sgCj4gaGVsZC4gVGhlIGVuZCByZXN1bHQgbWlnaHQgYmUgc2xpZ2h0bHkgYmV0dGVyIHRoYW4g
+YSBjb21wbGV0ZSBzeXN0ZW0gbG9jayBhcyAKPiBjYXVzZWQgYnkgdGhlIGJ1ZyBkZXNjcmliZWQg
+aW4gaTg3OCwgYnV0IG9ubHkgc2xpZ2h0bHkuCgpXaGVuIGRvZXMgdGhlIHRpbWVvdXQgdHJpZ2dl
+cj8gSSBwcmVzdW1lIGl0IG9ubHkgaGFwcGVucyB3aGVuIHRoaW5ncyBhcmUKYmFkbHkgYnJva2Vu
+IG9uIHRoZSBIVyBvciBkcml2ZXIgbGV2ZWwsIGFuZCB3aGVuIHRoaW5ncyB3b3JrIG5vcm1hbGx5
+LAp0aGUgd2FpdCBpcyB2ZXJ5IHNob3J0LgoKPiBVbmxlc3MgSSdtIG1pc3Rha2VuIHRoZSByZWFz
+b24geW91IGNhbid0IHNsZWVwIGhlcmUgaXMgYmVjYXVzZSBvZiB0aGUgbmVlZCB0byAKPiBhY2Nl
+c3MgcmVnaXN0ZXJzIGluIHRoZSBpbnRlcnJ1cHQgaGFuZGxlci4gQ291bGQgd2UgdXNlIHRocmVh
+ZGVkIElSUXMgdG8gc29sdmUgCj4gdGhpcyA/CgpZZXMsIEkgdGhpbmsgdGhhdCdzIHRoZSByZWFz
+b24uIFByb2JhYmx5IHdlIGNvdWxkIHVzZSB0aHJlYWRlZCBJUlFzLgoKQWxzbywgSSdtIG5vdCBz
+dXJlIGlmIHRoaXMgaXMgYSBiaWcgaXNzdWUuIElmIHRoZSBkbWFfc3luY193YWl0CnRpbWVvdXRz
+LCB0aGluZ3MgYXJlIGFscmVhZHkgcmF0aGVyIGJyb2tlbi4gVGhlbiBhZ2FpbiwgYW55IHdhaXQg
+aW4gYW4KaXJxIGNvbnRleHQgaXMgbm90IHRoYXQgbmljZS4gQnV0IGlmIHRoZSB3YWl0IGlzIGp1
+c3QgYSBmZXcgbG9vcHMgbG9uZywKaXQncyBub3QgcmVhbGx5IGV2ZW4gYSB3YWl0Li4uCgogVG9t
+aQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAw
+MTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2th
+L0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
