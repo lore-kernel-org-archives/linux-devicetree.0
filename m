@@ -1,163 +1,106 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 0/5] allow override of bus format in bridges
-Date: Wed, 4 Apr 2018 14:35:34 +0200
-Message-ID: <9af25e5a-7334-b07c-ff49-46530df6b1aa@axentia.se>
-References: <20180326212447.7380-1-peda@axentia.se>
- <2233231.my6BbD3pcT@avalon>
- <CAKMK7uH-=BqU+vuePTq4joY3XS2ypvtSKYvpv1LLyovPpSXv6A@mail.gmail.com>
- <1563250.XEJxFDuW0h@avalon>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v8 25/42] ARM: davinci: dm644x: add new clock init using
+ common clock framework
+Date: Wed, 4 Apr 2018 18:14:07 +0530
+Message-ID: <030ce534-765b-3059-a6a1-fffaaaba307a@ti.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <1521168778-27236-26-git-send-email-david@lechnology.com>
+ <333f49c7-bafd-8e2d-65e9-7d1aff4836de@ti.com>
+ <43c266b8-c023-a1b4-c751-bd46c2fb910d@lechnology.com>
+ <cda6f3bc-7ca9-68e9-80ca-baf6d4860c95@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563250.XEJxFDuW0h@avalon>
+In-Reply-To: <cda6f3bc-7ca9-68e9-80ca-baf6d4860c95@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-04 11:07, Laurent Pinchart wrote:
-> Hi Daniel,
-> 
-> On Wednesday, 4 April 2018 09:34:41 EEST Daniel Vetter wrote:
->> On Wed, Apr 4, 2018 at 12:28 AM, Laurent Pinchart wrote:
->>> On Wednesday, 28 March 2018 10:08:26 EEST Daniel Vetter wrote:
->>>> On Mon, Mar 26, 2018 at 11:24:42PM +0200, Peter Rosin wrote:
->>>>> Hi!
->>>>>
->>>>> [I got to v2 sooner than expected]
->>>>>
->>>>> I have an Atmel sama5d31 hooked up to an lvds encoder and then
->>>>> on to an lvds panel. Which seems like something that has been
->>>>> done one or two times before...
->>>>>
->>>>> The problem is that the bus_format of the SoC and the panel do
->>>>> not agree. The SoC driver (atmel-hlcdc) can handle the
->>>>> rgb444, rgb565, rgb666 and rgb888 bus formats. The hardware is
->>>>> wired for the rgb565 case. The lvds encoder supports rgb888 on
->>>>> its input side with the LSB wires for each color simply pulled
->>>>> down internally in the encoder in my case which means that the
->>>>> rgb565 bus_format is the format that works best. And the panel
->>>>> is expecting lvds (vesa-24), which is what the encoder outputs.
->>>>>
->>>>> The reason I "blame" the bus_format of the drm_connector is that
->>>>> with the below DT snippet, things do not work *exactly* due to
->>>>> that. At least, it starts to work if I hack the panel-lvds driver
->>>>> to report the rgb565 bus_format instead of vesa-24.
->>>>>
->>>>>     panel: panel {
->>>>>             compatible = "panel-lvds";
->>>>>             
->>>>>             width-mm = <304>;
->>>>>             height-mm = <228;
->>>>>             
->>>>>             data-mapping = "vesa-24";
->>>>>             
->>>>>             panel-timing {
->>>>>                     // 1024x768 @ 60Hz (typical)
->>>>>                     clock-frequency = <52140000 65000000 71100000>;
->>>>>                     hactive = <1024>;
->>>>>                     vactive = <768>;
->>>>>                     hfront-porch = <48 88 88>;
->>>>>                     hback-porch = <96 168 168>;
->>>>>                     hsync-len = <32 64 64>;
->>>>>                     vfront-porch = <8 13 14>;
->>>>>                     vback-porch = <8 13 14>;
->>>>>                     vsync-len = <8 12 14>;
->>>>>             };
->>>>>             
->>>>>             port {
->>>>>                     panel_input: endpoint {
->>>>>                             remote-endpoint = <&lvds_encoder_output>;
->>>>>                     };
->>>>>             };
->>>>>     };
->>>>>     
->>>>>     lvds-encoder {
->>>>>             compatible = "ti,ds90c185", "lvds-encoder";
->>>>>             
->>>>>             ports {
->>>>>                     #address-cells = <1>;
->>>>>                     #size-cells = <0>;
->>>>>                     
->>>>>                     port@0 {
->>>>>                             reg = <0>;
->>>>>                             
->>>>>                             lvds_encoder_input: endpoint {
->>>>>                                     remote-endpoint = <&hlcdc_output>;
->>>>>                             };
->>>>>                     };
->>>>>                     
->>>>>                     port@1 {
->>>>>                             reg = <1>;
->>>>>                             
->>>>>                             lvds_encoder_output: endpoint {
->>>>>                                     remote-endpoint = <&panel_input>;
->>>>>                             };
->>>>>                     };
->>>>>             };
->>>>>     };
->>>>>
->>>>> But, instead of perverting the panel-lvds driver with support
->>>>> for a totally fake non-lvds bus_format, I intruduce an API that allows
->>>>> display controller drivers to query the required bus_format of any
->>>>> intermediate bridges, and match up with that instead of the formats
->>>>> given by the drm_connector. I trigger this with this addition to the
->>>>>
->>>>> lvds-encoder DT node:
->>>>>             interface-pix-fmt = "rgb565";
->>>>>
->>>>> Naming is hard though, so I'm not sure if that's good?
->>>>>
->>>>> I threw in the first patch, since that is the actual lvds encoder
->>>>> I have in this case.
->>>>>
->>>>> Suggestions welcome.
->>>>
->>>> Took a quick look, feels rather un-atomic. And there's beend discussing
->>>> for other bridge related state that we might want to track (like the full
->>>> adjusted_mode that might need to be adjusted at each stage in the chain).
->>>> So here's my suggestions:
->>>>
->>>> - Add an optional per-bridge internal state struct using the support in
->>>>   https://dri.freedesktop.org/docs/drm/gpu/drm-kms.html#handling-driver-> >>   private-state
->>>>
->>>>   Yes it says "driver private", but since bridge is just helper stuff
->>>>   that's all included. "driver private" == "not exposed as uapi" here.
->>>>   Include all the usual convenience wrappers to get at the state for a
->>>>   bridge.
->>>>
->>>> - Then stuff your bus_format into that new drm_bridge_state struct.
->>>>
->>>> - Add a new bridge callback atomic_check, which gets that bridge state as
->>>>   parameter (similar to all the other atomic_check functions).
->>>>
->>>> This way we can even handle the bus_format dynamically, through the
->>>> atomic framework your bridge's atomic_check callback can look at the
->>>> entire atomic state (both up and down the chain if needed), it all neatly
->>>> fits into atomic overall and it's much easier to extend.
+On Wednesday 04 April 2018 12:17 PM, Sekhar Nori wrote:
+> On Tuesday 03 April 2018 10:00 PM, David Lechner wrote:
+>> On 04/03/2018 05:26 AM, Sekhar Nori wrote:
+>>> On Friday 16 March 2018 08:22 AM, David Lechner wrote:
+>>>> +static struct resource dm644x_pll1_resources[] = {
+>>>> +    {
+>>>> +        .start    = DAVINCI_PLL1_BASE,
+>>>> +        .end    = DAVINCI_PLL1_BASE + SZ_4K - 1,
 >>>
->>> While I think we'll eventually need bridge states, I don't think that's
->>> need yet. The bus formats reported by this patch series are static. We're
->>> not talking about the currently configured format for a bridge, but about
->>> the list of supported formats. This is similar to the bus_formats field
->>> present in the drm_display_info structure. There is thus in my opinion no
->>> need to interface this with atomic until we need to track the current
->>> format (and I think that will indeed happen at some point, but I don't
->>> think Peter needs this feature for now). That's why I've told Peter that
->>> I would like a bridge API to report the information and haven't requested
->>> a state-based implementation.
+>>> The .end should be DAVINCI_PLL1_BASE + SZ_1K - 1, otherwise it prevents
+>>> PLL2 from getting registered.
+>>>
+>>>> +        .flags    = IORESOURCE_MEM,
+>>>> +    },
+>>>> +};
+>>>> +
+>>>> +static struct platform_device dm644x_pll1_device = {
+>>>> +    .name        = "dm644x-pll1",
+>>>> +    .id        = -1,
+>>>> +    .resource    = dm644x_pll1_resources,
+>>>> +    .num_resources    = ARRAY_SIZE(dm644x_pll1_resources),
+>>>> +};
+>>>> +
+>>>> +static struct resource dm644x_pll2_resources[] = {
+>>>> +    {
+>>>> +        .start    = DAVINCI_PLL2_BASE,
+>>>> +        .end    = DAVINCI_PLL2_BASE + SZ_4K - 1,
+>>>
+>>> And this too should be fixed, else it prevents the PSC from getting
+>>> registered.
+>>>
+>>>> +        .flags    = IORESOURCE_MEM,
+>>>> +    },
+>>>> +};
+>>>
+>>> With these fixed, I still had to enable 'clk_ignore_unused' on DM644x
+>>> EVM to get to NFS boot. I think root of the problem is that pm_runtime()
+>>> APIs are not working in the legacy boot mode.
+>>>
+>>> This can be seen even on the DA850 LCDK in legacy boot. pm_genpd_summary
+>>> in debugfs shows all domains are off and there are no devices registered
+>>> under the "da850-psc1: emac" domain. NFS mounting still works on the
+>>> DA850 LCDK because clk_summary shows enable and prepare count of 4 for
+>>> emac. Not sure how that's happening. But on DM644x EVM, the emac clock
+>>> enable count is 0.
+>>>
+>>> Still looking at whats going wrong here. I am testing your v8 branch
+>>> with clk-davinci branch from clk-next merged to get the fixes Stephen
+>>> made.
+>>>
 >>
->> If it's static, why a dynamic callback? Just add it to struct
->> drm_bridge, require it's filled out before registering the bridge,
->> done.
+>> In legacy mode, genpd is not being used. I didn't see any mechanism for
 > 
-> If I remember correctly I mentioned both options in my initial proposal, 
-> without a personal preference. A new field in struct drm_bridge would 
-> certainly work for me.
+> Ah, I got stumped by the genpd related debug entries popping up.
+> Probably something should be done to make sure they don't show up in
+> legacy boot. And some comments to that effect in psc.c will help.
+> 
+>> genpd lookup without device tree. So, we are still relying on the
+>> matching in arch/arm/mach-davinci/pm_domain.c.
+> 
+> This is fine. We just need legacy boot to keep working without regressions.
+> 
+>>
+>> I suspect we need to fix the clock lookups in
+>> drivers/clk/davinci/psc-dm644x.c.
+>>
+>> LPSC_CLKDEV2(emac_clkdev,        NULL,        "davinci_emac.1",
+>>                     "fck",        "davinci_mdio.0");
+>>
+>> NULL might need to be changed to "fck" to be picked up by pm matching
+>> and "davinci_emac.1" should be verified that it matches the actual EMAC
+>> device name.
+> 
+> NULL con_id matches what we have for DA850 and also what we had for
+> DM644x prior to CCF conversion. So, I did not really suspect that. The
+> device name does match. I will check what else could be going on based
+> on your input.
 
-You did. Ok, so v3 coming up...
+This issue is because emac platform device is getting registered really
+early on dm644x even before the clocks are ready in postcore_initcall().
 
-Cheers,
-Peter
+I will send a patch fixing that.
+
+Thanks,
+Sekhar
