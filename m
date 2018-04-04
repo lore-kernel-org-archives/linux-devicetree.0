@@ -1,105 +1,107 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 5/5] hisi: Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX
-Date: Wed,  4 Apr 2018 11:14:35 +0800
-Message-ID: <1522811675-12741-6-git-send-email-leo.yan@linaro.org>
-References: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v10 2/2] fpga: lattice machxo2: Add Lattice MachXO2
+ support
+Date: Wed, 4 Apr 2018 12:34:08 +0800
+Message-ID: <201804041222.0xEsTote%fengguang.wu@intel.com>
+References: <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Kaihua Zhong <zhongkaihua@huawei.com>, Tao Wang <kevin.wangtao@hisilicon.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: kbuild-all@01.org, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Hi Paolo,
 
-The current defconfig is inconsistent as it selects the mailbox and
-the clock for the hi6220 and the hi3660 without having their Kconfigs
-making sure the dependencies are correct. It ends up when selecting
-different versions for the kernel (for example when git bisecting)
-those options disappear and they don't get back, leading to unexpected
-behaviors. In our case, the cpufreq driver does no longer work because
-the clock fails to initialize due to the clock stub and the mailbox
-missing.
+Thank you for the patch! Perhaps something to improve:
 
-In order to have the dependencies correctly set when defaulting, let's
-do the same as commit 3a49afb84ca074e ("clk: enable hi655x common clk
-automatically") where we select automatically the driver when the
-parent driver is selected. With sensible defaults in place, we can leave
-other choices for EXPERT.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.16 next-20180403]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+url:    https://github.com/0day-ci/linux/commits/Paolo-Pisati/dt-bindings-fpga-add-lattice-machxo2-slave-spi-binding-description/20180404-055540
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+>> drivers/fpga/machxo2-spi.c:86:19: sparse: cast to restricted __be32
+   drivers/fpga/machxo2-spi.c:369:12: sparse: no member 'parent' in struct fpga_manager
+>> drivers/fpga/machxo2-spi.c:375:33: sparse: not enough arguments for function fpga_mgr_register
+>> drivers/fpga/machxo2-spi.c:382:29: sparse: incorrect type in argument 1 (different base types) @@    expected struct device *dev @@    got structstruct device *dev @@
+>> drivers/fpga/machxo2-spi.c:369:12: sparse: generating address of non-lvalue (8)
+   drivers/fpga/machxo2-spi.c: In function 'machxo2_spi_probe':
+   drivers/fpga/machxo2-spi.c:369:5: error: 'struct fpga_manager' has no member named 'parent'
+     mgr->parent = dev;
+        ^~
+   drivers/fpga/machxo2-spi.c:375:27: error: passing argument 1 of 'fpga_mgr_register' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     return fpga_mgr_register(mgr);
+                              ^~~
+   In file included from drivers/fpga/machxo2-spi.c:12:0:
+   include/linux/fpga/fpga-mgr.h:173:5: note: expected 'struct device *' but argument is of type 'struct fpga_manager *'
+    int fpga_mgr_register(struct device *dev, const char *name,
+        ^~~~~~~~~~~~~~~~~
+   drivers/fpga/machxo2-spi.c:375:9: error: too few arguments to function 'fpga_mgr_register'
+     return fpga_mgr_register(mgr);
+            ^~~~~~~~~~~~~~~~~
+   In file included from drivers/fpga/machxo2-spi.c:12:0:
+   include/linux/fpga/fpga-mgr.h:173:5: note: declared here
+    int fpga_mgr_register(struct device *dev, const char *name,
+        ^~~~~~~~~~~~~~~~~
+   drivers/fpga/machxo2-spi.c: In function 'machxo2_spi_remove':
+   drivers/fpga/machxo2-spi.c:382:22: error: passing argument 1 of 'fpga_mgr_unregister' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     fpga_mgr_unregister(mgr);
+                         ^~~
+   In file included from drivers/fpga/machxo2-spi.c:12:0:
+   include/linux/fpga/fpga-mgr.h:176:6: note: expected 'struct device *' but argument is of type 'struct fpga_manager *'
+    void fpga_mgr_unregister(struct device *dev);
+         ^~~~~~~~~~~~~~~~~~~
+   drivers/fpga/machxo2-spi.c: In function 'machxo2_spi_probe':
+   drivers/fpga/machxo2-spi.c:376:1: warning: control reaches end of non-void function [-Wreturn-type]
+    }
+    ^
+   cc1: some warnings being treated as errors
+
+vim +86 drivers/fpga/machxo2-spi.c
+
+    65	
+    66	static int get_status(struct spi_device *spi, unsigned long *status)
+    67	{
+    68		struct spi_message msg;
+    69		struct spi_transfer rx, tx;
+    70		static const u8 cmd[] = LSC_READ_STATUS;
+    71		int ret;
+    72	
+    73		memset(&rx, 0, sizeof(rx));
+    74		memset(&tx, 0, sizeof(tx));
+    75		tx.tx_buf = cmd;
+    76		tx.len = sizeof(cmd);
+    77		rx.rx_buf = status;
+    78		rx.len = 4;
+    79		spi_message_init(&msg);
+    80		spi_message_add_tail(&tx, &msg);
+    81		spi_message_add_tail(&rx, &msg);
+    82		ret = spi_sync(spi, &msg);
+    83		if (ret)
+    84			return ret;
+    85	
+  > 86		*status = be32_to_cpu(*status);
+    87	
+    88		return 0;
+    89	}
+    90	
+
 ---
- arch/arm64/configs/defconfig  |  1 -
- drivers/clk/hisilicon/Kconfig | 13 ++++++++-----
- drivers/mailbox/Kconfig       | 12 ++++++++----
- 3 files changed, 16 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index ecf6137..1d9d8b9 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -549,7 +549,6 @@ CONFIG_HWSPINLOCK_QCOM=y
- CONFIG_ARM_MHU=y
- CONFIG_PLATFORM_MHU=y
- CONFIG_BCM2835_MBOX=y
--CONFIG_HI6220_MBOX=y
- CONFIG_QCOM_APCS_IPC=y
- CONFIG_ROCKCHIP_IOMMU=y
- CONFIG_TEGRA_IOMMU_SMMU=y
-diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
-index 1bd4355..becdb1d 100644
---- a/drivers/clk/hisilicon/Kconfig
-+++ b/drivers/clk/hisilicon/Kconfig
-@@ -44,14 +44,17 @@ config RESET_HISI
- 	  Build reset controller driver for HiSilicon device chipsets.
- 
- config STUB_CLK_HI6220
--	bool "Hi6220 Stub Clock Driver"
--	depends on COMMON_CLK_HI6220 && MAILBOX
--	default ARCH_HISI
-+	bool "Hi6220 Stub Clock Driver" if EXPERT
-+	depends on (COMMON_CLK_HI6220 || COMPILE_TEST)
-+	depends on MAILBOX
-+	default COMMON_CLK_HI6220
- 	help
- 	  Build the Hisilicon Hi6220 stub clock driver.
- 
- config STUB_CLK_HI3660
--	bool "Hi3660 Stub Clock Driver"
--	depends on COMMON_CLK_HI3660 && MAILBOX
-+	bool "Hi3660 Stub Clock Driver" if EXPERT
-+	depends on (COMMON_CLK_HI3660 || COMPILE_TEST)
-+	depends on MAILBOX
-+	default COMMON_CLK_HI3660
- 	help
- 	  Build the Hisilicon Hi3660 stub clock driver.
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index a2bb274..567cd02 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -109,16 +109,20 @@ config TI_MESSAGE_MANAGER
- 	  platform has support for the hardware block.
- 
- config HI3660_MBOX
--	tristate "Hi3660 Mailbox"
--	depends on ARCH_HISI && OF
-+	tristate "Hi3660 Mailbox" if EXPERT
-+	depends on (ARCH_HISI || COMPILE_TEST)
-+	depends on OF
-+	default ARCH_HISI
- 	help
- 	  An implementation of the hi3660 mailbox. It is used to send message
- 	  between application processors and other processors/MCU/DSP. Select
- 	  Y here if you want to use Hi3660 mailbox controller.
- 
- config HI6220_MBOX
--	tristate "Hi6220 Mailbox"
--	depends on ARCH_HISI
-+	tristate "Hi6220 Mailbox" if EXPERT
-+	depends on (ARCH_HISI || COMPILE_TEST)
-+	depends on OF
-+	default ARCH_HISI
- 	help
- 	  An implementation of the hi6220 mailbox. It is used to send message
- 	  between application processors and MCU. Say Y here if you want to
--- 
-1.9.1
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
