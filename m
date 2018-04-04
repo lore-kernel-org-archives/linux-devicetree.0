@@ -1,41 +1,42 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 2/4] mfd: add Gateworks System Controller core driver
-Date: Wed, 4 Apr 2018 15:12:39 +0200
-Message-ID: <20180404131239.GD20869@lunn.ch>
-References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
- <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
- <CAJ+vNU3-gaTcMAzo5wB6oSfE-JQC3NBVRJS5zFMTE-nVpD4F5g@mail.gmail.com>
- <20180403164715.GA5676@lunn.ch>
- <CAJ+vNU31f+iY5LOG6QmdJetb=pPvY_gpKoS+49FSy70U1Ksd8g@mail.gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 4.18] ARM: dts: BCM5301X: Switch Luxul XWC-1000 to the new
+ fixed partitions syntax
+Date: Wed,  4 Apr 2018 15:14:21 +0200
+Message-ID: <20180404131421.28651-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU31f+iY5LOG6QmdJetb=pPvY_gpKoS+49FSy70U1Ksd8g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> What about the 'reset' functionality? Is there something in the power
-> supply API for hooking in a GPIO based power switch (in my case it
-> would be i2c) as I would think that would be common for ATX supplies?
-> I didn't see anything in Documentation/power.
-> 
-> This is what led me to the restart handler idea. Ultimately when
-> someone issues a 'reboot' I would like it to use the GSC to
-> power-cycle the board.
-
-Hi Tim
-
-I think you end up with the same problem. By the time you need to turn
-the power supply off, too much of the kernel is shut down to be able
-to use I2C. And if you are in the middle of an Oops, you have no idea
-of the current state. Another I2C transaction could be under way etc.
-All the current reset drivers are pretty much self contained, atomic
-and use KISS hardware like a GPIO.
-
-Maybe you best bet is to see if you can find any other I2C PMICs which
-the kernel supports.
-
-    Andrew
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBuZXcgc3ludGF4
+IGlzIHNsaWdodGx5IGJldHRlciBkZXNpZ25lZCAmIHVzZXMgImNvbXBhdGlibGUiIHN0cmluZy4K
+Rm9yIGRldGFpbHMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFy
+dGl0aW9uLnR4dCAuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1sdXh1bC14d2MtMTAwMC5kdHMg
+fCAxMiArKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1sdXh1bC14
+d2MtMTAwMC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4LWx1eHVsLXh3Yy0xMDAwLmR0
+cwppbmRleCA1MGQ2NWQ4ZmJkOWEuLjVlZmI2ZjMxMTY0ZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvYmNtNDcwOC1sdXh1bC14d2MtMTAwMC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvYmNtNDcwOC1sdXh1bC14d2MtMTAwMC5kdHMKQEAgLTI2LDkgKzI2LDE1IEBACiAKIAluYW5k
+OiBuYW5kQDE4MDI4MDAwIHsKIAkJbmFuZGNzQDAgewotCQkJcGFydGl0aW9uQDAgewotCQkJCWxh
+YmVsID0gInViaSI7Ci0JCQkJcmVnID0gPDB4MDAwMDAwMDAgMHgwODAwMDAwMD47CisJCQlwYXJ0
+aXRpb25zIHsKKwkJCQljb21wYXRpYmxlID0gImZpeGVkLXBhcnRpdGlvbnMiOworCQkJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDE+OworCisJCQkJcGFydGl0aW9u
+QDAgeworCQkJCQlsYWJlbCA9ICJ1YmkiOworCQkJCQlyZWcgPSA8MHgwMDAwMDAwMCAweDA4MDAw
+MDAwPjsKKwkJCQl9OwogCQkJfTsKIAkJfTsKIAl9OwotLSAKMi4xMS4wCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
