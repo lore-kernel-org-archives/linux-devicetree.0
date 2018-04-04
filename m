@@ -1,44 +1,122 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [v3,4/4] watchdog: add Gateworks System Controller support
-Date: Wed, 4 Apr 2018 09:57:42 -0700
-Message-ID: <CAJ+vNU2RxHngXa00=zx84ifJ6wWh=vN84shRsT5sWYG1G74zeA@mail.gmail.com>
-References: <1522250043-8065-5-git-send-email-tharvey@gateworks.com>
- <20180330010757.GA12896@roeck-us.net> <CAJ+vNU3ARKLK5AcssEP-_P8AmwnAnS8VtAEO1ppwum2jpCqAYQ@mail.gmail.com>
- <20180330181954.GA17580@roeck-us.net> <CAJ+vNU1f+SH16hs3heMA_A2KcbzbXXmJtPxi0uiL4+4tNWgYoQ@mail.gmail.com>
- <20180402163242.GC14165@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v7 0/9] Add Actions Semi S900 pinctrl and gpio support
+Date: Wed,  4 Apr 2018 22:52:49 +0530
+Message-ID: <20180404172258.7678-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180402163242.GC14165@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org, linux-hwmon@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 2, 2018 at 9:32 AM, Andrew Lunn <andrew@lunn.ch> wrote:
->> The 'use case' we have been using this in for a couple years is that
->> users who want to use this watchdog will enable it externally (we have
->> a command in the bootloader) and if enabled the kernel driver (that
->> I'm proposing here which we've been using out-of-tree) will register
->> the watchdog device and the userspace watchdog process can open the
->> device and start tickling it. If the watchdog is never enabled (or
->> disabled via the bootloader command) the kernel driver fails to probe
->> and the SoC's watchdog can be used.
->
-> Hi Tim
->
-> Is there any reason not to give the user the choice to use both
-> watchdogs? Normally you write drivers to expose the hardware, and then
-> let the users choice if they want to use it.
->
+This patchset adds pinctrl and gpio support for Actions Semi S900 SoC.
+Pinctrl and gpio subsystems share the common set of register range but
+implemented as individual drivers for making it less complex.
 
-Andrew,
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-I don't know what value the SoC watchdog has if you have the GSC
-watchdog available that can power cycle the board but I would agree
-normally you would expose all of them. I suppose this may be a
-different case because I'm expecting the user to go and manually
-enable the watchdog instead of using the kernel to do it which means
-if its not enabled its not really available to be used.
+gpio-line-names has been added for the Bubblegum-96 board matching the
+96Boards CE specification v1.0.
 
-Tim
+Both pinctrl and gpio drivers are verified using the Bubblegum-96 board.
+
+This patchset depends on the clock driver which is still under review:
+https://lkml.org/lkml/2018/2/9/831
+
+There is also S500 pinctrl and gpio driver developed by Andreas Farber
+independently to this patchset.
+https://github.com/afaerber/linux/commits/bg96-next
+
+If this patchseries seems to be good enough to add base OWL pinctrl and
+gpio support. Then, we may decide on adding S500 support on top of this later
+by reusing the pinctrl definitions from Andreas.
+
+Thanks,
+Mani
+
+Changes in v7:
+
+* Added spinlock to gpio driver per Andy's suggestion
+* Introduced helper functions, owl_read_field and owl_write_field in pinctrl
+  driver as suggested by Andy
+* Fixed comma usage for structs
+
+Changes in v6:
+
+* Changed owl_gpio_set_reg to owl_gpio_update_reg in gpio driver
+* Reused owl_gpio_update_reg in owl_gpio_set in gpio driver
+* Removed ngpio property from DT for nodes with 32 gpios
+* Fixed size values in DT for gpio nodes
+* Added Reviewed-by tags from Linus for adding gpio-line-names in DT
+
+Changes in v5:
+
+* Removed alias for gpio nodes
+* Removed duplicate address from gpio nodes and modified the driver accordingly
+* Used ngpios property for specifying number of gpios per bank
+* Used generic gpio node name in DT and binding
+* Modified pinctrl driver to save space
+* Dropped pinctrl bindings patch since it got applied
+* Added Reviewed-by tags from Linus for DT and platform Kconfig changes
+
+Changes in v4:
+
+* Incorporated Andy's review for pinctrl driver
+* Used _relaxed functions for pinctrl driver
+* Added Andy's Reviewed-by tag for gpio driver
+* Added (back) Rob's Reviewed-by tag for pinctrl bindings
+
+Changes in v3:
+
+* Simplified owl_gpio_set_reg() with _relaxed functions
+* Added interrupt controller properties to gpio node bindings as suggested
+  by Rob
+* Minor code cleanups
+
+Changes in v2:
+
+* Implemented each GPIO bank as its own gpio-controller
+* Added gpio-ranges property
+* Modified pin group to follow pad names instead of register names
+* Incorporated review comments from Andy
+* Incorporated review comments from Andreas
+* Fixed the MODULE_LICENSE with respect to SPDX tag
+* Added Reviewed by tag from Rob for pinctrl binding
+
+Manivannan Sadhasivam (9):
+  arm64: dts: actions: Add pinctrl node for S900
+  arm64: actions: Enable PINCTRL in platforms Kconfig
+  pinctrl: actions: Add Actions S900 pinctrl driver
+  dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+  arm64: dts: actions: Add S900 gpio nodes
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  gpio: Add gpio driver for Actions OWL S900 SoC
+  MAINTAINERS: Add reviewer for ACTIONS platforms
+  MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
+
+ .../devicetree/bindings/gpio/actions,owl-gpio.txt  |   87 +
+ MAINTAINERS                                        |    5 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  |  195 ++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   57 +
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-owl.c                            |  184 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/actions/Kconfig                    |   12 +
+ drivers/pinctrl/actions/Makefile                   |    2 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |  585 ++++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  142 ++
+ drivers/pinctrl/actions/pinctrl-s900.c             | 1861 ++++++++++++++++++++
+ 15 files changed, 3142 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+ create mode 100644 drivers/gpio/gpio-owl.c
+ create mode 100644 drivers/pinctrl/actions/Kconfig
+ create mode 100644 drivers/pinctrl/actions/Makefile
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
+
+-- 
+2.14.1
