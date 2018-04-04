@@ -1,66 +1,68 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 2/5] drm: bridge: add API to query the expected input
- formats of bridges
-Date: Wed, 4 Apr 2018 16:40:03 +0200
-Message-ID: <9463e10c-120f-28f1-ef38-b0c8acedd1bd@axentia.se>
-References: <20180326212447.7380-1-peda@axentia.se>
- <fcc47402-d758-4062-0565-f5977b85b206@axentia.se>
- <20180327130231.GO27746@w540> <1811029.jLvDxETu2H@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/4] mfd: add Gateworks System Controller core driver
+Date: Wed, 4 Apr 2018 15:41:19 +0100
+Message-ID: <20180404144119.GD7691@sirena.org.uk>
+References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
+ <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
+ <CAJ+vNU3-gaTcMAzo5wB6oSfE-JQC3NBVRJS5zFMTE-nVpD4F5g@mail.gmail.com>
+ <20180403164715.GA5676@lunn.ch>
+ <CAJ+vNU31f+iY5LOG6QmdJetb=pPvY_gpKoS+49FSy70U1Ksd8g@mail.gmail.com>
+ <20180404131239.GD20869@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5gxpn/Q6ypwruk0T"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1811029.jLvDxETu2H@avalon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180404131239.GD20869@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jacopo mondi <jacopo@jmondi.org>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Daniel Vetter <daniel.vetter@intel.com>, Gustavo Padovan <gustavo@padovan.org>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Tim Harvey <tharvey@gateworks.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-04 15:07, Laurent Pinchart wrote:
-> First of all, thank you for the patch. This generates more discussion than I 
-> had anticipated, which is both good and bad. I'll comment through the e-mail, 
-> and try to explain both my initial idea, and also where it could lead us.
 
-*snip*
+--5gxpn/Q6ypwruk0T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for the long interesting mail! I will read it again, but my
-immediate reaction is that I am not the man to attempt anything heavier
-than static format information in drm bridges, and that I will hold off
-any further work until some consensus has been reached.
+On Wed, Apr 04, 2018 at 03:12:39PM +0200, Andrew Lunn wrote:
+> > What about the 'reset' functionality? Is there something in the power
+> > supply API for hooking in a GPIO based power switch (in my case it
+> > would be i2c) as I would think that would be common for ATX supplies?
+> > I didn't see anything in Documentation/power.
 
-> Finally, still regarding Peter's case, the decision to output RGB565 instead 
-> of RGB888 (which the LVDS encoder expects) is due to PCB routing between the 
-> display controller and the LVDS encoder. This isn't a property of the LVDS 
-> encoder or the display controller, but of their hardware connection. This 
-> patch series uses a DT property in the LVDS encoder DT node to convey that 
-> information, but wouldn't it be equally correct (or incorrect :-)) to instead 
-> use a DT property in the display controller DT node ?
+> > This is what led me to the restart handler idea. Ultimately when
+> > someone issues a 'reboot' I would like it to use the GSC to
+> > power-cycle the board.
 
-Right, it might even be more correct to do it there? Thinking about it, I
-have this in the DT
+> I think you end up with the same problem. By the time you need to turn
+> the power supply off, too much of the kernel is shut down to be able
+> to use I2C. And if you are in the middle of an Oops, you have no idea
+> of the current state. Another I2C transaction could be under way etc.
+> All the current reset drivers are pretty much self contained, atomic
+> and use KISS hardware like a GPIO.
 
-#include "sama5d3_lcd.dtsi"
+> Maybe you best bet is to see if you can find any other I2C PMICs which
+> the kernel supports.
 
-&hlcdc {
-	hlcdc-display-controller {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+Most systems have a handshake for final power down via asserting signals
+rather than using register writes, the final power down sequence usually
+runs way after software.  There's a few things that don't which just
+unceremoniously cut the power earlier on without completing the full
+power down sequence which for all practical purposes mostly works.
 
-		port@0 {
-			hlcdc_output: endpoint {
-				remote-endpoint = <&lvds_encoder_input>;
-			};
-		};
-	};
-};
+--5gxpn/Q6ypwruk0T
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Where the &pinctrl_lcd_rgb565 handle tells the chip to not even bother
-routing all of the rgb888 signals to pins and thus not waste pins that
-are in fact used for other things. Maybe it is possible for the hlcdc
-driver to look at that info and suggest rgb565 instead of rgb888 without
-anything further in the DT? But maybe it's difficult to peek into pinctrl
-bindings like that?
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Peter
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrE5A4ACgkQJNaLcl1U
+h9DgoAf+NlREIN0n4GCyKvQf462pdjqt/gmnsC2BNEK8Mj1EUiX+m6x776go5EtQ
+1Ss8tiBw6FqizVl/UEreGaSKAla/G3ksf4WXY8Y1DLnh86vLF13njlSFTSTUd+9I
+R+FuERcjkksvH47j2+xhznMf8gTSrlzJnnuWPjqfFXMlGCeOIdeiNpg/CzcTYnBD
+q2SZYWYAaqA9fJ8rc6ZDealK5U1cnCzyZiJCqGDBHtl3PgmZWFXjHAMfM86MfY9p
+2yur6ADSkx9kOwe20LA8aZGcU9EZzAhiRakUm4d/ovXH+w+faj+rt+UH943uabZW
+8i7kHaRzOBsVCA11FgDYY14UcJcXDQ==
+=3nwB
+-----END PGP SIGNATURE-----
+
+--5gxpn/Q6ypwruk0T--
