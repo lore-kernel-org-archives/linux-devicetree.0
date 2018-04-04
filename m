@@ -1,32 +1,38 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] doc: Add vendor prefix for Kieback & Peter GmbH
-Date: Wed,  4 Apr 2018 09:52:04 +0200
-Message-ID: <20180404075204.11417-1-lukma@denx.de>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: Multiple generic PHY instances for DWC3 USB IP
+Date: Wed, 04 Apr 2018 11:00:54 +0300
+Message-ID: <87woxns8nd.fsf@linux.intel.com>
+References: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com> <87vad7cz2i.fsf@linux.intel.com> <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com> <87po3fcxs4.fsf@linux.intel.com> <CAK7LNATpFZYK-f4j7sJpur-u43bK1gsz_eS1wurTq7C+n6pHAw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATpFZYK-f4j7sJpur-u43bK1gsz_eS1wurTq7C+n6pHAw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The 'kiebackpeter' entry has been added to vendor-prefixes.txt to indicate
-products from Kieback & Peter GmbH.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ae850d6c0ad3..8ff7eadc8bef 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -181,6 +181,7 @@ karo	Ka-Ro electronics GmbH
- keithkoep	Keith & Koep GmbH
- keymile	Keymile GmbH
- khadas	Khadas
-+kiebackpeter    Kieback & Peter GmbH
- kinetic Kinetic Technologies
- kingnovel	Kingnovel Technology Co., Ltd.
- kosagi	Sutajio Ko-Usagi PTE Ltd.
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>>> Each DWC3 instance is connected with
+>>> multiple HS PHYs and multiple SS PHYs,
+>>> depending on the number of ports.
+>>
+>> in that case, you shouldn't need dwc3 at all. A Host-only dwc3 is xHCI
+>> compliant. If you really don't have the gadget block, there's no need
+>> for you to use dwc3. Just use xhci-plat directly.
+>
+> Sorry, I was misunderstanding.
+>
+> Some of our SoCs support gadget,
+> so we need to use the dwc3 driver.
+
+fair enough. Now we need to figure out how to pass multiply PHYs to a
+multi-port dwc3 instance.
+
+Kishon, any ideas? How do you think DT should look like?
+
 -- 
-2.11.0
+balbi
