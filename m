@@ -1,41 +1,43 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 0/5] Hi3660: enable power management features
-Date: Wed,  4 Apr 2018 11:14:30 +0800
-Message-ID: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH 1/5] dts: arm64: hi3660: Add mailbox node
+Date: Wed,  4 Apr 2018 11:14:31 +0800
+Message-ID: <1522811675-12741-2-git-send-email-leo.yan@linaro.org>
+References: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Wei Xu <xuwei5@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Kaihua Zhong <zhongkaihua@huawei.com>, Tao Wang <kevin.wangtao@hisilicon.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Ruyi Wang <wangruyi@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Since hi3660 drivers have been merged into Linux kernel (mailbox driver is in
-Linux-next branch and other drivers are existed in Linux mainline kernel), so
-this patch series is to enable power management features on hi3660.
+From: Kaihua Zhong <zhongkaihua@huawei.com>
 
-This patch series includes device tree binding for mailbox, stub clock and CPU
-OPPs, and has one patch to consolidate the Kconfigs for driver modules.
+Add the mailbox controller node for hi3660 platform.
 
-This patch set have been tested on Hikey960 and also verified the patch 'hisi:
-Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX' for Hikey620.
+Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
+Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-Daniel Lezcano (1):
-  hisi: Consolidate the Kconfigs for the CLOCK_STUB and the MAILBOX
-
-Kaihua Zhong (2):
-  dts: arm64: hi3660: Add mailbox node
-  dts: arm64: hi3660: Add stub clock node
-
-Leo Yan (1):
-  dts: arm64: hi3660: Add CPU frequency scaling support
-
-Tao Wang (1):
-  dts: arm64: hi3660: Add thermal cooling management
-
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 145 ++++++++++++++++++++++++++++++
- arch/arm64/configs/defconfig              |   1 -
- drivers/clk/hisilicon/Kconfig             |  13 +--
- drivers/mailbox/Kconfig                   |  12 ++-
- 4 files changed, 161 insertions(+), 10 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index ec3eb8e..b9e7c91 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -274,6 +274,14 @@
+ 			#reset-cells = <2>;
+ 		};
+ 
++		mailbox: mailbox@e896b000 {
++			compatible = "hisilicon,hi3660-mbox";
++			reg = <0x0 0xe896b000 0x0 0x1000>;
++			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <3>;
++		};
++
+ 		dual_timer0: timer@fff14000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x0 0xfff14000 0x0 0x1000>;
 -- 
 1.9.1
