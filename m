@@ -1,62 +1,62 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Wed, 4 Apr 2018 13:33:02 +0300
-Message-ID: <c6afad26-c015-d24b-b36f-d5266042621c@ti.com>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <4932838.akKzjW5mjy@avalon> <8dd97211-a4b4-cd8e-f9ef-896adfb95d81@ti.com>
- <3403759.MX1QIus5OE@avalon>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: Multiple generic PHY instances for DWC3 USB IP
+Date: Wed, 4 Apr 2018 19:33:13 +0900
+Message-ID: <CAK7LNAQae2RAnVJtGdoQDuOHjP6MDptGrvWuQoJAzQ269p_k-Q@mail.gmail.com>
+References: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com>
+ <87vad7cz2i.fsf@linux.intel.com> <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com>
+ <87po3fcxs4.fsf@linux.intel.com> <CAK7LNATpFZYK-f4j7sJpur-u43bK1gsz_eS1wurTq7C+n6pHAw@mail.gmail.com>
+ <87woxns8nd.fsf@linux.intel.com> <CAK8P3a0t4ooQNJrak_r_Qc2T4UeQB9k3SgStuaBptV2DcA8SBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3403759.MX1QIus5OE@avalon>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0t4ooQNJrak_r_Qc2T4UeQB9k3SgStuaBptV2DcA8SBA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMDQvMTggMTM6MjgsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gSGkgVG9taSwKPiAK
-PiBPbiBXZWRuZXNkYXksIDQgQXByaWwgMjAxOCAxMzowMjowNCBFRVNUIFRvbWkgVmFsa2VpbmVu
-IHdyb3RlOgo+PiBPbiAwNC8wNC8xOCAxMjo1MSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPj4+
-IE9uIFdlZG5lc2RheSwgNCBBcHJpbCAyMDE4IDEwOjM3OjA1IEVFU1QgVG9taSBWYWxrZWluZW4g
-d3JvdGU6Cj4+Pj4gT24gMDQvMDQvMTggMDA6MTEsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+
-Pj4+IEkgYXNzdW1lIGFjY2VzcyB0byBETU0tbWFwcGVkIGJ1ZmZlcnMgdG8gYmUgd2F5IG1vcmUg
-ZnJlcXVlbnQgdGhhbgo+Pj4+PiBhY2Nlc3MgdG8gdGhlIERNTSByZWdpc3RlcnMuIElmIHRoYXQn
-cyB0aGUgY2FzZSwgdGhpcyBwYXJ0aWFsIHdvcmthcm91bmQKPj4+Pj4gc2hvdWxkIG9ubHkgc2xp
-Z2h0bHkgbG93ZXIgdGhlIHByb2JhYmlsaXR5IG9mIHN5c3RlbSBsb2NrLXVwLiBEbyB5b3UKPj4+
-Pj4gaGF2ZSBwbGFucyB0byBpbXBsZW1lbnQgYSB3b3JrYXJvdW5kIHRoYXQgd2lsbCBmaXggdGhl
-IHByb2JsZW0KPj4+Pj4gY29tcGxldGVseSA/Cj4+Pj4KPj4+PiBDUFUgb25seSBhY2Nlc3NlcyBt
-ZW1vcnkgdmlhIERNTSB3aGVuIHVzaW5nIFRJTEVSIDJEIGJ1ZmZlcnMsIHdoaWNoIGFyZQo+Pj4+
-IG5vdCBvZmZpY2lhbGx5IHN1cHBvcnRlZC4gRm9yIG5vbi0yRCwgdGhlIHBhZ2VzIGFyZSBtYXBw
-ZWQgZGlyZWN0bHkgdG8KPj4+PiB0aGUgQ1BVIHdpdGhvdXQgRE1NIGluIGJldHdlZW4uCj4+Pgo+
-Pj4gV2hhdCBpcyB0aGUgRE1NIHVzZWQgZm9yIHdpdGggbm9uLTJEIHRoZW4gPyBEb2VzIGl0IG5l
-ZWQgdG8gYmUgc2V0dXAgYXQKPj4+IGFsbCA/Cj4+Cj4+IEl0IGNyZWF0ZXMgYSBjb250aWd1b3Vz
-IHZpZXcgb2YgbWVtb3J5IGZvciBJUHMgd2l0aG91dCBJT01NVXMsIGxpa2UgRFNTLgo+IAo+IE9L
-LCBnb3QgaXQuIEluIHRoYXQgY2FzZSB0aGUgQ1BVIGFjY2Vzc2VzIGRvbid0IG5lZWQgdG8gZ28g
-dGhyb3VnaCB0aGUgRE1NLCAKPiBvbmx5IHRoZSBkZXZpY2UgYWNjZXNzZXMgZG8sIGFzIHRoZSBD
-UFUgd2lsbCBnbyB0aHJvdWdoIHRoZSBNTVUuIFNvcnJ5IGZvciB0aGUgCj4gbm9pc2UuCgpTbGln
-aHRseSByZWxhdGVkLCBqdXN0IHRoaW5raW5nIG91dCBsb3VkOgoKVGhpcyBpcyB0aGUgZmlyc3Qg
-cGFydCBvZiB0aGUgd29yay1hcm91bmQuIFRoZSBvdGhlciBwYXJ0IHdvdWxkIGJlIHRvCm1ha2Ug
-VElMRVIgMkQgYXZhaWxhYmxlIHRvIHRoZSBDUFUgdmlhIHNvbWUga2luZCBvZiBpbmRpcmVjdCBh
-Y2Nlc3MuClRJTEVSIDJEIG1lbW9yeSBpcyBtYXBwZWQgaW4gYSBjdXN0b20gd2F5IHRvIHRoZSBD
-UFUgZXZlbiBub3cgKGlmIEkKcmVjYWxsIHJpZ2h0LCBvbmx5IHR3byBwYWdlcyBhcmUgbWFwcGVk
-IGF0IG9uY2UsIHdpdGggYSBjdXN0b20gRE1NCm1hcHBpbmcgZm9yIHRob3NlKS4KCkkgdGhpbmsg
-c0RNQSB3b3VsZCBiZSB0aGUgY2hvaWNlIHRoZXJlIHRvbywgYWxsb2NhdGluZyB0d28gcGFnZXMg
-YXMgYQoiY2FjaGUiIGFuZCB1c2luZyBzRE1BIHRvIGZpbGwgYW5kIGZsdXNoIHRob3NlIHBhZ2Vz
-LgoKSSBoYXZlbid0IHNwZW50IGFueSB0aW1lIG9uIHRoYXQsIGFzIFRJTEVSIDJEIGhhcyBvdGhl
-ciBpc3N1ZXMgYW5kIGlzCm5vdCB2ZXJ5IHVzYWJsZS4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1
-bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVu
-bnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtp
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Arnd,
+
+2018-04-04 17:43 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wed, Apr 4, 2018 at 10:00 AM, Felipe Balbi
+> <felipe.balbi@linux.intel.com> wrote:
+>>
+>> Hi,
+>>
+>> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>>>>> Each DWC3 instance is connected with
+>>>>> multiple HS PHYs and multiple SS PHYs,
+>>>>> depending on the number of ports.
+>>>>
+>>>> in that case, you shouldn't need dwc3 at all. A Host-only dwc3 is xHCI
+>>>> compliant. If you really don't have the gadget block, there's no need
+>>>> for you to use dwc3. Just use xhci-plat directly.
+>>>
+>>> Sorry, I was misunderstanding.
+>>>
+>>> Some of our SoCs support gadget,
+>>> so we need to use the dwc3 driver.
+>>
+>> fair enough. Now we need to figure out how to pass multiply PHYs to a
+>> multi-port dwc3 instance.
+>>
+>> Kishon, any ideas? How do you think DT should look like?
+>
+> See this series from Martin Blumenstingl:
+>
+> https://www.spinics.net/lists/linux-usb/msg166281.html
+>
+>       Arnd
+
+
+Very useful information!
+
+Not tested yet, but I quickly reviewed the series visually,
+and probably this will work for us.
+
+Thanks!
+
+
+-- 
+Best Regards
+Masahiro Yamada
