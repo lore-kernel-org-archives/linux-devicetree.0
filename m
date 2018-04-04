@@ -1,155 +1,74 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v5 07/13] ARM: smp: Add initialization of CNTVOFF
-Date: Wed, 4 Apr 2018 15:59:09 +0200
-Message-ID: <20180404155909.148085f7@dell-desktop.home>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
-        <20180403061836.3926-8-mylene.josserand@bootlin.com>
-        <06308f46-ce7c-ddeb-ebca-abd1153138ba@arm.com>
+From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
+Date: Thu, 5 Apr 2018 00:04:01 +1000
+Message-ID: <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
+References: <20180403142415.30083-1-oohall@gmail.com>
+ <20180403142415.30083-3-oohall@gmail.com>
+ <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
+ <20180404220750.0436bbe1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <06308f46-ce7c-ddeb-ebca-abd1153138ba@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux@armlinux.org.uk, maxime.ripard@bootlin.com, wens@csie.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180404220750.0436bbe1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Wed, Apr 4, 2018 at 10:07 PM, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, 3 Apr 2018 10:37:51 -0700
+> Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> On Tue, Apr 3, 2018 at 7:24 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > Add device-tree binding documentation for the nvdimm region driver.
+>> >
+>> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> > v2: Changed name from nvdimm-region to pmem-region.
+>> >     Cleaned up the example binding and fixed the overlapping regions.
+>> >     Added support for multiple regions in a single reg.
+>> > ---
+>> >  .../devicetree/bindings/pmem/pmem-region.txt       | 80 ++++++++++++++++++++++
+>> >  MAINTAINERS                                        |  1 +
+>> >  2 files changed, 81 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+>>
+>> Device-tree folks, does this look, ok?
+>>
+>> Oliver, is there any concept of a management interface to the
+>> device(s) backing these regions? libnvdimm calls these "nmem" devices
+>> and support operations like health status and namespace label
+>> management.
 
-Thank you for the review.
+It's something I'm planning on implementing as soon as someone gives
+me some hardware that isn't hacked up lab crap. I'm posting this
+version with just regions since people have been asking for something
+in upstream even if it's not fully featured.
 
-On Wed, 4 Apr 2018 14:01:48 +0100
-Marc Zyngier <marc.zyngier@arm.com> wrote:
+Grumbling aside, the plan is to have separate drivers for the DIMM
+type. Discovering DIMM devices happens via the normal discovery
+mechanisms (e.g. an NVDIMM supporting the JEDEC interface is an I2C
+device) and when binding to a specific DIMM device it registers a DIMM
+descriptor structure and a ndctl implementation for that DIMM type
+with of_pmem. When of_pmem binds to a region it can plug everything
+into the region specific bus. There's a few details to work out, but I
+think it's a reasonable approach.
 
-> Hi Mylène,
-> 
-> On 03/04/18 07:18, Mylène Josserand wrote:
-> > The CNTVOFF register from arch timer is uninitialized.
-> > It should be done by the bootloader but it is currently not the case,
-> > even for boot CPU because this SoC is booting in secure mode.
-> > It leads to an random offset value meaning that each CPU will have a
-> > different time, which isn't working very well.
-> > 
-> > Add assembly code used for boot CPU and secondary CPU cores to make
-> > sure that the CNTVOFF register is initialized. Because this code can
-> > be used by different platforms, add this assembly file in ARM's common
-> > folder.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  arch/arm/common/Makefile           |  1 +
-> >  arch/arm/common/smp_cntvoff.S      | 35 +++++++++++++++++++++++++++++++++++
-> >  arch/arm/include/asm/smp_cntvoff.h |  8 ++++++++
-> >  3 files changed, 44 insertions(+)
-> >  create mode 100644 arch/arm/common/smp_cntvoff.S
-> >  create mode 100644 arch/arm/include/asm/smp_cntvoff.h
-> > 
-> > diff --git a/arch/arm/common/Makefile b/arch/arm/common/Makefile
-> > index 70b4a14ed993..83117deb86c8 100644
-> > --- a/arch/arm/common/Makefile
-> > +++ b/arch/arm/common/Makefile
-> > @@ -10,6 +10,7 @@ obj-$(CONFIG_DMABOUNCE)		+= dmabounce.o
-> >  obj-$(CONFIG_SHARP_LOCOMO)	+= locomo.o
-> >  obj-$(CONFIG_SHARP_PARAM)	+= sharpsl_param.o
-> >  obj-$(CONFIG_SHARP_SCOOP)	+= scoop.o
-> > +obj-$(CONFIG_SMP)		+= smp_cntvoff.o
-> >  obj-$(CONFIG_PCI_HOST_ITE8152)  += it8152.o
-> >  obj-$(CONFIG_MCPM)		+= mcpm_head.o mcpm_entry.o mcpm_platsmp.o vlock.o
-> >  CFLAGS_REMOVE_mcpm_entry.o	= -pg
-> > diff --git a/arch/arm/common/smp_cntvoff.S b/arch/arm/common/smp_cntvoff.S
-> > new file mode 100644
-> > index 000000000000..65ed199a50fe
-> > --- /dev/null
-> > +++ b/arch/arm/common/smp_cntvoff.S
-> > @@ -0,0 +1,35 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2018 Chen-Yu Tsai
-> > + * Copyright (c) 2018 Bootlin
-> > + *
-> > + * Chen-Yu Tsai <wens@csie.org>
-> > + * Mylène Josserand <mylene.josserand@bootlin.com>  
-> 
-> Given that this is literally lifted from shmobile_init_cntvoff, the
-> whole attribution is a bit dubious.
+> We would need a way to have nmem and pmem-regions find each other. Since we
+> don't have the ACPI abstractions, the nmem region would need to add the
+> ability for a driver to have a phandle to the interleaving and nmem properties.
+>
+> I guess that would be a separate driver, that would manage the nmem devices
+> and there would be a way to relate the pmem and nmems. Oliver?
 
-Yes, sorry, I will fix that.
-
-> 
-> > + *
-> > + * SMP support for sunxi based systems with Cortex A7/A15  
-> 
-> That's not restricted to sunxi, is it?
-
-Nope, I will update this line too (bad copy-paste from
-sunxi/headsmp.S...)
-
-> 
-> > + *
-> > + */
-> > +
-> > +#include <linux/linkage.h>
-> > +#include <asm/assembler.h>
-> > +
-> > +ENTRY(smp_init_cntvoff)  
-> 
-> The name doesn't quite reflect the usage constraints. This will only
-> work if used from secure, and is UNPREDICTABLE otherwise (see the CPS
-> instruction). Also, the "smp" prefix is quite misleading, as it only
-> affects the current CPU, and not any other.
-> 
-> How about secure_cntvoff_init instead? Same thing for the file name.
-
-Sure, this name is fine for me.
-
-> 
-> > +	.arch	armv7-a
-> > +	/*
-> > +	 * CNTVOFF has to be initialized either from non-secure Hypervisor
-> > +	 * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
-> > +	 * then it should be handled by the secure code
-> > +	 */
-> > +	cps	#MON_MODE
-> > +	mrc	p15, 0, r1, c1, c1, 0		/* Get Secure Config */
-> > +	orr	r0, r1, #1
-> > +	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
-> > +	isb
-> > +	mov	r0, #0
-> > +	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF = 0 */
-> > +	isb
-> > +	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
-> > +	isb
-> > +	cps	#SVC_MODE
-> > +	ret	lr
-> > +ENDPROC(smp_init_cntvoff)
-> > diff --git a/arch/arm/include/asm/smp_cntvoff.h b/arch/arm/include/asm/smp_cntvoff.h
-> > new file mode 100644
-> > index 000000000000..59a95f7604ee
-> > --- /dev/null
-> > +++ b/arch/arm/include/asm/smp_cntvoff.h
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#ifndef __ASMARM_ARCH_CNTVOFF_H
-> > +#define __ASMARM_ARCH_CNTVOFF_H
-> > +
-> > +extern void smp_init_cntvoff(void);
-> > +
-> > +#endif
-> >   
-> 
-> It'd be good to take this opportunity to refactor the shmobile code.
-
-I can do it in this series but I do not have any shmobile platforms so
-I will not be able to test my modifications (only compilation).
-
-If someone can test it for me (who?), it is okay for me to refactor this
-code :)
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Yes, that's the plan.
