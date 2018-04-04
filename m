@@ -1,74 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
- i878
-Date: Wed, 04 Apr 2018 14:17:23 +0300
-Message-ID: <1561664.RVAzNdDqiG@avalon>
-References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
- <3403759.MX1QIus5OE@avalon> <c6afad26-c015-d24b-b36f-d5266042621c@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
+ designware driver
+Date: Wed, 4 Apr 2018 12:50:14 +0100
+Message-ID: <20180404115014.GC24669@red-moon>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+ <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c6afad26-c015-d24b-b36f-d5266042621c@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: bhelgaas@google.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIFdlZG5lc2RheSwgNCBBcHJpbCAyMDE4IDEzOjMzOjAyIEVFU1QgVG9taSBW
-YWxrZWluZW4gd3JvdGU6Cj4gT24gMDQvMDQvMTggMTM6MjgsIExhdXJlbnQgUGluY2hhcnQgd3Jv
-dGU6Cj4gPiBPbiBXZWRuZXNkYXksIDQgQXByaWwgMjAxOCAxMzowMjowNCBFRVNUIFRvbWkgVmFs
-a2VpbmVuIHdyb3RlOgo+ID4+IE9uIDA0LzA0LzE4IDEyOjUxLCBMYXVyZW50IFBpbmNoYXJ0IHdy
-b3RlOgo+ID4+PiBPbiBXZWRuZXNkYXksIDQgQXByaWwgMjAxOCAxMDozNzowNSBFRVNUIFRvbWkg
-VmFsa2VpbmVuIHdyb3RlOgo+ID4+Pj4gT24gMDQvMDQvMTggMDA6MTEsIExhdXJlbnQgUGluY2hh
-cnQgd3JvdGU6Cj4gPj4+Pj4gSSBhc3N1bWUgYWNjZXNzIHRvIERNTS1tYXBwZWQgYnVmZmVycyB0
-byBiZSB3YXkgbW9yZSBmcmVxdWVudCB0aGFuCj4gPj4+Pj4gYWNjZXNzIHRvIHRoZSBETU0gcmVn
-aXN0ZXJzLiBJZiB0aGF0J3MgdGhlIGNhc2UsIHRoaXMgcGFydGlhbAo+ID4+Pj4+IHdvcmthcm91
-bmQgc2hvdWxkIG9ubHkgc2xpZ2h0bHkgbG93ZXIgdGhlIHByb2JhYmlsaXR5IG9mIHN5c3RlbSBs
-b2NrLQo+ID4+Pj4+IHVwLiBEbyB5b3UgaGF2ZSBwbGFucyB0byBpbXBsZW1lbnQgYSB3b3JrYXJv
-dW5kIHRoYXQgd2lsbCBmaXggdGhlCj4gPj4+Pj4gcHJvYmxlbSBjb21wbGV0ZWx5ID8KPiA+Pj4+
-IAo+ID4+Pj4gQ1BVIG9ubHkgYWNjZXNzZXMgbWVtb3J5IHZpYSBETU0gd2hlbiB1c2luZyBUSUxF
-UiAyRCBidWZmZXJzLCB3aGljaCBhcmUKPiA+Pj4+IG5vdCBvZmZpY2lhbGx5IHN1cHBvcnRlZC4g
-Rm9yIG5vbi0yRCwgdGhlIHBhZ2VzIGFyZSBtYXBwZWQgZGlyZWN0bHkgdG8KPiA+Pj4+IHRoZSBD
-UFUgd2l0aG91dCBETU0gaW4gYmV0d2Vlbi4KPiA+Pj4gCj4gPj4+IFdoYXQgaXMgdGhlIERNTSB1
-c2VkIGZvciB3aXRoIG5vbi0yRCB0aGVuID8gRG9lcyBpdCBuZWVkIHRvIGJlIHNldHVwIGF0Cj4g
-Pj4+IGFsbCA/Cj4gPj4gCj4gPj4gSXQgY3JlYXRlcyBhIGNvbnRpZ3VvdXMgdmlldyBvZiBtZW1v
-cnkgZm9yIElQcyB3aXRob3V0IElPTU1VcywgbGlrZSBEU1MuCj4gPiAKPiA+IE9LLCBnb3QgaXQu
-IEluIHRoYXQgY2FzZSB0aGUgQ1BVIGFjY2Vzc2VzIGRvbid0IG5lZWQgdG8gZ28gdGhyb3VnaCB0
-aGUKPiA+IERNTSwgb25seSB0aGUgZGV2aWNlIGFjY2Vzc2VzIGRvLCBhcyB0aGUgQ1BVIHdpbGwg
-Z28gdGhyb3VnaCB0aGUgTU1VLgo+ID4gU29ycnkgZm9yIHRoZSBub2lzZS4KPiAKPiBTbGlnaHRs
-eSByZWxhdGVkLCBqdXN0IHRoaW5raW5nIG91dCBsb3VkOgo+IAo+IFRoaXMgaXMgdGhlIGZpcnN0
-IHBhcnQgb2YgdGhlIHdvcmstYXJvdW5kLiBUaGUgb3RoZXIgcGFydCB3b3VsZCBiZSB0bwo+IG1h
-a2UgVElMRVIgMkQgYXZhaWxhYmxlIHRvIHRoZSBDUFUgdmlhIHNvbWUga2luZCBvZiBpbmRpcmVj
-dCBhY2Nlc3MuCj4gVElMRVIgMkQgbWVtb3J5IGlzIG1hcHBlZCBpbiBhIGN1c3RvbSB3YXkgdG8g
-dGhlIENQVSBldmVuIG5vdyAoaWYgSQo+IHJlY2FsbCByaWdodCwgb25seSB0d28gcGFnZXMgYXJl
-IG1hcHBlZCBhdCBvbmNlLCB3aXRoIGEgY3VzdG9tIERNTQo+IG1hcHBpbmcgZm9yIHRob3NlKS4K
-PiAKPiBJIHRoaW5rIHNETUEgd291bGQgYmUgdGhlIGNob2ljZSB0aGVyZSB0b28sIGFsbG9jYXRp
-bmcgdHdvIHBhZ2VzIGFzIGEKPiAiY2FjaGUiIGFuZCB1c2luZyBzRE1BIHRvIGZpbGwgYW5kIGZs
-dXNoIHRob3NlIHBhZ2VzLgoKVGhpbmtpbmcgb3V0IGxvdWQgdG9vLCBJIHN1cHBvc2Ugd2Ugd291
-bGQgdHJpZ2dlciB0aGUgc0RNQSB0byBmbHVzaCB0aGUgcGFnZSAKb3V0IHdoZW4gaXQgaGFzIHRv
-IGJlIGV2aWN0ZWQgZnJvbSB0aGUgdXNlcmdhcnQsIHRocm91Z2ggdGhlIHNhbWUgbWVjaGFuaXNt
-IHdlIAp1c2UgdG8gZXZpY3QgdGhlIFRJTEVSIDJEIG1hcHBpbmcgbm93LiBJZiB0aGUgc0RNQSBp
-cyBmYXN0IGVub3VnaCBpdCBjb3VsZCAKY29tcGxldGUgYmVmb3JlIHRoZSBDUFUgZmlsbHMgdGhl
-IG5leHQgcGFnZSwgYW5kIHdlIHdvdWxkbid0IGhhdmUgYW55IApub3RpY2VhYmxlIGRlbGF5ICh0
-aGVyZSB3b3VsZCBiZSBleHRyYSBtZW1vcnkgYmFuZHdpZHRoIGNvbnN1bXB0aW9uIHRob3VnaCku
-CgpIb3dldmVyLCB3aGVuIGZhdWx0aW5nIGEgcGFnZSBpbiwgd2Ugd291bGQgYWxzbyBuZWVkIHRv
-IHVzZSBzRE1BIHRvIHJlYWQgdGhlIApkYXRhLCByaWdodCA/IFRoYXQgc0RNQSB0cmFuc2ZlciBj
-b3VsZCBvbmx5IGJlIHRyaWdnZXJlZCBhdCB0aGUgdGltZSBvZiB0aGUgCnBhZ2UgZmF1bHQsIHNv
-IGV2ZXJ5IGFjY2VzcyByZXN1bHRpbmcgaW4gYSBmYXVsdCB3b3VsZCBiZSBkZWxheWVkIGJ5IGEg
-cGFnZS0Kc2l6ZWQgc0RNQSB0cmFuc2Zlci4gSSB3b25kZXIgaWYgdGhlIHJlc3VsdGluZyBwZXJm
-b3JtYW5jZXMgd291bGQgYmUgCmFjY2VwdGFibGUuCgo+IEkgaGF2ZW4ndCBzcGVudCBhbnkgdGlt
-ZSBvbiB0aGF0LCBhcyBUSUxFUiAyRCBoYXMgb3RoZXIgaXNzdWVzIGFuZCBpcwo+IG5vdCB2ZXJ5
-IHVzYWJsZS4KCk1heWJlIHdlIHNob3VsZCBqdXN0IG5vdCB1c2UgaXQgdGhlbiA7LSkKCi0tIApS
-ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Mar 28, 2018 at 12:38:33PM +0100, Gustavo Pimentel wrote:
+
+Please always write a commit log even if it is trivial.
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 6300762..4bb2e08 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -3,6 +3,7 @@
+>  Required properties:
+>  - compatible:
+>  	"snps,dw-pcie" for RC mode;
+> +	"snps,dw-pcie-ep" for EP mode;
+>  - reg: Should contain the configuration address space.
+>  - reg-names: Must be "config" for the PCIe configuration space.
+>      (The old way of getting the configuration address space from "ranges"
+> @@ -56,3 +57,15 @@ Example configuration:
+>  		#interrupt-cells = <1>;
+>  		num-lanes = <1>;
+>  	};
+> +or
+> +	pcie_ep: pcie_ep@dfc00000 {
+> +		compatible = "snps,dw-pcie-ep";
+> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
+> +		      <0xd0000000 0x2000000>; /* Configuration space */
+> +		reg-names = "dbi", "dbi2", "addr_space";
+> +		device_type = "pci";
+> +		num-ib-windows = <6>;
+> +		num-ob-windows = <2>;
+> +		num-lanes = <1>;
+> +	};
+> -- 
+> 2.7.4
+> 
+> 
