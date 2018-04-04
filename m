@@ -1,55 +1,34 @@
-Return-Path: <SRS0=k1Fe=G7=prevas.dk=Sean.Nyekjaer@kernel.org>
-From: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Subject: [RFC PATCH v2 2/2] iio: ti-dac5571: Add DT binding documentation
-Date: Tue, 10 Apr 2018 10:44:53 +0200
-Message-Id: <20180410084453.6189-2-sean.nyekjaer@prevas.dk>
-In-Reply-To: <20180410084453.6189-1-sean.nyekjaer@prevas.dk>
-References: <20180322102336.32268-1-sean.nyekjaer@prevas.dk>
- <20180410084453.6189-1-sean.nyekjaer@prevas.dk>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=18ew=GZ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 0/2] Add Renesas r8a77470 PFC driver
+Date: Wed,  4 Apr 2018 16:22:55 +0100
+Message-Id: <1522855377-48527-1-git-send-email-biju.das@bp.renesas.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Adding binding documentation for Texas Instruments DAC5571 Family
+Hi,
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/iio/dac/ti,dac5571.txt           | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
+This patch series aims to add support for r8a77470 PFC driver
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
-new file mode 100644
-index 000000000000..03af6b9a4d07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ti,dac5571.txt
-@@ -0,0 +1,24 @@
-+* Texas Instruments DAC5571 Family
-+
-+Required properties:
-+ - compatible: Should contain
-+    "ti,dac5571"
-+    "ti,dac6571"
-+    "ti,dac7571"
-+    "ti,dac5574"
-+    "ti,dac6574"
-+    "ti,dac7574"
-+    "ti,dac5573"
-+    "ti,dac6573"
-+    "ti,dac7573"
-+ - reg: Should contain the DAC I2C address
-+
-+Optional properties:
-+ - vref-supply: The regulator supply for DAC reference voltage
-+
-+Example:
-+dac@0 {
-+	compatible = "ti,dac5571";
-+	reg = <0x4C>;
-+	vref-supply = <&vdd_supply>;
-+};
+This patch is tested against "sh-pfc" branch of 'renesas-drivers.git' 
+repo. 
+
+V1-->V2
+        Incorporated sergie's review comment.
+
+Biju Das (2):
+  pinctrl: sh-pfc: Add r8a77470 PFC support
+  dt-bindings: pinctrl: sh-pfc: Document r8a77470 PFC support
+
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+ drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+ drivers/pinctrl/sh-pfc/core.c                      |    6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c              | 2156 ++++++++++++++++++++
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |    1 +
+ 6 files changed, 2170 insertions(+)
+ create mode 100644 drivers/pinctrl/sh-pfc/pfc-r8a77470.c
+
 -- 
-2.17.0
+2.7.4
