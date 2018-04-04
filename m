@@ -1,164 +1,99 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 0/5] allow override of bus format in bridges
-Date: Wed, 4 Apr 2018 08:34:41 +0200
-Message-ID: <CAKMK7uH-=BqU+vuePTq4joY3XS2ypvtSKYvpv1LLyovPpSXv6A@mail.gmail.com>
-References: <20180326212447.7380-1-peda@axentia.se>
- <20180328070826.GY14155@phenom.ffwll.local>
- <2233231.my6BbD3pcT@avalon>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH net-next 02/12] clk: sunxi-ng: r40: export a regmap to
+ access the GMAC register
+Date: Wed, 04 Apr 2018 14:45:02 +0800
+Message-ID: <1522824302.2049.7.camel@aosc.io>
+References: <20180317092857.4396-1-wens@csie.org>
+         <20180317092857.4396-3-wens@csie.org>
+         <20180318213129.ucwslzvwq6khxrcd@flea>
+         <CAGb2v67Fp20wkmqWyRowpAmm4EDwENnKFG+mccqWaPa5Jj4zBw@mail.gmail.com>
+         <20180403094845.le2hfuxktlv66lre@flea>
+         <20180403095005.skflxb7m2qzbhjix@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2233231.my6BbD3pcT@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, Peter Rosin <peda@axentia.se>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180403095005.skflxb7m2qzbhjix@flea>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgNCwgMjAxOCBhdCAxMjoyOCBBTSwgTGF1cmVudCBQaW5jaGFydAo8bGF1cmVu
-dC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBIaSBEYW5pZWwsCj4KPiBPbiBX
-ZWRuZXNkYXksIDI4IE1hcmNoIDIwMTggMTA6MDg6MjYgRUVTVCBEYW5pZWwgVmV0dGVyIHdyb3Rl
-Ogo+PiBPbiBNb24sIE1hciAyNiwgMjAxOCBhdCAxMToyNDo0MlBNICswMjAwLCBQZXRlciBSb3Np
-biB3cm90ZToKPj4gPiBIaSEKPj4gPgo+PiA+IFtJIGdvdCB0byB2MiBzb29uZXIgdGhhbiBleHBl
-Y3RlZF0KPj4gPgo+PiA+IEkgaGF2ZSBhbiBBdG1lbCBzYW1hNWQzMSBob29rZWQgdXAgdG8gYW4g
-bHZkcyBlbmNvZGVyIGFuZCB0aGVuCj4+ID4gb24gdG8gYW4gbHZkcyBwYW5lbC4gV2hpY2ggc2Vl
-bXMgbGlrZSBzb21ldGhpbmcgdGhhdCBoYXMgYmVlbgo+PiA+IGRvbmUgb25lIG9yIHR3byB0aW1l
-cyBiZWZvcmUuLi4KPj4gPgo+PiA+IFRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlIGJ1c19mb3JtYXQg
-b2YgdGhlIFNvQyBhbmQgdGhlIHBhbmVsIGRvCj4+ID4gbm90IGFncmVlLiBUaGUgU29DIGRyaXZl
-ciAoYXRtZWwtaGxjZGMpIGNhbiBoYW5kbGUgdGhlCj4+ID4gcmdiNDQ0LCByZ2I1NjUsIHJnYjY2
-NiBhbmQgcmdiODg4IGJ1cyBmb3JtYXRzLiBUaGUgaGFyZHdhcmUgaXMKPj4gPiB3aXJlZCBmb3Ig
-dGhlIHJnYjU2NSBjYXNlLiBUaGUgbHZkcyBlbmNvZGVyIHN1cHBvcnRzIHJnYjg4OCBvbgo+PiA+
-IGl0cyBpbnB1dCBzaWRlIHdpdGggdGhlIExTQiB3aXJlcyBmb3IgZWFjaCBjb2xvciBzaW1wbHkg
-cHVsbGVkCj4+ID4gZG93biBpbnRlcm5hbGx5IGluIHRoZSBlbmNvZGVyIGluIG15IGNhc2Ugd2hp
-Y2ggbWVhbnMgdGhhdCB0aGUKPj4gPiByZ2I1NjUgYnVzX2Zvcm1hdCBpcyB0aGUgZm9ybWF0IHRo
-YXQgd29ya3MgYmVzdC4gQW5kIHRoZSBwYW5lbAo+PiA+IGlzIGV4cGVjdGluZyBsdmRzICh2ZXNh
-LTI0KSwgd2hpY2ggaXMgd2hhdCB0aGUgZW5jb2RlciBvdXRwdXRzLgo+PiA+Cj4+ID4gVGhlIHJl
-YXNvbiBJICJibGFtZSIgdGhlIGJ1c19mb3JtYXQgb2YgdGhlIGRybV9jb25uZWN0b3IgaXMgdGhh
-dAo+PiA+IHdpdGggdGhlIGJlbG93IERUIHNuaXBwZXQsIHRoaW5ncyBkbyBub3Qgd29yayAqZXhh
-Y3RseSogZHVlIHRvCj4+ID4gdGhhdC4gQXQgbGVhc3QsIGl0IHN0YXJ0cyB0byB3b3JrIGlmIEkg
-aGFjayB0aGUgcGFuZWwtbHZkcyBkcml2ZXIKPj4gPiB0byByZXBvcnQgdGhlIHJnYjU2NSBidXNf
-Zm9ybWF0IGluc3RlYWQgb2YgdmVzYS0yNC4KPj4gPgo+PiA+ICAgICBwYW5lbDogcGFuZWwgewo+
-PiA+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicGFuZWwtbHZkcyI7Cj4+ID4KPj4gPiAgICAg
-ICAgICAgICB3aWR0aC1tbSA9IDwzMDQ+Owo+PiA+ICAgICAgICAgICAgIGhlaWdodC1tbSA9IDwy
-Mjg7Cj4+ID4KPj4gPiAgICAgICAgICAgICBkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7Cj4+ID4K
-Pj4gPiAgICAgICAgICAgICBwYW5lbC10aW1pbmcgewo+PiA+ICAgICAgICAgICAgICAgICAgICAg
-Ly8gMTAyNHg3NjggQCA2MEh6ICh0eXBpY2FsKQo+PiA+ICAgICAgICAgICAgICAgICAgICAgY2xv
-Y2stZnJlcXVlbmN5ID0gPDUyMTQwMDAwIDY1MDAwMDAwIDcxMTAwMDAwPjsKPj4gPiAgICAgICAg
-ICAgICAgICAgICAgIGhhY3RpdmUgPSA8MTAyND47Cj4+ID4gICAgICAgICAgICAgICAgICAgICB2
-YWN0aXZlID0gPDc2OD47Cj4+ID4gICAgICAgICAgICAgICAgICAgICBoZnJvbnQtcG9yY2ggPSA8
-NDggODggODg+Owo+PiA+ICAgICAgICAgICAgICAgICAgICAgaGJhY2stcG9yY2ggPSA8OTYgMTY4
-IDE2OD47Cj4+ID4gICAgICAgICAgICAgICAgICAgICBoc3luYy1sZW4gPSA8MzIgNjQgNjQ+Owo+
-PiA+ICAgICAgICAgICAgICAgICAgICAgdmZyb250LXBvcmNoID0gPDggMTMgMTQ+Owo+PiA+ICAg
-ICAgICAgICAgICAgICAgICAgdmJhY2stcG9yY2ggPSA8OCAxMyAxND47Cj4+ID4gICAgICAgICAg
-ICAgICAgICAgICB2c3luYy1sZW4gPSA8OCAxMiAxND47Cj4+ID4gICAgICAgICAgICAgfTsKPj4g
-Pgo+PiA+ICAgICAgICAgICAgIHBvcnQgewo+PiA+ICAgICAgICAgICAgICAgICAgICAgcGFuZWxf
-aW5wdXQ6IGVuZHBvaW50IHsKPj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3Rl
-LWVuZHBvaW50ID0gPCZsdmRzX2VuY29kZXJfb3V0cHV0PjsKPj4gPiAgICAgICAgICAgICAgICAg
-ICAgIH07Cj4+ID4gICAgICAgICAgICAgfTsKPj4gPiAgICAgfTsKPj4gPgo+PiA+ICAgICBsdmRz
-LWVuY29kZXIgewo+PiA+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksZHM5MGMxODUiLCAi
-bHZkcy1lbmNvZGVyIjsKPj4gPgo+PiA+ICAgICAgICAgICAgIHBvcnRzIHsKPj4gPiAgICAgICAg
-ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiA+ICAgICAgICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ID4KPj4gPiAgICAgICAgICAgICAgICAgICAgIHBvcnRA
-MCB7Cj4+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPj4gPgo+PiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRzX2VuY29kZXJfaW5wdXQ6IGVuZHBvaW50
-IHsKPj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9p
-bnQgPSA8JmhsY2RjX291dHB1dD47Cj4+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07
-Cj4+ID4gICAgICAgICAgICAgICAgICAgICB9Owo+PiA+Cj4+ID4gICAgICAgICAgICAgICAgICAg
-ICBwb3J0QDEgewo+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4+
-ID4KPj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbHZkc19lbmNvZGVyX291dHB1dDog
-ZW5kcG9pbnQgewo+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90
-ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+Owo+PiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB9Owo+PiA+ICAgICAgICAgICAgICAgICAgICAgfTsKPj4gPiAgICAgICAgICAgICB9Owo+
-PiA+ICAgICB9Owo+PiA+Cj4+ID4gQnV0LCBpbnN0ZWFkIG9mIHBlcnZlcnRpbmcgdGhlIHBhbmVs
-LWx2ZHMgZHJpdmVyIHdpdGggc3VwcG9ydAo+PiA+IGZvciBhIHRvdGFsbHkgZmFrZSBub24tbHZk
-cyBidXNfZm9ybWF0LCBJIGludHJ1ZHVjZSBhbiBBUEkgdGhhdCBhbGxvd3MKPj4gPiBkaXNwbGF5
-IGNvbnRyb2xsZXIgZHJpdmVycyB0byBxdWVyeSB0aGUgcmVxdWlyZWQgYnVzX2Zvcm1hdCBvZiBh
-bnkKPj4gPiBpbnRlcm1lZGlhdGUgYnJpZGdlcywgYW5kIG1hdGNoIHVwIHdpdGggdGhhdCBpbnN0
-ZWFkIG9mIHRoZSBmb3JtYXRzCj4+ID4gZ2l2ZW4gYnkgdGhlIGRybV9jb25uZWN0b3IuIEkgdHJp
-Z2dlciB0aGlzIHdpdGggdGhpcyBhZGRpdGlvbiB0byB0aGUKPj4gPgo+PiA+IGx2ZHMtZW5jb2Rl
-ciBEVCBub2RlOgo+PiA+ICAgICAgICAgICAgIGludGVyZmFjZS1waXgtZm10ID0gInJnYjU2NSI7
-Cj4+ID4KPj4gPiBOYW1pbmcgaXMgaGFyZCB0aG91Z2gsIHNvIEknbSBub3Qgc3VyZSBpZiB0aGF0
-J3MgZ29vZD8KPj4gPgo+PiA+IEkgdGhyZXcgaW4gdGhlIGZpcnN0IHBhdGNoLCBzaW5jZSB0aGF0
-IGlzIHRoZSBhY3R1YWwgbHZkcyBlbmNvZGVyCj4+ID4gSSBoYXZlIGluIHRoaXMgY2FzZS4KPj4g
-Pgo+PiA+IFN1Z2dlc3Rpb25zIHdlbGNvbWUuCj4+Cj4+IFRvb2sgYSBxdWljayBsb29rLCBmZWVs
-cyByYXRoZXIgdW4tYXRvbWljLiBBbmQgdGhlcmUncyBiZWVuZCBkaXNjdXNzaW5nCj4+IGZvciBv
-dGhlciBicmlkZ2UgcmVsYXRlZCBzdGF0ZSB0aGF0IHdlIG1pZ2h0IHdhbnQgdG8gdHJhY2sgKGxp
-a2UgdGhlIGZ1bGwKPj4gYWRqdXN0ZWRfbW9kZSB0aGF0IG1pZ2h0IG5lZWQgdG8gYmUgYWRqdXN0
-ZWQgYXQgZWFjaCBzdGFnZSBpbiB0aGUgY2hhaW4pLgo+PiBTbyBoZXJlJ3MgbXkgc3VnZ2VzdGlv
-bnM6Cj4+Cj4+IC0gQWRkIGFuIG9wdGlvbmFsIHBlci1icmlkZ2UgaW50ZXJuYWwgc3RhdGUgc3Ry
-dWN0IHVzaW5nIHRoZSBzdXBwb3J0IGluCj4+Cj4+IGh0dHBzOi8vZHJpLmZyZWVkZXNrdG9wLm9y
-Zy9kb2NzL2RybS9ncHUvZHJtLWttcy5odG1sI2hhbmRsaW5nLWRyaXZlci1wcml2YXQKPj4gZS1z
-dGF0ZQo+Pgo+PiAgIFllcyBpdCBzYXlzICJkcml2ZXIgcHJpdmF0ZSIsIGJ1dCBzaW5jZSBicmlk
-Z2UgaXMganVzdCBoZWxwZXIgc3R1ZmYKPj4gICB0aGF0J3MgYWxsIGluY2x1ZGVkLiAiZHJpdmVy
-IHByaXZhdGUiID09ICJub3QgZXhwb3NlZCBhcyB1YXBpIiBoZXJlLgo+PiAgIEluY2x1ZGUgYWxs
-IHRoZSB1c3VhbCBjb252ZW5pZW5jZSB3cmFwcGVycyB0byBnZXQgYXQgdGhlIHN0YXRlIGZvciBh
-Cj4+ICAgYnJpZGdlLgo+Pgo+PiAtIFRoZW4gc3R1ZmYgeW91ciBidXNfZm9ybWF0IGludG8gdGhh
-dCBuZXcgZHJtX2JyaWRnZV9zdGF0ZSBzdHJ1Y3QuCj4+Cj4+IC0gQWRkIGEgbmV3IGJyaWRnZSBj
-YWxsYmFjayBhdG9taWNfY2hlY2ssIHdoaWNoIGdldHMgdGhhdCBicmlkZ2Ugc3RhdGUgYXMKPj4g
-ICBwYXJhbWV0ZXIgKHNpbWlsYXIgdG8gYWxsIHRoZSBvdGhlciBhdG9taWNfY2hlY2sgZnVuY3Rp
-b25zKS4KPj4KPj4gVGhpcyB3YXkgd2UgY2FuIGV2ZW4gaGFuZGxlIHRoZSBidXNfZm9ybWF0IGR5
-bmFtaWNhbGx5LCB0aHJvdWdoIHRoZSBhdG9taWMKPj4gZnJhbWV3b3JrIHlvdXIgYnJpZGdlJ3Mg
-YXRvbWljX2NoZWNrIGNhbGxiYWNrIGNhbiBsb29rIGF0IHRoZSBlbnRpcmUKPj4gYXRvbWljIHN0
-YXRlIChib3RoIHVwIGFuZCBkb3duIHRoZSBjaGFpbiBpZiBuZWVkZWQpLCBpdCBhbGwgbmVhdGx5
-IGZpdHMKPj4gaW50byBhdG9taWMgb3ZlcmFsbCBhbmQgaXQncyBtdWNoIGVhc2llciB0byBleHRl
-bmQuCj4KPiBXaGlsZSBJIHRoaW5rIHdlJ2xsIGV2ZW50dWFsbHkgbmVlZCBicmlkZ2Ugc3RhdGVz
-LCBJIGRvbid0IHRoaW5rIHRoYXQncyBuZWVkCj4geWV0LiBUaGUgYnVzIGZvcm1hdHMgcmVwb3J0
-ZWQgYnkgdGhpcyBwYXRjaCBzZXJpZXMgYXJlIHN0YXRpYy4gV2UncmUgbm90Cj4gdGFsa2luZyBh
-Ym91dCB0aGUgY3VycmVudGx5IGNvbmZpZ3VyZWQgZm9ybWF0IGZvciBhIGJyaWRnZSwgYnV0IGFi
-b3V0IHRoZSBsaXN0Cj4gb2Ygc3VwcG9ydGVkIGZvcm1hdHMuIFRoaXMgaXMgc2ltaWxhciB0byB0
-aGUgYnVzX2Zvcm1hdHMgZmllbGQgcHJlc2VudCBpbiB0aGUKPiBkcm1fZGlzcGxheV9pbmZvIHN0
-cnVjdHVyZS4gVGhlcmUgaXMgdGh1cyBpbiBteSBvcGluaW9uIG5vIG5lZWQgdG8gaW50ZXJmYWNl
-Cj4gdGhpcyB3aXRoIGF0b21pYyB1bnRpbCB3ZSBuZWVkIHRvIHRyYWNrIHRoZSBjdXJyZW50IGZv
-cm1hdCAoYW5kIEkgdGhpbmsgdGhhdAo+IHdpbGwgaW5kZWVkIGhhcHBlbiBhdCBzb21lIHBvaW50
-LCBidXQgSSBkb24ndCB0aGluayBQZXRlciBuZWVkcyB0aGlzIGZlYXR1cmUKPiBmb3Igbm93KS4g
-VGhhdCdzIHdoeSBJJ3ZlIHRvbGQgUGV0ZXIgdGhhdCBJIHdvdWxkIGxpa2UgYSBicmlkZ2UgQVBJ
-IHRvIHJlcG9ydAo+IHRoZSBpbmZvcm1hdGlvbiBhbmQgaGF2ZW4ndCByZXF1ZXN0ZWQgYSBzdGF0
-ZS1iYXNlZCBpbXBsZW1lbnRhdGlvbi4KCklmIGl0J3Mgc3RhdGljLCB3aHkgYSBkeW5hbWljIGNh
-bGxiYWNrPyBKdXN0IGFkZCBpdCB0byBzdHJ1Y3QKZHJtX2JyaWRnZSwgcmVxdWlyZSBpdCdzIGZp
-bGxlZCBvdXQgYmVmb3JlIHJlZ2lzdGVyaW5nIHRoZSBicmlkZ2UsCmRvbmUuCi1EYW5pZWwKCj4K
-Pj4gUGxlYXNlIGFsc28gY2MgTGF1cmVudCBQaW5jaGFydCBvbiB0aGlzLgo+Pgo+PiA+IENoYW5n
-ZXMgc2luY2UgdjEgaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgvMy8xNy8yMjEKPj4gPiAtIEFk
-ZCBhIHByb3BlciBicmlkZ2UgQVBJIHRvIHF1ZXJ5IHRoZSBidXNfZm9ybWF0IGluc3RlYWQgb2Yg
-YWJ1c2luZwo+PiA+ICAgdGhlIC0+Z2V0X21vZGVzIHBhcnQgb2YgdGhlIGNvZGUuIFRoaXMgaXMg
-Y2xlYW5lciBidXQgcmVxdWlyZXMKPj4gPiAgIGNoYW5nZXMgdG8gYWxsIGRpc3BsYXkgY29udHJv
-bGxlciBkcml2ZXJzIHdpc2hpbmcgdG8gcGFydGljaXBhdGUuCj4+ID4gLSBBZGQgcGF0Y2ggdG8g
-YWRqdXN0IHRoZSBhdG1lbC1obGNkYyBkcml2ZXIgYWNjb3JkaW5nIHRvIHRoZSBhYm92ZS4KPj4g
-PiAtIEhvb2sgdGhlIG5ldyBpbmZvIGludG8gdGhlIGJyaWRnZSBsb2NhbCB0byB0aGUgbHZkcy1l
-bmNvZGVyIGluc3RlYWQKPj4gPiAgIG9mIG1lc3NpbmcgYWJvdXQgd2l0aCBuZXcgaW50ZXJmYWNl
-cyBmb3IgdGhlIHBhbmVsLWJyaWRnZSBkcml2ZXIuCj4+ID4gLSBBZGQgcGF0Y2ggd2l0aCBhIERU
-IHBhcnNpbmcgZnVuY3Rpb24gb2YgYnVzX2Zvcm1hdHMgaW4gYSBjZW50cmFsIHBsYWNlLgo+PiA+
-IC0gUmVwaHJhc2UgdGhlIGFkZGl0aW9uIG9mIHRpLGRzOTBjMTg1IHRvIHRoZSBsdmRzLXRyYW5z
-bWl0dGVyIGJpbmRpbmcuCj4+ID4KPj4gPiBQZXRlciBSb3NpbiAoNSk6Cj4+ID4gICBkdC1iaW5k
-aW5nczogZGlzcGxheTogYnJpZGdlOiBsdmRzLXRyYW5zbWl0dGVyOiBhZGQgdGksZHM5MGMxODUK
-Pj4gPiAgIGRybTogYnJpZGdlOiBhZGQgQVBJIHRvIHF1ZXJ5IHRoZSBleHBlY3RlZCBpbnB1dCBm
-b3JtYXRzIG9mIGJyaWRnZXMKPj4gPiAgIGRybTogb2Y6IGFkZCBkaXNwbGF5IGJ1cy1mb3JtYXQg
-cGFyc2VyCj4+ID4gICBkcm06IGJyaWRnZTogbHZkcy1lbmNvZGVyOiBhbGxvdyBzcGVjaWZ5aW5n
-IHRoZSBpbnB1dCBidXMgZm9ybWF0Cj4+ID4gICBkcm0vYXRtZWwtaGxjZGM6IHRha2UgYnJpZGdl
-cyBpbnRvIGFjY291bnQgd2hlbiBzZWxlY3Rpbmcgb3V0cHV0Cj4+ID4gICAgIGZvcm1hdAo+PiA+
-Cj4+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dCAg
-IHwgMTQgKysrKy0KPj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9idXMtZm9y
-bWF0LnR4dCAgICAgfCAzNSArKysrKysrKysrKysrCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9hdG1l
-bC1obGNkYy9hdG1lbF9obGNkY19jcnRjLmMgICAgIHwgNDkgKysrKysrKysrKysrKysrLS0KPj4g
-PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWVuY29kZXIuYyAgICAgICAgICAgICAgfCAy
-NSArKysrKysrKysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2RybV9icmlkZ2UuYyAgICAgICAgICAg
-ICAgICAgICAgICAgfCAzMiArKysrKysrKysrKysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2RybV9v
-Zi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA1OSArKysrKysrKysrKysrKysrKwo+PiA+
-ICBpbmNsdWRlL2RybS9kcm1fYnJpZGdlLmggICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE4
-ICsrKysrKysKPj4gPiAgaW5jbHVkZS9kcm0vZHJtX29mLmggICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgOSArKysrCj4+ID4gIDggZmlsZXMgY2hhbmdlZCwgMjM3IGluc2VydGlvbnMo
-KyksIDQgZGVsZXRpb25zKC0pCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+PiA+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9idXMtZm9ybWF0LnR4dAo+Cj4gLS0K
-PiBSZWdhcmRzLAo+Cj4gTGF1cmVudCBQaW5jaGFydAo+Cj4KPgoKCgotLSAKRGFuaWVsIFZldHRl
-cgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcg
-NDggLSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+在 2018-04-03二的 11:50 +0200，Maxime Ripard写道：
+> On Tue, Apr 03, 2018 at 11:48:45AM +0200, Maxime Ripard wrote:
+> > On Tue, Mar 20, 2018 at 03:15:02PM +0800, Chen-Yu Tsai wrote:
+> > > On Mon, Mar 19, 2018 at 5:31 AM, Maxime Ripard
+> > > <maxime.ripard@bootlin.com> wrote:
+> > > > On Sat, Mar 17, 2018 at 05:28:47PM +0800, Chen-Yu Tsai wrote:
+> > > > > From: Icenowy Zheng <icenowy@aosc.io>
+> > > > > 
+> > > > > There's a GMAC configuration register, which exists on
+> > > > > A64/A83T/H3/H5 in
+> > > > > the syscon part, in the CCU of R40 SoC.
+> > > > > 
+> > > > > Export a regmap of the CCU.
+> > > > > 
+> > > > > Read access is not restricted to all registers, but only the
+> > > > > GMAC
+> > > > > register is allowed to be written.
+> > > > > 
+> > > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > 
+> > > > Gah, this is crazy. I'm really starting to regret letting that
+> > > > syscon
+> > > > in in the first place...
+> > > 
+> > > IMHO syscon is really a better fit. It's part of the glue layer
+> > > and
+> > > most other dwmac user platforms treat it as such and use a
+> > > syscon.
+> > > Plus the controls encompass delays (phase), inverters (polarity),
+> > > and even signal routing. It's not really just a group of clock
+> > > controls,
+> > > like what we poorly modeled for A20/A31. I think that was really
+> > > a
+> > > mistake.
+> > > 
+> > > As I mentioned in the cover letter, a slightly saner approach
+> > > would
+> > > be to let drivers add custom syscon entries, which would then
+> > > require
+> > > less custom plumbing.
+> > 
+> > A syscon is convenient, sure, but it also bypasses any abstraction
+> > layer we have everywhere else, which means that we'll have to
+> > maintain
+> > the register layout in each and every driver that uses it.
+> > 
+> > So far, it's only be the GMAC, but it can also be others (the SRAM
+> > controller comes to my mind), and then, if there's any difference
+> > in
+> > the design in a future SoC, we'll have to maintain that in the GMAC
+> > driver as well.
+> 
+> I guess I forgot to say something, I'm fine with using a syscon we
+> already have.
+
+As we finally need the SRAM controller on these new SoCs (for VE on all
+SoCs targeted by dwmac-sun8i, and for DE on A64), should we deprecate
+the syscon and all switch to device regmap (and let sunxi-dram driver
+to export a regmap)? (As in the A64 DE2 thread discussed, two device
+nodes shouldn't cover the same MMIO region.)
+
+In addition, there might be multiple registers in the syscon/sram zone
+that are needed (for example, if a version driver is written, it will
+need the "0x24 Version Register"; and GMAC needs "0x30 EMAC Clock
+Register"). How to deal with this if we export the syscon/sram zone as
+a generic device regmap?
+
+> 
+> I'm just questionning if merging any other driver using one is the
+> right move.
+> 
+> Maxime
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
