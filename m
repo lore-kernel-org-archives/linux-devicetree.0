@@ -1,36 +1,70 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 0/5] none
-Date: Wed,  4 Apr 2018 21:00:19 +0200
-Message-ID: <cover.1522868422.git.hns@goldelico.com>
+Subject: [PATCH v2 3/5] [RFC] gpio: pca953x: hack to map LEVEL irqs to EDGE irqs (may loose interrupts/hang)
+Date: Wed,  4 Apr 2018 21:00:22 +0200
+Message-ID: <637f00dd7da98cfeffdc6080914a5f67b433da50.1522868423.git.hns@goldelico.com>
+References: <cover.1522868422.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1522868422.git.hns@goldelico.com>
+In-Reply-To: <cover.1522868422.git.hns@goldelico.com>
+References: <cover.1522868422.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-V2:
-* added PCA_PCAL flags if matched through of-table
-* fix address calculation for extended PCAL6524 registers
-* hack to map LEVEL_LOW to EDGE_FALLING to be able to
-  test in combination with ts3a227e driver
-* improve description of bindings for optional vcc-supply
-  and interrupt-controller;
+So far the interrupt type from the DTS is ignored, i.e.
 
-2018-03-10 09:32:53: no initial description
+	interrupt-parent = <&pcal6524>
+	interrupts = <10 IRQ_TYPE_EDGE_RISING>
 
-H. Nikolaus Schaller (5):
-  gpio: pca953x: set the PCA_PCAL flag also when matching by DT
-  gpio: pca953x: add register definitions for pcal6524 and fix address
-    calculation
-  [RFC] gpio: pca953x: hack to map LEVEL irqs to EDGE irqs (may loose
-    interrupts/hang)
-  DTS: Bindings: pca953x driver provides an optional vcc-supply property
-  DTS: Bindings: pca953x: add example how to use interrupt-controller
-    and gpio-controller
+does not overwrite a
 
- .../devicetree/bindings/gpio/gpio-pca953x.txt      | 34 +++++++++++++++++++++
- drivers/gpio/gpio-pca953x.c                        | 35 ++++++++++++++++++----
- 2 files changed, 64 insertions(+), 5 deletions(-)
+	devm_request_threaded_irq(..., IRQ_TYPE_LEVEL_LOW, ...)
 
+in driver code. Therefore, the pca953x driver rejects the
+setup of the irq because it can only handle EDGE interrupts
+so far.
+
+This hack translates level interrupts to edge interrupts
+for the pca953x chips. This is enough for initial testing,
+but not a good solution since interrupts may be lost.
+
+If for example the connected chip requests a IRQ_TYPE_LEVEL_LOW
+this may have the reason that there may be multiple different
+interrupt sources in the chip - wired-or together to the
+input of the pca953x. Now if we do edge detecion only,
+the first interrupt will generate an EDGE_FALLING, but a
+second one won't ever if the first interrupt wasn't already
+processed.
+
+IMHO a better solution would be to make the pca953x interrupt
+handler check if the irq input is still in the active
+level and run the device specific handler again.
+
+But this is a major rework that I must leave to others
+with more knowledge and time to work on it. This RFC
+patch is for having a reminder.
+
+Not Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/gpio/gpio-pca953x.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index c70acba710c7..c21cfdee2eb6 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -521,6 +521,11 @@ static int pca953x_irq_set_type(struct irq_data *d, unsigned int type)
+ 	int bank_nb = d->hwirq / BANK_SZ;
+ 	u8 mask = 1 << (d->hwirq % BANK_SZ);
+ 
++	if (type & IRQ_TYPE_LEVEL_LOW)
++		type |= IRQ_TYPE_EDGE_FALLING;
++	if (type & IRQ_TYPE_LEVEL_HIGH)
++		type |= IRQ_TYPE_EDGE_RISING;
++
+ 	if (!(type & IRQ_TYPE_EDGE_BOTH)) {
+ 		dev_err(&chip->client->dev, "irq %d: unsupported type %d\n",
+ 			d->irq, type);
 -- 
 2.12.2
