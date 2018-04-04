@@ -1,83 +1,31 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: Multiple generic PHY instances for DWC3 USB IP
-Date: Wed, 04 Apr 2018 09:04:43 +0300
-Message-ID: <87po3fcxs4.fsf@linux.intel.com>
-References: <CAK7LNATkS6pFQ9Gexm1uiG8e-3x6QXh-GYs3ABVEQzBnFK5gqw@mail.gmail.com> <87vad7cz2i.fsf@linux.intel.com> <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v1 0/8] Append several fixes and improvements in STM32 DMA
+Date: Wed, 4 Apr 2018 11:49:59 +0530
+Message-ID: <20180404061958.GH15443@localhost>
+References: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARBVG54o+fozHk8efXUNk8GSkRcRcdDNrtUhDs5kOA7=Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1520959327-25760-1-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 13, 2018 at 05:41:59PM +0100, Pierre-Yves MORDRET wrote:
+> This patchset appends several fixes and some improvements for STM32 DMAv2.
+> This includes:
+>         * Introduce DMA features bitfield
+>         * Threshold manages with bitfield feature
+>         * Improve memory burst management
+>         * Improve DMA IRQ status handling
+>         * Fix max items per transfer to match FIFO Size
+>         * Properly mask irq bits to avoid overlaping
+>         * Fix incomplete configuration in cyclic mode
+>         * Fix typo and reported checkpatch warnings
 
-Hi,
-
-Masahiro Yamada <yamada.masahiro@socionext.com> writes:
-> 2018-04-04 14:36 GMT+09:00 Felipe Balbi <felipe.balbi@linux.intel.com>:
->>
->> Hi,
->>
->> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
->>> Currently, DWC3 core IP (drivers/usb/dwc3/core.c)
->>> can take only one PHY phandle for each of SS, HS.
->>> (phy-names DT property is "usb2-phy" and "usb3-phy" for each)
->>
->> We never had any other requirements :-)
->>
->>> The DWC3 core IP is provided by Synopsys,
->>> but some SoC-dependent parts (a.k.a glue-layer)
->>> are implemented by SoC venders.
->>>
->>> The number of connected PHY instances are SoC-dependent.
->>>
->>> If you look at generic drivers such as
->>>   drivers/usb/host/ehci-platform.c
->>> the driver can handle arbitrary number of PHY instances.
->>>
->>> However, as mentioned above, DWC3 core allows only one PHY phandle
->>> for each SS/HS.
->>> This can result in a strange DT structure.
->>>
->>> For example, Socionext PXs3 SoC is integrated with 2 instances of DWC3.
->>>
->>> The instance 0 of DWC3 is connected with 2 super-speed PHYs.
->>
->> why 2 super-speed phys? Is this a two-port host-only implementation?
->
->
-> Socionext SoCs only support the host-mode.
->
->
-> The instance 0 has 2 ports.
-> In our integration, 1 SS PHY is needed for each port.
-> That's why it needs 2 SS PHYs.
->
-> Each DWC3 instance is connected with
-> multiple HS PHYs and multiple SS PHYs,
-> depending on the number of ports.
-
-in that case, you shouldn't need dwc3 at all. A Host-only dwc3 is xHCI
-compliant. If you really don't have the gadget block, there's no need
-for you to use dwc3. Just use xhci-plat directly.
-
->>> Is this OK?
->>
->> I don't know, I need a bit more details about your integration :-)
->
->
-> I can send a patch.
->
-> My concern is the following commit.
-> I do not know which parts are using this lookups.
-
-Samsung SoCs, probably ;-)
-
-Anyway, if your IP really is host-only, then you don't need dwc3 for
-anything. Just go for xHCI directly. If xHCI needs to be extended when
-it comes to PHY, then you can discuss with Mathias Nyman :-)
+Applied, thanks
 
 -- 
-balbi
+~Vinod
