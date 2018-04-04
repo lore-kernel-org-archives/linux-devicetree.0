@@ -1,146 +1,174 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v5 08/13] ARM: sunxi: Add initialization of CNTVOFF
-Date: Wed, 4 Apr 2018 09:45:15 +0200
-Message-ID: <20180404074515.r6nbkpcyy6vfelbr@flea>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
- <20180403061836.3926-9-mylene.josserand@bootlin.com>
- <20180403091218.t6xuq6csjp4uyy5u@flea>
- <20180403220628.19c9acaf@dell-desktop.home>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] ARM: dts: tpc: Device tree description of the iMX6Q
+ TPC board
+Date: Wed, 4 Apr 2018 09:48:26 +0200
+Message-ID: <20180404094826.36b2b998@jawa>
+References: <20180403165945.3981-1-lukma@denx.de>
+        <CAOMZO5BMWtWo6O_qKOsA_27xaReGDGczrujqRW8k23pkwscvDA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oka76lsnw6ugovnn"
+ boundary="Sig_/nmmmztlZ7hmKqpB._.hHImE"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180403220628.19c9acaf@dell-desktop.home>
+In-Reply-To: <CAOMZO5BMWtWo6O_qKOsA_27xaReGDGczrujqRW8k23pkwscvDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---oka76lsnw6ugovnn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+--Sig_/nmmmztlZ7hmKqpB._.hHImE
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 03, 2018 at 10:06:28PM +0200, Myl=E8ne Josserand wrote:
-> Hello,
+Hi Fabio,
+
+Thanks for the feedback,
+
+> Hi Lukasz,
 >=20
-> Thank you for the review.
+> On Tue, Apr 3, 2018 at 1:59 PM, Lukasz Majewski <lukma@denx.de> wrote:
 >=20
-> On Tue, 3 Apr 2018 11:12:18 +0200
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+> > ae850d6c0ad3..8ff7eadc8bef 100644 ---
+> > a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
+> > b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -181,6
+> > +181,7 @@ karo        Ka-Ro electronics GmbH keithkoep      Keith &
+> > Koep GmbH keymile        Keymile GmbH
+> >  khadas Khadas
+> > +kiebackpeter    Kieback & Peter GmbH =20
 >=20
-> > On Tue, Apr 03, 2018 at 08:18:31AM +0200, Myl=E8ne Josserand wrote:
-> > > Add the initialization of CNTVOFF for sun8i-a83t.
-> > >=20
-> > > For boot CPU, Create a new machine that handles this
-> > > function's call in an "init_early" callback.
-> > > For secondary CPUs, add this function into secondary_startup
-> > > assembly entry.
-> > >=20
-> > > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
-> > > ---
-> > >  arch/arm/mach-sunxi/headsmp.S |  1 +
-> > >  arch/arm/mach-sunxi/sunxi.c   | 18 +++++++++++++++++-
-> > >  2 files changed, 18 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/head=
-smp.S
-> > > index 79890fbe5613..b586b7cf803a 100644
-> > > --- a/arch/arm/mach-sunxi/headsmp.S
-> > > +++ b/arch/arm/mach-sunxi/headsmp.S
-> > > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> > > =20
-> > >  ENTRY(sunxi_mc_smp_secondary_startup)
-> > >  	bl	sunxi_mc_smp_cluster_cache_enable
-> > > +	bl	smp_init_cntvoff
-> > >  	b	secondary_startup
-> > >  ENDPROC(sunxi_mc_smp_secondary_startup)
-> > > =20
-> > > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> > > index 5e9602ce1573..090784108c0a 100644
-> > > --- a/arch/arm/mach-sunxi/sunxi.c
-> > > +++ b/arch/arm/mach-sunxi/sunxi.c
-> > > @@ -16,6 +16,7 @@
-> > >  #include <linux/platform_device.h>
-> > > =20
-> > >  #include <asm/mach/arch.h>
-> > > +#include <asm/smp_cntvoff.h>
-> > > =20
-> > >  static const char * const sunxi_board_dt_compat[] =3D {
-> > >  	"allwinner,sun4i-a10",
-> > > @@ -62,7 +63,6 @@ MACHINE_END
-> > >  static const char * const sun8i_board_dt_compat[] =3D {
-> > >  	"allwinner,sun8i-a23",
-> > >  	"allwinner,sun8i-a33",
-> > > -	"allwinner,sun8i-a83t",
-> > >  	"allwinner,sun8i-h2-plus",
-> > >  	"allwinner,sun8i-h3",
-> > >  	"allwinner,sun8i-r40",
-> > > @@ -75,6 +75,22 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family=
-")
-> > >  	.dt_compat	=3D sun8i_board_dt_compat,
-> > >  MACHINE_END
-> > > =20
-> > > +void __init sun8i_cntvoff_init(void)
-> > > +{
-> > > +	smp_init_cntvoff(); =20
-> >=20
-> > Can't this be moved to the SMP setup code?
+> This should be a separate patch.
+
+Ok.
+
 >=20
-> I tried to put it in the first lines of "sunxi_mc_smp_init" function
-> but it did not work. I tried to find some callbacks to have an
-> early "init" and I only found the "init_early"'s one. There is probably
-> another way to handle that so do not hesitate to tell me any ideas.
-
-It's hard to say without more context about why it doesn't work. Have
-you checked the order between early_initcall, the timer initialization
-function and init_early?
-
-> > > +}
-> > > +
-> > > +static const char * const sun8i_cntvoff_board_dt_compat[] =3D {
-> > > +	"allwinner,sun8i-a83t",
-> > > +	NULL,
-> > > +};
-> > > +
-> > > +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i boards needing c=
-ntvoff") =20
-> >=20
-> > All of the SoCs need CNTVOFF, so that doesn't really make sense. Why
-> > not just calling it for what it is: an A83t?
+> >  kinetic Kinetic Technologies
+> >  kingnovel      Kingnovel Technology Co., Ltd.
+> >  kosagi Sutajio Ko-Usagi PTE Ltd.
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index ade7a38543dc..c148c4cf28f2 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -459,6 +459,7 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
+> >         imx6q-icore-ofcap10.dtb \
+> >         imx6q-icore-ofcap12.dtb \
+> >         imx6q-icore-rqs.dtb \
+> > +       imx6q-kp-tpc.dtb \
+> >         imx6q-marsboard.dtb \
+> >         imx6q-mccmon6.dtb \
+> >         imx6q-nitrogen6x.dtb \
+> > diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts
+> > b/arch/arm/boot/dts/imx6q-kp-tpc.dts new file mode 100644
+> > index 000000000000..b5646040b516
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
+> > @@ -0,0 +1,23 @@
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0+ OR MIT) =20
 >=20
-> Sure, I will update it.
+> This line should be the first one and start with //
 
-Looking back at that code, I guess you want to change also the
-smp_init_cntvoff function. It's not really related to SMP either.
+Ok.
 
-Maxime
+>=20
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "imx6q-kp.dtsi"
+> > +
+> > +/ {
+> > +       model =3D "Freescale i.MX6 Qwuad K+P TPC Board";
+> > +       compatible =3D "kiebackpeter,imx6q-tpc", "fsl,imx6q";
+> > +
+> > +       memory: memory@10000000 { =20
+>=20
+> Only memory@10000000 is enough.
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Ok.
 
---oka76lsnw6ugovnn
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
+> > @@ -0,0 +1,460 @@
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0+ OR MIT) =20
+>=20
+> Same here.
+>=20
+> > +       beeper {
+> > +               compatible =3D "pwm-beeper";
+> > +               pwms =3D <&pwm2 0 500000>; //2kHz =20
+>=20
+> No // style comments, please.
+>=20
+> > +       lcd_panel: lcd-panel {
+> > +               compatible =3D "auo,g070vvn01"; =20
+>=20
+> I don't see this compatible string in linux-next.
+
+I've sent support for this display yesterday.
+
+[PATCH] display: panel: Add AUO g070vvn01 display support (800x480)
+
+
+>=20
+> > +&i2c1 {
+> > +       clock-frequency =3D <400000>;
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_i2c1>;
+> > +       status =3D "okay";
+> > +
+> > +       goodix_ts@5d {
+> > +               compatible =3D "goodix,gt911";
+> > +               reg =3D <0x5d>;
+> > +               pinctrl-names =3D "default";
+> > +               pinctrl-0 =3D <&pinctrl_ts>;
+> > +               interrupt-parent =3D <&gpio1>;
+> > +               interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;
+> > +               irq-gpios =3D <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> > +               reset-gpios =3D <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> > +       };
+> > +
+> > +       rx8025@32 {
+> > +               compatible =3D "dallas,rx8025"; =20
+>=20
+> I don't see this compatible string in linux-next.
+
+Ach... it should be "dallas,ds1307" as it supports also this chip. I
+will fix it in v2.
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/nmmmztlZ7hmKqpB._.hHImE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrEgooACgkQ0rTAlCFN
-r3Rq+A//RAPf5bwK82NFgP/VFiRpC9mqJuh6gtx3jQGiRSS7wD0GUaWhjPVTp4CD
-SujWxgVBKNcbJXThoMwfEmVOJaZAfcy+v+Oc5j0x5x2ARFSg/l3t3wVcocEsUZtP
-vYYqotb5+nnLnSMLEnTCbvx2pM++FpsJbSoUjChDziU06nCd/r/nBGg3UfECV0AB
-jWy2qdNNjctkdUXt2ZM0iZPcFmVBY4PcqUIqka7N+4WHc5YiVb8t9rrEn/NZLmat
-SV1pgJsac8Q1rfgs9j3rlc9p+3rTwN9JgOZMT+3G6UAkPCBjH+vX60UBKVG/Rpab
-VnwmIZ2GE4YvH+cC9/azd5wLzouIdE8QrivWUvpUb4BMYuepZGClRKZ+YwwgJNWs
-+5HIIHMfi9aNKdSCILzwZHW5Fq3IjH/jGetJ7OOam7DVbiE24KzFgZk8eoBviIrj
-qK71wNpCx1x4XY3x41I6P1/ivy6/D58xGy7B0aAqW3I3lcMVjy02CBem77u+dEGv
-rPTQextWoNokosmkyoU1NVqZxFAxHNaNQXcUyS4E+P1KHHYDppVmnB4q/yWgAk22
-5EIti+7UQCfy2gSIpQMU4UAMdxmGMdYhfz4fb1h+vv1+r0gnFu8yK9R6rh0INs4h
-SB7107rn4is6arbfI4iGxdXbatrkSg/I59FxU+cRkcnKitB4/8U=
-=B29i
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrEg0oACgkQAR8vZIA0
+zr0WyAf/YhvvxahEhRzc0WlrKD87kP5Be7v6bOfiCAglUIh+DT1vfyWjzSq4j+V2
+lRNHjDQzUNfOzNu6vhPyMdtiTsRGBObBggw2gSMV8POSAxI+2R39jmmDcsorZCca
+bxFfP5tPKSx/PT9OkhcnQdxo27zE1oWfySlDBxKRqWqSdTJRHA85g3S4gVY/4wyc
+RwD+IDMmBeYR31WUqJkDOlvMGZZvi4DmqNtUSHJFEFHgCNXazh8ANzTqoZDY9E5k
+oN9wF38RNtJGD7SvvN1MaNHTjdEznqZgk20EPeoYkuSLYDdaPFocnoXJTksmVeNX
+6xyAiPmgRVtFpiCIxBr65TNZe9ahnw==
+=zvnV
 -----END PGP SIGNATURE-----
 
---oka76lsnw6ugovnn--
+--Sig_/nmmmztlZ7hmKqpB._.hHImE--
