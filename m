@@ -1,84 +1,93 @@
-From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Wed, 4 Apr 2018 07:21:32 -0700
-Message-ID: <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
-References: <20180403142415.30083-1-oohall@gmail.com>
- <20180403142415.30083-3-oohall@gmail.com>
- <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
- <20180404220750.0436bbe1@gmail.com>
- <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
+ can't be supported
+Date: Wed, 04 Apr 2018 17:23:35 +0300
+Message-ID: <1527419.mcdjVnGTTs@avalon>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <67f26044-ac09-38b4-7faf-1738ee6c3d61@ti.com> <20180404131511.GB7303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180404131511.GB7303@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 7:04 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 4, 2018 at 10:07 PM, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, 3 Apr 2018 10:37:51 -0700
->> Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> On Tue, Apr 3, 2018 at 7:24 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> > Add device-tree binding documentation for the nvdimm region driver.
->>> >
->>> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> > Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> > ---
->>> > v2: Changed name from nvdimm-region to pmem-region.
->>> >     Cleaned up the example binding and fixed the overlapping regions.
->>> >     Added support for multiple regions in a single reg.
->>> > ---
->>> >  .../devicetree/bindings/pmem/pmem-region.txt       | 80 ++++++++++++++++++++++
->>> >  MAINTAINERS                                        |  1 +
->>> >  2 files changed, 81 insertions(+)
->>> >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
->>>
->>> Device-tree folks, does this look, ok?
->>>
->>> Oliver, is there any concept of a management interface to the
->>> device(s) backing these regions? libnvdimm calls these "nmem" devices
->>> and support operations like health status and namespace label
->>> management.
->
-> It's something I'm planning on implementing as soon as someone gives
-> me some hardware that isn't hacked up lab crap. I'm posting this
-> version with just regions since people have been asking for something
-> in upstream even if it's not fully featured.
->
-> Grumbling aside, the plan is to have separate drivers for the DIMM
-> type. Discovering DIMM devices happens via the normal discovery
-> mechanisms (e.g. an NVDIMM supporting the JEDEC interface is an I2C
-> device) and when binding to a specific DIMM device it registers a DIMM
-> descriptor structure and a ndctl implementation for that DIMM type
-> with of_pmem. When of_pmem binds to a region it can plug everything
-> into the region specific bus. There's a few details to work out, but I
-> think it's a reasonable approach.
-
-Yeah, that sounds reasonable. It would mean that your management
-interface would need to understand that nmems on different buses could
-potentially move to another bus after a reconfiguration, but that's
-not too much different than the ACPI case where nmems can join and
-leave regions after a reset / reconfig.
-
->> We would need a way to have nmem and pmem-regions find each other. Since we
->> don't have the ACPI abstractions, the nmem region would need to add the
->> ability for a driver to have a phandle to the interleaving and nmem properties.
->>
->> I guess that would be a separate driver, that would manage the nmem devices
->> and there would be a way to relate the pmem and nmems. Oliver?
->
-> Yes, that's the plan.
-
-So Balbir, is that enough for an Acked-by for this device-tree proposal?
+SGkgQmVub2l0LAoKT24gV2VkbmVzZGF5LCA0IEFwcmlsIDIwMTggMTY6MTU6MTEgRUVTVCBCZW5v
+aXQgUGFycm90IHdyb3RlOgo+IFRvbWkgVmFsa2VpbmVuIHdyb3RlIG9uIFdlZCBbMjAxOC1BcHIt
+MDQgMTQ6MTI6MTMgKzAzMDBdOgo+ID4gT24gMjYvMDMvMTggMTk6MjEsIEJlbm9pdCBQYXJyb3Qg
+d3JvdGU6Cj4gPj4gQ3VycmVudGx5IGF2YWlsYWJsZSBkaXNwbGF5IG1vZGUgZnJvbSBhIGNvbm5l
+Y3RvciBhcmUgZmlsdGVyZWQgb3V0Cj4gPj4gYmFzZWQgb25seSBvbiBwaXhlbCBjbG9jayBjYXBh
+YmlsaXR5LiBIb3dldmVyIHdlIGFsc28gbmVlZCB0byBmaWx0ZXIKPiA+PiBvdXQgd2lkZXIgbW9k
+ZSBpZiB3ZSBjYW5ub3QgaGFuZGxlIHRoZW0gYmFzZWQgb24gYXZhaWxhYmxlIHBpcGVsaW5lCj4g
+Pj4gY2FwYWJpbGl0aWVzLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IEJlbm9pdCBQYXJyb3Qg
+PGJwYXJyb3RAdGkuY29tPgo+ID4+IC0tLQo+ID4+IAo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vb21h
+cGRybS9kc3MvZGlzcGMuYyAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4+
+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3Mvb21hcGRzcy5oICAgIHwgIDEgKwo+ID4+ICBk
+cml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jIHwgMTAgKysrKysrKysrKwo+
+ID4+ICAzIGZpbGVzIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykKPiA+PiAKPiA+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3BjLmMKPiA+PiBiL2RyaXZlcnMv
+Z3B1L2RybS9vbWFwZHJtL2Rzcy9kaXNwYy5jIGluZGV4IDYyNGRlZTIyZjQ2Yi4uMzU1NDFkNDQ0
+MWRmCj4gPj4gMTAwNjQ0Cj4gPi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9kaXNw
+Yy5jCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3BjLmMKPiA+PiBA
+QCAtMTAwLDYgKzEwMCw4IEBAIHN0cnVjdCBkaXNwY19mZWF0dXJlcyB7Cj4gPj4gIAl1OCBtZ3Jf
+aGVpZ2h0X3N0YXJ0Owo+ID4+ICAJdTE2IG1ncl93aWR0aF9tYXg7Cj4gPj4gIAl1MTYgbWdyX2hl
+aWdodF9tYXg7Cj4gPj4gKwl1MTYgb3ZsX3dpZHRoX21heDsKPiA+PiArCXUxNiBvdmxfaGVpZ2h0
+X21heDsKPiA+PiAgCXVuc2lnbmVkIGxvbmcgbWF4X2xjZF9wY2xrOwo+ID4+ICAJdW5zaWduZWQg
+bG9uZyBtYXhfdHZfcGNsazsKPiA+PiAgCXVuc2lnbmVkIGludCBtYXhfZG93bnNjYWxlOwo+ID4+
+IEBAIC0yNDY1LDYgKzI0NjcsMTIgQEAgc3RhdGljIGludCBkaXNwY19vdmxfY2FsY19zY2FsaW5n
+KHVuc2lnbmVkIGxvbmcKPiA+PiBwY2xrLCB1bnNpZ25lZCBsb25nIGxjbGssCj4gPj4gIAlyZXR1
+cm4gMDsKPiA+PiAgfQo+ID4+IAo+ID4+ICtzdGF0aWMgdm9pZCBkaXNwY19vdmxfZ2V0X21heF9z
+aXplKHUxNiAqd2lkdGgsIHUxNiAqaGVpZ2h0KQo+ID4+ICt7Cj4gPj4gKwkqd2lkdGggPSBkaXNw
+Yy5mZWF0LT5vdmxfd2lkdGhfbWF4Owo+ID4+ICsJKmhlaWdodCA9IGRpc3BjLmZlYXQtPm92bF9o
+ZWlnaHRfbWF4Owo+ID4+ICt9Cj4gPj4gKwo+ID4+ICBzdGF0aWMgaW50IGRpc3BjX292bF9zZXR1
+cF9jb21tb24oZW51bSBvbWFwX3BsYW5lX2lkIHBsYW5lLAo+ID4+ICAJCWVudW0gb21hcF9vdmVy
+bGF5X2NhcHMgY2FwcywgdTMyIHBhZGRyLCB1MzIgcF91dl9hZGRyLAo+ID4+ICAJCXUxNiBzY3Jl
+ZW5fd2lkdGgsIGludCBwb3NfeCwgaW50IHBvc195LCB1MTYgd2lkdGgsIHUxNiBoZWlnaHQsCj4g
+Pj4gQEAgLTI1MDAsNiArMjUwOCwxMCBAQCBzdGF0aWMgaW50IGRpc3BjX292bF9zZXR1cF9jb21t
+b24oZW51bQo+ID4+IG9tYXBfcGxhbmVfaWQgcGxhbmUsCj4gPj4gIAlvdXRfd2lkdGggPSBvdXRf
+d2lkdGggPT0gMCA/IHdpZHRoIDogb3V0X3dpZHRoOwo+ID4+ICAJb3V0X2hlaWdodCA9IG91dF9o
+ZWlnaHQgPT0gMCA/IGhlaWdodCA6IG91dF9oZWlnaHQ7Cj4gPj4gCj4gPj4gKwlXQVJOKG91dF93
+aWR0aCA+IGRpc3BjLmZlYXQtPm92bF93aWR0aF9tYXgsCj4gPj4gKwkgICAgICJSZXF1ZXN0ZWQg
+T1ZMIHdpZHRoICglZCkgaXMgbGFyZ2VyIHRoYW4gY2FuIGJlIHN1cHBvcnRlZAo+ID4+ICglZCku
+XG4iLAo+ID4+ICsJICAgICBvdXRfd2lkdGgsIGRpc3BjLmZlYXQtPm92bF93aWR0aF9tYXgpOwo+
+ID4gCj4gPiBXaHkgZG9uJ3QgeW91IHJldHVybiBhbiBlcnJvciBoZXJlPyBJIGRvbid0IHNlZSBh
+IG5lZWQgZm9yIFdBUk4gaGVyZS4KPiAKPiBTbyBoZXJlIHlvdSBtZWFuIHJlcGxhY2UgdGhlIFdB
+Uk4gd2l0aCBzb21ldGhpbmcgbGlrZSB0aGlzOgo+IAo+IAlpZiAob3V0X3dpZHRoID4gZGlzcGMu
+ZmVhdC0+b3ZsX3dpZHRoX21heCkgewo+IAkJRFNTRVJSKCJSZXF1ZXN0ZWQgT1ZMIHdpZHRoICgl
+ZCkgaXMgbGFyZ2VyIHRoYW4gY2FuIGJlIHN1cHBvcnRlZCAoJWQpLgpcbiIsCj4gb3V0X3dpZHRo
+LCBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1F
+SU5WQUw7Cj4gCX0KCkNhbiB0aGlzIGhhcHBlbiA/IElmIHdlIHJlamVjdCBpbnZhbGlkIHNldHRp
+bmdzIGluIG9tYXBkcm0gd2Ugc2hvdWxkIG5ldmVyIGdldCAKdGhlbSBoZXJlLgoKPiA+PiAgdm9p
+ZCBkaXNwY19zZXRfb3BzKGNvbnN0IHN0cnVjdCBkaXNwY19vcHMgKm8pOwo+ID4+IAo+ID4+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jCj4gPj4g
+Yi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jIGluZGV4Cj4gPj4gYTBk
+N2IxZDkwNWU4Li5kNWUwNTlhYmI1NTUgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L29tYXBkcm0vb21hcF9jb25uZWN0b3IuYwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFw
+ZHJtL29tYXBfY29ubmVjdG9yLmMKPiA+PiBAQCAtMTk3LDYgKzE5NywxNiBAQCBzdGF0aWMgaW50
+IG9tYXBfY29ubmVjdG9yX21vZGVfdmFsaWQoc3RydWN0Cj4gPj4gZHJtX2Nvbm5lY3RvciAqY29u
+bmVjdG9yLAo+ID4+ICAJCQlyID0gMDsKPiA+PiAgCX0KPiA+PiAKPiA+PiArCS8qIENoZWNrIGlm
+IHRoZSBhZHZlcnRpc2VkIHdpZHRoIGV4Y2VlZCB3aGF0IHRoZSBwaXBlbGluZSBjYW4gZG8gKi8K
+PiA+PiArCWlmICghcikgewo+ID4+ICsJCXN0cnVjdCBvbWFwX2RybV9wcml2YXRlICpwcml2ID0g
+ZGV2LT5kZXZfcHJpdmF0ZTsKPiA+PiArCQl1MTYgd2lkdGgsIGhlaWdodDsKPiA+PiArCj4gPj4g
+KwkJcHJpdi0+ZGlzcGNfb3BzLT5vdmxfZ2V0X21heF9zaXplKCZ3aWR0aCwgJmhlaWdodCk7Cj4g
+Pj4gKwkJaWYgKG1vZGUtPmhkaXNwbGF5ID4gd2lkdGgpCj4gPj4gKwkJCXIgPSAtRUlOVkFMOwo+
+ID4gCj4gPiBZb3Ugc2hvdWxkIGNoZWNrIHRoZSBoZWlnaHQgYWxzby4KPiAKPiBZZWFoLCBJJ2xs
+IGZpeCB0aGF0LgoKVW5sZXNzIEknbSBtaXN0YWtlbiB0aGUgcmVzdHJpY3Rpb24gZG9lc24ndCBj
+b21lIGZyb20gdGhlIG91dHB1dCBzaWRlIG9mIHRoZSAKZGlzcGxheSBjb250cm9sbGVyIGJ1dCBm
+cm9tIHRoZSBvdmVybGF5cyAocGxhbmVzKSwgcmlnaHQgPyBTaG91bGRuJ3QgaXQgdGhlbiAKYmUg
+aW1wbGVtZW50ZWQgaW4gdGhlIGRybV9wbGFuZV9oZWxwZXJfZnVuY3MuYXRvbWljX2NoZWNrIG9w
+ZXJhdGlvbiA/CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
