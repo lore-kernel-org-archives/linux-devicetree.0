@@ -1,35 +1,78 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 3/6] arm: dts: modify timer register size in NPCM750 device tree
-Date: Wed,  4 Apr 2018 14:10:59 +0300
-Message-ID: <1522840262-21635-4-git-send-email-tmaimon77@gmail.com>
-References: <1522840262-21635-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522840262-21635-1-git-send-email-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
+ can't be supported
+Date: Wed, 4 Apr 2018 14:12:13 +0300
+Message-ID: <67f26044-ac09-38b4-7faf-1738ee6c3d61@ti.com>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <20180326162128.8740-2-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180326162128.8740-2-bparrot@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benoit Parrot <bparrot@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Modify timer register size in a common device tree for all Nuvoton
-NPCM750 BMCs.
-
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- arch/arm/boot/dts/nuvoton-npcm750.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-index 286f139fdc7c..c7d80d2152ae 100644
---- a/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-+++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-@@ -121,7 +121,7 @@
- 			timer0: timer@8000 {
- 				compatible = "nuvoton,npcm750-timer";
- 				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x8000 0x1000>;
-+				reg = <0x8000 0x50>;
- 				clocks = <&clk 15>;
- 			};
- 
--- 
-2.14.1
+T24gMjYvMDMvMTggMTk6MjEsIEJlbm9pdCBQYXJyb3Qgd3JvdGU6Cj4gQ3VycmVudGx5IGF2YWls
+YWJsZSBkaXNwbGF5IG1vZGUgZnJvbSBhIGNvbm5lY3RvciBhcmUgZmlsdGVyZWQgb3V0Cj4gYmFz
+ZWQgb25seSBvbiBwaXhlbCBjbG9jayBjYXBhYmlsaXR5LiBIb3dldmVyIHdlIGFsc28gbmVlZCB0
+byBmaWx0ZXIKPiBvdXQgd2lkZXIgbW9kZSBpZiB3ZSBjYW5ub3QgaGFuZGxlIHRoZW0gYmFzZWQg
+b24gYXZhaWxhYmxlIHBpcGVsaW5lCj4gY2FwYWJpbGl0aWVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6
+IEJlbm9pdCBQYXJyb3QgPGJwYXJyb3RAdGkuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
+b21hcGRybS9kc3MvZGlzcGMuYyAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9vbWFwZHNzLmggICAgfCAgMSArCj4gIGRy
+aXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfY29ubmVjdG9yLmMgfCAxMCArKysrKysrKysrCj4g
+IDMgZmlsZXMgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vb21hcGRybS9kc3MvZGlzcGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJt
+L2Rzcy9kaXNwYy5jCj4gaW5kZXggNjI0ZGVlMjJmNDZiLi4zNTU0MWQ0NDQxZGYgMTAwNjQ0Cj4g
+LS0tIGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3BjLmMKPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vb21hcGRybS9kc3MvZGlzcGMuYwo+IEBAIC0xMDAsNiArMTAwLDggQEAgc3RydWN0
+IGRpc3BjX2ZlYXR1cmVzIHsKPiAgCXU4IG1ncl9oZWlnaHRfc3RhcnQ7Cj4gIAl1MTYgbWdyX3dp
+ZHRoX21heDsKPiAgCXUxNiBtZ3JfaGVpZ2h0X21heDsKPiArCXUxNiBvdmxfd2lkdGhfbWF4Owo+
+ICsJdTE2IG92bF9oZWlnaHRfbWF4Owo+ICAJdW5zaWduZWQgbG9uZyBtYXhfbGNkX3BjbGs7Cj4g
+IAl1bnNpZ25lZCBsb25nIG1heF90dl9wY2xrOwo+ICAJdW5zaWduZWQgaW50IG1heF9kb3duc2Nh
+bGU7Cj4gQEAgLTI0NjUsNiArMjQ2NywxMiBAQCBzdGF0aWMgaW50IGRpc3BjX292bF9jYWxjX3Nj
+YWxpbmcodW5zaWduZWQgbG9uZyBwY2xrLCB1bnNpZ25lZCBsb25nIGxjbGssCj4gIAlyZXR1cm4g
+MDsKPiAgfQo+ICAKPiArc3RhdGljIHZvaWQgZGlzcGNfb3ZsX2dldF9tYXhfc2l6ZSh1MTYgKndp
+ZHRoLCB1MTYgKmhlaWdodCkKPiArewo+ICsJKndpZHRoID0gZGlzcGMuZmVhdC0+b3ZsX3dpZHRo
+X21heDsKPiArCSpoZWlnaHQgPSBkaXNwYy5mZWF0LT5vdmxfaGVpZ2h0X21heDsKPiArfQo+ICsK
+PiAgc3RhdGljIGludCBkaXNwY19vdmxfc2V0dXBfY29tbW9uKGVudW0gb21hcF9wbGFuZV9pZCBw
+bGFuZSwKPiAgCQllbnVtIG9tYXBfb3ZlcmxheV9jYXBzIGNhcHMsIHUzMiBwYWRkciwgdTMyIHBf
+dXZfYWRkciwKPiAgCQl1MTYgc2NyZWVuX3dpZHRoLCBpbnQgcG9zX3gsIGludCBwb3NfeSwgdTE2
+IHdpZHRoLCB1MTYgaGVpZ2h0LAo+IEBAIC0yNTAwLDYgKzI1MDgsMTAgQEAgc3RhdGljIGludCBk
+aXNwY19vdmxfc2V0dXBfY29tbW9uKGVudW0gb21hcF9wbGFuZV9pZCBwbGFuZSwKPiAgCW91dF93
+aWR0aCA9IG91dF93aWR0aCA9PSAwID8gd2lkdGggOiBvdXRfd2lkdGg7Cj4gIAlvdXRfaGVpZ2h0
+ID0gb3V0X2hlaWdodCA9PSAwID8gaGVpZ2h0IDogb3V0X2hlaWdodDsKPiAgCj4gKwlXQVJOKG91
+dF93aWR0aCA+IGRpc3BjLmZlYXQtPm92bF93aWR0aF9tYXgsCj4gKwkgICAgICJSZXF1ZXN0ZWQg
+T1ZMIHdpZHRoICglZCkgaXMgbGFyZ2VyIHRoYW4gY2FuIGJlIHN1cHBvcnRlZCAoJWQpLlxuIiwK
+PiArCSAgICAgb3V0X3dpZHRoLCBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKCldoeSBkb24n
+dCB5b3UgcmV0dXJuIGFuIGVycm9yIGhlcmU/IEkgZG9uJ3Qgc2VlIGEgbmVlZCBmb3IgV0FSTiBo
+ZXJlLgoKPiAgdm9pZCBkaXNwY19zZXRfb3BzKGNvbnN0IHN0cnVjdCBkaXNwY19vcHMgKm8pOwo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jIGIv
+ZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYwo+IGluZGV4IGEwZDdiMWQ5
+MDVlOC4uZDVlMDU5YWJiNTU1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJt
+L29tYXBfY29ubmVjdG9yLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nv
+bm5lY3Rvci5jCj4gQEAgLTE5Nyw2ICsxOTcsMTYgQEAgc3RhdGljIGludCBvbWFwX2Nvbm5lY3Rv
+cl9tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4gIAkJCXIgPSAw
+Owo+ICAJfQo+ICAKPiArCS8qIENoZWNrIGlmIHRoZSBhZHZlcnRpc2VkIHdpZHRoIGV4Y2VlZCB3
+aGF0IHRoZSBwaXBlbGluZSBjYW4gZG8gKi8KPiArCWlmICghcikgewo+ICsJCXN0cnVjdCBvbWFw
+X2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiArCQl1MTYgd2lkdGgsIGhl
+aWdodDsKPiArCj4gKwkJcHJpdi0+ZGlzcGNfb3BzLT5vdmxfZ2V0X21heF9zaXplKCZ3aWR0aCwg
+JmhlaWdodCk7Cj4gKwkJaWYgKG1vZGUtPmhkaXNwbGF5ID4gd2lkdGgpCj4gKwkJCXIgPSAtRUlO
+VkFMOwoKWW91IHNob3VsZCBjaGVjayB0aGUgaGVpZ2h0IGFsc28uCgogVG9taQoKLS0gClRleGFz
+IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
+LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
