@@ -1,103 +1,148 @@
-Return-Path: <SRS0=o6D7=G6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40079.outbound.protection.outlook.com ([40.107.4.79]:39927
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752283AbeDIHEe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 9 Apr 2018 03:04:34 -0400
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 2/5] usb: typec: fusb302: remove max_snk_* for sink
+Return-Path: <SRS0=0TFI=GZ=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH v2 2/5] usb: typec: fusb302: remove max_snk_* for sink
  config
-Date: Mon, 9 Apr 2018 07:04:30 +0000
-Message-ID: <VI1PR0402MB3917BCCFCA40C8F06A859CC089BF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
  <1521817127-23061-3-git-send-email-jun.li@nxp.com>
- <66fb9f1a-3331-201d-9ec2-747df3c98926@redhat.com>
-In-Reply-To: <66fb9f1a-3331-201d-9ec2-747df3c98926@redhat.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <7c857ffd-419d-bb6d-7330-4ec751f8682a@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8ca89cec-c63d-31dc-431a-8712276a63bf@redhat.com>
+Date: Wed, 4 Apr 2018 22:12:47 +0200
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
-Cc: "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <7c857ffd-419d-bb6d-7330-4ec751f8682a@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Mats Karrman <mats.dev.list@gmail.com>, Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com
+Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSBb
-bWFpbHRvOmhkZWdvZWRlQHJlZGhhdC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ05pyIM+aXpSAyMzoy
-Ng0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24u
-b3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoZWlra2ku
-a3JvZ2VydXNAbGludXguaW50ZWwuY29tDQo+IENjOiBsaW51eEByb2Vjay11cy5uZXQ7IHJtZnJm
-c0BnbWFpbC5jb207IHl1ZXlhby56aHVAZ21haWwuY29tOw0KPiBsaW51eC11c2JAdmdlci5rZXJu
-ZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14DQo+IDxsaW51
-eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzVdIHVzYjogdHlwZWM6
-IGZ1c2IzMDI6IHJlbW92ZSBtYXhfc25rXyogZm9yIHNpbmsNCj4gY29uZmlnDQo+IA0KPiBIaSwN
-Cj4gDQo+IE9uIDIzLTAzLTE4IDE1OjU4LCBMaSBKdW4gd3JvdGU6DQo+ID4gU2luY2UgbWF4X3Nu
-a18qIGlzIHRvIGJlIGRlcHJlY2F0ZWQsIHNvIHJlbW92ZSBtYXhfc25rXyogYnkgYWRkaW5nIGEN
-Cj4gPiB2YXJpYWJsZSBQRE8gZm9yIHNpbmsgY29uZmlnLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvdXNiL3R5
-cGVjL2Z1c2IzMDIvZnVzYjMwMi5jIHwgNTENCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyksIDE0IGRl
-bGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL2Z1c2Iz
-MDIvZnVzYjMwMi5jDQo+ID4gYi9kcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYw0K
-PiA+IGluZGV4IDcwMzYxNzEuLmRiNGQ5Y2QgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2Iv
-dHlwZWMvZnVzYjMwMi9mdXNiMzAyLmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy9mdXNi
-MzAyL2Z1c2IzMDIuYw0KPiA+IEBAIC0xMjAsNiArMTIwLDcgQEAgc3RydWN0IGZ1c2IzMDJfY2hp
-cCB7DQo+ID4gICAJZW51bSB0eXBlY19jY19wb2xhcml0eSBjY19wb2xhcml0eTsNCj4gPiAgIAll
-bnVtIHR5cGVjX2NjX3N0YXR1cyBjYzE7DQo+ID4gICAJZW51bSB0eXBlY19jY19zdGF0dXMgY2My
-Ow0KPiA+ICsJdTMyIHNua19wZG9bUERPX01BWF9PQkpFQ1RTXTsNCj4gPg0KPiA+ICAgI2lmZGVm
-IENPTkZJR19ERUJVR19GUw0KPiA+ICAgCXN0cnVjdCBkZW50cnkgKmRlbnRyeTsNCj4gPiBAQCAt
-MTIxMiwxMSArMTIxMyw2IEBAIHN0YXRpYyBjb25zdCB1MzIgc25rX3Bkb1tdID0gew0KPiA+ICAg
-c3RhdGljIGNvbnN0IHN0cnVjdCB0Y3BjX2NvbmZpZyBmdXNiMzAyX3RjcGNfY29uZmlnID0gew0K
-PiA+ICAgCS5zcmNfcGRvID0gc3JjX3BkbywNCj4gPiAgIAkubnJfc3JjX3BkbyA9IEFSUkFZX1NJ
-WkUoc3JjX3BkbyksDQo+ID4gLQkuc25rX3BkbyA9IHNua19wZG8sDQo+ID4gLQkubnJfc25rX3Bk
-byA9IEFSUkFZX1NJWkUoc25rX3BkbyksDQo+ID4gLQkubWF4X3Nua19tdiA9IDUwMDAsDQo+ID4g
-LQkubWF4X3Nua19tYSA9IDMwMDAsDQo+ID4gLQkubWF4X3Nua19tdyA9IDE1MDAwLA0KPiA+ICAg
-CS5vcGVyYXRpbmdfc25rX213ID0gMjUwMCwNCj4gPiAgIAkudHlwZSA9IFRZUEVDX1BPUlRfRFJQ
-LA0KPiA+ICAgCS5kYXRhID0gVFlQRUNfUE9SVF9EUkQsDQo+ID4gQEAgLTE3NTYsNiArMTc1Miwz
-OCBAQCBzdGF0aWMgaW50IGluaXRfZ3BpbyhzdHJ1Y3QgZnVzYjMwMl9jaGlwICpjaGlwKQ0KPiA+
-ICAgCXJldHVybiAwOw0KPiA+ICAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgZnVzYjMwMl9jb21w
-b3NpdGVfc25rX3Bkb19hcnJheShzdHJ1Y3QgZnVzYjMwMl9jaGlwICpjaGlwKQ0KPiA+ICt7DQo+
-ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBjaGlwLT5kZXY7DQo+ID4gKwl1MzIgbXYsIG1hLCBt
-dywgbWluX212Ow0KPiA+ICsJdW5zaWduZWQgaW50IGk7DQo+ID4gKw0KPiA+ICsJLyogQ29weSB0
-aGUgc3RhdGljIHNuayBwZG8gKi8NCj4gPiArCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHNu
-a19wZG8pOyBpKyspDQo+ID4gKwkJY2hpcC0+c25rX3Bkb1tpXSA9IHNua19wZG9baV07DQo+IA0K
-PiBUaGUgc3RhdGljIHNuayBQRE8gaXMgY29uc3RhbnQgYW5kIG9ubHkgY29udGFpbnM6DQo+IAlQ
-RE9fRklYRUQoNTAwMCwgNDAwLCBQRE9fRklYRURfRkxBR1MpLA0KPiANCj4gU28geW91IGNhbiBq
-dXN0IGRvOg0KPiANCj4gCWNoaXAtPnNua19wZG9bMF0gPSBQRE9fRklYRUQoNTAwMCwgNDAwLCBQ
-RE9fRklYRURfRkxBR1MpOw0KPiANCj4gSGVyZS4NCj4gDQo+ID4gKw0KPiA+ICsJaWYgKGRldmlj
-ZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmY3MsbWF4LXNpbmstbWljcm92b2x0IiwgJm12KSB8
-fA0KPiA+ICsJICAgIGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmY3MsbWF4LXNpbmst
-bWljcm9hbXAiLCAmbWEpIHx8DQo+ID4gKwkgICAgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRl
-diwgImZjcyxtYXgtc2luay1taWNyb3dhdHQiLCAmbXcpKQ0KPiANCj4gWW91IGNhbiBkcm9wIHRo
-ZSByZWFkaW5nIG9mICJmY3MsbWF4LXNpbmstbWljcm93YXR0IiBoZXJlLCBpdCB3YXMgb25seSBl
-dmVyDQo+IGFkZGVkIGJlY2F1c2UgdGhlIHRjcG0gY29kZSB1c2VkIHRvIGRlcGVuZCBvbiBtYXhf
-bXcgYmVpbmcgc2V0LCBub3cgdGhhdA0KPiB0aGF0IGlzIG5vIGxvbmdlciB0aGUgY2FzZSwgd2Ug
-ZG9uJ3QgbmVlZCBpdC4NCj4gDQo+IFNvIHRoaXMgZW50aXJlIGZ1bmN0aW9uIGNhbiBiZSBzaW1w
-bGlmaWVkIHRvOg0KPiANCj4gc3RhdGljIGludCBmdXNiMzAyX2NvbXBvc2l0ZV9zbmtfcGRvX2Fy
-cmF5KHN0cnVjdCBmdXNiMzAyX2NoaXAgKmNoaXApIHsNCj4gCXN0cnVjdCBkZXZpY2UgKmRldiA9
-IGNoaXAtPmRldjsNCj4gCXUzMiBtYXhfdXYsIG1heF91YTsNCj4gDQo+IAljaGlwLT5zbmtfcGRv
-WzBdID0gUERPX0ZJWEVEKDUwMDAsIDQwMCwgUERPX0ZJWEVEX0ZMQUdTKTsNCj4gDQo+IAlpZiAo
-ZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgImZjcyxtYXgtc2luay1taWNyb3ZvbHQiLCAm
-bWF4X3V2KSB8fA0KPiAJICAgIGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmY3MsbWF4
-LXNpbmstbWljcm9hbXAiLCAmbWF4X3VhKSkNCj4gCQlyZXR1cm4gMTsNCj4gDQo+IAljaGlwLT5z
-bmtfcGRvWzFdID0gUERPX1ZBUig1MDAwLCBtYXhfdXYgLyAxMDAwLCBtYXhfdWEgLyAxMDAwKTsN
-Cj4gCXJldHVybiAyOw0KPiB9DQoNCk9LLCBJIHdpbGwgY2hhbmdlIGluIHYzLg0KDQpUaGFua3MN
-Ckp1bg0KDQo+IA0KPiA+IEBAIC0xNzg0LDE4ICsxODEyLDEzIEBAIHN0YXRpYyBpbnQgZnVzYjMw
-Ml9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiA+ICAgCWNoaXAtPnRjcGNfZGV2
-LmNvbmZpZyA9ICZjaGlwLT50Y3BjX2NvbmZpZzsNCj4gPiAgIAltdXRleF9pbml0KCZjaGlwLT5s
-b2NrKTsNCj4gPg0KPiA+IC0JaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiZmNz
-LG1heC1zaW5rLW1pY3Jvdm9sdCIsICZ2KSkNCj4gPiAtCQljaGlwLT50Y3BjX2NvbmZpZy5tYXhf
-c25rX212ID0gdiAvIDEwMDA7DQo+ID4gLQ0KPiA+IC0JaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVh
-ZF91MzIoZGV2LCAiZmNzLG1heC1zaW5rLW1pY3JvYW1wIiwgJnYpKQ0KPiA+IC0JCWNoaXAtPnRj
-cGNfY29uZmlnLm1heF9zbmtfbWEgPSB2IC8gMTAwMDsNCj4gPiAtDQo+ID4gLQlpZiAoIWRldmlj
-ZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYsICJmY3MsbWF4LXNpbmstbWljcm93YXR0IiwgJnYpKQ0K
-PiA+IC0JCWNoaXAtPnRjcGNfY29uZmlnLm1heF9zbmtfbXcgPSB2IC8gMTAwMDsNCj4gPiAtDQo+
-ID4gICAJaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiZmNzLG9wZXJhdGluZy1z
-aW5rLW1pY3Jvd2F0dCIsICZ2KSkNCj4gPiAgIAkJY2hpcC0+dGNwY19jb25maWcub3BlcmF0aW5n
-X3Nua19tdyA9IHYgLyAxMDAwOw0KPiA+DQo+ID4gKwkvKiBDb21wb3NpdGUgc2luayBQRE8gKi8N
-Cj4gPiArCWNoaXAtPnRjcGNfY29uZmlnLm5yX3Nua19wZG8gPSBmdXNiMzAyX2NvbXBvc2l0ZV9z
-bmtfcGRvX2FycmF5KGNoaXApOw0KPiA+ICsJY2hpcC0+dGNwY19jb25maWcuc25rX3BkbyA9IGNo
-aXAtPnNua19wZG87DQo+ID4gKw0KPiA+ICAgCS8qDQo+ID4gICAJICogRGV2aWNldHJlZSBwbGF0
-Zm9ybXMgc2hvdWxkIGdldCBleHRjb24gdmlhIHBoYW5kbGUgKG5vdCB5ZXQNCj4gPiAgIAkgKiBz
-dXBwb3J0ZWQpLiBPbiBBQ1BJIHBsYXRmb3Jtcywgd2UgZ2V0IHRoZSBuYW1lIGZyb20gYSBkZXZp
-Y2UgcHJvcC4NCj4gPg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IEhhbnMNCg==
+Hi,
+
+On 04-04-18 14:06, Mats Karrman wrote:
+> Hi Li,
+> 
+> On 2018-03-23 15:58, Li Jun wrote:
+> 
+>> Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
+>> variable PDO for sink config.
+>>
+>> Signed-off-by: Li Jun <jun.li@nxp.com>
+>> ---
+>>   drivers/usb/typec/fusb302/fusb302.c | 51 +++++++++++++++++++++++++++----------
+>>   1 file changed, 37 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+>> index 7036171..db4d9cd 100644
+>> --- a/drivers/usb/typec/fusb302/fusb302.c
+>> +++ b/drivers/usb/typec/fusb302/fusb302.c
+>> @@ -120,6 +120,7 @@ struct fusb302_chip {
+>>       enum typec_cc_polarity cc_polarity;
+>>       enum typec_cc_status cc1;
+>>       enum typec_cc_status cc2;
+>> +    u32 snk_pdo[PDO_MAX_OBJECTS];
+>>   #ifdef CONFIG_DEBUG_FS
+>>       struct dentry *dentry;
+>> @@ -1212,11 +1213,6 @@ static const u32 snk_pdo[] = {
+>>   static const struct tcpc_config fusb302_tcpc_config = {
+>>       .src_pdo = src_pdo,
+>>       .nr_src_pdo = ARRAY_SIZE(src_pdo),
+>> -    .snk_pdo = snk_pdo,
+>> -    .nr_snk_pdo = ARRAY_SIZE(snk_pdo),
+>> -    .max_snk_mv = 5000,
+>> -    .max_snk_ma = 3000,
+>> -    .max_snk_mw = 15000,
+>>       .operating_snk_mw = 2500,
+>>       .type = TYPEC_PORT_DRP,
+>>       .data = TYPEC_PORT_DRD,
+>> @@ -1756,6 +1752,38 @@ static int init_gpio(struct fusb302_chip *chip)
+>>       return 0;
+>>   }
+>> +static int fusb302_composite_snk_pdo_array(struct fusb302_chip *chip)
+>> +{
+>> +    struct device *dev = chip->dev;
+>> +    u32 mv, ma, mw, min_mv;
+>> +    unsigned int i;
+>> +
+>> +    /* Copy the static snk pdo */
+>> +    for (i = 0; i < ARRAY_SIZE(snk_pdo); i++)
+>> +        chip->snk_pdo[i] = snk_pdo[i];
+>> +
+>> +    if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &mv) ||
+>> +        device_property_read_u32(dev, "fcs,max-sink-microamp", &ma) ||
+>> +        device_property_read_u32(dev, "fcs,max-sink-microwatt", &mw))
+>> +        return i;
+>> +
+>> +    mv = mv / 1000;
+>> +    ma = ma / 1000;
+>> +    mw = mw / 1000;
+>> +
+>> +    min_mv = 1000 * chip->tcpc_config.operating_snk_mw / ma;
+>> +    if (pdo_type(snk_pdo[i-1] == PDO_TYPE_FIXED))
+> 
+> You've got the parentheses wrong.
+> 
+> Apart from that I don't like/understand why the PDO's should be fixed.
+> Every product should be able to have its own settings, including the first PDO (e.g. it
+> might need to specify a higher current and/or set the "Higher Capability" bit).
+> 
+> I think this would be best solved the same way as in your TCPCI driver patch series [1]
+> with a list freely specified by a property.
+> 
+> [1] https://www.spinics.net/lists/linux-usb/msg167398.html
+
+Hmm, interesting, for the x86 use-case that would require updating
+the properties for the fusb302 defined in:
+
+drivers/platform/x86/intel_cht_int33fe.c
+
+In tandem, which is easily doable.
+
+But what about other users of the fusb302 driver? Since this driver
+was added before I started using it for some x86 boards, I assume
+there are some non x86 users, so we should preserve compatibility
+for DTB files which don't define any sink PDOs in their properties,
+I guess we could fall to a default fixed 5V sink pdo for those.
+
+Regards,
+
+Hans
+
+
+
+> 
+>> +        min_mv = max(min_mv, pdo_fixed_voltage(snk_pdo[i-1]));
+>> +    else
+>> +        min_mv = max(min_mv, pdo_max_voltage(snk_pdo[i-1]));
+>> +    ma = min(ma, 1000 * mw / min_mv);
+>> +
+>> +    /* Insert the new pdo to the end */
+>> +    chip->snk_pdo[i] = PDO_VAR(min_mv, mv, ma);
+>> +
+>> +    return i+1;
+>> +}
+>> +
+>>   static int fusb302_probe(struct i2c_client *client,
+>>                const struct i2c_device_id *id)
+>>   {
+>> @@ -1784,18 +1812,13 @@ static int fusb302_probe(struct i2c_client *client,
+>>       chip->tcpc_dev.config = &chip->tcpc_config;
+>>       mutex_init(&chip->lock);
+>> -    if (!device_property_read_u32(dev, "fcs,max-sink-microvolt", &v))
+>> -        chip->tcpc_config.max_snk_mv = v / 1000;
+>> -
+>> -    if (!device_property_read_u32(dev, "fcs,max-sink-microamp", &v))
+>> -        chip->tcpc_config.max_snk_ma = v / 1000;
+>> -
+>> -    if (!device_property_read_u32(dev, "fcs,max-sink-microwatt", &v))
+>> -        chip->tcpc_config.max_snk_mw = v / 1000;
+>> -
+>>       if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
+>>           chip->tcpc_config.operating_snk_mw = v / 1000;
+>> +    /* Composite sink PDO */
+>> +    chip->tcpc_config.nr_snk_pdo = fusb302_composite_snk_pdo_array(chip);
+>> +    chip->tcpc_config.snk_pdo = chip->snk_pdo;
+>> +
+>>       /*
+>>        * Devicetree platforms should get extcon via phandle (not yet
+>>        * supported). On ACPI platforms, we get the name from a device prop.
+>>
