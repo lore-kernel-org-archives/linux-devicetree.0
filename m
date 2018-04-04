@@ -1,39 +1,140 @@
-Return-Path: <SRS0=d5cC=GX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail17.heteml.jp ([157.7.188.30]:33285 "EHLO mail17.heteml.jp"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754095AbeDBDvs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 1 Apr 2018 23:51:48 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by mail17.heteml.jp (Postfix) with QMQP id 836833C80C6E
-        for <devicetree@vger.kernel.org>; Mon,  2 Apr 2018 12:42:23 +0900 (JST)
-Date: 2 Apr 2018 12:42:23 +0900
-Message-ID: <20180402034223.6243.qmail@mail17.heteml.jp>
-Subject: Re: =?utf-8?Q?5=20=20=20=20=20=E6=B0=B8=E5=88=A9331428=E3=80=82COM=E9=82=80=E6=82=A8=E6=B3=A8=E5=86=8C=E9=80=8158=E8=B5=A25=E2=92=8F0=E6=8F=90?=
- =?utf-8?Q?,=E4=B8=93=E5=91=98Q319120398=E9=A2=86?=
-References: <99c036ed54fa7141@9ee394e9e4cb7701>
-In-Reply-To: <99c036ed54fa7141@9ee394e9e4cb7701>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-From: info@saorinomori.com
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Return-Path: <SRS0=Tej7=GZ=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v9 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Wed,  4 Apr 2018 14:22:04 +0200
+Message-Id: <20180404122205.13051-2-maxime.ripard@bootlin.com>
+In-Reply-To: <20180404122205.13051-1-maxime.ripard@bootlin.com>
+References: <20180404122205.13051-1-maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-$B$*Ld9g$;@?$K$"$j$,$H$&$4$6$$$^$9!#(B
-$B8=:_!"B?$/$N$*Ld9g$;$rD:$$$F$*$j!"JV?.$K;~4V$,$+$+$C$F$*$j$^$9!#(B
-$BD:$$$?$*Ld9g$;$K$O=gHV$KBP1~$7$F$*$j$^$9$N$G(B
-$B:#$7$P$i$/$*BT$A2<$5$$$^$9$h$&!"$*4j$$?=$7>e$2$^$9!#(B
+The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+the hardware implementation.
 
-$B$5$r$j$N?9(B
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../devicetree/bindings/media/cdns,csi2rx.txt      | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
 
-Thank you so much for contacting us.
-You have just sent an email to info@saorinomori.com, which is the contact email account for the inquiries in Japanese language.
-
-For sending inquires in English language, would you contact us at contact@saorinomori.com so that we can get back to you as soon as possible.
-
-Thank you so much for your cooperation and warm regards,
-
-SAORI-NO-MORI / SAKAISEIKISANGYO CO. LTD.
-http://www.saorinomori.com
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+new file mode 100644
+index 000000000000..6b02a0657ad9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+@@ -0,0 +1,100 @@
++Cadence MIPI-CSI2 RX controller
++===============================
++
++The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
++lanes in input, and 4 different pixel streams in output.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * sys_clk: main clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties:
++  - phys: phandle to the external D-PHY, phy-names must be provided
++  - phy-names: must contain "dphy", if the implementation uses an
++               external D-PHY
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++           port, in accordance with the video interface bindings defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           port nodes are numbered as follows:
++
++           Port Description
++           -----------------------------
++           0    CSI-2 input
++           1    Stream 0 output
++           2    Stream 1 output
++           3    Stream 2 output
++           4    Stream 3 output
++
++           The stream output port nodes are optional if they are not
++           connected to anything at the hardware level or implemented
++           in the design.Since there is only one endpoint per port,
++           the endpoints are not numbered.
++
++
++Example:
++
++csi2rx: csi-bridge@0d060000 {
++	compatible = "cdns,csi2rx";
++	reg = <0x0d060000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "sys_clk", "p_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			csi2rx_in_sensor: endpoint {
++				remote-endpoint = <&sensor_out_csi2rx>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			csi2rx_out_grabber0: endpoint {
++				remote-endpoint = <&grabber0_in_csi2rx>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			csi2rx_out_grabber1: endpoint {
++				remote-endpoint = <&grabber1_in_csi2rx>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			csi2rx_out_grabber2: endpoint {
++				remote-endpoint = <&grabber2_in_csi2rx>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			csi2rx_out_grabber3: endpoint {
++				remote-endpoint = <&grabber3_in_csi2rx>;
++			};
++		};
++	};
++};
+-- 
+2.14.3
