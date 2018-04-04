@@ -1,68 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/4] mfd: add Gateworks System Controller core driver
-Date: Wed, 4 Apr 2018 15:41:19 +0100
-Message-ID: <20180404144119.GD7691@sirena.org.uk>
-References: <1522250043-8065-1-git-send-email-tharvey@gateworks.com>
- <1522250043-8065-3-git-send-email-tharvey@gateworks.com>
- <CAJ+vNU3-gaTcMAzo5wB6oSfE-JQC3NBVRJS5zFMTE-nVpD4F5g@mail.gmail.com>
- <20180403164715.GA5676@lunn.ch>
- <CAJ+vNU31f+iY5LOG6QmdJetb=pPvY_gpKoS+49FSy70U1Ksd8g@mail.gmail.com>
- <20180404131239.GD20869@lunn.ch>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [Patch v2 3/6] dt-bindings: display/ti: Add plane binding to
+ dispc node
+Date: Wed, 4 Apr 2018 17:56:46 +0300
+Message-ID: <40918ef0-247c-595f-5f0b-81a338bfac67@ti.com>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <20180326162128.8740-4-bparrot@ti.com> <2164642.vWvZsSsmr9@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5gxpn/Q6ypwruk0T"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180404131239.GD20869@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Tim Harvey <tharvey@gateworks.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2164642.vWvZsSsmr9@avalon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---5gxpn/Q6ypwruk0T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 04, 2018 at 03:12:39PM +0200, Andrew Lunn wrote:
-> > What about the 'reset' functionality? Is there something in the power
-> > supply API for hooking in a GPIO based power switch (in my case it
-> > would be i2c) as I would think that would be common for ATX supplies?
-> > I didn't see anything in Documentation/power.
-
-> > This is what led me to the restart handler idea. Ultimately when
-> > someone issues a 'reboot' I would like it to use the GSC to
-> > power-cycle the board.
-
-> I think you end up with the same problem. By the time you need to turn
-> the power supply off, too much of the kernel is shut down to be able
-> to use I2C. And if you are in the middle of an Oops, you have no idea
-> of the current state. Another I2C transaction could be under way etc.
-> All the current reset drivers are pretty much self contained, atomic
-> and use KISS hardware like a GPIO.
-
-> Maybe you best bet is to see if you can find any other I2C PMICs which
-> the kernel supports.
-
-Most systems have a handshake for final power down via asserting signals
-rather than using register writes, the final power down sequence usually
-runs way after software.  There's a few things that don't which just
-unceremoniously cut the power earlier on without completing the full
-power down sequence which for all practical purposes mostly works.
-
---5gxpn/Q6ypwruk0T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrE5A4ACgkQJNaLcl1U
-h9DgoAf+NlREIN0n4GCyKvQf462pdjqt/gmnsC2BNEK8Mj1EUiX+m6x776go5EtQ
-1Ss8tiBw6FqizVl/UEreGaSKAla/G3ksf4WXY8Y1DLnh86vLF13njlSFTSTUd+9I
-R+FuERcjkksvH47j2+xhznMf8gTSrlzJnnuWPjqfFXMlGCeOIdeiNpg/CzcTYnBD
-q2SZYWYAaqA9fJ8rc6ZDealK5U1cnCzyZiJCqGDBHtl3PgmZWFXjHAMfM86MfY9p
-2yur6ADSkx9kOwe20LA8aZGcU9EZzAhiRakUm4d/ovXH+w+faj+rt+UH943uabZW
-8i7kHaRzOBsVCA11FgDYY14UcJcXDQ==
-=3nwB
------END PGP SIGNATURE-----
-
---5gxpn/Q6ypwruk0T--
+T24gMDQvMDQvMTggMTc6MzYsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gSGkgQmVub2l0LAo+
+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+IAo+IE9uIE1vbmRheSwgMjYgTWFyY2ggMjAx
+OCAxOToyMToyNSBFRVNUIEJlbm9pdCBQYXJyb3Qgd3JvdGU6Cj4+IEN1cnJlbnRseSBhbGwgYXZh
+aWxhYmxlIGRpc3BsYXkgcGlwZWxpbmVzIChpLmUuIHBsYW5lKSBhbmQgb3V0cHV0IHBvcnQKPj4g
+cmVzb3VyY2VzIGFyZSBleHBvc2VkIHRvIHVzZXItc3BhY2UuIEluIHNvbWUgY2FzZXMgaXQgaXMg
+bmVlZGVkIHRvIGJlCj4+IGFibGUgdG8gcmVzdHJpY3Qgd2hpY2ggcmVzb3VyY2VzIGFyZSBhY3R1
+YWxseSB2aXNpYmxlIGZyb20gdXNlci1zcGFjZS4KPj4gQWxzbyBpbiBjYXNlcyB3aGVyZSBhIGRp
+c3BsYXkgd2lkZXIgdGhhbiAyMDQ4IHBpeGVscyBpcyB0byBiZSBzdXBwb3J0ZWQKPj4gbW9yZSB0
+aGFuIG9uZSB2aWRlbyBwaXBlbGluZSBpcyBuZWVkZWQuIEluIHRoaXMgY2FzZSB0aGUgMm5kIGhh
+cmR3YXJlCj4+IHBpcGVsaW5lIG5lZWRlZCBpcyBub3QgdmlzaWJsZSB0byB1c2VyIHNwYWNlIGFw
+cGxpY2F0aW9ucy4KPj4KPj4gVGhlc2UgdmlkZW8gcGlwZWxpbmUgZGVmaW5pdGlvbnMgbXVzdCBi
+ZSBzdGF0aWNhbGx5IGRlZmluZWQgc28gdGhhdAo+PiB0aGUgbnVtYmVyIG9mIHZpc2libGUgcGlw
+ZWxpbmVzIGRvZXMgbm90IGNoYW5nZSBmcm9tIHRoZSB1c2VyLXNwYWNlCj4+IHBlcnNwZWN0aXZl
+Lgo+Pgo+PiBJbiBvcmRlciB0byBhbGxvdyB0aGlzIHdlIGFyZSBhZGRpbmcgYW4gb3B0aW9uYWwg
+J3BsYW5lJyBzdWItbm9kZSB0bwo+PiB0aGUgZ2VuZXJpYyBESVNQQyBub2RlLgo+IAo+IEknbSBz
+b3JyeSBidXQgdGhpcyBpcyByZWFsbHkgY29uZmlndXJhdGlvbiBkYXRhLCBpdCBkb2Vzbid0IGRl
+c2NyaWJlIHRoZSAKPiBoYXJkd2FyZS4gSSBkb24ndCB0aGluayB0aGVzZSBwcm9wZXJ0aWVzIGJl
+bG9uZyB0byBEVC4KCkkgYWdyZWUsIGJ1dCB0aGUgcXVlc3Rpb24gdGhlbiBpczogd2hlcmUgc2hv
+dWxkIGl0IGJlPyBUaGVyZSB3YXMgYQpkaXNjdXNzaW9uIGluIHRoZSB2MSB0aHJlYWQgYWJvdXQg
+dGhpcywgYW5kIGFzIGZhciBhcyBJIHNlZSwgdGhlcmUgYXJlCm5vIG90aGVyIHVzYWJsZSBhbHRl
+cm5hdGl2ZXMuCgogVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtr
+YWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUy
+MS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
