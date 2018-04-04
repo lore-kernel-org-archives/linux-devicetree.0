@@ -1,73 +1,58 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
- designware driver
-Date: Wed, 4 Apr 2018 12:56:19 +0100
-Message-ID: <d48b4dc7-41a5-2304-c310-f7b4e08973a8@synopsys.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
- <20180404115014.GC24669@red-moon>
+From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
+Date: Wed, 4 Apr 2018 22:07:50 +1000
+Message-ID: <20180404220750.0436bbe1@gmail.com>
+References: <20180403142415.30083-1-oohall@gmail.com>
+ <20180403142415.30083-3-oohall@gmail.com>
+ <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180404115014.GC24669@red-moon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On Tue, 3 Apr 2018 10:37:51 -0700
+Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
 
-On 04/04/2018 12:50, Lorenzo Pieralisi wrote:
-> On Wed, Mar 28, 2018 at 12:38:33PM +0100, Gustavo Pimentel wrote:
+> On Tue, Apr 3, 2018 at 7:24 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Add device-tree binding documentation for the nvdimm region driver.
+> >
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> > v2: Changed name from nvdimm-region to pmem-region.
+> >     Cleaned up the example binding and fixed the overlapping regions.
+> >     Added support for multiple regions in a single reg.
+> > ---
+> >  .../devicetree/bindings/pmem/pmem-region.txt       | 80 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  1 +
+> >  2 files changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt  
 > 
-> Please always write a commit log even if it is trivial.
-
-Ok, Kishon has also refered that. On next patch version it'll contain a log
-description.
-
+> Device-tree folks, does this look, ok?
 > 
-> Thanks,
-> Lorenzo
-> 
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 6300762..4bb2e08 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -3,6 +3,7 @@
->>  Required properties:
->>  - compatible:
->>  	"snps,dw-pcie" for RC mode;
->> +	"snps,dw-pcie-ep" for EP mode;
->>  - reg: Should contain the configuration address space.
->>  - reg-names: Must be "config" for the PCIe configuration space.
->>      (The old way of getting the configuration address space from "ranges"
->> @@ -56,3 +57,15 @@ Example configuration:
->>  		#interrupt-cells = <1>;
->>  		num-lanes = <1>;
->>  	};
->> +or
->> +	pcie_ep: pcie_ep@dfc00000 {
->> +		compatible = "snps,dw-pcie-ep";
->> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
->> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
->> +		      <0xd0000000 0x2000000>; /* Configuration space */
->> +		reg-names = "dbi", "dbi2", "addr_space";
->> +		device_type = "pci";
->> +		num-ib-windows = <6>;
->> +		num-ob-windows = <2>;
->> +		num-lanes = <1>;
->> +	};
->> -- 
->> 2.7.4
->>
->>
+> Oliver, is there any concept of a management interface to the
+> device(s) backing these regions? libnvdimm calls these "nmem" devices
+> and support operations like health status and namespace label
+> management.
 
-Regards,
-Gustavo
+We would need a way to have nmem and pmem-regions find each other. Since we
+don't have the ACPI abstractions, the nmem region would need to add the
+ability for a driver to have a phandle to the interleaving and nmem properties.
+
+I guess that would be a separate driver, that would manage the nmem devices
+and there would be a way to relate the pmem and nmems. Oliver?
+
+Balbir Singh.
