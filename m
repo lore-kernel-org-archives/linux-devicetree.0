@@ -1,89 +1,64 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
- can't be supported
-Date: Wed, 4 Apr 2018 08:15:11 -0500
-Message-ID: <20180404131511.GB7303@ti.com>
-References: <20180326162128.8740-1-bparrot@ti.com>
- <20180326162128.8740-2-bparrot@ti.com>
- <67f26044-ac09-38b4-7faf-1738ee6c3d61@ti.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v5 01/13] ARM: move cputype definitions into another
+ file
+Date: Wed, 4 Apr 2018 15:49:16 +0200
+Message-ID: <20180404154916.66870e98@dell-desktop.home>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
+        <20180403061836.3926-2-mylene.josserand@bootlin.com>
+        <CAGb2v64GL=1UcYs1tFp-mS07vbHBao82SEhyzUrUHB++2-EKBg@mail.gmail.com>
+        <4ba0f1c4-a52a-b9f5-67ac-bf348a13228a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <67f26044-ac09-38b4-7faf-1738ee6c3d61@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4ba0f1c4-a52a-b9f5-67ac-bf348a13228a@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4gd3JvdGUgb24gV2VkIFsyMDE4
-LUFwci0wNCAxNDoxMjoxMyArMDMwMF06Cj4gT24gMjYvMDMvMTggMTk6MjEsIEJlbm9pdCBQYXJy
-b3Qgd3JvdGU6Cj4gPiBDdXJyZW50bHkgYXZhaWxhYmxlIGRpc3BsYXkgbW9kZSBmcm9tIGEgY29u
-bmVjdG9yIGFyZSBmaWx0ZXJlZCBvdXQKPiA+IGJhc2VkIG9ubHkgb24gcGl4ZWwgY2xvY2sgY2Fw
-YWJpbGl0eS4gSG93ZXZlciB3ZSBhbHNvIG5lZWQgdG8gZmlsdGVyCj4gPiBvdXQgd2lkZXIgbW9k
-ZSBpZiB3ZSBjYW5ub3QgaGFuZGxlIHRoZW0gYmFzZWQgb24gYXZhaWxhYmxlIHBpcGVsaW5lCj4g
-PiBjYXBhYmlsaXRpZXMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEJlbm9pdCBQYXJyb3QgPGJw
-YXJyb3RAdGkuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rp
-c3BjLmMgICAgICB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9vbWFwZHJtL2Rzcy9vbWFwZHNzLmggICAgfCAgMSArCj4gPiAgZHJpdmVycy9ncHUv
-ZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYyB8IDEwICsrKysrKysrKysKPiA+ICAzIGZpbGVz
-IGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9vbWFwZHJtL2Rzcy9kaXNwYy5jIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNz
-L2Rpc3BjLmMKPiA+IGluZGV4IDYyNGRlZTIyZjQ2Yi4uMzU1NDFkNDQ0MWRmIDEwMDY0NAo+ID4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3BjLmMKPiA+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9kaXNwYy5jCj4gPiBAQCAtMTAwLDYgKzEwMCw4IEBAIHN0
-cnVjdCBkaXNwY19mZWF0dXJlcyB7Cj4gPiAgCXU4IG1ncl9oZWlnaHRfc3RhcnQ7Cj4gPiAgCXUx
-NiBtZ3Jfd2lkdGhfbWF4Owo+ID4gIAl1MTYgbWdyX2hlaWdodF9tYXg7Cj4gPiArCXUxNiBvdmxf
-d2lkdGhfbWF4Owo+ID4gKwl1MTYgb3ZsX2hlaWdodF9tYXg7Cj4gPiAgCXVuc2lnbmVkIGxvbmcg
-bWF4X2xjZF9wY2xrOwo+ID4gIAl1bnNpZ25lZCBsb25nIG1heF90dl9wY2xrOwo+ID4gIAl1bnNp
-Z25lZCBpbnQgbWF4X2Rvd25zY2FsZTsKPiA+IEBAIC0yNDY1LDYgKzI0NjcsMTIgQEAgc3RhdGlj
-IGludCBkaXNwY19vdmxfY2FsY19zY2FsaW5nKHVuc2lnbmVkIGxvbmcgcGNsaywgdW5zaWduZWQg
-bG9uZyBsY2xrLAo+ID4gIAlyZXR1cm4gMDsKPiA+ICB9Cj4gPiAgCj4gPiArc3RhdGljIHZvaWQg
-ZGlzcGNfb3ZsX2dldF9tYXhfc2l6ZSh1MTYgKndpZHRoLCB1MTYgKmhlaWdodCkKPiA+ICt7Cj4g
-PiArCSp3aWR0aCA9IGRpc3BjLmZlYXQtPm92bF93aWR0aF9tYXg7Cj4gPiArCSpoZWlnaHQgPSBk
-aXNwYy5mZWF0LT5vdmxfaGVpZ2h0X21heDsKPiA+ICt9Cj4gPiArCj4gPiAgc3RhdGljIGludCBk
-aXNwY19vdmxfc2V0dXBfY29tbW9uKGVudW0gb21hcF9wbGFuZV9pZCBwbGFuZSwKPiA+ICAJCWVu
-dW0gb21hcF9vdmVybGF5X2NhcHMgY2FwcywgdTMyIHBhZGRyLCB1MzIgcF91dl9hZGRyLAo+ID4g
-IAkJdTE2IHNjcmVlbl93aWR0aCwgaW50IHBvc194LCBpbnQgcG9zX3ksIHUxNiB3aWR0aCwgdTE2
-IGhlaWdodCwKPiA+IEBAIC0yNTAwLDYgKzI1MDgsMTAgQEAgc3RhdGljIGludCBkaXNwY19vdmxf
-c2V0dXBfY29tbW9uKGVudW0gb21hcF9wbGFuZV9pZCBwbGFuZSwKPiA+ICAJb3V0X3dpZHRoID0g
-b3V0X3dpZHRoID09IDAgPyB3aWR0aCA6IG91dF93aWR0aDsKPiA+ICAJb3V0X2hlaWdodCA9IG91
-dF9oZWlnaHQgPT0gMCA/IGhlaWdodCA6IG91dF9oZWlnaHQ7Cj4gPiAgCj4gPiArCVdBUk4ob3V0
-X3dpZHRoID4gZGlzcGMuZmVhdC0+b3ZsX3dpZHRoX21heCwKPiA+ICsJICAgICAiUmVxdWVzdGVk
-IE9WTCB3aWR0aCAoJWQpIGlzIGxhcmdlciB0aGFuIGNhbiBiZSBzdXBwb3J0ZWQgKCVkKS5cbiIs
-Cj4gPiArCSAgICAgb3V0X3dpZHRoLCBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKPiAKPiBX
-aHkgZG9uJ3QgeW91IHJldHVybiBhbiBlcnJvciBoZXJlPyBJIGRvbid0IHNlZSBhIG5lZWQgZm9y
-IFdBUk4gaGVyZS4KClNvIGhlcmUgeW91IG1lYW4gcmVwbGFjZSB0aGUgV0FSTiB3aXRoIHNvbWV0
-aGluZyBsaWtlIHRoaXM6CgoJaWYgKG91dF93aWR0aCA+IGRpc3BjLmZlYXQtPm92bF93aWR0aF9t
-YXgpIHsKCQlEU1NFUlIoIlJlcXVlc3RlZCBPVkwgd2lkdGggKCVkKSBpcyBsYXJnZXIgdGhhbiBj
-YW4gYmUgc3VwcG9ydGVkICglZCkuXG4iLAoJCSAgICAgICBvdXRfd2lkdGgsIGRpc3BjLmZlYXQt
-Pm92bF93aWR0aF9tYXgpOwogICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cgl9Cgo+IAo+
-ID4gIHZvaWQgZGlzcGNfc2V0X29wcyhjb25zdCBzdHJ1Y3QgZGlzcGNfb3BzICpvKTsKPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jIGIvZHJp
-dmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYwo+ID4gaW5kZXggYTBkN2IxZDkw
-NWU4Li5kNWUwNTlhYmI1NTUgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRy
-bS9vbWFwX2Nvbm5lY3Rvci5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFw
-X2Nvbm5lY3Rvci5jCj4gPiBAQCAtMTk3LDYgKzE5NywxNiBAQCBzdGF0aWMgaW50IG9tYXBfY29u
-bmVjdG9yX21vZGVfdmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKPiA+ICAJ
-CQlyID0gMDsKPiA+ICAJfQo+ID4gIAo+ID4gKwkvKiBDaGVjayBpZiB0aGUgYWR2ZXJ0aXNlZCB3
-aWR0aCBleGNlZWQgd2hhdCB0aGUgcGlwZWxpbmUgY2FuIGRvICovCj4gPiArCWlmICghcikgewo+
-ID4gKwkJc3RydWN0IG9tYXBfZHJtX3ByaXZhdGUgKnByaXYgPSBkZXYtPmRldl9wcml2YXRlOwo+
-ID4gKwkJdTE2IHdpZHRoLCBoZWlnaHQ7Cj4gPiArCj4gPiArCQlwcml2LT5kaXNwY19vcHMtPm92
-bF9nZXRfbWF4X3NpemUoJndpZHRoLCAmaGVpZ2h0KTsKPiA+ICsJCWlmIChtb2RlLT5oZGlzcGxh
-eSA+IHdpZHRoKQo+ID4gKwkJCXIgPSAtRUlOVkFMOwo+IAo+IFlvdSBzaG91bGQgY2hlY2sgdGhl
-IGhlaWdodCBhbHNvLgoKWWVhaCwgSSdsbCBmaXggdGhhdC4KCkJlbm9pdAoKPiAKPiAgVG9taQo+
-IAo+IC0tIAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIs
-IDAwMTgwIEhlbHNpbmtpLgo+IFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlw
-YWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Hello Florian,
+
+On Tue, 3 Apr 2018 12:56:30 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
+
+> On 04/02/2018 11:52 PM, Chen-Yu Tsai wrote:
+> > On Tue, Apr 3, 2018 at 2:18 PM, Mylène Josserand
+> > <mylene.josserand@bootlin.com> wrote:  
+> >> To add the support for SMP on sun8i-a83t, we will use some
+> >> definitions in an assembly file so move definitions into
+> >> another file to separate C functions and macro defintions.  
+> > 
+> > Instead of moving the definitions, you could guard all the C
+> > stuff in "#ifndef __ASSEMBLY__". AFAIK a few header files do that.  
+> 
+> Which is effectively what this patch does (still waiting for an ACK):
+> 
+> https://patchwork.kernel.org/patch/10239855/
+
+Thanks for pointing out this existing patch.
+I will use it for my next series and add my Tested-by (once tested, of
+course).
+
+Best regards,
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+> 
+> > 
+> > ChenYu
+> >   
+> >> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> >> ---
+> >>  arch/arm/include/asm/cputype.h     | 94 +-----------------------------------
+> >>  arch/arm/include/asm/cputype_def.h | 98 ++++++++++++++++++++++++++++++++++++++  
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >   
+> 
+> 
