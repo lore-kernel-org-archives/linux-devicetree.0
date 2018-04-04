@@ -1,129 +1,136 @@
-Return-Path: <SRS0=PEGO=GY=redhat.com=hdegoede@kernel.org>
-Subject: Re: [PATCH v2 2/5] usb: typec: fusb302: remove max_snk_* for sink
- config
-References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
- <1521817127-23061-3-git-send-email-jun.li@nxp.com>
-From: Hans de Goede <hdegoede@redhat.com>
-Message-ID: <66fb9f1a-3331-201d-9ec2-747df3c98926@redhat.com>
-Date: Tue, 3 Apr 2018 17:25:43 +0200
+Return-Path: <SRS0=Tej7=GZ=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v8 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+Date: Wed,  4 Apr 2018 14:20:24 +0200
+Message-Id: <20180404122025.8726-2-maxime.ripard@bootlin.com>
+In-Reply-To: <20180404122025.8726-1-maxime.ripard@bootlin.com>
+References: <20180404122025.8726-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <1521817127-23061-3-git-send-email-jun.li@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com
-Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
+video streams and can output on up to 4 CSI-2 lanes, depending on the
+hardware implementation.
 
-On 23-03-18 15:58, Li Jun wrote:
-> Since max_snk_* is to be deprecated, so remove max_snk_* by adding a
-> variable PDO for sink config.
-> 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-> ---
->   drivers/usb/typec/fusb302/fusb302.c | 51 +++++++++++++++++++++++++++----------
->   1 file changed, 37 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-> index 7036171..db4d9cd 100644
-> --- a/drivers/usb/typec/fusb302/fusb302.c
-> +++ b/drivers/usb/typec/fusb302/fusb302.c
-> @@ -120,6 +120,7 @@ struct fusb302_chip {
->   	enum typec_cc_polarity cc_polarity;
->   	enum typec_cc_status cc1;
->   	enum typec_cc_status cc2;
-> +	u32 snk_pdo[PDO_MAX_OBJECTS];
->   
->   #ifdef CONFIG_DEBUG_FS
->   	struct dentry *dentry;
-> @@ -1212,11 +1213,6 @@ static const u32 snk_pdo[] = {
->   static const struct tcpc_config fusb302_tcpc_config = {
->   	.src_pdo = src_pdo,
->   	.nr_src_pdo = ARRAY_SIZE(src_pdo),
-> -	.snk_pdo = snk_pdo,
-> -	.nr_snk_pdo = ARRAY_SIZE(snk_pdo),
-> -	.max_snk_mv = 5000,
-> -	.max_snk_ma = 3000,
-> -	.max_snk_mw = 15000,
->   	.operating_snk_mw = 2500,
->   	.type = TYPEC_PORT_DRP,
->   	.data = TYPEC_PORT_DRD,
-> @@ -1756,6 +1752,38 @@ static int init_gpio(struct fusb302_chip *chip)
->   	return 0;
->   }
->   
-> +static int fusb302_composite_snk_pdo_array(struct fusb302_chip *chip)
-> +{
-> +	struct device *dev = chip->dev;
-> +	u32 mv, ma, mw, min_mv;
-> +	unsigned int i;
-> +
-> +	/* Copy the static snk pdo */
-> +	for (i = 0; i < ARRAY_SIZE(snk_pdo); i++)
-> +		chip->snk_pdo[i] = snk_pdo[i];
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-The static snk PDO is constant and only contains:
-	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
 
-So you can just do:
-
-	chip->snk_pdo[0] = PDO_FIXED(5000, 400, PDO_FIXED_FLAGS);
-
-Here.
-
-> +
-> +	if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &mv) ||
-> +	    device_property_read_u32(dev, "fcs,max-sink-microamp", &ma) ||
-> +	    device_property_read_u32(dev, "fcs,max-sink-microwatt", &mw))
-
-You can drop the reading of "fcs,max-sink-microwatt" here, it was only
-ever added because the tcpm code used to depend on max_mw being set,
-now that that is no longer the case, we don't need it.
-
-So this entire function can be simplified to:
-
-static int fusb302_composite_snk_pdo_array(struct fusb302_chip *chip)
-{
-	struct device *dev = chip->dev;
-	u32 max_uv, max_ua;
-
-	chip->snk_pdo[0] = PDO_FIXED(5000, 400, PDO_FIXED_FLAGS);
-
-	if (device_property_read_u32(dev, "fcs,max-sink-microvolt", &max_uv) ||
-	    device_property_read_u32(dev, "fcs,max-sink-microamp", &max_ua))
-		return 1;
-
-	chip->snk_pdo[1] = PDO_VAR(5000, max_uv / 1000, max_ua / 1000);
-	return 2;
-}
-
-> @@ -1784,18 +1812,13 @@ static int fusb302_probe(struct i2c_client *client,
->   	chip->tcpc_dev.config = &chip->tcpc_config;
->   	mutex_init(&chip->lock);
->   
-> -	if (!device_property_read_u32(dev, "fcs,max-sink-microvolt", &v))
-> -		chip->tcpc_config.max_snk_mv = v / 1000;
-> -
-> -	if (!device_property_read_u32(dev, "fcs,max-sink-microamp", &v))
-> -		chip->tcpc_config.max_snk_ma = v / 1000;
-> -
-> -	if (!device_property_read_u32(dev, "fcs,max-sink-microwatt", &v))
-> -		chip->tcpc_config.max_snk_mw = v / 1000;
-> -
->   	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
->   		chip->tcpc_config.operating_snk_mw = v / 1000;
->   
-> +	/* Composite sink PDO */
-> +	chip->tcpc_config.nr_snk_pdo = fusb302_composite_snk_pdo_array(chip);
-> +	chip->tcpc_config.snk_pdo = chip->snk_pdo;
-> +
->   	/*
->   	 * Devicetree platforms should get extcon via phandle (not yet
->   	 * supported). On ACPI platforms, we get the name from a device prop.
-> 
-
-Regards,
-
-Hans
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+new file mode 100644
+index 000000000000..459c6e332f52
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+@@ -0,0 +1,98 @@
++Cadence MIPI-CSI2 TX controller
++===============================
++
++The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
++4 CSI lanes in output, and up to 4 different pixel streams in input.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2tx"
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * esc_clk: escape mode clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties
++  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
++  - phy-names: must contain "dphy"
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++           port, in accordance with the video interface bindings defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           port nodes are numbered as follows.
++
++           Port Description
++           -----------------------------
++           0    CSI-2 output
++           1    Stream 0 input
++           2    Stream 1 input
++           3    Stream 2 input
++           4    Stream 3 input
++
++           The stream input port nodes are optional if they are not
++           connected to anything at the hardware level or implemented
++           in the design. Since there is only one endpoint per port,
++           the endpoints are not numbered.
++
++Example:
++
++csi2tx: csi-bridge@0d0e1000 {
++	compatible = "cdns,csi2tx";
++	reg = <0x0d0e1000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>,
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "p_clk", "esc_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			csi2tx_out: endpoint {
++				remote-endpoint = <&remote_in>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			csi2tx_in_stream0: endpoint {
++				remote-endpoint = <&stream0_out>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			csi2tx_in_stream1: endpoint {
++				remote-endpoint = <&stream1_out>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			csi2tx_in_stream2: endpoint {
++				remote-endpoint = <&stream2_out>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			csi2tx_in_stream3: endpoint {
++				remote-endpoint = <&stream3_out>;
++			};
++		};
++	};
++};
+-- 
+2.14.3
