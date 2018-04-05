@@ -1,18 +1,18 @@
-From: Frank Rowand <frowand.list@gmail.com>
+From: Jan Kiszka <jan.kiszka@web.de>
 Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
  unflattened to FDT
-Date: Thu, 5 Apr 2018 12:16:52 -0700
-Message-ID: <69c06530-94df-b67b-4e56-6519275afb45@gmail.com>
+Date: Thu, 5 Apr 2018 21:17:25 +0200
+Message-ID: <48bb616d-000f-834c-fcfd-c5441a6b61d8@web.de>
 References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
  <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
  <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
  <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
- <935d6135-c5db-e5f8-b850-8ef26ce0c0a0@web.de>
+ <de44758c-6c40-b951-e235-b2307ae6257e@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBD3LJZVFUEJBBJXMTHLAKGQEZLQK2EQ@googlegroups.com>
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBTPMTHLAKGQE3VVMZAA@googlegroups.com>
 Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <935d6135-c5db-e5f8-b850-8ef26ce0c0a0@web.de>
+In-Reply-To: <de44758c-6c40-b951-e235-b2307ae6257e@gmail.com>
 Content-Language: en-US
 List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
 List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
@@ -20,12 +20,12 @@ List-Archive: <https://groups.google.com/group/jailhouse-dev
 List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
 List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
  <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>, Frank Rowand <frowand.list@gmail.com>
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/18 00:22, Jan Kiszka wrote:
-> On 2018-04-05 02:55, Rob Herring wrote:
+On 2018-04-05 21:13, Frank Rowand wrote:
+> On 04/04/18 17:55, Rob Herring wrote:
 >> On Wed, Apr 4, 2018 at 5:35 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
 >>> Hi Frank,
 >>>
@@ -64,29 +64,13 @@ On 04/05/18 00:22, Jan Kiszka wrote:
 >>> "disabled"), modify it, and then activate it while it is already applied?
 >>
 >> No. I don't think that will work.
->>
->> The of_overlay_apply() function is still there, but static. We can
->> export it again if the need arises.
 > 
-> That would be the simplest solution from our perspective, but I'm not
-> sure if that is in the original spirit of this change.
-
-For short term out of tree usage, exporting of_overlay_apply() is ok.
-
-Yes, for in-tree, exporting it again defeats the attempted process to
-solve the overlay issues to make them acceptable in main line.
-
-
->>
->> Another option is there is a notifier callback OF_OVERLAY_PRE_APPLY,
->> but I'm not sure we want to make that be the normal interface to make
->> modifications.
+> I don't think it will work either.  The drivers won't be probed if the
+> nodes are disabled.
 > 
-> And would calling modification functions from that callback be legal at all?
 
-It might work in some specific cases, but the result is undefined.
+That would be the purpose of registering it disabled. The question is:
+Would it be probed at the point when we enabled it while being applied?
+If not, strike this.
 
-
-> 
-> Jan
-> 
+Jan
