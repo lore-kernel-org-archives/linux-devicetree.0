@@ -1,76 +1,51 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v3] ARM: dts: tpc: Device tree description of the iMX6Q
- TPC board
-Date: Thu, 5 Apr 2018 16:42:32 +0200
-Message-ID: <20180405164134.5ae71ea9@jawa>
-References: <20180405070939.22245-1-lukma@denx.de>
-        <CAOMZO5DHtvX64oseDFsLGiYmQPcb3thUrGeLxX8dgp69vUNZMg@mail.gmail.com>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
+Date: Thu, 5 Apr 2018 07:43:20 -0700
+Message-ID: <CAPcyv4jEFMnYqpcop=Ox-dZR3dSBRMhT05JSS-gPABX_YQGw1g@mail.gmail.com>
+References: <20180403142415.30083-1-oohall@gmail.com>
+ <20180403142415.30083-3-oohall@gmail.com>
+ <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
+ <20180404220750.0436bbe1@gmail.com>
+ <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
+ <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
+ <CAOSf1CHu4R-t8q-8fL6Dyk7myFR0gTfd6-0cxqtBVGZgYZWGAw@mail.gmail.com>
+ <87bmexua3s.fsf@concordia.ellerman.id.au>
+ <CAOSf1CEUnucUhW_pXG=7h5QBHvaH2-ENPKjGD42_0WEvbU6-Wg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TIacNO7LMssG4Z_oN2llEqO"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DHtvX64oseDFsLGiYmQPcb3thUrGeLxX8dgp69vUNZMg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAOSf1CEUnucUhW_pXG=7h5QBHvaH2-ENPKjGD42_0WEvbU6-Wg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/TIacNO7LMssG4Z_oN2llEqO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 5, 2018 at 5:43 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Apr 5, 2018 at 10:11 PM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+>> Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>> ...
+>>>
+>>> For context Balbir is working with me on some of the pmem stuff. You
+>>> probably want an Ack from Rob rather than one of us.
+>>
+>> I'll ack it if you make all the niggly nit picky trivial annoying
+>> changes I asked for :D
+>
+> *groan*
+>
+> Fine, I'll respin it tomorrow. If anyone else has comments now would
+> be the time to make them.
 
-Hi Fabio,
-
-> Hi Lukasz,
->=20
-> On Thu, Apr 5, 2018 at 4:09 AM, Lukasz Majewski <lukma@denx.de> wrote:
->=20
-> > +       reg_audio: regulator-audio {
-> > +               compatible =3D "regulator-fixed";
-> > +               regulator-name =3D "sgtl5000-supply";
-> > +               gpio =3D <&gpio6 31 GPIO_ACTIVE_HIGH>;
-> > +               enable-active-high;
-> > +               regulator-always-on;
-> > +       }; =20
->=20
-> sgtl5000 has 3 supplies: VDDD, VDDIO, VDDA.
->=20
-> Which supply does this reg_audio supply to the chip?
-
-It supplies none of the above. This regulator is needed to enable
-amplifier output placed after sgtl5000 device.
-
->=20
-> Can't you use any of the existing sgtl5000 regulator bindings to
-> describe this supply?
-
-As stated before - this supply enables the output of the amplifier.
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/TIacNO7LMssG4Z_oN2llEqO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlrGNdgACgkQAR8vZIA0
-zr0w/wgAsJt1lPSubFuoGe0c3+6cE/5LozTI/GFYzrspSaGsCIoh1phNWb2a89PN
-5yYEJztErGuCtE742GPvL0167PHlYPd7As0VlofqPPI4Aro8z6qU5Dp98AxsPkQb
-7O7+zhPCBuFL8q8bl/p66iqQl8O+SJm2p6apOnqBkMlMXqwq82CkwBMGLh8AUoUa
-bXIhNBW0SHwAh18/Ggr+y6taXn1t6PV7aX0Mhvbshpkm99wsQFo3EDZH6tK2mAf/
-JInxb4BJz+gaSUS304Um7G6Sk/qIaQ6IwsxZFd6rNUUYspbtalMsQdFJkHw6N3Go
-+ohaMdTj+IydZ2TjtkwwHQG5LZnWFw==
-=96D9
------END PGP SIGNATURE-----
-
---Sig_/TIacNO7LMssG4Z_oN2llEqO--
+Please also include my niggly nit picky trivial annoying bike shed
+color for the driver name to *not* use the "nd_region" suffix for a
+driver registering "nvdimm_bus" objects. "of_pmem_range" or
+"of_pmem_bus" or almost anything else would be fine.
