@@ -1,47 +1,73 @@
-From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Thu, 5 Apr 2018 22:43:14 +1000
-Message-ID: <CAOSf1CEUnucUhW_pXG=7h5QBHvaH2-ENPKjGD42_0WEvbU6-Wg@mail.gmail.com>
-References: <20180403142415.30083-1-oohall@gmail.com>
- <20180403142415.30083-3-oohall@gmail.com>
- <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
- <20180404220750.0436bbe1@gmail.com>
- <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
- <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
- <CAOSf1CHu4R-t8q-8fL6Dyk7myFR0gTfd6-0cxqtBVGZgYZWGAw@mail.gmail.com>
- <87bmexua3s.fsf@concordia.ellerman.id.au>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Thu, 5 Apr 2018 18:39:17 +0530
+Message-ID: <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <87bmexua3s.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 5, 2018 at 10:11 PM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
-> Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> ...
+Hi Bartosz,
+
+On Friday 09 February 2018 10:18 PM, Michael Turquette wrote:
+> On Fri, Feb 9, 2018 at 8:22 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> 2018-01-08 3:17 GMT+01:00 David Lechner <david@lechnology.com>:
+
+>> Hi David,
 >>
->> For context Balbir is working with me on some of the pmem stuff. You
->> probably want an Ack from Rob rather than one of us.
->
-> I'll ack it if you make all the niggly nit picky trivial annoying
-> changes I asked for :D
+>> I've been working on moving the genpd code from its own driver to the
+>> psc one. I couldn't get the system to boot though and problems
+>> happened very early in the boot sequence. I struggled to figure out
+>> what's happening, but eventually I noticed that psc uses
+>> CLK_OF_DECLARE() to initialize clocks. The functions registered this
+>> way are called very early in the boot sequence, way before
+>> late_initcall() in which the genpd framework is initialized. This of
 
-*groan*
+late_initcall() is too late for genpd to be initialized. As you may have
+seen with the latest set of patches, we have problems with timer
+initialization. After converting to platform devices, PSC and PLL clocks
+get initialized post time_init(). We are working that around using
+fixed-clocks, which hopefully will work (I still need to test many of
+the affected platforms).
 
-Fine, I'll respin it tomorrow. If anyone else has comments now would
-be the time to make them.
+Can you please reply with the exact issue you faced with genpd framework
+initialization so we do have that on record.
 
->
-> cheers
+Thanks,
+Sekhar
+
+>> course makes it impossible to register genpd at the same time we
+>> register PSCs.
+>>
+>> Mike, Stephen - it would be great if you could confirm, but I believe
+>> the clock framework now only accepts clock drivers which create real
+>> platform drivers, in which case this series would need to be modified.
+> 
+> You are correct. All new uses of CLK_OF_DECLARE are met with high
+> suspicion, and all new drivers should be platform drivers.
+> 
+> There are cases when CLK_OF_DECLARE is necessary (sometimes
+> temporarily while things are reworked), but it seems this is not the
+> case for this driver based on your testing of the platform driver
+> approach. Please use the platform driver approach instead.
+> 
+> Thanks,
+> Mike
+> 
+>>
+>> David: FYI I quickly converted the functions in psc-da850.c to actual
+>> probe callbacks and it worked just fine on a da850-lcdk board.
+>>
+>> Best regards,
+>> Bartosz Golaszewski
