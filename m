@@ -1,61 +1,36 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add fixed 26MHz clock as fck
- for twl
-Date: Thu, 5 Apr 2018 16:15:08 +0300
-Message-ID: <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
-References: <20180405115239.17370-1-peter.ujfalusi@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv3 1/7] dt-bindings, firmware: add Intel Stratix10 service
+ layer binding
+Date: Thu, 5 Apr 2018 08:16:53 -0500
+Message-ID: <20180405131653.2rso2ta74w663pdx@rob-hp-laptop>
+References: <1522182014-7338-1-git-send-email-richard.gong@linux.intel.com>
+ <1522182014-7338-2-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180405115239.17370-1-peter.ujfalusi@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, hns@goldelico.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1522182014-7338-2-git-send-email-richard.gong@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: richard.gong@linux.intel.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE4LTA0LTA1IDE0OjUyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBUaGUgYm9hcmQg
-dXNlcyAyNk1IeiBvc2NpbGxhdG9yIGZvciB0aGUgdHdsNDAzMCBIRkNMSy4KPiBUaGlzIHdheSB3
-ZSB3aWxsIG5vdCBkZXBlbmQgb24gdGhlIGJvb3Rsb2FkZXIgdG8gY29uZmlndXJlIHRoZQo+IENG
-R19CT09UOkhGQ0xLX0ZSRVEKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0
-ZXIudWpmYWx1c2lAdGkuY29tPgo+IC0tLQo+IEhpLAo+IAo+IHRoZXJlIG1pZ2h0IGJlIG90aGVy
-IGJvYXJkcyAoYWxsIG9tYXAzIGJvYXJkcyB3aXRoIHR3bDQwMzA/KSB3aGljaCB1c2VzIHRoZSBz
-YW1lCj4gc2V0dXAsIGJ1dCBJIG9ubHkgaGF2ZSBzY2hlbWF0aWNzIGZvciBiZWFnbGUteG0uCj4g
-Cj4gSW4gb3JkZXIgZm9yIHRoZSBkcml2ZXIgdG8gYWN0dWFsbHkgdXNlIHRoZSBjbG9jayB0aGUg
-Cj4gW1BBVENIXSBtZmQ6IHR3bC1jb3JlOiBGaXggY2xvY2sgaW5pdGlhbGl6YXRpb24KPiBuZWVk
-IHRvIGJlIGFwcGxpZWQuIFcvbyB0aGUgdHdsLWNvcmUgcGF0Y2ggdGhlIGNsb2NrIGlzIGp1c3Qg
-aWdub3JlZC4KPiAKPiBSZWdhcmRzLAo+IFBldGVyCj4gCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL29t
-YXAzLWJlYWdsZS14bS5kdHMgfCAxMCArKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
-bnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJl
-YWdsZS14bS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzCj4gaW5k
-ZXggMDM0OWZjYzlkYzI2Li5kODA1ODdkZTBiYmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAz
-LWJlYWdsZS14bS5kdHMKPiBAQCAtMzAsNiArMzAsMTMgQEAKPiAgCQlldGhlcm5ldCA9ICZldGhl
-cm5ldDsKPiAgCX07Cj4gIAo+ICsJLyogZml4ZWQgMjZNSHogb3NjaWxsYXRvciAqLwo+ICsJaGZj
-bGtfMjZtOiBvc2NpbGxhdG9yIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0
-aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI2MDAwMDAwPjsK
-PiArCX07Cj4gKwo+ICAJbGVkcyB7Cj4gIAkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOwo+ICAK
-PiBAQCAtMjc0LDYgKzI4MSw5IEBACj4gIAkJaW50ZXJydXB0cyA9IDw3PjsgLyogU1lTX05JUlEg
-Y2FzY2FkZWQgdG8gaW50YyAqLwo+ICAJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+ICAK
-PiArCQljbG9ja3MgPSA8JmhmY2xrXzI2bT47Cj4gKwkJY2xvY2stbmFtZXMgPSAiZmNrIjsKCkkg
-d29uZGVyIGlmIHdlIHNob3VsZCByZW5hbWUgdGhpcyB0byBoZmNsay4uLgpUaGUgRFQgZG9jdW1l
-bnRhdGlvbiBkb2VzIG5vdCBtZW50aW9uIGl0IGFuZCBhZmFpayBpdCBpcyBub3Qgc3BlY2lmaWVk
-CmluIERUIGZpbGVzIGVpdGhlci4KCkFmdGVyIGFsbCBpdCBpcyB0aGUgSEZDTEsgY2xvY2sgZm9y
-IHRoZSB0d2w0MDMwLgoKSSdtIGZpbmUga2VlcGluZyBpdCBhcyAnZmNrJyBidXQgaXQgbG9va3Mg
-YSBiaXQgd2VpcmQuCgo+ICsKPiAgCQl0d2xfYXVkaW86IGF1ZGlvIHsKPiAgCQkJY29tcGF0aWJs
-ZSA9ICJ0aSx0d2w0MDMwLWF1ZGlvIjsKPiAgCQkJY29kZWMgewo+IAoKLSBQw6l0ZXIKClRleGFz
-IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
-LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
-ZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On Tue, Mar 27, 2018 at 03:20:08PM -0500, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> Add a device tree binding for the Intel Stratix10 service layer driver
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Signed-off-by: Alan Tull <atull@kernel.org>
+> ---
+> v2: Change to put service layer driver node under the firmware node
+>     Change compatible to "intel, stratix10-svc"
+> v3: No change
+> ---
+>  .../bindings/firmware/intel,stratix10-svc.txt      | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+
+Please add acks/reviewed-by's when posting new versions.
+
+Rob
