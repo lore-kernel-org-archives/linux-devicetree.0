@@ -1,69 +1,54 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Wed, 4 Apr 2018 19:55:36 -0500
-Message-ID: <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com> <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH] ARM64: dts: meson-axg: enable the eMMC controller
+Date: Thu, 5 Apr 2018 09:25:06 +0800
+Message-ID: <05e90560-46a7-7e4f-c4cf-13d8d6e754b3@amlogic.com>
+References: <20180403102651.60340-1-yixun.lan@amlogic.com>
+ <201804040211.7wh3FnSx%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBDJIP47K7MERBH7ISXLAKGQEBZMRENI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201804040211.7wh3FnSx%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: yixun.lan@amlogic.com, kbuild-all@01.org, Kevin Hilman <khilman@baylibre.com>, Nan Li <nan.li@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 5:35 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
-> Hi Frank,
->
-> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Move duplicating and unflattening of an overlay flattened devicetree
->> (FDT) into the overlay application code.  To accomplish this,
->> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>
->> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->> code, which is thus responsible for freeing the duplicate FDT.  The
->> caller of of_overlay_fdt_apply() remains responsible for freeing the
->> original FDT.
->>
->> The unflattened devicetree now belongs to devicetree code, which is
->> thus responsible for freeing the unflattened devicetree.
->>
->> These ownership changes prevent early freeing of the duplicated FDT
->> or the unflattened devicetree, which could result in use after free
->> errors.
->>
->> of_overlay_fdt_apply() is a private function for the anticipated
->> overlay loader.
->
-> We are using of_fdt_unflatten_tree + of_overlay_apply in the
-> (out-of-tree) Jailhouse loader driver in order to register a virtual
-> device during hypervisor activation with Linux. The DT overlay is
-> created from a a template but modified prior to application to account
-> for runtime-specific parameters. See [1] for the current implementation.
->
-> I'm now wondering how to model that scenario best with the new API.
-> Given that the loader lost ownership of the unflattened tree but the
-> modification API exist only for the that DT state, I'm not yet seeing a
-> clear solution. Should we apply the template in disabled form (status =
-> "disabled"), modify it, and then activate it while it is already applied?
+Hi Kevin
 
-No. I don't think that will work.
+On 04/04/2018 02:26 AM, kbuild test robot wrote:
+> Hi Nan,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on next-20180403]
+> [cannot apply to robh/for-next v4.16 v4.16-rc7 v4.16-rc6 v4.16]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Yixun-Lan/ARM64-dts-meson-axg-enable-the-eMMC-controller/20180403-224314
+> config: arm64-allyesconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> Error: arch/arm64/boot/dts/amlogic/meson-axg-s400.dts:49.24-25 syntax error
+>    FATAL ERROR: Unable to parse input tree
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
 
-The of_overlay_apply() function is still there, but static. We can
-export it again if the need arises.
+oops, need to add this header (I fail to do a last check when rebase to
+the dt64 branch)
 
-Another option is there is a notifier callback OF_OVERLAY_PRE_APPLY,
-but I'm not sure we want to make that be the normal interface to make
-modifications.
++#include <dt-bindings/gpio/meson-axg-gpio.h>
 
-Rob
+will send a patch v2
+
+Yixun
