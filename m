@@ -1,114 +1,206 @@
-From: Jan Kiszka <jan.kiszka@web.de>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Thu, 5 Apr 2018 21:38:26 +0200
-Message-ID: <255dffbd-4ff1-42a4-033b-311d49339102@web.de>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
- <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
- <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [usb-next PATCH v11 3/8] usb: core: add a wrapper for the USB
+ PHYs on the HCD
+Date: Thu, 5 Apr 2018 22:04:01 +0200
+Message-ID: <CAFBinCCRhJLxOCz6_a23XnVcSo35MpE8huA8keNFBrWmr_mR=A@mail.gmail.com>
+References: <20180303214309.25643-1-martin.blumenstingl@googlemail.com>
+ <20180303214309.25643-4-martin.blumenstingl@googlemail.com>
+ <CAK7LNARM=F3Ey0aO9PiNftxkcLVo4z10jdrkSrQE1f74nK1=Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBOXWTHLAKGQEMDAQ7OA@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com, Jailhouse <jailhouse-dev@googlegroups.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAK7LNARM=F3Ey0aO9PiNftxkcLVo4z10jdrkSrQE1f74nK1=Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter.Chen-3arQi8VN3Tc@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-05 21:28, Frank Rowand wrote:
-> On 04/05/18 12:13, Jan Kiszka wrote:
->> On 2018-04-05 20:59, Frank Rowand wrote:
->>> Hi Jan,
->>>
->>> On 04/04/18 15:35, Jan Kiszka wrote:
->>>> Hi Frank,
->>>>
->>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>
->>>>> Move duplicating and unflattening of an overlay flattened devicetree
->>>>> (FDT) into the overlay application code.  To accomplish this,
->>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>>>
->>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>>>> code, which is thus responsible for freeing the duplicate FDT.  The
->>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>>>> original FDT.
->>>>>
->>>>> The unflattened devicetree now belongs to devicetree code, which is
->>>>> thus responsible for freeing the unflattened devicetree.
->>>>>
->>>>> These ownership changes prevent early freeing of the duplicated FDT
->>>>> or the unflattened devicetree, which could result in use after free
->>>>> errors.
->>>>>
->>>>> of_overlay_fdt_apply() is a private function for the anticipated
->>>>> overlay loader.
->>>>
->>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
->>>> device during hypervisor activation with Linux. The DT overlay is
->>>> created from a a template but modified prior to application to account
->>>> for runtime-specific parameters. See [1] for the current implementation.
->>>>
->>>> I'm now wondering how to model that scenario best with the new API.
->>>> Given that the loader lost ownership of the unflattened tree but the
->>>> modification API exist only for the that DT state, I'm not yet seeing a
->>>> clear solution. Should we apply the template in disabled form (status =
->>>> "disabled"), modify it, and then activate it while it is already applied?
->>>
->>> Thank you for the pointer to the driver - that makes it much easier to
->>> understand the use case and consider solutions.
->>>
->>> If you can make the changes directly on the FDT instead of on the
->>> expanded devicetree, then you could move to the new API.
+Hello,
+
+(great to hear that this might be useful on Socionext SoCs as well :))
+
+On Wed, Apr 4, 2018 at 2:10 PM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> 2018-03-04 6:43 GMT+09:00 Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>:
+>> Many SoC platforms have separate devices for the USB PHY which are
+>> registered through the generic PHY framework. These PHYs have to be
+>> enabled to make the USB controller actually work. They also have to be
+>> disabled again on shutdown/suspend.
 >>
->> Are there some examples/references on how to edit FDTs in-place in the
->> kernel? I'd like to avoid writing the n-th FDT parser/generator.
-> 
-> I don't know of any existing in-kernel edits of the FDT (but they might
-> exist).  The functions to access an FDT are in libfdt, which is in
-> scripts/dtc/libfdt/.
-> 
-
-Ah, libfdt is available for kernel drivers as well. That looks like a
-viable path on first sight. I'll try that and come back in case it does
-not solve all issues.
-
-> 
->>>
->>> Looking at the driver, I see one potential issue with that approach.
->>> The property "interrupt-map" is added directly to the changeset
->>> instead of being an existing property in the overlay.  Is it possible
->>> to have this property in the overlay when needed?
+>> Currently (at least) the following HCI platform drivers are using custom
+>> code to obtain all PHYs via devicetree for the roothub/controller and
+>> disable/enable them when required:
+>> - ehci-platform.c has ehci_platform_power_{on,off}
+>> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+>> - ohci-platform.c has ohci_platform_power_{on,off}
 >>
->> Well, the size of that property has a runtime dependency on the gic's
->> #address-cells. If that is easy to account for depends a bit on the
->> available FDT manipulation services. Or it would take multiple templates
->> to handle the different cases (0, 1, or 2 IIRC).
-> 
-> If I understand create_vpci_of_overlay() correctly, it is assuming a
-> fixed size of 4 cells.  Line 314 is: for (n = 0, cell = 0; n < 4; n++) {
-> 
-> Off the top of my head, it is theoretically possible to create a property
-> that can contain the largest possible size for the property, then shrink
-> the size by inserting NOPs at the end of the property to shrink it.
+>> With this new wrapper the USB PHYs can be specified directly in the
+>> USB controller's devicetree node (just like on the drivers listed
+>> above). This allows SoCs like the Amlogic Meson GXL family to operate
+>> correctly once this is wired up correctly. These SoCs use a dwc3
+>> controller and require all USB PHYs to be initialized (if one of the USB
+>> PHYs it not initialized then none of USB port works at all).
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Cc: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/usb/core/Makefile |   2 +-
+>>  drivers/usb/core/phy.c    | 158 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/usb/core/phy.h    |   7 ++
+>>  3 files changed, 166 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/usb/core/phy.c
+>>  create mode 100644 drivers/usb/core/phy.h
+>>
+>> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+>> index 92c9cefb4317..18e874b0441e 100644
+>> --- a/drivers/usb/core/Makefile
+>> +++ b/drivers/usb/core/Makefile
+>> @@ -6,7 +6,7 @@
+>>  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
+>>  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
+>>  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
+>> -usbcore-y += port.o
+>> +usbcore-y += phy.o port.o
+>>
+>>  usbcore-$(CONFIG_OF)           += of.o
+>>  usbcore-$(CONFIG_USB_PCI)              += hcd-pci.o
+>> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+>> new file mode 100644
+>> index 000000000000..09b7c43c0ea4
+>> --- /dev/null
+>> +++ b/drivers/usb/core/phy.c
+>> @@ -0,0 +1,158 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * A wrapper for multiple PHYs which passes all phy_* function calls to
+>> + * multiple (actual) PHY devices. This is comes handy when initializing
+>> + * all PHYs on a HCD and to keep them all in the same state.
+>> + *
+>> + * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/list.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/of.h>
+>> +
+>> +#include "phy.h"
+>> +
+>> +struct usb_phy_roothub {
+>> +       struct phy              *phy;
+>> +       struct list_head        list;
+>> +};
+>> +
+>> +static struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
+>> +{
+>> +       struct usb_phy_roothub *roothub_entry;
+>> +
+>> +       roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
+>> +       if (!roothub_entry)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       INIT_LIST_HEAD(&roothub_entry->list);
+>> +
+>> +       return roothub_entry;
+>> +}
+>> +
+>> +static int usb_phy_roothub_add_phy(struct device *dev, int index,
+>> +                                  struct list_head *list)
+>> +{
+>> +       struct usb_phy_roothub *roothub_entry;
+>> +       struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
+>> +
+>> +       if (IS_ERR_OR_NULL(phy)) {
+>> +               if (!phy || PTR_ERR(phy) == -ENODEV)
+>> +                       return 0;
+>> +               else
+>> +                       return PTR_ERR(phy);
+>> +       }
+>> +
+>> +       roothub_entry = usb_phy_roothub_alloc(dev);
+>> +       if (IS_ERR(roothub_entry))
+>> +               return PTR_ERR(roothub_entry);
+>> +
+>> +       roothub_entry->phy = phy;
+>> +
+>> +       list_add_tail(&roothub_entry->list, list);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev)
+>> +{
+>> +       struct usb_phy_roothub *phy_roothub;
+>> +       struct usb_phy_roothub *roothub_entry;
+>> +       struct list_head *head;
+>> +       int i, num_phys, err;
+>> +
+>> +       num_phys = of_count_phandle_with_args(dev->of_node, "phys",
+>> +                                             "#phy-cells");
+>> +       if (num_phys <= 0)
+>> +               return NULL;
+>> +
+>> +       phy_roothub = usb_phy_roothub_alloc(dev);
+>> +       if (IS_ERR(phy_roothub))
+>> +               return phy_roothub;
+>> +
+>> +       for (i = 0; i < num_phys; i++) {
+>> +               err = usb_phy_roothub_add_phy(dev, i, &phy_roothub->list);
+>> +               if (err)
+>> +                       goto err_out;
+>> +       }
+>> +
+>> +       head = &phy_roothub->list;
+>
+>
+> I think phy_roothub->phy is always empty,
+> and only phy_roothub->list is used.
+>
+>
+> I just wondered if we can directly put 'struct list_head' into
+> 'struct usb_hcd'.
+maybe you can try it and send a patch (note: please wait until
+v4.17-rc2-ish because there are some fixes that will be applied by
+Greg after v4.17-rc1 is out, as well as the issues you noted below)?
+I believe it's not critical so there's plenty of time to get it into v4.18
 
-Well, I even find fdt_appendprop which sounds like we could keep adding
-that property on the fly.
+>> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+>> new file mode 100644
+>> index 000000000000..6fde59bfbff8
+>> --- /dev/null
+>> +++ b/drivers/usb/core/phy.h
+>> @@ -0,0 +1,7 @@
+>> +struct usb_phy_roothub;
+>
+> struct device;
+>
+> is also needed for usb_phy_roothub_init().
+do you think that I should still fix this in 4.17?
 
-How does memory management work with libfdt? Do I have to ensure that
-the fdt is already backed by an area large enough also for it modified form?
+>> +struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev);
+>> +int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+>> +
+>> +int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+>> +void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+>
+>
+> Better to add an include guard?
+> SPDX-License-Identifier for this header too?
+good catch - I'll send a patch for this too (along with the missing
+forward declaration for struct device)
 
-Thanks,
-Jan
+
+Regards
+Martin
