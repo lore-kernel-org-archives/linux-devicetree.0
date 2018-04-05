@@ -1,85 +1,78 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
-Date: Thu, 5 Apr 2018 09:42:46 +0000
-Message-ID: <TY1PR01MB1769064C77AE3E5ABA4993DAF5BB0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
- <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Thu, 5 Apr 2018 11:54:29 +0200
+Message-ID: <20180405095429.GA7506@ulmo>
+References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Patrice Chotard <patrice.chotard@st.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KT24gMzAgTWFyY2ggMjAxOCAyMjoyNiBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IE9uIFdlZCwgTWFyIDI4LCAyMDE4IGF0IDU6MjIgUE0sIFBoaWwgRWR3b3J0aHkgd3JvdGU6
-DQo+ID4gVGhlIERlc2lnbldhcmUgR1BJTyBJUCBjYW4gYmUgY29uZmlndXJlZCBmb3IgZWl0aGVy
-IDEgb3IgMzINCj4gPiBpbnRlcnJ1cHRzLA0KPiANCj4gMSB0byAzMiwgb3IganVzdCBhIGNob2lj
-ZSBiZXR3ZWVuIHR3bz8NCkp1c3QgYSBjaG9pY2Ugb2YgMSBvciAzMi4NCk5vdGUgdGhhdCBieSAn
-Y29uZmlndXJlZCcgSSBhbSB0YWxraW5nIGFib3V0IHRoZSBoYXJkd2FyZSBiZWluZyBjb25maWd1
-cmVkIGluDQpSVEwgcHJpb3IgdG8gbWFudWZhY3R1cmluZyBhIGRldmljZS4gT25jZSBtYWRlLCB5
-b3UgY2Fubm90IGNoYW5nZSBpdC4NClRoaXMgY29uZmlndXJhdGlvbiBhZmZlY3RzIHRoZSBudW1i
-ZXIgb2Ygb3V0cHV0IGludGVycnVwdCBzaWduYWxzIGZyb20gdGhlIEdQSU8NCkNvbnRyb2xsZXIg
-YmxvY2sgdGhhdCBhcmUgY29ubmVjdGVkIHRvIGFuIGludGVycnVwdCBjb250cm9sbGVyLg0KDQo+
-ID4gYnV0IHRoZSBkcml2ZXIgY3VycmVudGx5IG9ubHkgc3VwcG9ydHMgMSBpbnRlcnJ1cHQuIFNl
-ZSB0aGUgRGVzaWduV2FyZQ0KPiA+IERXX2FwYl9ncGlvIERhdGFib29rIGRlc2NyaXB0aW9uIG9m
-IHRoZSAnR1BJT19JTlRSX0lPJyBwYXJhbWV0ZXIuDQo+IA0KPiBXaWxsIHNlZSBhZnRlciBob2xp
-ZGF5IGFuZCBwZXJoYXBzIG1ha2UgbW9yZSBjb21tZW50cy4gSGVyZSBpcyBqdXN0IGEgYnJpZWYN
-Cj4gcmV2aWV3Lg0KPiANCj4gPiArLSBpbnRlcnJ1cHRzIDogVGhlIGludGVycnVwdHMgdG8gdGhl
-IHBhcmVudCBjb250cm9sbGVyIHJhaXNlZCB3aGVuDQo+ID4gK0dQSU9zDQo+ID4gKyAgZ2VuZXJh
-dGUgdGhlIGludGVycnVwdHMuIElmIHRoZSBjb250cm9sbGVyIHByb3ZpZGVzIG9uZSBjb21iaW5l
-ZA0KPiA+ICtpbnRlcnJ1cHQNCj4gPiArICBmb3IgYWxsIEdQSU9zLCBzcGVjaWZ5IGEgc2luZ2xl
-IGludGVycnVwdC4gSWYgdGhlIGNvbnRyb2xsZXINCj4gPiArcHJvdmlkZXMgb25lDQo+ID4gKyAg
-aW50ZXJydXB0IGZvciBlYWNoIEdQSU8sIHByb3ZpZGUgYSBsaXN0IG9mIGludGVycnVwdHMgdGhh
-dA0KPiA+ICtjb3JyZXNwb25kIHRvIGVhY2gNCj4gPiArICBvZiB0aGUgR1BJTyBwaW5zLiBXaGVu
-IHNwZWNpZnlpbmcgbXVsdGlwbGUgaW50ZXJydXB0cywgaWYgYW55IG9mDQo+ID4gK3RoZSBHUElP
-cyBhcmUNCj4gPiArICBub3QgY29ubmVjdGVkIHRvIGFuIGludGVycnVwdCwgdXNlIHRoZSBpbnRl
-cnJ1cHQtbWFzayBwcm9wZXJ0eS4NCj4gPiArLSBpbnRlcnJ1cHQtbWFzayA6IGEgMzItYml0IGJp
-dCBtYXNrIHRoYXQgc3BlY2lmaWVzIHdoaWNoIGludGVycnVwdHMNCj4gPiAraW4gdGhlIGxpc3QN
-Cj4gPiArICBvZiBpbnRlcnJ1cHRzIGlzIHZhbGlkLCBiaXQgaXMgMSBmb3IgYSB2YWxpZCBpcnEu
-DQo+IA0KPiBTbywgYnV0IHdoeSBvbmUgd2lsbCBuZWVkIHRoYXQgaW4gcHJhY3RpY2U/IEdQSU8g
-ZHJpdmVyIHVzdWFsbHkgcHJvdmlkZXMgYSBwaW4NCj4gYmFzZWQgSVJRIGNoaXAgd2hpY2ggbWFw
-cyBlYWNoIHBpbiB0byB0aGUgY29ycmVzcG9uZGluZyBvZmZzZXQgaW5zaWRlDQo+IHNwZWNpZmlj
-IElSUSBkb21haW4uDQpPbiBhbiBBUk0gZGV2aWNlIHdlIGhhdmUgdGhpcyBHUElPIGJsb2NrIGNv
-bm5lY3RlZCB0byB0aGUgR0lDIGludGVycnVwdA0KY29udHJvbGxlciwgaS5lLiB0aGUgU3lub3Bz
-eXMgR1BJTyBjb250cm9sbGVyIGludGVycnVwdHMgY2FuKiBoYXZlIGEgMSB0byAxDQptYXBwaW5n
-IHRvIHRoZSBHSUMgaW50ZXJydXB0cy4gQXQgdGhlIG1vbWVudCwgdGhlIEdQSU8gZHJpdmVyIG9u
-bHkgYWxsb3dzIGENCnNpbmdsZSBpcnEgc2lnbmFsIHRvIHNwZWNpZmllZC4NCiogdGhpcyBpcyBu
-b3Qgc3RyaWN0bHkgYWNjdXJhdGUgb24gdGhlIGRldmljZSBJIGFtIHdvcmtpbmcgb24sIHRoZXJl
-IGlzIGFub3RoZXINCmJsb2NrIG9mIElQIGJldHdlZW4gdGhlIHR3bywgYnV0IHRoYXQgZG9lc24n
-dCBtYXR0ZXIgaW4gdGhpcyBjYXNlLg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3Ry
-dWN0IGRldmljZV9ub2RlICpucCA9IHRvX29mX25vZGUoZndub2RlKTsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICB1MzIgaXJxX21hc2sgPSAweEZGRkZGRkZGOw0KPiANCj4gV2h5PyBTaG91
-bGRuJ3QgaXQgYmUgZGVwZW5kZW50IHRvIHRoZSBhbW91bnQgb2YgYWN0dWFsIHBpbnMgLyBwb3J0
-cz8NCj4gSW50ZWwgUXVhcmsgaGFzIG9ubHkgOCBBRkFJUi4NCkl0J3MganVzdCBhIGRlZmF1bHQg
-d2hpY2ggY2FuIGJlIG92ZXJyaWRkZW4gdmlhIGRldmljZSB0cmVlLg0KRm9yIFF1YXJrLCBzaW5j
-ZSB5b3UgY3VycmVudGx5IG9ubHkgdXNlIGEgc2luZ2xlIGlycSwgSSBndWVzcyB0aGUgSFcgd2Fz
-DQpjb25maWd1cmVkIHRoYXQgd2F5LiBJbiB3aGljaCBjYXNlLCB5b3Ugd291bGRuJ3QgdXNlIGFu
-eSBvZiB0aGlzLg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50IGo7DQo+ID4gKw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIE9wdGlvbmFsIGlycSBtYXNrICovDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyKGZ3bm9kZSwN
-Cj4gPiArICJpbnRlcnJ1cHQtbWFzayIsICZpcnFfbWFzayk7DQo+ID4gKw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogVGhlIElQ
-IGhhcyBjb25maWd1cmF0aW9uIG9wdGlvbnMgdG8gYWxsb3cgYSBzaW5nbGUNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgKiBjb21iaW5lZCBpbnRlcnJ1cHQgb3Igb25lIHBlciBncGlvLiBJ
-ZiBvbmUgcGVyIGdwaW8sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogc29tZSBtaWdo
-dCBub3QgYmUgdXNlZC4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4gDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZm9yIChqID0gMDsgaiA8IHBwLT5uZ3BpbzsgaisrKSB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoaXJxX21hc2sgJiBCSVQo
-aikpIHsNCj4gDQo+IGZvcl9lYWNoX3NldF9iaXQoKSBpcyBpbiBrZXJuZWwgZm9yIGFnZXMhDQpU
-aGVyZSdzIGxvdCBvZiBzdHVmZiBpbiB0aGUga2VybmVsIGZvciBhZ2VzIHRoYXQgSSBjYW4ndCBy
-ZW1lbWJlciENCkknbGwgZml4IHRoaXMgOikNCg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBwcC0+aXJxW2pdID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobnAsIGop
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAocHAtPmly
-cVtqXSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBwcC0+aGFzX2lycSA9IHRydWU7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB9DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gDQo+IFNvLCBvbiB0aGUg
-Zmlyc3QgZ2xhbmNlIHRoZSBwYXRjaCBsb29rcyBlaXRoZXIgc3VwZXJmbHVvdXMgb3IgdGFraW5n
-IHdyb25nDQo+IGFwcHJvYWNoLiBQbGVhc2UsIGVsYWJvcmF0ZSBtb3JlIHdoeSBpdCdzIGRvbmUg
-aW4gdGhpcyB3YXkgYW5kIHdoYXQgdGhlDQo+IGNhc2UgZm9yIGFsbCB0aGlzIGluIHByYWN0aWNl
-Lg0KSG9wZWZ1bGx5IEkgaGF2ZSBleHBsYWluZWQgaXQgYSBiaXQgYmV0dGVyIGFib3ZlLg0KDQpU
-aGFua3MgZm9yIHlvdXIgY29tbWVudHMNClBoaWwNCg==
+
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
+> Add support to get and control a list of resets for the device
+> as optional and shared. These resets must be kept de-asserted until
+> the device is enabled.
+>=20
+> This is specified as shared because some SoCs like UniPhier series
+> have common reset controls with all ahci controller instances.
+>=20
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+>  drivers/ata/ahci.h                                 |  1 +
+>  drivers/ata/libahci_platform.c                     | 24 ++++++++++++++++=
++++---
+>  3 files changed, 23 insertions(+), 3 deletions(-)
+
+This causes a regression on Tegra because we explicitly request the
+resets after the call to ahci_platform_get_resources().
+
+=46rom a quick look, ahci_mtk and ahci_st are in the same boat, adding the
+corresponding maintainers to Cc.
+
+Patrice, Matthias: does SATA still work for you after this patch? This
+has been in linux-next since next-20180327.
+
+Given how this is one of the more hardware-specific bits, perhaps a
+better way to do this is to move reset handling into a Uniphier driver
+much like Tegra, Mediatek and ST?
+
+That said, I don't see SATA support for any of the Socionext hardware
+either in the DT bindings or drivers/ata, so perhaps it'd be best to
+back this out again until we have something that's more well tested?
+
+Thierry
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrF8lEACgkQ3SOs138+
+s6H7EA//fqnLBMRIi+b3go4vL4naTiR/ajPZkj30Gl9LMUb0uprVgnPOC1ClhAEd
+VUqcL75MwXydIasQixfzTEmX2DPXGC4EYaPY1Zv/FDgnC0PXJMOezup8W40mHZKU
+9imul0pq7on0izFRB32xb45s2BXHAVpAyB/uEVthyWopnWK6cvGlaL5BdbHgtVhj
+GaajtH+v6+LY54zquz0noREZqFqDS5ugUHFkZq7Vquza99K2TAs9Jw9O9FaloNZq
+/rwKurnds9aeegnt6661XK5mYjuGzlA0Zwf4zk9uzU71pGmKDBNBu6WEwvTSM1jK
+l8/io7YCmbr4mVbzzoLn3hzzI9loK0ohL3e7mVJO+mORJZBCTjOzBIz+bQOdkU4y
+BQyiX8RK1tl4q1beYKV0HD6sffXiJDTBdHNMON3UNqF9MCOyAaX4t5Nr9MITUsaz
+NggHnWunPeJD0TPDEVrdYGQHj/z4Ri6AAEcuBW6KsPrwLOxRbM+qAw3VF29Ur1fC
+4v5e7Olr1ltu/NmvBiiHEELk8lnVmgZwVacpVLv2a8JZ2XMp0WH9lxVXB57SoEQ7
+KdrmDfYTcpyeCIOrUqdaz64CDsWGbZL+X048KoZmoxV5I5VEcXjCOJzd49CJYNtW
+J9bCVROflae3vM95hOt98CnC1ewPDe/SlR1HX7cySdFdAQxOaXs=
+=5EOF
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
