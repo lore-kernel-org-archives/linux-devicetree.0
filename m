@@ -1,81 +1,61 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
-Date: Thu, 05 Apr 2018 16:10:58 +0300
-Message-ID: <87lge1er31.fsf@kamboji.qca.qualcomm.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
-        <20180319014032.9394-3-alexey.roslyakov@gmail.com>
-        <5AAF838D.2030105@broadcom.com>
-        <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
-        <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
-        <5AB044C0.9060701@broadcom.com>
-        <87po3zxe9n.fsf@kamboji.qca.qualcomm.com>
-        <CAPDyKFr2GVB0+UUpT3GgGBT17TMcrky6X4L_pw+ztTL6ejbCwQ@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add fixed 26MHz clock as fck
+ for twl
+Date: Thu, 5 Apr 2018 16:15:08 +0300
+Message-ID: <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
+References: <20180405115239.17370-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFr2GVB0+UUpT3GgGBT17TMcrky6X4L_pw+ztTL6ejbCwQ@mail.gmail.com>
-        (Ulf Hansson's message of "Thu, 22 Mar 2018 11:29:53 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Alexey Roslyakov <alexey.roslyakov@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180405115239.17370-1-peter.ujfalusi@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
-
-> On 20 March 2018 at 10:55, Kalle Valo <kvalo@codeaurora.org> wrote:
->> Arend van Spriel <arend.vanspriel@broadcom.com> writes:
->>
->>>>> If I get it right, you mean something like this:
->>>>>
->>>>> mmc3: mmc@1c12000 {
->>>>> ...
->>>>>          broken-sg-support;
->>>>>          sd-head-align = 4;
->>>>>          sd-sgentry-align = 512;
->>>>>
->>>>>          brcmf: wifi@1 {
->>>>>                  ...
->>>>>          };
->>>>> };
->>>>>
->>>>> Where dt: bindings documentation for these entries should reside?
->>>>> In generic MMC bindings? Well, this is the very special case and
->>>>> mmc-linux maintainer will unlikely to accept these changes.
->>>>> Also, extra kernel code modification might be required. It could make
->>>>> quite trivial change much more complex.
->>>>
->>>> If the MMC maintainers are not copied on this patch series, it will
->>>> likely be hard for them to identify this patch series and chime in...
->>>
->>> The main question is whether this is indeed a "very special case" as
->>> Alexey claims it to be or that it is likely to be applicable to other
->>> device and host combinations as you are suggesting.
->>>
->>> If these properties are imposed by the host or host controller it
->>> would make sense to have these in the mmc bindings.
->>
->> BTW, last year we were discussing something similar (I mean related to
->> alignment requirements) with ath10k SDIO patches and at the time the
->> patch submitter was proposing to have a bounce buffer in ath10k to
->> workaround that. I don't remember the details anymore, they are on the
->> ath10k mailing list archive if anyone is curious to know, but I would
->> not be surprised if they are similar as here. So there might be a need
->> to solve this in a generic way (but not sure of course as I haven't
->> checked the details).
->
-> I re-call something about these as well, here are the patches. Perhaps
-> I should pick some of them up...
->
-> https://patchwork.kernel.org/patch/10123137/
-> https://patchwork.kernel.org/patch/10123139/
-> https://patchwork.kernel.org/patch/10123141/
-> https://patchwork.kernel.org/patch/10123143/
-
-Actually I was talking about a different patch, found it now:
-
-ath10k_sdio: DMA bounce buffers for read write
-
-https://patchwork.kernel.org/patch/9979543/
-
--- 
-Kalle Valo
+CgpPbiAyMDE4LTA0LTA1IDE0OjUyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBUaGUgYm9hcmQg
+dXNlcyAyNk1IeiBvc2NpbGxhdG9yIGZvciB0aGUgdHdsNDAzMCBIRkNMSy4KPiBUaGlzIHdheSB3
+ZSB3aWxsIG5vdCBkZXBlbmQgb24gdGhlIGJvb3Rsb2FkZXIgdG8gY29uZmlndXJlIHRoZQo+IENG
+R19CT09UOkhGQ0xLX0ZSRVEKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0
+ZXIudWpmYWx1c2lAdGkuY29tPgo+IC0tLQo+IEhpLAo+IAo+IHRoZXJlIG1pZ2h0IGJlIG90aGVy
+IGJvYXJkcyAoYWxsIG9tYXAzIGJvYXJkcyB3aXRoIHR3bDQwMzA/KSB3aGljaCB1c2VzIHRoZSBz
+YW1lCj4gc2V0dXAsIGJ1dCBJIG9ubHkgaGF2ZSBzY2hlbWF0aWNzIGZvciBiZWFnbGUteG0uCj4g
+Cj4gSW4gb3JkZXIgZm9yIHRoZSBkcml2ZXIgdG8gYWN0dWFsbHkgdXNlIHRoZSBjbG9jayB0aGUg
+Cj4gW1BBVENIXSBtZmQ6IHR3bC1jb3JlOiBGaXggY2xvY2sgaW5pdGlhbGl6YXRpb24KPiBuZWVk
+IHRvIGJlIGFwcGxpZWQuIFcvbyB0aGUgdHdsLWNvcmUgcGF0Y2ggdGhlIGNsb2NrIGlzIGp1c3Qg
+aWdub3JlZC4KPiAKPiBSZWdhcmRzLAo+IFBldGVyCj4gCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL29t
+YXAzLWJlYWdsZS14bS5kdHMgfCAxMCArKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
+bnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJl
+YWdsZS14bS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzCj4gaW5k
+ZXggMDM0OWZjYzlkYzI2Li5kODA1ODdkZTBiYmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAz
+LWJlYWdsZS14bS5kdHMKPiBAQCAtMzAsNiArMzAsMTMgQEAKPiAgCQlldGhlcm5ldCA9ICZldGhl
+cm5ldDsKPiAgCX07Cj4gIAo+ICsJLyogZml4ZWQgMjZNSHogb3NjaWxsYXRvciAqLwo+ICsJaGZj
+bGtfMjZtOiBvc2NpbGxhdG9yIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0
+aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI2MDAwMDAwPjsK
+PiArCX07Cj4gKwo+ICAJbGVkcyB7Cj4gIAkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOwo+ICAK
+PiBAQCAtMjc0LDYgKzI4MSw5IEBACj4gIAkJaW50ZXJydXB0cyA9IDw3PjsgLyogU1lTX05JUlEg
+Y2FzY2FkZWQgdG8gaW50YyAqLwo+ICAJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+ICAK
+PiArCQljbG9ja3MgPSA8JmhmY2xrXzI2bT47Cj4gKwkJY2xvY2stbmFtZXMgPSAiZmNrIjsKCkkg
+d29uZGVyIGlmIHdlIHNob3VsZCByZW5hbWUgdGhpcyB0byBoZmNsay4uLgpUaGUgRFQgZG9jdW1l
+bnRhdGlvbiBkb2VzIG5vdCBtZW50aW9uIGl0IGFuZCBhZmFpayBpdCBpcyBub3Qgc3BlY2lmaWVk
+CmluIERUIGZpbGVzIGVpdGhlci4KCkFmdGVyIGFsbCBpdCBpcyB0aGUgSEZDTEsgY2xvY2sgZm9y
+IHRoZSB0d2w0MDMwLgoKSSdtIGZpbmUga2VlcGluZyBpdCBhcyAnZmNrJyBidXQgaXQgbG9va3Mg
+YSBiaXQgd2VpcmQuCgo+ICsKPiAgCQl0d2xfYXVkaW86IGF1ZGlvIHsKPiAgCQkJY29tcGF0aWJs
+ZSA9ICJ0aSx0d2w0MDMwLWF1ZGlvIjsKPiAgCQkJY29kZWMgewo+IAoKLSBQw6l0ZXIKClRleGFz
+IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
+LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
