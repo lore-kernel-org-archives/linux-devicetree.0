@@ -1,45 +1,85 @@
-From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: Re: [PATCH v1 5/7] soc: mediatek: add a fixed wait for SRAM stable
-Date: Thu, 5 Apr 2018 16:42:58 +0000
-Message-ID: <DM5PR2101MB1032103E32029A14A2E41D1FFBBB0@DM5PR2101MB1032.namprd21.prod.outlook.com>
-References: <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v6 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Thu, 5 Apr 2018 11:02:58 -0700
+Message-ID: <20180405180258.GJ18510@minitux>
+References: <20180405160459.16693-1-ilina@codeaurora.org>
+ <20180405160459.16693-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <0fc10b2498c6dbe20141831c722c32cc74330d3d.1522736996.git.sean.wang@mediatek.com>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Sasha Levin <Alexander.Levin@microsoft.com>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>Sean Wang <sean.wang@mediatek.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Weiyi Lu <weiyi.lu@mediatek.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180405160459.16693-3-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+On Thu 05 Apr 09:04 PDT 2018, Lina Iyer wrote:
 
-[This is an automated email]
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> 
+> Command DB provides information on shared resources like clocks,
+> regulators etc., probed at boot by the remote subsytem and made
+> available in shared memory.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+> 
+> Changes in v6:
+> 	- Move to bindings/reserved-memory
+> 	- Remove indirection address and use only the actual reserved
+> 	  memory
+> 
+> Changes in v4:
+> 	- Fix unwanted capitalization
+> 	- Add reg property
+> ---
+>  .../bindings/reserved-memory/qcom,cmd-db.txt       | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+> new file mode 100644
+> index 000000000000..d808ada474c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+> @@ -0,0 +1,37 @@
+> +Command DB
+> +---------
+> +
+> +Command DB is a database that provides a mapping between resource key and the
+> +resource address for a system resource managed by a remote processor. The data
+> +is stored in a shared memory region and is loaded by the remote processor.
+> +
+> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+> +controlling shared resources. Depending on the board configuration the shared
+> +resource properties may change. These properties are dynamically probed by the
+> +remote processor and made available in the shared memory.
+> +
+> +The bindings for Command DB is specified in the reserved-memory section in
+> +devicetree. The devicetree representation of the command DB driver should be:
+> +
+> +Properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should be "qcom,cmd-db"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop encoded array>
+> +	Definition: The register address that points to the location of the
+> +		    Command DB in memory. Additionally, specify the address
+> +		    and size of the actual lacation in memory.
 
-This commit has been processed by the -stable helper bot and determined
-to be a high probability candidate for -stable trees. (score: 83.4612)
+The reg doesn't reference the indirection registers anymore, please
+update this.
 
-The bot has tested the following trees: v4.15.15, v4.14.32, v4.9.92, v4.4.1=
-26,=20
+Apart from this, you have my:
 
-v4.15.15: Failed to apply! Possible dependencies:
-    40b3b88a117c ("soc: mediatek: reuse read[l,x]_poll_timeout helpers")
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-v4.14.32: Failed to apply! Possible dependencies:
-    40b3b88a117c ("soc: mediatek: reuse read[l,x]_poll_timeout helpers")
-
-v4.9.92: Failed to apply! Possible dependencies:
-    40b3b88a117c ("soc: mediatek: reuse read[l,x]_poll_timeout helpers")
-    52510ee93488 ("soc: mediatek: add SCPSYS power domain driver for MediaT=
-ek MT7622 SoC")
-
-v4.4.126: Failed to apply! Possible dependencies:
-    40b3b88a117c ("soc: mediatek: reuse read[l,x]_poll_timeout helpers")
-    52510ee93488 ("soc: mediatek: add SCPSYS power domain driver for MediaT=
-ek MT7622 SoC")
-
-
-Please let us know if you'd like to have this patch included in a stable tr=
-ee.
+Regards,
+Bjorn
