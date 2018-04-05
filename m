@@ -1,87 +1,67 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ata: ahci-platform: add reset control support
-Date: Thu, 5 Apr 2018 11:59:24 +0200
-Message-ID: <20180405095924.GB7506@ulmo>
-References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
- <20180405095429.GA7506@ulmo>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [Patch v2 1/6] drm/omap: Add ability to filter out modes which
+ can't be supported
+Date: Thu, 5 Apr 2018 13:21:30 +0300
+Message-ID: <f8e60ec4-20ec-4b7d-f102-bc9d7d50e37a@ti.com>
+References: <20180326162128.8740-1-bparrot@ti.com>
+ <67f26044-ac09-38b4-7faf-1738ee6c3d61@ti.com> <20180404131511.GB7303@ti.com>
+ <1527419.mcdjVnGTTs@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180405095429.GA7506@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Patrice Chotard <patrice.chotard@st.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527419.mcdjVnGTTs@avalon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 05, 2018 at 11:54:29AM +0200, Thierry Reding wrote:
-> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
-> > Add support to get and control a list of resets for the device
-> > as optional and shared. These resets must be kept de-asserted until
-> > the device is enabled.
-> >=20
-> > This is specified as shared because some SoCs like UniPhier series
-> > have common reset controls with all ahci controller instances.
-> >=20
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
-> >  drivers/ata/ahci.h                                 |  1 +
-> >  drivers/ata/libahci_platform.c                     | 24 ++++++++++++++=
-+++++---
-> >  3 files changed, 23 insertions(+), 3 deletions(-)
->=20
-> This causes a regression on Tegra because we explicitly request the
-> resets after the call to ahci_platform_get_resources().
->=20
-> From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
-> corresponding maintainers to Cc.
->=20
-> Patrice, Matthias: does SATA still work for you after this patch? This
-> has been in linux-next since next-20180327.
->=20
-> Given how this is one of the more hardware-specific bits, perhaps a
-> better way to do this is to move reset handling into a Uniphier driver
-> much like Tegra, Mediatek and ST?
->=20
-> That said, I don't see SATA support for any of the Socionext hardware
-> either in the DT bindings or drivers/ata, so perhaps it'd be best to
-> back this out again until we have something that's more well tested?
-
-Tejun,
-
-I just noticed that Linus already pulled this for v4.17, so backing out
-isn't going to work anymore. Still, I don't think this is tested well
-enough, and given the lack of users of this I think a revert is the best
-option at this point.
-
-Thierry
-
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrF83wACgkQ3SOs138+
-s6FsGw/+NGCyYB3zZfQTbmWc6w7aQKkTM68wBIKQ8CfnEP1Jt95ldFZqpiMyWw+7
-F1TWFxuKgn7t0GcABzlczYHvAkxDE9u+JFyuOh8vzLQctkOcLFmhlegKjwrT8UUp
-+0MVxMtNptCyQ2qF9Z65uKuRbRgnltHtaapt6OpS9mBf15ssvC8NMxl/l2FSRcbk
-dPJ3kxTmx5CAS3SHMQV81kO+vJ3HL2zIcDKRIbJfj6lIM0vPtSOWWety4eEVxJpo
-cMejkZfmeQ7iLO5EbAkmeG44RnWsk75BzUN/QKnyPRUlL4owsTRu9HyY5f3K2vO9
-Ap0giLD2y3Rp5pLwqW68BVP0+bco362Yv9d6XEjCma1Pq5cBDNX3F+ig3p8+t0j6
-Ijdzk5G5vKxo3f0xS7L8IkctvQhmSAsRG90BPO/8rDpWxopv3RAWFjYQ18EtZG3q
-jI8MZCQsUF/+JX8XM5olnNj0q9MIaFncBX7Sd9kcEmPzkdDlWhRMBcVjO6Mj+4qm
-HjoMFhrfadK0AhO7TD84SLIC+puGu5blfB6GBfsAcx1e7vAL8fRZe92p3TKm8wT1
-F4taQb3ysHufJySo3ykBN7vkblSm5ZhBbbxgMWyvYQ2AvSrG+ejK7m25UZ2EZxSU
-lluwb4yIdnyo3FHbX25akiz/Ph7F9iT1bGaRLzs4SAHl+/xV64U=
-=Z69j
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
+T24gMDQvMDQvMTggMTc6MjMsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cgo+Pj4+ICsJV0FSTihv
+dXRfd2lkdGggPiBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4LAo+Pj4+ICsJICAgICAiUmVxdWVz
+dGVkIE9WTCB3aWR0aCAoJWQpIGlzIGxhcmdlciB0aGFuIGNhbiBiZSBzdXBwb3J0ZWQKPj4+PiAo
+JWQpLlxuIiwKPj4+PiArCSAgICAgb3V0X3dpZHRoLCBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4
+KTsKPj4+Cj4+PiBXaHkgZG9uJ3QgeW91IHJldHVybiBhbiBlcnJvciBoZXJlPyBJIGRvbid0IHNl
+ZSBhIG5lZWQgZm9yIFdBUk4gaGVyZS4KPj4KPj4gU28gaGVyZSB5b3UgbWVhbiByZXBsYWNlIHRo
+ZSBXQVJOIHdpdGggc29tZXRoaW5nIGxpa2UgdGhpczoKPj4KPj4gCWlmIChvdXRfd2lkdGggPiBk
+aXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KSB7Cj4+IAkJRFNTRVJSKCJSZXF1ZXN0ZWQgT1ZMIHdp
+ZHRoICglZCkgaXMgbGFyZ2VyIHRoYW4gY2FuIGJlIHN1cHBvcnRlZCAoJWQpLgo+IFxuIiwKPj4g
+b3V0X3dpZHRoLCBkaXNwYy5mZWF0LT5vdmxfd2lkdGhfbWF4KTsKPj4gICAgICAgICAgICAgICAg
+IHJldHVybiAtRUlOVkFMOwo+PiAJfQo+IAo+IENhbiB0aGlzIGhhcHBlbiA/IElmIHdlIHJlamVj
+dCBpbnZhbGlkIHNldHRpbmdzIGluIG9tYXBkcm0gd2Ugc2hvdWxkIG5ldmVyIGdldCAKPiB0aGVt
+IGhlcmUuCgpUaGF0J3MgdHJ1ZS4gQW5kIHdlIHNob3VsZCBjaGVjayB0aGVtIGluIHRoZSBwbGFu
+ZSBhdG9taWMgY2hlY2sgKGJ1dCBkbwp3ZT8pLgoKSW4gdGhhdCBjYXNlIEkgZG9uJ3QgbWluZCBh
+IHdhcm4gdGhlcmUsIGJ1dCB5b3Ugc2hvdWxkIHN0aWxsIHJldHVybiBhbgplcnJvciBpZiBpdCBo
+YXBwZW5zLCBpbnN0ZWFkIG9mIGNvbnRpbnVpbmcgd2l0aCBiYWQgY29uZmlnLgoKPj4+PiArCS8q
+IENoZWNrIGlmIHRoZSBhZHZlcnRpc2VkIHdpZHRoIGV4Y2VlZCB3aGF0IHRoZSBwaXBlbGluZSBj
+YW4gZG8gKi8KPj4+PiArCWlmICghcikgewo+Pj4+ICsJCXN0cnVjdCBvbWFwX2RybV9wcml2YXRl
+ICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPj4+PiArCQl1MTYgd2lkdGgsIGhlaWdodDsKPj4+
+PiArCj4+Pj4gKwkJcHJpdi0+ZGlzcGNfb3BzLT5vdmxfZ2V0X21heF9zaXplKCZ3aWR0aCwgJmhl
+aWdodCk7Cj4+Pj4gKwkJaWYgKG1vZGUtPmhkaXNwbGF5ID4gd2lkdGgpCj4+Pj4gKwkJCXIgPSAt
+RUlOVkFMOwo+Pj4KPj4+IFlvdSBzaG91bGQgY2hlY2sgdGhlIGhlaWdodCBhbHNvLgo+Pgo+PiBZ
+ZWFoLCBJJ2xsIGZpeCB0aGF0Lgo+IAo+IFVubGVzcyBJJ20gbWlzdGFrZW4gdGhlIHJlc3RyaWN0
+aW9uIGRvZXNuJ3QgY29tZSBmcm9tIHRoZSBvdXRwdXQgc2lkZSBvZiB0aGUgCj4gZGlzcGxheSBj
+b250cm9sbGVyIGJ1dCBmcm9tIHRoZSBvdmVybGF5cyAocGxhbmVzKSwgcmlnaHQgPyBTaG91bGRu
+J3QgaXQgdGhlbiAKPiBiZSBpbXBsZW1lbnRlZCBpbiB0aGUgZHJtX3BsYW5lX2hlbHBlcl9mdW5j
+cy5hdG9taWNfY2hlY2sgb3BlcmF0aW9uID8KClllcywgYnV0IEkgZG9uJ3Qgc28uIElmIG91ciBw
+bGFuZXMgY2FuIHN1cHBvcnQgdXAgdG8sIHNheSwgMTAwMC4gVGhlbiB3ZQpwbHVnIGluIGEgbW9u
+aXRvciB3aXRoIG5hdGl2ZSB3aWR0aCBvZiAxMTAwLCB3aGljaCBvbWFwZHJtIHdvdWxkIGFjY2Vw
+dApoYXBwaWx5IGFuZCB0cnkgdG8gdXNlIGl0IGJ5IGRlZmF1bHQuIEJ1dCB3ZSBjYW4ndCBzaG93
+IGZiZGV2IG9yIGFueQpub3JtYWwgc2V0dXAgdGhlcmUsIGJlY2F1c2UgdGhlIHBsYW5lcyB3b24n
+dCBzdXBwb3J0IGl0LiBIb3cgd291bGQgd2UKbWFuYWdlIHRoYXQ/CgpXaGlsZSBub3Qgc3RyaWN0
+bHkgY29ycmVjdCwgSSB0aGluayBpdCdzIGZpbmUgdG8gcmVqZWN0IHZpZGVvbW9kZXMgd2hpY2gK
+Y2FuJ3QgYmUgc2hvd24gd2l0aCBhIG5vcm1hbCBmdWxsLXNjcmVlbiBwbGFuZS4KCiBUb21pCgot
+LSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAg
+SGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9t
+aWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
