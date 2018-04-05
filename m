@@ -1,35 +1,77 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v10 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Thu, 5 Apr 2018 10:12:05 -0500
-Message-ID: <CANk1AXTBNubsYm=psFRpL+q5oEckfyjdOfzmr-DOn69XCOCmbw@mail.gmail.com>
-References: <1522782152-27300-1-git-send-email-p.pisati@gmail.com> <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Thu, 5 Apr 2018 10:37:35 -0500
+Message-ID: <366610a6-8983-d744-01e5-a00592bef479@lechnology.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com>
+ <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+ <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
+In-Reply-To: <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 2:02 PM, Paolo Pisati <p.pisati@gmail.com> wrote:
+On 04/05/2018 09:36 AM, Sekhar Nori wrote:
+> On Thursday 05 April 2018 07:14 PM, Bartosz Golaszewski wrote:
+>> 2018-04-05 15:09 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
+>>> Hi Bartosz,
+>>>
+>>> On Friday 09 February 2018 10:18 PM, Michael Turquette wrote:
+>>>> On Fri, Feb 9, 2018 at 8:22 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>>> 2018-01-08 3:17 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>
+>>>>> Hi David,
+>>>>>
+>>>>> I've been working on moving the genpd code from its own driver to the
+>>>>> psc one. I couldn't get the system to boot though and problems
+>>>>> happened very early in the boot sequence. I struggled to figure out
+>>>>> what's happening, but eventually I noticed that psc uses
+>>>>> CLK_OF_DECLARE() to initialize clocks. The functions registered this
+>>>>> way are called very early in the boot sequence, way before
+>>>>> late_initcall() in which the genpd framework is initialized. This of
+>>>
+>>> late_initcall() is too late for genpd to be initialized. As you may have
+>>> seen with the latest set of patches, we have problems with timer
+>>> initialization. After converting to platform devices, PSC and PLL clocks
+>>> get initialized post time_init(). We are working that around using
+>>> fixed-clocks, which hopefully will work (I still need to test many of
+>>> the affected platforms).
+>>>
+>>> Can you please reply with the exact issue you faced with genpd framework
+>>> initialization so we do have that on record.
+>>>
+>>
+>> The exact issue manifested itself in a NULL-pointer dereference panic
+>> when I tried moving the genpd code I had initially implemented as a
+>> separate platform driver to what I believe was v6 or v7 of David's
+>> series (before the psc driver became a platform driver, when it was
+>> still using CLK_OF_DECLARE()). When I had tested a simple conversion
+>> of that version to a platform_driver, genpd worked fine.
+>>
+>> I don't have the stack traces from these panics, but I recall some
+>> debugfs functions being involved and the genpd late_initcalls are
+>> related to debugfs. Looking at it now I don't see how exactly it could
+>> fail though.
+> 
+> Do you have the code where you faced the problem stashed somewhere? I am
+> not (yet) advocating going back to CLK_OF_DECLARE(). But there is a
+> definite issue with timer being ready when not using CLK_OF_DECLARE().
+> So, I want to make sure there the reason why we are going down the
+> platform device path is a amply clear.
+> 
+> Thanks,
+> Sekhar
+> 
+This is the thread that led to the conversion to platform devices:
 
-Hi Paolo,
-
-Looks good, except that I have to fix up the calls to
-fpga_mgr_register/unregister since my API changes didn't go in.  I've
-fixed those up and pushed to a branch on my kernel org git repo to let
-the robots do some testing.  I'll post (v11 with those fixes) after
-that is cleared.
-
-We're too late for 4.17, expect it for 4.18.
-
-Thanks,
-Alan
-
-> This patch adds support to the FPGA manager for programming
-> MachXO2 device’s internal flash memory, via slave SPI.
->
-> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Acked-by: Alan Tull <atull@kernel.org>
+https://lkml.org/lkml/2018/2/9/541
