@@ -1,27 +1,23 @@
-From: David Lechner <david@lechnology.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
  DA850 PSC
-Date: Thu, 5 Apr 2018 10:37:35 -0500
-Message-ID: <366610a6-8983-d744-01e5-a00592bef479@lechnology.com>
+Date: Thu, 5 Apr 2018 17:51:32 +0200
+Message-ID: <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
 References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-13-git-send-email-david@lechnology.com>
- <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com> <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
  <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
- <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
- <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+ <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com> <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
  <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2018 09:36 AM, Sekhar Nori wrote:
+2018-04-05 16:36 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
 > On Thursday 05 April 2018 07:14 PM, Bartosz Golaszewski wrote:
 >> 2018-04-05 15:09 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
 >>> Hi Bartosz,
@@ -62,16 +58,18 @@ On 04/05/2018 09:36 AM, Sekhar Nori wrote:
 >> debugfs functions being involved and the genpd late_initcalls are
 >> related to debugfs. Looking at it now I don't see how exactly it could
 >> fail though.
-> 
+>
 > Do you have the code where you faced the problem stashed somewhere? I am
 > not (yet) advocating going back to CLK_OF_DECLARE(). But there is a
 > definite issue with timer being ready when not using CLK_OF_DECLARE().
 > So, I want to make sure there the reason why we are going down the
 > platform device path is a amply clear.
-> 
+>
 > Thanks,
 > Sekhar
-> 
-This is the thread that led to the conversion to platform devices:
 
-https://lkml.org/lkml/2018/2/9/541
+Yes, you can still find it on my github[1].
+
+Bart
+
+[1] github.com:brgl/linux.git  topic/davinci-genpd-final-v2
