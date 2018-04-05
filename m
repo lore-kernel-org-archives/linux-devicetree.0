@@ -1,547 +1,79 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v3] ARM: dts: tpc: Device tree description of the iMX6Q TPC board
-Date: Thu,  5 Apr 2018 09:09:39 +0200
-Message-ID: <20180405070939.22245-1-lukma@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lukasz Majewski <lukma@denx.de>
+From: Jan Kiszka <jan.kiszka@web.de>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Thu, 5 Apr 2018 09:22:11 +0200
+Message-ID: <935d6135-c5db-e5f8-b850-8ef26ce0c0a0@web.de>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBK45S7LAKGQENNI3KSI@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds device tree description of Kieback & Peter GmbH
-iMX6Q TPC board.
+On 2018-04-05 02:55, Rob Herring wrote:
+> On Wed, Apr 4, 2018 at 5:35 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
+>> Hi Frank,
+>>
+>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> Move duplicating and unflattening of an overlay flattened devicetree
+>>> (FDT) into the overlay application code.  To accomplish this,
+>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>>
+>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>>> code, which is thus responsible for freeing the duplicate FDT.  The
+>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>>> original FDT.
+>>>
+>>> The unflattened devicetree now belongs to devicetree code, which is
+>>> thus responsible for freeing the unflattened devicetree.
+>>>
+>>> These ownership changes prevent early freeing of the duplicated FDT
+>>> or the unflattened devicetree, which could result in use after free
+>>> errors.
+>>>
+>>> of_overlay_fdt_apply() is a private function for the anticipated
+>>> overlay loader.
+>>
+>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
+>> (out-of-tree) Jailhouse loader driver in order to register a virtual
+>> device during hypervisor activation with Linux. The DT overlay is
+>> created from a a template but modified prior to application to account
+>> for runtime-specific parameters. See [1] for the current implementation.
+>>
+>> I'm now wondering how to model that scenario best with the new API.
+>> Given that the loader lost ownership of the unflattened tree but the
+>> modification API exist only for the that DT state, I'm not yet seeing a
+>> clear solution. Should we apply the template in disabled form (status =
+>> "disabled"), modify it, and then activate it while it is already applied?
+> 
+> No. I don't think that will work.
+> 
+> The of_overlay_apply() function is still there, but static. We can
+> export it again if the need arises.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
+That would be the simplest solution from our perspective, but I'm not
+sure if that is in the original spirit of this change.
 
----
-Changes for v3:
-- Provide proper compatible for RTC DTS node
-- Remove wrong comment style for beeper
-- Add proper SPDX entries for DTS files
-- Add vendor prefix to a separate patch
+> 
+> Another option is there is a notifier callback OF_OVERLAY_PRE_APPLY,
+> but I'm not sure we want to make that be the normal interface to make
+> modifications.
 
-Changes for v2:
-- SPDX license identifiers used
-- Separate regulators
-- Proper beeper driver
-- Use of the lcd panel (with compatible) instead of timings provided in
-  device tree
-- Add IRQ types (like IRQ_TYPE_EDGE_FALLING) and GPIO active levels (like
-  GPIO_ACTIVE_HIGH)
-- Remove not needed nodes
-- Make W=1 dtbs compilation with no errors
----
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx6q-kp-tpc.dts |  22 ++
- arch/arm/boot/dts/imx6q-kp.dtsi    | 459 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 482 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-kp-tpc.dts
- create mode 100644 arch/arm/boot/dts/imx6q-kp.dtsi
+And would calling modification functions from that callback be legal at all?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ade7a38543dc..c148c4cf28f2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -459,6 +459,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-ofcap12.dtb \
- 	imx6q-icore-rqs.dtb \
-+	imx6q-kp-tpc.dtb \
- 	imx6q-marsboard.dtb \
- 	imx6q-mccmon6.dtb \
- 	imx6q-nitrogen6x.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-new file mode 100644
-index 000000000000..c3dea0ec54ac
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-@@ -0,0 +1,22 @@
-+//SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q-kp.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6 Qwuad K+P TPC Board";
-+	compatible = "kiebackpeter,imx6q-tpc", "fsl,imx6q";
-+
-+	memory@10000000 {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+};
-+
-+&ipu1_di0_disp0 {
-+	remote-endpoint = <&lcd_display_in>;
-+};
-diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
-new file mode 100644
-index 000000000000..4dc07dbba3a0
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-@@ -0,0 +1,459 @@
-+//SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2018
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
-+
-+/ {
-+	backlight_lcd: backlight-lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <  0   1   2   3   4   5   6   7   8   9
-+				      10  11  12  13  14  15  16  17  18  19
-+				      20  21  22  23  24  25  26  27  28  29
-+				      30  31  32  33  34  35  36  37  38  39
-+				      40  41  42  43  44  45  46  47  48  49
-+				      50  51  52  53  54  55  56  57  58  59
-+				      60  61  62  63  64  65  66  67  68  69
-+				      70  71  72  73  74  75  76  77  78  79
-+				      80  81  82  83  84  85  86  87  88  89
-+				      90  91  92  93  94  95  96  97  98  99
-+				     100 101 102 103 104 105 106 107 108 109
-+				     110 111 112 113 114 115 116 117 118 119
-+				     120 121 122 123 124 125 126 127 128 129
-+				     130 131 132 133 134 135 136 137 138 139
-+				     140 141 142 143 144 145 146 147 148 149
-+				     150 151 152 153 154 155 156 157 158 159
-+				     160 161 162 163 164 165 166 167 168 169
-+				     170 171 172 173 174 175 176 177 178 179
-+				     180 181 182 183 184 185 186 187 188 189
-+				     190 191 192 193 194 195 196 197 198 199
-+				     200 201 202 203 204 205 206 207 208 209
-+				     210 211 212 213 214 215 216 217 218 219
-+				     220 221 222 223 224 225 226 227 228 229
-+				     230 231 232 233 234 235 236 237 238 239
-+				     240 241 242 243 244 245 246 247 248 249
-+				     250 251 252 253 254 255>;
-+		default-brightness-level = <250>;
-+		status = "okay";
-+	};
-+
-+	beeper {
-+		compatible = "pwm-beeper";
-+		pwms = <&pwm2 0 500000>;
-+	};
-+
-+	lcd_display: disp0 {
-+		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu1>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			lcd_display_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp0>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "auo,g070vvn01";
-+		backlight = <&backlight_lcd>;
-+		bus-format-override = "rgb565";
-+		power-supply = <&reg_display>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		green {
-+			label = "led1";
-+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+
-+		red {
-+			label = "led0";
-+			gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "gpio";
-+			default-state = "off";
-+		};
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_audio: regulator-audio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sgtl5000-supply";
-+		gpio = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_display: regulator-display {
-+		compatible = "regulator-fixed";
-+		regulator-name = "display-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-usb_h1_vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6q-sgtl5000-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&codec>;
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_SYN |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(2) |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(2) |
-+			IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(2)
-+		>;
-+	};
-+
-+	aud3 {
-+		fsl,audmux-port = <2>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-+		>;
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	goodix_ts@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ts>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	rtc: ds1307@32 {
-+		compatible = "dallas,ds1307";
-+		reg = <0x32>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	codec: sgtl5000@a {
-+		compatible = "fsl,sgtl5000";
-+		#sound-dai-cells = <0>;
-+		reg = <0x0a>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_codec>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS	0x130b0
-+		>;
-+	};
-+
-+	pinctrl_codec: codecgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31   0x1b0b0
-+			/* sgtl5000 sys_mclk clock routed to CLKO1 */
-+			MX6QDL_PAD_GPIO_0__CCM_CLKO1      0x000b0
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO	0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2	0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3	0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2	0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3	0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK 0x4001b0a8
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: can1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX        0x1b0b0
-+			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: can2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX        0x1b0b0
-+			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
-+		 >;
-+	};
-+
-+	pinctrl_ipu1: ipu1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-+			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
-+			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-+			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-+			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
-+			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
-+			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
-+			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
-+			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
-+			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
-+			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
-+			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
-+			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
-+			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
-+			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
-+			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
-+			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
-+			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
-+			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
-+			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
-+			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
-+			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
-+			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
-+			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
-+			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
-+			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
-+			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
-+			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT3__PWM1_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_ts: tsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__GPIO1_IO09 0x1b0b0
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D26__UART2_TX_DATA       0x1b0b1
-+			MX6QDL_PAD_EIM_D27__UART2_RX_DATA       0x1b0b1
-+			MX6QDL_PAD_EIM_D28__UART2_CTS_B         0x1b0b1
-+			MX6QDL_PAD_EIM_D29__UART2_RTS_B         0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x17059
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x10059
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x17059
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x17059
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x17059
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x17059
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4		0x17059
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5		0x17059
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6		0x17059
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7		0x17059
-+		>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	uart-has-rtscts;
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <8>;
-+	non-removable;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	status = "okay";
-+};
--- 
-2.11.0
+Jan
