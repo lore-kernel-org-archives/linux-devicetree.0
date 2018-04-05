@@ -1,22 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3] ARM: dts: tpc: Device tree description of the iMX6Q
- TPC board
-Date: Thu, 5 Apr 2018 12:02:09 -0300
-Message-ID: <CAOMZO5Bt-L-u1E7st8-puQcMVSgKD9LQcQu_9rNRvJe++CHowA@mail.gmail.com>
-References: <20180405070939.22245-1-lukma@denx.de>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v10 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
+Date: Thu, 5 Apr 2018 10:12:05 -0500
+Message-ID: <CANk1AXTBNubsYm=psFRpL+q5oEckfyjdOfzmr-DOn69XCOCmbw@mail.gmail.com>
+References: <1522782152-27300-1-git-send-email-p.pisati@gmail.com> <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180405070939.22245-1-lukma@denx.de>
+In-Reply-To: <1522782152-27300-3-git-send-email-p.pisati@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 5, 2018 at 4:09 AM, Lukasz Majewski <lukma@denx.de> wrote:
-> This commit adds device tree description of Kieback & Peter GmbH
-> iMX6Q TPC board.
->
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+On Tue, Apr 3, 2018 at 2:02 PM, Paolo Pisati <p.pisati@gmail.com> wrote:
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Hi Paolo,
+
+Looks good, except that I have to fix up the calls to
+fpga_mgr_register/unregister since my API changes didn't go in.  I've
+fixed those up and pushed to a branch on my kernel org git repo to let
+the robots do some testing.  I'll post (v11 with those fixes) after
+that is cleared.
+
+We're too late for 4.17, expect it for 4.18.
+
+Thanks,
+Alan
+
+> This patch adds support to the FPGA manager for programming
+> MachXO2 device’s internal flash memory, via slave SPI.
+>
+> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Acked-by: Alan Tull <atull@kernel.org>
