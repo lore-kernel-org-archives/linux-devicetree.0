@@ -1,79 +1,46 @@
-From: Jan Kiszka <jan.kiszka@web.de>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Thu, 5 Apr 2018 09:22:11 +0200
-Message-ID: <935d6135-c5db-e5f8-b850-8ef26ce0c0a0@web.de>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
+Date: Thu, 5 Apr 2018 15:08:31 +0530
+Message-ID: <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
+References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com> <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBK45S7LAKGQENNI3KSI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ludovic Barre <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-05 02:55, Rob Herring wrote:
-> On Wed, Apr 4, 2018 at 5:35 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
->> Hi Frank,
->>
->> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> Move duplicating and unflattening of an overlay flattened devicetree
->>> (FDT) into the overlay application code.  To accomplish this,
->>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>
->>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>> code, which is thus responsible for freeing the duplicate FDT.  The
->>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>> original FDT.
->>>
->>> The unflattened devicetree now belongs to devicetree code, which is
->>> thus responsible for freeing the unflattened devicetree.
->>>
->>> These ownership changes prevent early freeing of the duplicated FDT
->>> or the unflattened devicetree, which could result in use after free
->>> errors.
->>>
->>> of_overlay_fdt_apply() is a private function for the anticipated
->>> overlay loader.
->>
->> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->> (out-of-tree) Jailhouse loader driver in order to register a virtual
->> device during hypervisor activation with Linux. The DT overlay is
->> created from a a template but modified prior to application to account
->> for runtime-specific parameters. See [1] for the current implementation.
->>
->> I'm now wondering how to model that scenario best with the new API.
->> Given that the loader lost ownership of the unflattened tree but the
->> modification API exist only for the that DT state, I'm not yet seeing a
->> clear solution. Should we apply the template in disabled form (status =
->> "disabled"), modify it, and then activate it while it is already applied?
-> 
-> No. I don't think that will work.
-> 
-> The of_overlay_apply() function is still there, but static. We can
-> export it again if the need arises.
+On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
+....
+> +
+> +       /* irq */
+> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
+> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
+> +               if (ipcc->irqs[i] < 0) {
+> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
+> +                       ret = ipcc->irqs[i];
+> +                       goto err_clk;
+> +               }
+> +
+> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
+> +                                               irq_thread[i], IRQF_ONESHOT,
+> +                                               dev_name(dev), ipcc);
+>
+In your interrupt handlers you don't do anything that could block.
+Threads only adds some delay to your message handling.
+So maybe use devm_request_irq() ?
 
-That would be the simplest solution from our perspective, but I'm not
-sure if that is in the original spirit of this change.
+.......
+> +
+> +static struct platform_driver stm32_ipcc_driver = {
+> +       .driver = {
+> +               .name = "stm32-ipcc",
+> +               .owner = THIS_MODULE,
+>
+No need of owner here these days.
+And also maybe use readl/writel, instead of _relaxed.
 
-> 
-> Another option is there is a notifier callback OF_OVERLAY_PRE_APPLY,
-> but I'm not sure we want to make that be the normal interface to make
-> modifications.
-
-And would calling modification functions from that callback be legal at all?
-
-Jan
+Cheers!
