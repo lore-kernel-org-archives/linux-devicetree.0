@@ -1,46 +1,85 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
-Date: Thu, 5 Apr 2018 15:08:31 +0530
-Message-ID: <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
-References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com> <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
+Date: Thu, 5 Apr 2018 09:42:46 +0000
+Message-ID: <TY1PR01MB1769064C77AE3E5ABA4993DAF5BB0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
+ <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ludovic Barre <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
-....
-> +
-> +       /* irq */
-> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
-> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
-> +               if (ipcc->irqs[i] < 0) {
-> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
-> +                       ret = ipcc->irqs[i];
-> +                       goto err_clk;
-> +               }
-> +
-> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
-> +                                               irq_thread[i], IRQF_ONESHOT,
-> +                                               dev_name(dev), ipcc);
->
-In your interrupt handlers you don't do anything that could block.
-Threads only adds some delay to your message handling.
-So maybe use devm_request_irq() ?
-
-.......
-> +
-> +static struct platform_driver stm32_ipcc_driver = {
-> +       .driver = {
-> +               .name = "stm32-ipcc",
-> +               .owner = THIS_MODULE,
->
-No need of owner here these days.
-And also maybe use readl/writel, instead of _relaxed.
-
-Cheers!
+SGkgQW5keSwNCg0KT24gMzAgTWFyY2ggMjAxOCAyMjoyNiBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+DQo+IE9uIFdlZCwgTWFyIDI4LCAyMDE4IGF0IDU6MjIgUE0sIFBoaWwgRWR3b3J0aHkgd3JvdGU6
+DQo+ID4gVGhlIERlc2lnbldhcmUgR1BJTyBJUCBjYW4gYmUgY29uZmlndXJlZCBmb3IgZWl0aGVy
+IDEgb3IgMzINCj4gPiBpbnRlcnJ1cHRzLA0KPiANCj4gMSB0byAzMiwgb3IganVzdCBhIGNob2lj
+ZSBiZXR3ZWVuIHR3bz8NCkp1c3QgYSBjaG9pY2Ugb2YgMSBvciAzMi4NCk5vdGUgdGhhdCBieSAn
+Y29uZmlndXJlZCcgSSBhbSB0YWxraW5nIGFib3V0IHRoZSBoYXJkd2FyZSBiZWluZyBjb25maWd1
+cmVkIGluDQpSVEwgcHJpb3IgdG8gbWFudWZhY3R1cmluZyBhIGRldmljZS4gT25jZSBtYWRlLCB5
+b3UgY2Fubm90IGNoYW5nZSBpdC4NClRoaXMgY29uZmlndXJhdGlvbiBhZmZlY3RzIHRoZSBudW1i
+ZXIgb2Ygb3V0cHV0IGludGVycnVwdCBzaWduYWxzIGZyb20gdGhlIEdQSU8NCkNvbnRyb2xsZXIg
+YmxvY2sgdGhhdCBhcmUgY29ubmVjdGVkIHRvIGFuIGludGVycnVwdCBjb250cm9sbGVyLg0KDQo+
+ID4gYnV0IHRoZSBkcml2ZXIgY3VycmVudGx5IG9ubHkgc3VwcG9ydHMgMSBpbnRlcnJ1cHQuIFNl
+ZSB0aGUgRGVzaWduV2FyZQ0KPiA+IERXX2FwYl9ncGlvIERhdGFib29rIGRlc2NyaXB0aW9uIG9m
+IHRoZSAnR1BJT19JTlRSX0lPJyBwYXJhbWV0ZXIuDQo+IA0KPiBXaWxsIHNlZSBhZnRlciBob2xp
+ZGF5IGFuZCBwZXJoYXBzIG1ha2UgbW9yZSBjb21tZW50cy4gSGVyZSBpcyBqdXN0IGEgYnJpZWYN
+Cj4gcmV2aWV3Lg0KPiANCj4gPiArLSBpbnRlcnJ1cHRzIDogVGhlIGludGVycnVwdHMgdG8gdGhl
+IHBhcmVudCBjb250cm9sbGVyIHJhaXNlZCB3aGVuDQo+ID4gK0dQSU9zDQo+ID4gKyAgZ2VuZXJh
+dGUgdGhlIGludGVycnVwdHMuIElmIHRoZSBjb250cm9sbGVyIHByb3ZpZGVzIG9uZSBjb21iaW5l
+ZA0KPiA+ICtpbnRlcnJ1cHQNCj4gPiArICBmb3IgYWxsIEdQSU9zLCBzcGVjaWZ5IGEgc2luZ2xl
+IGludGVycnVwdC4gSWYgdGhlIGNvbnRyb2xsZXINCj4gPiArcHJvdmlkZXMgb25lDQo+ID4gKyAg
+aW50ZXJydXB0IGZvciBlYWNoIEdQSU8sIHByb3ZpZGUgYSBsaXN0IG9mIGludGVycnVwdHMgdGhh
+dA0KPiA+ICtjb3JyZXNwb25kIHRvIGVhY2gNCj4gPiArICBvZiB0aGUgR1BJTyBwaW5zLiBXaGVu
+IHNwZWNpZnlpbmcgbXVsdGlwbGUgaW50ZXJydXB0cywgaWYgYW55IG9mDQo+ID4gK3RoZSBHUElP
+cyBhcmUNCj4gPiArICBub3QgY29ubmVjdGVkIHRvIGFuIGludGVycnVwdCwgdXNlIHRoZSBpbnRl
+cnJ1cHQtbWFzayBwcm9wZXJ0eS4NCj4gPiArLSBpbnRlcnJ1cHQtbWFzayA6IGEgMzItYml0IGJp
+dCBtYXNrIHRoYXQgc3BlY2lmaWVzIHdoaWNoIGludGVycnVwdHMNCj4gPiAraW4gdGhlIGxpc3QN
+Cj4gPiArICBvZiBpbnRlcnJ1cHRzIGlzIHZhbGlkLCBiaXQgaXMgMSBmb3IgYSB2YWxpZCBpcnEu
+DQo+IA0KPiBTbywgYnV0IHdoeSBvbmUgd2lsbCBuZWVkIHRoYXQgaW4gcHJhY3RpY2U/IEdQSU8g
+ZHJpdmVyIHVzdWFsbHkgcHJvdmlkZXMgYSBwaW4NCj4gYmFzZWQgSVJRIGNoaXAgd2hpY2ggbWFw
+cyBlYWNoIHBpbiB0byB0aGUgY29ycmVzcG9uZGluZyBvZmZzZXQgaW5zaWRlDQo+IHNwZWNpZmlj
+IElSUSBkb21haW4uDQpPbiBhbiBBUk0gZGV2aWNlIHdlIGhhdmUgdGhpcyBHUElPIGJsb2NrIGNv
+bm5lY3RlZCB0byB0aGUgR0lDIGludGVycnVwdA0KY29udHJvbGxlciwgaS5lLiB0aGUgU3lub3Bz
+eXMgR1BJTyBjb250cm9sbGVyIGludGVycnVwdHMgY2FuKiBoYXZlIGEgMSB0byAxDQptYXBwaW5n
+IHRvIHRoZSBHSUMgaW50ZXJydXB0cy4gQXQgdGhlIG1vbWVudCwgdGhlIEdQSU8gZHJpdmVyIG9u
+bHkgYWxsb3dzIGENCnNpbmdsZSBpcnEgc2lnbmFsIHRvIHNwZWNpZmllZC4NCiogdGhpcyBpcyBu
+b3Qgc3RyaWN0bHkgYWNjdXJhdGUgb24gdGhlIGRldmljZSBJIGFtIHdvcmtpbmcgb24sIHRoZXJl
+IGlzIGFub3RoZXINCmJsb2NrIG9mIElQIGJldHdlZW4gdGhlIHR3bywgYnV0IHRoYXQgZG9lc24n
+dCBtYXR0ZXIgaW4gdGhpcyBjYXNlLg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3Ry
+dWN0IGRldmljZV9ub2RlICpucCA9IHRvX29mX25vZGUoZndub2RlKTsNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICB1MzIgaXJxX21hc2sgPSAweEZGRkZGRkZGOw0KPiANCj4gV2h5PyBTaG91
+bGRuJ3QgaXQgYmUgZGVwZW5kZW50IHRvIHRoZSBhbW91bnQgb2YgYWN0dWFsIHBpbnMgLyBwb3J0
+cz8NCj4gSW50ZWwgUXVhcmsgaGFzIG9ubHkgOCBBRkFJUi4NCkl0J3MganVzdCBhIGRlZmF1bHQg
+d2hpY2ggY2FuIGJlIG92ZXJyaWRkZW4gdmlhIGRldmljZSB0cmVlLg0KRm9yIFF1YXJrLCBzaW5j
+ZSB5b3UgY3VycmVudGx5IG9ubHkgdXNlIGEgc2luZ2xlIGlycSwgSSBndWVzcyB0aGUgSFcgd2Fz
+DQpjb25maWd1cmVkIHRoYXQgd2F5LiBJbiB3aGljaCBjYXNlLCB5b3Ugd291bGRuJ3QgdXNlIGFu
+eSBvZiB0aGlzLg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50IGo7DQo+ID4gKw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIE9wdGlvbmFsIGlycSBtYXNrICovDQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyKGZ3bm9kZSwN
+Cj4gPiArICJpbnRlcnJ1cHQtbWFzayIsICZpcnFfbWFzayk7DQo+ID4gKw0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogVGhlIElQ
+IGhhcyBjb25maWd1cmF0aW9uIG9wdGlvbnMgdG8gYWxsb3cgYSBzaW5nbGUNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgKiBjb21iaW5lZCBpbnRlcnJ1cHQgb3Igb25lIHBlciBncGlvLiBJ
+ZiBvbmUgcGVyIGdwaW8sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogc29tZSBtaWdo
+dCBub3QgYmUgdXNlZC4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4gDQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgZm9yIChqID0gMDsgaiA8IHBwLT5uZ3BpbzsgaisrKSB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoaXJxX21hc2sgJiBCSVQo
+aikpIHsNCj4gDQo+IGZvcl9lYWNoX3NldF9iaXQoKSBpcyBpbiBrZXJuZWwgZm9yIGFnZXMhDQpU
+aGVyZSdzIGxvdCBvZiBzdHVmZiBpbiB0aGUga2VybmVsIGZvciBhZ2VzIHRoYXQgSSBjYW4ndCBy
+ZW1lbWJlciENCkknbGwgZml4IHRoaXMgOikNCg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBwcC0+aXJxW2pdID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobnAsIGop
+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAocHAtPmly
+cVtqXSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBwcC0+aGFzX2lycSA9IHRydWU7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB9DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gDQo+IFNvLCBvbiB0aGUg
+Zmlyc3QgZ2xhbmNlIHRoZSBwYXRjaCBsb29rcyBlaXRoZXIgc3VwZXJmbHVvdXMgb3IgdGFraW5n
+IHdyb25nDQo+IGFwcHJvYWNoLiBQbGVhc2UsIGVsYWJvcmF0ZSBtb3JlIHdoeSBpdCdzIGRvbmUg
+aW4gdGhpcyB3YXkgYW5kIHdoYXQgdGhlDQo+IGNhc2UgZm9yIGFsbCB0aGlzIGluIHByYWN0aWNl
+Lg0KSG9wZWZ1bGx5IEkgaGF2ZSBleHBsYWluZWQgaXQgYSBiaXQgYmV0dGVyIGFib3ZlLg0KDQpU
+aGFua3MgZm9yIHlvdXIgY29tbWVudHMNClBoaWwNCg==
