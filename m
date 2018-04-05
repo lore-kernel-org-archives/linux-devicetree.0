@@ -1,86 +1,95 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Thu, 5 Apr 2018 11:59:59 -0700
-Message-ID: <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for brcmfmac
+Date: Thu, 5 Apr 2018 21:09:14 +0200
+Message-ID: <CAPDyKFog7q2f7rHfm-FFRiGbRvd4NPQrYHP0==Xs-JAGGDKpYQ@mail.gmail.com>
+References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
+ <20180319014032.9394-3-alexey.roslyakov@gmail.com> <5AAF838D.2030105@broadcom.com>
+ <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
+ <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com> <5AB044C0.9060701@broadcom.com>
+ <87po3zxe9n.fsf@kamboji.qca.qualcomm.com> <CAPDyKFr2GVB0+UUpT3GgGBT17TMcrky6X4L_pw+ztTL6ejbCwQ@mail.gmail.com>
+ <87lge1er31.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBD3LJZVFUEJBBMPETHLAKGQEXJUJKLA@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com, Jailhouse <jailhouse-dev@googlegroups.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87lge1er31.fsf@kamboji.qca.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Alexey Roslyakov <alexey.roslyakov@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
-
-On 04/04/18 15:35, Jan Kiszka wrote:
-> Hi Frank,
-> 
-> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
+On 5 April 2018 at 15:10, Kalle Valo <kvalo@codeaurora.org> wrote:
+> Ulf Hansson <ulf.hansson@linaro.org> writes:
+>
+>> On 20 March 2018 at 10:55, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>> Arend van Spriel <arend.vanspriel@broadcom.com> writes:
+>>>
+>>>>>> If I get it right, you mean something like this:
+>>>>>>
+>>>>>> mmc3: mmc@1c12000 {
+>>>>>> ...
+>>>>>>          broken-sg-support;
+>>>>>>          sd-head-align = 4;
+>>>>>>          sd-sgentry-align = 512;
+>>>>>>
+>>>>>>          brcmf: wifi@1 {
+>>>>>>                  ...
+>>>>>>          };
+>>>>>> };
+>>>>>>
+>>>>>> Where dt: bindings documentation for these entries should reside?
+>>>>>> In generic MMC bindings? Well, this is the very special case and
+>>>>>> mmc-linux maintainer will unlikely to accept these changes.
+>>>>>> Also, extra kernel code modification might be required. It could make
+>>>>>> quite trivial change much more complex.
+>>>>>
+>>>>> If the MMC maintainers are not copied on this patch series, it will
+>>>>> likely be hard for them to identify this patch series and chime in...
+>>>>
+>>>> The main question is whether this is indeed a "very special case" as
+>>>> Alexey claims it to be or that it is likely to be applicable to other
+>>>> device and host combinations as you are suggesting.
+>>>>
+>>>> If these properties are imposed by the host or host controller it
+>>>> would make sense to have these in the mmc bindings.
+>>>
+>>> BTW, last year we were discussing something similar (I mean related to
+>>> alignment requirements) with ath10k SDIO patches and at the time the
+>>> patch submitter was proposing to have a bounce buffer in ath10k to
+>>> workaround that. I don't remember the details anymore, they are on the
+>>> ath10k mailing list archive if anyone is curious to know, but I would
+>>> not be surprised if they are similar as here. So there might be a need
+>>> to solve this in a generic way (but not sure of course as I haven't
+>>> checked the details).
 >>
->> Move duplicating and unflattening of an overlay flattened devicetree
->> (FDT) into the overlay application code.  To accomplish this,
->> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>> I re-call something about these as well, here are the patches. Perhaps
+>> I should pick some of them up...
 >>
->> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->> code, which is thus responsible for freeing the duplicate FDT.  The
->> caller of of_overlay_fdt_apply() remains responsible for freeing the
->> original FDT.
->>
->> The unflattened devicetree now belongs to devicetree code, which is
->> thus responsible for freeing the unflattened devicetree.
->>
->> These ownership changes prevent early freeing of the duplicated FDT
->> or the unflattened devicetree, which could result in use after free
->> errors.
->>
->> of_overlay_fdt_apply() is a private function for the anticipated
->> overlay loader.
-> 
-> We are using of_fdt_unflatten_tree + of_overlay_apply in the
-> (out-of-tree) Jailhouse loader driver in order to register a virtual
-> device during hypervisor activation with Linux. The DT overlay is
-> created from a a template but modified prior to application to account
-> for runtime-specific parameters. See [1] for the current implementation.
-> 
-> I'm now wondering how to model that scenario best with the new API.
-> Given that the loader lost ownership of the unflattened tree but the
-> modification API exist only for the that DT state, I'm not yet seeing a
-> clear solution. Should we apply the template in disabled form (status =
-> "disabled"), modify it, and then activate it while it is already applied?
+>> https://patchwork.kernel.org/patch/10123137/
+>> https://patchwork.kernel.org/patch/10123139/
+>> https://patchwork.kernel.org/patch/10123141/
+>> https://patchwork.kernel.org/patch/10123143/
+>
+> Actually I was talking about a different patch, found it now:
+>
+> ath10k_sdio: DMA bounce buffers for read write
+>
+> https://patchwork.kernel.org/patch/9979543/
 
-Thank you for the pointer to the driver - that makes it much easier to
-understand the use case and consider solutions.
+Ah, yes. This is about buffer alignment, particularly when using DMA.
 
-If you can make the changes directly on the FDT instead of on the
-expanded devicetree, then you could move to the new API.
+Normally there should be no constraint on the alignment, if the
+mmc/sdio controller driver would implement a fallback mechanism from
+DMA to PIO mode, in case the buffer can't be used for DMA.
 
-Looking at the driver, I see one potential issue with that approach.
-The property "interrupt-map" is added directly to the changeset
-instead of being an existing property in the overlay.  Is it possible
-to have this property in the overlay when needed?
+However, I know about cases where simply PIO doesn't work because of
+broken HW and in many cases the mmc drivers don't implement the
+fallback to PIO even if they could.
 
-I'll also reply to other comments in this thread.
+Moreover, it seems reasonable to anyway have a way for mmc driver to
+inform upper layers about DMA buffer alignment constraints, as to be
+able to use DMA as long as possible.
 
--Frank
+Thoughts?
 
-> 
-> Thanks,
-> Jan
-> 
-> [1]
-> https://github.com/siemens/jailhouse/blob/11ef401a9064644bf7faf28e35c97f27ececd81d/driver/pci.c#L280
-> .
-> 
+Kind regards
+Uffe
