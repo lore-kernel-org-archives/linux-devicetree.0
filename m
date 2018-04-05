@@ -1,89 +1,76 @@
-From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Thu, 5 Apr 2018 21:34:12 +1000
-Message-ID: <CAOSf1CHu4R-t8q-8fL6Dyk7myFR0gTfd6-0cxqtBVGZgYZWGAw@mail.gmail.com>
-References: <20180403142415.30083-1-oohall@gmail.com>
- <20180403142415.30083-3-oohall@gmail.com>
- <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
- <20180404220750.0436bbe1@gmail.com>
- <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
- <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: dts: omap3-beagle-xm: Add fixed 26MHz clock as fck for
+ twl
+Date: Thu, 5 Apr 2018 14:52:39 +0300
+Message-ID: <20180405115239.17370-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 5, 2018 at 12:21 AM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 4, 2018 at 7:04 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Apr 4, 2018 at 10:07 PM, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Tue, 3 Apr 2018 10:37:51 -0700
->>> Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> On Tue, Apr 3, 2018 at 7:24 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> > Add device-tree binding documentation for the nvdimm region driver.
->>>> >
->>>> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> > Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> > ---
->>>> > v2: Changed name from nvdimm-region to pmem-region.
->>>> >     Cleaned up the example binding and fixed the overlapping regions.
->>>> >     Added support for multiple regions in a single reg.
->>>> > ---
->>>> >  .../devicetree/bindings/pmem/pmem-region.txt       | 80 ++++++++++++++++++++++
->>>> >  MAINTAINERS                                        |  1 +
->>>> >  2 files changed, 81 insertions(+)
->>>> >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
->>>>
->>>> Device-tree folks, does this look, ok?
->>>>
->>>> Oliver, is there any concept of a management interface to the
->>>> device(s) backing these regions? libnvdimm calls these "nmem" devices
->>>> and support operations like health status and namespace label
->>>> management.
->>
->> It's something I'm planning on implementing as soon as someone gives
->> me some hardware that isn't hacked up lab crap. I'm posting this
->> version with just regions since people have been asking for something
->> in upstream even if it's not fully featured.
->>
->> Grumbling aside, the plan is to have separate drivers for the DIMM
->> type. Discovering DIMM devices happens via the normal discovery
->> mechanisms (e.g. an NVDIMM supporting the JEDEC interface is an I2C
->> device) and when binding to a specific DIMM device it registers a DIMM
->> descriptor structure and a ndctl implementation for that DIMM type
->> with of_pmem. When of_pmem binds to a region it can plug everything
->> into the region specific bus. There's a few details to work out, but I
->> think it's a reasonable approach.
->
-> Yeah, that sounds reasonable. It would mean that your management
-> interface would need to understand that nmems on different buses could
-> potentially move to another bus after a reconfiguration, but that's
-> not too much different than the ACPI case where nmems can join and
-> leave regions after a reset / reconfig.
->
->>> We would need a way to have nmem and pmem-regions find each other. Since we
->>> don't have the ACPI abstractions, the nmem region would need to add the
->>> ability for a driver to have a phandle to the interleaving and nmem properties.
->>>
->>> I guess that would be a separate driver, that would manage the nmem devices
->>> and there would be a way to relate the pmem and nmems. Oliver?
->>
->> Yes, that's the plan.
->
-> So Balbir, is that enough for an Acked-by for this device-tree proposal?
+The board uses 26MHz oscillator for the twl4030 HFCLK.
+This way we will not depend on the bootloader to configure the
+CFG_BOOT:HFCLK_FREQ
 
-For context Balbir is working with me on some of the pmem stuff. You
-probably want an Ack from Rob rather than one of us.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
+
+there might be other boards (all omap3 boards with twl4030?) which uses the same
+setup, but I only have schematics for beagle-xm.
+
+In order for the driver to actually use the clock the 
+[PATCH] mfd: twl-core: Fix clock initialization
+need to be applied. W/o the twl-core patch the clock is just ignored.
+
+Regards,
+Peter
+
+ arch/arm/boot/dts/omap3-beagle-xm.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
+index 0349fcc9dc26..d80587de0bbf 100644
+--- a/arch/arm/boot/dts/omap3-beagle-xm.dts
++++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+@@ -30,6 +30,13 @@
+ 		ethernet = &ethernet;
+ 	};
+ 
++	/* fixed 26MHz oscillator */
++	hfclk_26m: oscillator {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -274,6 +281,9 @@
+ 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+ 		interrupt-parent = <&intc>;
+ 
++		clocks = <&hfclk_26m>;
++		clock-names = "fck";
++
+ 		twl_audio: audio {
+ 			compatible = "ti,twl4030-audio";
+ 			codec {
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
