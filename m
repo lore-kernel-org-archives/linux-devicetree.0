@@ -1,121 +1,189 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
- unflattened to FDT
-Date: Thu, 5 Apr 2018 13:33:15 -0700
-Message-ID: <70c766c9-aa4b-d67c-37a0-795fc5bc228f@gmail.com>
-References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
- <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
- <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
- <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
- <d7e94a45-5d46-0491-e5dc-2b098a11c5b1@gmail.com>
- <255dffbd-4ff1-42a4-033b-311d49339102@web.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] DeviceTree updates for 4.17
+Date: Thu, 5 Apr 2018 16:09:37 -0500
+Message-ID: <CAL_JsqKY9PKUbU3ehbuxy4Ly-8E5U-KgUo+HASB=LgML=3euAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBD3LJZVFUEJBBDUQTLLAKGQEGAKPFOQ@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <255dffbd-4ff1-42a4-033b-311d49339102@web.de>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@web.de>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com, Jailhouse <jailhouse-dev@googlegroups.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/18 12:38, Jan Kiszka wrote:
-> On 2018-04-05 21:28, Frank Rowand wrote:
->> On 04/05/18 12:13, Jan Kiszka wrote:
->>> On 2018-04-05 20:59, Frank Rowand wrote:
->>>> Hi Jan,
->>>>
->>>> On 04/04/18 15:35, Jan Kiszka wrote:
->>>>> Hi Frank,
->>>>>
->>>>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
->>>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>>
->>>>>> Move duplicating and unflattening of an overlay flattened devicetree
->>>>>> (FDT) into the overlay application code.  To accomplish this,
->>>>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>>>>
->>>>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>>>>> code, which is thus responsible for freeing the duplicate FDT.  The
->>>>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>>>>> original FDT.
->>>>>>
->>>>>> The unflattened devicetree now belongs to devicetree code, which is
->>>>>> thus responsible for freeing the unflattened devicetree.
->>>>>>
->>>>>> These ownership changes prevent early freeing of the duplicated FDT
->>>>>> or the unflattened devicetree, which could result in use after free
->>>>>> errors.
->>>>>>
->>>>>> of_overlay_fdt_apply() is a private function for the anticipated
->>>>>> overlay loader.
->>>>>
->>>>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
->>>>> (out-of-tree) Jailhouse loader driver in order to register a virtual
->>>>> device during hypervisor activation with Linux. The DT overlay is
->>>>> created from a a template but modified prior to application to account
->>>>> for runtime-specific parameters. See [1] for the current implementation.
->>>>>
->>>>> I'm now wondering how to model that scenario best with the new API.
->>>>> Given that the loader lost ownership of the unflattened tree but the
->>>>> modification API exist only for the that DT state, I'm not yet seeing a
->>>>> clear solution. Should we apply the template in disabled form (status =
->>>>> "disabled"), modify it, and then activate it while it is already applied?
->>>>
->>>> Thank you for the pointer to the driver - that makes it much easier to
->>>> understand the use case and consider solutions.
->>>>
->>>> If you can make the changes directly on the FDT instead of on the
->>>> expanded devicetree, then you could move to the new API.
->>>
->>> Are there some examples/references on how to edit FDTs in-place in the
->>> kernel? I'd like to avoid writing the n-th FDT parser/generator.
->>
->> I don't know of any existing in-kernel edits of the FDT (but they might
->> exist).  The functions to access an FDT are in libfdt, which is in
->> scripts/dtc/libfdt/.
->>
-> 
-> Ah, libfdt is available for kernel drivers as well. That looks like a
-> viable path on first sight. I'll try that and come back in case it does
-> not solve all issues.
-> 
->>
->>>>
->>>> Looking at the driver, I see one potential issue with that approach.
->>>> The property "interrupt-map" is added directly to the changeset
->>>> instead of being an existing property in the overlay.  Is it possible
->>>> to have this property in the overlay when needed?
->>>
->>> Well, the size of that property has a runtime dependency on the gic's
->>> #address-cells. If that is easy to account for depends a bit on the
->>> available FDT manipulation services. Or it would take multiple templates
->>> to handle the different cases (0, 1, or 2 IIRC).
->>
->> If I understand create_vpci_of_overlay() correctly, it is assuming a
->> fixed size of 4 cells.  Line 314 is: for (n = 0, cell = 0; n < 4; n++) {
->>
->> Off the top of my head, it is theoretically possible to create a property
->> that can contain the largest possible size for the property, then shrink
->> the size by inserting NOPs at the end of the property to shrink it.
-> 
-> Well, I even find fdt_appendprop which sounds like we could keep adding
-> that property on the fly.
-> 
-> How does memory management work with libfdt? Do I have to ensure that
-> the fdt is already backed by an area large enough also for it modified form?
+Hi Linus,
 
-I have not looked at those functions, so I don't know.
+Please pull DT updates for 4.17.
 
+Rob
 
-> 
-> Thanks,
-> Jan
-> 
+The following changes since commit 4a3928c6f8a53fa1aed28ccba227742486e8ddcb:
+
+  Linux 4.16-rc3 (2018-02-25 18:50:41 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-for-4.17
+
+for you to fetch changes up to 827473268ee492b30b576ef156ab524a2b9f3520:
+
+  of: unittest: fix an error code in of_unittest_apply_overlay()
+(2018-03-19 22:52:40 -0500)
+
+----------------------------------------------------------------
+DeviceTree updates for 4.17:
+
+- Sync dtc to upstream version v1.4.6-9-gaadd0b65c987. This adds a bunch
+  more warnings (hidden behind W=1).
+
+- Build dtc lexer and parser files instead of using shipped versions.
+
+- Rework overlay apply API to take an FDT as input and apply overlays in
+  a single step.
+
+- Add a phandle lookup cache. This improves boot time by hundreds of
+  msec on systems with large DT.
+
+- Add trivial mcp4017/18/19 potentiometers bindings.
+
+- Remove VLA stack usage in DT code.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      of: unittest: move misplaced function declaration
+
+Dan Carpenter (2):
+      of: unittest: fix an error test in of_unittest_overlay_8()
+      of: unittest: fix an error code in of_unittest_apply_overlay()
+
+Frank Rowand (10):
+      x86: devicetree: fix config option around x86_flattree_get_config()
+      of: change overlay apply input data from unflattened to FDT
+      of: Documentation: of_overlay_apply() replaced by of_overlay_fdt_apply()
+      of: convert unittest overlay devicetree source to sugar syntax
+      of: improve reporting invalid overlay target path
+      of: unittest: clean up changeset test
+      of: overlay: do not include path in full_name of added nodes
+      of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+      of: unittest: remove unneeded local return value variables
+      of: unittest: local return value variable related cleanups
+
+Geert Uytterhoeven (2):
+      of: Documentation: Fix forgotten reference to of_overlay_apply()
+      of: overlay: Fix forgotten reference to of_overlay_apply()
+
+John Keeping (1):
+      dt-bindings: rockchip-dw-mshc: use consistent clock names
+
+Peter Rosin (1):
+      dt-bindings: trivial: add various mcp4017/18/19 potentiometers
+
+Rob Herring (12):
+      kbuild: remove remaining use of undefined YACC_PREFIX
+      kbuild: add dtc as dependency on .dtb files
+      scripts: re-enable some now fixed dtc warnings
+      ARM: boot: add strrchr function
+      Merge tag 'overlay_apply_fdt_v7-for-4.17' of
+git://git.kernel.org/.../frowand/linux into dt/next
+      arm64/efi: Make strrchr() available to the EFI namespace
+      powerpc: boot: add strrchr function
+      scripts/dtc: generate lexer and parser during build instead of shipping
+      scripts/dtc: Update to upstream version v1.4.6-9-gaadd0b65c987
+      scripts: turn off some new dtc warnings by default
+      MAINTAINERS: Add linux/of_*.h headers to appropriate subsystems
+      Merge branch 'dtc-update' into dt/next
+
+Stephen Boyd (3):
+      of: Support parsing phandle argument lists through a nexus node
+      of: unittest: Add phandle remapping test
+      gpio: Support gpio nexus dt bindings
+
+Tobin C. Harding (1):
+      of: unittest: Remove VLA stack usage
+
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |    4 +-
+ .../devicetree/bindings/trivial-devices.txt        |   12 +
+ Documentation/devicetree/overlay-notes.txt         |    8 +-
+ MAINTAINERS                                        |    4 +
+ arch/arm/boot/compressed/string.c                  |   10 +
+ arch/arm64/kernel/image.h                          |    1 +
+ arch/arm64/lib/strrchr.S                           |    2 +-
+ arch/powerpc/boot/stdio.c                          |   10 +
+ arch/powerpc/boot/string.h                         |    1 +
+ arch/x86/kernel/devicetree.c                       |    2 +-
+ drivers/gpio/gpiolib-of.c                          |    4 +-
+ drivers/of/Kconfig                                 |    1 +
+ drivers/of/base.c                                  |  270 ++-
+ drivers/of/dynamic.c                               |   21 +-
+ drivers/of/of_private.h                            |    6 +-
+ drivers/of/overlay.c                               |  154 +-
+ drivers/of/resolver.c                              |    9 -
+ drivers/of/unittest-data/Makefile                  |   28 +-
+ drivers/of/unittest-data/overlay.dts               |  101 +-
+ drivers/of/unittest-data/overlay_0.dts             |   14 +
+ drivers/of/unittest-data/overlay_1.dts             |   14 +
+ drivers/of/unittest-data/overlay_10.dts            |   27 +
+ drivers/of/unittest-data/overlay_11.dts            |   28 +
+ drivers/of/unittest-data/overlay_12.dts            |   14 +
+ drivers/of/unittest-data/overlay_13.dts            |   14 +
+ drivers/of/unittest-data/overlay_15.dts            |   30 +
+ drivers/of/unittest-data/overlay_2.dts             |    9 +
+ drivers/of/unittest-data/overlay_3.dts             |    9 +
+ drivers/of/unittest-data/overlay_4.dts             |   18 +
+ drivers/of/unittest-data/overlay_5.dts             |    9 +
+ drivers/of/unittest-data/overlay_6.dts             |   10 +
+ drivers/of/unittest-data/overlay_7.dts             |   10 +
+ drivers/of/unittest-data/overlay_8.dts             |   10 +
+ drivers/of/unittest-data/overlay_9.dts             |   10 +
+ drivers/of/unittest-data/overlay_bad_phandle.dts   |   23 +-
+ drivers/of/unittest-data/overlay_bad_symbol.dts    |   25 +-
+ drivers/of/unittest-data/tests-overlay.dtsi        |  217 +-
+ drivers/of/unittest-data/tests-phandle.dtsi        |   25 +
+ drivers/of/unittest.c                              |  578 +++--
+ include/linux/libfdt_env.h                         |    6 +-
+ include/linux/of.h                                 |   18 +-
+ scripts/Makefile.lib                               |    9 +-
+ scripts/dtc/Makefile                               |    6 +-
+ scripts/dtc/checks.c                               |  439 ++--
+ scripts/dtc/dtc-lexer.lex.c_shipped                | 2259 -------------------
+ scripts/dtc/dtc-parser.tab.c_shipped               | 2321 --------------------
+ scripts/dtc/dtc-parser.tab.h_shipped               |  125 --
+ scripts/dtc/dtc-parser.y                           |   17 +-
+ scripts/dtc/dtc.c                                  |    7 +-
+ scripts/dtc/dtc.h                                  |   11 +-
+ scripts/dtc/flattree.c                             |    2 +-
+ scripts/dtc/libfdt/fdt.c                           |   13 +-
+ scripts/dtc/libfdt/fdt.h                           |    6 +-
+ scripts/dtc/libfdt/fdt_overlay.c                   |   51 +
+ scripts/dtc/libfdt/fdt_ro.c                        |  132 +-
+ scripts/dtc/libfdt/fdt_rw.c                        |   90 +-
+ scripts/dtc/libfdt/fdt_sw.c                        |   24 +-
+ scripts/dtc/libfdt/fdt_wip.c                       |   10 +-
+ scripts/dtc/libfdt/libfdt.h                        |   37 +-
+ scripts/dtc/libfdt/libfdt_env.h                    |   33 +-
+ scripts/dtc/libfdt/libfdt_internal.h               |   32 +-
+ scripts/dtc/livetree.c                             |   10 +-
+ scripts/dtc/srcpos.c                               |    5 -
+ scripts/dtc/srcpos.h                               |    6 +-
+ scripts/dtc/update-dtc-source.sh                   |    7 +-
+ scripts/dtc/util.h                                 |    9 +-
+ scripts/dtc/version_gen.h                          |    2 +-
+ 67 files changed, 1786 insertions(+), 5643 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_0.dts
+ create mode 100644 drivers/of/unittest-data/overlay_1.dts
+ create mode 100644 drivers/of/unittest-data/overlay_10.dts
+ create mode 100644 drivers/of/unittest-data/overlay_11.dts
+ create mode 100644 drivers/of/unittest-data/overlay_12.dts
+ create mode 100644 drivers/of/unittest-data/overlay_13.dts
+ create mode 100644 drivers/of/unittest-data/overlay_15.dts
+ create mode 100644 drivers/of/unittest-data/overlay_2.dts
+ create mode 100644 drivers/of/unittest-data/overlay_3.dts
+ create mode 100644 drivers/of/unittest-data/overlay_4.dts
+ create mode 100644 drivers/of/unittest-data/overlay_5.dts
+ create mode 100644 drivers/of/unittest-data/overlay_6.dts
+ create mode 100644 drivers/of/unittest-data/overlay_7.dts
+ create mode 100644 drivers/of/unittest-data/overlay_8.dts
+ create mode 100644 drivers/of/unittest-data/overlay_9.dts
+ delete mode 100644 scripts/dtc/dtc-lexer.lex.c_shipped
+ delete mode 100644 scripts/dtc/dtc-parser.tab.c_shipped
+ delete mode 100644 scripts/dtc/dtc-parser.tab.h_shipped
