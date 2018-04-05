@@ -1,134 +1,74 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [Patch v2 5/6] drm/omap: Add virtual plane support to omap_plane
-Date: Thu, 5 Apr 2018 14:14:41 +0300
-Message-ID: <6fea4fd8-24a4-452e-8914-a3901377dcfe@ti.com>
-References: <20180326162128.8740-1-bparrot@ti.com>
- <20180326162128.8740-6-bparrot@ti.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Thu, 05 Apr 2018 20:23:47 +0900
+Message-ID: <20180405202347.2803.4A936039@socionext.com>
+References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com> <20180405095429.GA7506@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180326162128.8740-6-bparrot@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benoit Parrot <bparrot@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180405095429.GA7506@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Patrice Chotard <patrice.chotard@st.com>, Matthias Brugger <matthias.bgg@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYvMDMvMTggMTk6MjEsIEJlbm9pdCBQYXJyb3Qgd3JvdGU6Cj4gQWRkIHZpcnR1YWwgd2lk
-ZSBwbGFuZSBzdXBwb3J0IGJ5IGFkZGluZyBhbiBzZWNvbmRhcnkKPiBwbGFuZV9pZCBzbyB0aGF0
-IGFuICJvbWFwX3BsYW5lIiBjYW4gYmUgY29tcG9zZWQgb2YgdXAgdG8KPiB0d28gcGh5c2ljYWwg
-cGxhbmVzLgo+IAo+IFdoZW4gYXQgbGVhc3Qgb25lICdwbGFuZScgY2hpbGQgbm9kZSBpcyBwcmVz
-ZW50IGluIERUIHRoZW4KPiBvbWFwX3BsYW5lX2luaXQgd2lsbCBvbmx5IHVzZSB0aGUgcGxhbmUg
-ZGVzY3JpYmVkIGluIERULgo+IFNvbWUgb2YgdGhlc2Ugbm9kZXMgbWF5IGJlIGEgdmlydHVhbCB3
-aWRlIHBsYW5lIGlmIHRoZXkgYXJlIGRlZmluZWQKPiBhcyB0d28gcGh5c2ljYWwgcGxhbmVzLgo+
-IFBsYW5lcyBjYW4gYWxzbyBiZSBhc3NvY2lhdGVkIHdpdGggdmFyaW91cyBjcnRjcyBpbmRlcGVu
-ZGVudGx5Lgo+IFRoZXJlZm9yZSB3ZSBjYW4gcmVzdHJpY3QgdGhlIHVzZSBvZiB2aXJ0dWFsIHBs
-YW5lIHRvIHNwZWNpZmljCj4gQ1JUQy92aWRlbyBwb3J0IGlmIG5lZWQgYmUsIGlmIGNydGNfbWFz
-ayBpcyBub3Qgc3BlY2lmaWVkIHRoZW4KPiB0aGUgcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgdG8g
-YWxsIGF2YWlsYWJsZSBjcnRjcy4KPiBQaHlzaWNhbCBwbGFuZXMgd2hpY2ggYXJlIG5vdCBkZXNj
-cmliZWQgd2lsbCBlc3NlbnRpYWxseSBiZSBoaWRkZW4KPiBmcm9tIHRoZSBkcml2ZXIuCj4gCj4g
-SWYgbm8gJ3BsYW5lJyBjaGlsZCBub2RlcyBleGlzdCB0aGVuIHRoZSBub3JtYWwgcGxhbmUKPiBh
-bGxvY2F0aW9uIHdpbGwgdGFrZSBwbGFjZS4KClRoZSBkZXNjcyBpbiBtYW55IG9mIHRoZSBwYXRj
-aGVzIGFyZSBhIGJpdCBtZXNzeS4gSG93IGRvIHlvdSBmb3JtYXQKdGhlbT8gQXQgbGVhc3Qgdmlt
-J3MgYXV0b2Zvcm1hdCBnaXZlcyBhIG1vcmUgY29uc2lzdGVudCB3cmFwcGluZy4KCj4gU2lnbmVk
-LW9mZi1ieTogQmVub2l0IFBhcnJvdCA8YnBhcnJvdEB0aS5jb20+Cj4gLS0tCj4gIGRyaXZlcnMv
-Z3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMgICB8IDEyNyArKysrKysrKysrKysrKysrKysrKysr
-KysrKystLQo+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2ZiLmMgICAgfCAgNjYgKysr
-KysrKysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZmIuaCAgICB8ICAg
-NCArLQo+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX3BsYW5lLmMgfCAxNTEgKysrKysr
-KysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL29tYXBkcm0v
-b21hcF9wbGFuZS5oIHwgICA0ICstCj4gIDUgZmlsZXMgY2hhbmdlZCwgMjgzIGluc2VydGlvbnMo
-KyksIDY5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vb21h
-cGRybS9vbWFwX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kcnYuYwo+IGlu
-ZGV4IDM3ZWUyMGM3NzNjNy4uNGM0M2VmMjM5MTM2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9v
-bWFwX2Rydi5jCj4gQEAgLTE2LDYgKzE2LDcgQEAKPiAgICovCj4gIAo+ICAjaW5jbHVkZSA8bGlu
-dXgvc3lzX3NvYy5oPgo+ICsjaW5jbHVkZSA8bGludXgvc29ydC5oPgo+ICAKPiAgI2luY2x1ZGUg
-PGRybS9kcm1fYXRvbWljLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4K
-PiBAQCAtMTE2LDYgKzExNywxMTIgQEAgc3RhdGljIHZvaWQgb21hcF9hdG9taWNfY29tbWl0X3Rh
-aWwoc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKm9sZF9zdGF0ZSkKPiAgCXByaXYtPmRpc3BjX29w
-cy0+cnVudGltZV9wdXQoKTsKPiAgfQo+ICAKPiArc3RhdGljIGludCBvbWFwX2F0b21pY19zdGF0
-ZV96cG9zX2NtcChjb25zdCB2b2lkICphLCBjb25zdCB2b2lkICpiKQo+ICt7Cj4gKwljb25zdCBz
-dHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpzYSA9ICooc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqKilh
-Owo+ICsJY29uc3Qgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc2IgPSAqKHN0cnVjdCBkcm1fcGxh
-bmVfc3RhdGUgKiopYjsKPiArCj4gKwlpZiAoc2EtPnpwb3MgIT0gc2ItPnpwb3MpCj4gKwkJcmV0
-dXJuIHNhLT56cG9zIC0gc2ItPnpwb3M7Cj4gKwllbHNlCj4gKwkJcmV0dXJuIHNhLT5wbGFuZS0+
-YmFzZS5pZCAtIHNiLT5wbGFuZS0+YmFzZS5pZDsKPiArfQo+ICsKPiArc3RhdGljIGludCBvbWFw
-X2F0b21pY19jcnRjX25vcm1hbGl6ZV96cG9zKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywKPiArCQkJ
-CQkgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKmNydGNfc3RhdGUpCj4gK3sKPiArCXN0cnVjdCBk
-cm1fYXRvbWljX3N0YXRlICpzdGF0ZSA9IGNydGNfc3RhdGUtPnN0YXRlOwo+ICsJc3RydWN0IGRy
-bV9kZXZpY2UgKmRldiA9IGNydGMtPmRldjsKPiArCWludCB0b3RhbF9wbGFuZXMgPSBkZXYtPm1v
-ZGVfY29uZmlnLm51bV90b3RhbF9wbGFuZTsKPiArCXN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKipz
-dGF0ZXM7Cj4gKwlzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZTsKPiArCWludCBpLCBpbmMsIG4gPSAw
-Owo+ICsJaW50IHJldCA9IDA7Cj4gKwo+ICsJRFJNX0RFQlVHX0FUT01JQygiW0NSVEM6JWQ6JXNd
-IGNhbGN1bGF0aW5nIG5vcm1hbGl6ZWQgenBvcyB2YWx1ZXNcbiIsCj4gKwkJCSBjcnRjLT5iYXNl
-LmlkLCBjcnRjLT5uYW1lKTsKPiArCj4gKwlzdGF0ZXMgPSBrbWFsbG9jX2FycmF5KHRvdGFsX3Bs
-YW5lcywgc2l6ZW9mKCpzdGF0ZXMpLCBHRlBfS0VSTkVMKTsKPiArCWlmICghc3RhdGVzKQo+ICsJ
-CXJldHVybiAtRU5PTUVNOwo+ICsKPiArCS8qCj4gKwkgKiBOb3JtYWxpemF0aW9uIHByb2Nlc3Mg
-bWlnaHQgY3JlYXRlIG5ldyBzdGF0ZXMgZm9yIHBsYW5lcyB3aGljaAo+ICsJICogbm9ybWFsaXpl
-ZF96cG9zIGhhcyB0byBiZSByZWNhbGN1bGF0ZWQuCj4gKwkgKi8KPiArCWRybV9mb3JfZWFjaF9w
-bGFuZV9tYXNrKHBsYW5lLCBkZXYsIGNydGNfc3RhdGUtPnBsYW5lX21hc2spIHsKPiArCQlzdHJ1
-Y3QgZHJtX3BsYW5lX3N0YXRlICpwbGFuZV9zdGF0ZSA9Cj4gKwkJCWRybV9hdG9taWNfZ2V0X3Bs
-YW5lX3N0YXRlKHN0YXRlLCBwbGFuZSk7Cj4gKwkJaWYgKElTX0VSUihwbGFuZV9zdGF0ZSkpIHsK
-PiArCQkJcmV0ID0gUFRSX0VSUihwbGFuZV9zdGF0ZSk7Cj4gKwkJCWdvdG8gZG9uZTsKPiArCQl9
-Cj4gKwkJc3RhdGVzW24rK10gPSBwbGFuZV9zdGF0ZTsKPiArCQlEUk1fREVCVUdfQVRPTUlDKCJb
-UExBTkU6JWQ6JXNdIHByb2Nlc3NpbmcgenBvcyB2YWx1ZSAlZFxuIiwKPiArCQkJCSBwbGFuZS0+
-YmFzZS5pZCwgcGxhbmUtPm5hbWUsCj4gKwkJCQkgcGxhbmVfc3RhdGUtPnpwb3MpOwo+ICsJfQo+
-ICsKPiArCXNvcnQoc3RhdGVzLCBuLCBzaXplb2YoKnN0YXRlcyksIG9tYXBfYXRvbWljX3N0YXRl
-X3pwb3NfY21wLCBOVUxMKTsKPiArCj4gKwlmb3IgKGluYyA9IDAsIGkgPSAwOyBpIDwgbjsgaSsr
-KSB7Cj4gKwkJcGxhbmUgPSBzdGF0ZXNbaV0tPnBsYW5lOwo+ICsKPiArCQlzdGF0ZXNbaV0tPm5v
-cm1hbGl6ZWRfenBvcyA9IGkgKyBpbmM7Cj4gKwkJRFJNX0RFQlVHX0FUT01JQygiW1BMQU5FOiVk
-OiVzXSBub3JtYWxpemVkIHpwb3MgdmFsdWUgJWRcbiIsCj4gKwkJCQkgcGxhbmUtPmJhc2UuaWQs
-IHBsYW5lLT5uYW1lLCBpICsgaW5jKTsKPiArCQkvKgo+ICsJCSAqIElmIHRoZSBjdXJyZW50IHBs
-YW5lIGlzIHZpcnR1YWwgaXQgdXNlcyAyIGh3IHBsYW5lcwo+ICsJCSAqIHRoZXJlZm9yZSB0aGUg
-dmVyeSBuZXh0IHpwb3MgaXMgdXNlZCBieSB0aGUgc2Vjb25kYXJ5L2F1eAo+ICsJCSAqIHBsYW5l
-IHNvIHdlIG5lZWQgdG8gc2tpcCBvbmUgenBvcyBmcm9tIHRoaXMgcG9pbnQgb24uCj4gKwkJICov
-Cj4gKwkJaWYgKGlzX29tYXBfcGxhbmVfdmlydHVhbChwbGFuZSkpCj4gKwkJCWluYysrOwo+ICsJ
-fQo+ICsJY3J0Y19zdGF0ZS0+enBvc19jaGFuZ2VkID0gdHJ1ZTsKPiArCj4gK2RvbmU6Cj4gKwlr
-ZnJlZShzdGF0ZXMpOwo+ICsJcmV0dXJuIHJldDsKPiArfQo+ICsKPiArc3RhdGljIGludCBvbWFw
-X2F0b21pY19ub3JtYWxpemVfenBvcyhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICsJCQkJICAg
-ICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0YXRlKQo+ICt7Cj4gKwlzdHJ1Y3QgZHJtX2Ny
-dGMgKmNydGM7Cj4gKwlzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKm9sZF9jcnRjX3N0YXRlLCAqbmV3
-X2NydGNfc3RhdGU7Cj4gKwlpbnQgaSwgcmV0ID0gMDsKPiArCj4gKwlmb3JfZWFjaF9vbGRuZXdf
-Y3J0Y19pbl9zdGF0ZShzdGF0ZSwgY3J0Yywgb2xkX2NydGNfc3RhdGUsIG5ld19jcnRjX3N0YXRl
-LCBpKSB7Cj4gKwkJaWYgKG9sZF9jcnRjX3N0YXRlLT5wbGFuZV9tYXNrICE9IG5ld19jcnRjX3N0
-YXRlLT5wbGFuZV9tYXNrIHx8Cj4gKwkJICAgIG5ld19jcnRjX3N0YXRlLT56cG9zX2NoYW5nZWQp
-IHsKPiArCQkJcmV0ID0gb21hcF9hdG9taWNfY3J0Y19ub3JtYWxpemVfenBvcyhjcnRjLAo+ICsJ
-CQkJCQkJICAgICAgbmV3X2NydGNfc3RhdGUpOwo+ICsJCQlpZiAocmV0KQo+ICsJCQkJcmV0dXJu
-IHJldDsKPiArCQl9Cj4gKwl9Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBv
-bWFwX2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICsJCQkgICAgIHN0cnVj
-dCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSkKPiArewo+ICsJaW50IHJldDsKPiArCj4gKwlyZXQg
-PSBkcm1fYXRvbWljX2hlbHBlcl9jaGVjayhkZXYsIHN0YXRlKTsKPiArCWlmIChyZXQpCj4gKwkJ
-cmV0dXJuIHJldDsKPiArCj4gKwlpZiAoZGV2LT5tb2RlX2NvbmZpZy5ub3JtYWxpemVfenBvcykg
-ewo+ICsJCXJldCA9IG9tYXBfYXRvbWljX25vcm1hbGl6ZV96cG9zKGRldiwgc3RhdGUpOwo+ICsJ
-CWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30K
-PiArCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfY29uZmlnX2hlbHBlcl9mdW5jcyBv
-bWFwX21vZGVfY29uZmlnX2hlbHBlcl9mdW5jcyA9IHsKPiAgCS5hdG9taWNfY29tbWl0X3RhaWwg
-PSBvbWFwX2F0b21pY19jb21taXRfdGFpbCwKPiAgfTsKPiBAQCAtMTIzLDcgKzIzMCw3IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfY29uZmlnX2hlbHBlcl9mdW5jcyBvbWFwX21vZGVf
-Y29uZmlnX2hlbHBlcl9mdW5jcyA9Cj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfY29u
-ZmlnX2Z1bmNzIG9tYXBfbW9kZV9jb25maWdfZnVuY3MgPSB7Cj4gIAkuZmJfY3JlYXRlID0gb21h
-cF9mcmFtZWJ1ZmZlcl9jcmVhdGUsCj4gIAkub3V0cHV0X3BvbGxfY2hhbmdlZCA9IGRybV9mYl9o
-ZWxwZXJfb3V0cHV0X3BvbGxfY2hhbmdlZCwKPiAtCS5hdG9taWNfY2hlY2sgPSBkcm1fYXRvbWlj
-X2hlbHBlcl9jaGVjaywKPiArCS5hdG9taWNfY2hlY2sgPSBvbWFwX2F0b21pY19jaGVjaywKPiAg
-CS5hdG9taWNfY29tbWl0ID0gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0LAo+ICB9OwoKSSBkb24n
-dCB0aGluayBpdCdzIGEgZ29vZCBpZGVhIHRvIGNvcHlwYXN0ZQpkcm1fYXRvbWljX2hlbHBlcl9j
-cnRjX25vcm1hbGl6ZV96cG9zIGZyb20gdGhlIGRybSBjb3JlLiBXaXRoIFBldGVyJ3MKcGF0Y2hl
-cywgdGhlIGRybSBjb3JlIGRvZXMgdGhlIG5vcm1hbGl6aW5nLCBkb2Vzbid0IGl0PyBTbyB0aGV5
-IGFyZQphbHJlYWR5IHNvcnRlZCBwcm9wZXJseSwgYW5kIHlvdSBjYW4ganVzdCBnbyB0aHJvdWdo
-IHRoZW0gYW5kIGFkanVzdCB0aGUKenBvcyBpZiB0aGVyZSBhcmUgdmlydHVhbCBwbGFuZXMuCgog
-VG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIs
-IDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFp
-a2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Hi Thierry,
+
+On Thu, 5 Apr 2018 11:54:29 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
+
+> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
+> > Add support to get and control a list of resets for the device
+> > as optional and shared. These resets must be kept de-asserted until
+> > the device is enabled.
+> > 
+> > This is specified as shared because some SoCs like UniPhier series
+> > have common reset controls with all ahci controller instances.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+> >  drivers/ata/ahci.h                                 |  1 +
+> >  drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
+> >  3 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> This causes a regression on Tegra because we explicitly request the
+> resets after the call to ahci_platform_get_resources().
+> 
+> From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
+> corresponding maintainers to Cc.
+> 
+> Patrice, Matthias: does SATA still work for you after this patch? This
+> has been in linux-next since next-20180327.
+
+I assume that I use "generic-ahci" driver directly, and this driver has
+no way to handle resets, so I sent this patch.
+
+However, also as far as I look, some hardware-specific drivers handle their 
+own resets, and call ahci_platform_{enable,disable}_resources(). 
+Surely there are paths to call reset control twice in such drivers.
+
+Identically, when the driver also handle their own clocks, they have same issue.
+
+> Given how this is one of the more hardware-specific bits, perhaps a
+> better way to do this is to move reset handling into a Uniphier driver
+> much like Tegra, Mediatek and ST?
+
+Since it's difficult to write the resets in general with ahci_platform, I can prepare
+hardware-specific driver for our SoCs.
+
+> That said, I don't see SATA support for any of the Socionext hardware
+> either in the DT bindings or drivers/ata, so perhaps it'd be best to
+> back this out again until we have something that's more well tested?
+
+I'm about to use the generic driver, and prepare our phy driver and
+DT bindings for our SoCs, but not yet.
+
+Then it's no problem that we can back this out.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
