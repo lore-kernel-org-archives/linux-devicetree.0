@@ -1,82 +1,59 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] ata: ahci-platform: add reset control support
-Date: Thu, 5 Apr 2018 15:27:03 +0200
-Message-ID: <1f7d0738-1963-21c5-c293-e46fb0214ecf@redhat.com>
-References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
- <20180405095429.GA7506@ulmo> <e33f54ed-2848-9a4f-9669-7fada8c60326@st.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
+ DA850 PSC
+Date: Thu, 5 Apr 2018 15:44:06 +0200
+Message-ID: <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
+References: <1515377863-20358-1-git-send-email-david@lechnology.com>
+ <1515377863-20358-13-git-send-email-david@lechnology.com> <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
+ <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com> <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e33f54ed-2848-9a4f-9669-7fada8c60326@st.com>
-Content-Language: en-US
+In-Reply-To: <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrice CHOTARD <patrice.chotard@st.com>, Thierry Reding <thierry.reding@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05-04-18 15:17, Patrice CHOTARD wrote:
-> Hi Thierry
-> 
-> On 04/05/2018 11:54 AM, Thierry Reding wrote:
->> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
->>> Add support to get and control a list of resets for the device
->>> as optional and shared. These resets must be kept de-asserted until
->>> the device is enabled.
+2018-04-05 15:09 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
+> Hi Bartosz,
+>
+> On Friday 09 February 2018 10:18 PM, Michael Turquette wrote:
+>> On Fri, Feb 9, 2018 at 8:22 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>> 2018-01-08 3:17 GMT+01:00 David Lechner <david@lechnology.com>:
+>
+>>> Hi David,
 >>>
->>> This is specified as shared because some SoCs like UniPhier series
->>> have common reset controls with all ahci controller instances.
->>>
->>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>> ---
->>>    .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
->>>    drivers/ata/ahci.h                                 |  1 +
->>>    drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
->>>    3 files changed, 23 insertions(+), 3 deletions(-)
->>
->> This causes a regression on Tegra because we explicitly request the
->> resets after the call to ahci_platform_get_resources().
-> 
-> I confirm, we got exactly the same behavior on STi platform.
-> 
->>
->>   From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
->> corresponding maintainers to Cc.
->>
->> Patrice, Matthias: does SATA still work for you after this patch? This
->> has been in linux-next since next-20180327.
-> 
-> SATA is still working after this patch, but a kernel warning is
-> triggered due to the fact that resets are both requested by
-> libahci_platform and by ahci_st driver.
+>>> I've been working on moving the genpd code from its own driver to the
+>>> psc one. I couldn't get the system to boot though and problems
+>>> happened very early in the boot sequence. I struggled to figure out
+>>> what's happening, but eventually I noticed that psc uses
+>>> CLK_OF_DECLARE() to initialize clocks. The functions registered this
+>>> way are called very early in the boot sequence, way before
+>>> late_initcall() in which the genpd framework is initialized. This of
+>
+> late_initcall() is too late for genpd to be initialized. As you may have
+> seen with the latest set of patches, we have problems with timer
+> initialization. After converting to platform devices, PSC and PLL clocks
+> get initialized post time_init(). We are working that around using
+> fixed-clocks, which hopefully will work (I still need to test many of
+> the affected platforms).
+>
+> Can you please reply with the exact issue you faced with genpd framework
+> initialization so we do have that on record.
+>
 
-So in your case you might be able to remove the reset handling
-from the ahci_st driver and rely on the new libahci_platform
-handling instead? If that works that seems like a win to me.
+The exact issue manifested itself in a NULL-pointer dereference panic
+when I tried moving the genpd code I had initially implemented as a
+separate platform driver to what I believe was v6 or v7 of David's
+series (before the psc driver became a platform driver, when it was
+still using CLK_OF_DECLARE()). When I had tested a simple conversion
+of that version to a platform_driver, genpd worked fine.
 
-As said elsewhere in this thread I think it makes sense to keep (or re-add
-after a revert) the libahci_platform reset code, but make it conditional
-on a flag passed to ahci_platform_get_resources(). This way we get
-the shared code for most cases and platforms which need special handling
-can opt-out.
+I don't have the stack traces from these panics, but I recall some
+debugfs functions being involved and the genpd late_initcalls are
+related to debugfs. Looking at it now I don't see how exactly it could
+fail though.
 
-Regards,
-
-Hans
-
-
-> 
-> Patrice
-> 
->>
->> Given how this is one of the more hardware-specific bits, perhaps a
->> better way to do this is to move reset handling into a Uniphier driver
->> much like Tegra, Mediatek and ST?
->>
->> That said, I don't see SATA support for any of the Socionext hardware
->> either in the DT bindings or drivers/ata, so perhaps it'd be best to
->> back this out again until we have something that's more well tested?
->>
->> Thierry
+Best regards,
+Bartosz
