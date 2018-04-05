@@ -1,178 +1,230 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
-Date: Thu,  5 Apr 2018 10:18:26 -0600
-Message-ID: <20180405161834.3850-3-ilina@codeaurora.org>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180405161834.3850-1-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Thu, 5 Apr 2018 11:33:33 -0500
+Message-ID: <CAL_JsqJUMGo3mxa_Wh=y59TkBzjPyE0CtNuSGV79kZx1XDyaJQ@mail.gmail.com>
+References: <4060923.7DxT9ae38L@avalon> <20180327101008.GM27746@w540>
+ <6353eb46-5a2d-7b75-a60b-c31c59c8636a@mentor.com> <4549018.sA3EWz2jVz@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4549018.sA3EWz2jVz@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jacopo mondi <jacopo@jmondi.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-driver. The driver is used for communicating resource state requests for
-shared resources.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-
-Changes in v3:
-	- Move to soc/qcom
-	- Amend text per Stephen's suggestions
-
-Changes in v2:
-	- Amend text to describe the registers in reg property
-	- Add reg-names for the registers
-	- Update examples to use GIC_SPI in interrupts instead of 0
-	- Rephrase incorrect description
-
-Changes in v3:
-	- Fix unwanted capitalization
-	- Remove clients from the examples, this doc does not describe
-	  them
-	- Rephrase introductory paragraph
-	- Remove hardware specifics from DT bindings
----
- .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 127 +++++++++++++++++++++
- 1 file changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-new file mode 100644
-index 000000000000..dcf71a5b302f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-@@ -0,0 +1,127 @@
-+RPMH RSC:
-+------------
-+
-+Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
-+the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
-+can be written to the Trigger Command Set (TCS)  registers and using a (addr,
-+val) pair and triggered. Messages in the TCS are then sent in sequence over an
-+internal bus.
-+
-+The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
-+(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
-+active/wake resource requests. Multiple such DRVs can exist in a SoC and can
-+be written to from Linux. The structure of each DRV follows the same template
-+with a few variations that are captured by the properties here.
-+
-+A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
-+have powered off to facilitate idle power saving. TCS could be classified as -
-+
-+	SLEEP,  /* Triggered by F/W */
-+	WAKE,   /* Triggered by F/W */
-+	ACTIVE, /* Triggered by Linux */
-+	CONTROL /* Triggered by F/W */
-+
-+The order in which they are described in the DT, should match the hardware
-+configuration.
-+
-+Requests can be made for the state of a resource, when the subsystem is active
-+or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
-+will be an aggregate of the sleep votes from each of those subsystems. Clients
-+may request a sleep value for their shared resources in addition to the active
-+mode requests.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,rpmh-rsc".
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: The first register specifies the base address of the DRV.
-+	            The second register specifies the start address of the
-+	            TCS.
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Maps the register specified in the reg property. Must be
-+	            "drv" and "tcs".
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-interrupt>
-+	Definition: The interrupt that trips when a message complete/response
-+	           is received for this DRV from the accelerators.
-+
-+- qcom,drv-id:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: the id of the DRV in the RSC block.
-+
-+- qcom,tcs-config:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the tuple defining the configuration of TCS.
-+	            Must have 2 cells which describe each TCS type.
-+	            <type number_of_tcs>.
-+	            The order of the TCS must match the hardware
-+	            configuration.
-+	- Cell #1 (TCS Type): TCS types to be specified -
-+	            SLEEP_TCS
-+	            WAKE_TCS
-+	            ACTIVE_TCS
-+	            CONTROL_TCS
-+	- Cell #2 (Number of TCS): <u32>
-+
-+- label:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: Name for the RSC. The name would be used in trace logs.
-+
-+Drivers that want to use the RSC to communicate with RPMH must specify their
-+bindings as child of the RSC controllers they wish to communicate with.
-+
-+Example 1:
-+
-+For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-+register offsets for DRV2 start at 0D00, the register calculations are like
-+this -
-+First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-+Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
-+
-+	apps_rsc: rsc@179e000 {
-+		label = "apps_rsc";
-+		compatible = "qcom,rpmh-rsc";
-+		reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-+		reg-names = "drv", "tcs";
-+		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+		qcom,drv-id = <2>;
-+		qcom,tcs-config = <SLEEP_TCS   3>,
-+				  <WAKE_TCS    3>,
-+				  <ACTIVE_TCS  2>,
-+				  <CONTROL_TCS 1>;
-+	};
-+
-+Example 2:
-+
-+For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
-+register offsets for DRV0 start at 01C00, the register calculations are like
-+this -
-+First tuple: 0xAF20000
-+Second tuple: 0xAF20000 + 0x1C00 = 0xAF21C00
-+
-+	disp_rsc: rsc@af20000 {
-+		label = "disp_rsc";
-+		compatible = "qcom,rpmh-rsc";
-+		reg = <0xaf20000 0x10000>, <0xaf21c00 0x3000>;
-+		reg-names = "drv", "tcs";
-+		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
-+		qcom,drv-id = <0>;
-+		qcom,tcs-config = <SLEEP_TCS   1>,
-+				  <WAKE_TCS    1>,
-+				  <ACTIVE_TCS  0>,
-+				  <CONTROL_TCS 0>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gTW9uLCBBcHIgMiwgMjAxOCBhdCA4OjM2IEFNLCBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+IEhpIFZsYWRpbWlyLAo+Cj4gT24g
+VHVlc2RheSwgMjcgTWFyY2ggMjAxOCAxNDowMzoyNSBFRVNUIFZsYWRpbWlyIFphcG9sc2tpeSB3
+cm90ZToKPj4gT24gMDMvMjcvMjAxOCAwMToxMCBQTSwgamFjb3BvIG1vbmRpIHdyb3RlOgo+PiA+
+IE9uIFR1ZSwgTWFyIDI3LCAyMDE4IGF0IDEyOjM3OjMxUE0gKzAzMDAsIFZsYWRpbWlyIFphcG9s
+c2tpeSB3cm90ZToKPj4gPj4gT24gMDMvMjcvMjAxOCAxMTo1NyBBTSwgamFjb3BvIG1vbmRpIHdy
+b3RlOgo+PiA+Pj4gT24gVHVlLCBNYXIgMjcsIDIwMTggYXQgMTE6MzA6MjlBTSArMDMwMCwgVmxh
+ZGltaXIgWmFwb2xza2l5IHdyb3RlOgo+PiA+Pj4+IE9uIDAzLzI3LzIwMTggMTE6MjcgQU0sIFNl
+cmdlaSBTaHR5bHlvdiB3cm90ZToKPj4gPj4+Pj4gT24gMy8yNy8yMDE4IDEwOjMzIEFNLCBqYWNv
+cG8gbW9uZGkgd3JvdGU6Cj4+ID4+Pj4+IFsuLi5dCj4+ID4+Pj4+Cj4+ID4+Pj4+Pj4+Pj4+IERv
+Y3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGlu
+Z3MuCj4+ID4+Pj4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBN
+b25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4gPj4+Pj4+Pj4+Pj4gUmV2aWV3ZWQt
+Ynk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+ID4+Pj4+Pj4+Pj4+IFJl
+dmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZAo+PiA+Pj4+Pj4+Pj4+PiA8bmlrbGFzLnNvZGVy
+bHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPj4gPj4+Pj4+Pj4+Pj4gLS0tCj4+ID4+Pj4+Pj4+
+Pj4+Cj4+ID4+Pj4+Pj4+Pj4+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRo
+YzYzbHZkMTAyNC50eHQgfCA2Ngo+PiA+Pj4+Pj4+Pj4+PiAgICsrKysrKysrKysrKysrKysrKysK
+Pj4gPj4+Pj4+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0aW9ucygrKQo+PiA+Pj4+
+Pj4+Pj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+PiA+Pj4+Pj4+Pj4+Pgo+PiA+Pj4+Pj4+Pj4+
+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUs
+dGhjNjNsdmQxCj4+ID4+Pj4+Pj4+Pj4+IDAyNC50eHQKPj4gPj4+Pj4+Pj4+Pj4KPj4gPj4+Pj4+
+Pj4+Pj4gZGlmZiAtLWdpdAo+PiA+Pj4+Pj4+Pj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2Cj4+ID4+Pj4+Pj4+Pj4+IGQx
+MDI0LnR4dAo+PiA+Pj4+Pj4+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2Cj4+ID4+Pj4+Pj4+Pj4+IGQxMDI0LnR4dAo+
+PiA+Pj4+Pj4+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiA+Pj4+Pj4+Pj4+PiBpbmRleCAw
+MDAwMDAwLi44MjI1YzZhCj4+ID4+Pj4+Pj4+Pj4+IC0tLSAvZGV2L251bGwKPj4gPj4+Pj4+Pj4+
+Pj4gKysrCj4+ID4+Pj4+Pj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHYKPj4gPj4+Pj4+Pj4+Pj4gZDEwMjQudHh0Cj4+
+ID4+Pj4+Pj4+Pj4+IEBAIC0wLDAgKzEsNjYgQEAKPj4gPj4+Pj4+Pj4+Pj4gK1RoaW5lIEVsZWN0
+cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPj4gPj4+Pj4+Pj4+Pj4gKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gPj4+Pj4+Pj4+Pj4gKwo+PiA+
+Pj4+Pj4+Pj4+PiArVGhlIFRIQzYzTFZEMTAyNCBpcyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVy
+IGRlc2lnbmVkIHRvCj4+ID4+Pj4+Pj4+Pj4+IGNvbnZlcnQgTFZEUyBzdHJlYW1zCj4+ID4+Pj4+
+Pj4+Pj4+ICt0byBwYXJhbGxlbCBkYXRhIG91dHB1dHMuIFRoZSBjaGlwIHN1cHBvcnRzIHNpbmds
+ZS9kdWFsCj4+ID4+Pj4+Pj4+Pj4+IGlucHV0L291dHB1dCBtb2RlcywgK2hhbmRsaW5nIHVwIHRv
+IHR3byB0d28gaW5wdXQgTFZEUyBzdHJlYW0KPj4gPj4+Pj4+Pj4+Pj4gYW5kIHVwIHRvIHR3byBk
+aWdpdGFsIENNT1MvVFRMIG91dHB1dHMuCj4+ID4+Pj4+Pj4+Pj4+ICsKPj4gPj4+Pj4+Pj4+Pj4g
+K1NpbmdsZSBvciBkdWFsIG9wZXJhdGlvbiBtb2Rlcywgb3V0cHV0IGRhdGEgbWFwcGluZyBhbmQg
+RERSCj4+ID4+Pj4+Pj4+Pj4+IG91dHB1dCBtb2RlcyBhcmUKPj4gPj4+Pj4+Pj4+Pj4gK2NvbmZp
+Z3VyZWQgdGhyb3VnaCBpbnB1dCBzaWduYWxzIGFuZCB0aGUgY2hpcCBkb2VzIG5vdCBleHBvc2UK
+Pj4gPj4+Pj4+Pj4+Pj4gYW55IGNvbnRyb2wgYnVzLgo+PiA+Pj4+Pj4+Pj4+PiArCj4+ID4+Pj4+
+Pj4+Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+Pj4+Pj4+Pj4+PiArLSBjb21wYXRpYmxl
+OiBTaGFsbCBiZSAidGhpbmUsdGhjNjNsdmQxMDI0Igo+PiA+Pj4+Pj4+Pj4+PiArCj4+ID4+Pj4+
+Pj4+Pj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiA+Pj4+Pj4+Pj4+PiArLSB2Y2Mtc3VwcGx5
+OiBQb3dlciBzdXBwbHkgZm9yIFRUTCBvdXRwdXQgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5Cj4+ID4+
+Pj4+Pj4+Pj4+ICstIGN2Y2Mtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIFRUTCBDTE9DS09VVCBz
+aWduYWwKPj4gPj4+Pj4+Pj4+Pj4gKy0gbHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3IgTFZE
+UyBpbnB1dHMKPj4gPj4+Pj4+Pj4+Pj4gKy0gcHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBseSBmb3Ig
+UExMIGNpcmN1aXRyeQo+PiA+Pj4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+Pj4gQXMgZXhwbGFpbmVkIGlu
+IGEgY29tbWVudCB0byBvbmUgb2YgdGhlIHByZXZpb3VzIHZlcnNpb25zIG9mIHRoaXMKPj4gPj4+
+Pj4+Pj4+PiBzZXJpZXMsIEknbSB0ZW1wdGVkIHRvIG1ha2UgdmNjLXN1cHBseSBtYW5kYXRvcnkg
+YW5kIGRyb3AgdGhlCj4+ID4+Pj4+Pj4+Pj4gdGhyZWUgb3RoZXIgcG93ZXIgc3VwcGxpZXMgZm9y
+IG5vdywgYXMgSSBiZWxpZXZlIHRoZXJlJ3MgdmVyeQo+PiA+Pj4+Pj4+Pj4+IGxpdHRsZSBjaGFu
+Y2UgdGhleSB3aWxsIGJlIGNvbm5lY3RlZCB0byBzZXBhcmF0ZWx5IGNvbnRyb2xsYWJsZQo+PiA+
+Pj4+Pj4+Pj4+IHJlZ3VsYXRvcnMgKGFsbCBzdXBwbGllcyB1c2UgdGhlIHNhbWUgdm9sdGFnZSku
+IEluIHRoZSB2ZXJ5Cj4+ID4+Pj4+Pj4+Pj4gdW5saWtlbHkgZXZlbnQgdGhhdCB0aGlzIG9jY3Vy
+cyBpbiBkZXNpZ24gd2UgbmVlZCB0byBzdXBwb3J0IGluCj4+ID4+Pj4+Pj4+Pj4gdGhlIGZ1dHVy
+ZSwgdGhlIGN2Y2MsIGx2Y2MgYW5kIHB2Y2Mgc3VwcGxpZXMgY2FuIGJlIGFkZGVkIGxhdGVyCj4+
+ID4+Pj4+Pj4+Pj4gYXMgb3B0aW9uYWwgd2l0aG91dCBicmVha2luZyBiYWNrd2FyZCBjb21wYXRp
+YmlsaXR5Lgo+PiA+Pj4+Pj4+Pj4KPj4gPj4+Pj4+Pj4+IEknbSBva2F5IHdpdGggdGhhdC4KPj4g
+Pj4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+Pj4gQXBhcnQgZnJvbSB0aGF0LAo+PiA+Pj4+Pj4+Pj4+Cj4+
+ID4+Pj4+Pj4+Pj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbT4KPj4gPj4+Pj4+Pj4+Pgo+PiA+Pj4+Pj4+Pj4+PiArLSBwZHdu
+LWdwaW9zOiBQb3dlciBkb3duIEdQSU8gc2lnbmFsLiBBY3RpdmUgbG93Cj4+ID4+Pj4+Pj4+Pgo+
+PiA+Pj4+Pj4+Pj4gcG93ZXJkb3duLWdwaW9zIGlzIHRoZSBzZW1pLXN0YW5kYXJkIG5hbWUuCj4+
+ID4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+IHJpZ2h0LCBJJ3ZlIGFsc28gbm90aWNlZCBpdC4gSWYgcG9z
+c2libGUgcGxlYXNlIGF2b2lkIHNob3J0ZW5pbmdzCj4+ID4+Pj4+Pj4+IGluIHByb3BlcnR5IG5h
+bWVzLgo+PiA+Pj4+Pj4+Cj4+ID4+Pj4+Pj4gSXQgaXMgbm90IHNob3J0ZW5pbmcsIGl0IGp1c3Qg
+Zm9sbG93IHBpbiBuYW1lIGZyb20gZGVjb2RlcidzCj4+ID4+Pj4+Pj4gZGF0YXNoZWV0Lgo+PiA+
+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+Pj4+ICstIG9lLWdwaW9zOiBPdXRwdXQgZW5hYmxlIEdQSU8gc2ln
+bmFsLiBBY3RpdmUgaGlnaAo+PiA+Pj4+Pj4+Pj4+PiArCj4+ID4+Pj4+Pj4+Cj4+ID4+Pj4+Pj4+
+IEFuZCB0aGlzIG9uZSBpcyBhbHNvIGEgbm90IGV2ZXIgbWV0IHByb3BlcnR5IG5hbWUsIHBsZWFz
+ZSBjb25zaWRlcgo+PiA+Pj4+Pj4+PiB0byByZW5hbWUgaXQgdG8gJ2VuYWJsZS1ncGlvcycsIGZv
+ciBpbnN0YW5jZSBkaXNwbGF5IHBhbmVscyBkZWZpbmUKPj4gPj4+Pj4+Pj4gaXQuCj4+ID4+Pj4+
+Pj4KPj4gPj4+Pj4+PiBBZ2FpbiwgaXQgZm9sbG93cyBkYXRhc2hlZXQgbmFtaW5nIHNjaGVtZS4g
+SGFzIHNvbWV0aGluZyBjaGFuZ2VkIGluCj4+ID4+Pj4+Pj4gRFQgY29udmVudGlvbnM/Cj4+ID4+
+Pj4+Pgo+PiA+Pj4+Pj4gU2Vjb25kZWQuIE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGUgcHJv
+cGVydHkgbmFtZSBzaG91bGQgcmVmbGVjdAo+PiA+Pj4+Pj4gd2hhdCByZXBvcnRlZCBpbiB0aGUg
+dGhlIGNoaXAgbWFudWFsLiBGb3IgVEhDNjNMVkQxMDI0IHRoZSBlbmFibGUgYW5kCj4+ID4+Pj4+
+PiBwb3dlciBkb3duIHBpbnMgYXJlIG5hbWVkICdPRScgYW5kICdQRFdOJyByZXNwZWN0aXZlbHku
+Cj4+ID4+Pj4+Pgo+PiA+Pj4+PiBCdXQgZG9uJ3Qgd2UgbmVlZCB0aGUgdmVuZG9yIHByZWZpeCBp
+biB0aGUgcHJvcCBuYW1lcyB0aGVuLCBsaWtlCj4+ID4+Pj4+ICJyZW5lc2FzLG9lLWdwaW9zIiB0
+aGVuPwo+PiA+Pj4+Cj4+ID4+Pj4gU2Vjb25kZWQsIHdpdGggYSBjb3JyZWN0aW9uIHRvICJ0aGlu
+ZSxvZS1ncGlvcyIuCj4+ID4+Pgo+PiA+Pj4gbW1tLCBva2F5IHRoZW4uLi4KPj4gPj4+Cj4+ID4+
+PiBBIGdyZXAgZm9yIHRoYXQgc2VtaS1zdGFuZGFyZCBwcm9wZXJ0aWVzIG5hbWVzIGluIERvY3Vt
+ZW50YXRpb24vCj4+ID4+PiByZXR1cm5zIG9ubHkgdXNhZ2UgZXhhbXBsZXMgYW5kIG5vIGFjdHVh
+bCBkZWZpbml0aW9ucywgc28gSSBhc3N1bWUgdGhpcwo+PiA+Pj4gaXMgd2h5IHRoZXkgYXJlIHNl
+bWktc3RhbmRhcmQuCj4+ID4+Cj4+ID4+IEhlcmUgd2UgaGF2ZSB0byBiZSBzcGVjaWZpYyBhYm91
+dCBhIHBhcnRpY3VsYXIgcHJvcGVydHksIGxldCBpdCBiZQo+PiA+PiAnb2UtZ3Bpb3MnIHZzLiAn
+ZW5hYmxlLWdwaW9zJyBhbmQgbGV0J3MgY29sbGVjdCBzb21lIHN0YXRpc3RpY3M6Cj4+ID4+Cj4+
+ID4+ICUgZ3JlcCAtSHIgb2UtZ3Bpb3MgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+LyogfCB3YyAtbAo+PiA+PiAwCj4+ID4+Cj4+ID4+ICQgZ3JlcCAtSHIgZW5hYmxlLWdwaW9zIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy8qIHwgd2MgLWwKPj4gPj4gODYKPj4gPj4K
+Pj4gPj4gV2hpbGUgJ3RoaW5lLG9lLWdwaW9zJyB3b3VsZCBiZSBjb3JyZWN0LCBJIHNlZSBubyBy
+ZWFzb24gdG8gaW50cm9kdWNlIGEKPj4gPj4gdmVuZG9yIHNwZWNpZmljIHByb3BlcnR5IHRvIGRl
+ZmluZSBhIHBpbiB3aXRoIGEgY29tbW9uIGFuZCB3ZWxsCj4+ID4+IHVuZGVyc3Rvb2QgcHVycG9z
+ZS4KPj4gPj4KPj4gPj4gSWYgeW91IGdvIGZvcndhcmQgd2l0aCB0aGUgdmVuZG9yIHNwZWNpZmlj
+IHByZWZpeCwgYXBwYXJlbnRseSB5b3UgY2FuIHNldAo+PiA+PiB0aGUgbmFtZSB0byAndGhpbmUs
+b2UtZ3BpbycgKHNpbmdsZSkgb3IgZXZlbiB0byAndGhpbmUsb2UnLCBvciBkb2VzIHRoZQo+PiA+
+PiBkYXRhc2hlZXQgbmFtZXMgdGhlIHBpbiBhcyAiT0UgR1BJTyIgb3IgIk9FIGNvbm5lY3RlZCB0
+byBhIEdQSU8iPyBJCj4+ID4+IGd1ZXNzIG5vLgo+PiA+Cj4+ID4gTGV0IG1lIGNsYXJpZnkgSSBk
+b24ndCB3YW50IHRvIHB1c2ggZm9yIGEgdmVuZG9yIHNwZWNpZmljIG5hbWUgb3IKPj4gPiBzaW1p
+bGFyLCBJJ20gZmluZSB3aXRoIHVzaW5nICdzZW1pLXN0YW5kYXJkJyBuYW1lcywgSSdtIGp1c3Qg
+Y29uZnVzZWQKPj4gPiBieSB0aGUgJ3NlbWktc3RhbmRhcmQnIGRlZmluaXRpb24uIEkgZ3Vlc3Mg
+ZnJvbSB5b3VyIGV4YW1wbGVzLCB0aGUKPj4gPiB1c2FnZSBjb3VudCBtYWtlcyBhIGRpZmZlcmVu
+Y2UgaGVyZS4KPj4KPj4geWVzLCBpbiBnbmVuZXJhbCB5b3UgY2FuIHJlYWQgInNlbWktc3RhbmRh
+cmQiIGFzICJ3aWRlbHkgdXNlZCIsIHRodXMKPj4gY29sbGVjdGluZyBzdGF0aXN0aWNzIGlzIGEg
+Z29vZCBlbm91Z2ggbWV0aG9kIHRvIG1ha2UgYSByZWFzb25pbmcuCj4+Cj4+IEhvcGVmdWxseSB0
+aGUgbmV4dCBldm9sdXRpb25hcnkgc3RlcCBvZiAid2lkZWx5IHVzZWQiIGlzICJkZXNjcmliZWQg
+aW4KPj4gc3RhbmRhcmQiLgo+Pgo+PiA+PiBTdGFuZGFyZHMgZG8gbm90IGRlZmluZSAnLWdwaW9z
+JyBzdWZmaXgsIGJ1dCBwYXJ0aWFsbHkgdGhlIGRlc2NyaXB0aW9uIGlzCj4+ID4+IGZvdW5kIGlu
+IERvY3VtZW50YXRpb24vYmluZGluZ3MvZ3Bpby9ncGlvLnR4dCwgc3RpbGwgaXQgaXMgbm90IGEg
+c2VjdGlvbgo+PiA+PiBpbiBhbnkgc3RhbmRhcmQgYXMgZmFyIGFzIEkga25vdy4KPj4gPj4KPj4g
+Pj4+IFNlZW1zIGxpa2UgdGhlcmUgaXMgc29tZSB0cmliYWwga25vd2xlZGdlIGludm9sdmVkIGlu
+IGRlZmluaW5nIHdoYXQKPj4gPj4+IGlzIHNlbWktc3RhbmRhcmQgYW5kIHdoYXQncyBub3QsIG9y
+IGFyZSB0aG9zZSBwcm9wZXJ0aWVzIGRvY3VtZW50ZWQKPj4gPj4+IHNvbWV3aGVyZT8KPj4gPj4K
+Pj4gPj4gVGhlIHBvaW50IGlzIHRoYXQgdGhlcmUgaXMgbm8gZm9ybWFsIHN0YW5kYXJkIHdoaWNo
+IGRlc2NyaWJlcyBldmVyeSBJUCwKPj4gPj4gZXZlcnkgSUMgYW5kIGV2ZXJ5IHNpbmdsZSB0aGVp
+ciBwcm9wZXJ0eSwgc29tZSBkZXZpY2Ugbm9kZSBuYW1lcyBhbmQKPj4gPj4gcHJvcGVydHkgbmFt
+ZXMgYXJlIHJlY29tbWVuZGVkIGluIGVQQVBSIGFuZCBEZXZpY2V0cmVlIFNwZWNpZmljYXRpb24K
+Pj4gPj4gdGhvdWdoLgo+PiA+Pgo+PiA+PiBUaGluayBvZiBhIGNvbmZ1c2lvbiBpZiAncnN0LWdw
+aW9zJyAoaGF2ZSB5b3Ugc2VlbiBhbnkgSUNzIHdpdGggYW4gUlNUCj4+ID4+IHBpbj8pIGFuZCAn
+cmVzZXQtZ3Bpb3MnIGFyZSBkaWZmZXJlbnQuIFNhbWUgYXBwbGllcyB0byAncGR3bi1ncGlvcycg
+dnMuCj4+ID4+ICdwb3dlcmRvd24tZ3Bpb3MnLgo+PiA+Cj4+ID4gSSBzZWUgYWxsIHlvdXIgcG9p
+bnRzIGFuZCBJIGFncmVlIHdpdGggbW9zdCBvZiB0aGVtLiBBbnl3YXksIGlmIHRoZQo+PiA+IGNo
+aXAgbWFudWFsIGRlc2NyaWJlcyBhIHBpbiBhcyAnUlNUJyBJIHdvdWxkIG5vdCBmaW5kIGl0IGNv
+bmZ1c2luZyB0bwo+PiA+IGhhdmUgYSAncnN0LWdwaW8nIGRlZmluZWQgaW4gYmluZGluZ3MgOikK
+Pj4gPgo+PiA+IExldCBtZSBiZSBhIGJpdCBwZXNreSBoZXJlOiB3aGF0IGlmIGEgY2hpcCBkZWZp
+bmVzIGEgcmVzZXQgR1BJTywgd2hpY2gKPj4gPiBpcyBkZWZpbml0ZWx5IGEgcmVzZXQsIGJ1dCBu
+YW1lcyBpdCwgc2F5ICJYWVoiID8gV291bGQgeW91IHByZWZlciB0bwo+PiA+IHNlZSBpdCBkZWZp
+bmVkIGFzICJyZXNldC1ncGlvcyIgZm9yIGNvbnNpc3RlbmN5IHdpdGggb3RoZXIgYmluZGluZ3Ms
+Cj4+ID4gb3IgInh5ei1ncGlvcyIgZm9yIGNvbnNpc3RlbmN5IHdpdGggZG9jdW1lbnRhdGlvbj8K
+Pj4KPj4gSWYgYSBwaW4gaXMgZGVmaW5pdGVseSBhbiBJQyByZXNldCBhcyB5b3Ugc2FpZCwgdGhl
+biBteSBwcmVmZXJlbmNlIGlzIHRvIHNlZQo+PiBpdCBkZXNjcmliZWQgdW5kZXIgJ3Jlc2V0LWdw
+aW9zJyBwcm9wZXJ0eSBuYW1lLCBwbHVzIGEgY29tbWVudCBpbiB0aGUgSUMKPj4gZGV2aWNlIHRy
+ZWUgZG9jdW1lbnRhdGlvbiBkb2N1bWVudCBhYm91dCBpdC4gSSBjYW4gcHJvdmlkZSB0d28gcmVh
+c29ucyB0bwo+PiBhZHZvY2F0ZSBteSBwb3NpdGlvbjoKPj4KPj4gMSkgZGV2ZWxvcGVycyBzcGVu
+ZCBzaWduaWZpY2FudGx5IG1vcmUgdGltZSByZWFkaW5nIGFuZCBlZGl0aW5nIHRoZSBhY3R1YWwK
+Pj4gICAgRFRTSS9EVFMgYm9hcmQgZmlsZXMgcmF0aGVyIHRoYW4gcmVhZGluZyBhbmQgZWRpdGlu
+ZyBkb2N1bWVudGF0aW9uLAo+PiAgICBpdCBtYWtlcyBzZW5zZSB0byB1c2UgY29tbW9uIHByb3Bl
+cnR5IG5hbWVzIHRvIHNhdmUgdGltZSBhbmQgcmVkdWNlCj4+ICAgIGFtb3VudCBvZiAid2hhdCBk
+b2VzICdvZScgc3RhbmQgZm9yPyIgdHlwZSBvZiBxdWVzdGlvbnM7IEkgc3VwcG9zZQo+PiAgICB0
+aGF0IHRoZSByZWNvbW1lbmRhdGlvbiB0byBhdm9pZCBub3QgIndpZGVseSB1c2VkIiBhYmJyZXZp
+YXRpb25zIGluCj4+ICAgIGRldmljZSBub2RlIGFuZCBwcm9wZXJ0eSBuYW1lcyBhcmlzZXMgZnJv
+bSB0aGUgc2FtZSByZWFzb25pbmcsCj4+Cj4+IDIpICJ3aWRlbHkgdXNlZCIgYW5kICJzdGFuZGFy
+ZCIgcHJvcGVydGllcyBhcmUgZXhjZWxsZW50IGNhbmRpZGF0ZXMgZm9yCj4+ICAgIGRldmVsb3Bp
+bmcgKG9yIHJlLXVzaW5nKSBnZW5lcmFsaXphdGlvbiB3cmFwcGVycywgaXQgaGFwcGVuZWQgc28g
+bWFueQo+PiAgICB0aW1lcyBpbiB0aGUgcGFzdCwgYW5kIHRoaXMgcHJvY2VzcyBzaGFsbCBiZSBz
+dXBwb3J0ZWQgaW4gbXkgb3BpbmlvbjsKPj4gICAgZHVlIHRvIGNvbXBhdGliaWxpdHkgcmVzdHJp
+Y3Rpb25zIGl0IG1pZ2h0IGJlIHByb2JsZW1hdGljIHRvIGNoYW5nZQo+PiAgICBwcm9wZXJ0eSBu
+YW1lcywgYW5kIGV2ZXJ5IG5ldyBleGNlcHRpb24gdG8gIndpZGVseSB1c2VkIiBwcm9wZXJ0aWVz
+Cj4+ICAgIG1ha2VzIHByb2JsZW1hdGljIHRvIGRldmVsb3AgYW5kIG1haW50YWluIHRoZXNlIGtp
+bmRzIG9mIHdyYXBwZXJzLCBhbmQKPj4gICAgb2YgY291cnNlIGl0IHBvc3Rwb25lcyBhIGRlc2ly
+ZWQgImRlc2NyaWJlZCBpbiBzdGFuZGFyZCIgcmVjb2duaXRpb24uCj4+Cj4+IElmIG15IHBvaW50
+IG9mIHZpZXcgaXMgYWNjZXB0ZWQsIEkgZG8gYWRtaXQgdGhhdCBhIGRldmVsb3BlciB3aG8KPj4g
+dHJhbnNsYXRlcyBhIGJvYXJkIHNjaGVtYXRpY3MgdG8gYm9hcmQgRFRTIGZpbGUgbWF5IGV4cGVy
+aWVuY2UgYSBtaW5vcgo+PiBkaXNjb21mb3J0LCB3aGljaCBpcyBtaXRpZ2F0ZWQgaWYgcmVsZXZh
+bnQgcGluIG5hbWVzIGFyZSBmb3VuZCBpbiBkZXZpY2UKPj4gdHJlZSBiaW5kaW5nIGRvY3VtZW50
+YXRpb24gaW4gY29tbWVudHMgdG8gcHJvcGVydGllcywgc3RpbGwgdGhlIG92ZXJhbGwKPj4gZ2Fp
+biBpcyBub3RpY2VhYmx5IGhpZ2hlciBpbiBteSBwZXJzb25hbCBvcGluaW9uLgo+Cj4gSSBoYXZl
+IHRvIGRpc2FncmVlIHdpdGggdGhpcy4gV2hlbiB1c2luZyBhIHByb3BlcnR5IG5hbWUgdGhhdCBk
+b2Vzbid0Cj4gY29ycmVzcG9uZCB0byB0aGUgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbiwgZGV2ZWxv
+cGVycyB3aWxsIG5lZWQgdG8gcmVmZXIgdG8gdGhlCj4gRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlv
+biB0byBjb25maXJtIHRoZSBwcm9wZXJ0eSBuYW1lLiAiV2lkZWx5IHVzZWQiIHByb3BlcnR5Cj4g
+bmFtZXMgd2lsbCBub3Qgc2F2ZSB0aW1lLCB0aGV5IHdpbGwgdXNlIG1vcmUgdGltZS4gVGhpcyBp
+cyBvZiBjb3Vyc2UgbWFyZ2luYWwKPiBhbmQgSSBkb24ndCB0aGluayBpdCB3b3VsZCBoYXZlIGFu
+eSBub3RpY2VhYmxlIGltcGFjdCwgYnV0IEkgZG9uJ3QgdGhpbmsgeW91cgo+IGFyZ3VtZW50IGhv
+bGRzLgoKV2UgY2FuIGhhdmUgaXQgYm90aCB3YXlzLiBUaGUgbmFtZSBzaG91bGQgZm9sbG93IHRo
+ZSBkb2N1bWVudGVkCm5hbWUvZnVuY3Rpb24uIEZvciBleGFtcGxlLCB3ZSBoYXZlIGVuYWJsZS1n
+cGlvcyB3aGljaCBpcyBzaW1wbHkgdGhlCmludmVydCBvZiBwb3dlcmRvd24tZ3Bpb3MgKGZvciBz
+b2Z0d2FyZSdzIHB1cnBvc2VzKS4gUGljayB0aGUgb25lCmNsb3Nlc3QgdG8gdGhlIGRvY3VtZW50
+YXRpb24uIFdlJ3JlIG5vdCB0cnlpbmcgdG8gbWFrZSBiaW5kaW5ncyB1c2UKImVuYWJsZSIgaWYg
+YSBzaWduYWwgaXMgY2FsbGVkICJwb3dlcmRvd24iLgoKV2hhdCB3ZSBkb24ndCB3YW50IGlzIGdy
+YXR1aXRvdXMgdmFyaWF0aW9uIGluIHRoZSBuYW1lcyBiYXNlZCBvbiB0aGUKd2hpbXMgb2YgaHcg
+ZGVzaWduZXJzOgoKcmVzZXRiLWdwaW9zCnJlc2V0bi1ncGlvcwpyc3QtZ3Bpb3MKcnN0bi1ncGlv
+cwpuUkVTRVQtZ3Bpb3MKCi4uLnlvdSBnZXQgdGhlIGlkZWEgKGFuZCBJIGxlZnQgb3V0IHZlbmRv
+ciBwcmVmaXhlcykuCgo+IEknbSBhbGwgZm9yIHN0YW5kYXJkaXppbmcgcHJvcGVydGllcyBhY3Jv
+c3MgRFQgYmluZGluZ3MgZm9yIG11bHRpcGxlCj4gY29tcG9uZW50cywgYnV0IGRvaW5nIHNvIGlu
+IGEgc2VtaS1yYW5kb20gZmFzaGlvbiB3aWxsIGluIG15IG9waW5pb24gbm90Cj4gcmVzdWx0IGlu
+IGFueSBnYWluLiBXZSBjYW4gZGVjaWRlIHRoYXQgcG93ZXItZG93biBvciBvdXRwdXQtZW5hYmxl
+IEdQSU9TCj4gc2hvdWxkIGhhdmUgY29tbW9uIHByb3BlcnR5IG5hbWVzIChhbmQgSSdtIG5vdCBl
+dmVuIHN1cmUgdGhhdCB3b3VsZCBiZSB1c2VmdWwsCj4gYnV0IHdlIGNhbiBjZXJ0YWlubHkgZGlz
+Y3VzcyBpdCksIGJ1dCBpbiB0aGF0IGNhc2Ugc29tZW9uZSBzaG91bGQgbWFrZSBhCj4gcHJvcG9z
+YWwgYW5kIGdldCB0aGUgbmFtZXMgc3RhbmRhcmRpemVkLiBVbmxlc3Mgd2UgZG8gc28sIG5vIG1h
+dHRlciB3aGF0Cj4gcHJvcGVydHkgbmFtZSBnZXRzIHBpY2tlZCBmb3IgYSBwYXJ0aWN1bGFyIGJp
+bmRpbmcsIGl0IHdvbid0IGJlY29tZQo+IHVuaXZlcnNhbGx5IHVzZWQgYnkgbWFnaWMuCgpGb3Ig
+Im91dHB1dCBlbmFibGUiLCBJIHN1c3BlY3QgdGhhdCBpcyBhIGNvbW1vbiBzaWduYWwvZnVuY3Rp
+b24gYW5kCnNob3VsZCBoYXZlIGEgc3RhbmRhcmRpemVkIG5hbWUuIEdlbmVyYWxseSwgdGhlIHdh
+eSB0aGlzIHdvcmtzIGlzIHdlCmdldCBzZXZlcmFsIHZhcmlhdGlvbnMgYW5kIHRoZW4gd2UgdHJ5
+IHRvIHN0YW5kYXJkaXplIHRoaW5ncy4gSSB0aGluawp3ZSBjYW4gYWxsIGFncmVlIHN0YW5kYXJk
+aXppbmcgZmlyc3QgaXMgYmV0dGVyLiBJZiB5b3Ugd2FudCB0byBwdXQgaXQKaW4gYSBjb21tb24g
+cGxhY2UsIHBsZWFzZSBkby4gTWF5YmUgcGVvcGxlIHdpbGwgcmVhZCB0aGF0LiBSZWdhcmRsZXNz
+LAp0aGUgb25seSB3YXkgdG8gZW5mb3JjZSBmb2xsb3dpbmcgc3RhbmRhcmQgbmFtZXMgaXMgd2l0
+aCByZXZpZXcuCgpEZWJhdGluZyAib2UiIHZzLiAib3V0cHV0LWVuYWJsZSIgaXMgYmlrZXNoZWRk
+aW5nIElNTy4gQW55b25lIGZhbWlsaWFyCndpdGggaC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXpl
+IE9FLgoKVGhlIHJlYXNvbiB0byB0cnkgYW5kIHN0YW5kYXJkaXplIG5hbWVzIGlzIHNvIHdlIGNh
+biBoYXZlIGNvbW1vbgpkcml2ZXJzIG9yIGxpYnJhcnkgZnVuY3Rpb25zLiBJbiBwYXJ0aWN1bGFy
+LCBmb3IgdGhpbmdzIGxpa2UgR1BJT3MKdGhhdCBuZWVkIHRvIGJlIGNvbmZpZ3VyZWQgZmlyc3Qg
+Zm9yIGRldmljZXMgb24gb3RoZXJ3aXNlIGRpc2NvdmVyYWJsZQpidXNlcywgdGhpcyBpcyB2ZXJ5
+IHVzZWZ1bC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
