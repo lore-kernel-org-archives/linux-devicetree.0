@@ -1,93 +1,91 @@
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Subject: Re: [PATCH net-next v2 2/2] dt: bindings: add new dt entries for
- brcmfmac
-Date: Thu, 5 Apr 2018 21:11:52 +0200
-Message-ID: <5AC674F8.7080100@broadcom.com>
-References: <20180319014032.9394-1-alexey.roslyakov@gmail.com>
- <20180319014032.9394-3-alexey.roslyakov@gmail.com>
- <5AAF838D.2030105@broadcom.com>
- <CALFoz4YMKJr40fefczrbjXBROtZxnGikv0Jze-BnefofCB3dyg@mail.gmail.com>
- <817418fd-6446-57ea-b03d-383b4df9a979@gmail.com>
- <5AB044C0.9060701@broadcom.com> <87po3zxe9n.fsf@kamboji.qca.qualcomm.com>
- <CAPDyKFr2GVB0+UUpT3GgGBT17TMcrky6X4L_pw+ztTL6ejbCwQ@mail.gmail.com>
- <87lge1er31.fsf@kamboji.qca.qualcomm.com>
+From: Jan Kiszka <jan.kiszka@web.de>
+Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
+ unflattened to FDT
+Date: Thu, 5 Apr 2018 21:13:09 +0200
+Message-ID: <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
+ <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
+ <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
+ <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87lge1er31.fsf@kamboji.qca.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Alexey Roslyakov <alexey.roslyakov@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBTXKTHLAKGQEPBY27BI@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/5/2018 3:10 PM, Kalle Valo wrote:
-> Ulf Hansson <ulf.hansson@linaro.org> writes:
->
->> On 20 March 2018 at 10:55, Kalle Valo <kvalo@codeaurora.org> wrote:
->>> Arend van Spriel <arend.vanspriel@broadcom.com> writes:
->>>
->>>>>> If I get it right, you mean something like this:
->>>>>>
->>>>>> mmc3: mmc@1c12000 {
->>>>>> ...
->>>>>>           broken-sg-support;
->>>>>>           sd-head-align = 4;
->>>>>>           sd-sgentry-align = 512;
->>>>>>
->>>>>>           brcmf: wifi@1 {
->>>>>>                   ...
->>>>>>           };
->>>>>> };
->>>>>>
->>>>>> Where dt: bindings documentation for these entries should reside?
->>>>>> In generic MMC bindings? Well, this is the very special case and
->>>>>> mmc-linux maintainer will unlikely to accept these changes.
->>>>>> Also, extra kernel code modification might be required. It could make
->>>>>> quite trivial change much more complex.
->>>>>
->>>>> If the MMC maintainers are not copied on this patch series, it will
->>>>> likely be hard for them to identify this patch series and chime in...
->>>>
->>>> The main question is whether this is indeed a "very special case" as
->>>> Alexey claims it to be or that it is likely to be applicable to other
->>>> device and host combinations as you are suggesting.
->>>>
->>>> If these properties are imposed by the host or host controller it
->>>> would make sense to have these in the mmc bindings.
->>>
->>> BTW, last year we were discussing something similar (I mean related to
->>> alignment requirements) with ath10k SDIO patches and at the time the
->>> patch submitter was proposing to have a bounce buffer in ath10k to
->>> workaround that. I don't remember the details anymore, they are on the
->>> ath10k mailing list archive if anyone is curious to know, but I would
->>> not be surprised if they are similar as here. So there might be a need
->>> to solve this in a generic way (but not sure of course as I haven't
->>> checked the details).
+On 2018-04-05 20:59, Frank Rowand wrote:
+> Hi Jan,
+> 
+> On 04/04/18 15:35, Jan Kiszka wrote:
+>> Hi Frank,
 >>
->> I re-call something about these as well, here are the patches. Perhaps
->> I should pick some of them up...
+>> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> Move duplicating and unflattening of an overlay flattened devicetree
+>>> (FDT) into the overlay application code.  To accomplish this,
+>>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
+>>>
+>>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+>>> code, which is thus responsible for freeing the duplicate FDT.  The
+>>> caller of of_overlay_fdt_apply() remains responsible for freeing the
+>>> original FDT.
+>>>
+>>> The unflattened devicetree now belongs to devicetree code, which is
+>>> thus responsible for freeing the unflattened devicetree.
+>>>
+>>> These ownership changes prevent early freeing of the duplicated FDT
+>>> or the unflattened devicetree, which could result in use after free
+>>> errors.
+>>>
+>>> of_overlay_fdt_apply() is a private function for the anticipated
+>>> overlay loader.
 >>
->> https://patchwork.kernel.org/patch/10123137/
->> https://patchwork.kernel.org/patch/10123139/
->> https://patchwork.kernel.org/patch/10123141/
->> https://patchwork.kernel.org/patch/10123143/
->
-> Actually I was talking about a different patch, found it now:
->
-> ath10k_sdio: DMA bounce buffers for read write
->
-> https://patchwork.kernel.org/patch/9979543/
+>> We are using of_fdt_unflatten_tree + of_overlay_apply in the
+>> (out-of-tree) Jailhouse loader driver in order to register a virtual
+>> device during hypervisor activation with Linux. The DT overlay is
+>> created from a a template but modified prior to application to account
+>> for runtime-specific parameters. See [1] for the current implementation.
+>>
+>> I'm now wondering how to model that scenario best with the new API.
+>> Given that the loader lost ownership of the unflattened tree but the
+>> modification API exist only for the that DT state, I'm not yet seeing a
+>> clear solution. Should we apply the template in disabled form (status =
+>> "disabled"), modify it, and then activate it while it is already applied?
+> 
+> Thank you for the pointer to the driver - that makes it much easier to
+> understand the use case and consider solutions.
+> 
+> If you can make the changes directly on the FDT instead of on the
+> expanded devicetree, then you could move to the new API.
 
-The patches Uffe mentions are related to this. In brcmfmac we simply 
-implemented functionality to create a scatter list and send it through 
-the MMC stack using SDIO CMD53. It is in the creation of the scatter 
-list that these alignment properties are needed. Moving the whole 
-functionality to the MMC stack will also move those properties into 
-their right context, ie. SDIO host controller.
+Are there some examples/references on how to edit FDTs in-place in the
+kernel? I'd like to avoid writing the n-th FDT parser/generator.
 
-Our broker_sg_support property is basically doing the bounce buffer 
-thing if I understand it correctly.
+> 
+> Looking at the driver, I see one potential issue with that approach.
+> The property "interrupt-map" is added directly to the changeset
+> instead of being an existing property in the overlay.  Is it possible
+> to have this property in the overlay when needed?
 
-Regards,
-Arend
+Well, the size of that property has a runtime dependency on the gic's
+#address-cells. If that is easy to account for depends a bit on the
+available FDT manipulation services. Or it would take multiple templates
+to handle the different cases (0, 1, or 2 IIRC).
+
+> 
+> I'll also reply to other comments in this thread.
+
+TIA!
+
+Jan
