@@ -1,92 +1,62 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] ata: ahci-platform: add reset control support
-Date: Thu, 5 Apr 2018 13:30:35 +0200
-Message-ID: <b2426da6-598c-8ab1-7576-7ca4a151cc2a@redhat.com>
-References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
- <20180405095429.GA7506@ulmo> <20180405202347.2803.4A936039@socionext.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v8 40/42] ARM: davinci: add device tree support to timer
+Date: Thu, 5 Apr 2018 17:00:01 +0530
+Message-ID: <205cae72-4e91-aca2-e3b2-829a12066dc8@ti.com>
+References: <1521168778-27236-1-git-send-email-david@lechnology.com>
+ <1521168778-27236-41-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180405202347.2803.4A936039@socionext.com>
+In-Reply-To: <1521168778-27236-41-git-send-email-david@lechnology.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Patrice Chotard <patrice.chotard@st.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 16 March 2018 08:22 AM, David Lechner wrote:
+> +static int __init of_davinci_timer_init(struct device_node *np)
+> +{
+> +	struct clk *clk;
+> +
+> +	clk = of_clk_get(np, 0);
+> +	if (IS_ERR(clk)) {
+> +		struct of_phandle_args clkspec;
+> +
+> +		/*
+> +		 * Fall back to using ref_clk if the actual clock is not
+> +		 * available. This currently always happens because platform
+> +		 * clocks (i.e PLLs and PSCs) are registered as platform
+> +		 * devices and therefore are not available at this point in
+> +		 * the boot process.
 
-On 05-04-18 13:23, Kunihiko Hayashi wrote:
-> Hi Thierry,
-> 
-> On Thu, 5 Apr 2018 11:54:29 +0200
-> Thierry Reding <thierry.reding@gmail.com> wrote:
-> 
->> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
->>> Add support to get and control a list of resets for the device
->>> as optional and shared. These resets must be kept de-asserted until
->>> the device is enabled.
->>>
->>> This is specified as shared because some SoCs like UniPhier series
->>> have common reset controls with all ahci controller instances.
->>>
->>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>> ---
->>>   .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
->>>   drivers/ata/ahci.h                                 |  1 +
->>>   drivers/ata/libahci_platform.c                     | 24 +++++++++++++++++++---
->>>   3 files changed, 23 insertions(+), 3 deletions(-)
->>
->> This causes a regression on Tegra because we explicitly request the
->> resets after the call to ahci_platform_get_resources().
->>
->>  From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
->> corresponding maintainers to Cc.
->>
->> Patrice, Matthias: does SATA still work for you after this patch? This
->> has been in linux-next since next-20180327.
-> 
-> I assume that I use "generic-ahci" driver directly, and this driver has
-> no way to handle resets, so I sent this patch.
-> 
-> However, also as far as I look, some hardware-specific drivers handle their
-> own resets, and call ahci_platform_{enable,disable}_resources().
-> Surely there are paths to call reset control twice in such drivers.
-> 
-> Identically, when the driver also handle their own clocks, they have same issue.
-> 
->> Given how this is one of the more hardware-specific bits, perhaps a
->> better way to do this is to move reset handling into a Uniphier driver
->> much like Tegra, Mediatek and ST?
-> 
-> Since it's difficult to write the resets in general with ahci_platform, I can prepare
-> hardware-specific driver for our SoCs >
->> That said, I don't see SATA support for any of the Socionext hardware
->> either in the DT bindings or drivers/ata, so perhaps it'd be best to
->> back this out again until we have something that's more well tested?
-> 
-> I'm about to use the generic driver, and prepare our phy driver and
-> DT bindings for our SoCs, but not yet.
+It seems to me that this is not going to be a temporary problem (or at
+least will be around for quite a while). So, I think we can as well just
+look for ref_clk directly.
 
-If the AHCI controller on your SoC works with the generic driver +
-a phy-driver using the generic phy framework, then IMHO that is
-preferred over adding yet another SoC specific AHCI driver. If the
-only reason to do a SoC specific AHCI driver is the need for resets,
-then IMHO we should add a flags parameter to ahci_platform_get_resources
-which specifies which resource-types to get and have the existing
-drivers call ahci_platform_get_resources() without the flag to also
-get resets, where as the generic driver would get resets.
+> +		 */
+> +		clkspec.np = of_find_node_by_name(NULL, "ref_clk");
+> +		if (IS_ERR(clkspec.np)) {
+> +			pr_err("%s: No clock available for timer!\n", __func__);
+> +			return PTR_ERR(clkspec.np);
+> +		}
+> +		clk = of_clk_get_from_provider(&clkspec);
+> +		of_node_put(clkspec.np);
+> +	}
+> +
+> +	davinci_timer_init(clk);
+> +
+> +	return 0;
+> +}
+> +TIMER_OF_DECLARE(davinci_timer, "ti,davinci-timer", of_davinci_timer_init);
 
-Thierry that should solve the problem, right ?
+Here, I think we should use "ti,da850-timer" so we can change the fixed
+clock we are looking for based on the SoC. At a minimum, we should have
+"ti,da850-timer" in the DT along with "ti,davinci-timer".
 
- > Then it's no problem that we can back this out.
+BTW, I noticed that "ti,davinci-timer" is not documented. I think we
+need to add a binding documentation too.
 
-Yes reverting it for now is probably best, but I would like to see
-it get re-introduced while at the same time adding a flags parameter
-to ahci_platform_get_resources() and make the reset handling conditional
-on the flags. This IMHO is better then introducing another SoC driver.
-
-Regards,
-
-Hans
+Thanks,
+Sekhar
