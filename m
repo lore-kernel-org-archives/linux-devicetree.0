@@ -1,32 +1,25 @@
-From: Jan Kiszka <jan.kiszka@web.de>
+From: Frank Rowand <frowand.list@gmail.com>
 Subject: Re: [PATCH v7 2/5] of: change overlay apply input data from
  unflattened to FDT
-Date: Thu, 5 Apr 2018 21:13:09 +0200
-Message-ID: <a21dbee8-6e4e-9ceb-c798-dda43c2eae2d@web.de>
+Date: Thu, 5 Apr 2018 12:13:43 -0700
+Message-ID: <de44758c-6c40-b951-e235-b2307ae6257e@gmail.com>
 References: <1520122673-11003-1-git-send-email-frowand.list@gmail.com>
  <1520122673-11003-3-git-send-email-frowand.list@gmail.com>
  <09e3db63-cbf9-52a2-ee77-520979f17fea@web.de>
- <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+ <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <jailhouse-dev+bncBDDNLV6S7AOBBTXKTHLAKGQEPBY27BI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <7bbf615b-3cdd-6bb4-6918-33e48de4225d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+Gu=gwcxJnOF2xybXCh9N2Fp1NV05kuvQ2rif1fdHYrA@mail.gmail.com>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com, Jailhouse <jailhouse-dev@googlegroups.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Jan Kiszka <jan.kiszka@web.de>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jailhouse <jailhouse-dev@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-05 20:59, Frank Rowand wrote:
-> Hi Jan,
-> 
-> On 04/04/18 15:35, Jan Kiszka wrote:
+On 04/04/18 17:55, Rob Herring wrote:
+> On Wed, Apr 4, 2018 at 5:35 PM, Jan Kiszka <jan.kiszka@web.de> wrote:
 >> Hi Frank,
 >>
 >> On 2018-03-04 01:17, frowand.list@gmail.com wrote:
@@ -63,29 +56,34 @@ On 2018-04-05 20:59, Frank Rowand wrote:
 >> clear solution. Should we apply the template in disabled form (status =
 >> "disabled"), modify it, and then activate it while it is already applied?
 > 
-> Thank you for the pointer to the driver - that makes it much easier to
-> understand the use case and consider solutions.
+> No. I don't think that will work.
+
+I don't think it will work either.  The drivers won't be probed if the
+nodes are disabled.
+
+
+> The of_overlay_apply() function is still there, but static. We can
+> export it again if the need arises.
+
+I really don't want to export it again.  sigh.
+
+
+> Another option is there is a notifier callback OF_OVERLAY_PRE_APPLY,
+> but I'm not sure we want to make that be the normal interface to make
+> modifications.
+
+This callback is on my list of yet more ways that pointers into the
+(overlay) FDT are exposed.  Which means another solution to the
+underlying problem (which was an FPGA problem) needs to be created.
+I'd prefer that use of this mechanism not be expanded in the mean time.
+
+Even if that were not the case, using the OF_OVERLAY_PRE_APPLY notifier
+to modify the tree is problematic because the notifier(s) is called
+after the overlay FDT is in final form
+
+-Frank
+
 > 
-> If you can make the changes directly on the FDT instead of on the
-> expanded devicetree, then you could move to the new API.
-
-Are there some examples/references on how to edit FDTs in-place in the
-kernel? I'd like to avoid writing the n-th FDT parser/generator.
-
+> Rob
+> .
 > 
-> Looking at the driver, I see one potential issue with that approach.
-> The property "interrupt-map" is added directly to the changeset
-> instead of being an existing property in the overlay.  Is it possible
-> to have this property in the overlay when needed?
-
-Well, the size of that property has a runtime dependency on the gic's
-#address-cells. If that is easy to account for depends a bit on the
-available FDT manipulation services. Or it would take multiple templates
-to handle the different cases (0, 1, or 2 IIRC).
-
-> 
-> I'll also reply to other comments in this thread.
-
-TIA!
-
-Jan
