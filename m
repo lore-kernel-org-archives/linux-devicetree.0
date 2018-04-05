@@ -1,59 +1,112 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI
- DA850 PSC
-Date: Thu, 5 Apr 2018 15:44:06 +0200
-Message-ID: <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-13-git-send-email-david@lechnology.com> <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
- <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com> <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Thu, 5 Apr 2018 15:54:35 +0200
+Message-ID: <20180405135435.GA10860@ulmo>
+References: <1521768653-11824-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <20180405095429.GA7506@ulmo>
+ <e33f54ed-2848-9a4f-9669-7fada8c60326@st.com>
+ <1f7d0738-1963-21c5-c293-e46fb0214ecf@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1f7d0738-1963-21c5-c293-e46fb0214ecf@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-04-05 15:09 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
-> Hi Bartosz,
->
-> On Friday 09 February 2018 10:18 PM, Michael Turquette wrote:
->> On Fri, Feb 9, 2018 at 8:22 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>> 2018-01-08 3:17 GMT+01:00 David Lechner <david@lechnology.com>:
->
->>> Hi David,
->>>
->>> I've been working on moving the genpd code from its own driver to the
->>> psc one. I couldn't get the system to boot though and problems
->>> happened very early in the boot sequence. I struggled to figure out
->>> what's happening, but eventually I noticed that psc uses
->>> CLK_OF_DECLARE() to initialize clocks. The functions registered this
->>> way are called very early in the boot sequence, way before
->>> late_initcall() in which the genpd framework is initialized. This of
->
-> late_initcall() is too late for genpd to be initialized. As you may have
-> seen with the latest set of patches, we have problems with timer
-> initialization. After converting to platform devices, PSC and PLL clocks
-> get initialized post time_init(). We are working that around using
-> fixed-clocks, which hopefully will work (I still need to test many of
-> the affected platforms).
->
-> Can you please reply with the exact issue you faced with genpd framework
-> initialization so we do have that on record.
->
 
-The exact issue manifested itself in a NULL-pointer dereference panic
-when I tried moving the genpd code I had initially implemented as a
-separate platform driver to what I believe was v6 or v7 of David's
-series (before the psc driver became a platform driver, when it was
-still using CLK_OF_DECLARE()). When I had tested a simple conversion
-of that version to a platform_driver, genpd worked fine.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't have the stack traces from these panics, but I recall some
-debugfs functions being involved and the genpd late_initcalls are
-related to debugfs. Looking at it now I don't see how exactly it could
-fail though.
+On Thu, Apr 05, 2018 at 03:27:03PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 05-04-18 15:17, Patrice CHOTARD wrote:
+> > Hi Thierry
+> >=20
+> > On 04/05/2018 11:54 AM, Thierry Reding wrote:
+> > > On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
+> > > > Add support to get and control a list of resets for the device
+> > > > as optional and shared. These resets must be kept de-asserted until
+> > > > the device is enabled.
+> > > >=20
+> > > > This is specified as shared because some SoCs like UniPhier series
+> > > > have common reset controls with all ahci controller instances.
+> > > >=20
+> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > > ---
+> > > >    .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+> > > >    drivers/ata/ahci.h                                 |  1 +
+> > > >    drivers/ata/libahci_platform.c                     | 24 ++++++++=
++++++++++++---
+> > > >    3 files changed, 23 insertions(+), 3 deletions(-)
+> > >=20
+> > > This causes a regression on Tegra because we explicitly request the
+> > > resets after the call to ahci_platform_get_resources().
+> >=20
+> > I confirm, we got exactly the same behavior on STi platform.
+> >=20
+> > >=20
+> > >   From a quick look, ahci_mtk and ahci_st are in the same boat, addin=
+g the
+> > > corresponding maintainers to Cc.
+> > >=20
+> > > Patrice, Matthias: does SATA still work for you after this patch? This
+> > > has been in linux-next since next-20180327.
+> >=20
+> > SATA is still working after this patch, but a kernel warning is
+> > triggered due to the fact that resets are both requested by
+> > libahci_platform and by ahci_st driver.
+>=20
+> So in your case you might be able to remove the reset handling
+> from the ahci_st driver and rely on the new libahci_platform
+> handling instead? If that works that seems like a win to me.
+>=20
+> As said elsewhere in this thread I think it makes sense to keep (or re-add
+> after a revert) the libahci_platform reset code, but make it conditional
+> on a flag passed to ahci_platform_get_resources(). This way we get
+> the shared code for most cases and platforms which need special handling
+> can opt-out.
 
-Best regards,
-Bartosz
+Agreed, although I prefer such helpers to be opt-in, rather than
+opt-out. In my experience that tends make the helpers more resilient to
+this kind of regression. It also simplifies things because instead of
+drivers saying "I want all the helpers except this one and that one",
+they can simply say "I want these helpers and that one". In the former
+case whenever you add some new (opt-out) feature, you have to update all
+drivers and add the exception. In the latter you only need to extend the
+drivers that want to make use of the new helper.
+
+With that in mind, rather than adding a flag to the
+ahci_platform_get_resources() function, it might be more flexible to
+split the helpers into finer-grained functions. That way drivers can
+pick whatever functionality they want from the helpers.
+
+Thierry
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlrGKpgACgkQ3SOs138+
+s6HSKA/7BWzpQMlq3BAf0hZ3rDVbOwWJhmJQwIiAdKf+B0ndSEVo4vblW0Sekfwz
+uUqYANthL+uEOMU7cFinJvKs6+g5vkTjEr1Cd6ziAz6JR6JGfJMnM3RdbYjqr5xC
+lrdWxbjUHjHg6C2LqMtanXY3eAhlPdXnjFJ5OvbBMQSgQi/5hoF/TTl7+8v7QWaG
+tSZ8ob8M+i8sF4H+ObBRUcRieGSRse8gfgNaHZaEf1NfytnG4hf92HivV/+SAS8S
+FKd0oCkAulyHxZqlPl+Qf3qTkhyHhR+InrdSMRAtZwuNPneTMITB6ANx90sIqq98
+PVZ/Xvfz6UsxZPVsQrCUHnqtYiZ8swe/geHppydD5lkOe7DibqP+wRrl+49XxK1V
++Y3A/7xDxDkepO/cTnXgDL3DFdGfKcZ/B5s3iX92XL/c4J7KqkEKx3wgS98di/o/
+K3LevdQ3AUDXEtFZ5kxO/XJMLy9EnvQTXrdq7ZgQtaXNhgHCcB1bnn/QPqNEZ+v2
+0JoHfRECq5bar/hiw5Ni8IxrHXq3jBnqPXiye3eKh9eyJIMtna8X20i1sQefCyKA
+gp8cvS5ZM5osbhUatUQ+pK1MrEBAWCxdRPrRPl5bi3quxuiEu47rHHm6wFBg6n1R
+u1CDk+Cofnv1qptcH1e9Vs1IesX2qpRP6GrJjB4AG72fpURkdso=
+=F112
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
