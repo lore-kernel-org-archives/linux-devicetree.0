@@ -1,57 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge
-Date: Fri, 06 Apr 2018 16:53:43 +0300
-Message-ID: <6903975.GkMFuzh9fq@avalon>
-References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 3/9] pinctrl: actions: Add Actions S900 pinctrl driver
+Date: Fri, 6 Apr 2018 17:01:07 +0300
+Message-ID: <CAHp75Vd3otEntMseY0pq7ZyUhk1irs9Xt02R5c061FSDT0jXDA@mail.gmail.com>
+References: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org>
+ <20180328174703.19778-4-manivannan.sadhasivam@linaro.org> <CAHp75VeRh9hORs=4nPqc=rUOCRzAfp0z2_1_xpJUScAeE07yqw@mail.gmail.com>
+ <20180403170016.w3scjt57ssvk6zyi@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, niklas.soderlund@ragnatech.se
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180403170016.w3scjt57ssvk6zyi@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gRnJpZGF5LCA2IEFwcmlsIDIwMTggMTY6MDg6MDUgRUVTVCBKYWNvcG8g
-TW9uZGkgd3JvdGU6Cj4gSGVsbG8sCj4gICAgdGhpcyBzZXJpZXMgZW5hYmxlcyBIRE1JIGRpc3Bs
-YXkgb24gVjNNIEVhZ2xlIGJvYXJkLgo+IAo+IFRoZSBzZXJpZXMgaXMgYmFzZWQgb24gR2VlcnQn
-cyAicmVuZXNhcy1kcml2ZXJzLTIwMTgtMDQtMDMtdjQuMTYiIHdpdGgKPiBUSEM2M0xWRDEwMjQg
-ZHJpdmVyIG9uIHRvcCAoY2ZyLiBteSBpbiByZXZpZXcgc2VyaWVzOgo+ICJbUEFUQ0ggdjcgMC8y
-XSAgZHJtOiBBZGQgVGhpbmUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2RlciBicmlkZ2UiKQoKVGhp
-cyBpc24ndCBhIGdvb2QgYmFzZSBmb3IgZGV2ZWxvcG1lbnQsIGFzIHlvdSB3b3VsZCBwdWxsIHdh
-eSB0b28gbWFueSAKZGVwZW5kZW5jaWVzIGluLiBDb3VsZCB5b3UgcGxlYXNlIGJhc2Ugdjggb24g
-dG9wIG9mIHY0LjE3LXJjMSAob3IgaWYgeW91IGdldCAKdG8gcG9zdCBpdCBiZWZvcmUgdjQuMTct
-cmMxIGdldHMgbWVyZ2VkLCB5b3UgY2FuIHVzZSBMaW51cycgbWFzdGVyLCBhcyB0aGUgCkFSTTY0
-IERUIHB1bGwgcmVxdWVzdHMgZm9yIHY0LjE3LXJjMSBoYXZlIGJlZW4gbWVyZ2VkKSA/IEl0IHdp
-bGwgdGhlbiBiZSByZWFkeSAKZm9yIFNpbW9uIHRvIHB1bGwgaW4gaGlzIHY0LjE4IGJyYW5jaC4K
-Cj4gVGhpcyBzZXJpZXMgaW5jbHVkZXMgc29tZSBwcmVsaW1pbmFyeSB3b3JrIGZyb20gU2VyZ2Vp
-IGFuZCBOaWtsYXMuIEkgaGF2ZQo+IHJld29ya2VkIHRoZSB0d28gZmluYWwgcGF0Y2hlcyBmcm9t
-IE5pa2xhcyB0byBlbmFibGUgRFUgZmlyc3QsIGFkZCB0aGUgTFZEUwo+IGRlY29kZXIgbm9kZSwg
-YW5kIGZpbmFsbHkgYWRkIHRoZSBBRFY3NTExVyBjaGlwIGFuZCBlbmFibGUgSERNSSBvdXRwdXQu
-Cj4gCj4gQSBicmFuY2ggZm9yIHRlc3RpbmcgaXMgYXZhaWxhYmxlIGF0Ogo+IGdpdDovL2ptb25k
-aS5vcmcvbGludXggdjNtL3JlbmVzYXMtZHJpdmVycy0yMDE4LTA0LTAzLXY0LjE2L3Y3LWVhZ2xl
-LWR0cwo+IAo+IFRoYW5rcwo+ICAgIGoKPiAKPiBKYWNvcG8gTW9uZGkgKDIpOgo+ICAgYXJtNjQ6
-IGR0czogcmVuZXNhczogZWFnbGU6IEVuYWJsZSBEVQo+ICAgYXJtNjQ6IGR0czogcmVuZXNhczog
-ZWFnbGU6IEFkZCBMVkRTIGRlY29kZXIKPiAKPiBOaWtsYXMgU8O2ZGVybHVuZCAoMik6Cj4gICBh
-cm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk3MDogYWRkIHRoZSBMVkRTIGluc3RhbmNlCj4gICBh
-cm02NDogZHRzOiByZW5lc2FzOiBlYWdsZTogQWRkIEFEVjc1MTFXIGFuZCBIRE1JIG91dHB1dAo+
-IAo+IFNlcmdlaSBTaHR5bHlvdiAoMyk6Cj4gICBhcm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk3
-MDogYWRkIEZDUFZEIHN1cHBvcnQKPiAgIGFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3OTcwOiBh
-ZGQgVlNQRCBzdXBwb3J0Cj4gICBhcm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk3MDogYWRkIERV
-IHN1cHBvcnQKPiAKPiAgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTcwLWVhZ2xl
-LmR0cyB8IDg5ICsrKysrKysrKysrKysrKysrKysrKysrCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-cmVuZXNhcy9yOGE3Nzk3MC5kdHNpICAgICAgfCA3MyArKysrKysrKysrKysrKysrKysrKysKPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAxNjIgaW5zZXJ0aW9ucygrKQo+IAoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Tue, Apr 3, 2018 at 8:00 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+
+>> > +static const struct pinconf_ops owl_pinconf_ops = {
+>> > +       .is_generic = true,
+>> > +       .pin_config_get = owl_pin_config_get,
+>> > +       .pin_config_set = owl_pin_config_set,
+>> > +       .pin_config_group_get = owl_group_config_get,
+>> > +       .pin_config_group_set = owl_group_config_set
+>>
+>> It's still good idea to leave comma here...
+
+> I'm confused. What is the criteria for removing/keeping comma for last member
+> of struct? I followed your gpio driver suggestion.
+
+Just a common sense and experience are talking here: from time to time
+some structures are being expanded and in some cases it requires to
+update users. The comma just reduces a possible burden on this
+expansion.
+This is common pattern used in kernel.
+
+>> > +};
+>> > +
+>> > +static struct pinctrl_desc owl_pinctrl_desc = {
+>> > +       .pctlops = &owl_pinctrl_ops,
+>> > +       .pmxops = &owl_pinmux_ops,
+>> > +       .confops = &owl_pinconf_ops,
+>> > +       .owner = THIS_MODULE
+>>
+>> ...and here, and in all similar places.
+>>
+>> > +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
