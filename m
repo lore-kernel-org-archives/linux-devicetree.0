@@ -1,78 +1,47 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
-Date: Fri, 6 Apr 2018 18:26:24 +0530
-Message-ID: <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
-References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
- <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
- <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com> <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
+From: sricharan@codeaurora.org
+Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
+ data
+Date: Fri, 06 Apr 2018 18:35:49 +0530
+Message-ID: <7dc41c73f594918701c21075dde30870@codeaurora.org>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+ <20180320143131.4eenixtbhciq5fwc@localhost>
+ <20180329143715.GA31757@hector.attlocal.net>
+ <20180329163739.2fg5qxvb5j3fiy6r@localhost>
+ <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
+ <20180406045511.hnzxe4nepl5sqmld@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
+In-Reply-To: <20180406045511.hnzxe4nepl5sqmld@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org" <", linux-arm-kernel"@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 6, 2018 at 5:59 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
-> Hi
->
->
-> On 05/04/18 11:38, Jassi Brar wrote:
->> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
->> ....
->>> +
->>> +       /* irq */
->>> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
->>> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
->>> +               if (ipcc->irqs[i] < 0) {
->>> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
->>> +                       ret = ipcc->irqs[i];
->>> +                       goto err_clk;
->>> +               }
->>> +
->>> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
->>> +                                               irq_thread[i], IRQF_ONESHOT,
->>> +                                               dev_name(dev), ipcc);
->>>
->> In your interrupt handlers you don't do anything that could block.
->> Threads only adds some delay to your message handling.
->> So maybe use devm_request_irq() ?
->
-> The interrupt handlers call mbox_chan_received_data() /
-> mbox_chan_txdone(), which call in turn client's rx_callback() /
-> tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a
-> threaded irq here seems to be a good choice.
->
-rx_callback() is supposed to be atomic. So was tx_done() but some
-platforms needed preparing for the message to be sent. Your client is
-not going to be used by other platforms or even over other
-controllers, so if your prepare is NULL/atomic, you should assume
-tx_done to be atomic and not lose performace. If time comes to fix it,
-we'll move prepare() out of the atomic path.
+On 2018-04-06 10:25, Richard Cochran wrote:
+> On Mon, Apr 02, 2018 at 03:28:47PM +0530, sricharan@codeaurora.org 
+> wrote:
+>>   Yes, i will post another series for ipq806[2/4] updates and the
+>> corresponding
+>>   boards after this.
+> 
+> I tried mainline on the ap148 using qcom_defconfig and the
+> qcom-ipq8064-ap148.dtb, and it doesn't boot FYI.
+> 
+
+  I tried booting mainline built with qcom_defconfig on ap148 and
+  did boot. Not sure if your bootloader's bootarg is this,
+   'console=ttyMSM0,115200n8' ?
 
 
->> .......
->>> +
->>> +static struct platform_driver stm32_ipcc_driver = {
->>> +       .driver = {
->>> +               .name = "stm32-ipcc",
->>> +               .owner = THIS_MODULE,
->>>
->> No need of owner here these days.
->
-> OK, I will suppress it.
->
->> And also maybe use readl/writel, instead of _relaxed.
->
-> The IPCC device is exclusively used on ARM. In ARM architecture, the
-> ioremap on devices are strictly ordered and uncached.
-> In that case, using _relaxed avoids an unneeded cache flush, slightly
-> improving performance.
->
-Its not the portability, but that the impact is negligible in favor of
-_relaxed() version when all you do is just program some registers and
-not heavy duty i/o. But I am ok either way.  You'd gain far more
-performance handling irqs in non-threaded manner :)
+  root@(none):/# cat /proc/version
+  Linux version 4.16.0 (srichara@srichara-linux) (gcc version 6.3.1 
+20170109 (Linaro GCC 6.3-2017.02)) #1691 SMP PREEMPT Fri Apr 6 15:30:45 
+IST 2018
+  root@(none):/#
 
-Cheers!
+Regards,
+  Sricharan
