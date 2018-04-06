@@ -1,15 +1,15 @@
 Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bl2nam02on0066.outbound.protection.outlook.com ([104.47.38.66]:52683
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+Received: from mail-by2nam01on0071.outbound.protection.outlook.com ([104.47.34.71]:43531
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750807AbeDFSUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Apr 2018 14:20:02 -0400
+        id S1751678AbeDFRQJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Apr 2018 13:16:09 -0400
 From: Martin Kelly <mkelly@xevo.com>
-Subject: [PATCH v2 2/2] dt-bindings: iio:imu:mpu6050: support more interrupt types
-Date: Fri,  6 Apr 2018 11:19:42 -0700
-Message-Id: <20180406181942.1365-2-mkelly@xevo.com>
-In-Reply-To: <20180406181942.1365-1-mkelly@xevo.com>
-References: <20180406181942.1365-1-mkelly@xevo.com>
+Subject: [PATCH 2/2] dt-bindings: iio:imu:mpu6050: support more interrupt types
+Date: Fri,  6 Apr 2018 10:15:52 -0700
+Message-Id: <20180406171552.2969-2-mkelly@xevo.com>
+In-Reply-To: <20180406171552.2969-1-mkelly@xevo.com>
+References: <20180406171552.2969-1-mkelly@xevo.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
