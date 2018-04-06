@@ -1,52 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 3/9] pinctrl: actions: Add Actions S900 pinctrl driver
-Date: Fri, 6 Apr 2018 17:01:07 +0300
-Message-ID: <CAHp75Vd3otEntMseY0pq7ZyUhk1irs9Xt02R5c061FSDT0jXDA@mail.gmail.com>
-References: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org>
- <20180328174703.19778-4-manivannan.sadhasivam@linaro.org> <CAHp75VeRh9hORs=4nPqc=rUOCRzAfp0z2_1_xpJUScAeE07yqw@mail.gmail.com>
- <20180403170016.w3scjt57ssvk6zyi@linaro.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3] ARM: sun8i: v40: enable USB host ports for
+ Banana Pi M2 Berry
+Date: Fri,  6 Apr 2018 22:03:44 +0800
+Message-ID: <20180406140344.9457-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180403170016.w3scjt57ssvk6zyi@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJP5TXLAKGQEHVZOC7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 3, 2018 at 8:00 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
+ports, and it's connected to the USB1 port of the SoC.
 
->> > +static const struct pinconf_ops owl_pinconf_ops = {
->> > +       .is_generic = true,
->> > +       .pin_config_get = owl_pin_config_get,
->> > +       .pin_config_set = owl_pin_config_set,
->> > +       .pin_config_group_get = owl_group_config_get,
->> > +       .pin_config_group_set = owl_group_config_set
->>
->> It's still good idea to leave comma here...
+Enable it.
 
-> I'm confused. What is the criteria for removing/keeping comma for last member
-> of struct? I followed your gpio driver suggestion.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+Changes in v3:
+- Dropped OHCI node and added hub model comment in EHCI.
 
-Just a common sense and experience are talking here: from time to time
-some structures are being expanded and in some cases it requires to
-update users. The comma just reduces a possible burden on this
-expansion.
-This is common pattern used in kernel.
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
->> > +};
->> > +
->> > +static struct pinctrl_desc owl_pinctrl_desc = {
->> > +       .pctlops = &owl_pinctrl_ops,
->> > +       .pmxops = &owl_pinmux_ops,
->> > +       .confops = &owl_pinconf_ops,
->> > +       .owner = THIS_MODULE
->>
->> ...and here, and in all similar places.
->>
->> > +};
-
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index a26d72c3f9b5..35859d8f3267 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -87,6 +87,11 @@
+ 	};
+ };
+ 
++&ehci1 {
++	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -170,3 +175,8 @@
+ 	pinctrl-0 = <&uart0_pb_pins>;
+ 	status = "okay";
+ };
++
++&usbphy {
++	usb1_vbus-supply = <&reg_vcc5v0>;
++	status = "okay";
++};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.15.1
