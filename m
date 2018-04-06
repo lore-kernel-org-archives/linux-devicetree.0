@@ -1,13 +1,15 @@
 From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge
-Date: Fri, 6 Apr 2018 16:13:57 +0200
-Message-ID: <20180406141357.GN20945@w540>
+Subject: Re: [PATCH 7/7] arm64: dts: renesas: eagle: Add ADV7511W and HDMI
+ output
+Date: Fri, 6 Apr 2018 16:16:32 +0200
+Message-ID: <20180406141632.GO20945@w540>
 References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
- <6903975.GkMFuzh9fq@avalon>
+ <1523020092-25540-8-git-send-email-jacopo+renesas@jmondi.org>
+ <2235860.8H9ojNphtF@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1780426148=="
+Content-Type: multipart/mixed; boundary="===============1333342509=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6903975.GkMFuzh9fq@avalon>
+In-Reply-To: <2235860.8H9ojNphtF@avalon>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,80 +20,140 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
+Cc: devicetree@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1780426148==
+--===============1333342509==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JB7KW7Ey7eB5HOHs"
+	protocol="application/pgp-signature"; boundary="R0KbGFzrRdaLlFh/"
 Content-Disposition: inline
 
 
---JB7KW7Ey7eB5HOHs
+--R0KbGFzrRdaLlFh/
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi Laurent,
 
-On Fri, Apr 06, 2018 at 04:53:43PM +0300, Laurent Pinchart wrote:
+On Fri, Apr 06, 2018 at 04:51:11PM +0300, Laurent Pinchart wrote:
 > Hi Jacopo,
 >
-> On Friday, 6 April 2018 16:08:05 EEST Jacopo Mondi wrote:
-> > Hello,
-> >    this series enables HDMI display on V3M Eagle board.
-> >
-> > The series is based on Geert's "renesas-drivers-2018-04-03-v4.16" with
-> > THC63LVD1024 driver on top (cfr. my in review series:
-> > "[PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge")
+> Thank you for the patch.
 >
-> This isn't a good base for development, as you would pull way too many
-> dependencies in. Could you please base v8 on top of v4.17-rc1 (or if you =
-get
-> to post it before v4.17-rc1 gets merged, you can use Linus' master, as the
-> ARM64 DT pull requests for v4.17-rc1 have been merged) ? It will then be =
-ready
-> for Simon to pull in his v4.18 branch.
+> On Friday, 6 April 2018 16:08:12 EEST Jacopo Mondi wrote:
+> > From: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+> >
+> > Enable HDMI output adding the HDMI connector and the ADV7511W, connected
+> > to THC63LVD1024 LVDS decoder output.
+> >
+> > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
+h.se>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 51 ++++++++++++++++++=
+++++-
+> >  1 file changed, 50 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> > b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts index 9d0e65d..e9f7b83
+> > 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> > @@ -32,6 +32,17 @@
+> >  		reg =3D <0x0 0x48000000 0x0 0x38000000>;
+> >  	};
+> >
+> > +	hdmi-out {
+> > +		compatible =3D "hdmi-connector";
+> > +		type =3D "a";
+> > +
+> > +		port {
+> > +			hdmi_con_out: endpoint {
+> > +				remote-endpoint =3D <&adv7511_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> >  	thc63lvd1024: lvds-decoder {
+> >  		compatible =3D "thine,thc63lvd1024";
+> >
+> > @@ -41,11 +52,17 @@
+> >
+> >  			port@0 {
+> >  				reg =3D <0>;
+> > -
+>
+> This is unrelated, if you don't want a blank line here remove it from pat=
+ch
+> 6/7 :-)
 
-I used renesas-drivers as it already contains partial r8a77970 support which
-is not there in v4.16 (PFC, GPIO, SCIF...)
+No, you're right, this is a leftover from me splitting a single a
+patch in 3. According to your comments on other patches in the series
+I shouldn't have done that to begin with :)
 
-I should wait for v4.17-rc1 to come out and re-propose on top of that
-probably.
+Thanks
+  j
 
 >
-> > This series includes some preliminary work from Sergei and Niklas. I ha=
-ve
-> > reworked the two final patches from Niklas to enable DU first, add the =
-LVDS
-> > decoder node, and finally add the ADV7511W chip and enable HDMI output.
+> >  				thc63lvd1024_in: endpoint {
+> >  					remote-endpoint =3D <&lvds0_out>;
+> >  				};
+> >  			};
+> > +
+> > +			port@2 {
+> > +				reg =3D <2>;
+> > +				thc63lvd1024_out: endpoint {
+> > +					remote-endpoint =3D <&adv7511_in>;
+> > +				};
+> > +			};
+> >  		};
+> >  	};
+> >  };
+> > @@ -85,6 +102,38 @@
+> >  		gpio-controller;
+> >  		#gpio-cells =3D <2>;
+> >  	};
+> > +
+> > +	hdmi@39 {
+> > +		compatible =3D "adi,adv7511w";
+> > +		reg =3D <0x39>;
+> > +		interrupt-parent =3D <&gpio1>;
+> > +		interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
+> > +
+> > +		adi,input-depth =3D <8>;
+> > +		adi,input-colorspace =3D "rgb";
+> > +		adi,input-clock =3D "1x";
+> > +		adi,input-style =3D <1>;
+> > +		adi,input-justification =3D "evenly";
+> > +
+> > +		ports {
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			port@0 {
+> > +				reg =3D <0>;
+> > +				adv7511_in: endpoint {
+> > +					remote-endpoint =3D <&thc63lvd1024_out>;
+> > +				};
+> > +			};
+> > +
+> > +			port@1 {
+> > +				reg =3D <1>;
+> > +				adv7511_out: endpoint {
+> > +					remote-endpoint =3D <&hdmi_con_out>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> >  };
 > >
-> > A branch for testing is available at:
-> > git://jmondi.org/linux v3m/renesas-drivers-2018-04-03-v4.16/v7-eagle-dts
-> >
-> > Thanks
-> >    j
-> >
-> > Jacopo Mondi (2):
-> >   arm64: dts: renesas: eagle: Enable DU
-> >   arm64: dts: renesas: eagle: Add LVDS decoder
-> >
-> > Niklas S=C3=B6derlund (2):
-> >   arm64: dts: renesas: r8a77970: add the LVDS instance
-> >   arm64: dts: renesas: eagle: Add ADV7511W and HDMI output
-> >
-> > Sergei Shtylyov (3):
-> >   arm64: dts: renesas: r8a77970: add FCPVD support
-> >   arm64: dts: renesas: r8a77970: add VSPD support
-> >   arm64: dts: renesas: r8a77970: add DU support
-> >
-> >  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 89 ++++++++++++++++++=
-+++++
-> >  arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 73 ++++++++++++++++++=
-+++
-> >  2 files changed, 162 insertions(+)
-> >
+> >  &pfc {
+>
+> With patches 5/7, 6/7 and 7/7 merged together and the pinmux removed,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
 > --
 > Regards,
@@ -101,30 +163,30 @@ LVDS
 >
 >
 
---JB7KW7Ey7eB5HOHs
+--R0KbGFzrRdaLlFh/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJax4ClAAoJEHI0Bo8WoVY8ZqkP/0ImMs0Vp/w8mucupnP0kyYY
-uQ4Fb29BGuBM7Ofz67bSbH/EI9y50X+4Z6IG+l0M+y7piSn8JB3ciRJ9uOdGgisl
-EYUCMCdM6P8JesJPk1KMUbPDJTrQAdkkT11C+9daXWa2rykzpEt+ACF9ykCxDf4+
-4AM0RstwzKQhWE78/z19memKsc20FZAPPkoMx4URuQSRAZ8wT0uVAMEsuKW1qfPE
-zl72DJuW8CC7I1mQ7E0xIr+KR7WiQVXIRLtnwfhvTu2j/9EgOtpPy+sqFNJ8Ju3Y
-rUs8z1l3Jtu4YYDr35sY7LGtMNplQJczvAgYuB78YaUNVYXvw5Tl/c3+ZRKYyXRd
-XB99ppriFK0i5OadmIhqw6tco9Bxf7x1kXO8g+l0lmYptInbSOZJe7aX8FgN2YG9
-OZQ/lYK9Zs0uy7IG3CDrHFsuybzfsccad7x00LE62YK2DglquA2u6jQxe1zMYKtN
-DSN/Pwd81QB3/IYYkkztgjjj9dYcjmbt9A5iNuvHnUgzCYAB+di2TXVe8xXVv7N4
-JU51W1wqBx8aonh1FolaIY2d5Fi7Vs7j8WYuhdB6NfeGVnmKCCi1icnV8uUf92tw
-+eKoyfyShmfypOfmrW7SrarYb0TG5tZAf5TQI86E+EEgbFVa4gvHw5ORdvNFqKyL
-8FENS+DLpedr573avO0r
-=YkYS
+iQIcBAEBAgAGBQJax4FAAAoJEHI0Bo8WoVY8yBIP/0LBBYLyRQhzgOQ6hD31wVZs
+EmbPi+Yj+chIKUl1acF6klnPCO4dV46Ilz96yDS6CzeyPH/MUkmy2LJxEnj9Kim2
+FE+8C61WSA9+8wMbAWvGToEdQNlnnLbY5GwypZqZXuZ+/2i3yiq4zWUza1aP3Dzu
+NEGCU98eGD0uHs9+9yuT1OOr3CyVY8oTCe7TgtJ+w8roH3ldx+0fdBkw3Mh859CV
+AGDPV+WwMxUQMRRRVqWtyIuWSg9mxT/fuuM9wzOUntY8ib17hKjVUugg+BIjx/bP
+RbUCfQHf/dydLXg8iBBXmebiJJUQH89dpAVQ7aGlzQac98yKr0rYP6LV72Q/sikn
+jiQnnoGgT+XauerEvbOBkE1wx3ha/2YPkpznzNpRXyqKdMQAwxZ8WgizgaPnGw9D
+BHeG055XsIuTcV9n26q39xs8Yb79qawkCtK2cWdrUcHBLLIV3EBOldayNtsRus9X
+H3S1pD2AnrFk+oCxu13xmmDoGNHDdjphHdlZdCQih/SV4jTw0sTvxWi/MksgVSqM
+l9dEEz0GAnkRUWrAKi3OhXNhTsDyRbpDG4YnJwytTD2/poWok6XgqfIWLzaN9Qm/
+6CHjfFbSCjuTylIHZTFMy13cQlHOtswjNUFdgsVbMtXYDk4TtrDhdSY0GKPj/R6M
+sGs0PBnZKrd15wGKoZBX
+=ydXF
 -----END PGP SIGNATURE-----
 
---JB7KW7Ey7eB5HOHs--
+--R0KbGFzrRdaLlFh/--
 
---===============1780426148==
+--===============1333342509==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -134,4 +196,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1780426148==--
+--===============1333342509==--
