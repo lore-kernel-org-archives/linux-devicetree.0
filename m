@@ -1,115 +1,176 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Fri, 06 Apr 2018 18:40:14 +0300
-Message-ID: <2441543.5xTHaLXzZ0@avalon>
-References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
- <1664336.M7KDjLhzuK@avalon> <20180406142558.GP20945@w540>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v3 1/4] backlight: pwm_bl: linear interpolation between
+ brightness-levels
+Date: Fri, 6 Apr 2018 16:46:32 +0100
+Message-ID: <20180406154632.ttt5qgsbwsveipwh@holly.lan>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180406142558.GP20945@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, Mark Brown <broonie@kernel.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180208113032.27810-2-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKKENDJ2luZyBNYXJrIEJyb3duKQoKT24gRnJpZGF5LCA2IEFwcmlsIDIwMTgg
-MTc6MjU6NTggRUVTVCBqYWNvcG8gbW9uZGkgd3JvdGU6Cj4gT24gRnJpLCBBcHIgMDYsIDIwMTgg
-YXQgMDQ6MTU6MzVQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIEZyaWRh
-eSwgNiBBcHJpbCAyMDE4IDE1OjQxOjU2IEVFU1QgSmFjb3BvIE1vbmRpIHdyb3RlOgo+ID4+IERv
-Y3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGlu
-Z3MuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNh
-c0BqbW9uZGkub3JnPgo+ID4+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
-bXN1bmcuY29tPgo+ID4+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNv
-ZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiA+PiBSZXZpZXdlZC1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4+IC0tLQo+ID4+
-IAo+ID4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4
-dCB8IDYwCj4gPj4gICsrKysrKysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDYw
-IGluc2VydGlvbnMoKykKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4gPj4gCj4gPj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZk
-MTAyNC50eHQKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0Cj4gPj4gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4Cj4gPj4g
-dAo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3RoaW5lLHRoYzYzbHZkMTAyNC50eAo+ID4+IHQKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
-ID4+IGluZGV4IDAwMDAwMDAuLjExOTFmMTcKPiA+PiAtLS0gL2Rldi9udWxsCj4gPj4gKysrCj4g
-Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhp
-bmUsdGhjNjNsdmQxMDI0LnR4Cj4gPj4gdAo+ID4+IEBAIC0wLDAgKzEsNjAgQEAKPiA+PiArVGhp
-bmUgRWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlcgo+ID4+ICstLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4gKwo+ID4+ICtUaGUgVEhDNjNM
-VkQxMDI0IGlzIGEgZHVhbCBsaW5rIExWRFMgcmVjZWl2ZXIgZGVzaWduZWQgdG8gY29udmVydCBM
-VkRTCj4gPj4gc3RyZWFtcwo+ID4+ICt0byBwYXJhbGxlbCBkYXRhIG91dHB1dHMuIFRoZSBjaGlw
-IHN1cHBvcnRzIHNpbmdsZS9kdWFsIGlucHV0L291dHB1dAo+ID4+IG1vZGVzLAo+ID4+ICtoYW5k
-bGluZyB1cCB0byB0d28gdHdvIGlucHV0IExWRFMgc3RyZWFtIGFuZCB1cCB0byB0d28gZGlnaXRh
-bCBDTU9TL1RUTAo+ID4gCj4gPiBzL3RvIHR3byB0d28vdG8gdHdvLwo+ID4gcy9zdHJlYW0vc3Ry
-ZWFtcy8KPiA+IAo+ID4+IG91dHB1dHMuCj4gPj4gKwo+ID4+ICtTaW5nbGUgb3IgZHVhbCBvcGVy
-YXRpb24gbW9kZXMsIG91dHB1dCBkYXRhIG1hcHBpbmcgYW5kIEREUiBvdXRwdXQKPiA+PiBtb2Rl
-cyBhcmUKPiA+PiArY29uZmlndXJlZCB0aHJvdWdoIGlucHV0IHNpZ25hbHMgYW5kIHRoZSBjaGlw
-IGRvZXMgbm90IGV4cG9zZSBhbnkKPiA+PiBjb250cm9sIGJ1cy4KPiA+PiArCj4gPj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gPj4gKy0gY29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYz
-bHZkMTAyNCIKPiA+PiArCj4gPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4gKy0gdmNjLXN1
-cHBseTogUG93ZXIgc3VwcGx5IGZvciBUVEwgb3V0cHV0LCBUVEwgQ0xPQ0tPVVQgc2lnbmFsLCBM
-VkRTCj4gPj4gaW5wdXQsCj4gPj4gKyAgUFBMIGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+ID4+ICst
-IHBvd2VyZG93bi1ncGlvczogUG93ZXIgZG93biBHUElPIHNpZ25hbCwgcGluIG5hbWUgIi9QRFdO
-Ii4gQWN0aXZlIGxvdwo+ID4+ICstIGVuYWJsZS1ncGlvczogT3V0cHV0IGVuYWJsZSBHUElPIHNp
-Z25hbCwgcGluIG5hbWUgIk9FIi4gQWN0aXZlIGhpZ2gKPiA+IAo+ID4gQXMgUm9iIG1lbnRpb25l
-ZCBpbiBhIHJlcGx5IHRvIHY2LCB3ZSBjdXJyZW50bHkgdXNlICJlbmFibGUiIGFzIHRoZQo+ID4g
-aW52ZXJzZSBvZiAicG93ZXJkb3duIi4gSSB3b3VsZCBjYWxsIHRoaXMgb25lIG9lLWdwaW9zIGlu
-c3RlYWQuIFF1b3RpbmcKPiA+IFJvYjoKPiA+IAo+ID4gIkRlYmF0aW5nICJvZSIgdnMuICJvdXRw
-dXQtZW5hYmxlIiBpcyBiaWtlc2hlZGRpbmcgSU1PLiBBbnlvbmUgZmFtaWxpYXIKPiA+IHdpdGgg
-aC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FLiIKPiAKPiBJIGdvdCBhIGRpZmZlcmVudCB1
-bmRlcnN0YW5kaW5nIG9mIHdoYXQgUm9iIG1lYW50LiBJIHRob3VnaHQgImFueW9uZQo+IGZhbWls
-aWFyIHdpdGggaC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FIiBhcyB0aGF0IG5vYm9keSB3
-b3VsZCBnZXQKPiBjb25mdXNlZCBpZiBhIHBpbiBuYW1lZCBPRSBpbiB0aGUgY2hpcCBtYW51YWwg
-aXMgZGVzY2liZWQgYnkgYW4KPiAnZW5hYmxlJyBwcm9wZXJ0eS4KPiAKPiBCdXQgYXMgZGlzY3Vz
-c2VkIG9mZmxpbmUsIGVuYWJsZSBoYXMgcHJvYmFibHkgdG8gYmUgdXNlZCBhcyB0aGUKPiBvcHBv
-c2l0ZSBvZiBwb3dlcmRvd24gZm9yIGNvbXBsZXRlIGNoaXAgc2xlZXAsIG5vdCBqdXN0IGZvciBv
-dXRwdXQKPiBwYWQuCj4gCj4gQW55d2F5LCB3ZSBzcGVudCBlbm91Z2ggdGltZSBvbiBuYW1pbmcg
-aXNzdWVzLCBzdGFydGluZyBmcm9tIG15IGZpcnN0Cj4gc3R1cGlkICdwZHduJyBwZXJtdXRhdGlv
-bnMgdGhlbiBvbiB0aGlzIHNlbWktc3RhbmRhcmQgbmFtZXMuCj4gCj4gSSdsbCBzZW5kIG5leHQg
-dmVyc2lvbiB3aXRoICdwb3dlcmRvd24tZ3Bpb3MnIGFuZCAnb2UtZ3Bpb3MnCj4gcHJvcGVydGll
-cyBob3BpbmcgdGhhdCB3b3VsZCBiZSBmaW5hbGx5IGFjY2VwdGVkIGJ5IGV2ZXJ5b25lLgoKSSBj
-ZXJ0YWlubHkgd29uJ3QgY29tcGxhaW4gKGFzIGxvbmcgYXMgeW91IHdyaXRlIHB3ZG4gaW5zdGVh
-ZCBvZiBwZHduIGluIHRoZSAKZHJpdmVyIDotKSkuCgo+IFNhbWUgb24gdGhlIG1hbmRhdG9yeS9v
-cHRpb25hbCBWQ0Mgc3VwcGx5IHRoaW5nLiBMZXQncyB0cnkgdG8gbWFrZQo+IG5leHQgdmVyc2lv
-biB0aGUgZmluYWwgb25lLiBJZiB0aGUgb3B0aW9uYWwgcHJvcGVydHkgd2l0aCB0aGUgZHVtbXkK
-PiByZWd1bGF0b3IgZG9lc24ndCBzYXRpc2Z5IHlvdSBhbmQgaXQgaXMgcHJlZmVycmVkIHRvIGhh
-dmUgYSBmaXhlZC1yZWd1bGF0b3IKPiBhbnlob3cgaW4gRFQgSSdsbCBkbyBpbiBuZXh0IHZlcnNp
-b24sIG90aGV3aXNlIGxldCdzIHRyeSBub3QgdG8gY2hhbmdlCj4gaXQgYWdhaW4uIEknbGwganVz
-dCByZW1hcmsgaGVyZSB0aGF0IGluIHRoZSBjdXJyZW50IEVhZ2xlIGRlc2lnbiB2Y2MgaXMKPiBj
-b25uZWN0ZWQgdG8gYSBwb3dlciByYWlsIHdpdGggbm8gcmVndWxhdG9yIGF0IGFsbCA6KQoKSSBk
-b24ndCBsaWtlIHRoZSBkdW1teSByZWd1bGF0b3IgbXVjaCwgYXMgaXQgZ2VuZXJhdGVzIGEgZGV2
-X3dhcm4oKSwgd2hpY2ggCm1ha2VzIG1lIGJlbGlldmUgdGhhdCBpdCdzIGEgaGFjayByYXRoZXIg
-dGhhbiBhIHByb3BlciBzb2x1dGlvbi4gWW91IG1pZ2h0IAp3YW50IHRvIGFzayBNYXJrIEJyb3du
-IGZvciBoaXMgb3Bpbmlvbi4KCj4gPj4gKwo+ID4+ICtUaGUgVEhDNjNMVkQxMDI0IHZpZGVvIHBv
-cnQgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgYWNjb3JkaW5nCj4gPj4gK3RvIE9GIGdyYXBoIGJp
-bmRpbmdzIHNwZWNpZmllZCBieSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvCj4g
-Pj4gZ3JhcGgudHh0Cj4gPj4gKwo+ID4+ICtSZXF1aXJlZCB2aWRlbyBwb3J0IG5vZGVzOgo+ID4+
-ICstIHBvcnRAMDogRmlyc3QgTFZEUyBpbnB1dCBwb3J0Cj4gPj4gKy0gcG9ydEAyOiBGaXJzdCBk
-aWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ID4+ICsKPiA+PiArT3B0aW9uYWwgdmlk
-ZW8gcG9ydCBub2RlczoKPiA+PiArLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPiA+
-PiArLSBwb3J0QDM6IFNlY29uZCBkaWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ID4+
-ICsKPiA+PiArRXhhbXBsZToKPiA+PiArLS0tLS0tLS0KPiA+PiArCj4gPj4gKwl0aGM2M2x2ZDEw
-MjQ6IGx2ZHMtZGVjb2RlciB7Cj4gPj4gKwkJY29tcGF0aWJsZSA9ICJ0aGluZSx0aGM2M2x2ZDEw
-MjQiOwo+ID4+ICsKPiA+PiArCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfbHZkc192Y2M+Owo+ID4+ICsJ
-CXBvd2VyZG93bi1ncGlvcyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsKPiA+PiArCj4g
-Pj4gKwkJcG9ydHMgewo+ID4+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+PiArCQkJI3Np
-emUtY2VsbHMgPSA8MD47Cj4gPj4gKwo+ID4+ICsJCQlwb3J0QDAgewo+ID4+ICsJCQkJcmVnID0g
-PDA+Owo+ID4+ICsKPiA+PiArCQkJCWx2ZHNfZGVjX2luXzA6IGVuZHBvaW50IHsKPiA+PiArCQkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0PjsKPiA+PiArCQkJCX07Cj4gPj4gKwkJCX07
-Cj4gPj4gKwo+ID4+ICsJCQlwb3J0QDJ7Cj4gPj4gKwkJCQlyZWcgPSA8Mj47Cj4gPj4gKwo+ID4+
-ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiA+PiArCQkJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JmFkdjc1MTFfaW4+Owo+ID4+ICsJCQkJfTsKPiA+PiArCQkJfTsKPiA+PiArCQl9Owo+
-ID4+ICsJfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Feb 08, 2018 at 12:30:29PM +0100, Enric Balletbo i Serra wrote:
+> Setting num-interpolated-steps in the dts will allow you to have linear
+> interpolation between values of brightness-levels. This way a high
+> resolution pwm duty cycle can be used without having to list out every
+> possible value in the dts. This system also allows for gamma corrected
+> values.
+> 
+> The most simple example is interpolate between two brightness values a
+> number of steps, this can be done setting the following in the dts:
+> 
+>   brightness-levels = <0 65535>;
+>   num-interpolated-steps = <1024>;
+>   default-brightness-level = <512>;
+> 
+> This will create a brightness-level table with the following values:
+> 
+>   <0 63 126 189 252 315 378 441 ... 64260 64323 64386 64449 65535>
+> 
+> Another use case can be describe a gamma corrected curve, as we have
+> better sensitivity at low luminance than high luminance we probably
+> want have smaller steps for low brightness levels values and bigger
+> steps for high brightness levels values. This can be achieved with
+> the following in the dts:
+> 
+>   brightness-levels = <0 4096 65535>;
+>   num-interpolated-steps = <1024>;
+>   default-brightness-level = <512>;
+> 
+> This will create a brightness-levels table with the following values:
+> 
+>   <0 4 8 12 16 20 ... 4096 4156 4216 4276 ... 65535>
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+> ---
+> Changes since v2:
+> Requested by Daniel Thompson:
+>  - Use a devres alloc for table creatiion and then just swap pointers.
+>  - No need to use calloc because the loop initializes every element.
+> Changes since v1:
+> - None.
+> 
+>  drivers/video/backlight/pwm_bl.c | 83 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 8e3f1245f5c5..f0a108ab570a 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -147,7 +147,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  				  struct platform_pwm_backlight_data *data)
+>  {
+>  	struct device_node *node = dev->of_node;
+> +	unsigned int num_levels = 0;
+> +	unsigned int levels_count;
+> +	unsigned int num_steps;
+>  	struct property *prop;
+> +	unsigned int *table;
+>  	int length;
+>  	u32 value;
+>  	int ret;
+> @@ -167,6 +171,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  	/* read brightness levels from DT property */
+>  	if (data->max_brightness > 0) {
+>  		size_t size = sizeof(*data->levels) * data->max_brightness;
+> +		unsigned int i, j, n = 0;
+>  
+>  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
+>  		if (!data->levels)
+> @@ -184,6 +189,84 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			return ret;
+>  
+>  		data->dft_brightness = value;
+> +
+> +		/*
+> +		 * This property is optional, if is set enables linear
+> +		 * interpolation between each of the values of brightness levels
+> +		 * and creates a new pre-computed table.
+> +		 */
+> +		of_property_read_u32(node, "num-interpolated-steps",
+> +				     &num_steps);
+> +
+> +		/*
+> +		 * Make sure that there is at least two entries in the
+> +		 * brightness-levels table, otherwise we can't interpolate
+> +		 * between two points.
+> +		 */
+> +		if (num_steps) {
+> +			if (data->max_brightness < 2) {
+> +				dev_err(dev, "can't interpolate\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			/*
+> +			 * Recalculate the number of brightness levels, now
+> +			 * taking in consideration the number of interpolated
+> +			 * steps between two levels.
+> +			 */
+> +			for (i = 0; i < data->max_brightness - 1; i++) {
+> +				if ((data->levels[i + 1] - data->levels[i]) /
+> +				   num_steps)
+> +					num_levels += num_steps;
+> +				else
+> +					num_levels++;
+> +			}
+> +			num_levels++;
+> +			dev_dbg(dev, "new number of brightness levels: %d\n",
+> +				num_levels);
+> +
+> +			/*
+> +			 * Create a new table of brightness levels with all the
+> +			 * interpolated steps.
+> +			 */
+> +			size = sizeof(*table) * num_levels;
+> +			table = devm_kzalloc(dev, size, GFP_KERNEL);
+> +			if (!table)
+> +				return -ENOMEM;
+> +
+> +			/* Fill the interpolated table. */
+> +			levels_count = 0;
+> +			for (i = 0; i < data->max_brightness - 1; i++) {
+> +				value = data->levels[i];
+> +				n = (data->levels[i + 1] - value) / num_steps;
+> +				if (n > 0) {
+> +					for (j = 0; j < num_steps; j++) {
+> +						table[levels_count] = value;
+> +						value += n;
+> +						levels_count++;
+> +					}
+> +				} else {
+> +					table[levels_count] = data->levels[i];
+> +					levels_count++;
+> +				}
+> +			}
+> +			table[levels_count] = data->levels[i];
+> +
+> +			/*
+> +			 * As we use interpolation lets remove current
+> +			 * brightness levels table and replace for the
+> +			 * new interpolated table.
+> +			 */
+> +			devm_kfree(dev, data->levels);
+> +			data->levels = table;
+> +
+> +			/*
+> +			 * Reassign max_brightness value to the new total number
+> +			 * of brightness levels.
+> +			 */
+> +			data->max_brightness = num_levels;
+> +		}
+> +
+>  		data->max_brightness--;
+>  	}
+>  
+> -- 
+> 2.15.1
+> 
