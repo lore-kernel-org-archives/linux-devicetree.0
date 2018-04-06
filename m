@@ -1,15 +1,12 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Fri, 06 Apr 2018 16:15:35 +0300
-Message-ID: <1664336.M7KDjLhzuK@avalon>
-References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523018517-24121-2-git-send-email-jacopo+renesas@jmondi.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Fri, 6 Apr 2018 15:17:10 +0200
+Message-ID: <20180406131710.GM20945@w540>
+References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1668418150=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1523018517-24121-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,64 +17,101 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, vladimir_zapolskiy@mentor.com
+Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDYgQXByaWwg
-MjAxOCAxNTo0MTo1NiBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBEb2N1bWVudCBUaGluZSBU
-SEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyIGRldmljZSB0cmVlIGJpbmRpbmdzLgo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiBSZXZp
-ZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1i
-eTogTmlrbGFzIFPDtmRlcmx1bmQgPG5pa2xhcy5zb2Rlcmx1bmQrcmVuZXNhc0ByYWduYXRlY2gu
-c2U+Cj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
-YXNvbmJvYXJkLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5l
-LHRoYzYzbHZkMTAyNC50eHQgfCA2MCArKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA2MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
-dHh0Cj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi4xMTkxZjE3Cj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBAQCAtMCwwICsxLDYwIEBACj4gK1Ro
-aW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPiArLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFRIQzYzTFZEMTAyNCBp
-cyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVyIGRlc2lnbmVkIHRvIGNvbnZlcnQgTFZEUwo+IHN0
-cmVhbXMKPiArdG8gcGFyYWxsZWwgZGF0YSBvdXRwdXRzLiBUaGUgY2hpcCBzdXBwb3J0cyBzaW5n
-bGUvZHVhbCBpbnB1dC9vdXRwdXQgbW9kZXMsCj4gK2hhbmRsaW5nIHVwIHRvIHR3byB0d28gaW5w
-dXQgTFZEUyBzdHJlYW0gYW5kIHVwIHRvIHR3byBkaWdpdGFsIENNT1MvVFRMCgpzL3RvIHR3byB0
-d28vdG8gdHdvLwpzL3N0cmVhbS9zdHJlYW1zLwoKPiBvdXRwdXRzLgo+ICsKPiArU2luZ2xlIG9y
-IGR1YWwgb3BlcmF0aW9uIG1vZGVzLCBvdXRwdXQgZGF0YSBtYXBwaW5nIGFuZCBERFIgb3V0cHV0
-IG1vZGVzCj4gYXJlCj4gK2NvbmZpZ3VyZWQgdGhyb3VnaCBpbnB1dCBzaWduYWxzIGFuZCB0aGUg
-Y2hpcCBkb2VzIG5vdCBleHBvc2UgYW55IGNvbnRyb2wKPiBidXMuCj4gKwo+ICtSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IFNoYWxsIGJlICJ0aGluZSx0aGM2M2x2ZDEwMjQi
-Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBs
-eSBmb3IgVFRMIG91dHB1dCwgVFRMIENMT0NLT1VUIHNpZ25hbCwgTFZEUyBpbnB1dCwKPiArICBQ
-UEwgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5Cj4gKy0gcG93ZXJkb3duLWdwaW9zOiBQb3dlciBkb3du
-IEdQSU8gc2lnbmFsLCBwaW4gbmFtZSAiL1BEV04iLiBBY3RpdmUgbG93Cj4gKy0gZW5hYmxlLWdw
-aW9zOiBPdXRwdXQgZW5hYmxlIEdQSU8gc2lnbmFsLCBwaW4gbmFtZSAiT0UiLiBBY3RpdmUgaGln
-aAoKQXMgUm9iIG1lbnRpb25lZCBpbiBhIHJlcGx5IHRvIHY2LCB3ZSBjdXJyZW50bHkgdXNlICJl
-bmFibGUiIGFzIHRoZSBpbnZlcnNlIG9mIAoicG93ZXJkb3duIi4gSSB3b3VsZCBjYWxsIHRoaXMg
-b25lIG9lLWdwaW9zIGluc3RlYWQuIFF1b3RpbmcgUm9iOgoKIkRlYmF0aW5nICJvZSIgdnMuICJv
-dXRwdXQtZW5hYmxlIiBpcyBiaWtlc2hlZGRpbmcgSU1PLiBBbnlvbmUgZmFtaWxpYXIgd2l0aCAK
-aC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FLiIKCj4gKwo+ICtUaGUgVEhDNjNMVkQxMDI0
-IHZpZGVvIHBvcnQgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgYWNjb3JkaW5nCj4gK3RvIE9GIGdy
-YXBoIGJpbmRpbmdzIHNwZWNpZmllZCBieSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvCj4gZ3JhcGgudHh0Cj4gKwo+ICtSZXF1aXJlZCB2aWRlbyBwb3J0IG5vZGVzOgo+ICstIHBv
-cnRAMDogRmlyc3QgTFZEUyBpbnB1dCBwb3J0Cj4gKy0gcG9ydEAyOiBGaXJzdCBkaWdpdGFsIENN
-T1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ICsKPiArT3B0aW9uYWwgdmlkZW8gcG9ydCBub2RlczoK
-PiArLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPiArLSBwb3J0QDM6IFNlY29uZCBk
-aWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ICsKPiArRXhhbXBsZToKPiArLS0tLS0t
-LS0KPiArCj4gKwl0aGM2M2x2ZDEwMjQ6IGx2ZHMtZGVjb2RlciB7Cj4gKwkJY29tcGF0aWJsZSA9
-ICJ0aGluZSx0aGM2M2x2ZDEwMjQiOwo+ICsKPiArCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfbHZkc192
-Y2M+Owo+ICsJCXBvd2VyZG93bi1ncGlvcyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsK
-PiArCj4gKwkJcG9ydHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUt
-Y2VsbHMgPSA8MD47Cj4gKwo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiAr
-CQkJCWx2ZHNfZGVjX2luXzA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-Jmx2ZHNfb3V0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0QDJ7Cj4gKwkJCQly
-ZWcgPSA8Mj47Cj4gKwo+ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiArCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmFkdjc1MTFfaW4+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9
-Owo+ICsJfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1668418150==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="L0TNCHh3fkwjpuuE"
+Content-Disposition: inline
+
+
+--L0TNCHh3fkwjpuuE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Sorry for the mess
+
+subject should have been
+
+   Subject: [PATCH 0/7] V3M-Eagle display enablement
+
+I copied the wrong one from another cover letter...
+
+On Fri, Apr 06, 2018 at 03:08:05PM +0200, Jacopo Mondi wrote:
+> Hello,
+>    this series enables HDMI display on V3M Eagle board.
+>
+> The series is based on Geert's "renesas-drivers-2018-04-03-v4.16" with
+> THC63LVD1024 driver on top (cfr. my in review series:
+> "[PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge")
+>
+> This series includes some preliminary work from Sergei and Niklas. I have
+> reworked the two final patches from Niklas to enable DU first, add the LV=
+DS
+> decoder node, and finally add the ADV7511W chip and enable HDMI output.
+>
+> A branch for testing is available at:
+> git://jmondi.org/linux v3m/renesas-drivers-2018-04-03-v4.16/v7-eagle-dts
+>
+> Thanks
+>    j
+>
+> Jacopo Mondi (2):
+>   arm64: dts: renesas: eagle: Enable DU
+>   arm64: dts: renesas: eagle: Add LVDS decoder
+>
+> Niklas S=C3=B6derlund (2):
+>   arm64: dts: renesas: r8a77970: add the LVDS instance
+>   arm64: dts: renesas: eagle: Add ADV7511W and HDMI output
+>
+> Sergei Shtylyov (3):
+>   arm64: dts: renesas: r8a77970: add FCPVD support
+>   arm64: dts: renesas: r8a77970: add VSPD support
+>   arm64: dts: renesas: r8a77970: add DU support
+>
+>  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 89 ++++++++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 73 +++++++++++++++++++++
+>  2 files changed, 162 insertions(+)
+>
+> --
+> 2.7.4
+>
+
+--L0TNCHh3fkwjpuuE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJax3NWAAoJEHI0Bo8WoVY8+5IP/0I0zHdhOMVPJe30KKV5PHpJ
+SMSaZ8e2TGnueH8VjbxnM8DPsBIiXYe2L5VH58W1BObZHXJRyiBJ5CwNmdbpi1Xg
+j4L5dZ5FmmU4eHrgnsYgMKYJckU1QDzx3RwokP/fSaEhaaryCTjaj/+ecWfUsf9P
+8eSYaAMP5uAWM1dEp5an0XaIDEaEbq8BPnsVAeLmusihOF0Y4eh+3t0c5JYtXEPx
+R/t9SNxQc1RIxI7qa0ME1R0BIP9X3qm179ZPn5qmkM9IUTOAKZq9EaRgOFkxCghi
+VRZqeW/bvDToVMw5q09U2yPTMxKnB6s9ddyK0YotQoBnKI7tPH9dXYqEpZYqp94H
+DgXB/K05QdhXWHAD8AXzcVjAOitwG+P3Uj4EXQsnBkvA38Rq3svz2HfuImwBRRF2
+Rv759loGeVRu9dmU+jGdw33RtS7z+a6WxBa+etiTArpfrcx3Z6LZOk8S8KYx2Lbi
+CKvHojx/di8zNNgBzw35tfFMEf1v09041cKoouEznEcS1g2CoBLymrwza07aiP2S
+xseLUOIrO7vofVYXtC7MQyczS8f/DtbqxdIm6oXtBwlr32UA/b257hQO5e1TLD+P
+Xg5FqMYp1X+k8s2H+BXB6eqJQKdmJ/60iw2Jru3niXgH6Sz+wzOAfw4g3g1ZwG9T
+VZYoRSnFaf2/AB2hcNWg
+=YeR4
+-----END PGP SIGNATURE-----
+
+--L0TNCHh3fkwjpuuE--
+
+--===============1668418150==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1668418150==--
