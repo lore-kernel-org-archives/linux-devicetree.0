@@ -1,47 +1,49 @@
-From: sricharan@codeaurora.org
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Fri, 06 Apr 2018 18:35:49 +0530
-Message-ID: <7dc41c73f594918701c21075dde30870@codeaurora.org>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
- <20180320143131.4eenixtbhciq5fwc@localhost>
- <20180329143715.GA31757@hector.attlocal.net>
- <20180329163739.2fg5qxvb5j3fiy6r@localhost>
- <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
- <20180406045511.hnzxe4nepl5sqmld@localhost>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Fri,  6 Apr 2018 15:08:05 +0200
+Message-ID: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180406045511.hnzxe4nepl5sqmld@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-06 10:25, Richard Cochran wrote:
-> On Mon, Apr 02, 2018 at 03:28:47PM +0530, sricharan@codeaurora.org 
-> wrote:
->>   Yes, i will post another series for ipq806[2/4] updates and the
->> corresponding
->>   boards after this.
-> 
-> I tried mainline on the ap148 using qcom_defconfig and the
-> qcom-ipq8064-ap148.dtb, and it doesn't boot FYI.
-> 
+Hello,
+   this series enables HDMI display on V3M Eagle board.
 
-  I tried booting mainline built with qcom_defconfig on ap148 and
-  did boot. Not sure if your bootloader's bootarg is this,
-   'console=ttyMSM0,115200n8' ?
+The series is based on Geert's "renesas-drivers-2018-04-03-v4.16" with
+THC63LVD1024 driver on top (cfr. my in review series:
+"[PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge")
 
+This series includes some preliminary work from Sergei and Niklas. I have
+reworked the two final patches from Niklas to enable DU first, add the LVDS
+decoder node, and finally add the ADV7511W chip and enable HDMI output.
 
-  root@(none):/# cat /proc/version
-  Linux version 4.16.0 (srichara@srichara-linux) (gcc version 6.3.1 
-20170109 (Linaro GCC 6.3-2017.02)) #1691 SMP PREEMPT Fri Apr 6 15:30:45 
-IST 2018
-  root@(none):/#
+A branch for testing is available at:
+git://jmondi.org/linux v3m/renesas-drivers-2018-04-03-v4.16/v7-eagle-dts
 
-Regards,
-  Sricharan
+Thanks
+   j
+
+Jacopo Mondi (2):
+  arm64: dts: renesas: eagle: Enable DU
+  arm64: dts: renesas: eagle: Add LVDS decoder
+
+Niklas Söderlund (2):
+  arm64: dts: renesas: r8a77970: add the LVDS instance
+  arm64: dts: renesas: eagle: Add ADV7511W and HDMI output
+
+Sergei Shtylyov (3):
+  arm64: dts: renesas: r8a77970: add FCPVD support
+  arm64: dts: renesas: r8a77970: add VSPD support
+  arm64: dts: renesas: r8a77970: add DU support
+
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 89 ++++++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 73 +++++++++++++++++++++
+ 2 files changed, 162 insertions(+)
+
+--
+2.7.4
