@@ -1,70 +1,72 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 3/7] arm64: dts: renesas: r8a77970: add DU support
-Date: Fri,  6 Apr 2018 15:08:08 +0200
-Message-ID: <1523020092-25540-4-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH 6/7] arm64: dts: renesas: eagle: Add LVDS decoder
+Date: Fri,  6 Apr 2018 15:08:11 +0200
+Message-ID: <1523020092-25540-7-git-send-email-jacopo+renesas@jmondi.org>
 References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+The R-Car V3M Eagle board includes a transparent THC63LVD1024 LVDS
+decoder, connected to the on-chip LVDS encoder output on one side
+and to the not-yet-described HDMI encoder ADV7511W on the other one.
 
-Define the generic R8A77970 part of the DU device node.
+As the decoder does not need any configuration it has been so-far
+omitted from DTS. Now that a driver is available, describe it in DT
+as well.
 
-Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns@hitachi.com>.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77970.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-index db06c94..e649e86 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -635,6 +635,34 @@
- 			resets = <&cpg 623>;
- 			renesas,fcp = <&fcpvd0>;
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+index 144b847..9d0e65d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+@@ -31,6 +31,23 @@
+ 		/* first 128MB is reserved for secure area. */
+ 		reg = <0x0 0x48000000 0x0 0x38000000>;
+ 	};
 +
-+		du: display@feb00000 {
-+			compatible = "renesas,du-r8a77970";
-+			reg = <0 0xfeb00000 0 0x80000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 724>;
-+			clock-names = "du.0";
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			vsps = <&vspd0>;
-+			status = "disabled";
++	thc63lvd1024: lvds-decoder {
++		compatible = "thine,thc63lvd1024";
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+				port@0 {
-+					reg = <0>;
-+					du_out_rgb: endpoint {
-+					};
-+				};
++			port@0 {
++				reg = <0>;
 +
-+				port@1 {
-+					reg = <1>;
-+					du_out_lvds: endpoint {
-+					};
++				thc63lvd1024_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
 +				};
 +			};
 +		};
- 	};
++	};
+ };
  
- 	timer {
+ &avb {
+@@ -104,3 +121,15 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
