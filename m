@@ -1,85 +1,115 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v7 [RESEND] 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Fri,  6 Apr 2018 09:13:56 -0600
-Message-ID: <20180406151356.7818-3-ilina@codeaurora.org>
-References: <20180406151356.7818-1-ilina@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180406151356.7818-1-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Fri, 06 Apr 2018 18:40:14 +0300
+Message-ID: <2441543.5xTHaLXzZ0@avalon>
+References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1664336.M7KDjLhzuK@avalon> <20180406142558.GP20945@w540>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180406142558.GP20945@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, Mark Brown <broonie@kernel.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-
-Command DB provides information on shared resources like clocks,
-regulators etc., probed at boot by the remote subsytem and made
-available in shared memory.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes in v7:
-	- Fix description of 'reg' property
-
-Changes in v6:
-	- Move to bindings/reserved-memory
-	- Remove indirection address and use only the actual reserved
-	  memory
-
-Changes in v4:
-	- Fix unwanted capitalization
-	- Add reg property
----
- .../bindings/reserved-memory/qcom,cmd-db.txt       | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-
-diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-new file mode 100644
-index 000000000000..1390cd3a7f0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-@@ -0,0 +1,36 @@
-+Command DB
-+---------
-+
-+Command DB is a database that provides a mapping between resource key and the
-+resource address for a system resource managed by a remote processor. The data
-+is stored in a shared memory region and is loaded by the remote processor.
-+
-+Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-+controlling shared resources. Depending on the board configuration the shared
-+resource properties may change. These properties are dynamically probed by the
-+remote processor and made available in the shared memory.
-+
-+The bindings for Command DB is specified in the reserved-memory section in
-+devicetree. The devicetree representation of the command DB driver should be:
-+
-+Properties:
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,cmd-db"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop encoded array>
-+	Definition: The register address that points to the actual location of
-+		    the Command DB in memory.
-+
-+Example:
-+
-+	reserved-memory {
-+		[...]
-+		qcom,cmd-db@85fe0000 {
-+			reg = <0x0 0x85fe0000 0x0 0x20000>;
-+			compatible = "qcom,cmd-db";
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgSmFjb3BvLAoKKENDJ2luZyBNYXJrIEJyb3duKQoKT24gRnJpZGF5LCA2IEFwcmlsIDIwMTgg
+MTc6MjU6NTggRUVTVCBqYWNvcG8gbW9uZGkgd3JvdGU6Cj4gT24gRnJpLCBBcHIgMDYsIDIwMTgg
+YXQgMDQ6MTU6MzVQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIEZyaWRh
+eSwgNiBBcHJpbCAyMDE4IDE1OjQxOjU2IEVFU1QgSmFjb3BvIE1vbmRpIHdyb3RlOgo+ID4+IERv
+Y3VtZW50IFRoaW5lIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgZGV2aWNlIHRyZWUgYmluZGlu
+Z3MuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNh
+c0BqbW9uZGkub3JnPgo+ID4+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
+bXN1bmcuY29tPgo+ID4+IFJldmlld2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNv
+ZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KPiA+PiBSZXZpZXdlZC1ieTogTGF1cmVudCBQ
+aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4+IC0tLQo+ID4+
+IAo+ID4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4
+dCB8IDYwCj4gPj4gICsrKysrKysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDYw
+IGluc2VydGlvbnMoKykKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4gPj4gCj4gPj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZk
+MTAyNC50eHQKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0Cj4gPj4gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4Cj4gPj4g
+dAo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3RoaW5lLHRoYzYzbHZkMTAyNC50eAo+ID4+IHQKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+ID4+IGluZGV4IDAwMDAwMDAuLjExOTFmMTcKPiA+PiAtLS0gL2Rldi9udWxsCj4gPj4gKysrCj4g
+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhp
+bmUsdGhjNjNsdmQxMDI0LnR4Cj4gPj4gdAo+ID4+IEBAIC0wLDAgKzEsNjAgQEAKPiA+PiArVGhp
+bmUgRWxlY3Ryb25pY3MgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2Rlcgo+ID4+ICstLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4gKwo+ID4+ICtUaGUgVEhDNjNM
+VkQxMDI0IGlzIGEgZHVhbCBsaW5rIExWRFMgcmVjZWl2ZXIgZGVzaWduZWQgdG8gY29udmVydCBM
+VkRTCj4gPj4gc3RyZWFtcwo+ID4+ICt0byBwYXJhbGxlbCBkYXRhIG91dHB1dHMuIFRoZSBjaGlw
+IHN1cHBvcnRzIHNpbmdsZS9kdWFsIGlucHV0L291dHB1dAo+ID4+IG1vZGVzLAo+ID4+ICtoYW5k
+bGluZyB1cCB0byB0d28gdHdvIGlucHV0IExWRFMgc3RyZWFtIGFuZCB1cCB0byB0d28gZGlnaXRh
+bCBDTU9TL1RUTAo+ID4gCj4gPiBzL3RvIHR3byB0d28vdG8gdHdvLwo+ID4gcy9zdHJlYW0vc3Ry
+ZWFtcy8KPiA+IAo+ID4+IG91dHB1dHMuCj4gPj4gKwo+ID4+ICtTaW5nbGUgb3IgZHVhbCBvcGVy
+YXRpb24gbW9kZXMsIG91dHB1dCBkYXRhIG1hcHBpbmcgYW5kIEREUiBvdXRwdXQKPiA+PiBtb2Rl
+cyBhcmUKPiA+PiArY29uZmlndXJlZCB0aHJvdWdoIGlucHV0IHNpZ25hbHMgYW5kIHRoZSBjaGlw
+IGRvZXMgbm90IGV4cG9zZSBhbnkKPiA+PiBjb250cm9sIGJ1cy4KPiA+PiArCj4gPj4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gPj4gKy0gY29tcGF0aWJsZTogU2hhbGwgYmUgInRoaW5lLHRoYzYz
+bHZkMTAyNCIKPiA+PiArCj4gPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4gKy0gdmNjLXN1
+cHBseTogUG93ZXIgc3VwcGx5IGZvciBUVEwgb3V0cHV0LCBUVEwgQ0xPQ0tPVVQgc2lnbmFsLCBM
+VkRTCj4gPj4gaW5wdXQsCj4gPj4gKyAgUFBMIGFuZCBkaWdpdGFsIGNpcmN1aXRyeQo+ID4+ICst
+IHBvd2VyZG93bi1ncGlvczogUG93ZXIgZG93biBHUElPIHNpZ25hbCwgcGluIG5hbWUgIi9QRFdO
+Ii4gQWN0aXZlIGxvdwo+ID4+ICstIGVuYWJsZS1ncGlvczogT3V0cHV0IGVuYWJsZSBHUElPIHNp
+Z25hbCwgcGluIG5hbWUgIk9FIi4gQWN0aXZlIGhpZ2gKPiA+IAo+ID4gQXMgUm9iIG1lbnRpb25l
+ZCBpbiBhIHJlcGx5IHRvIHY2LCB3ZSBjdXJyZW50bHkgdXNlICJlbmFibGUiIGFzIHRoZQo+ID4g
+aW52ZXJzZSBvZiAicG93ZXJkb3duIi4gSSB3b3VsZCBjYWxsIHRoaXMgb25lIG9lLWdwaW9zIGlu
+c3RlYWQuIFF1b3RpbmcKPiA+IFJvYjoKPiA+IAo+ID4gIkRlYmF0aW5nICJvZSIgdnMuICJvdXRw
+dXQtZW5hYmxlIiBpcyBiaWtlc2hlZGRpbmcgSU1PLiBBbnlvbmUgZmFtaWxpYXIKPiA+IHdpdGgg
+aC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FLiIKPiAKPiBJIGdvdCBhIGRpZmZlcmVudCB1
+bmRlcnN0YW5kaW5nIG9mIHdoYXQgUm9iIG1lYW50LiBJIHRob3VnaHQgImFueW9uZQo+IGZhbWls
+aWFyIHdpdGggaC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FIiBhcyB0aGF0IG5vYm9keSB3
+b3VsZCBnZXQKPiBjb25mdXNlZCBpZiBhIHBpbiBuYW1lZCBPRSBpbiB0aGUgY2hpcCBtYW51YWwg
+aXMgZGVzY2liZWQgYnkgYW4KPiAnZW5hYmxlJyBwcm9wZXJ0eS4KPiAKPiBCdXQgYXMgZGlzY3Vz
+c2VkIG9mZmxpbmUsIGVuYWJsZSBoYXMgcHJvYmFibHkgdG8gYmUgdXNlZCBhcyB0aGUKPiBvcHBv
+c2l0ZSBvZiBwb3dlcmRvd24gZm9yIGNvbXBsZXRlIGNoaXAgc2xlZXAsIG5vdCBqdXN0IGZvciBv
+dXRwdXQKPiBwYWQuCj4gCj4gQW55d2F5LCB3ZSBzcGVudCBlbm91Z2ggdGltZSBvbiBuYW1pbmcg
+aXNzdWVzLCBzdGFydGluZyBmcm9tIG15IGZpcnN0Cj4gc3R1cGlkICdwZHduJyBwZXJtdXRhdGlv
+bnMgdGhlbiBvbiB0aGlzIHNlbWktc3RhbmRhcmQgbmFtZXMuCj4gCj4gSSdsbCBzZW5kIG5leHQg
+dmVyc2lvbiB3aXRoICdwb3dlcmRvd24tZ3Bpb3MnIGFuZCAnb2UtZ3Bpb3MnCj4gcHJvcGVydGll
+cyBob3BpbmcgdGhhdCB3b3VsZCBiZSBmaW5hbGx5IGFjY2VwdGVkIGJ5IGV2ZXJ5b25lLgoKSSBj
+ZXJ0YWlubHkgd29uJ3QgY29tcGxhaW4gKGFzIGxvbmcgYXMgeW91IHdyaXRlIHB3ZG4gaW5zdGVh
+ZCBvZiBwZHduIGluIHRoZSAKZHJpdmVyIDotKSkuCgo+IFNhbWUgb24gdGhlIG1hbmRhdG9yeS9v
+cHRpb25hbCBWQ0Mgc3VwcGx5IHRoaW5nLiBMZXQncyB0cnkgdG8gbWFrZQo+IG5leHQgdmVyc2lv
+biB0aGUgZmluYWwgb25lLiBJZiB0aGUgb3B0aW9uYWwgcHJvcGVydHkgd2l0aCB0aGUgZHVtbXkK
+PiByZWd1bGF0b3IgZG9lc24ndCBzYXRpc2Z5IHlvdSBhbmQgaXQgaXMgcHJlZmVycmVkIHRvIGhh
+dmUgYSBmaXhlZC1yZWd1bGF0b3IKPiBhbnlob3cgaW4gRFQgSSdsbCBkbyBpbiBuZXh0IHZlcnNp
+b24sIG90aGV3aXNlIGxldCdzIHRyeSBub3QgdG8gY2hhbmdlCj4gaXQgYWdhaW4uIEknbGwganVz
+dCByZW1hcmsgaGVyZSB0aGF0IGluIHRoZSBjdXJyZW50IEVhZ2xlIGRlc2lnbiB2Y2MgaXMKPiBj
+b25uZWN0ZWQgdG8gYSBwb3dlciByYWlsIHdpdGggbm8gcmVndWxhdG9yIGF0IGFsbCA6KQoKSSBk
+b24ndCBsaWtlIHRoZSBkdW1teSByZWd1bGF0b3IgbXVjaCwgYXMgaXQgZ2VuZXJhdGVzIGEgZGV2
+X3dhcm4oKSwgd2hpY2ggCm1ha2VzIG1lIGJlbGlldmUgdGhhdCBpdCdzIGEgaGFjayByYXRoZXIg
+dGhhbiBhIHByb3BlciBzb2x1dGlvbi4gWW91IG1pZ2h0IAp3YW50IHRvIGFzayBNYXJrIEJyb3du
+IGZvciBoaXMgb3Bpbmlvbi4KCj4gPj4gKwo+ID4+ICtUaGUgVEhDNjNMVkQxMDI0IHZpZGVvIHBv
+cnQgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgYWNjb3JkaW5nCj4gPj4gK3RvIE9GIGdyYXBoIGJp
+bmRpbmdzIHNwZWNpZmllZCBieSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvCj4g
+Pj4gZ3JhcGgudHh0Cj4gPj4gKwo+ID4+ICtSZXF1aXJlZCB2aWRlbyBwb3J0IG5vZGVzOgo+ID4+
+ICstIHBvcnRAMDogRmlyc3QgTFZEUyBpbnB1dCBwb3J0Cj4gPj4gKy0gcG9ydEAyOiBGaXJzdCBk
+aWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ID4+ICsKPiA+PiArT3B0aW9uYWwgdmlk
+ZW8gcG9ydCBub2RlczoKPiA+PiArLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPiA+
+PiArLSBwb3J0QDM6IFNlY29uZCBkaWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ID4+
+ICsKPiA+PiArRXhhbXBsZToKPiA+PiArLS0tLS0tLS0KPiA+PiArCj4gPj4gKwl0aGM2M2x2ZDEw
+MjQ6IGx2ZHMtZGVjb2RlciB7Cj4gPj4gKwkJY29tcGF0aWJsZSA9ICJ0aGluZSx0aGM2M2x2ZDEw
+MjQiOwo+ID4+ICsKPiA+PiArCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfbHZkc192Y2M+Owo+ID4+ICsJ
+CXBvd2VyZG93bi1ncGlvcyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsKPiA+PiArCj4g
+Pj4gKwkJcG9ydHMgewo+ID4+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+PiArCQkJI3Np
+emUtY2VsbHMgPSA8MD47Cj4gPj4gKwo+ID4+ICsJCQlwb3J0QDAgewo+ID4+ICsJCQkJcmVnID0g
+PDA+Owo+ID4+ICsKPiA+PiArCQkJCWx2ZHNfZGVjX2luXzA6IGVuZHBvaW50IHsKPiA+PiArCQkJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0PjsKPiA+PiArCQkJCX07Cj4gPj4gKwkJCX07
+Cj4gPj4gKwo+ID4+ICsJCQlwb3J0QDJ7Cj4gPj4gKwkJCQlyZWcgPSA8Mj47Cj4gPj4gKwo+ID4+
+ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiA+PiArCQkJCQlyZW1vdGUtZW5kcG9p
+bnQgPSA8JmFkdjc1MTFfaW4+Owo+ID4+ICsJCQkJfTsKPiA+PiArCQkJfTsKPiA+PiArCQl9Owo+
+ID4+ICsJfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
