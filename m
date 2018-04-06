@@ -1,50 +1,136 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
-Date: Fri, 06 Apr 2018 13:57:36 +1000
-Message-ID: <1522987056.21446.226.camel@kernel.crashing.org>
-References: <20180403142415.30083-1-oohall@gmail.com>
- <20180403142415.30083-3-oohall@gmail.com>
- <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
- <20180404220750.0436bbe1@gmail.com>
- <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
- <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
- <CAOSf1CHu4R-t8q-8fL6Dyk7myFR0gTfd6-0cxqtBVGZgYZWGAw@mail.gmail.com>
- <87bmexua3s.fsf@concordia.ellerman.id.au>
- <CAOSf1CEUnucUhW_pXG=7h5QBHvaH2-ENPKjGD42_0WEvbU6-Wg@mail.gmail.com>
- <CAPcyv4jEFMnYqpcop=Ox-dZR3dSBRMhT05JSS-gPABX_YQGw1g@mail.gmail.com>
- <CAOSf1CGtNg4_siQtAw-H95Ay1m7YPvjZeqnmWvELb1xH1stRJQ@mail.gmail.com>
- <CAPcyv4gv0rVQ+TTV=omcAO7tA5orufBadQn9ugK1jYwGH_NT=g@mail.gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] ata: ahci-platform: add reset control support
+Date: Fri, 06 Apr 2018 13:48:39 +0900
+Message-ID: <20180406134838.2ADC.4A936039@socionext.com>
+References: <6ce60a0b-0409-016a-d29c-91b8b9e2ad07@redhat.com> <cd3bc161-9a38-1e58-b66f-3ef81e3ed220@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAPcyv4gv0rVQ+TTV=omcAO7tA5orufBadQn9ugK1jYwGH_NT=g@mail.gmail.com>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cd3bc161-9a38-1e58-b66f-3ef81e3ed220@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Patrice CHOTARD <patrice.chotard@st.com>, Tejun Heo <tj@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-04-05 at 19:25 -0700, Dan Williams wrote:
-> > > Please also include my niggly nit picky trivial annoying bike shed
-> > > color for the driver name to *not* use the "nd_region" suffix for a
-> > > driver registering "nvdimm_bus" objects. "of_pmem_range" or
-> > > "of_pmem_bus" or almost anything else would be fine.
-> > 
-> > Oh sure, would using of_pmem_region to match the compatible be ok?
+Hi Hans,
+
+On Thu, 5 Apr 2018 16:08:24 +0200
+Hans de Goede <hdegoede@redhat.com> wrote:
+
+> Hi,
 > 
-> That works for me.
+> On 05-04-18 16:00, Hans de Goede wrote:
+> > Hi,
+> > > On 05-04-18 15:54, Thierry Reding wrote:
+> >> On Thu, Apr 05, 2018 at 03:27:03PM +0200, Hans de Goede wrote:
+> >>> Hi,
+> >>>
+> >>> On 05-04-18 15:17, Patrice CHOTARD wrote:
+> >>>> Hi Thierry
+> >>>>
+> >>>> On 04/05/2018 11:54 AM, Thierry Reding wrote:
+> >>>>> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
+> >>>>>> Add support to get and control a list of resets for the device
+> >>>>>> as optional and shared. These resets must be kept de-asserted until
+> >>>>>> the device is enabled.
+> >>>>>>
+> >>>>>> This is specified as shared because some SoCs like UniPhier series
+> >>>>>> have common reset controls with all ahci controller instances.
+> >>>>>>
+> >>>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >>>>>> ---
+> >>>>>> ??? .../devicetree/bindings/ata/ahci-platform.txt????? |? 1 +
+> >>>>>> ??? drivers/ata/ahci.h???????????????????????????????? |? 1 +
+> >>>>>> ??? drivers/ata/libahci_platform.c???????????????????? | 24 +++++++++++++++++++---
+> >>>>>> ??? 3 files changed, 23 insertions(+), 3 deletions(-)
+> >>>>>
+> >>>>> This causes a regression on Tegra because we explicitly request the
+> >>>>> resets after the call to ahci_platform_get_resources().
+> >>>>
+> >>>> I confirm, we got exactly the same behavior on STi platform.
+> >>>>
+> >>>>>
+> >>>>> ?? From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
+> >>>>> corresponding maintainers to Cc.
+> >>>>>
+> >>>>> Patrice, Matthias: does SATA still work for you after this patch? This
+> >>>>> has been in linux-next since next-20180327.
+> >>>>
+> >>>> SATA is still working after this patch, but a kernel warning is
+> >>>> triggered due to the fact that resets are both requested by
+> >>>> libahci_platform and by ahci_st driver.
+> >>>
+> >>> So in your case you might be able to remove the reset handling
+> >>> from the ahci_st driver and rely on the new libahci_platform
+> >>> handling instead? If that works that seems like a win to me.
+> >>>
+> >>> As said elsewhere in this thread I think it makes sense to keep (or re-add
+> >>> after a revert) the libahci_platform reset code, but make it conditional
+> >>> on a flag passed to ahci_platform_get_resources(). This way we get
+> >>> the shared code for most cases and platforms which need special handling
+> >>> can opt-out.
+> >>
+> >> Agreed, although I prefer such helpers to be opt-in, rather than
+> >> opt-out. In my experience that tends make the helpers more resilient to
+> >> this kind of regression. It also simplifies things because instead of
+> >> drivers saying "I want all the helpers except this one and that one",
+> >> they can simply say "I want these helpers and that one". In the former
+> >> case whenever you add some new (opt-out) feature, you have to update all
+> >> drivers and add the exception. In the latter you only need to extend the
+> >> drivers that want to make use of the new helper.
+> 
+> Erm, the idea never was to make this opt-out but rather opt in, so
+> we add a flags parameter to ahci_platform_get_resources() and all
+> current users pass in 0 for that to keep the current behavior.
+> 
+> And only the generic drivers/ata/ahci_platform.c driver will pass
+> in a the new AHCI_PLATFORM_GET_RESETS flag, which makes
+> ahci_platform_get_resources() (and the other functions) also deal
+> with resets.
+> 
+> >> With that in mind, rather than adding a flag to the
+> >> ahci_platform_get_resources() function, it might be more flexible to
+> >> split the helpers into finer-grained functions. That way drivers can
+> >> pick whatever functionality they want from the helpers.
+> > > Good point, so lets:
+> > > 1) Revert the patch for now
+> > 2) Have a new version of the patch which adds a ahci_platform_get_resets() helper
+> > 3) Modify the generic drivers/ata/ahci_platform.c driver to call the new
+> >  ?? ahci_platform_get_resets() between its ahci_platform_get_resources()
+> >  ?? and ahci_platform_enable_resources() calls.
+> >  ?? I think that ahci_platform_enable_resources() should still automatically
+> >  ?? do the right thing wrt resets if ahci_platform_get_resets() was called
+> >  ?? (otherwise the resets array will be empty and should be skipped)
+> > > This should make the generic driver usable for the UniPhier SoCs and
+> > maybe some other drivers like the ahci_st driver can also switch to the
+> > new ahci_platform_get_resets() functionality to reduce their code a bit.
+> 
+> So thinking slightly longer about this, with the opt-in variant
+> (which is what I intended all along) I do think that a flags parameter
+> is better, because the whole idea behind lib_ahci_platform is to avoid
+> having to do err = get_resource_a(), if (err) bail, err = get_resource_b()
+> if (err) bail, etc. in all the ahci (platform) drivers. And having fine
+> grained helpers re-introduces that.
 
-The prefix "of" is not generally used in matching properties,...
+In case of adding a flag instead of get_resource_a(),
+for example, we add the flag for use of resets,
 
-my own pot of paint :)
+-struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
++struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
++                                                  bool use_reset)
 
-Cheers,
-Ben.
+and for now all the drivers using this function need to add the argument as false
+to the caller.
+
+-       hpriv = ahci_platform_get_resources(pdev);
++       hpriv = ahci_platform_get_resources(pdev, false);
+
+Surely this can avoid adding functions such get_resource_a(). If we apply another
+feature later, we add its flag as one of the arguments instead. Is it right?
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
