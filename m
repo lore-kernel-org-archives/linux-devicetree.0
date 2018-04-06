@@ -1,44 +1,51 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH 1/2] ARM: SPEAr600: add DT description of the watchdog
-Date: Fri,  6 Apr 2018 09:50:44 +0200
-Message-ID: <0635969b6ef0fe528a27a8b6493cc3df770e1f60.1523000725.git-series.quentin.schulz@bootlin.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: SPEAr600: add DT description of the watchdog
+Date: Fri, 6 Apr 2018 13:26:48 +0530
+Message-ID: <20180406075648.GW3572@vireshk-i7>
+References: <0635969b6ef0fe528a27a8b6493cc3df770e1f60.1523000725.git-series.quentin.schulz@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0635969b6ef0fe528a27a8b6493cc3df770e1f60.1523000725.git-series.quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vireshk@kernel.org, shiraz.linux.kernel@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: vireshk@kernel.org, shiraz.linux.kernel@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-The SPEAr600 has a built-in watchdog which already has a DT binding
-described in Documentation/devicetree/bindings/watchdog/sp805-wdt.txt.
+On 06-04-18, 09:50, Quentin Schulz wrote:
+> The SPEAr600 has a built-in watchdog which already has a DT binding
+> described in Documentation/devicetree/bindings/watchdog/sp805-wdt.txt.
+> 
+> Let's add the description of the watchdog device in the SPEAr600 Device
+> Tree.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
+>  arch/arm/boot/dts/spear600.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
+> index 00166eb..d7c3096 100644
+> --- a/arch/arm/boot/dts/spear600.dtsi
+> +++ b/arch/arm/boot/dts/spear600.dtsi
+> @@ -213,6 +213,14 @@
+>  				interrupts = <6>;
+>  				status = "disabled";
+>  			};
+> +
+> +			wdt: wdt@fc880000 {
+> +				compatible = "arm,sp805", "arm,primecell";
+> +				reg = <0xfc880000 0x1000>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <20>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  	};
+>  };
 
-Let's add the description of the watchdog device in the SPEAr600 Device
-Tree.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- arch/arm/boot/dts/spear600.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
-index 00166eb..d7c3096 100644
---- a/arch/arm/boot/dts/spear600.dtsi
-+++ b/arch/arm/boot/dts/spear600.dtsi
-@@ -213,6 +213,14 @@
- 				interrupts = <6>;
- 				status = "disabled";
- 			};
-+
-+			wdt: wdt@fc880000 {
-+				compatible = "arm,sp805", "arm,primecell";
-+				reg = <0xfc880000 0x1000>;
-+				interrupt-parent = <&vic1>;
-+				interrupts = <20>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
-
-base-commit: 5e1dacccbb87780856219e29122f1eccec912ebb
 -- 
-git-series 0.9.1
+viresh
