@@ -1,60 +1,137 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3] ARM: sun8i: v40: enable USB host ports for
- Banana Pi M2 Berry
-Date: Fri,  6 Apr 2018 22:03:44 +0800
-Message-ID: <20180406140344.9457-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge
+Date: Fri, 6 Apr 2018 16:13:57 +0200
+Message-ID: <20180406141357.GN20945@w540>
+References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
+ <6903975.GkMFuzh9fq@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJP5TXLAKGQEHVZOC7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1780426148=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6903975.GkMFuzh9fq@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
-ports, and it's connected to the USB1 port of the SoC.
 
-Enable it.
+--===============1780426148==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JB7KW7Ey7eB5HOHs"
+Content-Disposition: inline
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v3:
-- Dropped OHCI node and added hub model comment in EHCI.
 
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+--JB7KW7Ey7eB5HOHs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index a26d72c3f9b5..35859d8f3267 100644
---- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-+++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -87,6 +87,11 @@
- 	};
- };
- 
-+&ehci1 {
-+	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -170,3 +175,8 @@
- 	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_vcc5v0>;
-+	status = "okay";
-+};
--- 
-2.15.1
+Hi Laurent,
+
+On Fri, Apr 06, 2018 at 04:53:43PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> On Friday, 6 April 2018 16:08:05 EEST Jacopo Mondi wrote:
+> > Hello,
+> >    this series enables HDMI display on V3M Eagle board.
+> >
+> > The series is based on Geert's "renesas-drivers-2018-04-03-v4.16" with
+> > THC63LVD1024 driver on top (cfr. my in review series:
+> > "[PATCH v7 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge")
+>
+> This isn't a good base for development, as you would pull way too many
+> dependencies in. Could you please base v8 on top of v4.17-rc1 (or if you =
+get
+> to post it before v4.17-rc1 gets merged, you can use Linus' master, as the
+> ARM64 DT pull requests for v4.17-rc1 have been merged) ? It will then be =
+ready
+> for Simon to pull in his v4.18 branch.
+
+I used renesas-drivers as it already contains partial r8a77970 support which
+is not there in v4.16 (PFC, GPIO, SCIF...)
+
+I should wait for v4.17-rc1 to come out and re-propose on top of that
+probably.
+
+>
+> > This series includes some preliminary work from Sergei and Niklas. I ha=
+ve
+> > reworked the two final patches from Niklas to enable DU first, add the =
+LVDS
+> > decoder node, and finally add the ADV7511W chip and enable HDMI output.
+> >
+> > A branch for testing is available at:
+> > git://jmondi.org/linux v3m/renesas-drivers-2018-04-03-v4.16/v7-eagle-dts
+> >
+> > Thanks
+> >    j
+> >
+> > Jacopo Mondi (2):
+> >   arm64: dts: renesas: eagle: Enable DU
+> >   arm64: dts: renesas: eagle: Add LVDS decoder
+> >
+> > Niklas S=C3=B6derlund (2):
+> >   arm64: dts: renesas: r8a77970: add the LVDS instance
+> >   arm64: dts: renesas: eagle: Add ADV7511W and HDMI output
+> >
+> > Sergei Shtylyov (3):
+> >   arm64: dts: renesas: r8a77970: add FCPVD support
+> >   arm64: dts: renesas: r8a77970: add VSPD support
+> >   arm64: dts: renesas: r8a77970: add DU support
+> >
+> >  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 89 ++++++++++++++++++=
++++++
+> >  arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 73 ++++++++++++++++++=
++++
+> >  2 files changed, 162 insertions(+)
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
+
+--JB7KW7Ey7eB5HOHs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJax4ClAAoJEHI0Bo8WoVY8ZqkP/0ImMs0Vp/w8mucupnP0kyYY
+uQ4Fb29BGuBM7Ofz67bSbH/EI9y50X+4Z6IG+l0M+y7piSn8JB3ciRJ9uOdGgisl
+EYUCMCdM6P8JesJPk1KMUbPDJTrQAdkkT11C+9daXWa2rykzpEt+ACF9ykCxDf4+
+4AM0RstwzKQhWE78/z19memKsc20FZAPPkoMx4URuQSRAZ8wT0uVAMEsuKW1qfPE
+zl72DJuW8CC7I1mQ7E0xIr+KR7WiQVXIRLtnwfhvTu2j/9EgOtpPy+sqFNJ8Ju3Y
+rUs8z1l3Jtu4YYDr35sY7LGtMNplQJczvAgYuB78YaUNVYXvw5Tl/c3+ZRKYyXRd
+XB99ppriFK0i5OadmIhqw6tco9Bxf7x1kXO8g+l0lmYptInbSOZJe7aX8FgN2YG9
+OZQ/lYK9Zs0uy7IG3CDrHFsuybzfsccad7x00LE62YK2DglquA2u6jQxe1zMYKtN
+DSN/Pwd81QB3/IYYkkztgjjj9dYcjmbt9A5iNuvHnUgzCYAB+di2TXVe8xXVv7N4
+JU51W1wqBx8aonh1FolaIY2d5Fi7Vs7j8WYuhdB6NfeGVnmKCCi1icnV8uUf92tw
++eKoyfyShmfypOfmrW7SrarYb0TG5tZAf5TQI86E+EEgbFVa4gvHw5ORdvNFqKyL
+8FENS+DLpedr573avO0r
+=YkYS
+-----END PGP SIGNATURE-----
+
+--JB7KW7Ey7eB5HOHs--
+
+--===============1780426148==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1780426148==--
