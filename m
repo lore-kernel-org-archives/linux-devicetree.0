@@ -1,112 +1,80 @@
-From: Merlijn Wajer <merlijn@wizzup.org>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice
-	call support was
-Date: Fri, 6 Apr 2018 14:23:46 +0200
-Message-ID: <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
-References: <20180331195524.GB19388@amd> <20180331234314.GZ5700@atomide.com>
- <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
- <20180401173012.GB5700@atomide.com>
- <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com> <20180403150444.GE5700@atomide.com>
- <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
- <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
+From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
+Date: Fri, 6 Apr 2018 12:29:02 +0000
+Message-ID: <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
+References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
+ <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+ <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2168415748573824120=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180406120423.GA18691@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <853A75F869AB854C902589DC856236A9-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "\",
+ linux-arm-kernel\"@lists.infradead.org" <",
+ linux-arm-kernel"@lists.infradead.org>, srv_heupstream <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============2168415748573824120==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Yg6daGM2LthClS44kTC15S8eIOJ1qdktd"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Yg6daGM2LthClS44kTC15S8eIOJ1qdktd
-Content-Type: multipart/mixed; boundary="1PGQP6m7Ci8bnWYKtrlqnHrPe51cDuysD";
- protected-headers="v1"
-From: Merlijn Wajer <merlijn@wizzup.org>
-To: Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-Cc: Dan Williams <dcbw@redhat.com>,
- Sebastian Reichel <sebastian.reichel@collabora.co.uk>,
- Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- alsa-devel@alsa-project.org, linux-omap@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-Message-ID: <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice call support was
-References: <20180331195524.GB19388@amd> <20180331234314.GZ5700@atomide.com>
- <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
- <20180401173012.GB5700@atomide.com>
- <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com> <20180403150444.GE5700@atomide.com>
- <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
- <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
-In-Reply-To: <20180406120423.GA18691@amd>
-
---1PGQP6m7Ci8bnWYKtrlqnHrPe51cDuysD
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On 06/04/18 14:04, Pavel Machek wrote:
-> Hi!
->=20
->> OK that explains why the speaker keeps working then :)
->=20
-> Ok, I pushed new version of unicsy_demo.
->=20
-> It now sends & receives sms and you can call & receive call. Tone from
-> linphone is used for incoming call. User interface and code is
-> slightly weird, as ofono was -- and still is -- meant as a backend.
-
-Great news, can't wait to try it.
-
-Did you modify ofono beyond the patches you have already posted? And
-what version of ofono was that for?
-
-Cheers,
-Merlijn
+Hi
 
 
---1PGQP6m7Ci8bnWYKtrlqnHrPe51cDuysD--
+On 05/04/18 11:38, Jassi Brar wrote:
+> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org> wrote:
+> ....
+>> +
+>> +       /* irq */
+>> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
+>> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
+>> +               if (ipcc->irqs[i] < 0) {
+>> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
+>> +                       ret = ipcc->irqs[i];
+>> +                       goto err_clk;
+>> +               }
+>> +
+>> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
+>> +                                               irq_thread[i], IRQF_ONESHOT,
+>> +                                               dev_name(dev), ipcc);
+>>
+> In your interrupt handlers you don't do anything that could block.
+> Threads only adds some delay to your message handling.
+> So maybe use devm_request_irq() ?
 
---Yg6daGM2LthClS44kTC15S8eIOJ1qdktd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCWsdm0gAKCRAGN09rynK8
-Ws8sAP93UQwdDXpLrVbWYOChCd2Wq4VDL+W97apx969J1TFVDAD+I8heEI3NZTVS
-BWnO78TUDpWCIQxqBLeD9VVDLEPeLwA=
-=nLpl
------END PGP SIGNATURE-----
-
---Yg6daGM2LthClS44kTC15S8eIOJ1qdktd--
-
---===============2168415748573824120==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+The interrupt handlers call mbox_chan_received_data() / 
+mbox_chan_txdone(), which call in turn client's rx_callback() / 
+tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a 
+threaded irq here seems to be a good choice.
 
 
---===============2168415748573824120==--
+>
+> .......
+>> +
+>> +static struct platform_driver stm32_ipcc_driver = {
+>> +       .driver = {
+>> +               .name = "stm32-ipcc",
+>> +               .owner = THIS_MODULE,
+>>
+> No need of owner here these days.
+
+OK, I will suppress it.
+
+> And also maybe use readl/writel, instead of _relaxed.
+
+The IPCC device is exclusively used on ARM. In ARM architecture, the 
+ioremap on devices are strictly ordered and uncached.
+In that case, using _relaxed avoids an unneeded cache flush, slightly 
+improving performance.
+
+>
+> Cheers!
