@@ -1,53 +1,83 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 2/7] arm64: dts: renesas: r8a77970: add VSPD support
-Date: Fri,  6 Apr 2018 15:08:07 +0200
-Message-ID: <1523020092-25540-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Fri, 06 Apr 2018 16:15:35 +0300
+Message-ID: <1664336.M7KDjLhzuK@avalon>
+References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523018517-24121-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1523018517-24121-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Describe VSPD0 in the R8A77970 device tree; it will be used by DU in
-the next patch...
-
-Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns@hitachi.com>.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- arch/arm64/boot/dts/renesas/r8a77970.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-index 71f466d..db06c94 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -625,6 +625,16 @@
- 			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
- 			resets = <&cpg 603>;
- 		};
-+
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x4000>;
-+			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+			renesas,fcp = <&fcpvd0>;
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
+SGkgSmFjb3BvLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDYgQXByaWwg
+MjAxOCAxNTo0MTo1NiBFRVNUIEphY29wbyBNb25kaSB3cm90ZToKPiBEb2N1bWVudCBUaGluZSBU
+SEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVyIGRldmljZSB0cmVlIGJpbmRpbmdzLgo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiBSZXZp
+ZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiBSZXZpZXdlZC1i
+eTogTmlrbGFzIFPDtmRlcmx1bmQgPG5pa2xhcy5zb2Rlcmx1bmQrcmVuZXNhc0ByYWduYXRlY2gu
+c2U+Cj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5l
+LHRoYzYzbHZkMTAyNC50eHQgfCA2MCArKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
+Z2VkLCA2MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
+dHh0Cj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0
+Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi4xMTkxZjE3Cj4gLS0tIC9k
+ZXYvbnVsbAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKPiBAQCAtMCwwICsxLDYwIEBACj4gK1Ro
+aW5lIEVsZWN0cm9uaWNzIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIKPiArLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFRIQzYzTFZEMTAyNCBp
+cyBhIGR1YWwgbGluayBMVkRTIHJlY2VpdmVyIGRlc2lnbmVkIHRvIGNvbnZlcnQgTFZEUwo+IHN0
+cmVhbXMKPiArdG8gcGFyYWxsZWwgZGF0YSBvdXRwdXRzLiBUaGUgY2hpcCBzdXBwb3J0cyBzaW5n
+bGUvZHVhbCBpbnB1dC9vdXRwdXQgbW9kZXMsCj4gK2hhbmRsaW5nIHVwIHRvIHR3byB0d28gaW5w
+dXQgTFZEUyBzdHJlYW0gYW5kIHVwIHRvIHR3byBkaWdpdGFsIENNT1MvVFRMCgpzL3RvIHR3byB0
+d28vdG8gdHdvLwpzL3N0cmVhbS9zdHJlYW1zLwoKPiBvdXRwdXRzLgo+ICsKPiArU2luZ2xlIG9y
+IGR1YWwgb3BlcmF0aW9uIG1vZGVzLCBvdXRwdXQgZGF0YSBtYXBwaW5nIGFuZCBERFIgb3V0cHV0
+IG1vZGVzCj4gYXJlCj4gK2NvbmZpZ3VyZWQgdGhyb3VnaCBpbnB1dCBzaWduYWxzIGFuZCB0aGUg
+Y2hpcCBkb2VzIG5vdCBleHBvc2UgYW55IGNvbnRyb2wKPiBidXMuCj4gKwo+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IFNoYWxsIGJlICJ0aGluZSx0aGM2M2x2ZDEwMjQi
+Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIHZjYy1zdXBwbHk6IFBvd2VyIHN1cHBs
+eSBmb3IgVFRMIG91dHB1dCwgVFRMIENMT0NLT1VUIHNpZ25hbCwgTFZEUyBpbnB1dCwKPiArICBQ
+UEwgYW5kIGRpZ2l0YWwgY2lyY3VpdHJ5Cj4gKy0gcG93ZXJkb3duLWdwaW9zOiBQb3dlciBkb3du
+IEdQSU8gc2lnbmFsLCBwaW4gbmFtZSAiL1BEV04iLiBBY3RpdmUgbG93Cj4gKy0gZW5hYmxlLWdw
+aW9zOiBPdXRwdXQgZW5hYmxlIEdQSU8gc2lnbmFsLCBwaW4gbmFtZSAiT0UiLiBBY3RpdmUgaGln
+aAoKQXMgUm9iIG1lbnRpb25lZCBpbiBhIHJlcGx5IHRvIHY2LCB3ZSBjdXJyZW50bHkgdXNlICJl
+bmFibGUiIGFzIHRoZSBpbnZlcnNlIG9mIAoicG93ZXJkb3duIi4gSSB3b3VsZCBjYWxsIHRoaXMg
+b25lIG9lLWdwaW9zIGluc3RlYWQuIFF1b3RpbmcgUm9iOgoKIkRlYmF0aW5nICJvZSIgdnMuICJv
+dXRwdXQtZW5hYmxlIiBpcyBiaWtlc2hlZGRpbmcgSU1PLiBBbnlvbmUgZmFtaWxpYXIgd2l0aCAK
+aC93IGRlc2lnbiBzaG91bGQgcmVjb2duaXplIE9FLiIKCj4gKwo+ICtUaGUgVEhDNjNMVkQxMDI0
+IHZpZGVvIHBvcnQgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgYWNjb3JkaW5nCj4gK3RvIE9GIGdy
+YXBoIGJpbmRpbmdzIHNwZWNpZmllZCBieSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvCj4gZ3JhcGgudHh0Cj4gKwo+ICtSZXF1aXJlZCB2aWRlbyBwb3J0IG5vZGVzOgo+ICstIHBv
+cnRAMDogRmlyc3QgTFZEUyBpbnB1dCBwb3J0Cj4gKy0gcG9ydEAyOiBGaXJzdCBkaWdpdGFsIENN
+T1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ICsKPiArT3B0aW9uYWwgdmlkZW8gcG9ydCBub2RlczoK
+PiArLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKPiArLSBwb3J0QDM6IFNlY29uZCBk
+aWdpdGFsIENNT1MvVFRMIHBhcmFsbGVsIG91dHB1dAo+ICsKPiArRXhhbXBsZToKPiArLS0tLS0t
+LS0KPiArCj4gKwl0aGM2M2x2ZDEwMjQ6IGx2ZHMtZGVjb2RlciB7Cj4gKwkJY29tcGF0aWJsZSA9
+ICJ0aGluZSx0aGM2M2x2ZDEwMjQiOwo+ICsKPiArCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfbHZkc192
+Y2M+Owo+ICsJCXBvd2VyZG93bi1ncGlvcyA9IDwmZ3BpbzQgMTUgR1BJT19BQ1RJVkVfTE9XPjsK
+PiArCj4gKwkJcG9ydHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUt
+Y2VsbHMgPSA8MD47Cj4gKwo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiAr
+CQkJCWx2ZHNfZGVjX2luXzA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+Jmx2ZHNfb3V0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0QDJ7Cj4gKwkJCQly
+ZWcgPSA8Mj47Cj4gKwo+ICsJCQkJbHZkc19kZWNfb3V0XzI6IGVuZHBvaW50IHsKPiArCQkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JmFkdjc1MTFfaW4+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9
+Owo+ICsJfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
