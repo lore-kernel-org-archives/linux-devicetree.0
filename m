@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 1/7] arm64: dts: renesas: r8a77970: add FCPVD support
-Date: Fri,  6 Apr 2018 15:08:06 +0200
-Message-ID: <1523020092-25540-2-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH 3/7] arm64: dts: renesas: r8a77970: add DU support
+Date: Fri,  6 Apr 2018 15:08:08 +0200
+Message-ID: <1523020092-25540-4-git-send-email-jacopo+renesas@jmondi.org>
 References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,8 +15,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
-the next patch...
+Define the generic R8A77970 part of the DU device node.
 
 Based on the original (and large) patch by Daisuke Matsushita
 <daisuke.matsushita.ns@hitachi.com>.
@@ -25,24 +24,44 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- arch/arm64/boot/dts/renesas/r8a77970.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-index e8358d9..71f466d 100644
+index db06c94..e649e86 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -617,6 +617,14 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+@@ -635,6 +635,34 @@
+ 			resets = <&cpg 623>;
+ 			renesas,fcp = <&fcpvd0>;
  		};
 +
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
++		du: display@feb00000 {
++			compatible = "renesas,du-r8a77970";
++			reg = <0 0xfeb00000 0 0x80000>;
++			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 724>;
++			clock-names = "du.0";
 +			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 603>;
++			vsps = <&vspd0>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					du_out_rgb: endpoint {
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					du_out_lvds: endpoint {
++					};
++				};
++			};
 +		};
  	};
  
