@@ -1,125 +1,126 @@
-From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/4] doc/devicetree: Persistent memory region bindings
-Date: Fri,  6 Apr 2018 15:21:15 +1000
-Message-ID: <20180406052116.31483-3-oohall@gmail.com>
-References: <20180406052116.31483-1-oohall@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/8] bindings: PCI: designware: Example update
+Date: Fri, 6 Apr 2018 11:53:47 +0530
+Message-ID: <ed26b2df-64fc-4f12-5097-35070eb2c7db@ti.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+ <33aa86ee667e8b435db080b8c683cb5df1bd6544.1522235224.git.gustavo.pimentel@synopsys.com>
+ <fa001440-0dfe-b84a-e5ef-9285043b5ede@ti.com>
+ <36a36857-2d79-2c2d-198d-a3b65cafc768@synopsys.com>
+ <c5ffa7d6-40b1-1702-c0fd-9ebb1b4197f8@ti.com>
+ <170b150d-d2c6-fee8-17f7-12a3107c13ff@ti.com>
+ <342e7438-ef13-e297-cc51-3df3a43a45d4@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180406052116.31483-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <342e7438-ef13-e297-cc51-3df3a43a45d4@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree binding documentation for the nvdimm region driver.
+Hi,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-v2: Changed name from nvdimm-region to pmem-region.
-    Cleaned up the example binding and fixed the overlapping regions.
-    Added support for multiple regions in a single reg.
-v3: Removed platform bus boilerplate from the example.
-    Changed description of the volatile and reg properties
-    to make them more clear.
----
- .../devicetree/bindings/pmem/pmem-region.txt       | 65 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+On Tuesday 03 April 2018 06:43 PM, Gustavo Pimentel wrote:
+> Hi Kishon,
+> 
+> On 03/04/2018 11:53, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Tuesday 03 April 2018 04:22 PM, Kishon Vijay Abraham I wrote:
+>>>
+>>>
+>>> On Tuesday 03 April 2018 04:03 PM, Gustavo Pimentel wrote:
+>>>> Hi Kishon,
+>>>>
+>>>> On 02/04/2018 06:23, Kishon Vijay Abraham I wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
+>>>>>> Changes the IP registers size to accommodate the ATU unroll space.
+>>>>>>
+>>>>>> Replaces "ctrlreg" reg-name by "dbi" to be coherent with similar drivers.
+>>>>>>
+>>>>>> Replaces the pcie base address example by a real pcie base address in use.
+>>>>>>
+>>>>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 12 ++++++------
+>>>>>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>>> index 1da7ade..6300762 100644
+>>>>>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>>> @@ -1,7 +1,8 @@
+>>>>>>  * Synopsys DesignWare PCIe interface
+>>>>>>  
+>>>>>>  Required properties:
+>>>>>> -- compatible: should contain "snps,dw-pcie" to identify the core.
+>>>>>> +- compatible:
+>>>>>> +	"snps,dw-pcie" for RC mode;
+>>>>>
+>>>>> I think irrespective of RC mode or EP mode, "snps,dw-pcie" can be used to
+>>>>> identify the pcie core?
+>>>>
+>>>> I guess so. What you suggest? I was just folling the same guideline present
+>>>> here: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2017_11_3_310&d=DwIC-g&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-f-E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=G1MqB_DY6ZwWtvS60L9PZMHnMe6rClMnrakAyQT_hDc&s=BhQYkrcp6y3QkD23qn1I6lU882BDUfLiXjBVWQ91cmg&e=
+>>>
+>>> Okay, I think you should have
+>>> "snps,dw-pcie-rc", "snps,dw-pcie" for RC mode;
+>>>
+>>> and in the later patch
+>>> "snps,dw-pcie-ep", "snps,dw-pcie" for EP mode;
+>>>
+> 
+> Ok, I'll change it.
+> 
+>>>>
+>>>>>>  - reg: Should contain the configuration address space.
+>>>>>>  - reg-names: Must be "config" for the PCIe configuration space.
+>>>>>>      (The old way of getting the configuration address space from "ranges"
+>>>>>> @@ -41,11 +42,11 @@ EP mode:
+>>>>>>  
+>>>>>>  Example configuration:
+>>>>>>  
+>>>>>> -	pcie: pcie@dffff000 {
+>>>>>> +	pcie: pcie@dfc00000 {
+>>>>>>  		compatible = "snps,dw-pcie";
+>>>>>> -		reg = <0xdffff000 0x1000>, /* Controller registers */
+>>>>>> -		      <0xd0000000 0x2000>; /* PCI config space */
+>>>>>> -		reg-names = "ctrlreg", "config";
+>>>>>> +		reg = <0xdfc00000 0x302000>, /* IP registers */
+>>>>>
+>>>>> which version of synopsys IP is this. I think the ideal thing to do here is to
+>>>>> have a separate register space for iATU.
+>>>>
+>>>> I also agree with that. The unroll iATU was introduced on Synopsys IP version
+>>>> 4.80 and the kernel patch was release on 2016-08-10
+>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.ozlabs.org_patch_657796_&d=DwIC-g&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-f-E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=G1MqB_DY6ZwWtvS60L9PZMHnMe6rClMnrakAyQT_hDc&s=EgKKDbg4ywCxu4-lG_scYAgPMnxirsjS0uSS7SzBTeM&e=
+>>>> However a separate register space for iATU implies some extra code do handle it
+>>>> (and of course some tests) that don't fit into this patch series, in my point of
+>>>> view. Can this task enter in the backlog in order to be done in another patch
+>>>> series?
+>>>
+>>> Yes sure. I think we should also make sure existing binding doesn't break.
+> 
+> I'll remove the any iATU unroll reference or change from this patch to avoid any
+> confusion.
 
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-new file mode 100644
-index 000000000000..5cfa4f016a00
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-@@ -0,0 +1,65 @@
-+Device-tree bindings for persistent memory regions
-+-----------------------------------------------------
-+
-+Persistent memory refers to a class of memory devices that are:
-+
-+	a) Usable as main system memory (i.e. cacheable), and
-+	b) Retain their contents across power failure.
-+
-+Given b) it is best to think of persistent memory as a kind of memory mapped
-+storage device. To ensure data integrity the operating system needs to manage
-+persistent regions separately to the normal memory pool. To aid with that this
-+binding provides a standardised interface for discovering where persistent
-+memory regions exist inside the physical address space.
-+
-+Bindings for the region nodes:
-+-----------------------------
-+
-+Required properties:
-+	- compatible = "pmem-region"
-+
-+	- reg = <base, size>;
-+		The reg property should specificy an address range that is
-+		translatable to a system physical address range. This address
-+		range should be mappable as normal system memory would be
-+		(i.e cacheable).
-+
-+		If the reg property contains multiple address ranges
-+		each address range will be treated as though it was specified
-+		in a separate device node. Having multiple address ranges in a
-+		node implies no special relationship between the two ranges.
-+
-+Optional properties:
-+	- Any relevant NUMA assocativity properties for the target platform.
-+
-+	- volatile; This property indicates that this region is actually
-+	  backed by non-persistent memory. This lets the OS know that it
-+	  may skip the cache flushes required to ensure data is made
-+	  persistent after a write.
-+
-+	  If this property is absent then the OS must assume that the region
-+	  is backed by non-volatile memory.
-+
-+Examples:
-+--------------------
-+
-+	/*
-+	 * This node specifies one 4KB region spanning from
-+	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
-+	 */
-+	pmem@5000 {
-+		compatible = "pmem-region";
-+		reg = <0x00005000 0x00001000>;
-+	};
-+
-+	/*
-+	 * This node specifies two 4KB regions that are backed by
-+	 * volatile (normal) memory.
-+	 */
-+	pmem@6000 {
-+		compatible = "pmem-region";
-+		reg = < 0x00006000 0x00001000
-+			0x00008000 0x00001000 >;
-+		volatile;
-+	};
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index df240740ca78..cbd289d58644 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8020,6 +8020,7 @@ L:	linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
- Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
- S:	Supported
- F:	drivers/nvdimm/of_pmem.c
-+F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
- 
- LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
- M:	Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
--- 
-2.9.5
+No, I think it's fine to have iATU unroll reference (since kernel also seems to
+support iATU unroll).
+
+What I meant is, we should add more flexibility on defining iATU address space
+(while making sure it doesn't break existing binding).
+
+I'm okay with this patch once you fix the compatible comment but in general
+this is what I'd like to have (in a future patch)
+
+*)  Add a new compatible "snps,dw-pcie-4.80";
+*) In the kernel "iatu_unroll_enabled" should be set based on the above compatible
+*) Define the a new reg space for iATU in 4.80
+
+And these have to be done in a way it doesn't break existing binding.
+
+Thanks
+Kishon
