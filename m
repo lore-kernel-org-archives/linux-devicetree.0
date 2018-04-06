@@ -1,56 +1,30 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/3] arm64: dts: renesas: condor: add PCIe support
-Date: Fri, 6 Apr 2018 23:19:59 +0300
-Message-ID: <62d9dbbe-9f11-303c-56dd-3dcdaf48bcc1@cogentembedded.com>
-References: <f07e6173-75b3-fe10-81d6-915942a5f4fe@cogentembedded.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: qcom: Add MSM8998 Global Clock Control (GCC) driver
+Date: Fri, 06 Apr 2018 13:25:49 -0700
+Message-ID: <152304634949.94378.7962656957799041629@swboyd.mtv.corp.google.com>
+References: <20180327152518.31021-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f07e6173-75b3-fe10-81d6-915942a5f4fe@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180327152518.31021-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Imran Khan <kimran@codeaurora.org>, Joonwoo Park <joonwoop@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable PCIe PHY and PCIEC and specify the PCIe bus clock for the Condor
-board.
+Quoting Bjorn Andersson (2018-03-27 08:25:18)
+> From: Joonwoo Park <joonwoop@codeaurora.org>
+> 
+> Add support for the global clock controller found on MSM8998
+> based devices. This should allow most non-multimedia device
+> drivers to probe and control their clocks.
+> 
+> Signed-off-by: Joonwoo Park <joonwoop@codeaurora.org>
+> Signed-off-by: Imran Khan <kimran@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> [bjorn: Specify regs for alpha_plls, fix white spaces and add binding]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -49,6 +49,18 @@
- 	clock-frequency = <32768>;
- };
- 
-+&pciec {
-+	status = "okay";
-+};
-+
-+&pcie_bus_clk {
-+	clock-frequency = <100000000>;
-+};
-+
-+&pcie_phy {
-+	status = "okay";
-+};
-+
- &scif0 {
- 	status = "okay";
- };
+The patch looks fine to me. I will apply it for v4.17+ though.
