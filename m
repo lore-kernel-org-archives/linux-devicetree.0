@@ -1,68 +1,57 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 11/11] arm64: dts: renesas: r8a7795: salvator-xs: add OF graph for usb role switch
-Date: Wed, 18 Apr 2018 17:10:05 +0900
-Message-Id: <1524039005-30618-12-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:44618 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752994AbeDFWwy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Apr 2018 18:52:54 -0400
+Received: by mail-pf0-f193.google.com with SMTP id p15so1746220pff.11
+        for <devicetree@vger.kernel.org>; Fri, 06 Apr 2018 15:52:54 -0700 (PDT)
+From: Matt Ranostay <matt.ranostay@konsulko.com>
+Subject: [PATCH v8 1/2] media: dt-bindings: Add bindings for panasonic,amg88xx
+Date: Fri,  6 Apr 2018 15:52:30 -0700
+Message-Id: <20180406225231.13831-2-matt.ranostay@konsulko.com>
+In-Reply-To: <20180406225231.13831-1-matt.ranostay@konsulko.com>
+References: <20180406225231.13831-1-matt.ranostay@konsulko.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Matt Ranostay <matt.ranostay@konsulko.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds OF graph properties for usb role switch.
+Define the device tree bindings for the panasonic,amg88xx i2c
+video driver.
 
-TODO:
- - Each node should be in salvator-common.dtsi.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 ---
- .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ .../bindings/media/i2c/panasonic,amg88xx.txt          | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-index 8b50ceb..c815fca 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-@@ -36,6 +36,24 @@
- 		device_type = "memory";
- 		reg = <0x7 0x00000000 0x0 0x40000000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
+new file mode 100644
+index 000000000000..4a3181a3dd7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
+@@ -0,0 +1,19 @@
++* Panasonic AMG88xx
 +
-+	/* TODO: should be into salvator-common.dtsi */
-+	usb3 {
-+		compatible = "usb-a-connector";
-+		label = "USB3_0";
++The Panasonic family of AMG88xx Grid-Eye sensors allow recording
++8x8 10Hz video which consists of thermal datapoints
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++Required Properties:
++ - compatible : Must be "panasonic,amg88xx"
++ - reg : i2c address of the device
 +
-+			port@1 {
-+				reg = <1>;
-+				usb3_connector0: endpoint {
-+					remote-endpoint = <&usb3_role_sw0_ep>;
-+				};
-+			};
++Example:
++
++	i2c0@1c22000 {
++		...
++		amg88xx@69 {
++			compatible = "panasonic,amg88xx";
++			reg = <0x69>;
 +		};
-+	};
- };
- 
- &du {
-@@ -107,3 +125,13 @@
- 
- 	status = "okay";
- };
-+
-+	&usb3_role_sw0 {
-+		ports {
-+			port@3 {
-+				usb3_role_sw0_ep: endpoint {
-+					remote-endpoint = <&usb3_connector0>;
-+				};
-+			};
-+		};
++		...
 +	};
 -- 
-1.9.1
+2.14.1
+
