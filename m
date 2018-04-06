@@ -1,80 +1,124 @@
-From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
-Date: Fri, 6 Apr 2018 12:29:02 +0000
-Message-ID: <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
-References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
- <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
- <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Content-ID: <853A75F869AB854C902589DC856236A9-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "\",
- linux-arm-kernel\"@lists.infradead.org" <",
- linux-arm-kernel"@lists.infradead.org>, srv_heupstream <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+From: Esben Haabendal <esben.haabendal@gmail.com>
+Subject: [PATCH 1/2] net/fsl_pq_mdio: Allow explicit speficition of TBIPA address
+Date: Fri,  6 Apr 2018 14:38:34 +0200
+Message-ID: <20180406123836.12019-1-esben.haabendal@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Esben Haabendal <eha@deif.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "Gustavo A. R. Silva" <garsilva@embeddedor.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+From: Esben Haabendal <eha@deif.com>
 
+This introduces a simpler and generic method for for finding (and mapping)
+the TBIPA register.
 
-On 05/04/18 11:38, Jassi Brar wrote:
-> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org> wrote:
-> ....
->> +
->> +       /* irq */
->> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
->> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
->> +               if (ipcc->irqs[i] < 0) {
->> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
->> +                       ret = ipcc->irqs[i];
->> +                       goto err_clk;
->> +               }
->> +
->> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
->> +                                               irq_thread[i], IRQF_ONESHOT,
->> +                                               dev_name(dev), ipcc);
->>
-> In your interrupt handlers you don't do anything that could block.
-> Threads only adds some delay to your message handling.
-> So maybe use devm_request_irq() ?
+Instead of relying of complicated logic for finding the TBIPA register
+address based on the MDIO or MII register block base
+address, which even in some cases relies on undocumented shadow registers,
+a second "reg" entry for the mdio bus devicetree node specifies the TBIPA
+register.
 
-The interrupt handlers call mbox_chan_received_data() / 
-mbox_chan_txdone(), which call in turn client's rx_callback() / 
-tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a 
-threaded irq here seems to be a good choice.
+Backwards compatibility is kept, as the existing logic is applied when
+only a single "reg" mapping is specified.
 
+Signed-off-by: Esben Haabendal <eha@deif.com>
+---
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |  6 ++-
+ drivers/net/ethernet/freescale/fsl_pq_mdio.c       | 50 +++++++++++++++-------
+ 2 files changed, 39 insertions(+), 17 deletions(-)
 
->
-> .......
->> +
->> +static struct platform_driver stm32_ipcc_driver = {
->> +       .driver = {
->> +               .name = "stm32-ipcc",
->> +               .owner = THIS_MODULE,
->>
-> No need of owner here these days.
-
-OK, I will suppress it.
-
-> And also maybe use readl/writel, instead of _relaxed.
-
-The IPCC device is exclusively used on ARM. In ARM architecture, the 
-ioremap on devices are strictly ordered and uncached.
-In that case, using _relaxed avoids an unneeded cache flush, slightly 
-improving performance.
-
->
-> Cheers!
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index 594982c6b9f9..79bf352e659c 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -6,7 +6,11 @@ the definition of the PHY node in booting-without-of.txt for an example
+ of how to define a PHY.
+ 
+ Required properties:
+-  - reg : Offset and length of the register set for the device
++  - reg : Offset and length of the register set for the device, and optionally
++          the offset and length of the TBIPA register (TBI PHY address
++	  register).  If TBIPA register is not specified, the driver will
++	  attempt to infer it from the register set specified (your mileage may
++	  vary).
+   - compatible : Should define the compatible device type for the
+     mdio. Currently supported strings/devices are:
+ 	- "fsl,gianfar-tbi"
+diff --git a/drivers/net/ethernet/freescale/fsl_pq_mdio.c b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
+index 80ad16acf0f1..ac2c3f6a12bc 100644
+--- a/drivers/net/ethernet/freescale/fsl_pq_mdio.c
++++ b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
+@@ -377,6 +377,38 @@ static const struct of_device_id fsl_pq_mdio_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, fsl_pq_mdio_match);
+ 
++static void set_tbipa(const u32 tbipa_val, struct platform_device *pdev,
++		      uint32_t __iomem * (*get_tbipa)(void __iomem *),
++		      void __iomem *reg_map, struct resource *reg_res)
++{
++	struct device_node *np = pdev->dev.of_node;
++	uint32_t __iomem *tbipa;
++	bool tbipa_mapped;
++
++	tbipa = of_iomap(np, 1);
++	if (tbipa) {
++		tbipa_mapped = true;
++	} else {
++		tbipa_mapped = false;
++		tbipa = (*get_tbipa)(reg_map);
++
++		/*
++		 * Add consistency check to make sure TBI is contained within
++		 * the mapped range (not because we would get a segfault,
++		 * rather to catch bugs in computing TBI address). Print error
++		 * message but continue anyway.
++		 */
++		if ((void *)tbipa > reg_map + resource_size(reg_res) - 4)
++			dev_err(&pdev->dev, "invalid register map (should be at least 0x%04zx to contain TBI address)\n",
++				((void *)tbipa - reg_map) + 4);
++	}
++
++	iowrite32be(be32_to_cpu(tbipa_val), tbipa);
++
++	if (tbipa_mapped)
++		iounmap(tbipa);
++}
++
+ static int fsl_pq_mdio_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *id =
+@@ -450,8 +482,6 @@ static int fsl_pq_mdio_probe(struct platform_device *pdev)
+ 
+ 		if (tbi) {
+ 			const u32 *prop = of_get_property(tbi, "reg", NULL);
+-			uint32_t __iomem *tbipa;
+-
+ 			if (!prop) {
+ 				dev_err(&pdev->dev,
+ 					"missing 'reg' property in node %pOF\n",
+@@ -459,20 +489,8 @@ static int fsl_pq_mdio_probe(struct platform_device *pdev)
+ 				err = -EBUSY;
+ 				goto error;
+ 			}
+-
+-			tbipa = data->get_tbipa(priv->map);
+-
+-			/*
+-			 * Add consistency check to make sure TBI is contained
+-			 * within the mapped range (not because we would get a
+-			 * segfault, rather to catch bugs in computing TBI
+-			 * address). Print error message but continue anyway.
+-			 */
+-			if ((void *)tbipa > priv->map + resource_size(&res) - 4)
+-				dev_err(&pdev->dev, "invalid register map (should be at least 0x%04zx to contain TBI address)\n",
+-					((void *)tbipa - priv->map) + 4);
+-
+-			iowrite32be(be32_to_cpup(prop), tbipa);
++			set_tbipa(*prop, pdev,
++				  data->get_tbipa, priv->map, &res);
+ 		}
+ 	}
+ 
+-- 
+2.16.3
