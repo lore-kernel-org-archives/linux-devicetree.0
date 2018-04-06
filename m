@@ -1,43 +1,78 @@
-From: Esben Haabendal <esben.haabendal@gmail.com>
-Subject: [PATCH] ARM: dts: ls1021a: Specify TBIPA register address
-Date: Fri,  6 Apr 2018 14:46:35 +0200
-Message-ID: <20180406124635.12319-1-esben.haabendal@gmail.com>
-References: <20180406123836.12019-2-esben.haabendal@gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
+Date: Fri, 6 Apr 2018 18:26:24 +0530
+Message-ID: <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
+References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
+ <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+ <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com> <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180406123836.12019-2-esben.haabendal@gmail.com>
+In-Reply-To: <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Manoil <claudiu.manoil@freescale.com>, "David S . Miller" <davem@davemloft.net>, "Gustavo A . R . Silva" <garsilva@embeddedor.com>, Esben Haabendal <eha@deif.com>
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org" <", linux-arm-kernel"@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Esben Haabendal <eha@deif.com>
+On Fri, Apr 6, 2018 at 5:59 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
+> Hi
+>
+>
+> On 05/04/18 11:38, Jassi Brar wrote:
+>> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
+>> ....
+>>> +
+>>> +       /* irq */
+>>> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
+>>> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
+>>> +               if (ipcc->irqs[i] < 0) {
+>>> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
+>>> +                       ret = ipcc->irqs[i];
+>>> +                       goto err_clk;
+>>> +               }
+>>> +
+>>> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
+>>> +                                               irq_thread[i], IRQF_ONESHOT,
+>>> +                                               dev_name(dev), ipcc);
+>>>
+>> In your interrupt handlers you don't do anything that could block.
+>> Threads only adds some delay to your message handling.
+>> So maybe use devm_request_irq() ?
+>
+> The interrupt handlers call mbox_chan_received_data() /
+> mbox_chan_txdone(), which call in turn client's rx_callback() /
+> tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a
+> threaded irq here seems to be a good choice.
+>
+rx_callback() is supposed to be atomic. So was tx_done() but some
+platforms needed preparing for the message to be sent. Your client is
+not going to be used by other platforms or even over other
+controllers, so if your prepare is NULL/atomic, you should assume
+tx_done to be atomic and not lose performace. If time comes to fix it,
+we'll move prepare() out of the atomic path.
 
-The current (mildly evil) fsl_pq_mdio code uses an undocumented shadow of
-the TBIPA register on LS1021A, which happens to be read-only.
-Changing TBI PHY address therefore does not work on LS1021A.
 
-The real (and documented) address of the TBIPA registere lies in the eTSEC
-block and not in MDIO/MII, which is read/write, so using that fixes
-the problem.
+>> .......
+>>> +
+>>> +static struct platform_driver stm32_ipcc_driver = {
+>>> +       .driver = {
+>>> +               .name = "stm32-ipcc",
+>>> +               .owner = THIS_MODULE,
+>>>
+>> No need of owner here these days.
+>
+> OK, I will suppress it.
+>
+>> And also maybe use readl/writel, instead of _relaxed.
+>
+> The IPCC device is exclusively used on ARM. In ARM architecture, the
+> ioremap on devices are strictly ordered and uncached.
+> In that case, using _relaxed avoids an unneeded cache flush, slightly
+> improving performance.
+>
+Its not the portability, but that the impact is negligible in favor of
+_relaxed() version when all you do is just program some registers and
+not heavy duty i/o. But I am ok either way.  You'd gain far more
+performance handling irqs in non-threaded manner :)
 
-Signed-off-by: Esben Haabendal <eha@deif.com>
----
- arch/arm/boot/dts/ls1021a.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c31dad98f989..728e206009ea 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -587,7 +587,8 @@
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			reg = <0x0 0x2d24000 0x0 0x4000>;
-+			reg = <0x0 0x2d24000 0x0 0x4000>,
-+			      <0x0 0x2d10030 0x0 0x4>;
- 		};
- 
- 		ptp_clock@2d10e00 {
--- 
-2.16.3
+Cheers!
