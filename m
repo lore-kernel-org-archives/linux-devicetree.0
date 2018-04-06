@@ -1,58 +1,55 @@
-From: <Yasunari.Takiguchi@sony.com>
-Subject: RE: [PATCH v5 02/12] [media] cxd2880-spi: Add support for CXD2880
- SPI interface
-Date: Fri, 6 Apr 2018 00:28:46 +0000
-Message-ID: <02699364973B424C83A42A84B04FDA8548B8E7@JPYOKXMS113.jp.sony.com>
-References: <20180118084016.20689-1-Yasunari.Takiguchi@sony.com>
-        <20180118084610.20967-1-Yasunari.Takiguchi@sony.com>
- <20180307071529.66e33f54@vento.lan>
+From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND v2 3/4] doc/devicetree: Persistent memory region bindings
+Date: Fri, 6 Apr 2018 12:14:48 +1000
+Message-ID: <CAOSf1CGtNg4_siQtAw-H95Ay1m7YPvjZeqnmWvELb1xH1stRJQ@mail.gmail.com>
+References: <20180403142415.30083-1-oohall@gmail.com>
+ <20180403142415.30083-3-oohall@gmail.com>
+ <CAPcyv4jW5H8A96MFD7-UazNSZq-t1_NfrChNB3p9=somdBpsNw@mail.gmail.com>
+ <20180404220750.0436bbe1@gmail.com>
+ <CAOSf1CGdKU4zQQauqo3UoNvKnKDMHteAEtsMWVtTG7T01csMbg@mail.gmail.com>
+ <CAPcyv4if4un9mgFon4ttjKDYEtHC_GP6VoxUENp7YNS50T3afA@mail.gmail.com>
+ <CAOSf1CHu4R-t8q-8fL6Dyk7myFR0gTfd6-0cxqtBVGZgYZWGAw@mail.gmail.com>
+ <87bmexua3s.fsf@concordia.ellerman.id.au>
+ <CAOSf1CEUnucUhW_pXG=7h5QBHvaH2-ENPKjGD42_0WEvbU6-Wg@mail.gmail.com>
+ <CAPcyv4jEFMnYqpcop=Ox-dZR3dSBRMhT05JSS-gPABX_YQGw1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180307071529.66e33f54@vento.lan>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@s-opensource.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, tbird20d@gmail.com, frowand.list@gmail.com, Masayuki.Yamamoto@sony.com, Hideki.Nozawa@sony.com, Kota.Yonezawa@sony.com, Toshihiko.Matsumoto@sony.com, Satoshi.C.Watanabe@sony.com, Yasunari.Takiguchi@sony.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAPcyv4jEFMnYqpcop=Ox-dZR3dSBRMhT05JSS-gPABX_YQGw1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,　Mauro
+On Fri, Apr 6, 2018 at 12:43 AM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Apr 5, 2018 at 5:43 AM, Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Thu, Apr 5, 2018 at 10:11 PM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+>>> Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>> ...
+>>>>
+>>>> For context Balbir is working with me on some of the pmem stuff. You
+>>>> probably want an Ack from Rob rather than one of us.
+>>>
+>>> I'll ack it if you make all the niggly nit picky trivial annoying
+>>> changes I asked for :D
+>>
+>> *groan*
+>>
+>> Fine, I'll respin it tomorrow. If anyone else has comments now would
+>> be the time to make them.
+>
+> Please also include my niggly nit picky trivial annoying bike shed
+> color for the driver name to *not* use the "nd_region" suffix for a
+> driver registering "nvdimm_bus" objects. "of_pmem_range" or
+> "of_pmem_bus" or almost anything else would be fine.
 
-> > +	u8 send_data[BURST_WRITE_MAX + 4];
-> > +	const u8 *write_data_top = NULL;
-> > +	int ret = 0;
-> > +
-> > +	if (!spi || !data) {
-> > +		pr_err("invalid arg\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	if (size > BURST_WRITE_MAX) {
-> > +		pr_err("data size > WRITE_MAX\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (sub_address + size > 0x100) {
-> > +		pr_err("out of range\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> It is better to use dev_err(spi->dev, ...) instead of pr_err().
-
-I got comment for this previous version patch as below
---------------------------------------------------------------------------------------
-The best would be to se dev_err() & friends for printing messages, as they print the device's name as filled at struct device.
-If you don't use, please add a define that will print the name at the logs, like:
-
-  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-either at the begining of the driver or at some header file.
-
-Btw, I'm noticing that you're also using dev_err() on other places of the code. 
-Please standardize. OK, on a few places, you may still need to use pr_err(), if you need to print a message before initializing struct device, but I suspect that you can init
---------------------------------------------------------------------------------------
-
-You pointed out here before. Because dev_foo () and pr_foo () were mixed.
-We standardize with pr_foo() because the logs is outputted before getting the device structure.
-Is it better to use dev_foo() where we can use it?
-
-Takiguchi
+Oh sure, would using of_pmem_region to match the compatible be ok?
