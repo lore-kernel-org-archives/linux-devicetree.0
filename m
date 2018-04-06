@@ -1,41 +1,79 @@
-From: sricharan@codeaurora.org
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Fri, 06 Apr 2018 21:38:47 +0530
-Message-ID: <82ba83a1a8ebb8a5ef2fa71356374be3@codeaurora.org>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
- <20180320143131.4eenixtbhciq5fwc@localhost>
- <20180329143715.GA31757@hector.attlocal.net>
- <20180329163739.2fg5qxvb5j3fiy6r@localhost>
- <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
- <20180406045511.hnzxe4nepl5sqmld@localhost>
- <7dc41c73f594918701c21075dde30870@codeaurora.org>
- <20180406151312.ehx4qtxcylkw4uhi@localhost>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
+Date: Fri, 6 Apr 2018 21:50:44 +0530
+Message-ID: <CABb+yY2Dd2Gr_-+4RaJarq3tve8tgzVqcoJw+MGT=+Vy56PwLw@mail.gmail.com>
+References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
+ <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
+ <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
+ <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com> <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
+ <f9a45a6e-5b3c-ddd0-e465-cfcad6ece818@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180406151312.ehx4qtxcylkw4uhi@localhost>
+In-Reply-To: <f9a45a6e-5b3c-ddd0-e465-cfcad6ece818@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-06 20:43, Richard Cochran wrote:
-> On Fri, Apr 06, 2018 at 06:35:49PM +0530, sricharan@codeaurora.org 
-> wrote:
->>  I tried booting mainline built with qcom_defconfig on ap148 and
->>  did boot. Not sure if your bootloader's bootarg is this,
->>   'console=ttyMSM0,115200n8' ?
-> 
-> Yes, I think so.  I'll double check it.
-> 
-> Do you have any out-of-tree patches or special jumper settings?
+On Fri, Apr 6, 2018 at 8:35 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
+>
+> On 06/04/18 14:56, Jassi Brar wrote:
+>> On Fri, Apr 6, 2018 at 5:59 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
+>>> Hi
+>>>
+>>>
+>>> On 05/04/18 11:38, Jassi Brar wrote:
+>>>> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
+>>>> ....
+>>>>> +
+>>>>> +       /* irq */
+>>>>> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
+>>>>> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
+>>>>> +               if (ipcc->irqs[i] < 0) {
+>>>>> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
+>>>>> +                       ret = ipcc->irqs[i];
+>>>>> +                       goto err_clk;
+>>>>> +               }
+>>>>> +
+>>>>> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
+>>>>> +                                               irq_thread[i], IRQF_ONESHOT,
+>>>>> +                                               dev_name(dev), ipcc);
+>>>>>
+>>>> In your interrupt handlers you don't do anything that could block.
+>>>> Threads only adds some delay to your message handling.
+>>>> So maybe use devm_request_irq() ?
+>>> The interrupt handlers call mbox_chan_received_data() /
+>>> mbox_chan_txdone(), which call in turn client's rx_callback() /
+>>> tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a
+>>> threaded irq here seems to be a good choice.
+>>>
+>> rx_callback() is supposed to be atomic.
+>
+> I am worried with this atomic part (and honestly I did not note that the
+> callbacks were expected to be)
+>
+> In my case, remoteproc->virtio->rpmsg is the mailbox client defining the
+> rx_callback.
+> If I follow your suggestion, I shall make this rx_callback Atomic in
+> remoteproc (or in virtio or rpmsg). And this does not seem to be so
+> simple (add a worker in the middle of somewhere?). Bjorn, feel free to
+> comment this part.
+>
+> An alternate implementation consists in using a threaded IRQ for the
+> mailbox interrupt.
+> This option is not only simple, but also ensures to split bottom & half
+> parts at the irq level which is IMHO a general good practice.
+>
+> I can see that some mailbox clients implement callbacks that are NOT
+> atomic and I suspect this is the reason why some mailbox drivers use
+> threaded_irq (rockchip mailbox splits the bottom & half parts).
+>
+> Would it be acceptable to consider the "atomic client callback" as a
+> non-strict rule ?
+>
+Of course you can traverse atomic path from sleepable context (but not
+vice-versa).
+Please send in the final revision.
 
-  No out of tree patches or special jumper settings. I am booting the
-  mainline kernel, ap148.dtb + ramfs.
-
-Regards,
-  Sricharan
+Thanks.
