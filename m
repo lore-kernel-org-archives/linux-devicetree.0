@@ -1,109 +1,41 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v3 0/4] backlight: pwm_bl: support linear interpolation
- and brightness to human eye
-Date: Fri, 6 Apr 2018 16:54:39 +0100
-Message-ID: <20180406155439.u7mm2jb3sizphumu@holly.lan>
-References: <20180208113032.27810-1-enric.balletbo@collabora.com>
- <CAFqH_52bXq76TnQLfnD0mohgr0d5iAcrHBcPefwnRB8gdbaYFQ@mail.gmail.com>
- <20180320112212.2mwthxug3pu7uqgg@holly.lan>
- <CAFqH_51E+9L2fuTY7Zo3=B2fUmL=pJtg7wz3GdN5wxhpqV8p0g@mail.gmail.com>
+From: sricharan@codeaurora.org
+Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
+ data
+Date: Fri, 06 Apr 2018 21:38:47 +0530
+Message-ID: <82ba83a1a8ebb8a5ef2fa71356374be3@codeaurora.org>
+References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
+ <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
+ <20180320143131.4eenixtbhciq5fwc@localhost>
+ <20180329143715.GA31757@hector.attlocal.net>
+ <20180329163739.2fg5qxvb5j3fiy6r@localhost>
+ <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
+ <20180406045511.hnzxe4nepl5sqmld@localhost>
+ <7dc41c73f594918701c21075dde30870@codeaurora.org>
+ <20180406151312.ehx4qtxcylkw4uhi@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_51E+9L2fuTY7Zo3=B2fUmL=pJtg7wz3GdN5wxhpqV8p0g@mail.gmail.com>
+In-Reply-To: <20180406151312.ehx4qtxcylkw4uhi@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 20, 2018 at 01:13:20PM +0100, Enric Balletbo Serra wrote:
-> Hi Daniel,
+On 2018-04-06 20:43, Richard Cochran wrote:
+> On Fri, Apr 06, 2018 at 06:35:49PM +0530, sricharan@codeaurora.org 
+> wrote:
+>>  I tried booting mainline built with qcom_defconfig on ap148 and
+>>  did boot. Not sure if your bootloader's bootarg is this,
+>>   'console=ttyMSM0,115200n8' ?
 > 
+> Yes, I think so.  I'll double check it.
 > 
-> 2018-03-20 12:22 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> > On Mon, Mar 19, 2018 at 05:04:31PM +0100, Enric Balletbo Serra wrote:
-> >> Hi Daniel,
-> >>
-> >> Gentle ping for this series, there is any possibility you have a
-> >> chance to review it? Let me know if you want I change something.
-> >
-> > I haven't got it in my TODO backlog... which means either I mistakenly
-> > deleted it when it went through originally or that I deliberately deleted
-> > it because I thought a v4 was coming along soon.
-> >
-> > I could go diving through the archives if I need to but were there other
-> > pending changes for this patchset?
-> >
-> 
-> Unless I am missing something there isn't pending changes requested.
-> 
-> 1/4 I addressed your latest comments in this version.
-> 2/4 Has been acked by Rob Herring
-> 3/4 I did not receive feedback but iirc we agreed to use a pre-computed table.
-> 4/4 Is already acked by you.
+> Do you have any out-of-tree patches or special jumper settings?
 
-You weren't missing anything... and I've just dived through my mail
-history and retrieved the patchset so I can review it.
+  No out of tree patches or special jumper settings. I am booting the
+  mainline kernel, ap148.dtb + ramfs.
 
-You should now have an ack from me on every patch. Sorry it has taken 
-so long.
-
-
-Daniel.
-
-
-> 
-> Regards,
->  Enric
-> 
-> >
-> > Daniel.
-> >
-> >
-> >>
-> >> Thanks,
-> >>   Enric
-> >>
-> >> 2018-02-08 12:30 GMT+01:00 Enric Balletbo i Serra
-> >> <enric.balletbo@collabora.com>:
-> >> > Dear all,
-> >> >
-> >> > This series is a third patchset integrating the requested changes.
-> >> >
-> >> > The first and second patch what tries to solve is the problem of
-> >> > granularity for high resolution PWMs. The idea is simple interpolate
-> >> > between 2 brightness values so we can have a high PWM duty cycle (a
-> >> > 16 bits PWM is up to 65535 possible steps) without having to list
-> >> > out every possible value in the dts. I think that this patch is
-> >> > required to not break backward compability, to be more flexible and
-> >> > also extend the functionality to be able to use high resolution PWM
-> >> > with enough steps to have a good UI experience in userspace.
-> >> >
-> >> > The thirth and fourth patch is a bit more ambicious, the idea is let
-> >> > decide the driver the brightness-levels required in function of the PWM
-> >> > resolution. To do this create a brightness-levels table filled with the
-> >> > CIE 1931 algorithm values to convert brightness to PWM duty cycle.
-> >> >
-> >> > More detailed info is available in the commit message of every patch.
-> >> >
-> >> > Both functionalities were tested on a Samsung Chromebook Plus (that has
-> >> > a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
-> >> >
-> >> > Waiting for your feedback.
-> >> >
-> >> > Best regards,
-> >> >
-> >> > Enric Balletbo i Serra (4):
-> >> >   backlight: pwm_bl: linear interpolation between brightness-levels
-> >> >   dt-bindings: pwm-backlight: add a num-interpolation-steps property.
-> >> >   backlight: pwm_bl: compute brightness of LED linearly to human eye.
-> >> >   dt-bindings: pwm-backlight: move brightness-levels to optional.
-> >> >
-> >> >  .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
-> >> >  drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
-> >> >  2 files changed, 246 insertions(+), 20 deletions(-)
-> >> >
-> >> > --
-> >> > 2.15.1
-> >> >
+Regards,
+  Sricharan
