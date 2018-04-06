@@ -1,15 +1,15 @@
 From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 7/7] arm64: dts: renesas: eagle: Add ADV7511W and HDMI
- output
-Date: Fri, 6 Apr 2018 16:16:32 +0200
-Message-ID: <20180406141632.GO20945@w540>
-References: <1523020092-25540-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523020092-25540-8-git-send-email-jacopo+renesas@jmondi.org>
- <2235860.8H9ojNphtF@avalon>
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Fri, 6 Apr 2018 16:25:58 +0200
+Message-ID: <20180406142558.GP20945@w540>
+References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523018517-24121-2-git-send-email-jacopo+renesas@jmondi.org>
+ <1664336.M7KDjLhzuK@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1333342509=="
+Content-Type: multipart/mixed; boundary="===============1003432265=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2235860.8H9ojNphtF@avalon>
+In-Reply-To: <1664336.M7KDjLhzuK@avalon>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,113 +20,141 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, geert@linux-m68k.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============1333342509==
+--===============1003432265==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="R0KbGFzrRdaLlFh/"
+	protocol="application/pgp-signature"; boundary="qUsYCxAE223BCwdt"
 Content-Disposition: inline
 
 
---R0KbGFzrRdaLlFh/
+--qUsYCxAE223BCwdt
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi Laurent,
 
-On Fri, Apr 06, 2018 at 04:51:11PM +0300, Laurent Pinchart wrote:
+On Fri, Apr 06, 2018 at 04:15:35PM +0300, Laurent Pinchart wrote:
 > Hi Jacopo,
 >
 > Thank you for the patch.
 >
-> On Friday, 6 April 2018 16:08:12 EEST Jacopo Mondi wrote:
-> > From: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+> On Friday, 6 April 2018 15:41:56 EEST Jacopo Mondi wrote:
+> > Document Thine THC63LVD1024 LVDS decoder device tree bindings.
 > >
-> > Enable HDMI output adding the HDMI connector and the ADV7511W, connected
-> > to THC63LVD1024 LVDS decoder output.
-> >
-> > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
 > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > > ---
-> >  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 51 ++++++++++++++++++=
-++++-
-> >  1 file changed, 50 insertions(+), 1 deletion(-)
+> >  .../bindings/display/bridge/thine,thc63lvd1024.txt | 60 ++++++++++++++=
++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
 > >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> > b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts index 9d0e65d..e9f7b83
-> > 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> > +++ b/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> > @@ -32,6 +32,17 @@
-> >  		reg =3D <0x0 0x48000000 0x0 0x38000000>;
-> >  	};
-> >
-> > +	hdmi-out {
-> > +		compatible =3D "hdmi-connector";
-> > +		type =3D "a";
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.t=
+xt
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.t=
+xt
+> > new file mode 100644
+> > index 0000000..1191f17
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.t=
+xt
+> > @@ -0,0 +1,60 @@
+> > +Thine Electronics THC63LVD1024 LVDS decoder
+> > +-------------------------------------------
 > > +
-> > +		port {
-> > +			hdmi_con_out: endpoint {
-> > +				remote-endpoint =3D <&adv7511_out>;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> >  	thc63lvd1024: lvds-decoder {
-> >  		compatible =3D "thine,thc63lvd1024";
-> >
-> > @@ -41,11 +52,17 @@
-> >
-> >  			port@0 {
-> >  				reg =3D <0>;
-> > -
+> > +The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
+> > streams
+> > +to parallel data outputs. The chip supports single/dual input/output m=
+odes,
+> > +handling up to two two input LVDS stream and up to two digital CMOS/TTL
 >
-> This is unrelated, if you don't want a blank line here remove it from pat=
-ch
-> 6/7 :-)
+> s/to two two/to two/
+> s/stream/streams/
+>
+> > outputs.
+> > +
+> > +Single or dual operation modes, output data mapping and DDR output mod=
+es
+> > are
+> > +configured through input signals and the chip does not expose any cont=
+rol
+> > bus.
+> > +
+> > +Required properties:
+> > +- compatible: Shall be "thine,thc63lvd1024"
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS i=
+nput,
+> > +  PPL and digital circuitry
+> > +- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
+> > +- enable-gpios: Output enable GPIO signal, pin name "OE". Active high
+>
+> As Rob mentioned in a reply to v6, we currently use "enable" as the inver=
+se of
+> "powerdown". I would call this one oe-gpios instead. Quoting Rob:
+>
+> "Debating "oe" vs. "output-enable" is bikeshedding IMO. Anyone familiar w=
+ith
+> h/w design should recognize OE."
+>
 
-No, you're right, this is a leftover from me splitting a single a
-patch in 3. According to your comments on other patches in the series
-I shouldn't have done that to begin with :)
+I got a different understanding of what Rob meant. I thought "anyone
+familiar with h/w design should recognize OE" as that nobody would get
+confused if a pin named OE in the chip manual is descibed by an
+'enable' property.
+
+But as discussed offline, enable has probably to be used as the
+opposite of powerdown for complete chip sleep, not just for output
+pad.
+
+Anyway, we spent enough time on naming issues, starting from my first
+stupid 'pdwn' permutations then on this semi-standard names.
+
+I'll send next version with 'powerdown-gpios' and 'oe-gpios'
+properties hoping that would be finally accepted by everyone.
+
+Same on the mandatory/optional VCC supply thing. Let's try to make
+next version the final one. If the optional property with the dummy
+regulator doesn't satisfy you and it is preferred to have a fixed-regulator
+anyhow in DT I'll do in next version, othewise let's try not to change
+it again. I'll just remark here that in the current Eagle design vcc is
+connected to a power rail with no regulator at all :)
 
 Thanks
-  j
+   j
 
->
-> >  				thc63lvd1024_in: endpoint {
-> >  					remote-endpoint =3D <&lvds0_out>;
-> >  				};
-> >  			};
 > > +
-> > +			port@2 {
-> > +				reg =3D <2>;
-> > +				thc63lvd1024_out: endpoint {
-> > +					remote-endpoint =3D <&adv7511_in>;
-> > +				};
-> > +			};
-> >  		};
-> >  	};
-> >  };
-> > @@ -85,6 +102,38 @@
-> >  		gpio-controller;
-> >  		#gpio-cells =3D <2>;
-> >  	};
+> > +The THC63LVD1024 video port connections are modeled according
+> > +to OF graph bindings specified by Documentation/devicetree/bindings/
+> > graph.txt
 > > +
-> > +	hdmi@39 {
-> > +		compatible =3D "adi,adv7511w";
-> > +		reg =3D <0x39>;
-> > +		interrupt-parent =3D <&gpio1>;
-> > +		interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
+> > +Required video port nodes:
+> > +- port@0: First LVDS input port
+> > +- port@2: First digital CMOS/TTL parallel output
 > > +
-> > +		adi,input-depth =3D <8>;
-> > +		adi,input-colorspace =3D "rgb";
-> > +		adi,input-clock =3D "1x";
-> > +		adi,input-style =3D <1>;
-> > +		adi,input-justification =3D "evenly";
+> > +Optional video port nodes:
+> > +- port@1: Second LVDS input port
+> > +- port@3: Second digital CMOS/TTL parallel output
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +	thc63lvd1024: lvds-decoder {
+> > +		compatible =3D "thine,thc63lvd1024";
+> > +
+> > +		vcc-supply =3D <&reg_lvds_vcc>;
+> > +		powerdown-gpios =3D <&gpio4 15 GPIO_ACTIVE_LOW>;
 > > +
 > > +		ports {
 > > +			#address-cells =3D <1>;
@@ -134,26 +162,21 @@ Thanks
 > > +
 > > +			port@0 {
 > > +				reg =3D <0>;
-> > +				adv7511_in: endpoint {
-> > +					remote-endpoint =3D <&thc63lvd1024_out>;
+> > +
+> > +				lvds_dec_in_0: endpoint {
+> > +					remote-endpoint =3D <&lvds_out>;
 > > +				};
 > > +			};
 > > +
-> > +			port@1 {
-> > +				reg =3D <1>;
-> > +				adv7511_out: endpoint {
-> > +					remote-endpoint =3D <&hdmi_con_out>;
+> > +			port@2{
+> > +				reg =3D <2>;
+> > +
+> > +				lvds_dec_out_2: endpoint {
+> > +					remote-endpoint =3D <&adv7511_in>;
 > > +				};
 > > +			};
 > > +		};
 > > +	};
-> >  };
-> >
-> >  &pfc {
->
-> With patches 5/7, 6/7 and 7/7 merged together and the pinmux removed,
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
 > --
 > Regards,
@@ -163,30 +186,30 @@ Thanks
 >
 >
 
---R0KbGFzrRdaLlFh/
+--qUsYCxAE223BCwdt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJax4FAAAoJEHI0Bo8WoVY8yBIP/0LBBYLyRQhzgOQ6hD31wVZs
-EmbPi+Yj+chIKUl1acF6klnPCO4dV46Ilz96yDS6CzeyPH/MUkmy2LJxEnj9Kim2
-FE+8C61WSA9+8wMbAWvGToEdQNlnnLbY5GwypZqZXuZ+/2i3yiq4zWUza1aP3Dzu
-NEGCU98eGD0uHs9+9yuT1OOr3CyVY8oTCe7TgtJ+w8roH3ldx+0fdBkw3Mh859CV
-AGDPV+WwMxUQMRRRVqWtyIuWSg9mxT/fuuM9wzOUntY8ib17hKjVUugg+BIjx/bP
-RbUCfQHf/dydLXg8iBBXmebiJJUQH89dpAVQ7aGlzQac98yKr0rYP6LV72Q/sikn
-jiQnnoGgT+XauerEvbOBkE1wx3ha/2YPkpznzNpRXyqKdMQAwxZ8WgizgaPnGw9D
-BHeG055XsIuTcV9n26q39xs8Yb79qawkCtK2cWdrUcHBLLIV3EBOldayNtsRus9X
-H3S1pD2AnrFk+oCxu13xmmDoGNHDdjphHdlZdCQih/SV4jTw0sTvxWi/MksgVSqM
-l9dEEz0GAnkRUWrAKi3OhXNhTsDyRbpDG4YnJwytTD2/poWok6XgqfIWLzaN9Qm/
-6CHjfFbSCjuTylIHZTFMy13cQlHOtswjNUFdgsVbMtXYDk4TtrDhdSY0GKPj/R6M
-sGs0PBnZKrd15wGKoZBX
-=ydXF
+iQIcBAEBAgAGBQJax4N2AAoJEHI0Bo8WoVY8rzkP/3SKO+s5txJfu3l8v/nisZ9l
+e28Nfi/5BbzJVsMEDvLIAOCF8FoKsy8wnk6JxRB/IzYGPm05MzJo/AnndFv7Qp2/
+IN9YLF5gRAFz0ANFyWgW2RbX223jp8Sul7qnADdDpu5NrrloB2/A5R8hC4AnGKz0
+KmfSg5BTxD5FK/OHJzPA0btPTnl+h0BMbXjhsfsxZ+uZ2j1T/RxJ/zZuf1sQhhsy
+TJQAAG2/P3P4e8J37yPWZGOUkx9I7/MqWYXLnQl2VZC3Kgv3p5fOgFk6u5W0ju+z
+HRc2bh/y8budqw6itflUSQMXqI3vAa2D52Jt0k25H3MfsBN2yg+xomCOsTCs4bUO
+ngqX2HZMd5EyUFmI1BLP7gmZ6Z82OzMdctb2ihrbdm5v1Belrb/Ot+DZCW2TO3FQ
+OHvahWUK5ztzhnO4HJJaYPDjHRd5s/OpHuwYMqIgtE1IVQBVtvlkzBuxeIEp1RfC
+2YQEi6kGziJDEaXN+HC96fghz6WjjkkvQGa53/EsneSX0v0c+QlSvwekoE0YLWrP
+GTHD6P5iW91FnFXK/GYiej8VEwlZDFg4/MQbZQH0SYWiNZNoVU+xd1xdIMHT8k7f
+MZCV9z+zCQlJueS0QShZIeEgZg1en/TT08OAd8KcExVvNOIwBWHfzymIXeGcTfja
+cp45eN+HJhsjbi9SvRVW
+=uoSA
 -----END PGP SIGNATURE-----
 
---R0KbGFzrRdaLlFh/--
+--qUsYCxAE223BCwdt--
 
---===============1333342509==
+--===============1003432265==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -196,4 +219,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1333342509==--
+--===============1003432265==--
