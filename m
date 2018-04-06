@@ -1,28 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 8/8] clk: davinci: kill davinci_clk_reset_assert/deassert()
-Date: Fri, 06 Apr 2018 13:40:17 -0700
-Message-ID: <152304721717.94378.15508132666893079542@swboyd.mtv.corp.google.com>
-References: <20180330152856.12297-1-brgl@bgdev.pl> <20180330152856.12297-9-brgl@bgdev.pl>
+Subject: Re: [PATCH 1/6] clk: stm32mp1: add missing static
+Date: Fri, 06 Apr 2018 13:44:31 -0700
+Message-ID: <152304747115.94378.14106353541958461583@swboyd.mtv.corp.google.com>
+References: <1522996773-24129-1-git-send-email-gabriel.fernandez@st.com>
+ <1522996773-24129-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180330152856.12297-9-brgl@bgdev.pl>
+In-Reply-To: <1522996773-24129-2-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sekhar Nori <nsekhar@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Alexandre Torgue <alexandre.torgue@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bartosz Golaszewski (2018-03-30 08:28:56)
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Quoting gabriel.fernandez@st.com (2018-04-05 23:39:28)
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> This code is no longer used. Remove it.
+> Add missing static for const parent names and clock ops.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
 
-I'll try to remember, but please send this again if we need to apply it
-to the clk tree for 4.18.
-
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Applied to clk-next
