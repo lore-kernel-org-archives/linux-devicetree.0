@@ -1,38 +1,31 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 12/44] clk: davinci: Add platform information for TI DA850 PSC
-Date: Fri, 06 Apr 2018 09:46:20 -0700
-Message-ID: <152303318048.143116.2883441215887455211@swboyd.mtv.corp.google.com>
-References: <1515377863-20358-1-git-send-email-david@lechnology.com>
- <1515377863-20358-13-git-send-email-david@lechnology.com>
- <CAMRc=MfQuqTK+mDT0Gawa6J-3d1z6djLutaHREKfVm+3hATEqQ@mail.gmail.com>
- <CAEG3pND6Cu0P_t3y_VM9Sm-GCb3yW0Pa8q4cRUOXYxa5=2nWUQ@mail.gmail.com>
- <a4d84be0-e3d3-4e39-40f9-cae9006cb6ee@ti.com>
- <CAMRc=Mc228JAxxBXcObmokh2h-toojG8OHrmbunm_ORqbGWUnA@mail.gmail.com>
- <69bc0848-0698-b936-96a3-2257a5e27809@ti.com>
- <CAMRc=MenWp=2dtOs1yafnHVkCxfT7SDS0fS2UxUd+U0s_UDwVw@mail.gmail.com>
- <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
+Subject: RE: [PATCH v3 03/10] clk: qcom: Add CPU clock driver for msm8996
+Date: Fri, 06 Apr 2018 11:18:37 -0700
+Message-ID: <152303871765.143116.6979602150972963768@swboyd.mtv.corp.google.com>
+References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+ <1518616792-29028-4-git-send-email-ilialin@codeaurora.org>
+ <152148100496.242365.3846617702949655708@swboyd.mtv.corp.google.com>
+ <024f01d3c1cb$304eaa60$90ebff20$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57f2182e-09b4-2cab-5602-9d0e029495be@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <024f01d3c1cb$304eaa60$90ebff20$@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ilialin@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, robh@kernel.org, will.deacon@arm.com, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sekhar Nori (2018-04-06 02:37:03)
+Quoting ilialin@codeaurora.org (2018-03-22 03:47:30)
 > 
-> Can you please check that and confirm there is no issue with genpd and 
-> using CLK_OF_DECLARE() to initialize clocks?
-> 
-> Unless you report an issue back, or Mike and Stephen have ideas about 
-> how to handle the dependency between PSC/PLL derived timer clock 
-> initialization and and timer_probe(), I think we need to move back to 
-> using CLK_OF_DECLARE(). 
+> I will have to change the clk_hw_unregister_fixed_rate() as well then, right? This will be an API change.
 
-In such a case, please use the hybrid approach where the clks required
-for the clockevent and/or clocksource are registered in the early
-CLK_OF_DECLARE path but the rest of the clks get registered with a
-proper platform device and driver. There are examples of this approach
-on other platforms already.
+You won't need to unregister anything? devm will take care of it.
