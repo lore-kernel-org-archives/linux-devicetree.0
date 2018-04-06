@@ -1,164 +1,43 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] ata: ahci-platform: add reset control support
-Date: Fri, 6 Apr 2018 12:12:11 +0200
-Message-ID: <68d50624-d31b-09cf-210e-9fb7c73b5df0@redhat.com>
-References: <20180406134838.2ADC.4A936039@socionext.com>
- <22a2bcd7-eff5-c20f-e056-f5946e579d5e@redhat.com>
- <20180406183623.CA38.4A936039@socionext.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
+Date: Fri, 6 Apr 2018 10:20:46 +0000
+Message-ID: <TY1PR01MB17693CFDF889498956107783F5BA0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
+ <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
+ <TY1PR01MB1769064C77AE3E5ABA4993DAF5BB0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+ <CAMuHMdX34f1pDCVqNV43_qtzqZ-fruOcUsUN_Ysz4ihJwe-56A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180406183623.CA38.4A936039@socionext.com>
+In-Reply-To: <CAMuHMdX34f1pDCVqNV43_qtzqZ-fruOcUsUN_Ysz4ihJwe-56A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Patrice CHOTARD <patrice.chotard@st.com>, Tejun Heo <tj@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 06-04-18 11:36, Kunihiko Hayashi wrote:
-> Hi Hans,
-> 
-> On Fri, 6 Apr 2018 10:29:37 +0200
-> Hans de Goede <hdegoede@redhat.com> wrote:
-> 
->> Hi,
->>
->> On 06-04-18 06:48, Kunihiko Hayashi wrote:
->>> Hi Hans,
->>>> On Thu, 5 Apr 2018 16:08:24 +0200
->>> Hans de Goede <hdegoede@redhat.com> wrote:
->>>>> Hi,
->>>>
->>>> On 05-04-18 16:00, Hans de Goede wrote:
->>>>> Hi,
->>>>>> On 05-04-18 15:54, Thierry Reding wrote:
->>>>>> On Thu, Apr 05, 2018 at 03:27:03PM +0200, Hans de Goede wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 05-04-18 15:17, Patrice CHOTARD wrote:
->>>>>>>> Hi Thierry
->>>>>>>>
->>>>>>>> On 04/05/2018 11:54 AM, Thierry Reding wrote:
->>>>>>>>> On Fri, Mar 23, 2018 at 10:30:53AM +0900, Kunihiko Hayashi wrote:
->>>>>>>>>> Add support to get and control a list of resets for the device
->>>>>>>>>> as optional and shared. These resets must be kept de-asserted until
->>>>>>>>>> the device is enabled.
->>>>>>>>>>
->>>>>>>>>> This is specified as shared because some SoCs like UniPhier series
->>>>>>>>>> have common reset controls with all ahci controller instances.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>>>>>>>> ---
->>>>>>>>>> ??? .../devicetree/bindings/ata/ahci-platform.txt????? |? 1 +
->>>>>>>>>> ??? drivers/ata/ahci.h???????????????????????????????? |? 1 +
->>>>>>>>>> ??? drivers/ata/libahci_platform.c???????????????????? | 24 +++++++++++++++++++---
->>>>>>>>>> ??? 3 files changed, 23 insertions(+), 3 deletions(-)
->>>>>>>>>
->>>>>>>>> This causes a regression on Tegra because we explicitly request the
->>>>>>>>> resets after the call to ahci_platform_get_resources().
->>>>>>>>
->>>>>>>> I confirm, we got exactly the same behavior on STi platform.
->>>>>>>>
->>>>>>>>>
->>>>>>>>> ?? From a quick look, ahci_mtk and ahci_st are in the same boat, adding the
->>>>>>>>> corresponding maintainers to Cc.
->>>>>>>>>
->>>>>>>>> Patrice, Matthias: does SATA still work for you after this patch? This
->>>>>>>>> has been in linux-next since next-20180327.
->>>>>>>>
->>>>>>>> SATA is still working after this patch, but a kernel warning is
->>>>>>>> triggered due to the fact that resets are both requested by
->>>>>>>> libahci_platform and by ahci_st driver.
->>>>>>>
->>>>>>> So in your case you might be able to remove the reset handling
->>>>>>> from the ahci_st driver and rely on the new libahci_platform
->>>>>>> handling instead? If that works that seems like a win to me.
->>>>>>>
->>>>>>> As said elsewhere in this thread I think it makes sense to keep (or re-add
->>>>>>> after a revert) the libahci_platform reset code, but make it conditional
->>>>>>> on a flag passed to ahci_platform_get_resources(). This way we get
->>>>>>> the shared code for most cases and platforms which need special handling
->>>>>>> can opt-out.
->>>>>>
->>>>>> Agreed, although I prefer such helpers to be opt-in, rather than
->>>>>> opt-out. In my experience that tends make the helpers more resilient to
->>>>>> this kind of regression. It also simplifies things because instead of
->>>>>> drivers saying "I want all the helpers except this one and that one",
->>>>>> they can simply say "I want these helpers and that one". In the former
->>>>>> case whenever you add some new (opt-out) feature, you have to update all
->>>>>> drivers and add the exception. In the latter you only need to extend the
->>>>>> drivers that want to make use of the new helper.
->>>>
->>>> Erm, the idea never was to make this opt-out but rather opt in, so
->>>> we add a flags parameter to ahci_platform_get_resources() and all
->>>> current users pass in 0 for that to keep the current behavior.
->>>>
->>>> And only the generic drivers/ata/ahci_platform.c driver will pass
->>>> in a the new AHCI_PLATFORM_GET_RESETS flag, which makes
->>>> ahci_platform_get_resources() (and the other functions) also deal
->>>> with resets.
->>>>
->>>>>> With that in mind, rather than adding a flag to the
->>>>>> ahci_platform_get_resources() function, it might be more flexible to
->>>>>> split the helpers into finer-grained functions. That way drivers can
->>>>>> pick whatever functionality they want from the helpers.
->>>>>> Good point, so lets:
->>>>>> 1) Revert the patch for now
->>>>> 2) Have a new version of the patch which adds a ahci_platform_get_resets() helper
->>>>> 3) Modify the generic drivers/ata/ahci_platform.c driver to call the new
->>>>>    ?? ahci_platform_get_resets() between its ahci_platform_get_resources()
->>>>>    ?? and ahci_platform_enable_resources() calls.
->>>>>    ?? I think that ahci_platform_enable_resources() should still automatically
->>>>>    ?? do the right thing wrt resets if ahci_platform_get_resets() was called
->>>>>    ?? (otherwise the resets array will be empty and should be skipped)
->>>>>> This should make the generic driver usable for the UniPhier SoCs and
->>>>> maybe some other drivers like the ahci_st driver can also switch to the
->>>>> new ahci_platform_get_resets() functionality to reduce their code a bit.
->>>>
->>>> So thinking slightly longer about this, with the opt-in variant
->>>> (which is what I intended all along) I do think that a flags parameter
->>>> is better, because the whole idea behind lib_ahci_platform is to avoid
->>>> having to do err = get_resource_a(), if (err) bail, err = get_resource_b()
->>>> if (err) bail, etc. in all the ahci (platform) drivers. And having fine
->>>> grained helpers re-introduces that.
->>>> In case of adding a flag instead of get_resource_a(),
->>> for example, we add the flag for use of resets,
->>>> -struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
->>> +struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
->>> +                                                  bool use_reset)
->>>> and for now all the drivers using this function need to add the argument as false
->>> to the caller.
->>>> -       hpriv = ahci_platform_get_resources(pdev);
->>> +       hpriv = ahci_platform_get_resources(pdev, false);
->>>> Surely this can avoid adding functions such get_resource_a(). If we apply another
->>> feature later, we add its flag as one of the arguments instead. Is it right?
->>
->> Yes, that is right, but instead of adding a "bool use_reset" please add
->> an "unsigned int flags" parameter instead and a:
->>
->> #define AHCI_PLATFORM_GET_RESETS	0x01
->>
->> And update all callers of ahci_platform_get_resources to pass 0 for flags
->> except for drivers/ata/ahci_platform.c. This way we only need to modify
->> all callers once, and if we want to add another optional resource in
->> the future we can add a:
->>
->> #define AHCI_PLATFORM_GET_FOO		0x02
->>
->> Without needing to change all callers again.
-> 
-> Indeed. This is more flexible to add another resources.
-> 
-> Although I'm about to prepare the candidate patch to fix this issue,
-> I think we need to revert the previous patch first if some SoCs have
-> issues because of it.
-
-Ack. It is probably best if you do a "git revert f0f56716fc3e5d547fd7811eb218a30ed0695605"
-on a tree with that commit and then send a patch to Tejun for this.
-
-Regards,
-
-Hans
+SGkgR2VlcnQsDQoNCk9uIDA2IEFwcmlsIDIwMTggMTA6NTcgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
+b3RlOg0KPiBPbiBUaHUsIEFwciA1LCAyMDE4IGF0IDExOjQyIEFNLCBQaGlsIEVkd29ydGh5IHdy
+b3RlOg0KPiA+IE9uIDMwIE1hcmNoIDIwMTggMjI6MjYgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
+PiA+PiBPbiBXZWQsIE1hciAyOCwgMjAxOCBhdCA1OjIyIFBNLCBQaGlsIEVkd29ydGh5IHdyb3Rl
+Og0KPiA+PiA+IFRoZSBEZXNpZ25XYXJlIEdQSU8gSVAgY2FuIGJlIGNvbmZpZ3VyZWQgZm9yIGVp
+dGhlciAxIG9yIDMyDQo+ID4+ID4gaW50ZXJydXB0cywNCj4gPj4NCj4gPj4gMSB0byAzMiwgb3Ig
+anVzdCBhIGNob2ljZSBiZXR3ZWVuIHR3bz8NCj4gPiBKdXN0IGEgY2hvaWNlIG9mIDEgb3IgMzIu
+DQo+ID4gTm90ZSB0aGF0IGJ5ICdjb25maWd1cmVkJyBJIGFtIHRhbGtpbmcgYWJvdXQgdGhlIGhh
+cmR3YXJlIGJlaW5nDQo+ID4gY29uZmlndXJlZCBpbiBSVEwgcHJpb3IgdG8gbWFudWZhY3R1cmlu
+ZyBhIGRldmljZS4gT25jZSBtYWRlLCB5b3UgY2Fubm90DQo+IGNoYW5nZSBpdC4NCj4gPiBUaGlz
+IGNvbmZpZ3VyYXRpb24gYWZmZWN0cyB0aGUgbnVtYmVyIG9mIG91dHB1dCBpbnRlcnJ1cHQgc2ln
+bmFscyBmcm9tDQo+ID4gdGhlIEdQSU8gQ29udHJvbGxlciBibG9jayB0aGF0IGFyZSBjb25uZWN0
+ZWQgdG8gYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIuDQo+IA0KPiBEaWZmZXJlbnRpYXRpbmcgYmV0
+d2VlbiBkaWZmZXJlbnQgdmVyc2lvbnMgb2YgYW4gSVAgYmxvY2sgdXNpbmcgRFQgcHJvcGVydGll
+cw0KPiBpcyB1c3VhbGx5IGEgYmFkIGlkZWEsIGZvciBzZXZlcmFsIHJlYXNvbnM6DQo+ICAgLSBX
+aGF0IGlmIHlvdSBkaXNjb3ZlciBhbm90aGVyIGRpZmZlcmVuY2UgbGF0ZXI/DQo+ICAgLSBZb3Ug
+Y2Fubm90IGFkZCBkaWZmZXJlbnRpYXRpbmcgcHJvcGVydGllcyByZXRyb2FjdGl2ZWx5LCBiZWNh
+dXNlIG9mDQo+IGJhY2t3YXJkcw0KPiAgICAgIGNvbXBhdGliaWxpdHkgd2l0aCBvbGQgRFRCUy4N
+Cj4gDQo+IEhlbmNlIEkgdGhpbmsgeW91IHNob3VsZCBpbnRyb2R1Y2UgYSBuZXcgY29tcGF0aWJs
+ZSB2YWx1ZSBpbnN0ZWFkLg0KDQpUaGlzIGlzIG5vdCBhIGRpZmZlcmVudCB2ZXJzaW9uIG9mIHRo
+ZSBJUCwganVzdCBhIGRpZmZlcmVudCBjb25maWd1cmF0aW9uIG9wdGlvbi4NCk1vc3QgSVAgYmxv
+Y2tzIGhhdmUgYSBodWdlIG51bWJlciBvZiBrbm9icyB0aGF0IGNhbiBiZSB0d2lkZGxlZCBieSB0
+aGUgSFcNCnBlb3BsZSwgc3VjaCBhcyBjYWNoZSBzaXplLCBVQVJUIGZpZm8gZGVwdGguIEkgdGhp
+bmsgdGhpcyBpcyBubyBkaWZmZXJlbnQuDQoNClRoYW5rcw0KUGhpbA0KDQo=
