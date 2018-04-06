@@ -1,34 +1,38 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v3 04/13] ARM: dts: ipq4019: Update ipq4019-dk01.1 board
- data
-Date: Fri, 6 Apr 2018 08:13:12 -0700
-Message-ID: <20180406151312.ehx4qtxcylkw4uhi@localhost>
-References: <1521518336-5467-1-git-send-email-sricharan@codeaurora.org>
- <1521518336-5467-5-git-send-email-sricharan@codeaurora.org>
- <20180320143131.4eenixtbhciq5fwc@localhost>
- <20180329143715.GA31757@hector.attlocal.net>
- <20180329163739.2fg5qxvb5j3fiy6r@localhost>
- <4073ec6b457cb369a83c710d0ae453b4@codeaurora.org>
- <20180406045511.hnzxe4nepl5sqmld@localhost>
- <7dc41c73f594918701c21075dde30870@codeaurora.org>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 07/10] input: touchscreen: touch_adc: add generic
+ resistive ADC touchscreen
+Date: Fri, 6 Apr 2018 16:13:22 +0100
+Message-ID: <20180406161322.00006190@huawei.com>
+References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
+        <1522153963-1121-8-git-send-email-eugen.hristev@microchip.com>
+        <20180330135835.6a8f57f1@archlinux>
+        <20180330180911.GA143703@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7dc41c73f594918701c21075dde30870@codeaurora.org>
+In-Reply-To: <20180330180911.GA143703@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sricharan@codeaurora.org
-Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Eugen Hristev <eugen.hristev@microchip.com>, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 06, 2018 at 06:35:49PM +0530, sricharan@codeaurora.org wrote:
->  I tried booting mainline built with qcom_defconfig on ap148 and
->  did boot. Not sure if your bootloader's bootarg is this,
->   'console=ttyMSM0,115200n8' ?
-
-Yes, I think so.  I'll double check it.
-
-Do you have any out-of-tree patches or special jumper settings?
-
-Thanks,
-Richard
+> > > +
+> > > +	input->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+> > > +	input->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
+> > > +
+> > > +	st->input = input;
+> > > +	input_set_drvdata(input, st);
+> > > +
+> > > +	ret = input_register_device(input);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to register input device.");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	st->iio_cb = iio_channel_get_all_cb(&pdev->dev, grts_cb, st);  
+> 
+> Hmm, we don't have devm-variant for this? Then you could use
+> devm_add_action_or_reset() to add cleanup action and completely remove
+> grts_remove().
+Not yet, but I'm not adverse to having one...
