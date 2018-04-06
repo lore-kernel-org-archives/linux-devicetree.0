@@ -1,13 +1,13 @@
 Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bn3nam01on0089.outbound.protection.outlook.com ([104.47.33.89]:60153
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+Received: from mail-by2nam03on0058.outbound.protection.outlook.com ([104.47.42.58]:43075
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751413AbeDFS0z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Apr 2018 14:26:55 -0400
+        id S1750807AbeDFST7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Apr 2018 14:19:59 -0400
 From: Martin Kelly <mkelly@xevo.com>
-Subject: [PATCH v3 1/2] iio:imu: inv_mpu6050: support more interrupt types
-Date: Fri,  6 Apr 2018 11:26:39 -0700
-Message-Id: <20180406182640.2345-1-mkelly@xevo.com>
+Subject: [PATCH v2 1/2] iio:imu: inv_mpu6050: support more interrupt types
+Date: Fri,  6 Apr 2018 11:19:41 -0700
+Message-Id: <20180406181942.1365-1-mkelly@xevo.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -38,18 +38,15 @@ Signed-off-by: Martin Kelly <mkelly@xevo.com>
  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    | 36 +++++++++++++++++++++++++++
  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c     |  5 ++--
  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h     | 12 ++++++++-
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c    |  8 ++++++
+ drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c    | 14 ++++++++++-
  drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c |  2 +-
- 5 files changed, 58 insertions(+), 5 deletions(-)
+ 5 files changed, 63 insertions(+), 6 deletions(-)
 
 v2:
 - Changed to ACK level interrupts at the start of the bottom half thread instead
   of at the end of it. Without this, the sample timestamps get distorted because
   the time to handle the bottom half thread delays future interrupts. With this
   change, the timestamps appear evenly distributed at the right frequency.
-v3:
-- Sent version 2 too quickly. Now that the ACK is moved to the top of the
-  function, the "goto out" logic is unnecessary, so we can clean it up.
 
 diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
 index 7d64be353403..869768d08802 100644
@@ -208,7 +205,7 @@ index 065794162d65..2822b638804f 100644
  /* init parameters */
  #define INV_MPU6050_INIT_FIFO_RATE           50
 diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-index ff81c6aa009d..a424fb922e65 100644
+index ff81c6aa009d..15bd36385f1d 100644
 --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
 +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
 @@ -128,6 +128,14 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
@@ -226,6 +223,25 @@ index ff81c6aa009d..a424fb922e65 100644
  	mutex_lock(&st->lock);
  	if (!(st->chip_config.accl_fifo_enable |
  		st->chip_config.gyro_fifo_enable))
+@@ -181,7 +189,7 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+ 	mutex_unlock(&st->lock);
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
+-	return IRQ_HANDLED;
++	goto out;
+ 
+ flush_fifo:
+ 	/* Flush HW and SW FIFOs. */
+@@ -189,5 +197,9 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+ 	mutex_unlock(&st->lock);
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
++	/* Fall through */
++	return IRQ_HANDLED;
++
++out:
+ 	return IRQ_HANDLED;
+ }
 diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
 index f963f9fc98c0..1e7201a43e34 100644
 --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
