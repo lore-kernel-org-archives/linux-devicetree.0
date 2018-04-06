@@ -1,72 +1,83 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add fixed 26MHz clock as fck
- for twl
-Date: Fri, 6 Apr 2018 10:00:33 +0300
-Message-ID: <065d346a-12a4-3dc6-d8a3-e5351a73a7ab@ti.com>
-References: <20180405115239.17370-1-peter.ujfalusi@ti.com>
- <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
+ designware driver
+Date: Fri, 6 Apr 2018 12:34:36 +0530
+Message-ID: <eeb842a7-6092-29af-1e22-53e04d9ab63c@ti.com>
+References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
+ <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+ <405911c8-fffc-5bd7-76c5-f7aabde3b7bc@ti.com>
+ <87ba8936-e870-f52b-2ff1-0aea90d0a25c@synopsys.com>
+ <f94889e3-ba6f-5aba-d0ab-85db5d434cc9@ti.com>
+ <331e32c4-a39b-b5a6-6fbd-6eef7ca4b27c@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, hns@goldelico.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <331e32c4-a39b-b5a6-6fbd-6eef7ca4b27c@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE4LTA0LTA1IDE2OjE1LCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiAKPiAKPiBPbiAy
-MDE4LTA0LTA1IDE0OjUyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPj4gVGhlIGJvYXJkIHVzZXMg
-MjZNSHogb3NjaWxsYXRvciBmb3IgdGhlIHR3bDQwMzAgSEZDTEsuCj4+IFRoaXMgd2F5IHdlIHdp
-bGwgbm90IGRlcGVuZCBvbiB0aGUgYm9vdGxvYWRlciB0byBjb25maWd1cmUgdGhlCj4+IENGR19C
-T09UOkhGQ0xLX0ZSRVEKPj4KPj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVy
-LnVqZmFsdXNpQHRpLmNvbT4KPj4gLS0tCj4+IEhpLAo+Pgo+PiB0aGVyZSBtaWdodCBiZSBvdGhl
-ciBib2FyZHMgKGFsbCBvbWFwMyBib2FyZHMgd2l0aCB0d2w0MDMwPykgd2hpY2ggdXNlcyB0aGUg
-c2FtZQo+PiBzZXR1cCwgYnV0IEkgb25seSBoYXZlIHNjaGVtYXRpY3MgZm9yIGJlYWdsZS14bS4K
-Pj4KPj4gSW4gb3JkZXIgZm9yIHRoZSBkcml2ZXIgdG8gYWN0dWFsbHkgdXNlIHRoZSBjbG9jayB0
-aGUgCj4+IFtQQVRDSF0gbWZkOiB0d2wtY29yZTogRml4IGNsb2NrIGluaXRpYWxpemF0aW9uCj4+
-IG5lZWQgdG8gYmUgYXBwbGllZC4gVy9vIHRoZSB0d2wtY29yZSBwYXRjaCB0aGUgY2xvY2sgaXMg
-anVzdCBpZ25vcmVkLgo+Pgo+PiBSZWdhcmRzLAo+PiBQZXRlcgo+Pgo+PiAgYXJjaC9hcm0vYm9v
-dC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cyB8IDEwICsrKysrKysrKysKPj4gIDEgZmlsZSBjaGFu
-Z2VkLCAxMCBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9vbWFwMy1iZWFnbGUteG0uZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXht
-LmR0cwo+PiBpbmRleCAwMzQ5ZmNjOWRjMjYuLmQ4MDU4N2RlMGJiZiAxMDA2NDQKPj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwo+PiArKysgYi9hcmNoL2FybS9i
-b290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzCj4+IEBAIC0zMCw2ICszMCwxMyBAQAo+PiAgCQll
-dGhlcm5ldCA9ICZldGhlcm5ldDsKPj4gIAl9Owo+PiAgCj4+ICsJLyogZml4ZWQgMjZNSHogb3Nj
-aWxsYXRvciAqLwo+PiArCWhmY2xrXzI2bTogb3NjaWxsYXRvciB7Cj4+ICsJCSNjbG9jay1jZWxs
-cyA9IDwwPjsKPj4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4+ICsJCWNsb2NrLWZy
-ZXF1ZW5jeSA9IDwyNjAwMDAwMD47Cj4+ICsJfTsKPj4gKwo+PiAgCWxlZHMgewo+PiAgCQljb21w
-YXRpYmxlID0gImdwaW8tbGVkcyI7Cj4+ICAKPj4gQEAgLTI3NCw2ICsyODEsOSBAQAo+PiAgCQlp
-bnRlcnJ1cHRzID0gPDc+OyAvKiBTWVNfTklSUSBjYXNjYWRlZCB0byBpbnRjICovCj4+ICAJCWlu
-dGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+PiAgCj4+ICsJCWNsb2NrcyA9IDwmaGZjbGtfMjZt
-PjsKPj4gKwkJY2xvY2stbmFtZXMgPSAiZmNrIjsKPiAKPiBJIHdvbmRlciBpZiB3ZSBzaG91bGQg
-cmVuYW1lIHRoaXMgdG8gaGZjbGsuLi4KPiBUaGUgRFQgZG9jdW1lbnRhdGlvbiBkb2VzIG5vdCBt
-ZW50aW9uIGl0IGFuZCBhZmFpayBpdCBpcyBub3Qgc3BlY2lmaWVkCj4gaW4gRFQgZmlsZXMgZWl0
-aGVyLgo+IAo+IEFmdGVyIGFsbCBpdCBpcyB0aGUgSEZDTEsgY2xvY2sgZm9yIHRoZSB0d2w0MDMw
-LgoKV2Ugc2hvdWxkIG5vdCBhcyBpdCB3b3VsZCBicmVhayBjb21wYXRpYmlsaXR5IHdpdGggc3Rh
-YmxlIGtlcm5lbHMgd2hlcmUKdGhlIGNvZGUgZXhwZWN0cyAnZmNrJyBhbmQgbm90IGhmY2xrLgoK
-PiAKPiBJJ20gZmluZSBrZWVwaW5nIGl0IGFzICdmY2snIGJ1dCBpdCBsb29rcyBhIGJpdCB3ZWly
-ZC4KPiAKPj4gKwo+PiAgCQl0d2xfYXVkaW86IGF1ZGlvIHsKPj4gIAkJCWNvbXBhdGlibGUgPSAi
-dGksdHdsNDAzMC1hdWRpbyI7Cj4+ICAJCQljb2RlYyB7Cj4+Cj4gCj4gLSBQw6l0ZXIKPiAKPiBU
-ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
-aW5raS4KPiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWlj
-aWxlOiBIZWxzaW5raQo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQg
-dGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LW9tYXAiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNz
-YWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0
-ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiAKCi0gUMOpdGVy
-CgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBI
-ZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21p
-Y2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+On Tuesday 03 April 2018 06:50 PM, Gustavo Pimentel wrote:
+> Hi Kishon,
+> 
+> On 03/04/2018 11:55, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Tuesday 03 April 2018 04:13 PM, Gustavo Pimentel wrote:
+>>> Hi Kishon,
+>>>
+>>> On 02/04/2018 06:35, Kishon Vijay Abraham I wrote:
+>>>>
+>>>>
+>>>> On Wednesday 28 March 2018 05:08 PM, Gustavo Pimentel wrote:
+>>>>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>
+>>>> Please add a commit message.
+>>>
+>>> Ok. I'll add. Thanks for noticing it.
+>>>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
+>>>>>  1 file changed, 13 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>> index 6300762..4bb2e08 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>>>> @@ -3,6 +3,7 @@
+>>>>>  Required properties:
+>>>>>  - compatible:
+>>>>>  	"snps,dw-pcie" for RC mode;
+>>>>> +	"snps,dw-pcie-ep" for EP mode;
+>>>>>  - reg: Should contain the configuration address space.
+>>>>>  - reg-names: Must be "config" for the PCIe configuration space.
+>>>>>      (The old way of getting the configuration address space from "ranges"
+>>>>> @@ -56,3 +57,15 @@ Example configuration:
+>>>>>  		#interrupt-cells = <1>;
+>>>>>  		num-lanes = <1>;
+>>>>>  	};
+>>>>> +or
+>>>>> +	pcie_ep: pcie_ep@dfc00000 {
+>>>>> +		compatible = "snps,dw-pcie-ep";
+>>>>> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
+>>>>> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
+>>>>
+>>>> Doesn't this have iATU unroll space?
+>>>
+>>> I don't think EP has it, but I'm no expert on this matter. Can you provide me
+>>> some example of having iATU unroll space mapping would be useful in EP scope?
+>>
+>> I'm not sure. I thought if the dwc3 core version is 4.80, then it'll have a
+>> separate ATU space irrespective of RC mode or EP mode.
+> 
+> As replied on patch 1, let's leave out  any reference of iATU unroll to avoid
+> any confusion. Agree?
+
+Mentioning iATU is fine as long as you change the size field in the "reg" property.
+
+Thanks
+Kishon
