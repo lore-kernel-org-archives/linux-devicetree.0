@@ -1,85 +1,85 @@
-From: Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
-Date: Fri, 6 Apr 2018 15:05:41 +0000
-Message-ID: <f9a45a6e-5b3c-ddd0-e465-cfcad6ece818@st.com>
-References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
- <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
- <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
- <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com>
- <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v7 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Fri,  6 Apr 2018 09:08:05 -0600
+Message-ID: <20180406150805.6394-3-ilina@codeaurora.org>
+References: <20180406150805.6394-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <E50218504ED75D4D88DF590B9A38B071@st.com>
+In-Reply-To: <20180406150805.6394-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAwNi8wNC8xOCAxNDo1NiwgSmFzc2kgQnJhciB3cm90ZToNCj4gT24gRnJpLCBBcHIgNiwg
-MjAxOCBhdCA1OjU5IFBNLCBGYWJpZW4gREVTU0VOTkUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+
-IHdyb3RlOg0KPj4gSGkNCj4+DQo+Pg0KPj4gT24gMDUvMDQvMTggMTE6MzgsIEphc3NpIEJyYXIg
-d3JvdGU6DQo+Pj4gT24gTW9uLCBNYXIgMTIsIDIwMTggYXQgNDoyOCBQTSwgRmFiaWVuIERlc3Nl
-bm5lIDxmYWJpZW4uZGVzc2VubmVAc3QuY29tPiB3cm90ZToNCj4+PiAuLi4uDQo+Pj4+ICsNCj4+
-Pj4gKyAgICAgICAvKiBpcnEgKi8NCj4+Pj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgSVBDQ19J
-UlFfTlVNOyBpKyspIHsNCj4+Pj4gKyAgICAgICAgICAgICAgIGlwY2MtPmlycXNbaV0gPSBvZl9p
-cnFfZ2V0X2J5bmFtZShkZXYtPm9mX25vZGUsIGlycV9uYW1lW2ldKTsNCj4+Pj4gKyAgICAgICAg
-ICAgICAgIGlmIChpcGNjLT5pcnFzW2ldIDwgMCkgew0KPj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICBkZXZfZXJyKGRldiwgIm5vIElSUSBzcGVjaWZpZWQgJXNcbiIsIGlycV9uYW1lW2ldKTsN
-Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0ID0gaXBjYy0+aXJxc1tpXTsNCj4+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfY2xrOw0KPj4+PiArICAgICAgICAgICAg
-ICAgfQ0KPj4+PiArDQo+Pj4+ICsgICAgICAgICAgICAgICByZXQgPSBkZXZtX3JlcXVlc3RfdGhy
-ZWFkZWRfaXJxKGRldiwgaXBjYy0+aXJxc1tpXSwgTlVMTCwNCj4+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXJxX3RocmVhZFtpXSwgSVJRRl9PTkVT
-SE9ULA0KPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBkZXZfbmFtZShkZXYpLCBpcGNjKTsNCj4+Pj4NCj4+PiBJbiB5b3VyIGludGVycnVwdCBoYW5k
-bGVycyB5b3UgZG9uJ3QgZG8gYW55dGhpbmcgdGhhdCBjb3VsZCBibG9jay4NCj4+PiBUaHJlYWRz
-IG9ubHkgYWRkcyBzb21lIGRlbGF5IHRvIHlvdXIgbWVzc2FnZSBoYW5kbGluZy4NCj4+PiBTbyBt
-YXliZSB1c2UgZGV2bV9yZXF1ZXN0X2lycSgpID8NCj4+IFRoZSBpbnRlcnJ1cHQgaGFuZGxlcnMg
-Y2FsbCBtYm94X2NoYW5fcmVjZWl2ZWRfZGF0YSgpIC8NCj4+IG1ib3hfY2hhbl90eGRvbmUoKSwg
-d2hpY2ggY2FsbCBpbiB0dXJuIGNsaWVudCdzIHJ4X2NhbGxiYWNrKCkgLw0KPj4gdHhfZG9uZSgp
-IC8gdHhfcHJlcGFyZSgpIHdoaWNoIGJlaGF2aW9yIG1heSBiZSB1bnNhZmUuIEhlbmNlLCB1c2lu
-ZyBhDQo+PiB0aHJlYWRlZCBpcnEgaGVyZSBzZWVtcyB0byBiZSBhIGdvb2QgY2hvaWNlLg0KPj4N
-Cj4gcnhfY2FsbGJhY2soKSBpcyBzdXBwb3NlZCB0byBiZSBhdG9taWMuDQoNCkkgYW0gd29ycmll
-ZCB3aXRoIHRoaXMgYXRvbWljIHBhcnQgKGFuZCBob25lc3RseSBJIGRpZCBub3Qgbm90ZSB0aGF0
-IHRoZSANCmNhbGxiYWNrcyB3ZXJlIGV4cGVjdGVkIHRvIGJlKQ0KDQpJbiBteSBjYXNlLCByZW1v
-dGVwcm9jLT52aXJ0aW8tPnJwbXNnIGlzIHRoZSBtYWlsYm94IGNsaWVudCBkZWZpbmluZyB0aGUg
-DQpyeF9jYWxsYmFjay4NCklmIEkgZm9sbG93IHlvdXIgc3VnZ2VzdGlvbiwgSSBzaGFsbCBtYWtl
-IHRoaXMgcnhfY2FsbGJhY2sgQXRvbWljIGluIA0KcmVtb3RlcHJvYyAob3IgaW4gdmlydGlvIG9y
-IHJwbXNnKS4gQW5kIHRoaXMgZG9lcyBub3Qgc2VlbSB0byBiZSBzbyANCnNpbXBsZSAoYWRkIGEg
-d29ya2VyIGluIHRoZSBtaWRkbGUgb2Ygc29tZXdoZXJlPykuIEJqb3JuLCBmZWVsIGZyZWUgdG8g
-DQpjb21tZW50IHRoaXMgcGFydC4NCg0KQW4gYWx0ZXJuYXRlIGltcGxlbWVudGF0aW9uIGNvbnNp
-c3RzIGluIHVzaW5nIGEgdGhyZWFkZWQgSVJRIGZvciB0aGUgDQptYWlsYm94IGludGVycnVwdC4N
-ClRoaXMgb3B0aW9uIGlzIG5vdCBvbmx5IHNpbXBsZSwgYnV0IGFsc28gZW5zdXJlcyB0byBzcGxp
-dCBib3R0b20gJiBoYWxmIA0KcGFydHMgYXQgdGhlIGlycSBsZXZlbCB3aGljaCBpcyBJTUhPIGEg
-Z2VuZXJhbCBnb29kIHByYWN0aWNlLg0KDQpJIGNhbiBzZWUgdGhhdCBzb21lIG1haWxib3ggY2xp
-ZW50cyBpbXBsZW1lbnQgY2FsbGJhY2tzIHRoYXQgYXJlIE5PVCANCmF0b21pYyBhbmQgSSBzdXNw
-ZWN0IHRoaXMgaXMgdGhlIHJlYXNvbiB3aHkgc29tZSBtYWlsYm94IGRyaXZlcnMgdXNlIA0KdGhy
-ZWFkZWRfaXJxIChyb2NrY2hpcCBtYWlsYm94IHNwbGl0cyB0aGUgYm90dG9tICYgaGFsZiBwYXJ0
-cykuDQoNCldvdWxkIGl0IGJlIGFjY2VwdGFibGUgdG8gY29uc2lkZXIgdGhlICJhdG9taWMgY2xp
-ZW50IGNhbGxiYWNrIiBhcyBhIA0Kbm9uLXN0cmljdCBydWxlID8NCg0KPiAgIFNvIHdhcyB0eF9k
-b25lKCkgYnV0IHNvbWUNCj4gcGxhdGZvcm1zIG5lZWRlZCBwcmVwYXJpbmcgZm9yIHRoZSBtZXNz
-YWdlIHRvIGJlIHNlbnQuIFlvdXIgY2xpZW50IGlzDQo+IG5vdCBnb2luZyB0byBiZSB1c2VkIGJ5
-IG90aGVyIHBsYXRmb3JtcyBvciBldmVuIG92ZXIgb3RoZXINCj4gY29udHJvbGxlcnMsIHNvIGlm
-IHlvdXIgcHJlcGFyZSBpcyBOVUxML2F0b21pYywgeW91IHNob3VsZCBhc3N1bWUNCj4gdHhfZG9u
-ZSB0byBiZSBhdG9taWMgYW5kIG5vdCBsb3NlIHBlcmZvcm1hY2UuIElmIHRpbWUgY29tZXMgdG8g
-Zml4IGl0LA0KPiB3ZSdsbCBtb3ZlIHByZXBhcmUoKSBvdXQgb2YgdGhlIGF0b21pYyBwYXRoLg0K
-Pg0KPg0KPj4+IC4uLi4uLi4NCj4+Pj4gKw0KPj4+PiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
-cml2ZXIgc3RtMzJfaXBjY19kcml2ZXIgPSB7DQo+Pj4+ICsgICAgICAgLmRyaXZlciA9IHsNCj4+
-Pj4gKyAgICAgICAgICAgICAgIC5uYW1lID0gInN0bTMyLWlwY2MiLA0KPj4+PiArICAgICAgICAg
-ICAgICAgLm93bmVyID0gVEhJU19NT0RVTEUsDQo+Pj4+DQo+Pj4gTm8gbmVlZCBvZiBvd25lciBo
-ZXJlIHRoZXNlIGRheXMuDQo+PiBPSywgSSB3aWxsIHN1cHByZXNzIGl0Lg0KPj4NCj4+PiBBbmQg
-YWxzbyBtYXliZSB1c2UgcmVhZGwvd3JpdGVsLCBpbnN0ZWFkIG9mIF9yZWxheGVkLg0KPj4gVGhl
-IElQQ0MgZGV2aWNlIGlzIGV4Y2x1c2l2ZWx5IHVzZWQgb24gQVJNLiBJbiBBUk0gYXJjaGl0ZWN0
-dXJlLCB0aGUNCj4+IGlvcmVtYXAgb24gZGV2aWNlcyBhcmUgc3RyaWN0bHkgb3JkZXJlZCBhbmQg
-dW5jYWNoZWQuDQo+PiBJbiB0aGF0IGNhc2UsIHVzaW5nIF9yZWxheGVkIGF2b2lkcyBhbiB1bm5l
-ZWRlZCBjYWNoZSBmbHVzaCwgc2xpZ2h0bHkNCj4+IGltcHJvdmluZyBwZXJmb3JtYW5jZS4NCj4+
-DQo+IEl0cyBub3QgdGhlIHBvcnRhYmlsaXR5LCBidXQgdGhhdCB0aGUgaW1wYWN0IGlzIG5lZ2xp
-Z2libGUgaW4gZmF2b3Igb2YNCj4gX3JlbGF4ZWQoKSB2ZXJzaW9uIHdoZW4gYWxsIHlvdSBkbyBp
-cyBqdXN0IHByb2dyYW0gc29tZSByZWdpc3RlcnMgYW5kDQo+IG5vdCBoZWF2eSBkdXR5IGkvby4g
-QnV0IEkgYW0gb2sgZWl0aGVyIHdheS4gIFlvdSdkIGdhaW4gZmFyIG1vcmUNCj4gcGVyZm9ybWFu
-Y2UgaGFuZGxpbmcgaXJxcyBpbiBub24tdGhyZWFkZWQgbWFubmVyIDopDQo+DQo+IENoZWVycyEN
-Cg==
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+
+Command DB provides information on shared resources like clocks,
+regulators etc., probed at boot by the remote subsytem and made
+available in shared memory.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes in v7:
+	- Fix description of 'reg' property
+
+Changes in v6:
+	- Move to bindings/reserved-memory
+	- Remove indirection address and use only the actual reserved
+	  memory
+
+Changes in v4:
+	- Fix unwanted capitalization
+	- Add reg property
+---
+ .../bindings/reserved-memory/qcom,cmd-db.txt       | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+new file mode 100644
+index 000000000000..02e7d729bd77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+@@ -0,0 +1,36 @@
++Command DB
++---------
++
++Command DB is a database that provides a mapping between resource key and the
++resource address for a system resource managed by a remote processor. The data
++is stored in a shared memory region and is loaded by the remote processor.
++
++Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
++controlling shared resources. Depending on the board configuration the shared
++resource properties may change. These properties are dynamically probed by the
++remote processor and made available in the shared memory.
++
++The bindings for Command DB is specified in the reserved-memory section in
++devicetree. The devicetree representation of the command DB driver should be:
++
++Properties:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,cmd-db"
++
++- reg:
++	Usage: required
++	Value type: <prop encoded array>
++	Definition: The register address that points to the location of the
++		    actual Command DB in memory.
++
++Example:
++
++	reserved-memory {
++		[...]
++		qcom,cmd-db@85fe0000 {
++			reg = <0x0 0x85fe0000 0x0 0x20000>;
++			compatible = "qcom,cmd-db";
++		};
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
