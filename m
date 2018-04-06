@@ -1,43 +1,81 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
-Date: Fri, 6 Apr 2018 10:20:46 +0000
-Message-ID: <TY1PR01MB17693CFDF889498956107783F5BA0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
- <CAHp75VeOTjZ30ok1JOW0cefZfxqUM-f0-zpTnC5TonyeqQVUKg@mail.gmail.com>
- <TY1PR01MB1769064C77AE3E5ABA4993DAF5BB0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <CAMuHMdX34f1pDCVqNV43_qtzqZ-fruOcUsUN_Ysz4ihJwe-56A@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: call/normal switch was Re: omap4-droid4: voice
+	call support was
+Date: Fri, 6 Apr 2018 14:04:23 +0200
+Message-ID: <20180406120423.GA18691@amd>
+References: <20180331195524.GB19388@amd> <20180331234314.GZ5700@atomide.com>
+ <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
+ <20180401173012.GB5700@atomide.com>
+ <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+ <20180402155754.GD5700@atomide.com>
+ <20180403150444.GE5700@atomide.com>
+ <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+ <20180403194419.GG5700@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX34f1pDCVqNV43_qtzqZ-fruOcUsUN_Ysz4ihJwe-56A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============7571068853956164655=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180403194419.GG5700@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDA2IEFwcmlsIDIwMTggMTA6NTcgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
-b3RlOg0KPiBPbiBUaHUsIEFwciA1LCAyMDE4IGF0IDExOjQyIEFNLCBQaGlsIEVkd29ydGh5IHdy
-b3RlOg0KPiA+IE9uIDMwIE1hcmNoIDIwMTggMjI6MjYgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
-PiA+PiBPbiBXZWQsIE1hciAyOCwgMjAxOCBhdCA1OjIyIFBNLCBQaGlsIEVkd29ydGh5IHdyb3Rl
-Og0KPiA+PiA+IFRoZSBEZXNpZ25XYXJlIEdQSU8gSVAgY2FuIGJlIGNvbmZpZ3VyZWQgZm9yIGVp
-dGhlciAxIG9yIDMyDQo+ID4+ID4gaW50ZXJydXB0cywNCj4gPj4NCj4gPj4gMSB0byAzMiwgb3Ig
-anVzdCBhIGNob2ljZSBiZXR3ZWVuIHR3bz8NCj4gPiBKdXN0IGEgY2hvaWNlIG9mIDEgb3IgMzIu
-DQo+ID4gTm90ZSB0aGF0IGJ5ICdjb25maWd1cmVkJyBJIGFtIHRhbGtpbmcgYWJvdXQgdGhlIGhh
-cmR3YXJlIGJlaW5nDQo+ID4gY29uZmlndXJlZCBpbiBSVEwgcHJpb3IgdG8gbWFudWZhY3R1cmlu
-ZyBhIGRldmljZS4gT25jZSBtYWRlLCB5b3UgY2Fubm90DQo+IGNoYW5nZSBpdC4NCj4gPiBUaGlz
-IGNvbmZpZ3VyYXRpb24gYWZmZWN0cyB0aGUgbnVtYmVyIG9mIG91dHB1dCBpbnRlcnJ1cHQgc2ln
-bmFscyBmcm9tDQo+ID4gdGhlIEdQSU8gQ29udHJvbGxlciBibG9jayB0aGF0IGFyZSBjb25uZWN0
-ZWQgdG8gYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIuDQo+IA0KPiBEaWZmZXJlbnRpYXRpbmcgYmV0
-d2VlbiBkaWZmZXJlbnQgdmVyc2lvbnMgb2YgYW4gSVAgYmxvY2sgdXNpbmcgRFQgcHJvcGVydGll
-cw0KPiBpcyB1c3VhbGx5IGEgYmFkIGlkZWEsIGZvciBzZXZlcmFsIHJlYXNvbnM6DQo+ICAgLSBX
-aGF0IGlmIHlvdSBkaXNjb3ZlciBhbm90aGVyIGRpZmZlcmVuY2UgbGF0ZXI/DQo+ICAgLSBZb3Ug
-Y2Fubm90IGFkZCBkaWZmZXJlbnRpYXRpbmcgcHJvcGVydGllcyByZXRyb2FjdGl2ZWx5LCBiZWNh
-dXNlIG9mDQo+IGJhY2t3YXJkcw0KPiAgICAgIGNvbXBhdGliaWxpdHkgd2l0aCBvbGQgRFRCUy4N
-Cj4gDQo+IEhlbmNlIEkgdGhpbmsgeW91IHNob3VsZCBpbnRyb2R1Y2UgYSBuZXcgY29tcGF0aWJs
-ZSB2YWx1ZSBpbnN0ZWFkLg0KDQpUaGlzIGlzIG5vdCBhIGRpZmZlcmVudCB2ZXJzaW9uIG9mIHRo
-ZSBJUCwganVzdCBhIGRpZmZlcmVudCBjb25maWd1cmF0aW9uIG9wdGlvbi4NCk1vc3QgSVAgYmxv
-Y2tzIGhhdmUgYSBodWdlIG51bWJlciBvZiBrbm9icyB0aGF0IGNhbiBiZSB0d2lkZGxlZCBieSB0
-aGUgSFcNCnBlb3BsZSwgc3VjaCBhcyBjYWNoZSBzaXplLCBVQVJUIGZpZm8gZGVwdGguIEkgdGhp
-bmsgdGhpcyBpcyBubyBkaWZmZXJlbnQuDQoNClRoYW5rcw0KUGhpbA0KDQo=
+
+--===============7571068853956164655==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+
+
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> OK that explains why the speaker keeps working then :)
+
+Ok, I pushed new version of unicsy_demo.
+
+It now sends & receives sms and you can call & receive call. Tone from
+linphone is used for incoming call. User interface and code is
+slightly weird, as ofono was -- and still is -- meant as a backend.
+
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrHYkcACgkQMOfwapXb+vIWcQCgod3+R3Xwjbl/CKKfRo9Bd/CY
+GHAAnjI7cd1QncvXEBUmK6pxKgufJ86e
+=ngsm
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
+
+--===============7571068853956164655==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7571068853956164655==--
