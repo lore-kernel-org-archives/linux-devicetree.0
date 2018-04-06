@@ -1,41 +1,72 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 3/6] clk: stm32mp1: fix SAI3 & SAI4 clocks
-Date: Fri, 6 Apr 2018 08:39:30 +0200
-Message-ID: <1522996773-24129-4-git-send-email-gabriel.fernandez@st.com>
-References: <1522996773-24129-1-git-send-email-gabriel.fernandez@st.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add fixed 26MHz clock as fck
+ for twl
+Date: Fri, 6 Apr 2018 10:00:33 +0300
+Message-ID: <065d346a-12a4-3dc6-d8a3-e5351a73a7ab@ti.com>
+References: <20180405115239.17370-1-peter.ujfalusi@ti.com>
+ <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522996773-24129-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com, Loic PALLARDY <loic.pallardy@st.com>, benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1b05ea2c-fa95-e5c7-2a37-4e0b46f62abc@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-
-fix bad copy / paste.
-SAI3 & SAI4 used gate of SAI2 instead SAI3 & SAI4
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- drivers/clk/clk-stm32mp1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 9a67b1c..eefed49 100644
---- a/drivers/clk/clk-stm32mp1.c
-+++ b/drivers/clk/clk-stm32mp1.c
-@@ -1942,8 +1942,8 @@ enum {
- 	KCLK(FDCAN_K, "fdcan_k", fdcan_src, 0, G_FDCAN, M_FDCAN),
- 	KCLK(SAI1_K, "sai1_k", sai_src, 0, G_SAI1, M_SAI1),
- 	KCLK(SAI2_K, "sai2_k", sai2_src, 0, G_SAI2, M_SAI2),
--	KCLK(SAI3_K, "sai3_k", sai_src, 0, G_SAI2, M_SAI3),
--	KCLK(SAI4_K, "sai4_k", sai_src, 0, G_SAI2, M_SAI4),
-+	KCLK(SAI3_K, "sai3_k", sai_src, 0, G_SAI3, M_SAI3),
-+	KCLK(SAI4_K, "sai4_k", sai_src, 0, G_SAI4, M_SAI4),
- 	KCLK(ADC12_K, "adc12_k", adc12_src, 0, G_ADC12, M_ADC12),
- 	KCLK(DSI_K, "dsi_k", dsi_src, 0, G_DSI, M_DSI),
- 	KCLK(ADFSDM_K, "adfsdm_k", sai_src, 0, G_ADFSDM, M_SAI1),
--- 
-1.9.1
+CgpPbiAyMDE4LTA0LTA1IDE2OjE1LCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiAKPiAKPiBPbiAy
+MDE4LTA0LTA1IDE0OjUyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPj4gVGhlIGJvYXJkIHVzZXMg
+MjZNSHogb3NjaWxsYXRvciBmb3IgdGhlIHR3bDQwMzAgSEZDTEsuCj4+IFRoaXMgd2F5IHdlIHdp
+bGwgbm90IGRlcGVuZCBvbiB0aGUgYm9vdGxvYWRlciB0byBjb25maWd1cmUgdGhlCj4+IENGR19C
+T09UOkhGQ0xLX0ZSRVEKPj4KPj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVy
+LnVqZmFsdXNpQHRpLmNvbT4KPj4gLS0tCj4+IEhpLAo+Pgo+PiB0aGVyZSBtaWdodCBiZSBvdGhl
+ciBib2FyZHMgKGFsbCBvbWFwMyBib2FyZHMgd2l0aCB0d2w0MDMwPykgd2hpY2ggdXNlcyB0aGUg
+c2FtZQo+PiBzZXR1cCwgYnV0IEkgb25seSBoYXZlIHNjaGVtYXRpY3MgZm9yIGJlYWdsZS14bS4K
+Pj4KPj4gSW4gb3JkZXIgZm9yIHRoZSBkcml2ZXIgdG8gYWN0dWFsbHkgdXNlIHRoZSBjbG9jayB0
+aGUgCj4+IFtQQVRDSF0gbWZkOiB0d2wtY29yZTogRml4IGNsb2NrIGluaXRpYWxpemF0aW9uCj4+
+IG5lZWQgdG8gYmUgYXBwbGllZC4gVy9vIHRoZSB0d2wtY29yZSBwYXRjaCB0aGUgY2xvY2sgaXMg
+anVzdCBpZ25vcmVkLgo+Pgo+PiBSZWdhcmRzLAo+PiBQZXRlcgo+Pgo+PiAgYXJjaC9hcm0vYm9v
+dC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cyB8IDEwICsrKysrKysrKysKPj4gIDEgZmlsZSBjaGFu
+Z2VkLCAxMCBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
+cy9vbWFwMy1iZWFnbGUteG0uZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXht
+LmR0cwo+PiBpbmRleCAwMzQ5ZmNjOWRjMjYuLmQ4MDU4N2RlMGJiZiAxMDA2NDQKPj4gLS0tIGEv
+YXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwo+PiArKysgYi9hcmNoL2FybS9i
+b290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzCj4+IEBAIC0zMCw2ICszMCwxMyBAQAo+PiAgCQll
+dGhlcm5ldCA9ICZldGhlcm5ldDsKPj4gIAl9Owo+PiAgCj4+ICsJLyogZml4ZWQgMjZNSHogb3Nj
+aWxsYXRvciAqLwo+PiArCWhmY2xrXzI2bTogb3NjaWxsYXRvciB7Cj4+ICsJCSNjbG9jay1jZWxs
+cyA9IDwwPjsKPj4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4+ICsJCWNsb2NrLWZy
+ZXF1ZW5jeSA9IDwyNjAwMDAwMD47Cj4+ICsJfTsKPj4gKwo+PiAgCWxlZHMgewo+PiAgCQljb21w
+YXRpYmxlID0gImdwaW8tbGVkcyI7Cj4+ICAKPj4gQEAgLTI3NCw2ICsyODEsOSBAQAo+PiAgCQlp
+bnRlcnJ1cHRzID0gPDc+OyAvKiBTWVNfTklSUSBjYXNjYWRlZCB0byBpbnRjICovCj4+ICAJCWlu
+dGVycnVwdC1wYXJlbnQgPSA8JmludGM+Owo+PiAgCj4+ICsJCWNsb2NrcyA9IDwmaGZjbGtfMjZt
+PjsKPj4gKwkJY2xvY2stbmFtZXMgPSAiZmNrIjsKPiAKPiBJIHdvbmRlciBpZiB3ZSBzaG91bGQg
+cmVuYW1lIHRoaXMgdG8gaGZjbGsuLi4KPiBUaGUgRFQgZG9jdW1lbnRhdGlvbiBkb2VzIG5vdCBt
+ZW50aW9uIGl0IGFuZCBhZmFpayBpdCBpcyBub3Qgc3BlY2lmaWVkCj4gaW4gRFQgZmlsZXMgZWl0
+aGVyLgo+IAo+IEFmdGVyIGFsbCBpdCBpcyB0aGUgSEZDTEsgY2xvY2sgZm9yIHRoZSB0d2w0MDMw
+LgoKV2Ugc2hvdWxkIG5vdCBhcyBpdCB3b3VsZCBicmVhayBjb21wYXRpYmlsaXR5IHdpdGggc3Rh
+YmxlIGtlcm5lbHMgd2hlcmUKdGhlIGNvZGUgZXhwZWN0cyAnZmNrJyBhbmQgbm90IGhmY2xrLgoK
+PiAKPiBJJ20gZmluZSBrZWVwaW5nIGl0IGFzICdmY2snIGJ1dCBpdCBsb29rcyBhIGJpdCB3ZWly
+ZC4KPiAKPj4gKwo+PiAgCQl0d2xfYXVkaW86IGF1ZGlvIHsKPj4gIAkJCWNvbXBhdGlibGUgPSAi
+dGksdHdsNDAzMC1hdWRpbyI7Cj4+ICAJCQljb2RlYyB7Cj4+Cj4gCj4gLSBQw6l0ZXIKPiAKPiBU
+ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
+aW5raS4KPiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWlj
+aWxlOiBIZWxzaW5raQo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQg
+dGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LW9tYXAiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNz
+YWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0
+ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiAKCi0gUMOpdGVy
+CgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBI
+ZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21p
+Y2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
