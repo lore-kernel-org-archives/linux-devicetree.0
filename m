@@ -1,87 +1,140 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: simultaneous voice/data works (was Re: call/normal
- switch was Re: omap4-droid4: voice call support was)
-Date: Sat, 7 Apr 2018 10:10:00 +0200
-Message-ID: <20180407081000.GB7818@amd>
-References: <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
- <20180401173012.GB5700@atomide.com>
- <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com>
- <20180403150444.GE5700@atomide.com>
- <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
- <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
- <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Sat, 7 Apr 2018 11:45:56 +0200
+Message-ID: <20180407094556.GQ20945@w540>
+References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1664336.M7KDjLhzuK@avalon> <20180406142558.GP20945@w540>
+ <2441543.5xTHaLXzZ0@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2608735475586296374=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Merlijn Wajer <merlijn@wizzup.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dcbw@redhat.com>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: multipart/mixed; boundary="===============0949986739=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2441543.5xTHaLXzZ0@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, Mark Brown <broonie@kernel.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============2608735475586296374==
+--===============0949986739==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+	protocol="application/pgp-signature"; boundary="5Dr6Wqe9hdyl7LAI"
 Content-Disposition: inline
 
 
---E39vaYmALEf/7YXx
-Content-Type: text/plain; charset=us-ascii
+--5Dr6Wqe9hdyl7LAI
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Laurent
 
-It seems qmicli can be used while unicsy_demo/ofone talks to the modem
-using the AT commands.
 
-So I could do:
+On Fri, Apr 06, 2018 at 06:40:14PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> (CC'ing Mark Brown)
 
-qmicli -d /dev/cdc-wdm0 --wds-follow-network --wds-start-network=3Dapn=3Din=
-ternet.t-mobile.cz
-route del default
-sudo ifconfig wwan0 up
-dhclient wwan0
+Hi Mark
 
-to get GPRS/UMTS connection. AT commands still work.
+[snip]
+> >
+> > Anyway, we spent enough time on naming issues, starting from my first
+> > stupid 'pdwn' permutations then on this semi-standard names.
+> >
+> > I'll send next version with 'powerdown-gpios' and 'oe-gpios'
+> > properties hoping that would be finally accepted by everyone.
+>
+> I certainly won't complain (as long as you write pwdn instead of pdwn in the
+> driver :-)).
+>
 
-Does anyone have any idea what to do to get the GPS to work?
+Oh, so you won't complain if I address your comments? Thank you! :D
+By the way, the dumb pdwn name comes, again, from the chip name. I can
+change it to a saner name for sure...
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> > Same on the mandatory/optional VCC supply thing. Let's try to make
+> > next version the final one. If the optional property with the dummy
+> > regulator doesn't satisfy you and it is preferred to have a fixed-regulator
+> > anyhow in DT I'll do in next version, othewise let's try not to change
+> > it again. I'll just remark here that in the current Eagle design vcc is
+> > connected to a power rail with no regulator at all :)
+>
+> I don't like the dummy regulator much, as it generates a dev_warn(), which
+> makes me believe that it's a hack rather than a proper solution. You might
+> want to ask Mark Brown for his opinion.
+>
 
---E39vaYmALEf/7YXx
+Sure: Hi Mark, a bit of context here to save you a long(er) reading.
+
+Unsurprisingly, the chip for which I'm writing this small driver needs
+a power supply to be properly functional :) In the development board
+it is installed on, the power supply is connected to a power rail,
+with no regulator. At the same time, some other designs may instead
+include a regulator. I assume that's a very common situation. I
+started by describing the regulator as optional in DT bindings, and
+use regulator_get_optional(). If that function returns PTR_ERR, the
+regulator is then ignored in driver's power management routines.
+
+In this last version I thought I was acting smart and copied what happens
+in other DRM bridges like adv7511, which use 'regulator_get()' and work
+with a dummy if no regulator is provided in DT. Laurent has the above
+doubts on using a dummy, and I actually share some of his concerns
+(that dev_warn() is how I found out adv7511 was using a dummy, actually).
+
+To sum up: when a regulator is described as optional in DT, do you
+suggest to work with a dummy if it's not there, or use the _optional()
+version of regulator_get() and manually set it to NULL and ignore it
+in the enable/disable driver's routines?
+
+Bonus question: Laurent likes to have the regulator described as required,
+and thus require it to be described in DT also in cases where it is not
+actually there using a 'fixed-regulator' and refuse to probe if the regulator
+is not available. Do you encourage this approach, or prefer to have it
+optional and handle it in the driver in one of the above described
+ways?
+
+Thank you
+    j
+
+--5Dr6Wqe9hdyl7LAI
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlrIfNgACgkQMOfwapXb+vLUgwCeM8xvN8f4NiGsYsGYTtPbEpiu
-+kMAn0ncGuWCT/d3i8uOStcDckMHMnJ9
-=sXKV
+iQIcBAEBAgAGBQJayJNUAAoJEHI0Bo8WoVY8OSMP/1Ws8zIHiIxBHM+D8JDRqLr/
+PwKqUx8CwAw7mMHsSYW6uIc+aTU5KStGMezxUKc3j+QcEUJmJcCb195KBn6yh1MD
+JV+oWZPPCeKrX4AfbFY9uYmYHAOdJoYky9w5NA0hdrpjIbF6iLehRhTM0syyKct1
+/o7VN2jsxHgZTnt4LBuCzd83E+Jx9MaTl8pERSr61feNUX8Hp+Xmofs0iXPZna9L
+vKdo4W/k4qG0Ap+ukZLd5MNkZXfWzTbsF7Wx+xntMtuXOPpJ9Ltzy5V/r3XphAHX
+ehawHATR8FjcCdzji5JINkOqXWvlSFgmXelBs2DHIhIZaaUC2X8HryuRPkkfhGlP
+3jF7egepZghYyCnoNyRxM7SXBnBqmGwSp+8zD+l5jVBhr4hRGqx+OFz8p4LA648A
+Bzgkx0HoEr0c5XvlNexgdhTPurRRGYYIGf5hFUGpFzS3rdlQKtRBZD+soRkt5K/Q
+2ldO8CI5gJHnFKVDYyMwBbERbua9e9QmPMNLT6R9AtkJFr1cs2sRBDK+f4LqTXS3
+/6clkHtP8O/1JlSKOo+BasIMgfynrFpcbX6HjlzdKP7h9PcSy+TEht/eybk42hwG
+/mENQ77D/pymSyQZHMh4i3jMR3j95L1q9utBaDH9CHZ50CC/w2z/DoujWlr2C2uH
+8IY5Np0FPDDO4bT+m/eu
+=n0wZ
 -----END PGP SIGNATURE-----
 
---E39vaYmALEf/7YXx--
+--5Dr6Wqe9hdyl7LAI--
 
---===============2608735475586296374==
-Content-Type: text/plain; charset="us-ascii"
+--===============0949986739==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============2608735475586296374==--
+--===============0949986739==--
