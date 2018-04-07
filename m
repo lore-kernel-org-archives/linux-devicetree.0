@@ -1,38 +1,35 @@
-Return-Path: <SRS0=/m6R=G5=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v2 5/5] DT: pci: rcar-pci: document R8A77980 bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
-Message-ID: <461a6029-1e03-a292-62d2-aca7de274de6@cogentembedded.com>
-Date: Sun, 8 Apr 2018 21:10:43 +0300
-MIME-Version: 1.0
-In-Reply-To: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=g+8A=G4=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 0/6] media: ov772x: support media controller, device tree probing, etc.
+Date: Sun,  8 Apr 2018 00:48:04 +0900
+Message-Id: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3H (R8A77980) SoC in the R-Car PCIe bindings.
+This patchset includes support media controller, device tree probing and
+other miscellanuous changes for ov772x driver.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Akinobu Mita (6):
+  media: ov772x: allow i2c controllers without
+    I2C_FUNC_PROTOCOL_MANGLING
+  media: ov772x: add checks for register read errors
+  media: ov772x: create subdevice device node
+  media: ov772x: add media controller support
+  media: ov772x: add device tree binding
+  media: ov772x: support device tree probing
 
----
-Changes in version 2:
-- new patch.
+ .../devicetree/bindings/media/i2c/ov772x.txt       |  36 ++++++
+ MAINTAINERS                                        |   1 +
+ drivers/media/i2c/ov772x.c                         | 136 ++++++++++++++++-----
+ 3 files changed, 140 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
 
- Documentation/devicetree/bindings/pci/rcar-pci.txt |    1 +
- 1 file changed, 1 insertion(+)
-
-Index: pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-===================================================================
---- pci.orig/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -8,6 +8,7 @@ compatible: "renesas,pcie-r8a7743" for t
- 	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
- 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
- 	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
-+	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
- 				     RZ/G1 compatible device.
- 	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+-- 
+2.7.4
