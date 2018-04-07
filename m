@@ -1,35 +1,56 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: Add entry for the Qualcomm BMS
-Date: Sat,  7 Apr 2018 14:59:21 +0100
-Message-ID: <20180407135934.26122-3-ctatlor97@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 1/3] power: supply: Add support for the Qualcomm
+ Battery Monitoring System
+Date: Sat, 7 Apr 2018 09:37:21 -0700
+Message-ID: <d33902cb-65d8-9790-7950-e30134f68578@infradead.org>
 References: <20180407135934.26122-1-ctatlor97@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180407135934.26122-1-ctatlor97@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 04/07/2018 06:59 AM, Craig Tatlor wrote:
+> This patch adds a driver for the BMS (Battery Monitoring System)
+> block of the PM8941 PMIC, it uses a lookup table defined in the
+> device tree to generate a capacity from the BMS supplied OCV, it
+> then ammends the coulomb counter to that to increase the accuracy
+> of the estimated capacity.
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> ---
+>  drivers/power/supply/Kconfig    |   9 +
+>  drivers/power/supply/Makefile   |   1 +
+>  drivers/power/supply/qcom_bms.c | 500 ++++++++++++++++++++++++++++++++
+>  3 files changed, 510 insertions(+)
+>  create mode 100644 drivers/power/supply/qcom_bms.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c3ad62c638c..aaf54b665f86 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11605,6 +11605,12 @@ W:	http://wireless.kernel.org/en/users/Drivers/ath9k
- S:	Supported
- F:	drivers/net/wireless/ath/ath9k/
- 
-+QUALCOMM BATTERY MONITORING SYSTEM
-+M:	Craig Tatlor <ctatlor97@gmail.com>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/power/supply/qcom_bms.c
-+
- QUALCOMM CAMERA SUBSYSTEM DRIVER
- M:	Todor Tomov <todor.tomov@linaro.org>
- L:	linux-media@vger.kernel.org
+> diff --git a/drivers/power/supply/qcom_bms.c b/drivers/power/supply/qcom_bms.c
+> new file mode 100644
+> index 000000000000..5aa6e906d1b9
+> --- /dev/null
+> +++ b/drivers/power/supply/qcom_bms.c
+> @@ -0,0 +1,500 @@
+
+Hi,
+
+> +static unsigned int between(int left, int right, int val)
+> +{
+> +	if (left <= val && val >= right)
+
+maybe double-check those if() conditions?
+[or I need my morning coffee]
+
+> +		return 1;
+> +
+> +	return 0;
+> +}
+
+thanks,
 -- 
-2.17.0
+~Randy
