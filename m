@@ -1,57 +1,44 @@
-Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:44618 "EHLO
+Return-Path: <SRS0=NCrW=G4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:36215 "EHLO
         mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752994AbeDFWwy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Apr 2018 18:52:54 -0400
-Received: by mail-pf0-f193.google.com with SMTP id p15so1746220pff.11
-        for <devicetree@vger.kernel.org>; Fri, 06 Apr 2018 15:52:54 -0700 (PDT)
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: [PATCH v8 1/2] media: dt-bindings: Add bindings for panasonic,amg88xx
-Date: Fri,  6 Apr 2018 15:52:30 -0700
-Message-Id: <20180406225231.13831-2-matt.ranostay@konsulko.com>
-In-Reply-To: <20180406225231.13831-1-matt.ranostay@konsulko.com>
-References: <20180406225231.13831-1-matt.ranostay@konsulko.com>
+        with ESMTP id S1751741AbeDGPss (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Apr 2018 11:48:48 -0400
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 3/6] media: ov772x: create subdevice device node
+Date: Sun,  8 Apr 2018 00:48:07 +0900
+Message-Id: <1523116090-13101-4-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
+References: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Matt Ranostay <matt.ranostay@konsulko.com>, devicetree@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the device tree bindings for the panasonic,amg88xx i2c
-video driver.
+Set the V4L2_SUBDEV_FL_HAS_DEVNODE flag for the subdevice so that the
+subdevice device node is created.
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- .../bindings/media/i2c/panasonic,amg88xx.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
+ drivers/media/i2c/ov772x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-new file mode 100644
-index 000000000000..4a3181a3dd7e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/panasonic,amg88xx.txt
-@@ -0,0 +1,19 @@
-+* Panasonic AMG88xx
-+
-+The Panasonic family of AMG88xx Grid-Eye sensors allow recording
-+8x8 10Hz video which consists of thermal datapoints
-+
-+Required Properties:
-+ - compatible : Must be "panasonic,amg88xx"
-+ - reg : i2c address of the device
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		amg88xx@69 {
-+			compatible = "panasonic,amg88xx";
-+			reg = <0x69>;
-+		};
-+		...
-+	};
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index c56f910..4bb81ff 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -1301,6 +1301,7 @@ static int ov772x_probe(struct i2c_client *client,
+ 	client->flags |= I2C_CLIENT_SCCB;
+ 
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
++	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	v4l2_ctrl_handler_init(&priv->hdl, 3);
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+ 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
 -- 
-2.14.1
+2.7.4
 
