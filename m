@@ -1,86 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Sat, 07 Apr 2018 12:56:48 +0300
-Message-ID: <2813569.TyIUb2mkfU@avalon>
-References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
- <2441543.5xTHaLXzZ0@avalon> <20180407094556.GQ20945@w540>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] doc/devicetree: Persistent memory region bindings
+Date: Sat, 07 Apr 2018 20:58:37 +1000
+Message-ID: <87zi2fb7vm.fsf@concordia.ellerman.id.au>
+References: <20180406052116.31483-1-oohall@gmail.com>
+ <20180406052116.31483-3-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180407094556.GQ20945@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, Mark Brown <broonie@kernel.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180406052116.31483-3-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gU2F0dXJkYXksIDcgQXByaWwgMjAxOCAxMjo0NTo1NiBFRVNUIGphY29w
-byBtb25kaSB3cm90ZToKPiBPbiBGcmksIEFwciAwNiwgMjAxOCBhdCAwNjo0MDoxNFBNICswMzAw
-LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gSGkgSmFjb3BvLAo+ID4gCj4gPiAoQ0MnaW5n
-IE1hcmsgQnJvd24pCj4gCj4gSGkgTWFyawo+IAo+IFtzbmlwXQo+IAo+ID4+IEFueXdheSwgd2Ug
-c3BlbnQgZW5vdWdoIHRpbWUgb24gbmFtaW5nIGlzc3Vlcywgc3RhcnRpbmcgZnJvbSBteSBmaXJz
-dAo+ID4+IHN0dXBpZCAncGR3bicgcGVybXV0YXRpb25zIHRoZW4gb24gdGhpcyBzZW1pLXN0YW5k
-YXJkIG5hbWVzLgo+ID4+IAo+ID4+IEknbGwgc2VuZCBuZXh0IHZlcnNpb24gd2l0aCAncG93ZXJk
-b3duLWdwaW9zJyBhbmQgJ29lLWdwaW9zJwo+ID4+IHByb3BlcnRpZXMgaG9waW5nIHRoYXQgd291
-bGQgYmUgZmluYWxseSBhY2NlcHRlZCBieSBldmVyeW9uZS4KPiA+IAo+ID4gSSBjZXJ0YWlubHkg
-d29uJ3QgY29tcGxhaW4gKGFzIGxvbmcgYXMgeW91IHdyaXRlIHB3ZG4gaW5zdGVhZCBvZiBwZHdu
-IGluCj4gPiB0aGUgZHJpdmVyIDotKSkuCj4gCj4gT2gsIHNvIHlvdSB3b24ndCBjb21wbGFpbiBp
-ZiBJIGFkZHJlc3MgeW91ciBjb21tZW50cz8gVGhhbmsgeW91ISA6RAo+IEJ5IHRoZSB3YXksIHRo
-ZSBkdW1iIHBkd24gbmFtZSBjb21lcywgYWdhaW4sIGZyb20gdGhlIGNoaXAgbmFtZS4gSSBjYW4K
-PiBjaGFuZ2UgaXQgdG8gYSBzYW5lciBuYW1lIGZvciBzdXJlLi4uCgpBbmQgSSd2ZSBqdXN0IHJl
-YWxpemVkIHRoYXQsIEkgdGhvdWdodCBpdCB3YXMgYSB0eXBvIDotLyBJZiBpdCBjb21lcyB3aXRo
-IHRoZSAKZGF0YXNoZWV0IEknbSBmaW5lIHdpdGggZWl0aGVyLgoKPiA+PiBTYW1lIG9uIHRoZSBt
-YW5kYXRvcnkvb3B0aW9uYWwgVkNDIHN1cHBseSB0aGluZy4gTGV0J3MgdHJ5IHRvIG1ha2UKPiA+
-PiBuZXh0IHZlcnNpb24gdGhlIGZpbmFsIG9uZS4gSWYgdGhlIG9wdGlvbmFsIHByb3BlcnR5IHdp
-dGggdGhlIGR1bW15Cj4gPj4gcmVndWxhdG9yIGRvZXNuJ3Qgc2F0aXNmeSB5b3UgYW5kIGl0IGlz
-IHByZWZlcnJlZCB0byBoYXZlIGEKPiA+PiBmaXhlZC1yZWd1bGF0b3IgYW55aG93IGluIERUIEkn
-bGwgZG8gaW4gbmV4dCB2ZXJzaW9uLCBvdGhld2lzZSBsZXQncyB0cnkKPiA+PiBub3QgdG8gY2hh
-bmdlIGl0IGFnYWluLiBJJ2xsIGp1c3QgcmVtYXJrIGhlcmUgdGhhdCBpbiB0aGUgY3VycmVudCBF
-YWdsZQo+ID4+IGRlc2lnbiB2Y2MgaXMgY29ubmVjdGVkIHRvIGEgcG93ZXIgcmFpbCB3aXRoIG5v
-IHJlZ3VsYXRvciBhdCBhbGwgOikKPiA+IAo+ID4gSSBkb24ndCBsaWtlIHRoZSBkdW1teSByZWd1
-bGF0b3IgbXVjaCwgYXMgaXQgZ2VuZXJhdGVzIGEgZGV2X3dhcm4oKSwgd2hpY2gKPiA+IG1ha2Vz
-IG1lIGJlbGlldmUgdGhhdCBpdCdzIGEgaGFjayByYXRoZXIgdGhhbiBhIHByb3BlciBzb2x1dGlv
-bi4gWW91IG1pZ2h0Cj4gPiB3YW50IHRvIGFzayBNYXJrIEJyb3duIGZvciBoaXMgb3Bpbmlvbi4K
-PiAKPiBTdXJlOiBIaSBNYXJrLCBhIGJpdCBvZiBjb250ZXh0IGhlcmUgdG8gc2F2ZSB5b3UgYSBs
-b25nKGVyKSByZWFkaW5nLgo+IAo+IFVuc3VycHJpc2luZ2x5LCB0aGUgY2hpcCBmb3Igd2hpY2gg
-SSdtIHdyaXRpbmcgdGhpcyBzbWFsbCBkcml2ZXIgbmVlZHMKPiBhIHBvd2VyIHN1cHBseSB0byBi
-ZSBwcm9wZXJseSBmdW5jdGlvbmFsIDopIEluIHRoZSBkZXZlbG9wbWVudCBib2FyZAo+IGl0IGlz
-IGluc3RhbGxlZCBvbiwgdGhlIHBvd2VyIHN1cHBseSBpcyBjb25uZWN0ZWQgdG8gYSBwb3dlciBy
-YWlsLAo+IHdpdGggbm8gcmVndWxhdG9yLiBBdCB0aGUgc2FtZSB0aW1lLCBzb21lIG90aGVyIGRl
-c2lnbnMgbWF5IGluc3RlYWQKPiBpbmNsdWRlIGEgcmVndWxhdG9yLgoKVG8gYmUgcHJlY2lzZSwg
-d2l0aCBhbiBhbHdheXMtb24gcmVndWxhdG9yIHRoYXQgY2FuJ3QgYmUgc29mdHdhcmUtY29udHJv
-bGxlZC4KCj4gSSBhc3N1bWUgdGhhdCdzIGEgdmVyeSBjb21tb24gc2l0dWF0aW9uLiBJIHN0YXJ0
-ZWQgYnkgZGVzY3JpYmluZyB0aGUKPiByZWd1bGF0b3IgYXMgb3B0aW9uYWwgaW4gRFQgYmluZGlu
-Z3MsIGFuZCB1c2UgcmVndWxhdG9yX2dldF9vcHRpb25hbCgpLiBJZgo+IHRoYXQgZnVuY3Rpb24g
-cmV0dXJucyBQVFJfRVJSLCB0aGUgcmVndWxhdG9yIGlzIHRoZW4gaWdub3JlZCBpbiBkcml2ZXIn
-cwo+IHBvd2VyIG1hbmFnZW1lbnQgcm91dGluZXMuCj4gCj4gSW4gdGhpcyBsYXN0IHZlcnNpb24g
-SSB0aG91Z2h0IEkgd2FzIGFjdGluZyBzbWFydCBhbmQgY29waWVkIHdoYXQgaGFwcGVucwo+IGlu
-IG90aGVyIERSTSBicmlkZ2VzIGxpa2UgYWR2NzUxMSwgd2hpY2ggdXNlICdyZWd1bGF0b3JfZ2V0
-KCknIGFuZCB3b3JrCj4gd2l0aCBhIGR1bW15IGlmIG5vIHJlZ3VsYXRvciBpcyBwcm92aWRlZCBp
-biBEVC4gTGF1cmVudCBoYXMgdGhlIGFib3ZlCj4gZG91YnRzIG9uIHVzaW5nIGEgZHVtbXksIGFu
-ZCBJIGFjdHVhbGx5IHNoYXJlIHNvbWUgb2YgaGlzIGNvbmNlcm5zCj4gKHRoYXQgZGV2X3dhcm4o
-KSBpcyBob3cgSSBmb3VuZCBvdXQgYWR2NzUxMSB3YXMgdXNpbmcgYSBkdW1teSwgYWN0dWFsbHkp
-Lgo+IAo+IFRvIHN1bSB1cDogd2hlbiBhIHJlZ3VsYXRvciBpcyBkZXNjcmliZWQgYXMgb3B0aW9u
-YWwgaW4gRFQsIGRvIHlvdQo+IHN1Z2dlc3QgdG8gd29yayB3aXRoIGEgZHVtbXkgaWYgaXQncyBu
-b3QgdGhlcmUsIG9yIHVzZSB0aGUgX29wdGlvbmFsKCkKPiB2ZXJzaW9uIG9mIHJlZ3VsYXRvcl9n
-ZXQoKSBhbmQgbWFudWFsbHkgc2V0IGl0IHRvIE5VTEwgYW5kIGlnbm9yZSBpdAo+IGluIHRoZSBl
-bmFibGUvZGlzYWJsZSBkcml2ZXIncyByb3V0aW5lcz8KPiAKPiBCb251cyBxdWVzdGlvbjogTGF1
-cmVudCBsaWtlcyB0byBoYXZlIHRoZSByZWd1bGF0b3IgZGVzY3JpYmVkIGFzIHJlcXVpcmVkLAo+
-IGFuZCB0aHVzIHJlcXVpcmUgaXQgdG8gYmUgZGVzY3JpYmVkIGluIERUIGFsc28gaW4gY2FzZXMg
-d2hlcmUgaXQgaXMgbm90Cj4gYWN0dWFsbHkgdGhlcmUgdXNpbmcgYSAnZml4ZWQtcmVndWxhdG9y
-JyBhbmQgcmVmdXNlIHRvIHByb2JlIGlmIHRoZQo+IHJlZ3VsYXRvciBpcyBub3QgYXZhaWxhYmxl
-LiBEbyB5b3UgZW5jb3VyYWdlIHRoaXMgYXBwcm9hY2gsIG9yIHByZWZlciB0bwo+IGhhdmUgaXQg
-b3B0aW9uYWwgYW5kIGhhbmRsZSBpdCBpbiB0aGUgZHJpdmVyIGluIG9uZSBvZiB0aGUgYWJvdmUg
-ZGVzY3JpYmVkCj4gd2F5cz8KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+> Add device-tree binding documentation for the nvdimm region driver.
+>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v2: Changed name from nvdimm-region to pmem-region.
+>     Cleaned up the example binding and fixed the overlapping regions.
+>     Added support for multiple regions in a single reg.
+> v3: Removed platform bus boilerplate from the example.
+>     Changed description of the volatile and reg properties
+>     to make them more clear.
+
+Thanks.
+
+Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+
+cheers
