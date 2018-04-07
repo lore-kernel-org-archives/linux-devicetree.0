@@ -1,42 +1,111 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] doc/devicetree: Persistent memory region bindings
-Date: Sat, 07 Apr 2018 20:58:37 +1000
-Message-ID: <87zi2fb7vm.fsf@concordia.ellerman.id.au>
-References: <20180406052116.31483-1-oohall@gmail.com>
- <20180406052116.31483-3-oohall@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: simultaneous voice/data works (was Re: call/normal
+ switch was Re: omap4-droid4: voice call support was)
+Date: Sat, 7 Apr 2018 14:22:33 +0200
+Message-ID: <20180407122233.GA11302@amd>
+References: <20180401153631.GA5700@atomide.com>
+ <20180401173012.GB5700@atomide.com>
+ <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+ <20180402155754.GD5700@atomide.com>
+ <20180403150444.GE5700@atomide.com>
+ <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+ <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
+ <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
+ <20180407081000.GB7818@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180406052116.31483-3-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2656763259633967031=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180407081000.GB7818@amd>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Merlijn Wajer <merlijn@wizzup.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dcbw@redhat.com>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> Add device-tree binding documentation for the nvdimm region driver.
->
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: Changed name from nvdimm-region to pmem-region.
->     Cleaned up the example binding and fixed the overlapping regions.
->     Added support for multiple regions in a single reg.
-> v3: Removed platform bus boilerplate from the example.
->     Changed description of the volatile and reg properties
->     to make them more clear.
 
-Thanks.
+--===============2656763259633967031==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
 
-Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 
-cheers
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat 2018-04-07 10:10:00, Pavel Machek wrote:
+> Hi!
+>=20
+> It seems qmicli can be used while unicsy_demo/ofone talks to the modem
+> using the AT commands.
+>=20
+> So I could do:
+>=20
+> qmicli -d /dev/cdc-wdm0 --wds-follow-network --wds-start-network=3Dapn=3D=
+internet.t-mobile.cz
+> route del default
+> sudo ifconfig wwan0 up
+> dhclient wwan0
+>=20
+> to get GPRS/UMTS connection. AT commands still work.
+>=20
+> Does anyone have any idea what to do to get the GPS to work?
+
+Got that to work.
+
+I installed modemmanager -- unfortunately that claims ttyUSB4 so it
+breaks voice/sms -- but then
+
+mmcli -m 0 --enable
+mmcli -m 0  --location-enable-gps-nmea
+watch -n .3 sudo mmcli -m 0  --location-get-gps-nmea
+
+=2E..can be used to get GPS data. Droid4 seems to have rather bad GPS,
+so you should probably put it near window for testing.
+
+Is there way to grab data from modemmanager and feed it to gpsd, so
+that normal applications can access gps? I don't see easy way.
+
+I tried --location-enable-gps-unmanaged , but that did not work for
+me.
+
+Is modemmanager enabling GPS, or is it talking to libqmi to do that?
+The code is quite confusing to me...
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrIuAgACgkQMOfwapXb+vKwNgCgnpkGp1ZCvHY6YIGdLkLNZj2B
+bF4An2dCSDEPgPDJVe6bZ9cpT1Ob5zoX
+=4HlO
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
+
+--===============2656763259633967031==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2656763259633967031==--
