@@ -1,369 +1,116 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] iommu: of: make of_pci_map_rid() available for
-	other devices too
-Date: Mon, 30 Apr 2018 15:56:49 -0500
-Message-ID: <20180430205649.GD95643@bhelgaas-glaptop.roam.corp.google.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-1-git-send-email-nipun.gupta@nxp.com>
-	<1525069641-8523-3-git-send-email-nipun.gupta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1525069641-8523-3-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=sB3+=G4=gmail.com=ctatlor97@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <d33902cb-65d8-9790-7950-e30134f68578@infradead.org>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <d33902cb-65d8-9790-7950-e30134f68578@infradead.org>
+From: Craig Tatlor <ctatlor97@gmail.com>
+Date: Sat, 7 Apr 2018 18:40:40 +0100
+Message-ID: <CAALoacpb3EbM4d+kqAxemeVL=nJd05JiN7-qi2sJt_O9REYgCw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] power: supply: Add support for the Qualcomm
+ Battery Monitoring System
+Content-Type: multipart/alternative; boundary="000000000000de902d056945ab0d"
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Apr 30, 2018 at 11:57:17AM +0530, Nipun Gupta wrote:
-> iommu-map property is also used by devices with fsl-mc. This
-> patch moves the of_pci_map_rid to generic location, so that it
-> can be used by other busses too.
-> 
-> 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
-> functional change done in the API.
-> 
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+--000000000000de902d056945ab0d
+Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+On Sat, Apr 7, 2018 at 5:37 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> ---
->  drivers/iommu/of_iommu.c |   5 +--
->  drivers/of/base.c        | 102 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/irq.c         |   5 +--
->  drivers/pci/of.c         | 101 ----------------------------------------------
->  include/linux/of.h       |  11 +++++
->  include/linux/of_pci.h   |  10 -----
->  6 files changed, 117 insertions(+), 117 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 5c36a8b..811e160 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -149,9 +149,8 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
->  	struct of_phandle_args iommu_spec = { .args_count = 1 };
->  	int err;
->  
-> -	err = of_pci_map_rid(info->np, alias, "iommu-map",
-> -			     "iommu-map-mask", &iommu_spec.np,
-> -			     iommu_spec.args);
-> +	err = of_map_rid(info->np, alias, "iommu-map", "iommu-map-mask",
-> +			 &iommu_spec.np, iommu_spec.args);
->  	if (err)
->  		return err == -ENODEV ? NO_IOMMU : err;
->  
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 848f549..c7aac81 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1995,3 +1995,105 @@ int of_find_last_cache_level(unsigned int cpu)
->  
->  	return cache_level;
->  }
-> +
-> +/**
-> + * of_map_rid - Translate a requester ID through a downstream mapping.
-> + * @np: root complex device node.
-> + * @rid: device requester ID to map.
-> + * @map_name: property name of the map to use.
-> + * @map_mask_name: optional property name of the mask to use.
-> + * @target: optional pointer to a target device node.
-> + * @id_out: optional pointer to receive the translated ID.
-> + *
-> + * Given a device requester ID, look up the appropriate implementation-defined
-> + * platform ID and/or the target device which receives transactions on that
-> + * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
-> + * @id_out may be NULL if only the other is required. If @target points to
-> + * a non-NULL device node pointer, only entries targeting that node will be
-> + * matched; if it points to a NULL value, it will receive the device node of
-> + * the first matching target phandle, with a reference held.
-> + *
-> + * Return: 0 on success or a standard error code on failure.
-> + */
-> +int of_map_rid(struct device_node *np, u32 rid,
-> +	       const char *map_name, const char *map_mask_name,
-> +	       struct device_node **target, u32 *id_out)
-> +{
-> +	u32 map_mask, masked_rid;
-> +	int map_len;
-> +	const __be32 *map = NULL;
-> +
-> +	if (!np || !map_name || (!target && !id_out))
-> +		return -EINVAL;
-> +
-> +	map = of_get_property(np, map_name, &map_len);
-> +	if (!map) {
-> +		if (target)
-> +			return -ENODEV;
-> +		/* Otherwise, no map implies no translation */
-> +		*id_out = rid;
-> +		return 0;
-> +	}
-> +
-> +	if (!map_len || map_len % (4 * sizeof(*map))) {
-> +		pr_err("%pOF: Error: Bad %s length: %d\n", np,
-> +			map_name, map_len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* The default is to select all bits. */
-> +	map_mask = 0xffffffff;
-> +
-> +	/*
-> +	 * Can be overridden by "{iommu,msi}-map-mask" property.
-> +	 * If of_property_read_u32() fails, the default is used.
-> +	 */
-> +	if (map_mask_name)
-> +		of_property_read_u32(np, map_mask_name, &map_mask);
-> +
-> +	masked_rid = map_mask & rid;
-> +	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
-> +		struct device_node *phandle_node;
-> +		u32 rid_base = be32_to_cpup(map + 0);
-> +		u32 phandle = be32_to_cpup(map + 1);
-> +		u32 out_base = be32_to_cpup(map + 2);
-> +		u32 rid_len = be32_to_cpup(map + 3);
-> +
-> +		if (rid_base & ~map_mask) {
-> +			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
-> +				np, map_name, map_name,
-> +				map_mask, rid_base);
-> +			return -EFAULT;
-> +		}
-> +
-> +		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
-> +			continue;
-> +
-> +		phandle_node = of_find_node_by_phandle(phandle);
-> +		if (!phandle_node)
-> +			return -ENODEV;
-> +
-> +		if (target) {
-> +			if (*target)
-> +				of_node_put(phandle_node);
-> +			else
-> +				*target = phandle_node;
-> +
-> +			if (*target != phandle_node)
-> +				continue;
-> +		}
-> +
-> +		if (id_out)
-> +			*id_out = masked_rid - rid_base + out_base;
-> +
-> +		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
-> +			np, map_name, map_mask, rid_base, out_base,
-> +			rid_len, rid, masked_rid - rid_base + out_base);
-> +		return 0;
-> +	}
-> +
-> +	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
-> +		np, map_name, rid, target && *target ? *target : NULL);
-> +	return -EFAULT;
-> +}
-> +EXPORT_SYMBOL_GPL(of_map_rid);
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 02ad93a..e1f6f39 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -22,7 +22,6 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
-> -#include <linux/of_pci.h>
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  
-> @@ -588,8 +587,8 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->  	 * "msi-map" property.
->  	 */
->  	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
-> -		if (!of_pci_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> -				    "msi-map-mask", np, &rid_out))
-> +		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> +				"msi-map-mask", np, &rid_out))
->  			break;
->  	return rid_out;
->  }
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index a28355c..d2cebbe 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -362,107 +362,6 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
->  #endif /* CONFIG_OF_ADDRESS */
->  
-> -/**
-> - * of_pci_map_rid - Translate a requester ID through a downstream mapping.
-> - * @np: root complex device node.
-> - * @rid: PCI requester ID to map.
-> - * @map_name: property name of the map to use.
-> - * @map_mask_name: optional property name of the mask to use.
-> - * @target: optional pointer to a target device node.
-> - * @id_out: optional pointer to receive the translated ID.
-> - *
-> - * Given a PCI requester ID, look up the appropriate implementation-defined
-> - * platform ID and/or the target device which receives transactions on that
-> - * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
-> - * @id_out may be NULL if only the other is required. If @target points to
-> - * a non-NULL device node pointer, only entries targeting that node will be
-> - * matched; if it points to a NULL value, it will receive the device node of
-> - * the first matching target phandle, with a reference held.
-> - *
-> - * Return: 0 on success or a standard error code on failure.
-> - */
-> -int of_pci_map_rid(struct device_node *np, u32 rid,
-> -		   const char *map_name, const char *map_mask_name,
-> -		   struct device_node **target, u32 *id_out)
-> -{
-> -	u32 map_mask, masked_rid;
-> -	int map_len;
-> -	const __be32 *map = NULL;
-> -
-> -	if (!np || !map_name || (!target && !id_out))
-> -		return -EINVAL;
-> -
-> -	map = of_get_property(np, map_name, &map_len);
-> -	if (!map) {
-> -		if (target)
-> -			return -ENODEV;
-> -		/* Otherwise, no map implies no translation */
-> -		*id_out = rid;
-> -		return 0;
-> -	}
-> -
-> -	if (!map_len || map_len % (4 * sizeof(*map))) {
-> -		pr_err("%pOF: Error: Bad %s length: %d\n", np,
-> -			map_name, map_len);
-> -		return -EINVAL;
-> -	}
-> -
-> -	/* The default is to select all bits. */
-> -	map_mask = 0xffffffff;
-> -
-> -	/*
-> -	 * Can be overridden by "{iommu,msi}-map-mask" property.
-> -	 * If of_property_read_u32() fails, the default is used.
-> -	 */
-> -	if (map_mask_name)
-> -		of_property_read_u32(np, map_mask_name, &map_mask);
-> -
-> -	masked_rid = map_mask & rid;
-> -	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
-> -		struct device_node *phandle_node;
-> -		u32 rid_base = be32_to_cpup(map + 0);
-> -		u32 phandle = be32_to_cpup(map + 1);
-> -		u32 out_base = be32_to_cpup(map + 2);
-> -		u32 rid_len = be32_to_cpup(map + 3);
-> -
-> -		if (rid_base & ~map_mask) {
-> -			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
-> -				np, map_name, map_name,
-> -				map_mask, rid_base);
-> -			return -EFAULT;
-> -		}
-> -
-> -		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
-> -			continue;
-> -
-> -		phandle_node = of_find_node_by_phandle(phandle);
-> -		if (!phandle_node)
-> -			return -ENODEV;
-> -
-> -		if (target) {
-> -			if (*target)
-> -				of_node_put(phandle_node);
-> -			else
-> -				*target = phandle_node;
-> -
-> -			if (*target != phandle_node)
-> -				continue;
-> -		}
-> -
-> -		if (id_out)
-> -			*id_out = masked_rid - rid_base + out_base;
-> -
-> -		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
-> -			np, map_name, map_mask, rid_base, out_base,
-> -			rid_len, rid, masked_rid - rid_base + out_base);
-> -		return 0;
-> -	}
-> -
-> -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
-> -		np, map_name, rid, target && *target ? *target : NULL);
-> -	return -EFAULT;
-> -}
-> -
->  #if IS_ENABLED(CONFIG_OF_IRQ)
->  /**
->   * of_irq_parse_pci - Resolve the interrupt for a PCI device
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4d25e4f..f4251c3 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -545,6 +545,10 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
->  
->  extern int of_cpu_node_to_id(struct device_node *np);
->  
-> +int of_map_rid(struct device_node *np, u32 rid,
-> +	       const char *map_name, const char *map_mask_name,
-> +	       struct device_node **target, u32 *id_out);
-> +
->  #else /* CONFIG_OF */
->  
->  static inline void of_core_init(void)
-> @@ -931,6 +935,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
->  	return -ENODEV;
->  }
->  
-> +static inline int of_map_rid(struct device_node *np, u32 rid,
-> +			     const char *map_name, const char *map_mask_name,
-> +			     struct device_node **target, u32 *id_out)
-> +{
-> +	return -EINVAL;
-> +}
-> +
->  #define of_match_ptr(_ptr)	NULL
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 091033a..a23b44a 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -17,9 +17,6 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->  int of_get_pci_domain_nr(struct device_node *node);
->  int of_pci_get_max_link_speed(struct device_node *node);
->  void of_pci_check_probe_only(void);
-> -int of_pci_map_rid(struct device_node *np, u32 rid,
-> -		   const char *map_name, const char *map_mask_name,
-> -		   struct device_node **target, u32 *id_out);
->  #else
->  static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
->  					     unsigned int devfn)
-> @@ -44,13 +41,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
->  	return -1;
->  }
->  
-> -static inline int of_pci_map_rid(struct device_node *np, u32 rid,
-> -			const char *map_name, const char *map_mask_name,
-> -			struct device_node **target, u32 *id_out)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static inline int
->  of_pci_get_max_link_speed(struct device_node *node)
->  {
-> -- 
-> 1.9.1
-> 
+> On 04/07/2018 06:59 AM, Craig Tatlor wrote:
+> > This patch adds a driver for the BMS (Battery Monitoring System)
+> > block of the PM8941 PMIC, it uses a lookup table defined in the
+> > device tree to generate a capacity from the BMS supplied OCV, it
+> > then ammends the coulomb counter to that to increase the accuracy
+> > of the estimated capacity.
+> >
+> > Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> > ---
+> >  drivers/power/supply/Kconfig    |   9 +
+> >  drivers/power/supply/Makefile   |   1 +
+> >  drivers/power/supply/qcom_bms.c | 500 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 510 insertions(+)
+> >  create mode 100644 drivers/power/supply/qcom_bms.c
+>
+> > diff --git a/drivers/power/supply/qcom_bms.c
+> b/drivers/power/supply/qcom_bms.c
+> > new file mode 100644
+> > index 000000000000..5aa6e906d1b9
+> > --- /dev/null
+> > +++ b/drivers/power/supply/qcom_bms.c
+> > @@ -0,0 +1,500 @@
+>
+> Hi,
+>
+> > +static unsigned int between(int left, int right, int val)
+> > +{
+> > +     if (left <= val && val >= right)
+>
+> maybe double-check those if() conditions?
+> [or I need my morning coffee]
+>
+> > +             return 1;
+> > +
+> > +     return 0;
+> > +}
+>
+> thanks,
+> --
+> ~Randy
+>
+
+--000000000000de902d056945ab0d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br></div><div class=3D"gmail_extra"><br><div class=3D"gma=
+il_quote">On Sat, Apr 7, 2018 at 5:37 PM, Randy Dunlap <span dir=3D"ltr">&l=
+t;<a href=3D"mailto:rdunlap@infradead.org" target=3D"_blank">rdunlap@infrad=
+ead.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D=
+"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=
+=3D"">On 04/07/2018 06:59 AM, Craig Tatlor wrote:<br>
+&gt; This patch adds a driver for the BMS (Battery Monitoring System)<br>
+&gt; block of the PM8941 PMIC, it uses a lookup table defined in the<br>
+&gt; device tree to generate a capacity from the BMS supplied OCV, it<br>
+&gt; then ammends the coulomb counter to that to increase the accuracy<br>
+&gt; of the estimated capacity.<br>
+&gt;<br>
+&gt; Signed-off-by: Craig Tatlor &lt;<a href=3D"mailto:ctatlor97@gmail.com"=
+>ctatlor97@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 drivers/power/supply/Kconfig=C2=A0 =C2=A0 |=C2=A0 =C2=A09 +<br>
+&gt;=C2=A0 drivers/power/supply/Makefile=C2=A0 =C2=A0|=C2=A0 =C2=A01 +<br>
+&gt;=C2=A0 drivers/power/supply/qcom_bms.<wbr>c | 500 +++++++++++++++++++++=
++++++++++<wbr>++<br>
+&gt;=C2=A0 3 files changed, 510 insertions(+)<br>
+&gt;=C2=A0 create mode 100644 drivers/power/supply/qcom_bms.<wbr>c<br>
+<br>
+</span><span class=3D"">&gt; diff --git a/drivers/power/supply/qcom_<wbr>bm=
+s.c b/drivers/power/supply/qcom_<wbr>bms.c<br>
+&gt; new file mode 100644<br>
+&gt; index 000000000000..5aa6e906d1b9<br>
+&gt; --- /dev/null<br>
+&gt; +++ b/drivers/power/supply/qcom_<wbr>bms.c<br>
+&gt; @@ -0,0 +1,500 @@<br>
+<br>
+</span>Hi,<br>
+<span class=3D""><br>
+&gt; +static unsigned int between(int left, int right, int val)<br>
+&gt; +{<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (left &lt;=3D val &amp;&amp; val &gt;=3D right=
+)<br>
+<br>
+</span>maybe double-check those if() conditions?<br>
+[or I need my morning coffee]<br>
+<span class=3D""><br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 1;<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; +}<br>
+<br>
+</span>thanks,<br>
+<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
+~Randy<br>
+</font></span></blockquote></div><br></div>
+
+--000000000000de902d056945ab0d--
