@@ -1,111 +1,40 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: simultaneous voice/data works (was Re: call/normal
- switch was Re: omap4-droid4: voice call support was)
-Date: Sat, 7 Apr 2018 14:22:33 +0200
-Message-ID: <20180407122233.GA11302@amd>
-References: <20180401153631.GA5700@atomide.com>
- <20180401173012.GB5700@atomide.com>
- <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com>
- <20180403150444.GE5700@atomide.com>
- <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
- <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
- <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
- <20180407081000.GB7818@amd>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 5/5] hisi: Consolidate the Kconfigs for the CLOCK_STUB and the
+ MAILBOX
+Date: Sat, 07 Apr 2018 05:56:54 -0700
+Message-ID: <152310581432.180276.1794734900981310994@swboyd.mtv.corp.google.com>
+References: <1522811675-12741-1-git-send-email-leo.yan@linaro.org>
+ <1522811675-12741-6-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2656763259633967031=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180407081000.GB7818@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Merlijn Wajer <merlijn@wizzup.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dcbw@redhat.com>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1522811675-12741-6-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Jassi Brar <jassisinghbrar@gmail.com>, Kaihua Zhong <zhongkaihua@huawei.com>, Leo Yan <leo.yan@linaro.org>, Tao Wang <kevin.wangtao@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Leo Yan (2018-04-03 20:14:35)
+> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> 
+> The current defconfig is inconsistent as it selects the mailbox and
+> the clock for the hi6220 and the hi3660 without having their Kconfigs
+> making sure the dependencies are correct. It ends up when selecting
+> different versions for the kernel (for example when git bisecting)
+> those options disappear and they don't get back, leading to unexpected
+> behaviors. In our case, the cpufreq driver does no longer work because
+> the clock fails to initialize due to the clock stub and the mailbox
+> missing.
+> 
+> In order to have the dependencies correctly set when defaulting, let's
+> do the same as commit 3a49afb84ca074e ("clk: enable hi655x common clk
+> automatically") where we select automatically the driver when the
+> parent driver is selected. With sensible defaults in place, we can leave
+> other choices for EXPERT.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
 
---===============2656763259633967031==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Content-Disposition: inline
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
-
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2018-04-07 10:10:00, Pavel Machek wrote:
-> Hi!
->=20
-> It seems qmicli can be used while unicsy_demo/ofone talks to the modem
-> using the AT commands.
->=20
-> So I could do:
->=20
-> qmicli -d /dev/cdc-wdm0 --wds-follow-network --wds-start-network=3Dapn=3D=
-internet.t-mobile.cz
-> route del default
-> sudo ifconfig wwan0 up
-> dhclient wwan0
->=20
-> to get GPRS/UMTS connection. AT commands still work.
->=20
-> Does anyone have any idea what to do to get the GPS to work?
-
-Got that to work.
-
-I installed modemmanager -- unfortunately that claims ttyUSB4 so it
-breaks voice/sms -- but then
-
-mmcli -m 0 --enable
-mmcli -m 0  --location-enable-gps-nmea
-watch -n .3 sudo mmcli -m 0  --location-get-gps-nmea
-
-=2E..can be used to get GPS data. Droid4 seems to have rather bad GPS,
-so you should probably put it near window for testing.
-
-Is there way to grab data from modemmanager and feed it to gpsd, so
-that normal applications can access gps? I don't see easy way.
-
-I tried --location-enable-gps-unmanaged , but that did not work for
-me.
-
-Is modemmanager enabling GPS, or is it talking to libqmi to do that?
-The code is quite confusing to me...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlrIuAgACgkQMOfwapXb+vKwNgCgnpkGp1ZCvHY6YIGdLkLNZj2B
-bF4An2dCSDEPgPDJVe6bZ9cpT1Ob5zoX
-=4HlO
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
-
---===============2656763259633967031==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2656763259633967031==--
+Although I wonder why it can't be split up?
