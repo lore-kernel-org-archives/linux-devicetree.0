@@ -1,225 +1,81 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
- SoCs
-Date: Fri, 06 Apr 2018 18:14:40 -0700
-Message-ID: <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
- <20180405161834.3850-3-ilina@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v7 01/11] arm64: dts: actions: Add S900 clock management
+ unit nodes
+Date: Sat, 7 Apr 2018 10:10:36 +0530
+Message-ID: <20180407044036.k3gi5ocnmpoll5gx@linaro.org>
+References: <20180326173905.22313-1-manivannan.sadhasivam@linaro.org>
+ <20180326173905.22313-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180405161834.3850-3-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180326173905.22313-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: afaerber@suse.de
+Cc: sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2018-04-05 09:18:26)
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Do=
-cumentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> new file mode 100644
-> index 000000000000..dcf71a5b302f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> @@ -0,0 +1,127 @@
-> +RPMH RSC:
-> +------------
-> +
-> +Resource Power Manager Hardened (RPMH) is the mechanism for communicatin=
-g with
-> +the hardened resource accelerators on Qualcomm SoCs. Requests to the res=
-ources
-> +can be written to the Trigger Command Set (TCS)  registers and using a (=
-addr,
-> +val) pair and triggered. Messages in the TCS are then sent in sequence o=
-ver an
-> +internal bus.
-> +
-> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w e=
-ntity
-> +(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep =
-and
+Hi Andreas,
 
-s/ a / /
+Since the clk driver got applied, can you please take the dts changes
+through linux-actions tree?
 
-> +active/wake resource requests. Multiple such DRVs can exist in a SoC and=
- can
-> +be written to from Linux. The structure of each DRV follows the same tem=
-plate
-> +with a few variations that are captured by the properties here.
-> +
-> +A TCS may be triggered from Linux or triggered by the F/W after all the =
-CPUs
-> +have powered off to facilitate idle power saving. TCS could be classifie=
-d as -
+Thanks,
+Mani
 
-s/ -/:/
-
+On Mon, Mar 26, 2018 at 11:08:55PM +0530, Manivannan Sadhasivam wrote:
+> Add Actions Semi S900 Clock Management Unit (CMU) nodes
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/actions/s900.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+> index 11406f6d3a6d..fee0c9557656 100644
+> --- a/arch/arm64/boot/dts/actions/s900.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s900.dtsi
+> @@ -4,6 +4,7 @@
+>   * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>   */
+>  
+> +#include <dt-bindings/clock/actions,s900-cmu.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+>  / {
+> @@ -88,6 +89,18 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> +	losc: losc {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <32768>;
+> +		#clock-cells = <0>;
+> +	};
 > +
-> +       SLEEP,  /* Triggered by F/W */
-> +       WAKE,   /* Triggered by F/W */
-> +       ACTIVE, /* Triggered by Linux */
-> +       CONTROL /* Triggered by F/W */
-
-Drop the commas?
-
+> +	diff24M: diff24M {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <24000000>;
+> +		#clock-cells = <0>;
+> +	};
 > +
-> +The order in which they are described in the DT, should match the hardwa=
-re
-> +configuration.
+>  	soc {
+>  		compatible = "simple-bus";
+>  		#address-cells = <2>;
+> @@ -154,6 +167,13 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		cmu: clock-controller@e0160000 {
+> +			compatible = "actions,s900-cmu";
+> +			reg = <0x0 0xe0160000 0x0 0x1000>;
+> +			clocks = <&hosc>, <&losc>;
+> +			#clock-cells = <1>;
+> +		};
 > +
-> +Requests can be made for the state of a resource, when the subsystem is =
-active
-> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource=
- state
-> +will be an aggregate of the sleep votes from each of those subsystems. C=
-lients
-> +may request a sleep value for their shared resources in addition to the =
-active
-> +mode requests.
-> +
-> +Properties:
-> +
-> +- compatible:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: Should be "qcom,rpmh-rsc".
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: The first register specifies the base address of the =
-DRV.
-> +                   The second register specifies the start address of the
-> +                   TCS.
-> +
-> +- reg-names:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: Maps the register specified in the reg property. Must=
- be
-> +                   "drv" and "tcs".
-> +
-> +- interrupts:
-> +       Usage: required
-> +       Value type: <prop-encoded-interrupt>
-> +       Definition: The interrupt that trips when a message complete/resp=
-onse
-> +                  is received for this DRV from the accelerators.
-> +
-> +- qcom,drv-id:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: the id of the DRV in the RSC block.
-> +
-> +- qcom,tcs-config:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: the tuple defining the configuration of TCS.
-> +                   Must have 2 cells which describe each TCS type.
-> +                   <type number_of_tcs>.
-> +                   The order of the TCS must match the hardware
-> +                   configuration.
-> +       - Cell #1 (TCS Type): TCS types to be specified -
-> +                   SLEEP_TCS
-> +                   WAKE_TCS
-> +                   ACTIVE_TCS
-> +                   CONTROL_TCS
-> +       - Cell #2 (Number of TCS): <u32>
-> +
-> +- label:
-> +       Usage: optional
-> +       Value type: <string>
-> +       Definition: Name for the RSC. The name would be used in trace log=
-s.
-> +
-> +Drivers that want to use the RSC to communicate with RPMH must specify t=
-heir
-> +bindings as child of the RSC controllers they wish to communicate with.
-
-s/child/child nodes/
-
-
-> +
-> +Example 1:
-> +
-> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of =
-2, the
-> +register offsets for DRV2 start at 0D00, the register calculations are l=
-ike
-> +this -
-> +First tuple: 0x179C0000 + 0x10000 * 2 =3D 0x179E0000
-> +Second tuple: 0x179E0000 + 0xD00 =3D 0x179E0D00
-> +
-> +       apps_rsc: rsc@179e000 {
-> +               label =3D "apps_rsc";
-> +               compatible =3D "qcom,rpmh-rsc";
-> +               reg =3D <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-
-The first reg property overlaps the second one. Does this second one
-ever move around? I would hardcode it in the driver to be 0xd00 away
-from the drv base instead of specifying it in DT if it's the same all
-the time.
-
-Also, the example shows 0x179c0000 which I guess is the actual beginning
-of the RSC block. So the binding seems to be for one DRV inside of an
-RSC. Can we get the full description of the RSC in the binding instead?
-I imagine that means there's a DRV0,1,2 and those probably have an
-interrupt per each DRV and then a different TCS config per each one too?
-If the binding can describe all of the RSC then we can use different
-DRVs by changing the qcom,drv-id property.
-
-	rsc@179c0000 {
-		compatible =3D "qcom,rpmh-rsc";
-		reg =3D <0x179c0000 0x10000>,
-		      <0x179d0000 0x10000>,
-		      <0x179e0000 0x10000>;
-		qcom,tcs-offset =3D <0xd00>;
-		qcom,drv-id =3D <0/1/2>;
-		interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-	}
-
-This is sort of what I imagine it would look like. I have no idea how
-the tcs config would work unless each DRV has the same TCS config
-though. Otherwise, if each node is for a drv, then I would expect the
-node would be called 'drv' and we wouldn't need the drv-id property and
-the compatible string would say drv instead of rsc?
-
-BTW, what are the other DRVs used for in the apps RSC?
-
-> +               reg-names =3D "drv", "tcs";
-> +               interrupts =3D <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +               qcom,drv-id =3D <2>;
-> +               qcom,tcs-config =3D <SLEEP_TCS   3>,
-> +                                 <WAKE_TCS    3>,
-> +                                 <ACTIVE_TCS  2>,
-> +                                 <CONTROL_TCS 1>;
-> +       };
-> +
-> +Example 2:
-> +
-> +For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
-> +register offsets for DRV0 start at 01C00, the register calculations are =
-like
-> +this -
-> +First tuple: 0xAF20000
-> +Second tuple: 0xAF20000 + 0x1C00 =3D 0xAF21C00
-> +
-> +       disp_rsc: rsc@af20000 {
-> +               label =3D "disp_rsc";
-> +               compatible =3D "qcom,rpmh-rsc";
-> +               reg =3D <0xaf20000 0x10000>, <0xaf21c00 0x3000>;
-
-Ok. The TCS offset seems totally random now.
-
-> +               reg-names =3D "drv", "tcs";
-> +               interrupts =3D <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
-> +               qcom,drv-id =3D <0>;
-> +               qcom,tcs-config =3D <SLEEP_TCS   1>,
-> +                                 <WAKE_TCS    1>,
-> +                                 <ACTIVE_TCS  0>,
-> +                                 <CONTROL_TCS 0>;
-> +       };
+>  		timer: timer@e0228000 {
+>  			compatible = "actions,s900-timer";
+>  			reg = <0x0 0xe0228000 0x0 0x8000>;
+> -- 
+> 2.14.1
+> 
