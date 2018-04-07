@@ -1,81 +1,87 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v7 01/11] arm64: dts: actions: Add S900 clock management
- unit nodes
-Date: Sat, 7 Apr 2018 10:10:36 +0530
-Message-ID: <20180407044036.k3gi5ocnmpoll5gx@linaro.org>
-References: <20180326173905.22313-1-manivannan.sadhasivam@linaro.org>
- <20180326173905.22313-2-manivannan.sadhasivam@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: simultaneous voice/data works (was Re: call/normal
+ switch was Re: omap4-droid4: voice call support was)
+Date: Sat, 7 Apr 2018 10:10:00 +0200
+Message-ID: <20180407081000.GB7818@amd>
+References: <20180401131852.GA11086@amd> <20180401153631.GA5700@atomide.com>
+ <20180401173012.GB5700@atomide.com>
+ <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+ <20180402155754.GD5700@atomide.com>
+ <20180403150444.GE5700@atomide.com>
+ <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+ <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
+ <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180326173905.22313-2-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de
-Cc: sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com
+Content-Type: multipart/mixed; boundary="===============2608735475586296374=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Merlijn Wajer <merlijn@wizzup.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dcbw@redhat.com>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
 
-Since the clk driver got applied, can you please take the dts changes
-through linux-actions tree?
+--===============2608735475586296374==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Disposition: inline
 
-Thanks,
-Mani
 
-On Mon, Mar 26, 2018 at 11:08:55PM +0530, Manivannan Sadhasivam wrote:
-> Add Actions Semi S900 Clock Management Unit (CMU) nodes
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/actions/s900.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
-> index 11406f6d3a6d..fee0c9557656 100644
-> --- a/arch/arm64/boot/dts/actions/s900.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s900.dtsi
-> @@ -4,6 +4,7 @@
->   * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->   */
->  
-> +#include <dt-bindings/clock/actions,s900-cmu.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  
->  / {
-> @@ -88,6 +89,18 @@
->  		#clock-cells = <0>;
->  	};
->  
-> +	losc: losc {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32768>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	diff24M: diff24M {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <24000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
-> @@ -154,6 +167,13 @@
->  			status = "disabled";
->  		};
->  
-> +		cmu: clock-controller@e0160000 {
-> +			compatible = "actions,s900-cmu";
-> +			reg = <0x0 0xe0160000 0x0 0x1000>;
-> +			clocks = <&hosc>, <&losc>;
-> +			#clock-cells = <1>;
-> +		};
-> +
->  		timer: timer@e0228000 {
->  			compatible = "actions,s900-timer";
->  			reg = <0x0 0xe0228000 0x0 0x8000>;
-> -- 
-> 2.14.1
-> 
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+It seems qmicli can be used while unicsy_demo/ofone talks to the modem
+using the AT commands.
+
+So I could do:
+
+qmicli -d /dev/cdc-wdm0 --wds-follow-network --wds-start-network=3Dapn=3Din=
+ternet.t-mobile.cz
+route del default
+sudo ifconfig wwan0 up
+dhclient wwan0
+
+to get GPRS/UMTS connection. AT commands still work.
+
+Does anyone have any idea what to do to get the GPS to work?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrIfNgACgkQMOfwapXb+vLUgwCeM8xvN8f4NiGsYsGYTtPbEpiu
++kMAn0ncGuWCT/d3i8uOStcDckMHMnJ9
+=sXKV
+-----END PGP SIGNATURE-----
+
+--E39vaYmALEf/7YXx--
+
+--===============2608735475586296374==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2608735475586296374==--
