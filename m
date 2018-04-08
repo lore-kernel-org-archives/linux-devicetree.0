@@ -1,97 +1,135 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] resource: Use list_head to link sibling resource
-Date: Sun, 8 Apr 2018 17:09:03 +0800
-Message-ID: <20180408090903.GE19345@localhost.localdomain>
-References: <20180408024724.16812-2-bhe@redhat.com>
- <201804081247.F3eqBMih%fengguang.wu@intel.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v5 08/13] ARM: sunxi: Add initialization of CNTVOFF
+Date: Sun, 8 Apr 2018 11:09:32 +0200
+Message-ID: <20180408110932.7ef29ed2@dell-desktop.home>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
+        <20180403061836.3926-9-mylene.josserand@bootlin.com>
+        <20180403091218.t6xuq6csjp4uyy5u@flea>
+        <20180403220628.19c9acaf@dell-desktop.home>
+        <20180404074515.r6nbkpcyy6vfelbr@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201804081247.F3eqBMih%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh@linuxfoundat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180404074515.r6nbkpcyy6vfelbr@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Maxime,
 
-Thanks for telling!
+On Wed, 4 Apr 2018 09:45:15 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-On 04/08/18 at 12:12pm, kbuild test robot wrote:
-> Hi Baoquan,
+> On Tue, Apr 03, 2018 at 10:06:28PM +0200, Mylène Josserand wrote:
+> > Hello,
+> > 
+> > Thank you for the review.
+> > 
+> > On Tue, 3 Apr 2018 11:12:18 +0200
+> > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >   
+> > > On Tue, Apr 03, 2018 at 08:18:31AM +0200, Mylène Josserand wrote:  
+> > > > Add the initialization of CNTVOFF for sun8i-a83t.
+> > > > 
+> > > > For boot CPU, Create a new machine that handles this
+> > > > function's call in an "init_early" callback.
+> > > > For secondary CPUs, add this function into secondary_startup
+> > > > assembly entry.
+> > > > 
+> > > > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > > > ---
+> > > >  arch/arm/mach-sunxi/headsmp.S |  1 +
+> > > >  arch/arm/mach-sunxi/sunxi.c   | 18 +++++++++++++++++-
+> > > >  2 files changed, 18 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
+> > > > index 79890fbe5613..b586b7cf803a 100644
+> > > > --- a/arch/arm/mach-sunxi/headsmp.S
+> > > > +++ b/arch/arm/mach-sunxi/headsmp.S
+> > > > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+> > > >  
+> > > >  ENTRY(sunxi_mc_smp_secondary_startup)
+> > > >  	bl	sunxi_mc_smp_cluster_cache_enable
+> > > > +	bl	smp_init_cntvoff
+> > > >  	b	secondary_startup
+> > > >  ENDPROC(sunxi_mc_smp_secondary_startup)
+> > > >  
+> > > > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> > > > index 5e9602ce1573..090784108c0a 100644
+> > > > --- a/arch/arm/mach-sunxi/sunxi.c
+> > > > +++ b/arch/arm/mach-sunxi/sunxi.c
+> > > > @@ -16,6 +16,7 @@
+> > > >  #include <linux/platform_device.h>
+> > > >  
+> > > >  #include <asm/mach/arch.h>
+> > > > +#include <asm/smp_cntvoff.h>
+> > > >  
+> > > >  static const char * const sunxi_board_dt_compat[] = {
+> > > >  	"allwinner,sun4i-a10",
+> > > > @@ -62,7 +63,6 @@ MACHINE_END
+> > > >  static const char * const sun8i_board_dt_compat[] = {
+> > > >  	"allwinner,sun8i-a23",
+> > > >  	"allwinner,sun8i-a33",
+> > > > -	"allwinner,sun8i-a83t",
+> > > >  	"allwinner,sun8i-h2-plus",
+> > > >  	"allwinner,sun8i-h3",
+> > > >  	"allwinner,sun8i-r40",
+> > > > @@ -75,6 +75,22 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Family")
+> > > >  	.dt_compat	= sun8i_board_dt_compat,
+> > > >  MACHINE_END
+> > > >  
+> > > > +void __init sun8i_cntvoff_init(void)
+> > > > +{
+> > > > +	smp_init_cntvoff();    
+> > > 
+> > > Can't this be moved to the SMP setup code?  
+> > 
+> > I tried to put it in the first lines of "sunxi_mc_smp_init" function
+> > but it did not work. I tried to find some callbacks to have an
+> > early "init" and I only found the "init_early"'s one. There is probably
+> > another way to handle that so do not hesitate to tell me any ideas.  
 > 
-> I love your patch! Yet something to improve:
+> It's hard to say without more context about why it doesn't work. Have
+> you checked the order between early_initcall, the timer initialization
+> function and init_early?
 > 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.16 next-20180406]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180408-110108
-> config: parisc-c3000_defconfig (attached as .config)
-> compiler: hppa-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=parisc 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers//parisc/lba_pci.c: In function 'lba_dump_res':
-> >> drivers//parisc/lba_pci.c:173:15: error: incompatible type for argument 1 of 'lba_dump_res'
->      lba_dump_res(r->child, d+2);
 
-I compiled with allyesconfig, don't know why this was missed. Will
-change and repost.
+Yes, I tested it. I wanted to test it again to give more context. Here
+is the boot log: http://code.bulix.org/n1x864-315948?raw
+I added printk in the 3 functions (with "===========>").
 
->                   ^
->    drivers//parisc/lba_pci.c:162:1: note: expected 'struct resource *' but argument is of type 'struct list_head'
->     lba_dump_res(struct resource *r, int d)
->     ^~~~~~~~~~~~
->    drivers//parisc/lba_pci.c:174:15: error: incompatible type for argument 1 of 'lba_dump_res'
->      lba_dump_res(r->sibling, d);
->                   ^
->    drivers//parisc/lba_pci.c:162:1: note: expected 'struct resource *' but argument is of type 'struct list_head'
->     lba_dump_res(struct resource *r, int d)
->     ^~~~~~~~~~~~
+The "init_early" and "sun6i_timer" are executed before
+"arch_timer_of_init" (which is the function that parses the DT property
+that we used previously "arm,cpu-registers-not-fw-configured").
+The "sunxi_mc_smp_init" function is called later so I guess that is why
+it is not working in that case.
+
+> > > > +}
+> > > > +
+> > > > +static const char * const sun8i_cntvoff_board_dt_compat[] = {
+> > > > +	"allwinner,sun8i-a83t",
+> > > > +	NULL,
+> > > > +};
+> > > > +
+> > > > +DT_MACHINE_START(SUN8I_CNTVOFF_DT, "Allwinner sun8i boards needing cntvoff")    
+> > > 
+> > > All of the SoCs need CNTVOFF, so that doesn't really make sense. Why
+> > > not just calling it for what it is: an A83t?  
+> > 
+> > Sure, I will update it.  
 > 
-> vim +/lba_dump_res +173 drivers//parisc/lba_pci.c
-> 
-> ^1da177e Linus Torvalds 2005-04-16  159  
-> ^1da177e Linus Torvalds 2005-04-16  160  
-> ^1da177e Linus Torvalds 2005-04-16  161  static void
-> ^1da177e Linus Torvalds 2005-04-16  162  lba_dump_res(struct resource *r, int d)
-> ^1da177e Linus Torvalds 2005-04-16  163  {
-> ^1da177e Linus Torvalds 2005-04-16  164  	int i;
-> ^1da177e Linus Torvalds 2005-04-16  165  
-> ^1da177e Linus Torvalds 2005-04-16  166  	if (NULL == r)
-> ^1da177e Linus Torvalds 2005-04-16  167  		return;
-> ^1da177e Linus Torvalds 2005-04-16  168  
-> ^1da177e Linus Torvalds 2005-04-16  169  	printk(KERN_DEBUG "(%p)", r->parent);
-> ^1da177e Linus Torvalds 2005-04-16  170  	for (i = d; i ; --i) printk(" ");
-> 645d11d4 Matthew Wilcox 2006-12-24  171  	printk(KERN_DEBUG "%p [%lx,%lx]/%lx\n", r,
-> 645d11d4 Matthew Wilcox 2006-12-24  172  		(long)r->start, (long)r->end, r->flags);
-> ^1da177e Linus Torvalds 2005-04-16 @173  	lba_dump_res(r->child, d+2);
-> ^1da177e Linus Torvalds 2005-04-16  174  	lba_dump_res(r->sibling, d);
-> ^1da177e Linus Torvalds 2005-04-16  175  }
-> ^1da177e Linus Torvalds 2005-04-16  176  
-> 
-> :::::: The code at line 173 was first introduced by commit
-> :::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-> 
-> :::::: TO: Linus Torvalds <torvalds-gWtpgVMusWVb5UGfqNBoRg@public.gmane.org>
-> :::::: CC: Linus Torvalds <torvalds-gWtpgVMusWVb5UGfqNBoRg@public.gmane.org>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> Looking back at that code, I guess you want to change also the
+> smp_init_cntvoff function. It's not really related to SMP either.
+
+Yep, I will update it in next version.
+
+Thanks,
+
+Best regards,
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
