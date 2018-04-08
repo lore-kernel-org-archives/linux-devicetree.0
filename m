@@ -1,33 +1,36 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 1/1] arm: npcm: enable L2 cache in NPCM7xx architecture
-Date: Sun,  8 Apr 2018 17:03:17 +0300
-Message-ID: <1523196197-2072-2-git-send-email-tmaimon77@gmail.com>
-References: <1523196197-2072-1-git-send-email-tmaimon77@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] net/fsl_pq_mdio: Allow explicit speficition of
+ TBIPA address
+Date: Sun, 08 Apr 2018 12:45:03 -0400 (EDT)
+Message-ID: <20180408.124503.332537054164377764.davem@davemloft.net>
+References: <20180406123836.12019-1-esben.haabendal@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523196197-2072-1-git-send-email-tmaimon77@gmail.com>
+In-Reply-To: <20180406123836.12019-1-esben.haabendal@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, linux@armlinux.org.uk, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, yuenn@google.com, joel@jms.id.au
-Cc: arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+To: esben.haabendal@gmail.com
+Cc: netdev@vger.kernel.org, eha@deif.com, claudiu.manoil@freescale.com, robh+dt@kernel.org, mark.rutland@arm.com, garsilva@embeddedor.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable ARM L2 cache module in Nuvoton NPCM7xx BMC by adding
-L2 cache parameters into NPCM7xx DT machine start structure.
+From: Esben Haabendal <esben.haabendal@gmail.com>
+Date: Fri,  6 Apr 2018 14:38:34 +0200
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- arch/arm/mach-npcm/npcm7xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+> From: Esben Haabendal <eha@deif.com>
+> 
+> This introduces a simpler and generic method for for finding (and mapping)
+> the TBIPA register.
+> 
+> Instead of relying of complicated logic for finding the TBIPA register
+> address based on the MDIO or MII register block base
+> address, which even in some cases relies on undocumented shadow registers,
+> a second "reg" entry for the mdio bus devicetree node specifies the TBIPA
+> register.
+> 
+> Backwards compatibility is kept, as the existing logic is applied when
+> only a single "reg" mapping is specified.
+> 
+> Signed-off-by: Esben Haabendal <eha@deif.com>
 
-diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
-index 5f7cd88103ef..c5f77d854c4f 100644
---- a/arch/arm/mach-npcm/npcm7xx.c
-+++ b/arch/arm/mach-npcm/npcm7xx.c
-@@ -17,4 +17,6 @@ static const char *const npcm7xx_dt_match[] = {
- DT_MACHINE_START(NPCM7XX_DT, "NPCM7XX Chip family")
- 	.atag_offset	= 0x100,
- 	.dt_compat	= npcm7xx_dt_match,
-+	.l2c_aux_val	= 0x0,
-+	.l2c_aux_mask	= ~0x0,
- MACHINE_END
--- 
-2.14.1
+Applied.
