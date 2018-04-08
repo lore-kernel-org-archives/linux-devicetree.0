@@ -1,78 +1,36 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] resource: Use list_head to link sibling resource
-Date: Sun, 8 Apr 2018 13:55:51 +0800
-Message-ID: <201804081223.lLuGQOqa%fengguang.wu@intel.com>
-References: <20180408024724.16812-2-bhe@redhat.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 0/3] irqchip: meson-gpio: add support for Meson-AXG SoCs
+Date: Sun, 8 Apr 2018 14:56:57 +0000
+Message-ID: <20180408145700.23520-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180408024724.16812-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Baoquan,
+  This series try to add GPIO interrupt controller support for Meson-AXG SoCs.
+  The first patch is a trivial typo fix, I can fold the first two patches
+together if necessary.
 
-I love your patch! Yet something to improve:
+Yixun Lan (3):
+  dt-bindings: interrupt-controller: fix the double quotes
+  dt-bindings: interrupt-controller: New binding for Meson-AXG SoC
+  irqchip/meson-gpio: add support for Meson-AXG SoCs
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v4.16 next-20180406]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+ .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt | 11 ++++++-----
+ drivers/irqchip/irq-meson-gpio.c                              |  5 +++++
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180408-110108
-config: sparc-defconfig (attached as .config)
-compiler: sparc-linux-gcc (GCC) 7.2.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        make.cross ARCH=sparc 
-
-All errors (new ones prefixed by >>):
-
-   arch/sparc/kernel/ioport.c: In function 'sparc_io_proc_show':
->> arch/sparc/kernel/ioport.c:672:9: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
-     for (r = root->child; r != NULL; r = r->sibling) {
-            ^
-   arch/sparc/kernel/ioport.c:672:37: error: incompatible types when assigning to type 'struct resource *' from type 'struct list_head'
-     for (r = root->child; r != NULL; r = r->sibling) {
-                                        ^
-
-vim +672 arch/sparc/kernel/ioport.c
-
-^1da177e4 Linus Torvalds     2005-04-16  666  
-e7a088f93 Alexey Dobriyan    2009-09-01  667  static int sparc_io_proc_show(struct seq_file *m, void *v)
-^1da177e4 Linus Torvalds     2005-04-16  668  {
-e7a088f93 Alexey Dobriyan    2009-09-01  669  	struct resource *root = m->private, *r;
-^1da177e4 Linus Torvalds     2005-04-16  670  	const char *nm;
-^1da177e4 Linus Torvalds     2005-04-16  671  
-e7a088f93 Alexey Dobriyan    2009-09-01 @672  	for (r = root->child; r != NULL; r = r->sibling) {
-c31f76518 Sam Ravnborg       2014-04-21  673  		if ((nm = r->name) == NULL) nm = "???";
-e7a088f93 Alexey Dobriyan    2009-09-01  674  		seq_printf(m, "%016llx-%016llx: %s\n",
-685143ac1 Greg Kroah-Hartman 2006-06-12  675  				(unsigned long long)r->start,
-685143ac1 Greg Kroah-Hartman 2006-06-12  676  				(unsigned long long)r->end, nm);
-^1da177e4 Linus Torvalds     2005-04-16  677  	}
-^1da177e4 Linus Torvalds     2005-04-16  678  
-e7a088f93 Alexey Dobriyan    2009-09-01  679  	return 0;
-^1da177e4 Linus Torvalds     2005-04-16  680  }
-^1da177e4 Linus Torvalds     2005-04-16  681  
-
-:::::: The code at line 672 was first introduced by commit
-:::::: e7a088f935180b90cfe6ab0aaae8a556f46885fe sparc: convert /proc/io_map, /proc/dvma_map to seq_file
-
-:::::: TO: Alexey Dobriyan <adobriyan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-:::::: CC: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+2.16.2
