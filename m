@@ -1,11 +1,13 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 0/3] irqchip: meson-gpio: add support for Meson-AXG SoCs
-Date: Sun, 8 Apr 2018 14:56:57 +0000
-Message-ID: <20180408145700.23520-1-yixun.lan@amlogic.com>
+Subject: [PATCH 1/3] dt-bindings: interrupt-controller: fix the double quotes
+Date: Sun, 8 Apr 2018 14:56:58 +0000
+Message-ID: <20180408145700.23520-2-yixun.lan@amlogic.com>
+References: <20180408145700.23520-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180408145700.23520-1-yixun.lan@amlogic.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,18 +21,34 @@ To: Marc Zyngier <marc.zyngier@arm.com>, Jason Cooper <jason@lakedaemon.net>, Th
 Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-  This series try to add GPIO interrupt controller support for Meson-AXG SoCs.
-  The first patch is a trivial typo fix, I can fold the first two patches
-together if necessary.
-
-Yixun Lan (3):
-  dt-bindings: interrupt-controller: fix the double quotes
-  dt-bindings: interrupt-controller: New binding for Meson-AXG SoC
-  irqchip/meson-gpio: add support for Meson-AXG SoCs
-
- .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt | 11 ++++++-----
- drivers/irqchip/irq-meson-gpio.c                              |  5 +++++
- 2 files changed, 11 insertions(+), 5 deletions(-)
-
--- 
-2.16.2
+VGhlIGRvdWJsZSBxdW90ZXMgc2VlbXMgbm90IEFTQ0lJIHR5cGUsIGZpeCBpdCBoZXJlLgoKU2ln
+bmVkLW9mZi1ieTogWWl4dW4gTGFuIDx5aXh1bi5sYW5AYW1sb2dpYy5jb20+Ci0tLQogLi4uL2Jp
+bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FtbG9naWMsbWVzb24tZ3Bpby1pbnRjLnR4dCAg
+fCAxMCArKysrKy0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA1IGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
+bnRlcnJ1cHQtY29udHJvbGxlci9hbWxvZ2ljLG1lc29uLWdwaW8taW50Yy50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYW1sb2dpYyxt
+ZXNvbi1ncGlvLWludGMudHh0CmluZGV4IGE4M2Y5YTU3MzRjYS4uYzc1M2Q5OWQ0M2RiIDEwMDY0
+NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRy
+b2xsZXIvYW1sb2dpYyxtZXNvbi1ncGlvLWludGMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hbWxvZ2ljLG1lc29uLWdwaW8t
+aW50Yy50eHQKQEAgLTksMTEgKzksMTEgQEAgbnVtYmVyIG9mIGludGVycnVwdCBleHBvc2VkIGRl
+cGVuZHMgb24gdGhlIFNvQy4KIAogUmVxdWlyZWQgcHJvcGVydGllczoKIAotLSBjb21wYXRpYmxl
+IDogbXVzdCBoYXZlICJhbWxvZ2ljLG1lc29uOC1ncGlvLWludGPigJ0gYW5kIGVpdGhlcgotICAg
+4oCcYW1sb2dpYyxtZXNvbjgtZ3Bpby1pbnRj4oCdIGZvciBtZXNvbjggU29DcyAoUzgwMikgb3IK
+LSAgIOKAnGFtbG9naWMsbWVzb244Yi1ncGlvLWludGPigJ0gZm9yIG1lc29uOGIgU29DcyAoUzgw
+NSkgb3IKLSAgIOKAnGFtbG9naWMsbWVzb24tZ3hiYi1ncGlvLWludGPigJ0gZm9yIEdYQkIgU29D
+cyAoUzkwNSkgb3IKLSAgIOKAnGFtbG9naWMsbWVzb24tZ3hsLWdwaW8taW50Y+KAnSBmb3IgR1hM
+IFNvQ3MgKFM5MDVYLCBTOTEyKQorLSBjb21wYXRpYmxlIDogbXVzdCBoYXZlICJhbWxvZ2ljLG1l
+c29uOC1ncGlvLWludGMiIGFuZCBlaXRoZXIKKyAgICAiYW1sb2dpYyxtZXNvbjgtZ3Bpby1pbnRj
+IiBmb3IgbWVzb244IFNvQ3MgKFM4MDIpIG9yCisgICAgImFtbG9naWMsbWVzb244Yi1ncGlvLWlu
+dGMiIGZvciBtZXNvbjhiIFNvQ3MgKFM4MDUpIG9yCisgICAgImFtbG9naWMsbWVzb24tZ3hiYi1n
+cGlvLWludGMiIGZvciBHWEJCIFNvQ3MgKFM5MDUpIG9yCisgICAgImFtbG9naWMsbWVzb24tZ3hs
+LWdwaW8taW50YyIgZm9yIEdYTCBTb0NzIChTOTA1WCwgUzkxMikKIC0gaW50ZXJydXB0LXBhcmVu
+dCA6IGEgcGhhbmRsZSB0byB0aGUgR0lDIHRoZSBpbnRlcnJ1cHRzIGFyZSByb3V0ZWQgdG8uCiAg
+ICBVc3VhbGx5IHRoaXMgaXMgcHJvdmlkZWQgYXQgdGhlIHJvb3QgbGV2ZWwgb2YgdGhlIGRldmlj
+ZSB0cmVlIGFzIGl0IGlzCiAgICBjb21tb24gdG8gbW9zdCBvZiB0aGUgU29DLgotLSAKMi4xNi4y
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
