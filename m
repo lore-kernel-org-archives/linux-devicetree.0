@@ -1,221 +1,86 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2] ARM64: dts: meson-axg: enable the eMMC controller
-Date: Sun, 8 Apr 2018 11:36:47 +0000
-Message-ID: <20180408113647.13543-1-yixun.lan@amlogic.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] resource: Use list_head to link sibling resource
+Date: Sun, 8 Apr 2018 12:12:46 +0800
+Message-ID: <201804081247.F3eqBMih%fengguang.wu@intel.com>
+References: <20180408024724.16812-2-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Nan Li <nan.li@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180408024724.16812-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
 List-Id: devicetree@vger.kernel.org
 
-From: Nan Li <nan.li@amlogic.com>
+Hi Baoquan,
 
-The IP of eMMC controller in AXG is similiar to Meson-GX series.
-Here we add the initial support of the HS200 mode with
-clock running at 166MHz (to be safe), since we found some eMMC chip
-fail to run at 200MHz due to tunning phase error.
+I love your patch! Yet something to improve:
 
-Signed-off-by: Nan Li <nan.li@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+[auto build test ERROR on linus/master]
+[also build test ERROR on v4.16 next-20180406]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180408-110108
+config: parisc-c3000_defconfig (attached as .config)
+compiler: hppa-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=parisc 
+
+All errors (new ones prefixed by >>):
+
+   drivers//parisc/lba_pci.c: In function 'lba_dump_res':
+>> drivers//parisc/lba_pci.c:173:15: error: incompatible type for argument 1 of 'lba_dump_res'
+     lba_dump_res(r->child, d+2);
+                  ^
+   drivers//parisc/lba_pci.c:162:1: note: expected 'struct resource *' but argument is of type 'struct list_head'
+    lba_dump_res(struct resource *r, int d)
+    ^~~~~~~~~~~~
+   drivers//parisc/lba_pci.c:174:15: error: incompatible type for argument 1 of 'lba_dump_res'
+     lba_dump_res(r->sibling, d);
+                  ^
+   drivers//parisc/lba_pci.c:162:1: note: expected 'struct resource *' but argument is of type 'struct list_head'
+    lba_dump_res(struct resource *r, int d)
+    ^~~~~~~~~~~~
+
+vim +/lba_dump_res +173 drivers//parisc/lba_pci.c
+
+^1da177e Linus Torvalds 2005-04-16  159  
+^1da177e Linus Torvalds 2005-04-16  160  
+^1da177e Linus Torvalds 2005-04-16  161  static void
+^1da177e Linus Torvalds 2005-04-16  162  lba_dump_res(struct resource *r, int d)
+^1da177e Linus Torvalds 2005-04-16  163  {
+^1da177e Linus Torvalds 2005-04-16  164  	int i;
+^1da177e Linus Torvalds 2005-04-16  165  
+^1da177e Linus Torvalds 2005-04-16  166  	if (NULL == r)
+^1da177e Linus Torvalds 2005-04-16  167  		return;
+^1da177e Linus Torvalds 2005-04-16  168  
+^1da177e Linus Torvalds 2005-04-16  169  	printk(KERN_DEBUG "(%p)", r->parent);
+^1da177e Linus Torvalds 2005-04-16  170  	for (i = d; i ; --i) printk(" ");
+645d11d4 Matthew Wilcox 2006-12-24  171  	printk(KERN_DEBUG "%p [%lx,%lx]/%lx\n", r,
+645d11d4 Matthew Wilcox 2006-12-24  172  		(long)r->start, (long)r->end, r->flags);
+^1da177e Linus Torvalds 2005-04-16 @173  	lba_dump_res(r->child, d+2);
+^1da177e Linus Torvalds 2005-04-16  174  	lba_dump_res(r->sibling, d);
+^1da177e Linus Torvalds 2005-04-16  175  }
+^1da177e Linus Torvalds 2005-04-16  176  
+
+:::::: The code at line 173 was first introduced by commit
+:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
+
+:::::: TO: Linus Torvalds <torvalds-gWtpgVMusWVb5UGfqNBoRg@public.gmane.org>
+:::::: CC: Linus Torvalds <torvalds-gWtpgVMusWVb5UGfqNBoRg@public.gmane.org>
 
 ---
-Hi Kevin
-  Please note this patch actually depend on the eMMC driver here [0].
-  Still a few problem to solve, to improve the tuning phase driver to make
-the clock running at 200MHz, and to further support the HS400 mode.
-Anyway, this patch itself is quite independent.
-
-changes since v1 at [1]:
- - fix missing gpio dt-bindings header
-
-[0] http://lkml.kernel.org/r/20180403100652.41056-1-yixun.lan@amlogic.com
-[1] http://lkml.kernel.org/r/20180403102651.60340-1-yixun.lan@amlogic.com
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 58 ++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 82 ++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 57eedced5a51..f67d4e47e641 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -15,6 +15,44 @@
- 		serial0 = &uart_AO;
- 		serial1 = &uart_A;
- 	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &ethmac {
-@@ -47,3 +85,23 @@
- 	pinctrl-0 = <&i2c1_z_pins>;
- 	pinctrl-names = "default";
- };
-+
-+/* emmc storage */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
-+	max-frequency = <180000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index b58808eb3cc8..cb70778c323c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/axg-clkc.h>
-+#include <dt-bindings/gpio/meson-axg-gpio.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -113,6 +114,36 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		apb: apb@ffe00000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xffe00000 0x0 0x200000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
-+
-+			sd_emmc_b: sd@5000 {
-+				compatible = "amlogic,meson-axg-mmc";
-+				reg = <0x0 0x5000 0x0 0x2000>;
-+				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+				clocks = <&clkc CLKID_SD_EMMC_B>,
-+					<&clkc CLKID_SD_EMMC_B_CLK0>,
-+					<&clkc CLKID_FCLK_DIV2>;
-+				clock-names = "core", "clkin0", "clkin1";
-+			};
-+
-+			sd_emmc_c: mmc@7000 {
-+				compatible = "amlogic,meson-axg-mmc";
-+				reg = <0x0 0x7000 0x0 0x2000>;
-+				interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+				clocks = <&clkc CLKID_SD_EMMC_C>,
-+					<&clkc CLKID_SD_EMMC_C_CLK0>,
-+					<&clkc CLKID_FCLK_DIV2>;
-+				clock-names = "core", "clkin0", "clkin1";
-+			};
-+		};
-+
- 		cbus: bus@ffd00000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xffd00000 0x0 0x25000>;
-@@ -309,6 +340,57 @@
- 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
- 				};
- 
-+				emmc_pins: emmc {
-+					mux {
-+						groups = "emmc_nand_d0",
-+							"emmc_nand_d1",
-+							"emmc_nand_d2",
-+							"emmc_nand_d3",
-+							"emmc_nand_d4",
-+							"emmc_nand_d5",
-+							"emmc_nand_d6",
-+							"emmc_nand_d7",
-+							"emmc_clk",
-+							"emmc_cmd",
-+							"emmc_ds";
-+						function = "emmc";
-+					};
-+				};
-+
-+				emmc_clk_gate_pins: emmc_clk_gate {
-+					mux {
-+						groups = "BOOT_8";
-+						function = "gpio_periphs";
-+					};
-+					cfg-pull-down {
-+						pins = "BOOT_8";
-+						bias-pull-down;
-+					};
-+				};
-+
-+				sdio_pins: sdio {
-+					mux {
-+						groups = "sdio_d0",
-+							"sdio_d1",
-+							"sdio_d2",
-+							"sdio_d3",
-+							"sdio_cmd",
-+							"sdio_clk";
-+						function = "sdio";
-+					};
-+				};
-+
-+				sdio_clk_gate_pins: sdio_clk_gate {
-+					mux {
-+						groups = "GPIOX_4";
-+						function = "gpio_periphs";
-+					};
-+					cfg-pull-down {
-+						pins = "GPIOX_4";
-+						bias-pull-down;
-+					};
-+				};
-+
- 				eth_rmii_x_pins: eth-x-rmii {
- 					mux {
- 						groups = "eth_mdio_x",
--- 
-2.16.2
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
