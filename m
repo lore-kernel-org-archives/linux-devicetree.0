@@ -1,57 +1,84 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH] ARM64: dts: meson-axg: add GPIO interrupt controller support
-Date: Sun, 8 Apr 2018 15:10:45 +0000
-Message-ID: <20180408151045.1138-1-yixun.lan@amlogic.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: simultaneous voice/data works (was Re: call/normal switch was
+ Re: omap4-droid4: voice call support was)
+Date: Sun, 8 Apr 2018 09:41:24 +0200
+Message-ID: <20180408074124.GA19844@amd>
+References: <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+ <20180402155754.GD5700@atomide.com>
+ <20180403150444.GE5700@atomide.com>
+ <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+ <20180403194419.GG5700@atomide.com>
+ <20180406120423.GA18691@amd>
+ <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
+ <20180407081000.GB7818@amd>
+ <20180407122233.GA11302@amd>
+ <cbfc3cfa8acbc02dde848ec4e1d71b5089ff1d10.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cbfc3cfa8acbc02dde848ec4e1d71b5089ff1d10.camel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Williams <dcbw@redhat.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Add the GPIO interrupt controller driver which found in the Amlogic's
-Meson-AXG SoC, the controller share the similar ASIC IP as other meson SoCs.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-Hi Kevin
- Please note this patch depend on the GPIO interrupt driver here[0]
+Hi!
 
-[0] http://lkml.kernel.org/r/20180408145700.23520-1-yixun.lan@amlogic.com
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> > mmcli -m 0 --enable
+> > mmcli -m 0  --location-enable-gps-nmea
+> > watch -n .3 sudo mmcli -m 0  --location-get-gps-nmea
+> >=20
+> > ...can be used to get GPS data. Droid4 seems to have rather bad GPS,
+> > so you should probably put it near window for testing.
+> >=20
+> > Is there way to grab data from modemmanager and feed it to gpsd, so
+> > that normal applications can access gps? I don't see easy way.
+> >=20
+> > I tried --location-enable-gps-unmanaged , but that did not work for
+> > me.
+>=20
+> That requires a TTY that would spit out the GPS data; in this mode MM
+> only sends the start/stop commands, and what comes out the GPS TTY is
+> undefined (at least by MM).
+>=20
+> So unless you know that one of the 6600's TTYs does GPS and in what
+> format it does GPS, then no.
+>=20
+> Doesn't --location-get-gps-nmea work for you?  That will spit out the
+> latest NMEA traces MM gets from the modem, if it supports NMEA.  I
+> believe --location-status will tell you what methods MM supports with
+> the modem.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index b58808eb3cc8..c1105065de99 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -120,6 +120,15 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
- 
-+			gpio_intc: interrupt-controller@f080 {
-+				compatible = "amlogic,meson-gpio-intc";
-+				reg = <0x0 0xf080 0x0 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
-+				status = "disabled";
-+			};
-+
- 			pwm_ab: pwm@1b000 {
- 				compatible = "amlogic,meson-axg-ee-pwm";
- 				reg = <0x0 0x1b000 0x0 0x20>;
--- 
-2.16.2
+Yes, --location-get-gps-nmea works for me.
+
+I guess one way forward would be to implement --location-get-gps-nmea
+support for qmicli, and use that?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrJx6QACgkQMOfwapXb+vKvOQCgsAtBVTQXYes1gXS4wxsb6+ju
+lKEAn25u8epgd3/FHcoh5BJa4dyYA7jJ
+=KX/F
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
