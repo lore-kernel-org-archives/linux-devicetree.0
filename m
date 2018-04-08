@@ -1,56 +1,32 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [[PATCH v2] 2/2] dt-bindings: clock: Introduce QCOM RPMh clock bindings
-Date: Sun,  8 Apr 2018 16:02:13 +0530
-Message-ID: <1523183533-23171-3-git-send-email-tdas@codeaurora.org>
-References: <1523183533-23171-1-git-send-email-tdas@codeaurora.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/1] arm: npcm: enable L2 cache in NPCM7xx architecture
+Date: Sun,  8 Apr 2018 17:03:16 +0300
+Message-ID: <1523196197-2072-1-git-send-email-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523183533-23171-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To: arm@kernel.org, linux@armlinux.org.uk, avifishman70@gmail.com, brendanhiggins@google.com, venture@google.com, yuenn@google.com, joel@jms.id.au
+Cc: arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Amit Nischal <anischal@codeaurora.org>
+This patch Enable ARM L2 cache module in Nuvoton NPCM7xx BMC
+by adding L2 cache parameters into NPCM7xx DT machine start structure.
 
-Add RPMh clock device bindings for Qualcomm Technology Inc's SoCs. These
-devices would be used for communicating resource state requests to control
-the clocks managed by RPMh.
+At patch V7 arm: npcm: add basic support for Nuvoton BMCs we got comments
+regarding the flags use in L2 cache module.
+- https://www.spinics.net/lists/arm-kernel/msg613212.html
 
-Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+After checking again the L2 cache use in the NPCM7xx,
+the only L2 cache flag we need to set is L2C_AUX_CTRL_SHARED_OVERRIDE 
+and it is done in the device tree:
+https://patchwork.kernel.org/patch/10063497/
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-new file mode 100644
-index 0000000..4ade82b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-@@ -0,0 +1,22 @@
-+Qualcomm Technologies, Inc. RPMh Clocks
-+-------------------------------------------------------
-+
-+Resource Power Manager Hardened (RPMh) manages shared resources on
-+some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
-+other hardware subsystems via RSC to control clocks.
-+
-+Required properties :
-+- compatible : shall contain "qcom,rpmh-clk-sdm845"
-+
-+- #clock-cells : must contain 1
-+
-+Example :
-+
-+#include <dt-bindings/clock/qcom,rpmh.h>
-+
-+	&apps_rsc {
-+		rpmh: clock-controller {
-+			compatible = "qcom,rpmh-clk-sdm845";
-+			#clock-cells = <1>;
-+		};
-+	};
+L2 cache flag mask allowed all the flag option.
+
+Tomer Maimon (1):
+  arm: npcm: enable L2 cache in NPCM7xx architecture
+
+ arch/arm/mach-npcm/npcm7xx.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+2.14.1
