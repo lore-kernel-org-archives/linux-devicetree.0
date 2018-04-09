@@ -1,53 +1,43 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] arm64: dts: juno: drop unnecessary address-cells and
- size-cells properties
-Date: Mon,  9 Apr 2018 11:39:45 +0100
-Message-ID: <1523270385-30461-1-git-send-email-sudeep.holla@arm.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 1/5] dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+Date: Mon,  9 Apr 2018 12:59:14 +0200
+Message-ID: <20180409105918.20792-2-peda@axentia.se>
+References: <20180409105918.20792-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180409105918.20792-1-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-/smb@8000000/motherboard/gpio_keys node doesn't have "ranges" or "reg"
-property in child nodes. So it's unnecessary to have address-cells
-as well as size-cells properties which results in below warning.
+Start list of actual chips compatible with "lvds-encoder".
 
-Warning (avoid_unnecessary_addr_size):
-/smb@8000000/motherboard/gpio_keys:
-	unnecessary #address-cells/#size-cells without "ranges" or child "reg"
-	property
-
-This patch drops the unnecessary address+size-cell properties.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ .../devicetree/bindings/display/bridge/lvds-transmitter.txt       | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index 2ac43221ddb6..69804c5f1197 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -56,8 +56,6 @@
+diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+index fd39ad34c383..50220190c203 100644
+--- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
++++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+@@ -22,7 +22,13 @@ among others.
  
- 			gpio_keys {
- 				compatible = "gpio-keys";
--				#address-cells = <1>;
--				#size-cells = <0>;
+ Required properties:
  
- 				power-button {
- 					debounce_interval = <50>;
+-- compatible: Must be "lvds-encoder"
++- compatible: Must be one or more of the following
++  - "ti,ds90c185" for the TI DS90C185 FPD-Link Serializer
++  - "lvds-encoder" for a generic LVDS encoder device
++
++  When compatible with the generic version, nodes must list the
++  device-specific version corresponding to the device first
++  followed by the generic version.
+ 
+ Required nodes:
+ 
 -- 
-2.7.4
+2.11.0
