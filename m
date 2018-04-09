@@ -1,61 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
- designware driver
-Date: Mon, 9 Apr 2018 14:12:33 -0500
-Message-ID: <20180409191233.l2s5hnrq7gejrmq6@rob-hp-laptop>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH] gpio: dwapb: Add support for 32 interrupts
+Date: Mon, 9 Apr 2018 14:20:13 -0500
+Message-ID: <20180409192013.5rytwgoixtyraow3@rob-hp-laptop>
+References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 28, 2018 at 12:38:33PM +0100, Gustavo Pimentel wrote:
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On Wed, Mar 28, 2018 at 03:22:30PM +0100, Phil Edworthy wrote:
+> The DesignWare GPIO IP can be configured for either 1 or 32 interrupts,
+> but the driver currently only supports 1 interrupt. See the DesignWare
+> DW_apb_gpio Databook description of the 'GPIO_INTR_IO' parameter.
+
+Someday h/w designers will realize this does nothing to optimize 
+interrupt handling...
+
+> This change allows the driver to work with up to 32 interrupts, it will
+> get as many interrupts as specified in the DT 'interrupts' property.
+> It doesn't do anything clever with the different interrupts, it just calls
+> the same handler used for single interrupt hardware.
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 6300762..4bb2e08 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -3,6 +3,7 @@
->  Required properties:
->  - compatible:
->  	"snps,dw-pcie" for RC mode;
-> +	"snps,dw-pcie-ep" for EP mode;
->  - reg: Should contain the configuration address space.
->  - reg-names: Must be "config" for the PCIe configuration space.
->      (The old way of getting the configuration address space from "ranges"
-> @@ -56,3 +57,15 @@ Example configuration:
->  		#interrupt-cells = <1>;
->  		num-lanes = <1>;
->  	};
-> +or
-> +	pcie_ep: pcie_ep@dfc00000 {
+> Note: There are a few lines over 80 chars, but this is just guidance, right?
+>       Especially as there are already some lines over 80 chars.
 
-pcie-ep@...
+Code, yes, but not for paragraphs of text in DT bindings.
 
-Or what others have used. We should define a standard name in the DT 
-spec for this.
+> ---
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   | 10 ++++-
+>  drivers/gpio/gpio-dwapb.c                          | 44 +++++++++++++++++-----
+>  include/linux/platform_data/gpio-dwapb.h           |  3 +-
+>  3 files changed, 45 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> index 4a75da7..e343581 100644
+> --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> @@ -26,8 +26,14 @@ controller.
+>    the second encodes the triger flags encoded as described in
+>    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  - interrupt-parent : The parent interrupt controller.
+> -- interrupts : The interrupt to the parent controller raised when GPIOs
+> -  generate the interrupts.
+> +- interrupts : The interrupts to the parent controller raised when GPIOs
+> +  generate the interrupts. If the controller provides one combined interrupt
+> +  for all GPIOs, specify a single interrupt. If the controller provides one
+> +  interrupt for each GPIO, provide a list of interrupts that correspond to each
+> +  of the GPIO pins. When specifying multiple interrupts, if any of the GPIOs are
+> +  not connected to an interrupt, use the interrupt-mask property.
+> +- interrupt-mask : a 32-bit bit mask that specifies which interrupts in the list
+> +  of interrupts is valid, bit is 1 for a valid irq.
 
-> +		compatible = "snps,dw-pcie-ep";
-> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
-> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
-> +		      <0xd0000000 0x2000000>; /* Configuration space */
-> +		reg-names = "dbi", "dbi2", "addr_space";
-> +		device_type = "pci";
-> +		num-ib-windows = <6>;
-> +		num-ob-windows = <2>;
-> +		num-lanes = <1>;
-> +	};
-> -- 
-> 2.7.4
-> 
-> 
+This is not a standard property and would need a vendor prefix. However, 
+I'd prefer you just skip any not connected interrupts with an invalid 
+interrupt number. Then the GPIO number is the index into "interrupts".
+
+>  - snps,nr-gpios : The number of pins in the port, a single cell.
+
+This BTW should be deprecated to use "nr-gpios" instead, but that's 
+another patch.
+
+>  - resets : Reset line for the controller.
+>  
