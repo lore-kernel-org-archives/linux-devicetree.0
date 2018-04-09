@@ -1,45 +1,48 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: simultaneous voice/data works (was Re: call/normal switch was
- Re: omap4-droid4: voice call support was)
-Date: Mon, 9 Apr 2018 07:08:47 -0700
-Message-ID: <20180409140847.GP5700@atomide.com>
-References: <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
- <20180402155754.GD5700@atomide.com>
- <20180403150444.GE5700@atomide.com>
- <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
- <20180403194419.GG5700@atomide.com>
- <20180406120423.GA18691@amd>
- <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
- <20180407081000.GB7818@amd>
- <20180407122233.GA11302@amd>
- <cbfc3cfa8acbc02dde848ec4e1d71b5089ff1d10.camel@redhat.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 7/9] PCI: dwc: Replace lower into upper case
+ characters
+Date: Mon, 09 Apr 2018 07:25:45 -0700
+Message-ID: <3c3fbc6afabaf7c007cba4543c90ea83196c1a6e.camel@perches.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
+         <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
+         <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
+         <c7aa4990-92ad-3e5e-de27-40df4f29f08b@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cbfc3cfa8acbc02dde848ec4e1d71b5089ff1d10.camel@redhat.com>
+In-Reply-To: <c7aa4990-92ad-3e5e-de27-40df4f29f08b@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Merlijn Wajer <merlijn@wizzup.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Dan Williams <dcbw@redhat.com> [180408 02:46]:
-> On Sat, 2018-04-07 at 14:22 +0200, Pavel Machek wrote:
-> > I tried --location-enable-gps-unmanaged , but that did not work for
-> > me.
+On Mon, 2018-04-09 at 14:10 +0100, Gustavo Pimentel wrote:
+> Hi Joe,
+
+Hello Gustavo.
+
+> On 09/04/2018 11:25, Joe Perches wrote:
+> > On Mon, 2018-04-09 at 10:41 +0100, Gustavo Pimentel wrote:
+> > > Replaces lower into upper case characters in comments and debug printks.
+> > > 
+> > > This is an attempt to keep the messages coherent within the designware
+> > > driver.
+> > 
+> > It'd be nice to make all the dwc drivers use the same
+> > message wording.
+> > 
+> > For instance:
+> > 
+> > drivers/pci/dwc/pci-keystone.c: dev_err(dev, "phy link never came up\n");
+> > drivers/pci/dwc/pcie-designware.c:      dev_err(pci->dev, "phy link never came up\n");
+> > drivers/pci/host/pcie-xilinx-nwl.c:     dev_err(dev, "PHY link never came up\n");
 > 
-> That requires a TTY that would spit out the GPS data; in this mode MM
-> only sends the start/stop commands, and what comes out the GPS TTY is
-> undefined (at least by MM).
-> 
-> So unless you know that one of the 6600's TTYs does GPS and in what
-> format it does GPS, then no.
+> I also agree, I added a task to my backlog to fix that. However, this task
+> shouldn't be done in this patch series since it's a more broader task involving
+> many drivers and different maintainers. Agree?
 
-There should be a NMEA port within the unknown port range ttyUSB[123].
+Right.
 
-Is there some easy way to enable --location-enable-gps-unmanaged for
-testing so I can check if GPS gets enabled for one of the ports?
-
-Regards,
-
-Tony
+I was just highlighting the inconsistency.
+So, no worries.  Whenever.
