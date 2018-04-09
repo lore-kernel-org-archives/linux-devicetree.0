@@ -1,53 +1,106 @@
-From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
-Date: Mon, 9 Apr 2018 14:05:20 -0700
-Message-ID: <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw@mail.gmail.com>
-References: <20180409074604.17671-1-oohall@gmail.com>
- <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv4 09/10] dt-bindings: mfd: ti-lmu: update for backlight
+Date: Mon, 9 Apr 2018 16:06:38 -0500
+Message-ID: <20180409210638.hugfap4ega3bwgou@rob-hp-laptop>
+References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
+ <20180330172414.26575-10-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180330172414.26575-10-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Milo Kim <Milo.Kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 1:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Apr 9, 2018 at 2:46 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Some OF platforms (pseries and some SPARC systems) has their own
->> implementations of NUMA affinity detection rather than using the generic
->> OF_NUMA driver, which mainly exists for arm64. For other platforms one
->> of two fallbacks provided by the base OF driver are used depending on
->> CONFIG_NUMA.
->>
->> In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
->> In the =y case the fallback is a real function which is defined as a
->> weak symbol so that it may be overwritten by the architecture if desired.
->>
->> The problem with this arrangement is that the real implementations all
->> export of_node_to_nid(). Unfortunately it's not possible to export the
->> fallback since it would clash with the non-weak version. As a result
->> we get build failures when:
->>
->> a) CONFIG_NUMA=y && CONFIG_OF=y, and
->> b) The platform doesn't implement of_node_to_nid(), and
->> c) A module uses of_node_to_nid()
->>
->> Given b) will be true for most platforms this is fairly easy to hit
->> and has been observed on ia64 and x86.
->
-> How specifically do we hit this? The only module I see using
-> of_node_to_nid in mainline is Cell EDAC driver.
+On Fri, Mar 30, 2018 at 07:24:13PM +0200, Sebastian Reichel wrote:
+> Update binding to integrate the backlight feature directly into
+> the main node, as suggested by Rob Herring.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> ---
+>  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 119 ++++++++++++-----------
+>  1 file changed, 60 insertions(+), 59 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> index c885cf89b8ce..b3433e95dfa5 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> @@ -28,10 +28,9 @@ Required properties:
+>  
+>  Optional property:
+>    - enable-gpios: A GPIO specifier for hardware enable pin.
+> -
+> -Required node:
+> -  - backlight: All LMU devices have backlight child nodes.
+> -               For the properties, please refer to [1].
+> +  - pwm-names: Should be either "lmu-backlight" or unset
+> +  - pwm: This should be a PWM specifier following ../pwm/pwm.txt and must
+> +         only be specified, if the backlight should be used in PWM mode.
+>  
+>  Optional nodes:
+>    - fault-monitor: Hardware fault monitoring driver for LM3633 and LM3697.
+> @@ -42,8 +41,31 @@ Optional nodes:
+>    - leds: LED properties for LM3633. Please refer to [2].
+>    - regulators: Regulator properties for LM3631 and LM3632.
+>                  Please refer to [3].
+> +  - bank0, bank1, bank2: This contains the backlight configuration
+> +                         for each backlight control bank.
+> +
+> +Required properties in the bank subnodes:
+> +  - label: A string describing the backlight. Should contain "keyboard"
+> +           for a keyboard backlight and "lcd" for LCD panel backlights.
+> +  - ti,led-sources: A list of channels, that should be driven. Each channel
+> +                    should only be driven by one bank.
+> +
+> +Optional properties in the bank subnodes:
+> +  - default-brightness-level: Backlight initial brightness value.
+> +                              Type is <u32>. It is set as soon as backlight
+> +			      device is created.
+> +			      0 ~ 2047 = LM3631, LM3632, LM3633, LM3695 and
+> +					 LM3697
+> +			      0 ~ 255  = LM3532
+> +  - ti,ramp-up-ms, ti,ramp-down-ms: Light dimming effect properties.
+> +				    Type is <u32>. Unit is millisecond.
+> +					0 ~ 65 ms    = LM3532
+> +					0 ~ 4000 ms  = LM3631
+> +					0 ~ 16000 ms = LM3633 and LM3697
+> +  - pwm-period: PWM period. Only valid in PWM brightness mode.
+> +                Type is <u32>. If this property is missing, then control
+> +		mode is set to I2C by default.
+>  
+> -[1] ../leds/backlight/ti-lmu-backlight.txt
+>  [2] ../leds/leds-lm3633.txt
+>  [3] ../regulator/lm363x-regulator.txt
+>  
+> @@ -53,14 +75,11 @@ lm3532@38 {
+>  
+>  	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+>  
+> -	backlight {
+> -		compatible = "ti,lm3532-backlight";
+> -
+> -		lcd {
+> -			led-sources = <0 1 2>;
+> -			ramp-up-msec = <30>;
+> -			ramp-down-msec = <0>;
+> -		};
+> +	bank0 {
+> +		label = "lcd";
+> +		led-sources = <0 1 2>;
+> +		ramp-up-msec = <30>;
+> +		ramp-down-msec = <0>;
 
-The of_pmem driver is using it currently pending for a 4.17 pull
-request. Stephen hit the compile failure in -next.
+Looks like it was already wrong, but these are missing the vendor 
+prefixes.
+
+>  	};
+>  };
+>  
+> @@ -105,13 +124,10 @@ lm3631@29 {
+
+Are so many examples really needed? Examples aren't supposed to 
+enumerate all possible options...
+
+Rob
