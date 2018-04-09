@@ -1,50 +1,52 @@
-Return-Path: <SRS0=b8Rb=G7=verge.net.au=horms@kernel.org>
-Date: Tue, 10 Apr 2018 11:31:28 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] phy: Renesas R-Car gen3 PCIe PHY driver
-Message-ID: <20180410093128.l6ornliuosnwkoyt@verge.net.au>
-References: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
- <CAMuHMdXNg32ECS+xNH46qK58JoU=VC_kbqhaVXD4xGZC16wY3A@mail.gmail.com>
- <267e381f-64d7-ea76-b5b7-96e71f9536ce@cogentembedded.com>
+Return-Path: <SRS0=2q4m=G6=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sender: geert.uytterhoeven@gmail.com
 In-Reply-To: <267e381f-64d7-ea76-b5b7-96e71f9536ce@cogentembedded.com>
+References: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
+ <CAMuHMdXNg32ECS+xNH46qK58JoU=VC_kbqhaVXD4xGZC16wY3A@mail.gmail.com> <267e381f-64d7-ea76-b5b7-96e71f9536ce@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Apr 2018 18:23:45 +0200
+Message-ID: <CAMuHMdW1Abry=hcHZRqNed8PoNetogN57Tco9+gKkX6XSUiXDA@mail.gmail.com>
+Subject: Re: [PATCH] phy: Renesas R-Car gen3 PCIe PHY driver
+Content-Type: text/plain; charset="UTF-8"
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Apr 09, 2018 at 06:57:11PM +0300, Sergei Shtylyov wrote:
+Hi Sergei,
+
+On Mon, Apr 9, 2018 at 5:57 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
 > On 04/09/2018 12:46 PM, Geert Uytterhoeven wrote:
-> 
-> >> This PHY is still mostly undocumented -- the only documented registers
-> >> exist on R-Car V3H (R8A77980) SoC  where this PHY stays in a powered-down
-> >> state after a reset and thus  we must power it on for PCIe to work...
-> > 
-> > Bogus spaces slipping in again?
-> 
->    Yes, I should have worked in the type-setting. :-)
-> 
-> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> >> --- /dev/null
-> >> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
-> >> @@ -0,0 +1,32 @@
-> [...]
-> >> +Example (R-Car V3H):
-> >> +
-> >> +       pcie-phy@e65d0000 {
-> >> +               compatible = "renesas,r8a77980-pcie-phy",
-> >> +                            "renesas,rcar-gen3-pcie-phy";
-> > 
-> > Is the R8A77980 PCIe PHY compatible with the generic version, given it needs
-> > to be powered up explicitly?
-> 
->    I assumed it's upwardly compatible. However, given the lack of information,
-> it might not be...
+>>> +static int rcar_gen3_phy_pcie_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct device *dev = &pdev->dev;
+>>> +       struct phy_provider *provider;
+>>> +       struct rcar_gen3_phy *phy;
+>>> +       struct resource *res;
+>>> +       void __iomem *base;
+>>> +       int error;
+>>> +
+>>> +       if (!dev->of_node) {
+>>> +               dev_err(dev,
+>>> +                       "This driver must only be instantiated from the device tree\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>
+>> Do we need this check? Just go bang, like most other DT-only drivers do?
+>
+>    You mean NULL pointer dereference?
 
-If we are not sure I'd rather assume that it is not upwardly compatible.
-Because falling back to something that doesn't work does not seem at all
-useful to me.
+Yep. (S)he who instantiates a "phy_rcar_gen3_pcie" device without DT is
+bound to die.
 
-...
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
