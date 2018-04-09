@@ -1,52 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 07/13] ARM: smp: Add initialization of CNTVOFF
-Date: Mon, 9 Apr 2018 10:24:41 +0200
-Message-ID: <CAMuHMdUoUVF+WYrPG1Dx515_de_2nhGhLfn9+tJUm5jgs1uz0w@mail.gmail.com>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
- <20180403061836.3926-8-mylene.josserand@bootlin.com> <06308f46-ce7c-ddeb-ebca-abd1153138ba@arm.com>
- <20180404155909.148085f7@dell-desktop.home> <86vad7qc21.wl-marc.zyngier@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [RESEND PATCH v3 0/4] backlight: pwm_bl: support linear interpolation and brightness to human eye
+Date: Mon,  9 Apr 2018 10:33:29 +0200
+Message-ID: <20180409083333.1249-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86vad7qc21.wl-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 4:30 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On Wed, 04 Apr 2018 14:59:09 +0100,
-> Myl=C4=8Dne Josserand wrote:
+Dear all,
 
-[Marc: stuck in ISO-8859-1? ;-]
+This series is a third patchset (resend )integrating the requested
+changes.
 
->> > It'd be good to take this opportunity to refactor the shmobile code.
->>
->> I can do it in this series but I do not have any shmobile platforms so
->> I will not be able to test my modifications (only compilation).
->>
->> If someone can test it for me (who?), it is okay for me to refactor this
->> code :)
->
-> I guess you could Cc the shmobile folks (Geert Uytterhoeven, Simon
-> Horman), and get them to review/test the changes.
+The first and second patch what tries to solve is the problem of
+granularity for high resolution PWMs. The idea is simple interpolate
+between 2 brightness values so we can have a high PWM duty cycle (a
+16 bits PWM is up to 65535 possible steps) without having to list
+out every possible value in the dts. I think that this patch is
+required to not break backward compatibility, to be more flexible and
+also extend the functionality to be able to use high resolution PWM
+with enough steps to have a good UI experience in userspace.
 
-Correct. I can test on a remote R-Car E2 ALT board that needs it.
+The thirth and fourth patch is a bit more ambicious, the idea is let
+decide the driver the brightness-levels required in function of the PWM
+resolution. To do this create a brightness-levels table filled with the
+CIE 1931 algorithm values to convert brightness to PWM duty cycle.
 
-P.S. Interestingly, none of the Renesas CA15 SoCs seem to suffer from it,
-     only CA7.
+More detailed info is available in the commit message of every patch.
 
-Gr{oetje,eeting}s,
+Both functionalities were tested on a Samsung Chromebook Plus (that has
+a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
 
-                        Geert
+Waiting for your feedback.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Best regards
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Enric Balletbo i Serra (4):
+  backlight: pwm_bl: linear interpolation between brightness-levels
+  dt-bindings: pwm-backlight: add a num-interpolation-steps property.
+  backlight: pwm_bl: compute brightness of LED linearly to human eye.
+  dt-bindings: pwm-backlight: move brightness-levels to optional.
+
+ .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
+ drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
+ 2 files changed, 246 insertions(+), 20 deletions(-)
+
+-- 
+2.16.3
