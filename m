@@ -1,87 +1,57 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv4 08/10] backlight: add TI LMU backlight driver
-Date: Tue, 10 Apr 2018 08:38:20 +0200
-Message-ID: <20180410063820.GA5793@amd>
-References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
- <20180330172414.26575-9-sebastian.reichel@collabora.co.uk>
- <20180403104908.GD6758@amd>
- <20180409155433.zxqs2b2k2xzn6kon@earth.universe>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH v3 3/7] drm/i2c: tda998x: move CEC device initialisation later
+Date: Mon, 09 Apr 2018 13:16:22 +0100
+Message-ID: <E1f5Vig-0002LV-Ju@rmk-PC.armlinux.org.uk>
+References: <20180409121529.GA31403@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180409121529.GA31403@n2100.armlinux.org.uk>
 Content-Disposition: inline
-In-Reply-To: <20180409155433.zxqs2b2k2xzn6kon@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Milo Kim <Milo.Kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > +static int ti_lmu_bl_add_device(struct ti_lmu_bank *lmu_bank)
-> > > +{
-> > > +	switch (lmu_bank->type) {
-> > > +	case TI_LMU_BL:
-> > > +		return ti_lmu_bl_register_backlight(lmu_bank);
-> > > +	case TI_LMU_LED:
-> > > +		return ti_lmu_bl_register_led(lmu_bank);
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +}
-> >=20
-> > Ok, this is somehow unusual/crazy. Single driver with two
-> > interfaces.
-> >=20
-> > Do we need the LED interface for something?
-> >
-> > If yes, I believe reasonable solution would be to always provide LED
-> > interface, and then have "backlight-trigger" which that would provide
-> > backlight interface for arbitrary LED.
->=20
-> Userspace expects keyboard backlight to be exposed via the LED
-> subsystem and display backlight via the backlight subsystem.
-
-Ok.
-
-> I considered always exposing the banks via the LED subsystem and
-> using a generic backlight driver. That brings its own problems,
-> since there is a dependency between the display and the backlight.
-> This is described in DT using a phandle. Getting the right backlight
-> device from the phandle will become very tricky with this approach.
-
-I believe we have to do this.
-
-Virtually any LED can be used as a backlight, and we don't really want
-to add two personalities to all the LED drivers.
-
-And it should not be too bad: LED will just have default trigger,
-which will say this LED corresponds to this display device. I believe
-someone wanted to do that for USB/ethernet activity.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlrMW9wACgkQMOfwapXb+vIkBACfZR1KTKRlSldNfZMrF8WODxgj
-MYsAn3UeGWYrf6edRoHD6WA/OeY7EWcj
-=Ma6V
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
+V2Ugbm8gbG9uZ2VyIHVzZSB0aGUgQ0VDIGNsaWVudCB0byBhY2Nlc3MgdGhlIENFQyBwYXJ0IGl0
+c2VsZiwgc28gd2UgY2FuCm1vdmUgdGhpcyBsYXRlciBpbiB0aGUgaW5pdGlhbGlzYXRpb24gc2Vx
+dWVuY2UuCgpBY2tlZC1ieTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgpT
+aWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytrZXJuZWxAYXJtbGludXgub3JnLnVrPgot
+LS0KIGRyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYuYyB8IDEzICsrKysrKysrLS0tLS0K
+IDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2kyYy90ZGE5OTh4X2Rydi5jIGIvZHJpdmVycy9ncHUvZHJt
+L2kyYy90ZGE5OTh4X2Rydi5jCmluZGV4IDJhOTk5MzBmMWJkYS4uN2YyNzYyZmFiNWM5IDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTJjL3RkYTk5OHhfZHJ2LmMKKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2kyYy90ZGE5OTh4X2Rydi5jCkBAIC0xNDg5LDkgKzE0ODksNiBAQCBzdGF0aWMgaW50
+IHRkYTk5OHhfY3JlYXRlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsIHN0cnVjdCB0ZGE5OTh4
+X3ByaXYgKnByaXYpCiAJcHJpdi0+Y2VjX2FkZHIgPSAweDM0ICsgKGNsaWVudC0+YWRkciAmIDB4
+MDMpOwogCXByaXYtPmN1cnJlbnRfcGFnZSA9IDB4ZmY7CiAJcHJpdi0+aGRtaSA9IGNsaWVudDsK
+LQlwcml2LT5jZWMgPSBpMmNfbmV3X2R1bW15KGNsaWVudC0+YWRhcHRlciwgcHJpdi0+Y2VjX2Fk
+ZHIpOwotCWlmICghcHJpdi0+Y2VjKQotCQlyZXR1cm4gLUVOT0RFVjsKIAogCS8qIHdha2UgdXAg
+dGhlIGRldmljZTogKi8KIAljZWNfd3JpdGUocHJpdiwgUkVHX0NFQ19FTkFNT0RTLApAQCAtMTU3
+OCw2ICsxNTc1LDEyIEBAIHN0YXRpYyBpbnQgdGRhOTk4eF9jcmVhdGUoc3RydWN0IGkyY19jbGll
+bnQgKmNsaWVudCwgc3RydWN0IHRkYTk5OHhfcHJpdiAqcHJpdikKIAkJY2VjX3dyaXRlKHByaXYs
+IFJFR19DRUNfUlhTSFBESU5URU5BLCBDRUNfUlhTSFBETEVWX0hQRCk7CiAJfQogCisJcHJpdi0+
+Y2VjID0gaTJjX25ld19kdW1teShjbGllbnQtPmFkYXB0ZXIsIHByaXYtPmNlY19hZGRyKTsKKwlp
+ZiAoIXByaXYtPmNlYykgeworCQlyZXQgPSAtRU5PREVWOworCQlnb3RvIGZhaWw7CisJfQorCiAJ
+LyogZW5hYmxlIEVESUQgcmVhZCBpcnE6ICovCiAJcmVnX3NldChwcml2LCBSRUdfSU5UX0ZMQUdT
+XzIsIElOVF9GTEFHU18yX0VESURfQkxLX1JEKTsKIApAQCAtMTU5NCwxNCArMTU5NywxNCBAQCBz
+dGF0aWMgaW50IHRkYTk5OHhfY3JlYXRlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsIHN0cnVj
+dCB0ZGE5OTh4X3ByaXYgKnByaXYpCiAKIAlyZXQgPSB0ZGE5OTh4X2dldF9hdWRpb19wb3J0cyhw
+cml2LCBucCk7CiAJaWYgKHJldCkKLQkJZ290byBlcnJfYXVkaW87CisJCWdvdG8gZmFpbDsKIAog
+CWlmIChwcml2LT5hdWRpb19wb3J0WzBdLmZvcm1hdCAhPSBBRk1UX1VOVVNFRCkKIAkJdGRhOTk4
+eF9hdWRpb19jb2RlY19pbml0KHByaXYsICZjbGllbnQtPmRldik7CiAKIAlyZXR1cm4gMDsKIAot
+ZXJyX2F1ZGlvOgorZmFpbDoKIAlpZiAoY2xpZW50LT5pcnEpCiAJCWZyZWVfaXJxKGNsaWVudC0+
+aXJxLCBwcml2KTsKIGVycl9pcnE6Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
