@@ -1,53 +1,36 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: phy-qcom-qmp: Add UFS phy compatible
- string for sdm845
-Date: Mon, 9 Apr 2018 17:01:36 +0530
-Message-ID: <5689c0f5-5b4f-bfff-1b22-3a76680423b0@codeaurora.org>
-References: <20180327071838.11168-1-cang@codeaurora.org>
- <20180327071838.11168-3-cang@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND v6 0/6] provide power off support for iMX6 with
+ external PMIC
+Date: Mon, 9 Apr 2018 19:37:45 +0800
+Message-ID: <20180409113744.GA14582@dragon>
+References: <20180305102524.5905-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180327071838.11168-3-cang@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180305102524.5905-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>, subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 05, 2018 at 11:25:17AM +0100, Oleksij Rempel wrote:
+> This patch series is providing power off support for Freescale/NXP iMX6 based
+> boards with external power management integrated circuit (PMIC).
+> As a first step the PMIC is configured to turn off the system if the
+> standby pin is asserted. On second step we assert the standby pin.
+> For this reason we need to use pm_power_off_prepare.
+> 
+> Usage of stnadby pin for power off is described in official iMX6
+> documentation.
+> 
+> 2018.03.05:
+> As this patch set touches multiple subsystems I think it would make
+> sense for Shawn Guo to take the all patch set.
+> The only part which didn't receive an ACK is regulator stuff. So I would
+> hope that Mark Brown can ACK it.
 
+Besides regulator changes, I did not see an ACK on kernel/reboot.c
+either.
 
-On 3/27/2018 12:48 PM, Can Guo wrote:
-> Update the compatible string for UFS QMP PHY on SDM845.
->
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-
-Please keep all reviewed-by's, given by reviewers and maintainers, to 
-your older
-version of the patch unless there's a design change (major change).
-I think you missed adding Rob H's reviewed-by tag.
-
-Also,
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-Thanks
-Vivek
-> ---
->   Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index cef8765..6e68a6d 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -11,7 +11,8 @@ Required properties:
->   	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
->   	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
->   	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
-> -	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
-> +	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-> +	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
->   
->    - reg: offset and length of register set for PHY's common serdes block.
->   
+Shawn
