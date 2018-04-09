@@ -1,65 +1,112 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: linux-next: build failure after merge of the nvdimm tree
-Date: Mon, 9 Apr 2018 11:14:00 -0700
-Message-ID: <CAPcyv4jDZOgL41N98jrdLgAjPjahx+ZvM6yLH8wZTu27=psP-w@mail.gmail.com>
-References: <20180409131619.0bc5fb45@canb.auug.org.au> <CAOSf1CHToZ5+k90n_sgh_9ezJjXpx21E5-K66TWkdU7t7kUiEw@mail.gmail.com>
- <CAOSf1CGjFOPPQPYNA=uLFJnVyNXQnsoBb8rm2qFi8uuUHmw8ZA@mail.gmail.com> <CAPcyv4icJ8DRgaBfsJc22AtBz2EOJLK9mGkM_4fi6wLD7L9-OA@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Mon, 9 Apr 2018 13:17:32 -0500
+Message-ID: <CAL_JsqKm6L_66RYJ6JQJfMLA073QyBtP0U+JBkA+m0e34QJWcg@mail.gmail.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
+ <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+ <20180309182751.GC31988@ti.com> <283b6aea-d262-42ec-5e41-294b02b062c5@ti.com>
+ <CAL_JsqJxDTj66V5eGYgQErhXZf6sfp=99De2XqaX+GyD7NCtGw@mail.gmail.com>
+ <c3b9897f-aae0-35b1-e4e9-99b904d47cda@ti.com>
+ <CAL_Jsq+jYa=aE0Z0s_Wr5iN5LVqpq2OfUfoKDx6i_YA-cg1RRg@mail.gmail.com>
+ <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPcyv4icJ8DRgaBfsJc22AtBz2EOJLK9mGkM_4fi6wLD7L9-OA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oliver <oohall@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a2c98c64-570c-4bb1-3976-3d54d3d4ecde@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 10:11 AM, Dan Williams <dan.j.williams@intel.com> wrote:
-> On Mon, Apr 9, 2018 at 12:34 AM, Oliver <oohall@gmail.com> wrote:
->> On Mon, Apr 9, 2018 at 1:38 PM, Oliver <oohall@gmail.com> wrote:
->>> On Mon, Apr 9, 2018 at 1:16 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>> Hi Dan,
->>>>
->>>> After merging the nvdimm tree, today's linux-next build (x86_64
->>>> allmodconfig) failed like this:
->>>>
->>>> ERROR: "of_node_to_nid" [drivers/nvdimm/of_pmem.ko] undefined!
->>>>
->>>> Caused by commit
->>>>
->>>>   717197608952 ("libnvdimm: Add device-tree based driver")
->>>>
->>>> X86 seems to not have a version of of_node_to_nid() even though CONFIG_OF
->>>> and CONFIG_NUMA are both 'y' in this build.
->>>
->>> It's a side effect of a driver selecting CONFIG_OF accidently. There's
->>> a patch to fix this in the drm-misc-next tree:
->>>
->>> https://lkml.org/lkml/2018/4/3/17
->>>
->>>> I have used the nvdimm tree from next-20180406 for today.
->>>
->>> That works too.
->>
->> Hmm, on closer inspection this is actually a bug in the of driver. The
->> patch above fixes the specific problem that we hit on ia64 due to
->> CONFIG_OF being selected by accident, but the underlying issue will
->> affect any platform that doesn't provide an implementation of
->> of_node_to_nid().
->>
->> The fundamental problem is that the various actual implementations of
->> of_node_to_nid (ppc, sparc and the generic one in of_numa.c) export
->> the symbol. While the fallback implementation does not because it is
->> defined as a weak symbol. As a result we'll get this build failure iff
->> there's a call to of_node_to_nid() in a module.
->>
->> The one-line fix is just to delete the call to of_node_to_nid() in
->> of_pmem.c. I have a patch that adds a Kconfig options and removes the
->> weak symbol games. That needs Acks from the ppc, sparc and DT
->> maintainers though so it'll take longer to organise.
->
-> How about just marking OF_PMEM as bool for the time being until all of
-> these other reworks land upstream?
-
-I went ahead and just pushed this workaround for now:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/commit/?h=libnvdimm-for-next&id=291717b6fbdb175da88ae2144fc58d63a490128d
+T24gRnJpLCBNYXIgMjMsIDIwMTggYXQgMjo1MyBBTSwgVG9taSBWYWxrZWluZW4gPHRvbWkudmFs
+a2VpbmVuQHRpLmNvbT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gT24gMjMvMDMvMTggMDM6MjMsIFJv
+YiBIZXJyaW5nIHdyb3RlOgo+Cj4+PiBPaywgSSB0aGluayB0aGUgZGVzY3JpcHRpb24gd2FzIGEg
+Yml0IHVuY2xlYXIuIFNvLCB0aGUgZHJpdmVyIGNhbiBkbwo+Pj4gdGhpcyBqdXN0IGZpbmUsIGl0
+IGNhbiByZXNlcnZlIGh3IHBsYW5lcyBkeW5hbWljYWxseSB3aGVuIG5lZWRlZC4gVGhlCj4+PiBw
+cm9ibGVtIGlzIHRoZSB1c2Vyc3BhY2UuCj4+Pgo+Pj4gV2hlbiBhIERSTSBhcHBsaWNhdGlvbiBz
+dGFydHMsIGl0IHNlZXMgYSBidW5jaCBvZiBwbGFuZXMsIGFuZCBjYW4gc2VlIG9uCj4+PiB3aGlj
+aCBjcnRjcyBlYWNoIHBsYW5lIGNhbiBiZSB1c2VkLiBUaGUgZXhwZWN0YXRpb24gaXMsIG9mIGNv
+dXJzZSwgdGhhdAo+Pj4gdGhlc2UgcGxhbmVzIGNhbiBiZSB1c2VkIG5vcm1hbGx5LiBJZiB0aGUg
+ZHJpdmVyIHdvdWxkIGR5bmFtaWNhbGx5Cj4+PiByZXNlcnZlIGFuIGFkZGl0aW9uYWwsIGN1cnJl
+bnRseSB1bnVzZWQgcGxhbmUsIHRoZSB1c2Vyc3BhY2Ugd291bGQgYmUKPj4+IHRvdGFsbHkgYmFm
+ZmxlZCwgYXMgaXQgZmFpbHMgdG8gY29uZmlndXJlIGJhc2ljIHBsYW5lIHNldHVwcy4KPj4+Cj4+
+PiBGb3IgZXhhbXBsZSwgdGhlIHVzZXJzcGFjZSBjb3VsZCBzZWUgdGhhdCB0aGVyZSBhcmUgdHdv
+IHBsYW5lcywgdXNhYmxlCj4+PiBvbiBMQ0QgYW5kIEhETUkgY3J0Y3MuIEJ1dCBteXN0ZXJpb3Vz
+bHkgbW9kZXNldHRpbmcgd291bGQgc29tZXRpbWVzIGZhaWwKPj4+IGlmIHRoZSBIRE1JIGlzIDJr
+KyBkaXNwbGF5LiBTZXR0aW5nIHVwIGEgcGxhbmUgb24gdGhlIEhETUkgd291bGQgd29yaywKPj4+
+IGV4Y2VwdCB3aGVuIHRoZSBMQ0QgYWxyZWFkeSBoYXMgYSBwbGFuZS4gU2V0dGluZyB1cCB0d28g
+cGxhbmVzIG9uIHRoZQo+Pj4gTENEIHdvdWxkIHdvcmssIGJ1dCBtb3Zpbmcgb25lIG9yIGJvdGgg
+cGxhbmVzIHRvIHRoZSBIRE1JIHdvdWxkIGZhaWwuIEV0Yy4KPj4KPj4gSSBzdXNwZWN0IHRoaXMg
+aXMgYSBjb21tb24gcHJvYmxlbS4gTm90IGJlY2F1c2UgdGhlIGgvdyByZXF1aXJlcwo+PiBkaWZm
+ZXJlbnQgYWxsb2NhdGlvbiBvZiBwbGFuZXMsIGJ1dCBiZWNhdXNlIHRoZSBtZW1vcnkgYmFuZHdp
+ZHRoIGNhbid0Cj4+IGhhbmRsZSBoYXZpbmcgYSAybmQgcGxhbmUgaWYgdGhlIHJlc29sdXRpb24g
+aXMgYWJvdmUgYSBjZXJ0YWluCj4+IHNpemUvZGVwdGguIFNvIHdoaWxlIHRoZSBwbGFuZSBkb2Vz
+bid0IGRpc2FwcGVhciwgdGhlIGVmZmVjdCBpcyB0aGUKPj4gc2FtZS4gSG93IGRvZXMgRFJNIGhh
+bmRsZSB0aGlzPwo+Cj4gSSBkb24ndCB0aGluayBEUk0gaGFuZGxlcyB0aGlzLiBFYWNoIGRyaXZl
+ciBjYW4gcHJvYmFibHkgZmlsdGVyIG91dAo+IHZpZGVvbW9kZXMgd2hpY2ggaXQga25vd3MgY2Fu
+J3QgYmUgdXNlZCBldmVuIHdpdGggc2luZ2xlIHBsYW5lICh3ZSBkbwo+IHRoaXMgb24gb21hcGRy
+bSksIGFuZCBhbHNvIGNhbiBnaXZlIGFuIGVycm9yIGlmIHRoZSBwbGFuZSBzZXR1cCB3b3VsZAo+
+IHJlc3VsdCBpbiB0b28gaGlnaCBiYW5kd2lkdGggdXNlLgo+Cj4gU28geWVzLCBwbGFuZSBzZXR1
+cHMgY2FuIGFsd2F5cyBmYWlsLCAibXlzdGVyaW91c2x5IiBmcm9tIHVzZXJzcGFjZSdzCj4gcGVy
+c3BlY3RpdmUuIEJ1dCBJIGRvbid0IHRoaW5rIGl0J3MgZXhhY3RseSBjb21wYXJhYmxlIHRvIHRo
+aXMgb25lLiBUaGUKPiBkaWZmZXJlbmNlIGlzIHRoYXQgaW4gdGhpcyBjYXNlIHdlIGNhbiBhdm9p
+ZCBhbGwgdGhlIHVzZXJzcGFjZSBpc3N1ZXMKPiB3aXRoIGEgc2ltcGxlIHN0YXRpYyBwbGFuZSBw
+YXJ0aXRpb25pbmcgZG9uZSBhdCBwcm9iZSB0aW1lLCBidXQgSSBjYW4ndAo+IHNlZSBob3cgdGhl
+IGJhbmR3aWR0aCBpc3N1ZSBjb3VsZCBiZSBzb2x2ZWQgaW4gYSBzaW1pbGFyIHdheS4KPgo+Pj4g
+V2UgY291bGQsIG9mIGNvdXJzZSwgY29udmV5IHRoaXMgaW5mb3JtYXRpb24gdG8gdGhlIHVzZXJz
+cGFjZSBhdCBydW50aW1lCj4+PiB2aWEgdGhlIERSTSBwcm9wZXJ0aWVzLCBidXQgdGhlbiBpdCB3
+b3VsZCBtZWFuIHdlJ2QgbmVlZCBjdXN0b21pemVkCj4+PiBhcHBsaWNhdGlvbnMuCj4+Pgo+Pj4g
+U28sIGFzIGZhciBhcyBJIGNhbiBzZWUsIGtlZXBpbmcgbm9ybWFsIERSTSBiZWhhdmlvciB3aXRo
+IDJrKyBkaXNwbGF5cwo+Pj4gb24gT01BUCBEU1MgcmVxdWlyZXMgYSBzdGF0aWMgdmlydHVhbCBw
+bGFuZSBzZXR1cC4gVGhlIG1vc3Qgc2ltcGxlIHNldHVwCj4+PiB3b3VsZCBiZSB0byBqdXN0IHNw
+bGl0IHRoZSBudW1iZXIgb2YgYXZhaWxhYmxlIHBsYW5lcyBieSAyLCBidXQgdGhlbiBpbgo+Pj4g
+bWFueSB1c2UgY2FzZXMgdGhhdCB3YXN0ZXMgb25lIGh3IHBsYW5lLgo+Pgo+PiBGb3IgSERNSSwg
+eW91IGNhbid0IGtub3cgaW4gYWR2YW5jZSB3aGF0IHJlc29sdXRpb24gd2lsbCBiZS4gU28gSQo+
+PiB0aGluayB5b3UgYWx3YXlzIG5lZWQgdG8gcmVzZXJ2ZSAyIHBsYW5lcy4gTm93LCBpZiB5b3Ug
+d2FudCB0byByZWR1Y2UKPgo+IFdlIGNhbiBkZWNpZGUgbm90IHRvIHN1cHBvcnQgMmsrIHJlc29s
+dXRpb25zIGZvciBIRE1JLCB3aGljaCwgd2l0aCB0aGlzCj4gc2VyaWVzLCBoYXBwZW5zIGJ5IG5v
+dCByZXNlcnZpbmcgZHVhbC1wbGFuZSBmb3IgdGhlIEhETUkuCgpSaWdodC4gU28gdHVybiB0aGlz
+IGFyb3VuZC4gRGVmaW5lIGluIERUIHdoYXQgaXMgdGhlIG1heGltdW0KcmVzb2x1dGlvbiBzdXBw
+b3J0ZWQgZm9yIEhETUkgYW5kIGNvbmZpZ3VyZSB0aGUgcGxhbmVzIGJhc2VkIG9uIHRoYXQuClRo
+ZSBkaWZmZXJlbmNlIGlzIGRlZmluaW5nIGEgbWF4IGlzIGdlbmVyaWMgZW5vdWdoIHRoYXQgaXQg
+Y2FuIHdvcmsKZm9yIG90aGVycyBhbmQgZm9yIGEgdmFyaWV0eSBvZiByZWFzb25zIHdoZXRoZXIg
+aXQgaXMgIyBvZiBwbGFuZXMsCm1lbW9yeSBiYW5kd2lkdGgsIGNyYXBweSBtb25pdG9yLCBwb29y
+IGJvYXJkIHNpZ25hbCBxdWFsaXR5LCBldGMuCgo+PiB0aGUgbWF4IHJlc29sdXRpb24gZm9yIHNv
+bWUgcmVhc29uLCBJIGd1ZXNzIHdlIGNvdWxkIGhhdmUgcHJvcGVydGllcwo+PiBmb3IgdGhhdC4g
+VGhhdCB3b3VsZCBiZSBtb3JlIGdlbmVyaWMgYW5kIHdvcmsgd2hldGhlciB5b3UgbmVlZCB0bwo+
+PiBjaGFuZ2UgcGxhbmUgYWxsb2NhdGlvbiBvciBoYXZlIGEgbGltaXQgZm9yIG90aGVyIHJlYXNv
+bnMuCj4+Cj4+IEZvciBhdHRhY2hlZCBwYW5lbHMsIHlvdSBrbm93IHRoZSByZXNvbHV0aW9uIHVw
+IGZyb250IGFuZCBjYW4gYWxsb2NhdGUKPj4gcGxhbmVzIGJlZm9yZSB0aGUgdXNlcnNwYWNlIGlu
+dGVyZmFjZSBpcyB1cC4KPgo+IEJ1dCByZXNlcnZlIGhvdyBtYW55IG9mIHRoZSBwbGFuZXM/IFdl
+IGhhdmUgTiBwbGFuZXMgYW5kIE0gZGlzcGxheXMuIEZvcgo+IHNvbWUgb2YgdGhlIGRpc3BsYXlz
+IHdlIGtub3cgdGhleSdyZSAyayssIHNvbWUgYXJlIGtub3duIHRvIGJlIC0yayBhbmQKPiBzb21l
+IGFyZSB1bmtub3duLiBUaGUgZHJpdmVyIGNhbid0IGluZGVwZW5kZW50bHkgbWFrZSBhbnkgc2Vu
+c2libGUKPiBzdGF0aWMgcmVzZXJ2YXRpb24gb2YgdGhlIHBsYW5lcyBmb3IgdGhlIGRpc3BsYXlz
+LCBiZWNhdXNlIGl0IGRvZXNuJ3QKPiBrbm93IHdoYXQgdGhlIHVzZXIgd2FudHMgdG8gZG8uCgpB
+ZnRlciB5b3UndmUgaGFuZGxlZCBIRE1JIGFzIGFib3ZlIGFuZCBhbnkgcGVybWFuZW50bHkgYXR0
+YWNoZWQgcGFuZWxzCndpdGggZml4ZWQgcmVzb2x1dGlvbnMsIHdoYXQgaXMgbGVmdCBmb3IgYSB1
+c2VyIHRvIGNvbmZpZ3VyZT8gUGVyaGFwcwpvbmx5IG9uZSBkaXNwbGF5IGNhbiBzdXBwb3J0IGFu
+IG92ZXJsYXkgYXQgdGhhdCBwb2ludCBiZWNhdXNlIHlvdSBhcmUKb3V0IG9mIHBsYW5lcz8KCj4g
+U28gZWl0aGVyIHdlIHJlc2VydmUgdGhlIGV4dHJhIHBsYW5lcyBhdCBydW50aW1lIG9uIGRlbWFu
+ZCwgbWFraW5nIGl0Cj4gZGlmZmljdWx0IHRvIG1hbmFnZSBmb3IgdGhlIHVzZXJzcGFjZSwgb3Ig
+d2UgcmVseSBvbiB0aGUgdXNlciB0byBnaXZlCj4gdGhlIGRyaXZlciBhIHN0YXRpYyBwYXJ0aXRp
+b25pbmcgb2YgdGhlIHBsYW5lcyBhY2NvcmRpbmcgdG8gdGhlIHVzZXIncwo+IHVzZSBjYXNlLgoK
+QW5kIGJ5IHVzZXIsIHdobyBkbyB5b3UgbWVhbiBleGFjdGx5PyBUaGUgdXNlIGNhc2UgaXMgdGll
+ZCB0byB0aGUKYm9hcmQgZGVzaWduIGFuZCBwcm9kdWN0IG9yIHRpZWQgdG8gdGhlIHdoaW1zIG9m
+IGFuIGVuZCB1c2VyIChlLmcuIEkKd2FudCB0byBkbyB2aWRlbyBwbGF5YmFjayB3aXRoIG92ZXJs
+YXkgdG8gZGlzcCAyKT8gWW91IHNob3VsZCBlcXVhdGUKdXNlcnMgbWFraW5nIERUIGNoYW5nZXMg
+d2l0aCB0ZWxsaW5nIHVzZXJzIHRvIHVwZGF0ZS9jaGFuZ2UgdGhlaXIKQklPUy4KClJvYgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
