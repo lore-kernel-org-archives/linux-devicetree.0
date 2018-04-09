@@ -1,37 +1,84 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 1/7] PM / OPP: Add dev_pm_opp_get_of_node()
-Date: Mon, 9 Apr 2018 09:17:14 -0600
-Message-ID: <20180409151714.GB5491@jcrouse-lnx.qualcomm.com>
-References: <20180316040824.21472-1-rnayak@codeaurora.org>
- <20180316040824.21472-2-rnayak@codeaurora.org>
- <152310602935.180276.13934458024242240384@swboyd.mtv.corp.google.com>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource sibling
+Date: Mon, 9 Apr 2018 08:38:18 -0700
+Message-ID: <CAPcyv4huU32+oMeoF8-HmmctafZ_uOZN-v85O5M8Ka8pBXP+Lg@mail.gmail.com>
+References: <20180408024724.16812-1-bhe@redhat.com>
+ <20180408024724.16812-2-bhe@redhat.com>
+ <20180409090853.GJ19345@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152310602935.180276.13934458024242240384@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, andy.gross@linaro.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180409090853.GJ19345-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 07, 2018 at 06:00:29AM -0700, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2018-03-15 21:08:18)
-> > From: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > This adds a new helper to let the power domain drivers to access
-> > opp->np, so that they can read platform specific properties from the
-> > node.
-> > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > ---
-> 
-> Are there two versions of this patch floating around?
+On Mon, Apr 9, 2018 at 2:08 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The struct resource uses singly linked list to link siblings. It's not
+> easy to do reverse iteration on sibling list. So replace it with list_head.
+>
+> And code refactoring makes codes in kernel/resource.c more readable than
+> pointer operation.
+>
+> Besides, type of member variables of struct resource, sibling and child, are
+> changed from 'struct resource *' to 'struct list_head'. Kernel size will
+> increase because of those statically defined struct resource instances.
+>
+> Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+[..]
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index e270b5048988..473c624606f9 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -31,6 +31,8 @@ struct resource ioport_resource = {
+>         .start  = 0,
+>         .end    = IO_SPACE_LIMIT,
+>         .flags  = IORESOURCE_IO,
+> +       .sibling = LIST_HEAD_INIT(ioport_resource.sibling),
+> +       .child  = LIST_HEAD_INIT(ioport_resource.child),
+>  };
+>  EXPORT_SYMBOL(ioport_resource);
+>
+> @@ -39,6 +41,8 @@ struct resource iomem_resource = {
+>         .start  = 0,
+>         .end    = -1,
+>         .flags  = IORESOURCE_MEM,
+> +       .sibling = LIST_HEAD_INIT(iomem_resource.sibling),
+> +       .child  = LIST_HEAD_INIT(iomem_resource.child),
+>  };
+>  EXPORT_SYMBOL(iomem_resource);
+>
+> @@ -57,20 +61,32 @@ static DEFINE_RWLOCK(resource_lock);
+>   * by boot mem after the system is up. So for reusing the resource entry
+>   * we need to remember the resource.
+>   */
+> -static struct resource *bootmem_resource_free;
+> +static struct list_head bootmem_resource_free = LIST_HEAD_INIT(bootmem_resource_free);
+>  static DEFINE_SPINLOCK(bootmem_resource_lock);
+>
+> +struct resource *sibling(struct resource *res)
+> +{
+> +       if (res->parent && !list_is_last(&res->sibling, &res->parent->child))
+> +               return list_next_entry(res, sibling);
+> +       return NULL;
+> +}
+> +
+> +struct resource *first_child(struct list_head *head)
+> +{
+> +       return list_first_entry_or_null(head, struct resource, sibling);
+> +}
+> +
 
-The other one was mine, but it is identical to this.
-
-Jordan
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+These names are too generic for new global symbols. A "resource_"
+prefix is warranted.
