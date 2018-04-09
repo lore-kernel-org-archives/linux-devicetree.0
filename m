@@ -1,46 +1,44 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[RFC]DPU PATCH] drm/bridge: add support for sn65dsi86
- bridge chip
-Date: Mon,  9 Apr 2018 16:16:11 +0530
-Message-ID: <1523270772-3881-1-git-send-email-spanda@codeaurora.org>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH v2 7/9] PCI: dwc: Replace lower into upper case characters
+Date: Mon, 9 Apr 2018 14:10:44 +0100
+Message-ID: <c7aa4990-92ad-3e5e-de27-40df4f29f08b@synopsys.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
+ <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
+ <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaHNldCBhZGQgc3VwcG9ydCBmb3IgdGkgYmFzZWQgc242NWRzdTg2IGJyaWRnZSBj
-aGlwLAp3aGljaCB0YWtlcyBkc2kgdmlkZW8gbW9kZSBzaWduYWwgYXMgaW5wdXQgYW5kIGNvdmVy
-dHMgaXQKdG8gZURQIHNpZ25hbCBhcyBvdXRwdXQuCgpDdXJyZW50IGRyaXZlciB1c2VzIGRldmlj
-ZSB0cmVlIGVudHJpZXMgdG8gZ2V0IHRoZSByZXF1aXJlZApncGlvIHBpbiBudW1iZXJzIHRoYXQg
-bmVlZHMgdG8gYmUgY29uZmlndXJlZCB0byBlbmFibGUgdGhlCkRTSSByZWNpZXZlciBhbmQgZURQ
-IGNvbm5lY3RvciBwYXJ0LiBBbHNvIHRoaXMgZHJpdmVyIGltcGxtZW50cwp0d28gbWV0aG9kcyB0
-byBkZXRlcm1pbmUgdGhlIG1vZGVzIHN1cHBvcnRlZCBieSB0aGUgZGlzcGxheQpwYW5lbCBkZXBl
-bmRpbmcgb24gd2hldGhlciBIUEQgaXMgZW5hYmxlZCBvciBub3QuIEZpcnN0IG1ldGhvZAppcyBi
-YXNlZCBvbiBFRElEIHJlYWQgd2hpY2ggaXMgdXNlZCBpZiBwYW5lbCBzdXBwb3J0cyBIRFAgYW5k
-CnRoZSBzZWNvbmQgbWV0aG9kIGlzIGJhc2VkIG9uIGN1c3RvbWUgbW9kZXMgYWRkZWQgaW4gZHRz
-aSBmaWxlCndoZW4gcGFuZWwgZG9lcyBub3Qgc3VwcG9ydCBIUEQuCgpDdXJyZW50IHBhdGNoIGlz
-IG5vdCB5ZXQgdGVzdGVkIG9uIGFuIGFjdHVhbCBzbjY1ZHNpODYgYnJpZGdlIEhXLgoKU2FuZGVl
-cCBQYW5kYSAoMSk6CiAgZHJtL2JyaWRnZTogYWRkIHNuNjVkc2k4NiBicmlkZ2UgZHJpdmVyIHN1
-cHBvcnQKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAgICAg
-ICB8ICAgNTMgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYyAgICAgICAg
-ICAgICAgfCAxMTQ2ICsrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDExOTkg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CiBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwoKLS0gClRoZSBRdWFs
-Y29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJv
-cmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
-aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hi Joe,
+
+On 09/04/2018 11:25, Joe Perches wrote:
+> On Mon, 2018-04-09 at 10:41 +0100, Gustavo Pimentel wrote:
+>> Replaces lower into upper case characters in comments and debug printks.
+>>
+>> This is an attempt to keep the messages coherent within the designware
+>> driver.
+> 
+> It'd be nice to make all the dwc drivers use the same
+> message wording.
+> 
+> For instance:
+> 
+> drivers/pci/dwc/pci-keystone.c: dev_err(dev, "phy link never came up\n");
+> drivers/pci/dwc/pcie-designware.c:      dev_err(pci->dev, "phy link never came up\n");
+> drivers/pci/host/pcie-xilinx-nwl.c:     dev_err(dev, "PHY link never came up\n");
+
+I also agree, I added a task to my backlog to fix that. However, this task
+shouldn't be done in this patch series since it's a more broader task involving
+many drivers and different maintainers. Agree?
+
+> 
+
+Regards,
+Gustavo
