@@ -1,47 +1,50 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v7 [RESEND] 2/2] dt-bindings: introduce Command DB for
- QCOM SoCs
-Date: Mon, 09 Apr 2018 20:42:32 +0000
-Message-ID: <CAE=gft4uBMknENW5o7Rr+ZPQYWUBRBRzAPdvy2=8wGDMMV4CVw@mail.gmail.com>
-References: <20180406151356.7818-1-ilina@codeaurora.org> <20180406151356.7818-3-ilina@codeaurora.org>
- <152305660223.94378.422604779280814924@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
+Date: Mon, 9 Apr 2018 15:52:38 -0500
+Message-ID: <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A@mail.gmail.com>
+References: <20180409074604.17671-1-oohall@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152305660223.94378.422604779280814924@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180409074604.17671-1-oohall@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org
-Cc: Lina Iyer <ilina@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, msivasub@codeaurora.org
+To: Oliver O'Halloran <oohall@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org, sparclinux@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 6, 2018 at 4:16 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Mon, Apr 9, 2018 at 2:46 AM, Oliver O'Halloran <oohall@gmail.com> wrote:
+> Some OF platforms (pseries and some SPARC systems) has their own
+> implementations of NUMA affinity detection rather than using the generic
+> OF_NUMA driver, which mainly exists for arm64. For other platforms one
+> of two fallbacks provided by the base OF driver are used depending on
+> CONFIG_NUMA.
+>
+> In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
+> In the =y case the fallback is a real function which is defined as a
+> weak symbol so that it may be overwritten by the architecture if desired.
+>
+> The problem with this arrangement is that the real implementations all
+> export of_node_to_nid(). Unfortunately it's not possible to export the
+> fallback since it would clash with the non-weak version. As a result
+> we get build failures when:
+>
+> a) CONFIG_NUMA=y && CONFIG_OF=y, and
+> b) The platform doesn't implement of_node_to_nid(), and
+> c) A module uses of_node_to_nid()
+>
+> Given b) will be true for most platforms this is fairly easy to hit
+> and has been observed on ia64 and x86.
 
-> Quoting Lina Iyer (2018-04-06 08:13:56)
-> > From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> >
-> > Command DB provides information on shared resources like clocks,
-> > regulators etc., probed at boot by the remote subsytem and made
-> > available in shared memory.
-> >
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >
+How specifically do we hit this? The only module I see using
+of_node_to_nid in mainline is Cell EDAC driver.
 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> This patch remedies the problem by introducing the ARCH_HAS_OWN_OF_NUMA
+> Kconfig option which is selected if an architecture provides an
+> implementation of of_node_to_nid(). If a platform does not use it's own,
+> or the generic OF_NUMA, then always use the inline fallback in of.h so
+> we don't need to futz around with exports.
 
-> > +       reserved-memory {
-> > +               [...]
-> > +               qcom,cmd-db@85fe0000 {
+I'm more inclined to figure out how to remove the export and provide a
+non DT specific function if drivers need to know this.
 
-> Nitpick: This may want to be called 'memory@85fe0000' because we prefer
-> generic node names.
-
-Another nit: the cmd-db region seems to need "no-map" to make the example
-actually work.
-
-Reviewed-by: Evan Green <evgreen@chromium.org>
-
--Evan
+Rob
