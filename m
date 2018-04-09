@@ -1,83 +1,86 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 2/2] mailbox: add STMicroelectronics STM32 IPCC driver
-Date: Mon, 9 Apr 2018 15:40:10 +0530
-Message-ID: <CABb+yY0ThbeqOGnFVcUUhYk86h7mfkeU_JQJQViUjCCVUP5Z8g@mail.gmail.com>
-References: <1520852307-26659-1-git-send-email-fabien.dessenne@st.com>
- <1520852307-26659-3-git-send-email-fabien.dessenne@st.com>
- <CABb+yY1x7J_oEgU-LR5jPYCoCoUHng84E+CibTxLzdtxhENTBw@mail.gmail.com>
- <4a2170b7-e5e9-4f5c-8ff7-79e102a658c1@st.com> <CABb+yY182+7xMbGCurzqxyoGFCRZn4_xKr3AvTQ2c+KyR1vx_w@mail.gmail.com>
- <f9a45a6e-5b3c-ddd0-e465-cfcad6ece818@st.com> <CABb+yY2Dd2Gr_-+4RaJarq3tve8tgzVqcoJw+MGT=+Vy56PwLw@mail.gmail.com>
- <d9b30262-3b0b-1b46-dee7-ee1a4b77e66e@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: bridge: Document
+ THC63LVD1024 LVDS decoder
+Date: Mon, 9 Apr 2018 11:22:44 +0100
+Message-ID: <20180409102244.GB11532@sirena.org.uk>
+References: <1523018517-24121-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1664336.M7KDjLhzuK@avalon> <20180406142558.GP20945@w540>
+ <2441543.5xTHaLXzZ0@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9b30262-3b0b-1b46-dee7-ee1a4b77e66e@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: multipart/mixed; boundary="===============1902917233=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2441543.5xTHaLXzZ0@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jacopo mondi <jacopo@jmondi.org>, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, magnus.damm@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, niklas.soderlund@ragnatech.se, geert@linux-m68k.org, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 2:33 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
->
->
-> On 06/04/18 18:20, Jassi Brar wrote:
->> On Fri, Apr 6, 2018 at 8:35 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
->>> On 06/04/18 14:56, Jassi Brar wrote:
->>>> On Fri, Apr 6, 2018 at 5:59 PM, Fabien DESSENNE <fabien.dessenne@st.com> wrote:
->>>>> Hi
->>>>>
->>>>>
->>>>> On 05/04/18 11:38, Jassi Brar wrote:
->>>>>> On Mon, Mar 12, 2018 at 4:28 PM, Fabien Dessenne <fabien.dessenne@st.com> wrote:
->>>>>> ....
->>>>>>> +
->>>>>>> +       /* irq */
->>>>>>> +       for (i = 0; i < IPCC_IRQ_NUM; i++) {
->>>>>>> +               ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
->>>>>>> +               if (ipcc->irqs[i] < 0) {
->>>>>>> +                       dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
->>>>>>> +                       ret = ipcc->irqs[i];
->>>>>>> +                       goto err_clk;
->>>>>>> +               }
->>>>>>> +
->>>>>>> +               ret = devm_request_threaded_irq(dev, ipcc->irqs[i], NULL,
->>>>>>> +                                               irq_thread[i], IRQF_ONESHOT,
->>>>>>> +                                               dev_name(dev), ipcc);
->>>>>>>
->>>>>> In your interrupt handlers you don't do anything that could block.
->>>>>> Threads only adds some delay to your message handling.
->>>>>> So maybe use devm_request_irq() ?
->>>>> The interrupt handlers call mbox_chan_received_data() /
->>>>> mbox_chan_txdone(), which call in turn client's rx_callback() /
->>>>> tx_done() / tx_prepare() which behavior may be unsafe. Hence, using a
->>>>> threaded irq here seems to be a good choice.
->>>>>
->>>> rx_callback() is supposed to be atomic.
->>> I am worried with this atomic part (and honestly I did not note that the
->>> callbacks were expected to be)
->>>
->>> In my case, remoteproc->virtio->rpmsg is the mailbox client defining the
->>> rx_callback.
->>> If I follow your suggestion, I shall make this rx_callback Atomic in
->>> remoteproc (or in virtio or rpmsg). And this does not seem to be so
->>> simple (add a worker in the middle of somewhere?). Bjorn, feel free to
->>> comment this part.
->>>
->>> An alternate implementation consists in using a threaded IRQ for the
->>> mailbox interrupt.
->>> This option is not only simple, but also ensures to split bottom & half
->>> parts at the irq level which is IMHO a general good practice.
->>>
->>> I can see that some mailbox clients implement callbacks that are NOT
->>> atomic and I suspect this is the reason why some mailbox drivers use
->>> threaded_irq (rockchip mailbox splits the bottom & half parts).
->>>
->>> Would it be acceptable to consider the "atomic client callback" as a
->>> non-strict rule ?
->>>
->> Of course you can traverse atomic path from sleepable context (but not
->> vice-versa).
->
-> So, to be sure we understand each other, I can use threaded_irq, right?
->
-Yes. Its platform specific driver, I can't dictate the features you want :)
+
+--===============1902917233==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
+Content-Disposition: inline
+
+
+--lEGEL1/lMxI0MVQ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 06, 2018 at 06:40:14PM +0300, Laurent Pinchart wrote:
+> On Friday, 6 April 2018 17:25:58 EEST jacopo mondi wrote:
+
+> > Same on the mandatory/optional VCC supply thing. Let's try to make
+> > next version the final one. If the optional property with the dummy
+> > regulator doesn't satisfy you and it is preferred to have a fixed-regul=
+ator
+> > anyhow in DT I'll do in next version, othewise let's try not to change
+> > it again. I'll just remark here that in the current Eagle design vcc is
+> > connected to a power rail with no regulator at all :)
+
+> I don't like the dummy regulator much, as it generates a dev_warn(), whic=
+h=20
+> makes me believe that it's a hack rather than a proper solution. You migh=
+t=20
+> want to ask Mark Brown for his opinion.
+
+The DT should describe the physical supplies the device needs, if that's
+a fixed regulator with no software control then the DT should have a
+fixed regulator with no software control.
+
+--lEGEL1/lMxI0MVQ2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlrLPvQACgkQJNaLcl1U
+h9Aqvwf/ciDfXmVqKQSvxMtmLhQMHUGmfRiXwnrhL+GeughyU+/cdRY39m4DlJ/r
+l6SO9pxgy35Nafx9kK9N+SaJytNy/WI7qMqvEtO7Ekl0ySaCxVHDSz9EPIyV0C3r
++HJ8ZpLzBvg8Vxprv38qSt8rbwzuejiIsaz7wamIEwmY0QH650COYddR34+29EGq
+hfwfseobZuIrHIBJ6o/bLV5js0xHiY68cXVAhSNWZK2RA935yVnD4mjWGakkvydu
+7G55zw9GVulr11UYjP7XDamnkRVqS7WsHt9B0vge0oIXqyAXhWWhsx14GxsJyhpI
+TNMbXD8PGAMasYAQ3cd+l0MgbD0dhQ==
+=OXuF
+-----END PGP SIGNATURE-----
+
+--lEGEL1/lMxI0MVQ2--
+
+--===============1902917233==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1902917233==--
