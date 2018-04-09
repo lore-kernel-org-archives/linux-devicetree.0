@@ -1,175 +1,137 @@
-Return-Path: <SRS0=DA9F=G5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751998AbeDHQ2s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 8 Apr 2018 12:28:48 -0400
-Date: Sun, 8 Apr 2018 17:28:44 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ism330dlc
-Message-ID: <20180408172844.38acd017@archlinux>
-In-Reply-To: <20180330203351.22681-2-lorenzo.bianconi@redhat.com>
-References: <20180330203351.22681-2-lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=o6D7=G6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40048.outbound.protection.outlook.com ([40.107.4.48]:11235
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751754AbeDIJEB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Apr 2018 05:04:01 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 2/5] usb: typec: fusb302: remove max_snk_* for sink
+ config
+Date: Mon, 9 Apr 2018 09:03:56 +0000
+Message-ID: <VI1PR0402MB39179824C47BA368C89F05D689BF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+ <1521817127-23061-3-git-send-email-jun.li@nxp.com>
+ <7c857ffd-419d-bb6d-7330-4ec751f8682a@gmail.com>
+ <8ca89cec-c63d-31dc-431a-8712276a63bf@redhat.com>
+In-Reply-To: <8ca89cec-c63d-31dc-431a-8712276a63bf@redhat.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Mats Karrman <mats.dev.list@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
+Cc: "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 30 Mar 2018 22:33:50 +0200
-Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
-
-> Add support to STM ISM330DLC 6-axis (acc + gyro) Mems sensor
-> http://www.st.com/resource/en/datasheet/ism330dlc.pdf
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to play with it.
-
-One note inline...
-
-> ---
->  drivers/iio/imu/st_lsm6dsx/Kconfig             |  3 ++-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        |  2 ++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 10 +++++-----
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   |  3 ++-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    |  5 +++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    |  5 +++++
->  6 files changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> index 14f2eb6e9fb7..ccc817e17eb8 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> @@ -8,7 +8,8 @@ config IIO_ST_LSM6DSX
->  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
->  	help
->  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
-> -	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm
-> +	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-> +	  ism330dlc
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called st_lsm6dsx.
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index a3cc7cd97026..edcd838037cd 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -18,12 +18,14 @@
->  #define ST_LSM6DS3H_DEV_NAME	"lsm6ds3h"
->  #define ST_LSM6DSL_DEV_NAME	"lsm6dsl"
->  #define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
-> +#define ST_ISM330DLC_DEV_NAME	"ism330dlc"
->  
->  enum st_lsm6dsx_hw_id {
->  	ST_LSM6DS3_ID,
->  	ST_LSM6DS3H_ID,
->  	ST_LSM6DSL_ID,
->  	ST_LSM6DSM_ID,
-> +	ST_ISM330DLC_ID,
->  	ST_LSM6DSX_MAX_ID,
->  };
->  
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> index 1045e025e92b..4994f920a836 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> @@ -1,10 +1,10 @@
->  /*
->   * STMicroelectronics st_lsm6dsx FIFO buffer library driver
->   *
-> - * LSM6DS3/LSM6DS3H/LSM6DSL/LSM6DSM: The FIFO buffer can be configured
-> - * to store data from gyroscope and accelerometer. Samples are queued
-> - * without any tag according to a specific pattern based on 'FIFO data sets'
-> - * (6 bytes each):
-> + * LSM6DS3/LSM6DS3H/LSM6DSL/LSM6DSM/ISM330DLC: The FIFO buffer can be
-I doubt this will be the last part we ever add.  Seems to me that a line break
-after that colon would reduce the 'noise' from adding parts in future.
-
-I don't care enough to 'fix' it now though.
-
-Jonathan
-> + * configured to store data from gyroscope and accelerometer. Samples are
-> + * queued without any tag according to a specific pattern based on
-> + * 'FIFO data sets' (6 bytes each):
->   *  - 1st data set is reserved for gyroscope data
->   *  - 2nd data set is reserved for accelerometer data
->   * The FIFO pattern changes depending on the ODRs and decimation factors
-> @@ -276,7 +276,7 @@ static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 *data,
->  #define ST_LSM6DSX_IIO_BUFF_SIZE	(ALIGN(ST_LSM6DSX_SAMPLE_SIZE, \
->  					       sizeof(s64)) + sizeof(s64))
->  /**
-> - * st_lsm6dsx_read_fifo() - LSM6DS3-LSM6DS3H-LSM6DSL-LSM6DSM read FIFO routine
-> + * st_lsm6dsx_read_fifo() - hw FIFO read routine
->   * @hw: Pointer to instance of struct st_lsm6dsx_hw.
->   *
->   * Read samples from the hw FIFO and push them to IIO buffers.
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 50d6491df484..aebbe0ddd8d8 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -17,7 +17,7 @@
->   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
->   *   - FIFO size: 8KB
->   *
-> - * - LSM6DS3H/LSM6DSL/LSM6DSM:
-> + * - LSM6DS3H/LSM6DSL/LSM6DSM/ISM330DLC:
->   *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
->   *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
->   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-> @@ -252,6 +252,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  		.id = {
->  			[0] = ST_LSM6DSL_ID,
->  			[1] = ST_LSM6DSM_ID,
-> +			[2] = ST_ISM330DLC_ID,
->  		},
->  		.decimator = {
->  			[ST_LSM6DSX_ID_ACC] = {
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> index 41525dd2aab7..377c4e9997da 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> @@ -57,6 +57,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
->  		.compatible = "st,lsm6dsm",
->  		.data = (void *)ST_LSM6DSM_ID,
->  	},
-> +	{
-> +		.compatible = "st,ism330dlc",
-> +		.data = (void *)ST_ISM330DLC_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-> @@ -66,6 +70,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
->  	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
->  	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
->  	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
-> +	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> index 2c8135834479..fec5c6ce7eb7 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> @@ -57,6 +57,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
->  		.compatible = "st,lsm6dsm",
->  		.data = (void *)ST_LSM6DSM_ID,
->  	},
-> +	{
-> +		.compatible = "st,ism330dlc",
-> +		.data = (void *)ST_ISM330DLC_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-> @@ -66,6 +70,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
->  	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
->  	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
->  	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
-> +	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhhbnMgZGUgR29lZGUgW21h
+aWx0bzpoZGVnb2VkZUByZWRoYXQuY29tXQ0KPiBTZW50OiAyMDE45bm0NOaciDXml6UgNDoxMw0K
+PiBUbzogTWF0cyBLYXJybWFuIDxtYXRzLmRldi5saXN0QGdtYWlsLmNvbT47IEp1biBMaSA8anVu
+LmxpQG54cC5jb20+Ow0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgcm9iaCtkdEBrZXJu
+ZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gaGVpa2tpLmtyb2dlcnVzQGxpbnV4Lmlu
+dGVsLmNvbQ0KPiBDYzogbGludXhAcm9lY2stdXMubmV0OyBybWZyZnNAZ21haWwuY29tOyB5dWV5
+YW8uemh1QGdtYWlsLmNvbTsNCj4gbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi81XSB1c2I6IHR5cGVjOiBmdXNiMzAyOiByZW1vdmUg
+bWF4X3Nua18qIGZvciBzaW5rDQo+IGNvbmZpZw0KPiANCj4gSGksDQo+IA0KPiBPbiAwNC0wNC0x
+OCAxNDowNiwgTWF0cyBLYXJybWFuIHdyb3RlOg0KPiA+IEhpIExpLA0KPiA+DQo+ID4gT24gMjAx
+OC0wMy0yMyAxNTo1OCwgTGkgSnVuIHdyb3RlOg0KPiA+DQo+ID4+IFNpbmNlIG1heF9zbmtfKiBp
+cyB0byBiZSBkZXByZWNhdGVkLCBzbyByZW1vdmUgbWF4X3Nua18qIGJ5IGFkZGluZyBhDQo+ID4+
+IHZhcmlhYmxlIFBETyBmb3Igc2luayBjb25maWcuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6
+IExpIEp1biA8anVuLmxpQG54cC5jb20+DQo+ID4+IC0tLQ0KPiA+PiDCoCBkcml2ZXJzL3VzYi90
+eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYyB8IDUxDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0tLS0tLS0tLS0NCj4gPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyks
+IDE0IGRlbGV0aW9ucygtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvdHlw
+ZWMvZnVzYjMwMi9mdXNiMzAyLmMNCj4gPj4gYi9kcml2ZXJzL3VzYi90eXBlYy9mdXNiMzAyL2Z1
+c2IzMDIuYw0KPiA+PiBpbmRleCA3MDM2MTcxLi5kYjRkOWNkIDEwMDY0NA0KPiA+PiAtLS0gYS9k
+cml2ZXJzL3VzYi90eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYw0KPiA+PiArKysgYi9kcml2ZXJzL3Vz
+Yi90eXBlYy9mdXNiMzAyL2Z1c2IzMDIuYw0KPiA+PiBAQCAtMTIwLDYgKzEyMCw3IEBAIHN0cnVj
+dCBmdXNiMzAyX2NoaXAgew0KPiA+PiDCoMKgwqDCoMKgIGVudW0gdHlwZWNfY2NfcG9sYXJpdHkg
+Y2NfcG9sYXJpdHk7DQo+ID4+IMKgwqDCoMKgwqAgZW51bSB0eXBlY19jY19zdGF0dXMgY2MxOw0K
+PiA+PiDCoMKgwqDCoMKgIGVudW0gdHlwZWNfY2Nfc3RhdHVzIGNjMjsNCj4gPj4gK8KgwqDCoCB1
+MzIgc25rX3Bkb1tQRE9fTUFYX09CSkVDVFNdOw0KPiA+PiDCoCAjaWZkZWYgQ09ORklHX0RFQlVH
+X0ZTDQo+ID4+IMKgwqDCoMKgwqAgc3RydWN0IGRlbnRyeSAqZGVudHJ5Ow0KPiA+PiBAQCAtMTIx
+MiwxMSArMTIxMyw2IEBAIHN0YXRpYyBjb25zdCB1MzIgc25rX3Bkb1tdID0gew0KPiA+PiDCoCBz
+dGF0aWMgY29uc3Qgc3RydWN0IHRjcGNfY29uZmlnIGZ1c2IzMDJfdGNwY19jb25maWcgPSB7DQo+
+ID4+IMKgwqDCoMKgwqAgLnNyY19wZG8gPSBzcmNfcGRvLA0KPiA+PiDCoMKgwqDCoMKgIC5ucl9z
+cmNfcGRvID0gQVJSQVlfU0laRShzcmNfcGRvKSwNCj4gPj4gLcKgwqDCoCAuc25rX3BkbyA9IHNu
+a19wZG8sDQo+ID4+IC3CoMKgwqAgLm5yX3Nua19wZG8gPSBBUlJBWV9TSVpFKHNua19wZG8pLA0K
+PiA+PiAtwqDCoMKgIC5tYXhfc25rX212ID0gNTAwMCwNCj4gPj4gLcKgwqDCoCAubWF4X3Nua19t
+YSA9IDMwMDAsDQo+ID4+IC3CoMKgwqAgLm1heF9zbmtfbXcgPSAxNTAwMCwNCj4gPj4gwqDCoMKg
+wqDCoCAub3BlcmF0aW5nX3Nua19tdyA9IDI1MDAsDQo+ID4+IMKgwqDCoMKgwqAgLnR5cGUgPSBU
+WVBFQ19QT1JUX0RSUCwNCj4gPj4gwqDCoMKgwqDCoCAuZGF0YSA9IFRZUEVDX1BPUlRfRFJELA0K
+PiA+PiBAQCAtMTc1Niw2ICsxNzUyLDM4IEBAIHN0YXRpYyBpbnQgaW5pdF9ncGlvKHN0cnVjdCBm
+dXNiMzAyX2NoaXANCj4gPj4gKmNoaXApDQo+ID4+IMKgwqDCoMKgwqAgcmV0dXJuIDA7DQo+ID4+
+IMKgIH0NCj4gPj4gK3N0YXRpYyBpbnQgZnVzYjMwMl9jb21wb3NpdGVfc25rX3Bkb19hcnJheShz
+dHJ1Y3QgZnVzYjMwMl9jaGlwDQo+ID4+ICsqY2hpcCkgew0KPiA+PiArwqDCoMKgIHN0cnVjdCBk
+ZXZpY2UgKmRldiA9IGNoaXAtPmRldjsNCj4gPj4gK8KgwqDCoCB1MzIgbXYsIG1hLCBtdywgbWlu
+X212Ow0KPiA+PiArwqDCoMKgIHVuc2lnbmVkIGludCBpOw0KPiA+PiArDQo+ID4+ICvCoMKgwqAg
+LyogQ29weSB0aGUgc3RhdGljIHNuayBwZG8gKi8NCj4gPj4gK8KgwqDCoCBmb3IgKGkgPSAwOyBp
+IDwgQVJSQVlfU0laRShzbmtfcGRvKTsgaSsrKQ0KPiA+PiArwqDCoMKgwqDCoMKgwqAgY2hpcC0+
+c25rX3Bkb1tpXSA9IHNua19wZG9baV07DQo+ID4+ICsNCj4gPj4gK8KgwqDCoCBpZiAoZGV2aWNl
+X3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgImZjcyxtYXgtc2luay1taWNyb3ZvbHQiLCAmbXYpDQo+
+ID4+ICt8fA0KPiA+PiArwqDCoMKgwqDCoMKgwqAgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRl
+diwgImZjcyxtYXgtc2luay1taWNyb2FtcCIsICZtYSkNCj4gPj4gK3x8DQo+ID4+ICvCoMKgwqDC
+oMKgwqDCoCBkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiZmNzLG1heC1zaW5rLW1pY3Jv
+d2F0dCIsDQo+ID4+ICsmbXcpKQ0KPiA+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGk7DQo+ID4+
+ICsNCj4gPj4gK8KgwqDCoCBtdiA9IG12IC8gMTAwMDsNCj4gPj4gK8KgwqDCoCBtYSA9IG1hIC8g
+MTAwMDsNCj4gPj4gK8KgwqDCoCBtdyA9IG13IC8gMTAwMDsNCj4gPj4gKw0KPiA+PiArwqDCoMKg
+IG1pbl9tdiA9IDEwMDAgKiBjaGlwLT50Y3BjX2NvbmZpZy5vcGVyYXRpbmdfc25rX213IC8gbWE7
+DQo+ID4+ICvCoMKgwqAgaWYgKHBkb190eXBlKHNua19wZG9baS0xXSA9PSBQRE9fVFlQRV9GSVhF
+RCkpDQo+ID4NCj4gPiBZb3UndmUgZ290IHRoZSBwYXJlbnRoZXNlcyB3cm9uZy4NCj4gPg0KPiA+
+IEFwYXJ0IGZyb20gdGhhdCBJIGRvbid0IGxpa2UvdW5kZXJzdGFuZCB3aHkgdGhlIFBETydzIHNo
+b3VsZCBiZSBmaXhlZC4NCj4gPiBFdmVyeSBwcm9kdWN0IHNob3VsZCBiZSBhYmxlIHRvIGhhdmUg
+aXRzIG93biBzZXR0aW5ncywgaW5jbHVkaW5nIHRoZQ0KPiA+IGZpcnN0IFBETyAoZS5nLiBpdCBt
+aWdodCBuZWVkIHRvIHNwZWNpZnkgYSBoaWdoZXIgY3VycmVudCBhbmQvb3Igc2V0IHRoZSAiSGln
+aGVyDQo+IENhcGFiaWxpdHkiIGJpdCkuDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgd291bGQgYmUg
+YmVzdCBzb2x2ZWQgdGhlIHNhbWUgd2F5IGFzIGluIHlvdXIgVENQQ0kgZHJpdmVyDQo+ID4gcGF0
+Y2ggc2VyaWVzIFsxXSB3aXRoIGEgbGlzdCBmcmVlbHkgc3BlY2lmaWVkIGJ5IGEgcHJvcGVydHku
+DQo+ID4NCj4gPiBbMV0NCj4gPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5v
+dXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGd3d3DQo+ID4gLnNwaW5pY3MubmV0JTJGbGlz
+dHMlMkZsaW51eC11c2IlMkZtc2cxNjczOTguaHRtbCZkYXRhPTAyJTdDMDElN0NqdW4ubA0KPiA+
+DQo+IGklNDBueHAuY29tJTdDNjc4ZmIzNWFmZmY1NDI1ODFkMzgwOGQ1OWE2ODcwOGIlN0M2ODZl
+YTFkM2JjMmI0YzZmYTkyYw0KPiBkDQo+ID4NCj4gOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjU4
+NDY5NTcxMDA5MzExMSZzZGF0YT1aeUFKUVVSOFpiQXE4VldzWmtGDQo+IFBHTGcNCj4gPiBGOVA1
+ajVRcHZGM3llR3lOb3lIOCUzRCZyZXNlcnZlZD0wDQo+IA0KPiBIbW0sIGludGVyZXN0aW5nLCBm
+b3IgdGhlIHg4NiB1c2UtY2FzZSB0aGF0IHdvdWxkIHJlcXVpcmUgdXBkYXRpbmcgdGhlDQo+IHBy
+b3BlcnRpZXMgZm9yIHRoZSBmdXNiMzAyIGRlZmluZWQgaW46DQo+IA0KPiBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9pbnRlbF9jaHRfaW50MzNmZS5jDQo+IA0KPiBJbiB0YW5kZW0sIHdoaWNoIGlzIGVh
+c2lseSBkb2FibGUuDQo+IA0KPiBCdXQgd2hhdCBhYm91dCBvdGhlciB1c2VycyBvZiB0aGUgZnVz
+YjMwMiBkcml2ZXI/IFNpbmNlIHRoaXMgZHJpdmVyIHdhcyBhZGRlZA0KPiBiZWZvcmUgSSBzdGFy
+dGVkIHVzaW5nIGl0IGZvciBzb21lIHg4NiBib2FyZHMsIEkgYXNzdW1lIHRoZXJlIGFyZSBzb21l
+IG5vbiB4ODYNCj4gdXNlcnMsIHNvIHdlIHNob3VsZCBwcmVzZXJ2ZSBjb21wYXRpYmlsaXR5IGZv
+ciBEVEIgZmlsZXMgd2hpY2ggZG9uJ3QgZGVmaW5lIGFueQ0KPiBzaW5rIFBET3MgaW4gdGhlaXIg
+cHJvcGVydGllcywgSSBndWVzcyB3ZSBjb3VsZCBmYWxsIHRvIGEgZGVmYXVsdCBmaXhlZCA1ViBz
+aW5rIHBkbw0KPiBmb3IgdGhvc2UuDQoNCklmIHdlIGNhbid0IGVsYWJvcmF0ZSBhbGwgZXhpc3Rp
+bmcgdXNlcnMsIHdlIGhhdmUgdG8gY2hhbmdlIHRoZSBkcml2ZXINCmxpa2UgdGhpcyB0byBwcmVz
+ZXJ2ZSBjb21wYXRpYmlsaXR5Lg0KDQpUaGFua3MNCkp1bg0KPiANCj4gUmVnYXJkcywNCj4gDQo+
+IEhhbnMNCj4gDQo+IA0KPiANCj4gPg0KPiA+PiArwqDCoMKgwqDCoMKgwqAgbWluX212ID0gbWF4
+KG1pbl9tdiwgcGRvX2ZpeGVkX3ZvbHRhZ2Uoc25rX3Bkb1tpLTFdKSk7DQo+ID4+ICvCoMKgwqAg
+ZWxzZQ0KPiA+PiArwqDCoMKgwqDCoMKgwqAgbWluX212ID0gbWF4KG1pbl9tdiwgcGRvX21heF92
+b2x0YWdlKHNua19wZG9baS0xXSkpOw0KPiA+PiArwqDCoMKgIG1hID0gbWluKG1hLCAxMDAwICog
+bXcgLyBtaW5fbXYpOw0KPiA+PiArDQo+ID4+ICvCoMKgwqAgLyogSW5zZXJ0IHRoZSBuZXcgcGRv
+IHRvIHRoZSBlbmQgKi8NCj4gPj4gK8KgwqDCoCBjaGlwLT5zbmtfcGRvW2ldID0gUERPX1ZBUiht
+aW5fbXYsIG12LCBtYSk7DQo+ID4+ICsNCj4gPj4gK8KgwqDCoCByZXR1cm4gaSsxOw0KPiA+PiAr
+fQ0KPiA+PiArDQo+ID4+IMKgIHN0YXRpYyBpbnQgZnVzYjMwMl9wcm9iZShzdHJ1Y3QgaTJjX2Ns
+aWVudCAqY2xpZW50LA0KPiA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnN0IHN0
+cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4gPj4gwqAgew0KPiA+PiBAQCAtMTc4NCwxOCArMTgx
+MiwxMyBAQCBzdGF0aWMgaW50IGZ1c2IzMDJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQNCj4gPj4g
+KmNsaWVudCwNCj4gPj4gwqDCoMKgwqDCoCBjaGlwLT50Y3BjX2Rldi5jb25maWcgPSAmY2hpcC0+
+dGNwY19jb25maWc7DQo+ID4+IMKgwqDCoMKgwqAgbXV0ZXhfaW5pdCgmY2hpcC0+bG9jayk7DQo+
+ID4+IC3CoMKgwqAgaWYgKCFkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiZmNzLG1heC1z
+aW5rLW1pY3Jvdm9sdCIsDQo+ID4+ICZ2KSkNCj4gPj4gLcKgwqDCoMKgwqDCoMKgIGNoaXAtPnRj
+cGNfY29uZmlnLm1heF9zbmtfbXYgPSB2IC8gMTAwMDsNCj4gPj4gLQ0KPiA+PiAtwqDCoMKgIGlm
+ICghZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgImZjcyxtYXgtc2luay1taWNyb2FtcCIs
+ICZ2KSkNCj4gPj4gLcKgwqDCoMKgwqDCoMKgIGNoaXAtPnRjcGNfY29uZmlnLm1heF9zbmtfbWEg
+PSB2IC8gMTAwMDsNCj4gPj4gLQ0KPiA+PiAtwqDCoMKgIGlmICghZGV2aWNlX3Byb3BlcnR5X3Jl
+YWRfdTMyKGRldiwgImZjcyxtYXgtc2luay1taWNyb3dhdHQiLA0KPiA+PiAmdikpDQo+ID4+IC3C
+oMKgwqDCoMKgwqDCoCBjaGlwLT50Y3BjX2NvbmZpZy5tYXhfc25rX213ID0gdiAvIDEwMDA7DQo+
+ID4+IC0NCj4gPj4gwqDCoMKgwqDCoCBpZiAoIWRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihkZXYs
+DQo+ID4+ICJmY3Msb3BlcmF0aW5nLXNpbmstbWljcm93YXR0IiwgJnYpKQ0KPiA+PiDCoMKgwqDC
+oMKgwqDCoMKgwqAgY2hpcC0+dGNwY19jb25maWcub3BlcmF0aW5nX3Nua19tdyA9IHYgLyAxMDAw
+Ow0KPiA+PiArwqDCoMKgIC8qIENvbXBvc2l0ZSBzaW5rIFBETyAqLw0KPiA+PiArwqDCoMKgIGNo
+aXAtPnRjcGNfY29uZmlnLm5yX3Nua19wZG8gPQ0KPiA+PiArZnVzYjMwMl9jb21wb3NpdGVfc25r
+X3Bkb19hcnJheShjaGlwKTsNCj4gPj4gK8KgwqDCoCBjaGlwLT50Y3BjX2NvbmZpZy5zbmtfcGRv
+ID0gY2hpcC0+c25rX3BkbzsNCj4gPj4gKw0KPiA+PiDCoMKgwqDCoMKgIC8qDQo+ID4+IMKgwqDC
+oMKgwqDCoCAqIERldmljZXRyZWUgcGxhdGZvcm1zIHNob3VsZCBnZXQgZXh0Y29uIHZpYSBwaGFu
+ZGxlIChub3QgeWV0DQo+ID4+IMKgwqDCoMKgwqDCoCAqIHN1cHBvcnRlZCkuIE9uIEFDUEkgcGxh
+dGZvcm1zLCB3ZSBnZXQgdGhlIG5hbWUgZnJvbSBhIGRldmljZQ0KPiBwcm9wLg0KPiA+Pg0K
