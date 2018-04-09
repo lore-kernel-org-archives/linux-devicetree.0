@@ -1,77 +1,83 @@
-Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bn3nam01on0067.outbound.protection.outlook.com ([104.47.33.67]:63936
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753072AbeDQM4m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Apr 2018 08:56:42 -0400
-From: Janek Kotas <jank@cadence.com>
-Subject: Re: [PATCH 1/2] scsi: ufs: Add UFS platform driver for Cadence UFS 
-Date: Tue, 17 Apr 2018 12:56:38 +0000
-Message-ID: <4D71040B-E811-4F60-A227-B3F597057A23@cadence.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 9 Apr 2018 14:10:02 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Add UFS platform driver for Cadence UFS
+Message-ID: <20180409191002.rv2ug6zbwrvavlr3@rob-hp-laptop>
 References: <2A879077-6CAD-4DAA-8C9A-7368CB93C72D@global.cadence.com>
- <20180409191002.rv2ug6zbwrvavlr3@rob-hp-laptop>
-In-Reply-To: <20180409191002.rv2ug6zbwrvavlr3@rob-hp-laptop>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD68907F9756FE4C849C753AE6E5E802@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2A879077-6CAD-4DAA-8C9A-7368CB93C72D@global.cadence.com>
+To: Janek Kotas <jank@cadence.com>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-VGhhbmsgeW91IGZvciB0aGUgcmVwbHkuDQoNCj4gT24gV2VkLCBNYXIgMjgsIDIwMTggYXQgMTE6
-MjU6MzRBTSArMDAwMCwgSmFuZWsgS290YXMgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGFkZHMgYSBk
-ZXZpY2UgdHJlZSBwbGF0Zm9ybQ0KPj4gZHJpdmVyIGRlc2NyaXB0aW9uIGZvciBDYWRlbmNlIFVG
-UyBDb250cm9sbGVyLg0KPiANCj4gWW91IGhhdmUgZXhhY3RseSB0aGUgc2FtZSBzdWJqZWN0IGZv
-ciBib3RoIHBhdGNoZXMuIERvbid0IGRvIHRoYXQuIEZvciANCj4gYmluZGluZ3MsIHRoZSBwcmVm
-ZXJyZWQgc3ViamVjdCBwcmVmaXggaXMg4oCcZHQtYmluZGluZ3M6IHVmczog4oCcLg0KDQpPSywg
-SSB3aWxsIGNoYW5nZSB0aGF0IGluIHRoZSBuZXh0IHZlcnNpb24gb2YgdGhlIHBhdGguIA0KVGhh
-bmtzIGZvciBsZXR0aW5nIG1lIGtub3cuDQoNCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogSmFuIEtv
-dGFzIDxqYW5rQGNhZGVuY2UuY29tPg0KPj4gLS0tDQo+PiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dCAgICB8ICAgMzEgKysrKysrKysrKysrKysrKysrKysN
-Cj4+IDEgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4+
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZz
-L2NkbnMtdWZzLXBsdGZybS50eHQNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11ZnMtcGx0ZnJtLnR4dA0KPj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLmQxMDIyOWQNCj4+IC0tLSAvZGV2L251
-bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucy11
-ZnMtcGx0ZnJtLnR4dA0KPiANCj4gcmVuYW1lIHRvIGNkbnMsdWZzaGMudHh0DQoNCk9LLCBJ4oCZ
-bGwgY2hhbmdlIHRoYXQuDQoNCj4+IEBAIC0wLDAgKzEsMzEgQEANCj4+ICsqIENhZGVuY2UgVW5p
-dmVyc2FsIEZsYXNoIFN0b3JhZ2UgKFVGUykgQ29udHJvbGxlcg0KPj4gKw0KPj4gK1VGUyBub2Rl
-cyBhcmUgZGVmaW5lZCB0byBkZXNjcmliZSBvbi1jaGlwIFVGUyBob3N0IGNvbnRyb2xsZXJzLg0K
-Pj4gK0VhY2ggVUZTIGNvbnRyb2xsZXIgaW5zdGFuY2Ugc2hvdWxkIGhhdmUgaXRzIG93biBub2Rl
-Lg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArLSBjb21wYXRpYmxlCTogY29t
-cGF0aWJsZSBsaXN0LCBjb250YWlucyB0aGUgZm9sbG93aW5nIGNvbnRyb2xsZXI6DQo+PiArCQkJ
-ImNkbnMsdWZzaGMiDQo+PiArCQkgIGNvbXBsZW1lbnRlZCB3aXRoIHRoZSBKRURFQyB2ZXJzaW9u
-Og0KPj4gKwkJCSJqZWRlYyx1ZnMtMi4wIg0KPj4gKw0KPj4gKy0gcmVnCQk6IHJlZ2lzdGVycyBt
-YXBwaW5nDQo+PiArLSBpbnRlcnJ1cHRzCTogaW50ZXJydXB0cyBtYXBwaW5nDQo+IA0KPiBIb3cg
-bWFueT8NCg0KQSBzaW5nbGUgcmVnaXN0ZXIgYW5kIGludGVycnVwdC4gDQpUaGUgZGVzY3JpcHRp
-b24gd2FzIGJhc2VkIG9uIHRoZSB1ZnNoY2QtcGx0ZnJtLnR4dC4NCknigJlsbCBjaGFuZ2UgaXQg
-dG8gYmUgbW9yZSBkZXNjcmlwdGl2ZS4NCg0KPj4gKy0gY2xvY2tzCTogTGlzdCBvZiBwaGFuZGxl
-IGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMuDQo+PiArLSBjbG9jay1uYW1lcwk6IExpc3Qgb2Yg
-Y2xvY2sgaW5wdXQgbmFtZSBzdHJpbmdzIHNvcnRlZCBpbiB0aGUgc2FtZQ0KPj4gKwkJICBvcmRl
-ciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5LiAiY29yZV9jbGsiIGlzIG1hbmRhdG9yeS4NCj4gDQo+
-IOKAnF9jbGsiIGlzIHJlZHVuZGFudC4NCg0KQ2hhbmdlZCwgdGhhbmtzLg0KDQo+IFJlYWxseSBv
-bmx5IG9uZSBjbG9jayBmb3IgdGhlIGJsb2NrPyBObyBjbG9jayBmcm9tIHRoZSBQSFk/IE5vIGJ1
-cyANCj4gY2xvY2s/DQoNCkkgd2FzbuKAmXQgc3VyZSBob3cgdG8gaGFuZGxlIHRoYXQuIFRoZSBV
-RlMgY29udHJvbGxlciBibG9jayBvbmx5IHJlcXVpcmVzDQphIGNvcmUgY2xvY2sgZnJvbSBhIHN5
-c3RlbS4gU3ltYm9sIGNsb2NrcyBjb21lIGEgUEhZLCANCndoaWNoIGlzIGFub3RoZXIsIGluZGVw
-ZW5kZW50IGJsb2NrLg0KU2hvdWxkIEkgc2ltcGx5IHVzZSBhIHBoeXMgcGhhbmRsZSwgZm9yIGEg
-VUZTIFBIWSBub2RlPw0KDQo+PiArLSBmcmVxLXRhYmxlLWh6CTogQXJyYXkgb2YgPG1pbiBtYXg+
-IG9wZXJhdGluZyBmcmVxdWVuY2llcyBzdG9yZWQgaW4gdGhlIHNhbWUNCj4+ICsJCSAgb3JkZXIg
-YXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4gSWYgdGhpcyBwcm9wZXJ0eSBpcyBub3QNCj4+ICsJCSAg
-ZGVmaW5lZCBvciBhIHZhbHVlIGluIHRoZSBhcnJheSBpcyAiMCIgdGhlbiBpdCBpcyBhc3N1bWVk
-DQo+PiArCQkgIHRoYXQgdGhlIGZyZXF1ZW5jeSBpcyBzZXQgYnkgdGhlIHBhcmVudCBjbG9jayBv
-ciBhDQo+PiArCQkgIGZpeGVkIHJhdGUgY2xvY2sgc291cmNlLg0KPiANCj4gVGhlICdhc3NpZ25l
-ZC1jbG9ja3MnIHByb3BlcnR5IGFuZCBmcmllbmRzIHNob3VsZCBiZSBhYmxlIHRvIGhhbmRsZSAN
-Cj4gdGhpcy4NCg0KVGhlIHNoYXJlZCBVRlMgcGxhdGZvcm0gY29kZSB1c2VzIGZyZXEtdGFibGUt
-aHosIA0KSSB3b3VsZCBsaWtlIGl0IHRvIGJlIGNvbnNpc3RlbnQgd2l0aCB0aGUgcmVzdCBvZiB0
-aGUgVUZTIGRyaXZlcnMuDQoNCj4+ICsNCj4+ICtFeGFtcGxlOg0KPj4gKwl1ZnNAZmQwMzAwMDAg
-ew0KPj4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLHVmc2hjIiwgImplZGVjLHVmcy0yLjAiOw0KPj4g
-KwkJcmVnID0gPDB4ZmQwMzAwMDAgMHgxMDAwMD47DQo+PiArCQlpbnRlcnJ1cHRzID0gPDAgMSAw
-PjsNCj4+ICsJCWZyZXEtdGFibGUtaHogPSA8MCAwPjsNCj4+ICsJCWNsb2NrcyA9IDwmdWZzX2Nv
-cmVfY2xrIDA+Ow0KPj4gKwkJY2xvY2stbmFtZXMgPSAiY29yZV9jbGsiOw0KPj4gKwl9Ow0KPj4g
-LS0gDQo+PiAxLjcuMQ0KDQo=
+On Wed, Mar 28, 2018 at 11:25:34AM +0000, Janek Kotas wrote:
+> This patch adds a device tree platform
+> driver description for Cadence UFS Controller.
+
+You have exactly the same subject for both patches. Don't do that. For 
+bindings, the preferred subject prefix is "dt-bindings: ufs: ".
+
+> 
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+> ---
+>  .../devicetree/bindings/ufs/cdns-ufs-pltfrm.txt    |   31 ++++++++++++++++++++
+>  1 files changed, 31 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/cdns-ufs-pltfrm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/cdns-ufs-pltfrm.txt b/Documentation/devicetree/bindings/ufs/cdns-ufs-pltfrm.txt
+> new file mode 100644
+> index 0000000..d10229d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/cdns-ufs-pltfrm.txt
+
+rename to cdns,ufshc.txt
+
+> @@ -0,0 +1,31 @@
+> +* Cadence Universal Flash Storage (UFS) Controller
+> +
+> +UFS nodes are defined to describe on-chip UFS host controllers.
+> +Each UFS controller instance should have its own node.
+> +
+> +Required properties:
+> +- compatible	: compatible list, contains the following controller:
+> +			"cdns,ufshc"
+> +		  complemented with the JEDEC version:
+> +			"jedec,ufs-2.0"
+> +
+> +- reg		: registers mapping
+> +- interrupts	: interrupts mapping
+
+How many?
+
+> +- clocks	: List of phandle and clock specifier pairs.
+> +- clock-names	: List of clock input name strings sorted in the same
+> +		  order as the clocks property. "core_clk" is mandatory.
+
+"_clk" is redundant.
+
+Really only one clock for the block? No clock from the PHY? No bus 
+clock?
+
+> +- freq-table-hz	: Array of <min max> operating frequencies stored in the same
+> +		  order as the clocks property. If this property is not
+> +		  defined or a value in the array is "0" then it is assumed
+> +		  that the frequency is set by the parent clock or a
+> +		  fixed rate clock source.
+
+The 'assigned-clocks' property and friends should be able to handle 
+this.
+
+> +
+> +Example:
+> +	ufs@fd030000 {
+> +		compatible = "cdns,ufshc", "jedec,ufs-2.0";
+> +		reg = <0xfd030000 0x10000>;
+> +		interrupts = <0 1 0>;
+> +		freq-table-hz = <0 0>;
+> +		clocks = <&ufs_core_clk 0>;
+> +		clock-names = "core_clk";
+> +	};
+> -- 
+> 1.7.1
