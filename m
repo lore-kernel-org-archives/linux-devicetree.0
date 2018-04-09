@@ -1,53 +1,58 @@
-From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] libnvdimm, of_pmem: workaround OF_NUMA=n build error
-Date: Mon, 09 Apr 2018 14:09:38 -0700
-Message-ID: <152330817871.32685.18143005199739186530.stgit@dwillia2-desk3.amr.corp.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] display: panel: Add AUO g070vvn01 display support
+ (800x480)
+Date: Mon, 9 Apr 2018 16:19:49 -0500
+Message-ID: <20180409211949.cp4jqmtlaswi5jyz@rob-hp-laptop>
+References: <20180403101525.22369-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180403101525.22369-1-lukma@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Stephen reports that an x86 allmodconfig build fails to build the
-of_pmem driver due to a missing definition of of_node_to_nid(). That
-helper is currently only exported in the OF_NUMA=y case. In other cases,
-ppc and sparc, it is a weak symbol, and outside of those platforms it is
-a static inline.
-
-Until an OF_NUMA=n configuration can reliably support usage of
-of_node_to_nid() in modules across architectures, mark this driver as
-'bool' instead of 'tristate'.
-
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reported-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Signed-off-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- drivers/nvdimm/Kconfig |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 2d6862bf7436..f6c533c4d09b 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -103,7 +103,8 @@ config NVDIMM_DAX
- 	  Select Y if unsure
- 
- config OF_PMEM
--	tristate "Device-tree support for persistent memory regions"
-+	# FIXME: make tristate once OF_NUMA dependency removed
-+	bool "Device-tree support for persistent memory regions"
- 	depends on OF
- 	default LIBNVDIMM
- 	help
+T24gVHVlLCBBcHIgMDMsIDIwMTggYXQgMTI6MTU6MjVQTSArMDIwMCwgTHVrYXN6IE1hamV3c2tp
+IHdyb3RlOgo+IFRoaXMgY29tbWl0IGFkZHMgc3VwcG9ydCBmb3IgQVVPJ3MgNy4wIiBkaXNwbGF5
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEx1a2FzeiBNYWpld3NraSA8bHVrbWFAZGVueC5kZT4KPiAt
+LS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGcwNzB2dm4wMSAgICAgICAgICAg
+fCAzMCArKysrKysrKysrKysrKysrKysrKysKCi50eHQKCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMzEgKysrKysrKysrKysrKysrKysrKysr
+Kwo+ICAyIGZpbGVzIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxn
+MDcwdnZuMDEKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGcwNzB2dm4wMSBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxnMDcwdnZuMDEKPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYmQ0MDE3MzYyMDk0Cj4gLS0tIC9kZXYvbnVsbAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1
+byxnMDcwdnZuMDEKPiBAQCAtMCwwICsxLDMwIEBACj4gK0FVIE9wdHJvbmljcyBDb3Jwb3JhdGlv
+biA3LjAiIEZIRCAoODAwIHggNDgwKSBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYXVvLGcwNzB2dm4wMSIKPiArLSBi
+YWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhl
+IHBhbmVsCj4gKy0gcG93ZXItc3VwcGx5OiBzaW5nbGUgcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhl
+IHN1cHBseSB2b2x0YWdlCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArLSBwb3J0OiBQYXJhbGxl
+bCBwb3J0IG1hcHBpbmcgdG8gY29ubmVjdCB0aGlzIGRpc3BsYXkKPiArCj4gK1RoaXMgcGFuZWwg
+bmVlZHMgc2luZ2xlIHBvd2VyIHN1cHBseSB2b2x0YWdlLiBJdHMgYmFja2xpZ2h0IGlzIGNvbm50
+cm9sbGVkCj4gK3ZpYSBQV00gc2lnbmFsLgo+ICsKPiArRXhhbXBsZToKPiArLS0tLS0tLS0KPiAr
+Cj4gK0V4YW1wbGUgZGV2aWNlLXRyZWUgZGVmaW5pdGlvbiB3aGVuIGNvbm5lY3RlZCB0byBpTVg2
+USBiYXNlZCBib2FyZAo+ICsKPiArCWxjZF9wYW5lbDogbGNkLXBhbmVsIHsKPiArCQljb21wYXRp
+YmxlID0gImF1byxnMDcwdnZuMDEiOwo+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0X2xjZD47
+Cj4gKwkJYnVzLWZvcm1hdC1vdmVycmlkZSA9ICJyZ2I1NjUiOwoKVGhpcyBpcyBub3QgZG9jdW1l
+bnRlZCB0aG91Z2ggaXQgYXBwZWFycyBpbiBhIGZldyBpLk1YIGR0cyBmaWxlcy4KCj4gKwkJcG93
+ZXItc3VwcGx5ID0gPCZyZWdfZGlzcGxheT47Cj4gKwo+ICsJCXBvcnQgewo+ICsJCQlsY2RfcGFu
+ZWxfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbGNkX2Rpc3BsYXlf
+b3V0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
