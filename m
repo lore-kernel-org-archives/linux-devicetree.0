@@ -1,85 +1,225 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource
- sibling
-Date: Mon, 9 Apr 2018 12:05:20 -0400 (EDT)
-Message-ID: <nycvar.YSQ.7.76.1804091133330.28462@knanqh.ubzr>
-References: <20180408024724.16812-1-bhe@redhat.com>
- <20180408024724.16812-2-bhe@redhat.com>
- <20180409090853.GJ19345@localhost.localdomain>
- <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Mon, 9 Apr 2018 10:08:00 -0600
+Message-ID: <20180409160800.GC19682@codeaurora.org>
+References: <20180405161834.3850-1-ilina@codeaurora.org>
+ <20180405161834.3850-3-ilina@codeaurora.org>
+ <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>, Keith Busch <keith.busch@intel.com>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input@vger.kernel.org, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, =?ISO-8859-15?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <dan.j.williams@intel.com>, Jonathan Derrick <jonathan.derrick@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundatio>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 Apr 2018, Rob Herring wrote:
+On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-04-05 09:18:26)
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> new file mode 100644
+>> index 000000000000..dcf71a5b302f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> @@ -0,0 +1,127 @@
+>> +RPMH RSC:
+>> +------------
+>> +
+>> +Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
+>> +the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
+>> +can be written to the Trigger Command Set (TCS)  registers and using a (addr,
+>> +val) pair and triggered. Messages in the TCS are then sent in sequence over an
+>> +internal bus.
+>> +
+>> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
+>> +(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
+>
+>s/ a / /
+>
+>> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
+>> +be written to from Linux. The structure of each DRV follows the same template
+>> +with a few variations that are captured by the properties here.
+>> +
+>> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
+>> +have powered off to facilitate idle power saving. TCS could be classified as -
+>
+>s/ -/:/
+>
+>> +
+>> +       SLEEP,  /* Triggered by F/W */
+>> +       WAKE,   /* Triggered by F/W */
+>> +       ACTIVE, /* Triggered by Linux */
+>> +       CONTROL /* Triggered by F/W */
+>
+>Drop the commas?
+>
+>> +
+>> +The order in which they are described in the DT, should match the hardware
+>> +configuration.
+>> +
+>> +Requests can be made for the state of a resource, when the subsystem is active
+>> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
+>> +will be an aggregate of the sleep votes from each of those subsystems. Clients
+>> +may request a sleep value for their shared resources in addition to the active
+>> +mode requests.
+>> +
+>> +Properties:
+>> +
+>> +- compatible:
+>> +       Usage: required
+>> +       Value type: <string>
+>> +       Definition: Should be "qcom,rpmh-rsc".
+>> +
+>> +- reg:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: The first register specifies the base address of the DRV.
+>> +                   The second register specifies the start address of the
+>> +                   TCS.
+>> +
+>> +- reg-names:
+>> +       Usage: required
+>> +       Value type: <string>
+>> +       Definition: Maps the register specified in the reg property. Must be
+>> +                   "drv" and "tcs".
+>> +
+>> +- interrupts:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-interrupt>
+>> +       Definition: The interrupt that trips when a message complete/response
+>> +                  is received for this DRV from the accelerators.
+>> +
+>> +- qcom,drv-id:
+>> +       Usage: required
+>> +       Value type: <u32>
+>> +       Definition: the id of the DRV in the RSC block.
+>> +
+>> +- qcom,tcs-config:
+>> +       Usage: required
+>> +       Value type: <prop-encoded-array>
+>> +       Definition: the tuple defining the configuration of TCS.
+>> +                   Must have 2 cells which describe each TCS type.
+>> +                   <type number_of_tcs>.
+>> +                   The order of the TCS must match the hardware
+>> +                   configuration.
+>> +       - Cell #1 (TCS Type): TCS types to be specified -
+>> +                   SLEEP_TCS
+>> +                   WAKE_TCS
+>> +                   ACTIVE_TCS
+>> +                   CONTROL_TCS
+>> +       - Cell #2 (Number of TCS): <u32>
+>> +
+>> +- label:
+>> +       Usage: optional
+>> +       Value type: <string>
+>> +       Definition: Name for the RSC. The name would be used in trace logs.
+>> +
+>> +Drivers that want to use the RSC to communicate with RPMH must specify their
+>> +bindings as child of the RSC controllers they wish to communicate with.
+>
+>s/child/child nodes/
+>
+>
+Ok to these as well as the above.
 
-> +Nico who has been working on tinification of the kernel.
-> 
-> On Mon, Apr 9, 2018 at 4:08 AM, Baoquan He <bhe@redhat.com> wrote:
-> > The struct resource uses singly linked list to link siblings. It's not
-> > easy to do reverse iteration on sibling list. So replace it with list_head.
-> 
-> Why is reverse iteration needed?
-> 
-> > And code refactoring makes codes in kernel/resource.c more readable than
-> > pointer operation.
-> 
-> resource_for_each_* helpers could solve that without the size increase.
-> 
-> > Besides, type of member variables of struct resource, sibling and child, are
-> > changed from 'struct resource *' to 'struct list_head'. Kernel size will
-> > increase because of those statically defined struct resource instances.
-> 
-> The DT struct device_node also has the same tree structure with
-> parent, child, sibling pointers and converting to list_head had been
-> on the todo list for a while. ACPI also has some tree walking
-> functions (drivers/acpi/acpica/pstree.c). Perhaps there should be a
-> common tree struct and helpers defined either on top of list_head or a
-> new struct if that saves some size.
-> 
-> >
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> > v2->v3:
-> >   Make sibling() and first_child() global so that they can be called
-> >   out of kernel/resource.c to simplify code.
-> 
-> These should probably be inline functions. Or exported if not.
-> 
-> >
-> >   Fix several code bugs found by kbuild test robot.
-> >
-> >   Got report from lkp that kernel size increased. It's on purpose since
-> >   the type change of sibling and child inside struct resource{}. For
-> >   each struct resource variable, it will cost another 16 bytes on x86 64.
-> 
-> The size increase should be mentioned in the commit log. More
-> generally, the size increase is 2 pointers.
+>> +
+>> +Example 1:
+>> +
+>> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
+>> +register offsets for DRV2 start at 0D00, the register calculations are like
+>> +this -
+>> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
+>> +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
+>> +
+>> +       apps_rsc: rsc@179e000 {
+>> +               label = "apps_rsc";
+>> +               compatible = "qcom,rpmh-rsc";
+>> +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
+>
+>The first reg property overlaps the second one. Does this second one
+>ever move around? I would hardcode it in the driver to be 0xd00 away
+>from the drv base instead of specifying it in DT if it's the same all
+>the time.
+>
+>Also, the example shows 0x179c0000 which I guess is the actual beginning
+>of the RSC block. So the binding seems to be for one DRV inside of an
+>RSC. Can we get the full description of the RSC in the binding instead?
+>I imagine that means there's a DRV0,1,2 and those probably have an
+>interrupt per each DRV and then a different TCS config per each one too?
+>If the binding can describe all of the RSC then we can use different
+>DRVs by changing the qcom,drv-id property.
+>
+>	rsc@179c0000 {
+>		compatible = "qcom,rpmh-rsc";
+>		reg = <0x179c0000 0x10000>,
+>		      <0x179d0000 0x10000>,
+>		      <0x179e0000 0x10000>;
+>		qcom,tcs-offset = <0xd00>;
+>		qcom,drv-id = <0/1/2>;
+>		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>	}
+>
+>This is sort of what I imagine it would look like. I have no idea how
+>the tcs config would work unless each DRV has the same TCS config
+>though. Otherwise, if each node is for a drv, then I would expect the
+>node would be called 'drv' and we wouldn't need the drv-id property and
+>the compatible string would say drv instead of rsc?
+>
+>BTW, what are the other DRVs used for in the apps RSC?
+>
+The DRV is the voter for an execution environment (Linux, Hypervisor,
+ATF) in the RSC. The RSC has a lot of other registers that Linux is not
+privy to. They are access restricted. The memory organization of the RSC
+mandates that we know the DRV id to access registers specific to the
+DRV. Unfortunately, not all RSC have identical DRV configuration and the
+register space is also variable depending on the capability of the RSC.
+There are functionalities supported by other RSCs in the SoC that are
+not supported by the RSC associated with the application processor,
+while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
+describing the whole RSC as it is not usable from Linux (because of
+access restrictions).
 
-Tiny kernels have much fewer resources anyway, and usually run on 
-platforms with 32-bit pointers, so this probably won't matter much in 
-the end.
+>> +               reg-names = "drv", "tcs";
+>> +               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>> +               qcom,drv-id = <2>;
+>> +               qcom,tcs-config = <SLEEP_TCS   3>,
+>> +                                 <WAKE_TCS    3>,
+>> +                                 <ACTIVE_TCS  2>,
+>> +                                 <CONTROL_TCS 1>;
+>> +       };
+>> +
+>> +Example 2:
+>> +
+>> +For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
+>> +register offsets for DRV0 start at 01C00, the register calculations are like
+>> +this -
+>> +First tuple: 0xAF20000
+>> +Second tuple: 0xAF20000 + 0x1C00 = 0xAF21C00
+>> +
+>> +       disp_rsc: rsc@af20000 {
+>> +               label = "disp_rsc";
+>> +               compatible = "qcom,rpmh-rsc";
+>> +               reg = <0xaf20000 0x10000>, <0xaf21c00 0x3000>;
+>
+>Ok. The TCS offset seems totally random now.
+>
+Yes it would appear so. Because the register space is optimized based on
+the functionality supported by the RSC, the TCS for a DRV is at a
+different offset in the RSC. Hence the explicit description of the
+address in the binding.
 
-This is if reverse iteration is actually needed as you say though.
-Unless I'm mistaken, resource iteration doesn't happen that often, and 
-not in critical paths either.
+Thanks,
+Lina
 
-Making the code clearer while keeping the same structure size could be 
-considered with the help of llist.h instead.
-
-
-Nicolas
+>> +               reg-names = "drv", "tcs";
+>> +               interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
+>> +               qcom,drv-id = <0>;
+>> +               qcom,tcs-config = <SLEEP_TCS   1>,
+>> +                                 <WAKE_TCS    1>,
+>> +                                 <ACTIVE_TCS  0>,
+>> +                                 <CONTROL_TCS 0>;
+>> +       };
