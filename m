@@ -1,31 +1,50 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 7/9] PCI: dwc: Replace lower into upper case
- characters
-Date: Mon, 09 Apr 2018 03:25:46 -0700
-Message-ID: <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
-References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
-         <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v3 0/2] mailbox: introduce STMicroelectronics STM32 IPCC driver
+Date: Mon, 9 Apr 2018 12:28:24 +0200
+Message-ID: <1523269706-23724-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jassi Brar <jassisinghbrar@gmail.com>, Ludovic
+ Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Loic Pallardy <loic.pallardy@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-04-09 at 10:41 +0100, Gustavo Pimentel wrote:
-> Replaces lower into upper case characters in comments and debug printks.
-> 
-> This is an attempt to keep the messages coherent within the designware
-> driver.
+The STMicroelectronics STM32 Inter-Processor Communication Controller
+(IPCC) is used for communicating data between two processors.
+It provides a non blocking signaling mechanism to post and retrieve
+communication data in an atomic way.
 
-It'd be nice to make all the dwc drivers use the same
-message wording.
+Changes since v3:
+- update after Jassi Brar review: remove 'driver.owner'
 
-For instance:
+Changes since v2:
+- update bindings and driver according to Rob's comments:
+    - change compatible property to "st,stm32mp1-ipcc"
+    - change "st,proc_id" property to "st,proc-id"
+    - define all interrupts as mandatory
 
-drivers/pci/dwc/pci-keystone.c: dev_err(dev, "phy link never came up\n");
-drivers/pci/dwc/pcie-designware.c:      dev_err(pci->dev, "phy link never came up\n");
-drivers/pci/host/pcie-xilinx-nwl.c:     dev_err(dev, "PHY link never came up\n");
+Fabien Dessenne (2):
+  dt-bindings: mailbox: add STMicroelectronics STM32 IPCC binding
+  mailbox: add STMicroelectronics STM32 IPCC driver
+
+ .../devicetree/bindings/mailbox/stm32-ipcc.txt     |  47 +++
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/stm32-ipcc.c                       | 402 +++++++++++++++++++++
+ 4 files changed, 459 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+ create mode 100644 drivers/mailbox/stm32-ipcc.c
+
+-- 
+2.7.4
