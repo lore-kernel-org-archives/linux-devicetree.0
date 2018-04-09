@@ -1,46 +1,90 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 0/5] Add tda998x (HDMI) support to atmel-hlcdc
-Date: Mon, 9 Apr 2018 13:44:22 +0200
-Message-ID: <bbc7a992-5f17-c108-2b6a-01a585e6e315@axentia.se>
-References: <20180409105918.20792-1-peda@axentia.se>
- <20180409111733.GP16141@n2100.armlinux.org.uk>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH v4 14/24] ASoC: qdsp6: q6asm: Add support to
+ audio stream apis
+Date: Mon, 9 Apr 2018 17:23:58 +0530
+Message-ID: <3661b4c5-c79d-d73e-5e95-57e849775517@codeaurora.org>
+References: <20180310022456.26739-1-srinivas.kandagatla@linaro.org>
+ <20180310022456.26739-15-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180409111733.GP16141@n2100.armlinux.org.uk>
+In-Reply-To: <20180310022456.26739-15-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-09 13:17, Russell King - ARM Linux wrote:
-> On Mon, Apr 09, 2018 at 12:59:13PM +0200, Peter Rosin wrote:
->> During this, I found that the tda998x driver never sets the format in
->> the connector display_info. Thus, the atmel-hlcdc driver fails to select
->> output format. Since I had similar problems with ds90c185 lvds encoder
->> I added patches to override the atmel-hlcdc output format via a DT
->> property and things start to play together.
-> 
-> That sounds like a hack.  The tda998x driver doesn't set the format
-> because it pre-dates the addition of this information in the display
-> info structure, and none of its current users require that information.
-> 
-> As you're the first to require it, rather than working around the
-> driver by adding stuff to DT, it would be much better to improve the
-> driver by adding this information.
-> 
-> Thanks.
 
-Even if I improved the tda998x driver, it would not be correct.
 
-The background is that while the atmel-hlcdc driver supports rgb888,
-our PCB is only wired for rgb565. And the tda19988 has rgb888 input
-(we have the lsb bits tied to ground on our PCB). So, the tda998x
-driver can request rgb888 and the atmel-hlcdc driver can say ok,
-but it still would not be correct. So, where exactly do you suggest
-that I model the narrowing of the display format?
-
-Cheers,
-Peter
+On 3/10/2018 7:54 AM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> This patch adds support to open, write and media format commands
+> in the q6asm module.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-and-Tested-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>   sound/soc/qcom/qdsp6/q6asm.c | 744 ++++++++++++++++++++++++++++++++++++++++++-
+>   sound/soc/qcom/qdsp6/q6asm.h |  49 +++
+>   2 files changed, 792 insertions(+), 1 deletion(-)
+>
+> diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+> index 8a2ca2ff9ce8..ddbf526358bd 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm.c
+> @@ -9,6 +9,8 @@
+>   #include <linux/device.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <uapi/sound/asound.h>
+>   #include <linux/delay.h>
+>   #include <linux/slab.h>
+>   #include <linux/mm.h>
+> @@ -17,10 +19,36 @@
+>   #include "q6dsp-errno.h"
+>   #include "q6dsp-common.h"
+>   
+> +#define ASM_STREAM_CMD_CLOSE			0x00010BCD
+> +#define ASM_STREAM_CMD_FLUSH			0x00010BCE
+> +#define ASM_SESSION_CMD_PAUSE			0x00010BD3
+> +#define ASM_DATA_CMD_EOS			0x00010BDB
+> +#define ASM_DEFAULT_POPP_TOPOLOGY		0x00010BE4
+Use NULL topology instead of default topology.
+#define ASM_NULL_POPP_TOPOLOGY                     0x00010C68
+> +#define ASM_STREAM_CMD_FLUSH_READBUFS		0x00010C09
+> +#define ASM_STREAM_CMD_SET_ENCDEC_PARAM		0x00010C10
+[..]
+> +	q6asm_add_hdr(ac, &open.hdr, sizeof(open), true, ac->stream_id);
+> +
+> +	open.hdr.opcode = ASM_STREAM_CMD_OPEN_WRITE_V3;
+> +	open.mode_flags = 0x00;
+> +	open.mode_flags |= ASM_LEGACY_STREAM_SESSION;
+> +
+> +	/* source endpoint : matrix */
+> +	open.sink_endpointype = ASM_END_POINT_DEVICE_MATRIX;
+> +	open.bits_per_sample = bits_per_sample;
+> +	open.postprocopo_id = ASM_DEFAULT_POPP_TOPOLOGY;
+  open.postprocopo_id = ASM_NULL_POPP_TOPOLOGY;
+> +
+> +	switch (format) {
+> +	case FORMAT_LINEAR_PCM:
+> +		open.dec_fmt_id = ASM_MEDIA_FMT_MULTI_CHANNEL_PCM_V2;
+> +		break;
+> +	default:
+> +		dev_err(ac->dev, "Invalid format 0x%x\n", format);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = q6asm_ac_send_cmd_sync(ac, &open);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	ac->io_mode |= ASM_TUN_WRITE_IO_MODE;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(q6asm_open_write);
