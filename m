@@ -1,40 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [net-next PATCH v3 01/11] soc: ti: K2G: enhancement to support
- QMSS in K2G NAVSS
-Date: Mon, 9 Apr 2018 16:12:44 -0500
-Message-ID: <20180409211244.cq45hzntyuppnkjc@rob-hp-laptop>
-References: <1522679881-25643-1-git-send-email-m-karicheri2@ti.com>
- <1522679881-25643-2-git-send-email-m-karicheri2@ti.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv2 1/3] dt-bindings: misc: achc: Make ezport
+ distinguishable
+Date: Mon, 9 Apr 2018 23:13:37 +0200
+Message-ID: <20180409211337.goavadt6f22wtkbw@earth.universe>
+References: <20180327135259.30890-1-sebastian.reichel@collabora.co.uk>
+ <20180327135259.30890-2-sebastian.reichel@collabora.co.uk>
+ <20180409185727.j4unhx5ig3fgm6ex@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="acogu7jgkafanp6d"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1522679881-25643-2-git-send-email-m-karicheri2@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: mark.rutland@arm.com, ssantosh@kernel.org, malat@debian.org, w-kwok2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, netdev@vger.kernel.org
+In-Reply-To: <20180409185727.j4unhx5ig3fgm6ex@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Nandor Han <nandor.han@ge.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 02, 2018 at 10:37:51AM -0400, Murali Karicheri wrote:
-> Navigator Subsystem (NAVSS) available on K2G SoC has a cut down
-> version of QMSS with less number of queues, internal linking ram
-> with lesser number of buffers etc.  It doesn't have status and
-> explicit push register space as in QMSS available on other K2 SoCs.
-> So define reg indices specific to QMSS on K2G. This patch introduces
-> "ti,66ak2g-navss-qm" compatibility to identify QMSS on K2G NAVSS
-> and to customize the dts handling code. Per Device manual,
-> descriptors with index less than or equal to regions0_size is in region 0
-> in the case of K2 QMSS where as for QMSS on K2G, descriptors with index
-> less than regions0_size is in region 0. So update the size accordingly in
-> the regions0_size bits of the linking ram size 0 register.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
-> ---
->  .../bindings/soc/ti/keystone-navigator-qmss.txt    |  9 ++-
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--acogu7jgkafanp6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  drivers/soc/ti/knav_qmss.h                         |  6 ++
->  drivers/soc/ti/knav_qmss_queue.c                   | 90 ++++++++++++++++------
->  3 files changed, 82 insertions(+), 23 deletions(-)
+Hi,
+
+On Mon, Apr 09, 2018 at 01:57:27PM -0500, Rob Herring wrote:
+> On Tue, Mar 27, 2018 at 03:52:57PM +0200, Sebastian Reichel wrote:
+> > This updates the GE ACHC binding, so that different compatible
+> > strings are used for the programming interface, which is the
+> > ezport interface from NXP MK20FN1M0VMD12 and the microcontroller's
+> > normal SPI interface.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> > ---
+> >  Documentation/devicetree/bindings/misc/ge-achc.txt | 19 ++++++++++++++=
+++---
+> >  1 file changed, 16 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/misc/ge-achc.txt b/Docum=
+entation/devicetree/bindings/misc/ge-achc.txt
+> > index 77df94d7a32f..6c6bd6568504 100644
+> > --- a/Documentation/devicetree/bindings/misc/ge-achc.txt
+> > +++ b/Documentation/devicetree/bindings/misc/ge-achc.txt
+> > @@ -7,7 +7,13 @@ Note: This device does not expose the peripherals as U=
+SB devices.
+> > =20
+> >  Required properties:
+> > =20
+> > -- compatible : Should be "ge,achc"
+> > +- compatible : Should be
+> > +  "ge,achc" (normal interface)
+> > +  "ge,achc-ezport" (flashing interface)
+> > +
+> > +Required properties (flashing interface only):
+> > +
+> > +- reset-gpios: GPIO Specifier for the reset GPIO
+>=20
+> Does the reset only affect the flashing interface and are the data pins=
+=20
+> shared? If not for both, then I think the correct thing to do here is=20
+> just extend reg to support multiple values to represent multiple chip=20
+> selects.
+
+reset affects the whole chip and the same spi data/clock pins are
+being used, so extending reg should work. The flashing cannot happen
+with the same speed, though. I'm currently encoding this by using
+different "spi-max-frequency" properties. I suppose I could limit
+it in the driver instead. I tried to come up with an example for
+your suggestion. Is this what you had in mind?
+
+&spi_controller {
+    achc@multiple {
+        /* 0 =3D flashing interface, 1 =3D normal interface */
+        reg =3D <0>, <1>;
+        compatible =3D "ge,achc";
+        reset-gpios =3D <&gpio42 23 ACTIVE_LOW>;
+        spi-max-frequency =3D <42>; /* max speed for normal operation */
+    };
+};
+
+-- Sebastian
+
+--acogu7jgkafanp6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlrL134ACgkQ2O7X88g7
++poINQ//a+J7+V5hKWgwQHchgWZm0WQdrRELqDqmbIuj9XZiHDAMUGf3ffx2t8zQ
+mCnwjnjEbHqSLQmJ7seikJzJ/MhHrE4qKMqsy38zacx1TzjmMEAq7IBV8I5V8kVw
+UmkFIN47Ng9uTOxGHLoYJqEnQFXtiWf2EmQ+hUMaIDokvzumuEI1muAGLblERL97
+nWdCpdgcdIzgTPqgjkDb1a6j8OF4uJFWTh/ci3y9OGe7ytalyuSHKJ3XBBHw+IHJ
+up4yvZPx7BE5BAwaRNWoaIPK1Bro8qhRNyCWHS/k7oR96UXEhum2picskVNFYqGm
+/MNhe5U5vqS7ysvxadOaw2Z7SDosQL49nKB+6HYFJ1D2VcwKjkoNvyWZ6wHSx8Jm
+4/Eas5aS16Qp+hwgF5ir+rTTzUTDCxVy1aSsYM/DCJy5ZjNJ3P/PQpqpk42xBOV6
+0QWPhMNeOg+vutYQ5+GJOx2iBZB+CLuP2oxj5zSY2V2HbLIBl4plcfQJm9m/rifJ
+/ogKFleLMB5r62B+LHgC2L2QXCQ2hr4f3hCjGCF0J7Cz+eDpQBzYeJur9cL1fBbI
+0Wn/5/3UzFKAlHYvMLSjZGyCS2mRCwDeB4Fyx1/GBREp3s6zRAYRJLdV20UHglsR
+zAwmF/M2MsdXs45auQU+8VQKAvLt3wFYMNoaMAhEQvWHa5+J1zY=
+=A6Mh
+-----END PGP SIGNATURE-----
+
+--acogu7jgkafanp6d--
