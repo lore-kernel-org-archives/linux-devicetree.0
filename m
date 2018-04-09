@@ -1,85 +1,128 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/7] sunxi: Add DT representation for the MBUS controller
-Date: Mon, 9 Apr 2018 11:22:29 +0200
-Message-ID: <20180409092229.ljcnsqgv7wh2s4op@flea>
-References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
- <CAL_Jsq+cURC780ivftY1v3P59g5UKAHwb48raXXB6huQ2KBvuQ@mail.gmail.com>
+Subject: Re: [PATCH v5 08/13] ARM: sunxi: Add initialization of CNTVOFF
+Date: Mon, 9 Apr 2018 11:24:31 +0200
+Message-ID: <20180409092431.yfupppnbypnx6ha5@flea>
+References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
+ <20180403061836.3926-9-mylene.josserand@bootlin.com>
+ <20180403091218.t6xuq6csjp4uyy5u@flea>
+ <20180403220628.19c9acaf@dell-desktop.home>
+ <20180404074515.r6nbkpcyy6vfelbr@flea>
+ <20180408110932.7ef29ed2@dell-desktop.home>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0204046295=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+cURC780ivftY1v3P59g5UKAHwb48raXXB6huQ2KBvuQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wyjsakd6dief2kjg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180408110932.7ef29ed2@dell-desktop.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: linux@armlinux.org.uk, wens@csie.org, marc.zyngier@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0204046295==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mtks4cbg7sp7nzzj"
-Content-Disposition: inline
-
-
---mtks4cbg7sp7nzzj
-Content-Type: text/plain; charset=us-ascii
+--wyjsakd6dief2kjg
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
-
-On Tue, Apr 03, 2018 at 11:03:30AM -0500, Rob Herring wrote:
-> On Tue, Apr 3, 2018 at 8:29 AM, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > Hi,
-> >
-> > We've had for quite some time to hack around in our drivers to take into
-> > account the fact that our DMA accesses are not done through the parent
-> > node, but through another bus with a different mapping than the CPU for=
- the
-> > RAM (0 instead of 0x40000000 for most SoCs).
-> >
-> > After some discussion after the submission of a camera device suffering=
- of
-> > the same hacks, I've decided to put together a serie that introduce a
-> > property called dma-parent that allows to express the DMA relationship
-> > between a master and its bus, even if they are not direct parents in th=
-e DT.
+On Sun, Apr 08, 2018 at 11:09:32AM +0200, Myl=E8ne Josserand wrote:
+> Hello Maxime,
 >=20
-> Reading thru v6 of the camera driver, it seems like having
-> intermediate buses would solve the problem in your case?
+> On Wed, 4 Apr 2018 09:45:15 +0200
+> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>=20
+> > On Tue, Apr 03, 2018 at 10:06:28PM +0200, Myl=E8ne Josserand wrote:
+> > > Hello,
+> > >=20
+> > > Thank you for the review.
+> > >=20
+> > > On Tue, 3 Apr 2018 11:12:18 +0200
+> > > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >  =20
+> > > > On Tue, Apr 03, 2018 at 08:18:31AM +0200, Myl=E8ne Josserand wrote:=
+ =20
+> > > > > Add the initialization of CNTVOFF for sun8i-a83t.
+> > > > >=20
+> > > > > For boot CPU, Create a new machine that handles this
+> > > > > function's call in an "init_early" callback.
+> > > > > For secondary CPUs, add this function into secondary_startup
+> > > > > assembly entry.
+> > > > >=20
+> > > > > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> > > > > ---
+> > > > >  arch/arm/mach-sunxi/headsmp.S |  1 +
+> > > > >  arch/arm/mach-sunxi/sunxi.c   | 18 +++++++++++++++++-
+> > > > >  2 files changed, 18 insertions(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/=
+headsmp.S
+> > > > > index 79890fbe5613..b586b7cf803a 100644
+> > > > > --- a/arch/arm/mach-sunxi/headsmp.S
+> > > > > +++ b/arch/arm/mach-sunxi/headsmp.S
+> > > > > @@ -71,6 +71,7 @@ ENDPROC(sunxi_mc_smp_cluster_cache_enable)
+> > > > > =20
+> > > > >  ENTRY(sunxi_mc_smp_secondary_startup)
+> > > > >  	bl	sunxi_mc_smp_cluster_cache_enable
+> > > > > +	bl	smp_init_cntvoff
+> > > > >  	b	secondary_startup
+> > > > >  ENDPROC(sunxi_mc_smp_secondary_startup)
+> > > > > =20
+> > > > > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/su=
+nxi.c
+> > > > > index 5e9602ce1573..090784108c0a 100644
+> > > > > --- a/arch/arm/mach-sunxi/sunxi.c
+> > > > > +++ b/arch/arm/mach-sunxi/sunxi.c
+> > > > > @@ -16,6 +16,7 @@
+> > > > >  #include <linux/platform_device.h>
+> > > > > =20
+> > > > >  #include <asm/mach/arch.h>
+> > > > > +#include <asm/smp_cntvoff.h>
+> > > > > =20
+> > > > >  static const char * const sunxi_board_dt_compat[] =3D {
+> > > > >  	"allwinner,sun4i-a10",
+> > > > > @@ -62,7 +63,6 @@ MACHINE_END
+> > > > >  static const char * const sun8i_board_dt_compat[] =3D {
+> > > > >  	"allwinner,sun8i-a23",
+> > > > >  	"allwinner,sun8i-a33",
+> > > > > -	"allwinner,sun8i-a83t",
+> > > > >  	"allwinner,sun8i-h2-plus",
+> > > > >  	"allwinner,sun8i-h3",
+> > > > >  	"allwinner,sun8i-r40",
+> > > > > @@ -75,6 +75,22 @@ DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i Fa=
+mily")
+> > > > >  	.dt_compat	=3D sun8i_board_dt_compat,
+> > > > >  MACHINE_END
+> > > > > =20
+> > > > > +void __init sun8i_cntvoff_init(void)
+> > > > > +{
+> > > > > +	smp_init_cntvoff();   =20
+> > > >=20
+> > > > Can't this be moved to the SMP setup code? =20
+> > >=20
+> > > I tried to put it in the first lines of "sunxi_mc_smp_init" function
+> > > but it did not work. I tried to find some callbacks to have an
+> > > early "init" and I only found the "init_early"'s one. There is probab=
+ly
+> > > another way to handle that so do not hesitate to tell me any ideas. =
+=20
+> >=20
+> > It's hard to say without more context about why it doesn't work. Have
+> > you checked the order between early_initcall, the timer initialization
+> > function and init_early?
+> >=20
+>=20
+> Yes, I tested it. I wanted to test it again to give more context. Here
+> is the boot log: http://code.bulix.org/n1x864-315948?raw
+> I added printk in the 3 functions (with "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D>").
+>=20
+> The "init_early" and "sun6i_timer" are executed before
+> "arch_timer_of_init" (which is the function that parses the DT property
+> that we used previously "arm,cpu-registers-not-fw-configured").
+> The "sunxi_mc_smp_init" function is called later so I guess that is why
+> it is not working in that case.
 
-I guess it would yes, but I guess it wouldn't model the hardware
-properly since this seems to be really a bus only meant to do DMA, and
-you're not accessing the registers of the device through that bus.
-
-And as far as I know, the DT implies that the topology is the one of
-the "control" side of the devices.
-
-We'll also need eventually to have retrieve the MBUS endpoints ID to
-be able to support perf and PM QoS properly.
-
-> As Arnd mentioned in that thread, something new needs to address all
-> the deficiencies with dma-ranges and describing DMA bus topologies.
-> This doesn't address the needs of describing bus interconnects.
-> There's been some efforts by the QCom folks with an interconnect
-> binding. They've mostly punted (for now at least) to not describing
-> the whole interconnect in DT and keeping the details in a driver.
-
-Is it that patch serie? https://lkml.org/lkml/2018/3/9/856
-
-> On the flip side, this does mirror the established pattern used by
-> interrupts, so maybe it's okay on it's own. I'll wait for others to
-> comment.
-
-We'll see how it turns out then :)
+Ok. Make sure to mention that in your commit log.
 
 Maxime
 
@@ -88,36 +131,24 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---mtks4cbg7sp7nzzj
+--wyjsakd6dief2kjg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrLMNQACgkQ0rTAlCFN
-r3TWOg/+PITSKgs5/CLaLWjLNhVxrJfRvenPqV62WWUZNr0uf7oGE3wlUbo1UhEM
-8+IdKo3FecHX8y9ioYyxqPX/McGLj79loFsFRKAUmBlxajBDraSH4EuUmfAXt0sy
-qVMV8tPbDypG0em8Y02wtTKOKPXC6exkYeoK9WIdWIEh/7s3FoWekAn31mGA8gjX
-CrnVEEVH47IzPca1ZkpbR7W13K8AFkCAcSMhbDV/CbYSQDzsNJ8ClLN0ZGruiym7
-QeopbLES61pEYZHjDawnsimp26TClh+e+dYxlivLA+3BC6dPSAFzlLoZHMESDGg9
-xEUX9R542oV9v59VhstUFoTq0vuFd4g/53aM2rP72X16DLCQNZcOY6dw19v+f8VN
-+7WwH42uoMozJKGGVErSVZ24U7jD47CV9ogNNtD05khym3sPw6mbRcznv5u7VtVB
-avodcqp5iP9IotJnOTXHlQkczZPvI21YPyN8LFeSM7ndLeHVhulOqilLP3Ngwe/8
-F3QTabVvfDmu105w2igCekw2vAh2CMXa1K9h3dd7oOnNIUjDrvtoAx6OHw7AwGuS
-2hF226SZ/IizqZLKD6so3h9kBMbvvtOFs/STbe0EOAOyoXqbdi9ShTX9KdZAO1SZ
-RwBQYp5MnafteyV1sENlBVhn06+4htMKEt7IuHMnc6w47/0VMb8=
-=J/c3
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrLMU4ACgkQ0rTAlCFN
+r3Q4Bg//ZB8yanfXYzPCvAbYC2ToGBNpVMGHYkbFoUxfRa7z6cpwxftqHxjTt8Bo
+Sr9oT+TpKHlfcMXZneRxjAgms6DNzIbF9NeRrnnfzaPupjBDb6iFWJONRDoW3Qis
+aOdxodXMnNdppqR9HbsvnRcwqkYUDYsiEJLUxuZLWVxuzFiUiV0k8EIaVMhH3PIW
+2x5zd7QO82z9nK05Dk1P9tSZH5Jnz2JYRqhMTsVx11jVkK1jHQFDwjxFDcoF+ogr
+vmBVYrqvFYJso89Fwx31HRiYUMq4OJdoZh1IvFUTY2wKbPRXo9NlVj2FUyJQaTQu
++GLeA4xLQS4RV3cewpGbndeO5xUqk3ugZYHq3UNAK4oUq13FG5VvA/uHn7ON07ZK
+xgoYPNXtGuTGDbaNd2tL5RWxqgC2JfqDRojyon9oVTHU+o0GyVn0QDwoOc80aAol
+wGHAiE+zXfbDVzrGL7DSXEFZjB4vupRaOYHaxktiQxLrfqtGFNMXUXtoFlb2+2ZJ
+Fd5MtYr/DV5LbXT0ePjPODsY9IuYSvWRzOGYBV62YBSVFTT8Cy3tiLKEWCA+nd7X
+jqFkkrIQ0Wn2lJJR1eDtKz7gN1Q4cw+WLxhe8ZmjMzGJE9awUdd+8+zlX7h0xx6e
+93WKSrccDgAqGfFvQybHARw2Q3CpsvZnIn6KUdJ2mFHnY2IvUsc=
+=+YHq
 -----END PGP SIGNATURE-----
 
---mtks4cbg7sp7nzzj--
-
---===============0204046295==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0204046295==--
+--wyjsakd6dief2kjg--
