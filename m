@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v2 8/9] PCI: dwc: Small computation improvement
-Date: Mon,  9 Apr 2018 10:41:17 +0100
-Message-ID: <5181f7ffbb9d2889974c49d84e72042251adf8b6.1523266508.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v2 6/9] PCI: dwc: Define maximum number of vectors
+Date: Mon,  9 Apr 2018 10:41:15 +0100
+Message-ID: <bf7062c863f33b2951acc586b1f22d3497ee2f10.1523266508.git.gustavo.pimentel@synopsys.com>
 References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
@@ -12,41 +12,40 @@ To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jin
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Replaces a simple division by 2 to a right shift rotation of 1 bit.
+Adds a callback that defines the maximum number of vectors that can be use
+by the Root Complex.
+
+Since this is a parameter associated to each SoC IP setting, makes sense to
+be configurable and easily visible to future modifications.
+
+The designware IP supports a maximum of 256 vectors.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
 Change v1->v2:
 - Nothing changed, just to follow the patch set version.
 
- drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pci/dwc/pcie-designware-host.c b/drivers/pci/dwc/pcie-designware-host.c
-index 03e9b82..8e6fed4 100644
---- a/drivers/pci/dwc/pcie-designware-host.c
-+++ b/drivers/pci/dwc/pcie-designware-host.c
-@@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
+index 5382a7a..94da252 100644
+--- a/drivers/pci/dwc/pcie-designware-plat.c
++++ b/drivers/pci/dwc/pcie-designware-plat.c
+@@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
  
- 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
- 	if (cfg_res) {
--		pp->cfg0_size = resource_size(cfg_res) / 2;
--		pp->cfg1_size = resource_size(cfg_res) / 2;
-+		pp->cfg0_size = resource_size(cfg_res) >> 1;
-+		pp->cfg1_size = resource_size(cfg_res) >> 1;
- 		pp->cfg0_base = cfg_res->start;
- 		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
- 	} else if (!pp->va_cfg0_base) {
-@@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			break;
- 		case 0:
- 			pp->cfg = win->res;
--			pp->cfg0_size = resource_size(pp->cfg) / 2;
--			pp->cfg1_size = resource_size(pp->cfg) / 2;
-+			pp->cfg0_size = resource_size(pp->cfg) >> 1;
-+			pp->cfg1_size = resource_size(pp->cfg) >> 1;
- 			pp->cfg0_base = pp->cfg->start;
- 			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
- 			break;
++static void dw_plat_set_num_vectors(struct pcie_port *pp)
++{
++	pp->num_vectors = MAX_MSI_IRQS;
++}
++
+ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
+ 	.host_init = dw_plat_pcie_host_init,
++	.set_num_vectors = dw_plat_set_num_vectors,
+ };
+ 
+ static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
 -- 
 2.7.4
