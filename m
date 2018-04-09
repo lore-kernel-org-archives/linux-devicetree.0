@@ -1,57 +1,131 @@
-From: Oliver <oohall@gmail.com>
-Subject: Re: linux-next: build failure after merge of the nvdimm tree
-Date: Mon, 9 Apr 2018 17:34:03 +1000
-Message-ID: <CAOSf1CGjFOPPQPYNA=uLFJnVyNXQnsoBb8rm2qFi8uuUHmw8ZA@mail.gmail.com>
-References: <20180409131619.0bc5fb45@canb.auug.org.au> <CAOSf1CHToZ5+k90n_sgh_9ezJjXpx21E5-K66TWkdU7t7kUiEw@mail.gmail.com>
+From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
+Date: Mon,  9 Apr 2018 17:46:04 +1000
+Message-ID: <20180409074604.17671-1-oohall@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOSf1CHToZ5+k90n_sgh_9ezJjXpx21E5-K66TWkdU7t7kUiEw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Dan Williams <dan.j.williams@intel.com>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 1:38 PM, Oliver <oohall@gmail.com> wrote:
-> On Mon, Apr 9, 2018 at 1:16 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->> Hi Dan,
->>
->> After merging the nvdimm tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
->>
->> ERROR: "of_node_to_nid" [drivers/nvdimm/of_pmem.ko] undefined!
->>
->> Caused by commit
->>
->>   717197608952 ("libnvdimm: Add device-tree based driver")
->>
->> X86 seems to not have a version of of_node_to_nid() even though CONFIG_OF
->> and CONFIG_NUMA are both 'y' in this build.
->
-> It's a side effect of a driver selecting CONFIG_OF accidently. There's
-> a patch to fix this in the drm-misc-next tree:
->
-> https://lkml.org/lkml/2018/4/3/17
->
->> I have used the nvdimm tree from next-20180406 for today.
->
-> That works too.
+Some OF platforms (pseries and some SPARC systems) has their own
+implementations of NUMA affinity detection rather than using the generic
+OF_NUMA driver, which mainly exists for arm64. For other platforms one
+of two fallbacks provided by the base OF driver are used depending on
+CONFIG_NUMA.
 
-Hmm, on closer inspection this is actually a bug in the of driver. The
-patch above fixes the specific problem that we hit on ia64 due to
-CONFIG_OF being selected by accident, but the underlying issue will
-affect any platform that doesn't provide an implementation of
-of_node_to_nid().
+In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
+In the =y case the fallback is a real function which is defined as a
+weak symbol so that it may be overwritten by the architecture if desired.
 
-The fundamental problem is that the various actual implementations of
-of_node_to_nid (ppc, sparc and the generic one in of_numa.c) export
-the symbol. While the fallback implementation does not because it is
-defined as a weak symbol. As a result we'll get this build failure iff
-there's a call to of_node_to_nid() in a module.
+The problem with this arrangement is that the real implementations all
+export of_node_to_nid(). Unfortunately it's not possible to export the
+fallback since it would clash with the non-weak version. As a result
+we get build failures when:
 
-The one-line fix is just to delete the call to of_node_to_nid() in
-of_pmem.c. I have a patch that adds a Kconfig options and removes the
-weak symbol games. That needs Acks from the ppc, sparc and DT
-maintainers though so it'll take longer to organise.
+a) CONFIG_NUMA=y && CONFIG_OF=y, and
+b) The platform doesn't implement of_node_to_nid(), and
+c) A module uses of_node_to_nid()
 
-Oliver
+Given b) will be true for most platforms this is fairly easy to hit
+and has been observed on ia64 and x86.
+
+This patch remedies the problem by introducing the ARCH_HAS_OWN_OF_NUMA
+Kconfig option which is selected if an architecture provides an
+implementation of of_node_to_nid(). If a platform does not use it's own,
+or the generic OF_NUMA, then always use the inline fallback in of.h so
+we don't need to futz around with exports.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Fixes: 298535c00a2c ("of, numa: Add NUMA of binding implementation.")
+Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/powerpc/Kconfig | 1 +
+ arch/sparc/Kconfig   | 1 +
+ drivers/of/Kconfig   | 3 +++
+ drivers/of/base.c    | 7 -------
+ include/linux/of.h   | 2 +-
+ 5 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c32a181a7cbb..74ce5f3564ae 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -625,6 +625,7 @@ config NUMA
+ 	bool "NUMA support"
+ 	depends on PPC64
+ 	default y if SMP && PPC_PSERIES
++	select ARCH_HAS_OWN_OF_NUMA
+ 
+ config NODES_SHIFT
+ 	int
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 8767e45f1b2b..f8071f1c3edb 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -299,6 +299,7 @@ config GENERIC_LOCKBREAK
+ config NUMA
+ 	bool "NUMA support"
+ 	depends on SPARC64 && SMP
++	select ARCH_HAS_OWN_OF_NUMA
+ 
+ config NODES_SHIFT
+ 	int "Maximum NUMA Nodes (as a power of 2)"
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index ad3fcad4d75b..01c62b747b25 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -103,4 +103,7 @@ config OF_OVERLAY
+ config OF_NUMA
+ 	bool
+ 
++config ARCH_HAS_OWN_OF_NUMA
++	bool
++
+ endif # OF
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 848f549164cd..82a9584bb0e2 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -84,13 +84,6 @@ int of_n_size_cells(struct device_node *np)
+ }
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
+-#ifdef CONFIG_NUMA
+-int __weak of_node_to_nid(struct device_node *np)
+-{
+-	return NUMA_NO_NODE;
+-}
+-#endif
+-
+ static struct device_node **phandle_cache;
+ static u32 phandle_cache_mask;
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..9bb42dac5e65 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -942,7 +942,7 @@ static inline int of_cpu_node_to_id(struct device_node *np)
+ #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+ #endif
+ 
+-#if defined(CONFIG_OF) && defined(CONFIG_NUMA)
++#if defined(CONFIG_OF_NUMA) || defined(CONFIG_ARCH_HAS_OWN_OF_NUMA)
+ extern int of_node_to_nid(struct device_node *np);
+ #else
+ static inline int of_node_to_nid(struct device_node *device)
+-- 
+2.9.5
