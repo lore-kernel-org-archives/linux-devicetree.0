@@ -1,601 +1,97 @@
-Return-Path: <SRS0=Tej7=GZ=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v8 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Date: Wed,  4 Apr 2018 14:20:25 +0200
-Message-Id: <20180404122025.8726-3-maxime.ripard@bootlin.com>
-In-Reply-To: <20180404122025.8726-1-maxime.ripard@bootlin.com>
-References: <20180404122025.8726-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=9NP3=G6=crapouillou.net=paul@kernel.org>
+Message-Id: <5acb87ad.4cdc620a.40e86.c6beSMTPIN_ADDED_MISSING@mx.google.com>
+Date: Mon, 09 Apr 2018 12:32:40 -0300
+Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
+From: Paul Cercueil <paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-mips@linux-mips.org, Jason Cooper <jason@lakedaemon.net>, James Hogan <jhogan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Lee Jones <lee.jones@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The Cadence MIPI-CSI2 TX controller is an hardware block meant to be used
-as a bridge between pixel interfaces and a CSI-2 bus.
-
-It supports operating with an internal or external D-PHY, with up to 4
-lanes, or without any D-PHY. The current code only supports the latter
-case.
-
-While the virtual channel input on the pixel interface can be directly
-mapped to CSI2, the datatype input is actually a selection signal (3-bits)
-mapping to a table of up to 8 preconfigured datatypes/formats (programmed
-at start-up)
-
-The block supports up to 8 input datatypes.
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/media/platform/cadence/Kconfig       |  11 +
- drivers/media/platform/cadence/Makefile      |   1 +
- drivers/media/platform/cadence/cdns-csi2tx.c | 529 +++++++++++++++++++++++++++
- 3 files changed, 541 insertions(+)
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
-diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
-index 70c95d79c8f7..3bf0f2454384 100644
---- a/drivers/media/platform/cadence/Kconfig
-+++ b/drivers/media/platform/cadence/Kconfig
-@@ -20,4 +20,15 @@ config VIDEO_CADENCE_CSI2RX
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called cdns-csi2rx.
- 
-+config VIDEO_CADENCE_CSI2TX
-+	tristate "Cadence MIPI-CSI2 TX Controller"
-+	depends on MEDIA_CONTROLLER
-+	depends on VIDEO_V4L2_SUBDEV_API
-+	select V4L2_FWNODE
-+	help
-+	  Support for the Cadence MIPI CSI2 Transceiver controller.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called cdns-csi2tx.
-+
- endif
-diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
-index 99a4086b7448..7fe992273162 100644
---- a/drivers/media/platform/cadence/Makefile
-+++ b/drivers/media/platform/cadence/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
-+obj-$(CONFIG_VIDEO_CADENCE_CSI2TX)	+= cdns-csi2tx.o
-diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
-new file mode 100644
-index 000000000000..4495044e9f99
---- /dev/null
-+++ b/drivers/media/platform/cadence/cdns-csi2tx.c
-@@ -0,0 +1,529 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for Cadence MIPI-CSI2 TX Controller
-+ *
-+ * Copyright (C) 2017 Cadence Design Systems Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+#include <media/v4l2-subdev.h>
-+
-+#define CSI2TX_DEVICE_CONFIG_REG	0x00
-+
-+#define CSI2TX_CONFIG_REG		0x20
-+#define CSI2TX_CONFIG_CFG_REQ			BIT(2)
-+#define CSI2TX_CONFIG_SRST_REQ			BIT(1)
-+
-+#define CSI2TX_DPHY_CFG_REG		0x28
-+#define CSI2TX_DPHY_CFG_CLK_RESET		BIT(16)
-+#define CSI2TX_DPHY_CFG_LANE_RESET(n)		BIT((n) + 12)
-+#define CSI2TX_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
-+#define CSI2TX_DPHY_CFG_MODE_LPDT		(2 << 8)
-+#define CSI2TX_DPHY_CFG_MODE_HS			(1 << 8)
-+#define CSI2TX_DPHY_CFG_MODE_ULPS		(0 << 8)
-+#define CSI2TX_DPHY_CFG_CLK_ENABLE		BIT(4)
-+#define CSI2TX_DPHY_CFG_LANE_ENABLE(n)		BIT(n)
-+
-+#define CSI2TX_DPHY_CLK_WAKEUP_REG	0x2c
-+#define CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(n)	((n) & 0xffff)
-+
-+#define CSI2TX_DT_CFG_REG(n)		(0x80 + (n) * 8)
-+#define CSI2TX_DT_CFG_DT(n)			(((n) & 0x3f) << 2)
-+
-+#define CSI2TX_DT_FORMAT_REG(n)		(0x84 + (n) * 8)
-+#define CSI2TX_DT_FORMAT_BYTES_PER_LINE(n)	(((n) & 0xffff) << 16)
-+#define CSI2TX_DT_FORMAT_MAX_LINE_NUM(n)	((n) & 0xffff)
-+
-+#define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
-+#define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
-+
-+#define CSI2TX_LANES_MAX	4
-+#define CSI2TX_STREAMS_MAX	4
-+
-+enum csi2tx_pads {
-+	CSI2TX_PAD_SOURCE,
-+	CSI2TX_PAD_SINK_STREAM0,
-+	CSI2TX_PAD_SINK_STREAM1,
-+	CSI2TX_PAD_SINK_STREAM2,
-+	CSI2TX_PAD_SINK_STREAM3,
-+	CSI2TX_PAD_MAX,
-+};
-+
-+struct csi2tx_fmt {
-+	u32	mbus;
-+	u32	dt;
-+	u32	bpp;
-+};
-+
-+struct csi2tx_priv {
-+	struct device			*dev;
-+	unsigned int			count;
-+
-+	/*
-+	 * Used to prevent race conditions between multiple,
-+	 * concurrent calls to start and stop.
-+	 */
-+	struct mutex			lock;
-+
-+	void __iomem			*base;
-+
-+	struct clk			*esc_clk;
-+	struct clk			*p_clk;
-+	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
-+
-+	struct v4l2_subdev		subdev;
-+	struct media_pad		pads[CSI2TX_PAD_MAX];
-+	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
-+
-+	bool				has_internal_dphy;
-+	u8				lanes[CSI2TX_LANES_MAX];
-+	unsigned int			num_lanes;
-+	unsigned int			max_lanes;
-+	unsigned int			max_streams;
-+};
-+
-+static const struct csi2tx_fmt csi2tx_formats[] = {
-+	{
-+		.mbus	= MEDIA_BUS_FMT_UYVY8_1X16,
-+		.bpp	= 2,
-+		.dt	= 0x1e,
-+	},
-+	{
-+		.mbus	= MEDIA_BUS_FMT_RGB888_1X24,
-+		.bpp	= 3,
-+		.dt	= 0x24,
-+	},
-+};
-+
-+static const struct v4l2_mbus_framefmt fmt_default = {
-+	.width		= 1280,
-+	.height		= 720,
-+	.code		= MEDIA_BUS_FMT_RGB888_1X24,
-+	.field		= V4L2_FIELD_NONE,
-+	.colorspace	= V4L2_COLORSPACE_DEFAULT,
-+};
-+
-+static inline
-+struct csi2tx_priv *v4l2_subdev_to_csi2tx(struct v4l2_subdev *subdev)
-+{
-+	return container_of(subdev, struct csi2tx_priv, subdev);
-+}
-+
-+static const struct csi2tx_fmt *csi2tx_get_fmt_from_mbus(struct v4l2_mbus_framefmt *mfmt)
-+{
-+	unsigned int i;
-+
-+	if (!mfmt)
-+		return NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(csi2tx_formats); i++)
-+		if (csi2tx_formats[i].mbus == mfmt->code)
-+			return &csi2tx_formats[i];
-+
-+	return NULL;
-+}
-+
-+static int csi2tx_enum_mbus_code(struct v4l2_subdev *subdev,
-+				 struct v4l2_subdev_pad_config *cfg,
-+				 struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	if (code->pad || code->index >= ARRAY_SIZE(csi2tx_formats))
-+		return -EINVAL;
-+
-+	code->code = csi2tx_formats[code->index].mbus;
-+
-+	return 0;
-+}
-+
-+static int csi2tx_get_pad_format(struct v4l2_subdev *subdev,
-+				 struct v4l2_subdev_pad_config *cfg,
-+				 struct v4l2_subdev_format *fmt)
-+{
-+	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-+
-+	if (fmt->pad >= CSI2TX_PAD_MAX)
-+		return -EINVAL;
-+
-+	fmt->format = csi2tx->pad_fmts[fmt->pad];
-+
-+	return 0;
-+}
-+
-+static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
-+				 struct v4l2_subdev_pad_config *cfg,
-+				 struct v4l2_subdev_format *fmt)
-+{
-+	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-+
-+	if (fmt->pad >= CSI2TX_PAD_MAX)
-+		return -EINVAL;
-+
-+	csi2tx->pad_fmts[fmt->pad] = fmt->format;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
-+	.enum_mbus_code	= csi2tx_enum_mbus_code,
-+	.get_fmt	= csi2tx_get_pad_format,
-+	.set_fmt	= csi2tx_set_pad_format,
-+};
-+
-+static void csi2tx_reset(struct csi2tx_priv *csi2tx)
-+{
-+	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-+
-+	udelay(10);
-+}
-+
-+static int csi2tx_start(struct csi2tx_priv *csi2tx)
-+{
-+	struct media_entity *entity = &csi2tx->subdev.entity;
-+	struct media_link *link;
-+	unsigned int i;
-+	u32 reg;
-+
-+	csi2tx_reset(csi2tx);
-+
-+	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-+
-+	udelay(10);
-+
-+	/* Configure our PPI interface with the D-PHY */
-+	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
-+	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
-+
-+	/* Put our lanes (clock and data) out of reset */
-+	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
-+	for (i = 0; i < csi2tx->num_lanes; i++)
-+		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i]);
-+	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+
-+	udelay(10);
-+
-+	/* Enable our (clock and data) lanes */
-+	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
-+	for (i = 0; i < csi2tx->num_lanes; i++)
-+		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i]);
-+	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+
-+	udelay(10);
-+
-+	/* Switch to HS mode */
-+	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
-+	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
-+	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+
-+	udelay(10);
-+
-+	/*
-+	 * Create a static mapping between the CSI virtual channels
-+	 * and the input streams.
-+	 *
-+	 * This should be enhanced, but v4l2 lacks the support for
-+	 * changing that mapping dynamically at the moment.
-+	 *
-+	 * We're protected from the userspace setting up links at the
-+	 * same time by the upper layer having called
-+	 * media_pipeline_start().
-+	 */
-+	list_for_each_entry(link, &entity->links, list) {
-+		struct v4l2_mbus_framefmt *mfmt;
-+		const struct csi2tx_fmt *fmt;
-+		unsigned int stream;
-+		int pad_idx = -1;
-+
-+		/* Only consider our enabled input pads */
-+		for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++) {
-+			struct media_pad *pad = &csi2tx->pads[i];
-+
-+			if ((pad == link->sink) &&
-+			    (link->flags & MEDIA_LNK_FL_ENABLED)) {
-+				pad_idx = i;
-+				break;
-+			}
-+		}
-+
-+		if (pad_idx < 0)
-+			continue;
-+
-+		mfmt = &csi2tx->pad_fmts[pad_idx];
-+		fmt = csitx_get_fmt_from_mbus(mfmt);
-+		if (!fmt)
-+			continue;
-+
-+		stream = pad_idx - CSI2TX_PAD_SINK_STREAM0;
-+
-+		/*
-+		 * We use the stream ID there, but it's wrong.
-+		 *
-+		 * A stream could very well send a data type that is
-+		 * not equal to its stream ID. We need to find a
-+		 * proper way to address it.
-+		 */
-+		writel(CSI2TX_DT_CFG_DT(fmt->dt),
-+		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
-+
-+		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
-+		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
-+		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
-+
-+		/*
-+		 * TODO: This needs to be calculated based on the
-+		 * output CSI2 clock rate.
-+		 */
-+		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
-+		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
-+	}
-+
-+	/* Disable the configuration mode */
-+	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
-+
-+	return 0;
-+}
-+
-+static void csi2tx_stop(struct csi2tx_priv *csi2tx)
-+{
-+	writel(CSI2TX_CONFIG_CFG_REQ | CSI2TX_CONFIG_SRST_REQ,
-+	       csi2tx->base + CSI2TX_CONFIG_REG);
-+}
-+
-+static int csi2tx_s_stream(struct v4l2_subdev *subdev, int enable)
-+{
-+	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-+	int ret = 0;
-+
-+	mutex_lock(&csi2tx->lock);
-+
-+	if (enable) {
-+		/*
-+		 * If we're not the first users, there's no need to
-+		 * enable the whole controller.
-+		 */
-+		if (!csi2tx->count) {
-+			ret = csi2tx_start(csi2tx);
-+			if (ret)
-+				goto out;
-+		}
-+
-+		csi2tx->count++;
-+	} else {
-+		csi2tx->count--;
-+
-+		/*
-+		 * Let the last user turn off the lights.
-+		 */
-+		if (!csi2tx->count)
-+			csi2tx_stop(csi2tx);
-+	}
-+
-+out:
-+	mutex_unlock(&csi2tx->lock);
-+	return ret;
-+}
-+
-+static const struct v4l2_subdev_video_ops csi2tx_video_ops = {
-+	.s_stream	= csi2tx_s_stream,
-+};
-+
-+static const struct v4l2_subdev_ops csi2tx_subdev_ops = {
-+	.pad		= &csi2tx_pad_ops,
-+	.video		= &csi2tx_video_ops,
-+};
-+
-+static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
-+				struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	unsigned int i;
-+	u32 dev_cfg;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	csi2tx->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(csi2tx->base))
-+		return PTR_ERR(csi2tx->base);
-+
-+	csi2tx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-+	if (IS_ERR(csi2tx->p_clk)) {
-+		dev_err(&pdev->dev, "Couldn't get p_clk\n");
-+		return PTR_ERR(csi2tx->p_clk);
-+	}
-+
-+	csi2tx->esc_clk = devm_clk_get(&pdev->dev, "esc_clk");
-+	if (IS_ERR(csi2tx->esc_clk)) {
-+		dev_err(&pdev->dev, "Couldn't get the esc_clk\n");
-+		return PTR_ERR(csi2tx->esc_clk);
-+	}
-+
-+	clk_prepare_enable(csi2tx->p_clk);
-+	dev_cfg = readl(csi2tx->base + CSI2TX_DEVICE_CONFIG_REG);
-+	clk_disable_unprepare(csi2tx->p_clk);
-+
-+	csi2tx->max_lanes = dev_cfg & 7;
-+	if (csi2tx->max_lanes > CSI2TX_LANES_MAX) {
-+		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
-+			csi2tx->max_lanes);
-+		return -EINVAL;
-+	}
-+
-+	csi2tx->max_streams = (dev_cfg >> 4) & 7;
-+	if (csi2tx->max_streams > CSI2TX_STREAMS_MAX) {
-+		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
-+			csi2tx->max_streams);
-+		return -EINVAL;
-+	}
-+
-+	csi2tx->has_internal_dphy = (dev_cfg & BIT(3)) ? true : false;
-+
-+	for (i = 0; i < csi2tx->max_streams; i++) {
-+		char clk_name[16];
-+
-+		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
-+		csi2tx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
-+		if (IS_ERR(csi2tx->pixel_clk[i])) {
-+			dev_err(&pdev->dev, "Couldn't get clock %s\n",
-+				clk_name);
-+			return PTR_ERR(csi2tx->pixel_clk[i]);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
-+{
-+	struct v4l2_fwnode_endpoint v4l2_ep;
-+	struct device_node *ep;
-+	int ret;
-+
-+	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
-+	if (!ep)
-+		return -EINVAL;
-+
-+	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-+	if (ret) {
-+		dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
-+		goto out;
-+	}
-+
-+	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
-+		dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
-+			v4l2_ep.bus_type);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
-+	if (csi2tx->num_lanes > csi2tx->max_lanes) {
-+		dev_err(csi2tx->dev,
-+			"Current configuration uses more lanes than supported\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
-+	       sizeof(csi2tx->lanes));
-+
-+out:
-+	of_node_put(ep);
-+	return ret;
-+}
-+
-+static int csi2tx_probe(struct platform_device *pdev)
-+{
-+	struct csi2tx_priv *csi2tx;
-+	unsigned int i;
-+	int ret;
-+
-+	csi2tx = kzalloc(sizeof(*csi2tx), GFP_KERNEL);
-+	if (!csi2tx)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, csi2tx);
-+	mutex_init(&csi2tx->lock);
-+	csi2tx->dev = &pdev->dev;
-+
-+	ret = csi2tx_get_resources(csi2tx, pdev);
-+	if (ret)
-+		goto err_free_priv;
-+
-+	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
-+	csi2tx->subdev.owner = THIS_MODULE;
-+	csi2tx->subdev.dev = &pdev->dev;
-+	csi2tx->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	snprintf(csi2tx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
-+		 KBUILD_MODNAME, dev_name(&pdev->dev));
-+
-+	ret = csi2tx_check_lanes(csi2tx);
-+	if (ret)
-+		goto err_free_priv;
-+
-+	/* Create our media pads */
-+	csi2tx->subdev.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-+	csi2tx->pads[CSI2TX_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
-+	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++)
-+		csi2tx->pads[i].flags = MEDIA_PAD_FL_SINK;
-+
-+	for (i = 0; i < CSI2TX_PAD_MAX; i++)
-+		csi2tx->pad_fmts[i] = fmt_default;
-+
-+	ret = media_entity_pads_init(&csi2tx->subdev.entity, CSI2TX_PAD_MAX,
-+				     csi2tx->pads);
-+	if (ret)
-+		goto err_free_priv;
-+
-+	ret = v4l2_async_register_subdev(&csi2tx->subdev);
-+	if (ret < 0)
-+		goto err_free_priv;
-+
-+	dev_info(&pdev->dev,
-+		 "Probed CSI2TX with %u/%u lanes, %u streams, %s D-PHY\n",
-+		 csi2tx->num_lanes, csi2tx->max_lanes, csi2tx->max_streams,
-+		 csi2tx->has_internal_dphy ? "internal" : "no");
-+
-+	return 0;
-+
-+err_free_priv:
-+	kfree(csi2tx);
-+	return ret;
-+}
-+
-+static int csi2tx_remove(struct platform_device *pdev)
-+{
-+	struct csi2tx_priv *csi2tx = platform_get_drvdata(pdev);
-+
-+	v4l2_async_unregister_subdev(&csi2tx->subdev);
-+	kfree(csi2tx);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id csi2tx_of_table[] = {
-+	{ .compatible = "cdns,csi2tx" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, csi2tx_of_table);
-+
-+static struct platform_driver csi2tx_driver = {
-+	.probe	= csi2tx_probe,
-+	.remove	= csi2tx_remove,
-+
-+	.driver	= {
-+		.name		= "cdns-csi2tx",
-+		.of_match_table	= csi2tx_of_table,
-+	},
-+};
-+module_platform_driver(csi2tx_driver);
-+MODULE_AUTHOR("Maxime Ripard <maxime.ripard@bootlin.com>");
-+MODULE_DESCRIPTION("Cadence CSI2-TX controller");
-+MODULE_LICENSE("GPL");
--- 
-2.14.3
+TGUgMyBhdnIuIDIwMTggNjo1OSBBTSwgRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxp
+bmFyby5vcmc+IGEgw6ljcml0IDoKPgo+IE9uIDMxLzAzLzIwMTggMTk6NDYsIFBhdWwgQ2VyY3Vl
+aWwgd3JvdGU6IAo+ID4gTGUgMjAxOC0wMy0zMSAxMDoxMCwgRGFuaWVsIExlemNhbm8gYSDDqWNy
+aXTCoDogCj4gPj4gT24gMjkvMDMvMjAxOCAxNjo1MiwgUGF1bCBDZXJjdWVpbCB3cm90ZTogCj4g
+Pj4+IAo+ID4+PiAKPiA+Pj4gTGUgbWVyLiAyOCBtYXJzIDIwMTggw6AgMTg6MjUsIERhbmllbCBM
+ZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPiAKPiA+Pj4gYSDDqWNyaXQgOiAKPiA+
+Pj4+IE9uIDI4LzAzLzIwMTggMTc6MTUsIFBhdWwgQ2VyY3VlaWwgd3JvdGU6IAo+ID4+Pj4+IMKg
+TGUgMjAxOC0wMy0yNCAwNzoyNiwgRGFuaWVsIExlemNhbm8gYSDDqWNyaXQgOiAKPiA+Pj4+Pj4g
+wqBPbiAxOC8wMy8yMDE4IDAwOjI5LCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+Pj4+Pj4+IMKg
+VGhpcyBkcml2ZXIgd2lsbCB1c2UgdGhlIFRDVSAoVGltZXIgQ291bnRlciBVbml0KSBwcmVzZW50
+IG9uIHRoZSAKPiA+Pj4+Pj4+IEluZ2VuaWMgCj4gPj4+Pj4+PiDCoEpaNDd4eCBTb0NzIHRvIHBy
+b3ZpZGUgdGhlIGtlcm5lbCB3aXRoIGEgY2xvY2tzb3VyY2UgYW5kIHRpbWVycy4gCj4gPj4+Pj4+
+IAo+ID4+Pj4+PiDCoFBsZWFzZSBwcm92aWRlIGEgbW9yZSBkZXRhaWxlZCBkZXNjcmlwdGlvbiBh
+Ym91dCB0aGUgdGltZXIuIAo+ID4+Pj4+IAo+ID4+Pj4+IMKgVGhlcmUncyBhIGRvYyBmaWxlIGZv
+ciB0aGF0IDopIAo+ID4+Pj4gCj4gPj4+PiBVc3VhbGx5LCB3aGVuIHRoZXJlIGlzIGEgbmV3IGRy
+aXZlciBJIGFzayBmb3IgYSBkZXNjcmlwdGlvbiBpbiB0aGUgCj4gPj4+PiBjaGFuZ2Vsb2cgZm9y
+IHJlZmVyZW5jZS4gCj4gPj4+PiAKPiA+Pj4+Pj4gwqBXaGVyZSBpcyB0aGUgY2xvY2tzb3VyY2Ug
+PyAKPiA+Pj4+PiAKPiA+Pj4+PiDCoFJpZ2h0LCB0aGVyZSBpcyBubyBjbG9ja3NvdXJjZSwganVz
+dCB0aW1lcnMuIAo+ID4+Pj4+IAo+ID4+Pj4+PiDCoEkgZG9uJ3Qgc2VlIHRoZSBwb2ludCBvZiB1
+c2luZyBjaGFubmVsIGlkeCBhbmQgcHdtIGNoZWNraW5nIGhlcmUuIAo+ID4+Pj4+PiAKPiA+Pj4+
+Pj4gwqBUaGVyZSBpcyBvbmUgY2xvY2tldmVudCwgd2h5IGNyZWF0ZSBtdWx0aXBsZSBjaGFubmVs
+cyA/IENhbid0IHlvdSAKPiA+Pj4+Pj4gc3RpY2sgCj4gPj4+Pj4+IMKgdG8gdGhlIHVzdWFsIGlu
+aXQgcm91dGluZSBmb3IgYSB0aW1lci4gCj4gPj4+Pj4gCj4gPj4+Pj4gwqBTbyB0aGUgaWRlYSBp
+cyB0aGF0IHdlIHVzZSBhbGwgdGhlIFRDVSBjaGFubmVscyB0aGF0IHdvbid0IGJlIHVzZWQgCj4g
+Pj4+Pj4gZm9yIFBXTSAKPiA+Pj4+PiDCoGFzIHRpbWVycy4gSGVuY2UgdGhlIFBXTSBjaGVja2lu
+Zy4gV2h5IGlzIHRoaXMgYmFkPyAKPiA+Pj4+IAo+ID4+Pj4gSXQgaXMgbm90IGJhZCBidXQgYXJn
+dWFibGUuIEJ5IGNoZWNraW5nIHRoZSBjaGFubmVscyB1c2VkIGJ5IHRoZSBwd20gaW4gCj4gPj4+
+PiB0aGUgY29kZSwgeW91IGludHJvZHVjZSBhbiBhZGhlcmVuY2UgYmV0d2VlbiB0d28gc3Vic3lz
+dGVtcyBldmVuIGlmIGl0IAo+ID4+Pj4gaXMganVzdCByZWxhdGVkIHRvIHRoZSBEVCBwYXJzaW5n
+IHBhcnQuIAo+ID4+Pj4gCj4gPj4+PiBBcyBpdCBpcyBub3QgbmVlZGVkIHRvIGhhdmUgbW9yZSB0
+aGFuIG9uZSB0aW1lciBpbiB0aGUgdGltZSBmcmFtZXdvcmsgCj4gPj4+PiAoYXQgbGVhc3Qgd2l0
+aCB0aGUgc2FtZSBjaGFyYWN0ZXJpc3RpY3MpLCB0aGUgcHdtIGNoYW5uZWxzIGNoZWNrIGlzIAo+
+ID4+Pj4gcG9pbnRsZXNzLiBXZSBjYW4gYXNzdW1lIHRoZSBhdXRob3Igb2YgdGhlIERUIGZpbGUg
+aXMgc21hcnQgZW5vdWdoIHRvIAo+ID4+Pj4gcHJldmVudCBjb25mbGljdHMgYW5kIGRlZmluZSBh
+IHB3bSBhbmQgYSB0aW1lciBwcm9wZXJseSBpbnN0ZWFkIG9mIAo+ID4+Pj4gYWRkaW5nIG1vcmUg
+Y29kZSBjb21wbGV4aXR5LiAKPiA+Pj4+IAo+ID4+Pj4gSW4gYWRkaXRpb24sIHNpbXBsaWZ5aW5n
+IHRoZSBjb2RlIHdpbGwgYWxsb3cgeW91IHRvIHVzZSB0aGUgdGltZXItb2YgCj4gPj4+PiBjb2Rl
+IGFuZCByZWR1Y2UgdmVyeSBzaWduaWZpY2FudGx5IHRoZSBpbml0IGZ1bmN0aW9uLiAKPiA+Pj4g
+Cj4gPj4+IFRoYXQncyB3aGF0IEkgaGFkIGluIG15IFYxIGFuZCBWMiwgbXkgRFQgbm9kZSBmb3Ig
+dGhlIHRpbWVyLWluZ2VuaWMgCj4gPj4+IGRyaXZlciAKPiA+Pj4gaGFkIGEgInRpbWVycyIgcHJv
+cGVydHkgKGUuZy4gInRpbWVycyA9IDw0IDU+OyIpIHRvIHNlbGVjdCB0aGUgY2hhbm5lbHMgCj4g
+Pj4+IHRoYXQgCj4gPj4+IHNob3VsZCBiZSB1c2VkIGFzIHRpbWVycy4gVGhlbiBSb2IgdG9sZCBt
+ZSBJIHNob3VsZG4ndCBkbyB0aGF0LCBhbmQgCj4gPj4+IGluc3RlYWQgCj4gPj4+IGRldGVjdCB0
+aGUgY2hhbm5lbHMgdGhhdCB3aWxsIGJlIHVzZWQgZm9yIFBXTS4gCj4gPj4+IAo+ID4+IAo+ID4+
+IFsgLi4uIF0gCj4gPj4gCj4gPj4gSG93IGRvIHlvdSBzcGVjaWZ5IHRoZSBjaGFubmVscyB1c2Vk
+IGZvciBQV00gPyAKPiA+IAo+ID4gVG8gZGV0ZWN0IHRoZSBjaGFubmVscyB0aGF0IHdpbGwgYmUg
+dXNlZCBhcyBQV00gSSBwYXJzZSB0aGUgd2hvbGUgCj4gPiBkZXZpY2V0cmVlIAo+ID4gc2VhcmNo
+aW5nIGZvciAicHdtcyIgcHJvcGVydGllczsgY2hlY2sgdGhhdCB0aGUgUFdNIGhhbmRsZSBpcyBm
+b3Igb3VyIAo+ID4gVENVIFBXTSAKPiA+IGRyaXZlcjsgdGhlbiByZWFkIHRoZSBQV00gbnVtYmVy
+IGZyb20gdGhlcmUuIAo+ID4gCj4gPiBPZiBjb3Vyc2UgaXQncyBoYWNraXNoLCBhbmQgaXQgb25s
+eSB3b3JrcyBmb3IgZGV2aWNldHJlZS4gSSBwcmVmZXJyZWQgdGhlIAo+ID4gbWV0aG9kIHdpdGgg
+dGhlICJ0aW1lcnMiIHByb3BlcnR5LiAKPgo+IERvIHlvdSBoYXZlIGEgRFQgcG9ydGlvbiBkZXNj
+cmliaW5nIHRoYXQ/IEVnIHNvbWV3aGVyZSBpbiB0aGUga2VybmVsJ3MgCj4gZ2l0IHRyZWUgPyAK
+Pgo+IEZyb20gd2hhdCBJIHVuZGVyc3Rvb2QsIHdlIGNhbiBzcGVjaWZ5IHRoZSBjaGFubmVsIGZv
+ciBhIHB3bSBidXQgbm90IGZvciAKPiBhIHRpbWVyLCB0aGVyZSBpcyBjZXJ0YWlubHkgc29tZXRo
+aW5nIEknbSBtaXNzaW5nLiAKCk5vLCBpdCB3YXMgc29tZXRoaW5nIGN1c3RvbS4gVGhlcmUgaXMg
+bm8gc3RhbmRhcmQgd2F5IHRvIHNwZWNpZnkgYSBjaGFubmVsIHRvIHVzZSBmb3IgYSB0aW1lci4K
+Cj4gPj4+Pj4+PiAKPiA+Pj4+Pj4+IMKgK2NvbmZpZyBJTkdFTklDX1RJTUVSIAo+ID4+Pj4+Pj4g
+wqArwqDCoMKgIGJvb2wgIkNsb2Nrc291cmNlL3RpbWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5p
+YyBKWiBTb0NzIiAKPiA+Pj4+Pj4+IMKgK8KgwqDCoCBkZXBlbmRzIG9uIE1BQ0hfSU5HRU5JQyB8
+fCBDT01QSUxFX1RFU1QgCj4gPj4+Pj4+IAo+ID4+Pj4+PiDCoGJvb2wgIkNsb2Nrc291cmNlL3Rp
+bWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5pYyBKWiBTb0NzIiBpZiAKPiA+Pj4+Pj4gQ09NUElM
+RV9URVNUIAo+ID4+Pj4+PiAKPiA+Pj4+Pj4gwqBSZW1vdmUgdGhlIGRlcGVuZHMgTUFDSF9JTkdF
+TklDLiAKPiA+Pj4+PiAKPiA+Pj4+PiDCoFRoaXMgZHJpdmVyIGlzIG5vdCB1c2VmdWwgb24gYW55
+dGhpbmcgZWxzZSB0aGFuIEluZ2VuaWMgU29Dcywgd2h5IAo+ID4+Pj4+IHNob3VsZCBJIAo+ID4+
+Pj4+IMKgcmVtb3ZlIE1BQ0hfSU5HRU5JQyB0aGVuPyAKPiA+Pj4+IAo+ID4+Pj4gRm9yIENPTVBJ
+TEVfVEVTVCBvbiB4ODYuIAo+ID4+PiAKPiA+Pj4gV2VsbCB0aGF0J3MgYSBsb2dpY2FsIE9SIHJp
+Z2h0IGhlcmUsIHNvIGl0IHdpbGwgd29yay4uLiAKPiA+PiAKPiA+PiBSaWdodCwgSSBtaXNzZWQg
+dGhlIHNlY29uZCBwYXJ0IG9mIHRoZSBjb25kaXRpb24uIEZvciBjb25zaXN0ZW5jeSAKPiA+PiBy
+ZWFzb24sIHdlIGRvbid0IGFkZCBhIGRlcGVuZGVuY3kgb24gdGhlIHBsYXRmb3JtLiBUaGUgcGxh
+dGZvcm0gd2lsbCAKPiA+PiBzZWxlY3QgaXQuIExvb2sgdGhlIG90aGVyIHRpbWVyIG9wdGlvbnMg
+YW5kIHlvdSB3aWxsIHNlZSB0aGVyZSBpcyBubyAKPiA+PiBNQUNIIGRlcHMuIEknbSB0cnlpbmcg
+Y29uc29saWRhdGluZyBhbGwgdGhlc2Ugb3B0aW9ucyB0byBoYXZlIHNhbWUgCj4gPj4gZm9ybWF0
+IGFuZCBob3BlZnVsbHkgZmFjdG9yIHRoZW0gb3V0LiAKPiA+IAo+ID4gSSdtIGFsbCBmb3IgZmFj
+dG9yaXNhdGlvbiwgYnV0IHdoYXQgSSBkaXNsaWtlIHdpdGggbm90IGRlcGVuZGluZyBvbiAKPiA+
+IE1BQ0hfSU5HRU5JQywgaXMgdGhhdCB0aGUgZHJpdmVyIG5vdyBhcHBlYXJzIGluIHRoZSBtZW51
+Y29uZmlnIGZvciAKPiA+IGV2ZXJ5IGFyY2gsIGV2ZW4gaWYgaXQgb25seSBhcHBsaWVzIHRvIG9u
+ZSBNSVBTIFNvQy4gCj4KPiBDYW4geW91IGRvIHRoZSBmb2xsb3dpbmcgY2hhbmdlPyAKPgo+IGJv
+b2wgIkNsb2Nrc291cmNlL3RpbWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5pYyBKWiBTb0NzIiBp
+ZiBDT01QSUxFX1RFU1QgCj4KPiBzbyBpdCB3aWxsIGFwcGVhciBvbmx5IHdoZW4gdGhlIENPTVBJ
+TEVfVEVTVCBvcHRpb24gaXMgc2V0IHdoYXRldmVyIHRoZSAKPiBwbGF0Zm9ybSB3aGljaCBpcyB0
+aGUgcHVycG9zZSBvZiB0aGlzIG9wdGlvbiB0byBpbmNyZWFzZSBjb21waWxlIHRlc3QgCj4gY292
+ZXJhZ2UuIAoKT2ssIEkgZ2V0IGl0IG5vdy4gSXQgd29uJ3QgYXBwZWFyIGluIHRoZSBtZW51Y29u
+ZmlnIHVubGVzcyBDT01QSUxFX1RFU1QgaXMgc2VsZWN0ZWQsIGJ1dCBJIGNhbiBzdGlsbCBzZWxl
+Y3QgaXQgZnJvbSB0aGUgcGxhdGZvcm0uCgpUaGFua3MhCi1QYXVs
