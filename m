@@ -1,387 +1,177 @@
-Return-Path: <SRS0=d5cC=GX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.220.in.ua ([89.184.67.205]:39097 "EHLO smtp.220.in.ua"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751216AbeDBMyC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Apr 2018 08:54:02 -0400
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v8 2/2] leds: add LED driver for CR0014114 board
-Date: Mon,  2 Apr 2018 15:53:50 +0300
-Message-Id: <20180402125350.2679-2-oleg@kaa.org.ua>
-In-Reply-To: <20180402125350.2679-1-oleg@kaa.org.ua>
-References: <20180328185616.27711-2-oleg@kaa.org.ua>
- <20180402125350.2679-1-oleg@kaa.org.ua>
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+Return-Path: <SRS0=SQQx=G6=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 1/5] usb: typec: tcpm: pdo matching optimization
+Date: Mon, 9 Apr 2018 06:06:33 +0000
+Message-ID: <VI1PR0402MB3917C91141021F08EC8EF8D889BF0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
+ <1521817127-23061-2-git-send-email-jun.li@nxp.com>
+ <1091023e-5d6c-39e9-f52c-30d84147ef47@redhat.com>
+In-Reply-To: <1091023e-5d6c-39e9-f52c-30d84147ef47@redhat.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Hans de Goede <hdegoede@redhat.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
+Cc: "linux@roeck-us.net" <linux@roeck-us.net>, "rmfrfs@gmail.com" <rmfrfs@gmail.com>, "yueyao.zhu@gmail.com" <yueyao.zhu@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a LED class driver for the RGB LEDs found on
-the Crane Merchandising System CR0014114 LEDs board.
-
-Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
----
- drivers/leds/Kconfig          |  13 ++
- drivers/leds/Makefile         |   1 +
- drivers/leds/leds-cr0014114.c | 314 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 328 insertions(+)
- create mode 100644 drivers/leds/leds-cr0014114.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 2c896c0e69e1..5831814d01d0 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -104,6 +104,19 @@ config LEDS_CPCAP
- 	  This option enables support for LEDs offered by Motorola's
- 	  CPCAP PMIC.
- 
-+config LEDS_CR0014114
-+	tristate "LED Support for Crane CR0014114"
-+	depends on LEDS_CLASS
-+	depends on SPI
-+	depends on OF
-+	help
-+	  This option enables support for CR0014114 LED Board which
-+	  is widely used in vending machines produced by
-+	  Crane Merchandising Systems.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-cr0014114.
-+
- config LEDS_LM3530
- 	tristate "LCD Backlight driver for LM3530"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 91eca81cae82..0176e7335994 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
- obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
- 
- # LED SPI Drivers
-+obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
- 
- # LED Userspace Drivers
-diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
-new file mode 100644
-index 000000000000..9d0417207827
---- /dev/null
-+++ b/drivers/leds/leds-cr0014114.c
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018 Crane Merchandising Systems. All rights reserved.
-+// Copyright (C) 2018 Oleh Kravchenko <oleg@kaa.org.ua>
-+
-+#include <linux/delay.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/workqueue.h>
-+#include <uapi/linux/uleds.h>
-+
-+/*
-+ *  CR0014114 SPI protocol descrtiption:
-+ *  +----+-----------------------------------+----+
-+ *  | CMD|             BRIGHTNESS            |CRC |
-+ *  +----+-----------------------------------+----+
-+ *  |    | LED0| LED1| LED2| LED3| LED4| LED5|    |
-+ *  |    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    |
-+ *  |    |R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|R|G|B|    |
-+ *  | 1  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 1  |
-+ *  |    |1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|    |
-+ *  |    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    |
-+ *  |    |               18                  |    |
-+ *  +----+-----------------------------------+----+
-+ *  |                    20                       |
-+ *  +---------------------------------------------+
-+ *
-+ *  PS: Boards can be connected to the chain:
-+ *      SPI -> board0 -> board1 -> board2 ..
-+ */
-+
-+/* CR0014114 SPI commands */
-+#define CR_SET_BRIGHTNESS	0x80
-+#define CR_INIT_REENUMERATE	0x81
-+#define CR_NEXT_REENUMERATE	0x82
-+
-+/* CR0014114 default settings */
-+#define CR_MAX_BRIGHTNESS	GENMASK(6, 0)
-+#define CR_FW_DELAY_MSEC	10
-+#define CR_RECOUNT_DELAY	(HZ * 3600)
-+
-+struct cr0014114_led {
-+	char			name[LED_MAX_NAME_SIZE];
-+	struct cr0014114	*priv;
-+	struct led_classdev	ldev;
-+	u8			brightness;
-+};
-+
-+struct cr0014114 {
-+	bool			do_recount;
-+	size_t			count;
-+	struct delayed_work	work;
-+	struct device		*dev;
-+	struct mutex		lock;
-+	struct spi_device	*spi;
-+	u8			*buf;
-+	unsigned long		delay;
-+	struct cr0014114_led	leds[];
-+};
-+
-+static void cr0014114_calc_crc(u8 *buf, const size_t len)
-+{
-+	size_t	i;
-+	u8	crc;
-+
-+	for (i = 1, crc = 1; i < len - 1; i++)
-+		crc += buf[i];
-+	crc |= BIT(7);
-+
-+	/* special case when CRC matches the SPI commands */
-+	if (crc == CR_SET_BRIGHTNESS ||
-+	    crc == CR_INIT_REENUMERATE ||
-+	    crc == CR_NEXT_REENUMERATE)
-+		crc = 0xfe;
-+
-+	buf[len - 1] = crc;
-+}
-+
-+static int cr0014114_recount(struct cr0014114 *priv)
-+{
-+	int	ret;
-+	size_t	i;
-+	u8	cmd;
-+
-+	dev_dbg(priv->dev, "LEDs recount is started\n");
-+
-+	cmd = CR_INIT_REENUMERATE;
-+	ret = spi_write(priv->spi, &cmd, sizeof(cmd));
-+	if (ret)
-+		goto err;
-+
-+	cmd = CR_NEXT_REENUMERATE;
-+	for (i = 0; i < priv->count; i++) {
-+		msleep(CR_FW_DELAY_MSEC);
-+
-+		ret = spi_write(priv->spi, &cmd, sizeof(cmd));
-+		if (ret)
-+			goto err;
-+	}
-+
-+err:
-+	dev_dbg(priv->dev, "LEDs recount is finished\n");
-+
-+	if (ret)
-+		dev_err(priv->dev, "with error %d", ret);
-+
-+	return ret;
-+}
-+
-+static int cr0014114_sync(struct cr0014114 *priv)
-+{
-+	int		ret;
-+	size_t		i;
-+	unsigned long	udelay, now = jiffies;
-+
-+	/* to avoid SPI mistiming with firmware we should wait some time */
-+	if (time_after(priv->delay, now)) {
-+		udelay = jiffies_to_usecs(priv->delay - now);
-+		usleep_range(udelay, udelay + 1);
-+	}
-+
-+	if (unlikely(priv->do_recount)) {
-+		ret = cr0014114_recount(priv);
-+		if (ret)
-+			goto err;
-+
-+		priv->do_recount = false;
-+		msleep(CR_FW_DELAY_MSEC);
-+	}
-+
-+	priv->buf[0] = CR_SET_BRIGHTNESS;
-+	for (i = 0; i < priv->count; i++)
-+		priv->buf[i + 1] = priv->leds[i].brightness;
-+	cr0014114_calc_crc(priv->buf, priv->count + 2);
-+	ret = spi_write(priv->spi, priv->buf, priv->count + 2);
-+
-+err:
-+	priv->delay = jiffies + msecs_to_jiffies(CR_FW_DELAY_MSEC);
-+
-+	return ret;
-+}
-+
-+static void cr0014114_recount_work(struct work_struct *work)
-+{
-+	int			ret;
-+	struct cr0014114	*priv = container_of(work,
-+						     struct cr0014114,
-+						     work.work);
-+
-+	mutex_lock(&priv->lock);
-+	priv->do_recount = true;
-+	ret = cr0014114_sync(priv);
-+	mutex_unlock(&priv->lock);
-+
-+	if (ret)
-+		dev_warn(priv->dev, "sync of LEDs failed %d\n", ret);
-+
-+	schedule_delayed_work(&priv->work, CR_RECOUNT_DELAY);
-+}
-+
-+static int cr0014114_set_sync(struct led_classdev *ldev,
-+			      enum led_brightness brightness)
-+{
-+	int			ret;
-+	struct cr0014114_led    *led = container_of(ldev,
-+						    struct cr0014114_led,
-+						    ldev);
-+
-+	dev_dbg(led->priv->dev, "Set brightness of %s to %d\n",
-+		led->name, brightness);
-+
-+	mutex_lock(&led->priv->lock);
-+	led->brightness = (u8)brightness;
-+	ret = cr0014114_sync(led->priv);
-+	mutex_unlock(&led->priv->lock);
-+
-+	return ret;
-+}
-+
-+static int cr0014114_probe_dt(struct cr0014114 *priv)
-+{
-+	size_t			i = 0;
-+	struct cr0014114_led	*led;
-+	struct fwnode_handle	*child;
-+	struct device_node	*np;
-+	int			ret;
-+	const char		*str;
-+
-+	device_for_each_child_node(priv->dev, child) {
-+		np = to_of_node(child);
-+		led = &priv->leds[i];
-+
-+		ret = fwnode_property_read_string(child, "label", &str);
-+		if (ret)
-+			snprintf(led->name, sizeof(led->name),
-+				 "cr0014114::");
-+		else
-+			snprintf(led->name, sizeof(led->name),
-+				 "cr0014114:%s", str);
-+
-+		fwnode_property_read_string(child, "linux,default-trigger",
-+					    &led->ldev.default_trigger);
-+
-+		led->priv			  = priv;
-+		led->ldev.name			  = led->name;
-+		led->ldev.max_brightness	  = CR_MAX_BRIGHTNESS;
-+		led->ldev.brightness_set_blocking = cr0014114_set_sync;
-+
-+		ret = devm_of_led_classdev_register(priv->dev, np,
-+						    &led->ldev);
-+		if (ret) {
-+			dev_err(priv->dev,
-+				"failed to register LED device %s, err %d",
-+				led->name, ret);
-+			fwnode_handle_put(child);
-+			return ret;
-+		}
-+
-+		led->ldev.dev->of_node = np;
-+
-+		i++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cr0014114_probe(struct spi_device *spi)
-+{
-+	struct cr0014114	*priv;
-+	size_t			count;
-+	int			ret;
-+
-+	count = device_get_child_node_count(&spi->dev);
-+	if (!count) {
-+		dev_err(&spi->dev, "LEDs are not defined in device tree!");
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&spi->dev,
-+			    sizeof(*priv) + sizeof(*priv->leds) * count,
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->buf = devm_kzalloc(&spi->dev, count + 2, GFP_KERNEL);
-+	if (!priv->buf)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->lock);
-+	INIT_DELAYED_WORK(&priv->work, cr0014114_recount_work);
-+	priv->count	= count;
-+	priv->dev	= &spi->dev;
-+	priv->spi	= spi;
-+	priv->delay	= jiffies -
-+			  msecs_to_jiffies(CR_FW_DELAY_MSEC);
-+
-+	priv->do_recount = true;
-+	ret = cr0014114_sync(priv);
-+	if (ret) {
-+		dev_err(priv->dev, "first recount failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	priv->do_recount = true;
-+	ret = cr0014114_sync(priv);
-+	if (ret) {
-+		dev_err(priv->dev, "second recount failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = cr0014114_probe_dt(priv);
-+	if (ret)
-+		return ret;
-+
-+	/* setup recount work to workaround buggy firmware */
-+	schedule_delayed_work(&priv->work, CR_RECOUNT_DELAY);
-+
-+	spi_set_drvdata(spi, priv);
-+
-+	return 0;
-+}
-+
-+static int cr0014114_remove(struct spi_device *spi)
-+{
-+	struct cr0014114 *priv = spi_get_drvdata(spi);
-+
-+	cancel_delayed_work_sync(&priv->work);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cr0014114_dt_ids[] = {
-+	{ .compatible = "crane,cr0014114", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, cr0014114_dt_ids);
-+
-+static struct spi_driver cr0014114_driver = {
-+	.probe		= cr0014114_probe,
-+	.remove		= cr0014114_remove,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= cr0014114_dt_ids,
-+	},
-+};
-+
-+module_spi_driver(cr0014114_driver);
-+
-+MODULE_AUTHOR("Oleh Kravchenko <oleg@kaa.org.ua>");
-+MODULE_DESCRIPTION("cr0014114 LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("spi:cr0014114");
--- 
-2.16.1
-
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSBb
+bWFpbHRvOmhkZWdvZWRlQHJlZGhhdC5jb21dDQo+IFNlbnQ6IDIwMTjlubQ05pyIM+aXpSAyMzox
+Nw0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24u
+b3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoZWlra2ku
+a3JvZ2VydXNAbGludXguaW50ZWwuY29tDQo+IENjOiBsaW51eEByb2Vjay11cy5uZXQ7IHJtZnJm
+c0BnbWFpbC5jb207IHl1ZXlhby56aHVAZ21haWwuY29tOw0KPiBsaW51eC11c2JAdmdlci5rZXJu
+ZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14DQo+IDxsaW51
+eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzVdIHVzYjogdHlwZWM6
+IHRjcG06IHBkbyBtYXRjaGluZyBvcHRpbWl6YXRpb24NCj4gDQo+IEhpLA0KPiANCj4gT24gMjMt
+MDMtMTggMTU6NTgsIExpIEp1biB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGlzIGEgY29tYmluYXRp
+b24gb2YgY29tbWl0IDU3ZTZmMGQ3YjgwNA0KPiA+ICgidHlwZWM6IHRjcG06IE9ubHkgcmVxdWVz
+dCBtYXRjaGluZyBwZG9zIikgYW5kIHNvdXJjZSBwZG8gc2VsZWN0aW9uDQo+ID4gb3B0aW1pemF0
+aW9uIGJhc2VkIG9uIGl0LCBpbnN0ZWFkIG9mIG9ubHkgY29tcGFyZSBiZXR3ZWVuIHRoZSBzYW1l
+IHBkbw0KPiA+IHR5cGUgb2Ygc2luayBhbmQgc291cmNlLCB3ZSBzaG91bGQgY2hlY2sgc291cmNl
+IHBkbyB2b2x0YWdlIHJhbmdlIGlzDQo+ID4gd2l0aGluIHRoZSB2b2x0YWdlIHJhbmdlIG9mIG9u
+ZSBzaW5rIHBkby4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5j
+b20+DQo+ID4gLS0tDQo+ID4gICBkcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCAxMjcNCj4gKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0NCj4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspLCAzNyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgYi9kcml2ZXJzL3VzYi90eXBlYy90
+Y3BtLmMgaW5kZXgNCj4gPiA2NzdkMTIxLi41MGExOTc5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvdXNiL3R5cGVjL3RjcG0uYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYw0K
+PiA+IEBAIC0yNTQsNiArMjU0LDkgQEAgc3RydWN0IHRjcG1fcG9ydCB7DQo+ID4gICAJdW5zaWdu
+ZWQgaW50IG5yX3NyY19wZG87DQo+ID4gICAJdTMyIHNua19wZG9bUERPX01BWF9PQkpFQ1RTXTsN
+Cj4gPiAgIAl1bnNpZ25lZCBpbnQgbnJfc25rX3BkbzsNCj4gPiArCXVuc2lnbmVkIGludCBucl9m
+aXhlZDsgLyogbnVtYmVyIG9mIGZpeGVkIHNpbmsgUERPcyAqLw0KPiA+ICsJdW5zaWduZWQgaW50
+IG5yX3ZhcjsgLyogbnVtYmVyIG9mIHZhcmlhYmxlIHNpbmsgUERPcyAqLw0KPiA+ICsJdW5zaWdu
+ZWQgaW50IG5yX2JhdHQ7IC8qIG51bWJlciBvZiBiYXR0ZXJ5IHNpbmsgUERPcyAqLw0KPiA+ICAg
+CXUzMiBzbmtfdmRvW1ZET19NQVhfT0JKRUNUU107DQo+ID4gICAJdW5zaWduZWQgaW50IG5yX3Nu
+a192ZG87DQo+ID4NCj4gDQo+IFRoZXNlIDMgdmFyaWFibGVzIGFyZSBub3cgbm8gbG9uZ2VyIG5l
+ZWRlZC4NCg0KWWVzLCBJIHdpbGwgcmVtb3ZlIHRoZW0uDQoNCj4gDQo+ID4gQEAgLTE3NzIsNDAg
+KzE3NzUsNjUgQEAgc3RhdGljIGludCB0Y3BtX3BkX2NoZWNrX3JlcXVlc3Qoc3RydWN0DQo+IHRj
+cG1fcG9ydCAqcG9ydCkNCj4gPiAgIAlyZXR1cm4gMDsNCj4gPiAgIH0NCj4gPg0KPiA+IC1zdGF0
+aWMgaW50IHRjcG1fcGRfc2VsZWN0X3BkbyhzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0KQ0KPiA+ICsj
+ZGVmaW5lIG1pbl9wb3dlcih4LCB5KSBtaW4ocGRvX21heF9wb3dlcih4KSwgcGRvX21heF9wb3dl
+cih5KSkNCj4gPiArI2RlZmluZSBtaW5fY3VycmVudCh4LCB5KSBtaW4ocGRvX21heF9jdXJyZW50
+KHgpLCBwZG9fbWF4X2N1cnJlbnQoeSkpDQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHRjcG1fcGRf
+c2VsZWN0X3BkbyhzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0LCBpbnQgKnNpbmtfcGRvLA0KPiA+ICsJ
+CQkgICAgICBpbnQgKnNyY19wZG8pDQo+ID4gICB7DQo+ID4gLQl1bnNpZ25lZCBpbnQgaSwgbWF4
+X213ID0gMCwgbWF4X212ID0gMDsNCj4gPiArCXVuc2lnbmVkIGludCBpLCBqLCBtYXhfc3JjX212
+ID0gMCwgbWluX3NyY19tdiA9IDAsIG1heF9tdyA9IDAsDQo+ID4gKwkJICAgICBtYXhfbXYgPSAw
+LCBzcmNfbXcgPSAwLCBzcmNfbWEgPSAwLCBtYXhfc25rX212ID0gMCwNCj4gPiArCQkgICAgIG1p
+bl9zbmtfbXYgPSAwOw0KPiA+ICAgCWludCByZXQgPSAtRUlOVkFMOw0KPiA+DQo+ID4gICAJLyoN
+Cj4gPiAtCSAqIFNlbGVjdCB0aGUgc291cmNlIFBETyBwcm92aWRpbmcgdGhlIG1vc3QgcG93ZXIg
+d2hpbGUgc3RheWluZyB3aXRoaW4NCj4gPiAtCSAqIHRoZSBib2FyZCdzIHZvbHRhZ2UgbGltaXRz
+LiBQcmVmZXIgUERPIHByb3ZpZGluZyBleHANCj4gPiArCSAqIFNlbGVjdCB0aGUgc291cmNlIFBE
+TyBwcm92aWRpbmcgdGhlIG1vc3QgcG93ZXIgd2hpY2ggaGFzIGENCj4gPiArCSAqIG1hdGNoaWcg
+c2luayBjYXAuDQo+ID4gICAJICovDQo+ID4gICAJZm9yIChpID0gMDsgaSA8IHBvcnQtPm5yX3Nv
+dXJjZV9jYXBzOyBpKyspIHsNCj4gPiAgIAkJdTMyIHBkbyA9IHBvcnQtPnNvdXJjZV9jYXBzW2ld
+Ow0KPiA+ICAgCQllbnVtIHBkX3Bkb190eXBlIHR5cGUgPSBwZG9fdHlwZShwZG8pOw0KPiA+IC0J
+CXVuc2lnbmVkIGludCBtdiwgbWEsIG13Ow0KPiA+DQo+ID4gLQkJaWYgKHR5cGUgPT0gUERPX1RZ
+UEVfRklYRUQpDQo+ID4gLQkJCW12ID0gcGRvX2ZpeGVkX3ZvbHRhZ2UocGRvKTsNCj4gPiAtCQll
+bHNlDQo+ID4gLQkJCW12ID0gcGRvX21pbl92b2x0YWdlKHBkbyk7DQo+ID4gKwkJaWYgKHR5cGUg
+PT0gUERPX1RZUEVfRklYRUQpIHsNCj4gPiArCQkJbWF4X3NyY19tdiA9IHBkb19maXhlZF92b2x0
+YWdlKHBkbyk7DQo+ID4gKwkJCW1pbl9zcmNfbXYgPSBtYXhfc3JjX212Ow0KPiA+ICsJCX0gZWxz
+ZSB7DQo+ID4gKwkJCW1heF9zcmNfbXYgPSBwZG9fbWF4X3ZvbHRhZ2UocGRvKTsNCj4gPiArCQkJ
+bWluX3NyY19tdiA9IHBkb19taW5fdm9sdGFnZShwZG8pOw0KPiA+ICsJCX0NCj4gPg0KPiA+ICAg
+CQlpZiAodHlwZSA9PSBQRE9fVFlQRV9CQVRUKSB7DQo+ID4gLQkJCW13ID0gcGRvX21heF9wb3dl
+cihwZG8pOw0KPiA+ICsJCQlzcmNfbXcgPSBwZG9fbWF4X3Bvd2VyKHBkbyk7DQo+ID4gICAJCX0g
+ZWxzZSB7DQo+ID4gLQkJCW1hID0gbWluKHBkb19tYXhfY3VycmVudChwZG8pLA0KPiA+IC0JCQkJ
+IHBvcnQtPm1heF9zbmtfbWEpOw0KPiA+IC0JCQltdyA9IG1hICogbXYgLyAxMDAwOw0KPiA+ICsJ
+CQlzcmNfbWEgPSBwZG9fbWF4X2N1cnJlbnQocGRvKTsNCj4gPiArCQkJc3JjX213ID0gc3JjX21h
+ICogbWluX3NyY19tdiAvIDEwMDA7DQo+ID4gICAJCX0NCj4gPg0KPiA+IC0JCS8qIFBlcmZlciBo
+aWdoZXIgdm9sdGFnZXMgaWYgYXZhaWxhYmxlICovDQo+ID4gLQkJaWYgKChtdyA+IG1heF9tdyB8
+fCAobXcgPT0gbWF4X213ICYmIG12ID4gbWF4X212KSkgJiYNCj4gPiAtCQkgICAgbXYgPD0gcG9y
+dC0+bWF4X3Nua19tdikgew0KPiA+IC0JCQlyZXQgPSBpOw0KPiA+IC0JCQltYXhfbXcgPSBtdzsN
+Cj4gPiAtCQkJbWF4X212ID0gbXY7DQo+ID4gKwkJZm9yIChqID0gMDsgaiA8IHBvcnQtPm5yX3Nu
+a19wZG87IGorKykgew0KPiA+ICsJCQlwZG8gPSBwb3J0LT5zbmtfcGRvW2pdOw0KPiA+ICsNCj4g
+PiArCQkJaWYgKHBkb190eXBlKHBkbykgPT0gUERPX1RZUEVfRklYRUQpIHsNCj4gPiArCQkJCW1p
+bl9zbmtfbXYgPSBwZG9fZml4ZWRfdm9sdGFnZShwZG8pOw0KPiA+ICsJCQkJbWF4X3Nua19tdiA9
+IHBkb19maXhlZF92b2x0YWdlKHBkbyk7DQo+ID4gKwkJCX0gZWxzZSB7DQo+ID4gKwkJCQltaW5f
+c25rX212ID0gcGRvX21pbl92b2x0YWdlKHBkbyk7DQo+ID4gKwkJCQltYXhfc25rX212ID0gcGRv
+X21heF92b2x0YWdlKHBkbyk7DQo+ID4gKwkJCX0NCj4gPiArDQo+ID4gKwkJCWlmIChtYXhfc3Jj
+X212IDw9IG1heF9zbmtfbXYgJiYNCj4gPiArCQkJCW1pbl9zcmNfbXYgPj0gbWluX3Nua19tdikg
+ew0KPiA+ICsJCQkJLyogUHJlZmVyIGhpZ2hlciB2b2x0YWdlcyBpZiBhdmFpbGFibGUgKi8NCj4g
+PiArCQkJCWlmICgoc3JjX213ID09IG1heF9tdyAmJiBtaW5fc3JjX212ID4gbWF4X212KSB8fA0K
+PiA+ICsJCQkJCQkJc3JjX213ID4gbWF4X213KSB7DQo+ID4gKwkJCQkJKnNyY19wZG8gPSBpOw0K
+PiA+ICsJCQkJCSpzaW5rX3BkbyA9IGo7DQo+ID4gKwkJCQkJbWF4X213ID0gc3JjX213Ow0KPiA+
+ICsJCQkJCW1heF9tdiA9IG1pbl9zcmNfbXY7DQo+ID4gKwkJCQl9DQo+ID4gKwkJCQlicmVhazsN
+Cj4gPiArCQkJfQ0KPiA+ICAgCQl9DQo+ID4gKw0KPiA+ICAgCX0NCj4gPg0KPiA+ICAgCXJldHVy
+biByZXQ7DQo+ID4gQEAgLTE4MTYsMTMgKzE4NDQsMTQgQEAgc3RhdGljIGludCB0Y3BtX3BkX2J1
+aWxkX3JlcXVlc3Qoc3RydWN0IHRjcG1fcG9ydA0KPiAqcG9ydCwgdTMyICpyZG8pDQo+ID4gICAJ
+dW5zaWduZWQgaW50IG12LCBtYSwgbXcsIGZsYWdzOw0KPiA+ICAgCXVuc2lnbmVkIGludCBtYXhf
+bWEsIG1heF9tdzsNCj4gPiAgIAllbnVtIHBkX3Bkb190eXBlIHR5cGU7DQo+ID4gLQlpbnQgaW5k
+ZXg7DQo+ID4gLQl1MzIgcGRvOw0KPiA+ICsJaW50IHNyY19wZG9faW5kZXgsIHNua19wZG9faW5k
+ZXg7DQo+ID4gKwl1MzIgcGRvLCBtYXRjaGluZ19zbmtfcGRvOw0KPiA+DQo+ID4gLQlpbmRleCA9
+IHRjcG1fcGRfc2VsZWN0X3Bkbyhwb3J0KTsNCj4gPiAtCWlmIChpbmRleCA8IDApDQo+ID4gKwlp
+ZiAodGNwbV9wZF9zZWxlY3RfcGRvKHBvcnQsICZzbmtfcGRvX2luZGV4LCAmc3JjX3Bkb19pbmRl
+eCkgPCAwKQ0KPiA+ICAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiAtCXBkbyA9IHBvcnQtPnNvdXJj
+ZV9jYXBzW2luZGV4XTsNCj4gPiArDQo+ID4gKwlwZG8gPSBwb3J0LT5zb3VyY2VfY2Fwc1tzcmNf
+cGRvX2luZGV4XTsNCj4gPiArCW1hdGNoaW5nX3Nua19wZG8gPSBwb3J0LT5zbmtfcGRvW3Nua19w
+ZG9faW5kZXhdOw0KPiA+ICAgCXR5cGUgPSBwZG9fdHlwZShwZG8pOw0KPiA+DQo+ID4gICAJaWYg
+KHR5cGUgPT0gUERPX1RZUEVfRklYRUQpDQo+ID4gQEAgLTE4MzAsMjYgKzE4NTksMjggQEAgc3Rh
+dGljIGludCB0Y3BtX3BkX2J1aWxkX3JlcXVlc3Qoc3RydWN0IHRjcG1fcG9ydA0KPiAqcG9ydCwg
+dTMyICpyZG8pDQo+ID4gICAJZWxzZQ0KPiA+ICAgCQltdiA9IHBkb19taW5fdm9sdGFnZShwZG8p
+Ow0KPiA+DQo+ID4gLQkvKiBTZWxlY3QgbWF4aW11bSBhdmFpbGFibGUgY3VycmVudCB3aXRoaW4g
+dGhlIGJvYXJkJ3MgcG93ZXIgbGltaXQgKi8NCj4gPiArCS8qIFNlbGVjdCBtYXhpbXVtIGF2YWls
+YWJsZSBjdXJyZW50IHdpdGhpbiB0aGUgc2luayBwZG8ncyBsaW1pdCAqLw0KPiA+ICAgCWlmICh0
+eXBlID09IFBET19UWVBFX0JBVFQpIHsNCj4gPiAtCQltdyA9IHBkb19tYXhfcG93ZXIocGRvKTsN
+Cj4gPiAtCQltYSA9IDEwMDAgKiBtaW4obXcsIHBvcnQtPm1heF9zbmtfbXcpIC8gbXY7DQo+ID4g
+KwkJbXcgPSBtaW5fcG93ZXIocGRvLCBtYXRjaGluZ19zbmtfcGRvKTsNCj4gPiArCQltYSA9IDEw
+MDAgKiBtdyAvIG12Ow0KPiA+ICAgCX0gZWxzZSB7DQo+ID4gLQkJbWEgPSBtaW4ocGRvX21heF9j
+dXJyZW50KHBkbyksDQo+ID4gLQkJCSAxMDAwICogcG9ydC0+bWF4X3Nua19tdyAvIG12KTsNCj4g
+PiArCQltYSA9IG1pbl9jdXJyZW50KHBkbywgbWF0Y2hpbmdfc25rX3Bkbyk7DQo+ID4gKwkJbXcg
+PSBtYSAqIG12IC8gMTAwMDsNCj4gPiAgIAl9DQo+ID4gLQltYSA9IG1pbihtYSwgcG9ydC0+bWF4
+X3Nua19tYSk7DQo+ID4NCj4gPiAgIAlmbGFncyA9IFJET19VU0JfQ09NTSB8IFJET19OT19TVVNQ
+RU5EOw0KPiA+DQo+ID4gICAJLyogU2V0IG1pc21hdGNoIGJpdCBpZiBvZmZlcmVkIHBvd2VyIGlz
+IGxlc3MgdGhhbiBvcGVyYXRpbmcgcG93ZXIgKi8NCj4gPiAtCW13ID0gbWEgKiBtdiAvIDEwMDA7
+DQo+ID4gICAJbWF4X21hID0gbWE7DQo+ID4gICAJbWF4X213ID0gbXc7DQo+ID4gICAJaWYgKG13
+IDwgcG9ydC0+b3BlcmF0aW5nX3Nua19tdykgew0KPiA+ICAgCQlmbGFncyB8PSBSRE9fQ0FQX01J
+U01BVENIOw0KPiA+IC0JCW1heF9tdyA9IHBvcnQtPm9wZXJhdGluZ19zbmtfbXc7DQo+ID4gLQkJ
+bWF4X21hID0gbWF4X213ICogMTAwMCAvIG12Ow0KPiA+ICsJCWlmICh0eXBlID09IFBET19UWVBF
+X0JBVFQgJiYNCj4gPiArCQkgICAgKHBkb19tYXhfcG93ZXIobWF0Y2hpbmdfc25rX3BkbykgPiBw
+ZG9fbWF4X3Bvd2VyKHBkbykpKQ0KPiA+ICsJCQltYXhfbXcgPSBwZG9fbWF4X3Bvd2VyKG1hdGNo
+aW5nX3Nua19wZG8pOw0KPiA+ICsJCWVsc2UgaWYgKHBkb19tYXhfY3VycmVudChtYXRjaGluZ19z
+bmtfcGRvKSA+DQo+ID4gKwkJCSBwZG9fbWF4X2N1cnJlbnQocGRvKSkNCj4gPiArCQkJbWF4X21h
+ID0gcGRvX21heF9jdXJyZW50KG1hdGNoaW5nX3Nua19wZG8pOw0KPiA+ICAgCX0NCj4gPg0KPiA+
+ICAgCXRjcG1fbG9nKHBvcnQsICJjYz0lZCBjYzE9JWQgY2MyPSVkIHZidXM9JWQgdmNvbm49JXMg
+cG9sYXJpdHk9JWQiLA0KPiA+IEBAIC0xODU4LDE2ICsxODg5LDE2IEBAIHN0YXRpYyBpbnQgdGNw
+bV9wZF9idWlsZF9yZXF1ZXN0KHN0cnVjdCB0Y3BtX3BvcnQNCj4gKnBvcnQsIHUzMiAqcmRvKQ0K
+PiA+ICAgCQkgcG9ydC0+cG9sYXJpdHkpOw0KPiA+DQo+ID4gICAJaWYgKHR5cGUgPT0gUERPX1RZ
+UEVfQkFUVCkgew0KPiA+IC0JCSpyZG8gPSBSRE9fQkFUVChpbmRleCArIDEsIG13LCBtYXhfbXcs
+IGZsYWdzKTsNCj4gPiArCQkqcmRvID0gUkRPX0JBVFQoc3JjX3Bkb19pbmRleCArIDEsIG13LCBt
+YXhfbXcsIGZsYWdzKTsNCj4gPg0KPiA+ICAgCQl0Y3BtX2xvZyhwb3J0LCAiUmVxdWVzdGluZyBQ
+RE8gJWQ6ICV1IG1WLCAldSBtVyVzIiwNCj4gPiAtCQkJIGluZGV4LCBtdiwgbXcsDQo+ID4gKwkJ
+CSBzcmNfcGRvX2luZGV4LCBtdiwgbXcsDQo+ID4gICAJCQkgZmxhZ3MgJiBSRE9fQ0FQX01JU01B
+VENIID8gIiBbbWlzbWF0Y2hdIiA6ICIiKTsNCj4gPiAgIAl9IGVsc2Ugew0KPiA+IC0JCSpyZG8g
+PSBSRE9fRklYRUQoaW5kZXggKyAxLCBtYSwgbWF4X21hLCBmbGFncyk7DQo+ID4gKwkJKnJkbyA9
+IFJET19GSVhFRChzcmNfcGRvX2luZGV4ICsgMSwgbWEsIG1heF9tYSwgZmxhZ3MpOw0KPiA+DQo+
+ID4gICAJCXRjcG1fbG9nKHBvcnQsICJSZXF1ZXN0aW5nIFBETyAlZDogJXUgbVYsICV1IG1BJXMi
+LA0KPiA+IC0JCQkgaW5kZXgsIG12LCBtYSwNCj4gPiArCQkJIHNyY19wZG9faW5kZXgsIG12LCBt
+YSwNCj4gPiAgIAkJCSBmbGFncyAmIFJET19DQVBfTUlTTUFUQ0ggPyAiIFttaXNtYXRjaF0iIDog
+IiIpOw0KPiA+ICAgCX0NCj4gPg0KPiA+IEBAIC0zNTk5LDYgKzM2MzAsMTkgQEAgaW50IHRjcG1f
+dXBkYXRlX3NpbmtfY2FwYWJpbGl0aWVzKHN0cnVjdCB0Y3BtX3BvcnQNCj4gKnBvcnQsIGNvbnN0
+IHUzMiAqcGRvLA0KPiA+ICAgfQ0KPiA+ICAgRVhQT1JUX1NZTUJPTF9HUEwodGNwbV91cGRhdGVf
+c2lua19jYXBhYmlsaXRpZXMpOw0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgbnJfdHlwZV9wZG9zKGNv
+bnN0IHUzMiAqcGRvLCB1bnNpZ25lZCBpbnQgbnJfcGRvLA0KPiA+ICsJCQllbnVtIHBkX3Bkb190
+eXBlIHR5cGUpDQo+ID4gK3sNCj4gPiArCWludCBjb3VudCA9IDA7DQo+ID4gKwlpbnQgaTsNCj4g
+PiArDQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwgbnJfcGRvOyBpKyspIHsNCj4gPiArCQlpZiAocGRv
+X3R5cGUocGRvW2ldKSA9PSB0eXBlKQ0KPiA+ICsJCQljb3VudCsrOw0KPiA+ICsJfQ0KPiA+ICsJ
+cmV0dXJuIGNvdW50Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICAgc3RydWN0IHRjcG1fcG9ydCAqdGNw
+bV9yZWdpc3Rlcl9wb3J0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHRjcGNfZGV2DQo+ICp0
+Y3BjKQ0KPiA+ICAgew0KPiA+ICAgCXN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQ7DQo+ID4gQEAgLTM2
+NDQsNiArMzY4OCwxNSBAQCBzdHJ1Y3QgdGNwbV9wb3J0ICp0Y3BtX3JlZ2lzdGVyX3BvcnQoc3Ry
+dWN0IGRldmljZQ0KPiAqZGV2LCBzdHJ1Y3QgdGNwY19kZXYgKnRjcGMpDQo+ID4gICAJCQkJCSAg
+dGNwYy0+Y29uZmlnLT5ucl9zcmNfcGRvKTsNCj4gPiAgIAlwb3J0LT5ucl9zbmtfcGRvID0gdGNw
+bV9jb3B5X3Bkb3MocG9ydC0+c25rX3BkbywNCj4gdGNwYy0+Y29uZmlnLT5zbmtfcGRvLA0KPiA+
+ICAgCQkJCQkgIHRjcGMtPmNvbmZpZy0+bnJfc25rX3Bkbyk7DQo+ID4gKwlwb3J0LT5ucl9maXhl
+ZCA9ICBucl90eXBlX3Bkb3MocG9ydC0+c25rX3BkbywNCj4gPiArCQkJCSAgICAgICBwb3J0LT5u
+cl9zbmtfcGRvLA0KPiA+ICsJCQkJICAgICAgIFBET19UWVBFX0ZJWEVEKTsNCj4gPiArCXBvcnQt
+Pm5yX3ZhciA9IG5yX3R5cGVfcGRvcyhwb3J0LT5zbmtfcGRvLA0KPiA+ICsJCQkJICAgIHBvcnQt
+Pm5yX3Nua19wZG8sDQo+ID4gKwkJCQkgICAgUERPX1RZUEVfVkFSKTsNCj4gPiArCXBvcnQtPm5y
+X2JhdHQgPSBucl90eXBlX3Bkb3MocG9ydC0+c25rX3BkbywNCj4gPiArCQkJCSAgICAgcG9ydC0+
+bnJfc25rX3BkbywNCj4gPiArCQkJCSAgICAgUERPX1RZUEVfQkFUVCk7DQo+ID4gICAJcG9ydC0+
+bnJfc25rX3ZkbyA9IHRjcG1fY29weV92ZG9zKHBvcnQtPnNua192ZG8sDQo+IHRjcGMtPmNvbmZp
+Zy0+c25rX3ZkbywNCj4gPiAgIAkJCQkJICB0Y3BjLT5jb25maWctPm5yX3Nua192ZG8pOw0KPiA+
+DQo+ID4NCj4gDQo+IEFuZCB0aGUgY29kZSBzZXR0aW5nIHRoZW0gdGh1cyBhbHNvIGlzIG5vIGxv
+bmdlciBuZWVkZWQuDQoNCkkgd2lsbCByZW1vdmUgdGhlbS4NCg0KPiANCj4gT3RoZXJ3aXNlIHRo
+aXMgbG9va3MgZ29vZCB0byBtZSBub3cuDQoNClRoYW5rcyBmb3IgcmV2aWV3Lg0KDQpKdW4NCj4g
+DQo+IFJlZ2FyZHMsDQo+IA0KPiBIYW5zDQo+IA0KDQo=
