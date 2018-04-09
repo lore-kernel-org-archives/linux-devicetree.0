@@ -1,302 +1,291 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
-Date: Tue, 10 Apr 2018 21:03:46 +0900
-Message-Id: <1523361826-8772-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=o6D7=G6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-by2nam01on0054.outbound.protection.outlook.com ([104.47.34.54]:36592
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754431AbeDIUXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Apr 2018 16:23:34 -0400
+Subject: Re: [PATCH v4 1/2] iio:imu: inv_mpu6050: support more interrupt types
+References: <20180406220048.29498-1-mkelly@xevo.com>
+ <b4876896-7d59-368c-f537-f74d53848163@invensense.com>
+From: Martin Kelly <mkelly@xevo.com>
+Message-ID: <1e8465b4-811d-ec38-ff47-c3da3d585067@xevo.com>
+Date: Mon, 9 Apr 2018 13:23:18 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <b4876896-7d59-368c-f537-f74d53848163@invensense.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, linux-iio@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds role switch support for R-Car SoCs. Some R-Car SoCs
-(e.g. R-Car H3) have USB 3.0 dual-role device controller which has
-the USB 3.0 xHCI host and Renesas USB 3.0 peripheral.
+Thanks, replies inline. I sent version 5 that addresses all these and a 
+few other things I noticed.
 
-Unfortunately, the mode change register contains the USB 3.0 peripheral
-controller side only. So, the USB 3.0 peripheral driver (renesas_usb3)
-manages this register. However, in peripheral mode, the host should
-stop. Also the host hardware needs to reinitialize its own registers
-when the mode changes from peripheral to host mode. Otherwise,
-the host cannot work correctly (e.g. detect a device as high-speed).
+On 04/09/2018 12:08 PM, Jean-Baptiste Maneyrol wrote:
+> Hello,
+> 
+> my comments below.
+> 
+> JB
+> 
+> On 07/04/2018 00:00, Martin Kelly wrote:
+>> Currently, we support only rising edge interrupts, and in fact we assume
+>> that the interrupt we're given is rising edge (and things won't work if
+>> it's not). However, the device supports rising edge, falling edge, level
+>> low, and level high interrupts.
+>>
+>> Empirically, on my system, switching to level interrupts has fixed a
+>> problem I had with significant (~40%) interrupt loss with edge
+>> interrupts, as well as bus errors at high frequencies (possibly a
+>> concurrency issue, which I will look into separately). This issue is
+>> likely related to the SoC I'm using (Allwinner H3), but being able to
+>> switch the interrupt type is still a very useful workaround.
+>>
+>> I tested this with each interrupt type and verified correct behavior in
+>> a logic analyzer.
+>>
+>> Add support for these interrupt types while also eliminating the error
+>> case of the device tree and driver using different interrupt types.
+>>
+>> Signed-off-by: Martin Kelly <mkelly@xevo.com>
+>> ---
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    | 36 
+>> +++++++++++++++++++++++++++
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c     |  5 ++--
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h     | 12 ++++++++-
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c    |  9 +++++++
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c |  2 +-
+>>   5 files changed, 59 insertions(+), 5 deletions(-)
+>>
+>> v2:
+>> - Changed to ACK level interrupts at the start of the bottom half 
+>> thread instead
+>>    of at the end of it. Without this, the sample timestamps get 
+>> distorted because
+>>    the time to handle the bottom half thread delays future interrupts. 
+>> With this
+>>    change, the timestamps appear evenly distributed at the right 
+>> frequency.
+>> v3:
+>> - Sent version 2 too quickly. Now that the ACK is moved to the top of the
+>>    function, the "goto out" logic is unnecessary, so we can clean it up.
+>> v4:
+>> - Moved the ACK inside the mutex.
+>>
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c 
+>> b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>> index 7d64be353403..869768d08802 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/spinlock.h>
+>>   #include <linux/iio/iio.h>
+>>   #include <linux/acpi.h>
+>> +#include <linux/platform_device.h>
+>>   #include "inv_mpu_iio.h"
+>>   /*
+>> @@ -52,6 +53,7 @@ static const struct inv_mpu6050_reg_map reg_set_6500 
+>> = {
+>>       .raw_accl               = INV_MPU6050_REG_RAW_ACCEL,
+>>       .temperature            = INV_MPU6050_REG_TEMPERATURE,
+>>       .int_enable             = INV_MPU6050_REG_INT_ENABLE,
+>> +    .int_status             = INV_MPU6050_REG_INT_STATUS,
+>>       .pwr_mgmt_1             = INV_MPU6050_REG_PWR_MGMT_1,
+>>       .pwr_mgmt_2             = INV_MPU6050_REG_PWR_MGMT_2,
+>>       .int_pin_cfg        = INV_MPU6050_REG_INT_PIN_CFG,
+>> @@ -281,6 +283,10 @@ static int inv_mpu6050_init_config(struct iio_dev 
+>> *indio_dev)
+>>       memcpy(&st->chip_config, hw_info[st->chip_type].config,
+>>              sizeof(struct inv_mpu6050_chip_config));
+>>       result = inv_mpu6050_set_power_itg(st, false);
+>> +    if (result)
+>> +        return result;
+>> +
+>> +    result = regmap_write(st->map, st->reg->int_pin_cfg, st->irq_mask);
+> Better put this before turning power off. Some registers require power 
+> on or the change is ignored >
 
-To achieve this by a driver, this role switch driver manages
-the mode change register and attach/release the xhci-plat driver.
-The renesas_usb3 udc driver should call devm_of_platform_populate()
-to probe this driver.
+Thanks, good point.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- .../bindings/usb/renesas,rcar-usb3-role-sw.txt     |  23 +++
- drivers/usb/roles/Kconfig                          |  12 ++
- drivers/usb/roles/Makefile                         |   1 +
- drivers/usb/roles/rcar-usb3-role-switch.c          | 200 +++++++++++++++++++++
- 4 files changed, 236 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
- create mode 100644 drivers/usb/roles/rcar-usb3-role-switch.c
+>>       return result;
+>>   }
+>> @@ -882,6 +888,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int 
+>> irq, const char *name,
+>>       struct inv_mpu6050_platform_data *pdata;
+>>       struct device *dev = regmap_get_device(regmap);
+>>       int result;
+>> +    struct irq_data *desc;
+>>       indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+>>       if (!indio_dev)
+>> @@ -913,6 +920,35 @@ int inv_mpu_core_probe(struct regmap *regmap, int 
+>> irq, const char *name,
+>>           st->plat_data = *pdata;
+>>       }
+>> +    desc = irq_get_irq_data(irq);
+>> +    if (!desc) {
+>> +        dev_err(dev, "Could not find IRQ %d\n", irq);
+>> +        return -EBUSY;
+>> +    }
+>> +
+>> +    st->irq_type = irqd_get_trigger_type(desc);
+>> +    if (st->irq_type == IRQF_TRIGGER_RISING) {
+>> +        st->irq_mask = INV_MPU6050_ACTIVE_HIGH |
+>> +                INV_MPU6050_EDGE_TRIGGERED;
+>> +        st->irq_level_triggered = false;
+>> +    } else if (st->irq_type == IRQF_TRIGGER_FALLING) {
+>> +        st->irq_mask = INV_MPU6050_ACTIVE_LOW |
+>> +                INV_MPU6050_EDGE_TRIGGERED;
+>> +        st->irq_level_triggered = false;
+>> +    } else if (st->irq_type == IRQF_TRIGGER_HIGH) {
+>> +        st->irq_mask = INV_MPU6050_ACTIVE_HIGH |
+>> +                INV_MPU6050_LEVEL_TRIGGERED;
+>> +        st->irq_level_triggered = true;
+>> +    } else if (st->irq_type == IRQF_TRIGGER_LOW) {
+>> +        st->irq_mask = INV_MPU6050_ACTIVE_LOW |
+>> +                INV_MPU6050_LEVEL_TRIGGERED;
+>> +        st->irq_level_triggered = true;
+>> +    } else {
+>> +        dev_err(dev, "Invalid interrupt type 0x%x specified\n",
+>> +            st->irq_type);
+>> +        return -EBUSY;
+>> +    }
+>> +
+>>       /* power is turned on inside check chip type*/
+>>       result = inv_check_and_setup_chip(st);
+>>       if (result)
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c 
+>> b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> index fcd7a92b6cf8..bb3064537943 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> @@ -44,8 +44,7 @@ static int inv_mpu6050_select_bypass(struct 
+>> i2c_mux_core *muxc, u32 chan_id)
+>>       if (!ret) {
+>>           st->powerup_count++;
+>>           ret = regmap_write(st->map, st->reg->int_pin_cfg,
+>> -                   INV_MPU6050_INT_PIN_CFG |
+>> -                   INV_MPU6050_BIT_BYPASS_EN);
+>> +               st->irq_mask | INV_MPU6050_BIT_BYPASS_EN);
+>>       }
+>>   write_error:
+>>       mutex_unlock(&st->lock);
+>> @@ -60,7 +59,7 @@ static int inv_mpu6050_deselect_bypass(struct 
+>> i2c_mux_core *muxc, u32 chan_id)
+>>       mutex_lock(&st->lock);
+>>       /* It doesn't really mattter, if any of the calls fails */
+>> -    regmap_write(st->map, st->reg->int_pin_cfg, 
+>> INV_MPU6050_INT_PIN_CFG);
+>> +    regmap_write(st->map, st->reg->int_pin_cfg, 0);
+> We need to write st->irq_mask here or we will loose irq configuration 
+> each time an i2c device under the mux is used.
+> 
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
-new file mode 100644
-index 0000000..752bc16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/renesas,rcar-usb3-role-sw.txt
-@@ -0,0 +1,23 @@
-+Renesas Electronics R-Car USB 3.0 role switch driver
-+
-+A renesas_usb3's node can contain this node.
-+
-+Required properties:
-+ - compatible: Must contain "renesas,rcar-usb3-role-switch".
-+ - renesas,host: phandle of the usb3.0 host.
-+
-+Example of R-Car H3 ES2.0:
-+	usb3_peri0: usb@ee020000 {
-+		compatible = "renesas,r8a7795-usb3-peri",
-+			     "renesas,rcar-gen3-usb3-peri";
-+		reg = <0 0xee020000 0 0x400>;
-+		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 328>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		resets = <&cpg 328>;
-+
-+		usb3-role-sw {
-+			compatible = "renesas,rcar-usb3-role-switch";
-+			renesas,host = <&xhci0>;
-+		};
-+	};
-diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-index f5a5e6f..8218035 100644
---- a/drivers/usb/roles/Kconfig
-+++ b/drivers/usb/roles/Kconfig
-@@ -11,4 +11,16 @@ config USB_ROLES_INTEL_XHCI
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called intel-xhci-usb-role-switch.
- 
-+config USB_ROLES_RCAR_USB3
-+	tristate "Renesas R-Car USB3.0 Role Switch"
-+	depends on ARCH_RENESAS
-+	help
-+	  Driver for the internal USB role switch for switching the USB data
-+	  lines between the xHCI host controller and the Renesas gadget
-+	  controller (by using renesas_usb3 driver) found on various Renesas
-+	  R-Car SoCs.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called rcar-usb3-role-switch.
-+
- endif # USB_ROLE_SWITCH
-diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
-index e44b179..7ce3be3 100644
---- a/drivers/usb/roles/Makefile
-+++ b/drivers/usb/roles/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_USB_ROLES_INTEL_XHCI) += intel-xhci-usb-role-switch.o
-+obj-$(CONFIG_USB_ROLES_RCAR_USB3) += rcar-usb3-role-switch.o
-diff --git a/drivers/usb/roles/rcar-usb3-role-switch.c b/drivers/usb/roles/rcar-usb3-role-switch.c
-new file mode 100644
-index 0000000..90648a1
---- /dev/null
-+++ b/drivers/usb/roles/rcar-usb3-role-switch.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas R-Car USB 3.0 role switch driver
-+ *
-+ * Copyright (C) 2018  Renesas Electronics Corporation
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/usb/role.h>
-+
-+#define USB3_DRD_CON		0x218
-+#define DRD_CON_PERI_CON	BIT(24)
-+
-+struct rcar_usb3_role_switch {
-+	struct usb_role_switch *role_sw;
-+	struct usb_role_switch_desc *desc;
-+	void __iomem *reg;
-+	enum usb_role save_role;	/* for suspend/resume */
-+};
-+
-+static enum usb_role
-+rcar_usb3_role_switch_get_mode(struct rcar_usb3_role_switch *rcar_sw)
-+{
-+	u32 val = readl(rcar_sw->reg + USB3_DRD_CON);
-+
-+	if (val & DRD_CON_PERI_CON)
-+		return USB_ROLE_DEVICE;
-+
-+	return USB_ROLE_HOST;
-+}
-+
-+static void
-+rcar_usb3_role_switch_set_mode(struct rcar_usb3_role_switch *rcar_sw,
-+			       bool host)
-+{
-+	void __iomem *drd_con = rcar_sw->reg + USB3_DRD_CON;
-+
-+	if (host)
-+		writel(readl(drd_con) & ~DRD_CON_PERI_CON, drd_con);
-+	else
-+		writel(readl(drd_con) | DRD_CON_PERI_CON, drd_con);
-+}
-+
-+static int rcar_usb3_role_switch_set_role(struct device *dev,
-+					  enum usb_role role)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	enum usb_role cur_role;
-+
-+	pm_runtime_get_sync(dev->parent);
-+
-+	cur_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	if (cur_role == USB_ROLE_HOST && role == USB_ROLE_DEVICE) {
-+		device_release_driver(rcar_sw->desc->usb3_port);
-+		rcar_usb3_role_switch_set_mode(rcar_sw, false);
-+	} else if (cur_role == USB_ROLE_DEVICE && role == USB_ROLE_HOST) {
-+		/* Must set the mode before device_attach of the host */
-+		rcar_usb3_role_switch_set_mode(rcar_sw, true);
-+		if (device_attach(rcar_sw->desc->usb3_port) < 0)
-+			dev_err(dev, "device_attach(usb3_port) failed\n");
-+	}
-+
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+
-+static enum usb_role rcar_usb3_role_switch_get_role(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	enum usb_role cur_role;
-+
-+	pm_runtime_get(dev->parent);
-+	cur_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	pm_runtime_put(dev->parent);
-+
-+	return cur_role;
-+}
-+
-+static struct usb_role_switch_desc rcar_usb3_role_switch_desc = {
-+	.set = rcar_usb3_role_switch_set_role,
-+	.get = rcar_usb3_role_switch_get_role,
-+};
-+
-+static const struct of_device_id rcar_usb3_role_switch_of_match[] = {
-+	{ .compatible = "renesas,rcar-usb3-role-switch" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, rcar_usb3_role_switch_of_match);
-+
-+static int rcar_usb3_role_switch_remove(struct platform_device *pdev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = platform_get_drvdata(pdev);
-+
-+	usb_role_switch_unregister(rcar_sw->role_sw);
-+	pm_runtime_disable(pdev->dev.parent);
-+
-+	return 0;
-+}
-+
-+static int rcar_usb3_role_switch_probe(struct platform_device *pdev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw;
-+	struct resource *res;
-+	struct device_node *host_node;
-+	struct platform_device *pdev_host;
-+
-+	rcar_sw = devm_kzalloc(&pdev->dev, sizeof(*rcar_sw), GFP_KERNEL);
-+	if (!rcar_sw)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(to_platform_device(pdev->dev.parent),
-+				    IORESOURCE_MEM, 0);
-+	/* Avoid devm_request_mem_region() calling by devm_ioremap_resource() */
-+	rcar_sw->reg = devm_ioremap_nocache(&pdev->dev, res->start,
-+					    resource_size(res));
-+	if (IS_ERR(rcar_sw->reg))
-+		return PTR_ERR(rcar_sw->reg);
-+
-+	platform_set_drvdata(pdev, rcar_sw);
-+
-+	host_node = of_parse_phandle(pdev->dev.of_node, "renesas,host", 0);
-+	if (!host_node)
-+		return -ENODEV;
-+
-+	pdev_host = of_find_device_by_node(host_node);
-+	if (!pdev_host)
-+		return -ENODEV;
-+
-+	of_node_put(host_node);
-+
-+	rcar_usb3_role_switch_desc.usb3_port = &pdev_host->dev;
-+
-+	pm_runtime_enable(pdev->dev.parent);
-+
-+	rcar_usb3_role_switch_desc.allow_userspace_control = true;
-+	rcar_sw->desc = &rcar_usb3_role_switch_desc;
-+	rcar_sw->role_sw = usb_role_switch_register(&pdev->dev,
-+						&rcar_usb3_role_switch_desc);
-+	if (IS_ERR(rcar_sw->role_sw)) {
-+		pm_runtime_disable(pdev->dev.parent);
-+		return PTR_ERR(rcar_sw->role_sw);
-+	}
-+
-+	dev_info(&pdev->dev, "probed\n");
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int rcar_usb3_role_switch_suspend(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+
-+	pm_runtime_get_sync(dev->parent);
-+	rcar_sw->save_role = rcar_usb3_role_switch_get_mode(rcar_sw);
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+
-+static int rcar_usb3_role_switch_resume(struct device *dev)
-+{
-+	struct rcar_usb3_role_switch *rcar_sw = dev_get_drvdata(dev);
-+	bool host = rcar_sw->save_role == USB_ROLE_HOST ? true : false;
-+
-+	pm_runtime_get_sync(dev->parent);
-+	rcar_usb3_role_switch_set_mode(rcar_sw, host);
-+	pm_runtime_put(dev->parent);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(rcar_usb3_role_switch_pm_ops,
-+			 rcar_usb3_role_switch_suspend,
-+			 rcar_usb3_role_switch_resume);
-+
-+static struct platform_driver rcar_usb3_role_switch_driver = {
-+	.probe		= rcar_usb3_role_switch_probe,
-+	.remove		= rcar_usb3_role_switch_remove,
-+	.driver		= {
-+		.name =	"rcar_usb3_role_switch",
-+		.pm		= &rcar_usb3_role_switch_pm_ops,
-+		.of_match_table = of_match_ptr(rcar_usb3_role_switch_of_match),
-+	},
-+};
-+module_platform_driver(rcar_usb3_role_switch_driver);
-+
-+MODULE_DESCRIPTION("Renesas USB3.0 role switch driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
-+MODULE_ALIAS("platform:rcar_usb3_role_switch");
--- 
-1.9.1
+Good catch.
+
+>>       st->powerup_count--;
+>>       if (!st->powerup_count)
+>>           regmap_write(st->map, st->reg->pwr_mgmt_1,
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h 
+>> b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+>> index 065794162d65..2822b638804f 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+>> @@ -40,6 +40,7 @@
+>>    *  @raw_accl:        Address of first accel register.
+>>    *  @temperature:    temperature register
+>>    *  @int_enable:    Interrupt enable register.
+>> + *  @int_status:    Interrupt status register.
+>>    *  @pwr_mgmt_1:    Controls chip's power state and clock source.
+>>    *  @pwr_mgmt_2:    Controls power state of individual sensors.
+>>    *  @int_pin_cfg;    Controls interrupt pin configuration.
+>> @@ -60,6 +61,7 @@ struct inv_mpu6050_reg_map {
+>>       u8 raw_accl;
+>>       u8 temperature;
+>>       u8 int_enable;
+>> +    u8 int_status;
+>>       u8 pwr_mgmt_1;
+>>       u8 pwr_mgmt_2;
+>>       u8 int_pin_cfg;
+>> @@ -143,6 +145,9 @@ struct inv_mpu6050_state {
+>>       DECLARE_KFIFO(timestamps, long long, TIMESTAMP_FIFO_SIZE);
+>>       struct regmap *map;
+>>       int irq;
+>> +    int irq_type;
+>> +    u16 irq_mask;
+>> +    bool irq_level_triggered;
+>>   };
+>>   /*register and associated bit definition*/
+>> @@ -159,6 +164,7 @@ struct inv_mpu6050_state {
+>>   #define INV_MPU6050_BITS_GYRO_OUT           0x70
+>>   #define INV_MPU6050_REG_INT_ENABLE          0x38
+>> +#define INV_MPU6050_REG_INT_STATUS          0x3a
+>>   #define INV_MPU6050_BIT_DATA_RDY_EN         0x01
+>>   #define INV_MPU6050_BIT_DMP_INT_EN          0x02
+>> @@ -190,6 +196,11 @@ struct inv_mpu6050_state {
+>>   #define INV_MPU6050_FIFO_COUNT_BYTE          2
+>>   #define INV_MPU6050_FIFO_THRESHOLD           500
+>> +#define INV_MPU6050_ACTIVE_HIGH             0x00
+>> +#define INV_MPU6050_ACTIVE_LOW              0x80
+>> +#define INV_MPU6050_EDGE_TRIGGERED          0x00
+>> +#define INV_MPU6050_LEVEL_TRIGGERED         0x20
+>> +
+> Datasheet name for this bit is LATCH_INT_EN. Better use it to be coherent.
+> 
+
+Agreed.
+
+>>   /* mpu6500 registers */
+>>   #define INV_MPU6500_REG_ACCEL_CONFIG_2      0x1D
+>>   #define INV_MPU6500_REG_ACCEL_OFFSET        0x77
+>> @@ -216,7 +227,6 @@ struct inv_mpu6050_state {
+>>   #define INV_MPU6050_REG_INT_PIN_CFG    0x37
+>>   #define INV_MPU6050_BIT_BYPASS_EN    0x2
+>> -#define INV_MPU6050_INT_PIN_CFG        0
+>>   /* init parameters */
+>>   #define INV_MPU6050_INIT_FIFO_RATE           50
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c 
+>> b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+>> index ff81c6aa009d..04dc4a11a9d0 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+>> @@ -129,6 +129,15 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+>>       s64 timestamp;
+>>       mutex_lock(&st->lock);
+>> +
+>> +    if (st->irq_level_triggered) {
+>> +        result = regmap_read(st->map, st->reg->int_status,
+>> +                (int *) data);
+>> +        if (result)
+>> +            dev_err(regmap_get_device(st->map),
+>> +                "failed to ack interrupt\n");
+>> +    }
+>> +
+> I would prefer to delete this irq_level_triggered boolean and read 
+> status in all cases and check the value. This is more coherent and can 
+> be useful in the future for handling WakeOnMotion or FIFO overflow 
+> interrupts. Also interesting to filter out possible spurious interrupt.
+> 
+
+Yes, I like that. Changed, and added a warning if we get a spurious 
+interrupt.
+
+>>       if (!(st->chip_config.accl_fifo_enable |
+>>           st->chip_config.gyro_fifo_enable))
+>>           goto end_session;
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c 
+>> b/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
+>> index f963f9fc98c0..1e7201a43e34 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_trigger.c
+>> @@ -131,7 +131,7 @@ int inv_mpu6050_probe_trigger(struct iio_dev 
+>> *indio_dev)
+>>       ret = devm_request_irq(&indio_dev->dev, st->irq,
+>>                      &iio_trigger_generic_data_rdy_poll,
+>> -                   IRQF_TRIGGER_RISING,
+>> +                   st->irq_type,
+>>                      "inv_mpu",
+>>                      st->trig);
+>>       if (ret)
+>>
