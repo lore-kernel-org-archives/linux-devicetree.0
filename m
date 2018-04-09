@@ -1,58 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] drm: bridge: lvds-encoder: allow specifying the
- input bus format
-Date: Mon, 9 Apr 2018 13:37:13 -0500
-Message-ID: <20180409183713.xk7qt4mukb24vr64@rob-hp-laptop>
-References: <20180326212447.7380-1-peda@axentia.se>
- <20180326212447.7380-5-peda@axentia.se>
+Subject: Re: [PATCH v3 2/2] dt-bindings: phy-qcom-qmp: Add UFS phy compatible
+ string for sdm845
+Date: Mon, 9 Apr 2018 13:39:36 -0500
+Message-ID: <20180409183936.5idm2qrhmgapjsd2@rob-hp-laptop>
+References: <20180327071838.11168-1-cang@codeaurora.org>
+ <20180327071838.11168-3-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180326212447.7380-5-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180327071838.11168-3-cang@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Can Guo <cang@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMjYsIDIwMTggYXQgMTE6MjQ6NDZQTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
-dGU6Cj4gSWYgdGhlIGJyaWRnZSBjaGFuZ2VzIHRoZSBidXMgZm9ybWF0LCBhbGxvdyB0aGlzIHRv
-IGJlIGRlc2NyaWJlZCBpbgo+IHRoZSBicmlkZ2UsIGluc3RlYWQgb2YgcHJvdmlkaW5nIGZhbHNl
-IGluZm9ybWF0aW9uIGFib3V0IHRoZSBidXMKPiBmb3JtYXQgb2YgdGhlIGNvbm5lY3RvciBvciBw
-YW5lbC4KCkkgZ3Vlc3MgdGhpcyBpcyBkZWFkLCBidXQgSSdsbCBjb21tZW50IGhlcmUgYW55d2F5
-IGJlY2F1c2UgdGhpcyBpc3N1ZSAKaGFzIGNvbWUgdXAgc2V2ZXJhbCB0aW1lcyBhbmQgSSB0aGlu
-ayBzb21ldGhpbmcgaXMgbmVlZGVkLgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8
-cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZk
-cy10cmFuc21pdHRlci50eHQgICB8ICA2ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L2x2ZHMtZW5jb2Rlci5jICAgICAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysK
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5z
-bWl0dGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+IGluZGV4IDUwMjIwMTkwYzIwMy4uOGQ0MGEyMDY5
-MjUyIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+IEBA
-IC0zMCw2ICszMCwxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgIGRldmljZS1zcGVjaWZp
-YyB2ZXJzaW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRldmljZSBmaXJzdAo+ICAgIGZvbGxvd2Vk
-IGJ5IHRoZSBnZW5lcmljIHZlcnNpb24uCj4gIAo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsK
-PiArLSBpbnRlcmZhY2UtcGl4LWZtdDoKPiArICBMaXN0IG9mIHZhbGlkIGlucHV0IGJ1cyBmb3Jt
-YXRzIG9mIHRoZSBlbmNvZGVyLiBSZWNvZ25pemVkIGJ1cyBmb3JtYXRzCj4gKyAgYXJlIGxpc3Rl
-ZCBpbiAuLi9idXMtZm9ybWF0LnR4dAoKV2UgYWxyZWFkeSBoYXZlIGJ1cyBpbnRlcmZhY2UgcHJv
-cGVydGllcyBkZWZpbmVkIGluIAptZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gSXQncyB0aGUg
-c2FtZSBwcm9ibGVtIHRob3VnaCB0aGUgYnVzL3BpeGVsIApmb3JtYXRzIGFyZSBzb21ld2hhdCBk
-aWZmZXJlbnQuICJidXMtd2lkdGgiIGlzIHByb2JhYmx5IGVub3VnaCB0byBoYW5kbGUgCnlvdXIg
-cGFydGljdWxhciBjYXNlLCBidXQgSSdkIGltYWdpbmUgdGhhdCBjb3VsZCBlYXNpbHkgbm90IGJl
-IHRoZSBjYXNlLiAKSWYgc28sIHdlIHNob3VsZCBleHRlbmQgdGhlIGV4aXN0aW5nIGJpbmRpbmcg
-cmF0aGVyIHRoYW4gZGl2ZXJnZSB3aXRoIApzb21ldGhpbmcgbmV3LgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Mar 27, 2018 at 03:18:38PM +0800, Can Guo wrote:
+> Update the compatible string for UFS QMP PHY on SDM845.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
