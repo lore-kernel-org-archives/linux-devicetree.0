@@ -1,131 +1,67 @@
-From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
-Date: Mon,  9 Apr 2018 17:46:04 +1000
-Message-ID: <20180409074604.17671-1-oohall@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 0/4] backlight: pwm_bl: support linear interpolation
+ and brightness to human eye
+Date: Mon, 9 Apr 2018 09:17:02 +0100
+Message-ID: <20180409081702.rwj773h6ndglnejm@dell>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180208113032.27810-1-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Some OF platforms (pseries and some SPARC systems) has their own
-implementations of NUMA affinity detection rather than using the generic
-OF_NUMA driver, which mainly exists for arm64. For other platforms one
-of two fallbacks provided by the base OF driver are used depending on
-CONFIG_NUMA.
+On Thu, 08 Feb 2018, Enric Balletbo i Serra wrote:
 
-In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
-In the =y case the fallback is a real function which is defined as a
-weak symbol so that it may be overwritten by the architecture if desired.
+> Dear all,
+> 
+> This series is a third patchset integrating the requested changes.
+> 
+> The first and second patch what tries to solve is the problem of
+> granularity for high resolution PWMs. The idea is simple interpolate
+> between 2 brightness values so we can have a high PWM duty cycle (a
+> 16 bits PWM is up to 65535 possible steps) without having to list
+> out every possible value in the dts. I think that this patch is
+> required to not break backward compability, to be more flexible and
+> also extend the functionality to be able to use high resolution PWM
+> with enough steps to have a good UI experience in userspace.
+> 
+> The thirth and fourth patch is a bit more ambicious, the idea is let
+> decide the driver the brightness-levels required in function of the PWM
+> resolution. To do this create a brightness-levels table filled with the
+> CIE 1931 algorithm values to convert brightness to PWM duty cycle.
+> 
+> More detailed info is available in the commit message of every patch.
+> 
+> Both functionalities were tested on a Samsung Chromebook Plus (that has
+> a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
+> 
+> Waiting for your feedback.
 
-The problem with this arrangement is that the real implementations all
-export of_node_to_nid(). Unfortunately it's not possible to export the
-fallback since it would clash with the non-weak version. As a result
-we get build failures when:
+Looks like you now have some positive feedback. :)
 
-a) CONFIG_NUMA=y && CONFIG_OF=y, and
-b) The platform doesn't implement of_node_to_nid(), and
-c) A module uses of_node_to_nid()
+Could you please collect all of your received Acks and re-post this
+set as a [RESEND] please?
 
-Given b) will be true for most platforms this is fairly easy to hit
-and has been observed on ia64 and x86.
+> Best regards,
+> 
+> Enric Balletbo i Serra (4):
+>   backlight: pwm_bl: linear interpolation between brightness-levels
+>   dt-bindings: pwm-backlight: add a num-interpolation-steps property.
+>   backlight: pwm_bl: compute brightness of LED linearly to human eye.
+>   dt-bindings: pwm-backlight: move brightness-levels to optional.
+> 
+>  .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
+>  drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
+>  2 files changed, 246 insertions(+), 20 deletions(-)
 
-This patch remedies the problem by introducing the ARCH_HAS_OWN_OF_NUMA
-Kconfig option which is selected if an architecture provides an
-implementation of of_node_to_nid(). If a platform does not use it's own,
-or the generic OF_NUMA, then always use the inline fallback in of.h so
-we don't need to futz around with exports.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Fixes: 298535c00a2c ("of, numa: Add NUMA of binding implementation.")
-Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/powerpc/Kconfig | 1 +
- arch/sparc/Kconfig   | 1 +
- drivers/of/Kconfig   | 3 +++
- drivers/of/base.c    | 7 -------
- include/linux/of.h   | 2 +-
- 5 files changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index c32a181a7cbb..74ce5f3564ae 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -625,6 +625,7 @@ config NUMA
- 	bool "NUMA support"
- 	depends on PPC64
- 	default y if SMP && PPC_PSERIES
-+	select ARCH_HAS_OWN_OF_NUMA
- 
- config NODES_SHIFT
- 	int
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index 8767e45f1b2b..f8071f1c3edb 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -299,6 +299,7 @@ config GENERIC_LOCKBREAK
- config NUMA
- 	bool "NUMA support"
- 	depends on SPARC64 && SMP
-+	select ARCH_HAS_OWN_OF_NUMA
- 
- config NODES_SHIFT
- 	int "Maximum NUMA Nodes (as a power of 2)"
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index ad3fcad4d75b..01c62b747b25 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -103,4 +103,7 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
- 
-+config ARCH_HAS_OWN_OF_NUMA
-+	bool
-+
- endif # OF
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 848f549164cd..82a9584bb0e2 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -84,13 +84,6 @@ int of_n_size_cells(struct device_node *np)
- }
- EXPORT_SYMBOL(of_n_size_cells);
- 
--#ifdef CONFIG_NUMA
--int __weak of_node_to_nid(struct device_node *np)
--{
--	return NUMA_NO_NODE;
--}
--#endif
--
- static struct device_node **phandle_cache;
- static u32 phandle_cache_mask;
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..9bb42dac5e65 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -942,7 +942,7 @@ static inline int of_cpu_node_to_id(struct device_node *np)
- #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
- #endif
- 
--#if defined(CONFIG_OF) && defined(CONFIG_NUMA)
-+#if defined(CONFIG_OF_NUMA) || defined(CONFIG_ARCH_HAS_OWN_OF_NUMA)
- extern int of_node_to_nid(struct device_node *np);
- #else
- static inline int of_node_to_nid(struct device_node *device)
 -- 
-2.9.5
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
