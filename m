@@ -1,44 +1,71 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH v2 7/9] PCI: dwc: Replace lower into upper case characters
-Date: Mon, 9 Apr 2018 14:10:44 +0100
-Message-ID: <c7aa4990-92ad-3e5e-de27-40df4f29f08b@synopsys.com>
-References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
- <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
- <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 3/9] dt-bindings: Tegra186 tachometer device tree bindings
+Date: Mon, 9 Apr 2018 08:21:17 -0500
+Message-ID: <CAL_Jsq+AsUiWWBQ7K4OUM58KqQbvBHuFYmXxXLwr7viwoKW-Yw@mail.gmail.com>
+References: <1521607244-29734-1-git-send-email-rrajk@nvidia.com>
+ <1521607244-29734-4-git-send-email-rrajk@nvidia.com> <20180327145249.xjoo42qow34ksdle@rob-hp-laptop>
+ <867aace8-dac7-51d4-bd46-15919b58b37d@kapsi.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0dad6b43476c1a70944e3e7c245040243ddc2a04.camel@perches.com>
-Content-Language: en-US
+In-Reply-To: <867aace8-dac7-51d4-bd46-15919b58b37d@kapsi.fi>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: Rajkumar Rampelli <rrajk@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Timur Tabi <timur@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Alex Elder <elder@linaro.org>, "heiko@sntech.de" <heiko@sn>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On Mon, Apr 9, 2018 at 12:38 AM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
+> Rob,
 
-On 09/04/2018 11:25, Joe Perches wrote:
-> On Mon, 2018-04-09 at 10:41 +0100, Gustavo Pimentel wrote:
->> Replaces lower into upper case characters in comments and debug printks.
+Please don't top post to lists.
+
+> this binding is for a specific IP block (for measuring/aggregating input
+> pulses) on the Tegra186 SoC, so I don't think it fits into any generic
+> binding.
+
+What is it hooked up to to measure? You only mention "fan" five times
+in the doc.
+
+You have #pwm-cells too, so this block has PWM output as well? If not,
+then where's the PWM for the fan control because there is no point in
+having fan tach without some control mechanism.
+
+There's only so many ways to control fans and types of fans, so yes,
+the interface of control and feedback lines between a fan and its
+controller should absolutely be generic.
+
+Rob
+
+>
+> Thanks,
+> Mikko
+>
+>
+> On 03/27/2018 05:52 PM, Rob Herring wrote:
 >>
->> This is an attempt to keep the messages coherent within the designware
->> driver.
-> 
-> It'd be nice to make all the dwc drivers use the same
-> message wording.
-> 
-> For instance:
-> 
-> drivers/pci/dwc/pci-keystone.c: dev_err(dev, "phy link never came up\n");
-> drivers/pci/dwc/pcie-designware.c:      dev_err(pci->dev, "phy link never came up\n");
-> drivers/pci/host/pcie-xilinx-nwl.c:     dev_err(dev, "PHY link never came up\n");
-
-I also agree, I added a task to my backlog to fix that. However, this task
-shouldn't be done in this patch series since it's a more broader task involving
-many drivers and different maintainers. Agree?
-
-> 
-
-Regards,
-Gustavo
+>> On Wed, Mar 21, 2018 at 10:10:38AM +0530, Rajkumar Rampelli wrote:
+>>>
+>>> Supply Device tree binding documentation for the NVIDIA
+>>> Tegra186 SoC's Tachometer Controller
+>>>
+>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+>>> ---
+>>>
+>>> V2: Renamed compatible string to "nvidia,tegra186-pwm-tachometer"
+>>>      Renamed dt property values of clock-names and reset-names to
+>>> "tachometer"
+>>>      from "tach"
+>>
+>>
+>> Read my prior comments on v1.
+>>
+>> Rob
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
