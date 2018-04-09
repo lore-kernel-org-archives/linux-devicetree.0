@@ -1,398 +1,70 @@
-From: ShuFan Lee <leechu729@gmail.com>
-Subject: [PATCH v5 1/2] staging: typec: rt1711h typec chip driver
-Date: Mon,  9 Apr 2018 10:11:34 +0800
-Message-ID: <1523239895-4467-2-git-send-email-leechu729@gmail.com>
-References: <1523239895-4467-1-git-send-email-leechu729@gmail.com>
+From: Dan Williams <dcbw@redhat.com>
+Subject: Re: simultaneous voice/data works (was Re: call/normal switch was
+ Re: omap4-droid4: voice call support was)
+Date: Sun, 08 Apr 2018 22:15:30 -0500
+Message-ID: <1a37aaadcd25b849d81bf295b28cdad7d5ffd1d2.camel@redhat.com>
+References: <67086fdd0cdd69142cb89cd00f90e5a580e6607a.camel@redhat.com>
+         <20180402155754.GD5700@atomide.com> <20180403150444.GE5700@atomide.com>
+         <20180403155023.GA14638@atrey.karlin.mff.cuni.cz>
+         <20180403194419.GG5700@atomide.com> <20180406120423.GA18691@amd>
+         <516eb3f7-e300-d59d-6a31-ab7545c656f1@wizzup.org>
+         <20180407081000.GB7818@amd> <20180407122233.GA11302@amd>
+         <cbfc3cfa8acbc02dde848ec4e1d71b5089ff1d10.camel@redhat.com>
+         <20180408074124.GA19844@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523239895-4467-1-git-send-email-leechu729@gmail.com>
+In-Reply-To: <20180408074124.GA19844@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: greg@kroah.com, heikki.krogerus@linux.intel.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: shufan_lee@richtek.com, cy_huang@richtek.com, jun.li@nxp.com, mats.dev.list@gmail.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Merlijn Wajer <merlijn@wizzup.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-From: ShuFan Lee <shufan_lee@richtek.com>
+On Sun, 2018-04-08 at 09:41 +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > > mmcli -m 0 --enable
+> > > mmcli -m 0  --location-enable-gps-nmea
+> > > watch -n .3 sudo mmcli -m 0  --location-get-gps-nmea
+> > > 
+> > > ...can be used to get GPS data. Droid4 seems to have rather bad
+> > > GPS,
+> > > so you should probably put it near window for testing.
+> > > 
+> > > Is there way to grab data from modemmanager and feed it to gpsd,
+> > > so
+> > > that normal applications can access gps? I don't see easy way.
+> > > 
+> > > I tried --location-enable-gps-unmanaged , but that did not work
+> > > for
+> > > me.
+> > 
+> > That requires a TTY that would spit out the GPS data; in this mode
+> > MM
+> > only sends the start/stop commands, and what comes out the GPS TTY
+> > is
+> > undefined (at least by MM).
+> > 
+> > So unless you know that one of the 6600's TTYs does GPS and in what
+> > format it does GPS, then no.
+> > 
+> > Doesn't --location-get-gps-nmea work for you?  That will spit out
+> > the
+> > latest NMEA traces MM gets from the modem, if it supports NMEA.  I
+> > believe --location-status will tell you what methods MM supports
+> > with
+> > the modem.
+> 
+> Yes, --location-get-gps-nmea works for me.
+> 
+> I guess one way forward would be to implement --location-get-gps-nmea
+> support for qmicli, and use that?
 
-Richtek RT1711H Type-C chip driver that works with
-Type-C Port Controller Manager to provide USB PD and
-USB Type-C functionalities.
-Add definition of TCPC_CC_STATUS_TOGGLING.
+Yeah, libqmi already has the necessary bits but it's not plumbed
+through to qmicli.  Note that qmicli is a straight interface to QMI and
+doesn't try to impose abstractions on anything, so you wouldn't get --
+location-get-gps-nmea, but you'd instead be working directly with the
+QMI PDS (older) and/or LOC (newer) service commands.
 
-Signed-off-by: ShuFan Lee <shufan_lee@richtek.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/staging/typec/Kconfig         |   8 +
- drivers/staging/typec/Makefile        |   1 +
- drivers/staging/typec/tcpci.h         |   1 +
- drivers/staging/typec/tcpci_rt1711h.c | 312 ++++++++++++++++++++++++++++++++++
- 4 files changed, 322 insertions(+)
- create mode 100644 drivers/staging/typec/tcpci_rt1711h.c
-
- changelogs between v1 & v2
- - use gpiod_* instead of gpio_*
-
- changelogs between v3 & v4
- - add definition of RT1711H_VID and RT1711H_PID
- - modify the way of using RT1711H_RTCTRL8_SET in rt1711h_set_vconn
-
- changelogs between v4 & v5
- - remove parsing rt,intr-gpios and just use client->irq parsed from interrupts property
-
-diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
-index 5359f556d203..3aa981fbc8f5 100644
---- a/drivers/staging/typec/Kconfig
-+++ b/drivers/staging/typec/Kconfig
-@@ -9,6 +9,14 @@ config TYPEC_TCPCI
- 	help
- 	  Type-C Port Controller driver for TCPCI-compliant controller.
- 
-+config TYPEC_RT1711H
-+	tristate "Richtek RT1711H Type-C chip driver"
-+	select TYPEC_TCPCI
-+	help
-+	  Richtek RT1711H Type-C chip driver that works with
-+	  Type-C Port Controller Manager to provide USB PD and USB
-+	  Type-C functionalities.
-+
- endif
- 
- endmenu
-diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
-index 53d649abcb53..7803d485e1b3 100644
---- a/drivers/staging/typec/Makefile
-+++ b/drivers/staging/typec/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-+obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
-diff --git a/drivers/staging/typec/tcpci.h b/drivers/staging/typec/tcpci.h
-index 34c865f0dcf6..303ebde26546 100644
---- a/drivers/staging/typec/tcpci.h
-+++ b/drivers/staging/typec/tcpci.h
-@@ -59,6 +59,7 @@
- #define TCPC_POWER_CTRL_VCONN_ENABLE	BIT(0)
- 
- #define TCPC_CC_STATUS			0x1d
-+#define TCPC_CC_STATUS_TOGGLING		BIT(5)
- #define TCPC_CC_STATUS_TERM		BIT(4)
- #define TCPC_CC_STATUS_CC2_SHIFT	2
- #define TCPC_CC_STATUS_CC2_MASK		0x3
-diff --git a/drivers/staging/typec/tcpci_rt1711h.c b/drivers/staging/typec/tcpci_rt1711h.c
-new file mode 100644
-index 000000000000..017389021b96
---- /dev/null
-+++ b/drivers/staging/typec/tcpci_rt1711h.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018, Richtek Technology Corporation
-+ *
-+ * Richtek RT1711H Type-C Chip Driver
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/usb/tcpm.h>
-+#include <linux/regmap.h>
-+#include "tcpci.h"
-+
-+#define RT1711H_VID		0x29CF
-+#define RT1711H_PID		0x1711
-+
-+#define RT1711H_RTCTRL8		0x9B
-+
-+/* Autoidle timeout = (tout * 2 + 1) * 6.4ms */
-+#define RT1711H_RTCTRL8_SET(ck300, ship_off, auto_idle, tout) \
-+			    (((ck300) << 7) | ((ship_off) << 5) | \
-+			    ((auto_idle) << 3) | ((tout) & 0x07))
-+
-+#define RT1711H_RTCTRL11	0x9E
-+
-+/* I2C timeout = (tout + 1) * 12.5ms */
-+#define RT1711H_RTCTRL11_SET(en, tout) \
-+			     (((en) << 7) | ((tout) & 0x0F))
-+
-+#define RT1711H_RTCTRL13	0xA0
-+#define RT1711H_RTCTRL14	0xA1
-+#define RT1711H_RTCTRL15	0xA2
-+#define RT1711H_RTCTRL16	0xA3
-+
-+struct rt1711h_chip {
-+	struct tcpci_data data;
-+	struct tcpci *tcpci;
-+	struct device *dev;
-+};
-+
-+static int rt1711h_read16(struct rt1711h_chip *chip, unsigned int reg, u16 *val)
-+{
-+	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u16));
-+}
-+
-+static int rt1711h_write16(struct rt1711h_chip *chip, unsigned int reg, u16 val)
-+{
-+	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u16));
-+}
-+
-+static int rt1711h_read8(struct rt1711h_chip *chip, unsigned int reg, u8 *val)
-+{
-+	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u8));
-+}
-+
-+static int rt1711h_write8(struct rt1711h_chip *chip, unsigned int reg, u8 val)
-+{
-+	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u8));
-+}
-+
-+static const struct regmap_config rt1711h_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = 0xFF, /* 0x80 .. 0xFF are vendor defined */
-+};
-+
-+static struct rt1711h_chip *tdata_to_rt1711h(struct tcpci_data *tdata)
-+{
-+	return container_of(tdata, struct rt1711h_chip, data);
-+}
-+
-+static int rt1711h_init(struct tcpci *tcpci, struct tcpci_data *tdata)
-+{
-+	int ret;
-+	struct rt1711h_chip *chip = tdata_to_rt1711h(tdata);
-+
-+	/* CK 300K from 320K, shipping off, auto_idle enable, tout = 32ms */
-+	ret = rt1711h_write8(chip, RT1711H_RTCTRL8,
-+			     RT1711H_RTCTRL8_SET(0, 1, 1, 2));
-+	if (ret < 0)
-+		return ret;
-+
-+	/* I2C reset : (val + 1) * 12.5ms */
-+	ret = rt1711h_write8(chip, RT1711H_RTCTRL11,
-+			     RT1711H_RTCTRL11_SET(1, 0x0F));
-+	if (ret < 0)
-+		return ret;
-+
-+	/* tTCPCfilter : (26.7 * val) us */
-+	ret = rt1711h_write8(chip, RT1711H_RTCTRL14, 0x0F);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*  tDRP : (51.2 + 6.4 * val) ms */
-+	ret = rt1711h_write8(chip, RT1711H_RTCTRL15, 0x04);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* dcSRC.DRP : 33% */
-+	return rt1711h_write16(chip, RT1711H_RTCTRL16, 330);
-+}
-+
-+static int rt1711h_set_vconn(struct tcpci *tcpci, struct tcpci_data *tdata,
-+			     bool enable)
-+{
-+	struct rt1711h_chip *chip = tdata_to_rt1711h(tdata);
-+
-+	return rt1711h_write8(chip, RT1711H_RTCTRL8,
-+			      RT1711H_RTCTRL8_SET(0, 1, !enable, 2));
-+}
-+
-+static int rt1711h_start_drp_toggling(struct tcpci *tcpci,
-+				      struct tcpci_data *tdata,
-+				      enum typec_cc_status cc)
-+{
-+	struct rt1711h_chip *chip = tdata_to_rt1711h(tdata);
-+	int ret;
-+	unsigned int reg = 0;
-+
-+	switch (cc) {
-+	default:
-+	case TYPEC_CC_RP_DEF:
-+		reg |= (TCPC_ROLE_CTRL_RP_VAL_DEF <<
-+			TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-+		break;
-+	case TYPEC_CC_RP_1_5:
-+		reg |= (TCPC_ROLE_CTRL_RP_VAL_1_5 <<
-+			TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-+		break;
-+	case TYPEC_CC_RP_3_0:
-+		reg |= (TCPC_ROLE_CTRL_RP_VAL_3_0 <<
-+			TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-+		break;
-+	}
-+
-+	if (cc == TYPEC_CC_RD)
-+		reg |= (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
-+			   (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
-+	else
-+		reg |= (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
-+			   (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT);
-+
-+	ret = rt1711h_write8(chip, TCPC_ROLE_CTRL, reg);
-+	if (ret < 0)
-+		return ret;
-+	usleep_range(500, 1000);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t rt1711h_irq(int irq, void *dev_id)
-+{
-+	int ret;
-+	u16 alert;
-+	u8 status;
-+	struct rt1711h_chip *chip = dev_id;
-+
-+	if (!chip->tcpci)
-+		return IRQ_HANDLED;
-+
-+	ret = rt1711h_read16(chip, TCPC_ALERT, &alert);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (alert & TCPC_ALERT_CC_STATUS) {
-+		ret = rt1711h_read8(chip, TCPC_CC_STATUS, &status);
-+		if (ret < 0)
-+			goto out;
-+		/* Clear cc change event triggered by starting toggling */
-+		if (status & TCPC_CC_STATUS_TOGGLING)
-+			rt1711h_write8(chip, TCPC_ALERT, TCPC_ALERT_CC_STATUS);
-+	}
-+
-+out:
-+	return tcpci_irq(chip->tcpci);
-+}
-+
-+static int rt1711h_init_alert(struct rt1711h_chip *chip,
-+			      struct i2c_client *client)
-+{
-+	int ret;
-+
-+	/* Disable chip interrupts before requesting irq */
-+	ret = rt1711h_write16(chip, TCPC_ALERT_MASK, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_request_threaded_irq(chip->dev, client->irq, NULL,
-+					rt1711h_irq,
-+					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
-+					dev_name(chip->dev), chip);
-+	if (ret < 0)
-+		return ret;
-+	enable_irq_wake(client->irq);
-+	return 0;
-+}
-+
-+static int rt1711h_sw_reset(struct rt1711h_chip *chip)
-+{
-+	int ret;
-+
-+	ret = rt1711h_write8(chip, RT1711H_RTCTRL13, 0x01);
-+	if (ret < 0)
-+		return ret;
-+
-+	usleep_range(1000, 2000);
-+	return 0;
-+}
-+
-+static int rt1711h_check_revision(struct i2c_client *i2c)
-+{
-+	int ret;
-+
-+	ret = i2c_smbus_read_word_data(i2c, TCPC_VENDOR_ID);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != RT1711H_VID) {
-+		dev_err(&i2c->dev, "vid is not correct, 0x%04x\n", ret);
-+		return -ENODEV;
-+	}
-+	ret = i2c_smbus_read_word_data(i2c, TCPC_PRODUCT_ID);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != RT1711H_PID) {
-+		dev_err(&i2c->dev, "pid is not correct, 0x%04x\n", ret);
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
-+static int rt1711h_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *i2c_id)
-+{
-+	int ret;
-+	struct rt1711h_chip *chip;
-+
-+	ret = rt1711h_check_revision(client);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "check vid/pid fail\n");
-+		return ret;
-+	}
-+
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->data.regmap = devm_regmap_init_i2c(client,
-+						 &rt1711h_regmap_config);
-+	if (IS_ERR(chip->data.regmap))
-+		return PTR_ERR(chip->data.regmap);
-+
-+	chip->dev = &client->dev;
-+	i2c_set_clientdata(client, chip);
-+
-+	ret = rt1711h_sw_reset(chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = rt1711h_init_alert(chip, client);
-+	if (ret < 0)
-+		return ret;
-+
-+	chip->data.init = rt1711h_init;
-+	chip->data.set_vconn = rt1711h_set_vconn;
-+	chip->data.start_drp_toggling = rt1711h_start_drp_toggling;
-+	chip->tcpci = tcpci_register_port(chip->dev, &chip->data);
-+	if (IS_ERR_OR_NULL(chip->tcpci))
-+		return PTR_ERR(chip->tcpci);
-+
-+	return 0;
-+}
-+
-+static int rt1711h_remove(struct i2c_client *client)
-+{
-+	struct rt1711h_chip *chip = i2c_get_clientdata(client);
-+
-+	tcpci_unregister_port(chip->tcpci);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id rt1711h_id[] = {
-+	{ "rt1711h", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, rt1711h_id);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id rt1711h_of_match[] = {
-+	{ .compatible = "richtek,rt1711h", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rt1711h_of_match);
-+#endif
-+
-+static struct i2c_driver rt1711h_i2c_driver = {
-+	.driver = {
-+		.name = "rt1711h",
-+		.of_match_table = of_match_ptr(rt1711h_of_match),
-+	},
-+	.probe = rt1711h_probe,
-+	.remove = rt1711h_remove,
-+	.id_table = rt1711h_id,
-+};
-+module_i2c_driver(rt1711h_i2c_driver);
-+
-+MODULE_AUTHOR("ShuFan Lee <shufan_lee@richtek.com>");
-+MODULE_DESCRIPTION("RT1711H USB Type-C Port Controller Interface Driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+Dan
