@@ -1,15 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] display: panel: Add AUO g070vvn01 display support
- (800x480)
-Date: Mon, 9 Apr 2018 16:19:49 -0500
-Message-ID: <20180409211949.cp4jqmtlaswi5jyz@rob-hp-laptop>
-References: <20180403101525.22369-1-lukma@denx.de>
+Subject: Re: [PATCH 6/7] clk: sunxi-ng: sun5i: Export the MBUS clock
+Date: Mon, 9 Apr 2018 16:23:42 -0500
+Message-ID: <20180409212342.xoxmbm6onj2xjmu3@rob-hp-laptop>
+References: <cover.54a07919b9d7fe8d7c90e9f4929648013e641cff.1522761929.git-series.maxime.ripard@bootlin.com>
+ <6d6004e057609109f6b3a0c014c30f7914eb4401.1522761929.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180403101525.22369-1-lukma@denx.de>
+In-Reply-To: <6d6004e057609109f6b3a0c014c30f7914eb4401.1522761929.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -19,40 +19,18 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMDMsIDIwMTggYXQgMTI6MTU6MjVQTSArMDIwMCwgTHVrYXN6IE1hamV3c2tp
-IHdyb3RlOgo+IFRoaXMgY29tbWl0IGFkZHMgc3VwcG9ydCBmb3IgQVVPJ3MgNy4wIiBkaXNwbGF5
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEx1a2FzeiBNYWpld3NraSA8bHVrbWFAZGVueC5kZT4KPiAt
-LS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGcwNzB2dm4wMSAgICAgICAgICAg
-fCAzMCArKysrKysrKysrKysrKysrKysrKysKCi50eHQKCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMzEgKysrKysrKysrKysrKysrKysrKysr
-Kwo+ICAyIGZpbGVzIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxn
-MDcwdnZuMDEKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGcwNzB2dm4wMSBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxnMDcwdnZuMDEKPiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYmQ0MDE3MzYyMDk0Cj4gLS0tIC9kZXYvbnVsbAo+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1
-byxnMDcwdnZuMDEKPiBAQCAtMCwwICsxLDMwIEBACj4gK0FVIE9wdHJvbmljcyBDb3Jwb3JhdGlv
-biA3LjAiIEZIRCAoODAwIHggNDgwKSBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYXVvLGcwNzB2dm4wMSIKPiArLSBi
-YWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhl
-IHBhbmVsCj4gKy0gcG93ZXItc3VwcGx5OiBzaW5nbGUgcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhl
-IHN1cHBseSB2b2x0YWdlCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArLSBwb3J0OiBQYXJhbGxl
-bCBwb3J0IG1hcHBpbmcgdG8gY29ubmVjdCB0aGlzIGRpc3BsYXkKPiArCj4gK1RoaXMgcGFuZWwg
-bmVlZHMgc2luZ2xlIHBvd2VyIHN1cHBseSB2b2x0YWdlLiBJdHMgYmFja2xpZ2h0IGlzIGNvbm50
-cm9sbGVkCj4gK3ZpYSBQV00gc2lnbmFsLgo+ICsKPiArRXhhbXBsZToKPiArLS0tLS0tLS0KPiAr
-Cj4gK0V4YW1wbGUgZGV2aWNlLXRyZWUgZGVmaW5pdGlvbiB3aGVuIGNvbm5lY3RlZCB0byBpTVg2
-USBiYXNlZCBib2FyZAo+ICsKPiArCWxjZF9wYW5lbDogbGNkLXBhbmVsIHsKPiArCQljb21wYXRp
-YmxlID0gImF1byxnMDcwdnZuMDEiOwo+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0X2xjZD47
-Cj4gKwkJYnVzLWZvcm1hdC1vdmVycmlkZSA9ICJyZ2I1NjUiOwoKVGhpcyBpcyBub3QgZG9jdW1l
-bnRlZCB0aG91Z2ggaXQgYXBwZWFycyBpbiBhIGZldyBpLk1YIGR0cyBmaWxlcy4KCj4gKwkJcG93
-ZXItc3VwcGx5ID0gPCZyZWdfZGlzcGxheT47Cj4gKwo+ICsJCXBvcnQgewo+ICsJCQlsY2RfcGFu
-ZWxfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbGNkX2Rpc3BsYXlf
-b3V0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+T24gVHVlLCBBcHIgMDMsIDIwMTggYXQgMDM6Mjk6MTlQTSArMDIwMCwgTWF4aW1lIFJpcGFyZCB3
+cm90ZToKPiBUaGUgTUJVUyBjbG9jayBpcyB1c2VkIGJ5IHRoZSBNQlVTIGNvbnRyb2xsZXIsIHNv
+IGxldCdzIGV4cG9ydCBpdCBzbyB0aGF0Cj4gd2UgY2FuIHVzZSBpdCBpbiBvdXIgRFQgbm9kZS4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4u
+Y29tPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNWkuaCAgICAgIHwgNCAt
+LS0tCj4gIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3VuNWktY2N1LmggfCAyICstCj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDUgZGVsZXRpb25zKC0pCgpSZXZpZXdlZC1i
+eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
