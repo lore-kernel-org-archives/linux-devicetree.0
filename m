@@ -1,33 +1,57 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: sun8i: v40: enable USB host ports
- for Banana Pi M2 Berry
-Date: Mon, 9 Apr 2018 15:33:34 +0800
-Message-ID: <CAGb2v651vpy3jdFY56CQi4yBU1wh01ecPn9cO9fiXkfed35QDA@mail.gmail.com>
-References: <20180406140344.9457-1-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Oliver <oohall@gmail.com>
+Subject: Re: linux-next: build failure after merge of the nvdimm tree
+Date: Mon, 9 Apr 2018 17:34:03 +1000
+Message-ID: <CAOSf1CGjFOPPQPYNA=uLFJnVyNXQnsoBb8rm2qFi8uuUHmw8ZA@mail.gmail.com>
+References: <20180409131619.0bc5fb45@canb.auug.org.au> <CAOSf1CHToZ5+k90n_sgh_9ezJjXpx21E5-K66TWkdU7t7kUiEw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZNOVTLAKGQEIHOHZSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180406140344.9457-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOSf1CHToZ5+k90n_sgh_9ezJjXpx21E5-K66TWkdU7t7kUiEw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Dan Williams <dan.j.williams@intel.com>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 6, 2018 at 10:03 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
-> ports, and it's connected to the USB1 port of the SoC.
+On Mon, Apr 9, 2018 at 1:38 PM, Oliver <oohall@gmail.com> wrote:
+> On Mon, Apr 9, 2018 at 1:16 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>> Hi Dan,
+>>
+>> After merging the nvdimm tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+>>
+>> ERROR: "of_node_to_nid" [drivers/nvdimm/of_pmem.ko] undefined!
+>>
+>> Caused by commit
+>>
+>>   717197608952 ("libnvdimm: Add device-tree based driver")
+>>
+>> X86 seems to not have a version of of_node_to_nid() even though CONFIG_OF
+>> and CONFIG_NUMA are both 'y' in this build.
 >
-> Enable it.
+> It's a side effect of a driver selecting CONFIG_OF accidently. There's
+> a patch to fix this in the drm-misc-next tree:
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> https://lkml.org/lkml/2018/4/3/17
+>
+>> I have used the nvdimm tree from next-20180406 for today.
+>
+> That works too.
 
-Verified against public schematics.
+Hmm, on closer inspection this is actually a bug in the of driver. The
+patch above fixes the specific problem that we hit on ia64 due to
+CONFIG_OF being selected by accident, but the underlying issue will
+affect any platform that doesn't provide an implementation of
+of_node_to_nid().
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+The fundamental problem is that the various actual implementations of
+of_node_to_nid (ppc, sparc and the generic one in of_numa.c) export
+the symbol. While the fallback implementation does not because it is
+defined as a weak symbol. As a result we'll get this build failure iff
+there's a call to of_node_to_nid() in a module.
+
+The one-line fix is just to delete the call to of_node_to_nid() in
+of_pmem.c. I have a patch that adds a Kconfig options and removes the
+weak symbol games. That needs Acks from the ppc, sparc and DT
+maintainers though so it'll take longer to organise.
+
+Oliver
