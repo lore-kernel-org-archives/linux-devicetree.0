@@ -1,204 +1,78 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH v2 00/10]  Add support for SAMA5D2 touchscreen
-Date: Tue, 10 Apr 2018 09:38:12 +0200
-Message-ID: <20180410073812.xbt3n6oegr23nlff@qschulz>
-References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
- <20180330140212.57dad66d@archlinux>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH v2 6/9] PCI: dwc: Define maximum number of vectors
+Date: Tue, 10 Apr 2018 08:59:30 +0100
+Message-ID: <a75bab38-55b7-b788-5ab4-b777fad2b7ff@synopsys.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
+ <bf7062c863f33b2951acc586b1f22d3497ee2f10.1523266508.git.gustavo.pimentel@synopsys.com>
+ <20180409160356.GA14533@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yqxejmhoftmcksd5"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180330140212.57dad66d@archlinux>
+In-Reply-To: <20180409160356.GA14533@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Eugen Hristev <eugen.hristev@microchip.com>, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lorenzo,
 
---yqxejmhoftmcksd5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09/04/2018 17:03, Lorenzo Pieralisi wrote:
+> On Mon, Apr 09, 2018 at 10:41:15AM +0100, Gustavo Pimentel wrote:
+>> Adds a callback that defines the maximum number of vectors that can be use
+>> by the Root Complex.
+>>
+>> Since this is a parameter associated to each SoC IP setting, makes sense to
+>> be configurable and easily visible to future modifications.
+>>
+>> The designware IP supports a maximum of 256 vectors.
+> 
+> I think that a DT property instead of a callback would have made more
+> sense - I struggle to see the point in defining a callback to initialize
+> a variable, this can be done in the generic dwc code (and a DT binding).
 
-Hi Jonathan and Eugen,
+The addition of this callback was done in MSI-X patch series before I take over
+the PCIe Designware driver responsibility. However I remember a thread in which
+this subject was discussed (see [1]), maybe this could bring some light about
+the motive why is was done like this. If you don't agree I can do patch after
+this series only focusing on this topic in order to do like to suggested.
 
-On Fri, Mar 30, 2018 at 02:02:12PM +0100, Jonathan Cameron wrote:
-> On Tue, 27 Mar 2018 15:32:33 +0300
-> Eugen Hristev <eugen.hristev@microchip.com> wrote:
->=20
-> > Hello,
-> >=20
-> > This patch series is a rework of my previous series named:
-> > [PATCH 00/14] iio: triggers: add consumer support
-> >=20
-> > In few words, this is the implementation of splitting the functionality
-> > of the IP block ADC device in SAMA5D2 SoC from ADC with touchscreen
-> > support. In order to avoid having a MFD device, two separate
-> > drivers that would work on same register base and split the IRQ,etc,
-> > as advised on the mailing list, I created a consumer driver for the
-> > channels, that will connect to the ADC as described in the device tree.
-> >=20
-> > I have collected feedback from everyone and here is the result:
-> > I have added a new generic resistive touchscreen driver, which acts
-> > as a iio consumer for the given channels and will create an input
-> > device and report the events. It uses a callback buffer to register
-> > to the IIO device and waits for data to be pushed.
-> > Inside the IIO device, I have kept a similar approach with the first ve=
-rsion
-> > of the series, except that now the driver can take multiple buffers, and
-> > will configure the touchscreen part of the hardware device if the speci=
-fic
-> > channels are requested.
-> >=20
-> > The SAMA5D2 ADC driver registers three new channels: two for the
-> > position on the X and Y axis, and one for the touch pressure.
-> > When channels are requested, it will check if the touchscreen channel m=
-ask
-> > includes the requested channels (it is possible that the consumer driver
-> > will not request pressure for example). If it's the case, it will work
-> > in touchscreen mode, and will refuse to do usual analog-digital convers=
-ion,
-> > because we have a single trigger and the touchscreen needs it.
-> > When the scan mask will include only old channels, the driver will func=
-tion
-> > in the same way as before. If the scan mask somehow is a mix of the two=
- (the
-> > masks intersect), the driver will refuse to work whatsoever (cannot hav=
-e both
-> > in the same time).
-> > The driver allows reading raw data for the new channels, if claim direct
-> > mode works: no touchscreen driver requested anything. The new channels =
-can
-> > act like the old ones. However, when requesting these channels, the usu=
-al
-> > trigger will not work and will not be enabled. The touchscreen channels
-> > require special trigger and irq configuration: pen detect, no pen detect
-> > and a periodic trigger to sample the touchscreen position and pressure.
-> > If the user attempts to use another trigger while there is a buffer
-> > that already requested the touchscreen channels (thus the trigger), the
-> > driver will refuse to comply.
-> >=20
-> > In order to have defines for the channel numbers, I added a bindings in=
-clude
-> > file that goes on a separate commit :
-> > dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer =
-info
-> > This should go in the same tree with the following commits :
-> >   ARM: dts: at91: sama5d2: add channel cells for ADC device
-> >   ARM: dts: at91: sama5d2: Add resistive touch device
-> >=20
-> > as build will break because these commits depend on the binding one
-> > which creates the included header file.
-> >=20
-> > After the discussions earlier this year on the mailing list, I hope this
-> > rework of the patches is much better and fulfills all the requirements
-> > for this implementation.
-> As I said in one of the later patches, I like this a lot.
-> It is a good blend of the moderately nasty handling needed in the ADC
-> driver with a lovely generic input driver.
->=20
-> Very nice!  Hope everyone else agrees ;)
->=20
+[1] -> https://www.spinics.net/lists/linux-pci/msg61835.html
+> 
+> Lorenzo
+> 
+>> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Change v1->v2:
+>> - Nothing changed, just to follow the patch set version.
+>>
+>>  drivers/pci/dwc/pcie-designware-plat.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
+>> index 5382a7a..94da252 100644
+>> --- a/drivers/pci/dwc/pcie-designware-plat.c
+>> +++ b/drivers/pci/dwc/pcie-designware-plat.c
+>> @@ -48,8 +48,14 @@ static int dw_plat_pcie_host_init(struct pcie_port *pp)
+>>  	return 0;
+>>  }
+>>  
+>> +static void dw_plat_set_num_vectors(struct pcie_port *pp)
+>> +{
+>> +	pp->num_vectors = MAX_MSI_IRQS;
+>> +}
+>> +
+>>  static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
+>>  	.host_init = dw_plat_pcie_host_init,
+>> +	.set_num_vectors = dw_plat_set_num_vectors,
+>>  };
+>>  
+>>  static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
+>> -- 
+>> 2.7.4
+>>
+>>
 
-I'd love to see a generic touchscreen driver being an iio consumer!
-
-However, I've already a case that can't be handled unfortunately.
-
-I posted ~2 years ago a patch series[1] for touchscreen support for
-Allwinner SoCs that are using their ADC (also) for touchscreen purpose.
-
-It's been a very long time, I'm trying the hardest I can with my
-"IIRC-skills".
-
-There are several problems:
-  - Data is stored in one register as a queue following this scheme:
-    X @t=3D0 coord, Y @t=3D0 coord, X @t=3D1 coord, Y @t=3D1 coord, X @t=3D2
-    coord, Y @t=3D2 coord, etc...
-
-    Thus, I suppose I've only one channel and not two for coordinates.
-
-  - The first data stored after an up event is absolutely unreliable so
-  I have to flush it, thus I need to use another API call to have the
-  touchscreen driver do some logic with a whole queue only when it's
-  after an up event (it doesn't really make sense to do so in the IIO
-  driver, does it?).
-
-  - This up event is an interrupt.. that is configurable from the same
-  set of registers than for the ADC, so I need an mfd,
-
-What are your thoughts (and maybe workarounds?) on those issues?
-
-Thanks,
-Quentin
-
-[1] https://lkml.org/lkml/2016/7/20/156
-
-> Jonathan
->=20
-> >=20
-> > Eugen Hristev (10):
-> >   MAINTAINERS: add generic resistive touchscreen adc
-> >   iio: Add channel for Position Relative
-> >   dt-bindings: input: touchscreen: touch_adc: create bindings
-> >   iio: inkern: add module put/get on iio dev module when requesting
-> >     channels
-> >   iio: adc: at91-sama5d2_adc: fix channel configuration for differential
-> >     channels
-> >   iio: adc: at91-sama5d2_adc: add support for position and pressure
-> >     channels
-> >   input: touchscreen: touch_adc: add generic resistive ADC touchscreen
-> >   dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer
-> >     info
-> >   ARM: dts: at91: sama5d2: add channel cells for ADC device
-> >   ARM: dts: at91: sama5d2: Add resistive touch device
-> >=20
-> >  Documentation/ABI/testing/sysfs-bus-iio            |  12 +
-> >  .../bindings/iio/adc/at91-sama5d2_adc.txt          |   9 +
-> >  .../bindings/input/touchscreen/touch_adc.txt       |  33 ++
-> >  MAINTAINERS                                        |   6 +
-> >  arch/arm/boot/dts/sama5d2.dtsi                     |  12 +
-> >  drivers/iio/adc/at91-sama5d2_adc.c                 | 491 +++++++++++++=
-+++++++-
-> >  drivers/iio/industrialio-core.c                    |   1 +
-> >  drivers/iio/inkern.c                               |   8 +-
-> >  drivers/input/touchscreen/Kconfig                  |  13 +
-> >  drivers/input/touchscreen/Makefile                 |   1 +
-> >  drivers/input/touchscreen/touch_adc.c              | 199 +++++++++
-> >  include/dt-bindings/iio/adc/at91-sama5d2_adc.h     |  16 +
-> >  include/uapi/linux/iio/types.h                     |   1 +
-> >  tools/iio/iio_event_monitor.c                      |   2 +
-> >  14 files changed, 791 insertions(+), 13 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
-/touch_adc.txt
-> >  create mode 100644 drivers/input/touchscreen/touch_adc.c
-> >  create mode 100644 include/dt-bindings/iio/adc/at91-sama5d2_adc.h
-> >=20
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---yqxejmhoftmcksd5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJazGnhAAoJEIS4mnU+4PGjjQ4P/1CFDe28McyTLRHonBDxGMEg
-k2fi6/gll3XkRhBVNRY3luuhcAHD4AIs1mIBiAQ9kyqh2haixIPxdW3+FnQoEHE/
-NnBjohuhgB3dwWPY8C6p9zh9xHjCD2z6iN86d2mJxwBLEme7kxV4RtJTKszILIHG
-YjKe6jGMziJfw7Xsqy43BxHZAxbiF68vX0XD1bvukSBg0boFGSqqv04FQ1/+veKA
-V9rWJWgJoBFkq9NXHLn3Xq8aWSeLFc4asWsGizlT4camdUBY4vKYGAFG0JzMa/Fh
-J6QrkG8jbJIHPBCqjdKcHxKD0kZqH6e2g594KlVAxsdpEsSXTEeK0SzEf4HZJ2l0
-xURrBY7rW0erObFf/EYl3Je3T+CLqE09Rl7/6MPtqbOILk13pXPGXEjENSA3VALa
-aAOz+w8TOeQi4MjeZZ6C0ULVK6iSkCuFEC3GaFjLfa7emYQWIF3mv+FAsoO5nEN5
-KGBUyNtpQVQial9muR2VhnDJjSph3d5SQZyYToFOf7jlntypKeFyW99TNXXXKAmJ
-IRkJ5o4nET4qaZa1nRLKPTCmHA1uCXW8IyV/alUkN6in2ptyzcr6Bpci9EDLQ1tm
-DmpclK7lrEJ4gWRrPrFtQTexEXN2rFXFJtdE5Dg0bjCGsPDGSaVHQ+0CLmaNOPrx
-UDZVg+sRYzGPv1VgJMdO
-=TMrW
------END PGP SIGNATURE-----
-
---yqxejmhoftmcksd5--
+Regards,
+Gustavo
