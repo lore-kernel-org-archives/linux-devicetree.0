@@ -1,127 +1,54 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/5] clk: Extract OF clock helpers in <linux/of_clk.h>
-Date: Tue, 10 Apr 2018 14:51:37 +0200
-Message-ID: <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
-References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: [PATCH v3 03/10] PCI: endpoint: functions/pci-epf-test: Add second entry
+Date: Tue, 10 Apr 2018 13:58:35 +0100
+Message-ID: <2f9b5b7f1c1e5f0d0b3ca2decab2b6f3b2788784.1523360166.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
+References: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-The use of of_clk_get_parent_{count,name}() and of_clk_init() is not
-limited to clock providers.
+Adds a seconds entry on the pci_epf_test_ids structure that disables the
+linkup_notifier parameter on driver.
 
-Hence move these helpers into their own header file, so callers that are
-not clock providers no longer have to include <linux/clk-provider.h>.
+This allows EPs that doesn't have linkup notification signal to work
+with pcitest.
 
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
-v2:
-  - New.
+Change v2->v3:
+ - Added second entry in pci_epf_test_ids structure.
+ - Remove test_reg_bar field assignment on second entry.
 
-I have't added an SPDX-License-Identifier line, as
-<linux/clk-provider.h> also doesn't have one yet.
+ drivers/pci/endpoint/functions/pci-epf-test.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Other candidates to be moved here later?
-  - of_clk_get(),
-  - of_clk_get_by_name(),
-  - of_clk_get_from_provider().
----
- include/linux/clk-provider.h | 14 +-------------
- include/linux/of_clk.h       | 29 +++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 13 deletions(-)
- create mode 100644 include/linux/of_clk.h
-
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 210a890008f9e129..61cb4729f22acd6b 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/io.h>
- #include <linux/of.h>
-+#include <linux/of_clk.h>
- 
- #ifdef CONFIG_COMMON_CLK
- 
-@@ -890,13 +891,10 @@ struct clk_hw *of_clk_hw_simple_get(struct of_phandle_args *clkspec,
- struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
- struct clk_hw *of_clk_hw_onecell_get(struct of_phandle_args *clkspec,
- 				     void *data);
--unsigned int of_clk_get_parent_count(struct device_node *np);
- int of_clk_parent_fill(struct device_node *np, const char **parents,
- 		       unsigned int size);
--const char *of_clk_get_parent_name(struct device_node *np, int index);
- int of_clk_detect_critical(struct device_node *np, int index,
- 			    unsigned long *flags);
--void of_clk_init(const struct of_device_id *matches);
- 
- #else /* !CONFIG_OF */
- 
-@@ -943,26 +941,16 @@ of_clk_hw_onecell_get(struct of_phandle_args *clkspec, void *data)
- {
- 	return ERR_PTR(-ENOENT);
- }
--static inline unsigned int of_clk_get_parent_count(struct device_node *np)
--{
--	return 0;
--}
- static inline int of_clk_parent_fill(struct device_node *np,
- 				     const char **parents, unsigned int size)
- {
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 7cef851..63dca44 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -459,10 +459,18 @@ static int pci_epf_test_bind(struct pci_epf *epf)
  	return 0;
  }
--static inline const char *of_clk_get_parent_name(struct device_node *np,
--						 int index)
--{
--	return NULL;
--}
- static inline int of_clk_detect_critical(struct device_node *np, int index,
- 					  unsigned long *flags)
- {
- 	return 0;
- }
--static inline void of_clk_init(const struct of_device_id *matches) {}
- #endif /* CONFIG_OF */
  
- /*
-diff --git a/include/linux/of_clk.h b/include/linux/of_clk.h
-new file mode 100644
-index 0000000000000000..ba3c0e6983ec1543
---- /dev/null
-+++ b/include/linux/of_clk.h
-@@ -0,0 +1,29 @@
-+/*
-+ * OF clock helpers
-+ */
++static const struct pci_epf_test_data data_cfg2 = {
++	.linkup_notifier = false
++};
 +
-+#ifndef __LINUX_OF_CLK_H
-+#define __LINUX_OF_CLK_H
-+
-+#if defined(CONFIG_COMMON_CLK) && defined(CONFIG_OF)
-+
-+unsigned int of_clk_get_parent_count(struct device_node *np);
-+const char *of_clk_get_parent_name(struct device_node *np, int index);
-+void of_clk_init(const struct of_device_id *matches);
-+
-+#else /* !CONFIG_COMMON_CLK || !CONFIG_OF */
-+
-+static inline unsigned int of_clk_get_parent_count(struct device_node *np)
-+{
-+	return 0;
-+}
-+static inline const char *of_clk_get_parent_name(struct device_node *np,
-+						 int index)
-+{
-+	return NULL;
-+}
-+static inline void of_clk_init(const struct of_device_id *matches) {}
-+
-+#endif /* !CONFIG_COMMON_CLK || !CONFIG_OF */
-+
-+#endif /* __LINUX_OF_CLK_H */
+ static const struct pci_epf_device_id pci_epf_test_ids[] = {
+ 	{
+ 		.name = "pci_epf_test",
+ 	},
++	{
++		.name = "pci_epf_test_cfg2",
++		.driver_data = (kernel_ulong_t)&data_cfg2,
++	},
+ 	{},
+ };
+ 
 -- 
 2.7.4
