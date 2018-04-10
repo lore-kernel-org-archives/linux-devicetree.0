@@ -1,75 +1,56 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v3 06/11] iio: inkern: add module put/get on iio dev module when requesting channels
-Date: Tue, 10 Apr 2018 11:57:52 +0300
-Message-ID: <1523350677-27106-7-git-send-email-eugen.hristev@microchip.com>
-References: <1523350677-27106-1-git-send-email-eugen.hristev@microchip.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH] arm64: dts: juno: drop unnecessary address-cells and
+ size-cells properties
+Date: Tue, 10 Apr 2018 10:24:47 +0100
+Message-ID: <20180410092447.GE10254@e110455-lin.cambridge.arm.com>
+References: <1523270385-30461-1-git-send-email-sudeep.holla@arm.com>
+ <1523286560-30889-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523350677-27106-1-git-send-email-eugen.hristev@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
-Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1523286560-30889-1-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When requesting channels for a particular consumer device,
-besides requesting the device (incrementing the reference counter), also
-do it for the driver module of the iio dev. This will avoid the situation
-where the producer IIO device can be removed and the consumer is still
-present in the kernel.
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- drivers/iio/inkern.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index ec98790..68d9b87 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/module.h>
- 
- #include <linux/iio/iio.h>
- #include "iio_core.h"
-@@ -152,6 +153,7 @@ static int __of_iio_channel_get(struct iio_channel *channel,
- 	if (index < 0)
- 		goto err_put;
- 	channel->channel = &indio_dev->channels[index];
-+	try_module_get(channel->indio_dev->driver_module);
- 
- 	return 0;
- 
-@@ -256,8 +258,10 @@ static struct iio_channel *of_iio_channel_get_all(struct device *dev)
- 	return chans;
- 
- error_free_chans:
--	for (i = 0; i < mapind; i++)
-+	for (i = 0; i < mapind; i++) {
-+		module_put(chans[i].indio_dev->driver_module);
- 		iio_device_put(chans[i].indio_dev);
-+	}
- 	kfree(chans);
- 	return ERR_PTR(ret);
- }
-@@ -351,6 +355,7 @@ void iio_channel_release(struct iio_channel *channel)
- {
- 	if (!channel)
- 		return;
-+	module_put(channel->indio_dev->driver_module);
- 	iio_device_put(channel->indio_dev);
- 	kfree(channel);
- }
-@@ -482,6 +487,7 @@ void iio_channel_release_all(struct iio_channel *channels)
- 	struct iio_channel *chan = &channels[0];
- 
- 	while (chan->indio_dev) {
-+		module_put(chan->indio_dev->driver_module);
- 		iio_device_put(chan->indio_dev);
- 		chan++;
- 	}
--- 
-2.7.4
+T24gTW9uLCBBcHIgMDksIDIwMTggYXQgMDQ6MDk6MjBQTSArMDEwMCwgU3VkZWVwIEhvbGxhIHdy
+b3RlOgo+IC9zbWJAODAwMDAwMC9tb3RoZXJib2FyZC9ncGlvX2tleXMgbm9kZSBkb2Vzbid0IGhh
+dmUgInJhbmdlcyIgb3IgInJlZyIKPiBwcm9wZXJ0eSBpbiBjaGlsZCBub2Rlcy4gU28gaXQncyB1
+bm5lY2Vzc2FyeSB0byBoYXZlIGFkZHJlc3MtY2VsbHMKPiBhcyB3ZWxsIGFzIHNpemUtY2VsbHMg
+cHJvcGVydGllcyB3aGljaCByZXN1bHRzIGluIGJlbG93IHdhcm5pbmcuCj4gCj4gV2FybmluZyAo
+YXZvaWRfdW5uZWNlc3NhcnlfYWRkcl9zaXplKToKPiAvc21iQDgwMDAwMDAvbW90aGVyYm9hcmQv
+Z3Bpb19rZXlzOgo+IAl1bm5lY2Vzc2FyeSAjYWRkcmVzcy1jZWxscy8jc2l6ZS1jZWxscyB3aXRo
+b3V0ICJyYW5nZXMiIG9yIGNoaWxkICJyZWciCj4gCXByb3BlcnR5Cj4gCj4gVGhpcyBwYXRjaCBk
+cm9wcyB0aGUgdW5uZWNlc3NhcnkgYWRkcmVzcytzaXplLWNlbGwgcHJvcGVydGllcy4KPiAKPiBD
+YzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+Cj4gQ2M6IExvcmVuem8gUGllcmFs
+aXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPgo+IFNpZ25lZC1vZmYtYnk6IFN1ZGVlcCBI
+b2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+CgpMb29rcyBsaWtlIHRoZSBzZW5zaWJsZSB0aGlu
+ZyB0byBkbyEKClJldmlld2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4K
+CkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1
+bm8tbW90aGVyYm9hcmQuZHRzaSB8IDIgLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25z
+KC0pCj4gCj4gKE1pc3NlZCBjYy1lZCBwZW9wbGUgZWFybGllcikKPiAKPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1tb3RoZXJib2FyZC5kdHNpIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9hcm0vanVuby1tb3RoZXJib2FyZC5kdHNpCj4gaW5kZXggMmFjNDMyMjFkZGI2
+Li42OTgwNGM1ZjExOTcgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVu
+by1tb3RoZXJib2FyZC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1t
+b3RoZXJib2FyZC5kdHNpCj4gQEAgLTU2LDggKzU2LDYgQEAKPiAKPiAgCQkJZ3Bpb19rZXlzIHsK
+PiAgCQkJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsKPiAtCQkJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+Owo+IC0JCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gCj4gIAkJCQlwb3dlci1idXR0b24gewo+
+ICAJCQkJCWRlYm91bmNlX2ludGVydmFsID0gPDUwPjsKPiAtLQo+IDIuNy40Cj4gCgotLSAKPT09
+PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8
+CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEg
+IC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
