@@ -1,31 +1,40 @@
-Return-Path: <SRS0=7/vk=HA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:35297 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751409AbeDKE6C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Apr 2018 00:58:02 -0400
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v3 1/4] gpio: pca953x: set the PCA_PCAL flag also when matching by DT
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHp75VfCV4b5YWgYvkZkonz+TCn1JRD3idwLpEfcZTD99xqtxw@mail.gmail.com>
-Date: Wed, 11 Apr 2018 06:57:51 +0200
-Content-Transfer-Encoding: 7bit
-Message-Id: <C3692040-E1EB-48A1-97C9-6F44DC2943BC@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com> <a5b37e5feff8a58dc63799ec76ef906695fd7239.1523376423.git.hns@goldelico.com> <CAHp75VcXpXZ+Ue7Cz0ORupgUjLTCiEwFYb2cs9kePX6EbEs-+w@mail.gmail.com> <CAHp75VfCV4b5YWgYvkZkonz+TCn1JRD3idwLpEfcZTD99xqtxw@mail.gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Return-Path: <SRS0=vni6=G7=gmail.com=andy.shevchenko@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VcXpXZ+Ue7Cz0ORupgUjLTCiEwFYb2cs9kePX6EbEs-+w@mail.gmail.com>
+References: <cover.1523376423.git.hns@goldelico.com> <a5b37e5feff8a58dc63799ec76ef906695fd7239.1523376423.git.hns@goldelico.com>
+ <CAHp75VcXpXZ+Ue7Cz0ORupgUjLTCiEwFYb2cs9kePX6EbEs-+w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 10 Apr 2018 21:10:04 +0300
+Message-ID: <CAHp75VfCV4b5YWgYvkZkonz+TCn1JRD3idwLpEfcZTD99xqtxw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] gpio: pca953x: set the PCA_PCAL flag also when
+ matching by DT
+Content-Type: text/plain; charset="UTF-8"
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-ID: <devicetree@vger.kernel.org>
 
+On Tue, Apr 10, 2018 at 9:08 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Apr 10, 2018 at 7:07 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>> The of_device_table is missing the PCA_PCAL flag so the
+>> pcal6524 would be operated in tca6424 compatibility mode which
+>> does not handle the new interrupt mask registers.
+>
+>
+>> +       { .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT |
+>> +                                                           PCA_PCAL), },
+>> +       { .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT |
+>> +                                                            PCA_PCAL), },
+>
+> Sorry didn't comment this earlier, though I think one line still
+> better to read disregard of 80 char limit.
 
-> Am 10.04.2018 um 20:10 schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> 
-> #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
+Another possible solution:
 
-Looks the best.
+#define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
 
-I have queued it for v4.
+or alike
 
-BR and thanks,
-Nikolaus
-
+-- 
+With Best Regards,
+Andy Shevchenko
