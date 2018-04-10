@@ -1,15 +1,17 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
-Date: Mon, 9 Apr 2018 20:02:47 -0500
-Message-ID: <CAL_JsqJY-sh+KBVAja=epesGdd=OKJzooeLTpZZD0Z++ZxqzfA@mail.gmail.com>
-References: <20180409074604.17671-1-oohall@gmail.com>
- <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A@mail.gmail.com>
- <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw@mail.gmail.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource sibling
+Date: Tue, 10 Apr 2018 10:10:43 +0800
+Message-ID: <20180410021043.GC25724@localhost.localdomain>
+References: <20180408024724.16812-1-bhe@redhat.com>
+ <20180408024724.16812-2-bhe@redhat.com>
+ <20180409090853.GJ19345@localhost.localdomain>
+ <CAPcyv4huU32+oMeoF8-HmmctafZ_uOZN-v85O5M8Ka8pBXP+Lg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4huU32+oMeoF8-HmmctafZ_uOZN-v85O5M8Ka8pBXP+Lg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
  <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
@@ -20,41 +22,69 @@ List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
 Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 9, 2018 at 4:05 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Apr 9, 2018 at 1:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Apr 9, 2018 at 2:46 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Some OF platforms (pseries and some SPARC systems) has their own
->>> implementations of NUMA affinity detection rather than using the generic
->>> OF_NUMA driver, which mainly exists for arm64. For other platforms one
->>> of two fallbacks provided by the base OF driver are used depending on
->>> CONFIG_NUMA.
->>>
->>> In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
->>> In the =y case the fallback is a real function which is defined as a
->>> weak symbol so that it may be overwritten by the architecture if desired.
->>>
->>> The problem with this arrangement is that the real implementations all
->>> export of_node_to_nid(). Unfortunately it's not possible to export the
->>> fallback since it would clash with the non-weak version. As a result
->>> we get build failures when:
->>>
->>> a) CONFIG_NUMA=y && CONFIG_OF=y, and
->>> b) The platform doesn't implement of_node_to_nid(), and
->>> c) A module uses of_node_to_nid()
->>>
->>> Given b) will be true for most platforms this is fairly easy to hit
->>> and has been observed on ia64 and x86.
->>
->> How specifically do we hit this? The only module I see using
->> of_node_to_nid in mainline is Cell EDAC driver.
->
-> The of_pmem driver is using it currently pending for a 4.17 pull
-> request. Stephen hit the compile failure in -next.
+On 04/09/18 at 08:38am, Dan Williams wrote:
+> On Mon, Apr 9, 2018 at 2:08 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > The struct resource uses singly linked list to link siblings. It's not
+> > easy to do reverse iteration on sibling list. So replace it with list_head.
+> >
+> > And code refactoring makes codes in kernel/resource.c more readable than
+> > pointer operation.
+> >
+> > Besides, type of member variables of struct resource, sibling and child, are
+> > changed from 'struct resource *' to 'struct list_head'. Kernel size will
+> > increase because of those statically defined struct resource instances.
+> >
+> > Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > ---
+> [..]
+> > diff --git a/kernel/resource.c b/kernel/resource.c
+> > index e270b5048988..473c624606f9 100644
+> > --- a/kernel/resource.c
+> > +++ b/kernel/resource.c
+> > @@ -31,6 +31,8 @@ struct resource ioport_resource = {
+> >         .start  = 0,
+> >         .end    = IO_SPACE_LIMIT,
+> >         .flags  = IORESOURCE_IO,
+> > +       .sibling = LIST_HEAD_INIT(ioport_resource.sibling),
+> > +       .child  = LIST_HEAD_INIT(ioport_resource.child),
+> >  };
+> >  EXPORT_SYMBOL(ioport_resource);
+> >
+> > @@ -39,6 +41,8 @@ struct resource iomem_resource = {
+> >         .start  = 0,
+> >         .end    = -1,
+> >         .flags  = IORESOURCE_MEM,
+> > +       .sibling = LIST_HEAD_INIT(iomem_resource.sibling),
+> > +       .child  = LIST_HEAD_INIT(iomem_resource.child),
+> >  };
+> >  EXPORT_SYMBOL(iomem_resource);
+> >
+> > @@ -57,20 +61,32 @@ static DEFINE_RWLOCK(resource_lock);
+> >   * by boot mem after the system is up. So for reusing the resource entry
+> >   * we need to remember the resource.
+> >   */
+> > -static struct resource *bootmem_resource_free;
+> > +static struct list_head bootmem_resource_free = LIST_HEAD_INIT(bootmem_resource_free);
+> >  static DEFINE_SPINLOCK(bootmem_resource_lock);
+> >
+> > +struct resource *sibling(struct resource *res)
+> > +{
+> > +       if (res->parent && !list_is_last(&res->sibling, &res->parent->child))
+> > +               return list_next_entry(res, sibling);
+> > +       return NULL;
+> > +}
+> > +
+> > +struct resource *first_child(struct list_head *head)
+> > +{
+> > +       return list_first_entry_or_null(head, struct resource, sibling);
+> > +}
+> > +
+> 
+> These names are too generic for new global symbols. A "resource_"
+> prefix is warranted.
 
-You mean the stuff reviewed last week in the middle of the merge
-window? Sounds like 4.18 material to me.
-
-Rob
+Thanks, sounds reasonable, will change them as resource_sibling() and
+resource_first_child(). Or res_sibling()/res_1st_child()?
