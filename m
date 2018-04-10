@@ -1,45 +1,52 @@
 Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:17645 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751845AbeDJQHJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 12:07:09 -0400
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 0/4] pcal6524 extensions and fixes for pca953x driver
-Date: Tue, 10 Apr 2018 18:07:00 +0200
-Message-Id: <cover.1523376423.git.hns@goldelico.com>
+Received: from mail-bl2nam02on0066.outbound.protection.outlook.com ([104.47.38.66]:35616
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751803AbeDJSLP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Apr 2018 14:11:15 -0400
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio:imu:mpu6050: support more
+ interrupt types
+References: <20180406220048.29498-1-mkelly@xevo.com>
+ <20180406220048.29498-2-mkelly@xevo.com>
+ <20180410141237.4jozljz6d5okwo2r@rob-hp-laptop>
+From: Martin Kelly <mkelly@xevo.com>
+Message-ID: <b90d4517-3eee-546d-db6c-2f7a7416a943@xevo.com>
+Date: Tue, 10 Apr 2018 11:11:05 -0700
+MIME-Version: 1.0
+In-Reply-To: <20180410141237.4jozljz6d5okwo2r@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
 List-ID: <devicetree@vger.kernel.org>
 
-V3:
-* add Reported-by: and Reviewed-by:
-* fix working for bindings description and example
-* convert all register offsets to hex
-* omit the LEVEL-IRQ RFC/hack commit
+On 04/10/2018 07:12 AM, Rob Herring wrote:
+> On Fri, Apr 06, 2018 at 03:00:48PM -0700, Martin Kelly wrote:
+>> Document that the inv_mpu6050 driver now supports falling edge, rising
+> 
+> It's really about what the h/w supports for bindings.
+> 
 
-2018-04-04 21:00:27: V2:
-* added PCA_PCAL flags if matched through of-table
-* fix address calculation for extended PCAL6524 registers
-* hack to map LEVEL_LOW to EDGE_FALLING to be able to
-  test in combination with ts3a227e driver
-* improve description of bindings for optional vcc-supply
-  and interrupt-controller;
+I understand that about devicetree in general, though in this case the 
+device supports all these types but the driver did not and would 
+silently fail if you gave the wrong type. I wanted to document that it's 
+now safe to use the other interrupt types, while before the 
+documentation told you (correctly) to use only rising edge.
 
-2018-03-10 09:32:53: no initial description
+If you think it's a good idea, I will change the description to 
+"Document that the MPU9250 supports ..." to clarify.
 
-H. Nikolaus Schaller (4):
-  gpio: pca953x: set the PCA_PCAL flag also when matching by DT
-  gpio: pca953x: add register definitions for pcal6524 and fix address
-    calculation
-  DTS: Bindings: pca953x add an optional vcc-supply property
-  DTS: Bindings: pca953x: add example how to use interrupt-controller
-    and gpio-controller
-
- .../devicetree/bindings/gpio/gpio-pca953x.txt      | 34 +++++++++++++
- drivers/gpio/gpio-pca953x.c                        | 56 +++++++++++++++-------
- 2 files changed, 72 insertions(+), 18 deletions(-)
-
--- 
-2.12.2
-
+>> edge, level low, and level high interrupt types, rather than just rising
+>> edge.
+>>
+>> The language used is the same as that in st_lsm6dsx.txt.
+>>
+>> Signed-off-by: Martin Kelly <mkelly@xevo.com>
+>> ---
+>>   Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 11 ++++++++---
+>>   1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
