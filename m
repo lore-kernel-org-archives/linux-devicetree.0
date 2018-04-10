@@ -1,100 +1,93 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
-Date: Tue, 10 Apr 2018 06:24:24 +0000
-Message-ID: <TY1PR01MB1769EC6963CFB3D720D1B9EEF5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
- <20180409192013.5rytwgoixtyraow3@rob-hp-laptop>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY
+ initialization
+Date: Tue, 10 Apr 2018 12:06:27 +0530
+Message-ID: <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
+References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+ <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
+ <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180409192013.5rytwgoixtyraow3@rob-hp-laptop>
+In-Reply-To: <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On 09 April 2018 20:20 Rob Herring wrote:
-> On Wed, Mar 28, 2018 at 03:22:30PM +0100, Phil Edworthy wrote:
-> > The DesignWare GPIO IP can be configured for either 1 or 32
-> > interrupts, but the driver currently only supports 1 interrupt. See
-> > the DesignWare DW_apb_gpio Databook description of the
-> 'GPIO_INTR_IO' parameter.
->=20
-> Someday h/w designers will realize this does nothing to optimize interrup=
-t
-> handling...
-I can imagine some software where the isr is written to handle a specific G=
-PIO
-interrupt _could_ be faster, though no sane software would be designed like
-that.
 
-> > This change allows the driver to work with up to 32 interrupts, it
-> > will get as many interrupts as specified in the DT 'interrupts' propert=
-y.
-> > It doesn't do anything clever with the different interrupts, it just
-> > calls the same handler used for single interrupt hardware.
-> >
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > ---
-> > Note: There are a few lines over 80 chars, but this is just guidance, r=
-ight?
-> >       Especially as there are already some lines over 80 chars.
->=20
-> Code, yes, but not for paragraphs of text in DT bindings.
-Good, that's what I did.
+On 3/30/2018 2:24 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Thu, Mar 29, 2018 at 11:44 AM, Doug Anderson <dianders@chromium.org> wrote:
+>> Hi,
+>>
+>> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>> QMP PHY for USB/PCIE requires pipe_clk for locking of
+>>> retime buffers at the pipe interface. Driver checks for
+>>> PHY_STATUS without enabling pipe_clk due to which
+>>> phy_init() fails with initialization timeout.
+>>> Though pipe_clk is output from PHY (after PLL is programmed
+>>> during initialization sequence) to GCC clock_ctl and then fed
+>>> back to PHY but for PHY_STATUS register to reflect successful
+>>> initialization pipe_clk from GCC must be present.
+>>> Since, clock driver now ignores status_check for pipe_clk on
+>>> clk_enable/disable, driver can safely enable/disable pipe_clk
+>>> from phy_init/exit.
+>>>
+>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>> ---
+>>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
+>>>  1 file changed, 8 insertions(+), 14 deletions(-)
+>> Overall this looks much better than the previous version.  Thanks!  :)
+>>
+>> I wonder one thing though.  You describe the original problem as this:
+>>
+>> 1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
+>> never sets the "ready" status.
+>>
+>> 2. If you don't have the PHY powered on / out of reset (which happens
+>> in qcom_qmp_phy_init()) then when you enable/disable the clock it
+>> doesn't properly update the status.  That's why you needed patch #1 in
+>> this series.
+>>
+>>
+>> I wonder: could you solve the above _without_ needing to use
+>> BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
+>> what happens if you put the clk_prepare_enable() after you've powered
+>> on the PHY and taken it out of reset but before you check the status?
+>> Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
+>> right before the "readl_poll_timeout" of the ready status?
+>>
+>>
+>> If you do that, you'll turn everything on.  Then you'll check that the
+>> clock's status is OK and then that the PHY's status is OK.
+> Oh!  This is what you did in the previous version of the patch, then you said:
+>
+> "That is still needed as PHY might take some time to generate pipe_clk
+> after its PLL is locked".
+>
+> It's really going to take more than the 200 us that the clock driver
+> is giving it?  If so, I'd prefer to increase the amount of time waited
+> in the clock driver, or adding a fixed delay _before_ the clk_enable()
+> so that the 200 us that the clock driver gives it would be enough.
+>
+> I'm just not a fan of ignoring status bits if it can be helped.
 
-> > ---
-> >  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   | 10 ++++-
-> >  drivers/gpio/gpio-dwapb.c                          | 44 ++++++++++++++=
-+++-----
-> >  include/linux/platform_data/gpio-dwapb.h           |  3 +-
-> >  3 files changed, 45 insertions(+), 12 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> > b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> > index 4a75da7..e343581 100644
-> > --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> > +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> > @@ -26,8 +26,14 @@ controller.
-> >    the second encodes the triger flags encoded as described in
-> >
-> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> >  - interrupt-parent : The parent interrupt controller.
-> > -- interrupts : The interrupt to the parent controller raised when
-> > GPIOs
-> > -  generate the interrupts.
-> > +- interrupts : The interrupts to the parent controller raised when
-> > +GPIOs
-> > +  generate the interrupts. If the controller provides one combined
-> > +interrupt
-> > +  for all GPIOs, specify a single interrupt. If the controller
-> > +provides one
-> > +  interrupt for each GPIO, provide a list of interrupts that
-> > +correspond to each
-> > +  of the GPIO pins. When specifying multiple interrupts, if any of
-> > +the GPIOs are
-> > +  not connected to an interrupt, use the interrupt-mask property.
-> > +- interrupt-mask : a 32-bit bit mask that specifies which interrupts
-> > +in the list
-> > +  of interrupts is valid, bit is 1 for a valid irq.
->=20
-> This is not a standard property and would need a vendor prefix. However, =
-I'd
-> prefer you just skip any not connected interrupts with an invalid interru=
-pt
-> number. Then the GPIO number is the index into "interrupts".
-Makes sense, I'll rework it to do this.
+I too would want to do that but it is not just about the delay.
+As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
+as first thing in the PHY initialization sequence. Same sequence also has
+been used in downstream phy driver always.
+Changing the sequence might work but I would like to stick to the HPG
+recommendation and avoid any deviation as PHY issues are very hard to
+debug.
 
-> >  - snps,nr-gpios : The number of pins in the port, a single cell.
->=20
-> This BTW should be deprecated to use "nr-gpios" instead, but that's anoth=
-er
-> patch.
 
-Thanks for your comments,
-Phil
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
