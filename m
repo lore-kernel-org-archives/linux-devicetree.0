@@ -1,123 +1,115 @@
-Return-Path: <SRS0=pAuD=GY=gmail.com=ykaneko0929@kernel.org>
+Return-Path: <SRS0=idpo=G7=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document
+ r8a774[35] CMT support
+Date: Tue, 10 Apr 2018 09:36:39 +0000
+Message-ID: <TY1PR01MB1770621EC40038C4237B1BAAC0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1513618743-4773-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdX7t9eZQ+3rhzZBKBjETqC7EUgZ4D+dxwhrwiMxvF3Wdw@mail.gmail.com>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
- <1522379583-4503-2-git-send-email-ykaneko0929@gmail.com> <CAMuHMdX7t9eZQ+3rhzZBKBjETqC7EUgZ4D+dxwhrwiMxvF3Wdw@mail.gmail.com>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Date: Tue, 3 Apr 2018 20:17:01 +0900
-Message-ID: <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com>
-Subject: Re: [PATCH/RFT v2 1/3] thermal: rcar_thermal: add r8a77995 support
-Content-Type: text/plain; charset="UTF-8"
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "Mark Rutland  <mark.rutland@arm.com>, Fabrizio Castro" <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Geert-san,
+Good morning gentlemen,
 
-2018-03-30 18:25 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> Hi Kaneko-san,
->
-> On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
->> Add support for R-Car D3 (r8a77995) thermal sensor.
->>
->> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
->
-> Thanks for your patch!
->
->> --- a/drivers/thermal/rcar_thermal.c
->> +++ b/drivers/thermal/rcar_thermal.c
->> @@ -58,10 +58,35 @@ struct rcar_thermal_common {
->>         spinlock_t lock;
->>  };
->>
->> +enum rcar_thermal_type {
->> +       RCAR_THERMAL,
->> +       RCAR_GEN2_THERMAL,
->> +       RCAR_GEN3_THERMAL,
->> +};
->> +
->> +struct rcar_thermal_chip {
->> +       int use_of_thermal;
->
-> This can be a single bit:
->
->     unsigned int use_of_thermal : 1;
->
->> +       enum rcar_thermal_type type;
->
-> If you would add feature bits, you can get rid of rcar_thermal_type:
->
->     unsigned int has_filonoff : 1;
->     unsigned int has_enr : 1;
->     unsigned int needs_suspend_resume : 1;
->
-> The number of interrupts can be stored here, too.
+I am very sorry to bother you again, but it seems this patch has no master.=
+ Is anybody willing to take it?
 
-It's nice!
+Thanks,
+Fab
 
+> -----Original Message-----
+> From: Fabrizio Castro [mailto:fabrizio.castro@bp.renesas.com]
+> Sent: 18 December 2017 17:39
+> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
+> Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Daniel Lezcano <dan=
+iel.lezcano@linaro.org>; Thomas Gleixner
+> <tglx@linutronix.de>; devicetree@vger.kernel.org; Simon Horman <horms@ver=
+ge.net.au>; Geert Uytterhoeven
+> <geert+renesas@glider.be>; Chris Paterson <Chris.Paterson2@renesas.com>; =
+Biju Das <biju.das@bp.renesas.com>; linux-renesas-
+> soc@vger.kernel.org
+> Subject: [PATCH v2 1/3] dt-bindings: timer: renesas, cmt: Document r8a774=
+[35] CMT support
 >
->> +};
->> +
->> +static const struct rcar_thermal_chip rcar_thermal = {
->> +       .use_of_thermal = 0,
->> +       .type = RCAR_THERMAL,
+> Document SoC specific compatible strings for r8a7743 and r8a7745.
+> No driver change is needed as the fallback strings will activate
+> the right code.
 >
-> .has_filonoff = 1,
-> .has_enr = 0,
-> ...
-> .nirqs = 1,
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Simon Horman <horms@verge.net.au>
+> ---
+> v1->v2:
+> * "R-Car Gen2 or RZ/G1." -> "R-Car Gen2 and RZ/G1."
+> * "all the R-Car" -> "R-Car"
 >
->> @@ -190,7 +222,8 @@ static int rcar_thermal_update_temp(struct rcar_thermal_priv *priv)
->>          * enable IRQ
->>          */
->>         if (rcar_has_irq_support(priv)) {
->> -               rcar_thermal_write(priv, FILONOFF, 0);
->> +               if (priv->chip->type != RCAR_GEN3_THERMAL)
+>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 14 ++++++++++-=
+---
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 >
-> if (priv->chip->has_filonoff)
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Do=
+cumentation/devicetree/bindings/timer/renesas,cmt.txt
+> index d740989..b40add2 100644
+> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> @@ -22,6 +22,10 @@ Required Properties:
 >
->> @@ -438,6 +471,9 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->>         struct rcar_thermal_priv *priv;
->>         struct device *dev = &pdev->dev;
->>         struct resource *res, *irq;
->> +       struct rcar_thermal_chip *chip = ((struct rcar_thermal_chip *)
+>      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a7=
+3a4.
+>      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a7=
+3a4.
+> +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7=
+743.
+> +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7=
+743.
+> +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7=
+745.
+> +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7=
+745.
+>      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7=
+790.
+>      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7=
+790.
+>      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7=
+791.
+> @@ -31,10 +35,12 @@ Required Properties:
+>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7=
+794.
+>      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7=
+794.
 >
-> I don't think the cast is needed.
-
-I will make 'chip' a const variable.
-
+> -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
+ Gen2.
+> -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
+ Gen2.
+> -These are fallbacks for r8a73a4 and all the R-Car Gen2
+> -entrieslisted above.
+> +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car=
+ Gen2
+> +and RZ/G1.
+> +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car=
+ Gen2
+> +and RZ/G1.
+> +These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
+> +listed above.
 >
->> @@ -457,19 +493,35 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->>         pm_runtime_enable(dev);
->>         pm_runtime_get_sync(dev);
->>
->> -       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> -       if (irq) {
->> -               /*
->> -                * platform has IRQ support.
->> -                * Then, driver uses common registers
->> -                * rcar_has_irq_support() will be enabled
->> -                */
->> -               res = platform_get_resource(pdev, IORESOURCE_MEM, mres++);
->> -               common->base = devm_ioremap_resource(dev, res);
->> -               if (IS_ERR(common->base))
->> -                       return PTR_ERR(common->base);
->> +       for (i = 0; i < nirq; i++) {
->
-> for (i = 0; i < priv->nirqs; i++) {
-
-
-Best regards,
-Kaneko
-
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
+>    - reg: base address and length of the registers block for the timer mo=
+dule.
+>    - interrupts: interrupt-specifier for the timer, one per channel.
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> 2.7.4
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
