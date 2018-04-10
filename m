@@ -1,97 +1,70 @@
-Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:33640 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752163AbeDJR5d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 13:57:33 -0400
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v8 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Tue, 10 Apr 2018 11:57:24 -0600
-Message-Id: <20180410175724.7165-3-ilina@codeaurora.org>
-In-Reply-To: <20180410175724.7165-1-ilina@codeaurora.org>
-References: <20180410175724.7165-1-ilina@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 10 Apr 2018 08:59:38 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] phy: Renesas R-Car gen3 PCIe PHY driver
+Message-ID: <20180410135938.m7c4trmgho6p43tk@rob-hp-laptop>
+References: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: kishon@ti.com, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+On Wed, Apr 04, 2018 at 10:31:26PM +0300, Sergei Shtylyov wrote:
+> This PHY is still mostly undocumented -- the only documented registers
+> exist on R-Car V3H (R8A77980) SoC  where this PHY stays in a powered-down
+> state after a reset and thus  we must power it on for PCIe to work...
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> The patch is against the 'next' branch of Kishon's 'linux-phy.git' repo.
+> 
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt |   32 ++
 
-Command DB provides information on shared resources like clocks,
-regulators etc., probed at boot by the remote subsytem and made
-available in shared memory.
+Separate patch please.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
-
-Changes in v8:
-	- Fix node name
-	- Add no-map property
-Changes in v7:
-	- Fix description of 'reg' property
-
-Changes in v6:
-	- Move to bindings/reserved-memory
-	- Remove indirection address and use only the actual reserved
-	  memory
-
-Changes in v4:
-	- Fix unwanted capitalization
-	- Add reg property
----
- .../bindings/reserved-memory/qcom,cmd-db.txt       | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-
-diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-new file mode 100644
-index 000000000000..68395530c0a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
-@@ -0,0 +1,37 @@
-+Command DB
-+---------
-+
-+Command DB is a database that provides a mapping between resource key and the
-+resource address for a system resource managed by a remote processor. The data
-+is stored in a shared memory region and is loaded by the remote processor.
-+
-+Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-+controlling shared resources. Depending on the board configuration the shared
-+resource properties may change. These properties are dynamically probed by the
-+remote processor and made available in the shared memory.
-+
-+The bindings for Command DB is specified in the reserved-memory section in
-+devicetree. The devicetree representation of the command DB driver should be:
-+
-+Properties:
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,cmd-db"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop encoded array>
-+	Definition: The register address that points to the actual location of
-+		    the Command DB in memory.
-+
-+Example:
-+
-+	reserved-memory {
-+		[...]
-+		reserved-memory@85fe0000 {
-+			reg = <0x0 0x85fe0000 0x0 0x20000>;
-+			compatible = "qcom,cmd-db";
-+			no-map;
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+>  drivers/phy/renesas/Kconfig                                  |    7 
+>  drivers/phy/renesas/Makefile                                 |    1 
+>  drivers/phy/renesas/phy-rcar-gen3-pcie.c                     |  158 +++++++++++
+>  4 files changed, 198 insertions(+)
+> 
+> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
+> ===================================================================
+> --- /dev/null
+> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
+> @@ -0,0 +1,32 @@
+> +* Renesas R-Car generation 3 PCIe PHY
+> +
+> +This file provides information on what the device node for the R-Car
+> +generation 3 PCIe PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,r8a77980-pcie-phy" if the device is a part of R8A77980
+> +	      SoC.
+> +	      "renesas,rcar-gen3-pcie-phy" for a generic R-Car Gen3 compatible
+> +	      device.
+> +
+> +	      When compatible with the generic version, nodes must list the
+> +	      SoC-specific version corresponding to the platform first
+> +	      followed by the generic version.
+> +
+> +- reg: offset and length of the register block.
+> +- clocks: clock phandle and specifier pair.
+> +- power-domains: power domain phandle and specifier pair.
+> +- resets: reset phandle and specifier pair.
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> +
+> +Example (R-Car V3H):
+> +
+> +	pcie-phy@e65d0000 {
+> +		compatible = "renesas,r8a77980-pcie-phy",
+> +			     "renesas,rcar-gen3-pcie-phy";
+> +		reg = <0 0xe65d0000 0 0x8000>;
+> +		#phy-cells = <0>;
+> +		clocks = <&cpg CPG_MOD 319>;
+> +		power-domains = <&sysc 32>;
+> +		resets = <&cpg 319>;
+> +	};
