@@ -1,61 +1,134 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 1/7] clk: msm8996-gcc: change halt check for USB/PCIE
- pipe_clk
-Date: Tue, 10 Apr 2018 12:14:10 +0530
-Message-ID: <b2ad0e6f-addb-5d68-1f5d-ba7e44ce3d70@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-2-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=UXvf+_rvbFGrHAQ1N0kbrMR_c2=LBVD=AMuL6DAjWO+Q@mail.gmail.com>
- <152295883900.91052.4792431636170417291@swboyd.mtv.corp.google.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 2/2] drm/omap: partial workaround for DRA7xx DMM errata
+ i878
+Date: Tue, 10 Apr 2018 09:50:03 +0300
+Message-ID: <b9a017ba-37d0-ec6c-1103-1836e1a83c12@ti.com>
+References: <20180322134206.22857-1-peter.ujfalusi@ti.com>
+ <20180322134206.22857-3-peter.ujfalusi@ti.com> <17308094.P4OCQetjOb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152295883900.91052.4792431636170417291@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <17308094.P4OCQetjOb@avalon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-
-On 4/6/2018 1:37 AM, Stephen Boyd wrote:
-> Quoting Doug Anderson (2018-03-29 13:55:55)
->> Hi,
->>
->> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>> The USB and PCIE pipe clocks are sourced from external clocks
->>> inside the QMP USB/PCIE PHYs. Enabling or disabling of PIPE RCG
->>> clocks is dependent on PHY initialization sequence hence
->>> update halt_check to BRANCH_HALT_DELAY for these clocks so
->>> that clock status bit is not polled when enabling or disabling
->>> the clocks. It allows to simplify PHY client driver code which
->>> is both user and source of the pipe_clk and avoid error logging
->>> related status check on clk_disable/enable.
->>>
->>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>> ---
->>>  drivers/clk/qcom/gcc-msm8996.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->> As per my feedback on <https://patchwork.kernel.org/patch/10314937/>,
->> I'm not a fan of this.  Hopefully we can adjust the PHY driver so it's
->> not needed.
->>
-> Agreed. We should be able to enable the clks at the right time and halt
-> bits should work. From what I can recall we had that working before on
-> db820c, so has something changed?
-
-As replied in other patch IMO it is better to stick to the recommended
-sequence and have this change as it would allow to cleanup PHY driver
-and align with HPG. One reason I can think of why it works
-on db820c is that there is some code in bootloader that enables
-all USB clocks (including pipe_clk). Same is the case with SDM845.
-And I start seeing errors if bootloader is changed or skip pipe_clk enable.
-
-
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgTGF1cmVudCwKCk9uIDIwMTgtMDQtMDQgMDA6MTEsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
+Cj4+ICtzdGF0aWMgaW50IGRtbV9kbWFfY29weShzdHJ1Y3QgZG1tICpkbW0sIGRtYV9hZGRyX3Qg
+c3JjLCBkbWFfYWRkcl90IGRzdCkKPj4gK3sKPj4gKwlzdHJ1Y3QgZG1hX2RldmljZSAqZG1hX2Rl
+diA9IGRtbS0+d2FfZG1hX2NoYW4tPmRldmljZTsKPj4gKwlzdHJ1Y3QgZG1hX2FzeW5jX3R4X2Rl
+c2NyaXB0b3IgKnR4Owo+PiArCWVudW0gZG1hX3N0YXR1cyBzdGF0dXM7Cj4+ICsJZG1hX2Nvb2tp
+ZV90IGNvb2tpZTsKPj4gKwo+PiArCXR4ID0gZG1hX2Rldi0+ZGV2aWNlX3ByZXBfZG1hX21lbWNw
+eShkbW0tPndhX2RtYV9jaGFuLCBkc3QsIHNyYywgNCwgMCk7Cj4+ICsJaWYgKCF0eCkgewo+PiAr
+CQlkZXZfZXJyKGRtbS0+ZGV2LCAiRmFpbGVkIHRvIHByZXBhcmUgRE1BIG1lbWNweVxuIik7Cj4+
+ICsJCXJldHVybiAtRUlPOwo+PiArCX0KPj4gKwo+PiArCWNvb2tpZSA9IHR4LT50eF9zdWJtaXQo
+dHgpOwo+PiArCWlmIChkbWFfc3VibWl0X2Vycm9yKGNvb2tpZSkpIHsKPj4gKwkJZGV2X2Vycihk
+bW0tPmRldiwgIkZhaWxlZCB0byBkbyBETUEgdHhfc3VibWl0XG4iKTsKPj4gKwkJcmV0dXJuIC1F
+SU87Cj4+ICsJfQo+PiArCj4+ICsJZG1hX2FzeW5jX2lzc3VlX3BlbmRpbmcoZG1tLT53YV9kbWFf
+Y2hhbik7Cj4+ICsJc3RhdHVzID0gZG1hX3N5bmNfd2FpdChkbW0tPndhX2RtYV9jaGFuLCBjb29r
+aWUpOwo+IAo+IGRtYV9zeW5jX3dhaXQoKSBoYXMgYSA1cyB0aW1lb3V0LiBZb3UncmUgY2FsbGlu
+ZyB0aGlzIGZ1bmN0aW9uIHdpdGggYSBzcGlubG9jayAKPiBoZWxkLiBUaGUgZW5kIHJlc3VsdCBt
+aWdodCBiZSBzbGlnaHRseSBiZXR0ZXIgdGhhbiBhIGNvbXBsZXRlIHN5c3RlbSBsb2NrIGFzIAo+
+IGNhdXNlZCBieSB0aGUgYnVnIGRlc2NyaWJlZCBpbiBpODc4LCBidXQgb25seSBzbGlnaHRseS4K
+PiAKPiBVbmxlc3MgSSdtIG1pc3Rha2VuIHRoZSByZWFzb24geW91IGNhbid0IHNsZWVwIGhlcmUg
+aXMgYmVjYXVzZSBvZiB0aGUgbmVlZCB0byAKPiBhY2Nlc3MgcmVnaXN0ZXJzIGluIHRoZSBpbnRl
+cnJ1cHQgaGFuZGxlci4gQ291bGQgd2UgdXNlIHRocmVhZGVkIElSUXMgdG8gc29sdmUgCj4gdGhp
+cyA/CgpZb3UgYXJlIHJpZ2h0IHRoYXQgZG1hX3N5bmNfd2FpdCgpIGhhdmUgNXMgdGltZW91dC4g
+QnV0IGl0IGlzIHRoZW9yZXRpY2FsIGluIHRoaXMgY2FzZSBhcyB0aGUgRE1BIHdvdWxkIGZpbmlz
+aCB0aGUgdHJhbnNmZXIgd2F5IGZhc3Rlci4gQXMgYW5kIGV4cGVyaW1lbnQgSSBoYXZlIHRyaWVk
+IHRoaXMgY2hhbmdlOgoKQEAgLTg2LDYgKzg3LDcgQEAgc3RhdGljIGludCBkbW1fZG1hX2NvcHko
+c3RydWN0IGRtbSAqZG1tLCBkbWFfYWRkcl90IHNyYywgZG1hX2FkZHJfdCBkc3QpCiAJc3RydWN0
+IGRtYV9hc3luY190eF9kZXNjcmlwdG9yICp0eDsKIAllbnVtIGRtYV9zdGF0dXMgc3RhdHVzOwog
+CWRtYV9jb29raWVfdCBjb29raWU7CisJdW5zaWduZWQgaW50IHRvdXQgPSAwOwogCiAJdHggPSBk
+bWFfZGV2LT5kZXZpY2VfcHJlcF9kbWFfbWVtY3B5KGRtbS0+d2FfZG1hX2NoYW4sIGRzdCwgc3Jj
+LCA0LCAwKTsKIAlpZiAoIXR4KSB7CkBAIC05OSwxMCArMTAxLDE5IEBAIHN0YXRpYyBpbnQgZG1t
+X2RtYV9jb3B5KHN0cnVjdCBkbW0gKmRtbSwgZG1hX2FkZHJfdCBzcmMsIGRtYV9hZGRyX3QgZHN0
+KQogCQlyZXR1cm4gLUVJTzsKIAl9CiAKKwlkZXZfZXJyKGRtbS0+ZGV2LCAiaTg3OCBkbWFfYXN5
+bmNfaXNzdWVfcGVuZGluZygpXG4iKTsKIAlkbWFfYXN5bmNfaXNzdWVfcGVuZGluZyhkbW0tPndh
+X2RtYV9jaGFuKTsKLQlzdGF0dXMgPSBkbWFfc3luY193YWl0KGRtbS0+d2FfZG1hX2NoYW4sIGNv
+b2tpZSk7CisJZG8geworCQlzdGF0dXMgPSBkbWFlbmdpbmVfdHhfc3RhdHVzKGRtbS0+d2FfZG1h
+X2NoYW4sIGNvb2tpZSwgTlVMTCk7CisJCWlmIChzdGF0dXMgPT0gRE1BX0NPTVBMRVRFKQorCQkJ
+YnJlYWs7CisJCWNwdV9yZWxheCgpOworCX0gd2hpbGUgKHRvdXQrKyA8IDUwKTsKKwogCWlmIChz
+dGF0dXMgIT0gRE1BX0NPTVBMRVRFKQogCQlkZXZfZXJyKGRtbS0+ZGV2LCAiaTg3OCB3YSBETUEg
+Y29weSBmYWlsdXJlXG4iKTsKKwllbHNlCisJCWRldl9lcnIoZG1tLT5kZXYsICJpODc4IHdhIERN
+QSBjb3B5IE9LICh0b3V0OiAldSlcbiIsIHRvdXQpOwogCiAJZG1hZW5naW5lX3Rlcm1pbmF0ZV9h
+bGwoZG1tLT53YV9kbWFfY2hhbik7CiAJcmV0dXJuIDA7CkBAIC0yODYsNiArMjk4LDcgQEAgc3Rh
+dGljIGlycXJldHVybl90IG9tYXBfZG1tX2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQgKmFyZykK
+IAl1MzIgc3RhdHVzID0gZG1tX3JlYWQoZG1tLCBETU1fUEFUX0lSUVNUQVRVUyk7CiAJaW50IGk7
+CiAKKwlkZXZfZXJyKGRtbS0+ZGV2LCAiJXMgLSBFTlRFUlxuIiwgX19mdW5jX18pOwogCS8qIGFj
+ayBJUlEgKi8KIAlkbW1fd3JpdGUoZG1tLCBzdGF0dXMsIERNTV9QQVRfSVJRU1RBVFVTKTsKIApA
+QCAtMzA1LDYgKzMxOCw3IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBvbWFwX2RtbV9pcnFfaGFuZGxl
+cihpbnQgaXJxLCB2b2lkICphcmcpCiAJCXN0YXR1cyA+Pj0gODsKIAl9CiAKKwlkZXZfZXJyKGRt
+bS0+ZGV2LCAiJXMgLSBMRUFWRVxuIiwgX19mdW5jX18pOwogCXJldHVybiBJUlFfSEFORExFRDsK
+IH0KCmFuZCBnZXQ6ClsgICA1OC42OTAwOTMgPCAgICAwLjAwNTU5OD5dIGRtbSA0ZTAwMDAwMC5k
+bW06IG9tYXBfZG1tX2lycV9oYW5kbGVyIC0gRU5URVIKWyAgIDU4LjY5NTYwMSA8ICAgIDAuMDA1
+NTA4Pl0gZG1tIDRlMDAwMDAwLmRtbTogaTg3OCBkbWFfYXN5bmNfaXNzdWVfcGVuZGluZygpClsg
+ICA1OC43MDEyODQgPCAgICAwLjAwNTY4Mz5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4Nzggd2EgRE1B
+IGNvcHkgT0sgKHRvdXQ6IDEpClsgICA1OC43MDY4ODEgPCAgICAwLjAwNTU5Nz5dIGRtbSA0ZTAw
+MDAwMC5kbW06IG9tYXBfZG1tX2lycV9oYW5kbGVyIC0gTEVBVkUKWyAgIDU4LjcxMjQ2NSA8ICAg
+IDAuMDA1NTg0Pl0gZG1tIDRlMDAwMDAwLmRtbTogaTg3OCBkbWFfYXN5bmNfaXNzdWVfcGVuZGlu
+ZygpClsgICA1OC43MTgxNTAgPCAgICAwLjAwNTY4NT5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4Nzgg
+d2EgRE1BIGNvcHkgT0sgKHRvdXQ6IDApClsgICA1OC43MjQ1NzUgPCAgICAwLjAwNjQyNT5dIGRt
+bSA0ZTAwMDAwMC5kbW06IGk4NzggZG1hX2FzeW5jX2lzc3VlX3BlbmRpbmcoKQpbICAgNTguNzMw
+MjYwIDwgICAgMC4wMDU2ODU+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4IHdhIERNQSBjb3B5IE9L
+ICh0b3V0OiAxKQpbICAgNTguNzM1ODcyIDwgICAgMC4wMDU2MTI+XSBkbW0gNGUwMDAwMDAuZG1t
+OiBpODc4IGRtYV9hc3luY19pc3N1ZV9wZW5kaW5nKCkKWyAgIDU4Ljc0MTU1NCA8ICAgIDAuMDA1
+NjgyPl0gZG1tIDRlMDAwMDAwLmRtbTogaTg3OCB3YSBETUEgY29weSBPSyAodG91dDogMikKWyAg
+IDU4Ljc0NzE3NCA8ICAgIDAuMDA1NjIwPl0gZG1tIDRlMDAwMDAwLmRtbTogaTg3OCBkbWFfYXN5
+bmNfaXNzdWVfcGVuZGluZygpClsgICA1OC43NTI4NTcgPCAgICAwLjAwNTY4Mz5dIGRtbSA0ZTAw
+MDAwMC5kbW06IGk4Nzggd2EgRE1BIGNvcHkgT0sgKHRvdXQ6IDIpClsgICA1OC43NTg0NTIgPCAg
+ICAwLjAwNTU5NT5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4NzggZG1hX2FzeW5jX2lzc3VlX3BlbmRp
+bmcoKQpbICAgNTguNzY0MTM3IDwgICAgMC4wMDU2ODU+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4
+IHdhIERNQSBjb3B5IE9LICh0b3V0OiAxKQpbICAgNTguNzY5NzMxIDwgICAgMC4wMDU1OTQ+XSBk
+bW0gNGUwMDAwMDAuZG1tOiBvbWFwX2RtbV9pcnFfaGFuZGxlciAtIEVOVEVSClsgICA1OC43NzUy
+MzcgPCAgICAwLjAwNTUwNj5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4NzggZG1hX2FzeW5jX2lzc3Vl
+X3BlbmRpbmcoKQpbICAgNTguNzgwOTE5IDwgICAgMC4wMDU2ODI+XSBkbW0gNGUwMDAwMDAuZG1t
+OiBpODc4IHdhIERNQSBjb3B5IE9LICh0b3V0OiAyKQpbICAgNTguNzg2NTE1IDwgICAgMC4wMDU1
+OTY+XSBkbW0gNGUwMDAwMDAuZG1tOiBvbWFwX2RtbV9pcnFfaGFuZGxlciAtIExFQVZFClsgICA1
+OC43ODY1NDUgPCAgICAwLjAwMDAzMD5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4NzggZG1hX2FzeW5j
+X2lzc3VlX3BlbmRpbmcoKQpbICAgNTguNzk3Njk4IDwgICAgMC4wMTExNTM+XSBkbW0gNGUwMDAw
+MDAuZG1tOiBpODc4IHdhIERNQSBjb3B5IE9LICh0b3V0OiAxKQpbICAgNTguODExNDU0IDwgICAg
+MC4wMTM3NTY+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4IGRtYV9hc3luY19pc3N1ZV9wZW5kaW5n
+KCkKWyAgIDU4LjgxNzE0OSA8ICAgIDAuMDA1Njk1Pl0gZG1tIDRlMDAwMDAwLmRtbTogaTg3OCB3
+YSBETUEgY29weSBPSyAodG91dDogMCkKWyAgIDU4LjgyMzE2MCA8ICAgIDAuMDA2MDExPl0gZG1t
+IDRlMDAwMDAwLmRtbTogaTg3OCBkbWFfYXN5bmNfaXNzdWVfcGVuZGluZygpClsgICA1OC44Mjg4
+NDYgPCAgICAwLjAwNTY4Nj5dIGRtbSA0ZTAwMDAwMC5kbW06IGk4Nzggd2EgRE1BIGNvcHkgT0sg
+KHRvdXQ6IDApClsgICA1OC44MzQ3NjEgPCAgICAwLjAwNTkxNT5dIGRtbSA0ZTAwMDAwMC5kbW06
+IGk4NzggZG1hX2FzeW5jX2lzc3VlX3BlbmRpbmcoKQpbICAgNTguODQwNDQ2IDwgICAgMC4wMDU2
+ODU+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4IHdhIERNQSBjb3B5IE9LICh0b3V0OiAwKQpbICAg
+NTguODQ2MDczIDwgICAgMC4wMDU2Mjc+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4IGRtYV9hc3lu
+Y19pc3N1ZV9wZW5kaW5nKCkKWyAgIDU4Ljg1MTc1OCA8ICAgIDAuMDA1Njg1Pl0gZG1tIDRlMDAw
+MDAwLmRtbTogaTg3OCB3YSBETUEgY29weSBPSyAodG91dDogMCkKWyAgIDU4Ljg1NzM1NSA8ICAg
+IDAuMDA1NTk3Pl0gZG1tIDRlMDAwMDAwLmRtbTogb21hcF9kbW1faXJxX2hhbmRsZXIgLSBFTlRF
+UgpbICAgNTguODYyODY1IDwgICAgMC4wMDU1MTA+XSBkbW0gNGUwMDAwMDAuZG1tOiBpODc4IGRt
+YV9hc3luY19pc3N1ZV9wZW5kaW5nKCkKWyAgIDU4Ljg2ODU0OSA8ICAgIDAuMDA1Njg0Pl0gZG1t
+IDRlMDAwMDAwLmRtbTogaTg3OCB3YSBETUEgY29weSBPSyAodG91dDogMSkKWyAgIDU4Ljg3NDE0
+NiA8ICAgIDAuMDA1NTk3Pl0gZG1tIDRlMDAwMDAwLmRtbTogb21hcF9kbW1faXJxX2hhbmRsZXIg
+LSBMRUFWRQoKSW4gdGhlIGxvbmcgcnVuIEkgaGF2ZSBzZWVuIG9uZSBjYXNlIHdoZXJlIHRvdXQg
+d2FzIDMuClRvIGJlIGhvbmVzdCBJIHdhcyBhIGJpdCBzdXJwcmlzZWQgdGhhdCB3ZSBoYXZlIHRv
+dXQgPiAwLgpEZXNwaXRlIHRoZSB0b3V0IG51bWJlciwgdGhlIGRpZmYgYmV0d2VlbiB0aGUgaXNz
+dWUgcGVuZGluZyBhbmQgY29tcGxldGlvbiBpcyBhcm91bmQgMC4wMDU2ODMuClRoaXMgaW5jbHVk
+ZXMgdGhlIHByaW50b3V0LCBidXQgSSdtIGxhenkgdG8gZG8gcHJvcGVyIGluc3RydW1lbnRhdGlv
+bi4KCkJ1dCwgZXZlbiB0aGlzIGluIG1pbmQgaXQgaXMgYSBiYWQgaWRlYSB0byBwb2xsIGluIGhh
+cmQgaW50ZXJydXB0IGhhbmRsZXIsIGFuZCB3ZSBkbyB0aGF0IGZvciByZWFkaW5nIHRoZSBETU1f
+UEFUX0lSUVNUQVRVUyByZWdpc3Rlci4KCkknbGwgdHJ5IHRvIG1vdmUgdGhlIGRtbSBkcml2ZXIg
+dG8gdGhyZWFkZWQgaXJxIGFuZCBtdXRleC4KCj4gCj4+ICsJaWYgKHN0YXR1cyAhPSBETUFfQ09N
+UExFVEUpCj4+ICsJCWRldl9lcnIoZG1tLT5kZXYsICJpODc4IHdhIERNQSBjb3B5IGZhaWx1cmVc
+biIpOwo+PiArCj4+ICsJZG1hZW5naW5lX3Rlcm1pbmF0ZV9hbGwoZG1tLT53YV9kbWFfY2hhbik7
+Cj4+ICsJcmV0dXJuIDA7Cj4+ICt9CgotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFu
+ZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNz
+IElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
