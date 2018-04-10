@@ -1,80 +1,66 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 3/8] bindings: PCI: designware: Add support for the EP in
- designware driver
-Date: Tue, 10 Apr 2018 12:11:01 +0100
-Message-ID: <8336d41a-daa7-ea11-9182-74b2ceeda159@synopsys.com>
-References: <cover.1522235224.git.gustavo.pimentel@synopsys.com>
- <dd582bfc2780679b7a092d23547c316234a84c34.1522235224.git.gustavo.pimentel@synopsys.com>
- <20180409191233.l2s5hnrq7gejrmq6@rob-hp-laptop>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iommu/rockchip: Make clock properties
+	optional
+Date: Tue, 10 Apr 2018 12:18:48 +0100
+Message-ID: <99245ec4-6835-7fa7-3bad-dd21874f92c0@arm.com>
+References: <20180410092612.2653-1-heiko@sntech.de>
+	<20180410092612.2653-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180409191233.l2s5hnrq7gejrmq6@rob-hp-laptop>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180410092612.2653-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 10/04/18 10:26, Heiko Stuebner wrote:
+> Rockchip IOMMUs are used without explicit clock handling for 4 years
+> now, so we should keep compatibility with old devicetrees if possible.
+> Therefore make iommu clocks optional.
 
-On 09/04/2018 20:12, Rob Herring wrote:
-> On Wed, Mar 28, 2018 at 12:38:33PM +0100, Gustavo Pimentel wrote:
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 6300762..4bb2e08 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -3,6 +3,7 @@
->>  Required properties:
->>  - compatible:
->>  	"snps,dw-pcie" for RC mode;
->> +	"snps,dw-pcie-ep" for EP mode;
->>  - reg: Should contain the configuration address space.
->>  - reg-names: Must be "config" for the PCIe configuration space.
->>      (The old way of getting the configuration address space from "ranges"
->> @@ -56,3 +57,15 @@ Example configuration:
->>  		#interrupt-cells = <1>;
->>  		num-lanes = <1>;
->>  	};
->> +or
->> +	pcie_ep: pcie_ep@dfc00000 {
+Do we need to touch the binding itself? Obviously the driver has to 
+treat clocks as optional in existing DTs (and I feel a bit dumb now for 
+managing to overlook that in review), but the binding effectively only 
+covers future DTs, and I'd assume we want to encourage the clocks to be 
+correctly specified there.
+
+Robin.
+
+> Fixes: 8fa9eb39c614 ("dt-bindings: iommu/rockchip: Add clock property")
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/iommu/rockchip,iommu.txt | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> pcie-ep@...
+> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> index 6ecefea1c6f9..25bfad987513 100644
+> --- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> @@ -14,13 +14,13 @@ Required properties:
+>                       "single-master" device, and needs no additional information
+>                       to associate with its master device.  See:
+>                       Documentation/devicetree/bindings/iommu/iommu.txt
+> +
+> +Optional properties:
+>   - clocks          : A list of clocks required for the IOMMU to be accessible by
+>                       the host CPU.
+>   - clock-names     : Should contain the following:
+>   	"iface" - Main peripheral bus clock (PCLK/HCL) (required)
+>   	"aclk"  - AXI bus clock (required)
+> -
+> -Optional properties:
+>   - rockchip,disable-mmu-reset : Don't use the mmu reset operation.
+>   			       Some mmu instances may produce unexpected results
+>   			       when the reset operation is used.
 > 
-> Or what others have used. We should define a standard name in the DT 
-> spec for this.
-> 
-
-By looking to [1] and [2], I think I should maintain the pcie name instead of
-pcie-ep.
-
-[1] ->
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pci/ti-pci.txt
-[2] ->
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-
-Thanks for noticing it.
-
->> +		compatible = "snps,dw-pcie-ep";
->> +		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
->> +		      <0xdfc01000 0x0001000>, /* IP registers 2 */
->> +		      <0xd0000000 0x2000000>; /* Configuration space */
->> +		reg-names = "dbi", "dbi2", "addr_space";
->> +		device_type = "pci";
->> +		num-ib-windows = <6>;
->> +		num-ob-windows = <2>;
->> +		num-lanes = <1>;
->> +	};
->> -- 
->> 2.7.4
->>
->>
-
-Regards,
-Gustavo
