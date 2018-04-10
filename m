@@ -1,69 +1,27 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 5/5] iommu/arm-smmu: Add support for qcom,
-	smmu-v2 variant
-Date: Tue, 10 Apr 2018 13:14:57 +0000
-Message-ID: <CAAFQd5Cj3qaqt8ACabZwN4ZKaNbF9N9suGVaOKD8-kNxgfeeVA@mail.gmail.com>
-References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
-	<20180313085534.11650-6-vivek.gautam@codeaurora.org>
-	<61d30fff-1bf8-d2c1-bbe9-f93de836ae77@huawei.com>
-	<7d5af071-ef98-8461-3ce9-e84fc0b3956a@codeaurora.org>
-	<d97872fe-5e8e-cc27-e385-64cea8ea2458@huawei.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/5] clk: Extract OF clock helpers in <linux/of_clk.h>
+Date: Tue, 10 Apr 2018 15:15:24 +0200
+Message-ID: <15715859.glpt2iY6pm@phil>
+References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be> <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <d97872fe-5e8e-cc27-e385-64cea8ea2458-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaojianbo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yisheng,
+Am Dienstag, 10. April 2018, 14:51:37 CEST schrieb Geert Uytterhoeven:
+> The use of of_clk_get_parent_{count,name}() and of_clk_init() is not
+> limited to clock providers.
+> 
+> Hence move these helpers into their own header file, so callers that are
+> not clock providers no longer have to include <linux/clk-provider.h>.
+> 
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Sorry, I think we missed your question here.
-
-On Wed, Mar 28, 2018 at 3:12 PM Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-
-> Hi Vivek,
-
-> On 2018/3/28 12:37, Vivek Gautam wrote:
-> > Hi Yisheng
-> >
-> >
-> > On 3/28/2018 6:54 AM, Yisheng Xie wrote:
-> >> Hi Vivek,
-> >>
-> >> On 2018/3/13 16:55, Vivek Gautam wrote:
-> >>> +- power-domains:  Specifiers for power domains required to be
-powered on for
-> >>> +                  the SMMU to operate, as per generic power domain
-bindings.
-> >>> +
-> >> In this patchset, power-domains is not used right? And you just do the
-clock gating,
-> >> but not power gating, right?
-> >
-> > We are handling the power-domains too. Please see the example in this
-binding doc.
-
-> I see, but I do not find the point in code of these patchset, do you mean
-PMIC(e.g mmcc)
-> will gate the power domain of SMMU(e.g. MDSS_GDSC of mmcc) when PMIC
-suspend?
-
-
-If respective SoC power domains is registered as a standard genpd PM
-domain, then the runtime PM subsystem will take care of power domain
-control at runtime suspend and resume.
-
-Best regards,
-Tomasz
+Really cool move,
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
