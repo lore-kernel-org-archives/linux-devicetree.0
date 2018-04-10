@@ -1,93 +1,87 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY
- initialization
-Date: Tue, 10 Apr 2018 12:06:27 +0530
-Message-ID: <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
- <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv4 08/10] backlight: add TI LMU backlight driver
+Date: Tue, 10 Apr 2018 08:38:20 +0200
+Message-ID: <20180410063820.GA5793@amd>
+References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
+ <20180330172414.26575-9-sebastian.reichel@collabora.co.uk>
+ <20180403104908.GD6758@amd>
+ <20180409155433.zxqs2b2k2xzn6kon@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180409155433.zxqs2b2k2xzn6kon@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Milo Kim <Milo.Kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/30/2018 2:24 AM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Mar 29, 2018 at 11:44 AM, Doug Anderson <dianders@chromium.org> wrote:
->> Hi,
->>
->> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>> QMP PHY for USB/PCIE requires pipe_clk for locking of
->>> retime buffers at the pipe interface. Driver checks for
->>> PHY_STATUS without enabling pipe_clk due to which
->>> phy_init() fails with initialization timeout.
->>> Though pipe_clk is output from PHY (after PLL is programmed
->>> during initialization sequence) to GCC clock_ctl and then fed
->>> back to PHY but for PHY_STATUS register to reflect successful
->>> initialization pipe_clk from GCC must be present.
->>> Since, clock driver now ignores status_check for pipe_clk on
->>> clk_enable/disable, driver can safely enable/disable pipe_clk
->>> from phy_init/exit.
->>>
->>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>> ---
->>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
->>>  1 file changed, 8 insertions(+), 14 deletions(-)
->> Overall this looks much better than the previous version.  Thanks!  :)
->>
->> I wonder one thing though.  You describe the original problem as this:
->>
->> 1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
->> never sets the "ready" status.
->>
->> 2. If you don't have the PHY powered on / out of reset (which happens
->> in qcom_qmp_phy_init()) then when you enable/disable the clock it
->> doesn't properly update the status.  That's why you needed patch #1 in
->> this series.
->>
->>
->> I wonder: could you solve the above _without_ needing to use
->> BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
->> what happens if you put the clk_prepare_enable() after you've powered
->> on the PHY and taken it out of reset but before you check the status?
->> Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
->> right before the "readl_poll_timeout" of the ready status?
->>
->>
->> If you do that, you'll turn everything on.  Then you'll check that the
->> clock's status is OK and then that the PHY's status is OK.
-> Oh!  This is what you did in the previous version of the patch, then you said:
->
-> "That is still needed as PHY might take some time to generate pipe_clk
-> after its PLL is locked".
->
-> It's really going to take more than the 200 us that the clock driver
-> is giving it?  If so, I'd prefer to increase the amount of time waited
-> in the clock driver, or adding a fixed delay _before_ the clk_enable()
-> so that the 200 us that the clock driver gives it would be enough.
->
-> I'm just not a fan of ignoring status bits if it can be helped.
+Hi!
 
-I too would want to do that but it is not just about the delay.
-As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
-as first thing in the PHY initialization sequence. Same sequence also has
-been used in downstream phy driver always.
-Changing the sequence might work but I would like to stick to the HPG
-recommendation and avoid any deviation as PHY issues are very hard to
-debug.
+> > > +static int ti_lmu_bl_add_device(struct ti_lmu_bank *lmu_bank)
+> > > +{
+> > > +	switch (lmu_bank->type) {
+> > > +	case TI_LMU_BL:
+> > > +		return ti_lmu_bl_register_backlight(lmu_bank);
+> > > +	case TI_LMU_LED:
+> > > +		return ti_lmu_bl_register_led(lmu_bank);
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +}
+> >=20
+> > Ok, this is somehow unusual/crazy. Single driver with two
+> > interfaces.
+> >=20
+> > Do we need the LED interface for something?
+> >
+> > If yes, I believe reasonable solution would be to always provide LED
+> > interface, and then have "backlight-trigger" which that would provide
+> > backlight interface for arbitrary LED.
+>=20
+> Userspace expects keyboard backlight to be exposed via the LED
+> subsystem and display backlight via the backlight subsystem.
 
+Ok.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> I considered always exposing the banks via the LED subsystem and
+> using a generic backlight driver. That brings its own problems,
+> since there is a dependency between the display and the backlight.
+> This is described in DT using a phandle. Getting the right backlight
+> device from the phandle will become very tricky with this approach.
+
+I believe we have to do this.
+
+Virtually any LED can be used as a backlight, and we don't really want
+to add two personalities to all the LED drivers.
+
+And it should not be too bad: LED will just have default trigger,
+which will say this LED corresponds to this display device. I believe
+someone wanted to do that for USB/ethernet activity.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlrMW9wACgkQMOfwapXb+vIkBACfZR1KTKRlSldNfZMrF8WODxgj
+MYsAn3UeGWYrf6edRoHD6WA/OeY7EWcj
+=Ma6V
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
