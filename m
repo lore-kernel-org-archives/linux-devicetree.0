@@ -1,41 +1,102 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH] gpio: dwapb: Add support for 32 interrupts
-Date: Tue, 10 Apr 2018 15:00:31 +0000
-Message-ID: <TY1PR01MB17693D030D9B4BEC6D4C58BFF5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
- <20180409192013.5rytwgoixtyraow3@rob-hp-laptop>
- <TY1PR01MB1769EC6963CFB3D720D1B9EEF5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <TY1PR01MB17691846E8DFA86DA831B8B9F5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <CAMuHMdUjYT466uPAHSoAWwQL2KaRUfM1njwpBkHwSK9fbGZTag@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY initialization
+Date: Tue, 10 Apr 2018 08:05:27 -0700
+Message-ID: <CAD=FV=XqH69_LXcCyTS1nF5fHpen=PnRxd-WTz=y3dKvMsRtuw@mail.gmail.com>
+References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+ <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
+ <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com> <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUjYT466uPAHSoAWwQL2KaRUfM1njwpBkHwSK9fbGZTag@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDEwIEFwcmlsIDIwMTggMTU6MjkgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
-b3RlOg0KPiBPbiBUdWUsIEFwciAxMCwgMjAxOCBhdCA0OjIzIFBNLCBQaGlsIEVkd29ydGh5IHdy
-b3RlOg0KPiA+IE9uIDEwIEFwcmlsIDIwMTggMDc6MjQgUGhpbCBFZHdvcnRoeSB3cm90ZToNCj4g
-Pj4gT24gMDkgQXByaWwgMjAxOCAyMDoyMCBSb2IgSGVycmluZyB3cm90ZToNCj4gPj4gPiBPbiBX
-ZWQsIE1hciAyOCwgMjAxOCBhdCAwMzoyMjozMFBNICswMTAwLCBQaGlsIEVkd29ydGh5IHdyb3Rl
-Og0KPiA+IFsuLi5dDQo+ID4+ID4gPiArLSBpbnRlcnJ1cHQtbWFzayA6IGEgMzItYml0IGJpdCBt
-YXNrIHRoYXQgc3BlY2lmaWVzIHdoaWNoDQo+ID4+ID4gPiAraW50ZXJydXB0cyBpbiB0aGUgbGlz
-dA0KPiA+PiA+ID4gKyAgb2YgaW50ZXJydXB0cyBpcyB2YWxpZCwgYml0IGlzIDEgZm9yIGEgdmFs
-aWQgaXJxLg0KPiA+PiA+DQo+ID4+ID4gVGhpcyBpcyBub3QgYSBzdGFuZGFyZCBwcm9wZXJ0eSBh
-bmQgd291bGQgbmVlZCBhIHZlbmRvciBwcmVmaXguDQo+ID4+ID4gSG93ZXZlciwNCj4gPj4gSSdk
-DQo+ID4+ID4gcHJlZmVyIHlvdSBqdXN0IHNraXAgYW55IG5vdCBjb25uZWN0ZWQgaW50ZXJydXB0
-cyB3aXRoIGFuIGludmFsaWQNCj4gPj4gPiBpbnRlcnJ1cHQgbnVtYmVyLiBUaGVuIHRoZSBHUElP
-IG51bWJlciBpcyB0aGUgaW5kZXggaW50byAiaW50ZXJydXB0cyIuDQo+ID4+IE1ha2VzIHNlbnNl
-LCBJJ2xsIHJld29yayBpdCB0byBkbyB0aGlzLg0KPiA+IEVyciwgd2hhdCB3b3VsZCBhbiBpbnZh
-bGlkIGludGVycnVwdCBudW1iZXIgYmU/DQo+ID4gSWYgSSB1c2UgLTEsIEkgZ2V0IGEgRFQgcGFy
-c2luZyBlcnJvciBhbmQgMCBpcyBjZXJ0YWlubHkgdmFsaWQuIElmIHRoZQ0KPiA+IG51bWJlciBp
-cyBsYXJnZXIgdGhhbiB0aGUgdmFsaWQgaW50ZXJydXB0IHJhbmdlIEkgZ2V0IGVycm9ycyBkdXJp
-bmcgcHJvYmUuDQo+IA0KPiBQZXJoYXBzIHVzaW5nIGludGVycnVwdHMtZXh0ZW5kZWQgaW5zdGVh
-ZCBvZiBpbnRlcnJ1cHRzPw0KPiANCj4gRS5nLg0KPiANCj4gICAgIGludGVycnVwdHMtZXh0ZW5k
-ZWQgPSA8JmludGMxIDUgMT4sIDwwPiwgPCZpbnRjMiAxIDA+Ow0KDQpUaGFua3MgZm9yIHRoZSBw
-b2ludGVyLCBJJ2xsIGhhdmUgYSBsb29rLg0KUGhpbA0K
+Hi,
+
+On Mon, Apr 9, 2018 at 11:36 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+> Hi,
+>
+>
+> On 3/30/2018 2:24 AM, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Thu, Mar 29, 2018 at 11:44 AM, Doug Anderson <dianders@chromium.org> wrote:
+>>> Hi,
+>>>
+>>> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>>> QMP PHY for USB/PCIE requires pipe_clk for locking of
+>>>> retime buffers at the pipe interface. Driver checks for
+>>>> PHY_STATUS without enabling pipe_clk due to which
+>>>> phy_init() fails with initialization timeout.
+>>>> Though pipe_clk is output from PHY (after PLL is programmed
+>>>> during initialization sequence) to GCC clock_ctl and then fed
+>>>> back to PHY but for PHY_STATUS register to reflect successful
+>>>> initialization pipe_clk from GCC must be present.
+>>>> Since, clock driver now ignores status_check for pipe_clk on
+>>>> clk_enable/disable, driver can safely enable/disable pipe_clk
+>>>> from phy_init/exit.
+>>>>
+>>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+>>>> ---
+>>>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
+>>>>  1 file changed, 8 insertions(+), 14 deletions(-)
+>>> Overall this looks much better than the previous version.  Thanks!  :)
+>>>
+>>> I wonder one thing though.  You describe the original problem as this:
+>>>
+>>> 1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
+>>> never sets the "ready" status.
+>>>
+>>> 2. If you don't have the PHY powered on / out of reset (which happens
+>>> in qcom_qmp_phy_init()) then when you enable/disable the clock it
+>>> doesn't properly update the status.  That's why you needed patch #1 in
+>>> this series.
+>>>
+>>>
+>>> I wonder: could you solve the above _without_ needing to use
+>>> BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
+>>> what happens if you put the clk_prepare_enable() after you've powered
+>>> on the PHY and taken it out of reset but before you check the status?
+>>> Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
+>>> right before the "readl_poll_timeout" of the ready status?
+>>>
+>>>
+>>> If you do that, you'll turn everything on.  Then you'll check that the
+>>> clock's status is OK and then that the PHY's status is OK.
+>> Oh!  This is what you did in the previous version of the patch, then you said:
+>>
+>> "That is still needed as PHY might take some time to generate pipe_clk
+>> after its PLL is locked".
+>>
+>> It's really going to take more than the 200 us that the clock driver
+>> is giving it?  If so, I'd prefer to increase the amount of time waited
+>> in the clock driver, or adding a fixed delay _before_ the clk_enable()
+>> so that the 200 us that the clock driver gives it would be enough.
+>>
+>> I'm just not a fan of ignoring status bits if it can be helped.
+>
+> I too would want to do that but it is not just about the delay.
+> As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
+> as first thing in the PHY initialization sequence. Same sequence also has
+> been used in downstream phy driver always.
+> Changing the sequence might work but I would like to stick to the HPG
+> recommendation and avoid any deviation as PHY issues are very hard to
+> debug.
+
+So hardware guys tell you that you're _supposed to_ ignore the clock
+ready bit for that clock and just hope it turns on and settles in time
+once power comes on for the clock?  That doesn't seem ideal.  My guess
+is that it's a bug in the specification that the QMP PHY hardware
+designers gave you.
+
+Stephen can feel free to override me if he disagrees since he's in
+charge of the clock part of this, but IMHO we should get the
+specification fixed and turn things on in the order that lets us check
+the status bits.
+
+
+-Doug
