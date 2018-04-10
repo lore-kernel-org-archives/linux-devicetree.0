@@ -1,81 +1,113 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
- OF device table
-Date: Tue, 10 Apr 2018 12:20:47 +0200
-Message-ID: <CAFqH_50O=V2jh3FDJ+udqL_F2s5W4G+KF1USHR_dKaT82_3EXw@mail.gmail.com>
-References: <20180410095340.24074-1-javierm@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2] display: panel: Add AUO g070vvn01 display support (800x480)
+Date: Tue, 10 Apr 2018 12:29:27 +0200
+Message-ID: <20180410102927.17787-1-lukma@denx.de>
+References: <20180403101525.22369-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410095340.24074-1-javierm@redhat.com>
+In-Reply-To: <20180403101525.22369-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Javier!
+This commit adds support for AUO's 7.0" display.
 
-2018-04-10 11:53 GMT+02:00 Javier Martinez Canillas <javierm@redhat.com>:
-> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
-> registered via OF") fixed how the I2C core reports the module alias when
-> devices are registered via OF.
->
-> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
-> OF device ID table, so if a Device Tree is using a different one, autoload
-> won't be working for the module (the matching works because the I2C device
-> ID table is used as a fallback).
->
-> So add compatible strings for each of the entries in the I2C device table.
->
-> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
-> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> ---
->
->  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
->  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> index 23e3abc3fdef..cd43fb8bc2ce 100644
-> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> @@ -1,8 +1,12 @@
->  Atmel maXTouch touchscreen/touchpad
->
->  Required properties:
-> -- compatible:
-> +- compatible: Must be one of the following
-> +    atmel,qt602240_ts
-> +    atmel,atmel_mxt_ts
-> +    atmel,atmel_mxt_tp
->      atmel,maxtouch
-> +    atmel,mXT224
->
->  - reg: The I2C address of the device
->
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 7659bc48f1db..e8ef83f168d6 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -3238,7 +3238,11 @@ static int __maybe_unused mxt_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
->
->  static const struct of_device_id mxt_of_match[] = {
-> +       { .compatible = "atmel,qt602240_ts", },
-> +       { .compatible = "atmel,atmel_mxt_ts", },
-> +       { .compatible = "atmel,atmel_mxt_tp", },
->         { .compatible = "atmel,maxtouch", },
-> +       { .compatible = "atmel,mXT224", },
->         {},
->  };
->  MODULE_DEVICE_TABLE(of, mxt_of_match);
-> --
-> 2.14.3
->
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-The Samsung Chromebook Plus is one of the affected devices, with
-current mainline the module is not autoloaded, this patch fixes the
-issue.
+---
+Changes for v2:
+- Add *.txt suffix to the auo,g070wn01 file
+- Remove not needed bus-format-override = "rgb565"; property
+---
+ .../bindings/display/panel/auo,g070vvn01.txt       | 30 +++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+new file mode 100644
+index 000000000000..5e8ace1f8db4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/auo,g070vvn01.txt
+@@ -0,0 +1,30 @@
++AU Optronics Corporation 7.0" FHD (800 x 480) TFT LCD panel
++
++Required properties:
++- compatible: should be "auo,g070vvn01"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
++
++Required nodes:
++- port: Parallel port mapping to connect this display
++
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
++
++Example:
++--------
++
++Example device-tree definition when connected to iMX6Q based board
++
++	lcd_panel: lcd-panel {
++		compatible = "auo,g070vvn01";
++		backlight = <&backlight_lcd>;
++
++		power-supply = <&reg_display>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5591984a392b..62314085b635 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -581,6 +581,34 @@ static const struct panel_desc auo_b133htn01 = {
+ 	},
+ };
+ 
++static const struct display_timing auo_g070vvn01_timings = {
++	.pixelclock = { 33300000, 34209000, 45000000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 20, 40, 200 },
++	.hback_porch = { 87, 40, 1 },
++	.hsync_len = { 1, 48, 87 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 5, 13, 200 },
++	.vback_porch = { 31, 31, 29 },
++	.vsync_len = { 1, 1, 3 },
++};
++
++static const struct panel_desc auo_g070vvn01 = {
++	.timings = &auo_g070vvn01_timings,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 50,
++		.disable = 50,
++		.unprepare = 1000,
++	},
++};
++
+ static const struct display_timing auo_g133han01_timings = {
+ 	.pixelclock = { 134000000, 141200000, 149000000 },
+ 	.hactive = { 1920, 1920, 1920 },
+@@ -2049,6 +2077,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b133xtn01",
+ 		.data = &auo_b133xtn01,
+ 	}, {
++		.compatible = "auo,g070vvn01",
++		.data = &auo_g070vvn01,
++	}, {
+ 		.compatible = "auo,g133han01",
+ 		.data = &auo_g133han01,
+ 	}, {
+-- 
+2.11.0
