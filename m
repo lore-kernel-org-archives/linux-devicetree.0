@@ -1,66 +1,35 @@
-Return-Path: <SRS0=o6D7=G6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from static-102-43-24-46.ipcom.comunitel.net ([46.24.43.102]:39201
-        "EHLO frontend2.localdomain" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1751753AbeDIK4p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 9 Apr 2018 06:56:45 -0400
-Subject: =?UTF-8?B?R3LDvMOfZSB2b24gRnJhdSBKb3JkYW5rYQ==?=
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] usb: gadet: udc: renesas_usb3: add role switch for R-Car SoCs
+Date: Tue, 10 Apr 2018 21:13:52 +0900
+Message-Id: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed; delsp=yes
-Content-Transfer-Encoding: 8Bit
-From: noreply@parador.es
-Reply-To: "Yordanka Nencheva Velikova" <velikovaa1948@gmail.com>
-Message-Id: <20180409104733.96A27125DEB@frontend2.localdomain>
-Date: Mon,  9 Apr 2018 12:47:33 +0200 (CEST)
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org" devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Nachricht des Absenders:
-/Guten Morgen,
-Bitte schämen Sie sich nicht, diese Nachricht zu lesen, weil Sie der
-beabsichtigte Empfänger sind. Ich habe deine E-Mail-Adresse über ein
-Verzeichnis gesehen und ich habe dich kontaktiert, weil ich dringend deine
-Hilfe benötigt habe. Mein Name ist Frau Yordanka Velikova Nencheva. Ich bin
-69 Jahre alt und bin rechtmäßig mit dem verstorbenen Herrn Peter Nencheva
-verheiratet. Ich und mein verstorbener Ehemann waren beide Bürger von
-Bulgarien, aber wir lebten hier in der Elfenbeinküste in Westafrika seit 28
-Jahren.
-Mein verstorbener Ehemann arbeitete viele Jahre lang als Expatriate hier in
-der Elfenbeinküste, bevor er bei einem tödlichen Autounfall starb, bei dem
-er und sein Fahrer hier in der Elfenbeinküste ums Leben kamen. Ich und mein
-verstorbener Mann waren beide verheiratet, ohne ein eigenes leibliches Kind.
-Ich habe derzeit eine schwere Brustkrebskrankheit und schreibe diese
-Nachricht mit Hilfe eines Arztes hier im Krankenhaus in der Elfenbeinküste.
-Als mein verstorbener Ehemann noch am Leben war, hinterlegte er die Summe von
-einer Million fünfhunderttausend Euro (1,500,000.00 Euro) bei der Westra
-Wermlands Sparbank http://www.warbarbank.se/ in Schweden, die er mit der Bank
-eine Vereinbarung unterzeichnete die Mittel werden für wohltätige Zwecke
-verwendet, wie z. Hilfe für die mutterlosen Babys, Unterstützung der
-kirchlichen Aktivitäten und Unterstützung der nicht privilegierten Kinder,
-ihre Ausbildung fortzusetzen. Mein Mann hat diese Entscheidung für diese
-karitative Arbeit getroffen, weil wir kein Kind haben, das die Gelder in der
-schwedischen Bank erbt, und er wurde von einem Waisenhaus in Sofia,
-Bulgarien, erzogen, weil er keine Familie in Bulgarien hat.
-Ich kontaktierte Sie heute, weil mein Arzt mich gerade darüber informiert
-hat, dass meine Brustkrebskrankheit am schlimmsten geworden ist und sie
-nächste Woche eine schwere / tödliche Krebsoperation durchführen werden,
-die ich vielleicht nicht überleben würde, weil der Tod tief in meinem
-Körpersystem gefressen hat. Ich fürchte, wenn ich nächste Woche während
-meiner Operation sterbe, werden die Gelder in der schwedischen Bank
-vergessen, weil ich keinen anderen Verwandten habe, der behauptet, dass ich
-keine Familie meines verstorbenen Ehemannes in Bulgarien finden kann.
-Hinweis: Ich möchte, dass Sie mir helfen, das Geld auf Ihr eigenes Bankkonto
-zu überweisen und es auf Ihr Bankkonto zu überweisen. Sie werden 30%
-(450.000,00 Euro) des Gesamtbetrages für sich selbst als Entschädigung
-einstreichen und die restlichen 70% (1,50, 000,00 Euro) für die
-Wohltätigkeitsarbeit in Ihrem Land verwenden.
-Bitte antworten Sie mir dringend, wenn Sie daran interessiert sind, mir bei
-dieser Transaktion zu helfen, damit ich Ihnen weitere Einzelheiten zusenden
-kann, da ich möchte, dass die Mittel vor meiner bevorstehenden Operation
-nächste Woche überwiesen werden.
-Mit freundlichen Grüßen,
-Frau Yordanka Nencheva Velikova/
-Parador de Alcañiz [1]
+This patch is based on the today's Linus master branch.
+This patch uses the USB role switch framework to attach/detach USB 3.0
+host driver when changes the role via the rcar usb switch driver [1]
+and "usb_role" sysfs.
 
-[1] http://www.parador.es/de/paradores/parador-de-alcaniz
+[1] https://patchwork.kernel.org/patch/10332865/
 
+In the future, I will add using the USB role switch APIs to renesas_usb3
+driver. But, for now, since the device connection framework is not good
+for device tree environment (e.g. calling the API on a driver with
+device name, but device names on device tree environment will be
+<base address register>.<device name>).
+
+Yoshihiro Shimoda (2):
+  usb: gadget: udc: renesas_usb3: add property "renesas,ignore-id"
+  usb: gadget: udc: renesas_usb3: add devm_of_platform_populate()
+
+ Documentation/devicetree/bindings/usb/renesas_usb3.txt |  2 ++
+ drivers/usb/gadget/udc/Kconfig                         |  1 +
+ drivers/usb/gadget/udc/renesas_usb3.c                  | 16 ++++++++++++++++
+ 3 files changed, 19 insertions(+)
+
+-- 
+1.9.1
