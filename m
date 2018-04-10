@@ -1,53 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 0/2] iio: add unit converter
-Date: Tue, 10 Apr 2018 08:06:52 -0500
-Message-ID: <20180410130652.d3kk3vo6p4524mid@rob-hp-laptop>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: afe: add current-sense-cuicuit
+ and voltage-divider
+Date: Tue, 10 Apr 2018 08:13:38 -0500
+Message-ID: <20180410131338.k744yajxspiaqwn4@rob-hp-laptop>
 References: <20180403153635.8228-1-peda@axentia.se>
- <93a6f7fc-4a53-c65c-422c-1649732fed50@ti.com>
- <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
+ <20180403153635.8228-2-peda@axentia.se>
+ <20180408175031.4945e2d7@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
+In-Reply-To: <20180408175031.4945e2d7@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: "Andrew F. Davis" <afd@ti.com>, linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 03, 2018 at 08:09:08PM +0200, Peter Rosin wrote:
-> On 2018-04-03 19:41, Andrew F. Davis wrote:
-> > On 04/03/2018 10:36 AM, Peter Rosin wrote:
-> >> Hi!
-> >>
-> >> This driver implements support for voltage dividers and current
-> >> sense circuits. It's pretty generic and should be easily adaptable
-> >> to other linear scaling purposes...
-> >>
-> > 
-> > I really like this idea, defining channel scaling / channel type
-> > conversion in DT will be very useful. So much so that I would recommend
-> > this not be a use specific driver but instead moved into the IIO core.
-> > 
-> > This would allow defining these channel conversions in the device node
-> > itself, so as to not need a separate node just for the converter (the
-> > conversion is not a device and probably should not have it's own node
-> > anyway). It would also help with enabling this support for buffered
-> > readers/writers and not just devices only supporting _raw reads/writes.
+On Sun, Apr 08, 2018 at 05:50:31PM +0100, Jonathan Cameron wrote:
+> On Tue,  3 Apr 2018 17:36:34 +0200
+> Peter Rosin <peda@axentia.se> wrote:
 > 
-> In my case, the voltage dividers and the current sense circuit are very
-> much real, and I can point my finger at them on the board. Sure, they
-> are not ICs, but to not call them devices is wrong IMHO, and the ADC
-> which is involved have very little to do with the voltage dividers and
-> the fact that it is involved in sensing current. This is not an argument
-> for not moving the functionally to the core though, but that has some
-> problems AFAICT. Because you need some kind of clever and generic
-> binding to make the core do its thing, and it might not be easy to come
-> up with something that fits all devices? And if we do put this in the
-> core, that opens the door for more complex unit converters later on
-> (non-linear etc), further complicating the generic bindings.
+> circuit in the patch title is spelled wrong.
+> 
+> > An ADC is often used to measure other quantities indirectly. These
+> > bindings describe two cases, a current through a sense resistor, and
+> > a "big" voltage measured with the help of a voltage divider.
+> > 
+> > Signed-off-by: Peter Rosin <peda@axentia.se>
+> 
+> Will definitely be wanting wide opinions on this one - Rob in particularly
+> for the binding side.
+> 
+> One comment inline. What we have here is nice and generic, but is
+> it what would be 'expected' for current sense circuit?  Should we
+> also be more specific in the naming.  There are lots of options for
+> current sense circuits and this is just the simplest (current loop
+> for example).
+> 
+> One option would be to use current-sense-shunt perhaps?
+> 
+> https://en.wikipedia.org/wiki/Current_sensing_techniques
+> Gives a few that I didn't think of beyond current loops etc.
+> 
+> 
+> > ---
+> >  .../bindings/iio/afe/current-sense-circuit.txt     | 45 ++++++++++++++++++++++
+> >  .../bindings/iio/afe/voltage-divider.txt           | 45 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  7 ++++
+> >  3 files changed, 97 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
+> > new file mode 100644
+> > index 000000000000..0bc7d89387c0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
+> > @@ -0,0 +1,45 @@
+> > +Current Sense Curcuit
+> > +=====================
+> > +
+> > +When an io-channel measures the voltage over a current sense resistor,
+> > +the interesting mesaurement is often the current through the resistor,
+> > +not the voltage over it. This binding describes such a current sense
+> > +curcuit.
+> > +
+> > +Required properties:
+> > +- compatible : "current-sense-circuit"
+> > +- io-channels : Channel node of a voltage io-channel.
+> > +
+> > +Optional properties:
+> > +- numerator : The io-channel scale is multiplied by this value (default 1).
+> > +- denominator : The io-channel scale is divided by this value (default 1).
+> > +
+> > +Example:
+> > +The system current is measured by measuring the voltage over a
+> > +3.3 ohms sense resistor.
+> 
+> Hmm. It sort of feels like the binding doesn't really reflect the
+> hardware as directly as it might.   Should we be explicitly having the
+> resistance in this case?  (with some more mapping logic needed in the
+> driver to figure out the scaling this causes).
 
-I agree. We've learned the hard way that even things like the LED diode 
-itself need to be described and not just the controller.
+I think having the resistance would be better as least in this case. For 
+other cases like voltage dividers I'm not sure though. Those would be 
+different compatibles so the associated properties don't necessarily 
+need to be the same.
 
 Rob
