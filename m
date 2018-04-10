@@ -1,53 +1,51 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iommu/rockchip: Make clock properties
-	optional
-Date: Tue, 10 Apr 2018 13:26:41 +0200
-Message-ID: <2406273.dIyKc4zb8g@phil>
-References: <20180410092612.2653-1-heiko@sntech.de>
-	<20180410092612.2653-2-heiko@sntech.de>
-	<99245ec4-6835-7fa7-3bad-dd21874f92c0@arm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 0/3] drm/omap: Workaround for errata i878
+Date: Tue, 10 Apr 2018 14:32:58 +0300
+Message-ID: <20180410113301.18984-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <99245ec4-6835-7fa7-3bad-dd21874f92c0-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
-
-Am Dienstag, 10. April 2018, 13:18:48 CEST schrieb Robin Murphy:
-> On 10/04/18 10:26, Heiko Stuebner wrote:
-> > Rockchip IOMMUs are used without explicit clock handling for 4 years
-> > now, so we should keep compatibility with old devicetrees if possible.
-> > Therefore make iommu clocks optional.
-> 
-> Do we need to touch the binding itself? Obviously the driver has to 
-> treat clocks as optional in existing DTs (and I feel a bit dumb now for 
-> managing to overlook that in review), but the binding effectively only 
-> covers future DTs, and I'd assume we want to encourage the clocks to be 
-> correctly specified there.
-
-I guess that depends on your definition of the timespan for backwards
-compatibility. I'm always starting out at indefinite till convinced
-otherwise ;-). Hence the clocks would need to stay optional for (nearly)
-forever.
-
-Also, having the binding claim them as required but the code handling
-them as optional just calls for someone to remove the optional handling :-D
-
-Not sure if there is a established way of saying
-"we want this for all future devices, but allow it to be missing for old dts".
-
-
-Heiko
+SGksCgpDaGFuZ2VzIHNpbmNlIHYyOgotIFVzZSB0aHJlYWRlZCBpcnEgd2hlbiB0aGUgaTg3OCB3
+b3JrYXJvdW5kIGlzIHVzZWQgdG8gYXZvaWQgdW5saWtlbHkgc3lzdGVtCiAgZnJlZXplOiBkbWFf
+c3luY193YWl0KCkgaGF2ZSA1IHNlY29uZCB0aW1lb3V0Ci0gVXNlIG11dGV4IGluc3RlYWQgb2Yg
+c3BpbmxvY2sgYXMgd2FfbG9jawotIHVzZSB0aGUgZG1hZW5naW5lX3ByZXBfZG1hX21lbWNweSgp
+IHdyYXBwZXIKLSBkbyBub3QgZXhwbGljaXRseSBjYWxsIGRtYV9hc3luY19pc3N1ZV9wZW5kaW5n
+KCkgYXMgaXQgaXMgZG9uZSBhcyBwYXJ0IG9mCiAgZG1hX3N5bmNfd2FpdCgpCi0gVXNlIGRlZmlu
+ZSBmb3IgdGhlIERNTSByZWdpc3RlciBzaXplICg0IGJ5dGVzKQotIENsZWFudXAgcGF0Y2ggZm9y
+IHRoZSByZW1vdmUgcGF0aDogbm8gbmVlZCB0byBjaGVjayBpZiB0aGUgaXJxIGlzIHZhbGlkLiBU
+aGUKICBkcml2ZXIgd291bGQgbm90IHByb2JlIHcvbyB2YWxpZCBpbnRlcnJ1cHQuCgpDaGFuZ2Vz
+IHNpbmNlIHYxOgotIHJlYmFzZWQgb24gZHJtLW5leHQKLSBjb21tZW50cyBmb3IgdGhlIHYxICho
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzgzNTg3NDEvKSBhZGRyZXNzZWQKIC0g
+dTMyIC0+IGRtYV9hZGRyX3Qgd2hlbiBhcHBsaWNhYmxlCiAtIGFkZGl0aW9uYWwgd21iKCkvcm1i
+KCkgYWRkZWQgdG8gbWFrZSBzdXJlIHdlIGhhdmUgY29ycmVjdCBiZWhhdmlvcgoKRXJyYXRhIGk4
+Nzggc2F5cyB0aGF0IE1QVSBzaG91bGQgbm90IGJlIHVzZWQgdG8gYWNjZXNzIFJBTSBhbmQgRE1N
+IGF0CnRoZSBzYW1lIHRpbWUuIEFzIGl0J3Mgbm90IHBvc3NpYmxlIHRvIHByZXZlbnQgTVBVIGFj
+Y2Vzc2luZyBSQU0sIHdlCm5lZWQgdG8gYWNjZXNzIERNTSB2aWEgYSBwcm94eS4KClJlZ2FyZHMs
+ClBldGVyCi0tLQpQZXRlciBVamZhbHVzaSAoMSk6CiAgZHJtL29tYXA6IGRtbV90aWxlcjogTm8g
+bmVlZCB0byBjaGVjayBpZiBpcnEgaXMgdmFsaWQgaW4KICAgIG9tYXBfZG1tX3JlbW92ZQoKVG9t
+aSBWYWxrZWluZW4gKDIpOgogIGR0LWJpbmRpbmdzOiBhcm06IG9tYXA6IGRtbTogRG9jdW1lbnQg
+bmV3IGNvbXBhdGlibGUgZm9yIERSQTd4eCBmYW1pbHkKICBkcm0vb21hcDogcGFydGlhbCB3b3Jr
+YXJvdW5kIGZvciBEUkE3eHggRE1NIGVycmF0YSBpODc4CgogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL29tYXAvZG1tLnR4dCAgICAgIHwgICAzICstCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRy
+bS9vbWFwX2RtbV9wcml2LmggICAgICAgfCAgIDggKwogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0v
+b21hcF9kbW1fdGlsZXIuYyAgICAgIHwgMTY0ICsrKysrKysrKysrKysrKysrLQogMyBmaWxlcyBj
+aGFuZ2VkLCAxNjggaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCi0tIApQZXRlcgoKVGV4
+YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
+a2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6
+IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
