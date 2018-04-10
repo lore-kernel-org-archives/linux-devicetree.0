@@ -1,49 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] DTS: Bindings: pca953x driver provides an
- optional vcc-supply property
-Date: Tue, 10 Apr 2018 08:55:57 -0500
-Message-ID: <20180410135557.umt5sgxrx23dirpo@rob-hp-laptop>
-References: <cover.1522868422.git.hns@goldelico.com>
- <e8e6fae4436e5390c7c4e831c9eb127d3f8cc65b.1522868423.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH] arm64: dts: apq8096-db820c: Add micro sd card supplies
+Date: Tue, 10 Apr 2018 14:54:26 +0100
+Message-ID: <20180410135426.15508-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e8e6fae4436e5390c7c4e831c9eb127d3f8cc65b.1522868423.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: galak@codeaurora.org, andy.shevchenko@gmail.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 04, 2018 at 09:00:23PM +0200, H. Nikolaus Schaller wrote:
-> So let's describe this property in the bindings.
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-It's not what the driver for some OS has. The h/w has a Vcc supply, so 
-let's add a property for it...
+This patch adds missing microSD card supplies, without this uSD
+card will not be detected.
 
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
->  1 file changed, 1 insertion(+)
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> index d2a937682836..6a7cddb187c1 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> @@ -35,6 +35,7 @@ Required properties:
->  Optional properties:
->   - reset-gpios: GPIO specification for the RESET input. This is an
->  		active low signal to the PCA953x.
-> + - vcc-supply:	power supply regulator.
->  
->  Example:
->  
-> -- 
-> 2.12.2
-> 
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 1c8f1b86472d..f8191f64eb84 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -87,6 +87,8 @@
+ 			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
+ 			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+ 			cd-gpios = <&msmgpio 38 0x1>;
++			vmmc-supply = <&pm8994_l21>;
++			vqmmc-supply = <&pm8994_l13>;
+ 			status = "okay";
+ 		};
+ 
+-- 
+2.16.2
