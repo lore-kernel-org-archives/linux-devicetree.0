@@ -1,57 +1,34 @@
-Return-Path: <SRS0=PEGO=GY=redhat.com=hdegoede@kernel.org>
-Subject: Re: [PATCH v2 0/5] usb: typec: remove max_snk_mv/ma/mw
-References: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
-From: Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e7ca276c-df03-738f-7a66-5e589e20b040@redhat.com>
-Date: Tue, 3 Apr 2018 17:27:51 +0200
-MIME-Version: 1.0
-In-Reply-To: <1521817127-23061-1-git-send-email-jun.li@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, heikki.krogerus@linux.intel.com
-Cc: linux@roeck-us.net, rmfrfs@gmail.com, yueyao.zhu@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:13649 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751676AbeDJPlQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Apr 2018 11:41:16 -0400
+From: Andy Yeh <andy.yeh@intel.com>
+Subject: [RESEND PATCH v7 0/2] DW9807 DT binding and driver patches
+Date: Tue, 10 Apr 2018 23:48:42 +0800
+Message-Id: <1523375324-27856-1-git-send-email-andy.yeh@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Hi Sakari and Tomasz,
 
-On 23-03-18 15:58, Li Jun wrote:
-> This patch set is to remove max_snk_mv/ma/mw configs, as we should
-> define the sink capability by sink PDOs, the first patch update
-> the source PDO match policy by compare the voltage range between
-> source and sink PDOs no matter what type they are, the following
-> patchs remove those 3 variables from 2 existing users by adding
-> a variable PDO, then finial patch remove the max_snk_* from tcpm.
-> 
-> Changes for v2:
-> - rebase the 1st patch to be based on commit 6f566af34628
->    ("Revert "typec: tcpm: Only request matching pdos"").
-> - Convert the device properties passing max_snk_* to be a
->    variable sink pdo for fusb302.
+The two patches are the DT binding and driver for DW9807 VCM controller.
 
-Thank you for the new version.
+Alan Chiang (2):
+  media: dw9807: Add dw9807 vcm driver
+  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
 
-I've replied with some comments to patches 1 and 2, the other
-3 patches look good to me.
+ .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  10 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/dw9807.c                         | 320 +++++++++++++++++++++
+ 5 files changed, 347 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+ create mode 100644 drivers/media/i2c/dw9807.c
 
-Regards,
+-- 
+2.7.4
 
-Hans
-
-
-
->   
-> Li Jun (5):
->    usb: typec: tcpm: pdo matching optimization
->    usb: typec: fusb302:  remove max_snk_* for sink config
->    dt-bindings: usb: fusb302: remove max-sink-* properties
->    usb: typec: wcove: remove max_snk_* for sink config
->    usb: typec: tcpm: remove max_snk_mv/ma/mw
-> 
->   .../devicetree/bindings/usb/fcs,fusb302.txt        |   6 -
->   drivers/usb/typec/fusb302/fusb302.c                |  51 +++++---
->   drivers/usb/typec/tcpm.c                           | 139 +++++++++++++--------
->   drivers/usb/typec/typec_wcove.c                    |   4 +-
->   include/linux/usb/tcpm.h                           |   9 --
->   5 files changed, 128 insertions(+), 81 deletions(-)
-> 
