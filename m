@@ -1,56 +1,56 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: drop unnecessary address-cells and
- size-cells properties
-Date: Tue, 10 Apr 2018 10:24:47 +0100
-Message-ID: <20180410092447.GE10254@e110455-lin.cambridge.arm.com>
-References: <1523270385-30461-1-git-send-email-sudeep.holla@arm.com>
- <1523286560-30889-1-git-send-email-sudeep.holla@arm.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: iommu/rockchip: Make clock properties
+ optional
+Date: Tue, 10 Apr 2018 11:26:11 +0200
+Message-ID: <20180410092612.2653-2-heiko@sntech.de>
+References: <20180410092612.2653-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1523286560-30889-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180410092612.2653-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMDksIDIwMTggYXQgMDQ6MDk6MjBQTSArMDEwMCwgU3VkZWVwIEhvbGxhIHdy
-b3RlOgo+IC9zbWJAODAwMDAwMC9tb3RoZXJib2FyZC9ncGlvX2tleXMgbm9kZSBkb2Vzbid0IGhh
-dmUgInJhbmdlcyIgb3IgInJlZyIKPiBwcm9wZXJ0eSBpbiBjaGlsZCBub2Rlcy4gU28gaXQncyB1
-bm5lY2Vzc2FyeSB0byBoYXZlIGFkZHJlc3MtY2VsbHMKPiBhcyB3ZWxsIGFzIHNpemUtY2VsbHMg
-cHJvcGVydGllcyB3aGljaCByZXN1bHRzIGluIGJlbG93IHdhcm5pbmcuCj4gCj4gV2FybmluZyAo
-YXZvaWRfdW5uZWNlc3NhcnlfYWRkcl9zaXplKToKPiAvc21iQDgwMDAwMDAvbW90aGVyYm9hcmQv
-Z3Bpb19rZXlzOgo+IAl1bm5lY2Vzc2FyeSAjYWRkcmVzcy1jZWxscy8jc2l6ZS1jZWxscyB3aXRo
-b3V0ICJyYW5nZXMiIG9yIGNoaWxkICJyZWciCj4gCXByb3BlcnR5Cj4gCj4gVGhpcyBwYXRjaCBk
-cm9wcyB0aGUgdW5uZWNlc3NhcnkgYWRkcmVzcytzaXplLWNlbGwgcHJvcGVydGllcy4KPiAKPiBD
-YzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+Cj4gQ2M6IExvcmVuem8gUGllcmFs
-aXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPgo+IFNpZ25lZC1vZmYtYnk6IFN1ZGVlcCBI
-b2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+CgpMb29rcyBsaWtlIHRoZSBzZW5zaWJsZSB0aGlu
-ZyB0byBkbyEKClJldmlld2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4K
-CkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1
-bm8tbW90aGVyYm9hcmQuZHRzaSB8IDIgLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25z
-KC0pCj4gCj4gKE1pc3NlZCBjYy1lZCBwZW9wbGUgZWFybGllcikKPiAKPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1tb3RoZXJib2FyZC5kdHNpIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9hcm0vanVuby1tb3RoZXJib2FyZC5kdHNpCj4gaW5kZXggMmFjNDMyMjFkZGI2
-Li42OTgwNGM1ZjExOTcgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVu
-by1tb3RoZXJib2FyZC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1t
-b3RoZXJib2FyZC5kdHNpCj4gQEAgLTU2LDggKzU2LDYgQEAKPiAKPiAgCQkJZ3Bpb19rZXlzIHsK
-PiAgCQkJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsKPiAtCQkJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+IC0JCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gCj4gIAkJCQlwb3dlci1idXR0b24gewo+
-ICAJCQkJCWRlYm91bmNlX2ludGVydmFsID0gPDUwPjsKPiAtLQo+IDIuNy40Cj4gCgotLSAKPT09
-PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8
-CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEg
-IC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Rockchip IOMMUs are used without explicit clock handling for 4 years
+now, so we should keep compatibility with old devicetrees if possible.
+Therefore make iommu clocks optional.
+
+Fixes: 8fa9eb39c614 ("dt-bindings: iommu/rockchip: Add clock property")
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iommu/rockchip,iommu.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+index 6ecefea1c6f9..25bfad987513 100644
+--- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+@@ -14,13 +14,13 @@ Required properties:
+                     "single-master" device, and needs no additional information
+                     to associate with its master device.  See:
+                     Documentation/devicetree/bindings/iommu/iommu.txt
++
++Optional properties:
+ - clocks          : A list of clocks required for the IOMMU to be accessible by
+                     the host CPU.
+ - clock-names     : Should contain the following:
+ 	"iface" - Main peripheral bus clock (PCLK/HCL) (required)
+ 	"aclk"  - AXI bus clock (required)
+-
+-Optional properties:
+ - rockchip,disable-mmu-reset : Don't use the mmu reset operation.
+ 			       Some mmu instances may produce unexpected results
+ 			       when the reset operation is used.
+-- 
+2.16.2
