@@ -1,117 +1,84 @@
-Return-Path: <SRS0=NCrW=G4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:37448 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751579AbeDGPsm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 7 Apr 2018 11:48:42 -0400
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 1/6] media: ov772x: allow i2c controllers without I2C_FUNC_PROTOCOL_MANGLING
-Date: Sun,  8 Apr 2018 00:48:05 +0900
-Message-Id: <1523116090-13101-2-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=iFDK=G7=gmail.com=akinobu.mita@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20180409090649.GX20945@w540>
 References: <1523116090-13101-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+ <1523116090-13101-6-git-send-email-akinobu.mita@gmail.com> <20180409090649.GX20945@w540>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Wed, 11 Apr 2018 01:34:08 +0900
+Message-ID: <CAC5umyherpizqmFCK-mwMkHMVvjEABSMG3ktLfgS74irN2Of0w@mail.gmail.com>
+Subject: Re: [PATCH 5/6] media: ov772x: add device tree binding
+Content-Type: text/plain; charset="UTF-8"
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The ov772x driver only works when the i2c controller have
-I2C_FUNC_PROTOCOL_MANGLING.  However, many i2c controller drivers don't
-support it.
+2018-04-09 18:06 GMT+09:00 jacopo mondi <jacopo@jmondi.org>:
+> Hi Akinobu,
+>
+> On Sun, Apr 08, 2018 at 12:48:09AM +0900, Akinobu Mita wrote:
+>> This adds a device tree binding documentation for OV7720/OV7725 sensor.
+>
+> Please use as patch subject
+> media: dt-bindings:
 
-The reason that the ov772x requires I2C_FUNC_PROTOCOL_MANGLING is that
-it doesn't support repeated starts.
+OK.
 
-This change adds an alternative method for reading from ov772x register
-which uses two separated i2c messages for the i2c controllers without
-I2C_FUNC_PROTOCOL_MANGLING.
+>>
+>> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+>> ---
+>>  .../devicetree/bindings/media/i2c/ov772x.txt       | 36 ++++++++++++++++++++++
+>>  MAINTAINERS                                        |  1 +
+>>  2 files changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>> new file mode 100644
+>> index 0000000..9b0df3b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>> @@ -0,0 +1,36 @@
+>> +* Omnivision OV7720/OV7725 CMOS sensor
+>> +
+>
+> Could you please provide a brief description of the sensor (supported
+> resolution and formats is ok)
 
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/media/i2c/ov772x.c | 42 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 9 deletions(-)
+OK.
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index b62860c..283ae2c 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -424,6 +424,7 @@ struct ov772x_priv {
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	unsigned short                    band_filter;
- 	unsigned int			  fps;
-+	int (*reg_read)(struct i2c_client *client, u8 addr);
- };
- 
- /*
-@@ -542,11 +543,34 @@ static struct ov772x_priv *to_ov772x(struct v4l2_subdev *sd)
- 	return container_of(sd, struct ov772x_priv, subdev);
- }
- 
--static inline int ov772x_read(struct i2c_client *client, u8 addr)
-+static int ov772x_read(struct i2c_client *client, u8 addr)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov772x_priv *priv = to_ov772x(sd);
-+
-+	return priv->reg_read(client, addr);
-+}
-+
-+static int ov772x_reg_read(struct i2c_client *client, u8 addr)
- {
- 	return i2c_smbus_read_byte_data(client, addr);
- }
- 
-+static int ov772x_reg_read_fallback(struct i2c_client *client, u8 addr)
-+{
-+	int ret;
-+	u8 val;
-+
-+	ret = i2c_master_send(client, &addr, 1);
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_master_recv(client, &val, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val;
-+}
-+
- static inline int ov772x_write(struct i2c_client *client, u8 addr, u8 value)
- {
- 	return i2c_smbus_write_byte_data(client, addr, value);
-@@ -1255,20 +1279,20 @@ static int ov772x_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
--					      I2C_FUNC_PROTOCOL_MANGLING)) {
--		dev_err(&adapter->dev,
--			"I2C-Adapter doesn't support SMBUS_BYTE_DATA or PROTOCOL_MANGLING\n");
--		return -EIO;
--	}
--	client->flags |= I2C_CLIENT_SCCB;
--
- 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
- 	priv->info = client->dev.platform_data;
- 
-+	if (i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
-+					     I2C_FUNC_PROTOCOL_MANGLING))
-+		priv->reg_read = ov772x_reg_read;
-+	else
-+		priv->reg_read = ov772x_reg_read_fallback;
-+
-+	client->flags |= I2C_CLIENT_SCCB;
-+
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
- 	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
--- 
-2.7.4
+>> +Required Properties:
+>> +- compatible: shall be one of
+>> +     "ovti,ov7720"
+>> +     "ovti,ov7725"
+>> +- clocks: reference to the xclk input clock.
+>> +- clock-names: shall be "xclk".
+>> +
+>> +Optional Properties:
+>> +- rstb-gpios: reference to the GPIO connected to the RSTB pin, if any.
+>> +- pwdn-gpios: reference to the GPIO connected to the PWDN pin, if any.
+>
+> As a general note:
+> This is debated, and I'm not enforcing it, but please consider using
+> generic names for GPIOs with common functions. In this case
+> "reset-gpios" and "powerdown-gpios". Also please indicate the GPIO
+> active level in bindings description.
+>
+> For this specific driver:
+> The probe routine already looks for a GPIO named 'pwdn', so I guess
+> the DT bindings should use the same name. Unless you're willing to
+> change it in the board files that register it (Migo-R only in mainline) and
+> use the generic 'powerdown' name for both. Either is fine with me.
 
+I'll prepare anothre patch that renames the GPIO names to generic one in
+this driver and Mingo-R board file.
+
+> There is no support for the reset GPIO in the driver code, it
+> supports soft reset only. Either ditch it from bindings or add support
+> for it in driver's code.
+
+Doesn't that reset GPIO exist in current ov772x driver code, does it?
