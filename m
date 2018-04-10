@@ -1,59 +1,43 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/2] vfio: platform: Fix reset module leak in error path
-Date: Tue, 10 Apr 2018 17:53:46 +0200
-Message-ID: <1523375627-23746-2-git-send-email-geert+renesas@glider.be>
-References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 1/4] gpio: pca953x: set the PCA_PCAL flag also when matching by DT
+Date: Tue, 10 Apr 2018 18:07:01 +0200
+Message-ID: <a5b37e5feff8a58dc63799ec76ef906695fd7239.1523376423.git.hns@goldelico.com>
+References: <cover.1523376423.git.hns@goldelico.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
+In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
+References: <cover.1523376423.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-If the IOMMU group setup fails, the reset module is not released.
+The of_device_table is missing the PCA_PCAL flag so the
+pcal6524 would be operated in tca6424 compatibility mode which
+does not handle the new interrupt mask registers.
 
-Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
-v2:
-  - Add Reviewed-by.
----
- drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-index 35469af87f88678e..b60bb5326668498c 100644
---- a/drivers/vfio/platform/vfio_platform_common.c
-+++ b/drivers/vfio/platform/vfio_platform_common.c
-@@ -680,18 +680,23 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
- 	group = vfio_iommu_group_get(dev);
- 	if (!group) {
- 		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto put_reset;
- 	}
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d2ead4b1cf61..4a075619b93e 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -936,8 +936,10 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
+ 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
  
- 	ret = vfio_add_group_dev(dev, &vfio_platform_ops, vdev);
--	if (ret) {
--		vfio_iommu_group_put(group, dev);
--		return ret;
--	}
-+	if (ret)
-+		goto put_iommu;
+-	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
+-	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
++	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT |
++							    PCA_PCAL), },
++	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT |
++							     PCA_PCAL), },
  
- 	mutex_init(&vdev->igate);
- 
- 	return 0;
-+
-+put_iommu:
-+	vfio_iommu_group_put(group, dev);
-+put_reset:
-+	vfio_platform_put_reset(vdev);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(vfio_platform_probe_common);
- 
+ 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
+ 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
 -- 
-2.7.4
+2.12.2
