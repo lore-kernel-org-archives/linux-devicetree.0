@@ -1,93 +1,60 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/3] drm/vc4: Remove the need for the GPU-subsystem DT node.
-Date: Mon,  9 Apr 2018 16:00:38 -0700
-Message-ID: <20180409230040.1100-1-eric@anholt.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: Introduce ARCH_HAS_OWN_OF_NUMA
+Date: Mon, 9 Apr 2018 20:02:47 -0500
+Message-ID: <CAL_JsqJY-sh+KBVAja=epesGdd=OKJzooeLTpZZD0Z++ZxqzfA@mail.gmail.com>
+References: <20180409074604.17671-1-oohall@gmail.com>
+ <CAL_Jsq+ho2QhmNmPZMDJcfSxposJd=jYDvjhXH8cMAtVFP7n4A@mail.gmail.com>
+ <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAPcyv4iCkc7ZSB7Sjk-O7iBWvvTzhTmdccucC4uN6GEu5Bjotw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEdQVSBzdWJzeXN0ZW0gbm9kZSB3YXMgYSB3b3JrYXJvdW5kIHRvIGhhdmUgYSBjZW50cmFs
-IGRldmljZSB0bwpiaW5kIFYzRCBhbmQgZGlzcGxheSB0by4gIEZvbGxvd2luZyB0aGUgbGVhZCBv
-ZiAyNDY3NzRkMTdmYzAKKCJkcm0vZXRuYXZpdjogcmVtb3ZlIHRoZSBuZWVkIGZvciBhIGdwdS1z
-dWJzeXN0ZW0gRFQgbm9kZSIpLCByZW1vdmUKdGhlIHN1YnN5c3RlbSBub2RlIHVzYWdlIGFuZCBq
-dXN0IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhlIERSTQpkZXZpY2UgdG8gYXR0YWNo
-IHRvIGlmIGFueSBvZiB0aGUgc3Vic3lzdGVtIGRldmljZXMgYXJlIHByZXNlbnQuCgpTaWduZWQt
-b2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgotLS0KIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L2JyY20sYmNtLXZjNC50eHQgICAgICAgICB8ICA3IC0tLS0KIGRyaXZlcnMvZ3B1L2Ry
-bS92YzQvdmM0X2Rydi5jICAgICAgICAgICAgICAgICB8IDMzICsrKysrKysrKysrKysrLS0tLS0K
-IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2h2cy5jICAgICAgICAgICAgICAgICB8ICAxICsKIGRy
-aXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jICAgICAgICAgICAgICAgICB8ICAxICsKIDQgZmls
-ZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNt
-LXZjNC50eHQKaW5kZXggMjg0ZTJiMTRjZmJlLi41ZmQ0NzE3MTAxZDYgMTAwNjQ0Ci0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20t
-dmM0LnR4dApAQCAtNCw5ICs0LDYgQEAgVGhlIFZDNCBkZXZpY2UgcHJlc2VudCBvbiB0aGUgUmFz
-cGJlcnJ5IFBpIGluY2x1ZGVzIGEgZGlzcGxheSBzeXN0ZW0KIHdpdGggSERNSSBvdXRwdXQgYW5k
-IHRoZSBIVlMgKEhhcmR3YXJlIFZpZGVvIFNjYWxlcikgZm9yIGNvbXBvc2l0aW5nCiBkaXNwbGF5
-IHBsYW5lcy4KIAotUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgVkM0OgotLSBjb21wYXRpYmxlOglT
-aG91bGQgYmUgImJyY20sYmNtMjgzNS12YzQiIG9yICJicmNtLGN5Z251cy12YzQiCi0KIFJlcXVp
-cmVkIHByb3BlcnRpZXMgZm9yIFBpeGVsIFZhbHZlOgogLSBjb21wYXRpYmxlOglTaG91bGQgYmUg
-b25lIG9mICJicmNtLGJjbTI4MzUtcGl4ZWx2YWx2ZTAiLAogCQkgICJicmNtLGJjbTI4MzUtcGl4
-ZWx2YWx2ZTEiLCBvciAiYnJjbSxiY20yODM1LXBpeGVsdmFsdmUyIgpAQCAtMTUzLDEwICsxNTAs
-NiBAQCB2M2Q6IHYzZEA3ZWMwMDAwMCB7CiAJaW50ZXJydXB0cyA9IDwxIDEwPjsKIH07CiAKLXZj
-NDogZ3B1IHsKLQljb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12YzQiOwotfTsKLQogcGFuZWw6
-IHBhbmVsIHsKIAljb21wYXRpYmxlID0gIm9udGF0LHl4NzAwd3YwMyIsICJzaW1wbGUtcGFuZWwi
-OwogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMv
-Z3B1L2RybS92YzQvdmM0X2Rydi5jCmluZGV4IDdjOTVlZDVjNWNhYy4uZDI4MmFiN2RlMDNhIDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYworKysgYi9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9kcnYuYwpAQCAtMzY0LDIyICszNjQsMzQgQEAgc3RhdGljIGludCB2YzRf
-cGxhdGZvcm1fZHJtX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXJldHVy
-biAwOwogfQogCi1zdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRfb2ZfbWF0Y2hb
-XSA9IHsKLQl7IC5jb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12YzQiLCB9LAotCXsgLmNvbXBh
-dGlibGUgPSAiYnJjbSxjeWdudXMtdmM0IiwgfSwKLQl7fSwKLX07Ci1NT0RVTEVfREVWSUNFX1RB
-QkxFKG9mLCB2YzRfb2ZfbWF0Y2gpOwotCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2
-YzRfcGxhdGZvcm1fZHJpdmVyID0gewogCS5wcm9iZQkJPSB2YzRfcGxhdGZvcm1fZHJtX3Byb2Jl
-LAogCS5yZW1vdmUJCT0gdmM0X3BsYXRmb3JtX2RybV9yZW1vdmUsCiAJLmRyaXZlcgkJPSB7CiAJ
-CS5uYW1lCT0gInZjNC1kcm0iLAotCQkub2ZfbWF0Y2hfdGFibGUgPSB2YzRfb2ZfbWF0Y2gsCiAJ
-fSwKIH07CiAKK3N0YXRpYyBib29sCitkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goY29uc3Qg
-c3RydWN0IHBsYXRmb3JtX2RyaXZlciAqZHJpdmVyKQoreworCWludCBpOworCisJZm9yIChpID0g
-MDsgZHJpdmVyLT5kcml2ZXIub2ZfbWF0Y2hfdGFibGVbaV0uY29tcGF0aWJsZTsgaSsrKSB7CisJ
-CWNvbnN0IGNoYXIgKmNvbXBhdCA9IGRyaXZlci0+ZHJpdmVyLm9mX21hdGNoX3RhYmxlW2ldLmNv
-bXBhdGlibGU7CisJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKKworCQl3aGlsZSAoKG5vZGUg
-PSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShub2RlLCBOVUxMLCBjb21wYXQpKSkgeworCQkJaWYg
-KG9mX2RldmljZV9pc19hdmFpbGFibGUobm9kZSkpIHsKKwkJCQlvZl9ub2RlX3B1dChub2RlKTsK
-KwkJCQlyZXR1cm4gdHJ1ZTsKKwkJCX0KKwkJfQorCX0KKworCXJldHVybiBmYWxzZTsKK30KKwog
-c3RhdGljIGludCBfX2luaXQgdmM0X2RybV9yZWdpc3Rlcih2b2lkKQogewogCWludCByZXQ7CkBA
-IC0zODksNiArNDAxLDExIEBAIHN0YXRpYyBpbnQgX19pbml0IHZjNF9kcm1fcmVnaXN0ZXIodm9p
-ZCkKIAlpZiAocmV0KQogCQlyZXR1cm4gcmV0OwogCisJaWYgKGRyaXZlcl9vZl90YWJsZV9oYXNf
-YV9tYXRjaCgmdmM0X3YzZF9kcml2ZXIpIHx8CisJICAgIGRyaXZlcl9vZl90YWJsZV9oYXNfYV9t
-YXRjaCgmdmM0X2h2c19kcml2ZXIpKSB7CisJCXBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcl9zaW1w
-bGUoInZjNC1kcm0iLCAtMSwgTlVMTCwgMCk7CisJfQorCiAJcmV0dXJuIHBsYXRmb3JtX2RyaXZl
-cl9yZWdpc3RlcigmdmM0X3BsYXRmb3JtX2RyaXZlcik7CiB9CiAKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS92YzQvdmM0X2h2cy5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfaHZzLmMK
-aW5kZXggMmI2MmZjNWI4ZDg1Li43MzA4MTNlZTc0YWUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS92YzQvdmM0X2h2cy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2h2cy5jCkBA
-IC0yNjIsNiArMjYyLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdmM0X2h2
-c19kdF9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LWh2cyIgfSwK
-IAl7fQogfTsKK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHZjNF9odnNfZHRfbWF0Y2gpOwogCiBz
-dHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHZjNF9odnNfZHJpdmVyID0gewogCS5wcm9iZSA9IHZjNF9o
-dnNfZGV2X3Byb2JlLApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92M2QuYwppbmRleCBiZmMyZmE3M2QyYWUuLmU3N2U5
-ZWJiYWI0YiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMKQEAgLTQ1OSw2ICs0NTksNyBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRfdjNkX2R0X21hdGNoW10gPSB7CiAJeyAuY29t
-cGF0aWJsZSA9ICJicmNtLHZjNC12M2QiIH0sCiAJe30KIH07CitNT0RVTEVfREVWSUNFX1RBQkxF
-KG9mLCB2YzRfdjNkX2R0X21hdGNoKTsKIAogc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2YzRfdjNk
-X2RyaXZlciA9IHsKIAkucHJvYmUgPSB2YzRfdjNkX2Rldl9wcm9iZSwKLS0gCjIuMTcuMAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Apr 9, 2018 at 4:05 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Apr 9, 2018 at 1:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Mon, Apr 9, 2018 at 2:46 AM, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Some OF platforms (pseries and some SPARC systems) has their own
+>>> implementations of NUMA affinity detection rather than using the generic
+>>> OF_NUMA driver, which mainly exists for arm64. For other platforms one
+>>> of two fallbacks provided by the base OF driver are used depending on
+>>> CONFIG_NUMA.
+>>>
+>>> In the CONFIG_NUMA=n case the fallback is an inline function in of.h.
+>>> In the =y case the fallback is a real function which is defined as a
+>>> weak symbol so that it may be overwritten by the architecture if desired.
+>>>
+>>> The problem with this arrangement is that the real implementations all
+>>> export of_node_to_nid(). Unfortunately it's not possible to export the
+>>> fallback since it would clash with the non-weak version. As a result
+>>> we get build failures when:
+>>>
+>>> a) CONFIG_NUMA=y && CONFIG_OF=y, and
+>>> b) The platform doesn't implement of_node_to_nid(), and
+>>> c) A module uses of_node_to_nid()
+>>>
+>>> Given b) will be true for most platforms this is fairly easy to hit
+>>> and has been observed on ia64 and x86.
+>>
+>> How specifically do we hit this? The only module I see using
+>> of_node_to_nid in mainline is Cell EDAC driver.
+>
+> The of_pmem driver is using it currently pending for a 4.17 pull
+> request. Stephen hit the compile failure in -next.
+
+You mean the stuff reviewed last week in the middle of the merge
+window? Sounds like 4.18 material to me.
+
+Rob
