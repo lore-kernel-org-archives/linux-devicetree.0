@@ -1,102 +1,66 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY initialization
-Date: Tue, 10 Apr 2018 08:05:27 -0700
-Message-ID: <CAD=FV=XqH69_LXcCyTS1nF5fHpen=PnRxd-WTz=y3dKvMsRtuw@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
- <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com> <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3 0/2] iio: add unit converter
+Date: Tue, 10 Apr 2018 17:28:00 +0200
+Message-ID: <20180410152802.30958-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi!
 
-On Mon, Apr 9, 2018 at 11:36 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
-> Hi,
->
->
-> On 3/30/2018 2:24 AM, Doug Anderson wrote:
->> Hi,
->>
->> On Thu, Mar 29, 2018 at 11:44 AM, Doug Anderson <dianders@chromium.org> wrote:
->>> Hi,
->>>
->>> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>>> QMP PHY for USB/PCIE requires pipe_clk for locking of
->>>> retime buffers at the pipe interface. Driver checks for
->>>> PHY_STATUS without enabling pipe_clk due to which
->>>> phy_init() fails with initialization timeout.
->>>> Though pipe_clk is output from PHY (after PLL is programmed
->>>> during initialization sequence) to GCC clock_ctl and then fed
->>>> back to PHY but for PHY_STATUS register to reflect successful
->>>> initialization pipe_clk from GCC must be present.
->>>> Since, clock driver now ignores status_check for pipe_clk on
->>>> clk_enable/disable, driver can safely enable/disable pipe_clk
->>>> from phy_init/exit.
->>>>
->>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>>> ---
->>>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 22 ++++++++--------------
->>>>  1 file changed, 8 insertions(+), 14 deletions(-)
->>> Overall this looks much better than the previous version.  Thanks!  :)
->>>
->>> I wonder one thing though.  You describe the original problem as this:
->>>
->>> 1. If you don't turn the clock on in qcom_qmp_phy_init() then the PHY
->>> never sets the "ready" status.
->>>
->>> 2. If you don't have the PHY powered on / out of reset (which happens
->>> in qcom_qmp_phy_init()) then when you enable/disable the clock it
->>> doesn't properly update the status.  That's why you needed patch #1 in
->>> this series.
->>>
->>>
->>> I wonder: could you solve the above _without_ needing to use
->>> BRANCH_HALT_DELAY in the clock driver?  Specifically, can you tell me
->>> what happens if you put the clk_prepare_enable() after you've powered
->>> on the PHY and taken it out of reset but before you check the status?
->>> Said another way, put the "clk_prepare_enable(qphy->pipe_clk)" call
->>> right before the "readl_poll_timeout" of the ready status?
->>>
->>>
->>> If you do that, you'll turn everything on.  Then you'll check that the
->>> clock's status is OK and then that the PHY's status is OK.
->> Oh!  This is what you did in the previous version of the patch, then you said:
->>
->> "That is still needed as PHY might take some time to generate pipe_clk
->> after its PLL is locked".
->>
->> It's really going to take more than the 200 us that the clock driver
->> is giving it?  If so, I'd prefer to increase the amount of time waited
->> in the clock driver, or adding a fixed delay _before_ the clk_enable()
->> so that the 200 us that the clock driver gives it would be enough.
->>
->> I'm just not a fan of ignoring status bits if it can be helped.
->
-> I too would want to do that but it is not just about the delay.
-> As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
-> as first thing in the PHY initialization sequence. Same sequence also has
-> been used in downstream phy driver always.
-> Changing the sequence might work but I would like to stick to the HPG
-> recommendation and avoid any deviation as PHY issues are very hard to
-> debug.
+This driver implements support for voltage dividers and current
+sense shunts. It's pretty generic and should be easily adaptable
+to other linear scaling purposes.
 
-So hardware guys tell you that you're _supposed to_ ignore the clock
-ready bit for that clock and just hope it turns on and settles in time
-once power comes on for the clock?  That doesn't seem ideal.  My guess
-is that it's a bug in the specification that the QMP PHY hardware
-designers gave you.
+Cheers,
+Peter
 
-Stephen can feel free to override me if he disagrees since he's in
-charge of the clock part of this, but IMHO we should get the
-specification fixed and turn things on in the order that lets us check
-the status bits.
+Changes since v2:    https://lkml.org/lkml/2018/4/3/461
+- Rename from current-sence-circuit to current-sense-shunt (this
+  should also fix all the typing problems I had with curciut).
+- Describe the shunt resistance directly (instead of indirectly
+  in the form of a quotient).
+- Add a ->props() op to struct unit_converter_cfg to enable simple
+  separation of properties for different converters.
+- Shuffle the code around to minimize forward declarations.
+- Drop the unused indio member from struct unit_converter.
+- Drop error report on iio driver registration failure.
 
+Changes since v1:    https://lkml.org/lkml/2018/3/19/801
+- Put the driver in the new afe category (Analog Front Ends) and do not
+  move the iio-mux driver.
+- Do not refer to the source channel as "parent", use "source" instead.
+- Have the DT compatible drive the target unit, instead of relying on a
+  "type" DT-property for that.
+- In the DT bindings, use an unnamed source channel.
+- Do not set up writes to _RAW (sorry Phil) as I don't need it and have
+  not tested it. It's easy to add back if needed.
+- Fail if the source channel does not support _RAW or _SCALE.
+- Fix various spelling issues.
+- Fix various code style issues.
 
--Doug
+Peter Rosin (2):
+  dt-bindings: iio: afe: add current-sense-shunt and voltage-divider
+  iio: afe: unit-converter: new driver
+
+ .../bindings/iio/afe/current-sense-shunt.txt       |  41 +++
+ .../bindings/iio/afe/voltage-divider.txt           |  45 ++++
+ MAINTAINERS                                        |   8 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/afe/Kconfig                            |  18 ++
+ drivers/iio/afe/Makefile                           |   6 +
+ drivers/iio/afe/iio-unit-converter.c               | 291 +++++++++++++++++++++
+ 8 files changed, 411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
+ create mode 100644 drivers/iio/afe/Kconfig
+ create mode 100644 drivers/iio/afe/Makefile
+ create mode 100644 drivers/iio/afe/iio-unit-converter.c
+
+-- 
+2.11.0
