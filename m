@@ -1,151 +1,204 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 6/7] dt-bindings: phy-qcom-usb2: Add support to
- override tuning values
-Date: Tue, 10 Apr 2018 12:46:56 +0530
-Message-ID: <47a6d655-c4ba-ab5a-ef94-094f25cff74b@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-7-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=VGtmWTaa_aRG6UVAtCzy3cS8sTZDCqAgRMYeg7U02qTw@mail.gmail.com>
- <20180409201824.adsnvqo4vv2waixc@rob-hp-laptop>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH v2 00/10]  Add support for SAMA5D2 touchscreen
+Date: Tue, 10 Apr 2018 09:38:12 +0200
+Message-ID: <20180410073812.xbt3n6oegr23nlff@qschulz>
+References: <1522153963-1121-1-git-send-email-eugen.hristev@microchip.com>
+ <20180330140212.57dad66d@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yqxejmhoftmcksd5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180409201824.adsnvqo4vv2waixc@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180330140212.57dad66d@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--yqxejmhoftmcksd5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/10/2018 1:48 AM, Rob Herring wrote:
-> On Thu, Mar 29, 2018 at 01:38:23PM -0700, Doug Anderson wrote:
->> Hi,
->>
->> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>> To improve eye diagram for PHYs on different boards of same SOC,
->>> some parameters may need to be changed. Provide device tree
->>> properties to override these from board specific device tree
->>> files. While at it, replace "qcom,qusb2-v2-phy" with compatible
->>> string for USB2 PHY on sdm845 which was earlier added for
->>> sdm845 only.
->>>
->>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>> ---
->>>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt        | 19 ++++++++++++++++++-
->>>  1 file changed, 18 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>> index 42c9742..0ed140a 100644
->>> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>> @@ -6,7 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->>>  Required properties:
->>>   - compatible: compatible list, contains
->>>                "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
->>> -              "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
->>> +              "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
->>>
->>>   - reg: offset and length of the PHY register set.
->>>   - #phy-cells: must be 0.
->>> @@ -27,6 +27,23 @@ Optional properties:
->>>                 tuning parameter value for qusb2 phy.
->>>
->>>   - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
->> Just to confirm: the new properties below work just fine on the old
->> msm8996 PHY too, right?
-No it won't as register layouts and bit fields are different. Also IMP_CTRL
-register doesnt exist for msm8996. I will mention that explicitly here.
+Hi Jonathan and Eugen,
 
->>
->>
->>> + - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
->>> +               added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
->>> +               tuning paramter that may vary for different boards of same SOC.
->>> + - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
->>> +               output current. 0x0 value corresponding to 24mA which is maximum
->>> +               current and 0xf corresponds to lowest current which is 15mA.
->>> + - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
->>> +               Possible values are:
->>> +               00: NONE
->>> +               01: +5%
->>> +               10: +10%
->>> +               11: +15%
->> The user of the device tree will expect to specify this in decimal,
->> right?  So list the above as 0, 1, 2, 3.  ...not 00, 01, 10, 11.
-Fine.
->> (though below I suggest that specifying 0, 1, 2, 3 is probably not
->> quite the right way to describe this property).
->>
->>
->>> +- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
->>> +               pre-emphasis (specified using qcom,preemphasis-level) must be in
->>> +               effect. Possible values are:
->>> +               0: Full-bit width
->>> +               1: Half-bit width
->> Perhaps just make this a boolean property.  If it exists then you get
->> the non-default case.  AKA: if the default is full bit width, then
->> you'd allow a boolean property "qcom,preemphasis-half-width" to
->> override.  If the default is half bit width then you'd allow
->> "qcom,preemphasis-full-width" to override.
+On Fri, Mar 30, 2018 at 02:02:12PM +0100, Jonathan Cameron wrote:
+> On Tue, 27 Mar 2018 15:32:33 +0300
+> Eugen Hristev <eugen.hristev@microchip.com> wrote:
+>=20
+> > Hello,
+> >=20
+> > This patch series is a rework of my previous series named:
+> > [PATCH 00/14] iio: triggers: add consumer support
+> >=20
+> > In few words, this is the implementation of splitting the functionality
+> > of the IP block ADC device in SAMA5D2 SoC from ADC with touchscreen
+> > support. In order to avoid having a MFD device, two separate
+> > drivers that would work on same register base and split the IRQ,etc,
+> > as advised on the mailing list, I created a consumer driver for the
+> > channels, that will connect to the ADC as described in the device tree.
+> >=20
+> > I have collected feedback from everyone and here is the result:
+> > I have added a new generic resistive touchscreen driver, which acts
+> > as a iio consumer for the given channels and will create an input
+> > device and report the events. It uses a callback buffer to register
+> > to the IIO device and waits for data to be pushed.
+> > Inside the IIO device, I have kept a similar approach with the first ve=
+rsion
+> > of the series, except that now the driver can take multiple buffers, and
+> > will configure the touchscreen part of the hardware device if the speci=
+fic
+> > channels are requested.
+> >=20
+> > The SAMA5D2 ADC driver registers three new channels: two for the
+> > position on the X and Y axis, and one for the touch pressure.
+> > When channels are requested, it will check if the touchscreen channel m=
+ask
+> > includes the requested channels (it is possible that the consumer driver
+> > will not request pressure for example). If it's the case, it will work
+> > in touchscreen mode, and will refuse to do usual analog-digital convers=
+ion,
+> > because we have a single trigger and the touchscreen needs it.
+> > When the scan mask will include only old channels, the driver will func=
+tion
+> > in the same way as before. If the scan mask somehow is a mix of the two=
+ (the
+> > masks intersect), the driver will refuse to work whatsoever (cannot hav=
+e both
+> > in the same time).
+> > The driver allows reading raw data for the new channels, if claim direct
+> > mode works: no touchscreen driver requested anything. The new channels =
+can
+> > act like the old ones. However, when requesting these channels, the usu=
+al
+> > trigger will not work and will not be enabled. The touchscreen channels
+> > require special trigger and irq configuration: pen detect, no pen detect
+> > and a periodic trigger to sample the touchscreen position and pressure.
+> > If the user attempts to use another trigger while there is a buffer
+> > that already requested the touchscreen channels (thus the trigger), the
+> > driver will refuse to comply.
+> >=20
+> > In order to have defines for the channel numbers, I added a bindings in=
+clude
+> > file that goes on a separate commit :
+> > dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer =
+info
+> > This should go in the same tree with the following commits :
+> >   ARM: dts: at91: sama5d2: add channel cells for ADC device
+> >   ARM: dts: at91: sama5d2: Add resistive touch device
+> >=20
+> > as build will break because these commits depend on the binding one
+> > which creates the included header file.
+> >=20
+> > After the discussions earlier this year on the mailing list, I hope this
+> > rework of the patches is much better and fulfills all the requirements
+> > for this implementation.
+> As I said in one of the later patches, I like this a lot.
+> It is a good blend of the moderately nasty handling needed in the ADC
+> driver with a lovely generic input driver.
+>=20
+> Very nice!  Hope everyone else agrees ;)
+>=20
 
-Default property value for an SOC is specified in driver and could vary from
-soc to soc. Hence, from board devicetree for different SOCs we might need
-to select separate widths overriding default driver values.
-Alternative is to have two bool properties each for half and full-width. Did
-you actually mean that?
+I'd love to see a generic touchscreen driver being an iio consumer!
 
->>
->>
->> For all the above optional bits, please indicate what the default is
->> if they aren't specified.  If you have to specify a different default
->> for sdm845 vs. msm8996 then so be it (though it would be nice to avoid
->> it by changing the default for sdm845 unless that's totally crazy).
-Sure.
->>
->>
->> Overall this looks pretty good to me.  Certainly the descriptions are
->> very understandable and this will make tuning on a per-board /
->> per-port basis much easier!  Thanks!
->>
->>
->> One last overall comment is that ideally we could make the device tree
->> a little bit more human readable.  Right now we'll have a set of
->> properties that looks like this (numbers made up):
->>
->> qcom,imp-res-offset-value = <0x13>;
->> qcom,hstx-trim-value = <0x7>;
->> qcom,preemphasis-level = <1>;
->> qcom,preemphasis-width = <0>;
->>
->>
->> One option to make that more readable would be to change the units, AKA:
->>
->> qcom,hstx-trim-ma = <18>;
->> qcom,preemphasis-percent = <5>;
->>
->> ...then the code would translate from these human-readable values to
->> the real numbers.
-> Yes, we often do that. However, there properties are very specific to 
-> this device and making the driver translate back to h/w values doesn't 
-> add much.
+However, I've already a case that can't be handled unfortunately.
 
-Thanks for review Rob. I too agree with both the viewpoints.
-Doug, if it is not of much concern then can I stick with current approach?
+I posted ~2 years ago a patch series[1] for touchscreen support for
+Allwinner SoCs that are using their ADC (also) for touchscreen purpose.
 
->
->> Another option would be to add a #include to the bindings.  I'd defer
->> to the wisdom of the bindings guys about if this is better or worse
->> than adding the units, but personally I like it better because:
->> * You get a compile-time error if you use an unsupported value.
->> * You don't need to add the code to translate.
-> This is fine for me. Really, I'm fine with it as-is, but #defines make 
-> some people happy.
->
-> Rob
+It's been a very long time, I'm trying the hardest I can with my
+"IIRC-skills".
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+There are several problems:
+  - Data is stored in one register as a queue following this scheme:
+    X @t=3D0 coord, Y @t=3D0 coord, X @t=3D1 coord, Y @t=3D1 coord, X @t=3D2
+    coord, Y @t=3D2 coord, etc...
+
+    Thus, I suppose I've only one channel and not two for coordinates.
+
+  - The first data stored after an up event is absolutely unreliable so
+  I have to flush it, thus I need to use another API call to have the
+  touchscreen driver do some logic with a whole queue only when it's
+  after an up event (it doesn't really make sense to do so in the IIO
+  driver, does it?).
+
+  - This up event is an interrupt.. that is configurable from the same
+  set of registers than for the ADC, so I need an mfd,
+
+What are your thoughts (and maybe workarounds?) on those issues?
+
+Thanks,
+Quentin
+
+[1] https://lkml.org/lkml/2016/7/20/156
+
+> Jonathan
+>=20
+> >=20
+> > Eugen Hristev (10):
+> >   MAINTAINERS: add generic resistive touchscreen adc
+> >   iio: Add channel for Position Relative
+> >   dt-bindings: input: touchscreen: touch_adc: create bindings
+> >   iio: inkern: add module put/get on iio dev module when requesting
+> >     channels
+> >   iio: adc: at91-sama5d2_adc: fix channel configuration for differential
+> >     channels
+> >   iio: adc: at91-sama5d2_adc: add support for position and pressure
+> >     channels
+> >   input: touchscreen: touch_adc: add generic resistive ADC touchscreen
+> >   dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer
+> >     info
+> >   ARM: dts: at91: sama5d2: add channel cells for ADC device
+> >   ARM: dts: at91: sama5d2: Add resistive touch device
+> >=20
+> >  Documentation/ABI/testing/sysfs-bus-iio            |  12 +
+> >  .../bindings/iio/adc/at91-sama5d2_adc.txt          |   9 +
+> >  .../bindings/input/touchscreen/touch_adc.txt       |  33 ++
+> >  MAINTAINERS                                        |   6 +
+> >  arch/arm/boot/dts/sama5d2.dtsi                     |  12 +
+> >  drivers/iio/adc/at91-sama5d2_adc.c                 | 491 +++++++++++++=
++++++++-
+> >  drivers/iio/industrialio-core.c                    |   1 +
+> >  drivers/iio/inkern.c                               |   8 +-
+> >  drivers/input/touchscreen/Kconfig                  |  13 +
+> >  drivers/input/touchscreen/Makefile                 |   1 +
+> >  drivers/input/touchscreen/touch_adc.c              | 199 +++++++++
+> >  include/dt-bindings/iio/adc/at91-sama5d2_adc.h     |  16 +
+> >  include/uapi/linux/iio/types.h                     |   1 +
+> >  tools/iio/iio_event_monitor.c                      |   2 +
+> >  14 files changed, 791 insertions(+), 13 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
+/touch_adc.txt
+> >  create mode 100644 drivers/input/touchscreen/touch_adc.c
+> >  create mode 100644 include/dt-bindings/iio/adc/at91-sama5d2_adc.h
+> >=20
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--yqxejmhoftmcksd5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJazGnhAAoJEIS4mnU+4PGjjQ4P/1CFDe28McyTLRHonBDxGMEg
+k2fi6/gll3XkRhBVNRY3luuhcAHD4AIs1mIBiAQ9kyqh2haixIPxdW3+FnQoEHE/
+NnBjohuhgB3dwWPY8C6p9zh9xHjCD2z6iN86d2mJxwBLEme7kxV4RtJTKszILIHG
+YjKe6jGMziJfw7Xsqy43BxHZAxbiF68vX0XD1bvukSBg0boFGSqqv04FQ1/+veKA
+V9rWJWgJoBFkq9NXHLn3Xq8aWSeLFc4asWsGizlT4camdUBY4vKYGAFG0JzMa/Fh
+J6QrkG8jbJIHPBCqjdKcHxKD0kZqH6e2g594KlVAxsdpEsSXTEeK0SzEf4HZJ2l0
+xURrBY7rW0erObFf/EYl3Je3T+CLqE09Rl7/6MPtqbOILk13pXPGXEjENSA3VALa
+aAOz+w8TOeQi4MjeZZ6C0ULVK6iSkCuFEC3GaFjLfa7emYQWIF3mv+FAsoO5nEN5
+KGBUyNtpQVQial9muR2VhnDJjSph3d5SQZyYToFOf7jlntypKeFyW99TNXXXKAmJ
+IRkJ5o4nET4qaZa1nRLKPTCmHA1uCXW8IyV/alUkN6in2ptyzcr6Bpci9EDLQ1tm
+DmpclK7lrEJ4gWRrPrFtQTexEXN2rFXFJtdE5Dg0bjCGsPDGSaVHQ+0CLmaNOPrx
+UDZVg+sRYzGPv1VgJMdO
+=TMrW
+-----END PGP SIGNATURE-----
+
+--yqxejmhoftmcksd5--
