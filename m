@@ -1,58 +1,107 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH v3 04/10] bindings: PCI: designware: Add support for the EP in Designware driver
-Date: Tue, 10 Apr 2018 13:58:36 +0100
-Message-ID: <d51cbb5f1cb4d87cfd263130cfffc385f25345be.1523360166.git.gustavo.pimentel@synopsys.com>
-References: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
-References: <cover.1523360166.git.gustavo.pimentel@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, jingoohan1@gmail.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v6 2/2] dt-bindings: drm/bridge: Document Cadence DSI bridge
+ bindings
+Date: Tue, 10 Apr 2018 15:00:01 +0200
+Message-ID: <20180410130001.1234-2-boris.brezillon@bootlin.com>
+References: <20180410130001.1234-1-boris.brezillon@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180410130001.1234-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org
+Cc: "Menon, Nishanth" <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rafal Ciepiela <rafalc@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Simon Hatliff <hatliff@cadence.com>, Kumar Gala <galak@codeaurora.org>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Suresh Punnoose <sureshp@cadence.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Endpoint in PCIe Designware
-driver.
-
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
-Change v1->v2:
- - Add a missing log description.
- - Add "snps,dw-pcie" compatible string following Kishon's suggestion.
-Change v2->v3:
-- Reverted pcie_ep name to pcie.
-
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index f02cd20..3ba2080 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -3,6 +3,7 @@
- Required properties:
- - compatible:
- 	"snps,dw-pcie-rc", "snps,dw-pcie" for RC mode;
-+	"snps,dw-pcie-ep", "snps,dw-pcie" for EP mode;
- - reg: Should contain the configuration address space.
- - reg-names: Must be "config" for the PCIe configuration space.
-     (The old way of getting the configuration address space from "ranges"
-@@ -56,3 +57,15 @@ Example configuration:
- 		#interrupt-cells = <1>;
- 		num-lanes = <1>;
- 	};
-+or
-+	pcie: pcie@dfc00000 {
-+		compatible = "snps,dw-pcie-ep", "snps,dw_pcie";
-+		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
-+		      <0xdfc01000 0x0001000>, /* IP registers 2 */
-+		      <0xd0000000 0x2000000>; /* Configuration space */
-+		reg-names = "dbi", "dbi2", "addr_space";
-+		device_type = "pci";
-+		num-ib-windows = <6>;
-+		num-ob-windows = <2>;
-+		num-lanes = <1>;
-+	};
--- 
-2.7.4
+RnJvbTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29t
+PgoKRG9jdW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBDYWRlbmNlIERTSSBicmlkZ2Uu
+CgpTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVs
+ZWN0cm9ucy5jb20+Ci0tLQpIZWxsbyBSb2IsCgpJIGRyb3BwZWQgeW91ciBBY2tlZC1ieSBiZWNh
+dXNlIHRoaXMgdmVyc2lvbiBub3cgZG9jdW1lbnRzIHRoZSBEUEhZCmJpbmRpbmdzLgoKUmVnYXJk
+cywKCkJvcmlzCgpDaGFuZ2VzIGluIHY2OgotIERvY3VtZW50IHRoZSBEUEhZIGJpbmRpbmdzCi0g
+RHJvcCBSb2IncyBhY2sgYmVjYXVzZSBvZiB0aGUgYWRkaXRpb24gRFBIWSBiaW5kaW5ncyBkb2MK
+CkNoYW5nZXMgaW4gdjU6Ci0gQWRkIG9wdGlvbmFsIHJlc2V0IGxpbmUgZm9yIHRoZSBwZXJpcGhl
+cmFsL0FQQiBsb2dpYwoKQ2hhbmdlcyBpbiB2NDoKLSBSZW5hbWUgRFNJIGNsa3MgKHN1Z2dlc3Rl
+ZCBieSBUb21pKQotIERyb3AgdGhlIElQIHZlcnNpb24gaW4gdGhlIGNvbXBhdGlibGUgc2luY2Ug
+aXQgY2FuIGJlIGV4dHJhY3RlZCBmcm9tCiAgYSByZWdpc3RlciAoc3VnZ2VzdGVkIGJ5IEFuZHJ6
+ZWopCgpDaGFuZ2VzIGluIHYzOgotIEZpeCBjbG9jayBuYW1lcyBpbiB0aGUgZXhhbXBsZQotIERv
+Y3VtZW50IGhvdyB0byByZXByZXNlbnQgRFNJIGRldmljZXMgdGhhdCBhcmUgY29udHJvbGxlciB0
+aHJvdWdoCiAgYW4gZXh0ZXJuYWwgYnVzIGxpa2UgSTJDIG9yIFNQSQoKQ2hhbmdlcyBpbiB2MjoK
+LSBOb25lCi0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNpLnR4dCAgICAg
+ICAgICAgfCAxMzMgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTMzIGlu
+c2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNpLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRz
+aS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mNTcyNWJiNmM2
+MWMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0CkBAIC0wLDAgKzEsMTMzIEBACitDYWRlbmNlIERT
+SSBicmlkZ2UKKz09PT09PT09PT09PT09PT09PQorCitUaGUgQ2FkZW5jZSBEU0kgYnJpZGdlIGlz
+IGEgRFBJIHRvIERTSSBicmlkZ2Ugc3VwcG9ydGluZyB1cCB0byA0IERTSSBsYW5lcy4KKworUmVx
+dWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIHNldCB0byAiY2Rucyxk
+c2kiLgorLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250
+cm9sbGVyJ3MgcmVnaXN0ZXJzLgorLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgbGluZSBjb25uZWN0
+ZWQgdG8gdGhlIERTSSBicmlkZ2UuCistIGNsb2NrczogRFNJIGJyaWRnZSBjbG9ja3MuCistIGNs
+b2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gImRzaV9wX2NsayIgYW5kICJkc2lfc3lzX2NsayIuCist
+IHBoeXM6IHBoYW5kbGUgbGluayB0byB0aGUgTUlQSSBELVBIWSBjb250cm9sbGVyLgorLSBwaHkt
+bmFtZXM6IG11c3QgY29udGFpbiAiZHBoeSIuCistICNhZGRyZXNzLWNlbGxzOiBtdXN0IGJlIHNl
+dCB0byAxLgorLSAjc2l6ZS1jZWxsczogbXVzdCBiZSBzZXQgdG8gMC4KKworT3B0aW9uYWwgcHJv
+cGVydGllczoKKy0gcmVzZXRzOiBEU0kgcmVzZXQgbGluZXMuCistIHJlc2V0LW5hbWVzOiBjYW4g
+Y29udGFpbiAiZHNpX3BfcnN0Ii4KKworUmVxdWlyZWQgc3Vibm9kZXM6CistIHBvcnRzOiBQb3J0
+cyBhcyBkZXNjcmliZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBo
+LnR4dC4KKyAgMiBwb3J0cyBhcmUgYXZhaWxhYmxlOgorICAqIHBvcnQgMDogdGhpcyBwb3J0IGlz
+IG9ubHkgbmVlZGVkIGlmIHNvbWUgb2YgeW91ciBEU0kgZGV2aWNlcyBhcmUKKwkgICAgY29udHJv
+bGxlZCB0aHJvdWdoICBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IgU1BJLiBDYW4gaGF2ZSBh
+dAorCSAgICBtb3N0IDQgZW5kcG9pbnRzLiBUaGUgZW5kcG9pbnQgbnVtYmVyIGlzIGRpcmVjdGx5
+IGVuY29kaW5nIHRoZQorCSAgICBEU0kgdmlydHVhbCBjaGFubmVsIHVzZWQgYnkgdGhpcyBkZXZp
+Y2UuCisgICogcG9ydCAxOiByZXByZXNlbnRzIHRoZSBEUEkgaW5wdXQuCisgIE90aGVyIHBvcnRz
+IHdpbGwgYmUgYWRkZWQgbGF0ZXIgdG8gc3VwcG9ydCB0aGUgbmV3IGtpbmQgb2YgaW5wdXRzLgor
+CistIG9uZSBzdWJub2RlIHBlciBEU0kgZGV2aWNlIGNvbm5lY3RlZCBvbiB0aGUgRFNJIGJ1cy4g
+RWFjaCBEU0kgZGV2aWNlIHNob3VsZAorICBjb250YWluIGEgcmVnIHByb3BlcnR5IGVuY29kaW5n
+IGl0cyB2aXJ0dWFsIGNoYW5uZWwuCisKK0NhZGVuY2UgRFBIWQorPT09PT09PT09PT09CisKK0Nh
+ZGVuY2UgRFBIWSBibG9jay4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTog
+c2hvdWxkIGJlIHNldCB0byAiY2RucyxkcGh5Ii4KKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJl
+c3MgYW5kIGxlbmd0aCBvZiB0aGUgRFBIWSByZWdpc3RlcnMuCistIGNsb2NrczogRFBIWSByZWZl
+cmVuY2UgY2xvY2tzLgorLSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJwc20iIGFuZCAicGxs
+X3JlZiIuCistICNwaHktY2VsbHM6IG11c3QgYmUgc2V0IHRvIDAuCisKKworRXhhbXBsZToKKwlk
+cGh5MDogZHBoeUBmZDBlMDAwMHsKKwkJY29tcGF0aWJsZSA9ICJjZG5zLGRwaHkiOworCQlyZWcg
+PSA8MHgwIDB4ZmQwZTAwMDAgMHgwIDB4MTAwMD47CisJCWNsb2NrcyA9IDwmcHNtX2Nsaz4sIDwm
+cGxsX3JlZl9jbGs+OworCQljbG9jay1uYW1lcyA9ICJwc20iLCAicGxsX3JlZiI7CisJCSNwaHkt
+Y2VsbHMgPSA8MD47CisJfTsKKworCWRzaTA6IGRzaUBmZDBjMDAwMCB7CisJCWNvbXBhdGlibGUg
+PSAiY2Rucyxkc2kiOworCQlyZWcgPSA8MHgwIDB4ZmQwYzAwMDAgMHgwIDB4MTAwMD47CisJCWNs
+b2NrcyA9IDwmcGNsaz4sIDwmc3lzY2xrPjsKKwkJY2xvY2stbmFtZXMgPSAiZHNpX3BfY2xrIiwg
+ImRzaV9zeXNfY2xrIjsKKwkJaW50ZXJydXB0cyA9IDwxPjsKKwkJcGh5cyA9IDwmZHBoeTA+Owor
+CQlwaHktbmFtZXMgPSAiZHBoeSI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKKworCQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNz
+aXplLWNlbGxzID0gPDA+OworCisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlkc2kw
+X2RwaV9pbnB1dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF9kcGlf
+b3V0cHV0PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKworCQlwYW5lbDogZHNpLWRldkAwIHsKKwkJ
+CWNvbXBhdGlibGUgPSAiPHZlbmRvcixwYW5lbD4iOworCQkJcmVnID0gPDA+OworCQl9OworCX07
+CisKK29yCisKKwlkc2kwOiBkc2lAZmQwYzAwMDAgeworCQljb21wYXRpYmxlID0gImNkbnMsZHNp
+IjsKKwkJcmVnID0gPDB4MCAweGZkMGMwMDAwIDB4MCAweDEwMDA+OworCQljbG9ja3MgPSA8JnBj
+bGs+LCA8JnN5c2Nsaz47CisJCWNsb2NrLW5hbWVzID0gImRzaV9wX2NsayIsICJkc2lfc3lzX2Ns
+ayI7CisJCWludGVycnVwdHMgPSA8MT47CisJCXBoeXMgPSA8JmRwaHkxPjsKKwkJcGh5LW5hbWVz
+ID0gImRwaHkiOworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47
+CisKKwkJcG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKKworCQkJcG9ydEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQlkc2kwX291dHB1dDogZW5kcG9p
+bnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfcGFu
+ZWxfaW5wdXQ+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsK
+KwkJCQlkc2kwX2RwaV9pbnB1dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+Jnh4eF9kcGlfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OworCisJaTJjQHh4eCB7
+CisJCXBhbmVsOiBwYW5lbEA1OSB7CisJCQljb21wYXRpYmxlID0gIjx2ZW5kb3IscGFuZWw+IjsK
+KwkJCXJlZyA9IDwweDU5PjsKKworCQkJcG9ydCB7CisJCQkJZHNpX3BhbmVsX2lucHV0OiBlbmRw
+b2ludCB7CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMF9vdXRwdXQ+OworCQkJCX07CisJ
+CQl9OworCQl9OworCX07Ci0tIAoyLjE0LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
