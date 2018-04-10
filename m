@@ -1,36 +1,45 @@
-Return-Path: <SRS0=+3ec=G7=goldelico.com=hns@kernel.org>
+Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:17645 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751845AbeDJQHJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 12:07:09 -0400
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 3/4] DTS: Bindings: pca953x add an optional vcc-supply property
-Date: Tue, 10 Apr 2018 18:07:03 +0200
-Message-Id: <33bd9f06399356902480a9338319c9c3254c72f3.1523376423.git.hns@goldelico.com>
-In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com>
-In-Reply-To: <cover.1523376423.git.hns@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com>
+Subject: [PATCH v3 0/4] pcal6524 extensions and fixes for pca953x driver
+Date: Tue, 10 Apr 2018 18:07:00 +0200
+Message-Id: <cover.1523376423.git.hns@goldelico.com>
+Sender: devicetree-owner@vger.kernel.org
 To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hardware can have a switchable Vcc supply, so let's add it to
-the bindings (the current Linux driver code already supports it).
+V3:
+* add Reported-by: and Reviewed-by:
+* fix working for bindings description and example
+* convert all register offsets to hex
+* omit the LEVEL-IRQ RFC/hack commit
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
- 1 file changed, 1 insertion(+)
+2018-04-04 21:00:27: V2:
+* added PCA_PCAL flags if matched through of-table
+* fix address calculation for extended PCAL6524 registers
+* hack to map LEVEL_LOW to EDGE_FALLING to be able to
+  test in combination with ts3a227e driver
+* improve description of bindings for optional vcc-supply
+  and interrupt-controller;
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index d2a937682836..6a7cddb187c1 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -35,6 +35,7 @@ Required properties:
- Optional properties:
-  - reset-gpios: GPIO specification for the RESET input. This is an
- 		active low signal to the PCA953x.
-+ - vcc-supply:	power supply regulator.
- 
- Example:
- 
+2018-03-10 09:32:53: no initial description
+
+H. Nikolaus Schaller (4):
+  gpio: pca953x: set the PCA_PCAL flag also when matching by DT
+  gpio: pca953x: add register definitions for pcal6524 and fix address
+    calculation
+  DTS: Bindings: pca953x add an optional vcc-supply property
+  DTS: Bindings: pca953x: add example how to use interrupt-controller
+    and gpio-controller
+
+ .../devicetree/bindings/gpio/gpio-pca953x.txt      | 34 +++++++++++++
+ drivers/gpio/gpio-pca953x.c                        | 56 +++++++++++++++-------
+ 2 files changed, 72 insertions(+), 18 deletions(-)
+
 -- 
 2.12.2
+
