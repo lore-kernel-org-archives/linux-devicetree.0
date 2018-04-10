@@ -1,207 +1,98 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 7/7] phy: qcom-qusb2: Add QUSB2 PHYs support for sdm845
-Date: Tue, 10 Apr 2018 12:25:10 +0530
-Message-ID: <bc95c295-df8a-6219-b923-adcb0d7030f0@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-8-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=X70gNedZjCiKQTOqtDf5UttViAiibgRjCoKWVJZqcKEQ@mail.gmail.com>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [PATCH v3 2/8] DT: reset: renesas,rzn1-reboot: document RZ/N1
+ reboot driver
+Date: Tue, 10 Apr 2018 07:08:45 +0000
+Message-ID: <OSBPR01MB2054DA948D0301F20AB9F1EDD2BE0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1522309629-10152-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1522309629-10152-3-git-send-email-michel.pollet@bp.renesas.com>
+ <20180409201027.ydlvyx72mrt5fphh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=X70gNedZjCiKQTOqtDf5UttViAiibgRjCoKWVJZqcKEQ@mail.gmail.com>
+In-Reply-To: <20180409201027.ydlvyx72mrt5fphh@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
+On 09 April 2018 21:10,  Rob Herring wrote:
+> On Thu, Mar 29, 2018 at 08:46:58AM +0100, Michel Pollet wrote:
+> > The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver as part
+> > of the sysctrl MFD to handle rebooting the CA7 cores.
+> > This documents the driver bindings.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > ---
+> >  .../bindings/power/renesas,rzn1-reboot.txt           | 20
+> ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
+> > b/Documentation/devicetree/bindings/power/renesas,rzn1-reboot.txt
+> > new file mode 100644
+> > index 0000000..f592769
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/renesas,rzn1-
+> reboot.txt
+> > @@ -0,0 +1,20 @@
+> > +DT bindings for the Renesas RZ/N1 Reboot Driver
+> > +
+> > +=3D=3D Reboot Driver Node =3D=3D
+> > +
+> > +The reboot driver is always a subnode of the system controller node,
+> > +see renesas,rzn1-sysctrl.txt for details.
+> > +
+> > +Bindings:
+> > ++ Required:
+> > +compatible =3D "renesas,rzn1-reboot";
+> > +
+> > +Example:
+> > +sysctrl: sysctrl@4000c000 {
+> > +compatible =3D "renesas,rzn1-sysctrl", "syscon", "simple-mfd";
+>
+> Are there other functions for this block? If so, please define a complete
+> binding for the block.
 
-On 3/30/2018 2:08 AM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->> @@ -241,6 +252,18 @@ struct qusb2_phy_cfg {
->>   * @tcsr: TCSR syscon register map
->>   * @cell: nvmem cell containing phy tuning value
->>   *
->> + * @override_imp_res_offset: PHY should use different rescode offset
->> + * @imp_res_offset_value: rescode offset to be updated in IMP_CTRL1 register
->> + *
->> + * @override_hstx_trim: PHY should use different HSTX o/p current value
->> + * @hstx_trim_value: HSTX_TRIM value to be updated in TUNE1 register
->> + *
->> + * @override_preemphasis: PHY should use different pre-amphasis amplitude
->> + * @preemphasis_level: Amplitude Pre-Emphasis to be updated in TUNE1 register
->> + *
->> + * @override_preemphasis_width: PHY should use different pre-emphasis duration
->> + * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
->> + *
-> nit: spacing here doesn't match spacing in the structure.  AKA: you've
-> smashed together all 8 properties in the structure but not in the
-> description.
-Will fix it.
->
->
->>   * @cfg: phy config data
->>   * @has_se_clk_scheme: indicate if PHY has single-ended ref clock scheme
->>   * @phy_initialized: indicate if PHY has been initialized
->> @@ -259,12 +282,35 @@ struct qusb2_phy {
->>         struct regmap *tcsr;
->>         struct nvmem_cell *cell;
->>
->> +       bool override_imp_res_offset;
->> +       u8 imp_res_offset_value;
->> +       bool override_hstx_trim;
->> +       u8 hstx_trim_value;
->> +       bool override_preemphasis;
->> +       u8 preemphasis_level;
->> +       bool override_preemphasis_width;
->> +       u8 preemphasis_width;
->> +
->>         const struct qusb2_phy_cfg *cfg;
->>         bool has_se_clk_scheme;
->>         bool phy_initialized;
->>         enum phy_mode mode;
->>  };
->>
->> +static inline void qusb2_write_mask(void __iomem *base, u32 offset,
->> +                                   u32 val, u32 mask)
->> +{
->> +       u32 reg;
->> +
->> +       reg = readl(base + offset);
->> +       reg &= ~mask;
->> +       reg |= val;
-> "reg |= (val & mask)" instead of just "reg |= val"
->
-> You don't do any bounds checking of the device tree entries and this
-> will at least make sure that a bad value for a field won't screw up
-> other fields (and so, presumably, it will be easier to find the bug).
->
-It makes sense. Will change accordingly.
+There are indeed multiple functions for this particular IP block. It's pret=
+ty much a
+kitchen sink of clocks, pinmux, reboot, watchdog, SMP and probably a couple
+more I forgot about!
+
+We've discussed this MFD structure with Geert, we picked that because if I
+were to add all these callbacks/drivers to a 'sysctrl' driver, it'd end up =
+looking
+like ... a mach-xx.c file in the end!
+So the current version is just a placeholder for a single driver for now, b=
+ut it
+won't last, there's already a SMP core enable driver lined up next...
 
 >
->> +       writel(reg, base + offset);
->> +
->> +       /* Ensure above write is completed */
->> +       readl(base + offset);
-> You're using readl() and writel() which have barriers.  Why do you
-> need this extra readl()?
+> > +reg =3D <0x4000c000 0x1000>;
+> > +
+> > +reboot {
+> > +compatible =3D "renesas,rzn1-reboot";
+>
+> Why is this node needed? The driver for "renesas,rzn1-sysctrl" should be
+> able to register as a reboot handler/driver/provider.
 
-This requirement comes from AHB2PHY wrapper designers and HPG.
-Also existing qusb2_setbits/clrbits() wrapper already have similar handling.
-
->
->
->> +}
->> +
->>  static inline void qusb2_setbits(void __iomem *base, u32 offset, u32 val)
->>  {
->>         u32 reg;
->> @@ -305,6 +351,42 @@ void qcom_qusb2_phy_configure(void __iomem *base,
->>  }
->>
->>  /*
->> + * Update board specific PHY tuning override values if specified from
->> + * device tree.
->> + *
-> nit: remove extra comment line with just a "*" on it.
-Sure.
->
->
->> + */
->> +static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
->> +{
->> +       const struct qusb2_phy_cfg *cfg = qphy->cfg;
->> +
->> +       if (qphy->override_imp_res_offset)
->> +               qusb2_write_mask(qphy->base, QUSB2PHY_IMP_CTRL1,
->> +                            qphy->imp_res_offset_value << IMP_RES_OFFSET_SHIFT,
->> +                            IMP_RES_OFFSET_MASK);
->> +
->> +       if (qphy->override_hstx_trim)
->> +               qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
->> +                                qphy->hstx_trim_value << HSTX_TRIM_SHIFT,
->> +                                HSTX_TRIM_MASK);
->> +
->> +       if (qphy->override_preemphasis)
->> +               qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
->> +                               qphy->preemphasis_level << PREEMPHASIS_EN_SHIFT,
->> +                               PREEMPHASIS_EN_MASK);
->> +
->> +       if (qphy->override_preemphasis_width) {
->> +               if (qphy->preemphasis_width)
->> +                       qusb2_setbits(qphy->base,
->> +                                     cfg->regs[QUSB2PHY_PORT_TUNE1],
->> +                                     PREEMPH_HALF_WIDTH);
->> +               else
->> +                       qusb2_clrbits(qphy->base,
->> +                                     cfg->regs[QUSB2PHY_PORT_TUNE1],
->> +                                     PREEMPH_HALF_WIDTH);
->> +       }
->> +}
->> +
->> +/*
->>   * Fetches HS Tx tuning value from nvmem and sets the
->>   * QUSB2PHY_PORT_TUNE1/2 register.
->>   * For error case, skip setting the value and use the default value.
->> @@ -525,6 +607,9 @@ static int qusb2_phy_init(struct phy *phy)
->>         qcom_qusb2_phy_configure(qphy->base, cfg->regs, cfg->tbl,
->>                                  cfg->tbl_num);
->>
->> +       /* Override board specific PHY tuning values */
->> +       qusb2_phy_override_phy_params(qphy);
->> +
->>         /* Set efuse value for tuning the PHY */
->>         qusb2_phy_set_tune2_param(qphy);
->>
->> @@ -647,7 +732,7 @@ static int qusb2_phy_exit(struct phy *phy)
->>                 .compatible     = "qcom,msm8996-qusb2-phy",
->>                 .data           = &msm8996_phy_cfg,
->>         }, {
->> -               .compatible     = "qcom,qusb2-v2-phy",
->> +               .compatible     = "qcom,sdm845-qusb2-phy",
->>                 .data           = &qusb2_v2_phy_cfg,
-> Can you change the name of the structure to match (AKA include sdm845?)
-
-OK
->
->
->>         },
->>         { },
->> @@ -736,6 +821,31 @@ static int qusb2_phy_probe(struct platform_device *pdev)
->>                 qphy->cell = NULL;
->>                 dev_dbg(dev, "failed to lookup tune2 hstx trim value\n");
->>         }
->> +
->> +       if (of_find_property(dev->of_node, "qcom,imp-res-offset-value", NULL)) {
-> Get rid of the extra of_find_property().  Just use the error code from
-> the property_read() to know if it was there and you've done two steps
-> in one (read it and know if it was there).
->
-That is better. Thanks.
-
->> +               qphy->override_imp_res_offset = true;
->> +               of_property_read_u8(dev->of_node, "qcom,imp-res-offset-value",
->> +                                   &qphy->imp_res_offset_value);
-> You probably don't want of_property_read_u8(), even if you intend the
-> property to bit in 8 bits.  You probably want to use
-> of_property_read_u32() to read into a temporary value and then copy
-> that to your 8-bit structure element.
->
-> If you use of_property_read_u8 then you have to "/bits/ 8" in the
-> device tree and that's ugly and doesn't seem to be what's done very
-> often.  People just always stick a u32 in the device tree.
-
-Sure, will do that.
+Please see above...
 
 >
->
-> -Doug
+> Rob
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks for your input!
+Michel
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
