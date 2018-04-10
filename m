@@ -1,53 +1,43 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] gpio: dwapb: Add support for 32 interrupts
-Date: Tue, 10 Apr 2018 16:29:11 +0200
-Message-ID: <CAMuHMdUjYT466uPAHSoAWwQL2KaRUfM1njwpBkHwSK9fbGZTag@mail.gmail.com>
-References: <1522246950-9110-1-git-send-email-phil.edworthy@renesas.com>
- <20180409192013.5rytwgoixtyraow3@rob-hp-laptop> <TY1PR01MB1769EC6963CFB3D720D1B9EEF5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <TY1PR01MB17691846E8DFA86DA831B8B9F5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 3/5] [RFC] gpio: pca953x: hack to map LEVEL irqs to
+ EDGE irqs (may loose interrupts/hang)
+Date: Tue, 10 Apr 2018 17:38:17 +0300
+Message-ID: <CAHp75VctneZKFrRr5bgq6w1L9JkDzbKW421aDLQU2jf9vZgmFA@mail.gmail.com>
+References: <cover.1522868422.git.hns@goldelico.com> <637f00dd7da98cfeffdc6080914a5f67b433da50.1522868423.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TY1PR01MB17691846E8DFA86DA831B8B9F5BE0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+In-Reply-To: <637f00dd7da98cfeffdc6080914a5f67b433da50.1522868423.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Rob Herring <robh@kernel.org>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+On Wed, Apr 4, 2018 at 10:00 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-On Tue, Apr 10, 2018 at 4:23 PM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
-> On 10 April 2018 07:24 Phil Edworthy wrote:
->> On 09 April 2018 20:20 Rob Herring wrote:
->> > On Wed, Mar 28, 2018 at 03:22:30PM +0100, Phil Edworthy wrote:
-> [...]
->> > > +- interrupt-mask : a 32-bit bit mask that specifies which interrupts
->> > > +in the list
->> > > +  of interrupts is valid, bit is 1 for a valid irq.
->> >
->> > This is not a standard property and would need a vendor prefix. However,
->> I'd
->> > prefer you just skip any not connected interrupts with an invalid interrupt
->> > number. Then the GPIO number is the index into "interrupts".
->> Makes sense, I'll rework it to do this.
-> Err, what would an invalid interrupt number be?
-> If I use -1, I get a DT parsing error and 0 is certainly valid. If the number is
-> larger than the valid interrupt range I get errors during probe.
+> in driver code. Therefore, the pca953x driver rejects the
+> setup of the irq because it can only handle EDGE interrupts
+> so far.
+>
+> This hack translates level interrupts to edge interrupts
+> for the pca953x chips. This is enough for initial testing,
+> but not a good solution since interrupts may be lost.
+>
+> If for example the connected chip requests a IRQ_TYPE_LEVEL_LOW
+> this may have the reason that there may be multiple different
+> interrupt sources in the chip - wired-or together to the
+> input of the pca953x. Now if we do edge detecion only,
+> the first interrupt will generate an EDGE_FALLING, but a
+> second one won't ever if the first interrupt wasn't already
+> processed.
+>
+> IMHO a better solution would be to make the pca953x interrupt
+> handler check if the irq input is still in the active
+> level and run the device specific handler again.
 
-Perhaps using interrupts-extended instead of interrupts?
-
-E.g.
-
-    interrupts-extended = <&intc1 5 1>, <0>, <&intc2 1 0>;
-
-Gr{oetje,eeting}s,
-
-                        Geert
+What I thought about is to enable such exclusively for "L" variants of
+the chips and check latched values.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
