@@ -1,80 +1,114 @@
-Return-Path: <SRS0=jhCx=HA=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] usb: role: rcar-usb3-role-switch: add support for R-Car
- SoCs
-Date: Wed, 11 Apr 2018 03:15:23 +0000
-Message-ID: <TY1PR06MB0992CB520090B80CB8B68104D8BD0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1523361826-8772-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAHp75Vd20+dQewCsy-UPpSw+5OkuVhok=MEYLJ8OqPHEQKSZdA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd20+dQewCsy-UPpSw+5OkuVhok=MEYLJ8OqPHEQKSZdA@mail.gmail.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=vni6=G7=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+In-Reply-To: <1523361826-8772-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1523361826-8772-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 10 Apr 2018 15:40:00 +0300
+Message-ID: <CAHp75Vd20+dQewCsy-UPpSw+5OkuVhok=MEYLJ8OqPHEQKSZdA@mail.gmail.com>
+Subject: Re: [PATCH] usb: role: rcar-usb3-role-switch: add support for R-Car SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, USB <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgQW5keSwNCg0KVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3IQ0KDQo+IEZyb206IEFuZHkgU2hl
-dmNoZW5rbywgU2VudDogVHVlc2RheSwgQXByaWwgMTAsIDIwMTggOTo0MCBQTQ0KPiANCj4gT24g
-VHVlLCBBcHIgMTAsIDIwMTggYXQgMzowMyBQTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hp
-aGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCjxzbmlwPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvZXJyLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvbW9kdWxlLmg+DQo+IA0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+
-DQo+IA0KPiBEbyB5b3UgbmVlZCB0aGlzIG9uZT8NCg0KSWYgdXNpbmcgb2ZfcGFyc2VfcGhhbmRs
-ZSgpIGlzIGFjY2VwdGFibGUsIEkgbmVlZCBsaW51eC9vZl9wbGF0Zm9ybS5oIGF0IGxlYXN0Lg0K
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUg
-PGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L3VhY2Nlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3VzYi9yb2xl
-Lmg+DQo+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCByY2FyX3VzYjNf
-cm9sZV9zd2l0Y2hfb2ZfbWF0Y2hbXSA9IHsNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAi
-cmVuZXNhcyxyY2FyLXVzYjMtcm9sZS1zd2l0Y2giIH0sDQo+ID4gKyAgICAgICB7IH0sDQo+IA0K
-PiBCZXR0ZXIgdG8gcmVtb3ZlIGNvbW1hIGF0IHRlcm1pbmF0b3IgbGluZS4NCg0KSSBnb3QgaXQu
-IEkgd2lsbCBmaXggaXQgaW4gdjIuDQoNCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklDRV9UQUJM
-RShvZiwgcmNhcl91c2IzX3JvbGVfc3dpdGNoX29mX21hdGNoKTsNCj4gDQo+ID4gK3N0YXRpYyBp
-bnQgcmNhcl91c2IzX3JvbGVfc3dpdGNoX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ID4gK3sNCj4gDQo+ID4gKyAgICAgICAvKiBBdm9pZCBkZXZtX3JlcXVlc3RfbWVtX3Jl
-Z2lvbigpIGNhbGxpbmcgYnkgZGV2bV9pb3JlbWFwX3Jlc291cmNlKCkgKi8NCj4gDQo+IFJlZHVu
-ZGFudCBjb21tZW50Lg0KDQpJIHdpbGwgcmVtb3ZlIHRoaXMgY29tbWVudC4NCg0KPiA+ICsgICAg
-ICAgaG9zdF9ub2RlID0gb2ZfcGFyc2VfcGhhbmRsZShwZGV2LT5kZXYub2Zfbm9kZSwgInJlbmVz
-YXMsaG9zdCIsIDApOw0KPiA+ICsgICAgICAgaWYgKCFob3N0X25vZGUpDQo+ID4gKyAgICAgICAg
-ICAgICAgIHJldHVybiAtRU5PREVWOw0KPiA+ICsNCj4gPiArICAgICAgIHBkZXZfaG9zdCA9IG9m
-X2ZpbmRfZGV2aWNlX2J5X25vZGUoaG9zdF9ub2RlKTsNCj4gPiArICAgICAgIGlmICghcGRldl9o
-b3N0KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiArDQo+ID4gKyAg
-ICAgICBvZl9ub2RlX3B1dChob3N0X25vZGUpOw0KPiANCj4gSXNuJ3Qgd2hhdCBIZWlra2kgdHJp
-ZWQgdG8gc29sdmUgd2l0aCBncmFwaHMgYW5kIHN0dWZmIGxpa2UgdGhhdD8NCg0KSGVpa2tpIHBy
-ZXBhcmVkICJkZXZpY2UgY29ubmVjdGlvbiIgZnJhbWV3b3JrIChkZXZjb24pIFsxXSB0byBnZXQg
-YSBkZXZpY2UgcG9pbnRlci4NCkhvd2V2ZXIsIElJVUMsIHdlIG5lZWQgdG8gaW1wcm92ZSB0aGUg
-ZnJhbWV3b3JrIGZvciBkZXZpY2UgdHJlZSBlbnZpcm9ubWVudCBiZWNhdXNlOg0KIC0gVGhlIGRl
-dmNvbiBuZWVkcyBlYWNoIGRldl9uYW1lKCkgdGhyb3VnaCB0aGUgZW5kcG9pbnQgYXJyYXkgb2Yg
-c3RydWN0IGRldmljZV9jb25uZWN0aW9uLg0KIC0gRWFjaCBkZXZfbmFtZSgpIG9uIGRldmljZSB0
-cmVlIGVudmlyb25tZW50IHdpbGwgYmUgPGJhc2UgYWRkcmVzcyByZWdpc3Rlcj4uPGRldmljZSBu
-YW1lPiwNCiAgIGYuZS4gImVlMDIwMDAwLnVzYiIuIFNvLCBJIGRvbuKAmXQgdGhpbmsgYWRkaW5n
-IHN1Y2ggc3RyaW5ncyB0byBhIGRyaXZlciBpcyBhIGdvb2Qgd2F5Lg0KDQpTbywgSSB3cm90ZSBz
-dWNoIGEgY29kZSBieSB1c2luZyBleGlzdGluZyBBUElzLg0KU2hvdWxkIEkgaW1wcm92ZSB0aGUg
-ZnJhbWV3b3JrIGZpcnN0IHNvbWVob3c/IE9yLCBpcyBteSB1bmRlcnN0YW5kaW5nIGluY29ycmVj
-dD8NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyOTcwNDEvDQoN
-Cj4gPiArICAgICAgIGRldl9pbmZvKCZwZGV2LT5kZXYsICJwcm9iZWRcbiIpOw0KPiANCj4gTm9p
-c2UuIChIaW50OiBpbml0Y2FsbF9kZWJ1ZyBpcyBhIGdvb2QgY29tbWFuZCBsaW5lIG9wdGlvbikN
-Cg0KVGhhbmsgeW91IGZvciB0aGUgaGludCEgSSB3aWxsIHJlbW92ZSB0aGUgZGV2X2luZm8oKS4N
-Cg0KPiA+ICt9DQo+IA0KPiA+ICsjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQo+IA0KPiBJbnN0ZWFk
-Li4uDQo+IA0KPiA+ICtzdGF0aWMgaW50IHJjYXJfdXNiM19yb2xlX3N3aXRjaF9zdXNwZW5kKHN0
-cnVjdCBkZXZpY2UgKmRldikNCj4gDQo+IC4uLnVzZSBfX21heWJlX3VudXNlZCBhbm5vdGF0aW9u
-Lg0KPiANCj4gPiArc3RhdGljIGludCByY2FyX3VzYjNfcm9sZV9zd2l0Y2hfcmVzdW1lKHN0cnVj
-dCBkZXZpY2UgKmRldikNCj4gDQo+IERpdHRvLg0KDQpJIHdpbGwgZml4IHRoZW0gaW4gdjIgcGF0
-Y2guDQoNCj4gPiArI2VuZGlmDQo+IA0KPiANCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
-cml2ZXIgcmNhcl91c2IzX3JvbGVfc3dpdGNoX2RyaXZlciA9IHsNCj4gPiArICAgICAgIC5wcm9i
-ZSAgICAgICAgICA9IHJjYXJfdXNiM19yb2xlX3N3aXRjaF9wcm9iZSwNCj4gPiArICAgICAgIC5y
-ZW1vdmUgICAgICAgICA9IHJjYXJfdXNiM19yb2xlX3N3aXRjaF9yZW1vdmUsDQo+ID4gKyAgICAg
-ICAuZHJpdmVyICAgICAgICAgPSB7DQo+ID4gKyAgICAgICAgICAgICAgIC5uYW1lID0gInJjYXJf
-dXNiM19yb2xlX3N3aXRjaCIsDQo+ID4gKyAgICAgICAgICAgICAgIC5wbSAgICAgICAgICAgICA9
-ICZyY2FyX3VzYjNfcm9sZV9zd2l0Y2hfcG1fb3BzLA0KPiANCj4gPiArICAgICAgICAgICAgICAg
-Lm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKHJjYXJfdXNiM19yb2xlX3N3aXRjaF9vZl9t
-YXRjaCksDQo+IA0KPiBJcyBpdCBwb3NzaWJsZSB0byBoYXZlIHRoaXMgZHJpdmVyIHcvbyBPRj8g
-RG9lcyBpdCBtYWtlIHNlbnNlIGluIHRoYXQgY2FzZT8NCj4gT3RoZXJ3aXNlIHJlbW92ZSBvZl9t
-YXRjaF9wdHIoKSBjYWxsIGFuZCBiZWxvdyBtb2RhbGlhcy4NCg0KVGhpcyBkcml2ZXIgZGVwZW5k
-cyBvbiBPRiBub3cuIFNvLCBJIHdpbGwgcmVtb3ZlIG9mX21hdGNoX3B0cigpIGFuZCBNT0RVTEVf
-QUxJQVMoKS4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+ICsgICAg
-ICAgfSwNCj4gPiArfTsNCj4gDQo+ID4gK01PRFVMRV9BTElBUygicGxhdGZvcm06cmNhcl91c2Iz
-X3JvbGVfc3dpdGNoIik7DQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBT
-aGV2Y2hlbmtvDQo=
+On Tue, Apr 10, 2018 at 3:03 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds role switch support for R-Car SoCs. Some R-Car SoCs
+> (e.g. R-Car H3) have USB 3.0 dual-role device controller which has
+> the USB 3.0 xHCI host and Renesas USB 3.0 peripheral.
+>
+> Unfortunately, the mode change register contains the USB 3.0 peripheral
+> controller side only. So, the USB 3.0 peripheral driver (renesas_usb3)
+> manages this register. However, in peripheral mode, the host should
+> stop. Also the host hardware needs to reinitialize its own registers
+> when the mode changes from peripheral to host mode. Otherwise,
+> the host cannot work correctly (e.g. detect a device as high-speed).
+>
+> To achieve this by a driver, this role switch driver manages
+> the mode change register and attach/release the xhci-plat driver.
+> The renesas_usb3 udc driver should call devm_of_platform_populate()
+> to probe this driver.
+
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of_device.h>
+
+Do you need this one?
+
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/usb/role.h>
+
+> +static const struct of_device_id rcar_usb3_role_switch_of_match[] = {
+> +       { .compatible = "renesas,rcar-usb3-role-switch" },
+> +       { },
+
+Better to remove comma at terminator line.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_usb3_role_switch_of_match);
+
+> +static int rcar_usb3_role_switch_probe(struct platform_device *pdev)
+> +{
+
+> +       /* Avoid devm_request_mem_region() calling by devm_ioremap_resource() */
+
+Redundant comment.
+
+> +       host_node = of_parse_phandle(pdev->dev.of_node, "renesas,host", 0);
+> +       if (!host_node)
+> +               return -ENODEV;
+> +
+> +       pdev_host = of_find_device_by_node(host_node);
+> +       if (!pdev_host)
+> +               return -ENODEV;
+> +
+> +       of_node_put(host_node);
+
+Isn't what Heikki tried to solve with graphs and stuff like that?
+
+> +       dev_info(&pdev->dev, "probed\n");
+
+Noise. (Hint: initcall_debug is a good command line option)
+
+> +}
+
+> +#ifdef CONFIG_PM_SLEEP
+
+Instead...
+
+> +static int rcar_usb3_role_switch_suspend(struct device *dev)
+
+...use __maybe_unused annotation.
+
+> +static int rcar_usb3_role_switch_resume(struct device *dev)
+
+Ditto.
+
+> +#endif
+
+
+> +static struct platform_driver rcar_usb3_role_switch_driver = {
+> +       .probe          = rcar_usb3_role_switch_probe,
+> +       .remove         = rcar_usb3_role_switch_remove,
+> +       .driver         = {
+> +               .name = "rcar_usb3_role_switch",
+> +               .pm             = &rcar_usb3_role_switch_pm_ops,
+
+> +               .of_match_table = of_match_ptr(rcar_usb3_role_switch_of_match),
+
+Is it possible to have this driver w/o OF? Does it make sense in that case?
+Otherwise remove of_match_ptr() call and below modalias.
+
+> +       },
+> +};
+
+> +MODULE_ALIAS("platform:rcar_usb3_role_switch");
+
+-- 
+With Best Regards,
+Andy Shevchenko
