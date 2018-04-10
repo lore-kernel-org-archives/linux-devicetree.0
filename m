@@ -1,70 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Date: Tue, 10 Apr 2018 12:36:21 -0700
-Message-ID: <20180410193621.GB6727@builder>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
- <20180405161834.3850-3-ilina@codeaurora.org>
- <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
- <20180409160800.GC19682@codeaurora.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/3] drm/vc4: Remove the need for the GPU-subsystem DT
+ node.
+Date: Tue, 10 Apr 2018 12:39:22 -0700
+Message-ID: <87efjmq2ad.fsf@anholt.net>
+References: <20180409230040.1100-1-eric@anholt.net>
+ <8806871.109949.1523384893773@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180409160800.GC19682@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1375544889=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8806871.109949.1523384893773@email.1und1.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 09 Apr 09:08 PDT 2018, Lina Iyer wrote:
+--===============1375544889==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
-> > Quoting Lina Iyer (2018-04-05 09:18:26)
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-[..]
-> > > +Example 1:
-> > > +
-> > > +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-> > > +register offsets for DRV2 start at 0D00, the register calculations are like
-> > > +this -
-> > > +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-> > > +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
-> > > +
-> > > +       apps_rsc: rsc@179e000 {
-> > > +               label = "apps_rsc";
-> > > +               compatible = "qcom,rpmh-rsc";
-> > > +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-> > 
-> > The first reg property overlaps the second one. Does this second one
-> > ever move around? I would hardcode it in the driver to be 0xd00 away
-> > from the drv base instead of specifying it in DT if it's the same all
-> > the time.
-[..]
-> > 
-> The DRV is the voter for an execution environment (Linux, Hypervisor,
-> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
-> privy to. They are access restricted. The memory organization of the RSC
-> mandates that we know the DRV id to access registers specific to the
-> DRV. Unfortunately, not all RSC have identical DRV configuration and the
-> register space is also variable depending on the capability of the RSC.
-> There are functionalities supported by other RSCs in the SoC that are
-> not supported by the RSC associated with the application processor,
-> while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
-> describing the whole RSC as it is not usable from Linux (because of
-> access restrictions).
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I generally prefer that we describe the hardware blocks as accurate as
-possible, instead of applying current restrictions on Linux onto the
-description. This ensures that we can reuse the binding and drivers in
-configurations not considered today. However, afaict we still have the
-problem that we need a way to express where in the RSC our TCS sits.
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-Regardless of what's right or not, the given example causes the driver
-to fail probing, so something needs to be changed. (Making the drv size
-0xd00 is functional but doesn't really relate to any bondary in the
-register space).
+> Hi Eric,
+>
+>> Eric Anholt <eric@anholt.net> hat am 10. April 2018 um 01:00 geschrieben:
+>>=20
+>>=20
+>> The GPU subsystem node was a workaround to have a central device to
+>> bind V3D and display to.  Following the lead of 246774d17fc0
+>> ("drm/etnaviv: remove the need for a gpu-subsystem DT node"), remove
+>> the subsystem node usage and just create a platform device for the DRM
+>> device to attach to if any of the subsystem devices are present.
+>
+> i didn't test it. Does the code change keep the backward compatibility wi=
+th older DT?
 
-Regards,
-Bjorn
+Yes.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlrNEuoACgkQtdYpNtH8
+nuhUWg//UGmPNTa+rJb7kiaYTKyB/d4e4Gxawk7qcPsrBflg+i4AShAXO2JNJ6Cn
+BfCm1nhmY5J/Ucsa2XDt4uinpGb/0+A04gMNNtv2vqcoxeTBs3JMaB3TQLiEO0Sq
+LU9yTfR0z+NQRkPxFKlJ49n5FDymKJr1K1r95z2MAqGLkH0Cm9S08IIfCcG3aToa
+TxYuST/EJmCf54VcW7tN9O8MieFhhz2aBE+YEP+Wkxf9FkY1bmXonsMfLRoGR21R
+IRdXxm/SvBj672E6R0nWai+/7ePe5EG17NNR4WfNZs0L8iUoyeDlV8EZm/f8nN0b
+qIZhyKRWxxG1ebnR+BWSFEPXJS2HEt+s3cNIZ65R6tmBeHx3sWr81pM2Z+r/79au
+oA+LRuNtK/ZoTYcw+0OeMzNU53fJ6vPK7/6juJLC9fHQQvy7fpDTLCMjl/iEfeIq
+XfBFqRzdvD6i/Zac0Q1kJWfkt3Ys2Yh3z0rGg/tebaiUQD8QU9cUIo0WTatZMcpX
+y7VTonCwWNVKC/z6k8QUXF04Vubh03GuqBF9fccgb+O0uGA4rx3SK8L/+MzSlOFX
+A4gO6FlLQSOIolfsKVqN2oX8kTX7Rxw5lpZeJWpyTMTsw+BcFQwgZ+rGnnyGKIBM
+8xRYBiyPtVmifGK+UGUAaodNRCiiLPE03ovjvFf8LXEql6ACW2Q=
+=n38c
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============1375544889==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1375544889==--
