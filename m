@@ -1,69 +1,97 @@
-Return-Path: <SRS0=U5K/=G3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-by2nam01on0071.outbound.protection.outlook.com ([104.47.34.71]:43531
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751678AbeDFRQJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Apr 2018 13:16:09 -0400
-From: Martin Kelly <mkelly@xevo.com>
-Subject: [PATCH 2/2] dt-bindings: iio:imu:mpu6050: support more interrupt types
-Date: Fri,  6 Apr 2018 10:15:52 -0700
-Message-Id: <20180406171552.2969-2-mkelly@xevo.com>
-In-Reply-To: <20180406171552.2969-1-mkelly@xevo.com>
-References: <20180406171552.2969-1-mkelly@xevo.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:33640 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752163AbeDJR5d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 13:57:33 -0400
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v8 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Tue, 10 Apr 2018 11:57:24 -0600
+Message-Id: <20180410175724.7165-3-ilina@codeaurora.org>
+In-Reply-To: <20180410175724.7165-1-ilina@codeaurora.org>
+References: <20180410175724.7165-1-ilina@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <JManeyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document that the inv_mpu6050 driver now supports falling edge, rising
-edge, level low, and level high interrupt types, rather than just rising
-edge.
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-The language used is the same as that in st_lsm6dsx.txt.
+Command DB provides information on shared resources like clocks,
+regulators etc., probed at boot by the remote subsytem and made
+available in shared memory.
 
-Signed-off-by: Martin Kelly <mkelly@xevo.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
 ---
- Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index 2b4514592f83..6b106d5ef298 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -11,7 +11,12 @@ Required properties:
- 		"invensense,icm20608"
-  - reg : the I2C address of the sensor
-  - interrupt-parent : should be the phandle for the interrupt controller
-- - interrupts : interrupt mapping for GPIO IRQ
-+ - interrupts: interrupt mapping for IRQ. It should be configured with flags
-+   IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
-+   IRQ_TYPE_EDGE_FALLING.
+Changes in v8:
+	- Fix node name
+	- Add no-map property
+Changes in v7:
+	- Fix description of 'reg' property
+
+Changes in v6:
+	- Move to bindings/reserved-memory
+	- Remove indirection address and use only the actual reserved
+	  memory
+
+Changes in v4:
+	- Fix unwanted capitalization
+	- Add reg property
+---
+ .../bindings/reserved-memory/qcom,cmd-db.txt       | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+new file mode 100644
+index 000000000000..68395530c0a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.txt
+@@ -0,0 +1,37 @@
++Command DB
++---------
 +
-+  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
-+  bindings.
- 
- Optional properties:
-  - mount-matrix: an optional 3x3 mounting rotation matrix
-@@ -24,7 +29,7 @@ Example:
- 		compatible = "invensense,mpu6050";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio1>;
--		interrupts = <18 1>;
-+		interrupts = <18 IRQ_TYPE_EDGE_RISING>;
- 		mount-matrix = "-0.984807753012208",  /* x0 */
- 		               "0",                   /* y0 */
- 		               "-0.173648177666930",  /* z0 */
-@@ -41,7 +46,7 @@ Example:
- 		compatible = "invensense,mpu9250";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <21 1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
- 		i2c-gate {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++Command DB is a database that provides a mapping between resource key and the
++resource address for a system resource managed by a remote processor. The data
++is stored in a shared memory region and is loaded by the remote processor.
++
++Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
++controlling shared resources. Depending on the board configuration the shared
++resource properties may change. These properties are dynamically probed by the
++remote processor and made available in the shared memory.
++
++The bindings for Command DB is specified in the reserved-memory section in
++devicetree. The devicetree representation of the command DB driver should be:
++
++Properties:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,cmd-db"
++
++- reg:
++	Usage: required
++	Value type: <prop encoded array>
++	Definition: The register address that points to the actual location of
++		    the Command DB in memory.
++
++Example:
++
++	reserved-memory {
++		[...]
++		reserved-memory@85fe0000 {
++			reg = <0x0 0x85fe0000 0x0 0x20000>;
++			compatible = "qcom,cmd-db";
++			no-map;
++		};
++	};
 -- 
-2.11.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
