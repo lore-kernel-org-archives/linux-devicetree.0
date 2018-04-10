@@ -1,40 +1,70 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
-Date: Tue, 10 Apr 2018 14:53:47 -0400
-Message-ID: <04d4d161-ed72-f6b6-9b94-1d60bd79ef94@codeaurora.org>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
- <20180212183352.22730-4-jean-philippe.brucker@arm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Tue, 10 Apr 2018 12:36:21 -0700
+Message-ID: <20180410193621.GB6727@builder>
+References: <20180405161834.3850-1-ilina@codeaurora.org>
+ <20180405161834.3850-3-ilina@codeaurora.org>
+ <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
+ <20180409160800.GC19682@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180212183352.22730-4-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org
-Cc: mark.rutland@arm.com, xieyisheng1@huawei.com, ilias.apalodimas@linaro.org, catalin.marinas@arm.com, xuzaibo@huawei.com, jonathan.cameron@huawei.com, will.deacon@arm.com, yi.l.liu@intel.com, lorenzo.pieralisi@arm.com, ashok.raj@intel.com, tn@semihalf.com, joro@8bytes.org, bharatku@xilinx.com, rfranz@cavium.com, lenb@kernel.org, jacob.jun.pan@linux.intel.com, alex.williamson@redhat.com, robh+dt@kernel.org, thunder.leizhen@huawei.com, bhelgaas@google.com, shunyong.yang@hxt-semitech.com, dwmw2@infradead.org, liubo95@huawei.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, robdclark@gmail.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, robin.murphy@arm.com, christian.koenig@amd.com, nwatters@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180409160800.GC19682@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
-> +static void io_mm_detach_all_locked(struct iommu_bond *bond)
-> +{
-> +	while (!io_mm_detach_locked(bond));
-> +}
-> +
+On Mon 09 Apr 09:08 PDT 2018, Lina Iyer wrote:
 
-I don't remember if I mentioned this before or not but I think this loop
-needs a little bit relaxation with yield and maybe an informational message
-with might help if wait exceeds some time.
+> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
+> > Quoting Lina Iyer (2018-04-05 09:18:26)
+> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+[..]
+> > > +Example 1:
+> > > +
+> > > +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
+> > > +register offsets for DRV2 start at 0D00, the register calculations are like
+> > > +this -
+> > > +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
+> > > +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
+> > > +
+> > > +       apps_rsc: rsc@179e000 {
+> > > +               label = "apps_rsc";
+> > > +               compatible = "qcom,rpmh-rsc";
+> > > +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
+> > 
+> > The first reg property overlaps the second one. Does this second one
+> > ever move around? I would hardcode it in the driver to be 0xd00 away
+> > from the drv base instead of specifying it in DT if it's the same all
+> > the time.
+[..]
+> > 
+> The DRV is the voter for an execution environment (Linux, Hypervisor,
+> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
+> privy to. They are access restricted. The memory organization of the RSC
+> mandates that we know the DRV id to access registers specific to the
+> DRV. Unfortunately, not all RSC have identical DRV configuration and the
+> register space is also variable depending on the capability of the RSC.
+> There are functionalities supported by other RSCs in the SoC that are
+> not supported by the RSC associated with the application processor,
+> while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
+> describing the whole RSC as it is not usable from Linux (because of
+> access restrictions).
+> 
 
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+I generally prefer that we describe the hardware blocks as accurate as
+possible, instead of applying current restrictions on Linux onto the
+description. This ensures that we can reuse the binding and drivers in
+configurations not considered today. However, afaict we still have the
+problem that we need a way to express where in the RSC our TCS sits.
+
+Regardless of what's right or not, the given example causes the driver
+to fail probing, so something needs to be changed. (Making the drv size
+0xd00 is functional but doesn't really relate to any bondary in the
+register space).
+
+Regards,
+Bjorn
