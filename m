@@ -1,402 +1,94 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH v2 2/9] PCI: dwc: Add support for endpoint mode
-Date: Tue, 10 Apr 2018 11:36:53 +0100
-Message-ID: <667dde5d-70b9-0001-59f9-f2b7cb8d06b8@synopsys.com>
-References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
- <9ce10e6844863029992a5f4e74c89818615850e3.1523266508.git.gustavo.pimentel@synopsys.com>
- <abb244d5-2697-54da-b64c-25c018f50354@ti.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v8 1/2] dt-bindings: display: bridge: Document THC63LVD1024 LVDS decoder
+Date: Tue, 10 Apr 2018 12:53:09 +0200
+Message-ID: <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <abb244d5-2697-54da-b64c-25c018f50354@ti.com>
-Content-Language: en-US
+In-Reply-To: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, vladimir_zapolskiy@mentor.com, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Document Thine THC63LVD1024 LVDS decoder device tree bindings.
 
-On 10/04/2018 06:12, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Monday 09 April 2018 03:11 PM, Gustavo Pimentel wrote:
->> The PCIe controller dual mode is capable of operating in host mode as well
->> as endpoint mode by configuration, therefore this patch aims to add
->> endpoint mode support to the designware driver.
->>
->> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Change v1->v2:
->>  - Removed dw_plat_pcie_stop_link empty function.
->>  - Implemented Kishon's suggestions about dw-pcie-rc and dw-pcie strings.
->> compatibility.
->>  - Added second entry on pci_epf_test_ids structure.
->>
->>  drivers/pci/dwc/Kconfig                       |  45 ++++++--
->>  drivers/pci/dwc/pcie-designware-ep.c          |   4 +-
->>  drivers/pci/dwc/pcie-designware-plat.c        | 153 ++++++++++++++++++++++++--
->>  drivers/pci/endpoint/functions/pci-epf-test.c |   9 ++
->>  4 files changed, 190 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->> index 2f3f5c5..3fd7daf 100644
->> --- a/drivers/pci/dwc/Kconfig
->> +++ b/drivers/pci/dwc/Kconfig
->> @@ -7,8 +7,7 @@ config PCIE_DW
->>  
->>  config PCIE_DW_HOST
->>          bool
->> -	depends on PCI
->> -	depends on PCI_MSI_IRQ_DOMAIN
->> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
->>          select PCIE_DW
->>  
->>  config PCIE_DW_EP
->> @@ -52,16 +51,42 @@ config PCI_DRA7XX_EP
->>  
->>  config PCIE_DW_PLAT
->>  	bool "Platform bus based DesignWare PCIe Controller"
->> -	depends on PCI
->> -	depends on PCI_MSI_IRQ_DOMAIN
->> -	select PCIE_DW_HOST
->> -	---help---
->> -	 This selects the DesignWare PCIe controller support. Select this if
->> -	 you have a PCIe controller on Platform bus.
->> +	help
->> +	  There are two instances of PCIe controller in Designware IP.
->> +	  This controller can work either as EP or RC. In order to enable
->> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
->> +	  order to enable device-specific features PCIE_DW_PLAT_EP must be
->> +	  selected.
->>  
->> -	 If you have a controller with this interface, say Y or M here.
->> +config PCIE_DW_PLAT_HOST
->> +	bool "Platform bus based DesignWare PCIe Controller - Host mode"
->> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
->> +	select PCIE_DW_HOST
->> +	select PCIE_DW_PLAT
->> +	default y
->> +	help
->> +	  Enables support for the PCIe controller in the Designware IP to
->> +	  work in host mode. There are two instances of PCIe controller in
->> +	  Designware IP.
->> +	  This controller can work either as EP or RC. In order to enable
->> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
->> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
->> +	  selected.
->>  
->> -	 If unsure, say N.
->> +config PCIE_DW_PLAT_EP
->> +	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
->> +	depends on PCI && PCI_MSI_IRQ_DOMAIN
->> +	depends on PCI_ENDPOINT
->> +	select PCIE_DW_EP
->> +	select PCIE_DW_PLAT
->> +	help
->> +	  Enables support for the PCIe controller in the Designware IP to
->> +	  work in endpoint mode. There are two instances of PCIe controller
->> +	  in Designware IP.
->> +	  This controller can work either as EP or RC. In order to enable
->> +	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
->> +	  order to enable device-specific features PCI_DW_PLAT_EP must be
->> +	  selected.
->>  
->>  config PCI_EXYNOS
->>  	bool "Samsung Exynos PCIe controller"
->> diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
->> index f07678b..4ac135a 100644
->> --- a/drivers/pci/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/dwc/pcie-designware-ep.c
->> @@ -15,8 +15,10 @@
->>  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->>  {
->>  	struct pci_epc *epc = ep->epc;
->> +	struct pci_epf *epf;
->>  
->> -	pci_epc_linkup(epc);
->> +	list_for_each_entry(epf, &epc->pci_epf, list)
->> +		pci_epf_linkup(epf);
->>  }
-> 
-> This shouldn't be required anymore.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../bindings/display/bridge/thine,thc63lvd1024.txt | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
 
-Ok. I'll revert it.
-
->>  
->>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->> diff --git a/drivers/pci/dwc/pcie-designware-plat.c b/drivers/pci/dwc/pcie-designware-plat.c
->> index 5416aa8..5382a7a 100644
->> --- a/drivers/pci/dwc/pcie-designware-plat.c
->> +++ b/drivers/pci/dwc/pcie-designware-plat.c
->> @@ -12,19 +12,29 @@
->>  #include <linux/interrupt.h>
->>  #include <linux/kernel.h>
->>  #include <linux/init.h>
->> +#include <linux/of_device.h>
->>  #include <linux/of_gpio.h>
->>  #include <linux/pci.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/resource.h>
->>  #include <linux/signal.h>
->>  #include <linux/types.h>
->> +#include <linux/regmap.h>
->>  
->>  #include "pcie-designware.h"
->>  
->>  struct dw_plat_pcie {
->> -	struct dw_pcie		*pci;
->> +	struct dw_pcie			*pci;
->> +	struct regmap			*regmap;
->> +	enum dw_pcie_device_mode	mode;
->>  };
->>  
->> +struct dw_plat_pcie_of_data {
->> +	enum dw_pcie_device_mode	mode;
->> +};
->> +
->> +static const struct of_device_id dw_plat_pcie_of_match[];
->> +
->>  static int dw_plat_pcie_host_init(struct pcie_port *pp)
->>  {
->>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> @@ -42,9 +52,53 @@ static const struct dw_pcie_host_ops dw_plat_pcie_host_ops = {
->>  	.host_init = dw_plat_pcie_host_init,
->>  };
->>  
->> -static int dw_plat_add_pcie_port(struct pcie_port *pp,
->> +static int dw_plat_pcie_establish_link(struct dw_pcie *pci)
->> +{
->> +	return 0;
->> +}
->> +
->> +static const struct dw_pcie_ops dw_pcie_ops = {
->> +	.start_link = dw_plat_pcie_establish_link,
->> +};
->> +
->> +static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +	enum pci_barno bar;
->> +
->> +	for (bar = BAR_0; bar <= BAR_5; bar++)
->> +		dw_pcie_ep_reset_bar(pci, bar);
->> +}
->> +
->> +static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->> +				     enum pci_epc_irq_type type,
->> +				     u8 interrupt_num)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +
->> +	switch (type) {
->> +	case PCI_EPC_IRQ_LEGACY:
->> +		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
->> +		return -EINVAL;
->> +	case PCI_EPC_IRQ_MSI:
->> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->> +	default:
->> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static struct dw_pcie_ep_ops pcie_ep_ops = {
->> +	.ep_init = dw_plat_pcie_ep_init,
->> +	.raise_irq = dw_plat_pcie_ep_raise_irq,
->> +};
->> +
->> +static int dw_plat_add_pcie_port(struct dw_plat_pcie *dw_plat_pcie,
->>  				 struct platform_device *pdev)
->>  {
->> +	struct dw_pcie *pci = dw_plat_pcie->pci;
->> +	struct pcie_port *pp = &pci->pp;
->>  	struct device *dev = &pdev->dev;
->>  	int ret;
->>  
->> @@ -63,15 +117,44 @@ static int dw_plat_add_pcie_port(struct pcie_port *pp,
->>  
->>  	ret = dw_pcie_host_init(pp);
->>  	if (ret) {
->> -		dev_err(dev, "failed to initialize host\n");
->> +		dev_err(dev, "Failed to initialize host\n");
->>  		return ret;
->>  	}
->>  
->>  	return 0;
->>  }
->>  
->> -static const struct dw_pcie_ops dw_pcie_ops = {
->> -};
->> +static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
->> +			       struct platform_device *pdev)
->> +{
->> +	int ret;
->> +	struct dw_pcie_ep *ep;
->> +	struct resource *res;
->> +	struct device *dev = &pdev->dev;
->> +	struct dw_pcie *pci = dw_plat_pcie->pci;
->> +
->> +	ep = &pci->ep;
->> +	ep->ops = &pcie_ep_ops;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
->> +	pci->dbi_base2 = devm_ioremap(dev, res->start, resource_size(res));
-> 
-> This can throw up a NULL pointer dereferencing error. Use devm_ioremap_resource
-> instead.
-
-I have looked on [1] and [2] and both implementations uses devm_ioremap
-function, they are also wrong?
-
-[1] -> https://elixir.bootlin.com/linux/latest/source/drivers/pci/dwc/pcie-artpec6.c
-[2] -> https://elixir.bootlin.com/linux/latest/source/drivers/pci/dwc/pci-dra7xx.c
-
-> 
->> +	if (IS_ERR(pci->dbi_base2))
->> +		return PTR_ERR(pci->dbi_base2);
-
-However this validation is wrong. By using the devm_ioremap function the correct
-validation should be like this:
-
-if (!pci->dbi_base2)
-	return -ENOMEM;
-
-like exists on [1] and [2]. Can I maintain the coherency with [1] and [2]?
-
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->> +	if (!res)
->> +		return -EINVAL;
->> +
->> +	ep->phys_base = res->start;
->> +	ep->addr_size = resource_size(res);
->> +
->> +	ret = dw_pcie_ep_init(ep);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to initialize endpoint\n");
->> +		return ret;
->> +	}
->> +	return 0;
->> +}
->>  
->>  static int dw_plat_pcie_probe(struct platform_device *pdev)
->>  {
->> @@ -80,6 +163,16 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
->>  	struct dw_pcie *pci;
->>  	struct resource *res;  /* Resource from DT */
->>  	int ret;
->> +	const struct of_device_id *match;
->> +	const struct dw_plat_pcie_of_data *data;
->> +	enum dw_pcie_device_mode mode;
->> +
->> +	match = of_match_device(dw_plat_pcie_of_match, dev);
->> +	if (!match)
->> +		return -EINVAL;
->> +
->> +	data = (struct dw_plat_pcie_of_data *)match->data;
->> +	mode = (enum dw_pcie_device_mode)data->mode;
->>  
->>  	dw_plat_pcie = devm_kzalloc(dev, sizeof(*dw_plat_pcie), GFP_KERNEL);
->>  	if (!dw_plat_pcie)
->> @@ -93,23 +186,63 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
->>  	pci->ops = &dw_pcie_ops;
->>  
->>  	dw_plat_pcie->pci = pci;
->> +	dw_plat_pcie->mode = mode;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
->> +	if (!res)
->> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  
->> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  	pci->dbi_base = devm_ioremap_resource(dev, res);
->>  	if (IS_ERR(pci->dbi_base))
->>  		return PTR_ERR(pci->dbi_base);
->>  
->>  	platform_set_drvdata(pdev, dw_plat_pcie);
->>  
->> -	ret = dw_plat_add_pcie_port(&pci->pp, pdev);
->> -	if (ret < 0)
->> -		return ret;
->> +	switch (dw_plat_pcie->mode) {
->> +	case DW_PCIE_RC_TYPE:
->> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_HOST))
->> +			return -ENODEV;
->> +
->> +		ret = dw_plat_add_pcie_port(dw_plat_pcie, pdev);
->> +		if (ret < 0)
->> +			return ret;
->> +		break;
->> +	case DW_PCIE_EP_TYPE:
->> +		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_EP))
->> +			return -ENODEV;
->> +
->> +		ret = dw_plat_add_pcie_ep(dw_plat_pcie, pdev);
->> +		if (ret < 0)
->> +			return ret;
->> +		break;
->> +	default:
->> +		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
->> +	}
->>  
->>  	return 0;
->>  }
->>  
->> +static const struct dw_plat_pcie_of_data dw_plat_pcie_rc_of_data = {
->> +	.mode = DW_PCIE_RC_TYPE,
->> +};
->> +
->> +static const struct dw_plat_pcie_of_data dw_plat_pcie_ep_of_data = {
->> +	.mode = DW_PCIE_EP_TYPE,
->> +};
->> +
->>  static const struct of_device_id dw_plat_pcie_of_match[] = {
->> -	{ .compatible = "snps,dw-pcie", },
->> +	{
->> +		.compatible = "snps,dw-pcie",
->> +		.data = &dw_plat_pcie_rc_of_data,
->> +	},
->> +	{
->> +		.compatible = "snps,dw-pcie-rc",
->> +		.data = &dw_plat_pcie_rc_of_data,
->> +	},
->> +	{
->> +		.compatible = "snps,dw-pcie-ep",
->> +		.data = &dw_plat_pcie_ep_of_data,
->> +	},
->>  	{},
->>  };
->>  
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index 7cef851..45d1c63 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> 
-> have a separate patch for this.
-
-Ok.
-
->> @@ -459,10 +459,19 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>  	return 0;
->>  }
->>  
->> +static const struct pci_epf_test_data data_cfg2 = {
->> +	.test_reg_bar = BAR_0,
-> 
-> default test_reg_bar is BAR_0. So you can skip this.
-
-Ok, I'll remove it.
-
->> +	.linkup_notifier = false
->> +};
->> +
-> 
-> Thanks
-> Kishon
-> 
-
-Regards,
-Gustavo
+diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+new file mode 100644
+index 0000000..0b23e70
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+@@ -0,0 +1,60 @@
++Thine Electronics THC63LVD1024 LVDS decoder
++-------------------------------------------
++
++The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS streams
++to parallel data outputs. The chip supports single/dual input/output modes,
++handling up to two LVDS input streams and up to two digital CMOS/TTL outputs.
++
++Single or dual operation mode, output data mapping and DDR output modes are
++configured through input signals and the chip does not expose any control bus.
++
++Required properties:
++- compatible: Shall be "thine,thc63lvd1024"
++- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
++  PPL and digital circuitry
++
++Optional properties:
++- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
++- oe-gpios: Output enable GPIO signal, pin name "OE". Active high
++
++The THC63LVD1024 video port connections are modeled according
++to OF graph bindings specified by Documentation/devicetree/bindings/graph.txt
++
++Required video port nodes:
++- port@0: First LVDS input port
++- port@2: First digital CMOS/TTL parallel output
++
++Optional video port nodes:
++- port@1: Second LVDS input port
++- port@3: Second digital CMOS/TTL parallel output
++
++Example:
++--------
++
++	thc63lvd1024: lvds-decoder {
++		compatible = "thine,thc63lvd1024";
++
++		vcc-supply = <&reg_lvds_vcc>;
++		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lvds_dec_in_0: endpoint {
++					remote-endpoint = <&lvds_out>;
++				};
++			};
++
++			port@2{
++				reg = <2>;
++
++				lvds_dec_out_2: endpoint {
++					remote-endpoint = <&adv7511_in>;
++				};
++			};
++		};
++	};
+--
+2.7.4
