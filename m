@@ -1,70 +1,50 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 10 Apr 2018 08:59:38 -0500
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=b8Rb=G7=verge.net.au=horms@kernel.org>
+Date: Tue, 10 Apr 2018 11:31:28 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] phy: Renesas R-Car gen3 PCIe PHY driver
-Message-ID: <20180410135938.m7c4trmgho6p43tk@rob-hp-laptop>
+Message-ID: <20180410093128.l6ornliuosnwkoyt@verge.net.au>
 References: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
+ <CAMuHMdXNg32ECS+xNH46qK58JoU=VC_kbqhaVXD4xGZC16wY3A@mail.gmail.com>
+ <267e381f-64d7-ea76-b5b7-96e71f9536ce@cogentembedded.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f28c74d-f35a-5ccb-eeba-f21ae39c3857@cogentembedded.com>
+In-Reply-To: <267e381f-64d7-ea76-b5b7-96e71f9536ce@cogentembedded.com>
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: kishon@ti.com, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Apr 04, 2018 at 10:31:26PM +0300, Sergei Shtylyov wrote:
-> This PHY is still mostly undocumented -- the only documented registers
-> exist on R-Car V3H (R8A77980) SoC  where this PHY stays in a powered-down
-> state after a reset and thus  we must power it on for PCIe to work...
+On Mon, Apr 09, 2018 at 06:57:11PM +0300, Sergei Shtylyov wrote:
+> On 04/09/2018 12:46 PM, Geert Uytterhoeven wrote:
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >> This PHY is still mostly undocumented -- the only documented registers
+> >> exist on R-Car V3H (R8A77980) SoC  where this PHY stays in a powered-down
+> >> state after a reset and thus  we must power it on for PCIe to work...
+> > 
+> > Bogus spaces slipping in again?
 > 
-> ---
-> The patch is against the 'next' branch of Kishon's 'linux-phy.git' repo.
+>    Yes, I should have worked in the type-setting. :-)
 > 
->  Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt |   32 ++
+> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> >> --- /dev/null
+> >> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
+> >> @@ -0,0 +1,32 @@
+> [...]
+> >> +Example (R-Car V3H):
+> >> +
+> >> +       pcie-phy@e65d0000 {
+> >> +               compatible = "renesas,r8a77980-pcie-phy",
+> >> +                            "renesas,rcar-gen3-pcie-phy";
+> > 
+> > Is the R8A77980 PCIe PHY compatible with the generic version, given it needs
+> > to be powered up explicitly?
+> 
+>    I assumed it's upwardly compatible. However, given the lack of information,
+> it might not be...
 
-Separate patch please.
+If we are not sure I'd rather assume that it is not upwardly compatible.
+Because falling back to something that doesn't work does not seem at all
+useful to me.
 
->  drivers/phy/renesas/Kconfig                                  |    7 
->  drivers/phy/renesas/Makefile                                 |    1 
->  drivers/phy/renesas/phy-rcar-gen3-pcie.c                     |  158 +++++++++++
->  4 files changed, 198 insertions(+)
-> 
-> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
-> ===================================================================
-> --- /dev/null
-> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
-> @@ -0,0 +1,32 @@
-> +* Renesas R-Car generation 3 PCIe PHY
-> +
-> +This file provides information on what the device node for the R-Car
-> +generation 3 PCIe PHY contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,r8a77980-pcie-phy" if the device is a part of R8A77980
-> +	      SoC.
-> +	      "renesas,rcar-gen3-pcie-phy" for a generic R-Car Gen3 compatible
-> +	      device.
-> +
-> +	      When compatible with the generic version, nodes must list the
-> +	      SoC-specific version corresponding to the platform first
-> +	      followed by the generic version.
-> +
-> +- reg: offset and length of the register block.
-> +- clocks: clock phandle and specifier pair.
-> +- power-domains: power domain phandle and specifier pair.
-> +- resets: reset phandle and specifier pair.
-> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-> +
-> +Example (R-Car V3H):
-> +
-> +	pcie-phy@e65d0000 {
-> +		compatible = "renesas,r8a77980-pcie-phy",
-> +			     "renesas,rcar-gen3-pcie-phy";
-> +		reg = <0 0xe65d0000 0 0x8000>;
-> +		#phy-cells = <0>;
-> +		clocks = <&cpg CPG_MOD 319>;
-> +		power-domains = <&sysc 32>;
-> +		resets = <&cpg 319>;
-> +	};
+...
