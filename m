@@ -1,80 +1,40 @@
-From: Philippe Cornu <philippe.cornu@st.com>
-Subject: [PATCH 2/2] drm/bridge: sii902x: add optional power supplies
-Date: Tue, 10 Apr 2018 07:19:27 +0200
-Message-ID: <20180410051927.8268-3-philippe.cornu@st.com>
-References: <20180410051927.8268-1-philippe.cornu@st.com>
+From: Chen Zhong <chen.zhong@mediatek.com>
+Subject: Re: [PATCH v6 0/6] Add MediaTek PMIC keys support
+Date: Tue, 10 Apr 2018 13:46:27 +0800
+Message-ID: <1523339187.12445.1.camel@mhfsdcap03>
+References: <1508937364-30054-1-git-send-email-chen.zhong@mediatek.com>
+         <808b2029da224ab687fb0553cbc1c68e@mtkmbs08n1.mediatek.inc>
+         <1521685073.28226.10.camel@mtkswgap22> <20180323185418.GD255819@dtor-ws>
+         <20180327080507.pgil6pw2mn4y2f4d@dell>
+         <3ece050c-7573-ef4e-2c89-61645a243a33@gmail.com>
+         <20180328102640.yx6nv5abfexmouuf@dell>
+         <1522290675.17084.8.camel@mhfsdcap03>
+         <20180329130402.6fp7nofyp6iesmbv@dell> <20180329161527.GA107392@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180410051927.8268-1-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180329161527.GA107392@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it, devicetree@vger.kernel.org, linus.walleij@linaro.org, jcsing.lee@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, eddie.huang@mediatek.com, beomho.seo@samsung.com, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSAzIG9wdGlvbmFsIHBvd2VyIHN1cHBsaWVzIHVzaW5nIHRoZSBleGFjdCBkZXNjcmlw
-dGlvbgpmb3VuZCBpbiB0aGUgZG9jdW1lbnQgbmFtZWQKIlNpSTkwMjJBL1NpSTkwMjRBIEhETUkg
-VHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpIi4KClNpZ25lZC1vZmYtYnk6IFBo
-aWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9zaWk5MDJ4LmMgfCAzOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKaW5kZXggNjAzNzNkN2ViMjIwLi5lMTdiYTZkYjFlYzgg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCkBAIC0yNCw2ICsyNCw3IEBACiAjaW5jbHVkZSA8
-bGludXgvaTJjLmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAjaW5jbHVkZSA8bGludXgv
-cmVnbWFwLmg+CisjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+CiAKICNpbmNs
-dWRlIDxkcm0vZHJtUC5oPgogI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPgpAQCAt
-ODYsNiArODcsNyBAQCBzdHJ1Y3Qgc2lpOTAyeCB7CiAJc3RydWN0IGRybV9icmlkZ2UgYnJpZGdl
-OwogCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsKIAlzdHJ1Y3QgZ3Bpb19kZXNjICpy
-ZXNldF9ncGlvOworCXN0cnVjdCByZWd1bGF0b3JfYnVsa19kYXRhIHN1cHBsaWVzWzNdOwogfTsK
-IAogc3RhdGljIGlubGluZSBzdHJ1Y3Qgc2lpOTAyeCAqYnJpZGdlX3RvX3NpaTkwMngoc3RydWN0
-IGRybV9icmlkZ2UgKmJyaWRnZSkKQEAgLTM5MiwyMyArMzk0LDQzIEBAIHN0YXRpYyBpbnQgc2lp
-OTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCQlyZXR1cm4gUFRSX0VSUihz
-aWk5MDJ4LT5yZXNldF9ncGlvKTsKIAl9CiAKKwlzaWk5MDJ4LT5zdXBwbGllc1swXS5zdXBwbHkg
-PSAiaW92Y2MiOworCXNpaTkwMngtPnN1cHBsaWVzWzFdLnN1cHBseSA9ICJhdmNjMTIiOworCXNp
-aTkwMngtPnN1cHBsaWVzWzJdLnN1cHBseSA9ICJjdmNjMTIiOworCXJldCA9IGRldm1fcmVndWxh
-dG9yX2J1bGtfZ2V0KGRldiwgQVJSQVlfU0laRShzaWk5MDJ4LT5zdXBwbGllcyksCisJCQkJICAg
-ICAgc2lpOTAyeC0+c3VwcGxpZXMpOworCWlmIChyZXQpIHsKKwkJZGV2X2VycihkZXYsICJyZWd1
-bGF0b3JfYnVsa19nZXQgZmFpbGVkXG4iKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlyZXQgPSBy
-ZWd1bGF0b3JfYnVsa19lbmFibGUoQVJSQVlfU0laRShzaWk5MDJ4LT5zdXBwbGllcyksCisJCQkJ
-ICAgIHNpaTkwMngtPnN1cHBsaWVzKTsKKwlpZiAocmV0KSB7CisJCWRldl9lcnIoZGV2LCAicmVn
-dWxhdG9yX2J1bGtfZW5hYmxlIGZhaWxlZFxuIik7CisJCXJldHVybiByZXQ7CisJfQorCisJdXNs
-ZWVwX3JhbmdlKDEwMDAwLCAyMDAwMCk7CisKIAlzaWk5MDJ4X3Jlc2V0KHNpaTkwMngpOwogCiAJ
-cmV0ID0gcmVnbWFwX3dyaXRlKHNpaTkwMngtPnJlZ21hcCwgU0lJOTAyWF9SRUdfVFBJX1JRQiwg
-MHgwKTsKIAlpZiAocmV0KQotCQlyZXR1cm4gcmV0OworCQlnb3RvIGVycl9kaXNhYmxlX3JlZ3Vs
-YXRvcjsKIAogCXJldCA9IHJlZ21hcF9idWxrX3JlYWQoc2lpOTAyeC0+cmVnbWFwLCBTSUk5MDJY
-X1JFR19DSElQSUQoMCksCiAJCQkgICAgICAgJmNoaXBpZCwgNCk7CiAJaWYgKHJldCkgewogCQlk
-ZXZfZXJyKGRldiwgInJlZ21hcF9yZWFkIGZhaWxlZCAlZFxuIiwgcmV0KTsKLQkJcmV0dXJuIHJl
-dDsKKwkJZ290byBlcnJfZGlzYWJsZV9yZWd1bGF0b3I7CiAJfQogCiAJaWYgKGNoaXBpZFswXSAh
-PSAweGIwKSB7CiAJCWRldl9lcnIoZGV2LCAiSW52YWxpZCBjaGlwaWQ6ICUwMnggKGV4cGVjdGlu
-ZyAweGIwKVxuIiwKIAkJCWNoaXBpZFswXSk7Ci0JCXJldHVybiAtRUlOVkFMOworCQlyZXQgPSAt
-RUlOVkFMOworCQlnb3RvIGVycl9kaXNhYmxlX3JlZ3VsYXRvcjsKIAl9CiAKIAkvKiBDbGVhciBh
-bGwgcGVuZGluZyBpbnRlcnJ1cHRzICovCkBAIC00MjQsNyArNDQ2LDcgQEAgc3RhdGljIGludCBz
-aWk5MDJ4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCiAJCQkJCQlJUlFGX09ORVNI
-T1QsIGRldl9uYW1lKGRldiksCiAJCQkJCQlzaWk5MDJ4KTsKIAkJaWYgKHJldCkKLQkJCXJldHVy
-biByZXQ7CisJCQlnb3RvIGVycl9kaXNhYmxlX3JlZ3VsYXRvcjsKIAl9CiAKIAlzaWk5MDJ4LT5i
-cmlkZ2UuZnVuY3MgPSAmc2lpOTAyeF9icmlkZ2VfZnVuY3M7CkBAIC00MzQsNiArNDU2LDEyIEBA
-IHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCWky
-Y19zZXRfY2xpZW50ZGF0YShjbGllbnQsIHNpaTkwMngpOwogCiAJcmV0dXJuIDA7CisKK2Vycl9k
-aXNhYmxlX3JlZ3VsYXRvcjoKKwlyZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoc2lp
-OTAyeC0+c3VwcGxpZXMpLAorCQkJICAgICAgIHNpaTkwMngtPnN1cHBsaWVzKTsKKworCXJldHVy
-biByZXQ7CiB9CiAKIHN0YXRpYyBpbnQgc2lpOTAyeF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQg
-KmNsaWVudCkKQEAgLTQ0Myw2ICs0NzEsOSBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcmVtb3ZlKHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCiAKIAlkcm1fYnJpZGdlX3JlbW92ZSgmc2lpOTAyeC0+
-YnJpZGdlKTsKIAorCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoQVJSQVlfU0laRShzaWk5MDJ4LT5z
-dXBwbGllcyksCisJCQkgICAgICAgc2lpOTAyeC0+c3VwcGxpZXMpOworCiAJcmV0dXJuIDA7CiB9
-CiAKLS0gCjIuMTUuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Thu, 2018-03-29 at 09:15 -0700, Dmitry Torokhov wrote:
+> 
+> 
+> Oh, sorry, I did not realize you wanted my Ack for bindings. I usually
+> leave it to Rob and simply ack the driver itself when I am happy with
+> the code.
+> 
+> I'll go and add my ack to the binding post if that will help merging
+> the series.
+> 
+> Thanks. 
+
+Hi Lee,
+
+May I know if I need to collect Dmitry's comments and send a new version
+for the merging?
+
+Thank you.
