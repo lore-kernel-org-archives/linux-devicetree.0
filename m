@@ -1,1005 +1,587 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource sibling
-Date: Tue, 10 Apr 2018 21:44:16 +0800
-Message-ID: <20180410134416.GM19345@localhost.localdomain>
-References: <20180408024724.16812-1-bhe@redhat.com>
- <20180408024724.16812-2-bhe@redhat.com>
- <20180409090853.GJ19345@localhost.localdomain>
- <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: tpc: Device tree description of the iMX6Q
+ TPC board
+Date: Tue, 10 Apr 2018 08:45:58 -0500
+Message-ID: <20180410134558.fzilfgqvavbdiget@rob-hp-laptop>
+References: <20180403165945.3981-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yang <richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yaowei Bai <baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, "K. Y. Srinivasan" <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Derrick <jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh@linuxfoundati>
+In-Reply-To: <20180403165945.3981-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks a lot for looking into this and involve Nico to this thread!
-
-On 04/09/18 at 09:49am, Rob Herring wrote:
-> +Nico who has been working on tinification of the kernel.
+On Tue, Apr 03, 2018 at 06:59:45PM +0200, Lukasz Majewski wrote:
+> This commit adds device tree description of Kieback & Peter GmbH
+> iMX6Q TPC board.
 > 
-> On Mon, Apr 9, 2018 at 4:08 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > The struct resource uses singly linked list to link siblings. It's not
-> > easy to do reverse iteration on sibling list. So replace it with list_head.
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 > 
-> Why is reverse iteration needed?
-
-This is the explanation I made when Andrew helped to review the v1 post:
-https://lkml.org/lkml/2018/3/23/78
-
-Because we have been using kexec-tools utility to search available
-System RAM space for loading kernel/initrd/purgatory from top to down.
-That is done in user space by searching /proc/iomem. While later added
-kexec_file interface, the searching code happened in kernel, and it
-only search System RAM region bottom up, then take an area in that found
-RAM region from top to down. We need unify these two interfaces on
-behaviour since they are the same on essense from the users' point of
-view, though implementation is different. As you know, the singly linked
-list implementation of the current resource's sibling linking, makes the
-searching from top to down very hard to satisfy people. 
-
-Below is the v1 post, we make an temporary array to copy iomem_resource's
-first level of children, then iterate the array reversedly. Andrew
-suggested me to try list_head after reviewing. In fact we can optimize
-that patch to only copy resource pointer into array, still the way is
-ugly.
-https://lkml.org/lkml/2018/3/21/952
-
-Then Wei pasted a patch he had made as below. He didn't mention if he
-also has requirement on reversed iteration of resource. That is an O(n*n)
-way, from personal feelings, hard to say if it's bettern than v1 post.
-https://lkml.org/lkml/2018/3/24/157
-
-That's why I would like to have a try of the list_head linking.
-
+> ---
+> Changes for v2:
+> - SDPX license identifiers used
+> - Separate regulators
+> - Proper beeper driver
+> - Use of the lcd panel (with compatible) instead of timings provided in
+>   device tree
+> - Add IRQ types (like IRQ_TYPE_EDGE_FALLING) and GPIO active levels (like
+>   GPIO_ACTIVE_HIGH)
+> - Remove not needed nodes
+> - Make W=1 dtbs compilation with no errors
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/imx6q-kp-tpc.dts                 |  23 ++
+>  arch/arm/boot/dts/imx6q-kp.dtsi                    | 460 +++++++++++++++++++++
+>  4 files changed, 485 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-kp-tpc.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-kp.dtsi
 > 
-> > And code refactoring makes codes in kernel/resource.c more readable than
-> > pointer operation.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ae850d6c0ad3..8ff7eadc8bef 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -181,6 +181,7 @@ karo	Ka-Ro electronics GmbH
+>  keithkoep	Keith & Koep GmbH
+>  keymile	Keymile GmbH
+>  khadas	Khadas
+> +kiebackpeter    Kieback & Peter GmbH
+>  kinetic Kinetic Technologies
+>  kingnovel	Kingnovel Technology Co., Ltd.
+>  kosagi	Sutajio Ko-Usagi PTE Ltd.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index ade7a38543dc..c148c4cf28f2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -459,6 +459,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-icore-ofcap10.dtb \
+>  	imx6q-icore-ofcap12.dtb \
+>  	imx6q-icore-rqs.dtb \
+> +	imx6q-kp-tpc.dtb \
+>  	imx6q-marsboard.dtb \
+>  	imx6q-mccmon6.dtb \
+>  	imx6q-nitrogen6x.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
+> new file mode 100644
+> index 000000000000..b5646040b516
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
+> @@ -0,0 +1,23 @@
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+This goes on the first line. checkpatch.pl will tell you this.
+
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6q-kp.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX6 Qwuad K+P TPC Board";
+> +	compatible = "kiebackpeter,imx6q-tpc", "fsl,imx6q";
+> +
+> +	memory: memory@10000000 {
+> +		reg = <0x10000000 0x40000000>;
+> +	};
+> +};
+> +
+> +&ipu1_di0_disp0 {
+> +	remote-endpoint = <&lcd_display_in>;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
+> new file mode 100644
+> index 000000000000..acf6d40ca227
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
+> @@ -0,0 +1,460 @@
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6q.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include <dt-bindings/sound/fsl-imx-audmux.h>
+> +
+> +/ {
+> +	backlight_lcd: backlight-lcd {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm1 0 5000000>;
+> +		brightness-levels = <  0   1   2   3   4   5   6   7   8   9
+
+There's a property now so you don't have to list every single value and 
+can just say "<0 255>". It's not landed yet though. See "dt-bindings: 
+pwm-backlight: add a num-interpolation-steps property". 
+
+> +				      10  11  12  13  14  15  16  17  18  19
+> +				      20  21  22  23  24  25  26  27  28  29
+> +				      30  31  32  33  34  35  36  37  38  39
+> +				      40  41  42  43  44  45  46  47  48  49
+> +				      50  51  52  53  54  55  56  57  58  59
+> +				      60  61  62  63  64  65  66  67  68  69
+> +				      70  71  72  73  74  75  76  77  78  79
+> +				      80  81  82  83  84  85  86  87  88  89
+> +				      90  91  92  93  94  95  96  97  98  99
+> +				     100 101 102 103 104 105 106 107 108 109
+> +				     110 111 112 113 114 115 116 117 118 119
+> +				     120 121 122 123 124 125 126 127 128 129
+> +				     130 131 132 133 134 135 136 137 138 139
+> +				     140 141 142 143 144 145 146 147 148 149
+> +				     150 151 152 153 154 155 156 157 158 159
+> +				     160 161 162 163 164 165 166 167 168 169
+> +				     170 171 172 173 174 175 176 177 178 179
+> +				     180 181 182 183 184 185 186 187 188 189
+> +				     190 191 192 193 194 195 196 197 198 199
+> +				     200 201 202 203 204 205 206 207 208 209
+> +				     210 211 212 213 214 215 216 217 218 219
+> +				     220 221 222 223 224 225 226 227 228 229
+> +				     230 231 232 233 234 235 236 237 238 239
+> +				     240 241 242 243 244 245 246 247 248 249
+> +				     250 251 252 253 254 255>;
+> +		default-brightness-level = <250>;
+> +		status = "okay";
+
+This isn't an existing node, so you don't need to override status.
+
+> +	};
+> +
+> +	beeper {
+> +		compatible = "pwm-beeper";
+> +		pwms = <&pwm2 0 500000>; //2kHz
+> +	};
+> +
+> +	lcd_display: disp0 {
+> +		compatible = "fsl,imx-parallel-display";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interface-pix-fmt = "rgb24";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ipu1>;
+> +		status = "okay";
+
+Necessary?
+
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			lcd_display_in: endpoint {
+> +				remote-endpoint = <&ipu1_di0_disp0>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			lcd_display_out: endpoint {
+> +				remote-endpoint = <&lcd_panel_in>;
+> +			};
+> +		};
+> +	};
+> +
+> +	lcd_panel: lcd-panel {
+> +		compatible = "auo,g070vvn01";
+> +		backlight = <&backlight_lcd>;
+> +		bus-format-override = "rgb565";
+
+This is not documented.
+
+> +		power-supply = <&reg_display>;
+> +
+> +		port {
+> +			lcd_panel_in: endpoint {
+> +				remote-endpoint = <&lcd_display_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		green {
+> +			label = "led1";
+> +			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "gpio";
+> +			default-state = "off";
+> +		};
+> +
+> +		red {
+> +			label = "led0";
+> +			gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "gpio";
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_audio: regulator-audio {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "sgtl5000-supply";
+> +		gpio = <&gpio6 31 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_display: regulator-display {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "display-supply";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_h1_vbus: regulator-usb_h1_vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_h1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		enable-active-high;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "imx6q-sgtl5000-audio";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,bitclock-master = <&codec_dai>;
+> +		simple-audio-card,frame-master = <&codec_dai>;
+> +
+> +		cpu_dai: simple-audio-card,cpu {
+> +			sound-dai = <&ssi1>;
+> +		};
+> +
+> +		codec_dai: simple-audio-card,codec {
+> +			sound-dai = <&codec>;
+> +		};
+> +	};
+> +};
+> +
+> +&audmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_audmux>;
+> +	status = "okay";
+> +
+> +	ssi1 {
+> +		fsl,audmux-port = <0>;
+> +		fsl,port-config = <
+> +			(IMX_AUDMUX_V2_PTCR_SYN |
+> +			IMX_AUDMUX_V2_PTCR_TFSEL(2) |
+> +			IMX_AUDMUX_V2_PTCR_TCSEL(2) |
+> +			IMX_AUDMUX_V2_PTCR_TFSDIR |
+> +			IMX_AUDMUX_V2_PTCR_TCLKDIR)
+> +			IMX_AUDMUX_V2_PDCR_RXDSEL(2)
+> +		>;
+> +	};
+> +
+> +	aud3 {
+> +		fsl,audmux-port = <2>;
+> +		fsl,port-config = <
+> +			IMX_AUDMUX_V2_PTCR_SYN
+> +			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+> +		>;
+> +	};
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet>;
+> +	phy-mode = "rgmii";
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	goodix_ts@5d {
+
+touchscreen@5d
+
+> +		compatible = "goodix,gt911";
+> +		reg = <0x5d>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ts>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> +		irq-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	rx8025@32 {
+> +		compatible = "dallas,rx8025";
+> +		reg = <0x32>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	codec: sgtl5000@a {
+
+audio-codec@a
+
+> +		compatible = "fsl,sgtl5000";
+> +		#sound-dai-cells = <0>;
+> +		reg = <0x0a>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_codec>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		VDDA-supply = <&reg_3p3v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_audmux: audmuxgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
+> +			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS	0x130b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_codec: codecgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31   0x1b0b0
+> +			/* sgtl5000 sys_mclk clock routed to CLKO1 */
+> +			MX6QDL_PAD_GPIO_0__CCM_CLKO1      0x000b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet: enetgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO	0x1b0b0
+> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+> +			MX6QDL_PAD_RGMII_TXC__RGMII_TXC	0x1b0b0
+> +			MX6QDL_PAD_RGMII_TD0__RGMII_TD0	0x1b0b0
+> +			MX6QDL_PAD_RGMII_TD1__RGMII_TD1	0x1b0b0
+> +			MX6QDL_PAD_RGMII_TD2__RGMII_TD2	0x1b0b0
+> +			MX6QDL_PAD_RGMII_TD3__RGMII_TD3	0x1b0b0
+> +			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
+> +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RXC__RGMII_RXC	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RD0__RGMII_RD0	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RD1__RGMII_RD1	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RD2__RGMII_RD2	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RD3__RGMII_RD3	0x1b0b0
+> +			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
+> +			MX6QDL_PAD_GPIO_16__ENET_REF_CLK 0x4001b0a8
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan1: can1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX        0x1b0b0
+> +			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2: can2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX        0x1b0b0
+> +			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001b8b1
+> +			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
+> +			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
+> +		 >;
+> +	};
+> +
+> +	pinctrl_ipu1: ipu1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+> +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
+> +			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
+> +			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
+> +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
+> +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
+> +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
+> +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
+> +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
+> +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
+> +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
+> +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
+> +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
+> +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
+> +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
+> +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
+> +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
+> +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
+> +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
+> +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
+> +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
+> +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
+> +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
+> +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
+> +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
+> +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
+> +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
+> +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm1: pwm1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_DAT3__PWM1_OUT		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm2: pwm2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ts: tsgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_9__GPIO1_IO09 0x1b0b0
+> +			MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D26__UART2_TX_DATA       0x1b0b1
+> +			MX6QDL_PAD_EIM_D27__UART2_RX_DATA       0x1b0b1
+> +			MX6QDL_PAD_EIM_D28__UART2_CTS_B         0x1b0b1
+> +			MX6QDL_PAD_EIM_D29__UART2_RTS_B         0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
+> +			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
+> +			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
+> +			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+> +			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+> +			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc4: usdhc4grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x17059
+> +			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x10059
+> +			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x17059
+> +			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x17059
+> +			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x17059
+> +			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x17059
+> +			MX6QDL_PAD_SD4_DAT4__SD4_DATA4		0x17059
+> +			MX6QDL_PAD_SD4_DAT5__SD4_DATA5		0x17059
+> +			MX6QDL_PAD_SD4_DAT6__SD4_DATA6		0x17059
+> +			MX6QDL_PAD_SD4_DAT7__SD4_DATA7		0x17059
+> +		>;
+> +	};
+> +};
+> +
+> +&can1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan1>;
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan2>;
+> +};
+> +
+> +&pwm1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm1>;
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm2>;
+> +	status = "okay";
+> +};
+> +
+> +&ssi1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	uart-has-rtscts;
+> +};
+> +
+> +&usbh1 {
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc4>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	no-1-8-v;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.11.0
 > 
-> resource_for_each_* helpers could solve that without the size increase.
-
-Nico mentioned llist, that is a linux kernel standard singly linked
-list, very elegant code existed. Still can not satisfy the reversed
-iteration requirement.
-
-> 
-> > Besides, type of member variables of struct resource, sibling and child, are
-> > changed from 'struct resource *' to 'struct list_head'. Kernel size will
-> > increase because of those statically defined struct resource instances.
-> 
-> The DT struct device_node also has the same tree structure with
-> parent, child, sibling pointers and converting to list_head had been
-> on the todo list for a while. ACPI also has some tree walking
-> functions (drivers/acpi/acpica/pstree.c). Perhaps there should be a
-> common tree struct and helpers defined either on top of list_head or a
-> new struct if that saves some size.
-
-We have had many this kind of trees in kernel, the obvious examples is 
-task_struct. And struct task_group {} too. They have used list_head
-already.
-struct task_struct {
-	...
-	/* Real parent process: */                                                                                 
-        struct task_struct __rcu        *real_parent;                                                              
-                                                                                                                   
-        /* Recipient of SIGCHLD, wait4() reports: */                                                               
-        struct task_struct __rcu        *parent;
-	struct list_head                children;                                                                  
-        struct list_head                sibling;
-	...
-}
-
-		    root
-                ///   |   \\\
-               ///    |    \\\
-              ///     |     \\\
-             ///      |      \\\
-          (child)<->(child)<->(child)
-                         ///   |   \\\
-                     ///       |      \\\
-                   ///         |          \\\
-                ///            |             \\\
-             (grandchild)<->(grandchild)<->(grandchild)
-
-If define an new struct, , like tree_list, or tlist?
-
-struct tlist {
-	void			*parent;
-	struct list_head        sibling;                                                                                                         
-	struct list_head        child;
-}
-
-Just a rough idea, feel it might not bring too much benefit compared
-with direct list operation.
-
-> 
-> >
-> > Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > v2->v3:
-> >   Make sibling() and first_child() global so that they can be called
-> >   out of kernel/resource.c to simplify code.
-> 
-> These should probably be inline functions. Or exported if not.
-> 
-> >
-> >   Fix several code bugs found by kbuild test robot.
-> >
-> >   Got report from lkp that kernel size increased. It's on purpose since
-> >   the type change of sibling and child inside struct resource{}. For
-> >   each struct resource variable, it will cost another 16 bytes on x86 64.
-> 
-> The size increase should be mentioned in the commit log. More
-> generally, the size increase is 2 pointers.
-
-Simply mentioned the size increase in this updated version. Yes, 2
-pointers increased. Will add it to log ot make it more specifically.
-
-Thanks
-Baoquan
-
-> >
-> >  arch/sparc/kernel/ioport.c                  |   2 +-
-> >  drivers/gpu/drm/drm_memory.c                |   3 +-
-> >  drivers/gpu/drm/gma500/gtt.c                |   5 +-
-> >  drivers/hv/vmbus_drv.c                      |  52 ++++----
-> >  drivers/input/joystick/iforce/iforce-main.c |   4 +-
-> >  drivers/nvdimm/e820.c                       |   2 +-
-> >  drivers/nvdimm/namespace_devs.c             |   6 +-
-> >  drivers/nvdimm/nd.h                         |   5 +-
-> >  drivers/of/address.c                        |   4 +-
-> >  drivers/parisc/lba_pci.c                    |   4 +-
-> >  drivers/pci/host/vmd.c                      |   8 +-
-> >  drivers/pci/probe.c                         |   2 +
-> >  drivers/pci/setup-bus.c                     |   2 +-
-> >  include/linux/ioport.h                      |   6 +-
-> >  kernel/resource.c                           | 193 ++++++++++++++--------------
-> >  15 files changed, 149 insertions(+), 149 deletions(-)
-> >
-> > diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
-> > index 3bcef9ce74df..4e91fbbbedcc 100644
-> > --- a/arch/sparc/kernel/ioport.c
-> > +++ b/arch/sparc/kernel/ioport.c
-> > @@ -669,7 +669,7 @@ static int sparc_io_proc_show(struct seq_file *m, void *v)
-> >         struct resource *root = m->private, *r;
-> >         const char *nm;
-> >
-> > -       for (r = root->child; r != NULL; r = r->sibling) {
-> > +       list_for_each_entry(r, &root->child, sibling) {
-> >                 if ((nm = r->name) == NULL) nm = "???";
-> >                 seq_printf(m, "%016llx-%016llx: %s\n",
-> >                                 (unsigned long long)r->start,
-> > diff --git a/drivers/gpu/drm/drm_memory.c b/drivers/gpu/drm/drm_memory.c
-> > index 3c54044214db..53e300a993dc 100644
-> > --- a/drivers/gpu/drm/drm_memory.c
-> > +++ b/drivers/gpu/drm/drm_memory.c
-> > @@ -155,9 +155,8 @@ u64 drm_get_max_iomem(void)
-> >         struct resource *tmp;
-> >         resource_size_t max_iomem = 0;
-> >
-> > -       for (tmp = iomem_resource.child; tmp; tmp = tmp->sibling) {
-> > +       list_for_each_entry(tmp, &iomem_resource.child, sibling)
-> >                 max_iomem = max(max_iomem,  tmp->end);
-> > -       }
-> >
-> >         return max_iomem;
-> >  }
-> > diff --git a/drivers/gpu/drm/gma500/gtt.c b/drivers/gpu/drm/gma500/gtt.c
-> > index 3949b0990916..addd3bc009af 100644
-> > --- a/drivers/gpu/drm/gma500/gtt.c
-> > +++ b/drivers/gpu/drm/gma500/gtt.c
-> > @@ -565,7 +565,7 @@ int psb_gtt_init(struct drm_device *dev, int resume)
-> >  int psb_gtt_restore(struct drm_device *dev)
-> >  {
-> >         struct drm_psb_private *dev_priv = dev->dev_private;
-> > -       struct resource *r = dev_priv->gtt_mem->child;
-> > +       struct resource *r;
-> >         struct gtt_range *range;
-> >         unsigned int restored = 0, total = 0, size = 0;
-> >
-> > @@ -573,14 +573,13 @@ int psb_gtt_restore(struct drm_device *dev)
-> >         mutex_lock(&dev_priv->gtt_mutex);
-> >         psb_gtt_init(dev, 1);
-> >
-> > -       while (r != NULL) {
-> > +       list_for_each_entry(r, &dev_priv->gtt_mem->child, sibling) {
-> >                 range = container_of(r, struct gtt_range, resource);
-> >                 if (range->pages) {
-> >                         psb_gtt_insert(dev, range, 1);
-> >                         size += range->resource.end - range->resource.start;
-> >                         restored++;
-> >                 }
-> > -               r = r->sibling;
-> >                 total++;
-> >         }
-> >         mutex_unlock(&dev_priv->gtt_mutex);
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index bc65c4d79c1f..7ba8a25520d9 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1413,9 +1413,8 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
-> >  {
-> >         resource_size_t start = 0;
-> >         resource_size_t end = 0;
-> > -       struct resource *new_res;
-> > +       struct resource *new_res, *tmp;
-> >         struct resource **old_res = &hyperv_mmio;
-> > -       struct resource **prev_res = NULL;
-> >
-> >         switch (res->type) {
-> >
-> > @@ -1462,44 +1461,36 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
-> >         /*
-> >          * If two ranges are adjacent, merge them.
-> >          */
-> > -       do {
-> > -               if (!*old_res) {
-> > -                       *old_res = new_res;
-> > -                       break;
-> > -               }
-> > -
-> > -               if (((*old_res)->end + 1) == new_res->start) {
-> > -                       (*old_res)->end = new_res->end;
-> > +       if (!*old_res) {
-> > +               *old_res = new_res;
-> > +               return AE_OK;
-> > +       }
-> > +       tmp = *old_res;
-> > +       list_for_each_entry_from(tmp, &tmp->parent->child, sibling) {
-> > +               if ((tmp->end + 1) == new_res->start) {
-> > +                       tmp->end = new_res->end;
-> >                         kfree(new_res);
-> >                         break;
-> >                 }
-> >
-> > -               if ((*old_res)->start == new_res->end + 1) {
-> > -                       (*old_res)->start = new_res->start;
-> > +               if (tmp->start == new_res->end + 1) {
-> > +                       tmp->start = new_res->start;
-> >                         kfree(new_res);
-> >                         break;
-> >                 }
-> >
-> > -               if ((*old_res)->start > new_res->end) {
-> > -                       new_res->sibling = *old_res;
-> > -                       if (prev_res)
-> > -                               (*prev_res)->sibling = new_res;
-> > -                       *old_res = new_res;
-> > +               if (tmp->start > new_res->end) {
-> > +                       list_add(&new_res->sibling, tmp->sibling.prev);
-> >                         break;
-> >                 }
-> > -
-> > -               prev_res = old_res;
-> > -               old_res = &(*old_res)->sibling;
-> > -
-> > -       } while (1);
-> > +       }
-> >
-> >         return AE_OK;
-> >  }
-> >
-> >  static int vmbus_acpi_remove(struct acpi_device *device)
-> >  {
-> > -       struct resource *cur_res;
-> > -       struct resource *next_res;
-> > +       struct resource *res;
-> >
-> >         if (hyperv_mmio) {
-> >                 if (fb_mmio) {
-> > @@ -1508,10 +1499,9 @@ static int vmbus_acpi_remove(struct acpi_device *device)
-> >                         fb_mmio = NULL;
-> >                 }
-> >
-> > -               for (cur_res = hyperv_mmio; cur_res; cur_res = next_res) {
-> > -                       next_res = cur_res->sibling;
-> > -                       kfree(cur_res);
-> > -               }
-> > +               res = hyperv_mmio;
-> > +               list_for_each_entry_from(res, &res->parent->child, sibling)
-> > +                       kfree(res);
-> >         }
-> >
-> >         return 0;
-> > @@ -1597,7 +1587,8 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
-> >                 }
-> >         }
-> >
-> > -       for (iter = hyperv_mmio; iter; iter = iter->sibling) {
-> > +       iter = hyperv_mmio;
-> > +       list_for_each_entry_from(iter, &iter->parent->child, sibling) {
-> >                 if ((iter->start >= max) || (iter->end <= min))
-> >                         continue;
-> >
-> > @@ -1640,7 +1631,8 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size)
-> >         struct resource *iter;
-> >
-> >         down(&hyperv_mmio_lock);
-> > -       for (iter = hyperv_mmio; iter; iter = iter->sibling) {
-> > +       iter = hyperv_mmio;
-> > +       list_for_each_entry_from(iter, &iter->parent->child, sibling) {
-> >                 if ((iter->start >= start + size) || (iter->end <= start))
-> >                         continue;
-> >
-> > diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/joystick/iforce/iforce-main.c
-> > index daeeb4c7e3b0..5c0be27b33ff 100644
-> > --- a/drivers/input/joystick/iforce/iforce-main.c
-> > +++ b/drivers/input/joystick/iforce/iforce-main.c
-> > @@ -305,8 +305,8 @@ int iforce_init_device(struct iforce *iforce)
-> >         iforce->device_memory.end = 200;
-> >         iforce->device_memory.flags = IORESOURCE_MEM;
-> >         iforce->device_memory.parent = NULL;
-> > -       iforce->device_memory.child = NULL;
-> > -       iforce->device_memory.sibling = NULL;
-> > +       INIT_LIST_HEAD(&iforce->device_memory.child);
-> > +       INIT_LIST_HEAD(&iforce->device_memory.sibling);
-> >
-> >  /*
-> >   * Wait until device ready - until it sends its first response.
-> > diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-> > index 6f9a6ffd7cde..513e661bb0d8 100644
-> > --- a/drivers/nvdimm/e820.c
-> > +++ b/drivers/nvdimm/e820.c
-> > @@ -53,7 +53,7 @@ static int e820_pmem_probe(struct platform_device *pdev)
-> >                 goto err;
-> >         platform_set_drvdata(pdev, nvdimm_bus);
-> >
-> > -       for (p = iomem_resource.child; p ; p = p->sibling) {
-> > +       list_for_each_entry(p, &iomem_resource.child, sibling) {
-> >                 struct nd_region_desc ndr_desc;
-> >
-> >                 if (p->desc != IORES_DESC_PERSISTENT_MEMORY_LEGACY)
-> > diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> > index 658ada497be0..bcbdf5335909 100644
-> > --- a/drivers/nvdimm/namespace_devs.c
-> > +++ b/drivers/nvdimm/namespace_devs.c
-> > @@ -637,7 +637,7 @@ static resource_size_t scan_allocate(struct nd_region *nd_region,
-> >   retry:
-> >         first = 0;
-> >         for_each_dpa_resource(ndd, res) {
-> > -               struct resource *next = res->sibling, *new_res = NULL;
-> > +               struct resource *next = sibling(res), *new_res = NULL;
-> >                 resource_size_t allocate, available = 0;
-> >                 enum alloc_loc loc = ALLOC_ERR;
-> >                 const char *action;
-> > @@ -763,7 +763,7 @@ static resource_size_t scan_allocate(struct nd_region *nd_region,
-> >          * an initial "pmem-reserve pass".  Only do an initial BLK allocation
-> >          * when none of the DPA space is reserved.
-> >          */
-> > -       if ((is_pmem || !ndd->dpa.child) && n == to_allocate)
-> > +       if ((is_pmem || list_empty(&ndd->dpa.child)) && n == to_allocate)
-> >                 return init_dpa_allocation(label_id, nd_region, nd_mapping, n);
-> >         return n;
-> >  }
-> > @@ -779,7 +779,7 @@ static int merge_dpa(struct nd_region *nd_region,
-> >   retry:
-> >         for_each_dpa_resource(ndd, res) {
-> >                 int rc;
-> > -               struct resource *next = res->sibling;
-> > +               struct resource *next = sibling(res);
-> >                 resource_size_t end = res->start + resource_size(res);
-> >
-> >                 if (!next || strcmp(res->name, label_id->id) != 0
-> > diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> > index 184e070d50a2..1dc0b2370bd1 100644
-> > --- a/drivers/nvdimm/nd.h
-> > +++ b/drivers/nvdimm/nd.h
-> > @@ -102,11 +102,10 @@ unsigned sizeof_namespace_label(struct nvdimm_drvdata *ndd);
-> >                 (unsigned long long) (res ? res->start : 0), ##arg)
-> >
-> >  #define for_each_dpa_resource(ndd, res) \
-> > -       for (res = (ndd)->dpa.child; res; res = res->sibling)
-> > +       list_for_each_entry(res, &(ndd)->dpa.child, sibling)
-> >
-> >  #define for_each_dpa_resource_safe(ndd, res, next) \
-> > -       for (res = (ndd)->dpa.child, next = res ? res->sibling : NULL; \
-> > -                       res; res = next, next = next ? next->sibling : NULL)
-> > +       list_for_each_entry_safe(res, next, &(ndd)->dpa.child, sibling)
-> >
-> >  struct nd_percpu_lane {
-> >         int count;
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 53349912ac75..e2e25719ab52 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -330,7 +330,9 @@ int of_pci_range_to_resource(struct of_pci_range *range,
-> >  {
-> >         int err;
-> >         res->flags = range->flags;
-> > -       res->parent = res->child = res->sibling = NULL;
-> > +       res->parent = NULL;
-> > +       INIT_LIST_HEAD(&res->child);
-> > +       INIT_LIST_HEAD(&res->sibling);
-> >         res->name = np->full_name;
-> >
-> >         if (res->flags & IORESOURCE_IO) {
-> > diff --git a/drivers/parisc/lba_pci.c b/drivers/parisc/lba_pci.c
-> > index 69bd98421eb1..84f04418ae0b 100644
-> > --- a/drivers/parisc/lba_pci.c
-> > +++ b/drivers/parisc/lba_pci.c
-> > @@ -170,8 +170,8 @@ lba_dump_res(struct resource *r, int d)
-> >         for (i = d; i ; --i) printk(" ");
-> >         printk(KERN_DEBUG "%p [%lx,%lx]/%lx\n", r,
-> >                 (long)r->start, (long)r->end, r->flags);
-> > -       lba_dump_res(r->child, d+2);
-> > -       lba_dump_res(r->sibling, d);
-> > +       lba_dump_res(first_child(&r->child), d+2);
-> > +       lba_dump_res(sibling(r), d);
-> >  }
-> >
-> >
-> > diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
-> > index 930a8fa08bd6..c3000af903ea 100644
-> > --- a/drivers/pci/host/vmd.c
-> > +++ b/drivers/pci/host/vmd.c
-> > @@ -520,14 +520,14 @@ static struct pci_ops vmd_ops = {
-> >
-> >  static void vmd_attach_resources(struct vmd_dev *vmd)
-> >  {
-> > -       vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
-> > -       vmd->dev->resource[VMD_MEMBAR2].child = &vmd->resources[2];
-> > +       list_add(&vmd->resources[1].sibling, &vmd->dev->resource[VMD_MEMBAR1].child);
-> > +       list_add(&vmd->resources[2].sibling, &vmd->dev->resource[VMD_MEMBAR2].child);
-> >  }
-> >
-> >  static void vmd_detach_resources(struct vmd_dev *vmd)
-> >  {
-> > -       vmd->dev->resource[VMD_MEMBAR1].child = NULL;
-> > -       vmd->dev->resource[VMD_MEMBAR2].child = NULL;
-> > +       INIT_LIST_HEAD(&vmd->dev->resource[VMD_MEMBAR1].child);
-> > +       INIT_LIST_HEAD(&vmd->dev->resource[VMD_MEMBAR2].child);
-> >  }
-> >
-> >  /*
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index ac91b6fd0bcd..d162c77bec29 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -59,6 +59,8 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
-> >         r->res.start = 0;
-> >         r->res.end = 0xff;
-> >         r->res.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED;
-> > +       INIT_LIST_HEAD(&r->res.child);
-> > +       INIT_LIST_HEAD(&r->res.sibling);
-> >
-> >         list_add_tail(&r->list, &pci_domain_busn_res_list);
-> >
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 072784f55ea5..0d5e30004ca6 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -2107,7 +2107,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
-> >                                 continue;
-> >
-> >                         /* Ignore BARs which are still in use */
-> > -                       if (res->child)
-> > +                       if (!list_empty(&res->child))
-> >                                 continue;
-> >
-> >                         ret = add_to_list(&saved, bridge, res, 0, 0);
-> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > index da0ebaec25f0..03d1510f03e0 100644
-> > --- a/include/linux/ioport.h
-> > +++ b/include/linux/ioport.h
-> > @@ -22,7 +22,8 @@ struct resource {
-> >         const char *name;
-> >         unsigned long flags;
-> >         unsigned long desc;
-> > -       struct resource *parent, *sibling, *child;
-> > +       struct list_head child, sibling;
-> > +       struct resource *parent;
-> >  };
-> >
-> >  /*
-> > @@ -189,6 +190,8 @@ extern int allocate_resource(struct resource *root, struct resource *new,
-> >                                                        resource_size_t,
-> >                                                        resource_size_t),
-> >                              void *alignf_data);
-> > +extern struct resource *sibling(struct resource *res);
-> > +extern struct resource *first_child(struct list_head *head);
-> >  struct resource *lookup_resource(struct resource *root, resource_size_t start);
-> >  int adjust_resource(struct resource *res, resource_size_t start,
-> >                     resource_size_t size);
-> > @@ -215,7 +218,6 @@ static inline bool resource_contains(struct resource *r1, struct resource *r2)
-> >         return r1->start <= r2->start && r1->end >= r2->end;
-> >  }
-> >
-> > -
-> >  /* Convenience shorthand with allocation */
-> >  #define request_region(start,n,name)           __request_region(&ioport_resource, (start), (n), (name), 0)
-> >  #define request_muxed_region(start,n,name)     __request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
-> > diff --git a/kernel/resource.c b/kernel/resource.c
-> > index e270b5048988..473c624606f9 100644
-> > --- a/kernel/resource.c
-> > +++ b/kernel/resource.c
-> > @@ -31,6 +31,8 @@ struct resource ioport_resource = {
-> >         .start  = 0,
-> >         .end    = IO_SPACE_LIMIT,
-> >         .flags  = IORESOURCE_IO,
-> > +       .sibling = LIST_HEAD_INIT(ioport_resource.sibling),
-> > +       .child  = LIST_HEAD_INIT(ioport_resource.child),
-> >  };
-> >  EXPORT_SYMBOL(ioport_resource);
-> >
-> > @@ -39,6 +41,8 @@ struct resource iomem_resource = {
-> >         .start  = 0,
-> >         .end    = -1,
-> >         .flags  = IORESOURCE_MEM,
-> > +       .sibling = LIST_HEAD_INIT(iomem_resource.sibling),
-> > +       .child  = LIST_HEAD_INIT(iomem_resource.child),
-> >  };
-> >  EXPORT_SYMBOL(iomem_resource);
-> >
-> > @@ -57,20 +61,32 @@ static DEFINE_RWLOCK(resource_lock);
-> >   * by boot mem after the system is up. So for reusing the resource entry
-> >   * we need to remember the resource.
-> >   */
-> > -static struct resource *bootmem_resource_free;
-> > +static struct list_head bootmem_resource_free = LIST_HEAD_INIT(bootmem_resource_free);
-> >  static DEFINE_SPINLOCK(bootmem_resource_lock);
-> >
-> > +struct resource *sibling(struct resource *res)
-> > +{
-> > +       if (res->parent && !list_is_last(&res->sibling, &res->parent->child))
-> > +               return list_next_entry(res, sibling);
-> > +       return NULL;
-> > +}
-> > +
-> > +struct resource *first_child(struct list_head *head)
-> > +{
-> > +       return list_first_entry_or_null(head, struct resource, sibling);
-> > +}
-> > +
-> >  static struct resource *next_resource(struct resource *p, bool sibling_only)
-> >  {
-> >         /* Caller wants to traverse through siblings only */
-> >         if (sibling_only)
-> > -               return p->sibling;
-> > +               return sibling(p);
-> >
-> > -       if (p->child)
-> > -               return p->child;
-> > -       while (!p->sibling && p->parent)
-> > +       if (!list_empty(&p->child))
-> > +               return first_child(&p->child);
-> > +       while (!sibling(p) && p->parent)
-> >                 p = p->parent;
-> > -       return p->sibling;
-> > +       return sibling(p);
-> >  }
-> >
-> >  static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-> > @@ -90,7 +106,7 @@ static void *r_start(struct seq_file *m, loff_t *pos)
-> >         struct resource *p = m->private;
-> >         loff_t l = 0;
-> >         read_lock(&resource_lock);
-> > -       for (p = p->child; p && l < *pos; p = r_next(m, p, &l))
-> > +       for (p = first_child(&p->child); p && l < *pos; p = r_next(m, p, &l))
-> >                 ;
-> >         return p;
-> >  }
-> > @@ -186,8 +202,7 @@ static void free_resource(struct resource *res)
-> >
-> >         if (!PageSlab(virt_to_head_page(res))) {
-> >                 spin_lock(&bootmem_resource_lock);
-> > -               res->sibling = bootmem_resource_free;
-> > -               bootmem_resource_free = res;
-> > +               list_add(&res->sibling, &bootmem_resource_free);
-> >                 spin_unlock(&bootmem_resource_lock);
-> >         } else {
-> >                 kfree(res);
-> > @@ -199,10 +214,9 @@ static struct resource *alloc_resource(gfp_t flags)
-> >         struct resource *res = NULL;
-> >
-> >         spin_lock(&bootmem_resource_lock);
-> > -       if (bootmem_resource_free) {
-> > -               res = bootmem_resource_free;
-> > -               bootmem_resource_free = res->sibling;
-> > -       }
-> > +       res = first_child(&bootmem_resource_free);
-> > +       if (res)
-> > +               list_del(&res->sibling);
-> >         spin_unlock(&bootmem_resource_lock);
-> >
-> >         if (res)
-> > @@ -210,6 +224,8 @@ static struct resource *alloc_resource(gfp_t flags)
-> >         else
-> >                 res = kzalloc(sizeof(struct resource), flags);
-> >
-> > +       INIT_LIST_HEAD(&res->child);
-> > +       INIT_LIST_HEAD(&res->sibling);
-> >         return res;
-> >  }
-> >
-> > @@ -218,7 +234,7 @@ static struct resource * __request_resource(struct resource *root, struct resour
-> >  {
-> >         resource_size_t start = new->start;
-> >         resource_size_t end = new->end;
-> > -       struct resource *tmp, **p;
-> > +       struct resource *tmp;
-> >
-> >         if (end < start)
-> >                 return root;
-> > @@ -226,64 +242,62 @@ static struct resource * __request_resource(struct resource *root, struct resour
-> >                 return root;
-> >         if (end > root->end)
-> >                 return root;
-> > -       p = &root->child;
-> > -       for (;;) {
-> > -               tmp = *p;
-> > -               if (!tmp || tmp->start > end) {
-> > -                       new->sibling = tmp;
-> > -                       *p = new;
-> > +
-> > +       if (list_empty(&root->child)) {
-> > +               list_add(&new->sibling, &root->child);
-> > +               new->parent = root;
-> > +               INIT_LIST_HEAD(&new->child);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       list_for_each_entry(tmp, &root->child, sibling) {
-> > +               if (tmp->start > end) {
-> > +                       list_add(&new->sibling, tmp->sibling.prev);
-> >                         new->parent = root;
-> > +                       INIT_LIST_HEAD(&new->child);
-> >                         return NULL;
-> >                 }
-> > -               p = &tmp->sibling;
-> >                 if (tmp->end < start)
-> >                         continue;
-> >                 return tmp;
-> >         }
-> > +
-> > +       list_add_tail(&new->sibling, &root->child);
-> > +       new->parent = root;
-> > +       INIT_LIST_HEAD(&new->child);
-> > +       return NULL;
-> >  }
-> >
-> >  static int __release_resource(struct resource *old, bool release_child)
-> >  {
-> > -       struct resource *tmp, **p, *chd;
-> > +       struct resource *tmp, *next, *chd;
-> >
-> > -       p = &old->parent->child;
-> > -       for (;;) {
-> > -               tmp = *p;
-> > -               if (!tmp)
-> > -                       break;
-> > +       list_for_each_entry_safe(tmp, next, &old->parent->child, sibling) {
-> >                 if (tmp == old) {
-> > -                       if (release_child || !(tmp->child)) {
-> > -                               *p = tmp->sibling;
-> > +                       if (release_child || list_empty(&tmp->child)) {
-> > +                               list_del(&tmp->sibling);
-> >                         } else {
-> > -                               for (chd = tmp->child;; chd = chd->sibling) {
-> > +                               list_for_each_entry(chd, &tmp->child, sibling)
-> >                                         chd->parent = tmp->parent;
-> > -                                       if (!(chd->sibling))
-> > -                                               break;
-> > -                               }
-> > -                               *p = tmp->child;
-> > -                               chd->sibling = tmp->sibling;
-> > +                               list_splice(&tmp->child, tmp->sibling.prev);
-> > +                               list_del(&tmp->sibling);
-> >                         }
-> > +
-> >                         old->parent = NULL;
-> >                         return 0;
-> >                 }
-> > -               p = &tmp->sibling;
-> >         }
-> >         return -EINVAL;
-> >  }
-> >
-> >  static void __release_child_resources(struct resource *r)
-> >  {
-> > -       struct resource *tmp, *p;
-> > +       struct resource *tmp, *next;
-> >         resource_size_t size;
-> >
-> > -       p = r->child;
-> > -       r->child = NULL;
-> > -       while (p) {
-> > -               tmp = p;
-> > -               p = p->sibling;
-> > -
-> > +       list_for_each_entry_safe(tmp, next, &r->child, sibling) {
-> >                 tmp->parent = NULL;
-> > -               tmp->sibling = NULL;
-> > +               INIT_LIST_HEAD(&tmp->sibling);
-> >                 __release_child_resources(tmp);
-> >
-> >                 printk(KERN_DEBUG "release child resource %pR\n", tmp);
-> > @@ -292,6 +306,8 @@ static void __release_child_resources(struct resource *r)
-> >                 tmp->start = 0;
-> >                 tmp->end = size - 1;
-> >         }
-> > +
-> > +       INIT_LIST_HEAD(&tmp->child);
-> >  }
-> >
-> >  void release_child_resources(struct resource *r)
-> > @@ -376,7 +392,8 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
-> >
-> >         read_lock(&resource_lock);
-> >
-> > -       for (p = iomem_resource.child; p; p = next_resource(p, sibling_only)) {
-> > +       for (p = first_child(&iomem_resource.child); p;
-> > +                       p = next_resource(p, sibling_only)) {
-> >                 if ((p->flags & res->flags) != res->flags)
-> >                         continue;
-> >                 if ((desc != IORES_DESC_NONE) && (desc != p->desc))
-> > @@ -564,7 +581,7 @@ int region_intersects(resource_size_t start, size_t size, unsigned long flags,
-> >         struct resource *p;
-> >
-> >         read_lock(&resource_lock);
-> > -       for (p = iomem_resource.child; p ; p = p->sibling) {
-> > +       list_for_each_entry(p, &iomem_resource.child, sibling) {
-> >                 bool is_type = (((p->flags & flags) == flags) &&
-> >                                 ((desc == IORES_DESC_NONE) ||
-> >                                  (desc == p->desc)));
-> > @@ -618,7 +635,7 @@ static int __find_resource(struct resource *root, struct resource *old,
-> >                          resource_size_t  size,
-> >                          struct resource_constraint *constraint)
-> >  {
-> > -       struct resource *this = root->child;
-> > +       struct resource *this = first_child(&root->child);
-> >         struct resource tmp = *new, avail, alloc;
-> >
-> >         tmp.start = root->start;
-> > @@ -628,7 +645,7 @@ static int __find_resource(struct resource *root, struct resource *old,
-> >          */
-> >         if (this && this->start == root->start) {
-> >                 tmp.start = (this == old) ? old->start : this->end + 1;
-> > -               this = this->sibling;
-> > +               this = sibling(this);
-> >         }
-> >         for(;;) {
-> >                 if (this)
-> > @@ -663,7 +680,7 @@ next:               if (!this || this->end == root->end)
-> >
-> >                 if (this != old)
-> >                         tmp.start = this->end + 1;
-> > -               this = this->sibling;
-> > +               this = sibling(this);
-> >         }
-> >         return -EBUSY;
-> >  }
-> > @@ -707,7 +724,7 @@ static int reallocate_resource(struct resource *root, struct resource *old,
-> >                 goto out;
-> >         }
-> >
-> > -       if (old->child) {
-> > +       if (!list_empty(&old->child)) {
-> >                 err = -EBUSY;
-> >                 goto out;
-> >         }
-> > @@ -788,7 +805,7 @@ struct resource *lookup_resource(struct resource *root, resource_size_t start)
-> >         struct resource *res;
-> >
-> >         read_lock(&resource_lock);
-> > -       for (res = root->child; res; res = res->sibling) {
-> > +       list_for_each_entry(res, &root->child, sibling) {
-> >                 if (res->start == start)
-> >                         break;
-> >         }
-> > @@ -821,32 +838,27 @@ static struct resource * __insert_resource(struct resource *parent, struct resou
-> >                         break;
-> >         }
-> >
-> > -       for (next = first; ; next = next->sibling) {
-> > +       for (next = first; ; next = sibling(next)) {
-> >                 /* Partial overlap? Bad, and unfixable */
-> >                 if (next->start < new->start || next->end > new->end)
-> >                         return next;
-> > -               if (!next->sibling)
-> > +               if (!sibling(next))
-> >                         break;
-> > -               if (next->sibling->start > new->end)
-> > +               if (sibling(next)->start > new->end)
-> >                         break;
-> >         }
-> > -
-> >         new->parent = parent;
-> > -       new->sibling = next->sibling;
-> > -       new->child = first;
-> > +       list_add(&new->sibling, &next->sibling);
-> > +       INIT_LIST_HEAD(&new->child);
-> >
-> > -       next->sibling = NULL;
-> > -       for (next = first; next; next = next->sibling)
-> > +       /*
-> > +        * From first to next, they all fall into new's region, so change them
-> > +        * as new's children.
-> > +        */
-> > +       list_cut_position(&new->child, first->sibling.prev, &next->sibling);
-> > +       list_for_each_entry(next, &new->child, sibling)
-> >                 next->parent = new;
-> >
-> > -       if (parent->child == first) {
-> > -               parent->child = new;
-> > -       } else {
-> > -               next = parent->child;
-> > -               while (next->sibling != first)
-> > -                       next = next->sibling;
-> > -               next->sibling = new;
-> > -       }
-> >         return NULL;
-> >  }
-> >
-> > @@ -968,19 +980,17 @@ static int __adjust_resource(struct resource *res, resource_size_t start,
-> >         if ((start < parent->start) || (end > parent->end))
-> >                 goto out;
-> >
-> > -       if (res->sibling && (res->sibling->start <= end))
-> > +       if (sibling(res) && (sibling(res)->start <= end))
-> >                 goto out;
-> >
-> > -       tmp = parent->child;
-> > -       if (tmp != res) {
-> > -               while (tmp->sibling != res)
-> > -                       tmp = tmp->sibling;
-> > +       if (res->sibling.prev != &parent->child) {
-> > +               tmp = list_prev_entry(res, sibling);
-> >                 if (start <= tmp->end)
-> >                         goto out;
-> >         }
-> >
-> >  skip:
-> > -       for (tmp = res->child; tmp; tmp = tmp->sibling)
-> > +       list_for_each_entry(tmp, &res->child, sibling)
-> >                 if ((tmp->start < start) || (tmp->end > end))
-> >                         goto out;
-> >
-> > @@ -1205,34 +1215,32 @@ EXPORT_SYMBOL(__request_region);
-> >  void __release_region(struct resource *parent, resource_size_t start,
-> >                         resource_size_t n)
-> >  {
-> > -       struct resource **p;
-> > +       struct resource *res;
-> >         resource_size_t end;
-> >
-> > -       p = &parent->child;
-> > +       res = first_child(&parent->child);
-> >         end = start + n - 1;
-> >
-> >         write_lock(&resource_lock);
-> >
-> >         for (;;) {
-> > -               struct resource *res = *p;
-> > -
-> >                 if (!res)
-> >                         break;
-> >                 if (res->start <= start && res->end >= end) {
-> >                         if (!(res->flags & IORESOURCE_BUSY)) {
-> > -                               p = &res->child;
-> > +                               res = first_child(&res->child);
-> >                                 continue;
-> >                         }
-> >                         if (res->start != start || res->end != end)
-> >                                 break;
-> > -                       *p = res->sibling;
-> > +                       list_del(&res->sibling);
-> >                         write_unlock(&resource_lock);
-> >                         if (res->flags & IORESOURCE_MUXED)
-> >                                 wake_up(&muxed_resource_wait);
-> >                         free_resource(res);
-> >                         return;
-> >                 }
-> > -               p = &res->sibling;
-> > +               res = sibling(res);
-> >         }
-> >
-> >         write_unlock(&resource_lock);
-> > @@ -1267,9 +1275,7 @@ EXPORT_SYMBOL(__release_region);
-> >  int release_mem_region_adjustable(struct resource *parent,
-> >                         resource_size_t start, resource_size_t size)
-> >  {
-> > -       struct resource **p;
-> > -       struct resource *res;
-> > -       struct resource *new_res;
-> > +       struct resource *res, *new_res;
-> >         resource_size_t end;
-> >         int ret = -EINVAL;
-> >
-> > @@ -1280,16 +1286,16 @@ int release_mem_region_adjustable(struct resource *parent,
-> >         /* The alloc_resource() result gets checked later */
-> >         new_res = alloc_resource(GFP_KERNEL);
-> >
-> > -       p = &parent->child;
-> > +       res = first_child(&parent->child);
-> >         write_lock(&resource_lock);
-> >
-> > -       while ((res = *p)) {
-> > +       while ((res)) {
-> >                 if (res->start >= end)
-> >                         break;
-> >
-> >                 /* look for the next resource if it does not fit into */
-> >                 if (res->start > start || res->end < end) {
-> > -                       p = &res->sibling;
-> > +                       res = sibling(res);
-> >                         continue;
-> >                 }
-> >
-> > @@ -1297,14 +1303,14 @@ int release_mem_region_adjustable(struct resource *parent,
-> >                         break;
-> >
-> >                 if (!(res->flags & IORESOURCE_BUSY)) {
-> > -                       p = &res->child;
-> > +                       res = first_child(&res->child);
-> >                         continue;
-> >                 }
-> >
-> >                 /* found the target resource; let's adjust accordingly */
-> >                 if (res->start == start && res->end == end) {
-> >                         /* free the whole entry */
-> > -                       *p = res->sibling;
-> > +                       list_del(&res->sibling);
-> >                         free_resource(res);
-> >                         ret = 0;
-> >                 } else if (res->start == start && res->end != end) {
-> > @@ -1327,14 +1333,13 @@ int release_mem_region_adjustable(struct resource *parent,
-> >                         new_res->flags = res->flags;
-> >                         new_res->desc = res->desc;
-> >                         new_res->parent = res->parent;
-> > -                       new_res->sibling = res->sibling;
-> > -                       new_res->child = NULL;
-> > +                       INIT_LIST_HEAD(&new_res->child);
-> >
-> >                         ret = __adjust_resource(res, res->start,
-> >                                                 start - res->start);
-> >                         if (ret)
-> >                                 break;
-> > -                       res->sibling = new_res;
-> > +                       list_add(&new_res->sibling, &res->sibling);
-> >                         new_res = NULL;
-> >                 }
-> >
-> > @@ -1515,7 +1520,7 @@ static int __init reserve_setup(char *str)
-> >                         res->end = io_start + io_num - 1;
-> >                         res->flags |= IORESOURCE_BUSY;
-> >                         res->desc = IORES_DESC_NONE;
-> > -                       res->child = NULL;
-> > +                       INIT_LIST_HEAD(&res->child);
-> >                         if (request_resource(parent, res) == 0)
-> >                                 reserved = x+1;
-> >                 }
-> > @@ -1535,7 +1540,7 @@ int iomem_map_sanity_check(resource_size_t addr, unsigned long size)
-> >         loff_t l;
-> >
-> >         read_lock(&resource_lock);
-> > -       for (p = p->child; p ; p = r_next(NULL, p, &l)) {
-> > +       for (p = first_child(&p->child); p; p = r_next(NULL, p, &l)) {
-> >                 /*
-> >                  * We can probably skip the resources without
-> >                  * IORESOURCE_IO attribute?
-> > @@ -1591,7 +1596,7 @@ bool iomem_is_exclusive(u64 addr)
-> >         addr = addr & PAGE_MASK;
-> >
-> >         read_lock(&resource_lock);
-> > -       for (p = p->child; p ; p = r_next(NULL, p, &l)) {
-> > +       for (p = first_child(&p->child); p; p = r_next(NULL, p, &l)) {
-> >                 /*
-> >                  * We can probably skip the resources without
-> >                  * IORESOURCE_IO attribute?
-> > --
-> > 2.13.6
-> >
