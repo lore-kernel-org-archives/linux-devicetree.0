@@ -1,74 +1,69 @@
-Return-Path: <SRS0=yROL=GY=bootlin.com=maxime.ripard@kernel.org>
-Date: Tue, 3 Apr 2018 16:25:13 +0200
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v8 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Message-ID: <20180403142513.435jdbs7u7nathtm@flea>
-References: <20180215133335.9335-1-maxime.ripard@bootlin.com>
- <20180215133335.9335-3-maxime.ripard@bootlin.com>
- <20180329133255.GD26532@bigcity.dyn.berto.se>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6ghnuyaey5gm4fhd"
-Content-Disposition: inline
-In-Reply-To: <20180329133255.GD26532@bigcity.dyn.berto.se>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+Return-Path: <SRS0=MwFQ=G7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:17233 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751471AbeDJQGv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Apr 2018 12:06:51 -0400
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v2 3/5] [RFC] gpio: pca953x: hack to map LEVEL irqs to EDGE irqs (may loose interrupts/hang)
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHp75VctneZKFrRr5bgq6w1L9JkDzbKW421aDLQU2jf9vZgmFA@mail.gmail.com>
+Date: Tue, 10 Apr 2018 18:06:41 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D32076BD-A605-4D62-AC22-33711CE0EB39@goldelico.com>
+References: <cover.1522868422.git.hns@goldelico.com> <637f00dd7da98cfeffdc6080914a5f67b433da50.1522868423.git.hns@goldelico.com> <CAHp75VctneZKFrRr5bgq6w1L9JkDzbKW421aDLQU2jf9vZgmFA@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Andy,
 
---6ghnuyaey5gm4fhd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Niklas,
-
-Thanks for your review,
-
-On Thu, Mar 29, 2018 at 03:32:55PM +0200, Niklas S=F6derlund wrote:
-> > diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/pla=
-tform/cadence/Kconfig
-> > new file mode 100644
-> > index 000000000000..18f061e5cbd1
-> > --- /dev/null
-> > +++ b/drivers/media/platform/cadence/Kconfig
-> > @@ -0,0 +1,17 @@
-> > +config VIDEO_CADENCE
-> > +	bool "Cadence Video Devices"
+> Am 10.04.2018 um 16:38 schrieb Andy Shevchenko =
+<andy.shevchenko@gmail.com>:
 >=20
-> I'm no expert on Kconfig best practices so if nothing else I might learn=
-=20
-> something. There is no need to add a description to this option as it=20
-> only groups the Cadence drivers?
+> On Wed, Apr 4, 2018 at 10:00 PM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>=20
+>> in driver code. Therefore, the pca953x driver rejects the
+>> setup of the irq because it can only handle EDGE interrupts
+>> so far.
+>>=20
+>> This hack translates level interrupts to edge interrupts
+>> for the pca953x chips. This is enough for initial testing,
+>> but not a good solution since interrupts may be lost.
+>>=20
+>> If for example the connected chip requests a IRQ_TYPE_LEVEL_LOW
+>> this may have the reason that there may be multiple different
+>> interrupt sources in the chip - wired-or together to the
+>> input of the pca953x. Now if we do edge detecion only,
+>> the first interrupt will generate an EDGE_FALLING, but a
+>> second one won't ever if the first interrupt wasn't already
+>> processed.
+>>=20
+>> IMHO a better solution would be to make the pca953x interrupt
+>> handler check if the irq input is still in the active
+>> level and run the device specific handler again.
+>=20
+> What I thought about is to enable such exclusively for "L" variants of
+> the chips and check latched values.
 
-You don't strictly need it, but you're right and one should be better,
-I've added it.
+Yes, something like this, although we have to think about if the same =
+can't
+be done for other chips.
 
-Maxime
+The question is who will pick up this topic and when. My job for this =
+chip
+was to check if it can basically work and the hack shows that, but =
+others
+must make the driver perfect.
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+So for the moment I keep it in our workplace and remove it from the
+patch set.
 
---6ghnuyaey5gm4fhd
-Content-Type: application/pgp-signature; name="signature.asc"
+I am sure that there will be some more kernel developers as soon
+as the Pyra handheld hardware is more widely available.
 
------BEGIN PGP SIGNATURE-----
+BR,
+Nikolaus
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrDjsgACgkQ0rTAlCFN
-r3QLoQ/+Oyl6xPhBeYQjU23lTQIzC6yjPMV+l8hEv/Rr/jgwwwLoNW1iPqsCxuGa
-TNCM5BJHYovSqmaYQ3NlE+ilsMCF4vwi4md+X0IgyYsLRgw+1FblWCJBf3DSIsKG
-/oynhDw/Dw5WaQg3ncqBkmGlUZL4nDw3o+j5VZST6VoNS+4BNZPVuucdwKV7vZ8o
-aH3VkmxIIiaPMB8ncH2jXEql6EsHpuaWpbya6bdF0qIDcLSKILYMM8GUg3cGvhBk
-i5Co3MBY6YXiI8vbS5LV9wZVKuVrPqLPJjYLPqeMfLo94bFNnGuhH59xjyhCGB/C
-7fmXxicD/l46SwNL7GWaTFuAhuE29Zijtt95PY6JxmEZL/zLeSNO0PxwVtO6aO6z
-DHAtCvo2RKfxCmagGMz5HYf1aDAZDZjlpQggdJHYBSuYFGZEZCVp+c56xYTmTRm7
-8E3mt2iwD+PPgfygzRMN3YkNCUIzBQyj1n/t8c9DKfboo8WRLilI+6l6yba3gMyd
-+JfHLTTdyA9XDSEjxchXIo2ZYruP5mSpOKeL5j9eWSgCaMcRuPGyTj775fnbof/E
-fPLWnl/LMb7GQxESKSXWToMjN/xIdpN9tFxOzkSS/ErAX9KWhYWeQ3HsSlTOUzPb
-N0PvwZPsjLZXV8lqzsYuSksBZ7Zk6rRsyGKZvT0IJMaG4DlkD1E=
-=rV4V
------END PGP SIGNATURE-----
-
---6ghnuyaey5gm4fhd--
