@@ -1,90 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: afe: add current-sense-cuicuit
- and voltage-divider
-Date: Tue, 10 Apr 2018 08:13:38 -0500
-Message-ID: <20180410131338.k744yajxspiaqwn4@rob-hp-laptop>
-References: <20180403153635.8228-1-peda@axentia.se>
- <20180403153635.8228-2-peda@axentia.se>
- <20180408175031.4945e2d7@archlinux>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 5/5] iommu/arm-smmu: Add support for qcom,
+	smmu-v2 variant
+Date: Tue, 10 Apr 2018 13:14:57 +0000
+Message-ID: <CAAFQd5Cj3qaqt8ACabZwN4ZKaNbF9N9suGVaOKD8-kNxgfeeVA@mail.gmail.com>
+References: <20180313085534.11650-1-vivek.gautam@codeaurora.org>
+	<20180313085534.11650-6-vivek.gautam@codeaurora.org>
+	<61d30fff-1bf8-d2c1-bbe9-f93de836ae77@huawei.com>
+	<7d5af071-ef98-8461-3ce9-e84fc0b3956a@codeaurora.org>
+	<d97872fe-5e8e-cc27-e385-64cea8ea2458@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180408175031.4945e2d7@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <d97872fe-5e8e-cc27-e385-64cea8ea2458-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaojianbo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 08, 2018 at 05:50:31PM +0100, Jonathan Cameron wrote:
-> On Tue,  3 Apr 2018 17:36:34 +0200
-> Peter Rosin <peda@axentia.se> wrote:
-> 
-> circuit in the patch title is spelled wrong.
-> 
-> > An ADC is often used to measure other quantities indirectly. These
-> > bindings describe two cases, a current through a sense resistor, and
-> > a "big" voltage measured with the help of a voltage divider.
-> > 
-> > Signed-off-by: Peter Rosin <peda@axentia.se>
-> 
-> Will definitely be wanting wide opinions on this one - Rob in particularly
-> for the binding side.
-> 
-> One comment inline. What we have here is nice and generic, but is
-> it what would be 'expected' for current sense circuit?  Should we
-> also be more specific in the naming.  There are lots of options for
-> current sense circuits and this is just the simplest (current loop
-> for example).
-> 
-> One option would be to use current-sense-shunt perhaps?
-> 
-> https://en.wikipedia.org/wiki/Current_sensing_techniques
-> Gives a few that I didn't think of beyond current loops etc.
-> 
-> 
-> > ---
-> >  .../bindings/iio/afe/current-sense-circuit.txt     | 45 ++++++++++++++++++++++
-> >  .../bindings/iio/afe/voltage-divider.txt           | 45 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  7 ++++
-> >  3 files changed, 97 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
-> > new file mode 100644
-> > index 000000000000..0bc7d89387c0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/afe/current-sense-circuit.txt
-> > @@ -0,0 +1,45 @@
-> > +Current Sense Curcuit
-> > +=====================
-> > +
-> > +When an io-channel measures the voltage over a current sense resistor,
-> > +the interesting mesaurement is often the current through the resistor,
-> > +not the voltage over it. This binding describes such a current sense
-> > +curcuit.
-> > +
-> > +Required properties:
-> > +- compatible : "current-sense-circuit"
-> > +- io-channels : Channel node of a voltage io-channel.
-> > +
-> > +Optional properties:
-> > +- numerator : The io-channel scale is multiplied by this value (default 1).
-> > +- denominator : The io-channel scale is divided by this value (default 1).
-> > +
-> > +Example:
-> > +The system current is measured by measuring the voltage over a
-> > +3.3 ohms sense resistor.
-> 
-> Hmm. It sort of feels like the binding doesn't really reflect the
-> hardware as directly as it might.   Should we be explicitly having the
-> resistance in this case?  (with some more mapping logic needed in the
-> driver to figure out the scaling this causes).
+Hi Yisheng,
 
-I think having the resistance would be better as least in this case. For 
-other cases like voltage dividers I'm not sure though. Those would be 
-different compatibles so the associated properties don't necessarily 
-need to be the same.
+Sorry, I think we missed your question here.
 
-Rob
+On Wed, Mar 28, 2018 at 3:12 PM Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+
+> Hi Vivek,
+
+> On 2018/3/28 12:37, Vivek Gautam wrote:
+> > Hi Yisheng
+> >
+> >
+> > On 3/28/2018 6:54 AM, Yisheng Xie wrote:
+> >> Hi Vivek,
+> >>
+> >> On 2018/3/13 16:55, Vivek Gautam wrote:
+> >>> +- power-domains:  Specifiers for power domains required to be
+powered on for
+> >>> +                  the SMMU to operate, as per generic power domain
+bindings.
+> >>> +
+> >> In this patchset, power-domains is not used right? And you just do the
+clock gating,
+> >> but not power gating, right?
+> >
+> > We are handling the power-domains too. Please see the example in this
+binding doc.
+
+> I see, but I do not find the point in code of these patchset, do you mean
+PMIC(e.g mmcc)
+> will gate the power domain of SMMU(e.g. MDSS_GDSC of mmcc) when PMIC
+suspend?
+
+
+If respective SoC power domains is registered as a standard genpd PM
+domain, then the runtime PM subsystem will take care of power domain
+control at runtime suspend and resume.
+
+Best regards,
+Tomasz
