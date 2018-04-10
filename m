@@ -1,141 +1,30 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH v3 01/10] Documentations: dt-bindings: Add documents of
- generic PECI bus, adapter and client drivers
-Date: Tue, 10 Apr 2018 11:32:03 -0700
-Message-ID: <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v8 2/3] mtd: spi-nor: add rockchip serial flash controller driver
+Date: Tue, 10 Apr 2018 15:34:57 -0300
+Message-ID: <CAAEAJfCYm4Z20x8PdU3uHh_0BExTCAoOy5Aq=ZXWLJKaB1C9kQ@mail.gmail.com>
+References: <1518091958-3672-1-git-send-email-andy.yan@rock-chips.com> <1518092327-3827-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van.os@prodrive-technologies.com>, Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518092327-3827-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documents of generic PECI bus, adapter and client drivers.
+Hi Andy,
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-Reviewed-by: James Feist <james.feist@linux.intel.com>
-Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Julia Cartwright <juliac@eso.teric.us>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Milton Miller II <miltonm@us.ibm.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
-Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
----
- .../devicetree/bindings/peci/peci-adapter.txt      | 23 ++++++++++++++++++++
- .../devicetree/bindings/peci/peci-bus.txt          | 15 +++++++++++++
- .../devicetree/bindings/peci/peci-client.txt       | 25 ++++++++++++++++++++++
- 3 files changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/peci/peci-adapter.txt
- create mode 100644 Documentation/devicetree/bindings/peci/peci-bus.txt
- create mode 100644 Documentation/devicetree/bindings/peci/peci-client.txt
+Just a very minor nit.
 
-diff --git a/Documentation/devicetree/bindings/peci/peci-adapter.txt b/Documentation/devicetree/bindings/peci/peci-adapter.txt
-new file mode 100644
-index 000000000000..9221374f6b11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/peci/peci-adapter.txt
-@@ -0,0 +1,23 @@
-+Generic device tree configuration for PECI adapters.
-+
-+Required properties:
-+- compatible     : Should contain hardware specific definition strings that can
-+		   match an adapter driver implementation.
-+- reg            : Should contain PECI controller registers location and length.
-+- #address-cells : Should be <1>.
-+- #size-cells    : Should be <0>.
-+
-+Example:
-+	peci: peci@10000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10000000 0x1000>;
-+
-+		peci0: peci-bus@0 {
-+			compatible = "soc,soc-peci";
-+			reg = <0x0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/peci/peci-bus.txt b/Documentation/devicetree/bindings/peci/peci-bus.txt
-new file mode 100644
-index 000000000000..90bcc791ccb0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/peci/peci-bus.txt
-@@ -0,0 +1,15 @@
-+Generic device tree configuration for PECI buses.
-+
-+Required properties:
-+- compatible     : Should be "simple-bus".
-+- #address-cells : Should be <1>.
-+- #size-cells    : Should be <1>.
-+- ranges         : Should contain PECI controller registers ranges.
-+
-+Example:
-+	peci: peci@10000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10000000 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/peci/peci-client.txt b/Documentation/devicetree/bindings/peci/peci-client.txt
-new file mode 100644
-index 000000000000..8e2bfd8532f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/peci/peci-client.txt
-@@ -0,0 +1,25 @@
-+Generic device tree configuration for PECI clients.
-+
-+Required properties:
-+- compatible : Should contain target device specific definition strings that can
-+	       match a client driver implementation.
-+- reg        : Should contain address of a client CPU. Address range of CPU
-+	       clients is starting from 0x30 based on PECI specification.
-+	       <0x30> .. <0x37> (depends on the PECI_OFFSET_MAX definition)
-+
-+Example:
-+	peci-bus@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		< more properties >
-+
-+		function@cpu0 {
-+			compatible = "device,function";
-+			reg = <0x30>;
-+		};
-+
-+		function@cpu1 {
-+			compatible = "device,function";
-+			reg = <0x31>;
-+		};
-+	};
--- 
-2.16.2
+On 8 February 2018 at 09:18, Andy Yan <andy.yan@rock-chips.com> wrote:
+[..]
+> +
+> +static int get_if_type(struct rockchip_sfc *sfc, enum spi_nor_protocol proto)
+> +{
+
+I understand that this got copy-pasted from some other driver,
+but please change this function name to something like
+rockchip_sfc_get_if_type().
+
+Thanks,
+Eze
