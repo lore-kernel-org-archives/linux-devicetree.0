@@ -1,28 +1,53 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RESEND PATCH v6 5/5] ARM: dts: rockchip: set PWM delay backlight settings for Minnie
-Date: Tue, 10 Apr 2018 15:04:22 +0200
-Message-ID: <217634691.qDbm1hq3Bz@phil>
-References: <20180328170327.5395-1-enric.balletbo@collabora.com> <20180328170327.5395-5-enric.balletbo@collabora.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 0/2] iio: add unit converter
+Date: Tue, 10 Apr 2018 08:06:52 -0500
+Message-ID: <20180410130652.d3kk3vo6p4524mid@rob-hp-laptop>
+References: <20180403153635.8228-1-peda@axentia.se>
+ <93a6f7fc-4a53-c65c-422c-1649732fed50@ti.com>
+ <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180328170327.5395-5-enric.balletbo@collabora.com>
+Content-Disposition: inline
+In-Reply-To: <5c18fa2a-0b10-5365-4868-ead6b61b45b2@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+To: Peter Rosin <peda@axentia.se>
+Cc: "Andrew F. Davis" <afd@ti.com>, linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>, Phil Reid <preid@electromag.com.au>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 28. März 2018, 19:03:27 CEST schrieb Enric Balletbo i Serra:
-> The minnie devices comes with an AUO B101EAN01 panel which is different
-> from default veyron devices, thus the power on/off timing sequence is
-> slightly different. The datasheet specifies a pwm delay of 200 ms, so
-> update the PMW delay proprieties accordingly.
+On Tue, Apr 03, 2018 at 08:09:08PM +0200, Peter Rosin wrote:
+> On 2018-04-03 19:41, Andrew F. Davis wrote:
+> > On 04/03/2018 10:36 AM, Peter Rosin wrote:
+> >> Hi!
+> >>
+> >> This driver implements support for voltage dividers and current
+> >> sense circuits. It's pretty generic and should be easily adaptable
+> >> to other linear scaling purposes...
+> >>
+> > 
+> > I really like this idea, defining channel scaling / channel type
+> > conversion in DT will be very useful. So much so that I would recommend
+> > this not be a use specific driver but instead moved into the IIO core.
+> > 
+> > This would allow defining these channel conversions in the device node
+> > itself, so as to not need a separate node just for the converter (the
+> > conversion is not a device and probably should not have it's own node
+> > anyway). It would also help with enabling this support for buffered
+> > readers/writers and not just devices only supporting _raw reads/writes.
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> In my case, the voltage dividers and the current sense circuit are very
+> much real, and I can point my finger at them on the board. Sure, they
+> are not ICs, but to not call them devices is wrong IMHO, and the ADC
+> which is involved have very little to do with the voltage dividers and
+> the fact that it is involved in sensing current. This is not an argument
+> for not moving the functionally to the core though, but that has some
+> problems AFAICT. Because you need some kind of clever and generic
+> binding to make the core do its thing, and it might not be easy to come
+> up with something that fits all devices? And if we do put this in the
+> core, that opens the door for more complex unit converters later on
+> (non-linear etc), further complicating the generic bindings.
 
-applied for 4.18
+I agree. We've learned the hard way that even things like the LED diode 
+itself need to be described and not just the controller.
 
-Thanks
-Heiko
+Rob
