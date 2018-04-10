@@ -1,27 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 4/9] dt-bindings: gpio: Add gpio nodes for Actions
- S900 SoC
-Date: Tue, 10 Apr 2018 08:53:53 -0500
-Message-ID: <20180410135353.yyyv54ik6nkimb6j@rob-hp-laptop>
-References: <20180404172258.7678-1-manivannan.sadhasivam@linaro.org>
- <20180404172258.7678-5-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 4/5] DTS: Bindings: pca953x driver provides an
+ optional vcc-supply property
+Date: Tue, 10 Apr 2018 08:55:57 -0500
+Message-ID: <20180410135557.umt5sgxrx23dirpo@rob-hp-laptop>
+References: <cover.1522868422.git.hns@goldelico.com>
+ <e8e6fae4436e5390c7c4e831c9eb127d3f8cc65b.1522868423.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180404172258.7678-5-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <e8e6fae4436e5390c7c4e831c9eb127d3f8cc65b.1522868423.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: galak@codeaurora.org, andy.shevchenko@gmail.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 04, 2018 at 10:52:53PM +0530, Manivannan Sadhasivam wrote:
-> Add gpio nodes for Actions Semi S900 SoC.
+On Wed, Apr 04, 2018 at 09:00:23PM +0200, H. Nikolaus Schaller wrote:
+> So let's describe this property in the bindings.
+
+It's not what the driver for some OS has. The h/w has a Vcc supply, so 
+let's add a property for it...
+
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  .../devicetree/bindings/gpio/actions,owl-gpio.txt  | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> index d2a937682836..6a7cddb187c1 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> @@ -35,6 +35,7 @@ Required properties:
+>  Optional properties:
+>   - reset-gpios: GPIO specification for the RESET input. This is an
+>  		active low signal to the PCA953x.
+> + - vcc-supply:	power supply regulator.
+>  
+>  Example:
+>  
+> -- 
+> 2.12.2
+> 
