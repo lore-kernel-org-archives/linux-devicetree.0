@@ -1,49 +1,81 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 6/9] PCI: dwc: Define maximum number of vectors
-Date: Tue, 10 Apr 2018 10:56:02 +0100
-Message-ID: <20180410095602.GA27363@e107981-ln.cambridge.arm.com>
-References: <cover.1523266508.git.gustavo.pimentel@synopsys.com>
- <bf7062c863f33b2951acc586b1f22d3497ee2f10.1523266508.git.gustavo.pimentel@synopsys.com>
- <20180409160356.GA14533@e107981-ln.cambridge.arm.com>
- <a75bab38-55b7-b788-5ab4-b777fad2b7ff@synopsys.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH] Input: atmel_mxt_ts - add missing compatible strings to
+ OF device table
+Date: Tue, 10 Apr 2018 12:20:47 +0200
+Message-ID: <CAFqH_50O=V2jh3FDJ+udqL_F2s5W4G+KF1USHR_dKaT82_3EXw@mail.gmail.com>
+References: <20180410095340.24074-1-javierm@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a75bab38-55b7-b788-5ab4-b777fad2b7ff@synopsys.com>
+In-Reply-To: <20180410095340.24074-1-javierm@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Nick Dyer <nick@shmanahar.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 08:59:30AM +0100, Gustavo Pimentel wrote:
-> Hi Lorenzo,
-> 
-> On 09/04/2018 17:03, Lorenzo Pieralisi wrote:
-> > On Mon, Apr 09, 2018 at 10:41:15AM +0100, Gustavo Pimentel wrote:
-> >> Adds a callback that defines the maximum number of vectors that can be use
-> >> by the Root Complex.
-> >>
-> >> Since this is a parameter associated to each SoC IP setting, makes sense to
-> >> be configurable and easily visible to future modifications.
-> >>
-> >> The designware IP supports a maximum of 256 vectors.
-> > 
-> > I think that a DT property instead of a callback would have made more
-> > sense - I struggle to see the point in defining a callback to initialize
-> > a variable, this can be done in the generic dwc code (and a DT binding).
-> 
-> The addition of this callback was done in MSI-X patch series before I take over
-> the PCIe Designware driver responsibility. However I remember a thread in which
-> this subject was discussed (see [1]), maybe this could bring some light about
-> the motive why is was done like this. If you don't agree I can do patch after
-> this series only focusing on this topic in order to do like to suggested.
-> 
-> [1] -> https://www.spinics.net/lists/linux-pci/msg61835.html
+Thanks Javier!
 
-Lucas has a point - it is fine to handle them as you do in this patch,
-it does not make much sense to add a property for something that
-strictly depends on the compatible string.
+2018-04-10 11:53 GMT+02:00 Javier Martinez Canillas <javierm@redhat.com>:
+> Commit af503716ac14 ("i2c: core: report OF style module alias for devices
+> registered via OF") fixed how the I2C core reports the module alias when
+> devices are registered via OF.
+>
+> But the atmel_mxt_ts driver only has an "atmel,maxtouch" compatible in its
+> OF device ID table, so if a Device Tree is using a different one, autoload
+> won't be working for the module (the matching works because the I2C device
+> ID table is used as a fallback).
+>
+> So add compatible strings for each of the entries in the I2C device table.
+>
+> Fixes: af503716ac14 ("i2c: core: report OF style module alias for devices registered via OF")
+> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> ---
+>
+>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 6 +++++-
+>  drivers/input/touchscreen/atmel_mxt_ts.c                   | 4 ++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> index 23e3abc3fdef..cd43fb8bc2ce 100644
+> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> @@ -1,8 +1,12 @@
+>  Atmel maXTouch touchscreen/touchpad
+>
+>  Required properties:
+> -- compatible:
+> +- compatible: Must be one of the following
+> +    atmel,qt602240_ts
+> +    atmel,atmel_mxt_ts
+> +    atmel,atmel_mxt_tp
+>      atmel,maxtouch
+> +    atmel,mXT224
+>
+>  - reg: The I2C address of the device
+>
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 7659bc48f1db..e8ef83f168d6 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -3238,7 +3238,11 @@ static int __maybe_unused mxt_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+>
+>  static const struct of_device_id mxt_of_match[] = {
+> +       { .compatible = "atmel,qt602240_ts", },
+> +       { .compatible = "atmel,atmel_mxt_ts", },
+> +       { .compatible = "atmel,atmel_mxt_tp", },
+>         { .compatible = "atmel,maxtouch", },
+> +       { .compatible = "atmel,mXT224", },
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, mxt_of_match);
+> --
+> 2.14.3
+>
 
-Thanks,
-Lorenzo
+The Samsung Chromebook Plus is one of the affected devices, with
+current mainline the module is not autoloaded, this patch fixes the
+issue.
+
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
