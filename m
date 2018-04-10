@@ -1,341 +1,398 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v6 06/11] firmware: xilinx: Add debugfs interface
-Date: Tue, 10 Apr 2018 12:38:42 -0700
-Message-ID: <1523389127-14243-7-git-send-email-jollys@xilinx.com>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH 5/5] powerpc:dts:pm: add power management node
+Date: Tue, 10 Apr 2018 14:57:11 -0500
+Message-ID: <CADRPPNQXH3+eGNV417BRVnFZgPoTF7aut32DmZZ-0xJKB9TJ9Q@mail.gmail.com>
+References: <20180329013143.22527-1-ran.wang_1@nxp.com> <20180329013143.22527-5-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <20180329013143.22527-5-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Scott Wood <oss@buserror.net>, Kumar Gala <galak@kernel.crashing.org>, Zhao Chenhui <chenhui.zhao@freescale.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajanv@xilinx.com>
+On Wed, Mar 28, 2018 at 8:31 PM, Ran Wang <ran.wang_1@nxp.com> wrote:
+> Enable Power Management feature on device tree, including MPC8536,
+> MPC8544, MPC8548, MPC8572, P1010, P1020, P1021, P1022, P2020, P2041,
+> P3041, T104X, T1024.
 
-Firmware-debug provides debugfs interface to all APIs.
-Debugfs can be used to call firmware APIs with required
-parameters.
+There are no device tree bindings documented for the properties and
+compatible strings used in the patch. Please update the binding
+documents first before adding them into device tree.
 
-Usage:
-* Calling firmware API through debugfs:
-  # echo "<api-name> <arg1> .. <argn>" > /sys/.../zynqmp-firmware/pm
-
-* Read output of last called firmware API:
-  # cat /sys/.../zynqmp-firmware/pm
-
-Refer ug1200 for more information on these APIs:
-  * https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-api.pdf
-
-Add basic debugfs file to get API version.
-
-Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
- drivers/firmware/xilinx/Kconfig        |   7 ++
- drivers/firmware/xilinx/Makefile       |   1 +
- drivers/firmware/xilinx/zynqmp-debug.c | 212 +++++++++++++++++++++++++++++++++
- drivers/firmware/xilinx/zynqmp-debug.h |  22 ++++
- drivers/firmware/xilinx/zynqmp.c       |   9 ++
- 5 files changed, 251 insertions(+)
- create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
- create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
-
-diff --git a/drivers/firmware/xilinx/Kconfig b/drivers/firmware/xilinx/Kconfig
-index cce4e4f..10faa10 100644
---- a/drivers/firmware/xilinx/Kconfig
-+++ b/drivers/firmware/xilinx/Kconfig
-@@ -13,4 +13,11 @@ config ZYNQMP_FIRMWARE
- 	  Say yes to enable ZynqMP firmware interface driver.
- 	  In doubt, say N
- 
-+config ZYNQMP_FIRMWARE_DEBUG
-+	bool "Enable Xilinx Zynq MPSoC firmware debug APIs"
-+	depends on ZYNQMP_FIRMWARE && DEBUG_FS
-+	help
-+	  Say yes to enable ZynqMP firmware interface debug APIs.
-+	  In doubt, say N
-+
- endmenu
-diff --git a/drivers/firmware/xilinx/Makefile b/drivers/firmware/xilinx/Makefile
-index 29f7bf2..875a537 100644
---- a/drivers/firmware/xilinx/Makefile
-+++ b/drivers/firmware/xilinx/Makefile
-@@ -2,3 +2,4 @@
- # Makefile for Xilinx firmwares
- 
- obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o
-+obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += zynqmp-debug.o
-diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
-new file mode 100644
-index 0000000..4800366
---- /dev/null
-+++ b/drivers/firmware/xilinx/zynqmp-debug.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx Zynq MPSoC Firmware layer for debugfs APIs
-+ *
-+ *  Copyright (C) 2014-2018 Xilinx, Inc.
-+ *
-+ *  Michal Simek <michal.simek@xilinx.com>
-+ *  Davorin Mista <davorin.mista@aggios.com>
-+ *  Jolly Shah <jollys@xilinx.com>
-+ *  Rajan Vaja <rajanv@xilinx.com>
-+ */
-+
-+#include <linux/compiler.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/debugfs.h>
-+#include <linux/uaccess.h>
-+
-+#include <linux/firmware/xlnx-zynqmp.h>
-+#include "zynqmp-debug.h"
-+
-+#define PM_API_NAME_LEN			50
-+
-+struct pm_api_info {
-+	u32 api_id;
-+	char api_name[PM_API_NAME_LEN];
-+	char api_name_len;
-+};
-+
-+static char debugfs_buf[PAGE_SIZE];
-+
-+#define PM_API(id)		 {id, #id, strlen(#id)}
-+static struct pm_api_info pm_api_list[] = {
-+	PM_API(PM_GET_API_VERSION),
-+};
-+
-+/**
-+ * zynqmp_pm_argument_value() - Extract argument value from a PM-API request
-+ * @arg:	Entered PM-API argument in string format
-+ *
-+ * Return: Argument value in unsigned integer format on success
-+ *	   0 otherwise
-+ */
-+static u64 zynqmp_pm_argument_value(char *arg)
-+{
-+	u64 value;
-+
-+	if (!arg)
-+		return 0;
-+
-+	if (!kstrtou64(arg, 0, &value))
-+		return value;
-+
-+	return 0;
-+}
-+
-+/**
-+ * get_pm_api_id() - Extract API-ID from a PM-API request
-+ * @pm_api_req:		Entered PM-API argument in string format
-+ * @pm_id:		API-ID
-+ *
-+ * Return: 0 on success else error code
-+ */
-+static int get_pm_api_id(char *pm_api_req, u32 *pm_id)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pm_api_list) ; i++) {
-+		if (!strncasecmp(pm_api_req, pm_api_list[i].api_name,
-+				 pm_api_list[i].api_name_len)) {
-+			*pm_id = pm_api_list[i].api_id;
-+			break;
-+		}
-+	}
-+
-+	/* If no name was entered look for PM-API ID instead */
-+	if (i == ARRAY_SIZE(pm_api_list) && kstrtouint(pm_api_req, 10, pm_id))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
-+{
-+	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-+	u32 pm_api_version;
-+	int ret;
-+
-+	if (!eemi_ops)
-+		return -ENXIO;
-+
-+	switch (pm_id) {
-+	case PM_GET_API_VERSION:
-+		ret = eemi_ops->get_api_version(&pm_api_version);
-+		sprintf(debugfs_buf, "PM-API Version = %d.%d\n",
-+			pm_api_version >> 16, pm_api_version & 0xffff);
-+		break;
-+	default:
-+		sprintf(debugfs_buf, "Unsupported PM-API request\n");
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_pm_debugfs_api_write() - debugfs write function
-+ * @file:	User file structure
-+ * @ptr:	User entered PM-API string
-+ * @len:	Length of the userspace buffer
-+ * @off:	Offset within the file
-+ *
-+ * Used for triggering pm api functions by writing
-+ * echo <pm_api_id>	> /sys/kernel/debug/zynqmp_pm/power or
-+ * echo <pm_api_name>	> /sys/kernel/debug/zynqmp_pm/power
-+ *
-+ * Return: Number of bytes copied if PM-API request succeeds,
-+ *	   the corresponding error code otherwise
-+ */
-+static ssize_t zynqmp_pm_debugfs_api_write(struct file *file,
-+					   const char __user *ptr, size_t len,
-+					   loff_t *off)
-+{
-+	char *kern_buff, *tmp_buff;
-+	char *pm_api_req;
-+	u32 pm_id = 0;
-+	u64 pm_api_arg[4] = {0, 0, 0, 0};
-+	/* Return values from PM APIs calls */
-+	u32 pm_api_ret[4] = {0, 0, 0, 0};
-+
-+	int ret;
-+	int i = 0;
-+
-+	strcpy(debugfs_buf, "");
-+
-+	if (*off != 0 || len == 0)
-+		return -EINVAL;
-+
-+	kern_buff = kzalloc(len, GFP_KERNEL);
-+	if (!kern_buff)
-+		return -ENOMEM;
-+
-+	tmp_buff = kern_buff;
-+
-+	ret = strncpy_from_user(kern_buff, ptr, len);
-+	if (ret < 0) {
-+		ret = -EFAULT;
-+		goto err;
-+	}
-+
-+	/* Read the API name from a user request */
-+	pm_api_req = strsep(&kern_buff, " ");
-+
-+	ret = get_pm_api_id(pm_api_req, &pm_id);
-+	if (ret < 0)
-+		goto err;
-+
-+	/* Read node_id and arguments from the PM-API request */
-+	pm_api_req = strsep(&kern_buff, " ");
-+	while ((i < ARRAY_SIZE(pm_api_arg)) && pm_api_req) {
-+		pm_api_arg[i++] = zynqmp_pm_argument_value(pm_api_req);
-+		pm_api_req = strsep(&kern_buff, " ");
-+	}
-+
-+	ret = process_api_request(pm_id, pm_api_arg, pm_api_ret);
-+
-+err:
-+	kfree(tmp_buff);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+/**
-+ * zynqmp_pm_debugfs_api_read() - debugfs read function
-+ * @file:	User file structure
-+ * @ptr:	Requested pm_api_version string
-+ * @len:	Length of the userspace buffer
-+ * @off:	Offset within the file
-+ *
-+ * Return: Length of the version string on success
-+ *	   else error code
-+ */
-+static ssize_t zynqmp_pm_debugfs_api_read(struct file *file, char __user *ptr,
-+					  size_t len, loff_t *off)
-+{
-+	return simple_read_from_buffer(ptr, len, off, debugfs_buf,
-+				       strlen(debugfs_buf));
-+}
-+
-+/* Setup debugfs fops */
-+static const struct file_operations fops_zynqmp_pm_dbgfs = {
-+	.owner = THIS_MODULE,
-+	.write = zynqmp_pm_debugfs_api_write,
-+	.read = zynqmp_pm_debugfs_api_read,
-+};
-+
-+/**
-+ * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
-+ *
-+ * Return:	None
-+ */
-+void zynqmp_pm_api_debugfs_init(void)
-+{
-+	struct dentry *root_dir;
-+
-+	/* Initialize debugfs interface */
-+	root_dir = debugfs_create_dir("zynqmp-firmware", NULL);
-+	debugfs_create_file("pm", 0660, root_dir, NULL,
-+			    &fops_zynqmp_pm_dbgfs);
-+}
-diff --git a/drivers/firmware/xilinx/zynqmp-debug.h b/drivers/firmware/xilinx/zynqmp-debug.h
-new file mode 100644
-index 0000000..3303b37
---- /dev/null
-+++ b/drivers/firmware/xilinx/zynqmp-debug.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Xilinx Zynq MPSoC Firmware layer
-+ *
-+ *  Copyright (C) 2014-2018 Xilinx
-+ *
-+ *  Michal Simek <michal.simek@xilinx.com>
-+ *  Davorin Mista <davorin.mista@aggios.com>
-+ *  Jolly Shah <jollys@xilinx.com>
-+ *  Rajan Vaja <rajanv@xilinx.com>
-+ */
-+
-+#ifndef __FIRMWARE_ZYNQMP_DEBUG_H__
-+#define __FIRMWARE_ZYNQMP_DEBUG_H__
-+
-+#if IS_REACHABLE(CONFIG_ZYNQMP_FIRMWARE_DEBUG)
-+void zynqmp_pm_api_debugfs_init(void);
-+#else
-+static inline void zynqmp_pm_api_debugfs_init(void) { }
-+#endif
-+
-+#endif /* __FIRMWARE_ZYNQMP_DEBUG_H__ */
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index c172fd2..5f399d0 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -19,6 +19,7 @@
- #include <linux/uaccess.h>
- 
- #include <linux/firmware/xlnx-zynqmp.h>
-+#include "zynqmp-debug.h"
- 
- /**
-  * zynqmp_pm_ret_code() - Convert PMU-FW error codes to Linux error codes
-@@ -527,3 +528,11 @@ static int __init zynqmp_plat_init(void)
- 	return ret;
- }
- early_initcall(zynqmp_plat_init);
-+
-+static int zynqmp_firmware_init(void)
-+{
-+	zynqmp_pm_api_debugfs_init();
-+
-+	return 0;
-+}
-+device_initcall(zynqmp_firmware_init);
--- 
-2.7.4
+>
+> Signed-off-by: Zhao Chenhui <chenhui.zhao@freescale.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |   14 ++++++-
+>  arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi |    2 +
+>  arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi |    2 +
+>  arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi |    2 +
+>  arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    8 ++++
+>  arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    5 +++
+>  arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    5 +++
+>  arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    9 +++--
+>  arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |   14 +++++++
+>  arch/powerpc/boot/dts/fsl/pq3-power.dtsi      |   48 +++++++++++++++++++++++++
+>  arch/powerpc/boot/dts/fsl/t1024rdb.dts        |    2 +-
+>  arch/powerpc/boot/dts/fsl/t1040rdb.dts        |    2 +-
+>  arch/powerpc/boot/dts/fsl/t1042rdb.dts        |    2 +-
+>  arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts     |    2 +-
+>  14 files changed, 108 insertions(+), 9 deletions(-)
+>  create mode 100644 arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+>
+> diff --git a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+> index 4193570..fba40a1 100644
+> --- a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+> @@ -199,6 +199,10 @@
+>
+>  /include/ "pq3-dma-0.dtsi"
+>  /include/ "pq3-etsec1-0.dtsi"
+> +       enet0: ethernet@24000 {
+> +               fsl,wake-on-filer;
+> +               fsl,pmc-handle = <&etsec1_clk>;
+> +       };
+>  /include/ "pq3-etsec1-timer-0.dtsi"
+>
+>         usb@22000 {
+> @@ -222,9 +226,10 @@
+>         };
+>
+>  /include/ "pq3-etsec1-2.dtsi"
+> -
+> -       ethernet@26000 {
+> +       enet2: ethernet@26000 {
+>                 cell-index = <1>;
+> +               fsl,wake-on-filer;
+> +               fsl,pmc-handle = <&etsec3_clk>;
+>         };
+>
+>         usb@2b000 {
+> @@ -249,4 +254,9 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+> +       power@e0070 {
+> +               compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
+> +       };
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
+> index b68eb11..ea7416a 100644
+> --- a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
+> @@ -188,4 +188,6 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
+> index 579d76c..dddb737 100644
+> --- a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
+> @@ -156,4 +156,6 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
+> index 49294cf..40a6cff 100644
+> --- a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
+> @@ -193,4 +193,6 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+> index 1b4aafc..47b62a8 100644
+> --- a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+> @@ -173,6 +173,8 @@
+>
+>  /include/ "pq3-etsec2-0.dtsi"
+>         enet0: ethernet@b0000 {
+> +               fsl,pmc-handle = <&etsec1_clk>;
+> +
+>                 queue-group@b0000 {
+>                         fsl,rx-bit-map = <0xff>;
+>                         fsl,tx-bit-map = <0xff>;
+> @@ -181,6 +183,8 @@
+>
+>  /include/ "pq3-etsec2-1.dtsi"
+>         enet1: ethernet@b1000 {
+> +               fsl,pmc-handle = <&etsec2_clk>;
+> +
+>                 queue-group@b1000 {
+>                         fsl,rx-bit-map = <0xff>;
+>                         fsl,tx-bit-map = <0xff>;
+> @@ -189,6 +193,8 @@
+>
+>  /include/ "pq3-etsec2-2.dtsi"
+>         enet2: ethernet@b2000 {
+> +               fsl,pmc-handle = <&etsec3_clk>;
+> +
+>                 queue-group@b2000 {
+>                         fsl,rx-bit-map = <0xff>;
+>                         fsl,tx-bit-map = <0xff>;
+> @@ -201,4 +207,6 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+> index 642dc3a..cc4c746 100644
+> --- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+> @@ -163,14 +163,17 @@
+>
+>  /include/ "pq3-etsec2-0.dtsi"
+>         enet0: enet0_grp2: ethernet@b0000 {
+> +               fsl,pmc-handle = <&etsec1_clk>;
+>         };
+>
+>  /include/ "pq3-etsec2-1.dtsi"
+>         enet1: enet1_grp2: ethernet@b1000 {
+> +               fsl,pmc-handle = <&etsec2_clk>;
+>         };
+>
+>  /include/ "pq3-etsec2-2.dtsi"
+>         enet2: enet2_grp2: ethernet@b2000 {
+> +               fsl,pmc-handle = <&etsec3_clk>;
+>         };
+>
+>         global-utilities@e0000 {
+> @@ -178,6 +181,8 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+>
+>  /include/ "pq3-etsec2-grp2-0.dtsi"
+> diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+> index 407cb5f..378195d 100644
+> --- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+> @@ -159,14 +159,17 @@
+>
+>  /include/ "pq3-etsec2-0.dtsi"
+>         enet0: enet0_grp2: ethernet@b0000 {
+> +               fsl,pmc-handle = <&etsec1_clk>;
+>         };
+>
+>  /include/ "pq3-etsec2-1.dtsi"
+>         enet1: enet1_grp2: ethernet@b1000 {
+> +               fsl,pmc-handle = <&etsec2_clk>;
+>         };
+>
+>  /include/ "pq3-etsec2-2.dtsi"
+>         enet2: enet2_grp2: ethernet@b2000 {
+> +               fsl,pmc-handle = <&etsec3_clk>;
+>         };
+>
+>         global-utilities@e0000 {
+> @@ -174,6 +177,8 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+>
+>  &qe {
+> diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+> index 5f51b7b..6ac21e8 100644
+> --- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+> @@ -225,11 +225,13 @@
+>  /include/ "pq3-etsec2-0.dtsi"
+>         enet0: enet0_grp2: ethernet@b0000 {
+>                 fsl,wake-on-filer;
+> +               fsl,pmc-handle = <&etsec1_clk>;
+>         };
+>
+>  /include/ "pq3-etsec2-1.dtsi"
+>         enet1: enet1_grp2: ethernet@b1000 {
+>                 fsl,wake-on-filer;
+> +               fsl,pmc-handle = <&etsec2_clk>;
+>         };
+>
+>         global-utilities@e0000 {
+> @@ -238,9 +240,10 @@
+>                 fsl,has-rstcr;
+>         };
+>
+> -       power@e0070{
+> -               compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
+> -               reg = <0xe0070 0x20>;
+> +/include/ "pq3-power.dtsi"
+> +       power@e0070 {
+> +               compatible = "fsl,p1022-pmc", "fsl,mpc8536-pmc",
+> +                               "fsl,mpc8548-pmc";
+>         };
+>
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+> index 884e01b..2c4787c 100644
+> --- a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+> @@ -175,6 +175,10 @@
+>                 compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
+>         };
+>  /include/ "pq3-etsec1-0.dtsi"
+> +       enet0: ethernet@24000 {
+> +               fsl,pmc-handle = <&etsec1_clk>;
+> +
+> +       };
+>  /include/ "pq3-etsec1-timer-0.dtsi"
+>
+>         ptp_clock@24e00 {
+> @@ -183,7 +187,15 @@
+>
+>
+>  /include/ "pq3-etsec1-1.dtsi"
+> +       enet1: ethernet@25000 {
+> +               fsl,pmc-handle = <&etsec2_clk>;
+> +       };
+> +
+>  /include/ "pq3-etsec1-2.dtsi"
+> +       enet2: ethernet@26000 {
+> +               fsl,pmc-handle = <&etsec3_clk>;
+> +       };
+> +
+>  /include/ "pq3-esdhc-0.dtsi"
+>         sdhc@2e000 {
+>                 compatible = "fsl,p2020-esdhc", "fsl,esdhc";
+> @@ -198,4 +210,6 @@
+>                 reg = <0xe0000 0x1000>;
+>                 fsl,has-rstcr;
+>         };
+> +
+> +/include/ "pq3-power.dtsi"
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/pq3-power.dtsi b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+> new file mode 100644
+> index 0000000..5a760b3
+> --- /dev/null
+> +++ b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+> @@ -0,0 +1,48 @@
+> +/*
+> + * PQ3 Power Management device tree stub
+> + *
+> + * Copyright 2012-2013 Freescale Semiconductor Inc.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions are met:
+> + *     * Redistributions of source code must retain the above copyright
+> + *       notice, this list of conditions and the following disclaimer.
+> + *     * Redistributions in binary form must reproduce the above copyright
+> + *       notice, this list of conditions and the following disclaimer in the
+> + *       documentation and/or other materials provided with the distribution.
+> + *     * Neither the name of Freescale Semiconductor nor the
+> + *       names of its contributors may be used to endorse or promote products
+> + *       derived from this software without specific prior written permission.
+> + *
+> + *
+> + * ALTERNATIVELY, this software may be distributed under the terms of the
+> + * GNU General Public License ("GPL") as published by the Free Software
+> + * Foundation, either version 2 of that License or (at your option) any
+> + * later version.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
+> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
+> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +power@e0070 {
+> +       compatible = "fsl,mpc8548-pmc";
+> +       reg = <0xe0070 0x20>;
+> +
+> +       etsec1_clk: soc-clk@24 {
+> +               fsl,pmcdr-mask = <0x00000080>;
+> +       };
+> +       etsec2_clk: soc-clk@25 {
+> +               fsl,pmcdr-mask = <0x00000040>;
+> +       };
+> +       etsec3_clk: soc-clk@26 {
+> +               fsl,pmcdr-mask = <0x00000020>;
+> +       };
+> +};
+> diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+> index 73a6453..95fc694 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+> @@ -91,7 +91,7 @@
+>                 board-control@2,0 {
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+> -                       compatible = "fsl,t1024-cpld";
+> +                       compatible = "fsl,t1024-cpld", "fsl,deepsleep-cpld";
+>                         reg = <3 0 0x300>;
+>                         ranges = <0 3 0 0x300>;
+>                         bank-width = <1>;
+> diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> index 65ff34c..825665c 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> @@ -70,7 +70,7 @@
+>
+>         ifc: localbus@ffe124000 {
+>                 cpld@3,0 {
+> -                       compatible = "fsl,t1040rdb-cpld";
+> +                       compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+>                 };
+>         };
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb.dts b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
+> index 3ebb712..0997643 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1042rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
+> @@ -68,7 +68,7 @@
+>
+>         ifc: localbus@ffe124000 {
+>                 cpld@3,0 {
+> -                       compatible = "fsl,t1042rdb-cpld";
+> +                       compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+>                 };
+>         };
+>  };
+> diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
+> index 8ec3ff4..b10cab1 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
+> @@ -41,7 +41,7 @@
+>
+>         ifc: localbus@ffe124000 {
+>                 cpld@3,0 {
+> -                       compatible = "fsl,t1042rdb_pi-cpld";
+> +                       compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
+>                 };
+>         };
+>
+> --
+> 1.7.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
