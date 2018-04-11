@@ -1,65 +1,49 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 0/5] V3M-Eagle HDMI output enablement
-Date: Wed, 11 Apr 2018 14:43:05 +0200
-Message-ID: <1523450590-31347-1-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] arm64: zynqmp: Use serdev for zcu100 BT
+Date: Wed, 11 Apr 2018 15:16:16 +0200
+Message-ID: <0ce3b4f588f1d9a83cfe99b93af3514f4d893273.1523452571.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: monstr@monstr.eu, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   I have rebased the Eagle display enablement on top of (part of) Sergei's
-series:
- [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+Mainline started to use serdev interface for uart attached devices.
+Change description to reflect it.
 
-Simon: you can skip "[1/5]  arm64: dts: renesas: r8a77970: add FCPVD support"
-as you already collected that
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Sergei: I re-sent your series because there was an additional comment from
-Laurent on [3/5]. I felt it was wrong to send a follow up patch on a series
-still not collected by Simon, so I've resent it. Hope this time is ok with you.
-Also, please note that [5/5] of your original series shall be re-sent using
-the newly introduced (still in-review) LVDS decoder. Please see [5/5] of this
-series as an example.
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Niklas: [5/5] of this series is a fixup of your patches and mine. I added
-your signed-off-by, hope it is ok.
-
-The series depends on THC63LVD1024 driver, currently submitted for inclusion
-"[PATCH v8 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge"
-currently available at:
-git://jmondi.org/linux lvds-bridge/linus-master/v8
-
-Thanks
-   j
-
-v2 -> v3:
-- Use Sergei's series for patches [1-4] with a minor comment from Laurent
-- Remove the lvds-decoder node label and add Laurent's Reviewed-by in [5/5]
-
-v1 -> v2:
-- Add Laurent's reviewed by tags
-- Fixup patch 5, 6 and 7 of v1
-- Remove DU digital output pin muxing
-- Update thc63lvd1024 to use the new bindings with mandatory power supply
-- Minor fixes (changes are described individually in each patch)
-
-Jacopo Mondi (1):
-  arm64: dts: renesas: eagle: Enable HDMI output
-
-Sergei Shtylyov (4):
-  arm64: dts: renesas: r8a77970: add FCPVD support
-  arm64: dts: renesas: r8a77970: add VSPD support
-  arm64: dts: renesas: r8a77970: add DU support
-  arm64: dts: renesas: r8a77970: add LVDS support
-
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 93 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 75 +++++++++++++++++++++
- 2 files changed, 168 insertions(+)
-
---
-2.7.4
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+index 3e862a9faf26..c7f713c8e69e 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+@@ -89,12 +89,6 @@
+ 			gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};
+-
+-		bt_power {
+-			label = "bt_power";
+-			gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
+-			default-state = "on";
+-		};
+ 	};
+ 
+ 	wmmcsdio_fixed: fixedregulator-mmcsdio {
+@@ -267,6 +261,10 @@
+ 
+ &uart0 {
+ 	status = "okay";
++	bluetooth {
++		compatible = "ti,wl1831-st";
++		enable-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &uart1 {
+-- 
+2.17.0
