@@ -1,79 +1,47 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Date: Wed, 11 Apr 2018 15:26:18 -0600
-Message-ID: <20180411212618.GH19682@codeaurora.org>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
- <20180405161834.3850-3-ilina@codeaurora.org>
- <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
- <20180409160800.GC19682@codeaurora.org>
- <20180410193621.GB6727@builder>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+From: Ricardo Silva <rjpdasilva@gmail.com>
+Subject: [PATCH] dt-bindings: pinctrl: mcp23s08: Clarify gpiospec flags cell usage
+Date: Wed, 11 Apr 2018 22:42:57 +0100
+Message-ID: <20180411214257.14902-1-rjpdasilva@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180410193621.GB6727@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Ricardo Silva <rjpdasilva@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10 2018 at 13:36 -0600, Bjorn Andersson wrote:
->On Mon 09 Apr 09:08 PDT 2018, Lina Iyer wrote:
->
->> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
->> > Quoting Lina Iyer (2018-04-05 09:18:26)
->> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
->[..]
->> > > +Example 1:
->> > > +
->> > > +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
->> > > +register offsets for DRV2 start at 0D00, the register calculations are like
->> > > +this -
->> > > +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
->> > > +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
->> > > +
->> > > +       apps_rsc: rsc@179e000 {
->> > > +               label = "apps_rsc";
->> > > +               compatible = "qcom,rpmh-rsc";
->> > > +               reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
->> >
->> > The first reg property overlaps the second one. Does this second one
->> > ever move around? I would hardcode it in the driver to be 0xd00 away
->> > from the drv base instead of specifying it in DT if it's the same all
->> > the time.
->[..]
->> >
->> The DRV is the voter for an execution environment (Linux, Hypervisor,
->> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
->> privy to. They are access restricted. The memory organization of the RSC
->> mandates that we know the DRV id to access registers specific to the
->> DRV. Unfortunately, not all RSC have identical DRV configuration and the
->> register space is also variable depending on the capability of the RSC.
->> There are functionalities supported by other RSCs in the SoC that are
->> not supported by the RSC associated with the application processor,
->> while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
->> describing the whole RSC as it is not usable from Linux (because of
->> access restrictions).
->>
->
->I generally prefer that we describe the hardware blocks as accurate as
->possible, instead of applying current restrictions on Linux onto the
->description. This ensures that we can reuse the binding and drivers in
->configurations not considered today. However, afaict we still have the
->problem that we need a way to express where in the RSC our TCS sits.
->
->Regardless of what's right or not, the given example causes the driver
->to fail probing, so something needs to be changed.
-I have been using this in DT and I haven't seen failures. Could you send
-me the logs?
+The pinctrl-mcp23s08 driver doesn't provide a specific gpiospec
+of_xlate() function, causing the gpiolib-of's of_gpio_simple_xlate()
+function to be used instead, which takes the gpiospec's second cell as
+the flags specifier according to 'include/dt-bindings/gpio/gpio.h'.
 
-Thanks,
-Lina
+The pinctrl-mcp23s08 bindings document was mentioning that the flags
+were unused, which is not accurate because values in that second cell
+are indeed used by the gpiolib-of's of_gpio_simple_xlate() for
+configuring the gpio (e.g. its polarity).
 
->(Making the drv size
->0xd00 is functional but doesn't really relate to any bondary in the
->register space).
->
->Regards,
->Bjorn
+This way, replace the "flags currently unused" reference in the
+dt-bindings document with references to the appropriate files specifying
+the possible flag values and gpiospec description.
+
+CC: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Silva <rjpdasilva@gmail.com>
+---
+ .../devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt          | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index 9c451c20dda4..c357c99c948f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -18,7 +18,9 @@ Required properties:
+     removed.
+ - #gpio-cells : Should be two.
+   - first cell is the pin number
+-  - second cell is used to specify flags. Flags are currently unused.
++  - second cell is used to specify flags as described in
++    'Documentation/devicetree/bindings/gpio/gpio.txt'. Allowed values defined by
++    'include/dt-bindings/gpio/gpio.h' (e.g. GPIO_ACTIVE_LOW).
+ - gpio-controller : Marks the device node as a GPIO controller.
+ - reg : For an address on its bus. I2C uses this a the I2C address of the chip.
+         SPI uses this to specify the chipselect line which the chip is
+-- 
+2.17.0
