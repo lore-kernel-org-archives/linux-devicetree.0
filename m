@@ -1,7 +1,7 @@
 From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v2 5/6] powerpc:dts:pm: add power management node
-Date: Wed, 11 Apr 2018 14:35:50 +0800
-Message-ID: <20180411063551.30368-5-ran.wang_1@nxp.com>
+Subject: [PATCH v2 6/6] fsl_pmc: update device bindings
+Date: Wed, 11 Apr 2018 14:35:51 +0800
+Message-ID: <20180411063551.30368-6-ran.wang_1@nxp.com>
 References: <20180411063551.30368-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,382 +9,106 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180411063551.30368-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Scott Wood <oss@buserror.net>, Kumar Gala <galak@kernel.crashing.org>, Li Yang <leoyang.li@nxp.com>
-Cc: Zhao Chenhui <chenhui.zhao@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ran Wang <ran.wang_1@nxp.com>
+Cc: Zhao Chenhui <chenhui.zhao@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Li Yang <leoli@freescale.com>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable Power Management feature on device tree, including MPC8536,
-MPC8544, MPC8548, MPC8572, P1010, P1020, P1021, P1022, P2020, P2041,
-P3041, T104X, T1024.
+From: Li Yang <leoli@freescale.com>
 
-Signed-off-by: Zhao Chenhui <chenhui.zhao@freescale.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Zhao Chenhui <chenhui.zhao@nxp.com>
 Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
 Changes in v2:
-  - no change
+  - new file
 
- arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |   14 ++++++-
- arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    8 ++++
- arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    5 +++
- arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    5 +++
- arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    9 +++--
- arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |   14 +++++++
- arch/powerpc/boot/dts/fsl/pq3-power.dtsi      |   48 +++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t1024rdb.dts        |    2 +-
- arch/powerpc/boot/dts/fsl/t1040rdb.dts        |    2 +-
- arch/powerpc/boot/dts/fsl/t1042rdb.dts        |    2 +-
- arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts     |    2 +-
- 14 files changed, 108 insertions(+), 9 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+ .../devicetree/bindings/powerpc/fsl/pmc.txt        |   59 +++++++++++--------
+ 1 files changed, 34 insertions(+), 25 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-index 4193570..fba40a1 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-@@ -199,6 +199,10 @@
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt b/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
+index 07256b7..f1f749f 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
+@@ -9,15 +9,20 @@ Properties:
  
- /include/ "pq3-dma-0.dtsi"
- /include/ "pq3-etsec1-0.dtsi"
-+	enet0: ethernet@24000 {
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec1_clk>;
-+	};
- /include/ "pq3-etsec1-timer-0.dtsi"
- 
- 	usb@22000 {
-@@ -222,9 +226,10 @@
- 	};
- 
- /include/ "pq3-etsec1-2.dtsi"
--
--	ethernet@26000 {
-+	enet2: ethernet@26000 {
- 		cell-index = <1>;
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	usb@2b000 {
-@@ -249,4 +254,9 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
+   "fsl,mpc8548-pmc" should be listed for any chip whose PMC is
+   compatible.  "fsl,mpc8536-pmc" should also be listed for any chip
+-  whose PMC is compatible, and implies deep-sleep capability.
++  whose PMC is compatible, and implies deep-sleep capability and
++  wake on user defined packet(wakeup on ARP).
 +
-+/include/ "pq3-power.dtsi"
++  "fsl,p1022-pmc" should be listed for any chip whose PMC is
++  compatible, and implies lossless Ethernet capability during sleep.
+ 
+   "fsl,mpc8641d-pmc" should be listed for any chip whose PMC is
+   compatible; all statements below that apply to "fsl,mpc8548-pmc" also
+   apply to "fsl,mpc8641d-pmc".
+ 
+   Compatibility does not include bit assignments in SCCR/PMCDR/DEVDISR; these
+-  bit assignments are indicated via the sleep specifier in each device's
+-  sleep property.
++  bit assignments are indicated via the clock nodes.  Device which has a
++  controllable clock source should have a "fsl,pmc-handle" property pointing
++  to the clock node.
+ 
+ - reg: For devices compatible with "fsl,mpc8349-pmc", the first resource
+   is the PMC block, and the second resource is the Clock Configuration
+@@ -33,31 +38,35 @@ Properties:
+   this is a phandle to an "fsl,gtm" node on which timer 4 can be used as
+   a wakeup source from deep sleep.
+ 
+-Sleep specifiers:
++Clock nodes:
++The clock nodes are to describe the masks in PM controller registers for each
++soc clock.
++- fsl,pmcdr-mask: For "fsl,mpc8548-pmc"-compatible devices, the mask will be
++  ORed into PMCDR before suspend if the device using this clock is the wake-up
++  source and need to be running during low power mode; clear the mask if
++  otherwise.
+ 
+-  fsl,mpc8349-pmc: Sleep specifiers consist of one cell.  For each bit
+-  that is set in the cell, the corresponding bit in SCCR will be saved
+-  and cleared on suspend, and restored on resume.  This sleep controller
+-  supports disabling and resuming devices at any time.
++- fsl,sccr-mask: For "fsl,mpc8349-pmc"-compatible devices, the corresponding
++  bit specified by the mask in SCCR will be saved and cleared on suspend, and
++  restored on resume.
+ 
+-  fsl,mpc8536-pmc: Sleep specifiers consist of three cells, the third of
+-  which will be ORed into PMCDR upon suspend, and cleared from PMCDR
+-  upon resume.  The first two cells are as described for fsl,mpc8578-pmc.
+-  This sleep controller only supports disabling devices during system
+-  sleep, or permanently.
+-
+-  fsl,mpc8548-pmc: Sleep specifiers consist of one or two cells, the
+-  first of which will be ORed into DEVDISR (and the second into
+-  DEVDISR2, if present -- this cell should be zero or absent if the
+-  hardware does not have DEVDISR2) upon a request for permanent device
+-  disabling.  This sleep controller does not support configuring devices
+-  to disable during system sleep (unless supported by another compatible
+-  match), or dynamically.
++- fsl,devdisr-mask: Contain one or two cells, depending on the availability of
++  DEVDISR2 register.  For compatible devices, the mask will be ORed into DEVDISR
++  or DEVDISR2 when the clock should be permenently disabled.
+ 
+ Example:
+ 
+-	power@b00 {
+-		compatible = "fsl,mpc8313-pmc", "fsl,mpc8349-pmc";
+-		reg = <0xb00 0x100 0xa00 0x100>;
+-		interrupts = <80 8>;
 +	power@e0070 {
 +		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
-+	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-index b68eb11..ea7416a 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-@@ -188,4 +188,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
++		reg = <0xe0070 0x20>;
 +
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-index 579d76c..dddb737 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-@@ -156,4 +156,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
++		etsec1_clk: soc-clk@24 {
++			fsl,pmcdr-mask = <0x00000080>;
++		};
++		etsec2_clk: soc-clk@25 {
++			fsl,pmcdr-mask = <0x00000040>;
++		};
++		etsec3_clk: soc-clk@26 {
++			fsl,pmcdr-mask = <0x00000020>;
++		};
  	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-index 49294cf..40a6cff 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-@@ -193,4 +193,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-index 1b4aafc..47b62a8 100644
---- a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-@@ -173,6 +173,8 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
-+
- 		queue-group@b0000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -181,6 +183,8 @@
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
-+
- 		queue-group@b1000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -189,6 +193,8 @@
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
-+
- 		queue-group@b2000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -201,4 +207,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-index 642dc3a..cc4c746 100644
---- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-@@ -163,14 +163,17 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: enet2_grp2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -178,6 +181,8 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
- 
- /include/ "pq3-etsec2-grp2-0.dtsi"
-diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-index 407cb5f..378195d 100644
---- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-@@ -159,14 +159,17 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: enet2_grp2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -174,6 +177,8 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
- 
- &qe {
-diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-index 5f51b7b..6ac21e8 100644
---- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-@@ -225,11 +225,13 @@
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
- 		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
- 		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -238,9 +240,10 @@
- 		fsl,has-rstcr;
- 	};
- 
--	power@e0070{
--		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
--		reg = <0xe0070 0x20>;
-+/include/ "pq3-power.dtsi"
-+	power@e0070 {
-+		compatible = "fsl,p1022-pmc", "fsl,mpc8536-pmc",
-+				"fsl,mpc8548-pmc";
- 	};
- 
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-index 884e01b..2c4787c 100644
---- a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-@@ -175,6 +175,10 @@
- 		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
- 	};
- /include/ "pq3-etsec1-0.dtsi"
-+	enet0: ethernet@24000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
-+
-+	};
- /include/ "pq3-etsec1-timer-0.dtsi"
- 
- 	ptp_clock@24e00 {
-@@ -183,7 +187,15 @@
- 
- 
- /include/ "pq3-etsec1-1.dtsi"
-+	enet1: ethernet@25000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
-+	};
-+
- /include/ "pq3-etsec1-2.dtsi"
-+	enet2: ethernet@26000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
-+	};
-+
- /include/ "pq3-esdhc-0.dtsi"
- 	sdhc@2e000 {
- 		compatible = "fsl,p2020-esdhc", "fsl,esdhc";
-@@ -198,4 +210,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/pq3-power.dtsi b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
-new file mode 100644
-index 0000000..5a760b3
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
-@@ -0,0 +1,48 @@
-+/*
-+ * PQ3 Power Management device tree stub
-+ *
-+ * Copyright 2012-2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+power@e0070 {
-+	compatible = "fsl,mpc8548-pmc";
-+	reg = <0xe0070 0x20>;
-+
-+	etsec1_clk: soc-clk@24 {
-+		fsl,pmcdr-mask = <0x00000080>;
-+	};
-+	etsec2_clk: soc-clk@25 {
-+		fsl,pmcdr-mask = <0x00000040>;
-+	};
-+	etsec3_clk: soc-clk@26 {
-+		fsl,pmcdr-mask = <0x00000020>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-index 73a6453..95fc694 100644
---- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-@@ -91,7 +91,7 @@
- 		board-control@2,0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "fsl,t1024-cpld";
-+			compatible = "fsl,t1024-cpld", "fsl,deepsleep-cpld";
- 			reg = <3 0 0x300>;
- 			ranges = <0 3 0 0x300>;
- 			bank-width = <1>;
-diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-index 65ff34c..825665c 100644
---- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-@@ -70,7 +70,7 @@
- 
- 	ifc: localbus@ffe124000 {
- 		cpld@3,0 {
--			compatible = "fsl,t1040rdb-cpld";
-+			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb.dts b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
-index 3ebb712..0997643 100644
---- a/arch/powerpc/boot/dts/fsl/t1042rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1042rdb.dts
-@@ -68,7 +68,7 @@
- 
- 	ifc: localbus@ffe124000 {
- 		cpld@3,0 {
--			compatible = "fsl,t1042rdb-cpld";
-+			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
-index 8ec3ff4..b10cab1 100644
---- a/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1042rdb_pi.dts
-@@ -41,7 +41,7 @@
- 
- 	ifc: localbus@ffe124000 {
- 		cpld@3,0 {
--			compatible = "fsl,t1042rdb_pi-cpld";
-+			compatible = "fsl,t104xrdb-cpld", "fsl,deepsleep-cpld";
- 		};
- 	};
- 
 -- 
 1.7.1
