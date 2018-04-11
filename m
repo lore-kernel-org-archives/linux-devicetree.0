@@ -1,7 +1,7 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 1/2] dt-bindings: iio: afe: add binding for adi,lt6106
-Date: Wed, 11 Apr 2018 16:15:54 +0200
-Message-ID: <20180411141555.15044-2-peda@axentia.se>
+Subject: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Wed, 11 Apr 2018 16:15:55 +0200
+Message-ID: <20180411141555.15044-3-peda@axentia.se>
 References: <20180410152802.30958-1-peda@axentia.se>
  <20180411141555.15044-1-peda@axentia.se>
 Mime-Version: 1.0
@@ -17,78 +17,107 @@ This is a current sense amplifier from Analog Devices.
 
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../devicetree/bindings/iio/afe/adi,lt6106.txt     | 50 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+ drivers/iio/afe/Kconfig              |  3 +-
+ drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt b/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
-new file mode 100644
-index 000000000000..98b6d93596f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
-@@ -0,0 +1,50 @@
-+LT6106 36V High Side Current Sence Amplifier
-+============================================
+diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+index 642ce4eb12a6..0e10fe8f459a 100644
+--- a/drivers/iio/afe/Kconfig
++++ b/drivers/iio/afe/Kconfig
+@@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+ 	depends on OF || COMPILE_TEST
+ 	help
+ 	  Say yes here to build support for the IIO unit converter
+-	  that handles voltage dividers and current sense shunts.
++	  that handles voltage dividers, current sense shunts and
++	  the LT6106 Current Sense Amplifier from Analog Devices.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called iio-unit-converter.
+diff --git a/drivers/iio/afe/iio-unit-converter.c b/drivers/iio/afe/iio-unit-converter.c
+index fc50290d7e5e..4b0ae5ab9c2d 100644
+--- a/drivers/iio/afe/iio-unit-converter.c
++++ b/drivers/iio/afe/iio-unit-converter.c
+@@ -144,6 +144,53 @@ static int unit_converter_configure_channel(struct device *dev,
+ 	return 0;
+ }
+ 
++static int unit_converter_adi_lt6106_props(struct device *dev,
++					   struct unit_converter *uc)
++{
++	u32 sense;
++	u32 rin;
++	u32 rout;
++	u32 factor;
++	int ret;
 +
-+This binding assumes the typical application of the current sense amplifier
-+as described in the LT6106 datasheet.
++	ret = device_property_read_u32(dev, "sense-resistor-micro-ohms",
++				       &sense);
++	if (ret) {
++		dev_err(dev, "failed to read the sense resistance: %d\n", ret);
++		return ret;
++	}
 +
-+http://www.analog.com/media/en/technical-documentation/data-sheets/6106fb.pdf
++	ret = device_property_read_u32(dev, "input-resistor-ohms", &rin);
++	if (ret) {
++		dev_err(dev, "failed to read the input resistance: %d\n", ret);
++		return ret;
++	}
 +
-+                                             .------.
-+    Vin --------------------+--------------+-|Rsense|-+-----.
-+                            |              | '------' |     |
-+                            |              |          |   .---.
-+                 .--------------------.  .---.        |   | L |
-+                 |          V+        |  |Rin|        |   | O |
-+                 |                    |  '---'        |   | A |
-+                 |                    |    |          |   | D |
-+                 |                -IN |----'          |   '---'
-+    Vout ---+----| OUT   LT6106       |               |     |
-+            |    |                +IN |---------------'    GND
-+         .----.  |                    |
-+         |Rout|  |                    |
-+         '----'  |          V-        |
-+            |    '--------------------'
-+            |               |
-+           GND             GND
++	ret = device_property_read_u32(dev, "output-resistor-ohms", &rout);
++	if (ret) {
++		dev_err(dev, "failed to read the output resistance: %d\n", ret);
++		return ret;
++	}
 +
-+The voltage Vsense over Rsense is measured by looking at Vout. They
-+are related as Vout = Vsense * Rout / Rin. The current Isense through
-+Rsense is (almost) the same as that through the LOAD. Hence, the
-+interesting LOAD current can be calculated as
++	/*
++	 * Calculate the scaling factor, rin / (rout * sense), while trying
++	 * to keep the fraction from overflowing.
++	 */
++	factor = gcd(sense, 1000000);
++	uc->numerator = 1000000 / factor;
++	uc->denominator = sense / factor;
 +
-+                 Vout * Rin / (Rout * Rsense)
++	factor = gcd(uc->numerator, rout);
++	uc->numerator /= factor;
++	uc->denominator *= rout / factor;
 +
-+Required properties:
-+- compatible : "adi,lt6106"
-+- io-channels : Channel node of an io-channel measuring Vout.
-+- sense-resistor-micro-ohms : The Rsense resistance in microohms.
-+- input-resistor-ohms : The Rin resistance in ohms.
-+- output-resistor-ohms : The Rout resistance in ohms.
++	factor = gcd(uc->denominator, rin);
++	uc->numerator *= rin / factor;
++	uc->denominator /= factor;
 +
-+Example:
++	return 0;
++}
 +
-+sysi {
-+	compatible = "adi,lt6106";
-+	io-channels = <&tiadc 0>;
-+
-+	sense-resistor-micro-ohms = <20000>;
-+	input-resistor-ohms = <200>;
-+	output-resistor-ohms = <10000>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 21368749f3b0..76d1e03f350a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6893,6 +6893,7 @@ IIO UNIT CONVERTER
- M:	Peter Rosin <peda@axentia.se>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
- F:	Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
- F:	Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
- F:	drivers/iio/afe/iio-unit-converter.c
+ static int unit_converter_current_sense_shunt_props(struct device *dev,
+ 						    struct unit_converter *uc)
+ {
+@@ -175,11 +222,16 @@ static int unit_converter_voltage_divider_props(struct device *dev,
+ }
+ 
+ enum unit_converter_variant {
++	ADI_LT6106,
+ 	CURRENT_SENSE_SHUNT,
+ 	VOLTAGE_DIVIDER,
+ };
+ 
+ static const struct unit_converter_cfg unit_converter_cfg[] = {
++	[ADI_LT6106] = {
++		.type = IIO_CURRENT,
++		.props = unit_converter_adi_lt6106_props,
++	},
+ 	[CURRENT_SENSE_SHUNT] = {
+ 		.type = IIO_CURRENT,
+ 		.props = unit_converter_current_sense_shunt_props,
+@@ -191,6 +243,8 @@ static const struct unit_converter_cfg unit_converter_cfg[] = {
+ };
+ 
+ static const struct of_device_id unit_converter_match[] = {
++	{ .compatible = "adi,lt6106",
++	  .data = &unit_converter_cfg[ADI_LT6106], },
+ 	{ .compatible = "current-sense-shunt",
+ 	  .data = &unit_converter_cfg[CURRENT_SENSE_SHUNT], },
+ 	{ .compatible = "voltage-divider",
 -- 
 2.11.0
