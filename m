@@ -1,152 +1,131 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN92
-Date: Thu, 12 Apr 2018 01:12:13 +0200
-Message-ID: <e2c0a2c9442f1563865aaab310e066a18d425793.camel@paulk.fr>
+From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+Subject: Re: Re: [PATCH 2/3] ARM: dts: sun7i: Add RGB666 pins definition
+Date: Thu, 12 Apr 2018 01:19:54 +0200
+Message-ID: <1f71f768-2c3d-a241-a368-e55f4677a279@micronovasrl.com>
 References: <20180410213129.24049-1-contact@paulk.fr>
- <20180411062835.oqzd34e2szrnv34b@flea>
+ <20180410213129.24049-2-contact@paulk.fr>
+ <e7f68882-c333-12ac-c122-20b0d7b65666@micronovasrl.com>
+ <588060914d3b6899f6812daa4969f61bf750c91b.camel@paulk.fr>
+Reply-To: giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1697068732=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180411062835.oqzd34e2szrnv34b@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
-List-Id: devicetree@vger.kernel.org
-
-
---===============1697068732==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-Rrf1dUj1vrQz5d/Oqhue"
-
-
---=-Rrf1dUj1vrQz5d/Oqhue
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV5B5VKVYCRBKNQXLLAKGQEEQS4CBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <588060914d3b6899f6812daa4969f61bf750c91b.camel-W9ppeneeCTY@public.gmane.org>
+Content-Language: it
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Le mercredi 11 avril 2018 =C3=A0 08:28 +0200, Maxime Ripard a =C3=A9crit :
-> On Tue, Apr 10, 2018 at 11:31:27PM +0200, Paul Kocialkowski wrote:
-> > This adds timings for the RGB666 variant of the Innolux AT070TN92
-> > panel,
-> > as found on the Ainol AW1 tablet.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 26
-> > ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >=20
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > b/drivers/gpu/drm/panel/panel-simple.c
-> > index 5591984a392b..efeb2f2162bc 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -1063,6 +1063,29 @@ static const struct panel_desc
-> > innolux_at070tn92 =3D {
-> >  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
-> >  };
-> > =20
-> > +static const struct drm_display_mode innolux_at070tn92_rgb666_mode
-> > =3D {
-> > +	.clock =3D 40000,
-> > +	.hdisplay =3D 800,
-> > +	.hsync_start =3D 800 + 112,
-> > +	.hsync_end =3D 800 + 112 + 1,
-> > +	.htotal =3D 800 + 112 + 1 + 87,
-> > +	.vdisplay =3D 480,
-> > +	.vsync_start =3D 480 + 141,
-> > +	.vsync_end =3D 480 + 141 + 1,
-> > +	.vtotal =3D 480 + 141 + 1 + 38,
-> > +	.vrefresh =3D 60,
-> > +};
+Il 12/04/2018 01:09, Paul Kocialkowski ha scritto:
+> Hi,
 >=20
-> I'm not sure why you'd need different timings if the only difference
-> is the bus width.
-
-I'll try with the other timings, although it might be desirable to have
-a higher clock speed thanks to the reduced number of wires on the bus.
-
-> > +static const struct panel_desc innolux_at070tn92_rgb666 =3D {
-> > +	.modes =3D &innolux_at070tn92_rgb666_mode,
-> > +	.num_modes =3D 1,
-> > +	.size =3D {
-> > +		.width =3D 154,
-> > +		.height =3D 86,
-> > +	},
-> > +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
-> > +};
-> > +
-> >  static const struct display_timing innolux_g101ice_l01_timing =3D {
-> >  	.pixelclock =3D { 60400000, 71100000, 74700000 },
-> >  	.hactive =3D { 1280, 1280, 1280 },
-> > @@ -2105,6 +2128,9 @@ static const struct of_device_id
-> > platform_of_match[] =3D {
-> >  	}, {
-> >  		.compatible =3D "innolux,at070tn92",
-> >  		.data =3D &innolux_at070tn92,
-> > +	}, {
-> > +		.compatible =3D "innolux,at070tn92-rgb666",
-> > +		.data =3D &innolux_at070tn92_rgb666,
+> Le jeudi 12 avril 2018 =C3=A0 00:22 +0200, Giulio Benetti a =C3=A9crit :
+>> Hi,
+>>
+>> Il 10/04/2018 23:31, Paul Kocialkowski ha scritto:
+>>> This adds the pins definition for RGB666 LCD panels on the A20. It
+>>> was
+>>> imported from the A33 definition, that concernes the same set of
+>>> pins.
+>>>
+>>> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+>>> ---
+>>>    arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
+>>>    1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> index e529e4ff2174..f46af8675cfa 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> @@ -781,6 +781,14 @@
+>>>    				function =3D "ir1";
+>>>    			};
+>>>   =20
+>>> +			lcd_rgb666_pins: lcd_rgb666@0 {
+>>
+>> I point you to this Thread and back:
+>> https://lists.freedesktop.org/archives/dri-devel/2018-March/170688.htm
+>> l
+>>
+>> I did the same for rgb888, so good part is discussed.
+>>
+>> IMHO I would:
+>> - call lcd0_rgb666_pins, since this is for LCD0 interface
+>> - same as above, call lcd0-rgb666, take care about using "-" instad
+>> of
+>> "_" that can cause DTC warnings.
+>> - remove @0 since only this set can achieve LCD0 RGB666, and I
+>>     don't think there will be other combinations.
 >=20
-> And this isn't a different device, it's just the integration in the
-> board that is different, so you shouldn't have a different compatible
-> here, but rather something like the bus-width property documented in
-> the Documentation/devicetree/bindings/media/video-interfaces.txt file.
+> I even responded to that discussion but overlooked these aspects when
+> crafting this patch. Thanks for the summary :)
 
-I'll take a look at it and try to craft v2 in this direction then.
+You're welcome, I've forgotten you've been involved discussing
+that patch so i've pointed you something yours :)
+Anyway it should help.
 
-Thanks for the review!
+Best regards
 
 --=20
-Paul Kocialkowski,
+Giulio Benetti
+CTO
 
-developer of free digital technology and hardware support.
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale =E2=82=AC 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
 
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
---=-Rrf1dUj1vrQz5d/Oqhue
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+>=20
+>> Kind regards
+>>
+>> --=20
+>> Giulio Benetti
+>> CTO
+>>
+>> MICRONOVA SRL
+>> Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+>> Tel. 049/8931563 - Fax 049/8931346
+>> Cod.Fiscale - P.IVA 02663420285
+>> Capitale Sociale =E2=82=AC 26.000 i.v.
+>> Iscritta al Reg. Imprese di Padova N. 02663420285
+>> Numero R.E.A. 258642
+>>
+>>
+>>> +				pins =3D "PD2", "PD3", "PD4", "PD5",
+>>> "PD6", "PD7",
+>>> +				       "PD10", "PD11", "PD12",
+>>> "PD13", "PD14", "PD15",
+>>> +				       "PD18", "PD19", "PD20",
+>>> "PD21", "PD22", "PD23",
+>>> +				       "PD24", "PD25", "PD26",
+>>> "PD27";
+>>> +				function =3D "lcd0";
+>>> +			};
+>>> +
+>>>    			mmc0_pins_a: mmc0@0 {
+>>>    				pins =3D "PF0", "PF1", "PF2",
+>>>    				       "PF3", "PF4", "PF5";
+>>>
+>>
+>>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrOlk0ACgkQhP3B6o/u
-lQyr8w//WAJaArvsaQW2UvNJA7txzcUdH79ZKSzuKuB/PDrdX2VnLBr63zRStEcL
-sp0brTzcXJb3fpiDjncHAyHinmE4LvaWgQpx0wqHEFvcLX//SsgCZ23lCV/3e/u2
-IaWw6PS5qUGVMf5B2iSDWtAAWEU49dkqnN80AUYxh4Qwg0sDV0BBVbw+cTdY+1Di
-LX/dCsYZHtebsEVf3/UQSj4lgg2ToVJBnb/u+cQQtnXTnzZ/1I4HIlbC0ioprjhS
-hPB99AmfzavwTsBU/D8ixtS8e1WorL+KHQHbqo6ZdMPqwj93KTlaQ29LobRQKl1q
-sp6emm/IFK5EI/e2n8zzVUeAs1UtCsMan/LmuuERIl9ee+GpX0hgLPWC7JPV2hwi
-I73/qJotvoIuGlRPVL8bmoyjbyGLR2BpGbk7AwLHTQdr5P/jFMQcUbiWAa/wkqh5
-dZCsB767Dg+YaRvfo+4bQX2FayklveMODaqzn7uKKpdkp8VmtatWCckhqQWUpVYC
-JHdHy7fo6WPui3d853xR/LjMBVGrwxnDO7ByPPpXevv0RC3zkWKcDzrZ4N2bJTp1
-u6G0C2hO/7ZWsiE87WGSVBqmEktb/Wmr+af4iG//DBKdEJimzdoht9Zv6omYLUah
-wrSjZqhdSh2azmzb/ZNFq8EKiTMRVqimSaXbfp/YV1V2N6UE/o8=
-=STx8
------END PGP SIGNATURE-----
-
---=-Rrf1dUj1vrQz5d/Oqhue--
-
-
---===============1697068732==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1697068732==--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
