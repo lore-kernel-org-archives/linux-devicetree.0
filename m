@@ -1,79 +1,88 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] vfio: platform: Add generic DT reset controller support
-Date: Wed, 11 Apr 2018 10:43:14 +0200
-Message-ID: <CAMuHMdXM2GHxE197BNpTjWx+zq_gAbxWzFO5Mnv9SnRA-L-utw@mail.gmail.com>
-References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
- <1523375627-23746-3-git-send-email-geert+renesas@glider.be> <1523434945.4739.1.camel@pengutronix.de>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 00/12] refactor dts and add support for more boards
+Date: Wed, 11 Apr 2018 16:53:53 +0800
+Message-ID: <cover.1523434757.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523434945.4739.1.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+From: Sean Wang <sean.wang@mediatek.com>
 
-On Wed, Apr 11, 2018 at 10:22 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Tue, 2018-04-10 at 17:53 +0200, Geert Uytterhoeven wrote:
->> Vfio-platform requires reset support, provided either by ACPI, or, on DT
->> platforms, by a device-specific reset driver matching against the
->> device's compatible value.
->>
->> On many SoCs, devices are connected to an SoC-internal reset controller.
->> If the reset hierarchy is described in DT using "resets" properties,
->> such devices can be reset in a generic way through the reset controller
->> subsystem.  Hence add support for this, avoiding the need to write
->> device-specific reset drivers for each single device on affected SoCs.
->>
->> Devices that do require a more complex reset procedure can still provide
->> a device-specific reset driver, as that takes precedence.
->>
->> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
->> becomes a no-op (as in: "No reset function found for device") if reset
->> controller support is disabled.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Changes since v1:
+- Dropped several patches which have been merged.
+- Rebased to linux-next-20180410 where those dependent patches including
+  [1] and [2] all have been got merged.
+- Revised according to suggestions and comments on v1, where the major work is
+  to put board-specific nodes into DTS files and to leave the common nodes
+  among boards in DTSI files as done in patch 7,9,10,11 and 12.
+- Merged Ryder Lee's patch for update audio nodes reflecting the latest
+  bindings.
+- Revised commit message.
 
-Thanks!
+The series is to refactor current .dts for allowing more boards can properly
+join and reuse almost the same device node definitions.
 
->> --- a/drivers/vfio/platform/vfio_platform_common.c
->> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> [...]
->> @@ -127,8 +136,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->>               vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->>                                                       &vdev->reset_module);
->>       }
->> +     if (vdev->of_reset)
->> +             return 0;
->> +
->> +     rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
->
-> If vdev->device->of_node == NULL, this will return -EINVAL ...
->
->> +     if (!IS_ERR(rstc)) {
->> +             vdev->reset_control = rstc;
->> +             return 0;
->> +     }
->>
->> -     return vdev->of_reset ? 0 : -ENOENT;
->> +     return PTR_ERR(rstc);
->
-> ... instead of -ENOENT, if that makes any difference.
+Before we're doing that, some works about enhancements and fixups are being
+made on the dt-binding document and .dts files. In addition, the series has to
+depend on the patch [1][2]. Otherwise, certain build failure would have an
+occurrence.
 
-Not really. The single caller (vfio_platform_probe_common()) already returns
--EINVAL if no IOMMU group is found, so this should be handled fine.
+[1] arm: dts: mt7623: add PCIe related nodes
+http://lists.infradead.org/pipermail/linux-mediatek/2018-February/012053.html
 
-Gr{oetje,eeting}s,
+[2] dt-bindings: soc: add header files required for MT7623A SCPSYS dt-binding
+http://lists.infradead.org/pipermail/linux-mediatek/2018-February/011930.html
 
-                        Geert
+Ryder Lee (1):
+  arm: dts: mediatek: modify audio related nodes for both MT2701 and
+    MT7623
+
+Sean Wang (11):
+  dt-bindings: cpufreq: mediatek: use - instead of _ in examples
+  arm: dts: mediatek: converted to using SPDX identifiers
+  arm: dts: mt7623: fix invalid memory node being generated
+  arm: dts: mt7623: fix available memory size on bananapi-r2
+  arm: dts: mt7623: fix all Warnings (unit_address_vs_reg)
+  arm: dts: mt7623: add BTIF, HSDMA and SPI-NOR device nodes
+  arm: dts: mt6323: move node mt6323 leds to mt6323.dtsi
+  arm: dts: mt7623: extend common file reused by all boards with MT7623
+    SoCs
+  arm: dts: mt7623: add MT7623A SoC level DTS
+  arm: dts: mt7623: add MT7623A reference boards
+  arm: dts: mt7623: add MT7623N reference board with eMMC
+
+ .../bindings/cpufreq/cpufreq-mediatek.txt          |   6 +-
+ arch/arm/boot/dts/Makefile                         |   3 +
+ arch/arm/boot/dts/mt2701-evb.dts                   |   9 +-
+ arch/arm/boot/dts/mt2701.dtsi                      | 197 ++++----
+ arch/arm/boot/dts/mt6323.dtsi                      |  17 +-
+ arch/arm/boot/dts/mt6580-evbp1.dts                 |   9 +-
+ arch/arm/boot/dts/mt6580.dtsi                      |   9 +-
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |  10 +-
+ arch/arm/boot/dts/mt6589.dtsi                      |  12 +-
+ arch/arm/boot/dts/mt6592-evb.dts                   |   9 +-
+ arch/arm/boot/dts/mt6592.dtsi                      |   9 +-
+ arch/arm/boot/dts/mt7623.dtsi                      | 537 ++++++++++++++++-----
+ arch/arm/boot/dts/mt7623a-rfb-emmc.dts             | 291 +++++++++++
+ arch/arm/boot/dts/mt7623a-rfb-nand.dts             | 337 +++++++++++++
+ arch/arm/boot/dts/mt7623a.dtsi                     |  44 ++
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 279 ++---------
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts             | 326 +++++++++++++
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts             |  40 +-
+ arch/arm/boot/dts/mt7623n-rfb.dtsi                 |  12 +-
+ arch/arm/boot/dts/mt8127-moose.dts                 |   9 +-
+ arch/arm/boot/dts/mt8127.dtsi                      |   9 +-
+ arch/arm/boot/dts/mt8135-evbp1.dts                 |   9 +-
+ arch/arm/boot/dts/mt8135.dtsi                      |   9 +-
+ 23 files changed, 1576 insertions(+), 616 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+ create mode 100644 arch/arm/boot/dts/mt7623a-rfb-nand.dts
+ create mode 100644 arch/arm/boot/dts/mt7623a.dtsi
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb-emmc.dts
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
