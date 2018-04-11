@@ -1,218 +1,63 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 05/12] arm: dts: mt7623: fix all Warnings
- (unit_address_vs_reg)
-Date: Wed, 11 Apr 2018 16:53:58 +0800
-Message-ID: <9b5b74f9847d024c05b5d485c967c8b9c8eec561.1523434758.git.sean.wang@mediatek.com>
-References: <cover.1523434757.git.sean.wang@mediatek.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 4/5] soc/tegra: pmc: Use of_clk_get_parent_count()
+ instead of open coding
+Date: Wed, 11 Apr 2018 10:07:47 +0100
+Message-ID: <a96706de-f680-7ef2-53fd-d2cf07b6061b@nvidia.com>
+References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
+ <1523364701-15383-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1523434757.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523364701-15383-5-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
 
-Fix below a lot of Warnings (unit_address_vs_reg) that dtc complains so
-much for
+On 10/04/18 13:51, Geert Uytterhoeven wrote:
+> As of_clk_get_parent_count() returns zero on failure, while
+> of_count_phandle_with_args() might return a negative error code, this
+> also fixes the issue of possibly using a very big number in the
+> allocation below.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This depends on "[PATCH v2 1/5] clk: Extract OF clock helpers in
+> <linux/of_clk.h>".
+> 
+> v2:
+>   - of_clk_get_parent_count() was moved to <linux/of_clk.h>.
+> ---
+>  drivers/soc/tegra/pmc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index d9fcdb592b3966a5..d8cb48a4b8eb1b78 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+> @@ -725,7 +726,7 @@ static int tegra_powergate_of_get_clks(struct tegra_powergate *pg,
+>  	unsigned int i, count;
+>  	int err;
+>  
+> -	count = of_count_phandle_with_args(np, "clocks", "#clock-cells");
+> +	count = of_clk_get_parent_count(np);
+>  	if (count == 0)
+>  		return -ENODEV;
+>  
+> 
 
-Node /oscillator@1 has a unit name, but no reg property
-Node /oscillator@0 has a unit name, but no reg property
-Node /pinctrl@10005000/cir@0 has a unit name, but no reg property
-Node /pinctrl@10005000/i2c@0 has a unit name, but no reg property
-Node /pinctrl@10005000/i2c@1 has a unit name, but no reg property
-Node /pinctrl@10005000/i2s@0 has a unit name, but no reg property
-Node /pinctrl@10005000/i2s@1 has a unit name, but no reg property
-Node /pinctrl@10005000/keys@0 has a unit name, but no reg property
-Node /pinctrl@10005000/leds@0 has a unit name, but no reg property
-Node /pinctrl@10005000/pwm@0 has a unit name, but no reg property
-Node /pinctrl@10005000/spi@0 has a unit name, but no reg property
-Node /pinctrl@10005000/uart@0 has a unit name, but no reg property
-Node /pinctrl@10005000/uart@1 has a unit name, but no reg property
-Node /pinctrl@10005000/uart@2 has a unit name, but no reg property
-Node /ethernet@1b100000/mdio-bus/switch@0/ports has a reg or ranges
-property, but no unit name
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/mt7623.dtsi                 |  4 ++--
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 27 ++++++++++++---------------
- arch/arm/boot/dts/mt7623n-rfb.dtsi            |  2 +-
- 3 files changed, 15 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 406a9f3..b9b5619 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -124,14 +124,14 @@
- 		#clock-cells = <0>;
- 	};
- 
--	rtc32k: oscillator@1 {
-+	rtc32k: oscillator-1 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <32000>;
- 		clock-output-names = "rtc32k";
- 	};
- 
--	clk26m: oscillator@0 {
-+	clk26m: oscillator-0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index d2a354e..71023a6 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -145,8 +145,6 @@
- 
- 		switch@0 {
- 			compatible = "mediatek,mt7530";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0>;
- 			reset-gpios = <&pio 33 0>;
- 			core-supply = <&mt6323_vpa_reg>;
-@@ -155,7 +153,6 @@
- 			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				reg = <0>;
- 
- 				port@0 {
- 					reg = <0>;
-@@ -259,14 +256,14 @@
- };
- 
- &pio {
--	cir_pins_a:cir@0 {
-+	cir_pins_a:cir-default {
- 		pins-cir {
- 			pinmux = <MT7623_PIN_46_IR_FUNC_IR>;
- 			bias-disable;
- 		};
- 	};
- 
--	i2c0_pins_a: i2c@0 {
-+	i2c0_pins_a: i2c0-default {
- 		pins-i2c0 {
- 			pinmux = <MT7623_PIN_75_SDA0_FUNC_SDA0>,
- 				 <MT7623_PIN_76_SCL0_FUNC_SCL0>;
-@@ -274,7 +271,7 @@
- 		};
- 	};
- 
--	i2c1_pins_a: i2c@1 {
-+	i2c1_pins_a: i2c1-default {
- 		pin-i2c1 {
- 			pinmux = <MT7623_PIN_57_SDA1_FUNC_SDA1>,
- 				 <MT7623_PIN_58_SCL1_FUNC_SCL1>;
-@@ -282,7 +279,7 @@
- 		};
- 	};
- 
--	i2s0_pins_a: i2s@0 {
-+	i2s0_pins_a: i2s0-default {
- 		pin-i2s0 {
- 			pinmux = <MT7623_PIN_49_I2S0_DATA_FUNC_I2S0_DATA>,
- 				 <MT7623_PIN_72_I2S0_DATA_IN_FUNC_I2S0_DATA_IN>,
-@@ -294,7 +291,7 @@
- 		};
- 	};
- 
--	i2s1_pins_a: i2s@1 {
-+	i2s1_pins_a: i2s1-default {
- 		pin-i2s1 {
- 			pinmux = <MT7623_PIN_33_I2S1_DATA_FUNC_I2S1_DATA>,
- 				 <MT7623_PIN_34_I2S1_DATA_IN_FUNC_I2S1_DATA_IN>,
-@@ -306,7 +303,7 @@
- 		};
- 	};
- 
--	key_pins_a: keys@0 {
-+	key_pins_a: keys-alt {
- 		pins-keys {
- 			pinmux = <MT7623_PIN_256_GPIO256_FUNC_GPIO256>,
- 				 <MT7623_PIN_257_GPIO257_FUNC_GPIO257> ;
-@@ -314,7 +311,7 @@
- 		};
- 	};
- 
--	led_pins_a: leds@0 {
-+	led_pins_a: leds-alt {
- 		pins-leds {
- 			pinmux = <MT7623_PIN_239_EXT_SDIO0_FUNC_GPIO239>,
- 				 <MT7623_PIN_240_EXT_XCS_FUNC_GPIO240>,
-@@ -433,7 +430,7 @@
- 		};
- 	};
- 
--	pwm_pins_a: pwm@0 {
-+	pwm_pins_a: pwm-default {
- 		pins-pwm {
- 			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
- 				 <MT7623_PIN_204_PWM1_FUNC_PWM1>,
-@@ -443,7 +440,7 @@
- 		};
- 	};
- 
--	spi0_pins_a: spi@0 {
-+	spi0_pins_a: spi0-default {
- 		pins-spi {
- 			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
- 				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
-@@ -453,21 +450,21 @@
- 		};
- 	};
- 
--	uart0_pins_a: uart@0 {
-+	uart0_pins_a: uart0-default {
- 		pins-dat {
- 			pinmux = <MT7623_PIN_79_URXD0_FUNC_URXD0>,
- 				 <MT7623_PIN_80_UTXD0_FUNC_UTXD0>;
- 		};
- 	};
- 
--	uart1_pins_a: uart@1 {
-+	uart1_pins_a: uart1-default {
- 		pins-dat {
- 			pinmux = <MT7623_PIN_81_URXD1_FUNC_URXD1>,
- 				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
- 		};
- 	};
- 
--	uart2_pins_a: uart@2 {
-+	uart2_pins_a: uart2-default {
- 		pins-dat {
- 			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
- 				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
-diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-index 343e8ef..5c5cc7d 100644
---- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -44,7 +44,7 @@
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
- 
--	usb_p1_vbus: regulator@0 {
-+	usb_p1_vbus: regulator-5v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_vbus";
- 		regulator-min-microvolt = <5000000>;
--- 
-2.7.4
+Cheers
+Jon
