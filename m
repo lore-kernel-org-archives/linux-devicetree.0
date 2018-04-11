@@ -1,114 +1,65 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
- SoCs
-Date: Wed, 11 Apr 2018 08:29:04 -0700
-Message-ID: <152346054406.180276.4468371342222361883@swboyd.mtv.corp.google.com>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
- <20180405161834.3850-3-ilina@codeaurora.org>
- <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
- <20180409160800.GC19682@codeaurora.org>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 0/2] iio: add unit converter
+Date: Wed, 11 Apr 2018 10:34:40 -0500
+Message-ID: <fe90dc62-ef2b-d999-6841-2d9d5943654c@ti.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180409160800.GC19682@codeaurora.org>
+In-Reply-To: <20180411141555.15044-1-peda@axentia.se>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2018-04-09 09:08:00)
-> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
-> >Quoting Lina Iyer (2018-04-05 09:18:26)
-> >> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b=
-/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> >> new file mode 100644
-> >> index 000000000000..dcf71a5b302f
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> >> @@ -0,0 +1,127 @@
-> >> +
-> >> +Example 1:
-> >> +
-> >> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id =
-of 2, the
-> >> +register offsets for DRV2 start at 0D00, the register calculations ar=
-e like
-> >> +this -
-> >> +First tuple: 0x179C0000 + 0x10000 * 2 =3D 0x179E0000
-> >> +Second tuple: 0x179E0000 + 0xD00 =3D 0x179E0D00
-> >> +
-> >> +       apps_rsc: rsc@179e000 {
-> >> +               label =3D "apps_rsc";
-> >> +               compatible =3D "qcom,rpmh-rsc";
-> >> +               reg =3D <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-> >
-> >The first reg property overlaps the second one. Does this second one
-> >ever move around? I would hardcode it in the driver to be 0xd00 away
-> >from the drv base instead of specifying it in DT if it's the same all
-> >the time.
-> >
-> >Also, the example shows 0x179c0000 which I guess is the actual beginning
-> >of the RSC block. So the binding seems to be for one DRV inside of an
-> >RSC. Can we get the full description of the RSC in the binding instead?
-> >I imagine that means there's a DRV0,1,2 and those probably have an
-> >interrupt per each DRV and then a different TCS config per each one too?
-> >If the binding can describe all of the RSC then we can use different
-> >DRVs by changing the qcom,drv-id property.
-> >
-> >       rsc@179c0000 {
-> >               compatible =3D "qcom,rpmh-rsc";
-> >               reg =3D <0x179c0000 0x10000>,
-> >                     <0x179d0000 0x10000>,
-> >                     <0x179e0000 0x10000>;
-> >               qcom,tcs-offset =3D <0xd00>;
-> >               qcom,drv-id =3D <0/1/2>;
-> >               interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> >                            <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> >                            <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> >       }
-> >
-> >This is sort of what I imagine it would look like. I have no idea how
-> >the tcs config would work unless each DRV has the same TCS config
-> >though. Otherwise, if each node is for a drv, then I would expect the
-> >node would be called 'drv' and we wouldn't need the drv-id property and
-> >the compatible string would say drv instead of rsc?
-> >
-> >BTW, what are the other DRVs used for in the apps RSC?
-> >
-> The DRV is the voter for an execution environment (Linux, Hypervisor,
-> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
-> privy to. They are access restricted.
+On 04/11/2018 09:15 AM, Peter Rosin wrote:
+> Hi!
+> 
+> I'm now following up with one more binding for the unit-converter.
+> This time with a real IC, namely LT6106 from Analog Devices.
 
-Alright. Well sometimes access restrictions aren't there, so this isn't
-a good assumption to make.
+This makes more sense to me, I wasn't thinking about more complex ICs
+like this when I made my "resistor being part of the sensing device"
+argument.
 
-> The memory organization of the RSC
-> mandates that we know the DRV id to access registers specific to the
-> DRV.
+I can see how having a new node will probably be needed. It just seems
+strange to ask a resistor for its current, although it is the "device"
+that "knows" how much current if flowing though it..
 
-I think qcom,drv-id covers that, no?
+A case I'm more familiar with, fuel gauges, we have a gauge device that
+has a handle to the battery it is gauging [0], we still ask the
+"fuel-gauge" node to get out the state of charge, not the "battery"
+node, the battery is not a "device" from our perspective.
 
-> Unfortunately, not all RSC have identical DRV configuration and the
-> register space is also variable depending on the capability of the RSC.
-> There are functionalities supported by other RSCs in the SoC that are
-> not supported by the RSC associated with the application processor,
-> while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
-> describing the whole RSC as it is not usable from Linux (because of
-> access restrictions).
+Thinking more about that, I like your way better, so I recant my earlier
+objections.
 
-If we're not describing the whole RSC in the RSC binding then we're not
-going to get very far. From what I can tell, this binding describes one
-DRV inside of an RSC instead of the whole RSC. Yes we'll probably never
-use the ATF part of the RSC in Linux, but we may use the hypervisor part
-if we use KVM/Xen so the binding should be describing as much as it can
-about this device in case some software needs to use it.
+Andrew
 
-Put another way, even if the "apps" RSC is complicated, we should be
-describing it to the best of our abilities in the binding so that when
-it is used by non-linux OSes things still work by simply tweaking the
-drv-id that we use to pick the right things out of the node.
+[0] Documentation/devicetree/bindings/power/supply/bq27xxx.txt
 
-Or we're describing the RSC but it's really a container node that
-doesn't do much besides hold DRVs? So this is described at the wrong
-level?
+> It's
+> a current sense amplifier. I was a but unsure if I should have
+> the Rin and Rout resistors in the binding or if I instead should
+> have used the "gain". In the end I went with the resistors since
+> while the normal case is an integer gain, that may not always be
+> the case. And when it's not, that could get tricky. But I'm open
+> for arguments on that.
+> 
+> Cheers,
+> Peter
+> 
+> Peter Rosin (2):
+>   dt-bindings: iio: afe: add binding for adi,lt6106
+>   iio: afe: unit-converter: add support for adi,lt6106
+> 
+>  .../devicetree/bindings/iio/afe/adi,lt6106.txt     | 50 ++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  drivers/iio/afe/Kconfig                            |  3 +-
+>  drivers/iio/afe/iio-unit-converter.c               | 54 ++++++++++++++++++++++
+>  4 files changed, 107 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+> 
