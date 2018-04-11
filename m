@@ -1,26 +1,32 @@
-Return-Path: <SRS0=pVrr=HB=verge.net.au=horms@kernel.org>
-Date: Thu, 12 Apr 2018 09:35:54 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] arm64: renesas: Add Renesas R8A77990 Kconfig support
-Message-ID: <20180412073553.6qtjcbi54zoaltdk@verge.net.au>
-References: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1523439353-980-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXzy667DwjEaJOEnJ16WmELM9rLSj4-GZksnhWNm4dn8Q@mail.gmail.com>
+Return-Path: <SRS0=pywT=HA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXzy667DwjEaJOEnJ16WmELM9rLSj4-GZksnhWNm4dn8Q@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1523439353-980-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1523439353-980-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Apr 2018 15:25:06 +0200
+Message-ID: <CAMuHMdXzy667DwjEaJOEnJ16WmELM9rLSj4-GZksnhWNm4dn8Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: renesas: Add Renesas R8A77990 Kconfig support
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Apr 11, 2018 at 03:25:06PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Apr 11, 2018 at 11:35 AM, Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > Add configuration option for the R-Car E3 (R8A77990) SoC.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Apr 11, 2018 at 11:35 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Add configuration option for the R-Car E3 (R8A77990) SoC.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Thanks, applied.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
