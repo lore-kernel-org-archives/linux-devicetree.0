@@ -1,20 +1,20 @@
-Return-Path: <SRS0=iny2=HA=pengutronix.de=p.zabel@kernel.org>
-Message-ID: <1523434945.4739.1.camel@pengutronix.de>
+Return-Path: <SRS0=Xz8k=HA=verge.net.au=horms@kernel.org>
+Date: Wed, 11 Apr 2018 10:22:27 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH v2 2/2] vfio: platform: Add generic DT reset controller
  support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Date: Wed, 11 Apr 2018 10:22:25 +0200
-In-Reply-To: <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
+Message-ID: <20180411082226.qbhf7hcvtcns7ge3@verge.net.au>
 References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
-	 <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+ <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 2018-04-10 at 17:53 +0200, Geert Uytterhoeven wrote:
+On Tue, Apr 10, 2018 at 05:53:47PM +0200, Geert Uytterhoeven wrote:
 > Vfio-platform requires reset support, provided either by ACPI, or, on DT
 > platforms, by a device-specific reset driver matching against the
 > device's compatible value.
@@ -33,9 +33,6 @@ On Tue, 2018-04-10 at 17:53 +0200, Geert Uytterhoeven wrote:
 > controller support is disabled.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
 > ---
 > v2:
 >   - Don't store error values in vdev->reset_control,
@@ -51,7 +48,40 @@ Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 > index b60bb5326668498c..3c13327b2777f8ec 100644
 > --- a/drivers/vfio/platform/vfio_platform_common.c
 > +++ b/drivers/vfio/platform/vfio_platform_common.c
-[...]
+> @@ -17,6 +17,7 @@
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> @@ -112,11 +113,19 @@ static bool vfio_platform_has_reset(struct vfio_platform_device *vdev)
+>  	if (VFIO_PLATFORM_IS_ACPI(vdev))
+>  		return vfio_platform_acpi_has_reset(vdev);
+>  
+> -	return vdev->of_reset ? true : false;
+> +	if (vdev->of_reset)
+> +		return true;
+> +
+> +	if (vdev->reset_control)
+> +		return true;
+> +
+> +	return false;
+
+I wonder if the above would be better expressed as:
+
+	return vdev->of_reset || vdev->reset_control;
+
+>  }
+>  
+>  static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  {
+> +	struct reset_control *rstc;
+> +
+>  	if (VFIO_PLATFORM_IS_ACPI(vdev))
+>  		return vfio_platform_acpi_has_reset(vdev) ? 0 : -ENOENT;
+>  
 > @@ -127,8 +136,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
 >  		vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
 >  							&vdev->reset_module);
@@ -60,9 +90,6 @@ Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 > +		return 0;
 > +
 > +	rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
-
-If vdev->device->of_node == NULL, this will return -EINVAL ...
-
 > +	if (!IS_ERR(rstc)) {
 > +		vdev->reset_control = rstc;
 > +		return 0;
@@ -70,8 +97,44 @@ If vdev->device->of_node == NULL, this will return -EINVAL ...
 >  
 > -	return vdev->of_reset ? 0 : -ENOENT;
 > +	return PTR_ERR(rstc);
+>  }
+>  
+>  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+> @@ -138,6 +155,8 @@ static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+>  
+>  	if (vdev->of_reset)
+>  		module_put(vdev->reset_module);
+> +
+> +	reset_control_put(vdev->reset_control);
+>  }
+>  
+>  static int vfio_platform_regions_init(struct vfio_platform_device *vdev)
+> @@ -217,6 +236,9 @@ static int vfio_platform_call_reset(struct vfio_platform_device *vdev,
+>  	} else if (vdev->of_reset) {
+>  		dev_info(vdev->device, "reset\n");
+>  		return vdev->of_reset(vdev);
+> +	} else if (vdev->reset_control) {
+> +		dev_info(vdev->device, "reset\n");
 
-... instead of -ENOENT, if that makes any difference.
+Would it be useful to differentiate between the above two informational
+messages?
 
-regards
-Philipp
+> +		return reset_control_reset(vdev->reset_control);
+>  	}
+>  
+>  	dev_warn(vdev->device, "no reset function found!\n");
+> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+> index 85ffe5d9d1abd94e..a56e80ae5986540b 100644
+> --- a/drivers/vfio/platform/vfio_platform_private.h
+> +++ b/drivers/vfio/platform/vfio_platform_private.h
+> @@ -60,6 +60,7 @@ struct vfio_platform_device {
+>  	const char			*compat;
+>  	const char			*acpihid;
+>  	struct module			*reset_module;
+> +	struct reset_control		*reset_control;
+>  	struct device			*device;
+>  
+>  	/*
+> -- 
+> 2.7.4
+> 
