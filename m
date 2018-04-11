@@ -1,56 +1,57 @@
-Return-Path: <SRS0=jhCx=HA=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] usb: role: rcar-usb3-role-switch: add support for R-Car
+Return-Path: <SRS0=2R+r=HA=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Wed, 11 Apr 2018 11:01:37 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH] usb: role: rcar-usb3-role-switch: add support for R-Car
  SoCs
-Date: Wed, 11 Apr 2018 08:43:16 +0000
-Message-ID: <TY1PR06MB0992B234D74FF7DC6EB14C73D8BD0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Message-ID: <20180411080137.GB7517@kuha.fi.intel.com>
 References: <1523361826-8772-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180411072606.GA7517@kuha.fi.intel.com>
-In-Reply-To: <20180411072606.GA7517@kuha.fi.intel.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <CAHp75Vd20+dQewCsy-UPpSw+5OkuVhok=MEYLJ8OqPHEQKSZdA@mail.gmail.com>
+ <TY1PR06MB0992CB520090B80CB8B68104D8BD0@TY1PR06MB0992.apcprd06.prod.outlook.com>
 MIME-Version: 1.0
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB0992CB520090B80CB8B68104D8BD0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, USB <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Heikki,
+On Wed, Apr 11, 2018 at 03:15:23AM +0000, Yoshihiro Shimoda wrote:
+> > > +       host_node = of_parse_phandle(pdev->dev.of_node, "renesas,host", 0);
+> > > +       if (!host_node)
+> > > +               return -ENODEV;
+> > > +
+> > > +       pdev_host = of_find_device_by_node(host_node);
+> > > +       if (!pdev_host)
+> > > +               return -ENODEV;
+> > > +
+> > > +       of_node_put(host_node);
+> > 
+> > Isn't what Heikki tried to solve with graphs and stuff like that?
+> 
+> Heikki prepared "device connection" framework (devcon) [1] to get a device pointer.
+> However, IIUC, we need to improve the framework for device tree environment because:
+>  - The devcon needs each dev_name() through the endpoint array of struct device_connection.
+>  - Each dev_name() on device tree environment will be <base address register>.<device name>,
+>    f.e. "ee020000.usb". So, I don???t think adding such strings to a driver is a good way.
 
-> From: Heikki Krogerus, Sent: Wednesday, April 11, 2018 4:26 PM
->=20
-> On Tue, Apr 10, 2018 at 09:03:46PM +0900, Yoshihiro Shimoda wrote:
-<snip>
-> > +Example of R-Car H3 ES2.0:
-> > +	usb3_peri0: usb@ee020000 {
-> > +		compatible =3D "renesas,r8a7795-usb3-peri",
-> > +			     "renesas,rcar-gen3-usb3-peri";
-> > +		reg =3D <0 0xee020000 0 0x400>;
-> > +		interrupts =3D <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks =3D <&cpg CPG_MOD 328>;
-> > +		power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
-> > +		resets =3D <&cpg 328>;
-> > +
-> > +		usb3-role-sw {
-> > +			compatible =3D "renesas,rcar-usb3-role-switch";
-> > +			renesas,host =3D <&xhci0>;
->=20
-> I pretty sure you should model that connection using OF graph
-> bindings. That way I believe this will also fit nicely to the
-> usb-connector bindings. Check bindings/connector/usb-connector.txt
+That is how the build-in connection descriptions are handled, but in
+this case you want to describe them in your bindings, and to do that you
+should use remote-endpoints, ie. OF graph bindings: bindings/graph.txt
 
-Oh, I didn't know the usb-connector bindings has been merged into the linux=
--next.
-Thank you for the suggestion. I will try to use it.
+> So, I wrote such a code by using existing APIs.
+> Should I improve the framework first somehow? Or, is my understanding incorrect?
 
-Best regards,
-Yoshihiro Shimoda
+You don't necessarily need to propose any changes to the device
+connection framework at this point, but you do need to use graph for
+describing that connection. Once we add device graph handling to the
+device connection framework, it is no problem to update this driver.
 
-> > +		};
-> > +	};
->=20
->=20
-> Br,
->=20
-> --
-> heikki
+Of course, if you have time and interest in preparing a proposal for
+graph handling to the device connection framework, I would appreciate
+it.
+
+
+Thanks,
+
+-- 
+heikki
