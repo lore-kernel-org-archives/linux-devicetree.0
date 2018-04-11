@@ -1,66 +1,78 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4/4] soc: renesas: rcar-rst: Add support for R-Car E3
-Date: Wed, 11 Apr 2018 18:36:26 +0900
-Message-Id: <1523439386-1032-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=O2/u=HA=gmail.com=richard.weiyang@kernel.org>
+Date: Wed, 11 Apr 2018 11:22:20 +0800
+From: Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource sibling
+Message-ID: <20180411032220.GA49071@WeideMacBook-Pro.local>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20180408024724.16812-1-bhe@redhat.com>
+ <20180408024724.16812-2-bhe@redhat.com>
+ <20180409090853.GJ19345@localhost.localdomain>
+ <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw@mail.gmail.com>
+ <20180410134416.GM19345@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180410134416.GM19345@localhost.localdomain>
+To: Baoquan He <bhe@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, David Airlie <airlied@linux.ie>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Frank Rowand <frowand.list@gmail.com>, Keith Busch <keith.busch@intel.com>, Jonathan Derrick <jonathan.derrick@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Brijesh Singh <brijesh.singh@amd.com>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Wei Yang <richard.weiyang@gmail.com>, devel@linuxdriverproject.org, linux-input@vger.kernel.org, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+On Tue, Apr 10, 2018 at 09:44:16PM +0800, Baoquan He wrote:
+>Hi Rob,
+>
+>Thanks a lot for looking into this and involve Nico to this thread!
+>
+>On 04/09/18 at 09:49am, Rob Herring wrote:
+>> +Nico who has been working on tinification of the kernel.
+>> 
+>> On Mon, Apr 9, 2018 at 4:08 AM, Baoquan He <bhe@redhat.com> wrote:
+>> > The struct resource uses singly linked list to link siblings. It's not
+>> > easy to do reverse iteration on sibling list. So replace it with list_head.
+>> 
+>> Why is reverse iteration needed?
+>
+>This is the explanation I made when Andrew helped to review the v1 post:
+>https://lkml.org/lkml/2018/3/23/78
+>
+>Because we have been using kexec-tools utility to search available
+>System RAM space for loading kernel/initrd/purgatory from top to down.
+>That is done in user space by searching /proc/iomem. While later added
+>kexec_file interface, the searching code happened in kernel, and it
+>only search System RAM region bottom up, then take an area in that found
+>RAM region from top to down. We need unify these two interfaces on
+>behaviour since they are the same on essense from the users' point of
+>view, though implementation is different. As you know, the singly linked
+>list implementation of the current resource's sibling linking, makes the
+>searching from top to down very hard to satisfy people. 
+>
+>Below is the v1 post, we make an temporary array to copy iomem_resource's
+>first level of children, then iterate the array reversedly. Andrew
+>suggested me to try list_head after reviewing. In fact we can optimize
+>that patch to only copy resource pointer into array, still the way is
+>ugly.
+>https://lkml.org/lkml/2018/3/21/952
+>
+>Then Wei pasted a patch he had made as below. He didn't mention if he
+>also has requirement on reversed iteration of resource. That is an O(n*n)
+>way, from personal feelings, hard to say if it's bettern than v1 post.
+>https://lkml.org/lkml/2018/3/24/157
 
-This patch adds definition of reset vector for the R8A77990 SoC.
+I don't have requirement on reverse iteration of resource structure.
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[shimoda: rebase]
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/reset/renesas,rst.txt | 1 +
- drivers/soc/renesas/Kconfig                             | 3 ++-
- drivers/soc/renesas/rcar-rst.c                          | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+My approach is almost the same as current walk_system_ram_res(). Since each
+resource keeps parent, we could get previous resource by search on
+res->parent->child.
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-index 7be61ef..67e83b0 100644
---- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-@@ -30,6 +30,7 @@ Required properties:
- 		  - "renesas,r8a77965-rst" (R-Car M3-N)
- 		  - "renesas,r8a77970-rst" (R-Car V3M)
- 		  - "renesas,r8a77980-rst" (R-Car V3H)
-+		  - "renesas,r8a77990-rst" (R-Car E3)
- 		  - "renesas,r8a77995-rst" (R-Car D3)
-   - reg: Address start and address range for the device.
- 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 36bec60..1d824cb 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -4,7 +4,8 @@ config SOC_RENESAS
- 	select SOC_BUS
- 	select RST_RCAR if ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || \
- 			   ARCH_R8A7795 || ARCH_R8A7796 || ARCH_R8A77965 || \
--			   ARCH_R8A77970 || ARCH_R8A77980 || ARCH_R8A77995
-+			   ARCH_R8A77970 || ARCH_R8A77980 || ARCH_R8A77990 || \
-+			   ARCH_R8A77995
- 	select SYSC_R8A7743 if ARCH_R8A7743
- 	select SYSC_R8A7745 if ARCH_R8A7745
- 	select SYSC_R8A77470 if ARCH_R8A77470
-diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
-index 66d7dba..d9c1034 100644
---- a/drivers/soc/renesas/rcar-rst.c
-+++ b/drivers/soc/renesas/rcar-rst.c
-@@ -60,6 +60,7 @@ struct rst_config {
- 	{ .compatible = "renesas,r8a77965-rst", .data = &rcar_rst_gen3 },
- 	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen3 },
- 	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen3 },
-+	{ .compatible = "renesas,r8a77990-rst", .data = &rcar_rst_gen3 },
- 	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen3 },
- 	{ /* sentinel */ }
- };
+The complexity of a whole iteration is O(N * W / 2), where N is the number of
+resources in the tree and W is the average number of siblings of each
+resource.
+
+And this approach doesn't need to change current structure.
+
+>
+>That's why I would like to have a try of the list_head linking.
+>
+
 -- 
-1.9.1
+Wei Yang
+Help you, Help me
