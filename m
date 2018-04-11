@@ -1,67 +1,25 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [linux-sunxi] [PATCH v3] ARM: sun8i: v40: enable USB host ports
- for Banana Pi M2 Berry
-Date: Wed, 11 Apr 2018 09:48:08 +0200
-Message-ID: <20180411074808.eogpgm3xtercmnay@flea>
-References: <20180406140344.9457-1-icenowy@aosc.io>
- <CAGb2v651vpy3jdFY56CQi4yBU1wh01ecPn9cO9fiXkfed35QDA@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] vfio: platform: Fix reset module leak in error
+ path
+Date: Wed, 11 Apr 2018 10:09:31 +0200
+Message-ID: <20180411080930.6knha76gu5f6qgnw@verge.net.au>
+References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
+ <1523375627-23746-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="og4ex2vm244qbsln"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v651vpy3jdFY56CQi4yBU1wh01ecPn9cO9fiXkfed35QDA@mail.gmail.com>
+In-Reply-To: <1523375627-23746-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 10, 2018 at 05:53:46PM +0200, Geert Uytterhoeven wrote:
+> If the IOMMU group setup fails, the reset module is not released.
+> 
+> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
---og4ex2vm244qbsln
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 09, 2018 at 03:33:34PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Apr 6, 2018 at 10:03 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
-> > Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
-> > ports, and it's connected to the USB1 port of the SoC.
-> >
-> > Enable it.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->=20
-> Verified against public schematics.
->=20
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-
-Applied for 4.18
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---og4ex2vm244qbsln
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrNvbcACgkQ0rTAlCFN
-r3SliQ/+JhWN4KcdyeTTPTNjOhhyahYrxL5nKTrln4HQBxlfTH/jqi5+18w77kR1
-PAgzNwKGOy3+hshtp8memLDwjphqKHkrnflZxQTnPuBVbj8o+tkvDsvTGdKb0hbI
-N5ya/AWZsIxPe8UxfiINs4ePX65NYKegeP+yIh/YDxGTqVYono4jjhv05hO+q7vc
-W9EKeyYZmut1ZU4pN+EPm1y0KuI/zM1mXSLUwVq0oKGyVUbCyRwZ48vee7V8aSFo
-UvZzF0J+/8lFRZBueGvnPO3INx/RL6e7KaBxFM0mKcTJqkY521cqtBMLrEq+Lz31
-YgmEhe9WH+4VyDVlTJyxXC0+QqbWCQVIBp4EQA5gd7m4+PF67jRrFeYBaN5D3NYS
-Motne9gLATmC9YWMhD1abftgcA1lQPYCRZpp7lsFELXK2P4tA4412MeC4iqXkPqf
-v5VagfsiKyprBnWpjNDJN5VeFr2dteaDiLrfbqRp6vvwPWJk0LCYU+bKycohN40n
-0gUPpB3zQvJRZm6G5/1nJPYqREcR4v5/NlkYP5T77qkHh/5qAgQQmJ5R7JuR8anb
-rWukIZPoXqgGhVo2N12u0P2BKla+gWIwrK273w9r7uthkgN6v7kTciEKKKJEaeM0
-NPHDldio1TKG07LyKCfcIQb2cM9PAOIikSsF8OpMLh0j1xWKN38=
-=DHFh
------END PGP SIGNATURE-----
-
---og4ex2vm244qbsln--
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
