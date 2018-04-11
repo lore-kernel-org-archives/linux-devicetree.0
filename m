@@ -1,65 +1,80 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 0/2] iio: add unit converter
-Date: Wed, 11 Apr 2018 10:34:40 -0500
-Message-ID: <fe90dc62-ef2b-d999-6841-2d9d5943654c@ti.com>
-References: <20180410152802.30958-1-peda@axentia.se>
- <20180411141555.15044-1-peda@axentia.se>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY
+ initialization
+Date: Wed, 11 Apr 2018 21:07:38 +0530
+Message-ID: <f8f47dc2-74ab-96c6-b3bd-a476bd19514d@codeaurora.org>
+References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
+ <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
+ <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
+ <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
+ <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
+ <CAD=FV=XqH69_LXcCyTS1nF5fHpen=PnRxd-WTz=y3dKvMsRtuw@mail.gmail.com>
+ <152338515540.180276.4273344163431724770@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180411141555.15044-1-peda@axentia.se>
+In-Reply-To: <152338515540.180276.4273344163431724770@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2018 09:15 AM, Peter Rosin wrote:
-> Hi!
-> 
-> I'm now following up with one more binding for the unit-converter.
-> This time with a real IC, namely LT6106 from Analog Devices.
+Hi,
 
-This makes more sense to me, I wasn't thinking about more complex ICs
-like this when I made my "resistor being part of the sensing device"
-argument.
 
-I can see how having a new node will probably be needed. It just seems
-strange to ask a resistor for its current, although it is the "device"
-that "knows" how much current if flowing though it..
+On 4/11/2018 12:02 AM, Stephen Boyd wrote:
+> Quoting Doug Anderson (2018-04-10 08:05:27)
+>> On Mon, Apr 9, 2018 at 11:36 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
+>>> On 3/30/2018 2:24 AM, Doug Anderson wrote:
+>>>> Oh!  This is what you did in the previous version of the patch, then you said:
+>>>>
+>>>> "That is still needed as PHY might take some time to generate pipe_clk
+>>>> after its PLL is locked".
+>>>>
+>>>> It's really going to take more than the 200 us that the clock driver
+>>>> is giving it?  If so, I'd prefer to increase the amount of time waited
+>>>> in the clock driver, or adding a fixed delay _before_ the clk_enable()
+>>>> so that the 200 us that the clock driver gives it would be enough.
+>>>>
+>>>> I'm just not a fan of ignoring status bits if it can be helped.
+>>> I too would want to do that but it is not just about the delay.
+>>> As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
+>>> as first thing in the PHY initialization sequence. Same sequence also has
+>>> been used in downstream phy driver always.
+>>> Changing the sequence might work but I would like to stick to the HPG
+>>> recommendation and avoid any deviation as PHY issues are very hard to
+>>> debug.
+>> So hardware guys tell you that you're _supposed to_ ignore the clock
+>> ready bit for that clock and just hope it turns on and settles in time
+>> once power comes on for the clock?  That doesn't seem ideal.  My guess
+>> is that it's a bug in the specification that the QMP PHY hardware
+>> designers gave you.
+It could be a bug in specification. But same sequence has been well tested on both
+msm8996 and sdm845, so I would for now like to stick with that for now.
+>> Stephen can feel free to override me if he disagrees since he's in
+>> charge of the clock part of this, but IMHO we should get the
+>> specification fixed and turn things on in the order that lets us check
+>> the status bits.
+>>
+> Presumably there's a PLL "enable" bit in the QMP phy init sequence that
+> we can use to enable the PLL output at a bypass rate and then enable the
+> clk in GCC and then resume the PLL enable sequence. That would allow us
+> to make sure the clk is working.
+>
+> Are the branches in GCC ever turned on or off at runtime though? Or do
+> we just turn them on because they're defaulted off out of reset and then
+> leave them on?
+It can be left on always.
+>
+> I ask because it may be easier to never expose these clks in Linux, hit
+> the enable bits in the branches during clk driver probe, and then act
+> like they never exist because we don't really use them.
+This sounds better idea. Let me check if I can get a patch for same in msm8996
+and sdm845 clock drivers.
 
-A case I'm more familiar with, fuel gauges, we have a gauge device that
-has a handle to the battery it is gauging [0], we still ask the
-"fuel-gauge" node to get out the state of charge, not the "battery"
-node, the battery is not a "device" from our perspective.
 
-Thinking more about that, I like your way better, so I recant my earlier
-objections.
-
-Andrew
-
-[0] Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-
-> It's
-> a current sense amplifier. I was a but unsure if I should have
-> the Rin and Rout resistors in the binding or if I instead should
-> have used the "gain". In the end I went with the resistors since
-> while the normal case is an integer gain, that may not always be
-> the case. And when it's not, that could get tricky. But I'm open
-> for arguments on that.
-> 
-> Cheers,
-> Peter
-> 
-> Peter Rosin (2):
->   dt-bindings: iio: afe: add binding for adi,lt6106
->   iio: afe: unit-converter: add support for adi,lt6106
-> 
->  .../devicetree/bindings/iio/afe/adi,lt6106.txt     | 50 ++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  drivers/iio/afe/Kconfig                            |  3 +-
->  drivers/iio/afe/iio-unit-converter.c               | 54 ++++++++++++++++++++++
->  4 files changed, 107 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
