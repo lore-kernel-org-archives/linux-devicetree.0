@@ -1,35 +1,96 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 4/4] soc: actions: Fix help text in Kconfig for OWL_PM_DOMAINS
-Date: Wed, 11 Apr 2018 22:10:36 +0530
-Message-ID: <20180411164036.8046-5-manivannan.sadhasivam@linaro.org>
-References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v2 8/9] PCI: dwc: Small computation improvement
+Date: Wed, 11 Apr 2018 15:37:46 -0400
+Message-ID: <000001d3d1cc$92706790$b75136b0$@gmail.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com> <5181f7ffbb9d2889974c49d84e72042251adf8b6.1523266508.git.gustavo.pimentel@synopsys.com> <003001d3d128$39f3eaa0$addbbfe0$@gmail.com> <c295bc5b-e67a-290c-3316-56a1cc001538@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <c295bc5b-e67a-290c-3316-56a1cc001538@synopsys.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, robh+dt@kernel.org
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: 'Gustavo Pimentel' <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-OWL_PM_DOMAINS is being used by 3 SoCs of OWL family. This fixes
-the wording to use family name OWL instead of SoC name S500.
+On Wednesday, April 11, 2018 3:40 AM, Gustavo Pimentel wrote:
+> 
+> Hi Jingoo,
+> 
+> On 11/04/2018 01:01, Jingoo Han wrote:
+> > On Monday, April 9, 2018 5:41 AM, Gustavo Pimentel wrote:
+> >>
+> >> Replaces a simple division by 2 to a right shift rotation of 1 bit.
+> >
+> > It looks good. However, would you add a simple reason to the commit
+> > message?
+> 
+> Sure.
+> 
+> Can be this one?
+> 
+> Probably any recent and decent compiler does this kind of substitution
+> in order to improve code performance. Nevertheless it's a coding good
+> practice whenever there is a division / multiplication by multiple of 2
+> to replace it by the equivalent operation in this case, the shift
+> rotation.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/soc/actions/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, that's what I wanted. The most platforms using 'dwc' are based on
+ARM CPUs. So, the shift rotation can be better.
+Thank you.
 
-diff --git a/drivers/soc/actions/Kconfig b/drivers/soc/actions/Kconfig
-index 9d68b5a771c3..26c3155d3738 100644
---- a/drivers/soc/actions/Kconfig
-+++ b/drivers/soc/actions/Kconfig
-@@ -10,7 +10,7 @@ config OWL_PM_DOMAINS
- 	select PM_GENERIC_DOMAINS
- 	help
- 	  Say 'y' here to enable support for Smart Power System (SPS)
--	  power-gating on Actions Semiconductor S500 SoC.
-+	  power-gating on Actions Semiconductor OWL SoCs.
- 	  If unsure, say 'n'.
- 
- endif
--- 
-2.14.1
+Best regards,
+Jingoo Han
+
+> 
+> >
+> > Best regards,
+> > Jingoo Han
+> >
+> >>
+> >> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> >> ---
+> >> Change v1->v2:
+> >> - Nothing changed, just to follow the patch set version.
+> >>
+> >>  drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
+> >>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/dwc/pcie-designware-host.c
+> >> b/drivers/pci/dwc/pcie-designware-host.c
+> >> index 03e9b82..8e6fed4 100644
+> >> --- a/drivers/pci/dwc/pcie-designware-host.c
+> >> +++ b/drivers/pci/dwc/pcie-designware-host.c
+> >> @@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> >>
+> >>  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> >> "config");
+> >>  	if (cfg_res) {
+> >> -		pp->cfg0_size = resource_size(cfg_res) / 2;
+> >> -		pp->cfg1_size = resource_size(cfg_res) / 2;
+> >> +		pp->cfg0_size = resource_size(cfg_res) >> 1;
+> >> +		pp->cfg1_size = resource_size(cfg_res) >> 1;
+> >>  		pp->cfg0_base = cfg_res->start;
+> >>  		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+> >>  	} else if (!pp->va_cfg0_base) {
+> >> @@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> >>  			break;
+> >>  		case 0:
+> >>  			pp->cfg = win->res;
+> >> -			pp->cfg0_size = resource_size(pp->cfg) / 2;
+> >> -			pp->cfg1_size = resource_size(pp->cfg) / 2;
+> >> +			pp->cfg0_size = resource_size(pp->cfg) >> 1;
+> >> +			pp->cfg1_size = resource_size(pp->cfg) >> 1;
+> >>  			pp->cfg0_base = pp->cfg->start;
+> >>  			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+> >>  			break;
+> >> --
+> >> 2.7.4
+> >>
+> >
+> >
+> 
+> Regards,
+> Gustavo
