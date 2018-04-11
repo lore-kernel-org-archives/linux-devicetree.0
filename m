@@ -1,338 +1,41 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] arm64: zynqmp: Remove ep108 board
-Date: Wed, 11 Apr 2018 15:17:05 +0200
-Message-ID: <052cdf7d45bb94e106ae33c972a050089ef75803.1523452618.git.michal.simek@xilinx.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3 0/2] iio: add unit converter
+Date: Wed, 11 Apr 2018 16:15:53 +0200
+Message-ID: <20180411141555.15044-1-peda@axentia.se>
+References: <20180410152802.30958-1-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180410152802.30958-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>, monstr@monstr.eu, VNSL Durga <vnsl.durga.challa@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, Alistair Francis <alistair.francis@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@dowhile0.org>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ZynqMP Emulation board is no longer tested and there is no reason to
-keep maintaining it.
+Hi!
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+I'm now following up with one more binding for the unit-converter.
+This time with a real IC, namely LT6106 from Analog Devices. It's
+a current sense amplifier. I was a but unsure if I should have
+the Rin and Rout resistors in the binding or if I instead should
+have used the "gain". In the end I went with the resistors since
+while the normal case is an integer gain, that may not always be
+the case. And when it's not, that could get tricky. But I'm open
+for arguments on that.
 
- arch/arm64/boot/dts/xilinx/Makefile           |   1 -
- .../boot/dts/xilinx/zynqmp-ep108-clk.dtsi     | 137 ----------------
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts   | 154 ------------------
- 3 files changed, 292 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
- delete mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+Cheers,
+Peter
 
-diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/xilinx/Makefile
-index c2a0c00272e2..d452f80e7601 100644
---- a/arch/arm64/boot/dts/xilinx/Makefile
-+++ b/arch/arm64/boot/dts/xilinx/Makefile
-@@ -1,5 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-ep108.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zc1232-revA.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zc1254-revA.dtb
- dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zc1275-revA.dtb
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
-deleted file mode 100644
-index 9f5eedbc2139..000000000000
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
-+++ /dev/null
-@@ -1,137 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- * clock specification for Xilinx ZynqMP ep108 development board
-- *
-- * (C) Copyright 2015, Xilinx, Inc.
-- *
-- * Michal Simek <michal.simek@xilinx.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--/ {
--	misc_clk: misc_clk {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <25000000>;
--	};
--
--	i2c_clk: i2c_clk {
--		compatible = "fixed-clock";
--		#clock-cells = <0x0>;
--		clock-frequency = <111111111>;
--	};
--
--	sata_clk: sata_clk {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <75000000>;
--	};
--
--	clk100: clk100 {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <100000000>;
--	};
--
--	clk600: clk600 {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <600000000>;
--	};
--};
--
--&can0 {
--	clocks = <&misc_clk &misc_clk>;
--};
--
--&can1 {
--	clocks = <&misc_clk &misc_clk>;
--};
--
--&fpd_dma_chan1 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan2 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan3 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan4 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan5 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan6 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan7 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&fpd_dma_chan8 {
--	clocks = <&clk600>, <&clk100>;
--};
--
--&gem0 {
--	clocks = <&misc_clk>, <&misc_clk>, <&misc_clk>;
--};
--
--&gpio {
--	clocks = <&misc_clk>;
--};
--
--&i2c0 {
--	clocks = <&i2c_clk>;
--};
--
--&i2c1 {
--	clocks = <&i2c_clk>;
--};
--
--&sata {
--	clocks = <&sata_clk>;
--};
--
--&sdhci0 {
--	clocks = <&misc_clk>, <&misc_clk>;
--};
--
--&sdhci1 {
--	clocks = <&misc_clk>, <&misc_clk>;
--};
--
--&spi0 {
--	clocks = <&misc_clk &misc_clk>;
--};
--
--&spi1 {
--	clocks = <&misc_clk &misc_clk>;
--};
--
--&uart0 {
--	clocks = <&misc_clk &misc_clk>;
--};
--
--&usb0 {
--	clocks = <&misc_clk>, <&misc_clk>;
--};
--
--&usb1 {
--	clocks = <&misc_clk>, <&misc_clk>;
--};
--
--&watchdog0 {
--	clocks= <&misc_clk>;
--};
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-deleted file mode 100644
-index 4b0684911626..000000000000
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ /dev/null
-@@ -1,154 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- * dts file for Xilinx ZynqMP ep108 development board
-- *
-- * (C) Copyright 2014 - 2015, Xilinx, Inc.
-- *
-- * Michal Simek <michal.simek@xilinx.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--/dts-v1/;
--
--#include "zynqmp.dtsi"
--#include "zynqmp-ep108-clk.dtsi"
--
--/ {
--	model = "ZynqMP EP108";
--
--	aliases {
--		mmc0 = &sdhci0;
--		mmc1 = &sdhci1;
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
--	memory@0 {
--		device_type = "memory";
--		reg = <0x0 0x0 0x0 0x40000000>;
--	};
--};
--
--&can0 {
--	status = "okay";
--};
--
--&can1 {
--	status = "okay";
--};
--
--&gem0 {
--	status = "okay";
--	phy-handle = <&phy0>;
--	phy-mode = "rgmii-id";
--	phy0: phy@0 {
--		reg = <0>;
--		max-speed = <100>;
--	};
--};
--
--&gpio {
--	status = "okay";
--};
--
--&i2c0 {
--	status = "okay";
--	clock-frequency = <400000>;
--	eeprom@54 {
--		compatible = "atmel,24c64";
--		reg = <0x54>;
--	};
--};
--
--&i2c1 {
--	status = "okay";
--	clock-frequency = <400000>;
--	eeprom@55 {
--		compatible = "atmel,24c64";
--		reg = <0x55>;
--	};
--};
--
--&sata {
--	status = "okay";
--	ceva,broken-gen2;
--	/* SATA Phy OOB timing settings */
--	ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
--	ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
--	ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
--	ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
--	ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
--	ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
--	ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
--	ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
--};
--
--&sdhci0 {
--	status = "okay";
--	bus-width = <8>;
--};
--
--&sdhci1 {
--	status = "okay";
--};
--
--&spi0 {
--	status = "okay";
--	num-cs = <1>;
--	spi0_flash0: spi0_flash0@0 {
--		compatible = "m25p80";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		spi-max-frequency = <50000000>;
--		reg = <0>;
--
--		spi0_flash0@0 {
--			label = "spi0_flash0";
--			reg = <0x0 0x100000>;
--		};
--	};
--};
--
--&spi1 {
--	status = "okay";
--	num-cs = <1>;
--	spi1_flash0: spi1_flash0@0 {
--		compatible = "m25p80";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		spi-max-frequency = <50000000>;
--		reg = <0>;
--
--		spi1_flash0@0 {
--			label = "spi1_flash0";
--			reg = <0x0 0x100000>;
--		};
--	};
--};
--
--&uart0 {
--	status = "okay";
--};
--
--&usb0 {
--	status = "okay";
--	dr_mode = "peripheral";
--	maximum-speed = "high-speed";
--};
--
--&usb1 {
--	status = "okay";
--	dr_mode = "host";
--	maximum-speed = "high-speed";
--};
--
--&watchdog0 {
--	status = "okay";
--};
+Peter Rosin (2):
+  dt-bindings: iio: afe: add binding for adi,lt6106
+  iio: afe: unit-converter: add support for adi,lt6106
+
+ .../devicetree/bindings/iio/afe/adi,lt6106.txt     | 50 ++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ drivers/iio/afe/Kconfig                            |  3 +-
+ drivers/iio/afe/iio-unit-converter.c               | 54 ++++++++++++++++++++++
+ 4 files changed, 107 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/afe/adi,lt6106.txt
+
 -- 
-2.17.0
+2.11.0
