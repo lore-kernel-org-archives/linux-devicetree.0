@@ -1,80 +1,139 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 2/7] phy: qcom-qmp: Enable pipe_clk before PHY
- initialization
-Date: Wed, 11 Apr 2018 21:07:38 +0530
-Message-ID: <f8f47dc2-74ab-96c6-b3bd-a476bd19514d@codeaurora.org>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-3-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=XtviSYq=2w=Ld1xq5U2VPy=u=q6a3+4qd2zVGB+f9P8A@mail.gmail.com>
- <CAD=FV=WGEKy98De_zH9rp+g-tE2YuVK2vRxLJrjeeSx=ijBAww@mail.gmail.com>
- <19c66b02-4f8e-902a-9397-21e7690db7b8@codeaurora.org>
- <CAD=FV=XqH69_LXcCyTS1nF5fHpen=PnRxd-WTz=y3dKvMsRtuw@mail.gmail.com>
- <152338515540.180276.4273344163431724770@swboyd.mtv.corp.google.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Wed, 11 Apr 2018 10:43:07 -0500
+Message-ID: <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152338515540.180276.4273344163431724770@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180411141555.15044-3-peda@axentia.se>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, Wei Yongjun <weiyongjun1@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/11/2018 09:15 AM, Peter Rosin wrote:
+> This is a current sense amplifier from Analog Devices.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/iio/afe/Kconfig              |  3 +-
+>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+> index 642ce4eb12a6..0e10fe8f459a 100644
+> --- a/drivers/iio/afe/Kconfig
+> +++ b/drivers/iio/afe/Kconfig
+> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>  	depends on OF || COMPILE_TEST
+>  	help
+>  	  Say yes here to build support for the IIO unit converter
+> -	  that handles voltage dividers and current sense shunts.
+> +	  that handles voltage dividers, current sense shunts and
+> +	  the LT6106 Current Sense Amplifier from Analog Devices.
 
+Could work better to split these out into separate drivers. Maybe a
+iio-shunt-resistor.c that does just voltage->current with the
+appropriate scaling. Then make a a separate lt6106.c.
 
-On 4/11/2018 12:02 AM, Stephen Boyd wrote:
-> Quoting Doug Anderson (2018-04-10 08:05:27)
->> On Mon, Apr 9, 2018 at 11:36 PM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>> On 3/30/2018 2:24 AM, Doug Anderson wrote:
->>>> Oh!  This is what you did in the previous version of the patch, then you said:
->>>>
->>>> "That is still needed as PHY might take some time to generate pipe_clk
->>>> after its PLL is locked".
->>>>
->>>> It's really going to take more than the 200 us that the clock driver
->>>> is giving it?  If so, I'd prefer to increase the amount of time waited
->>>> in the clock driver, or adding a fixed delay _before_ the clk_enable()
->>>> so that the 200 us that the clock driver gives it would be enough.
->>>>
->>>> I'm just not a fan of ignoring status bits if it can be helped.
->>> I too would want to do that but it is not just about the delay.
->>> As per QMP PHY hardware designers, pipe_clk should be enabled in GCC
->>> as first thing in the PHY initialization sequence. Same sequence also has
->>> been used in downstream phy driver always.
->>> Changing the sequence might work but I would like to stick to the HPG
->>> recommendation and avoid any deviation as PHY issues are very hard to
->>> debug.
->> So hardware guys tell you that you're _supposed to_ ignore the clock
->> ready bit for that clock and just hope it turns on and settles in time
->> once power comes on for the clock?  That doesn't seem ideal.  My guess
->> is that it's a bug in the specification that the QMP PHY hardware
->> designers gave you.
-It could be a bug in specification. But same sequence has been well tested on both
-msm8996 and sdm845, so I would for now like to stick with that for now.
->> Stephen can feel free to override me if he disagrees since he's in
->> charge of the clock part of this, but IMHO we should get the
->> specification fixed and turn things on in the order that lets us check
->> the status bits.
->>
-> Presumably there's a PLL "enable" bit in the QMP phy init sequence that
-> we can use to enable the PLL output at a bypass rate and then enable the
-> clk in GCC and then resume the PLL enable sequence. That would allow us
-> to make sure the clk is working.
->
-> Are the branches in GCC ever turned on or off at runtime though? Or do
-> we just turn them on because they're defaulted off out of reset and then
-> leave them on?
-It can be left on always.
->
-> I ask because it may be easier to never expose these clks in Linux, hit
-> the enable bits in the branches during clk driver probe, and then act
-> like they never exist because we don't really use them.
-This sounds better idea. Let me check if I can get a patch for same in msm8996
-and sdm845 clock drivers.
+"iio-unit-converter.c" isn't really doing what it says it is, it is not
+a generic "unit converter" like one would assume. Having the driver name
+describe what kind of device it physically represents will be better
+when more complex AFEs show up that, for instance, have programmable
+gains and need a larger driver.
 
+Andrew
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called iio-unit-converter.
+> diff --git a/drivers/iio/afe/iio-unit-converter.c b/drivers/iio/afe/iio-unit-converter.c
+> index fc50290d7e5e..4b0ae5ab9c2d 100644
+> --- a/drivers/iio/afe/iio-unit-converter.c
+> +++ b/drivers/iio/afe/iio-unit-converter.c
+> @@ -144,6 +144,53 @@ static int unit_converter_configure_channel(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static int unit_converter_adi_lt6106_props(struct device *dev,
+> +					   struct unit_converter *uc)
+> +{
+> +	u32 sense;
+> +	u32 rin;
+> +	u32 rout;
+> +	u32 factor;
+> +	int ret;
+> +
+> +	ret = device_property_read_u32(dev, "sense-resistor-micro-ohms",
+> +				       &sense);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read the sense resistance: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = device_property_read_u32(dev, "input-resistor-ohms", &rin);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read the input resistance: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = device_property_read_u32(dev, "output-resistor-ohms", &rout);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read the output resistance: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Calculate the scaling factor, rin / (rout * sense), while trying
+> +	 * to keep the fraction from overflowing.
+> +	 */
+> +	factor = gcd(sense, 1000000);
+> +	uc->numerator = 1000000 / factor;
+> +	uc->denominator = sense / factor;
+> +
+> +	factor = gcd(uc->numerator, rout);
+> +	uc->numerator /= factor;
+> +	uc->denominator *= rout / factor;
+> +
+> +	factor = gcd(uc->denominator, rin);
+> +	uc->numerator *= rin / factor;
+> +	uc->denominator /= factor;
+> +
+> +	return 0;
+> +}
+> +
+>  static int unit_converter_current_sense_shunt_props(struct device *dev,
+>  						    struct unit_converter *uc)
+>  {
+> @@ -175,11 +222,16 @@ static int unit_converter_voltage_divider_props(struct device *dev,
+>  }
+>  
+>  enum unit_converter_variant {
+> +	ADI_LT6106,
+>  	CURRENT_SENSE_SHUNT,
+>  	VOLTAGE_DIVIDER,
+>  };
+>  
+>  static const struct unit_converter_cfg unit_converter_cfg[] = {
+> +	[ADI_LT6106] = {
+> +		.type = IIO_CURRENT,
+> +		.props = unit_converter_adi_lt6106_props,
+> +	},
+>  	[CURRENT_SENSE_SHUNT] = {
+>  		.type = IIO_CURRENT,
+>  		.props = unit_converter_current_sense_shunt_props,
+> @@ -191,6 +243,8 @@ static const struct unit_converter_cfg unit_converter_cfg[] = {
+>  };
+>  
+>  static const struct of_device_id unit_converter_match[] = {
+> +	{ .compatible = "adi,lt6106",
+> +	  .data = &unit_converter_cfg[ADI_LT6106], },
+>  	{ .compatible = "current-sense-shunt",
+>  	  .data = &unit_converter_cfg[CURRENT_SENSE_SHUNT], },
+>  	{ .compatible = "voltage-divider",
+> 
