@@ -1,56 +1,67 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v5 07/13] ARM: smp: Add initialization of CNTVOFF
-Date: Wed, 11 Apr 2018 09:44:46 +0200
-Message-ID: <20180411094446.468c7f99@dell-desktop.home>
-References: <20180403061836.3926-1-mylene.josserand@bootlin.com>
-        <20180403061836.3926-8-mylene.josserand@bootlin.com>
-        <06308f46-ce7c-ddeb-ebca-abd1153138ba@arm.com>
-        <20180404155909.148085f7@dell-desktop.home>
-        <86vad7qc21.wl-marc.zyngier@arm.com>
-        <CAMuHMdUoUVF+WYrPG1Dx515_de_2nhGhLfn9+tJUm5jgs1uz0w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH v3] ARM: sun8i: v40: enable USB host ports
+ for Banana Pi M2 Berry
+Date: Wed, 11 Apr 2018 09:48:08 +0200
+Message-ID: <20180411074808.eogpgm3xtercmnay@flea>
+References: <20180406140344.9457-1-icenowy@aosc.io>
+ <CAGb2v651vpy3jdFY56CQi4yBU1wh01ecPn9cO9fiXkfed35QDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="og4ex2vm244qbsln"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUoUVF+WYrPG1Dx515_de_2nhGhLfn9+tJUm5jgs1uz0w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v651vpy3jdFY56CQi4yBU1wh01ecPn9cO9fiXkfed35QDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, quentin.schulz@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Mon, 9 Apr 2018 10:24:41 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+--og4ex2vm244qbsln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Apr 4, 2018 at 4:30 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > On Wed, 04 Apr 2018 14:59:09 +0100,
-> > Mylčne Josserand wrote:  
-> 
-> [Marc: stuck in ISO-8859-1? ;-]
-> 
-> >> > It'd be good to take this opportunity to refactor the shmobile code.  
-> >>
-> >> I can do it in this series but I do not have any shmobile platforms so
-> >> I will not be able to test my modifications (only compilation).
-> >>
-> >> If someone can test it for me (who?), it is okay for me to refactor this
-> >> code :)  
+On Mon, Apr 09, 2018 at 03:33:34PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Apr 6, 2018 at 10:03 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> > Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
+> > ports, and it's connected to the USB1 port of the SoC.
 > >
-> > I guess you could Cc the shmobile folks (Geert Uytterhoeven, Simon
-> > Horman), and get them to review/test the changes.  
-> 
-> Correct. I can test on a remote R-Car E2 ALT board that needs it.
+> > Enable it.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>=20
+> Verified against public schematics.
+>=20
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 
-Great, thank you!
+Applied for 4.18
 
-I will add you in CC in my next version, then.
+Maxime
 
-Best regards,
-
-Mylène
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
-http://bootlin.com
+https://bootlin.com
+
+--og4ex2vm244qbsln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrNvbcACgkQ0rTAlCFN
+r3SliQ/+JhWN4KcdyeTTPTNjOhhyahYrxL5nKTrln4HQBxlfTH/jqi5+18w77kR1
+PAgzNwKGOy3+hshtp8memLDwjphqKHkrnflZxQTnPuBVbj8o+tkvDsvTGdKb0hbI
+N5ya/AWZsIxPe8UxfiINs4ePX65NYKegeP+yIh/YDxGTqVYono4jjhv05hO+q7vc
+W9EKeyYZmut1ZU4pN+EPm1y0KuI/zM1mXSLUwVq0oKGyVUbCyRwZ48vee7V8aSFo
+UvZzF0J+/8lFRZBueGvnPO3INx/RL6e7KaBxFM0mKcTJqkY521cqtBMLrEq+Lz31
+YgmEhe9WH+4VyDVlTJyxXC0+QqbWCQVIBp4EQA5gd7m4+PF67jRrFeYBaN5D3NYS
+Motne9gLATmC9YWMhD1abftgcA1lQPYCRZpp7lsFELXK2P4tA4412MeC4iqXkPqf
+v5VagfsiKyprBnWpjNDJN5VeFr2dteaDiLrfbqRp6vvwPWJk0LCYU+bKycohN40n
+0gUPpB3zQvJRZm6G5/1nJPYqREcR4v5/NlkYP5T77qkHh/5qAgQQmJ5R7JuR8anb
+rWukIZPoXqgGhVo2N12u0P2BKla+gWIwrK273w9r7uthkgN6v7kTciEKKKJEaeM0
+NPHDldio1TKG07LyKCfcIQb2cM9PAOIikSsF8OpMLh0j1xWKN38=
+=DHFh
+-----END PGP SIGNATURE-----
+
+--og4ex2vm244qbsln--
