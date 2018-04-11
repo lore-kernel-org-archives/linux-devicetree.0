@@ -1,45 +1,61 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 06/11] usb: common: roles: Allow if the parent dev_name matches
-Date: Wed, 18 Apr 2018 17:10:00 +0900
-Message-Id: <1524039005-30618-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1524039005-30618-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=1Kw+=HA=bootlin.com=maxime.ripard@kernel.org>
+Date: Wed, 11 Apr 2018 10:19:25 +0200
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Change sun7i-a20-olimex-som204-evb to
+ not use cd-inverted
+Message-ID: <20180411081925.hjhobvessykaiqoq@flea>
+References: <20180410145119.27362-1-tuomas@tuxera.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ejriaccedkaw7yec"
+Content-Disposition: inline
+In-Reply-To: <20180410145119.27362-1-tuomas@tuxera.com>
+To: Tuomas Tynkkynen <tuomas@tuxera.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-THis patch adds a condition in __switch_match() to allow if
-the parent dev_name matches. Otherwise, OF environment cannot match
-the usb role switch devices because the usb role switch framework
-adds the names of a new child device as the parent dev_name with
-"-role-switch".
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/common/roles.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+--ejriaccedkaw7yec
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-index cc1c55a..381259c 100644
---- a/drivers/usb/common/roles.c
-+++ b/drivers/usb/common/roles.c
-@@ -88,7 +88,13 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
- 
- static int __switch_match(struct device *dev, const void *name)
- {
--	return !strcmp((const char *)name, dev_name(dev));
-+	int ret = !strcmp((const char *)name, dev_name(dev));
-+
-+	/* If doesn't match, this also checks the parent dev_name */
-+	if (!ret && dev->parent)
-+		ret = !strcmp((const char *)name, dev_name(dev->parent));
-+
-+	return ret;
- }
- 
- static void *usb_role_switch_match(struct device_connection *con, int ep,
--- 
-1.9.1
+On Tue, Apr 10, 2018 at 05:51:19PM +0300, Tuomas Tynkkynen wrote:
+> Commit 45e01f401a2a16 ("ARM: dts: sunxi: Switch MMC nodes away from
+> cd-inverted property") changed most of the sunxi boards away from using
+> the cd-inverted property in MMC nodes. However, the
+> sun7i-a20-olimex-som204-evb board which got merged concurrently with
+> that commit is now using cd-inverted. Switch it away from using
+> cd-inverted to be consistent with rest of the sunxi boards.
+>=20
+> Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ejriaccedkaw7yec
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrNxQwACgkQ0rTAlCFN
+r3QSaA//YBgKR8GjceuTd2+KP7HCuu058FpFl1+HbX6am2RBi4/wMzQUP2fWktfG
+uv87VGTqU9odcSA+Q9uzZJ4fIuS/a9stYLJmOuKK5U/MecufkLdn0c/wFiXM/nkf
+3EX7VUj6FzF9647+rFUE1A1M9a4cckBjiWQD+U5L+A2P5cDU9SicII91DTx6tiyD
+DfhvHx0Z5fkSbPRxYRw+nKmlU7M/9I51sTjSR6GHDyBo01v32hl0tvRN/rjEudwP
+YM6G16h4ecIUrUG46twNXioxzzFG2/9O7NKaq3alcKRTi4suZjgHYH8bsK2XeepN
+4pmNK4hetxBcd+tzAcdrFoS2aynGS9Jz6rP0E9vXrOmG2mM6DfIULvOPKFcyGMKm
+3XRWIdlXuxLmkpnTvFRMW0CmHWK9YUTwzX5Tg8DsKNhLbdE7gPmoTrDE6eZenCwo
+zuUDwrGnJVdjWUg8cU57n/sFFKWhXDBYP2sxHgdp6+86od4BcgwYeI28lJ/cSsSB
+eZ8xCUfw/OFcRkuCljnKUIFwaEWt6TJDqNRwGqHHexoq+4rHjQoEjFRPkgNk4A1v
+P1eiZKhc+JXjbEMS98D9kV6DEU71avbdnajFOhVlt13O4fNua+R4WhRaunUncTXj
+FJLTBJPSzM3wzJytdiEyowWRvUmKt19SOe0fR/WNnm+k+nGEtG8=
+=yET0
+-----END PGP SIGNATURE-----
+
+--ejriaccedkaw7yec--
