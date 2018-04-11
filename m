@@ -1,25 +1,96 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/2] vfio: platform: Fix reset module leak in error
- path
-Date: Wed, 11 Apr 2018 10:09:31 +0200
-Message-ID: <20180411080930.6knha76gu5f6qgnw@verge.net.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] vfio: platform: Add generic DT reset controller support
+Date: Wed, 11 Apr 2018 10:39:19 +0200
+Message-ID: <CAMuHMdXq5gTrYBGnP8EfL4s_c+=JA6vXgrmgs3Wa_+8cS3jYNA@mail.gmail.com>
 References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
- <1523375627-23746-2-git-send-email-geert+renesas@glider.be>
+ <1523375627-23746-3-git-send-email-geert+renesas@glider.be> <20180411082226.qbhf7hcvtcns7ge3@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523375627-23746-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <20180411082226.qbhf7hcvtcns7ge3@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 05:53:46PM +0200, Geert Uytterhoeven wrote:
-> If the IOMMU group setup fails, the reset module is not released.
-> 
-> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Hi Simon,
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+On Wed, Apr 11, 2018 at 10:22 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Tue, Apr 10, 2018 at 05:53:47PM +0200, Geert Uytterhoeven wrote:
+>> Vfio-platform requires reset support, provided either by ACPI, or, on DT
+>> platforms, by a device-specific reset driver matching against the
+>> device's compatible value.
+>>
+>> On many SoCs, devices are connected to an SoC-internal reset controller.
+>> If the reset hierarchy is described in DT using "resets" properties,
+>> such devices can be reset in a generic way through the reset controller
+>> subsystem.  Hence add support for this, avoiding the need to write
+>> device-specific reset drivers for each single device on affected SoCs.
+>>
+>> Devices that do require a more complex reset procedure can still provide
+>> a device-specific reset driver, as that takes precedence.
+>>
+>> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
+>> becomes a no-op (as in: "No reset function found for device") if reset
+>> controller support is disabled.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> v2:
+>>   - Don't store error values in vdev->reset_control,
+>>   - Use of_reset_control_get_exclusive() instead of
+>>     __of_reset_control_get(),
+>>   - Improve description.
+
+>> --- a/drivers/vfio/platform/vfio_platform_common.c
+>> +++ b/drivers/vfio/platform/vfio_platform_common.c
+>> @@ -17,6 +17,7 @@
+>>  #include <linux/iommu.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mutex.h>
+>> +#include <linux/reset.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/types.h>
+>>  #include <linux/uaccess.h>
+>> @@ -112,11 +113,19 @@ static bool vfio_platform_has_reset(struct vfio_platform_device *vdev)
+>>       if (VFIO_PLATFORM_IS_ACPI(vdev))
+>>               return vfio_platform_acpi_has_reset(vdev);
+>>
+>> -     return vdev->of_reset ? true : false;
+>> +     if (vdev->of_reset)
+>> +             return true;
+>> +
+>> +     if (vdev->reset_control)
+>> +             return true;
+>> +
+>> +     return false;
+>
+> I wonder if the above would be better expressed as:
+>
+>         return vdev->of_reset || vdev->reset_control;
+
+Makes sense, now both checks are of the same type.
+
+>> @@ -217,6 +236,9 @@ static int vfio_platform_call_reset(struct vfio_platform_device *vdev,
+>>       } else if (vdev->of_reset) {
+>>               dev_info(vdev->device, "reset\n");
+>>               return vdev->of_reset(vdev);
+>> +     } else if (vdev->reset_control) {
+>> +             dev_info(vdev->device, "reset\n");
+>
+> Would it be useful to differentiate between the above two informational
+> messages?
+
+Probably not, there's also no differentiation with the message for the
+ACPI case above (out of visible context).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
