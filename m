@@ -1,118 +1,67 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 4/5] drivers: soc: sunxi: export a regmap for
- EMAC clock reg on A64
-Date: Wed, 11 Apr 2018 22:16:40 +0800
-Message-ID: <20180411141641.14675-5-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 5/5] arm64: allwinner: a64: add SRAM controller device tree node
+Date: Wed, 11 Apr 2018 22:16:41 +0800
+Message-ID: <20180411141641.14675-6-icenowy@aosc.io>
 References: <20180411141641.14675-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB25TXDLAKGQEA27SWPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180411141641.14675-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180411141641.14675-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-The A64 SRAM controller memory zone has a EMAC clock register, which is
-needed by the Ethernet MAC driver (dwmac-sun8i).
+Allwinner A64 has a SRAM controller, and in the device tree currently
+we have a syscon node to enable EMAC driver to access the EMAC clock
+register. As SRAM controller driver can now export regmap for this
+register, replace the syscon node to the SRAM controller device node,
+and let EMAC driver to acquire its EMAC clock regmap.
 
-Export a regmap for this register on A64.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- drivers/soc/sunxi/sunxi_sram.c | 48 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
-index 882be5ed7e84..35ab5f334bb1 100644
---- a/drivers/soc/sunxi/sunxi_sram.c
-+++ b/drivers/soc/sunxi/sunxi_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 1b2ef28c42bd..1c37659d9d41 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -168,10 +168,25 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
- #include <linux/soc/sunxi/sunxi_sram.h>
+-		syscon: syscon@1c00000 {
+-			compatible = "allwinner,sun50i-a64-system-controller",
+-				"syscon";
++		sram_controller: sram-controller@1c00000 {
++			compatible = "allwinner,sun50i-a64-sram-controller";
+ 			reg = <0x01c00000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			sram_c: sram@18000 {
++				compatible = "mmio-sram";
++				reg = <0x00018000 0x28000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0 0x00018000 0x28000>;
++
++				de2_sram: sram-section@0 {
++					compatible = "allwinner,sun50i-a64-sram-c";
++					reg = <0x0000 0x28000>;
++				};
++			};
+ 		};
  
-@@ -281,13 +282,41 @@ int sunxi_sram_release(struct device *dev)
- }
- EXPORT_SYMBOL(sunxi_sram_release);
+ 		dma: dma-controller@1c02000 {
+@@ -599,7 +614,7 @@
  
-+struct sunxi_sramc_variant {
-+	bool has_emac_clock;
-+};
-+
-+static const struct sunxi_sramc_variant sun4i_a10_sramc_variant = {
-+	/* Nothing special */
-+};
-+
-+static const struct sunxi_sramc_variant sun50i_a64_sramc_variant = {
-+	.has_emac_clock = true,
-+};
-+
-+static struct regmap_config sunxi_sram_emac_clock_regmap = {
-+	.reg_bits       = 32,
-+	.val_bits       = 32,
-+	.reg_stride     = 4,
-+	.max_register   = 0x0,	/* only single register */
-+	.name		= "emac-clock",
-+};
-+
-+#define SUNXI_SRAM_EMAC_CLOCK_REG	0x30
-+
- static int sunxi_sram_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	struct dentry *d;
-+	struct regmap *emac_clock;
-+	const struct sunxi_sramc_variant *variant;
- 
- 	sram_dev = &pdev->dev;
- 
-+	variant = of_device_get_match_data(&pdev->dev);
-+	if (!variant)
-+		return -EINVAL;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -300,12 +329,27 @@ static int sunxi_sram_probe(struct platform_device *pdev)
- 	if (!d)
- 		return -ENOMEM;
- 
-+	if (variant->has_emac_clock) {
-+		emac_clock = devm_regmap_init_mmio(&pdev->dev,
-+						   base + SUNXI_SRAM_EMAC_CLOCK_REG,
-+						   &sunxi_sram_emac_clock_regmap);
-+
-+		if (IS_ERR(emac_clock))
-+			return PTR_ERR(emac_clock);
-+	}
-+
- 	return 0;
- }
- 
- static const struct of_device_id sunxi_sram_dt_match[] = {
--	{ .compatible = "allwinner,sun4i-a10-sram-controller" },
--	{ .compatible = "allwinner,sun50i-a64-sram-controller" },
-+	{
-+		.compatible = "allwinner,sun4i-a10-sram-controller",
-+		.data = &sun4i_a10_sramc_variant,
-+	},
-+	{
-+		.compatible = "allwinner,sun50i-a64-sram-controller",
-+		.data = &sun50i_a64_sramc_variant,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sunxi_sram_dt_match);
+ 		emac: ethernet@1c30000 {
+ 			compatible = "allwinner,sun50i-a64-emac";
+-			syscon = <&syscon>;
++			syscon = <&sram_controller>;
+ 			reg = <0x01c30000 0x10000>;
+ 			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
 -- 
 2.15.1
