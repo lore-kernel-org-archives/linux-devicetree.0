@@ -1,115 +1,52 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 06/12] arm: dts: mt7623: add BTIF, HSDMA and SPI-NOR device nodes
-Date: Wed, 11 Apr 2018 16:53:59 +0800
-Message-ID: <39294f68b1f9e65341f94a989347da81a26c878d.1523434758.git.sean.wang@mediatek.com>
-References: <cover.1523434757.git.sean.wang@mediatek.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [RFC 1/6] dt-bindings: dma: xilinx_dma: Add optional property
+ has_axieth_connected
+Date: Wed, 11 Apr 2018 14:35:26 +0530
+Message-ID: <20180411090525.GX6014@localhost>
+References: <1522665546-10035-1-git-send-email-radheys@xilinx.com>
+ <1522665546-10035-2-git-send-email-radheys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1523434757.git.sean.wang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1522665546-10035-2-git-send-email-radheys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, radheys@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On Mon, Apr 02, 2018 at 04:09:01PM +0530, Radhey Shyam Pandey wrote:
+> Add an optional AXI DMA property 'has_axieth_connected'. This can be
+> specified to indicate that AXI DMA is connected to AXI Ethernet in
+> hardware design and dma driver needs to do some additional handling.
 
-add BTIF, HSDMA and SPI-NOR device nodes and enable it on relevant boards
+1. why are DT people and list not added to this? I have added that
+2. should we have a property for a specific peripheral? Wouldn't it help to have
+a generic property for peripheral connected which can be scaled to more IPs
+being connected in future?
+3. Please use right subsystem name, it damengine: not dma:
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- arch/arm/boot/dts/mt7623.dtsi                 | 36 ++++++++++++++++++++++++++-
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  6 ++++-
- 2 files changed, 40 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
+> ---
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index a2b8bfa..5d592e3 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -42,6 +42,7 @@ Optional properties:
+>  	the hardware.
+>  Optional properties for AXI DMA:
+>  - xlnx,mcdma: Tells whether configured for multi-channel mode in the hardware.
+> +- xlnx,axieth-connected: Tells whether AXI DMA is connected to AXI Ethernet.
+>  Optional properties for VDMA:
+>  - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
+>  	It takes following values:
+> -- 
+> 1.7.1
+> 
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index b9b5619..8cf3d26 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017 MediaTek Inc.
-+ * Copyright (c) 2017-2018 MediaTek Inc.
-  * Author: John Crispin <john@phrozen.org>
-  *	   Sean Wang <sean.wang@mediatek.com>
-  *
-@@ -486,6 +486,18 @@
- 		nvmem-cell-names = "calibration-data";
- 	};
- 
-+	btif: serial@1100c000 {
-+		compatible = "mediatek,mt7623-btif",
-+			     "mediatek,mtk-btif";
-+		reg = <0 0x1100c000 0 0x1000>;
-+		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_BTIF>;
-+		clock-names = "main";
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		status = "disabled";
-+	};
-+
- 	nandc: nfi@1100d000 {
- 		compatible = "mediatek,mt7623-nfc",
- 			     "mediatek,mt2701-nfc";
-@@ -511,6 +523,18 @@
- 		status = "disabled";
- 	};
- 
-+	nor_flash: spi@11014000 {
-+		compatible = "mediatek,mt7623-nor",
-+			     "mediatek,mt8173-nor";
-+		reg = <0 0x11014000 0 0x1000>;
-+		clocks = <&pericfg CLK_PERI_FLASH>,
-+			 <&topckgen CLK_TOP_FLASH_SEL>;
-+		clock-names = "spi", "sf";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	spi1: spi@11016000 {
- 		compatible = "mediatek,mt7623-spi",
- 			     "mediatek,mt2701-spi";
-@@ -867,6 +891,16 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	hsdma: dma-controller@1b007000 {
-+		compatible = "mediatek,mt7623-hsdma";
-+		reg = <0 0x1b007000 0 0x1000>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
-+		clock-names = "hsdma";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+		#dma-cells = <1>;
-+	};
-+
- 	eth: ethernet@1b100000 {
- 		compatible = "mediatek,mt7623-eth",
- 			     "mediatek,mt2701-eth",
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 71023a6..1fd6f55 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2017 Sean Wang <sean.wang@mediatek.com>
-+ * Copyright 2017-2018 Sean Wang <sean.wang@mediatek.com>
-  *
-  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
-@@ -114,6 +114,10 @@
- 	};
- };
- 
-+&btif {
-+	status = "okay";
-+};
-+
- &cir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cir_pins_a>;
 -- 
-2.7.4
+~Vinod
