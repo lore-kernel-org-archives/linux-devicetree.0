@@ -1,36 +1,77 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/3] dt-bindings: arm: Document R-Car E3 SoC DT bindings
-Date: Wed, 11 Apr 2018 18:35:51 +0900
-Message-Id: <1523439353-980-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=iny2=HA=pengutronix.de=p.zabel@kernel.org>
+Message-ID: <1523434945.4739.1.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] vfio: platform: Add generic DT reset controller
+ support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Wed, 11 Apr 2018 10:22:25 +0200
+In-Reply-To: <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
+References: <1523375627-23746-1-git-send-email-geert+renesas@glider.be>
+	 <1523375627-23746-3-git-send-email-geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree bindings documentation for Renesas R-Car
-E3 (r8a77990).
+On Tue, 2018-04-10 at 17:53 +0200, Geert Uytterhoeven wrote:
+> Vfio-platform requires reset support, provided either by ACPI, or, on DT
+> platforms, by a device-specific reset driver matching against the
+> device's compatible value.
+> 
+> On many SoCs, devices are connected to an SoC-internal reset controller.
+> If the reset hierarchy is described in DT using "resets" properties,
+> such devices can be reset in a generic way through the reset controller
+> subsystem.  Hence add support for this, avoiding the need to write
+> device-specific reset drivers for each single device on affected SoCs.
+> 
+> Devices that do require a more complex reset procedure can still provide
+> a device-specific reset driver, as that takes precedence.
+> 
+> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
+> becomes a no-op (as in: "No reset function found for device") if reset
+> controller support is disabled.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 4401369..5d21d48 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -47,6 +47,8 @@ SoCs:
-     compatible = "renesas,r8a77970"
-   - R-Car V3H (R8A77980)
-     compatible = "renesas,r8a77980"
-+  - R-Car E3 (R8A77990)
-+    compatible = "renesas,r8a77990"
-   - R-Car D3 (R8A77995)
-     compatible = "renesas,r8a77995"
- 
--- 
-1.9.1
+> ---
+> v2:
+>   - Don't store error values in vdev->reset_control,
+>   - Use of_reset_control_get_exclusive() instead of
+>     __of_reset_control_get(),
+>   - Improve description.
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c  | 26 ++++++++++++++++++++++++--
+>  drivers/vfio/platform/vfio_platform_private.h |  1 +
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index b60bb5326668498c..3c13327b2777f8ec 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+[...]
+> @@ -127,8 +136,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  		vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
+>  							&vdev->reset_module);
+>  	}
+> +	if (vdev->of_reset)
+> +		return 0;
+> +
+> +	rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
+
+If vdev->device->of_node == NULL, this will return -EINVAL ...
+
+> +	if (!IS_ERR(rstc)) {
+> +		vdev->reset_control = rstc;
+> +		return 0;
+> +	}
+>  
+> -	return vdev->of_reset ? 0 : -ENOENT;
+> +	return PTR_ERR(rstc);
+
+... instead of -ENOENT, if that makes any difference.
+
+regards
+Philipp
