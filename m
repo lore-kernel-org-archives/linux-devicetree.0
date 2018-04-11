@@ -1,63 +1,114 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v3 2/4] dt-bindings:power:supply: Add docs for ADP5061 battery charger
-Date: Wed, 11 Apr 2018 18:10:15 +0300
-Message-ID: <1523459415-31636-1-git-send-email-stefan.popa@analog.com>
-References: <1522829832-7866-1-git-send-email-stefan.popa@analog.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
+ SoCs
+Date: Wed, 11 Apr 2018 08:29:04 -0700
+Message-ID: <152346054406.180276.4468371342222361883@swboyd.mtv.corp.google.com>
+References: <20180405161834.3850-1-ilina@codeaurora.org>
+ <20180405161834.3850-3-ilina@codeaurora.org>
+ <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
+ <20180409160800.GC19682@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522829832-7866-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20180409160800.GC19682@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: davem@davemloft.net, mchehab@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, akpm@linux-foundation.org, rdunlap@infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document adi,adp5061 properties.
+Quoting Lina Iyer (2018-04-09 09:08:00)
+> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2018-04-05 09:18:26)
+> >> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b=
+/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> >> new file mode 100644
+> >> index 000000000000..dcf71a5b302f
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> >> @@ -0,0 +1,127 @@
+> >> +
+> >> +Example 1:
+> >> +
+> >> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id =
+of 2, the
+> >> +register offsets for DRV2 start at 0D00, the register calculations ar=
+e like
+> >> +this -
+> >> +First tuple: 0x179C0000 + 0x10000 * 2 =3D 0x179E0000
+> >> +Second tuple: 0x179E0000 + 0xD00 =3D 0x179E0D00
+> >> +
+> >> +       apps_rsc: rsc@179e000 {
+> >> +               label =3D "apps_rsc";
+> >> +               compatible =3D "qcom,rpmh-rsc";
+> >> +               reg =3D <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
+> >
+> >The first reg property overlaps the second one. Does this second one
+> >ever move around? I would hardcode it in the driver to be 0xd00 away
+> >from the drv base instead of specifying it in DT if it's the same all
+> >the time.
+> >
+> >Also, the example shows 0x179c0000 which I guess is the actual beginning
+> >of the RSC block. So the binding seems to be for one DRV inside of an
+> >RSC. Can we get the full description of the RSC in the binding instead?
+> >I imagine that means there's a DRV0,1,2 and those probably have an
+> >interrupt per each DRV and then a different TCS config per each one too?
+> >If the binding can describe all of the RSC then we can use different
+> >DRVs by changing the qcom,drv-id property.
+> >
+> >       rsc@179c0000 {
+> >               compatible =3D "qcom,rpmh-rsc";
+> >               reg =3D <0x179c0000 0x10000>,
+> >                     <0x179d0000 0x10000>,
+> >                     <0x179e0000 0x10000>;
+> >               qcom,tcs-offset =3D <0xd00>;
+> >               qcom,drv-id =3D <0/1/2>;
+> >               interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> >       }
+> >
+> >This is sort of what I imagine it would look like. I have no idea how
+> >the tcs config would work unless each DRV has the same TCS config
+> >though. Otherwise, if each node is for a drv, then I would expect the
+> >node would be called 'drv' and we wouldn't need the drv-id property and
+> >the compatible string would say drv instead of rsc?
+> >
+> >BTW, what are the other DRVs used for in the apps RSC?
+> >
+> The DRV is the voter for an execution environment (Linux, Hypervisor,
+> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
+> privy to. They are access restricted.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v3:
-	- Split devicetree bindings into a separate patch.
+Alright. Well sometimes access restrictions aren't there, so this isn't
+a good assumption to make.
 
- .../devicetree/bindings/power/supply/adp5061.txt        | 17 +++++++++++++++++
- MAINTAINERS                                             |  1 +
- 2 files changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/adp5061.txt
+> The memory organization of the RSC
+> mandates that we know the DRV id to access registers specific to the
+> DRV.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/adp5061.txt b/Documentation/devicetree/bindings/power/supply/adp5061.txt
-new file mode 100644
-index 0000000..7447446
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/adp5061.txt
-@@ -0,0 +1,17 @@
-+Analog Devices ADP5061 Programmable Linear Battery Charger Driver
-+
-+Required properties:
-+  - compatible:		should be "adi,adp5061"
-+  - reg:		i2c address of the device
-+
-+The node for this driver must be a child node of a I2C controller, hence
-+all mandatory properties described in
-+Documentation/devicetree/bindings/i2c/i2c.txt
-+must be specified.
-+
-+Example:
-+
-+	adp5061@14 {
-+		    compatible = "adi,adp5061";
-+		    reg = <0x14>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 60cd6db..a9ca73b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -802,6 +802,7 @@ M:	Stefan Popa <stefan.popa@analog.com>
- L:	linux-pm@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
-+F:	Documentation/devicetree/bindings/power/supply/adp5061.txt
- F:	drivers/power/supply/adp5061.c
- 
- ANALOG DEVICES INC ADV7180 DRIVER
--- 
-2.7.4
+I think qcom,drv-id covers that, no?
+
+> Unfortunately, not all RSC have identical DRV configuration and the
+> register space is also variable depending on the capability of the RSC.
+> There are functionalities supported by other RSCs in the SoC that are
+> not supported by the RSC associated with the application processor,
+> while not many RSCs' support multiple DRVs. Therefore it doesn't benefit
+> describing the whole RSC as it is not usable from Linux (because of
+> access restrictions).
+
+If we're not describing the whole RSC in the RSC binding then we're not
+going to get very far. From what I can tell, this binding describes one
+DRV inside of an RSC instead of the whole RSC. Yes we'll probably never
+use the ATF part of the RSC in Linux, but we may use the hypervisor part
+if we use KVM/Xen so the binding should be describing as much as it can
+about this device in case some software needs to use it.
+
+Put another way, even if the "apps" RSC is complicated, we should be
+describing it to the best of our abilities in the binding so that when
+it is used by non-linux OSes things still work by simply tweaking the
+drv-id that we use to pick the right things out of the node.
+
+Or we're describing the RSC but it's really a container node that
+doesn't do much besides hold DRVs? So this is described at the wrong
+level?
