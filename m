@@ -1,54 +1,64 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: bcm2835-gpio: Add generic pinctrl support
-Date: Wed, 11 Apr 2018 09:02:02 -0700
-Message-ID: <87bmeppw91.fsf@anholt.net>
-References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br> <1523422726-7910-1-git-send-email-matheus@castello.eng.br> <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Wed, 11 Apr 2018 11:13:19 -0500
+Message-ID: <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
+In-Reply-To: <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, stefan.wahren@i2se.com
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+To: Lars-Peter Clausen <lars@metafoo.de>, Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 04/11/2018 10:51 AM, Lars-Peter Clausen wrote:
+> On 04/11/2018 05:43 PM, Andrew F. Davis wrote:
+>> On 04/11/2018 09:15 AM, Peter Rosin wrote:
+>>> This is a current sense amplifier from Analog Devices.
+>>>
+>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>> ---
+>>>  drivers/iio/afe/Kconfig              |  3 +-
+>>>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+>>> index 642ce4eb12a6..0e10fe8f459a 100644
+>>> --- a/drivers/iio/afe/Kconfig
+>>> +++ b/drivers/iio/afe/Kconfig
+>>> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>>>  	depends on OF || COMPILE_TEST
+>>>  	help
+>>>  	  Say yes here to build support for the IIO unit converter
+>>> -	  that handles voltage dividers and current sense shunts.
+>>> +	  that handles voltage dividers, current sense shunts and
+>>> +	  the LT6106 Current Sense Amplifier from Analog Devices.
+>>
+>> Could work better to split these out into separate drivers. Maybe a
+>> iio-shunt-resistor.c that does just voltage->current with the
+>> appropriate scaling. Then make a a separate lt6106.c.
+> 
+> I don't think we need a separate driver here. There are tons of circuits
+> that all work the same way and all require the same properties. If we'd add
+> a driver for each of them we'd get buried in boilerplate code.
+> 
 
-Matheus Castello <matheus@castello.eng.br> writes:
+Fair enough, then it should at least be renamed to something generic
+like current-sense-amplifier, as you said lots of circuits do this, not
+just lt6106s. We will have then have support for:
 
-> Added generic pin configuration and multiplexing support,
-> and should be preferred than brcm legacy one.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt  | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+current-sense-amplifier
+current-sense-shunt
+voltage-divider
 
-All 3 patches are:
+compatibles in this driver called "unit-converter" which is still a
+misnomer IMHO.
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
-
-Thanks for doing this!
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlrOMXoACgkQtdYpNtH8
-nuj/1g//fxXVtZo3a5iog1ZPJ+ZHt2TI1AKXnCcQ6dF1gdsHD4FOF3UqnK1I87Aj
-V38Fv3b3l3vMNvrRZp4y6evU/+1Xa7AbAbKTE+TCqmAPsLM06ECFtjax9gqIf5tI
-gDa46IO63fLNmAEFVy3bi0UyjmHka6zvOycXnOihpuwXjErrcf0UOuFflyBHIEFR
-b2SQcPAPf6+Q9GhGOAZF1kO7JpTkBxfSptXKYajkCTfUfgVYrOUFtjn6I8BYEvp6
-hxVFjwimABfhhhAE5hRj6lyCFq90z/y0pwu2LpYA9moR0Pxw04Ht95pGtrs/MQYc
-UBzQ6e+gU7dNfwA9vtr7kRwqR7PT/QCuASUvTOFAigypXDACjLbjQHYxnZJQl3El
-lRdgMvdW23t8/LQb+/sgsJLAprBYp3RE72EJ/mtxZUYhqqHYGB+Wuav3mSo1ZVvV
-xksZCMNGzm7vHgp32c1T/SWKTJ3tpDNfu8mVJw2yJY6uE8ahfgxbQGINf4CAfNhh
-9W2YAHyL6Mipz5JfFVZmMn/WKKgPn+gA17QVpFdLJOr/M/nOVODiYI31krvfNFlP
-3y9XfGMyHoF3bDMO962u3kmDAe8yJRVRVO2T/354AVmL4Is9IR2er88DkFa7MjBn
-yT4DMkILqgkGOfk9xwJ306QNF4mHZ4AuR+Tlh46fPkQXGa+yu/A=
-=UWDk
------END PGP SIGNATURE-----
---=-=-=--
+Andrew
