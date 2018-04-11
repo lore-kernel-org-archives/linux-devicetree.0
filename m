@@ -1,82 +1,33 @@
-Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from bin-mail-out-06.binero.net ([195.74.38.229]:20709 "EHLO
-        bin-mail-out-06.binero.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752261AbeDQU4D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Apr 2018 16:56:03 -0400
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a7796: decrease temperature hysteresis
-Date: Tue, 17 Apr 2018 22:54:28 +0200
-Message-Id: <20180417205428.15227-3-niklas.soderlund@ragnatech.se>
-In-Reply-To: <20180417205428.15227-1-niklas.soderlund@ragnatech.se>
-References: <20180417205428.15227-1-niklas.soderlund@ragnatech.se>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] clk: renesas: Add support for R-Car E3
+Date: Wed, 11 Apr 2018 18:37:25 +0900
+Message-Id: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+This patch is based on the renesas-drivers-2018-04-03-v4.16 tag of
+renesas-drivers.git.
 
-To incorporate more tests by the hardware team decrease the hysteresis
-value to 1C.
+Takeshi Kihara (1):
+  clk: renesas: Add r8a77990 CPG Core Clock Definitions
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Yoshihiro Shimoda (1):
+  clk: renesas: cpg-mssr: Add support for R-Car E3
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 599c74d6a6cb67ab..e3a28b9a5fbdd2a6 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -2438,12 +2438,12 @@
- 			trips {
- 				sensor1_passive: sensor1-passive {
- 					temperature = <95000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "passive";
- 				};
- 				sensor1_crit: sensor1-crit {
- 					temperature = <120000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-@@ -2464,12 +2464,12 @@
- 			trips {
- 				sensor2_passive: sensor2-passive {
- 					temperature = <95000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "passive";
- 				};
- 				sensor2_crit: sensor2-crit {
- 					temperature = <120000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-@@ -2490,12 +2490,12 @@
- 			trips {
- 				sensor3_passive: sensor3-passive {
- 					temperature = <95000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "passive";
- 				};
- 				sensor3_crit: sensor3-crit {
- 					temperature = <120000>;
--					hysteresis = <2000>;
-+					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   3 +-
+ drivers/clk/renesas/Kconfig                        |   5 +
+ drivers/clk/renesas/Makefile                       |   1 +
+ drivers/clk/renesas/r8a77990-cpg-mssr.c            | 291 +++++++++++++++++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
+ include/dt-bindings/clock/r8a77990-cpg-mssr.h      |  63 +++++
+ 7 files changed, 369 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/renesas/r8a77990-cpg-mssr.c
+ create mode 100644 include/dt-bindings/clock/r8a77990-cpg-mssr.h
+
 -- 
-2.17.0
-
+1.9.1
