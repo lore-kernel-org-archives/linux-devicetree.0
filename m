@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 04/12] arm: dts: mt7623: fix available memory size on bananapi-r2
-Date: Wed, 11 Apr 2018 16:53:57 +0800
-Message-ID: <705d03d06a7668d66689777bb90806953e0744b3.1523434758.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 06/12] arm: dts: mt7623: add BTIF, HSDMA and SPI-NOR device nodes
+Date: Wed, 11 Apr 2018 16:53:59 +0800
+Message-ID: <39294f68b1f9e65341f94a989347da81a26c878d.1523434758.git.sean.wang@mediatek.com>
 References: <cover.1523434757.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,28 +14,102 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-There is 2GB DDR3 available on bananapi-r2 board as [1] specified.
-
-[1] http://www.banana-pi.org/r2.html
+add BTIF, HSDMA and SPI-NOR device nodes and enable it on relevant boards
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 ---
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/mt7623.dtsi                 | 36 ++++++++++++++++++++++++++-
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  6 ++++-
+ 2 files changed, 40 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index b9b5619..8cf3d26 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (c) 2017 MediaTek Inc.
++ * Copyright (c) 2017-2018 MediaTek Inc.
+  * Author: John Crispin <john@phrozen.org>
+  *	   Sean Wang <sean.wang@mediatek.com>
+  *
+@@ -486,6 +486,18 @@
+ 		nvmem-cell-names = "calibration-data";
+ 	};
+ 
++	btif: serial@1100c000 {
++		compatible = "mediatek,mt7623-btif",
++			     "mediatek,mtk-btif";
++		reg = <0 0x1100c000 0 0x1000>;
++		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_BTIF>;
++		clock-names = "main";
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
++
+ 	nandc: nfi@1100d000 {
+ 		compatible = "mediatek,mt7623-nfc",
+ 			     "mediatek,mt2701-nfc";
+@@ -511,6 +523,18 @@
+ 		status = "disabled";
+ 	};
+ 
++	nor_flash: spi@11014000 {
++		compatible = "mediatek,mt7623-nor",
++			     "mediatek,mt8173-nor";
++		reg = <0 0x11014000 0 0x1000>;
++		clocks = <&pericfg CLK_PERI_FLASH>,
++			 <&topckgen CLK_TOP_FLASH_SEL>;
++		clock-names = "spi", "sf";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	spi1: spi@11016000 {
+ 		compatible = "mediatek,mt7623-spi",
+ 			     "mediatek,mt2701-spi";
+@@ -867,6 +891,16 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	hsdma: dma-controller@1b007000 {
++		compatible = "mediatek,mt7623-hsdma";
++		reg = <0 0x1b007000 0 0x1000>;
++		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
++		clock-names = "hsdma";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
++		#dma-cells = <1>;
++	};
++
+ 	eth: ethernet@1b100000 {
+ 		compatible = "mediatek,mt7623-eth",
+ 			     "mediatek,mt2701-eth",
 diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 5938e4c..d2a354e 100644
+index 71023a6..1fd6f55 100644
 --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
 +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -110,7 +110,7 @@
- 
- 	memory@80000000 {
- 		device_type = "memory";
--		reg = <0 0x80000000 0 0x40000000>;
-+		reg = <0 0x80000000 0 0x80000000>;
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2017 Sean Wang <sean.wang@mediatek.com>
++ * Copyright 2017-2018 Sean Wang <sean.wang@mediatek.com>
+  *
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+@@ -114,6 +114,10 @@
  	};
  };
  
++&btif {
++	status = "okay";
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
 -- 
 2.7.4
