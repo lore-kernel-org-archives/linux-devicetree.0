@@ -1,14 +1,14 @@
 From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH v2 8/9] PCI: dwc: Small computation improvement
-Date: Tue, 10 Apr 2018 20:01:21 -0400
-Message-ID: <003001d3d128$39f3eaa0$addbbfe0$@gmail.com>
-References: <cover.1523266508.git.gustavo.pimentel@synopsys.com> <5181f7ffbb9d2889974c49d84e72042251adf8b6.1523266508.git.gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH v2 7/9] PCI: dwc: Replace lower into upper case characters
+Date: Tue, 10 Apr 2018 20:05:59 -0400
+Message-ID: <000001d3d128$dfa4e8a0$9eeeb9e0$@gmail.com>
+References: <cover.1523266508.git.gustavo.pimentel@synopsys.com> <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
         charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5181f7ffbb9d2889974c49d84e72042251adf8b6.1523266508.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <a28d463d04b198f51c64c1a7eb5b3f77da2d4ab9.1523266508.git.gustavo.pimentel@synopsys.com>
 Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 To: 'Gustavo Pimentel' <gustavo.pimentel@synopsys.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, Joao.Pinto@synopsys.com, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
@@ -17,51 +17,28 @@ List-Id: devicetree@vger.kernel.org
 
 On Monday, April 9, 2018 5:41 AM, Gustavo Pimentel wrote:
 > 
-> Replaces a simple division by 2 to a right shift rotation of 1 bit.
-
-It looks good. However, would you add a simple reason to the commit
-message?
-
-Best regards,
-Jingoo Han
-
+> Replaces lower into upper case characters in comments and debug printks.
+> 
+> This is an attempt to keep the messages coherent within the designware
+> driver.
+> 
+> Also fixed code style on dw_pcie_irq_domain_free function.
 > 
 > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+
+
 > ---
 > Change v1->v2:
-> - Nothing changed, just to follow the patch set version.
+> - Added an extra log description line about code style following Fabio
+> Estevam suggestion.
 > 
->  drivers/pci/dwc/pcie-designware-host.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/pci/dwc/pcie-designware-ep.c   | 16 ++++++++--------
+>  drivers/pci/dwc/pcie-designware-host.c | 35 ++++++++++++++++++-----------
+> -----
+>  drivers/pci/dwc/pcie-designware.c      | 22 ++++++++++-----------
+>  3 files changed, 38 insertions(+), 35 deletions(-)
 > 
-> diff --git a/drivers/pci/dwc/pcie-designware-host.c
-> b/drivers/pci/dwc/pcie-designware-host.c
-> index 03e9b82..8e6fed4 100644
-> --- a/drivers/pci/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/dwc/pcie-designware-host.c
-> @@ -332,8 +332,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> 
->  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> "config");
->  	if (cfg_res) {
-> -		pp->cfg0_size = resource_size(cfg_res) / 2;
-> -		pp->cfg1_size = resource_size(cfg_res) / 2;
-> +		pp->cfg0_size = resource_size(cfg_res) >> 1;
-> +		pp->cfg1_size = resource_size(cfg_res) >> 1;
->  		pp->cfg0_base = cfg_res->start;
->  		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
->  	} else if (!pp->va_cfg0_base) {
-> @@ -377,8 +377,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			break;
->  		case 0:
->  			pp->cfg = win->res;
-> -			pp->cfg0_size = resource_size(pp->cfg) / 2;
-> -			pp->cfg1_size = resource_size(pp->cfg) / 2;
-> +			pp->cfg0_size = resource_size(pp->cfg) >> 1;
-> +			pp->cfg1_size = resource_size(pp->cfg) >> 1;
->  			pp->cfg0_base = pp->cfg->start;
->  			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
->  			break;
-> --
-> 2.7.4
-> 
+
+[.....]
