@@ -1,77 +1,63 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] vfio: platform: Fix using devices in PM Domains
-Date: Wed, 11 Apr 2018 11:15:46 +0200
-Message-ID: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 1/2] vfio: platform: Fix reset module leak in error path
+Date: Wed, 11 Apr 2018 11:15:48 +0200
+Message-ID: <1523438149-16433-3-git-send-email-geert+renesas@glider.be>
+References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-If a device is part of a PM Domain (e.g. power and/or clock domain), its
-power state is managed using Runtime PM.  Without Runtime PM, the device
-may not be powered up, causing subtle failures, crashes, or system
-lock-ups when the device is accessed by the guest.
+If the IOMMU group setup fails, the reset module is not released.
 
-Fix this by adding Runtime PM support, powering the device when the VFIO
-device is opened by the guest.
-
-Note that while more fine-grained power management could be implemented
-on the guest side, if exported, this would be inherently unsafe, as
-abusing it may kill the whole system.
-
+Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- drivers/vfio/platform/vfio_platform_common.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+v3:
+  - Add Reviewed-by,
+
+v2:
+  - Add Reviewed-by.
+---
+ drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-index 3c13327b2777f8ec..9d46fce2446daebe 100644
+index 35469af87f88678e..b60bb5326668498c 100644
 --- a/drivers/vfio/platform/vfio_platform_common.c
 +++ b/drivers/vfio/platform/vfio_platform_common.c
-@@ -17,6 +17,7 @@
- #include <linux/iommu.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -255,6 +256,8 @@ static void vfio_platform_release(void *device_data)
- 		const char *extra_dbg = NULL;
- 		int ret;
- 
-+		pm_runtime_put(vdev->device);
-+
- 		ret = vfio_platform_call_reset(vdev, &extra_dbg);
- 		if (ret && vdev->reset_required) {
- 			dev_warn(vdev->device, "reset driver is required and reset call failed in release (%d) %s\n",
-@@ -297,6 +300,10 @@ static int vfio_platform_open(void *device_data)
- 				 ret, extra_dbg ? extra_dbg : "");
- 			goto err_rst;
- 		}
-+
-+		ret = pm_runtime_get_sync(vdev->device);
-+		if (ret < 0)
-+			goto err_rst;
+@@ -680,18 +680,23 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 	group = vfio_iommu_group_get(dev);
+ 	if (!group) {
+ 		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto put_reset;
  	}
  
- 	vdev->refcnt++;
-@@ -712,6 +719,7 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 	ret = vfio_add_group_dev(dev, &vfio_platform_ops, vdev);
+-	if (ret) {
+-		vfio_iommu_group_put(group, dev);
+-		return ret;
+-	}
++	if (ret)
++		goto put_iommu;
  
  	mutex_init(&vdev->igate);
  
-+	pm_runtime_enable(vdev->device);
  	return 0;
++
++put_iommu:
++	vfio_iommu_group_put(group, dev);
++put_reset:
++	vfio_platform_put_reset(vdev);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(vfio_platform_probe_common);
  
- put_iommu:
-@@ -729,6 +737,7 @@ struct vfio_platform_device *vfio_platform_remove_common(struct device *dev)
- 	vdev = vfio_del_group_dev(dev);
- 
- 	if (vdev) {
-+		pm_runtime_disable(vdev->device);
- 		vfio_platform_put_reset(vdev);
- 		vfio_iommu_group_put(dev->iommu_group, dev);
- 	}
 -- 
 2.7.4
