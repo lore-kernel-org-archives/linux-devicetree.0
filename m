@@ -1,52 +1,76 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [RFC 1/6] dt-bindings: dma: xilinx_dma: Add optional property
- has_axieth_connected
-Date: Wed, 11 Apr 2018 14:35:26 +0530
-Message-ID: <20180411090525.GX6014@localhost>
-References: <1522665546-10035-1-git-send-email-radheys@xilinx.com>
- <1522665546-10035-2-git-send-email-radheys@xilinx.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 01/12] dt-bindings: cpufreq: mediatek: use - instead of _
+ in examples
+Date: Wed, 11 Apr 2018 16:53:54 +0800
+Message-ID: <1b9604aa3d3c68be68caf8af32fa4130f57743d6.1523434758.git.sean.wang@mediatek.com>
+References: <cover.1523434757.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522665546-10035-2-git-send-email-radheys@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, radheys@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1523434757.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 02, 2018 at 04:09:01PM +0530, Radhey Shyam Pandey wrote:
-> Add an optional AXI DMA property 'has_axieth_connected'. This can be
-> specified to indicate that AXI DMA is connected to AXI Ethernet in
-> hardware design and dma driver needs to do some additional handling.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-1. why are DT people and list not added to this? I have added that
-2. should we have a property for a specific peripheral? Wouldn't it help to have
-a generic property for peripheral connected which can be scaled to more IPs
-being connected in future?
-3. Please use right subsystem name, it damengine: not dma:
+It should be good that no use "_" is in examples. Consequently,
+those nodes in certain files which have an inappropriate name containing
+"_" are all being replaced with "-".
 
-> 
-> Signed-off-by: Radhey Shyam Pandey <radheys@xilinx.com>
-> ---
->  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> index a2b8bfa..5d592e3 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> @@ -42,6 +42,7 @@ Optional properties:
->  	the hardware.
->  Optional properties for AXI DMA:
->  - xlnx,mcdma: Tells whether configured for multi-channel mode in the hardware.
-> +- xlnx,axieth-connected: Tells whether AXI DMA is connected to AXI Ethernet.
->  Optional properties for VDMA:
->  - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
->  	It takes following values:
-> -- 
-> 1.7.1
-> 
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+index d36f07e..38cfbb5 100644
+--- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+@@ -26,7 +26,7 @@ Optional properties:
+ 
+ Example 1 (MT7623 SoC):
+ 
+-	cpu_opp_table: opp_table {
++	cpu_opp_table: opp-table {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+@@ -86,7 +86,7 @@ Example 1 (MT7623 SoC):
+ 	};
+ 
+ Example 2 (MT8173 SoC):
+-	cpu_opp_table_a: opp_table_a {
++	cpu_opp_table_a: opp-table-a {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+@@ -131,7 +131,7 @@ Example 2 (MT8173 SoC):
+ 		};
+ 	};
+ 
+-	cpu_opp_table_b: opp_table_b {
++	cpu_opp_table_b: opp-table-b {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
 -- 
-~Vinod
+2.7.4
