@@ -1,76 +1,498 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 2/3] ARM: dts: sun7i: Add RGB666 pins definition
-Date: Thu, 12 Apr 2018 00:22:09 +0200
-Message-ID: <e7f68882-c333-12ac-c122-20b0d7b65666@micronovasrl.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun7i: Add support for the
+ Ainol AW1 tablet
+Date: Thu, 12 Apr 2018 01:08:51 +0200
+Message-ID: <7f6d6a6a5a0cc2d37ebba046509d4f25d3bfa600.camel@paulk.fr>
 References: <20180410213129.24049-1-contact@paulk.fr>
- <20180410213129.24049-2-contact@paulk.fr>
+	 <20180410213129.24049-3-contact@paulk.fr>
+	 <20180411070657.kw6uckqtmwb7p5hf@flea>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410213129.24049-2-contact@paulk.fr>
-Content-Language: it
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-uZfVfqY0EVzNGQdhvl7l"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBBE5LXLLAKGQEA4BCQLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180411070657.kw6uckqtmwb7p5hf@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Il 10/04/2018 23:31, Paul Kocialkowski ha scritto:
-> This adds the pins definition for RGB666 LCD panels on the A20. It was
-> imported from the A33 definition, that concernes the same set of pins.
-> 
-> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> ---
->   arch/arm/boot/dts/sun7i-a20.dtsi | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index e529e4ff2174..f46af8675cfa 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -781,6 +781,14 @@
->   				function = "ir1";
->   			};
->   
-> +			lcd_rgb666_pins: lcd_rgb666@0 {
+--=-uZfVfqY0EVzNGQdhvl7l
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I point you to this Thread and back:
-https://lists.freedesktop.org/archives/dri-devel/2018-March/170688.html
+Hi and thanks for the review !
 
-I did the same for rgb888, so good part is discussed.
+Le mercredi 11 avril 2018 =C3=A0 09:06 +0200, Maxime Ripard a =C3=A9crit :
+> Hi,
+>=20
+> On Tue, Apr 10, 2018 at 11:31:29PM +0200, Paul Kocialkowski wrote:
+> > This adds support for the Ainol AW1, an A20-based 7" tablet from
+> > Ainol.
+> >=20
+> > The following board-specific features are supported:
+> > * LCD panel
+> > * Backlight
+> > * USB OTG
+> > * Buttons
+> > * Touchscreen (doesn't work without non-free firmware)
+> > * Accelerometer
+> > * Battery
+> >=20
+> > The following are untested:
+> > * Audio output
+> > * Audio speakers
+> > * USB via SPCI connector
+> >=20
+> > The following are not supported:
+> > * Wi-Fi
+> > * Bluetooth
+> > * NAND
+> > * Audio via SPCI connector
+> >=20
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/Makefile                |   1 +
+> >  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 358
+> > ++++++++++++++++++++++++++++++
+> >  2 files changed, 359 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> >=20
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 9f7133b6fba0..03bfacebfdbd 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -929,6 +929,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
+> >  	sun6i-a31s-sinovoip-bpi-m2.dtb \
+> >  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+> >  dtb-$(CONFIG_MACH_SUN7I) +=3D \
+> > +	sun7i-a20-ainol-aw1.dtb \
+> >  	sun7i-a20-bananapi.dtb \
+> >  	sun7i-a20-bananapi-m1-plus.dtb \
+> >  	sun7i-a20-bananapro.dtb \
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> > b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> > new file mode 100644
+> > index 000000000000..697586991aea
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
+> > @@ -0,0 +1,358 @@
+> > +/*
+> > + * Copyright 2018 Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> > + *
+> > + * This file is dual-licensed: you can use it either under the
+> > terms
+> > + * of the GPL or the X11 license, at your option. Note that this
+> > dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License
+> > as
+> > + *     published by the Free Software Foundation; either version 2
+> > of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty
+> > of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+> > the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated
+> > documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom
+> > the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall
+> > be
+> > + *     included in all copies or substantial portions of the
+> > Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+> > KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+> > WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+> > OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+>=20
+> Can you use an SPDX header instead of the whole license text?
 
-IMHO I would:
-- call lcd0_rgb666_pins, since this is for LCD0 interface
-- same as above, call lcd0-rgb666, take care about using "-" instad of 
-"_" that can cause DTC warnings.
-- remove @0 since only this set can achieve LCD0 RGB666, and I
-   don't think there will be other combinations.
+Sure, will do in v2.
 
-Kind regards
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "sun7i-a20.dtsi"
+> > +#include "sunxi-common-regulators.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +
+> > +/ {
+> > +	model =3D "Ainol AW1";
+> > +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
+> > +
+> > +	aliases {
+> > +		serial0 =3D &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path =3D "serial0:115200n8";
+> > +	};
+> > +
+> > +	backlight: backlight {
+> > +		compatible =3D "pwm-backlight";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&backlight_enable_pin>;
+>=20
+> You don't need any of the pinctrl nodes for the GPIOs
 
--- 
-Giulio Benetti
-CTO
+I tried without the pinctrl nodes and got issues on various controllers
+(e.g. i2c for the touchscreen) because of the missing pinctrl nodes on
+4.16. Maybe I'm missing some patches here?
 
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale € 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
+> > +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90
+> > 100>;
+> > +		default-brightness-level =3D <5>;
+> > +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7
+> > */
+> > +	};
+> > +
+> > +	panel: panel {
+> > +		compatible =3D "innolux,at070tn92";
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +		power-supply =3D <&panel_power>;
+> > +		backlight =3D <&backlight>;
+> > +
+> > +		port@0 {
+> > +			reg =3D <0>;
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			panel_input: endpoint@0 {
+> > +				reg =3D <0>;
+> > +				remote-endpoint =3D
+> > <&tcon0_out_panel>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	panel_power: panel_power {
+> > +		compatible =3D "regulator-fixed";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&panel_power_pin>;
+> > +		regulator-name =3D "panel-power";
+> > +		regulator-min-microvolt =3D <10400000>;
+> > +		regulator-max-microvolt =3D <10400000>;
+> > +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+> > +		enable-active-high;
+>=20
+> Sigh, we should really convert regulator-fixed to use the proper GPIO
+> API here...
+>=20
+> > +		regulator-boot-on;
+> > +	};
+> > +};
+> > +
+> > +&codec {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&codec_pa_pin>;
+> > +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15
+> > */
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply =3D <&reg_dcdc2>;
+> > +};
+>=20
+> How was CPUfreq tested?
 
+In fact, I haven't tried it at all, but I can definitely do that with
+e.g. ssvb's stress test for various cpufreq functioning points.
 
-> +				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-> +				       "PD10", "PD11", "PD12", "PD13", "PD14", "PD15",
-> +				       "PD18", "PD19", "PD20", "PD21", "PD22", "PD23",
-> +				       "PD24", "PD25", "PD26", "PD27";
-> +				function = "lcd0";
-> +			};
-> +
->   			mmc0_pins_a: mmc0@0 {
->   				pins = "PF0", "PF1", "PF2",
->   				       "PF3", "PF4", "PF5";
-> 
+> > +
+> > +&de {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ehci0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ehci1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c0_pins_a>;
+> > +	status =3D "okay";
+> > +
+> > +	axp209: pmic@34 {
+> > +		reg =3D <0x34>;
+> > +		interrupt-parent =3D <&nmi_intc>;
+> > +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +};
+> > +
+> > +&i2c1 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c1_pins_a>;
+> > +	status =3D "okay";
+> > +
+> > +	lis3dh: accelerometer@18 {
+> > +		compatible =3D "st,lis3dh-accel";
+> > +		reg =3D <0x18>;
+> > +		vdd-supply =3D <&reg_vcc3v3>;
+> > +		vddio-supply =3D <&reg_vcc3v3>;
+> > +		st,drdy-int-pin =3D <1>;
+> > +	};
+> > +};
+> > +
+> > +&i2c2 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&i2c2_pins_a>;
+> > +	status =3D "okay";
+> > +	clock-frequency =3D <400000>; /* 400 KHz required for
+> > GSL1680. */
+>=20
+> I'm not sure that comment is worth it. The only device there is the
+> touchscreen, so it's kind of obvious that it's the device that needs
+> that frequency.
+
+Well, I found a similar comment in the other dts using the same
+touchscreen controller. Since the information was rather valuable (it
+made it clear that I needed the same clock frequency for that specific
+touchscreen), it might help others in the future (even if only when
+grepping for gsl1680).
+
+> > +
+> > +	gsl1680: touchscreen@40 {
+> > +		compatible =3D "silead,gsl1680";
+> > +		reg =3D <0x40>;
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&touchscreen_power_pin>;
+> > +		interrupt-parent =3D <&pio>;
+> > +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /*
+> > EINT21 (PH21) */
+> > +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20
+> > */
+> > +		firmware-name =3D "gsl1680-ainol-aw1.fw";
+> > +		touchscreen-size-x =3D <480>;
+> > +		touchscreen-size-y =3D <800>;
+> > +		touchscreen-swapped-x-y;
+> > +		touchscreen-inverted-y;
+> > +		silead,max-fingers =3D <5>;
+> > +	};
+> > +};
+> > +
+> > +&lradc {
+> > +	vref-supply =3D <&reg_vcc3v0>;
+>=20
+> You should use the proper regulator from the PMIC here.
+
+Fair enough, I'll look into that and try to fix it in v2. I think this
+was inspired from another dts using lradc for buttons.
+
+> > +	status =3D "okay";
+> > +
+> > +	button@571 {
+> > +		label =3D "Volume Up";
+> > +		linux,code =3D <KEY_VOLUMEUP>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <571428>;
+> > +	};
+> > +
+> > +	button@761 {
+> > +		label =3D "Volume Down";
+> > +		linux,code =3D <KEY_VOLUMEDOWN>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <761904>;
+> > +	};
+> > +
+> > +	button@952 {
+> > +		label =3D "Home";
+> > +		linux,code =3D <KEY_HOME>;
+> > +		channel =3D <0>;
+> > +		voltage =3D <952380>;
+> > +	};
+> > +};
+> > +
+> > +&mmc0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&mmc0_pins_a>;
+> > +	vmmc-supply =3D <&reg_vcc3v3>;
+>=20
+> And here too.
+
+I will also look into it for v2 then.
+
+> > +	bus-width =3D <4>;
+> > +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> > +	cd-inverted;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ohci0 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&ohci1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&otg_sram {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pio {
+> > +	panel_power_pin: panel_power_pin@0 {
+> > +		pins =3D "PH8";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	backlight_enable_pin: backlight_enable_pin@0 {
+> > +		pins =3D "PH7";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	touchscreen_power_pin: touchscreen_power_pin@0 {
+> > +		pins =3D "PH20";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	codec_pa_pin: codec_pa_pin@0 {
+> > +		pins =3D "PH15";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+> > +		pins =3D "PH4";
+> > +		function =3D "gpio_in";
+> > +		bias-pull-up;
+> > +	};
+> > +
+> > +	usb0_vbus_pin: usb0_vbus_pin@0 {
+> > +		pins =3D "PB9";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	usb1_vbus_pin: usb1_vbus_pin@0 {
+> > +		pins =3D "PH6";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	usb2_vbus_pin: usb2_vbus_pin@0 {
+> > +		pins =3D "PH3";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +};
+> > +
+> > +&pwm {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pwm0_pins_a>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&tcon0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&lcd_rgb666_pins>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&tcon0_out {
+> > +	tcon0_out_panel: endpoint@0 {
+> > +		reg =3D <0>;
+> > +		remote-endpoint =3D <&panel_input>;
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&uart0_pins_a>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&usb_otg {
+> > +	dr_mode =3D "otg";
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&usbphy {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&usb0_id_detect_pin>;
+> > +	usb0_id_det-gpio =3D <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+> > +	usb0_vbus_power-supply =3D <&usb_power_supply>;
+> > +	usb0_vbus-supply =3D <&reg_usb0_vbus>;
+> > +	usb1_vbus-supply =3D <&reg_usb1_vbus>;
+> > +	usb2_vbus-supply =3D <&reg_usb2_vbus>;
+>=20
+> And here as well.
+
+--=20
+Paul Kocialkowski,
+
+developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--=-uZfVfqY0EVzNGQdhvl7l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrOlYQACgkQhP3B6o/u
+lQys2w//UVwbIltiZviOjbMxh0LAWFBfymU5208P7DQx8YNzJiTZcP5rnOT7n2w9
+DKCCIOLtFiYI3f9mg5qrKKUNzh+8ntsHhOpAcZbcvusfizIBt+fxR3ebhzGOLfkX
+K8im10pCFUXeyQkNoeGgAtHxIRGTO5b8vayljYVrHdy+RSddKjcVU7TKP5Q6qJ64
+hqZZqtWdMwbJLXYQJ4jxpd486VSTKSew7W3XAbyA0O4Gisom3eB0VCvTVcaa9qJi
+XPMfJP5DzvWVAitDwZO5eYUEFC9vWmxBoa/0pzqSDOd/XzB0S6fcbbc+OvsLV43S
+MD25zzoD49Y92fqw5tDWpie7hg2w1ezQm3nM+L35rnoqIR5/s7bX7KO9NGBeAc70
+6DQfyy4QFwEA5vWDcZBcVyxqQZ6btq66CReVO8rDMfF6cDuGx3Ru7Z5echnS8Gfw
+jrXq05C1XDlQySZp6JGs5LGa/yBIjsbd/8SsMpp4/mw1MblurIfeyGPyptWhdwtR
+jKZTaZ1+j++i5Hu8PbIOyZ4qst4w6YI0N0S5/zChFJgcXJ0HV24gZjc+VBB0VBEl
+Hp7ULb14WI5O9tds+clDoj8MpzsUxobx+3haIKKXNcrKVgljXsO2SDvLvk3RKZnq
+Cy1nLvToFsBKZvicr/6egMrNb3uizuXvnSqqL8sMehm5WK7bPNA=
+=EjPv
+-----END PGP SIGNATURE-----
+
+--=-uZfVfqY0EVzNGQdhvl7l--
