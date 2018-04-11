@@ -1,51 +1,99 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/4] soc: renesas: identify R-Car E3
-Date: Wed, 11 Apr 2018 18:36:23 +0900
-Message-Id: <1523439386-1032-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=7/vk=HA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lf0-f65.google.com ([209.85.215.65]:43893 "EHLO
+        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751546AbeDKKd4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Apr 2018 06:33:56 -0400
+Received: by mail-lf0-f65.google.com with SMTP id v207-v6so1890263lfa.10
+        for <devicetree@vger.kernel.org>; Wed, 11 Apr 2018 03:33:55 -0700 (PDT)
+Date: Wed, 11 Apr 2018 12:33:53 +0200
+From: niklas soderlund <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v2 3/4] arm64: dts: renesas: r8a77970: add LVDS support
+Message-ID: <20180411103353.GY12256@bigcity.dyn.berto.se>
+References: <1523357646-3946-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1523357646-3946-4-git-send-email-jacopo+renesas@jmondi.org>
+ <0baa0f6e-f275-4a27-c76b-e4f8aec0b5f6@cogentembedded.com>
+ <20180410121352.GD6436@w540>
+ <9f54ba77-368f-3d0c-cb58-4849672af449@cogentembedded.com>
+ <20180411095328.GE20945@w540>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180411095328.GE20945@w540>
+Sender: devicetree-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Hi Jacopo, Sergei,
 
-This patch adds support for identifying the R-Car E3 (R8A77990) SoC.
+On 2018-04-11 11:53:28 +0200, Jacopo Mondi wrote:
+> Hi Sergei, Niklas
+> 
+> On Tue, Apr 10, 2018 at 08:12:36PM +0300, Sergei Shtylyov wrote:
+> > On 04/10/2018 03:13 PM, jacopo mondi wrote:
+> >
+> > >>> From: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+> > >>>
+> > >>> Add the LVDS device to r8a77970.dtsi in a disabled state. Also connect
+> > >>> the it to the LVDS output of the DU.
+> > >>>
+> > >>> Signed-off-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+> > >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >>>
+> > >>> ---
+> > >>> v1 -> v2:
+> > >>> - Rebased on the modified endpoint name and changed patch subject to
+> > >>>   comply with other patches in the series from Sergei.
+> > >>
+> > >>    Stop, what was wrong with my R8A77970 LVDS patch, reposted on the popular
+> > >> demand? :-)
+> > >>
+> > >
+> > > Nothing wrong, I found out about your right now.
+> > > I see a very small difference as
+> > >          lvds@feb90000 vs lvds-encoder@feb90000
+> >
+> >    Yes, I thought the latter was closer to a "generic" name that DT spec requires...
+> >
+> > > You can add your signed-off-by ofc if you think that's the case.
+> >
+> >    Didn't understand what you mean here...
+> 
+> Don't worry, I will resend this and use (part of) your series
+> [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+> 
+> But please note that:
+> [1/5] from your series has already been collected by Simon
+> I have to reapply Laurent's comment on this series to your one (so I
+> have to resend it anyhow)
+> [5/5] from your series shall be resent to take into account the newly
+> developed LVDS decoder driver (once it has been accepted)
+> 
+> I have anyway to repost your patches then, and as I did in this series
+> you are ofc listed as author already, so I have missed what's the
+> difference actually except from LVDS patch I collected from Niklas and not
+> from your series.
+> 
+> Niklas I picked up patches 1-3 of this series from your tree.
+> 1 and 2 are patches from Sergei's series
+> 3 is from you but was also in Sergei's series and I picked yours as it
+> was there already. Can I rebase on top of Sergei's one instead?
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/soc/renesas/renesas-soc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Yes please do so. And sorry for this mess, it is my fault as I missed 
+one of Sergei's patches when integrating changes I made to 
+r8a77970-eagle.dts. For this series always pick Sergei's patches over 
+mine :-)
 
-diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index 3912a71..d44d0e6 100644
---- a/drivers/soc/renesas/renesas-soc.c
-+++ b/drivers/soc/renesas/renesas-soc.c
-@@ -164,6 +164,11 @@ struct renesas_soc {
- 	.id	= 0x56,
- };
- 
-+static const struct renesas_soc soc_rcar_e3 __initconst __maybe_unused = {
-+	.family	= &fam_rcar_gen3,
-+	.id	= 0x57,
-+};
-+
- static const struct renesas_soc soc_rcar_d3 __initconst __maybe_unused = {
- 	.family	= &fam_rcar_gen3,
- 	.id	= 0x58,
-@@ -236,6 +241,9 @@ struct renesas_soc {
- #ifdef CONFIG_ARCH_R8A77980
- 	{ .compatible = "renesas,r8a77980",	.data = &soc_rcar_v3h },
- #endif
-+#ifdef CONFIG_ARCH_R8A77990
-+	{ .compatible = "renesas,r8a77990",	.data = &soc_rcar_e3 },
-+#endif
- #ifdef CONFIG_ARCH_R8A77995
- 	{ .compatible = "renesas,r8a77995",	.data = &soc_rcar_d3 },
- #endif
+Once more sorry for the mess to both of you.
+
+> 
+> Thanks
+>    j
+
+
+
 -- 
-1.9.1
+Regards,
+Niklas S�derlund
