@@ -1,521 +1,136 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: Re: [PATCH 3/3] ARM: dts: sun7i: Add support for
- the Ainol AW1 tablet
-Date: Wed, 11 Apr 2018 08:09:49 +0200
-Message-ID: <5ca7a37c93dfc7b1fdbe9ae4730ebe10b8012cf2.camel@paulk.fr>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/3] drm/panel: Add RGB666 variant of Innolux AT070TN92
+Date: Wed, 11 Apr 2018 08:28:35 +0200
+Message-ID: <20180411062835.oqzd34e2szrnv34b@flea>
 References: <20180410213129.24049-1-contact@paulk.fr>
-	 <20180410213129.24049-3-contact@paulk.fr>
-	 <7e026716a09cc267440cc93d597aefc329486c91.camel@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-CWqdqRwbl1aUZHEPtE+0"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBOONW3LAKGQEWLQKANA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <7e026716a09cc267440cc93d597aefc329486c91.camel-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1444589583=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180410213129.24049-1-contact@paulk.fr>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Kocialkowski <contact@paulk.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-CWqdqRwbl1aUZHEPtE+0
-Content-Type: text/plain; charset="UTF-8"
+--===============1444589583==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7tqqpg34pqzskzur"
+Content-Disposition: inline
+
+
+--7tqqpg34pqzskzur
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Apr 10, 2018 at 11:31:27PM +0200, Paul Kocialkowski wrote:
+> This adds timings for the RGB666 variant of the Innolux AT070TN92 panel,
+> as found on the Ainol AW1 tablet.
+>=20
+> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
+/panel-simple.c
+> index 5591984a392b..efeb2f2162bc 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1063,6 +1063,29 @@ static const struct panel_desc innolux_at070tn92 =
+=3D {
+>  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
+>  };
+> =20
+> +static const struct drm_display_mode innolux_at070tn92_rgb666_mode =3D {
+> +	.clock =3D 40000,
+> +	.hdisplay =3D 800,
+> +	.hsync_start =3D 800 + 112,
+> +	.hsync_end =3D 800 + 112 + 1,
+> +	.htotal =3D 800 + 112 + 1 + 87,
+> +	.vdisplay =3D 480,
+> +	.vsync_start =3D 480 + 141,
+> +	.vsync_end =3D 480 + 141 + 1,
+> +	.vtotal =3D 480 + 141 + 1 + 38,
+> +	.vrefresh =3D 60,
+> +};
 
-Le mardi 10 avril 2018 =C3=A0 23:35 +0200, Paul Kocialkowski a =C3=A9crit :
-> Le mardi 10 avril 2018 =C3=A0 23:31 +0200, Paul Kocialkowski a =C3=A9crit=
- :
-> > This adds support for the Ainol AW1, an A20-based 7" tablet from
-> > Ainol.
->=20
-> This version didn't use the dedicated binding for the panel and will
-> be
-> fixed in v2 and onwards.
->=20
-> > The following board-specific features are supported:
-> > * LCD panel
-> > * Backlight
-> > * USB OTG
-> > * Buttons
-> > * Touchscreen (doesn't work without non-free firmware)
-> > * Accelerometer
-> > * Battery
-> >=20
-> > The following are untested:
-> > * Audio output
-> > * Audio speakers
-> > * USB via SPCI connector
-> >=20
-> > The following are not supported:
-> > * Wi-Fi
-> > * Bluetooth
-> > * NAND
-> > * Audio via SPCI connector
+I'm not sure why you'd need different timings if the only difference
+is the bus width.
 
-The camera is also not supported at this point.
+> +static const struct panel_desc innolux_at070tn92_rgb666 =3D {
+> +	.modes =3D &innolux_at070tn92_rgb666_mode,
+> +	.num_modes =3D 1,
+> +	.size =3D {
+> +		.width =3D 154,
+> +		.height =3D 86,
+> +	},
+> +	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+> +};
+> +
+>  static const struct display_timing innolux_g101ice_l01_timing =3D {
+>  	.pixelclock =3D { 60400000, 71100000, 74700000 },
+>  	.hactive =3D { 1280, 1280, 1280 },
+> @@ -2105,6 +2128,9 @@ static const struct of_device_id platform_of_match[=
+] =3D {
+>  	}, {
+>  		.compatible =3D "innolux,at070tn92",
+>  		.data =3D &innolux_at070tn92,
+> +	}, {
+> +		.compatible =3D "innolux,at070tn92-rgb666",
+> +		.data =3D &innolux_at070tn92_rgb666,
 
-> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile                |   1 +
-> >  arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts | 358
-> > ++++++++++++++++++++++++++++++
-> >  2 files changed, 359 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-> >=20
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 9f7133b6fba0..03bfacebfdbd 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -929,6 +929,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
-> >  	sun6i-a31s-sinovoip-bpi-m2.dtb \
-> >  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
-> >  dtb-$(CONFIG_MACH_SUN7I) +=3D \
-> > +	sun7i-a20-ainol-aw1.dtb \
-> >  	sun7i-a20-bananapi.dtb \
-> >  	sun7i-a20-bananapi-m1-plus.dtb \
-> >  	sun7i-a20-bananapro.dtb \
-> > diff --git a/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-> > b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-> > new file mode 100644
-> > index 000000000000..697586991aea
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/sun7i-a20-ainol-aw1.dts
-> > @@ -0,0 +1,358 @@
-> > +/*
-> > + * Copyright 2018 Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-> > + *
-> > + * This file is dual-licensed: you can use it either under the
-> > terms
-> > + * of the GPL or the X11 license, at your option. Note that this
-> > dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This file is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License
-> > as
-> > + *     published by the Free Software Foundation; either version 2
-> > of
-> > the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This file is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty
-> > of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
-> > the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated
-> > documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom
-> > the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall
-> > be
-> > + *     included in all copies or substantial portions of the
-> > Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-> > KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-> > WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
-> > OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "sun7i-a20.dtsi"
-> > +#include "sunxi-common-regulators.dtsi"
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/pwm/pwm.h>
-> > +
-> > +/ {
-> > +	model =3D "Ainol AW1";
-> > +	compatible =3D "ainol,ainol-aw1", "allwinner,sun7i-a20";
-> > +
-> > +	aliases {
-> > +		serial0 =3D &uart0;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path =3D "serial0:115200n8";
-> > +	};
-> > +
-> > +	backlight: backlight {
-> > +		compatible =3D "pwm-backlight";
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&backlight_enable_pin>;
-> > +		pwms =3D <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-> > +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90
-> > 100>;
-> > +		default-brightness-level =3D <5>;
-> > +		enable-gpios =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7
-> > */
-> > +	};
-> > +
-> > +	panel: panel {
-> > +		compatible =3D "innolux,at070tn92";
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +		power-supply =3D <&panel_power>;
-> > +		backlight =3D <&backlight>;
-> > +
-> > +		port@0 {
-> > +			reg =3D <0>;
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +
-> > +			panel_input: endpoint@0 {
-> > +				reg =3D <0>;
-> > +				remote-endpoint =3D
-> > <&tcon0_out_panel>;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	panel_power: panel_power {
-> > +		compatible =3D "regulator-fixed";
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&panel_power_pin>;
-> > +		regulator-name =3D "panel-power";
-> > +		regulator-min-microvolt =3D <10400000>;
-> > +		regulator-max-microvolt =3D <10400000>;
-> > +		gpio =3D <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-> > +		enable-active-high;
-> > +		regulator-boot-on;
-> > +	};
-> > +};
-> > +
-> > +&codec {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&codec_pa_pin>;
-> > +	allwinner,pa-gpios =3D <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15
-> > */
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&cpu0 {
-> > +	cpu-supply =3D <&reg_dcdc2>;
-> > +};
-> > +
-> > +&de {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ehci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ehci1 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&i2c0_pins_a>;
-> > +	status =3D "okay";
-> > +
-> > +	axp209: pmic@34 {
-> > +		reg =3D <0x34>;
-> > +		interrupt-parent =3D <&nmi_intc>;
-> > +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> > +	};
-> > +};
-> > +
-> > +&i2c1 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&i2c1_pins_a>;
-> > +	status =3D "okay";
-> > +
-> > +	lis3dh: accelerometer@18 {
-> > +		compatible =3D "st,lis3dh-accel";
-> > +		reg =3D <0x18>;
-> > +		vdd-supply =3D <&reg_vcc3v3>;
-> > +		vddio-supply =3D <&reg_vcc3v3>;
-> > +		st,drdy-int-pin =3D <1>;
-> > +	};
-> > +};
-> > +
-> > +&i2c2 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&i2c2_pins_a>;
-> > +	status =3D "okay";
-> > +	clock-frequency =3D <400000>; /* 400 KHz required for
-> > GSL1680.
-> > */
-> > +
-> > +	gsl1680: touchscreen@40 {
-> > +		compatible =3D "silead,gsl1680";
-> > +		reg =3D <0x40>;
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&touchscreen_power_pin>;
-> > +		interrupt-parent =3D <&pio>;
-> > +		interrupts =3D <7 21 IRQ_TYPE_EDGE_FALLING>; /*
-> > EINT21
-> > (PH21) */
-> > +		power-gpios =3D <&pio 7 20 GPIO_ACTIVE_HIGH>; /* PH20
-> > */
-> > +		firmware-name =3D "gsl1680-ainol-aw1.fw";
-> > +		touchscreen-size-x =3D <480>;
-> > +		touchscreen-size-y =3D <800>;
-> > +		touchscreen-swapped-x-y;
-> > +		touchscreen-inverted-y;
-> > +		silead,max-fingers =3D <5>;
-> > +	};
-> > +};
-> > +
-> > +&lradc {
-> > +	vref-supply =3D <&reg_vcc3v0>;
-> > +	status =3D "okay";
-> > +
-> > +	button@571 {
-> > +		label =3D "Volume Up";
-> > +		linux,code =3D <KEY_VOLUMEUP>;
-> > +		channel =3D <0>;
-> > +		voltage =3D <571428>;
-> > +	};
-> > +
-> > +	button@761 {
-> > +		label =3D "Volume Down";
-> > +		linux,code =3D <KEY_VOLUMEDOWN>;
-> > +		channel =3D <0>;
-> > +		voltage =3D <761904>;
-> > +	};
-> > +
-> > +	button@952 {
-> > +		label =3D "Home";
-> > +		linux,code =3D <KEY_HOME>;
-> > +		channel =3D <0>;
-> > +		voltage =3D <952380>;
-> > +	};
-> > +};
-> > +
-> > +&mmc0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&mmc0_pins_a>;
-> > +	vmmc-supply =3D <&reg_vcc3v3>;
-> > +	bus-width =3D <4>;
-> > +	cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-> > +	cd-inverted;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ohci0 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ohci1 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&otg_sram {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&pio {
-> > +	panel_power_pin: panel_power_pin@0 {
-> > +		pins =3D "PH8";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	backlight_enable_pin: backlight_enable_pin@0 {
-> > +		pins =3D "PH7";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	touchscreen_power_pin: touchscreen_power_pin@0 {
-> > +		pins =3D "PH20";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	codec_pa_pin: codec_pa_pin@0 {
-> > +		pins =3D "PH15";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> > +		pins =3D "PH4";
-> > +		function =3D "gpio_in";
-> > +		bias-pull-up;
-> > +	};
-> > +
-> > +	usb0_vbus_pin: usb0_vbus_pin@0 {
-> > +		pins =3D "PB9";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	usb1_vbus_pin: usb1_vbus_pin@0 {
-> > +		pins =3D "PH6";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	usb2_vbus_pin: usb2_vbus_pin@0 {
-> > +		pins =3D "PH3";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +};
-> > +
-> > +&pwm {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pwm0_pins_a>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&tcon0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&lcd_rgb666_pins>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&tcon0_out {
-> > +	tcon0_out_panel: endpoint@0 {
-> > +		reg =3D <0>;
-> > +		remote-endpoint =3D <&panel_input>;
-> > +	};
-> > +};
-> > +
-> > +&uart0 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&uart0_pins_a>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&usb_otg {
-> > +	dr_mode =3D "otg";
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&usbphy {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&usb0_id_detect_pin>;
-> > +	usb0_id_det-gpio =3D <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> > +	usb0_vbus_power-supply =3D <&usb_power_supply>;
-> > +	usb0_vbus-supply =3D <&reg_usb0_vbus>;
-> > +	usb1_vbus-supply =3D <&reg_usb1_vbus>;
-> > +	usb2_vbus-supply =3D <&reg_usb2_vbus>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +#include "axp209.dtsi"
-> > +
-> > +&battery_power_supply {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&reg_dcdc2 {
-> > +	regulator-always-on;
-> > +	regulator-min-microvolt =3D <1000000>;
-> > +	regulator-max-microvolt =3D <1450000>;
-> > +	regulator-name =3D "vdd-cpu";
-> > +};
-> > +
-> > +&reg_dcdc3 {
-> > +	regulator-always-on;
-> > +	regulator-min-microvolt =3D <1000000>;
-> > +	regulator-max-microvolt =3D <1400000>;
-> > +	regulator-name =3D "vdd-int-dll";
-> > +};
-> > +
-> > +&reg_ldo1 {
-> > +	regulator-name =3D "vdd-rtc";
-> > +};
-> > +
-> > +&reg_ldo2 {
-> > +	regulator-always-on;
-> > +	regulator-min-microvolt =3D <3000000>;
-> > +	regulator-max-microvolt =3D <3000000>;
-> > +	regulator-name =3D "avcc";
-> > +};
-> > +
-> > +&reg_usb0_vbus {
-> > +	pinctrl-0 =3D <&usb0_vbus_pin>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&reg_usb1_vbus {
-> > +	pinctrl-0 =3D <&usb1_vbus_pin>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&reg_usb2_vbus {
-> > +	pinctrl-0 =3D <&usb2_vbus_pin>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&usb_power_supply {
-> > +	status =3D "okay";
-> > +};
->=20
-> --=20
-> Paul Kocialkowski,
->=20
-> developer of free digital technology and hardware support.
->=20
-> Website: https://www.paulk.fr/
-> Coding blog: https://code.paulk.fr/
-> Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
->=20
---=20
-Paul Kocialkowski,
+And this isn't a different device, it's just the integration in the
+board that is different, so you shouldn't have a different compatible
+here, but rather something like the bus-width property documented in
+the Documentation/devicetree/bindings/media/video-interfaces.txt file.
 
-developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+Maxime
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---=-CWqdqRwbl1aUZHEPtE+0
+--7tqqpg34pqzskzur
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlrNpq0ACgkQhP3B6o/u
-lQydpQ/+KcC5NUxr9isfrcvxNFH3CKar04owXGER9ZWqzE1DAUpE9Kb0LjjEp91t
-zXjiz2f177QihwT8/zIDNL9uG4jxm/JCu0CTTeNnquE+4/+jDnaCHBG0IhqgBeKK
-RCYLrq/mILghPPO8/yyaMnOxnCWTcvoEJNJf3FAxgeqxVmCgpOjjWo3wDIxMNJh6
-4nOweKr2rxdGERrwRa8oNKEZNyDg3KMx2x8Y7YFE9rbLH1v+qOe5PybSYjzQrAfM
-QHpOaS3qbx3AwjnZ4j/BpIa4egeEIWNUQP7VRpx14l2tVHsfHEj32WgwKGZq8bmM
-f9Krejnqnk9E/WVybYGGj63zoZcDpF9KJ/xwMRbC22xbMQb1bdaV2UcTV0xTvfWW
-nWMNrlE9DmIvu8v+WW04n8KsjmwyJbMpC2eBEEmRYCNrRimaBRQ9NI/cJpO4UDIO
-Q4CAOkCrGyUSfFppEqulaoy3+mWJtIjTuapvsPbdxwuXPkOkxfBkmJY9NLvfYKjw
-z8vVzwGhEWi3E2voVLTDIYP0O6X7qgMDcSckRQRIoD53ivc+z25nkNAmNcMYtNZa
-G+PRmE0eG9GYFh5T2qHbT/rgC1LtscRPwWpaZxYJ9jnVbxhIprTtfZLItf7cVhDk
-flRBRIt1Hyj49Pw7xEi/qpxgS7crj+4DkDzU/4vi1cLPwwva6NY=
-=JKNE
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrNqwUACgkQ0rTAlCFN
+r3QQWQ/+NWa87cWJjJ2jsBdu8HcxgKwidvfuf9dQIu9bLYU0Jd3y7BTcqbbR4XHP
+axE+EeI6M3V6q5VoTEJ2hlDKK8m2mLzFY7wIiDmYKICN1LQOI3S5xZGU8r5bDdUx
+2byxBqtxVV0droDsi8ZEmWCmiKFLUh+fXpjAqQIQN75hosuFv2DpfFysoLw+9hD+
+YUIhI7MQA2OfLg1fcfmXvsfU3Y/KXlw1gR/xRyQv7rBp/PEs0DqmPd+g6UMBHcgP
+FOgm4B3qPL32tBWraYNW2VASz8j55ZpVCqNHtfxeqkjC3Rcg9B6LlUeqmhonJ9jx
+QGKcojZrLkzhbQgb8NfuPEFuZD58twQr6aXfE1L06k1rbMxB1rrK6zU+Vozao2iX
+3yotoFmL0fOu0mo97nXtfj4x4STVUplex9kuWAd8v3qTwtlnFyXxbaUharE6iC53
+OS12+LYk5BQa7e+XU4Fhagqd6KDYnVomDMVE1VSB/rtBGZDWMOYv4F2x6v1u55Yu
+uX2JcYD5LlH0pOLldc8hKpVeAA6FsZ9aS7jFywCbDf30QQk5kTQpY5qqb7fRP3OB
+ZgUaQ6f6tYRdpGnUKKVMImEuYjIJ6U+I5LUsKJBrsuxl69wkeisxxOztIlfayZKv
+cKKzq5DaIDjtpsa7pG3YbQanq1wH4JWTlTznm+ukGPFoDXhP9bY=
+=3vBz
 -----END PGP SIGNATURE-----
 
---=-CWqdqRwbl1aUZHEPtE+0--
+--7tqqpg34pqzskzur--
+
+--===============1444589583==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1444589583==--
