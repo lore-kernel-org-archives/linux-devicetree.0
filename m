@@ -1,113 +1,95 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] display: panel: Add KOE tx14d24vm1bpa display support (320x240)
-Date: Thu, 12 Apr 2018 16:37:15 +0200
-Message-ID: <20180412143715.6828-1-lukma@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun7i: Add support for the
+ Ainol AW1 tablet
+Date: Thu, 12 Apr 2018 16:51:36 +0200
+Message-ID: <20180412145136.zp2i7u76oinphiiz@flea>
+References: <20180410213129.24049-1-contact@paulk.fr>
+ <20180410213129.24049-3-contact@paulk.fr>
+ <20180411070657.kw6uckqtmwb7p5hf@flea>
+ <7f6d6a6a5a0cc2d37ebba046509d4f25d3bfa600.camel@paulk.fr>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kzof2any5a4z6n2z"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBHFXXLAKGQEGGBMDBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <7f6d6a6a5a0cc2d37ebba046509d4f25d3bfa600.camel-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for KOE's 5.7" display.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+--kzof2any5a4z6n2z
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-new file mode 100644
-index 000000000000..be7ac666807b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-@@ -0,0 +1,42 @@
-+Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "koe,tx14d24vm1bpa"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX53 based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "koe,tx14d24vm1bpa";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_3v3>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+Then one needs to extend the dispX node:
-+
-+	lcd_display: disp1 {
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 62314085b635..45e61af936e0 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1245,6 +1245,29 @@ static const struct panel_desc innolux_zj070na_01p = {
- 	},
- };
- 
-+static const struct display_timing koe_tx14d24vm1bpa_timing = {
-+	.pixelclock = { 5580000, 5850000, 6200000 },
-+	.hactive = { 320, 320, 320 },
-+	.hfront_porch = { 30, 30, 30 },
-+	.hback_porch = { 30, 30, 30 },
-+	.hsync_len = { 1, 5, 17 },
-+	.vactive = { 240, 240, 240 },
-+	.vfront_porch = { 6, 6, 6 },
-+	.vback_porch = { 5, 5, 5 },
-+	.vsync_len = { 1, 2, 11 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
-+
-+static const struct panel_desc koe_tx14d24vm1bpa = {
-+	.timings = &koe_tx14d24vm1bpa_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 115,
-+		.height = 86,
-+	},
-+};
-+
- static const struct display_timing kyo_tcg121xglp_timing = {
- 	.pixelclock = { 52000000, 65000000, 71000000 },
- 	.hactive = { 1024, 1024, 1024 },
-@@ -2155,6 +2178,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "innolux,zj070na-01p",
- 		.data = &innolux_zj070na_01p,
- 	}, {
-+		.compatible = "koe,tx14d24vm1bpa",
-+		.data = &koe_tx14d24vm1bpa,
-+	}, {
- 		.compatible = "kyo,tcg121xglp",
- 		.data = &kyo_tcg121xglp,
- 	}, {
+On Thu, Apr 12, 2018 at 01:08:51AM +0200, Paul Kocialkowski wrote:
+> > > +	backlight: backlight {
+> > > +		compatible = "pwm-backlight";
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&backlight_enable_pin>;
+> > 
+> > You don't need any of the pinctrl nodes for the GPIOs
+> 
+> I tried without the pinctrl nodes and got issues on various controllers
+> (e.g. i2c for the touchscreen) because of the missing pinctrl nodes on
+> 4.16. Maybe I'm missing some patches here?
+
+You don't need any patches. What was the error exactly?
+
+> > > +&cpu0 {
+> > > +	cpu-supply = <&reg_dcdc2>;
+> > > +};
+> > 
+> > How was CPUfreq tested?
+> 
+> In fact, I haven't tried it at all, but I can definitely do that with
+> e.g. ssvb's stress test for various cpufreq functioning points.
+
+That would be great yes.
+
+> > > +&i2c2 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&i2c2_pins_a>;
+> > > +	status = "okay";
+> > > +	clock-frequency = <400000>; /* 400 KHz required for
+> > > GSL1680. */
+> > 
+> > I'm not sure that comment is worth it. The only device there is the
+> > touchscreen, so it's kind of obvious that it's the device that needs
+> > that frequency.
+> 
+> Well, I found a similar comment in the other dts using the same
+> touchscreen controller. Since the information was rather valuable (it
+> made it clear that I needed the same clock frequency for that specific
+> touchscreen),
+
+You can have the same kind of comment for pretty much all DT
+lines. you could for example have on the pinctrl property just above
+the comment that the I2C2 on that boards are tied to those pins. But
+that's just redundant, and the SNR would be pretty bad if we were to
+do it everywhere.
+
+> it might help others in the future (even if only when grepping for
+> gsl1680).
+> 
+> > > +
+> > > +	gsl1680: touchscreen@40 {
+> > > +		compatible = "silead,gsl1680";
+
+You have the gsl1680 two times here, so grep would find it either way.
+
+Maxime
+
 -- 
-2.11.0
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--kzof2any5a4z6n2z--
