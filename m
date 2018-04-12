@@ -1,25 +1,25 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 1/8] arm: shmobile: Add the RZ/N1 arch to the shmobile
- Kconfig
-Date: Thu, 12 Apr 2018 10:00:10 +0200
-Message-ID: <20180412080010.n2am3co66acwgo22@verge.net.au>
-References: <1523349015-37985-1-git-send-email-michel.pollet@bp.renesas.com>
- <1523349015-37985-2-git-send-email-michel.pollet@bp.renesas.com>
+Subject: Re: [PATCH v3 0/5] V3M-Eagle HDMI output enablement
+Date: Thu, 12 Apr 2018 10:08:27 +0200
+Message-ID: <20180412080827.5cxipw53nqpfnrfn@verge.net.au>
+References: <1523450590-31347-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523349015-37985-2-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <1523450590-31347-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, buserror+upstream@gmail.com, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 09:30:01AM +0100, Michel Pollet wrote:
-> Add the RZ/N1 Family (Part #R9A06G0xx) ARCH config to the rest of
-> the Renesas SoC collection.
-> 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Apr 11, 2018 at 02:43:05PM +0200, Jacopo Mondi wrote:
+> Hello,
+>    I have rebased the Eagle display enablement on top of (part of) Sergei's
+> series:
+>  [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
 
-This change has already been accepted for v4.18.
+Hi Jacopo,
+
+the emails with the patches of this series do not
+seem to have hit my inbox or patchwork.
