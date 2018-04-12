@@ -1,32 +1,26 @@
-Return-Path: <SRS0=vni6=G7=gmail.com=andy.shevchenko@kernel.org>
+Return-Path: <SRS0=pVrr=HB=verge.net.au=horms@kernel.org>
+Date: Thu, 12 Apr 2018 09:35:54 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/3] arm64: renesas: Add Renesas R8A77990 Kconfig support
+Message-ID: <20180412073553.6qtjcbi54zoaltdk@verge.net.au>
+References: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439353-980-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXzy667DwjEaJOEnJ16WmELM9rLSj4-GZksnhWNm4dn8Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a5b37e5feff8a58dc63799ec76ef906695fd7239.1523376423.git.hns@goldelico.com>
-References: <cover.1523376423.git.hns@goldelico.com> <a5b37e5feff8a58dc63799ec76ef906695fd7239.1523376423.git.hns@goldelico.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 10 Apr 2018 21:08:39 +0300
-Message-ID: <CAHp75VcXpXZ+Ue7Cz0ORupgUjLTCiEwFYb2cs9kePX6EbEs-+w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] gpio: pca953x: set the PCA_PCAL flag also when
- matching by DT
-Content-Type: text/plain; charset="UTF-8"
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXzy667DwjEaJOEnJ16WmELM9rLSj4-GZksnhWNm4dn8Q@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 10, 2018 at 7:07 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> The of_device_table is missing the PCA_PCAL flag so the
-> pcal6524 would be operated in tca6424 compatibility mode which
-> does not handle the new interrupt mask registers.
+On Wed, Apr 11, 2018 at 03:25:06PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Apr 11, 2018 at 11:35 AM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > Add configuration option for the R-Car E3 (R8A77990) SoC.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-
-> +       { .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT |
-> +                                                           PCA_PCAL), },
-> +       { .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT |
-> +                                                            PCA_PCAL), },
-
-Sorry didn't comment this earlier, though I think one line still
-better to read disregard of 80 char limit.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks, applied.
