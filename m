@@ -1,36 +1,29 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/3] dt-bindings: arm: Document Renesas Ebisu board DT bindings
-Date: Wed, 11 Apr 2018 18:35:52 +0900
-Message-Id: <1523439353-980-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523439353-980-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=pVrr=HB=verge.net.au=horms@kernel.org>
+Date: Thu, 12 Apr 2018 09:48:06 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/4] soc: renesas: identify R-Car E3
+Message-ID: <20180412074805.ptscnsmglh4eucha@verge.net.au>
+References: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439386-1032-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUZirrotC9-QHymE42jUO87N2aY-qUwvf0_YUwmh7_47A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUZirrotC9-QHymE42jUO87N2aY-qUwvf0_YUwmh7_47A@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree bindings documentation for Renesas
-Ebisu board (RTP0RC77990SEB0010S).
+On Wed, Apr 11, 2018 at 03:26:49PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Apr 11, 2018 at 11:36 AM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >
+> > This patch adds support for identifying the R-Car E3 (R8A77990) SoC.
+> >
+> > Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 5d21d48..61b486f 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -71,6 +71,8 @@ Boards:
-     compatible = "renesas,draak", "renesas,r8a77995"
-   - Eagle (RTP0RC77970SEB0010S)
-     compatible = "renesas,eagle", "renesas,r8a77970"
-+  - Ebisu (RTP0RC77990SEB0010S)
-+    compatible = "renesas,ebisu", "renesas,r8a77990"
-   - Genmai (RTK772100BC00000BR)
-     compatible = "renesas,genmai", "renesas,r7s72100"
-   - GR-Peach (X28A-M01-E/F)
--- 
-1.9.1
+Thanks, applied.
