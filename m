@@ -1,105 +1,127 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 3/9] pinctrl: actions: Add Actions S900 pinctrl driver
-Date: Thu, 12 Apr 2018 14:29:01 +0200
-Message-ID: <CACRpkdbizcaB-EfK_5k-=5GsoMJrtNoE2HBdiZOmA62NnPsZBA@mail.gmail.com>
-References: <20180404172258.7678-1-manivannan.sadhasivam@linaro.org>
- <20180404172258.7678-4-manivannan.sadhasivam@linaro.org> <CACRpkdZPOSDenSORGVLPuJKPP_iE97mZLXHJLcF2kH5wKPw=tg@mail.gmail.com>
- <94aceb15-63a5-44a3-d0bc-f56adebc27d5@suse.de>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] vfio: platform: Add generic DT reset support
+Date: Thu, 12 Apr 2018 08:36:05 -0400
+Message-ID: <e06c459f-51bd-74d1-7a43-bf54231d08ba@codeaurora.org>
+References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
+ <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
+ <e6a70247-14f2-63b6-852b-3d43e45f8fa2@redhat.com>
+ <CAMuHMdU5m=vV9nuVoRkX6tX-A=az3aK6HT7yFqgDam_rCNEfSg@mail.gmail.com>
+ <2e09425d-0f27-3069-3421-e454ee70e3b2@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <94aceb15-63a5-44a3-d0bc-f56adebc27d5@suse.de>
+In-Reply-To: <2e09425d-0f27-3069-3421-e454ee70e3b2@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+To: Auger Eric <eric.auger@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2018 at 2:10 PM, Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
-> Am 12.04.2018 um 11:04 schrieb Linus Walleij:
->> On Wed, Apr 4, 2018 at 7:22 PM, Manivannan Sadhasivam
->> <manivannan.sadhasivam@linaro.org> wrote:
+On 4/12/2018 7:49 AM, Auger Eric wrote:
+> Hi Geert,
+> On 12/04/18 13:32, Geert Uytterhoeven wrote:
+>> Hi Eric,
 >>
->>> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
->>> pinctrl, pinmux and pinconf functionalities through a range of register=
-s
->>> common to both gpio driver and pinctrl driver.
+>> On Thu, Apr 12, 2018 at 12:31 PM, Auger Eric <eric.auger@redhat.com> wrote:
+>>> On 11/04/18 11:15, Geert Uytterhoeven wrote:
+>>>> Vfio-platform requires reset support, provided either by ACPI, or, on DT
+>>>> platforms, by a device-specific reset driver matching against the
+>>>> device's compatible value.
+>>>>
+>>>> On many SoCs, devices are connected to an SoC-internal reset controller.
+>>>> If the reset hierarchy is described in DT using "resets" properties,
+>>>> such devices can be reset in a generic way through the reset controller
+>>>> subsystem.  Hence add support for this, avoiding the need to write
+>>>> device-specific reset drivers for each single device on affected SoCs.
+>>>>
+>>>> Devices that do require a more complex reset procedure can still provide
+>>>> a device-specific reset driver, as that takes precedence.
+>>>>
+>>>> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
+>>>> becomes a no-op (as in: "No reset function found for device") if reset
+>>>> controller support is disabled.
+>>>>
+>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>>
+>>>> --- a/drivers/vfio/platform/vfio_platform_common.c
+>>>> +++ b/drivers/vfio/platform/vfio_platform_common.c
+>>
+>>>> @@ -127,8 +130,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>>>>               vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
+>>>>                                                       &vdev->reset_module);
+>>>>       }
+>>>> +     if (vdev->of_reset)
+>>>> +             return 0;
+>>>> +
+>>>> +     rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
 >>>
->>> Pinmux functionality is available only for the pin groups while the
->>> pinconf functionality is available for both pin groups and individual
->>> pins.
->>>
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> Shouldn't we prefer the top level reset_control_get_exclusive()?
 >>
->> Patch applied for v4.18
+>> I guess that should work, too.
 >>
->> GOOD WORK!
+>>> To make sure about the exclusive/shared terminology, does
+>>> get_reset_control_get_exclusive() check we have an exclusive wire
+>>> between this device and the reset controller?
 >>
->> We really need to get this in so that Andreas can work on S500
->> patches with this as a base.
->
-> No, I refused to do that. If his patches get merged, Mani offered that
-> he will take care of rebasing/rewriting S500 part.
+>> AFAIU, the "exclusive" means that only a single user can obtain access to
+>> the reset, and it does not guarantee that we have an exclusive wire between
+>> the device and the reset controller.
+>>
+>> The latter depends on the SoC's reset topology. If a reset wire is shared
+>> by multiple devices (e.g. resets shared by PWM or Display Unit devices on
+>> R-Car SoCs), exporting a subset of these devices to a guest is a bad idea,
+>> indeed.
+> 
+> So who's going to check this assigned device will not trigger a reset of
+> other non assigned devices sharing the same reset controller?
 
-OK then.
+I like the direction in general. I was hoping that you'd call it of_reset_control
+rather than reset_control.
 
->> If any review comments still remain they can surely be addressed
->> with incremental improvement patches.
->
-> My biggest problem was/is that Mani designed his structs totally
-> different from mine, with no explanation why or how they correlate.
+Is there anything in the OF spec about what to expect from DT's reset?
 
-This kind of clashes happen all the time because of parallel work.
-As much as we all hate to reimplement stuff just because
-coordination is not perfect, it still invariably happens, it's just
-a natural flaw to the way asynchronous development without
-project managers work.
+> 
+>>
+>> I guess the same thing can happen with the ACPI "_RST" method?
+> 
+> ACPI spec _RST chapter says about _RST object:
+> 
+> "This object executes a reset on the associated device
+>  or devices. If included in a device context, the
+> reset must not affect any other ACPI-described de
+> vices; if included in a power resource for reset
+> (_PRR, Section 7.3.26) the reset must affect all ACPI-described devices
+> that reference it. When this object is described in
+> a device context, it executes a function level reset that only affects
+> the device it is associated with; neither parent nor children should be
+> affected by the execution of this reset. Executing this must only result
+> in this device resetting without the device appearing as if it
+> has been removed from the bus altogether, to prevent OSPM re-enumeration
+> of devices on hot-pluggable buses (e.g. USB)."
 
-But what is important to keep in mind is that there is no bad
-intent from anyone here, you are both enthusiastic contributors
-and let's keep this friendly.
+ACPI spec is clear. We are doing a device specific reset aka function level
+reset here. It does not impact other devices in the system. 
 
-If Manivannan has already offered to update your patch, that's
-great.
+In fact, ACPI does not have a clock controller concept. All clock/reset details
+are hidden from the OS.
 
-If you feel any kind of annoyance or aggression toward another
-contributor, then I have a big problem as maintainer, and that
-problem is hard to solve, scary to deal with and extremely
-exhausting and diverting attention from important technical work,
-so please help me as much as you can NOT to give me this
-particular problem.
+> 
+> Adding Sinan in copy for clarification.
+> 
+> Thanks
+> 
+> Eric
+>>
+>> Gr{oetje,eeting}s,
+>>
+>>                         Geert
+>>
+> 
 
-> Also I had protested against him defining fake pins for the drive
-> strength. Since I did not have time to review the newer patches yet,
-> please make sure that this is addressed _before_ merging. Changing the
-> binding after the fact is a problem!
 
-This is more of a technical issue and a bit of philosophical
-debate on how to partition the hardware so as to be represented
-in the binding.
-
-Let's discuss it. Surely Manivannan can augment his DT
-bindings if there is a problem.
-
-With that in mind, I have a softer stance that some DT
-fundamentalists out there: I do not consider the DT binding as
-etched in stone because it was merged to the kernel tree. I
-see the stone-etching as something that happens when a
-mass-produced system is deployed with a DTB file
-using these bindings in its boot partition. When sold to
-end users.
-
-That means that these bindings can still be augmented
-as long as we are in prototype stage, and if we are just
-talking about hobbyist work using attached device trees
-or booting off media with DTB as a separate target image
-but copied from the kernel tree, we can always augment
-them.
-
-I guess some will disagree with me on this stance.
-But those are my principles.
-If you don't like them, I have others. :D
-
-Yours,
-Linus Walleij
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
