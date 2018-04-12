@@ -1,104 +1,61 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v3 2/2] vfio: platform: Add generic DT reset support
-Date: Thu, 12 Apr 2018 13:49:04 +0200
-Message-ID: <2e09425d-0f27-3069-3421-e454ee70e3b2@redhat.com>
-References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
- <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
- <e6a70247-14f2-63b6-852b-3d43e45f8fa2@redhat.com>
- <CAMuHMdU5m=vV9nuVoRkX6tX-A=az3aK6HT7yFqgDam_rCNEfSg@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v7 3/9] pinctrl: actions: Add Actions S900 pinctrl driver
+Date: Thu, 12 Apr 2018 14:10:28 +0200
+Message-ID: <94aceb15-63a5-44a3-d0bc-f56adebc27d5@suse.de>
+References: <20180404172258.7678-1-manivannan.sadhasivam@linaro.org>
+ <20180404172258.7678-4-manivannan.sadhasivam@linaro.org>
+ <CACRpkdZPOSDenSORGVLPuJKPP_iE97mZLXHJLcF2kH5wKPw=tg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU5m=vV9nuVoRkX6tX-A=az3aK6HT7yFqgDam_rCNEfSg@mail.gmail.com>
+In-Reply-To: <CACRpkdZPOSDenSORGVLPuJKPP_iE97mZLXHJLcF2kH5wKPw=tg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kaya Sinan <okaya@codeaurora.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-On 12/04/18 13:32, Geert Uytterhoeven wrote:
-> Hi Eric,
+Am 12.04.2018 um 11:04 schrieb Linus Walleij:
+> On Wed, Apr 4, 2018 at 7:22 PM, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> On Thu, Apr 12, 2018 at 12:31 PM, Auger Eric <eric.auger@redhat.com> wrote:
->> On 11/04/18 11:15, Geert Uytterhoeven wrote:
->>> Vfio-platform requires reset support, provided either by ACPI, or, on DT
->>> platforms, by a device-specific reset driver matching against the
->>> device's compatible value.
->>>
->>> On many SoCs, devices are connected to an SoC-internal reset controller.
->>> If the reset hierarchy is described in DT using "resets" properties,
->>> such devices can be reset in a generic way through the reset controller
->>> subsystem.  Hence add support for this, avoiding the need to write
->>> device-specific reset drivers for each single device on affected SoCs.
->>>
->>> Devices that do require a more complex reset procedure can still provide
->>> a device-specific reset driver, as that takes precedence.
->>>
->>> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
->>> becomes a no-op (as in: "No reset function found for device") if reset
->>> controller support is disabled.
->>>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
->>> --- a/drivers/vfio/platform/vfio_platform_common.c
->>> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> 
->>> @@ -127,8 +130,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->>>               vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->>>                                                       &vdev->reset_module);
->>>       }
->>> +     if (vdev->of_reset)
->>> +             return 0;
->>> +
->>> +     rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
+>> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
+>> pinctrl, pinmux and pinconf functionalities through a range of registers
+>> common to both gpio driver and pinctrl driver.
 >>
->> Shouldn't we prefer the top level reset_control_get_exclusive()?
+>> Pinmux functionality is available only for the pin groups while the
+>> pinconf functionality is available for both pin groups and individual
+>> pins.
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> I guess that should work, too.
+> Patch applied for v4.18
 > 
->> To make sure about the exclusive/shared terminology, does
->> get_reset_control_get_exclusive() check we have an exclusive wire
->> between this device and the reset controller?
+> GOOD WORK!
 > 
-> AFAIU, the "exclusive" means that only a single user can obtain access to
-> the reset, and it does not guarantee that we have an exclusive wire between
-> the device and the reset controller.
-> 
-> The latter depends on the SoC's reset topology. If a reset wire is shared
-> by multiple devices (e.g. resets shared by PWM or Display Unit devices on
-> R-Car SoCs), exporting a subset of these devices to a guest is a bad idea,
-> indeed.
+> We really need to get this in so that Andreas can work on S500
+> patches with this as a base.
 
-So who's going to check this assigned device will not trigger a reset of
-other non assigned devices sharing the same reset controller?
+No, I refused to do that. If his patches get merged, Mani offered that
+he will take care of rebasing/rewriting S500 part.
 
 > 
-> I guess the same thing can happen with the ACPI "_RST" method?
+> If any review comments still remain they can surely be addressed
+> with incremental improvement patches.
 
-ACPI spec _RST chapter says about _RST object:
+My biggest problem was/is that Mani designed his structs totally
+different from mine, with no explanation why or how they correlate.
 
-"This object executes a reset on the associated device
- or devices. If included in a device context, the
-reset must not affect any other ACPI-described de
-vices; if included in a power resource for reset
-(_PRR, Section 7.3.26) the reset must affect all ACPI-described devices
-that reference it. When this object is described in
-a device context, it executes a function level reset that only affects
-the device it is associated with; neither parent nor children should be
-affected by the execution of this reset. Executing this must only result
-in this device resetting without the device appearing as if it
-has been removed from the bus altogether, to prevent OSPM re-enumeration
-of devices on hot-pluggable buses (e.g. USB)."
+Also I had protested against him defining fake pins for the drive
+strength. Since I did not have time to review the newer patches yet,
+please make sure that this is addressed _before_ merging. Changing the
+binding after the fact is a problem!
 
-Adding Sinan in copy for clarification.
+Regards,
+Andreas
 
-Thanks
-
-Eric
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
