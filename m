@@ -1,103 +1,108 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v4 1/2] Documentation: Documentation for qcom, llcc
-Date: Thu, 12 Apr 2018 22:07:10 +0000
-Message-ID: <CAE=gft5Ks7rXOB9=oaaKjh65HY2_3-iXOh6Q01Rtpx_nJ-H1FQ@mail.gmail.com>
-References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org> <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Fri, 13 Apr 2018 00:31:04 +0200
+Message-ID: <36e0c96b-89ec-2372-825a-71ead1a43473@axentia.se>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+ <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+ <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
+ <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: rishabhb@codeaurora.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org
+To: "Andrew F. Davis" <afd@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 1:09 PM Rishabh Bhatnagar <rishabhb@codeaurora.org>
-wrote:
+On 2018-04-12 17:35, Andrew F. Davis wrote:
+> On 04/12/2018 09:29 AM, Peter Rosin wrote:
+>> On 2018-04-11 18:13, Andrew F. Davis wrote:
+>>> On 04/11/2018 10:51 AM, Lars-Peter Clausen wrote:
+>>>> On 04/11/2018 05:43 PM, Andrew F. Davis wrote:
+>>>>> On 04/11/2018 09:15 AM, Peter Rosin wrote:
+>>>>>> This is a current sense amplifier from Analog Devices.
+>>>>>>
+>>>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>>>> ---
+>>>>>>  drivers/iio/afe/Kconfig              |  3 +-
+>>>>>>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>>>>>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+>>>>>> index 642ce4eb12a6..0e10fe8f459a 100644
+>>>>>> --- a/drivers/iio/afe/Kconfig
+>>>>>> +++ b/drivers/iio/afe/Kconfig
+>>>>>> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>>>>>>  	depends on OF || COMPILE_TEST
+>>>>>>  	help
+>>>>>>  	  Say yes here to build support for the IIO unit converter
+>>>>>> -	  that handles voltage dividers and current sense shunts.
+>>>>>> +	  that handles voltage dividers, current sense shunts and
+>>>>>> +	  the LT6106 Current Sense Amplifier from Analog Devices.
+>>>>>
+>>>>> Could work better to split these out into separate drivers. Maybe a
+>>>>> iio-shunt-resistor.c that does just voltage->current with the
+>>>>> appropriate scaling. Then make a a separate lt6106.c.
+>>>>
+>>>> I don't think we need a separate driver here. There are tons of circuits
+>>>> that all work the same way and all require the same properties. If we'd add
+>>>> a driver for each of them we'd get buried in boilerplate code.
+>>>>
+>>>
+>>> Fair enough, then it should at least be renamed to something generic
+>>> like current-sense-amplifier, as you said lots of circuits do this, not
+>>> just lt6106s. We will have then have support for:
+>>>
+>>> current-sense-amplifier
+>>> current-sense-shunt
+>>> voltage-divider
+>>
+>> For the compatible "current-sense-amplifier", I would advocate the
+>> properties...
+>>
+>>  sense-resistor-micro-ohms
+>>  sense-gain
+>>
+>> (or something close to that)
+>>
+>> ...and not input-resistor-ohms and output-resistor-ohms which are way
+>> more particular to the LT6106.
+>>
+>> But as I said in the cover letter, I didn't go with sense-gain since I
+>> thought I would end up with requests for non-integer gains. There is
+>> yet to be a comment on the non-integer gain problem, and before there
+>> is a path forward for that case, I'm reluctant.
+>>
+> 
+> Why not similar to what you had before with the resistor:
+> 
+> sense-gain-multiplier
+> sense-gain-divider
+> 
+> if either are missing assume they are 1.
 
-> Documentation for last level cache controller device tree bindings,
-> client bindings usage examples.
+Hmm, how about sense-gain for the normal integer case, and then divide
+by sense-attenuation if needed? I.e. exactly the same functionality as
+you describe, just different names.
 
-> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->   .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 58
-++++++++++++++++++++++
->   1 file changed, 58 insertions(+)
->   create mode 100644
-Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>>> compatibles in this driver called "unit-converter" which is still a
+>>> misnomer IMHO.
+>>
+>> I don't remember you having presented your preference, and I think
+>> that goes against the established bike-shedding protocol?
+>>
+> 
+> True, how about "current-sense-from-voltage" ?
 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> new file mode 100644
-> index 0000000..497cf0f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> @@ -0,0 +1,58 @@
-> +== Introduction==
-> +
-> +LLCC (Last Level Cache Controller) provides last level of cache memory
-in SOC,
-> +that can be shared by multiple clients. Clients here are different cores
-in the
-> +SOC, the idea is to minimize the local caches at the clients and migrate
-to
-> +common pool of memory
-> +
-> +Properties:
-> +- compatible:
-> +        Usage: required
-> +        Value type: <string>
-> +        Definition: must be "qcom,sdm845-llcc"
-> +
-> +- reg:
-> +        Usage: required
-> +        Value Type: <prop-encoded-array>
-> +        Definition: must be addresses and sizes of the LLCC registers
-> +
-> +- #cache-cells:
-> +        Usage: required
-> +        Value Type: <u32>
-> +        Definition: Number of cache cells, must be 1
-> +
-> +- max-slices:
-> +        usage: required
-> +        Value Type: <u32>
-> +        Definition: Number of cache slices supported by hardware
-> +
-> +Example:
-> +
-> +       llcc: qcom,llcc@1100000 {
-> +               compatible = "qcom,sdm845-llcc";
-> +               reg = <0x1100000 0x250000>;
-> +               #cache-cells = <1>;
-> +               max-slices = <32>;
-> +       };
-> +
-> +== Client ==
-> +
-> +Properties:
-> +- cache-slice-names:
-> +        Usage: required
-> +        Value type: <stringlist>
-> +        Definition: A set of names that identify the usecase names of a
-> +                       client that uses cache slice. These strings are
-> +                       used to look up the cache slice entries by name.
-> +
-> +- cache-slices:
-> +        Usage: required
-> +        Value type: <prop-encoded-array>
-> +        Definition: The tuple has phandle to llcc device as the first
-> +                       argument and the second argument is the usecase
-> +                       id of the client.
-> +For Example:
-> +       venus {
-> +               cache-slice-names = "vidsc0", "vidsc1";
-> +               cache-slices = <&llcc VIDSC0_ID>, <&llcc VIDSC1_ID>;
+Doesn't cover "voltage-divider" (and we don't need separate drivers
+doing the exact same calculations, that's a maintenance nightmare).
 
-My git complains about some whitespace weirdness on the line above. Other
-than that:
-
-Reviewed-by: Evan Green <evgreen@chromium.org>
-
--Evan
+Cheers,
+Peter
