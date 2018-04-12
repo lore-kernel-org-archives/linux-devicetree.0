@@ -1,75 +1,86 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 3/4] lan78xx: Read LED modes from Device Tree
-Date: Thu, 12 Apr 2018 16:26:15 +0200
-Message-ID: <20180412142615.GO28963@lunn.ch>
-References: <1523541336-145953-1-git-send-email-phil@raspberrypi.org>
- <1523541336-145953-4-git-send-email-phil@raspberrypi.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Thu, 12 Apr 2018 16:29:33 +0200
+Message-ID: <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+ <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523541336-145953-4-git-send-email-phil@raspberrypi.org>
+In-Reply-To: <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2018 at 02:55:35PM +0100, Phil Elwell wrote:
-> Add support for DT property "microchip,led-modes", a vector of two
-> cells (u32s) in the range 0-15, each of which sets the mode for one
-> of the two LEDs. Some possible values are:
+On 2018-04-11 18:13, Andrew F. Davis wrote:
+> On 04/11/2018 10:51 AM, Lars-Peter Clausen wrote:
+>> On 04/11/2018 05:43 PM, Andrew F. Davis wrote:
+>>> On 04/11/2018 09:15 AM, Peter Rosin wrote:
+>>>> This is a current sense amplifier from Analog Devices.
+>>>>
+>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>> ---
+>>>>  drivers/iio/afe/Kconfig              |  3 +-
+>>>>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>>>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+>>>> index 642ce4eb12a6..0e10fe8f459a 100644
+>>>> --- a/drivers/iio/afe/Kconfig
+>>>> +++ b/drivers/iio/afe/Kconfig
+>>>> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>>>>  	depends on OF || COMPILE_TEST
+>>>>  	help
+>>>>  	  Say yes here to build support for the IIO unit converter
+>>>> -	  that handles voltage dividers and current sense shunts.
+>>>> +	  that handles voltage dividers, current sense shunts and
+>>>> +	  the LT6106 Current Sense Amplifier from Analog Devices.
+>>>
+>>> Could work better to split these out into separate drivers. Maybe a
+>>> iio-shunt-resistor.c that does just voltage->current with the
+>>> appropriate scaling. Then make a a separate lt6106.c.
+>>
+>> I don't think we need a separate driver here. There are tons of circuits
+>> that all work the same way and all require the same properties. If we'd add
+>> a driver for each of them we'd get buried in boilerplate code.
+>>
 > 
->     0=link/activity          1=link1000/activity
->     2=link100/activity       3=link10/activity
->     4=link100/1000/activity  5=link10/1000/activity
->     6=link10/100/activity    14=off    15=on
+> Fair enough, then it should at least be renamed to something generic
+> like current-sense-amplifier, as you said lots of circuits do this, not
+> just lt6106s. We will have then have support for:
 > 
-> Also use the presence of the DT property to indicate that the
-> LEDs should be enabled - necessary in the event that no valid OTP
-> or EEPROM is available.
+> current-sense-amplifier
+> current-sense-shunt
+> voltage-divider
 
-I'm not a fan of this, but at the moment, we don't have anything
-better.
+For the compatible "current-sense-amplifier", I would advocate the
+properties...
 
-Please follow what mscc does, add a header file for the LED settings.
+ sense-resistor-micro-ohms
+ sense-gain
 
-       Andrew
+(or something close to that)
 
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> ---
->  drivers/net/usb/lan78xx.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-> index d98397b..ffb483d 100644
-> --- a/drivers/net/usb/lan78xx.c
-> +++ b/drivers/net/usb/lan78xx.c
-> @@ -2008,6 +2008,7 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
->  {
->  	int ret;
->  	u32 mii_adv;
-> +	u32 led_modes[2];
->  	struct phy_device *phydev;
->  
->  	phydev = phy_find_first(dev->mdiobus);
-> @@ -2097,6 +2098,25 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
->  		(void)lan78xx_set_eee(dev->net, &edata);
->  	}
->  
-> +	if (!of_property_read_u32_array(dev->udev->dev.of_node,
-> +					"microchip,led-modes",
-> +					led_modes, ARRAY_SIZE(led_modes))) {
-> +		u32 reg;
-> +		int i;
-> +
-> +		reg = phy_read(phydev, 0x1d);
-> +		for (i = 0; i < ARRAY_SIZE(led_modes); i++) {
-> +			reg &= ~(0xf << (i * 4));
-> +			reg |= (led_modes[i] & 0xf) << (i * 4);
-> +		}
+...and not input-resistor-ohms and output-resistor-ohms which are way
+more particular to the LT6106.
 
-Please add range checks for led_modes[i] and return -EINVAL if the
-check fails.
+But as I said in the cover letter, I didn't go with sense-gain since I
+thought I would end up with requests for non-integer gains. There is
+yet to be a comment on the non-integer gain problem, and before there
+is a path forward for that case, I'm reluctant.
 
-      Andrew
+> compatibles in this driver called "unit-converter" which is still a
+> misnomer IMHO.
+
+I don't remember you having presented your preference, and I think
+that goes against the established bike-shedding protocol?
+
+Cheers,
+Peter
