@@ -1,32 +1,140 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 9/9] MAINTAINERS: Add Actions Semi S900 pinctrl and
- gpio entries
-Date: Thu, 12 Apr 2018 11:10:03 +0200
-Message-ID: <CACRpkdZBob9vhsshH8qdX+Uef7=sdsoaze+uOXUHmU8WpgRMtQ@mail.gmail.com>
-References: <20180404172258.7678-1-manivannan.sadhasivam@linaro.org> <20180404172258.7678-10-manivannan.sadhasivam@linaro.org>
+From: Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v3 2/2] vfio: platform: Add generic DT reset support
+Date: Thu, 12 Apr 2018 12:31:09 +0200
+Message-ID: <e6a70247-14f2-63b6-852b-3d43e45f8fa2@redhat.com>
+References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
+ <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180404172258.7678-10-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 4, 2018 at 7:22 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+Hi Geert, Philipp,
 
-> Add S900 pinctrl and gpio entries under ARCH_ACTIONS
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On 11/04/18 11:15, Geert Uytterhoeven wrote:
+> Vfio-platform requires reset support, provided either by ACPI, or, on DT
+> platforms, by a device-specific reset driver matching against the
+> device's compatible value.
+> 
+> On many SoCs, devices are connected to an SoC-internal reset controller.
+> If the reset hierarchy is described in DT using "resets" properties,
+> such devices can be reset in a generic way through the reset controller
+> subsystem.  Hence add support for this, avoiding the need to write
+> device-specific reset drivers for each single device on affected SoCs.
+> 
+> Devices that do require a more complex reset procedure can still provide
+> a device-specific reset driver, as that takes precedence.
+> 
+> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
+> becomes a no-op (as in: "No reset function found for device") if reset
+> controller support is disabled.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> v3:
+>   - Add Reviewed-by,
+>   - Merge similar checks in vfio_platform_has_reset(),
+> 
+> v2:
+>   - Don't store error values in vdev->reset_control,
+>   - Use of_reset_control_get_exclusive() instead of
+>     __of_reset_control_get(),
+>   - Improve description.
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c  | 20 ++++++++++++++++++--
+>  drivers/vfio/platform/vfio_platform_private.h |  1 +
+>  2 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index b60bb5326668498c..ef9b9e3220ebe939 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> @@ -112,11 +113,13 @@ static bool vfio_platform_has_reset(struct vfio_platform_device *vdev)
+>  	if (VFIO_PLATFORM_IS_ACPI(vdev))
+>  		return vfio_platform_acpi_has_reset(vdev);
+>  
+> -	return vdev->of_reset ? true : false;
+> +	return vdev->of_reset || vdev->reset_control;
+>  }
+>  
+>  static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  {
+> +	struct reset_control *rstc;
+> +
+>  	if (VFIO_PLATFORM_IS_ACPI(vdev))
+>  		return vfio_platform_acpi_has_reset(vdev) ? 0 : -ENOENT;
+>  
+> @@ -127,8 +130,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  		vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
+>  							&vdev->reset_module);
+>  	}
+> +	if (vdev->of_reset)
+> +		return 0;
+> +
+> +	rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
 
-This should probably also go in through the ARM SoC tree.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Shouldn't we prefer the top level reset_control_get_exclusive()?
 
-Again, tell me if things get stuck and I will apply it.
+To make sure about the exclusive/shared terminology, does
+get_reset_control_get_exclusive() check we have an exclusive wire
+between this device and the reset controller?
 
-(It doesn't matter that the files referenced come in from different trees.
-I think.)
+Thanks
 
-Yours,
-Linus Walleij
+Eric
+> +	if (!IS_ERR(rstc)) {
+> +		vdev->reset_control = rstc;
+> +		return 0;
+> +	}
+>  
+> -	return vdev->of_reset ? 0 : -ENOENT;
+> +	return PTR_ERR(rstc);
+>  }
+>  
+>  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+> @@ -138,6 +149,8 @@ static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+>  
+>  	if (vdev->of_reset)
+>  		module_put(vdev->reset_module);
+> +
+> +	reset_control_put(vdev->reset_control);
+>  }
+>  
+>  static int vfio_platform_regions_init(struct vfio_platform_device *vdev)
+> @@ -217,6 +230,9 @@ static int vfio_platform_call_reset(struct vfio_platform_device *vdev,
+>  	} else if (vdev->of_reset) {
+>  		dev_info(vdev->device, "reset\n");
+>  		return vdev->of_reset(vdev);
+> +	} else if (vdev->reset_control) {
+> +		dev_info(vdev->device, "reset\n");
+> +		return reset_control_reset(vdev->reset_control);
+>  	}
+>  
+>  	dev_warn(vdev->device, "no reset function found!\n");
+> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+> index 85ffe5d9d1abd94e..a56e80ae5986540b 100644
+> --- a/drivers/vfio/platform/vfio_platform_private.h
+> +++ b/drivers/vfio/platform/vfio_platform_private.h
+> @@ -60,6 +60,7 @@ struct vfio_platform_device {
+>  	const char			*compat;
+>  	const char			*acpihid;
+>  	struct module			*reset_module;
+> +	struct reset_control		*reset_control;
+>  	struct device			*device;
+>  
+>  	/*
+> 
