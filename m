@@ -1,86 +1,92 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm64: allwinner: a64: add SRAM
- controller device tree node
-Date: Thu, 12 Apr 2018 16:58:06 +0200
-Message-ID: <20180412145806.hsvxomh6vousrhq5@flea>
-References: <20180411141641.14675-1-icenowy@aosc.io>
- <20180411141641.14675-6-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 3/5] net: stmmac: dwmac-sun8i: Allow getting
+ syscon regmap from device
+Date: Thu, 12 Apr 2018 23:11:08 +0800
+Message-ID: <A027702A-F3F7-4896-B2B8-E024DA521661@aosc.io>
+References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-4-icenowy@aosc.io> <20180412145628.iaaeue2imiijwx5d@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="evvv32nlsy5xv6f6"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCXIXXLAKGQEVGOTILA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBT7OXXLAKGQEKQ2NFFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180411141641.14675-6-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180412145628.iaaeue2imiijwx5d@flea>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---evvv32nlsy5xv6f6
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-Hi,
+=E4=BA=8E 2018=E5=B9=B44=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8810=
+:56:28, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Wed, Apr 11, 2018 at 10:16:39PM +0800, Icenowy Zheng wrote:
+>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>=20
+>> On the Allwinner R40 SoC, the "GMAC clock" register is in the CCU
+>> address space; on the A64 SoC this register is in the SRAM controller
+>> address space, and with a different offset.
+>>=20
+>> To access the register from another device and hide the internal
+>> difference between the device, let it register a regmap named
+>> "emac-clock". We can then get the device from the phandle, and
+>> retrieve the regmap with dev_get_regmap(); in this situation the
+>> regmap_field will be set up to access the only register in the
+>regmap.
+>>=20
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> [Icenowy: change to use regmaps with single register, change commit
+>>  message]
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 48
+>++++++++++++++++++++++-
+>>  1 file changed, 46 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+>b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+>> index 1037f6c78bca..b61210c0d415 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+>> @@ -85,6 +85,13 @@ const struct reg_field old_syscon_reg_field =3D {
+>>  	.msb =3D 31,
+>>  };
+>> =20
+>> +/* Specially exported regmap which contains only EMAC register */
+>> +const struct reg_field single_reg_field =3D {
+>> +	.reg =3D 0,
+>> +	.lsb =3D 0,
+>> +	.msb =3D 31,
+>> +};
+>> +
+>
+>I'm not sure this would be wise. If we ever need some other register
+>exported through the regmap, will have to change all the calling sites
+>everywhere in the kernel, which will be a pain and will break
+>bisectability.
 
-On Wed, Apr 11, 2018 at 10:16:41PM +0800, Icenowy Zheng wrote:
-> Allwinner A64 has a SRAM controller, and in the device tree currently
-> we have a syscon node to enable EMAC driver to access the EMAC clock
-> register. As SRAM controller driver can now export regmap for this
-> register, replace the syscon node to the SRAM controller device node,
-> and let EMAC driver to acquire its EMAC clock regmap.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 1b2ef28c42bd..1c37659d9d41 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -168,10 +168,25 @@
->  		#size-cells = <1>;
->  		ranges;
->  
-> -		syscon: syscon@1c00000 {
-> -			compatible = "allwinner,sun50i-a64-system-controller",
-> -				"syscon";
-> +		sram_controller: sram-controller@1c00000 {
-> +			compatible = "allwinner,sun50i-a64-sram-controller";
->  			reg = <0x01c00000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			sram_c: sram@18000 {
-> +				compatible = "mmio-sram";
-> +				reg = <0x00018000 0x28000>;
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				ranges = <0 0x00018000 0x28000>;
-> +
-> +				de2_sram: sram-section@0 {
-> +					compatible = "allwinner,sun50i-a64-sram-c";
-> +					reg = <0x0000 0x28000>;
-> +				};
-> +			};
+In this situation the register can be exported as another
+ regmap. Currently the code will access a regmap with name
+"emac-clock" for this register.
 
-That doesn't look related at all to what's being discussed here, so
-you'd rather add it as part of your DE2-enablement serie (or amend
-your commit log to say why this is important to do it in this patch).
+>
+>Chen-Yu's (or was it yours?) initial solution with a custom writeable
+>hook only allowing a single register seemed like a better one.
 
-Maxime
+But I remember you mentioned that you want it to hide the
+difference inside the device.
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---evvv32nlsy5xv6f6--
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
