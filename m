@@ -1,62 +1,51 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 0/5] V3M-Eagle HDMI output enablement
-Date: Thu, 12 Apr 2018 10:13:56 +0200
-Message-ID: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 1/5] arm64: dts: renesas: r8a77970: add FCPVD support
+Date: Thu, 12 Apr 2018 10:13:57 +0200
+Message-ID: <1523520841-16455-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   I have rebased the Eagle display enablement on top of (part of) Sergei's
-series:
- [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Simon: you can skip "[1/5]  arm64: dts: renesas: r8a77970: add FCPVD support"
-as you already collected that
+Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
+the next patch...
 
-Sergei: I re-sent your series because there was an additional comment from
-Laurent on [3/5]. I felt it was wrong to send a follow up patch on a series
-still not collected by Simon, so I've resent it. Hope this time is ok with you.
-Also, please note that [5/5] of your original series shall be re-sent using
-the newly introduced (still in-review) LVDS decoder. Please see [5/5] of this
-series as an example.
+Based on the original (and large) patch by Daisuke Matsushita
+<daisuke.matsushita.ns@hitachi.com>.
 
-Niklas: [5/5] of this series is a fixup of your patches and mine. I added
-your signed-off-by, hope it is ok.
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-The series depends on THC63LVD1024 driver, currently submitted for inclusion
-"[PATCH v8 0/2]  drm: Add Thine THC63LVD1024 LVDS decoder bridge"
-currently available at:
-git://jmondi.org/linux lvds-bridge/linus-master/v8
-
-Thanks
-   j
-
-v2 -> v3:
-- Use Sergei's series for patches [1-4] with a minor comment from Laurent
-- Remove the lvds-decoder node label and add Laurent's Reviewed-by in [5/5]
-
-v1 -> v2:
-- Add Laurent's reviewed by tags
-- Fixup patch 5, 6 and 7 of v1
-- Remove DU digital output pin muxing
-- Update thc63lvd1024 to use the new bindings with mandatory power supply
-- Minor fixes (changes are described individually in each patch)
-
-Jacopo Mondi (1):
-  arm64: dts: renesas: eagle: Enable HDMI output
-
-Sergei Shtylyov (4):
-  arm64: dts: renesas: r8a77970: add FCPVD support
-  arm64: dts: renesas: r8a77970: add VSPD support
-  arm64: dts: renesas: r8a77970: add DU support
-  arm64: dts: renesas: r8a77970: add LVDS support
-
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 93 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 75 +++++++++++++++++++++
- 2 files changed, 168 insertions(+)
-
---
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index c6db8ea..97c27ef 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -617,6 +617,14 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
++
++		fcpvd0: fcp@fea27000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea27000 0 0x200>;
++			clocks = <&cpg CPG_MOD 603>;
++			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
++			resets = <&cpg 603>;
++		};
+ 	};
+ 
+ 	timer {
+-- 
 2.7.4
