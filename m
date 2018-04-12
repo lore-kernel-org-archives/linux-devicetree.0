@@ -1,104 +1,102 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 3/5] net: stmmac: dwmac-sun8i: Allow
- getting syscon regmap from device
-Date: Thu, 12 Apr 2018 23:23:30 +0800
-Message-ID: <CAGb2v66Qi2D1qgF3-iVJFAiznMUzzen0nHM5vsPe7Cyi6QTYpw@mail.gmail.com>
-References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-4-icenowy@aosc.io>
- <20180412145628.iaaeue2imiijwx5d@flea> <A027702A-F3F7-4896-B2B8-E024DA521661@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Thu, 12 Apr 2018 10:35:57 -0500
+Message-ID: <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+ <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+ <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCPUXXLAKGQEATZ6GQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <A027702A-F3F7-4896-B2B8-E024DA521661-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2018 at 11:11 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> =E4=BA=8E 2018=E5=B9=B44=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-10:56:28, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->>On Wed, Apr 11, 2018 at 10:16:39PM +0800, Icenowy Zheng wrote:
->>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On 04/12/2018 09:29 AM, Peter Rosin wrote:
+> On 2018-04-11 18:13, Andrew F. Davis wrote:
+>> On 04/11/2018 10:51 AM, Lars-Peter Clausen wrote:
+>>> On 04/11/2018 05:43 PM, Andrew F. Davis wrote:
+>>>> On 04/11/2018 09:15 AM, Peter Rosin wrote:
+>>>>> This is a current sense amplifier from Analog Devices.
+>>>>>
+>>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>>> ---
+>>>>>  drivers/iio/afe/Kconfig              |  3 +-
+>>>>>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+>>>>> index 642ce4eb12a6..0e10fe8f459a 100644
+>>>>> --- a/drivers/iio/afe/Kconfig
+>>>>> +++ b/drivers/iio/afe/Kconfig
+>>>>> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>>>>>  	depends on OF || COMPILE_TEST
+>>>>>  	help
+>>>>>  	  Say yes here to build support for the IIO unit converter
+>>>>> -	  that handles voltage dividers and current sense shunts.
+>>>>> +	  that handles voltage dividers, current sense shunts and
+>>>>> +	  the LT6106 Current Sense Amplifier from Analog Devices.
+>>>>
+>>>> Could work better to split these out into separate drivers. Maybe a
+>>>> iio-shunt-resistor.c that does just voltage->current with the
+>>>> appropriate scaling. Then make a a separate lt6106.c.
 >>>
->>> On the Allwinner R40 SoC, the "GMAC clock" register is in the CCU
->>> address space; on the A64 SoC this register is in the SRAM controller
->>> address space, and with a different offset.
+>>> I don't think we need a separate driver here. There are tons of circuits
+>>> that all work the same way and all require the same properties. If we'd add
+>>> a driver for each of them we'd get buried in boilerplate code.
 >>>
->>> To access the register from another device and hide the internal
->>> difference between the device, let it register a regmap named
->>> "emac-clock". We can then get the device from the phandle, and
->>> retrieve the regmap with dev_get_regmap(); in this situation the
->>> regmap_field will be set up to access the only register in the
->>regmap.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> [Icenowy: change to use regmaps with single register, change commit
->>>  message]
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> ---
->>>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 48
->>++++++++++++++++++++++-
->>>  1 file changed, 46 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> index 1037f6c78bca..b61210c0d415 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
->>> @@ -85,6 +85,13 @@ const struct reg_field old_syscon_reg_field =3D {
->>>      .msb =3D 31,
->>>  };
->>>
->>> +/* Specially exported regmap which contains only EMAC register */
->>> +const struct reg_field single_reg_field =3D {
->>> +    .reg =3D 0,
->>> +    .lsb =3D 0,
->>> +    .msb =3D 31,
->>> +};
->>> +
 >>
->>I'm not sure this would be wise. If we ever need some other register
->>exported through the regmap, will have to change all the calling sites
->>everywhere in the kernel, which will be a pain and will break
->>bisectability.
->
-> In this situation the register can be exported as another
->  regmap. Currently the code will access a regmap with name
-> "emac-clock" for this register.
->
+>> Fair enough, then it should at least be renamed to something generic
+>> like current-sense-amplifier, as you said lots of circuits do this, not
+>> just lt6106s. We will have then have support for:
 >>
->>Chen-Yu's (or was it yours?) initial solution with a custom writeable
->>hook only allowing a single register seemed like a better one.
->
-> But I remember you mentioned that you want it to hide the
-> difference inside the device.
+>> current-sense-amplifier
+>> current-sense-shunt
+>> voltage-divider
+> 
+> For the compatible "current-sense-amplifier", I would advocate the
+> properties...
+> 
+>  sense-resistor-micro-ohms
+>  sense-gain
+> 
+> (or something close to that)
+> 
+> ...and not input-resistor-ohms and output-resistor-ohms which are way
+> more particular to the LT6106.
+> 
+> But as I said in the cover letter, I didn't go with sense-gain since I
+> thought I would end up with requests for non-integer gains. There is
+> yet to be a comment on the non-integer gain problem, and before there
+> is a path forward for that case, I'm reluctant.
+> 
 
-Hi,
+Why not similar to what you had before with the resistor:
 
-The idea is that a device can export multiple regmaps. This one,
-the one named "gmac" (in my soon to come v2) or "emac-clock" here,
-is but one of many possible regmaps, and it only exports the register
-needed by the GMAC/EMAC. IMHO it is highly unlikely the same piece of
-hardware would need a second register from the same device. A more
-likely situation would be it needs another register from a different
-device, like on the H6 where the "internal PHY" is not so internal
-from a system bus point of view.
+sense-gain-multiplier
+sense-gain-divider
 
-ChenYu
+if either are missing assume they are 1.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>> compatibles in this driver called "unit-converter" which is still a
+>> misnomer IMHO.
+> 
+> I don't remember you having presented your preference, and I think
+> that goes against the established bike-shedding protocol?
+> 
+
+True, how about "current-sense-from-voltage" ?
+
+Andrew
+
+> Cheers,
+> Peter
+> 
