@@ -1,59 +1,27 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 2/5] arm64: dts: renesas: r8a77970: add VSPD support
-Date: Thu, 12 Apr 2018 10:13:58 +0200
-Message-ID: <1523520841-16455-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 4/9] dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+Date: Thu, 12 Apr 2018 10:54:28 +0200
+Message-ID: <CACRpkdYtdJc7jXfFPmXQUg5Q5YACk29-FvohOkXMmnOgV5_NzQ@mail.gmail.com>
+References: <20180328174703.19778-1-manivannan.sadhasivam@linaro.org> <20180328174703.19778-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180328174703.19778-5-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Wed, Mar 28, 2018 at 7:46 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-Describe VSPD0 in the R8A77970 device tree; it will be used by DU in
-the next patch...
+> Add gpio nodes for Actions Semi S900 SoC.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns@hitachi.com>.
+This should probably have Subject "add bindings" rather than "add gpio nodes"
+but it's fine, I can fix it up when applying if I just get Rob's ACK
+on these bindings (that look entirely uncontroversial).
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
----
-v1 -> v2 (Jacopo) :
-- Extend the memory region to include V6_CLUTn_TBL* registers.
----
- arch/arm64/boot/dts/renesas/r8a77970.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-index 97c27ef..a3ef3bd 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -625,6 +625,16 @@
- 			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
- 			resets = <&cpg 603>;
- 		};
-+
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x8000>;
-+			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+			renesas,fcp = <&fcpvd0>;
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
+Yours,
+Linus Walleij
