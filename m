@@ -1,78 +1,113 @@
-Return-Path: <SRS0=O2/u=HA=gmail.com=richard.weiyang@kernel.org>
-Date: Wed, 11 Apr 2018 11:22:20 +0800
-From: Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v3 1/3] resource: Use list_head to link resource sibling
-Message-ID: <20180411032220.GA49071@WeideMacBook-Pro.local>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20180408024724.16812-1-bhe@redhat.com>
- <20180408024724.16812-2-bhe@redhat.com>
- <20180409090853.GJ19345@localhost.localdomain>
- <CAL_Jsq+xxa9ep2LK3H6YWhwrZtc-T73Y84ry6Hs-JJ3XEXoGsw@mail.gmail.com>
- <20180410134416.GM19345@localhost.localdomain>
+Return-Path: <SRS0=puHF=HB=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/2] usb: gadget: udc: renesas_usb3: add property
+ "renesas,ignore-id"
+Date: Thu, 12 Apr 2018 05:03:23 +0000
+Message-ID: <TY1PR06MB0992A446CC3822360157B948D8BC0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523362434-17808-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180411072810.powlmegmyyju3nol@verge.net.au>
+In-Reply-To: <20180411072810.powlmegmyyju3nol@verge.net.au>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180410134416.GM19345@localhost.localdomain>
-To: Baoquan He <bhe@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, David Airlie <airlied@linux.ie>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Frank Rowand <frowand.list@gmail.com>, Keith Busch <keith.busch@intel.com>, Jonathan Derrick <jonathan.derrick@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Brijesh Singh <brijesh.singh@amd.com>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Wei Yang <richard.weiyang@gmail.com>, devel@linuxdriverproject.org, linux-input@vger.kernel.org, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "balbi@kernel.org" <balbi@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 10, 2018 at 09:44:16PM +0800, Baoquan He wrote:
->Hi Rob,
->
->Thanks a lot for looking into this and involve Nico to this thread!
->
->On 04/09/18 at 09:49am, Rob Herring wrote:
->> +Nico who has been working on tinification of the kernel.
->> 
->> On Mon, Apr 9, 2018 at 4:08 AM, Baoquan He <bhe@redhat.com> wrote:
->> > The struct resource uses singly linked list to link siblings. It's not
->> > easy to do reverse iteration on sibling list. So replace it with list_head.
->> 
->> Why is reverse iteration needed?
->
->This is the explanation I made when Andrew helped to review the v1 post:
->https://lkml.org/lkml/2018/3/23/78
->
->Because we have been using kexec-tools utility to search available
->System RAM space for loading kernel/initrd/purgatory from top to down.
->That is done in user space by searching /proc/iomem. While later added
->kexec_file interface, the searching code happened in kernel, and it
->only search System RAM region bottom up, then take an area in that found
->RAM region from top to down. We need unify these two interfaces on
->behaviour since they are the same on essense from the users' point of
->view, though implementation is different. As you know, the singly linked
->list implementation of the current resource's sibling linking, makes the
->searching from top to down very hard to satisfy people. 
->
->Below is the v1 post, we make an temporary array to copy iomem_resource's
->first level of children, then iterate the array reversedly. Andrew
->suggested me to try list_head after reviewing. In fact we can optimize
->that patch to only copy resource pointer into array, still the way is
->ugly.
->https://lkml.org/lkml/2018/3/21/952
->
->Then Wei pasted a patch he had made as below. He didn't mention if he
->also has requirement on reversed iteration of resource. That is an O(n*n)
->way, from personal feelings, hard to say if it's bettern than v1 post.
->https://lkml.org/lkml/2018/3/24/157
+Hi Simon-san,
 
-I don't have requirement on reverse iteration of resource structure.
+> From: Simon Horman, Sent: Wednesday, April 11, 2018 4:28 PM
+>=20
+> On Tue, Apr 10, 2018 at 09:13:53PM +0900, Yoshihiro Shimoda wrote:
+<snip>
+> > This patch adds a new property to ignore the ID signal on a board.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/renesas_usb3.txt |  2 ++
+> >  drivers/usb/gadget/udc/renesas_usb3.c                  | 10 ++++++++++
+> >  2 files changed, 12 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > index 2c071bb..53949bd 100644
+> > --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > @@ -19,6 +19,8 @@ Required properties:
+> >  Optional properties:
+> >    - phys: phandle + phy specifier pair
+> >    - phy-names: must be "usb"
+> > +  - renesas,ignore-id: when a board doesn't use ID pin, you can add th=
+is
+> > +		       property to ignore the ID state.
+> >
+> >  Example of R-Car H3 ES1.x:
+> >  	usb3_peri0: usb@ee020000 {
+> > diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget=
+/udc/renesas_usb3.c
+> > index 409cde4..59e1485 100644
+> > --- a/drivers/usb/gadget/udc/renesas_usb3.c
+> > +++ b/drivers/usb/gadget/udc/renesas_usb3.c
+> > @@ -350,6 +350,7 @@ struct renesas_usb3 {
+> >  	bool extcon_host;		/* check id and set EXTCON_USB_HOST */
+> >  	bool extcon_usb;		/* check vbus and set EXTCON_USB */
+> >  	bool forced_b_device;
+> > +	bool ignore_id;
+> >  };
+> >
+> >  #define gadget_to_renesas_usb3(_gadget)	\
+> > @@ -645,6 +646,9 @@ static void usb3_check_vbus(struct renesas_usb3 *us=
+b3)
+> >
+> >  static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+> >  {
+> > +	if (usb3->ignore_id && !usb3->forced_b_device)
+> > +		return;
+> > +
+> >  	if (host)
+> >  		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
+> >  	else
+> > @@ -675,6 +679,9 @@ static void usb3_mode_config(struct renesas_usb3 *u=
+sb3, bool host, bool a_dev)
+> >
+> >  static bool usb3_is_a_device(struct renesas_usb3 *usb3)
+> >  {
+> > +	if (usb3->ignore_id)
+> > +		return false;
+> > +
+> >  	return !(usb3_read(usb3, USB3_USB_OTG_STA) & USB_OTG_IDMON);
+> >  }
+> >
+> > @@ -2632,6 +2639,9 @@ static int renesas_usb3_probe(struct platform_dev=
+ice *pdev)
+> >  	if (ret < 0)
+> >  		goto err_add_udc;
+> >
+> > +	if (of_property_read_bool(pdev->dev.of_node, "renesas,no-id"))
+> > +		usb3->ignore_id =3D true;
+>=20
+> I wonder if this is better expressed as:
+>=20
+> 	usb3->ignore_id =3D of_property_read_bool(pdev->dev.of_node,
+> 						"renesas,no-id"));
 
-My approach is almost the same as current walk_system_ram_res(). Since each
-resource keeps parent, we could get previous resource by search on
-res->parent->child.
+Thank you for the pointed out! I agree with you.
+However, I would like to recall this adding property for now because
+I'm thinking that the OF graph of usb-connector can assume this via connect=
+or-type
+instead of such a local property. So, I'll try to use the usb-connector bin=
+dings on
+this driver.
 
-The complexity of a whole iteration is O(N * W / 2), where N is the number of
-resources in the tree and W is the average number of siblings of each
-resource.
+Best regards,
+Yoshihiro Shimoda
 
-And this approach doesn't need to change current structure.
-
->
->That's why I would like to have a try of the list_head linking.
->
-
--- 
-Wei Yang
-Help you, Help me
+> > +
+> >  	ret =3D device_create_file(&pdev->dev, &dev_attr_role);
+> >  	if (ret < 0)
+> >  		goto err_dev_create;
+> > --
+> > 1.9.1
+> >
