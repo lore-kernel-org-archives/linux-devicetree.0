@@ -1,156 +1,234 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 6/7] dt-bindings: phy-qcom-usb2: Add support to
- override tuning values
-Date: Thu, 12 Apr 2018 13:47:51 -0700
-Message-ID: <CAD=FV=Wc+dNZ6wPqwacn-wbp66FhBT5BgbbKGFjO9b+pa5Od6Q@mail.gmail.com>
-References: <1522321466-21755-1-git-send-email-mgautam@codeaurora.org>
- <1522321466-21755-7-git-send-email-mgautam@codeaurora.org>
- <CAD=FV=VGtmWTaa_aRG6UVAtCzy3cS8sTZDCqAgRMYeg7U02qTw@mail.gmail.com>
- <20180409201824.adsnvqo4vv2waixc@rob-hp-laptop> <47a6d655-c4ba-ab5a-ef94-094f25cff74b@codeaurora.org>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v4 2/2] drivers: soc: Add LLCC driver
+Date: Thu, 12 Apr 2018 22:02:57 +0000
+Message-ID: <CAE=gft6DHtvkLAyAF30p6rwJrs845nxBOxWQ0gmHdJ0VQa4ZxQ@mail.gmail.com>
+References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org> <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <47a6d655-c4ba-ab5a-ef94-094f25cff74b@codeaurora.org>
+In-Reply-To: <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: rishabhb@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rishabh,
 
-On Tue, Apr 10, 2018 at 12:16 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->
->
-> On 4/10/2018 1:48 AM, Rob Herring wrote:
->> On Thu, Mar 29, 2018 at 01:38:23PM -0700, Doug Anderson wrote:
->>> Hi,
->>>
->>> On Thu, Mar 29, 2018 at 4:04 AM, Manu Gautam <mgautam@codeaurora.org> wrote:
->>>> To improve eye diagram for PHYs on different boards of same SOC,
->>>> some parameters may need to be changed. Provide device tree
->>>> properties to override these from board specific device tree
->>>> files. While at it, replace "qcom,qusb2-v2-phy" with compatible
->>>> string for USB2 PHY on sdm845 which was earlier added for
->>>> sdm845 only.
->>>>
->>>> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
->>>> ---
->>>>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt        | 19 ++++++++++++++++++-
->>>>  1 file changed, 18 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>>> index 42c9742..0ed140a 100644
->>>> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>>> @@ -6,7 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->>>>  Required properties:
->>>>   - compatible: compatible list, contains
->>>>                "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
->>>> -              "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
->>>> +              "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
->>>>
->>>>   - reg: offset and length of the PHY register set.
->>>>   - #phy-cells: must be 0.
->>>> @@ -27,6 +27,23 @@ Optional properties:
->>>>                 tuning parameter value for qusb2 phy.
->>>>
->>>>   - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
->>> Just to confirm: the new properties below work just fine on the old
->>> msm8996 PHY too, right?
-> No it won't as register layouts and bit fields are different. Also IMP_CTRL
-> register doesnt exist for msm8996. I will mention that explicitly here.
+On Tue, Apr 10, 2018 at 1:09 PM Rishabh Bhatnagar <rishabhb@codeaurora.org>
+wrote:
 
-Thanks!  Yeah, definitely document which properties only work on
-sdm845 and which ones work everywhere.
+> LLCC (Last Level Cache Controller) provides additional cache memory
+> in the system. LLCC is partitioned into multiple slices and each
+> slice gets its own priority, size, ID and other config parameters.
+> LLCC driver programs these parameters for each slice. Clients that
+> are assigned to use LLCC need to get information such size & ID of the
+> slice they get and activate or deactivate the slice as needed. LLCC driver
+> provides API for the clients to perform these operations.
 
+> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>   drivers/soc/qcom/Kconfig           |  17 ++
+>   drivers/soc/qcom/Makefile          |   2 +
+>   drivers/soc/qcom/llcc-sdm845.c     | 110 ++++++++++
+>   drivers/soc/qcom/llcc-slice.c      | 404
++++++++++++++++++++++++++++++++++++++
+>   include/linux/soc/qcom/llcc-qcom.h | 168 +++++++++++++++
+>   5 files changed, 701 insertions(+)
+>   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>   create mode 100644 drivers/soc/qcom/llcc-slice.c
+>   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
 
->>>> + - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
->>>> +               added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
->>>> +               tuning paramter that may vary for different boards of same SOC.
->>>> + - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
->>>> +               output current. 0x0 value corresponding to 24mA which is maximum
->>>> +               current and 0xf corresponds to lowest current which is 15mA.
->>>> + - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
->>>> +               Possible values are:
->>>> +               00: NONE
->>>> +               01: +5%
->>>> +               10: +10%
->>>> +               11: +15%
->>> The user of the device tree will expect to specify this in decimal,
->>> right?  So list the above as 0, 1, 2, 3.  ...not 00, 01, 10, 11.
-> Fine.
->>> (though below I suggest that specifying 0, 1, 2, 3 is probably not
->>> quite the right way to describe this property).
->>>
->>>
->>>> +- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
->>>> +               pre-emphasis (specified using qcom,preemphasis-level) must be in
->>>> +               effect. Possible values are:
->>>> +               0: Full-bit width
->>>> +               1: Half-bit width
->>> Perhaps just make this a boolean property.  If it exists then you get
->>> the non-default case.  AKA: if the default is full bit width, then
->>> you'd allow a boolean property "qcom,preemphasis-half-width" to
->>> override.  If the default is half bit width then you'd allow
->>> "qcom,preemphasis-full-width" to override.
->
-> Default property value for an SOC is specified in driver and could vary from
-> soc to soc. Hence, from board devicetree for different SOCs we might need
-> to select separate widths overriding default driver values.
-> Alternative is to have two bool properties each for half and full-width. Did
-> you actually mean that?
+[...]
+> diff --git a/drivers/soc/qcom/llcc-sdm845.c
+b/drivers/soc/qcom/llcc-sdm845.c
+> new file mode 100644
+> index 0000000..619b226
+> --- /dev/null
+> +++ b/drivers/soc/qcom/llcc-sdm845.c
+> @@ -0,0 +1,110 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/soc/qcom/llcc-qcom.h>
+> +
+> +/*
+> + * SCT(System Cache Table) entry contains of the following parameters
 
-It's OK to keep it as-is then.  ...but please document what the
-default is for every SoC/port combination that supports this property.
+contains the following members:
 
+> + * name: Name of the client's use case for which the llcc slice is used
+> + * uid: Unique id for the client's use case
 
->>> For all the above optional bits, please indicate what the default is
->>> if they aren't specified.  If you have to specify a different default
->>> for sdm845 vs. msm8996 then so be it (though it would be nice to avoid
->>> it by changing the default for sdm845 unless that's totally crazy).
-> Sure.
->>>
->>>
->>> Overall this looks pretty good to me.  Certainly the descriptions are
->>> very understandable and this will make tuning on a per-board /
->>> per-port basis much easier!  Thanks!
->>>
->>>
->>> One last overall comment is that ideally we could make the device tree
->>> a little bit more human readable.  Right now we'll have a set of
->>> properties that looks like this (numbers made up):
->>>
->>> qcom,imp-res-offset-value = <0x13>;
->>> qcom,hstx-trim-value = <0x7>;
->>> qcom,preemphasis-level = <1>;
->>> qcom,preemphasis-width = <0>;
->>>
->>>
->>> One option to make that more readable would be to change the units, AKA:
->>>
->>> qcom,hstx-trim-ma = <18>;
->>> qcom,preemphasis-percent = <5>;
->>>
->>> ...then the code would translate from these human-readable values to
->>> the real numbers.
->> Yes, we often do that. However, there properties are very specific to
->> this device and making the driver translate back to h/w values doesn't
->> add much.
->
-> Thanks for review Rob. I too agree with both the viewpoints.
-> Doug, if it is not of much concern then can I stick with current approach?
+s/uid/usecase_id/
 
-I certainly would appreciate the #defines and believe they add to the
-readability, but if you're dead set against it and Rob says it's OK, I
-won't yell too loudly.
+> + * slice_id: llcc slice id for each client
+> + * max_cap: The maximum capacity of the cache slice provided in KB
+> + * priority: Priority of the client used to select victim line for
+replacement
+> + * fixed_size: Determine if the slice has a fixed capacity
 
+"Boolean indicating if the slice has a fixed capacity" might be better
 
->>> Another option would be to add a #include to the bindings.  I'd defer
->>> to the wisdom of the bindings guys about if this is better or worse
->>> than adding the units, but personally I like it better because:
->>> * You get a compile-time error if you use an unsupported value.
->>> * You don't need to add the code to translate.
->> This is fine for me. Really, I'm fine with it as-is, but #defines make
->> some people happy.
->>
->> Rob
+> diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
+> new file mode 100644
+> index 0000000..67a81b0
+> --- /dev/null
+> +++ b/drivers/soc/qcom/llcc-slice.c
+...
+> +static int llcc_update_act_ctrl(struct llcc_drv_data *drv, u32 sid,
+> +                               u32 act_ctrl_reg_val, u32 status)
+> +{
+> +       u32 act_ctrl_reg;
+> +       u32 status_reg;
+> +       u32 slice_status;
+> +       int ret = 0;
+> +
+> +       act_ctrl_reg = drv->bcast_off + LLCC_TRP_ACT_CTRLn(sid);
+> +       status_reg = drv->bcast_off + LLCC_TRP_STATUSn(sid);
+> +
+> +       /*Set the ACTIVE trigger*/
+
+Add spaces around /* */
+
+> +       act_ctrl_reg_val |= ACT_CTRL_ACT_TRIG;
+> +       ret = regmap_write(drv->regmap, act_ctrl_reg, act_ctrl_reg_val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Clear the ACTIVE trigger */
+> +       act_ctrl_reg_val &= ~ACT_CTRL_ACT_TRIG;
+> +       ret = regmap_write(drv->regmap, act_ctrl_reg, act_ctrl_reg_val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = regmap_read_poll_timeout(drv->regmap, status_reg,
+slice_status,
+> +                       !(slice_status & status), 0,
+LLCC_STATUS_READ_DELAY);
+> +       return ret;
+> +}
+> +
+> +/**
+> + * llcc_slice_activate - Activate the llcc slice
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A value zero will be returned on success and a negative errno will
+
+a value of zero
+
+> + * be returned in error cases
+> + */
+> +int llcc_slice_activate(struct llcc_slice_desc *desc)
+> +{
+> +       int ret;
+> +       u32 act_ctrl_val;
+> +       struct llcc_drv_data *drv;
+> +
+> +       if (desc == NULL)
+> +               return -EINVAL;
+
+I think we can remove this check, right?
+
+> +
+> +       drv = dev_get_drvdata(desc->dev);
+> +       if (!drv)
+> +               return -EINVAL;
+> +
+> +       mutex_lock(&drv->lock);
+> +       if (test_bit(desc->slice_id, drv->bitmap)) {
+> +               mutex_unlock(&drv->lock);
+> +               return 0;
+> +       }
+> +
+> +       act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE << ACT_CTRL_OPCODE_SHIFT;
+> +
+> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
+> +                                 DEACTIVATE);
+> +
+> +       __set_bit(desc->slice_id, drv->bitmap);
+> +       mutex_unlock(&drv->lock);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
+> +
+> +/**
+> + * llcc_slice_deactivate - Deactivate the llcc slice
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A value zero will be returned on success and a negative errno will
+> + * be returned in error cases
+> + */
+> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
+> +{
+> +       u32 act_ctrl_val;
+> +       int ret;
+> +       struct llcc_drv_data *drv;
+> +
+> +       if (desc == NULL)
+> +               return -EINVAL;
+> +
+> +       drv = dev_get_drvdata(desc->dev);
+> +       if (!drv)
+> +               return -EINVAL;
+> +
+> +       mutex_lock(&drv->lock);
+> +       if (!test_bit(desc->slice_id, drv->bitmap)) {
+> +               mutex_unlock(&drv->lock);
+> +               return 0;
+> +       }
+> +       act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE <<
+ACT_CTRL_OPCODE_SHIFT;
+> +
+> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
+> +                                 ACTIVATE);
+> +
+> +       __clear_bit(desc->slice_id, drv->bitmap);
+> +       mutex_unlock(&drv->lock);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_slice_deactivate);
+> +
+> +/**
+> + * llcc_get_slice_id - return the slice id
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A positive value will be returned on success and a negative errno will
+> + * be returned on error
+> + */
+> +int llcc_get_slice_id(struct llcc_slice_desc *desc)
+> +{
+> +       if (!desc)
+> +               return -EINVAL;
+
+Can we remove this check too?
+
+> +
+> +       return desc->slice_id;
+> +}
+> +EXPORT_SYMBOL_GPL(llcc_get_slice_id);
+> +
+> +/**
+> + * llcc_get_slice_size - return the slice id
+> + * @desc: Pointer to llcc slice descriptor
+> + *
+> + * A positive value will be returned on success and zero will returned on
+> + * error
+> + */
+> +size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
+> +{
+> +       if (!desc)
+> +               return 0;
+
+And this one?
+
+-Evan
