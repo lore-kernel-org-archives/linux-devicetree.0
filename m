@@ -1,38 +1,25 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 2/2] vfio: platform: Add generic DT reset support
-Date: Thu, 12 Apr 2018 09:00:18 +0200
-Message-ID: <20180412070017.ekfic2pgddqs7gdz@verge.net.au>
-References: <1523438149-16433-1-git-send-email-geert+renesas@glider.be>
- <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v4 1/8] arm: shmobile: Add the RZ/N1 arch to the shmobile
+ Kconfig
+Date: Thu, 12 Apr 2018 10:00:10 +0200
+Message-ID: <20180412080010.n2am3co66acwgo22@verge.net.au>
+References: <1523349015-37985-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523349015-37985-2-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523438149-16433-4-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1523349015-37985-2-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, buserror+upstream@gmail.com, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 11, 2018 at 11:15:49AM +0200, Geert Uytterhoeven wrote:
-> Vfio-platform requires reset support, provided either by ACPI, or, on DT
-> platforms, by a device-specific reset driver matching against the
-> device's compatible value.
+On Tue, Apr 10, 2018 at 09:30:01AM +0100, Michel Pollet wrote:
+> Add the RZ/N1 Family (Part #R9A06G0xx) ARCH config to the rest of
+> the Renesas SoC collection.
 > 
-> On many SoCs, devices are connected to an SoC-internal reset controller.
-> If the reset hierarchy is described in DT using "resets" properties,
-> such devices can be reset in a generic way through the reset controller
-> subsystem.  Hence add support for this, avoiding the need to write
-> device-specific reset drivers for each single device on affected SoCs.
-> 
-> Devices that do require a more complex reset procedure can still provide
-> a device-specific reset driver, as that takes precedence.
-> 
-> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
-> becomes a no-op (as in: "No reset function found for device") if reset
-> controller support is disabled.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+This change has already been accepted for v4.18.
