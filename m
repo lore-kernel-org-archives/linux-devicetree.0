@@ -1,10 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Subject: [PATCH v3 0/5] V3M-Eagle HDMI output enablement
-Date: Thu, 12 Apr 2018 10:11:47 +0200
-Message-ID: <1523520712-16106-1-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 12 Apr 2018 10:13:56 +0200
+Message-ID: <1523520841-16455-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com
