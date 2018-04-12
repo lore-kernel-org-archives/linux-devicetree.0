@@ -1,91 +1,70 @@
 From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH 4/4] dt-bindings: Document the DT bindings for lan78xx
-Date: Thu, 12 Apr 2018 14:55:36 +0100
-Message-ID: <1523541336-145953-5-git-send-email-phil@raspberrypi.org>
+Subject: [PATCH 3/4] lan78xx: Read LED modes from Device Tree
+Date: Thu, 12 Apr 2018 14:55:35 +0100
+Message-ID: <1523541336-145953-4-git-send-email-phil@raspberrypi.org>
 References: <1523541336-145953-1-git-send-email-phil@raspberrypi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1523541336-145953-1-git-send-email-phil@raspberrypi.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Cc: Phil Elwell <phil@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-The Microchip LAN78XX family of devices are Ethernet controllers with
-a USB interface. Despite being discoverable devices it can be useful to
-be able to configure them from Device Tree, particularly in low-cost
-applications without an EEPROM or programmed OTP.
+Add support for DT property "microchip,led-modes", a vector of two
+cells (u32s) in the range 0-15, each of which sets the mode for one
+of the two LEDs. Some possible values are:
 
-Document the supported properties in a bindings file, adding it to
-MAINTAINERS at the same time.
+    0=link/activity          1=link1000/activity
+    2=link100/activity       3=link10/activity
+    4=link100/1000/activity  5=link10/1000/activity
+    6=link10/100/activity    14=off    15=on
+
+Also use the presence of the DT property to indicate that the
+LEDs should be enabled - necessary in the event that no valid OTP
+or EEPROM is available.
 
 Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 ---
- .../devicetree/bindings/net/microchip,lan78xx.txt  | 44 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+ drivers/net/usb/lan78xx.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/microchip,lan78xx.txt b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
-new file mode 100644
-index 0000000..e7d7850
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/microchip,lan78xx.txt
-@@ -0,0 +1,44 @@
-+Microchip LAN78xx Gigabit Ethernet controller
-+
-+The LAN78XX devices are usually configured by programming their OTP or with
-+an external EEPROM, but some platforms (e.g. Raspberry Pi 3 B+) have neither.
-+
-+Please refer to ethernet.txt for a description of common Ethernet bindings.
-+
-+Optional properties:
-+- microchip,eee-enabled: if present, enable Energy Efficient Ethernet support;
-+- microchip,led-modes: a two-element vector, with each element configuring
-+  the operating mode of an LED. The values supported by the device are;
-+  0: Link/Activity
-+  1: Link1000/Activity
-+  2: Link100/Activity
-+  3: Link10/Activity
-+  4: Link100/1000/Activity
-+  5: Link10/1000/Activity
-+  6: Link10/100/Activity
-+  7: RESERVED
-+  8: Duplex/Collision
-+  9: Collision
-+  10: Activity
-+  11: RESERVED
-+  12: Auto-negotiation Fault
-+  13: RESERVED
-+  14: Off
-+  15: On
-+- microchip,tx-lpi-timer: the delay (in microseconds) between the TX fifo
-+  becoming empty and invoking Low Power Idles (default 600).
-+
-+Example:
-+
-+	/* Standard configuration for a Raspberry Pi 3 B+ */
-+	ethernet: usbether@1 {
-+		compatible = "usb424,7800";
-+		reg = <1>;
-+		microchip,eee-enabled;
-+		microchip,tx-lpi-timer = <600>;
-+		/*
-+		 * led0 = 1:link1000/activity
-+		 * led1 = 6:link10/100/activity
-+		 */
-+		microchip,led-modes = <1 6>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2328eed..b637aad 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14482,6 +14482,7 @@ M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/usb/lan78xx.*
-+F:	Documentation/devicetree/bindings/net/microchip,lan78xx.txt
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index d98397b..ffb483d 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2008,6 +2008,7 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ {
+ 	int ret;
+ 	u32 mii_adv;
++	u32 led_modes[2];
+ 	struct phy_device *phydev;
  
- USB MASS STORAGE DRIVER
- M:	Alan Stern <stern@rowland.harvard.edu>
+ 	phydev = phy_find_first(dev->mdiobus);
+@@ -2097,6 +2098,25 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 		(void)lan78xx_set_eee(dev->net, &edata);
+ 	}
+ 
++	if (!of_property_read_u32_array(dev->udev->dev.of_node,
++					"microchip,led-modes",
++					led_modes, ARRAY_SIZE(led_modes))) {
++		u32 reg;
++		int i;
++
++		reg = phy_read(phydev, 0x1d);
++		for (i = 0; i < ARRAY_SIZE(led_modes); i++) {
++			reg &= ~(0xf << (i * 4));
++			reg |= (led_modes[i] & 0xf) << (i * 4);
++		}
++		(void)phy_write(phydev, 0x1d, reg);
++
++		/* Ensure the LEDs are enabled */
++		lan78xx_read_reg(dev, HW_CFG, &reg);
++		reg |= HW_CFG_LED0_EN_ | HW_CFG_LED1_EN_;
++		lan78xx_write_reg(dev, HW_CFG, reg);
++	}
++
+ 	genphy_config_aneg(phydev);
+ 
+ 	dev->fc_autoneg = phydev->autoneg;
 -- 
 2.7.4
