@@ -1,44 +1,75 @@
-Return-Path: <SRS0=lcts=HC=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/2] clk: renesas: Add r8a77990 CPG Core Clock Definitions
-Date: Fri, 13 Apr 2018 02:16:06 +0000
-Message-ID: <TY1PR06MB09927E1CE7136B0690A31B7AD8B30@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Return-Path: <SRS0=nXIn=HB=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1523439447-1084-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1523439447-1084-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXata291k6ViN-eHrw6OLN49p2CJT6yZHqQukL2Yf2Lag@mail.gmail.com>
-In-Reply-To: <CAMuHMdXata291k6ViN-eHrw6OLN49p2CJT6yZHqQukL2Yf2Lag@mail.gmail.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Apr 2018 14:23:17 +0200
+Message-ID: <CAMuHMdXata291k6ViN-eHrw6OLN49p2CJT6yZHqQukL2Yf2Lag@mail.gmail.com>
+Subject: Re: [PATCH 1/2] clk: renesas: Add r8a77990 CPG Core Clock Definitions
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gRnJvbTogR2Vl
-cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBUaHVyc2RheSwgQXByaWwgMTIsIDIwMTggOToyMyBQTQ0K
-PiANCj4gSGkgU2hpbW9kYS1zYW4sDQo+IA0KPiBPbiBXZWQsIEFwciAxMSwgMjAxOCBhdCAxMToz
-NyBBTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMu
-Y29tPiB3cm90ZToNCjxzbmlwPg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9pbmNsdWRl
-L2R0LWJpbmRpbmdzL2Nsb2NrL3I4YTc3OTkwLWNwZy1tc3NyLmgNCj4gPiBAQCAtMCwwICsxLDYz
-IEBADQo+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+ID4gKy8q
-DQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOCBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnAuDQo+
-ID4gKyAqLw0KPiA+ICsjaWZuZGVmIF9fRFRfQklORElOR1NfQ0xPQ0tfUjhBNzc5OTBfQ1BHX01T
-U1JfSF9fDQo+ID4gKyNkZWZpbmUgX19EVF9CSU5ESU5HU19DTE9DS19SOEE3Nzk5MF9DUEdfTVNT
-Ul9IX18NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9yZW5lc2FzLWNw
-Zy1tc3NyLmg+DQo+ID4gKw0KPiA+ICsvKiByOGE3Nzk5MCBDUEcgQ29yZSBDbG9ja3MgKi8NCj4g
-DQo+IFsuLi5dDQo+IA0KPiA+ICsjZGVmaW5lIFI4QTc3OTkwX0NMS19DU0kwICAgICAgICAgICAg
-ICA0Nw0KPiANCj4gTm90ZSB0aGF0IENTSTAgaXMgbm90IGxpc3RlZCBpbiBUYWJsZSA4LjJnICgi
-Ui1DYXIgRTMiKS4NCj4gUHJvYmFibHkgaXQgZG9lcyBleGlzdCwgZ2l2ZW46DQo+ICAgLSBUYWJs
-ZSA4LjExICgiUmVnaXN0ZXIgQ29uZmlndXJhdGlvbiIpIHNheXMgQ1NJMENLQ1IgZXhpc3RzIG9u
-IFItQ2FyIEUzLA0KPiAgIC0gRmlndXJlIDI1LjYgKCJDU0kyIEJsb2NrIERpYWdyYW0gKFItQ2Fy
-IEUzKSIpIHNob3dzIENTSTAuDQoNCkkgdGhpbmsgc28uIEknbSBhc2tpbmcgSFcgdGVhbSBhYm91
-dCBtaXNzaW5nIENTSTAgaW4gVGFibGUgOC4yZyBub3cuDQoNCj4gPiArI2RlZmluZSBSOEE3Nzk5
-MF9DTEtfUE9TVDMgICAgICAgICAgICAgNDgNCj4gDQo+IEkgbm90aWNlZCB0aGVzZSBQT1NUeCBj
-bG9ja3MgaGF2ZSBiZWVuIGFkZGVkIHRvIGFsbCBSLUNhciBHZW4zIGNsb2NrIHRhYmxlcy4NCj4g
-SXQgZG9lc24ndCBsb29rIGxpa2Ugd2Ugd2lsbCBldmVyIG5lZWQgdG8gcmVmZXIgdGhlbSBmcm9t
-IERULCBzbyBJIHRoaW5rIHdlDQo+IGNhbiB0cmVhdCB0aGVtIGFzIGludGVybmFsIGNsb2Nrcywg
-YW5kIG9taXQgdGhlbSBmcm9tIHRoZSBEVCBiaW5kaW5ncy4NCj4gDQo+IFdoYXQgZG8geW91IHRo
-aW5rPw0KDQpJIGFncmVlIHdpdGggeW91LiBTbywgSSB3aWxsIG9taXQgUE9TVHggY2xvY2tzIGZy
-b20gdGhlIERUIGJpbmRpbmdzIGluIHYyIHBhdGNoLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhp
-cm8gU2hpbW9kYQ0KDQo=
+Hi Shimoda-san,
+
+On Wed, Apr 11, 2018 at 11:37 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> This patch adds all R-Car E3 Clock Pulse Generator Core Clock Outputs.
+>
+> Note that internal CPG clocks (S0, S1, S2, S3, SDSRC) are not included,
+> as they are used as internal clock sources only, and never referenced
+> from DT.
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> [shimoda: add SPDX-License-Identifier]
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a77990-cpg-mssr.h
+> @@ -0,0 +1,63 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2018 Renesas Electronics Corp.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* r8a77990 CPG Core Clocks */
+
+[...]
+
+> +#define R8A77990_CLK_CSI0              47
+
+Note that CSI0 is not listed in Table 8.2g ("R-Car E3").
+Probably it does exist, given:
+  - Table 8.11 ("Register Configuration") says CSI0CKCR exists on R-Car E3,
+  - Figure 25.6 ("CSI2 Block Diagram (R-Car E3)") shows CSI0.
+
+> +#define R8A77990_CLK_POST3             48
+
+I noticed these POSTx clocks have been added to all R-Car Gen3 clock tables.
+It doesn't look like we will ever need to refer them from DT, so I think we
+can treat them as internal clocks, and omit them from the DT bindings.
+
+What do you think?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
