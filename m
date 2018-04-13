@@ -1,97 +1,28 @@
-Return-Path: <SRS0=9NP3=G6=crapouillou.net=paul@kernel.org>
-Message-Id: <5acb87ad.4cdc620a.40e86.c6beSMTPIN_ADDED_MISSING@mx.google.com>
-Date: Mon, 09 Apr 2018 12:32:40 -0300
-Subject: Re: [PATCH v4 7/8] clocksource: Add a new timer-ingenic driver
-From: Paul Cercueil <paul@crapouillou.net>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 13 Apr 2018 12:23:22 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] DT: pci: rcar-pci: document R8A77980 bindings
+Message-ID: <20180413172322.k7nmtz3xnlaenvxq@rob-hp-laptop>
+References: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
+ <461a6029-1e03-a292-62d2-aca7de274de6@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Maarten ter Huurne <maarten@treewalker.org>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-mips@linux-mips.org, Jason Cooper <jason@lakedaemon.net>, James Hogan <jhogan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <461a6029-1e03-a292-62d2-aca7de274de6@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-TGUgMyBhdnIuIDIwMTggNjo1OSBBTSwgRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxp
-bmFyby5vcmc+IGEgw6ljcml0IDoKPgo+IE9uIDMxLzAzLzIwMTggMTk6NDYsIFBhdWwgQ2VyY3Vl
-aWwgd3JvdGU6IAo+ID4gTGUgMjAxOC0wMy0zMSAxMDoxMCwgRGFuaWVsIExlemNhbm8gYSDDqWNy
-aXTCoDogCj4gPj4gT24gMjkvMDMvMjAxOCAxNjo1MiwgUGF1bCBDZXJjdWVpbCB3cm90ZTogCj4g
-Pj4+IAo+ID4+PiAKPiA+Pj4gTGUgbWVyLiAyOCBtYXJzIDIwMTggw6AgMTg6MjUsIERhbmllbCBM
-ZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPiAKPiA+Pj4gYSDDqWNyaXQgOiAKPiA+
-Pj4+IE9uIDI4LzAzLzIwMTggMTc6MTUsIFBhdWwgQ2VyY3VlaWwgd3JvdGU6IAo+ID4+Pj4+IMKg
-TGUgMjAxOC0wMy0yNCAwNzoyNiwgRGFuaWVsIExlemNhbm8gYSDDqWNyaXQgOiAKPiA+Pj4+Pj4g
-wqBPbiAxOC8wMy8yMDE4IDAwOjI5LCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+Pj4+Pj4+IMKg
-VGhpcyBkcml2ZXIgd2lsbCB1c2UgdGhlIFRDVSAoVGltZXIgQ291bnRlciBVbml0KSBwcmVzZW50
-IG9uIHRoZSAKPiA+Pj4+Pj4+IEluZ2VuaWMgCj4gPj4+Pj4+PiDCoEpaNDd4eCBTb0NzIHRvIHBy
-b3ZpZGUgdGhlIGtlcm5lbCB3aXRoIGEgY2xvY2tzb3VyY2UgYW5kIHRpbWVycy4gCj4gPj4+Pj4+
-IAo+ID4+Pj4+PiDCoFBsZWFzZSBwcm92aWRlIGEgbW9yZSBkZXRhaWxlZCBkZXNjcmlwdGlvbiBh
-Ym91dCB0aGUgdGltZXIuIAo+ID4+Pj4+IAo+ID4+Pj4+IMKgVGhlcmUncyBhIGRvYyBmaWxlIGZv
-ciB0aGF0IDopIAo+ID4+Pj4gCj4gPj4+PiBVc3VhbGx5LCB3aGVuIHRoZXJlIGlzIGEgbmV3IGRy
-aXZlciBJIGFzayBmb3IgYSBkZXNjcmlwdGlvbiBpbiB0aGUgCj4gPj4+PiBjaGFuZ2Vsb2cgZm9y
-IHJlZmVyZW5jZS4gCj4gPj4+PiAKPiA+Pj4+Pj4gwqBXaGVyZSBpcyB0aGUgY2xvY2tzb3VyY2Ug
-PyAKPiA+Pj4+PiAKPiA+Pj4+PiDCoFJpZ2h0LCB0aGVyZSBpcyBubyBjbG9ja3NvdXJjZSwganVz
-dCB0aW1lcnMuIAo+ID4+Pj4+IAo+ID4+Pj4+PiDCoEkgZG9uJ3Qgc2VlIHRoZSBwb2ludCBvZiB1
-c2luZyBjaGFubmVsIGlkeCBhbmQgcHdtIGNoZWNraW5nIGhlcmUuIAo+ID4+Pj4+PiAKPiA+Pj4+
-Pj4gwqBUaGVyZSBpcyBvbmUgY2xvY2tldmVudCwgd2h5IGNyZWF0ZSBtdWx0aXBsZSBjaGFubmVs
-cyA/IENhbid0IHlvdSAKPiA+Pj4+Pj4gc3RpY2sgCj4gPj4+Pj4+IMKgdG8gdGhlIHVzdWFsIGlu
-aXQgcm91dGluZSBmb3IgYSB0aW1lci4gCj4gPj4+Pj4gCj4gPj4+Pj4gwqBTbyB0aGUgaWRlYSBp
-cyB0aGF0IHdlIHVzZSBhbGwgdGhlIFRDVSBjaGFubmVscyB0aGF0IHdvbid0IGJlIHVzZWQgCj4g
-Pj4+Pj4gZm9yIFBXTSAKPiA+Pj4+PiDCoGFzIHRpbWVycy4gSGVuY2UgdGhlIFBXTSBjaGVja2lu
-Zy4gV2h5IGlzIHRoaXMgYmFkPyAKPiA+Pj4+IAo+ID4+Pj4gSXQgaXMgbm90IGJhZCBidXQgYXJn
-dWFibGUuIEJ5IGNoZWNraW5nIHRoZSBjaGFubmVscyB1c2VkIGJ5IHRoZSBwd20gaW4gCj4gPj4+
-PiB0aGUgY29kZSwgeW91IGludHJvZHVjZSBhbiBhZGhlcmVuY2UgYmV0d2VlbiB0d28gc3Vic3lz
-dGVtcyBldmVuIGlmIGl0IAo+ID4+Pj4gaXMganVzdCByZWxhdGVkIHRvIHRoZSBEVCBwYXJzaW5n
-IHBhcnQuIAo+ID4+Pj4gCj4gPj4+PiBBcyBpdCBpcyBub3QgbmVlZGVkIHRvIGhhdmUgbW9yZSB0
-aGFuIG9uZSB0aW1lciBpbiB0aGUgdGltZSBmcmFtZXdvcmsgCj4gPj4+PiAoYXQgbGVhc3Qgd2l0
-aCB0aGUgc2FtZSBjaGFyYWN0ZXJpc3RpY3MpLCB0aGUgcHdtIGNoYW5uZWxzIGNoZWNrIGlzIAo+
-ID4+Pj4gcG9pbnRsZXNzLiBXZSBjYW4gYXNzdW1lIHRoZSBhdXRob3Igb2YgdGhlIERUIGZpbGUg
-aXMgc21hcnQgZW5vdWdoIHRvIAo+ID4+Pj4gcHJldmVudCBjb25mbGljdHMgYW5kIGRlZmluZSBh
-IHB3bSBhbmQgYSB0aW1lciBwcm9wZXJseSBpbnN0ZWFkIG9mIAo+ID4+Pj4gYWRkaW5nIG1vcmUg
-Y29kZSBjb21wbGV4aXR5LiAKPiA+Pj4+IAo+ID4+Pj4gSW4gYWRkaXRpb24sIHNpbXBsaWZ5aW5n
-IHRoZSBjb2RlIHdpbGwgYWxsb3cgeW91IHRvIHVzZSB0aGUgdGltZXItb2YgCj4gPj4+PiBjb2Rl
-IGFuZCByZWR1Y2UgdmVyeSBzaWduaWZpY2FudGx5IHRoZSBpbml0IGZ1bmN0aW9uLiAKPiA+Pj4g
-Cj4gPj4+IFRoYXQncyB3aGF0IEkgaGFkIGluIG15IFYxIGFuZCBWMiwgbXkgRFQgbm9kZSBmb3Ig
-dGhlIHRpbWVyLWluZ2VuaWMgCj4gPj4+IGRyaXZlciAKPiA+Pj4gaGFkIGEgInRpbWVycyIgcHJv
-cGVydHkgKGUuZy4gInRpbWVycyA9IDw0IDU+OyIpIHRvIHNlbGVjdCB0aGUgY2hhbm5lbHMgCj4g
-Pj4+IHRoYXQgCj4gPj4+IHNob3VsZCBiZSB1c2VkIGFzIHRpbWVycy4gVGhlbiBSb2IgdG9sZCBt
-ZSBJIHNob3VsZG4ndCBkbyB0aGF0LCBhbmQgCj4gPj4+IGluc3RlYWQgCj4gPj4+IGRldGVjdCB0
-aGUgY2hhbm5lbHMgdGhhdCB3aWxsIGJlIHVzZWQgZm9yIFBXTS4gCj4gPj4+IAo+ID4+IAo+ID4+
-IFsgLi4uIF0gCj4gPj4gCj4gPj4gSG93IGRvIHlvdSBzcGVjaWZ5IHRoZSBjaGFubmVscyB1c2Vk
-IGZvciBQV00gPyAKPiA+IAo+ID4gVG8gZGV0ZWN0IHRoZSBjaGFubmVscyB0aGF0IHdpbGwgYmUg
-dXNlZCBhcyBQV00gSSBwYXJzZSB0aGUgd2hvbGUgCj4gPiBkZXZpY2V0cmVlIAo+ID4gc2VhcmNo
-aW5nIGZvciAicHdtcyIgcHJvcGVydGllczsgY2hlY2sgdGhhdCB0aGUgUFdNIGhhbmRsZSBpcyBm
-b3Igb3VyIAo+ID4gVENVIFBXTSAKPiA+IGRyaXZlcjsgdGhlbiByZWFkIHRoZSBQV00gbnVtYmVy
-IGZyb20gdGhlcmUuIAo+ID4gCj4gPiBPZiBjb3Vyc2UgaXQncyBoYWNraXNoLCBhbmQgaXQgb25s
-eSB3b3JrcyBmb3IgZGV2aWNldHJlZS4gSSBwcmVmZXJyZWQgdGhlIAo+ID4gbWV0aG9kIHdpdGgg
-dGhlICJ0aW1lcnMiIHByb3BlcnR5LiAKPgo+IERvIHlvdSBoYXZlIGEgRFQgcG9ydGlvbiBkZXNj
-cmliaW5nIHRoYXQ/IEVnIHNvbWV3aGVyZSBpbiB0aGUga2VybmVsJ3MgCj4gZ2l0IHRyZWUgPyAK
-Pgo+IEZyb20gd2hhdCBJIHVuZGVyc3Rvb2QsIHdlIGNhbiBzcGVjaWZ5IHRoZSBjaGFubmVsIGZv
-ciBhIHB3bSBidXQgbm90IGZvciAKPiBhIHRpbWVyLCB0aGVyZSBpcyBjZXJ0YWlubHkgc29tZXRo
-aW5nIEknbSBtaXNzaW5nLiAKCk5vLCBpdCB3YXMgc29tZXRoaW5nIGN1c3RvbS4gVGhlcmUgaXMg
-bm8gc3RhbmRhcmQgd2F5IHRvIHNwZWNpZnkgYSBjaGFubmVsIHRvIHVzZSBmb3IgYSB0aW1lci4K
-Cj4gPj4+Pj4+PiAKPiA+Pj4+Pj4+IMKgK2NvbmZpZyBJTkdFTklDX1RJTUVSIAo+ID4+Pj4+Pj4g
-wqArwqDCoMKgIGJvb2wgIkNsb2Nrc291cmNlL3RpbWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5p
-YyBKWiBTb0NzIiAKPiA+Pj4+Pj4+IMKgK8KgwqDCoCBkZXBlbmRzIG9uIE1BQ0hfSU5HRU5JQyB8
-fCBDT01QSUxFX1RFU1QgCj4gPj4+Pj4+IAo+ID4+Pj4+PiDCoGJvb2wgIkNsb2Nrc291cmNlL3Rp
-bWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5pYyBKWiBTb0NzIiBpZiAKPiA+Pj4+Pj4gQ09NUElM
-RV9URVNUIAo+ID4+Pj4+PiAKPiA+Pj4+Pj4gwqBSZW1vdmUgdGhlIGRlcGVuZHMgTUFDSF9JTkdF
-TklDLiAKPiA+Pj4+PiAKPiA+Pj4+PiDCoFRoaXMgZHJpdmVyIGlzIG5vdCB1c2VmdWwgb24gYW55
-dGhpbmcgZWxzZSB0aGFuIEluZ2VuaWMgU29Dcywgd2h5IAo+ID4+Pj4+IHNob3VsZCBJIAo+ID4+
-Pj4+IMKgcmVtb3ZlIE1BQ0hfSU5HRU5JQyB0aGVuPyAKPiA+Pj4+IAo+ID4+Pj4gRm9yIENPTVBJ
-TEVfVEVTVCBvbiB4ODYuIAo+ID4+PiAKPiA+Pj4gV2VsbCB0aGF0J3MgYSBsb2dpY2FsIE9SIHJp
-Z2h0IGhlcmUsIHNvIGl0IHdpbGwgd29yay4uLiAKPiA+PiAKPiA+PiBSaWdodCwgSSBtaXNzZWQg
-dGhlIHNlY29uZCBwYXJ0IG9mIHRoZSBjb25kaXRpb24uIEZvciBjb25zaXN0ZW5jeSAKPiA+PiBy
-ZWFzb24sIHdlIGRvbid0IGFkZCBhIGRlcGVuZGVuY3kgb24gdGhlIHBsYXRmb3JtLiBUaGUgcGxh
-dGZvcm0gd2lsbCAKPiA+PiBzZWxlY3QgaXQuIExvb2sgdGhlIG90aGVyIHRpbWVyIG9wdGlvbnMg
-YW5kIHlvdSB3aWxsIHNlZSB0aGVyZSBpcyBubyAKPiA+PiBNQUNIIGRlcHMuIEknbSB0cnlpbmcg
-Y29uc29saWRhdGluZyBhbGwgdGhlc2Ugb3B0aW9ucyB0byBoYXZlIHNhbWUgCj4gPj4gZm9ybWF0
-IGFuZCBob3BlZnVsbHkgZmFjdG9yIHRoZW0gb3V0LiAKPiA+IAo+ID4gSSdtIGFsbCBmb3IgZmFj
-dG9yaXNhdGlvbiwgYnV0IHdoYXQgSSBkaXNsaWtlIHdpdGggbm90IGRlcGVuZGluZyBvbiAKPiA+
-IE1BQ0hfSU5HRU5JQywgaXMgdGhhdCB0aGUgZHJpdmVyIG5vdyBhcHBlYXJzIGluIHRoZSBtZW51
-Y29uZmlnIGZvciAKPiA+IGV2ZXJ5IGFyY2gsIGV2ZW4gaWYgaXQgb25seSBhcHBsaWVzIHRvIG9u
-ZSBNSVBTIFNvQy4gCj4KPiBDYW4geW91IGRvIHRoZSBmb2xsb3dpbmcgY2hhbmdlPyAKPgo+IGJv
-b2wgIkNsb2Nrc291cmNlL3RpbWVyIHVzaW5nIHRoZSBUQ1UgaW4gSW5nZW5pYyBKWiBTb0NzIiBp
-ZiBDT01QSUxFX1RFU1QgCj4KPiBzbyBpdCB3aWxsIGFwcGVhciBvbmx5IHdoZW4gdGhlIENPTVBJ
-TEVfVEVTVCBvcHRpb24gaXMgc2V0IHdoYXRldmVyIHRoZSAKPiBwbGF0Zm9ybSB3aGljaCBpcyB0
-aGUgcHVycG9zZSBvZiB0aGlzIG9wdGlvbiB0byBpbmNyZWFzZSBjb21waWxlIHRlc3QgCj4gY292
-ZXJhZ2UuIAoKT2ssIEkgZ2V0IGl0IG5vdy4gSXQgd29uJ3QgYXBwZWFyIGluIHRoZSBtZW51Y29u
-ZmlnIHVubGVzcyBDT01QSUxFX1RFU1QgaXMgc2VsZWN0ZWQsIGJ1dCBJIGNhbiBzdGlsbCBzZWxl
-Y3QgaXQgZnJvbSB0aGUgcGxhdGZvcm0uCgpUaGFua3MhCi1QYXVs
+On Sun, Apr 08, 2018 at 09:10:43PM +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3H (R8A77980) SoC in the R-Car PCIe bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> Changes in version 2:
+> - new patch.
+> 
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt |    1 +
+>  1 file changed, 1 insertion(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
