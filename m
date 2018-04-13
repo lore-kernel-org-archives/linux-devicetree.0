@@ -1,61 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] mfd: intel_quark_i2c_gpio: Update Synopsys GPIO interrupts
-Date: Fri, 13 Apr 2018 10:20:19 +0200
-Message-ID: <CAMuHMdVKi=dDvn29U-S26PtAc_Um_+1Oy=PzKAgYUSU9qvcF-Q@mail.gmail.com>
-References: <1523606900-2332-1-git-send-email-phil.edworthy@renesas.com> <1523606900-2332-3-git-send-email-phil.edworthy@renesas.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v2 2/2] mfd: intel_quark_i2c_gpio: Update Synopsys GPIO
+ interrupts
+Date: Fri, 13 Apr 2018 08:24:30 +0000
+Message-ID: <TY1PR01MB176970ECD9C66DCF865E5C17F5B30@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1523606900-2332-1-git-send-email-phil.edworthy@renesas.com>
+ <1523606900-2332-3-git-send-email-phil.edworthy@renesas.com>
+ <CAMuHMdVKi=dDvn29U-S26PtAc_Um_+1Oy=PzKAgYUSU9qvcF-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523606900-2332-3-git-send-email-phil.edworthy@renesas.com>
+In-Reply-To: <CAMuHMdVKi=dDvn29U-S26PtAc_Um_+1Oy=PzKAgYUSU9qvcF-Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
-
-On Fri, Apr 13, 2018 at 10:08 AM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
-> Since the way the Synopsys GPIO interrupts are stored has changed, this
-> driver needs to be updated in line with the changes.
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
-> v2:
->  - New patch in v2 to fix the only other user of struct dwapb_port_property.
-
-Thanks for your patch!
-
-To avoid bisection compile failures due to the changed type of
-dwapb_port_property.irq,
-I think this should be folded into the first patch,
-
-> ---
->  drivers/mfd/intel_quark_i2c_gpio.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
-> index 90e35de..5bddb84 100644
-> --- a/drivers/mfd/intel_quark_i2c_gpio.c
-> +++ b/drivers/mfd/intel_quark_i2c_gpio.c
-> @@ -233,7 +233,8 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
->         pdata->properties->idx          = 0;
->         pdata->properties->ngpio        = INTEL_QUARK_MFD_NGPIO;
->         pdata->properties->gpio_base    = INTEL_QUARK_MFD_GPIO_BASE;
-> -       pdata->properties->irq          = pdev->irq;
-> +       pdata->properties->irq[0]       = pdev->irq;
-> +       pdata->properties->has_irq      = true;
->         pdata->properties->irq_shared   = true;
->
->         cell->platform_data = pdata;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIDEzIEFwcmlsIDIwMTggMDk6MjAgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
+b3RlOg0KPiBPbiBGcmksIEFwciAxMywgMjAxOCBhdCAxMDowOCBBTSwgUGhpbCBFZHdvcnRoeSB3
+cm90ZToNCj4gPiBTaW5jZSB0aGUgd2F5IHRoZSBTeW5vcHN5cyBHUElPIGludGVycnVwdHMgYXJl
+IHN0b3JlZCBoYXMgY2hhbmdlZCwNCj4gPiB0aGlzIGRyaXZlciBuZWVkcyB0byBiZSB1cGRhdGVk
+IGluIGxpbmUgd2l0aCB0aGUgY2hhbmdlcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWwg
+RWR3b3J0aHkgPHBoaWwuZWR3b3J0aHlAcmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gdjI6DQo+
+ID4gIC0gTmV3IHBhdGNoIGluIHYyIHRvIGZpeCB0aGUgb25seSBvdGhlciB1c2VyIG9mIHN0cnVj
+dA0KPiBkd2FwYl9wb3J0X3Byb3BlcnR5Lg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0K
+PiANCj4gVG8gYXZvaWQgYmlzZWN0aW9uIGNvbXBpbGUgZmFpbHVyZXMgZHVlIHRvIHRoZSBjaGFu
+Z2VkIHR5cGUgb2YNCj4gZHdhcGJfcG9ydF9wcm9wZXJ0eS5pcnEsIEkgdGhpbmsgdGhpcyBzaG91
+bGQgYmUgZm9sZGVkIGludG8gdGhlIGZpcnN0IHBhdGNoLA0KUmlnaHQsIHRoYW5rcyBmb3IgcG9p
+bnRpbmcgdGhpcyBvdXQhDQpQaGlsDQoNCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZmQvaW50ZWxf
+cXVhcmtfaTJjX2dwaW8uYyB8IDMgKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9p
+bnRlbF9xdWFya19pMmNfZ3Bpby5jDQo+ID4gYi9kcml2ZXJzL21mZC9pbnRlbF9xdWFya19pMmNf
+Z3Bpby5jDQo+ID4gaW5kZXggOTBlMzVkZS4uNWJkZGI4NCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
+ZXJzL21mZC9pbnRlbF9xdWFya19pMmNfZ3Bpby5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvaW50
+ZWxfcXVhcmtfaTJjX2dwaW8uYw0KPiA+IEBAIC0yMzMsNyArMjMzLDggQEAgc3RhdGljIGludCBp
+bnRlbF9xdWFya19ncGlvX3NldHVwKHN0cnVjdCBwY2lfZGV2DQo+ICpwZGV2LCBzdHJ1Y3QgbWZk
+X2NlbGwgKmNlbGwpDQo+ID4gICAgICAgICBwZGF0YS0+cHJvcGVydGllcy0+aWR4ICAgICAgICAg
+ID0gMDsNCj4gPiAgICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5uZ3BpbyAgICAgICAgPSBJTlRF
+TF9RVUFSS19NRkRfTkdQSU87DQo+ID4gICAgICAgICBwZGF0YS0+cHJvcGVydGllcy0+Z3Bpb19i
+YXNlICAgID0gSU5URUxfUVVBUktfTUZEX0dQSU9fQkFTRTsNCj4gPiAtICAgICAgIHBkYXRhLT5w
+cm9wZXJ0aWVzLT5pcnEgICAgICAgICAgPSBwZGV2LT5pcnE7DQo+ID4gKyAgICAgICBwZGF0YS0+
+cHJvcGVydGllcy0+aXJxWzBdICAgICAgID0gcGRldi0+aXJxOw0KPiA+ICsgICAgICAgcGRhdGEt
+PnByb3BlcnRpZXMtPmhhc19pcnEgICAgICA9IHRydWU7DQo+ID4gICAgICAgICBwZGF0YS0+cHJv
+cGVydGllcy0+aXJxX3NoYXJlZCAgID0gdHJ1ZTsNCj4gPg0KPiA+ICAgICAgICAgY2VsbC0+cGxh
+dGZvcm1fZGF0YSA9IHBkYXRhOw0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVu
+IC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0NCj4g
+bTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwg
+cGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0
+byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
+aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRz
+DQo=
