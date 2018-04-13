@@ -1,52 +1,50 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of: Don't create platform device for OPP tables
-Date: Fri, 13 Apr 2018 08:07:50 -0500
-Message-ID: <CAL_JsqJHkwfCM=5+XCtOF+P9HRuhROB2FLKa3Qq1NhYd7_J7_Q@mail.gmail.com>
-References: <b70afd25fc48ad4d677e4e53951f2138cd34b85e.1523351100.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/2] dt-bindings: drm/bridge: Document Cadence DSI
+ bridge bindings
+Date: Fri, 13 Apr 2018 08:46:08 -0500
+Message-ID: <20180413134608.sh5maxkkvgc424wa@rob-hp-laptop>
+References: <20180410130001.1234-1-boris.brezillon@bootlin.com>
+ <20180410130001.1234-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b70afd25fc48ad4d677e4e53951f2138cd34b85e.1523351100.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180410130001.1234-2-boris.brezillon@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "Menon, Nishanth" <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org, Rafal Ciepiela <rafalc@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Jyri Sarha <jsarha@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 4:05 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> The OPP tables are present as separate nodes, whose phandle is used in
-> the "operating-points-v2" property of devices. Currently the OF core
-> creates a platform device for the OPP table unconditionally, which is
-> not used by any kernel code.
->
-> Skip creating OPP table platform devices.
->
-> Reported-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/of/platform.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index c00d81dfac0b..aaae5d90433d 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -356,6 +356,12 @@ static int of_platform_bus_create(struct device_node *bus,
->                 return 0;
->         }
->
-> +       /* OPP tables have separate nodes, but we don't want devices for them */
-> +       if (unlikely(of_device_is_compatible(bus, "operating-points-v2"))) {
-
-Can you make this a match table instead. I could imagine we may have
-some other cases to add.
-
-> +               pr_debug("%s() - skipping OPP node %pOF\n", __func__, bus);
-> +               return 0;
-> +       }
-> +
->         if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
->                 pr_debug("%s() - skipping %pOF, already populated\n",
->                         __func__, bus);
-> --
-> 2.15.0.194.g9af6a3dea062
->
+T24gVHVlLCBBcHIgMTAsIDIwMTggYXQgMDM6MDA6MDFQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9u
+IHdyb3RlOgo+IEZyb206IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxl
+Y3Ryb25zLmNvbT4KPiAKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIENhZGVu
+Y2UgRFNJIGJyaWRnZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
+LmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gSGVsbG8gUm9iLAo+IAo+IEkg
+ZHJvcHBlZCB5b3VyIEFja2VkLWJ5IGJlY2F1c2UgdGhpcyB2ZXJzaW9uIG5vdyBkb2N1bWVudHMg
+dGhlIERQSFkKPiBiaW5kaW5ncy4KPiAKPiBSZWdhcmRzLAo+IAo+IEJvcmlzCj4gCj4gQ2hhbmdl
+cyBpbiB2NjoKPiAtIERvY3VtZW50IHRoZSBEUEhZIGJpbmRpbmdzCj4gLSBEcm9wIFJvYidzIGFj
+ayBiZWNhdXNlIG9mIHRoZSBhZGRpdGlvbiBEUEhZIGJpbmRpbmdzIGRvYwo+IAo+IENoYW5nZXMg
+aW4gdjU6Cj4gLSBBZGQgb3B0aW9uYWwgcmVzZXQgbGluZSBmb3IgdGhlIHBlcmlwaGVyYWwvQVBC
+IGxvZ2ljCj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAtIFJlbmFtZSBEU0kgY2xrcyAoc3VnZ2VzdGVk
+IGJ5IFRvbWkpCj4gLSBEcm9wIHRoZSBJUCB2ZXJzaW9uIGluIHRoZSBjb21wYXRpYmxlIHNpbmNl
+IGl0IGNhbiBiZSBleHRyYWN0ZWQgZnJvbQo+ICAgYSByZWdpc3RlciAoc3VnZ2VzdGVkIGJ5IEFu
+ZHJ6ZWopCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIEZpeCBjbG9jayBuYW1lcyBpbiB0aGUgZXhh
+bXBsZQo+IC0gRG9jdW1lbnQgaG93IHRvIHJlcHJlc2VudCBEU0kgZGV2aWNlcyB0aGF0IGFyZSBj
+b250cm9sbGVyIHRocm91Z2gKPiAgIGFuIGV4dGVybmFsIGJ1cyBsaWtlIEkyQyBvciBTUEkKPiAK
+PiBDaGFuZ2VzIGluIHYyOgo+IC0gTm9uZQo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvY2Rucyxkc2kudHh0ICAgICAgICAgICB8IDEzMyArKysrKysrKysrKysrKysrKysrKysK
+PiAgMSBmaWxlIGNoYW5nZWQsIDEzMyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxk
+c2kudHh0CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
