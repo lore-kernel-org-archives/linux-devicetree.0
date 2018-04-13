@@ -1,37 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 05/11] dt-bindings: input: touchscreen:
- resistive-adc-touch: create bindings
-Date: Fri, 13 Apr 2018 13:34:04 -0500
-Message-ID: <20180413183404.2bt6wmjbozwvkyck@rob-hp-laptop>
-References: <1523350677-27106-1-git-send-email-eugen.hristev@microchip.com>
- <1523350677-27106-6-git-send-email-eugen.hristev@microchip.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [[RFC]DPU PATCH 2/2] dt-bindings: drm/bridge:
+ Document sn65dsi86 bridge bindings
+Date: Fri, 13 Apr 2018 18:40:43 +0000
+Message-ID: <CAOw6vbJe2k6UCLU6T6L0PJ_7tCQhOWC5ELjgSSbUm18Wydcf_g@mail.gmail.com>
+References: <1523596981-18913-1-git-send-email-spanda@codeaurora.org>
+ <1523596981-18913-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523350677-27106-6-git-send-email-eugen.hristev@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1523596981-18913-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 11:57:51AM +0300, Eugen Hristev wrote:
-> Added bindings for generic resistive touchscreen ADC.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> Changes in v3:
->  - renamed file and compatible to exclude "generic" keyword
->  - removed the pressure threshold property, added it as a common
-> touchscreen property in the touchscreen common bindings in a separate
-> commit.
-> 
-> Changes in v2:
->  - modified bindings to have a generic resistive touchscreen adc driver
-> instead of specific architecture one.
-> 
->  .../input/touchscreen/resistive-adc-touch.txt      | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/resistive-adc-touch.txt
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gRnJpLCBBcHIgMTMsIDIwMTggYXQgMToyMyBBTSBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29k
+ZWF1cm9yYS5vcmc+IHdyb3RlOgoKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhl
+IHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KCj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQ
+YW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICAgLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCA3NQorKysrKysrKysrKysrKysrKysr
+KysrCj4gICAxIGZpbGUgY2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUg
+MTAwNjQ0CkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aSxzbjY1ZHNpODYudHh0Cgo+IGRpZmYgLS1naXQKYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dApiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5jYmQyZjBlCj4gLS0tIC9kZXYvbnVs
+bAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
+ZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAsMCArMSw3NSBAQAo+ICtTTjY1RFNJODYgRFNJIHRv
+IGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsK
+PiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJy
+aWRnZS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBi
+ZSAidGksc242NWRzaTg2Igo+ICstIHJlZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQg
+YXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJsZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBz
+cGVjaWZpY2F0aW9uIGZvciBFRFBfQlJJSl9FTiBwaW4KPiArLSBhdXgtc2RhLWdwaW9zOiBPRiBk
+ZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIEVEUF9CUklKX0kyQ19TREEKcGluIG9m
+IEFVWCBjaGFubmVsCj4gKy0gYXV4LXNjbC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVj
+aWZpY2F0aW9uIGZvciBFRFBfQlJJSl9JMkNfU0NMCnBpbiBvZiBBVVggY2hhbm5lbAo+ICstIGJp
+YXMtZW4tZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgRU5fUFAz
+MzAwX0RYX0VEUApwaW4gdG8KCgpQUDMzMDA/CgoKPiArICAgICAgICAgICAgICAgICAgICAgICBl
+bmFibGUgMy4zViBzdXBwbHkgdG8gZURQIGNvbm5lY3Rvcgo+ICstIGJrbHQtZW4tZ3Bpb3M6IE9G
+IGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgQVBfRURQX0JLTFRFTiBwaW4KCgpJ
+IGRvbid0IHNlZSBhbnkgb2YgdGhlc2UgcGlucyBsaXN0ZWQgaW4gdGhlIFNONjVEU0k4NiBkYXRh
+c2hlZXQuIENhbiB5b3UKcGxlYXNlIHVzZSB0aGUgYWN0dWFsIHBpbiBuYW1lcz8KCgo+ICsKPiAr
+LSB2Y2Npby1zdXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIFBIWS4KPiAr
+LSB2Y2NhLXN1cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgQ29udHJvbGxl
+ci4KPiArLSB2Y2NzLXN1cHBseTogQSAzLjNWIHN1cHBseSB0aGF0IHBvd2VyIHRoZSBlRFAgY29u
+bmVjdG9yCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBpcnEtZ3Bpb3M6IE9G
+IGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgaW50ZXJydXB0IHBpbgo+ICstIGJr
+bHQtY3RybC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFRFBf
+QktMVENUTCBwaW4KCgpTYW1lIGNvbW1lbnQgaGVyZSwgdGhpcyBpc24ndCBsaXN0ZWQgaW4gdGhl
+IGRhdGFzaGVldAoKCj4gKwo+ICstIHNuLGlzLXBsdWdnYWJsZTogYm9vbGVhbiBwcm9wZXJ0eSB0
+byBzcGVjaWZ5IGlmIEhQRCBzdXBwb3J0ZWQgb3Igbm90CgoKQ291bGQgeW91IGluZmVyIHRoaXMg
+ZnJvbSB3aGV0aGVyIHRoZXJlJ3MgYSBwYW5lbCBwcmVzZW50IGluIHRoZSBkdHM/CgoKPiArLSBz
+bixjdXN0b20tbW9kZXM6IE9GIGRldmljZS10cmVlIHNwZWNpZmljdGlvbiB0byBhZGQgc3VwcG9y
+dCBmb3IgY3VzdG9tCm1vZGVzCgoKUGxlYXNlIGRyb3AgY3VzdG9tLW1vZGVzLCBpdCBkb2Vzbid0
+IGJlbG9uZyBvbiB0aGUgYnJpZGdlLgoKPiArCj4gK1JlcXVpcmVkIG5vZGVzOgo+ICsKPiArVGhp
+cyBkZXZpY2UgaGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVs
+bGVkIHVzaW5nCnRoZSBPRgo+ICtncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArCj4gKy0gVmlkZW8gcG9ydCAw
+IGZvciBEU0kgaW5wdXQKPiArLSBWaWRlbyBwb3J0IDEgZm9yIGVEUCBvdXRwdXQKPiArCj4gK0V4
+YW1wbGUKPiArLS0tLS0tLQo+ICsKPiArZWRwLWJyaWRnZUAyZCB7Cj4gKyAgICAgICBjb21wYXRp
+YmxlID0gInRpLHNuNjVkc2k4NiI7Cj4gKyAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAr
+ICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsgICAgICAgcmVnID0gPDB4MmQ+Owo+ICsKPiAr
+ICAgICAgIGVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMyBHUElPX0FDVElWRV9ISUdIPjsKPiAr
+ICAgICAgIGF1eC1zZGEtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzQgR1BJT19BQ1RJVkVfSElHSD47Cj4g
+KyAgICAgICBhdXgtc2NsLWdwaW9zID0gPCZtc21ncGlvIDM1IEdQSU9fQUNUSVZFX0hJR0g+Owo+
+ICsgICAgICAgYmlhcy1lbi1ncGlvcyA9IDwmbXNtZ3BpbyAzNiBHUElPX0FDVElWRV9ISUdIPjsK
+PiArICAgICAgIGJrbHQtZW4tZ3Bpb3MgPSA8Jm1zbWdwaW8gMzcgR1BJT19BQ1RJVkVfSElHSD47
+Cj4gKwo+ICsgICAgICAgdmNjaW8tc3VwcGx5ID0gPCZwbTg5MTZfbDE3PjsKPiArICAgICAgIHZj
+Y2Etc3VwcGx5ID0gPCZwbTg5MTZfbDY+Owo+ICsgICAgICAgdmNjcy1zdXBwbHkgPSA8JnBtODkx
+Nl9sNz47Cj4gKwo+ICsgICAgICAgcG9ydHMgewo+ICsgICAgICAgICAgICAgICAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsg
+ICAgICAgICAgICAgICBwb3J0QDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDww
+PjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZWRwX2JyaWRnZV9pbjogZW5kcG9pbnQg
+ewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZk
+c2lfb3V0PjsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICB9
+Owo+ICsKPiArICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICByZWcgPSA8MT47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGVkcF9icmlkZ2Vfb3V0
+OiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5k
+cG9pbnQgPSA8JmVkcF9wYW5lbF9pbj47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAr
+ICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gK30KPiAtLQo+IFRoZSBRdWFsY29tbSBJ
+bm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9y
+dW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBs
+aXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
