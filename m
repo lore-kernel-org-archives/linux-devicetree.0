@@ -1,206 +1,252 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm
- SoCs
-Date: Fri, 13 Apr 2018 15:40:33 -0700
-Message-ID: <152365923361.51482.7839380101584600308@swboyd.mtv.corp.google.com>
-References: <20180405161834.3850-1-ilina@codeaurora.org>
- <20180405161834.3850-3-ilina@codeaurora.org>
- <152306368031.94378.14957212064809086345@swboyd.mtv.corp.google.com>
- <20180409160800.GC19682@codeaurora.org>
- <152346054406.180276.4468371342222361883@swboyd.mtv.corp.google.com>
- <20180411212431.GG19682@codeaurora.org>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v4 2/2] drivers: soc: Add LLCC driver
+Date: Fri, 13 Apr 2018 16:08:30 -0700
+Message-ID: <a4d0d993c8bf42d9a2e59078606a4b4d@codeaurora.org>
+References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
+ <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
+ <CAE=gft6DHtvkLAyAF30p6rwJrs845nxBOxWQ0gmHdJ0VQa4ZxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180411212431.GG19682@codeaurora.org>
+In-Reply-To: <CAE=gft6DHtvkLAyAF30p6rwJrs845nxBOxWQ0gmHdJ0VQa4ZxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2018-04-11 14:24:31)
-> On Wed, Apr 11 2018 at 09:29 -0600, Stephen Boyd wrote:
-> >Quoting Lina Iyer (2018-04-09 09:08:00)
-> >> On Fri, Apr 06 2018 at 19:14 -0600, Stephen Boyd wrote:
-> >> >Quoting Lina Iyer (2018-04-05 09:18:26)
-> >> >> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.tx=
-t b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> >> >> new file mode 100644
-> >> >> index 000000000000..dcf71a5b302f
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> >> >> @@ -0,0 +1,127 @@
-> >> >> +
-> >> >> +Example 1:
-> >> >> +
-> >> >> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV =
-id of 2, the
-> >> >> +register offsets for DRV2 start at 0D00, the register calculations=
- are like
-> >> >> +this -
-> >> >> +First tuple: 0x179C0000 + 0x10000 * 2 =3D 0x179E0000
-> >> >> +Second tuple: 0x179E0000 + 0xD00 =3D 0x179E0D00
-> >> >> +
-> >> >> +       apps_rsc: rsc@179e000 {
-> >> >> +               label =3D "apps_rsc";
-> >> >> +               compatible =3D "qcom,rpmh-rsc";
-> >> >> +               reg =3D <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-> >> >
-> >> >The first reg property overlaps the second one. Does this second one
-> >> >ever move around? I would hardcode it in the driver to be 0xd00 away
-> >> >from the drv base instead of specifying it in DT if it's the same all
-> >> >the time.
-> >> >
-> >> >Also, the example shows 0x179c0000 which I guess is the actual beginn=
-ing
-> >> >of the RSC block. So the binding seems to be for one DRV inside of an
-> >> >RSC. Can we get the full description of the RSC in the binding instea=
-d?
-> >> >I imagine that means there's a DRV0,1,2 and those probably have an
-> >> >interrupt per each DRV and then a different TCS config per each one t=
-oo?
-> >> >If the binding can describe all of the RSC then we can use different
-> >> >DRVs by changing the qcom,drv-id property.
-> >> >
-> >> >       rsc@179c0000 {
-> >> >               compatible =3D "qcom,rpmh-rsc";
-> >> >               reg =3D <0x179c0000 0x10000>,
-> >> >                     <0x179d0000 0x10000>,
-> >> >                     <0x179e0000 0x10000>;
-> >> >               qcom,tcs-offset =3D <0xd00>;
-> >> >               qcom,drv-id =3D <0/1/2>;
-> >> >               interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> >> >                            <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> >> >                            <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> >> >       }
-> >> >
-> >> >This is sort of what I imagine it would look like. I have no idea how
-> >> >the tcs config would work unless each DRV has the same TCS config
-> >> >though. Otherwise, if each node is for a drv, then I would expect the
-> >> >node would be called 'drv' and we wouldn't need the drv-id property a=
-nd
-> >> >the compatible string would say drv instead of rsc?
-> >> >
-> >> >BTW, what are the other DRVs used for in the apps RSC?
-> >> >
-> >> The DRV is the voter for an execution environment (Linux, Hypervisor,
-> >> ATF) in the RSC. The RSC has a lot of other registers that Linux is not
-> >> privy to. They are access restricted.
-> >
-> >Alright. Well sometimes access restrictions aren't there, so this isn't
-> >a good assumption to make.
-> >
-> >> The memory organization of the RSC
-> >> mandates that we know the DRV id to access registers specific to the
-> >> DRV.
-> >
-> >I think qcom,drv-id covers that, no?
-> >
-> >> Unfortunately, not all RSC have identical DRV configuration and the
-> >> register space is also variable depending on the capability of the RSC.
-> >> There are functionalities supported by other RSCs in the SoC that are
-> >> not supported by the RSC associated with the application processor,
-> >> while not many RSCs' support multiple DRVs. Therefore it doesn't benef=
-it
-> >> describing the whole RSC as it is not usable from Linux (because of
-> >> access restrictions).
-> >
-> >If we're not describing the whole RSC in the RSC binding then we're not
-> >going to get very far. From what I can tell, this binding describes one
-> >DRV inside of an RSC instead of the whole RSC. Yes we'll probably never
-> >use the ATF part of the RSC in Linux, but we may use the hypervisor part
-> >if we use KVM/Xen so the binding should be describing as much as it can
-> >about this device in case some software needs to use it.
-> >
-> The RSC is pretty much this. A set of registers that are RSC specific at
-> the address pointed to by the "rsc" reg and the TCS regsiters pointed to
-> by the "tcs" reg. You do not want to clobber multiple DRVs into the same
-> device node. It will be a lot confusing for the drivers to determine
-> which DRV to vote.
-
-Well it seems like an RSC contains many DRVs and those DRVs contain many
-TCSes. This is what I get after talking with Bjorn on IRC.
-
-	+--------------------------------------------------+ (0x00000)
-	|                                                  |
-	|                  DRV #0                          |
-	|                                                  |
-	|----------                          --------------| (tcs-offset (0xd00))
-	|                  DRV0_TCS0                       | =
-
-	|                common space                      | =
-
-	|                cmd sequencer                     | 0xd00 + 0x14
-	|                                                  |
-	|                  DRV0_TCS1                       | =
-
-	|                common space                      | 0xd00 + 0x2a0
-	|                cmd sequencer                     | 0xd00 + 0x2a0 + 0x14
-	|                                                  |
-	|                  DRV0_TCS2                       | =
-
-	|                                                  |
-	|                                                  |
-	+--------------------------------------------------+ (0x10000)
-	|                                                  |
-	|                  DRV #1                          |
-	|                                                  |
-	|----------                          --------------| (tcs-offset)
-	|                  DRV1_TCS0                       | =
-
-	|                  DRV1_TCS1                       | =
-
-	|                  DRV1_TCS2                       | =
-
-	+--------------------------------------------------+ (0x20000)
-	|                                                  |
-	|                  DRV #2                          |
-	|                                                  |
-	|----------                          --------------|
-	|                  DRV2_TCS0                       | =
-
-	|                  DRV2_TCS1                       | =
-
-	|                  DRV2_TCS2                       | =
-
-	|                  DRV2_TCS3                       | =
-
-	|                  DRV2_TCS4                       | =
-
-	|                  DRV2_TCS5                       | =
-
-	+--------------------------------------------------+
-
-I think I understand it now. There aren't any "RSC common" registers
-that are common to the entire RSC. Instead, everything goes into a DRV,
-or into a common TCS space, or into a TCS "queue".
-
-> >Put another way, even if the "apps" RSC is complicated, we should be
-> >describing it to the best of our abilities in the binding so that when
-> >it is used by non-linux OSes things still work by simply tweaking the
-> >drv-id that we use to pick the right things out of the node.
-> >
-> >Or we're describing the RSC but it's really a container node that
-> >doesn't do much besides hold DRVs? So this is described at the wrong
-> >level?
-> What we are describing is a DRV, but a standalone DRV alone is useless
-> without the necessary RSC registers. So its a unique RSC+DRV combination
-> that is represented here.
-> =
-
-
-If my understanding is correct up there then the binding could either
-describe a single RSC DRV, or it could describe all the RSC DRV
-instances and interrupts going into the RSC "block" and then we can use
-drv-id to pick the offset we jump to.
-
-I imagine we don't have any practical use-case for the entire RSC space
-because there aren't any common RSC registers to deal with. So we've
-boiled this all down to describing one DRV and then I wonder why we care
-about having drv-id at all? It looks to be used to check for a max
-number of TCS, but that's already described by DT so it doesn't seem
-very useful to double check what the hardware can tells us.
-
-Long story short, we can remove drv-id and just describe drvs by
-themselves?
+On 2018-04-12 15:02, Evan Green wrote:
+> Hi Rishabh,
+> 
+> On Tue, Apr 10, 2018 at 1:09 PM Rishabh Bhatnagar 
+> <rishabhb@codeaurora.org>
+> wrote:
+> 
+>> LLCC (Last Level Cache Controller) provides additional cache memory
+>> in the system. LLCC is partitioned into multiple slices and each
+>> slice gets its own priority, size, ID and other config parameters.
+>> LLCC driver programs these parameters for each slice. Clients that
+>> are assigned to use LLCC need to get information such size & ID of the
+>> slice they get and activate or deactivate the slice as needed. LLCC 
+>> driver
+>> provides API for the clients to perform these operations.
+> 
+>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>> ---
+>>   drivers/soc/qcom/Kconfig           |  17 ++
+>>   drivers/soc/qcom/Makefile          |   2 +
+>>   drivers/soc/qcom/llcc-sdm845.c     | 110 ++++++++++
+>>   drivers/soc/qcom/llcc-slice.c      | 404
+> +++++++++++++++++++++++++++++++++++++
+>>   include/linux/soc/qcom/llcc-qcom.h | 168 +++++++++++++++
+>>   5 files changed, 701 insertions(+)
+>>   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>>   create mode 100644 drivers/soc/qcom/llcc-slice.c
+>>   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
+> 
+> [...]
+>> diff --git a/drivers/soc/qcom/llcc-sdm845.c
+> b/drivers/soc/qcom/llcc-sdm845.c
+>> new file mode 100644
+>> index 0000000..619b226
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/llcc-sdm845.c
+>> @@ -0,0 +1,110 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2017-2018, The Linux Foundation. All rights 
+>> reserved.
+>> + *
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/soc/qcom/llcc-qcom.h>
+>> +
+>> +/*
+>> + * SCT(System Cache Table) entry contains of the following parameters
+> 
+> contains the following members:
+> 
+>> + * name: Name of the client's use case for which the llcc slice is 
+>> used
+>> + * uid: Unique id for the client's use case
+> 
+> s/uid/usecase_id/
+> 
+>> + * slice_id: llcc slice id for each client
+>> + * max_cap: The maximum capacity of the cache slice provided in KB
+>> + * priority: Priority of the client used to select victim line for
+> replacement
+>> + * fixed_size: Determine if the slice has a fixed capacity
+> 
+> "Boolean indicating if the slice has a fixed capacity" might be better
+> 
+>> diff --git a/drivers/soc/qcom/llcc-slice.c 
+>> b/drivers/soc/qcom/llcc-slice.c
+>> new file mode 100644
+>> index 0000000..67a81b0
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/llcc-slice.c
+> ...
+>> +static int llcc_update_act_ctrl(struct llcc_drv_data *drv, u32 sid,
+>> +                               u32 act_ctrl_reg_val, u32 status)
+>> +{
+>> +       u32 act_ctrl_reg;
+>> +       u32 status_reg;
+>> +       u32 slice_status;
+>> +       int ret = 0;
+>> +
+>> +       act_ctrl_reg = drv->bcast_off + LLCC_TRP_ACT_CTRLn(sid);
+>> +       status_reg = drv->bcast_off + LLCC_TRP_STATUSn(sid);
+>> +
+>> +       /*Set the ACTIVE trigger*/
+> 
+> Add spaces around /* */
+> 
+>> +       act_ctrl_reg_val |= ACT_CTRL_ACT_TRIG;
+>> +       ret = regmap_write(drv->regmap, act_ctrl_reg, 
+>> act_ctrl_reg_val);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* Clear the ACTIVE trigger */
+>> +       act_ctrl_reg_val &= ~ACT_CTRL_ACT_TRIG;
+>> +       ret = regmap_write(drv->regmap, act_ctrl_reg, 
+>> act_ctrl_reg_val);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = regmap_read_poll_timeout(drv->regmap, status_reg,
+> slice_status,
+>> +                       !(slice_status & status), 0,
+> LLCC_STATUS_READ_DELAY);
+>> +       return ret;
+>> +}
+>> +
+>> +/**
+>> + * llcc_slice_activate - Activate the llcc slice
+>> + * @desc: Pointer to llcc slice descriptor
+>> + *
+>> + * A value zero will be returned on success and a negative errno will
+> 
+> a value of zero
+> 
+>> + * be returned in error cases
+>> + */
+>> +int llcc_slice_activate(struct llcc_slice_desc *desc)
+>> +{
+>> +       int ret;
+>> +       u32 act_ctrl_val;
+>> +       struct llcc_drv_data *drv;
+>> +
+>> +       if (desc == NULL)
+>> +               return -EINVAL;
+> 
+> I think we can remove this check, right?
+> 
+>> +
+>> +       drv = dev_get_drvdata(desc->dev);
+>> +       if (!drv)
+>> +               return -EINVAL;
+>> +
+>> +       mutex_lock(&drv->lock);
+>> +       if (test_bit(desc->slice_id, drv->bitmap)) {
+>> +               mutex_unlock(&drv->lock);
+>> +               return 0;
+>> +       }
+>> +
+>> +       act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE << 
+>> ACT_CTRL_OPCODE_SHIFT;
+>> +
+>> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
+>> +                                 DEACTIVATE);
+>> +
+>> +       __set_bit(desc->slice_id, drv->bitmap);
+>> +       mutex_unlock(&drv->lock);
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
+>> +
+>> +/**
+>> + * llcc_slice_deactivate - Deactivate the llcc slice
+>> + * @desc: Pointer to llcc slice descriptor
+>> + *
+>> + * A value zero will be returned on success and a negative errno will
+>> + * be returned in error cases
+>> + */
+>> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
+>> +{
+>> +       u32 act_ctrl_val;
+>> +       int ret;
+>> +       struct llcc_drv_data *drv;
+>> +
+>> +       if (desc == NULL)
+>> +               return -EINVAL;
+>> +
+>> +       drv = dev_get_drvdata(desc->dev);
+>> +       if (!drv)
+>> +               return -EINVAL;
+>> +
+>> +       mutex_lock(&drv->lock);
+>> +       if (!test_bit(desc->slice_id, drv->bitmap)) {
+>> +               mutex_unlock(&drv->lock);
+>> +               return 0;
+>> +       }
+>> +       act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE <<
+> ACT_CTRL_OPCODE_SHIFT;
+>> +
+>> +       ret = llcc_update_act_ctrl(drv, desc->slice_id, act_ctrl_val,
+>> +                                 ACTIVATE);
+>> +
+>> +       __clear_bit(desc->slice_id, drv->bitmap);
+>> +       mutex_unlock(&drv->lock);
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(llcc_slice_deactivate);
+>> +
+>> +/**
+>> + * llcc_get_slice_id - return the slice id
+>> + * @desc: Pointer to llcc slice descriptor
+>> + *
+>> + * A positive value will be returned on success and a negative errno 
+>> will
+>> + * be returned on error
+>> + */
+>> +int llcc_get_slice_id(struct llcc_slice_desc *desc)
+>> +{
+>> +       if (!desc)
+>> +               return -EINVAL;
+> 
+> Can we remove this check too?
+> 
+We need this check and the following one to protect against the
+null pointer access which might happen if client doesn't get
+the descriptor before accessing size and slice_id.
+>> +
+>> +       return desc->slice_id;
+>> +}
+>> +EXPORT_SYMBOL_GPL(llcc_get_slice_id);
+>> +
+>> +/**
+>> + * llcc_get_slice_size - return the slice id
+>> + * @desc: Pointer to llcc slice descriptor
+>> + *
+>> + * A positive value will be returned on success and zero will 
+>> returned on
+>> + * error
+>> + */
+>> +size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
+>> +{
+>> +       if (!desc)
+>> +               return 0;
+> 
+> And this one?
+> 
+> -Evan
