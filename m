@@ -1,117 +1,99 @@
-Return-Path: <SRS0=ISde=HC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lucky1.263xmail.com ([211.157.147.134]:35489 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752391AbeDMC0O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Apr 2018 22:26:14 -0400
+Return-Path: <SRS0=273F=HC=rock-chips.com=shawn.lin@kernel.org>
+Subject: Re: [PATCH 2/2] mmc: core: Add tunable delay before detecting card
+ after card is inserted
+References: <1523496031-145755-1-git-send-email-shawn.lin@rock-chips.com>
+ <1523496031-145755-2-git-send-email-shawn.lin@rock-chips.com>
+ <CAPDyKFoMT90sayR3i783Zybr-O5S9Q2Zp4+DYLNehSQQntdbgw@mail.gmail.com>
+ <3600d23a-7a5b-cb31-2f6a-9f7239f26981@rock-chips.com>
+ <CAPDyKFrWw-AhON1janB83JA13dxZQz6o6zMg3LBQK2Hv2+Cw_w@mail.gmail.com>
+ <a9497120-154b-4f87-9742-d7fd4c38d86b@rock-chips.com>
+ <CACRpkdakcGvFUt4bLTyr_xzVOfCqOXtxAvf_NVHfoCQW_qK9=A@mail.gmail.com>
 From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 2/2] mmc: core: Add tunable delay before detecting card after card is inserted
-Date: Fri, 13 Apr 2018 10:18:45 +0800
-Message-Id: <1523585925-169568-2-git-send-email-shawn.lin@rock-chips.com>
-In-Reply-To: <1523585925-169568-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1523585925-169568-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <05434d63-189d-3546-406a-1db9705beeed@rock-chips.com>
+Date: Fri, 13 Apr 2018 09:26:01 +0800
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdakcGvFUt4bLTyr_xzVOfCqOXtxAvf_NVHfoCQW_qK9=A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Allow to use tunable delay before detecting card after card is inserted,
-which either comes from firmware node, or comes from debounce value
-passed on to mmc_gpiod_request_cd(). If the platform doesn't support
-debounce, then we fall back to use the debounce period as the delay,
-otherwise, it behaves the same as before that a HW debounce(if set) plus
-a 200ms hardcode delay before detecting the card.
+Hi Linus,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+On 2018/4/12 19:47, Linus Walleij wrote:
+> On Thu, Apr 12, 2018 at 10:14 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>> On 2018/4/12 15:58, Ulf Hansson wrote:
+>>> On 12 April 2018 at 09:34, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> 
+>>> However if I understand correctly, you are suggesting to use a 200 ms
+>>> default debounce value - and in case that is succeeded to be set for
+>>> the GPIO, then we don't need the delay when scheduling the detect
+>>> work. No?
+>>>
+>>> On top of that, you want the debounce value to come from DT?
+>>
+>> In case the debounce is passed on from the caller, it means the caller
+>> drivers want it. So we firstly try it by using gpio debounce, but anyway we
+>> could fall back to use software debounce method, namely
+>> mmc_detect_change(host, msecs_to_jiffies(ctx->cd_delay_ms));
+>>
+>> ctx->cd_delay_ms =  max_t(unsigned int, debounce, 200) could make sure
+>> we at least have a basic 200ms delay which keeps consistent with current
+>> code. But a longer delay is better if the caller ask it via debounce
+>> argument.
+> 
+> The debounce time is dependent on use case so it makes sense
+> for this to come from the configuration for a certain system.
+> 200ms makes a lot of sense though.
+> 
+> But there is a real problem with the bigger picture here.
+> 
+> Please consult:
+> drivers/input/keyboard/gpio_keys.c
+> 
+> As you can see, GPIO keys implements a timer-based
+> software delay. The good thing is that this is thoroughly tested
+> code so if you do this, look at how the input subsystem is
+> doing it. A key isn't very different from a MMC/SD card slot.
+> 
+> But the hippo in the living room is of course that this will
+> lead to code duplication. Reinventing the wheel.
+> 
+> What I would like to happen, is for software debouncing
+> to be moved into gpiolib and used as a fallback in the cases
+> where the hardware does not support debounce.
+> 
+> This way gpiod_set_debounce() will never fail with -ENOTSUPP
+> and we can remove the code from in the input subsystem
+> and reuse it freely for MMC/SD card detection. Probably also
+> in drivers/extcon etc.
+> 
+> To me this makes most sense.
+> 
+> I understand it might be a bit much to ask and I think I tried
 
----
+My current plan is still to slightly improve this in MMC/SD slot-gpio
+code but not touch timer-based software debouce as you may understand
+that I need backport it for my employer in short-term, expecially they
+argue upstream first. :)
 
-Changes in v2:
-- doesn't introduce new agrument for mmc_gpiod_request_cd and drop
-  the change for host drivers
-
- drivers/mmc/core/host.c      | 7 +++++--
- drivers/mmc/core/slot-gpio.c | 9 +++++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 64b03d6..d281cbf 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -179,7 +179,7 @@ static void mmc_retune_timer(struct timer_list *t)
- int mmc_of_parse(struct mmc_host *host)
- {
- 	struct device *dev = host->parent;
--	u32 bus_width, drv_type;
-+	u32 bus_width, drv_type, cd_delay_ms;
- 	int ret;
- 	bool cd_cap_invert, cd_gpio_invert = false;
- 	bool ro_cap_invert, ro_gpio_invert = false;
-@@ -230,11 +230,14 @@ int mmc_of_parse(struct mmc_host *host)
- 	} else {
- 		cd_cap_invert = device_property_read_bool(dev, "cd-inverted");
- 
-+		if (device_property_read_u32(dev, "cd-delay-ms", &cd_delay_ms))
-+			cd_delay_ms = 200;
-+
- 		if (device_property_read_bool(dev, "broken-cd"))
- 			host->caps |= MMC_CAP_NEEDS_POLL;
- 
- 		ret = mmc_gpiod_request_cd(host, "cd", 0, true,
--					   0, &cd_gpio_invert);
-+					   cd_delay_ms, &cd_gpio_invert);
- 		if (!ret)
- 			dev_info(host->parent, "Got CD GPIO\n");
- 		else if (ret != -ENOENT && ret != -ENOSYS)
-diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-index 31f7dbb..2ef41be 100644
---- a/drivers/mmc/core/slot-gpio.c
-+++ b/drivers/mmc/core/slot-gpio.c
-@@ -28,15 +28,17 @@ struct mmc_gpio {
- 	irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
- 	char *ro_label;
- 	char cd_label[0];
-+	u32 cd_delay_ms;
- };
- 
- static irqreturn_t mmc_gpio_cd_irqt(int irq, void *dev_id)
- {
- 	/* Schedule a card detection after a debounce timeout */
- 	struct mmc_host *host = dev_id;
-+	struct mmc_gpio *ctx = host->slot.handler_priv;
- 
- 	host->trigger_card_event = true;
--	mmc_detect_change(host, msecs_to_jiffies(200));
-+	mmc_detect_change(host, msecs_to_jiffies(ctx->cd_delay_ms));
- 
- 	return IRQ_HANDLED;
- }
-@@ -49,6 +51,7 @@ int mmc_gpio_alloc(struct mmc_host *host)
- 
- 	if (ctx) {
- 		ctx->ro_label = ctx->cd_label + len;
-+		ctx->cd_delay_ms = 200;
- 		snprintf(ctx->cd_label, len, "%s cd", dev_name(host->parent));
- 		snprintf(ctx->ro_label, len, "%s ro", dev_name(host->parent));
- 		host->slot.handler_priv = ctx;
-@@ -239,6 +242,8 @@ int mmc_gpio_request_cd(struct mmc_host *host, unsigned int gpio,
-  * @debounce: debounce time in microseconds
-  * @gpio_invert: will return whether the GPIO line is inverted or not, set
-  * to NULL to ignore
-+ * @cd_delay_ms: delay time in ms before detecting card after card insert
-+ * event
-  *
-  * Use this function in place of mmc_gpio_request_cd() to use the GPIO
-  * descriptor API.  Note that it must be called prior to mmc_add_host()
-@@ -261,7 +266,7 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
- 	if (debounce) {
- 		ret = gpiod_set_debounce(desc, debounce);
- 		if (ret < 0)
--			return ret;
-+			ctx->cd_delay_ms = debounce;
- 	}
- 
- 	if (gpio_invert)
--- 
-1.9.1
+But I'm interested in timer-based software debouce support in GPIO,
+and will have a look it later. Btw, have you post patch(es) for thatin
+the past? It should be helpful for me to investigate it if you could
+share a link.
 
 
+> to factor this over from input to GPIO at one point but
+> failed. Would you like to give it a try, or do you want me to
+> take a stab at it? (It might take some time...)
+> 
+> Yours,
+> Linus Walleij
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
