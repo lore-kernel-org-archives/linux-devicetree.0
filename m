@@ -1,32 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: afe: add current-sense-shunt
- and voltage-divider
-Date: Fri, 13 Apr 2018 16:42:04 -0500
-Message-ID: <20180413214204.6msvqb4sk3uaeiq3@rob-hp-laptop>
-References: <20180410152802.30958-1-peda@axentia.se>
- <20180410152802.30958-2-peda@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 13/13] dt: bindings: add bindings for wcn3990 wifi
+ block
+Date: Fri, 13 Apr 2018 16:53:40 -0500
+Message-ID: <20180413215340.vhvlhlaapt5uuo7d@rob-hp-laptop>
+References: <1523378986-11551-1-git-send-email-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180410152802.30958-2-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1523378986-11551-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 05:28:01PM +0200, Peter Rosin wrote:
-> An ADC is often used to measure other quantities indirectly. These
-> bindings describe two cases, a current through a shunt resistor, and
-> a "big" voltage measured with the help of a voltage divider.
+On Tue, Apr 10, 2018 at 10:19:46PM +0530, Govind Singh wrote:
+> Add device tree binding documentation details for wcn3990
+> wifi block present in Qualcomm SDM845/APQ8098 SoC into
+> "qcom,ath10k.txt".
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  .../bindings/iio/afe/current-sense-shunt.txt       | 41 ++++++++++++++++++++
->  .../bindings/iio/afe/voltage-divider.txt           | 45 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++++
->  3 files changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
+>  .../bindings/net/wireless/qcom,ath10k.txt          | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+One nit, otherwise:
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 3d2a031..34e4f98 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  - compatible: Should be one of the following:
+>  	* "qcom,ath10k"
+>  	* "qcom,ipq4019-wifi"
+> +	* "qcom,wcn3990-wifi"
+>  
+>  PCI based devices uses compatible string "qcom,ath10k" and takes calibration
+>  data along with board specific data via "qcom,ath10k-calibration-data".
+> @@ -18,8 +19,12 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
+>  "qcom,ath10k-calibration-data" conflict with each other and only one
+>  can be provided per device.
+>  
+> +SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
+> +
+>  Optional properties:
+>  - reg: Address and length of the register set for the device.
+> +- reg-names: Must include the list of following reg names,
+> +	     "membase"
+>  - resets: Must contain an entry for each entry in reset-names.
+>            See ../reset/reseti.txt for details.
+>  - reset-names: Must include the list of following reset names,
+> @@ -49,6 +54,8 @@ Optional properties:
+>  				 hw versions.
+>  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
+>  				     the length can vary between hw versions.
+> +- <supply-name>-supply: handle to the regulator device tree node
+> +			   optional "supply-name" is "vdd-0.8-cx-mx".
+>  
+>  Example (to supply the calibration data alone):
+>  
+> @@ -119,3 +126,27 @@ wifi0: wifi@a000000 {
+>  	qcom,msi_base = <0x40>;
+>  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
+>  };
+> +
+> +Example (to supply wcn3990 SoC wifi block details):
+> +
+> +qcom,wifi@18000000 {
+
+wifi@...
+
+> +		compatible = "qcom,wcn3990-wifi";
+> +		reg = <0x18800000 0x800000>;
+> +		reg-names = "membase";
+> +		clocks = <&clock_gcc clk_aggre2_noc_clk>;
+> +		clock-names = "smmu_aggre2_noc_clk"
+> +		interrupts =
+> +			   <0 130 0 /* CE0 */ >,
+> +			   <0 131 0 /* CE1 */ >,
+> +			   <0 132 0 /* CE2 */ >,
+> +			   <0 133 0 /* CE3 */ >,
+> +			   <0 134 0 /* CE4 */ >,
+> +			   <0 135 0 /* CE5 */ >,
+> +			   <0 136 0 /* CE6 */ >,
+> +			   <0 137 0 /* CE7 */ >,
+> +			   <0 138 0 /* CE8 */ >,
+> +			   <0 139 0 /* CE9 */ >,
+> +			   <0 140 0 /* CE10 */ >,
+> +			   <0 141 0 /* CE11 */ >;
+> +		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
