@@ -1,46 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: display: atmel: add optional
- output-mode property
-Date: Fri, 13 Apr 2018 12:46:48 -0500
-Message-ID: <20180413174648.zxljbw634o2r4zty@rob-hp-laptop>
-References: <20180409105918.20792-1-peda@axentia.se>
- <20180409105918.20792-3-peda@axentia.se>
+Subject: Re: [PATCH 1/3] drm/vc4: Remove the need for the GPU-subsystem DT
+ node.
+Date: Fri, 13 Apr 2018 12:56:32 -0500
+Message-ID: <20180413175632.oz62n363g6rxdp6z@rob-hp-laptop>
+References: <20180409230040.1100-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180409105918.20792-3-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180409230040.1100-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 09, 2018 at 12:59:15PM +0200, Peter Rosin wrote:
-> Useful for beating cases where an output mode selection heuristic
-> fails.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> index 82f2acb3d374..dc478455b883 100644
-> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> @@ -10,6 +10,10 @@ Required properties:
->   - #address-cells: should be set to 1.
->   - #size-cells: should be set to 0.
->  
-> +Optional properties:
-> + - output-mode: override any output mode selection hueristic and force a
-> +   particular output mode. One of "rgb444", "rgb565", "rgb666" and "rgb888".
-> +
-
-This needs to be generic, not just added to some random display 
-controller binding.
-
-It also belongs in the port or endpoint node as is done for camera 
-interfaces.
-
-Rob
+T24gTW9uLCBBcHIgMDksIDIwMTggYXQgMDQ6MDA6MzhQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhlIEdQVSBzdWJzeXN0ZW0gbm9kZSB3YXMgYSB3b3JrYXJvdW5kIHRvIGhhdmUgYSBj
+ZW50cmFsIGRldmljZSB0bwo+IGJpbmQgVjNEIGFuZCBkaXNwbGF5IHRvLiAgRm9sbG93aW5nIHRo
+ZSBsZWFkIG9mIDI0Njc3NGQxN2ZjMAo+ICgiZHJtL2V0bmF2aXY6IHJlbW92ZSB0aGUgbmVlZCBm
+b3IgYSBncHUtc3Vic3lzdGVtIERUIG5vZGUiKSwgcmVtb3ZlCj4gdGhlIHN1YnN5c3RlbSBub2Rl
+IHVzYWdlIGFuZCBqdXN0IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhlIERSTQo+IGRl
+dmljZSB0byBhdHRhY2ggdG8gaWYgYW55IG9mIHRoZSBzdWJzeXN0ZW0gZGV2aWNlcyBhcmUgcHJl
+c2VudC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+
+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgICAgICAgfCAg
+NyAtLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAgICAgICAgICAgICB8
+IDMzICsrKysrKysrKysrKysrLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfaHZzLmMg
+ICAgICAgICAgICAgICAgIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92M2QuYyAg
+ICAgICAgICAgICAgICAgfCAgMSArCj4gIDQgZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygr
+KSwgMTUgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0Cj4gaW5kZXggMjg0ZTJi
+MTRjZmJlLi41ZmQ0NzE3MTAxZDYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKPiBAQCAtNCw5
+ICs0LDYgQEAgVGhlIFZDNCBkZXZpY2UgcHJlc2VudCBvbiB0aGUgUmFzcGJlcnJ5IFBpIGluY2x1
+ZGVzIGEgZGlzcGxheSBzeXN0ZW0KPiAgd2l0aCBIRE1JIG91dHB1dCBhbmQgdGhlIEhWUyAoSGFy
+ZHdhcmUgVmlkZW8gU2NhbGVyKSBmb3IgY29tcG9zaXRpbmcKPiAgZGlzcGxheSBwbGFuZXMuCj4g
+IAo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBWQzQ6Cj4gLS0gY29tcGF0aWJsZToJU2hvdWxk
+IGJlICJicmNtLGJjbTI4MzUtdmM0IiBvciAiYnJjbSxjeWdudXMtdmM0Igo+IC0KPiAgUmVxdWly
+ZWQgcHJvcGVydGllcyBmb3IgUGl4ZWwgVmFsdmU6Cj4gIC0gY29tcGF0aWJsZToJU2hvdWxkIGJl
+IG9uZSBvZiAiYnJjbSxiY20yODM1LXBpeGVsdmFsdmUwIiwKPiAgCQkgICJicmNtLGJjbTI4MzUt
+cGl4ZWx2YWx2ZTEiLCBvciAiYnJjbSxiY20yODM1LXBpeGVsdmFsdmUyIgo+IEBAIC0xNTMsMTAg
+KzE1MCw2IEBAIHYzZDogdjNkQDdlYzAwMDAwIHsKPiAgCWludGVycnVwdHMgPSA8MSAxMD47Cj4g
+IH07Cj4gIAo+IC12YzQ6IGdwdSB7Cj4gLQljb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12YzQi
+Owo+IC19Owo+IC0KPiAgcGFuZWw6IHBhbmVsIHsKPiAgCWNvbXBhdGlibGUgPSAib250YXQseXg3
+MDB3djAzIiwgInNpbXBsZS1wYW5lbCI7Cj4gIAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jCj4gaW5kZXgg
+N2M5NWVkNWM1Y2FjLi5kMjgyYWI3ZGUwM2EgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3ZjNC92YzRfZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYwo+IEBA
+IC0zNjQsMjIgKzM2NCwzNCBAQCBzdGF0aWMgaW50IHZjNF9wbGF0Zm9ybV9kcm1fcmVtb3ZlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiAtc3Rh
+dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdmM0X29mX21hdGNoW10gPSB7Cj4gLQl7IC5j
+b21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12YzQiLCB9LAo+IC0JeyAuY29tcGF0aWJsZSA9ICJi
+cmNtLGN5Z251cy12YzQiLCB9LAo+IC0Je30sCj4gLX07Cj4gLU1PRFVMRV9ERVZJQ0VfVEFCTEUo
+b2YsIHZjNF9vZl9tYXRjaCk7Cj4gLQo+ICBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2
+YzRfcGxhdGZvcm1fZHJpdmVyID0gewo+ICAJLnByb2JlCQk9IHZjNF9wbGF0Zm9ybV9kcm1fcHJv
+YmUsCj4gIAkucmVtb3ZlCQk9IHZjNF9wbGF0Zm9ybV9kcm1fcmVtb3ZlLAo+ICAJLmRyaXZlcgkJ
+PSB7Cj4gIAkJLm5hbWUJPSAidmM0LWRybSIsCj4gLQkJLm9mX21hdGNoX3RhYmxlID0gdmM0X29m
+X21hdGNoLAo+ICAJfSwKPiAgfTsKPiAgCj4gK3N0YXRpYyBib29sCj4gK2RyaXZlcl9vZl90YWJs
+ZV9oYXNfYV9tYXRjaChjb25zdCBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyICpkcml2ZXIpCj4gK3sK
+PiArCWludCBpOwo+ICsKCj4gKwlmb3IgKGkgPSAwOyBkcml2ZXItPmRyaXZlci5vZl9tYXRjaF90
+YWJsZVtpXS5jb21wYXRpYmxlOyBpKyspIHsKPiArCQljb25zdCBjaGFyICpjb21wYXQgPSBkcml2
+ZXItPmRyaXZlci5vZl9tYXRjaF90YWJsZVtpXS5jb21wYXRpYmxlOwo+ICsJCXN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbm9kZTsKPiArCj4gKwkJd2hpbGUgKChub2RlID0gb2ZfZmluZF9jb21wYXRpYmxl
+X25vZGUobm9kZSwgTlVMTCwgY29tcGF0KSkpIHsKPiArCQkJaWYgKG9mX2RldmljZV9pc19hdmFp
+bGFibGUobm9kZSkpIHsKPiArCQkJCW9mX25vZGVfcHV0KG5vZGUpOwo+ICsJCQkJcmV0dXJuIHRy
+dWU7Cj4gKwkJCX0KPiArCQl9Cj4gKwl9CgpBbGwgdGhpcyBjYW4gYmUgcmVwbGFjZWQgd2l0aDoK
+Cm5vZGUgPSBvZl9maW5kX21hdGNoaW5nX25vZGVfYW5kX21hdGNoKE5VTEwsIGRyaXZlci0+ZHJp
+dmVyLm9mX21hdGNoX3RhYmxlLCBOVUxMKTsKaWYgKG9mX2RldmljZV9pc19hdmFpbGFibGUobm9k
+ZSkpIHsKCW9mX25vZGVfcHV0KG5vZGUpOwoJcmV0dXJuIHRydWU7Cn0KCj4gKwo+ICsJcmV0dXJu
+IGZhbHNlOwo+ICt9Cj4gKwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
