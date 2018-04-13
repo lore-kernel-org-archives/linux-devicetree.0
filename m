@@ -1,127 +1,55 @@
-Return-Path: <SRS0=yVOu=G2=chromium.org=tfiga@kernel.org>
+Return-Path: <SRS0=Uqzc=HC=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-References: <1519402422-9595-1-git-send-email-andy.yeh@intel.com>
- <1519402422-9595-3-git-send-email-andy.yeh@intel.com> <CAL_JsqKd8dxF1eSkST1GyKCS_bkzALv2aGHC9TXHWfnrxx33SQ@mail.gmail.com>
- <20180228133126.cusxnid64xd5uawu@paasikivi.fi.intel.com> <20180302185900.cj4hpt5qqinhyvnt@rob-hp-laptop>
- <20180302201457.ia6egjlxa5zmuwmd@kekkonen.localdomain>
-In-Reply-To: <20180302201457.ia6egjlxa5zmuwmd@kekkonen.localdomain>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Thu, 05 Apr 2018 08:21:56 +0000
-Message-ID: <CAAFQd5AcWpkemhXDwqjvhAxKdBxK1B_XuNZmzDJvpAY_TtNuPw@mail.gmail.com>
-Subject: Re: [v5 2/2] media: dt-bindings: Add bindings for Dongwoon DW9807
- voice coil
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <TY1PR06MB09922C1E3B83DF01EB084714D8BC0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439386-1032-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdVP5U2W3Zmpfe689UYBdNfS6nK7jFW5oQcJQ_QakW1UfQ@mail.gmail.com>
+ <20180412075506.frylywvges5c6nzx@verge.net.au> <TY1PR06MB09922C1E3B83DF01EB084714D8BC0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 13 Apr 2018 10:46:20 +0200
+Message-ID: <CAMuHMdVXm52gCOx9KL+0Nn2pw507ansPVFGtAjN8sTTwEKWtdg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] soc: renesas: rcar-sysc: Add support for R-Car E3
+ power areas
 Content-Type: text/plain; charset="UTF-8"
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Rob Herring <robh@kernel.org>, "Yeh, Andy" <andy.yeh@intel.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>, Hans Verkuil <hverkuil@xs4all.nl>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Mar 3, 2018 at 5:15 AM Sakari Ailus <sakari.ailus@linux.intel.com>
-wrote:
+Hi Shimoda-san,
 
-> On Fri, Mar 02, 2018 at 12:59:00PM -0600, Rob Herring wrote:
-> > On Wed, Feb 28, 2018 at 03:31:26PM +0200, Sakari Ailus wrote:
-> > > Hi Rob,
-> > >
-> > > Thanks for the review.
-> > >
-> > > On Tue, Feb 27, 2018 at 04:10:31PM -0600, Rob Herring wrote:
-> > > > On Fri, Feb 23, 2018 at 10:13 AM, Andy Yeh <andy.yeh@intel.com>
-wrote:
-> > > > > From: Alan Chiang <alanx.chiang@intel.com>
-> > > > >
-> > > > > Dongwoon DW9807 is a voice coil lens driver.
-> > > > >
-> > > > > Also add a vendor prefix for Dongwoon for one did not exist
-previously.
-> > > >
-> > > > Where's that?
-> > >
-> > > Added by aece98a912d92444ea9da03b04269407d1308f1f . So that line isn't
-> > > relevant indeed and should be removed.
-> > >
-> > > >
-> > > > >
-> > > > > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-| 9 +++++++++
-> > > >
-> > > > DACs generally go in bindings/iio/dac/
-> > >
-> > > We have quite a few lens voice coil drivers under bindings/media/i2c
-now. I
-> > > don't really object to putting this one to bindings/iio/dac but then
-the
-> > > rest should be moved as well.
-> > >
-> > > The camera LED flash drivers are under bindings/leds so this would
-actually
-> > > be analoguous to that. The lens voice coil drivers are perhaps still
-a bit
-> > > more bound to the domain (camera) than the LED flash drivers.
-> >
-> > The h/w is bound to that function or just the s/w?
+On Thu, Apr 12, 2018 at 10:25 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>> From: Simon Horman <horms@verge.net.au>, Sent: Thursday, April 12, 2018 4:55 PM
+>> On Wed, Apr 11, 2018 at 05:10:02PM +0200, Geert Uytterhoeven wrote:
+>> > On Wed, Apr 11, 2018 at 11:36 AM, Yoshihiro Shimoda
+>> > <yoshihiro.shimoda.uh@renesas.com> wrote:
+>> > > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> > >
+>> > > This patch adds Cortex-A53 CPU{0,1}, Cortex-A53 SCU, Cortex-R7, A3VC,
+>> > > A2VC1 and 3DG-{A,B} power domain areas for the R8A77990 SoC.
+>> >
+>> > > - The 3DG power domain resume order of R-Car E3 is [3DG-B] -> [3DG-A],
+>> >
+>> > So 3DG-B is the parent of 3DG-A?
+>> > I have to take your word on this, as I cannot find this in the documentation.
+>
+> Geert-san, you're correct. the documentation doesn't have any description about this.
+> So, software team are asking HW guys about this.
+> This means, should we drop 3DGs (or always on these domains) at initial support?
 
-> The hardware. I guess in principle you could use them for other purposes
-> --- most devices seem to be current sinks with configurable current ---
-but
-> I've never seen that.
+Using always-on is an acceptable solution, for now.
 
-> The datasheet (dw9714) is here:
+But let's wait and see the response from the HW guys. The v4.18 deadline is
+sufficiently far in the future...
 
-> <URL:http://www.datasheetspdf.com/datasheet/download.php?id=840322>
+Gr{oetje,eeting}s,
 
-> >
-> > > I can send a patch if you think the existing bindings should be
-moved; let
-> > > me know.
-> >
-> > I'm okay if they are separate as long as we're not going to see the
-> > same device show up in both places. However, "i2c" is not the best
+                        Geert
 
-> Ack. I wouldn't expect that. The datasheets of such devices clearly label
-> the devices voice coil module drivers.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> > directory choice. It should be by function, so we can find common
-> > properties.
-
-> I2c devices in the media subsystem tend to be peripherals that are always
-> used with another device with access to some system bus. Camera sensors,
-lens
-> devices and tuners can be found there currently. I don't know the original
-> reasoning but it most likely is related to that.
-
-> In terms of different kinds of devices we have currently at least the
-> following:
-
->          Camera ISPs and CSI-2 receivers
->          Video muxes
->          Video codecs
->          Camera sensors
->          Camera lens drivers (right now only voice coil modules?)
->          Tuners (DVB, radio, analogue TV, whatever)
->          Radio transmitters
->          HDMI CEC
->          Remote controllers
->          JPEG codecs
-
-> Cc Hans, too.
-
-Any updates here?
-
-To be honest, I'm not sure there is too much to be thinking about here.
-This particular hardware block is a lens driver, specifically designed to
-be used with cameras. Quoting maker's website [1]:
-
-   "Driver ICs for automatically focus on images of mobile cameras.
-    Dongwoon Anatech's AF driver ICs are optimized mobile cameras
-    with low power, low noise, smallest package, as well as include
-    various lens position control methodology."
-
-IMHO putting its bindings under the more general purpose iio/ directory
-doesn't make much sense and would be actually confusing.
-
-[1] http://www.dwanatech.com/eng/sub/sub02_01.php?cat_no=6
-
-Best regards,
-Tomasz
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
