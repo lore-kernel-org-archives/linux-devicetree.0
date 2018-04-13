@@ -1,346 +1,148 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v8 2/2] drm: bridge: Add thc63lvd1024 LVDS decoder driver
-Date: Fri, 13 Apr 2018 18:28:36 +0200
-Message-ID: <20180413162836.GD6666@w540>
-References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: power: supply: qcom_bms: Add bindings
+Date: Fri, 13 Apr 2018 11:35:27 -0500
+Message-ID: <20180413163527.ludqnnc5nkj4spre@rob-hp-laptop>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
+ <20180407175802.29444-1-ctatlor97@gmail.com>
+ <20180407175802.29444-2-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1300214521=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1523357590-3841-3-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, Laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180407175802.29444-2-ctatlor97@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1300214521==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qGV0fN9tzfkG3CxV"
-Content-Disposition: inline
-
-
---qGV0fN9tzfkG3CxV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-   small self review, as I've just noticed a trivial error.
-
-On Tue, Apr 10, 2018 at 12:53:10PM +0200, Jacopo Mondi wrote:
-> Add DRM bridge driver for Thine THC63LVD1024 LVDS to digital parallel
-> output converter.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+On Sat, Apr 07, 2018 at 06:57:45PM +0100, Craig Tatlor wrote:
+> Add bindings for the Qualcomm Battery Monitoring system.
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 > ---
->  drivers/gpu/drm/bridge/Kconfig        |   6 +
->  drivers/gpu/drm/bridge/Makefile       |   1 +
->  drivers/gpu/drm/bridge/thc63lvd1024.c | 206 ++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 213 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/thc63lvd1024.c
->
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kcon=
-fig
-> index 3aa65bd..42c9c2d 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -93,6 +93,12 @@ config DRM_SII9234
->  	  It is an I2C driver, that detects connection of MHL bridge
->  	  and starts encapsulation of HDMI signal.
->
-> +config DRM_THINE_THC63LVD1024
-> +	tristate "Thine THC63LVD1024 LVDS decoder bridge"
-> +	depends on OF
-> +	---help---
-> +	  Thine THC63LVD1024 LVDS/parallel converter driver.
-> +
->  config DRM_TOSHIBA_TC358767
->  	tristate "Toshiba TC358767 eDP bridge"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Mak=
-efile
-> index 373eb28..fd90b16 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_PARADE_PS8622) +=3D parade-ps8622.o
->  obj-$(CONFIG_DRM_SIL_SII8620) +=3D sil-sii8620.o
->  obj-$(CONFIG_DRM_SII902X) +=3D sii902x.o
->  obj-$(CONFIG_DRM_SII9234) +=3D sii9234.o
-> +obj-$(CONFIG_DRM_THINE_THC63LVD1024) +=3D thc63lvd1024.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358767) +=3D tc358767.o
->  obj-$(CONFIG_DRM_ANALOGIX_DP) +=3D analogix/
->  obj-$(CONFIG_DRM_I2C_ADV7511) +=3D adv7511/
-> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/brid=
-ge/thc63lvd1024.c
+>  .../bindings/power/supply/qcom_bms.txt        | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/qcom_bms.txt b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
 > new file mode 100644
-> index 0000000..aa1d650
+> index 000000000000..6296399edc09
 > --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> @@ -0,0 +1,206 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * THC63LVD1024 LVDS to parallel data DRM bridge driver.
-> + *
-> + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
+> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> @@ -0,0 +1,93 @@
+> +Qualcomm Battery Measurement System
 > +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_panel.h>
+> +The Qualcomm Battery Measurement System is found inside of Qualcomm PM8941
+
+Is it Monitoring or Measurment?
+
+> +PMICs. It provides OCV and coulomb counter registers that allow the kernel
+> +to infer a capacity level.
+
+s/kernel/OS/
+
+OCV?
+
 > +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/regulator/consumer.h>
+> +Required properties:
+> +- compatible:               Should contain "qcom,pm8941-bms".
+> +- reg:                      Specifies the SPMI address and length of the
+> +			    controller's registers.
+> +- interrupts:               OCV threshold interrupt.
+> +- io-channels:              Should contain IIO channel specifier for the
+> +			    ADC channel that reports battery temperature.
+> +- io-channel-names:         Should contain "temp".
+> +- qcom,fcc-temp-legend:     An array containing the temperature, in degC,
+> +			    for each column of the FCC lookup table.
+
+What's FCC?
+
+> +- qcom,fcc-lut:             An array of FCC values in mah, one entry for each
+> +			    temperature defined in in qcom,fcc-temp-legend.
+> +- qcom,ocv-temp-legend:     An array containing the temperature, in degC,
+> +			    for each column of the OCV lookup table.
+> +- qcom,ocv-capacity-legend: An array containing the capacity for each
+> +			    row of the OCV lookup table.
+> +- qcom,ocv-lut:             An array of OCV values in mV, one entry for each
+> +			    capacity defined in qcom,ocv-capacity-legend.
+
+Need to specify the sizes of these if not 32-bit.
+
+All these seem to have units, so add unit suffixes as defined in 
+property-units.txt.
+
 > +
-> +enum thc63_ports {
-> +	THC63_LVDS_IN0,
-> +	THC63_LVDS_IN1,
-> +	THC63_RGB_OUT0,
-> +	THC63_RGB_OUT1,
+> +Example:
+> +
+> +		pm8941_vadc: vadc@3100 {
+
+adc@...
+
+> +			compatible = "qcom,spmi-vadc";
+> +			reg = <0x3100>;
+> +			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			#io-channel-cells = <1>;
+> +
+> +			bat_temp {
+> +				reg = <VADC_LR_MUX1_BAT_THERM>;
+> +			};
+> +		};
+> +
+> +		bms@4000 {
+> +			compatible = "qcom,pm8941-bms";
+> +			reg = <0x4000>;
+> +			interrupts = <0x0 0x40 0x4 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "ocv_thr";
+> +
+> +			io-channels = <&pm8941_vadc VADC_LR_MUX1_BAT_THERM>;
+> +			io-channel-names = "temp";
+> +
+> +			qcom,fcc-temp-legend = /bits/ 8 <(-10) 0 25 50 65>;
+> +			qcom,fcc-lut = /bits/ 16 <6010 6070 6680 6780 6670>;
+> +
+> +			qcom,ocv-capacity-legend = /bits/ 8 <100 95 90 85
+> +							     80 75 70 65
+> +							     60 55 50 45
+> +							     40 35 30 25
+> +							     20 15 10 9
+> +							     8 7 6 5 4
+> +							     3 2 1 0>;
+> +
+> +			qcom,ocv-temp-legend = /bits/ 8 <(-10) 0 25 50 65>;
+> +			qcom,ocv-lut = /bits/ 16 <4288 4288 4306 4315 4315
+> +						  4261 4241 4259 4266 4246
+> +						  4201 4181 4201 4207 4187
+> +						  4153 4133 4150 4155 4135
+> +						  4105 4085 4100 4104 4084
+> +						  4058 4038 4052 4058 4038
+> +						  4012 3992 4004 4014 3994
+> +						  3970 3950 3959 3971 3951
+> +						  3931 3911 3915 3927 3907
+> +						  3899 3879 3880 3884 3864
+> +						  3873 3853 3851 3853 3833
+> +						  3848 3828 3827 3829 3809
+> +						  3829 3809 3808 3809 3789
+> +						  3815 3795 3791 3791 3771
+> +						  3801 3781 3775 3772 3752
+> +						  3785 3765 3751 3746 3726
+> +						  3767 3747 3727 3719 3699
+> +						  3750 3730 3702 3692 3672
+> +						  3728 3708 3680 3672 3652
+> +						  3720 3700 3676 3665 3645
+> +						  3712 3692 3670 3660 3645
+> +						  3695 3675 3658 3648 3633
+> +						  3662 3647 3629 3620 3610
+> +						  3620 3605 3589 3580 3570
+> +						  3562 3552 3538 3529 3519
+> +						  3490 3480 3474 3470 3465
+> +						  3403 3398 3388 3380 3375
+> +						  3320 3300 3255 3221 3206
+> +						  3000 3000 3000 3000 3000>;
+> +		};
+> +	};
 > +};
-> +
-> +struct thc63_dev {
-> +	struct device *dev;
-> +
-> +	struct regulator *vcc;
-> +
-> +	struct gpio_desc *pdwn;
-> +	struct gpio_desc *oe;
-> +
-> +	struct drm_bridge bridge;
-> +	struct drm_bridge *next;
-> +};
-> +
-> +static inline struct thc63_dev *to_thc63(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct thc63_dev, bridge);
-> +}
-> +
-> +static int thc63_attach(struct drm_bridge *bridge)
-> +{
-> +	struct thc63_dev *thc63 =3D to_thc63(bridge);
-> +
-> +	return drm_bridge_attach(bridge->encoder, thc63->next, bridge);
-> +}
-> +
-> +static void thc63_enable(struct drm_bridge *bridge)
-> +{
-> +	struct thc63_dev *thc63 =3D to_thc63(bridge);
-> +	int ret;
-> +
-> +	ret =3D regulator_enable(thc63->vcc);
-> +	if (ret) {
-> +		dev_err(thc63->dev,
-> +			"Failed to enable regulator \"vcc\": %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	gpiod_set_value(thc63->pdwn, 0);
-> +	gpiod_set_value(thc63->oe, 1);
-> +}
-> +
-> +static void thc63_disable(struct drm_bridge *bridge)
-> +{
-> +	struct thc63_dev *thc63 =3D to_thc63(bridge);
-> +	int ret;
-> +
-> +	gpiod_set_value(thc63->oe, 0);
-> +	gpiod_set_value(thc63->pdwn, 1);
-> +
-> +	ret =3D regulator_disable(thc63->vcc);
-> +	if (ret)
-> +		dev_err(thc63->dev,
-> +			"Failed to disable regulator \"vcc\": %d\n", ret);
-> +}
-> +
-> +static const struct drm_bridge_funcs thc63_bridge_func =3D {
-> +	.attach	=3D thc63_attach,
-> +	.enable =3D thc63_enable,
-> +	.disable =3D thc63_disable,
-> +};
-> +
-> +static int thc63_parse_dt(struct thc63_dev *thc63)
-> +{
-> +	struct device_node *thc63_out;
-> +	struct device_node *remote;
-> +
-> +	thc63_out =3D of_graph_get_endpoint_by_regs(thc63->dev->of_node,
-> +						  THC63_RGB_OUT0, -1);
-> +	if (!thc63_out) {
-> +		dev_err(thc63->dev, "Missing endpoint in port@%u\n",
-> +			THC63_RGB_OUT0);
-> +		return -ENODEV;
-> +	}
-> +
-> +	remote =3D of_graph_get_remote_port_parent(thc63_out);
-> +	of_node_put(thc63_out);
-> +	if (!remote) {
-> +		dev_err(thc63->dev, "Endpoint in port@%u unconnected\n",
-> +			THC63_RGB_OUT0);
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!of_device_is_available(remote)) {
-> +		dev_err(thc63->dev, "port@%u remote endpoint is disabled\n",
-> +			THC63_RGB_OUT0);
-> +		of_node_put(remote);
-> +		return -ENODEV;
-> +	}
-> +
-> +	thc63->next =3D of_drm_find_bridge(remote);
-> +	if (!thc63->next) {
-> +		of_node_put(remote);
-> +		return -EPROBE_DEFER;
-> +	}
-
-the 'remote' OF node is only put in the error path.
-
-If there are no other comments on this driver I can send a follow up
-patch, or it's easier I can resend the series being it just two small
-patches.
-
-Thanks
-   j
-
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int thc63_gpio_init(struct thc63_dev *thc63)
-> +{
-> +	thc63->oe =3D devm_gpiod_get_optional(thc63->dev, "oe", GPIOD_OUT_LOW);
-> +	if (IS_ERR(thc63->oe)) {
-> +		dev_err(thc63->dev, "Unable to get \"oe-gpios\": %ld\n",
-> +			PTR_ERR(thc63->oe));
-> +		return PTR_ERR(thc63->oe);
-> +	}
-> +
-> +	thc63->pdwn =3D devm_gpiod_get_optional(thc63->dev, "powerdown",
-> +					      GPIOD_OUT_HIGH);
-> +	if (IS_ERR(thc63->pdwn)) {
-> +		dev_err(thc63->dev, "Unable to get \"powerdown-gpios\": %ld\n",
-> +			PTR_ERR(thc63->pdwn));
-> +		return PTR_ERR(thc63->pdwn);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int thc63_probe(struct platform_device *pdev)
-> +{
-> +	struct thc63_dev *thc63;
-> +	int ret;
-> +
-> +	thc63 =3D devm_kzalloc(&pdev->dev, sizeof(*thc63), GFP_KERNEL);
-> +	if (!thc63)
-> +		return -ENOMEM;
-> +
-> +	thc63->dev =3D &pdev->dev;
-> +	platform_set_drvdata(pdev, thc63);
-> +
-> +	thc63->vcc =3D devm_regulator_get_optional(thc63->dev, "vcc");
-> +	if (IS_ERR(thc63->vcc)) {
-> +		if (PTR_ERR(thc63->vcc) =3D=3D -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		dev_err(thc63->dev, "Unable to get \"vcc\" supply: %ld\n",
-> +			PTR_ERR(thc63->vcc));
-> +		return PTR_ERR(thc63->vcc);
-> +	}
-> +
-> +	ret =3D thc63_gpio_init(thc63);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D thc63_parse_dt(thc63);
-> +	if (ret)
-> +		return ret;
-> +
-> +	thc63->bridge.driver_private =3D thc63;
-> +	thc63->bridge.of_node =3D pdev->dev.of_node;
-> +	thc63->bridge.funcs =3D &thc63_bridge_func;
-> +
-> +	drm_bridge_add(&thc63->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static int thc63_remove(struct platform_device *pdev)
-> +{
-> +	struct thc63_dev *thc63 =3D platform_get_drvdata(pdev);
-> +
-> +	drm_bridge_remove(&thc63->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id thc63_match[] =3D {
-> +	{ .compatible =3D "thine,thc63lvd1024", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, thc63_match);
-> +
-> +static struct platform_driver thc63_driver =3D {
-> +	.probe	=3D thc63_probe,
-> +	.remove	=3D thc63_remove,
-> +	.driver	=3D {
-> +		.name		=3D "thc63lvd1024",
-> +		.of_match_table	=3D thc63_match,
-> +	},
-> +};
-> +module_platform_driver(thc63_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo@jmondi.org>");
-> +MODULE_DESCRIPTION("Thine THC63LVD1024 LVDS decoder DRM bridge driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
->
-
---qGV0fN9tzfkG3CxV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa0Nq0AAoJEHI0Bo8WoVY8c3sP/Ah+NayP3xJtkqCvx6beuoWc
-beAT2p/5LYlP7+2d8d12S59a5Bmr+q6vNrtzFufNTPBuNsDxeYZIu99HRCRdp0a1
-mCJ26nSaFR2iC7XhJmRlbxUMt73A9vgTfmM3q2taDlCL0ihC+ZoJt8rak2ehEcLH
-5yeYJt1lBYbpqB4NHk9sMINaLedGtVRgsaEHRQX+nJJCcjjI2iI2eFqix/ejhrB6
-dJPQxknGE6nmG15zG5vwV1/NBT06WYlr4jfNnfNuoTlpFHsfH0Umq0kzyN+doIX5
-/MpGVl0PGQgoexNbe/xbZiVFkln8fTs2xCyk+gUbodhnI0aztdCiWAtCQs9q16bR
-0sllAsVDIN9EY51sT0bI+JAyllg3lWub7wBYeOjQepxMEHUTt5qRNvutgrYHAwPi
-mQYCpfPH/P0KzVvx/mfwW861Gy5pn5JwMpq/EWecFYqHTvIeQxZNJ6XYANSS8GuU
-nk4Nk/NXSsJaBB3BHlsBXmY7XTahDmPq5LYH2968SDDmPJji7q3Fec2PJq2jVe2u
-TzQhilNb66Ne/N/btiENoKRUjc+5LP2xxdchpa2wZ7AEtB2n9EQcIySd845yXjku
-z2xCHfncg5xhF96b5tQd5E7yAQ3luRolW5A2E3DTTNOk52w2wV0ZmFuT6A6xev4x
-ZwzuDtg8Nuso8CaeGWqJ
-=xNrT
------END PGP SIGNATURE-----
-
---qGV0fN9tzfkG3CxV--
-
---===============1300214521==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1300214521==--
+> -- 
+> 2.17.0
+> 
