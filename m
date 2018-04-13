@@ -1,89 +1,52 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: Re: [PATCH v4 0/8] drm/sun4i: Allwinner MIPI-DSI support
-Date: Fri, 13 Apr 2018 17:48:26 +0530
-Message-ID: <CAD6G_RQrgw2Oopr8uxxev+XN=PERCoR37G7TUur=b=Pvy=6AnA@mail.gmail.com>
-References: <cover.a3617c4362eac8783f412525e52cf5552d19095d.1522835818.git-series.maxime.ripard@bootlin.com>
- <20180411124325.youvfpws27l2wesf@flea> <CAD6G_RRQrj9m=MPdjovEcwJV_fivCMAERSa49Mt0cKGFTicsxA@mail.gmail.com>
- <20180413120958.vo4y34q36q2rjyej@flea>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: Don't create platform device for OPP tables
+Date: Fri, 13 Apr 2018 08:07:50 -0500
+Message-ID: <CAL_JsqJHkwfCM=5+XCtOF+P9HRuhROB2FLKa3Qq1NhYd7_J7_Q@mail.gmail.com>
+References: <b70afd25fc48ad4d677e4e53951f2138cd34b85e.1523351100.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180413120958.vo4y34q36q2rjyej@flea>
+In-Reply-To: <b70afd25fc48ad4d677e4e53951f2138cd34b85e.1523351100.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, dri-devel@lists.freedesktop.org, Gustavo Padovan <gustavo@padovan.org>, Daniel Vetter <daniel.vetter@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 13, 2018 at 5:39 PM, Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
-> On Fri, Apr 13, 2018 at 05:30:04PM +0530, Jagan Teki wrote:
->> On Wed, Apr 11, 2018 at 6:13 PM, Maxime Ripard
->> <maxime.ripard@bootlin.com> wrote:
->> > On Wed, Apr 04, 2018 at 11:57:08AM +0200, Maxime Ripard wrote:
->> >> Hi,
->> >>
->> >> Here is an preliminary version of the MIPI-DSI support for the Allwinner
->> >> SoCs.
->> >>
->> >> This controller can be found on a number of recent SoCs, such as the
->> >> A31, A33 or the A64.
->> >>
->> >> Given the sparse documentation, there's a number of obscure areas, but
->> >> the current implementation has been tested with a 4-lanes DSI panel on
->> >> an A33.
->> >>
->> >> The support is a bit rough around the edges at the time, and some artifacts
->> >> are still shown on the screen for some reasons. Wider testing with
->> >> different display will hopefully nail those down.
->> >>
->> >> This needs the regmap_mmio_attach_clk, on its way to Linus in 4.17.
->> >>
->> >> Let me know what you think,
->> >> Maxime
->> >>
->> >> Changes from v3:
->> >>   - Rebased on top of current drm-misc-next
->> >>   - Switched to SPDX license header
->> >>   - Made the ECC array const
->> >>   - Split the big DSI patch into two, one to add the DSI driver and one to
->> >>     add the TCON bits.
->> >>   - Removed the dithering code
->> >>   - Changed the DT labels to remove the indices
->> >>   - Used sleeps instead of delays in the panel driver
->> >>   - Used the backlight_enable / _disable functions
->> >>   - Added Chen-Yu's Reviewed-by
->> >>
->> >> Changes from v2:
->> >>   - Added a ports node under the DSI node
->> >>   - Changed the huarui panel driver to an ili9881c driver
->> >>   - Changed the panel vendor to bananapi
->> >>   - Made the init table static in the panel driver
->> >>   - Dropped the huarui vendor patch for the DT doc.
->> >>
->> >> Changes from v1:
->> >>   - Rebased on 4.16-rc1
->> >>   - Constified a few function arguments and structures
->> >>   - Reworked the DT binding example a bit
->> >>   - Reworked the panel driver to check for DSI return codes, and use DCS
->> >>     helpers when possible
->> >>
->> >> Maxime Ripard (8):
->> >>   drm/sun4i: tcon: Add TRI finish interrupt for vblank
->> >>   dt-bindings: display: Add Allwinner MIPI-DSI bindings
->> >>   drm/sun4i: Add Allwinner A31 MIPI-DSI controller support
->> >>   drm/sun4i: Tie the DSI controller in the TCON
->> >>   dt-bindings: panel: Add the Ilitek ILI9881c panel documentation
->> >>   drm/panel: Add Ilitek ILI9881c panel driver
->> >>   ARM: dts: sun8i: a33: Add the DSI-related nodes
->> >>   [DO NOT MERGE] arm: dts: sun8i: bpi-m2m: Add DSI display
->>
->> I have reviewed most of the patches and reused for A64 all look fine
->> to me (except the panel driver). May be my issue is not relevant to
->> this thread, but I'm looking for help If I miss anything for A64 [1]
->> and [2] are changes made for A64, the issue is kernel hang while
->> loading sun6i_dsi.
+On Tue, Apr 10, 2018 at 4:05 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> The OPP tables are present as separate nodes, whose phandle is used in
+> the "operating-points-v2" property of devices. Currently the OF core
+> creates a platform device for the OPP table unconditionally, which is
+> not used by any kernel code.
 >
-> My guess would be that you're not claiming the DE2 SRAM. See:
-> https://lkml.org/lkml/2018/3/16/1096
+> Skip creating OPP table platform devices.
+>
+> Reported-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/of/platform.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index c00d81dfac0b..aaae5d90433d 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -356,6 +356,12 @@ static int of_platform_bus_create(struct device_node *bus,
+>                 return 0;
+>         }
+>
+> +       /* OPP tables have separate nodes, but we don't want devices for them */
+> +       if (unlikely(of_device_is_compatible(bus, "operating-points-v2"))) {
 
-Thanks Maxime, will try.
+Can you make this a match table instead. I could imagine we may have
+some other cases to add.
+
+> +               pr_debug("%s() - skipping OPP node %pOF\n", __func__, bus);
+> +               return 0;
+> +       }
+> +
+>         if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
+>                 pr_debug("%s() - skipping %pOF, already populated\n",
+>                         __func__, bus);
+> --
+> 2.15.0.194.g9af6a3dea062
+>
