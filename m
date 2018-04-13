@@ -1,66 +1,44 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] dt-bindings: add binding for at91-usart in spi mode
-Date: Fri, 13 Apr 2018 20:12:51 +0200
-Message-ID: <20180413181251.GG22187@piout.net>
-References: <20180413161117.20274-1-radu.pirea@microchip.com>
- <20180413161117.20274-3-radu.pirea@microchip.com>
- <20180413162327.GE22187@piout.net>
- <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] usb: dwc3: Add Qualcomm DWC3 glue driver
+Date: Fri, 13 Apr 2018 11:23:23 -0700
+Message-ID: <20180413182323.GA11810@usblab-sd-06.qualcomm.com>
+References: <1523638285-5742-1-git-send-email-mgautam@codeaurora.org>
+ <1523638285-5742-3-git-send-email-mgautam@codeaurora.org>
+ <20180413173322.GA30306@usblab-sd-06.qualcomm.com>
+ <076ce053-c51d-0a53-507a-faa7481e8dcc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8e6c447d-dce5-f9af-e5b2-8d1d863159d6@microchip.com>
+In-Reply-To: <076ce053-c51d-0a53-507a-faa7481e8dcc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: balbi@kernel.org, robh@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/04/2018 19:12:54+0200, Nicolas Ferre wrote:
-> > > diff --git a/Documentation/devicetree/bindings/spi/microchip,at91-usart-spi.txt b/Documentation/devicetree/bindings/spi/microchip,at91-usart-spi.txt
-> > > new file mode 100644
-> > > index 000000000000..92d33ccdffae
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/spi/microchip,at91-usart-spi.txt
-> > > @@ -0,0 +1,24 @@
-> > > +* Universal Synchronous Asynchronous Receiver/Transmitter (USART) in SPI mode
-> > > +
-> > > +Required properties:
-> > > +- #size-cells      : Must be <0>
-> > > +- #address-cells   : Must be <1>
-> > > +- compatible: Should be "microchip,at91sam9g45-usart-spi" or "microchip,sama5d2-usart-spi"
-> > > +- reg: Should contain registers location and length
-> > > +- interrupts: Should contain interrupt
-> > > +- clocks: phandles to input clocks.
-> > > +- clock-names: tuple listing input clock names.
-> > > +	Required elements: "usart"
-> > > +- cs-gpios: chipselects (internal cs not supported)
-> > > +
-> > > +Example:
-> > > +	spi0: spi@f001c000 {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +		compatible = "microchip,sama5d2-usart-spi", "microchip,at91sam9g45-usart-spi";
-> > 
-> > I'm pretty sure this will be considered configuration rather than
-> > hardware description. Why don't you do something like the flexcom mode
-> > selection?
+On Fri, Apr 13, 2018 at 11:32:04PM +0530, Manu Gautam wrote:
+> On 4/13/2018 11:03 PM, Jack Pham wrote:
+> > Are the extcon phandles bound to the glue node? I don't see the
+> > description in the bindings doc in PATCH 1/3. And if so, would it be
+> > a duplicate of the child node's extcon binding? Then again, the
+> > alternative would be to grab it directly from the child (i.e.
+> > qcom->dwc3->dev.of_node) which I'm not sure is ok to do or not.
+> >
 > 
-> Because we are not in the same situation as having a glue layer that would
-> select one of the already existing peripherals with associated drivers
-> above.
-> This layout of the hardware is completely different from the USART one and
-> it seems to makes sense to address it with a different hardware description
-> and so a different compatible string.
-> 
+> Yes these are bound to glue node. I missed to add it to documentation, will do
+> so.
 
-But then, you can end up with two drivers trying to use the same IP
-because nothing prevents you from writing a DT with both a usart and an
-spi node enabled for the same IP. request_mem_region() will not help
-here because then the working driver will depend on the probing order.
+Ok thanks.
 
+> I kept it separate for couple of reasons - one is to not peek too-much into child
+> node. Another reason is that doing so allows to have extcon in "peripheral"
+> only mode as well (not just drd mode which is the case with dwc3 core).
+> It allows to notify h/w when vbus is not there in device mode which IMO is
+> right thing to do.
 
+Ah, makes sense. extcon for the child is only needed for dual-role.
+
+Jack
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
