@@ -1,114 +1,29 @@
-Return-Path: <SRS0=/m6R=G5=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v2 3/5] pcie-rcar: add R-Car gen3 PHY support
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
-Message-ID: <3eb7e548-8b21-2347-c742-a007fd9cfed9@cogentembedded.com>
-Date: Sun, 8 Apr 2018 21:05:10 +0300
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 13 Apr 2018 08:43:40 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio:imu:mpu6050: support more
+ interrupt types
+Message-ID: <20180413134340.x5xhdlyeibx3kfch@rob-hp-laptop>
+References: <20180409202128.5031-1-mkelly@xevo.com>
+ <20180409202128.5031-2-mkelly@xevo.com>
 MIME-Version: 1.0
-In-Reply-To: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180409202128.5031-2-mkelly@xevo.com>
+To: Martin Kelly <mkelly@xevo.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On R-Car gen3 SoCs the PCIe PHY has its own register region -- and I have
-written  a generic PHY driver for it, thus we need to add the corresponding
-code in  rcar_pcie_hw_init_gen3() and call devm_phy_optional_get() at the
-driver's probing time,  so that the existing R-Car gen3 device trees (not
-having a PHY node) would still work (we only need  to power up the PHY on
-R-Car V3H).
+On Mon, Apr 09, 2018 at 01:21:28PM -0700, Martin Kelly wrote:
+> Document that the inv_mpu6050 driver now supports falling edge, rising
+> edge, level low, and level high interrupt types, rather than just rising
+> edge.
+> 
+> The language used is the same as that in st_lsm6dsx.txt.
+> 
+> Signed-off-by: Martin Kelly <mkelly@xevo.com>
+> ---
+>  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-Changes in version 2:
-- updated the bindings.
-
- Documentation/devicetree/bindings/pci/rcar-pci.txt |    5 +++
- drivers/pci/host/pcie-rcar.c                       |   27 +++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
-
-Index: pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-===================================================================
---- pci.orig/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ pci/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -32,6 +32,11 @@ compatible: "renesas,pcie-r8a7743" for t
- 	and PCIe bus clocks.
- - clock-names: from common clock binding: should be "pcie" and "pcie_bus".
- 
-+Optional properties:
-+- phys: from common PHY binding: PHY phandle and specifier (only make sense
-+	for R-Car gen3 SoCs where the PCIe PHYs have their own register blocks).
-+- phy-names: from common PHY binding: should be "pcie".
-+
- Example:
- 
- SoC-specific DT Entry:
-Index: pci/drivers/pci/host/pcie-rcar.c
-===================================================================
---- pci.orig/drivers/pci/host/pcie-rcar.c
-+++ pci/drivers/pci/host/pcie-rcar.c
-@@ -24,6 +24,7 @@
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-@@ -140,6 +141,7 @@ static inline struct rcar_msi *to_rcar_m
- /* Structure representing the PCIe interface */
- struct rcar_pcie {
- 	struct device		*dev;
-+	struct phy		*phy;
- 	void __iomem		*base;
- 	struct list_head	resources;
- 	int			root_bus_nr;
-@@ -667,6 +669,21 @@ static int rcar_pcie_hw_init_gen2(struct
- 	return rcar_pcie_hw_init(pcie);
- }
- 
-+static int rcar_pcie_hw_init_gen3(struct rcar_pcie *pcie)
-+{
-+	int err;
-+
-+	err = phy_init(pcie->phy);
-+	if (err)
-+		return err;
-+
-+	err = phy_power_on(pcie->phy);
-+	if (err)
-+		return err;
-+
-+	return rcar_pcie_hw_init(pcie);
-+}
-+
- static int rcar_msi_alloc(struct rcar_msi *chip)
- {
- 	int msi;
-@@ -916,6 +933,10 @@ static int rcar_pcie_get_resources(struc
- 	struct resource res;
- 	int err, i;
- 
-+	pcie->phy = devm_phy_optional_get(dev, "pcie");
-+	if (IS_ERR(pcie->phy))
-+		return PTR_ERR(pcie->phy);
-+
- 	err = of_address_to_resource(dev->of_node, 0, &res);
- 	if (err)
- 		return err;
-@@ -1068,8 +1089,10 @@ static const struct of_device_id rcar_pc
- 	  .data = rcar_pcie_hw_init_gen2 },
- 	{ .compatible = "renesas,pcie-rcar-gen2",
- 	  .data = rcar_pcie_hw_init_gen2 },
--	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
--	{ .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
-+	{ .compatible = "renesas,pcie-r8a7795",
-+	  .data = rcar_pcie_hw_init_gen3 },
-+	{ .compatible = "renesas,pcie-rcar-gen3",
-+	  .data = rcar_pcie_hw_init_gen3 },
- 	{},
- };
- 
+Reviewed-by: Rob Herring <robh@kernel.org>
