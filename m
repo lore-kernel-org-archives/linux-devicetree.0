@@ -1,31 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-bindings: display: bridge: Document
- THC63LVD1024 LVDS decoder
-Date: Fri, 13 Apr 2018 16:12:15 -0500
-Message-ID: <20180413211215.mjmn3w2txw236tw6@rob-hp-laptop>
-References: <1523357590-3841-1-git-send-email-jacopo+renesas@jmondi.org>
- <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 1/5] clk: Extract OF clock helpers in <linux/of_clk.h>
+Date: Fri, 13 Apr 2018 16:16:44 -0500
+Message-ID: <20180413211644.wd7lrl4phqtshpzp@rob-hp-laptop>
+References: <1523364701-15383-1-git-send-email-geert+renesas@glider.be>
+ <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523357590-3841-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1523364701-15383-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, vladimir_zapolskiy@mentor.com, horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 12:53:09PM +0200, Jacopo Mondi wrote:
-> Document Thine THC63LVD1024 LVDS decoder device tree bindings.
+On Tue, Apr 10, 2018 at 02:51:37PM +0200, Geert Uytterhoeven wrote:
+> The use of of_clk_get_parent_{count,name}() and of_clk_init() is not
+> limited to clock providers.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Hence move these helpers into their own header file, so callers that are
+> not clock providers no longer have to include <linux/clk-provider.h>.
+> 
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../bindings/display/bridge/thine,thc63lvd1024.txt | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> v2:
+>   - New.
+> 
+> I have't added an SPDX-License-Identifier line, as
+> <linux/clk-provider.h> also doesn't have one yet.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Should that matter?
+
+> 
+> Other candidates to be moved here later?
+>   - of_clk_get(),
+>   - of_clk_get_by_name(),
+>   - of_clk_get_from_provider().
+> ---
+>  include/linux/clk-provider.h | 14 +-------------
+>  include/linux/of_clk.h       | 29 +++++++++++++++++++++++++++++
+
+Please update MAINTAINERS so I am not the maintainer. :)
+
+>  2 files changed, 30 insertions(+), 13 deletions(-)
+>  create mode 100644 include/linux/of_clk.h
