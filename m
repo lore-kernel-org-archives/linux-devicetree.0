@@ -1,73 +1,49 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] usb: dwc3: Add Qualcomm DWC3 glue driver
-Date: Fri, 13 Apr 2018 23:32:04 +0530
-Message-ID: <076ce053-c51d-0a53-507a-faa7481e8dcc@codeaurora.org>
-References: <1523638285-5742-1-git-send-email-mgautam@codeaurora.org>
- <1523638285-5742-3-git-send-email-mgautam@codeaurora.org>
- <20180413173322.GA30306@usblab-sd-06.qualcomm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/8] dt-bindings: mfd: renesas,rzn1-sysctrl: document
+ RZ/N1 sysctrl node
+Date: Fri, 13 Apr 2018 13:05:49 -0500
+Message-ID: <20180413180549.yjzkl2yf7osz7myt@rob-hp-laptop>
+References: <1523349015-37985-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1523349015-37985-4-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180413173322.GA30306@usblab-sd-06.qualcomm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1523349015-37985-4-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jack Pham <jackp@codeaurora.org>
-Cc: balbi@kernel.org, robh@kernel.org, andy.gross@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, buserror+upstream@gmail.com, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jack,
+On Tue, Apr 10, 2018 at 09:30:03AM +0100, Michel Pollet wrote:
+> The Renesas RZ/N1 Family (Part #R9A06G0xx) has a multi-function
+> system controller. This documents the node used to encapsulate
+> it's sub drivers.
+> 
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  .../bindings/mfd/renesas,rzn1-sysctrl.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt b/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+> new file mode 100644
+> index 0000000..9897f8f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/renesas,rzn1-sysctrl.txt
+> @@ -0,0 +1,23 @@
+> +DT bindings for the Renesas RZ/N1 System Controller
+> +
+> +== System Controller Node ==
+> +
+> +The system controller node currently only hosts a single sub-node to handle
+> +the rebooting of the CPU. Eventually it will host the clock driver, SMP
+> +start handler, watchdog etc.
 
+Please submit a complete binding for the h/w block.
 
-On 4/13/2018 11:03 PM, Jack Pham wrote:
-> Hi Manu,
->
-> On Fri, Apr 13, 2018 at 10:21:23PM +0530, Manu Gautam wrote:
->> DWC3 controller on Qualcomm SOCs has a Qscratch wrapper.
->> Some of its uses are described below resulting in need to
->> have a separate glue driver instead of using dwc3-of-simple:
->>  - It exposes register interface to override vbus-override
->>    and lane0-pwr-present signals going to hardware. These
->>    must be updated in peripheral mode for DWC3 if vbus lines
->>    are not connected to hardware block. Otherwise RX termination
->>    in SS mode or DP pull-up is not applied by device controller.
->>  - pwr_events_irq_stat support to check if USB2 PHY is in L2 state
->>    before glue driver proceeds with suspend.
->>  - Support for wakeup interrupts lines that are asserted whenever
->>    there is any wakeup event on USB3 or USB2 bus.
->>  - Support to replace pip3 clock going to DWC3 with utmi clock
->>    for hardware configuration where SSPHY is not used with DWC3.
->>
->> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> <snip>
->
->> +static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
->> +{
->> +	struct device		*dev = qcom->dev;
->> +	struct extcon_dev	*host_edev;
->> +	int			ret;
->> +
->> +	if (!of_property_read_bool(dev->of_node, "extcon"))
->> +		return 0;
->> +
->> +	qcom->edev = extcon_get_edev_by_phandle(dev, 0);
-> Are the extcon phandles bound to the glue node? I don't see the
-> description in the bindings doc in PATCH 1/3. And if so, would it be
-> a duplicate of the child node's extcon binding? Then again, the
-> alternative would be to grab it directly from the child (i.e.
-> qcom->dwc3->dev.of_node) which I'm not sure is ok to do or not.
->
+Again, if the only reason you have sub nodes is to define compatible 
+strings and in turn enumerate drivers, then you don't need the nodes in 
+DT. DT is not the only way to instantiate drivers.
 
-Yes these are bound to glue node. I missed to add it to documentation, will do
-so.
-I kept it separate for couple of reasons - one is to not peek too-much into child
-node. Another reason is that doing so allows to have extcon in "peripheral"
-only mode as well (not just drd mode which is the case with dwc3 core).
-It allows to notify h/w when vbus is not there in device mode which IMO is
-right thing to do.
-
-
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
