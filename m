@@ -1,71 +1,91 @@
-Return-Path: <SRS0=57ul=HH=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/2] clk: renesas: cpg-mssr: Add support for R-Car E3
-Date: Wed, 18 Apr 2018 08:46:35 +0000
-Message-ID: <TY1PR06MB0992839D645B697E5D2DD2C9D8B60@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Return-Path: <SRS0=Uqzc=HC=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <1523439447-1084-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1523439447-1084-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdXViS-HoHWaO55FW3vepMt-KOmo-EpF1C-6N=Kq_WgV1Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdXViS-HoHWaO55FW3vepMt-KOmo-EpF1C-6N=Kq_WgV1Q@mail.gmail.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 13 Apr 2018 12:36:46 +0200
+Message-ID: <CAMuHMdXViS-HoHWaO55FW3vepMt-KOmo-EpF1C-6N=Kq_WgV1Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: Add support for R-Car E3
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gRnJvbTogR2Vl
-cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBGcmlkYXksIEFwcmlsIDEzLCAyMDE4IDc6MzcgUE0NCj4g
-DQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gV2VkLCBBcHIgMTEsIDIwMTggYXQgMTE6Mzcg
-QU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNv
-bT4gd3JvdGU6DQo8c25pcD4NCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiBAQCAt
-MjYsNiArMjYsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOg0KPiA+ICAgICAgICAtICJyZW5lc2Fz
-LHI4YTc3OTY1LWNwZy1tc3NyIiBmb3IgdGhlIHI4YTc3OTY1IFNvQyAoUi1DYXIgTTMtTikNCj4g
-PiAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk3MC1jcGctbXNzciIgZm9yIHRoZSByOGE3Nzk3MCBT
-b0MgKFItQ2FyIFYzTSkNCj4gPiAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk4MC1jcGctbXNzciIg
-Zm9yIHRoZSByOGE3Nzk4MCBTb0MgKFItQ2FyIFYzSCkNCj4gPiArICAgICAgLSAicmVuZXNhcyxy
-OGE3Nzk5MC1jcGctbXNzciIgZm9yIHRoZSByOGE3Nzk5NSBTb0MgKFItQ2FyIEUzKQ0KPiANCj4g
-cjhhNzc5OTAgU29DDQoNCk9vcHMhIEkgd2lsbCBmaXggdGhpcyBpbiB2Mi4NCg0KPiA+ICAgICAg
-ICAtICJyZW5lc2FzLHI4YTc3OTk1LWNwZy1tc3NyIiBmb3IgdGhlIHI4YTc3OTk1IFNvQyAoUi1D
-YXIgRDMpDQo+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9yZW5l
-c2FzL3I4YTc3OTkwLWNwZy1tc3NyLmMNCj4gPiBAQCAtMCwwICsxLDI5MSBAQA0KPiANCj4gPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBjcGdfY29yZV9jbGsgcjhhNzc5OTBfY29yZV9jbGtzW10gX19p
-bml0Y29uc3QgPSB7DQo+IA0KPiA+ICsgICAgICAgLyogQ29yZSBDbG9jayBPdXRwdXRzICovDQo+
-IA0KPiA+ICsgICAgICAgREVGX0dFTjNfUEUoInMwZDZjIiwgICBSOEE3Nzk5MF9DTEtfUzBENkMs
-IENMS19TMCwgNiwgQ0xLX1BFLCA2KSwNCj4gDQo+IC4uLiBDTEtfUEUsIDIpLA0KDQpJIHdpbGwg
-Zml4IHRoaXMuDQoNCj4gPiArICAgICAgIERFRl9HRU4zX1BFKCJzM2QxYyIsICAgUjhBNzc5OTBf
-Q0xLX1MzRDFDLCBDTEtfUzMsIDEsIENMS19QRSwgMSksDQo+ID4gKyAgICAgICBERUZfR0VOM19Q
-RSgiczNkMmMiLCAgIFI4QTc3OTkwX0NMS19TM0QyQywgQ0xLX1MzLCAyLCBDTEtfUEUsIDIpLA0K
-PiA+ICsgICAgICAgREVGX0dFTjNfUEUoInMzZDRjIiwgICBSOEE3Nzk5MF9DTEtfUzNENEMsIENM
-S19TMywgNCwgQ0xLX1BFLCA0KSwNCj4gPiArDQo+ID4gKyAgICAgICBERUZfRElWNlAxKCJjYW5m
-ZCIsICAgIFI4QTc3OTkwX0NMS19DQU5GRCwgQ0xLX1BMTDBENiwgMHgyNDQpLA0KPiANCj4gSSBj
-YW5ub3QgY29uZmlybSB0aGUgcGFyZW50LCBhcyBTZWN0aW9uIDguMi4xOCAoIkNBTi1GRCBDbG9j
-ayBGcmVxdWVuY3kNCj4gQ29udHJvbCBSZWdpc3RlciAoQ0FORkRDS0NSKSIpIGRvZXMgbm90IHNw
-ZWNpZnkgdGhlIHNvdXJjZSBjbG9jayBmcmVxdWVuY3kNCj4gZm9yIFItQ2FyIEUzICh1bmxpa2Ug
-Zm9yIEQzKS4gQnV0IDgwMCBNSHogc291bmRzIHNhbmUuDQoNCkFjY29yZGluZyB0byB0aGUgRmln
-dXJlIDguMWcsIFBMTDAgd2l0aCAxLzIgLS0gMS8zIC0tIENBTkZEIGNsb2NrLg0KU28sIHRoZSBw
-YXJlbnQgY2xvY2sgaXMgUExMMEQ2IChQTEwwIHdpdGggRElWIDYpLg0KDQo+ID4gKyAgICAgICBE
-RUZfRElWNlAxKCJjc2kwIiwgICAgIFI4QTc3OTkwX0NMS19DU0kwLCAgQ0xLX1BMTDFEMiwgMHgw
-MGMpLA0KPiANCj4gSSBjYW5ub3QgY29uZmlybSB0aGUgcGFyZW50IGNsb2NrLCBhcyBDU0kwIGlz
-IG5vdCBkb2N1bWVudGVkLg0KPiBCdXQgZ2l2ZW4gUExMMSBydW5zIGF0IDEuNiBHSHosIFBMTDEv
-MiBpcyBjb25zaXN0ZW50IHdpdGggUExMMS80IG9uIG90aGVyDQo+IFItQ2FyIEdlbjMgU29DcyB3
-aXRoIGEgZmFzdGVyIFBMTDEgKDMuMiBHSHopLg0KDQpJIGhlYXJkIHRoZSBDU0kwIHdpbGwgYmUg
-ZG9jdW1lbnRlZCBpbiB0aGUgZnV0dXJlLg0KDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXNz
-cl9tb2RfY2xrIHI4YTc3OTkwX21vZF9jbGtzW10gX19pbml0Y29uc3QgPSB7DQo+IA0KPiA+ICsg
-ICAgICAgREVGX01PRCgidmluNyIsICAgICAgICAgICAgICAgICAgODA0LCAgIFI4QTc3OTkwX0NM
-S19TMUQyKSwNCj4gPiArICAgICAgIERFRl9NT0QoInZpbjYiLCAgICAgICAgICAgICAgICAgIDgw
-NSwgICBSOEE3Nzk5MF9DTEtfUzFEMiksDQo+IA0KPiBWaW42LzcgaGF2ZSBiZWVuIHJlbW92ZWQg
-aW4gdGhlIEZlYi4gZXJyYXRhLg0KDQpPb3BzLCBJIHdpbGwgcmVtb3ZlIHRoZW0gaW4gdjIgcGF0
-Y2guDQoNCj4gV2l0aCB0aGUgYWJvdmUgZml4ZWQvY29uZmlybWVkOg0KPiBSZXZpZXdlZC1ieTog
-R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmtzIQ0K
-DQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGplLGVldGluZ31z
-LA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0
-IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
-cnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0
-ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20g
-dGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhp
-bmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVz
-IFRvcnZhbGRzDQo=
+Hi Shimoda-san,
+
+On Wed, Apr 11, 2018 at 11:37 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Initial support for R-Car E3 (r8a77990), including core and module
+> clocks.
+>
+> Based on the Table 8.2g of "R-Car Series, 3rd Generation User's Manual:
+> Hardware ((Rev. 0.80, Oct 31, 2017) with Manual Errata on Feb. 28, 2018".
+>
+> Inspried by patches by Takeshi Kihara in the BSP.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> @@ -26,6 +26,7 @@ Required Properties:
+>        - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
+>        - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
+>        - "renesas,r8a77980-cpg-mssr" for the r8a77980 SoC (R-Car V3H)
+> +      - "renesas,r8a77990-cpg-mssr" for the r8a77995 SoC (R-Car E3)
+
+r8a77990 SoC
+
+>        - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+> @@ -0,0 +1,291 @@
+
+> +static const struct cpg_core_clk r8a77990_core_clks[] __initconst = {
+
+> +       /* Core Clock Outputs */
+
+> +       DEF_GEN3_PE("s0d6c",   R8A77990_CLK_S0D6C, CLK_S0, 6, CLK_PE, 6),
+
+... CLK_PE, 2),
+
+> +       DEF_GEN3_PE("s3d1c",   R8A77990_CLK_S3D1C, CLK_S3, 1, CLK_PE, 1),
+> +       DEF_GEN3_PE("s3d2c",   R8A77990_CLK_S3D2C, CLK_S3, 2, CLK_PE, 2),
+> +       DEF_GEN3_PE("s3d4c",   R8A77990_CLK_S3D4C, CLK_S3, 4, CLK_PE, 4),
+> +
+> +       DEF_DIV6P1("canfd",    R8A77990_CLK_CANFD, CLK_PLL0D6, 0x244),
+
+I cannot confirm the parent, as Section 8.2.18 ("CAN-FD Clock Frequency
+Control Register (CANFDCKCR)") does not specify the source clock frequency
+for R-Car E3 (unlike for D3). But 800 MHz sounds sane.
+
+> +       DEF_DIV6P1("csi0",     R8A77990_CLK_CSI0,  CLK_PLL1D2, 0x00c),
+
+I cannot confirm the parent clock, as CSI0 is not documented.
+But given PLL1 runs at 1.6 GHz, PLL1/2 is consistent with PLL1/4 on other
+R-Car Gen3 SoCs with a faster PLL1 (3.2 GHz).
+
+> +static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
+
+> +       DEF_MOD("vin7",                  804,   R8A77990_CLK_S1D2),
+> +       DEF_MOD("vin6",                  805,   R8A77990_CLK_S1D2),
+
+Vin6/7 have been removed in the Feb. errata.
+
+With the above fixed/confirmed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
