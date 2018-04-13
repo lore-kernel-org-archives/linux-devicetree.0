@@ -1,66 +1,88 @@
-From: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
-Subject: [PATCH v2 11/14] staging: iio: ad7746: Add devicetree bindings documentation
-Date: Fri, 13 Apr 2018 13:36:48 -0300
-Message-ID: <1523637411-8531-12-git-send-email-hernan@vanguardiasur.com.ar>
-References: <1523637411-8531-1-git-send-email-hernan@vanguardiasur.com.ar>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v3] gpio: dwapb: Add support for 1 interrupt per port A
+ GPIO
+Date: Fri, 13 Apr 2018 16:47:30 +0000
+Message-ID: <TY1PR01MB1769DB39F986BEADEF61F8C9F5B30@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1523609472-4481-1-git-send-email-phil.edworthy@renesas.com>
+ <CAFHUOYziPaZC-Zcb7rXqC9p24H+CU4wK4NQShQkYLgH7c5mVwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523637411-8531-1-git-send-email-hernan@vanguardiasur.com.ar>
+In-Reply-To: <CAFHUOYziPaZC-Zcb7rXqC9p24H+CU4wK4NQShQkYLgH7c5mVwA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Hernán Gonzalez <hernan@vanguardiasur.com.ar>
----
- .../devicetree/bindings/staging/iio/cdc/ad7746.txt | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
-
-diff --git a/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
-new file mode 100644
-index 0000000..7740f05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
-@@ -0,0 +1,34 @@
-+Analog Devices AD7746/5/7 capacitive sensor driver
-+
-+Required properties:
-+	- compatible: Should be one of
-+		* "adi,ad7745"
-+		* "adi,ad7746"
-+	  * "adi,ad7747"
-+	- reg: The 7-bits long I2c address of the device
-+
-+Optional properties:
-+	- adi,exclvl: This property defines the excitation voltage level for the
-+    capacitance to be measured. Possible values are:
-+      * 0 = +-VDD/8
-+      * 1 = +-VDD/4
-+      * 2 = +-VDD * 3/8
-+      * 3 = +-VDD/2 (Default)
-+	- adi,nexca_en: Invert excitation output A.
-+	- adi,nexcb_en:	Invert excitation output B.
-+
-+Example:
-+Here exclvl would be 1 (VDD/4), Excitation pin A would be inverted and
-+Excitation pin B would NOT be inverted.
-+
-+i2c2 {
-+
-+      < . . . >
-+
-+      ad7746: ad7746@60 {
-+              compatible = "ad7746";
-+              reg = <0x60>;
-+              adi,exclvl = <1>;
-+              adi,nexca_en;
-+      };
-+};
--- 
-2.7.4
+SGkgSG9hbiwNCg0KT24gMTMgQXByaWwgMjAxOCAxNzozNyBIb2FuIFRyYW4gd3JvdGU6DQo+IE9u
+IEZyaSwgQXByIDEzLCAyMDE4IGF0IDE6NTEgQU0sIFBoaWwgRWR3b3J0aHkgd3JvdGU6DQo+ID4g
+VGhlIERlc2lnbldhcmUgR1BJTyBJUCBjYW4gYmUgY29uZmlndXJlZCBmb3IgZWl0aGVyIDEgaW50
+ZXJydXB0IG9yIDENCj4gPiBwZXIgR1BJTyBpbiBwb3J0IEEsIGJ1dCB0aGUgZHJpdmVyIGN1cnJl
+bnRseSBvbmx5IHN1cHBvcnRzIDEgaW50ZXJydXB0Lg0KPiA+IFNlZSB0aGUgRGVzaWduV2FyZSBE
+V19hcGJfZ3BpbyBEYXRhYm9vayBkZXNjcmlwdGlvbiBvZiB0aGUNCj4gPiAnR1BJT19JTlRSX0lP
+JyBwYXJhbWV0ZXIuDQo+ID4NCj4gPiBUaGlzIGNoYW5nZSBhbGxvd3MgdGhlIGRyaXZlciB0byB3
+b3JrIHdpdGggdXAgdG8gMzIgaW50ZXJydXB0cywgaXQNCj4gPiB3aWxsIGdldCBhcyBtYW55IGlu
+dGVycnVwdHMgYXMgc3BlY2lmaWVkIGluIHRoZSBEVCAnaW50ZXJydXB0cycgcHJvcGVydHkuDQo+
+ID4gSXQgZG9lc24ndCBkbyBhbnl0aGluZyBjbGV2ZXIgd2l0aCB0aGUgZGlmZmVyZW50IGludGVy
+cnVwdHMsIGl0IGp1c3QNCj4gPiBjYWxscyB0aGUgc2FtZSBoYW5kbGVyIHVzZWQgZm9yIHNpbmds
+ZSBpbnRlcnJ1cHQgaGFyZHdhcmUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsIEVkd29y
+dGh5IDxwaGlsLmVkd29ydGh5QHJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+IE9uZSBwb2ludCB0
+byBtZW50aW9uIGlzIHRoYXQgSSBoYXZlIG1hZGUgaXQgcG9zc2libGUgZm9yIHVzZXJzIHRvIGhh
+dmUNCj4gPiB1bmNvbm5jdGVkIGludGVycnVwdHMgYnkgc3BlY2lmeWluZyBob2xlcyBpbiB0aGUg
+bGlzdCBvZiBpbnRlcnJ1cHRzLg0KPiA+IFRoaXMgaXMgZG9uZSBieSBzdXBwb3J0aW5nIHRoZSBp
+bnRlcnJ1cHRzLWV4dGVuZGVkIERUIHByb3AuDQo+ID4gSG93ZXZlciwgSSBoYXZlIG5vIHVzZSBm
+b3IgdGhpcyBhbmQgaGFkIHRvIGhhY2sgc29tZSB0ZXN0IGNhc2UgZm9yIHRoaXMuDQo+ID4gUGVy
+aGFwcyB0aGUgZHJpdmVyIHNob3VsZCBzdXBwb3J0IDEgaW50ZXJydXB0IG9yIGFsbCBHUElPYSBh
+cyBpbnRlcnJ1cHRzPw0KPiA+DQo+ID4gdjM6DQo+ID4gIC0gUm9sbGVkIG1mZDogaW50ZWxfcXVh
+cmtfaTJjX2dwaW8gZml4IGludG8gdGhpcyBwYXRjaCB0byBhdm9pZA0KPiA+IGJpc2VjdCBwcm9i
+bGVtcw0KPiA+IHYyOg0KPiA+ICAtIFJlcGxhY2VkIGludGVycnVwdC1tYXNrIERUIHByb3Agd2l0
+aCBzdXBwb3J0IGZvciB0aGUgaW50ZXJydXB0cy0NCj4gZXh0ZW5kZWQNCj4gPiAgICBwcm9wLiBU
+aGlzIG1lYW5zIHJlcGxhY2luZyB0aGUgY2FsbCB0byBpcnFfb2ZfcGFyc2VfYW5kX21hcCgpIHdp
+dGggY2FsbHMNCj4gPiAgICB0byBvZl9pcnFfcGFyc2Vfb25lKCkgYW5kIGlycV9jcmVhdGVfb2Zf
+bWFwcGluZygpLg0KPiA+DQo+ID4gTm90ZTogVGhlcmUgYXJlIGEgZmV3ICpjb2RlKiBsaW5lcyBv
+dmVyIDgwIGNoYXJzLCBidXQgdGhpcyBpcyBqdXN0IGd1aWRhbmNlLA0KPiA+ICAgIHJpZ2h0PyBF
+c3BlY2lhbGx5IGFzIHRoZXJlIGFyZSBhbHJlYWR5IHNvbWUgbGluZXMgb3ZlciA4MCBjaGFycy4N
+Cj4gPiAtLS0NCltzbmlwXQ0KDQo+ID4gLSAgICAgICAgICAgICAgIGlmIChoYXNfYWNwaV9jb21w
+YW5pb24oZGV2KSAmJiBwcC0+aWR4ID09IDApDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+cHAtPmlycSA9IHBsYXRmb3JtX2dldF9pcnEodG9fcGxhdGZvcm1fZGV2aWNlKGRldiksIDApOw0K
+PiA+ICsgICAgICAgICAgICAgICBpZiAoaGFzX2FjcGlfY29tcGFuaW9uKGRldikgJiYgcHAtPmlk
+eCA9PSAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHAtPmlycVswXSA9IHBsYXRm
+b3JtX2dldF9pcnEodG9fcGxhdGZvcm1fZGV2aWNlKGRldiksIDApOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGlmIChwcC0+aXJxWzBdKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcHAtPmhhc19pcnEgPSB0cnVlOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+IA0K
+PiBJdCBkb2Vzbid0IHdvcmsgZm9yIEFDUEkuIENvdWxkIHlvdSBkbyB0aGUgc2FtZSBsb2dpYyBm
+b3IgQUNQST8NCkkgZG9u4oCZdCBoYXZlIGFjY2VzcyB0byBhbnkgZGV2aWNlIHRoYXQgd2FzIGJh
+a2VkIChpLmUuIGZhYmJlZCkgd2l0aCBtdWx0aXBsZQ0Kb3V0cHV0IGludGVycnVwdHMgZnJvbSB0
+aGUgU3lub3BzeXMgR1BJTyBibG9ja3MgYW5kIHVzZSBBQ1BJLiBJIGRvbid0DQprbm93IGlmIGFu
+eSBzdWNoIGRldmljZSBleGlzdHMuDQoNCkkgd291bGQgcHJlZmVyIG5vdCB3cml0aW5nIGNvZGUg
+dGhhdCBjYW4gYmUgdGVzdGVkIGVhc2lseS4gSSBjYW5ub3QgZXZlbg0KdGVzdCB0aGUgY3VycmVu
+dCwgYWxiZWl0IHNtYWxsLCBjaGFuZ2VzIHRvIHRoZSBJbnRlbCBRdWFyayBNRkQuDQoNClJlZ2Fy
+ZHMNClBoaWwNCg0KPiBUaGFua3MNCj4gSG9hbg0KPiANCj4gPg0KPiA+ICAgICAgICAgICAgICAg
+ICBwcC0+aXJxX3NoYXJlZCAgPSBmYWxzZTsNCj4gPiAgICAgICAgICAgICAgICAgcHAtPmdwaW9f
+YmFzZSAgID0gLTE7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL2ludGVsX3F1YXJrX2ky
+Y19ncGlvLmMNCj4gPiBiL2RyaXZlcnMvbWZkL2ludGVsX3F1YXJrX2kyY19ncGlvLmMNCj4gPiBp
+bmRleCA5MGUzNWRlLi41YmRkYjg0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL2ludGVs
+X3F1YXJrX2kyY19ncGlvLmMNCj4gPiArKysgYi9kcml2ZXJzL21mZC9pbnRlbF9xdWFya19pMmNf
+Z3Bpby5jDQo+ID4gQEAgLTIzMyw3ICsyMzMsOCBAQCBzdGF0aWMgaW50IGludGVsX3F1YXJrX2dw
+aW9fc2V0dXAoc3RydWN0IHBjaV9kZXYNCj4gKnBkZXYsIHN0cnVjdCBtZmRfY2VsbCAqY2VsbCkN
+Cj4gPiAgICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5pZHggICAgICAgICAgPSAwOw0KPiA+ICAg
+ICAgICAgcGRhdGEtPnByb3BlcnRpZXMtPm5ncGlvICAgICAgICA9IElOVEVMX1FVQVJLX01GRF9O
+R1BJTzsNCj4gPiAgICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5ncGlvX2Jhc2UgICAgPSBJTlRF
+TF9RVUFSS19NRkRfR1BJT19CQVNFOw0KPiA+IC0gICAgICAgcGRhdGEtPnByb3BlcnRpZXMtPmly
+cSAgICAgICAgICA9IHBkZXYtPmlycTsNCj4gPiArICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5p
+cnFbMF0gICAgICAgPSBwZGV2LT5pcnE7DQo+ID4gKyAgICAgICBwZGF0YS0+cHJvcGVydGllcy0+
+aGFzX2lycSAgICAgID0gdHJ1ZTsNCj4gPiAgICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5pcnFf
+c2hhcmVkICAgPSB0cnVlOw0KPiA+DQo+ID4gICAgICAgICBjZWxsLT5wbGF0Zm9ybV9kYXRhID0g
+cGRhdGE7DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9ncGlv
+LWR3YXBiLmgNCj4gPiBiL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9ncGlvLWR3YXBiLmgN
+Cj4gPiBpbmRleCAyZGM3ZjRhLi41YTUyZDY5IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGlu
+dXgvcGxhdGZvcm1fZGF0YS9ncGlvLWR3YXBiLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3Bs
+YXRmb3JtX2RhdGEvZ3Bpby1kd2FwYi5oDQo+ID4gQEAgLTE5LDcgKzE5LDggQEAgc3RydWN0IGR3
+YXBiX3BvcnRfcHJvcGVydHkgew0KPiA+ICAgICAgICAgdW5zaWduZWQgaW50ICAgIGlkeDsNCj4g
+PiAgICAgICAgIHVuc2lnbmVkIGludCAgICBuZ3BpbzsNCj4gPiAgICAgICAgIHVuc2lnbmVkIGlu
+dCAgICBncGlvX2Jhc2U7DQo+ID4gLSAgICAgICB1bnNpZ25lZCBpbnQgICAgaXJxOw0KPiA+ICsg
+ICAgICAgdW5zaWduZWQgaW50ICAgIGlycVszMl07DQo+ID4gKyAgICAgICBib29sICAgICAgICAg
+ICAgaGFzX2lycTsNCj4gPiAgICAgICAgIGJvb2wgICAgICAgICAgICBpcnFfc2hhcmVkOw0KPiA+
+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo=
