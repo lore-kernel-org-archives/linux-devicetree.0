@@ -1,78 +1,641 @@
-Return-Path: <SRS0=YK6f=HG=bootlin.com=maxime.ripard@kernel.org>
-Date: Tue, 17 Apr 2018 15:10:24 +0200
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=OOdH=HC=retiisi.org.uk=sakari.ailus@kernel.org>
+Date: Fri, 13 Apr 2018 15:14:37 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [PATCH v8 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Message-ID: <20180417131024.kc6smxh4mbd44nst@flea>
+Message-ID: <20180413121437.slsv2ef2j5k2aihw@valkosipuli.retiisi.org.uk>
 References: <20180404122025.8726-1-maxime.ripard@bootlin.com>
  <20180404122025.8726-3-maxime.ripard@bootlin.com>
- <20180413121437.slsv2ef2j5k2aihw@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fpsima7u2besgle5"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20180413121437.slsv2ef2j5k2aihw@valkosipuli.retiisi.org.uk>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180404122025.8726-3-maxime.ripard@bootlin.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Maxime,
 
---fpsima7u2besgle5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 04, 2018 at 02:20:25PM +0200, Maxime Ripard wrote:
+> The Cadence MIPI-CSI2 TX controller is an hardware block meant to be used
+> as a bridge between pixel interfaces and a CSI-2 bus.
+> 
+> It supports operating with an internal or external D-PHY, with up to 4
+> lanes, or without any D-PHY. The current code only supports the latter
+> case.
+> 
+> While the virtual channel input on the pixel interface can be directly
+> mapped to CSI2, the datatype input is actually a selection signal (3-bits)
+> mapping to a table of up to 8 preconfigured datatypes/formats (programmed
+> at start-up)
+> 
+> The block supports up to 8 input datatypes.
+> 
+> Reviewed-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  drivers/media/platform/cadence/Kconfig       |  11 +
+>  drivers/media/platform/cadence/Makefile      |   1 +
+>  drivers/media/platform/cadence/cdns-csi2tx.c | 529 +++++++++++++++++++++++++++
+>  3 files changed, 541 insertions(+)
+>  create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+> 
+> diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
+> index 70c95d79c8f7..3bf0f2454384 100644
+> --- a/drivers/media/platform/cadence/Kconfig
+> +++ b/drivers/media/platform/cadence/Kconfig
+> @@ -20,4 +20,15 @@ config VIDEO_CADENCE_CSI2RX
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called cdns-csi2rx.
+>  
+> +config VIDEO_CADENCE_CSI2TX
+> +	tristate "Cadence MIPI-CSI2 TX Controller"
+> +	depends on MEDIA_CONTROLLER
+> +	depends on VIDEO_V4L2_SUBDEV_API
+> +	select V4L2_FWNODE
+> +	help
+> +	  Support for the Cadence MIPI CSI2 Transceiver controller.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called cdns-csi2tx.
+> +
+>  endif
+> diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
+> index 99a4086b7448..7fe992273162 100644
+> --- a/drivers/media/platform/cadence/Makefile
+> +++ b/drivers/media/platform/cadence/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
+> +obj-$(CONFIG_VIDEO_CADENCE_CSI2TX)	+= cdns-csi2tx.o
+> diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
+> new file mode 100644
+> index 000000000000..4495044e9f99
+> --- /dev/null
+> +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
+> @@ -0,0 +1,529 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Driver for Cadence MIPI-CSI2 TX Controller
+> + *
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
 
-Hi Sakari,
+Maybe 2017--2018?
 
-On Fri, Apr 13, 2018 at 03:14:37PM +0300, Sakari Ailus wrote:
-> > +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
-> > +				 struct v4l2_subdev_pad_config *cfg,
-> > +				 struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct csi2tx_priv *csi2tx =3D v4l2_subdev_to_csi2tx(subdev);
-> > +
-> > +	if (fmt->pad >=3D CSI2TX_PAD_MAX)
-> > +		return -EINVAL;
-> > +
-> > +	csi2tx->pad_fmts[fmt->pad] =3D fmt->format;
->=20
-> Have I asked previously if there are any limitations with this?
->=20
-> The CSI-2 TX link has multiple formats so I wouldn't support formats on
-> that pad in order to be compatible with the planned VC/data type support
-> patchset. Or do you see issues with that?
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define CSI2TX_DEVICE_CONFIG_REG	0x00
+> +
+> +#define CSI2TX_CONFIG_REG		0x20
+> +#define CSI2TX_CONFIG_CFG_REQ			BIT(2)
+> +#define CSI2TX_CONFIG_SRST_REQ			BIT(1)
+> +
+> +#define CSI2TX_DPHY_CFG_REG		0x28
+> +#define CSI2TX_DPHY_CFG_CLK_RESET		BIT(16)
+> +#define CSI2TX_DPHY_CFG_LANE_RESET(n)		BIT((n) + 12)
+> +#define CSI2TX_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
+> +#define CSI2TX_DPHY_CFG_MODE_LPDT		(2 << 8)
+> +#define CSI2TX_DPHY_CFG_MODE_HS			(1 << 8)
+> +#define CSI2TX_DPHY_CFG_MODE_ULPS		(0 << 8)
+> +#define CSI2TX_DPHY_CFG_CLK_ENABLE		BIT(4)
+> +#define CSI2TX_DPHY_CFG_LANE_ENABLE(n)		BIT(n)
+> +
+> +#define CSI2TX_DPHY_CLK_WAKEUP_REG	0x2c
+> +#define CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(n)	((n) & 0xffff)
+> +
+> +#define CSI2TX_DT_CFG_REG(n)		(0x80 + (n) * 8)
+> +#define CSI2TX_DT_CFG_DT(n)			(((n) & 0x3f) << 2)
+> +
+> +#define CSI2TX_DT_FORMAT_REG(n)		(0x84 + (n) * 8)
+> +#define CSI2TX_DT_FORMAT_BYTES_PER_LINE(n)	(((n) & 0xffff) << 16)
+> +#define CSI2TX_DT_FORMAT_MAX_LINE_NUM(n)	((n) & 0xffff)
+> +
+> +#define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
+> +#define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
+> +
+> +#define CSI2TX_LANES_MAX	4
+> +#define CSI2TX_STREAMS_MAX	4
+> +
+> +enum csi2tx_pads {
+> +	CSI2TX_PAD_SOURCE,
+> +	CSI2TX_PAD_SINK_STREAM0,
+> +	CSI2TX_PAD_SINK_STREAM1,
+> +	CSI2TX_PAD_SINK_STREAM2,
+> +	CSI2TX_PAD_SINK_STREAM3,
+> +	CSI2TX_PAD_MAX,
+> +};
+> +
+> +struct csi2tx_fmt {
+> +	u32	mbus;
+> +	u32	dt;
+> +	u32	bpp;
+> +};
+> +
+> +struct csi2tx_priv {
+> +	struct device			*dev;
+> +	unsigned int			count;
+> +
+> +	/*
+> +	 * Used to prevent race conditions between multiple,
+> +	 * concurrent calls to start and stop.
+> +	 */
+> +	struct mutex			lock;
+> +
+> +	void __iomem			*base;
+> +
+> +	struct clk			*esc_clk;
+> +	struct clk			*p_clk;
+> +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
+> +
+> +	struct v4l2_subdev		subdev;
+> +	struct media_pad		pads[CSI2TX_PAD_MAX];
+> +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
+> +
+> +	bool				has_internal_dphy;
+> +	u8				lanes[CSI2TX_LANES_MAX];
+> +	unsigned int			num_lanes;
+> +	unsigned int			max_lanes;
+> +	unsigned int			max_streams;
+> +};
+> +
+> +static const struct csi2tx_fmt csi2tx_formats[] = {
+> +	{
+> +		.mbus	= MEDIA_BUS_FMT_UYVY8_1X16,
+> +		.bpp	= 2,
+> +		.dt	= 0x1e,
+> +	},
+> +	{
+> +		.mbus	= MEDIA_BUS_FMT_RGB888_1X24,
+> +		.bpp	= 3,
+> +		.dt	= 0x24,
+> +	},
+> +};
+> +
+> +static const struct v4l2_mbus_framefmt fmt_default = {
+> +	.width		= 1280,
+> +	.height		= 720,
+> +	.code		= MEDIA_BUS_FMT_RGB888_1X24,
+> +	.field		= V4L2_FIELD_NONE,
+> +	.colorspace	= V4L2_COLORSPACE_DEFAULT,
+> +};
+> +
+> +static inline
+> +struct csi2tx_priv *v4l2_subdev_to_csi2tx(struct v4l2_subdev *subdev)
+> +{
+> +	return container_of(subdev, struct csi2tx_priv, subdev);
+> +}
+> +
+> +static const struct csi2tx_fmt *csi2tx_get_fmt_from_mbus(struct v4l2_mbus_framefmt *mfmt)
 
-It's not just about the CSI-2 link, but more about the input pads as
-well, that can be configured (and we need to know the format in order
-to configure the IP properly).
+Over 80 characters, please wrap.
 
-Maybe we can simply prevent the format change on the CSI-2 pad, but
-not the others?
+You could use just the mbus code as the argument if that's all you need.
 
-Maxime
+> +{
+> +	unsigned int i;
+> +
+> +	if (!mfmt)
+> +		return NULL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(csi2tx_formats); i++)
+> +		if (csi2tx_formats[i].mbus == mfmt->code)
+> +			return &csi2tx_formats[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static int csi2tx_enum_mbus_code(struct v4l2_subdev *subdev,
+> +				 struct v4l2_subdev_pad_config *cfg,
+> +				 struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	if (code->pad || code->index >= ARRAY_SIZE(csi2tx_formats))
+> +		return -EINVAL;
+> +
+> +	code->code = csi2tx_formats[code->index].mbus;
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_get_pad_format(struct v4l2_subdev *subdev,
+> +				 struct v4l2_subdev_pad_config *cfg,
+> +				 struct v4l2_subdev_format *fmt)
+> +{
+> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
+> +
+> +	if (fmt->pad >= CSI2TX_PAD_MAX)
+> +		return -EINVAL;
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The V4L2 subdev IOCTL handlers do check the pad numbers, you can remove
+them here (and below).
 
---fpsima7u2besgle5
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +	fmt->format = csi2tx->pad_fmts[fmt->pad];
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
+> +				 struct v4l2_subdev_pad_config *cfg,
+> +				 struct v4l2_subdev_format *fmt)
+> +{
+> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
+> +
+> +	if (fmt->pad >= CSI2TX_PAD_MAX)
+> +		return -EINVAL;
+> +
+> +	csi2tx->pad_fmts[fmt->pad] = fmt->format;
 
------BEGIN PGP SIGNATURE-----
+Have I asked previously if there are any limitations with this?
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlrV8j8ACgkQ0rTAlCFN
-r3TARA/+K32TEb7Ja/DpbaWx2/aVUlR/S4Zm21SGE/K81JriCEle8sBwZ6kpAxqj
-3KkiyjxnfPeHUErZ6pkF7QcOoZ2Ci/auMrZ5ty31QXqDYwIWUz12yN9vZQ6+QByT
-0ntZYHMpATINqb8Ot/vCFE2aImN6p0pIWBYHkgzJvdcPnCo8XTETw4i8CmZ8ByC+
-saYzTpRLiNCum0Yyqe1w1MZXj1klNNE4Nq9gR/0lBk4g+bPlbGx1+qgpGyqWNDQL
-2kSF72yAQzJVqxPTj0vDG/LRjOTEre5gzRNJAYR2+LIG1bKkeUUljxlYZxKQjKT3
-2HPLCC5azBPe0RXaKneN7r1Wcm88iQdFmRHOlCLKOdJJ5rigrIQlnMQAkOvnYGFI
-nWqPA+Oic2KvQn3oJU6coeoAYKEXwk3LJF/SIXmGqC50GxUB2PNGe+LOM36xsV5a
-FE2R54WsFwG5DrYKeY55k3WI5No3EB50GZ/k6dV7Bpa43QS8MIYdsbQYUqbpzEHf
-ru0VfdJT5vGN2M6azjAN51SBP1R4M8jIcibTYK9DUKOuRjFi9RoHA+JsZxrjUk93
-/OoKOo4/x882zktRpcqpjmGez5LbmYrPBPkz/eIL3zhP3l1T8WqtQVQrcE0uaTD7
-pLW/boyjEbsOjRigfkJus8vt+U14zf5q08+Xb0wnm2vfM5WK0do=
-=C2WO
------END PGP SIGNATURE-----
+The CSI-2 TX link has multiple formats so I wouldn't support formats on
+that pad in order to be compatible with the planned VC/data type support
+patchset. Or do you see issues with that?
 
---fpsima7u2besgle5--
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
+> +	.enum_mbus_code	= csi2tx_enum_mbus_code,
+> +	.get_fmt	= csi2tx_get_pad_format,
+> +	.set_fmt	= csi2tx_set_pad_format,
+> +};
+> +
+> +static void csi2tx_reset(struct csi2tx_priv *csi2tx)
+> +{
+> +	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
+> +
+> +	udelay(10);
+> +}
+> +
+> +static int csi2tx_start(struct csi2tx_priv *csi2tx)
+> +{
+> +	struct media_entity *entity = &csi2tx->subdev.entity;
+> +	struct media_link *link;
+> +	unsigned int i;
+> +	u32 reg;
+> +
+> +	csi2tx_reset(csi2tx);
+> +
+> +	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/* Configure our PPI interface with the D-PHY */
+> +	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
+> +	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
+> +
+> +	/* Put our lanes (clock and data) out of reset */
+> +	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
+> +	for (i = 0; i < csi2tx->num_lanes; i++)
+> +		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i]);
+> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/* Enable our (clock and data) lanes */
+> +	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
+> +	for (i = 0; i < csi2tx->num_lanes; i++)
+> +		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i]);
+> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/* Switch to HS mode */
+> +	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
+> +	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
+> +	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/*
+> +	 * Create a static mapping between the CSI virtual channels
+> +	 * and the input streams.
+> +	 *
+> +	 * This should be enhanced, but v4l2 lacks the support for
+> +	 * changing that mapping dynamically at the moment.
+> +	 *
+> +	 * We're protected from the userspace setting up links at the
+> +	 * same time by the upper layer having called
+> +	 * media_pipeline_start().
+> +	 */
+> +	list_for_each_entry(link, &entity->links, list) {
+> +		struct v4l2_mbus_framefmt *mfmt;
+> +		const struct csi2tx_fmt *fmt;
+> +		unsigned int stream;
+> +		int pad_idx = -1;
+> +
+> +		/* Only consider our enabled input pads */
+> +		for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++) {
+> +			struct media_pad *pad = &csi2tx->pads[i];
+> +
+> +			if ((pad == link->sink) &&
+> +			    (link->flags & MEDIA_LNK_FL_ENABLED)) {
+> +				pad_idx = i;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (pad_idx < 0)
+> +			continue;
+> +
+> +		mfmt = &csi2tx->pad_fmts[pad_idx];
+> +		fmt = csitx_get_fmt_from_mbus(mfmt);
+> +		if (!fmt)
+> +			continue;
+> +
+> +		stream = pad_idx - CSI2TX_PAD_SINK_STREAM0;
+> +
+> +		/*
+> +		 * We use the stream ID there, but it's wrong.
+> +		 *
+> +		 * A stream could very well send a data type that is
+> +		 * not equal to its stream ID. We need to find a
+> +		 * proper way to address it.
+> +		 */
+> +		writel(CSI2TX_DT_CFG_DT(fmt->dt),
+> +		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
+> +
+> +		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
+> +		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
+> +		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
+> +
+> +		/*
+> +		 * TODO: This needs to be calculated based on the
+> +		 * output CSI2 clock rate.
+> +		 */
+> +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
+> +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
+> +	}
+> +
+> +	/* Disable the configuration mode */
+> +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static void csi2tx_stop(struct csi2tx_priv *csi2tx)
+> +{
+> +	writel(CSI2TX_CONFIG_CFG_REQ | CSI2TX_CONFIG_SRST_REQ,
+> +	       csi2tx->base + CSI2TX_CONFIG_REG);
+> +}
+> +
+> +static int csi2tx_s_stream(struct v4l2_subdev *subdev, int enable)
+> +{
+> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
+> +	int ret = 0;
+> +
+> +	mutex_lock(&csi2tx->lock);
+> +
+> +	if (enable) {
+> +		/*
+> +		 * If we're not the first users, there's no need to
+> +		 * enable the whole controller.
+> +		 */
+> +		if (!csi2tx->count) {
+> +			ret = csi2tx_start(csi2tx);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		csi2tx->count++;
+> +	} else {
+> +		csi2tx->count--;
+> +
+> +		/*
+> +		 * Let the last user turn off the lights.
+> +		 */
+> +		if (!csi2tx->count)
+> +			csi2tx_stop(csi2tx);
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&csi2tx->lock);
+> +	return ret;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops csi2tx_video_ops = {
+> +	.s_stream	= csi2tx_s_stream,
+> +};
+> +
+> +static const struct v4l2_subdev_ops csi2tx_subdev_ops = {
+> +	.pad		= &csi2tx_pad_ops,
+> +	.video		= &csi2tx_video_ops,
+> +};
+> +
+> +static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
+> +				struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	unsigned int i;
+> +	u32 dev_cfg;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	csi2tx->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(csi2tx->base))
+> +		return PTR_ERR(csi2tx->base);
+> +
+> +	csi2tx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
+> +	if (IS_ERR(csi2tx->p_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get p_clk\n");
+> +		return PTR_ERR(csi2tx->p_clk);
+> +	}
+> +
+> +	csi2tx->esc_clk = devm_clk_get(&pdev->dev, "esc_clk");
+> +	if (IS_ERR(csi2tx->esc_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get the esc_clk\n");
+> +		return PTR_ERR(csi2tx->esc_clk);
+> +	}
+> +
+> +	clk_prepare_enable(csi2tx->p_clk);
+> +	dev_cfg = readl(csi2tx->base + CSI2TX_DEVICE_CONFIG_REG);
+> +	clk_disable_unprepare(csi2tx->p_clk);
+> +
+> +	csi2tx->max_lanes = dev_cfg & 7;
+
+Some defines would be nice for this (instead of magic numbers).
+
+> +	if (csi2tx->max_lanes > CSI2TX_LANES_MAX) {
+> +		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
+> +			csi2tx->max_lanes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	csi2tx->max_streams = (dev_cfg >> 4) & 7;
+> +	if (csi2tx->max_streams > CSI2TX_STREAMS_MAX) {
+> +		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
+> +			csi2tx->max_streams);
+> +		return -EINVAL;
+> +	}
+> +
+> +	csi2tx->has_internal_dphy = (dev_cfg & BIT(3)) ? true : false;
+> +
+> +	for (i = 0; i < csi2tx->max_streams; i++) {
+> +		char clk_name[16];
+> +
+> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
+> +		csi2tx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
+> +		if (IS_ERR(csi2tx->pixel_clk[i])) {
+> +			dev_err(&pdev->dev, "Couldn't get clock %s\n",
+> +				clk_name);
+> +			return PTR_ERR(csi2tx->pixel_clk[i]);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
+> +{
+> +	struct v4l2_fwnode_endpoint v4l2_ep;
+> +	struct device_node *ep;
+> +	int ret;
+> +
+> +	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> +	if (!ep)
+> +		return -EINVAL;
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> +	if (ret) {
+> +		dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
+> +		goto out;
+> +	}
+> +
+> +	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
+> +		dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
+> +			v4l2_ep.bus_type);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+> +	if (csi2tx->num_lanes > csi2tx->max_lanes) {
+> +		dev_err(csi2tx->dev,
+> +			"Current configuration uses more lanes than supported\n");
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
+> +	       sizeof(csi2tx->lanes));
+> +
+> +out:
+> +	of_node_put(ep);
+
+Newline here?
+
+> +	return ret;
+> +}
+> +
+> +static int csi2tx_probe(struct platform_device *pdev)
+> +{
+> +	struct csi2tx_priv *csi2tx;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	csi2tx = kzalloc(sizeof(*csi2tx), GFP_KERNEL);
+> +	if (!csi2tx)
+> +		return -ENOMEM;
+
+And here?
+
+> +	platform_set_drvdata(pdev, csi2tx);
+> +	mutex_init(&csi2tx->lock);
+> +	csi2tx->dev = &pdev->dev;
+> +
+> +	ret = csi2tx_get_resources(csi2tx, pdev);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
+> +	csi2tx->subdev.owner = THIS_MODULE;
+> +	csi2tx->subdev.dev = &pdev->dev;
+> +	csi2tx->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	snprintf(csi2tx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
+> +		 KBUILD_MODNAME, dev_name(&pdev->dev));
+> +
+> +	ret = csi2tx_check_lanes(csi2tx);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	/* Create our media pads */
+> +	csi2tx->subdev.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+> +	csi2tx->pads[CSI2TX_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
+> +	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++)
+> +		csi2tx->pads[i].flags = MEDIA_PAD_FL_SINK;
+> +
+> +	for (i = 0; i < CSI2TX_PAD_MAX; i++)
+> +		csi2tx->pad_fmts[i] = fmt_default;
+> +
+> +	ret = media_entity_pads_init(&csi2tx->subdev.entity, CSI2TX_PAD_MAX,
+> +				     csi2tx->pads);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	ret = v4l2_async_register_subdev(&csi2tx->subdev);
+> +	if (ret < 0)
+> +		goto err_free_priv;
+> +
+> +	dev_info(&pdev->dev,
+> +		 "Probed CSI2TX with %u/%u lanes, %u streams, %s D-PHY\n",
+> +		 csi2tx->num_lanes, csi2tx->max_lanes, csi2tx->max_streams,
+> +		 csi2tx->has_internal_dphy ? "internal" : "no");
+> +
+> +	return 0;
+> +
+> +err_free_priv:
+> +	kfree(csi2tx);
+
+And here.
+
+> +	return ret;
+> +}
+> +
+> +static int csi2tx_remove(struct platform_device *pdev)
+> +{
+> +	struct csi2tx_priv *csi2tx = platform_get_drvdata(pdev);
+> +
+> +	v4l2_async_unregister_subdev(&csi2tx->subdev);
+> +	kfree(csi2tx);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id csi2tx_of_table[] = {
+> +	{ .compatible = "cdns,csi2tx" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, csi2tx_of_table);
+> +
+> +static struct platform_driver csi2tx_driver = {
+> +	.probe	= csi2tx_probe,
+> +	.remove	= csi2tx_remove,
+> +
+> +	.driver	= {
+> +		.name		= "cdns-csi2tx",
+> +		.of_match_table	= csi2tx_of_table,
+> +	},
+> +};
+> +module_platform_driver(csi2tx_driver);
+> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard@bootlin.com>");
+> +MODULE_DESCRIPTION("Cadence CSI2-TX controller");
+> +MODULE_LICENSE("GPL");
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
