@@ -1,202 +1,39 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 4/9] ARM: dts: bcm2837: Add Raspberry Pi 3 B+
-Date: Fri, 13 Apr 2018 19:27:53 +0200
-Message-ID: <1523640478-4448-5-git-send-email-stefan.wahren@i2se.com>
-References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/9] Input: elan_i2c - add trackstick report
+Date: Fri, 13 Apr 2018 12:36:52 -0500
+Message-ID: <20180413173652.d5errnzdoz3elaes@rob-hp-laptop>
+References: <20180409091051.2944-1-benjamin.tissoires@redhat.com>
+ <20180409091051.2944-4-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180409091051.2944-4-benjamin.tissoires@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, kt.liao@emc.com.tw, Oliver Haessler <oliver@redhat.com>, Benjamin Berg <bberg@redhat.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi 3 B+ has the following major differences compared
-to the model 3 B:
-* Microchip LAN7515 (Gigabit Ethernet)
-* Cypress CYW43455 (802.11n/ac and BT 4.2)
+On Mon, Apr 09, 2018 at 11:10:45AM +0200, Benjamin Tissoires wrote:
+> The Elan touchpads over I2C/SMBus also can handle a
+> trackstick. Unfortunately, nothing tells us if the
+> device supports trackstick (the information lies in
+> the PS/2 node), so rely on a platform data to enable
+> or not the trackstick node.
+> 
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1313939
+> 
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> 
+> ---
+> 
+> changes in v2:
+> - use of generic device property instead of platform data so
+>   device tree can also make use of it
+> ---
+>  .../devicetree/bindings/input/elan_i2c.txt         |  1 +
 
-We need to add the USB LAN chip so the bootloader can add the MAC address.
-This is necessary because there ain't a EEPROM or a valid OTP.  
+Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 108 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi |  27 ++++++++
- 3 files changed, 136 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e24249..a300a35 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2836-rpi-2-b.dtb \
- 	bcm2837-rpi-3-b.dtb \
-+	bcm2837-rpi-3-b-plus.dtb \
- 	bcm2835-rpi-zero.dtb \
- 	bcm2835-rpi-zero-w.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-new file mode 100644
-index 0000000..4adb85e
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+#include "bcm2837.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-lan7515.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,3-model-b-plus", "brcm,bcm2837";
-+	model = "Raspberry Pi 3 Model B+";
-+
-+	chosen {
-+		/* 8250 auxiliary UART instead of pl011 */
-+		stdout-path = "serial1:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		pwr {
-+			label = "PWR";
-+			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&expgpio 1 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&firmware {
-+	expgpio: gpio {
-+		compatible = "raspberrypi,firmware-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "BT_ON",
-+				  "WL_ON",
-+				  "STATUS_LED",
-+				  "LAN_RUN",
-+				  "",
-+				  "CAM_GPIO0",
-+				  "CAM_GPIO1",
-+				  "";
-+		status = "okay";
-+	};
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
-+	status = "okay";
-+};
-+
-+/* SDHCI is used to control the SDIO for wireless */
-+&sdhci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio34>;
-+	status = "okay";
-+	bus-width = <4>;
-+	non-removable;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SDHOST is used to drive the SD card */
-+&sdhost {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhost_gpio48>;
-+	status = "okay";
-+	bus-width = <4>;
-+};
-+
-+/* uart0 communicates with the BT module */
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		max-speed = <2000000>;
-+		shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+/* uart1 is mapped to the pin header */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_gpio14>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
-new file mode 100644
-index 0000000..169203c
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/ {
-+	aliases {
-+		ethernet0 = &ethernet;
-+	};
-+};
-+
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,2514";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb1_1@1 {
-+			compatible = "usb424,2514";
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ethernet: usbether@1 {
-+				compatible = "usb424,7800";
-+				reg = <1>;
-+			};
-+		};
-+	};
-+};
--- 
-2.7.4
+>  drivers/input/mouse/elan_i2c_core.c                | 90 +++++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 3 deletions(-)
