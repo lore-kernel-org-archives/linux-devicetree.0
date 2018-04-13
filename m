@@ -1,50 +1,125 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Fri, 13 Apr 2018 08:46:08 -0500
-Message-ID: <20180413134608.sh5maxkkvgc424wa@rob-hp-laptop>
-References: <20180410130001.1234-1-boris.brezillon@bootlin.com>
- <20180410130001.1234-2-boris.brezillon@bootlin.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
+Date: Fri, 13 Apr 2018 09:47:30 -0500
+Message-ID: <d59697bb-60bf-deee-65b5-c552c59e8d5a@ti.com>
+References: <20180410152802.30958-1-peda@axentia.se>
+ <20180411141555.15044-1-peda@axentia.se>
+ <20180411141555.15044-3-peda@axentia.se>
+ <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
+ <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
+ <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
+ <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
+ <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
+ <36e0c96b-89ec-2372-825a-71ead1a43473@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180410130001.1234-2-boris.brezillon@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: "Menon, Nishanth" <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org, Rafal Ciepiela <rafalc@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Jyri Sarha <jsarha@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <36e0c96b-89ec-2372-825a-71ead1a43473@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTAsIDIwMTggYXQgMDM6MDA6MDFQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9u
-IHdyb3RlOgo+IEZyb206IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxl
-Y3Ryb25zLmNvbT4KPiAKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIENhZGVu
-Y2UgRFNJIGJyaWRnZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
-LmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gSGVsbG8gUm9iLAo+IAo+IEkg
-ZHJvcHBlZCB5b3VyIEFja2VkLWJ5IGJlY2F1c2UgdGhpcyB2ZXJzaW9uIG5vdyBkb2N1bWVudHMg
-dGhlIERQSFkKPiBiaW5kaW5ncy4KPiAKPiBSZWdhcmRzLAo+IAo+IEJvcmlzCj4gCj4gQ2hhbmdl
-cyBpbiB2NjoKPiAtIERvY3VtZW50IHRoZSBEUEhZIGJpbmRpbmdzCj4gLSBEcm9wIFJvYidzIGFj
-ayBiZWNhdXNlIG9mIHRoZSBhZGRpdGlvbiBEUEhZIGJpbmRpbmdzIGRvYwo+IAo+IENoYW5nZXMg
-aW4gdjU6Cj4gLSBBZGQgb3B0aW9uYWwgcmVzZXQgbGluZSBmb3IgdGhlIHBlcmlwaGVyYWwvQVBC
-IGxvZ2ljCj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAtIFJlbmFtZSBEU0kgY2xrcyAoc3VnZ2VzdGVk
-IGJ5IFRvbWkpCj4gLSBEcm9wIHRoZSBJUCB2ZXJzaW9uIGluIHRoZSBjb21wYXRpYmxlIHNpbmNl
-IGl0IGNhbiBiZSBleHRyYWN0ZWQgZnJvbQo+ICAgYSByZWdpc3RlciAoc3VnZ2VzdGVkIGJ5IEFu
-ZHJ6ZWopCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIEZpeCBjbG9jayBuYW1lcyBpbiB0aGUgZXhh
-bXBsZQo+IC0gRG9jdW1lbnQgaG93IHRvIHJlcHJlc2VudCBEU0kgZGV2aWNlcyB0aGF0IGFyZSBj
-b250cm9sbGVyIHRocm91Z2gKPiAgIGFuIGV4dGVybmFsIGJ1cyBsaWtlIEkyQyBvciBTUEkKPiAK
-PiBDaGFuZ2VzIGluIHYyOgo+IC0gTm9uZQo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvY2Rucyxkc2kudHh0ICAgICAgICAgICB8IDEzMyArKysrKysrKysrKysrKysrKysrKysK
-PiAgMSBmaWxlIGNoYW5nZWQsIDEzMyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxk
-c2kudHh0CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 04/12/2018 05:31 PM, Peter Rosin wrote:
+> On 2018-04-12 17:35, Andrew F. Davis wrote:
+>> On 04/12/2018 09:29 AM, Peter Rosin wrote:
+>>> On 2018-04-11 18:13, Andrew F. Davis wrote:
+>>>> On 04/11/2018 10:51 AM, Lars-Peter Clausen wrote:
+>>>>> On 04/11/2018 05:43 PM, Andrew F. Davis wrote:
+>>>>>> On 04/11/2018 09:15 AM, Peter Rosin wrote:
+>>>>>>> This is a current sense amplifier from Analog Devices.
+>>>>>>>
+>>>>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>>>>> ---
+>>>>>>>  drivers/iio/afe/Kconfig              |  3 +-
+>>>>>>>  drivers/iio/afe/iio-unit-converter.c | 54 ++++++++++++++++++++++++++++++++++++
+>>>>>>>  2 files changed, 56 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/iio/afe/Kconfig b/drivers/iio/afe/Kconfig
+>>>>>>> index 642ce4eb12a6..0e10fe8f459a 100644
+>>>>>>> --- a/drivers/iio/afe/Kconfig
+>>>>>>> +++ b/drivers/iio/afe/Kconfig
+>>>>>>> @@ -10,7 +10,8 @@ config IIO_UNIT_CONVERTER
+>>>>>>>  	depends on OF || COMPILE_TEST
+>>>>>>>  	help
+>>>>>>>  	  Say yes here to build support for the IIO unit converter
+>>>>>>> -	  that handles voltage dividers and current sense shunts.
+>>>>>>> +	  that handles voltage dividers, current sense shunts and
+>>>>>>> +	  the LT6106 Current Sense Amplifier from Analog Devices.
+>>>>>>
+>>>>>> Could work better to split these out into separate drivers. Maybe a
+>>>>>> iio-shunt-resistor.c that does just voltage->current with the
+>>>>>> appropriate scaling. Then make a a separate lt6106.c.
+>>>>>
+>>>>> I don't think we need a separate driver here. There are tons of circuits
+>>>>> that all work the same way and all require the same properties. If we'd add
+>>>>> a driver for each of them we'd get buried in boilerplate code.
+>>>>>
+>>>>
+>>>> Fair enough, then it should at least be renamed to something generic
+>>>> like current-sense-amplifier, as you said lots of circuits do this, not
+>>>> just lt6106s. We will have then have support for:
+>>>>
+>>>> current-sense-amplifier
+>>>> current-sense-shunt
+>>>> voltage-divider
+>>>
+>>> For the compatible "current-sense-amplifier", I would advocate the
+>>> properties...
+>>>
+>>>  sense-resistor-micro-ohms
+>>>  sense-gain
+>>>
+>>> (or something close to that)
+>>>
+>>> ...and not input-resistor-ohms and output-resistor-ohms which are way
+>>> more particular to the LT6106.
+>>>
+>>> But as I said in the cover letter, I didn't go with sense-gain since I
+>>> thought I would end up with requests for non-integer gains. There is
+>>> yet to be a comment on the non-integer gain problem, and before there
+>>> is a path forward for that case, I'm reluctant.
+>>>
+>>
+>> Why not similar to what you had before with the resistor:
+>>
+>> sense-gain-multiplier
+>> sense-gain-divider
+>>
+>> if either are missing assume they are 1.
+> 
+> Hmm, how about sense-gain for the normal integer case, and then divide
+> by sense-attenuation if needed? I.e. exactly the same functionality as
+> you describe, just different names.
+> 
+
+I like these names, but I think gain/attenuation sound very analog and I
+would be tempted to assume they are floating point numbers or the units
+are logarithmic (dB).
+
+To prevent any more needless bike-shedding on my part I'd like to say
+either yours, mine, or Lars-Peter's suggestion all work for me.
+
+>>>> compatibles in this driver called "unit-converter" which is still a
+>>>> misnomer IMHO.
+>>>
+>>> I don't remember you having presented your preference, and I think
+>>> that goes against the established bike-shedding protocol?
+>>>
+>>
+>> True, how about "current-sense-from-voltage" ?
+> 
+> Doesn't cover "voltage-divider" (and we don't need separate drivers
+> doing the exact same calculations, that's a maintenance nightmare).
+> 
+
+
+The driver name doesn't have to cover every use, just more than the
+other name.
+
+
+> Cheers,
+> Peter
+> 
