@@ -1,54 +1,61 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v2 2/2] mfd: intel_quark_i2c_gpio: Update Synopsys GPIO
- interrupts
-Date: Fri, 13 Apr 2018 08:24:30 +0000
-Message-ID: <TY1PR01MB176970ECD9C66DCF865E5C17F5B30@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1523606900-2332-1-git-send-email-phil.edworthy@renesas.com>
- <1523606900-2332-3-git-send-email-phil.edworthy@renesas.com>
- <CAMuHMdVKi=dDvn29U-S26PtAc_Um_+1Oy=PzKAgYUSU9qvcF-Q@mail.gmail.com>
+From: Matt Redfearn <matt.redfearn@mips.com>
+Subject: [PATCH] MIPS: dts: Boston: Fix PCI bus dtc warnings:
+Date: Fri, 13 Apr 2018 09:50:44 +0100
+Message-ID: <1523609444-2496-1-git-send-email-matt.redfearn@mips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVKi=dDvn29U-S26PtAc_Um_+1Oy=PzKAgYUSU9qvcF-Q@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Rob Herring <robh@kernel.org>, Matt Redfearn <matt.redfearn@mips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDEzIEFwcmlsIDIwMTggMDk6MjAgR2VlcnQgVXl0dGVyaG9ldmVuIHdy
-b3RlOg0KPiBPbiBGcmksIEFwciAxMywgMjAxOCBhdCAxMDowOCBBTSwgUGhpbCBFZHdvcnRoeSB3
-cm90ZToNCj4gPiBTaW5jZSB0aGUgd2F5IHRoZSBTeW5vcHN5cyBHUElPIGludGVycnVwdHMgYXJl
-IHN0b3JlZCBoYXMgY2hhbmdlZCwNCj4gPiB0aGlzIGRyaXZlciBuZWVkcyB0byBiZSB1cGRhdGVk
-IGluIGxpbmUgd2l0aCB0aGUgY2hhbmdlcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWwg
-RWR3b3J0aHkgPHBoaWwuZWR3b3J0aHlAcmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gdjI6DQo+
-ID4gIC0gTmV3IHBhdGNoIGluIHYyIHRvIGZpeCB0aGUgb25seSBvdGhlciB1c2VyIG9mIHN0cnVj
-dA0KPiBkd2FwYl9wb3J0X3Byb3BlcnR5Lg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0K
-PiANCj4gVG8gYXZvaWQgYmlzZWN0aW9uIGNvbXBpbGUgZmFpbHVyZXMgZHVlIHRvIHRoZSBjaGFu
-Z2VkIHR5cGUgb2YNCj4gZHdhcGJfcG9ydF9wcm9wZXJ0eS5pcnEsIEkgdGhpbmsgdGhpcyBzaG91
-bGQgYmUgZm9sZGVkIGludG8gdGhlIGZpcnN0IHBhdGNoLA0KUmlnaHQsIHRoYW5rcyBmb3IgcG9p
-bnRpbmcgdGhpcyBvdXQhDQpQaGlsDQoNCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZmQvaW50ZWxf
-cXVhcmtfaTJjX2dwaW8uYyB8IDMgKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9p
-bnRlbF9xdWFya19pMmNfZ3Bpby5jDQo+ID4gYi9kcml2ZXJzL21mZC9pbnRlbF9xdWFya19pMmNf
-Z3Bpby5jDQo+ID4gaW5kZXggOTBlMzVkZS4uNWJkZGI4NCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL21mZC9pbnRlbF9xdWFya19pMmNfZ3Bpby5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvaW50
-ZWxfcXVhcmtfaTJjX2dwaW8uYw0KPiA+IEBAIC0yMzMsNyArMjMzLDggQEAgc3RhdGljIGludCBp
-bnRlbF9xdWFya19ncGlvX3NldHVwKHN0cnVjdCBwY2lfZGV2DQo+ICpwZGV2LCBzdHJ1Y3QgbWZk
-X2NlbGwgKmNlbGwpDQo+ID4gICAgICAgICBwZGF0YS0+cHJvcGVydGllcy0+aWR4ICAgICAgICAg
-ID0gMDsNCj4gPiAgICAgICAgIHBkYXRhLT5wcm9wZXJ0aWVzLT5uZ3BpbyAgICAgICAgPSBJTlRF
-TF9RVUFSS19NRkRfTkdQSU87DQo+ID4gICAgICAgICBwZGF0YS0+cHJvcGVydGllcy0+Z3Bpb19i
-YXNlICAgID0gSU5URUxfUVVBUktfTUZEX0dQSU9fQkFTRTsNCj4gPiAtICAgICAgIHBkYXRhLT5w
-cm9wZXJ0aWVzLT5pcnEgICAgICAgICAgPSBwZGV2LT5pcnE7DQo+ID4gKyAgICAgICBwZGF0YS0+
-cHJvcGVydGllcy0+aXJxWzBdICAgICAgID0gcGRldi0+aXJxOw0KPiA+ICsgICAgICAgcGRhdGEt
-PnByb3BlcnRpZXMtPmhhc19pcnEgICAgICA9IHRydWU7DQo+ID4gICAgICAgICBwZGF0YS0+cHJv
-cGVydGllcy0+aXJxX3NoYXJlZCAgID0gdHJ1ZTsNCj4gPg0KPiA+ICAgICAgICAgY2VsbC0+cGxh
-dGZvcm1fZGF0YSA9IHBkYXRhOw0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVu
-IC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0NCj4g
-bTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwg
-cGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0
-byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
-aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRz
-DQo=
+dtc recently (v1.4.4-8-g756ffc4f52f6) added PCI bus checks. Fix the
+warnings now emitted:
+
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@10000000:
+missing bus-range for PCI bridge
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@12000000:
+missing bus-range for PCI bridge
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@14000000:
+missing bus-range for PCI bridge
+
+Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+---
+
+ arch/mips/boot/dts/img/boston.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/mips/boot/dts/img/boston.dts b/arch/mips/boot/dts/img/boston.dts
+index 2cd49b60e030..f7aad80c69ab 100644
+--- a/arch/mips/boot/dts/img/boston.dts
++++ b/arch/mips/boot/dts/img/boston.dts
+@@ -51,6 +51,8 @@
+ 		ranges = <0x02000000 0 0x40000000
+ 			  0x40000000 0 0x40000000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci0_intc 1>,
+ 				<0 0 0 2 &pci0_intc 2>,
+@@ -79,6 +81,8 @@
+ 		ranges = <0x02000000 0 0x20000000
+ 			  0x20000000 0 0x20000000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci1_intc 1>,
+ 				<0 0 0 2 &pci1_intc 2>,
+@@ -107,6 +111,8 @@
+ 		ranges = <0x02000000 0 0x16000000
+ 			  0x16000000 0 0x100000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci2_intc 1>,
+ 				<0 0 0 2 &pci2_intc 2>,
+-- 
+2.7.4
