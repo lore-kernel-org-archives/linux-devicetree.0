@@ -1,36 +1,44 @@
-Return-Path: <SRS0=FOmB=HB=rock-chips.com=shawn.lin@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 1/2] Documentation: mmc: add optional cd-delay-ms property
-Date: Thu, 12 Apr 2018 09:20:30 +0800
-Message-Id: <1523496031-145755-1-git-send-email-shawn.lin@rock-chips.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Return-Path: <SRS0=S/Wl=HC=verge.net.au=horms@kernel.org>
+Date: Fri, 13 Apr 2018 10:09:10 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/4] soc: renesas: rcar-rst: Add support for R-Car E3
+Message-ID: <20180413080910.7sbcsyngcozosbs7@verge.net.au>
+References: <1523439386-1032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439386-1032-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdVssUyEq7ipQ-p4DzCpZKkV64TZnSV0OKpshjigaNFb2g@mail.gmail.com>
+ <20180412075430.kkqg63djci6jkno2@verge.net.au>
+ <TY1PR06MB099243FEB726CEEF0CD8C616D8BC0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB099243FEB726CEEF0CD8C616D8BC0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-slot-gpio uses a fixed delay, 200ms, before detecting card after the card
-is inserted. 200ms doesn't work for some platforms, so some host drivers
-added their own properties for parsing that from DT, for instance,
-dw_mmc and pxamci. That being said, it should also be tunable when using
-slog-gpio.
+On Thu, Apr 12, 2018 at 08:11:22AM +0000, Yoshihiro Shimoda wrote:
+> Hi Simon-san,
+> 
+> > From: Simon Horman, Sent: Thursday, April 12, 2018 4:55 PM
+> > 
+> > On Wed, Apr 11, 2018 at 05:18:28PM +0200, Geert Uytterhoeven wrote:
+> > > Hi Shimoda-san,
+> > >
+> > > Thanks for your patch!
+> > >
+> > > On Wed, Apr 11, 2018 at 11:36 AM, Yoshihiro Shimoda
+> > > <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > > > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > > >
+> > > > This patch adds definition of reset vector for the R8A77990 SoC.
+> > >
+> > > The description doesn't seem to match what the patch does?
+> > 
+> > How about this text, based on Sergei's test for the R8a77980?
+> > 
+> > Add support for R-Car E3 (R8A77990) to the R-Car RST driver.
+> > This driver is needed for the clock driver to work.
+> 
+> It's good to me. So, should I submit v2 patch?
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
-
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 467cd7b..215b9a2 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -19,6 +19,8 @@ Optional properties:
- - wp-gpios: Specify GPIOs for write protection, see gpio binding
- - cd-inverted: when present, polarity on the CD line is inverted. See the note
-   below for the case, when a GPIO is used for the CD line
-+- cd-delay-ms: Set delay time before detecting card after card insert interrupt.
-+  It's only valid when cd-gpios is present.
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-   below for the case, when a GPIO is used for the WP line
- - disable-wp: When set no physical WP line is present. This property should
--- 
-1.9.1
+No need, I have applied the patch with the changelog text above.
