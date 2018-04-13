@@ -1,59 +1,44 @@
-Return-Path: <>
+Return-Path: <SRS0=lcts=HC=renesas.com=yoshihiro.shimoda.uh@kernel.org>
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] usb: gadget: udc: renesas_usb3: add devm_of_platform_populate()
-Date: Tue, 10 Apr 2018 21:13:54 +0900
-Message-Id: <1523362434-17808-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1523362434-17808-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/2] clk: renesas: Add r8a77990 CPG Core Clock Definitions
+Date: Fri, 13 Apr 2018 02:16:06 +0000
+Message-ID: <TY1PR06MB09927E1CE7136B0690A31B7AD8B30@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1523439447-1084-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1523439447-1084-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXata291k6ViN-eHrw6OLN49p2CJT6yZHqQukL2Yf2Lag@mail.gmail.com>
+In-Reply-To: <CAMuHMdXata291k6ViN-eHrw6OLN49p2CJT6yZHqQukL2Yf2Lag@mail.gmail.com>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds devm_of_platform_populate() calling to populate
-the rcar-usb3-role-switch driver.
-
-For now, this renesas_usb3 driver doesn't use any APIs of
-the usb role switch framework because the usb_role_switch_get()
-API depends on the device_connection framework and this framework
-is not good match on device tree environment. However, the select
-USB_ROLE_SWITCH needs to enable the rcar-usb3-role-switch driver.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/gadget/udc/Kconfig        | 1 +
- drivers/usb/gadget/udc/renesas_usb3.c | 6 ++++++
- 2 files changed, 7 insertions(+)
-
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index 0875d38..7e4a5dd 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -193,6 +193,7 @@ config USB_RENESAS_USB3
- 	tristate 'Renesas USB3.0 Peripheral controller'
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	depends on EXTCON && HAS_DMA
-+	select USB_ROLE_SWITCH
- 	help
- 	   Renesas USB3.0 Peripheral controller is a USB peripheral controller
- 	   that supports super, high, and full speed USB 3.0 data transfers.
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 59e1485..fd593b2 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -2639,6 +2639,12 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_add_udc;
- 
-+	ret = devm_of_platform_populate(&pdev->dev);
-+	if (ret < 0)
-+		goto err_dev_create;
-+
-+	/* TODO: Get role switch and use usb_role_switch_{set,get}_role APIs */
-+
- 	if (of_property_read_bool(pdev->dev.of_node, "renesas,no-id"))
- 		usb3->ignore_id = true;
- 
--- 
-1.9.1
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNCj4gRnJvbTogR2Vl
+cnQgVXl0dGVyaG9ldmVuLCBTZW50OiBUaHVyc2RheSwgQXByaWwgMTIsIDIwMTggOToyMyBQTQ0K
+PiANCj4gSGkgU2hpbW9kYS1zYW4sDQo+IA0KPiBPbiBXZWQsIEFwciAxMSwgMjAxOCBhdCAxMToz
+NyBBTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMu
+Y29tPiB3cm90ZToNCjxzbmlwPg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9pbmNsdWRl
+L2R0LWJpbmRpbmdzL2Nsb2NrL3I4YTc3OTkwLWNwZy1tc3NyLmgNCj4gPiBAQCAtMCwwICsxLDYz
+IEBADQo+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+ID4gKy8q
+DQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOCBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnAuDQo+
+ID4gKyAqLw0KPiA+ICsjaWZuZGVmIF9fRFRfQklORElOR1NfQ0xPQ0tfUjhBNzc5OTBfQ1BHX01T
+U1JfSF9fDQo+ID4gKyNkZWZpbmUgX19EVF9CSU5ESU5HU19DTE9DS19SOEE3Nzk5MF9DUEdfTVNT
+Ul9IX18NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9yZW5lc2FzLWNw
+Zy1tc3NyLmg+DQo+ID4gKw0KPiA+ICsvKiByOGE3Nzk5MCBDUEcgQ29yZSBDbG9ja3MgKi8NCj4g
+DQo+IFsuLi5dDQo+IA0KPiA+ICsjZGVmaW5lIFI4QTc3OTkwX0NMS19DU0kwICAgICAgICAgICAg
+ICA0Nw0KPiANCj4gTm90ZSB0aGF0IENTSTAgaXMgbm90IGxpc3RlZCBpbiBUYWJsZSA4LjJnICgi
+Ui1DYXIgRTMiKS4NCj4gUHJvYmFibHkgaXQgZG9lcyBleGlzdCwgZ2l2ZW46DQo+ICAgLSBUYWJs
+ZSA4LjExICgiUmVnaXN0ZXIgQ29uZmlndXJhdGlvbiIpIHNheXMgQ1NJMENLQ1IgZXhpc3RzIG9u
+IFItQ2FyIEUzLA0KPiAgIC0gRmlndXJlIDI1LjYgKCJDU0kyIEJsb2NrIERpYWdyYW0gKFItQ2Fy
+IEUzKSIpIHNob3dzIENTSTAuDQoNCkkgdGhpbmsgc28uIEknbSBhc2tpbmcgSFcgdGVhbSBhYm91
+dCBtaXNzaW5nIENTSTAgaW4gVGFibGUgOC4yZyBub3cuDQoNCj4gPiArI2RlZmluZSBSOEE3Nzk5
+MF9DTEtfUE9TVDMgICAgICAgICAgICAgNDgNCj4gDQo+IEkgbm90aWNlZCB0aGVzZSBQT1NUeCBj
+bG9ja3MgaGF2ZSBiZWVuIGFkZGVkIHRvIGFsbCBSLUNhciBHZW4zIGNsb2NrIHRhYmxlcy4NCj4g
+SXQgZG9lc24ndCBsb29rIGxpa2Ugd2Ugd2lsbCBldmVyIG5lZWQgdG8gcmVmZXIgdGhlbSBmcm9t
+IERULCBzbyBJIHRoaW5rIHdlDQo+IGNhbiB0cmVhdCB0aGVtIGFzIGludGVybmFsIGNsb2Nrcywg
+YW5kIG9taXQgdGhlbSBmcm9tIHRoZSBEVCBiaW5kaW5ncy4NCj4gDQo+IFdoYXQgZG8geW91IHRo
+aW5rPw0KDQpJIGFncmVlIHdpdGggeW91LiBTbywgSSB3aWxsIG9taXQgUE9TVHggY2xvY2tzIGZy
+b20gdGhlIERUIGJpbmRpbmdzIGluIHYyIHBhdGNoLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhp
+cm8gU2hpbW9kYQ0KDQo=
