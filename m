@@ -1,79 +1,63 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 0/9] ARM: bcm283x: RPi 3 B+ support and other improvements
-Date: Fri, 13 Apr 2018 13:01:19 -0700
-Message-ID: <878t9qzxio.fsf@anholt.net>
-References: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iommu/rockchip: Make clock properties
+	optional
+Date: Fri, 13 Apr 2018 16:02:26 -0500
+Message-ID: <20180413210226.x4jx7b6kmui3oa3f@rob-hp-laptop>
+References: <20180410092612.2653-1-heiko@sntech.de>
+	<20180410092612.2653-2-heiko@sntech.de>
+	<99245ec4-6835-7fa7-3bad-dd21874f92c0@arm.com>
+	<2406273.dIyKc4zb8g@phil>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1933039627649845637=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1523640478-4448-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2406273.dIyKc4zb8g@phil>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1933039627649845637==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Tue, Apr 10, 2018 at 01:26:41PM +0200, Heiko Stuebner wrote:
+> Hi Robin,
+> 
+> Am Dienstag, 10. April 2018, 13:18:48 CEST schrieb Robin Murphy:
+> > On 10/04/18 10:26, Heiko Stuebner wrote:
+> > > Rockchip IOMMUs are used without explicit clock handling for 4 years
+> > > now, so we should keep compatibility with old devicetrees if possible.
+> > > Therefore make iommu clocks optional.
+> > 
+> > Do we need to touch the binding itself? Obviously the driver has to 
+> > treat clocks as optional in existing DTs (and I feel a bit dumb now for 
+> > managing to overlook that in review), but the binding effectively only 
+> > covers future DTs, and I'd assume we want to encourage the clocks to be 
+> > correctly specified there.
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I'd prefer the DT docs reflect what is correct for new/current dts 
+files. That's the only way the docs can validate the dts files.
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+> I guess that depends on your definition of the timespan for backwards
+> compatibility. I'm always starting out at indefinite till convinced
+> otherwise ;-). Hence the clocks would need to stay optional for (nearly)
+> forever.
+> 
+> Also, having the binding claim them as required but the code handling
+> them as optional just calls for someone to remove the optional handling :-D
 
-> The main focus of the patch series is to provide support for the new
-> Raspberry Pi 3 B+ . The rest are parts which missed the merge window for =
-4.17.
->
-> Since there are still some issues with LAN78XX, also apply Phil Elwell's
-> patches [1] and Dave Stevenson's patches [2] before testing. But they are=
- not
-> required for the function of this series.=20=20=20=20
+A comment in the code saying why missing clocks are allowed should 
+suffice.
 
-This series all looks great to me, and is:
+> Not sure if there is a established way of saying
+> "we want this for all future devices, but allow it to be missing for old dts".
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+We don't really...
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlrRDI8ACgkQtdYpNtH8
-nuiodg//aWmu2OoNwGK1WBpyDM9WMJlE0d32vgpm9V+tZ7KomKXaAn9ZZMxhqcL+
-zV4YhtxAODq0Ch/VA0wrHsPlna0J+mZA6pieKbSZD2PHSOQoiiYyWk66tUX66GE4
-8FzhDls8Er6XsQilhPAaBnH1X/R87xc00ui9p3xOcgBOFLtnTtiCtUXIi6+/QGNU
-8ko/3SfTG4duWSATwUoHa/Lxs8rZ09OBlmNGrEX0AuXLtNpEJWBRSnEs8/heG47s
-96LUv1UQ0RfDT/Gq85qAe/1uZWwKREZm1sYcsPK3J6w8/yCDwkYci67IS9nhvGr/
-G8YyVAV3xHD72x/jSLpkiI0Yzl/bmK6Yaa6OsxcOw6Rut1St9IOjTWSBzCUKWIpb
-Cj3GG7bwwiA3oqAMVXuSu64jj/CPpv+XWh/ws+9v14MhRMtxYARBc/IUQsLY+e3K
-C6Fvza0wsfwlroAfAzhm5sGb7ulbK7gGI1syjOV83N7wXPsbquZztCeRhknb5Smg
-SeBfJ8qdjx/5jv/ohkVNbEafHNLJmJly1oPGeLRdNheJvlWgifOUy68noYp4r+zq
-ZIkCWrjAk3HvfZY8pxfu7gdl2LwXYk3elW93u6cN+jqHGz6hna0K43bTiPk+D8P0
-ujnwJkNPBjBppWAr/r2bSwNJkFfcpioGMlyG9nbnAe5NJkNs7z0=
-=IP9J
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============1933039627649845637==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1933039627649845637==--
+Rob
