@@ -1,37 +1,40 @@
-Return-Path: <SRS0=pf7g=HG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from bin-mail-out-05.binero.net ([195.74.38.228]:31852 "EHLO
-        bin-mail-out-05.binero.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751204AbeDQUzy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Apr 2018 16:55:54 -0400
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: [PATCH 0/2] arm64: dts: renesas: r8a779{5,6}: decrease temperature
-Date: Tue, 17 Apr 2018 22:54:26 +0200
-Message-Id: <20180417205428.15227-1-niklas.soderlund@ragnatech.se>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 13 Apr 2018 12:22:44 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/5] pcie-rcar: add R-Car gen3 PHY support
+Message-ID: <20180413172244.ceixi5lhl2tygsfk@rob-hp-laptop>
+References: <26e803ca-06b6-28c5-b87c-fc639b322d6f@cogentembedded.com>
+ <3eb7e548-8b21-2347-c742-a007fd9cfed9@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3eb7e548-8b21-2347-c742-a007fd9cfed9@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+On Sun, Apr 08, 2018 at 09:05:10PM +0300, Sergei Shtylyov wrote:
+> On R-Car gen3 SoCs the PCIe PHY has its own register region -- and I have
+> written  a generic PHY driver for it, thus we need to add the corresponding
+> code in  rcar_pcie_hw_init_gen3() and call devm_phy_optional_get() at the
+> driver's probing time,  so that the existing R-Car gen3 device trees (not
+> having a PHY node) would still work (we only need  to power up the PHY on
+> R-Car V3H).
 
-Hi Simon,
+Spurious spaces, again...
 
-This series decrease the hysteresis from 2C to 1C for the two boards we 
-have described upstream. They have no dependencies and are ready to be 
-accepted if the review is in favor of them.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> Changes in version 2:
+> - updated the bindings.
+> 
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt |    5 +++
 
-Niklas Söderlund (2):
-  arm64: dts: renesas: r8a7795: decrease temperature hysteresis
-  arm64: dts: renesas: r8a7796: decrease temperature hysteresis
+Otherwise,
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++------
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 12 ++++++------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
 
--- 
-2.17.0
-
+>  drivers/pci/host/pcie-rcar.c                       |   27 +++++++++++++++++++--
+>  2 files changed, 30 insertions(+), 2 deletions(-)
