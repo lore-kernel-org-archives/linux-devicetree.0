@@ -1,27 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: interrupt-controller: New binding for
- Meson-AXG SoC
-Date: Fri, 13 Apr 2018 12:20:55 -0500
-Message-ID: <20180413172055.waibtio6qbltdv4a@rob-hp-laptop>
-References: <20180408145700.23520-1-yixun.lan@amlogic.com>
- <20180408145700.23520-3-yixun.lan@amlogic.com>
+Subject: Re: [PATCH v5 2/2] dt-bindings: usb: rt1711h device tree binding
+ document
+Date: Fri, 13 Apr 2018 12:24:53 -0500
+Message-ID: <20180413172453.55zjfuvud6r5wtrd@rob-hp-laptop>
+References: <1523239895-4467-1-git-send-email-leechu729@gmail.com>
+ <1523239895-4467-3-git-send-email-leechu729@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180408145700.23520-3-yixun.lan@amlogic.com>
+In-Reply-To: <1523239895-4467-3-git-send-email-leechu729@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: ShuFan Lee <leechu729@gmail.com>
+Cc: greg@kroah.com, heikki.krogerus@linux.intel.com, linux@roeck-us.net, mark.rutland@arm.com, shufan_lee@richtek.com, cy_huang@richtek.com, jun.li@nxp.com, mats.dev.list@gmail.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 08, 2018 at 02:56:59PM +0000, Yixun Lan wrote:
-> Update the dt-binding documentation to support new compatible string
-> for the GPIO interrupt controller which found in Amlogic's Meson-AXG SoC.
+On Mon, Apr 09, 2018 at 10:11:35AM +0800, ShuFan Lee wrote:
+> From: ShuFan Lee <shufan_lee@richtek.com>
 > 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Add device tree binding document for Richtek RT1711H Type-C chip driver
+> 
+> Signed-off-by: ShuFan Lee <shufan_lee@richtek.com>
 > ---
->  .../devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/usb/richtek,rt1711h.txt         | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
