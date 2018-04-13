@@ -1,45 +1,346 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
-Date: Fri, 13 Apr 2018 11:59:29 +0100
-Message-ID: <f2ea5af2-dfd6-7463-0eaa-ee9ede87eac1@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
-	<04d4d161-ed72-f6b6-9b94-1d60bd79ef94@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <04d4d161-ed72-f6b6-9b94-1d60bd79ef94-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v4 10/15] memory: tegra: Introduce memory client hot reset
+Date: Fri, 13 Apr 2018 14:33:49 +0300
+Message-ID: <b063a7d44509189495825e73942329aca51e9e69.1523301400.git.digetx@gmail.com>
+References: <cover.1523301400.git.digetx@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1523301400.git.digetx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/18 19:53, Sinan Kaya wrote:
-> On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
->> +static void io_mm_detach_all_locked(struct iommu_bond *bond)
->> +{
->> +	while (!io_mm_detach_locked(bond));
->> +}
->> +
-> 
-> I don't remember if I mentioned this before or not but I think this loop
-> needs a little bit relaxation with yield and maybe an informational message
-> with might help if wait exceeds some time.
+In order to reset busy HW properly, memory controller needs to be
+involved, otherwise it is possible to get corrupted memory or hang machine
+if HW was reset during DMA. Introduce memory client 'hot reset' that will
+be used for resetting of busy HW.
 
-Right, at the very least we should have a cpu_relax here. I think this
-bit is going away, though, because I want to lift the possibility of
-calling bind() for the same dev/mm pair multiple times. It's not useful
-in my opinion because that call could only be issued by a given driver.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/memory/tegra/mc.c | 210 ++++++++++++++++++++++++++++++++++++++
+ drivers/memory/tegra/mc.h |   2 +
+ include/soc/tegra/mc.h    |  33 ++++++
+ 3 files changed, 245 insertions(+)
 
-Thanks,
-Jean
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 5932ab33202a..6b211daa99bf 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -72,6 +73,207 @@ static const struct of_device_id tegra_mc_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, tegra_mc_of_match);
+ 
++static int terga_mc_block_dma_common(struct tegra_mc *mc,
++				     const struct tegra_mc_reset *rst)
++{
++	unsigned long flags;
++	u32 value;
++
++	spin_lock_irqsave(&mc->lock, flags);
++
++	value = mc_readl(mc, rst->control) | BIT(rst->bit);
++	mc_writel(mc, value, rst->control);
++
++	spin_unlock_irqrestore(&mc->lock, flags);
++
++	return 0;
++}
++
++static bool terga_mc_dma_idling_common(struct tegra_mc *mc,
++				       const struct tegra_mc_reset *rst)
++{
++	return (mc_readl(mc, rst->status) & BIT(rst->bit)) != 0;
++}
++
++static int terga_mc_unblock_dma_common(struct tegra_mc *mc,
++				       const struct tegra_mc_reset *rst)
++{
++	unsigned long flags;
++	u32 value;
++
++	spin_lock_irqsave(&mc->lock, flags);
++
++	value = mc_readl(mc, rst->control) & ~BIT(rst->bit);
++	mc_writel(mc, value, rst->control);
++
++	spin_unlock_irqrestore(&mc->lock, flags);
++
++	return 0;
++}
++
++static int terga_mc_reset_status_common(struct tegra_mc *mc,
++					const struct tegra_mc_reset *rst)
++{
++	return (mc_readl(mc, rst->control) & BIT(rst->bit)) != 0;
++}
++
++const struct tegra_mc_reset_ops terga_mc_reset_ops_common = {
++	.block_dma = terga_mc_block_dma_common,
++	.dma_idling = terga_mc_dma_idling_common,
++	.unblock_dma = terga_mc_unblock_dma_common,
++	.reset_status = terga_mc_reset_status_common,
++};
++
++static inline struct tegra_mc *reset_to_mc(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct tegra_mc, reset);
++}
++
++static const struct tegra_mc_reset *tegra_mc_reset_find(struct tegra_mc *mc,
++							unsigned long id)
++{
++	unsigned int i;
++
++	for (i = 0; i < mc->soc->num_resets; i++)
++		if (mc->soc->resets[i].id == id)
++			return &mc->soc->resets[i];
++
++	return NULL;
++}
++
++static int tegra_mc_hotreset_assert(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++	int retries = 500;
++	int err;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->reset_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	if (rst_ops->block_dma) {
++		/* block clients DMA requests */
++		err = rst_ops->block_dma(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to block %s DMA: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	if (rst_ops->dma_idling) {
++		/* wait for completion of the outstanding DMA requests */
++		while (!rst_ops->dma_idling(mc, rst)) {
++			if (!retries--) {
++				dev_err(mc->dev, "Failed to flush %s DMA\n",
++					rst->name);
++				return -EBUSY;
++			}
++
++			usleep_range(10, 100);
++		}
++	}
++
++	if (rst_ops->hotreset_assert) {
++		/* clear clients DMA requests sitting before arbitration */
++		err = rst_ops->hotreset_assert(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to hot reset %s: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++static int tegra_mc_hotreset_deassert(struct reset_controller_dev *rcdev,
++				      unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++	int err;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->reset_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	if (rst_ops->hotreset_deassert) {
++		/* take out client from hot reset */
++		err = rst_ops->hotreset_deassert(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to deassert hot reset %s: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	if (rst_ops->unblock_dma) {
++		/* allow new DMA requests to proceed to arbitration */
++		err = rst_ops->unblock_dma(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to unblock %s DMA : %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++static int tegra_mc_hotreset_status(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->reset_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	return rst_ops->reset_status(mc, rst);
++}
++
++static const struct reset_control_ops tegra_mc_reset_ops = {
++	.assert = tegra_mc_hotreset_assert,
++	.deassert = tegra_mc_hotreset_deassert,
++	.status = tegra_mc_hotreset_status,
++};
++
++static int tegra_mc_reset_setup(struct tegra_mc *mc)
++{
++	int err;
++
++	mc->reset.ops = &tegra_mc_reset_ops;
++	mc->reset.owner = THIS_MODULE;
++	mc->reset.of_node = mc->dev->of_node;
++	mc->reset.of_reset_n_cells = 1;
++	mc->reset.nr_resets = mc->soc->num_resets;
++
++	err = reset_controller_register(&mc->reset);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
+ {
+ 	unsigned long long tick;
+@@ -432,6 +634,7 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	platform_set_drvdata(pdev, mc);
++	spin_lock_init(&mc->lock);
+ 	mc->soc = match->data;
+ 	mc->dev = &pdev->dev;
+ 
+@@ -486,6 +689,13 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	err = tegra_mc_reset_setup(mc);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to register reset controller: %d\n",
++			err);
++		return err;
++	}
++
+ 	mc->irq = platform_get_irq(pdev, 0);
+ 	if (mc->irq < 0) {
+ 		dev_err(&pdev->dev, "interrupt not specified\n");
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index cdd6911f4079..01065f12ebeb 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -41,6 +41,8 @@ static inline void mc_writel(struct tegra_mc *mc, u32 value,
+ 	writel(value, mc->regs + offset);
+ }
+ 
++extern const struct tegra_mc_reset_ops terga_mc_reset_ops_common;
++
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ extern const struct tegra_mc_soc tegra20_mc_soc;
+ #endif
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index bea7fe776825..b43f37fea096 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -9,6 +9,7 @@
+ #ifndef __SOC_TEGRA_MC_H__
+ #define __SOC_TEGRA_MC_H__
+ 
++#include <linux/reset-controller.h>
+ #include <linux/types.h>
+ 
+ struct clk;
+@@ -95,6 +96,30 @@ static inline void tegra_smmu_remove(struct tegra_smmu *smmu)
+ }
+ #endif
+ 
++struct tegra_mc_reset {
++	const char *name;
++	unsigned long id;
++	unsigned int control;
++	unsigned int status;
++	unsigned int reset;
++	unsigned int bit;
++};
++
++struct tegra_mc_reset_ops {
++	int (*hotreset_assert)(struct tegra_mc *mc,
++			       const struct tegra_mc_reset *rst);
++	int (*hotreset_deassert)(struct tegra_mc *mc,
++				 const struct tegra_mc_reset *rst);
++	int (*block_dma)(struct tegra_mc *mc,
++			 const struct tegra_mc_reset *rst);
++	bool (*dma_idling)(struct tegra_mc *mc,
++			   const struct tegra_mc_reset *rst);
++	int (*unblock_dma)(struct tegra_mc *mc,
++			   const struct tegra_mc_reset *rst);
++	int (*reset_status)(struct tegra_mc *mc,
++			    const struct tegra_mc_reset *rst);
++};
++
+ struct tegra_mc_soc {
+ 	const struct tegra_mc_client *clients;
+ 	unsigned int num_clients;
+@@ -110,6 +135,10 @@ struct tegra_mc_soc {
+ 	const struct tegra_smmu_soc *smmu;
+ 
+ 	u32 intmask;
++
++	const struct tegra_mc_reset_ops *reset_ops;
++	const struct tegra_mc_reset *resets;
++	unsigned int num_resets;
+ };
+ 
+ struct tegra_mc {
+@@ -124,6 +153,10 @@ struct tegra_mc {
+ 
+ 	struct tegra_mc_timing *timings;
+ 	unsigned int num_timings;
++
++	struct reset_controller_dev reset;
++
++	spinlock_t lock;
+ };
+ 
+ void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate);
+-- 
+2.17.0
