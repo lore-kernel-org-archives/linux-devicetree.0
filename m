@@ -1,39 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/9] Input: elan_i2c - add trackstick report
-Date: Fri, 13 Apr 2018 12:36:52 -0500
-Message-ID: <20180413173652.d5errnzdoz3elaes@rob-hp-laptop>
-References: <20180409091051.2944-1-benjamin.tissoires@redhat.com>
- <20180409091051.2944-4-benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH 1/5] dt-bindings: display: bridge: lvds-transmitter: add
+ ti,ds90c185
+Date: Fri, 13 Apr 2018 12:39:34 -0500
+Message-ID: <20180413173934.uq7xhbkrq4g77jch@rob-hp-laptop>
+References: <20180409105918.20792-1-peda@axentia.se>
+ <20180409105918.20792-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180409091051.2944-4-benjamin.tissoires@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, kt.liao@emc.com.tw, Oliver Haessler <oliver@redhat.com>, Benjamin Berg <bberg@redhat.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180409105918.20792-2-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 09, 2018 at 11:10:45AM +0200, Benjamin Tissoires wrote:
-> The Elan touchpads over I2C/SMBus also can handle a
-> trackstick. Unfortunately, nothing tells us if the
-> device supports trackstick (the information lies in
-> the PS/2 node), so rely on a platform data to enable
-> or not the trackstick node.
-> 
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1313939
-> 
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> 
-> ---
-> 
-> changes in v2:
-> - use of generic device property instead of platform data so
->   device tree can also make use of it
-> ---
->  .../devicetree/bindings/input/elan_i2c.txt         |  1 +
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/input/mouse/elan_i2c_core.c                | 90 +++++++++++++++++++++-
->  2 files changed, 88 insertions(+), 3 deletions(-)
+T24gTW9uLCBBcHIgMDksIDIwMTggYXQgMTI6NTk6MTRQTSArMDIwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gU3RhcnQgbGlzdCBvZiBhY3R1YWwgY2hpcHMgY29tcGF0aWJsZSB3aXRoICJsdmRzLWVu
+Y29kZXIiLgo+IAo+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNo
+YXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgUm9zaW4gPHBlZGFA
+YXhlbnRpYS5zZT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2UvbHZkcy10cmFuc21pdHRlci50eHQgICAgICAgfCA4ICsrKysrKystCj4gIDEgZmlsZSBjaGFu
+Z2VkLCA3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKClJldmlld2VkLWJ5OiBSb2IgSGVy
+cmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
