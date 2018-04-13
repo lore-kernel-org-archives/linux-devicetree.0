@@ -1,37 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [[PATCH v2] 1/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-Date: Fri, 13 Apr 2018 11:37:05 -0500
-Message-ID: <20180413163705.io4xbukerjkzjmri@rob-hp-laptop>
-References: <1523183533-23171-1-git-send-email-tdas@codeaurora.org>
- <1523183533-23171-2-git-send-email-tdas@codeaurora.org>
+From: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>
+Subject: [PATCH v2 11/14] staging: iio: ad7746: Add devicetree bindings documentation
+Date: Fri, 13 Apr 2018 13:36:48 -0300
+Message-ID: <1523637411-8531-12-git-send-email-hernan@vanguardiasur.com.ar>
+References: <1523637411-8531-1-git-send-email-hernan@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523183533-23171-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1523637411-8531-1-git-send-email-hernan@vanguardiasur.com.ar>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Hern=C3=A1n=20Gonzalez?= <hernan@vanguardiasur.com.ar>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 08, 2018 at 04:02:12PM +0530, Taniya Das wrote:
-> From: Amit Nischal <anischal@codeaurora.org>
-> 
-> Add the RPMh clock driver to control the RPMh managed clock resources on
-> some of the Qualcomm Technologies, Inc. SoCs.
-> 
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  drivers/clk/qcom/Kconfig              |   9 +
->  drivers/clk/qcom/Makefile             |   1 +
->  drivers/clk/qcom/clk-rpmh.c           | 394 ++++++++++++++++++++++++++++++++++
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Hernán Gonzalez <hernan@vanguardiasur.com.ar>
+---
+ .../devicetree/bindings/staging/iio/cdc/ad7746.txt | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
 
->  include/dt-bindings/clock/qcom,rpmh.h |  25 +++
-
-This goes with the binding patch which should come first in the series.
-
->  4 files changed, 429 insertions(+)
->  create mode 100644 drivers/clk/qcom/clk-rpmh.c
->  create mode 100644 include/dt-bindings/clock/qcom,rpmh.h
+diff --git a/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
+new file mode 100644
+index 0000000..7740f05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
+@@ -0,0 +1,34 @@
++Analog Devices AD7746/5/7 capacitive sensor driver
++
++Required properties:
++	- compatible: Should be one of
++		* "adi,ad7745"
++		* "adi,ad7746"
++	  * "adi,ad7747"
++	- reg: The 7-bits long I2c address of the device
++
++Optional properties:
++	- adi,exclvl: This property defines the excitation voltage level for the
++    capacitance to be measured. Possible values are:
++      * 0 = +-VDD/8
++      * 1 = +-VDD/4
++      * 2 = +-VDD * 3/8
++      * 3 = +-VDD/2 (Default)
++	- adi,nexca_en: Invert excitation output A.
++	- adi,nexcb_en:	Invert excitation output B.
++
++Example:
++Here exclvl would be 1 (VDD/4), Excitation pin A would be inverted and
++Excitation pin B would NOT be inverted.
++
++i2c2 {
++
++      < . . . >
++
++      ad7746: ad7746@60 {
++              compatible = "ad7746";
++              reg = <0x60>;
++              adi,exclvl = <1>;
++              adi,nexca_en;
++      };
++};
+-- 
+2.7.4
