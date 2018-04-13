@@ -1,79 +1,48 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[RFC]DPU PATCH 2/2] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Fri, 13 Apr 2018 10:53:01 +0530
-Message-ID: <1523596981-18913-3-git-send-email-spanda@codeaurora.org>
-References: <1523596981-18913-1-git-send-email-spanda@codeaurora.org>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/5] net: stmmac: dwmac-sun8i: Allow getting
+ syscon regmap from device
+Date: Fri, 13 Apr 2018 14:03:59 +0800
+Message-ID: <201804131338.J3POccon%fengguang.wu@intel.com>
+References: <20180411141641.14675-4-icenowy@aosc.io>
+Reply-To: fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1523596981-18913-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJ4N37Q6EERBY4QYHLAKGQEAGFB5FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180411141641.14675-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBzbjY1ZHNpODYgRFNJIHRvIGVEUCBi
-cmlkZ2UuCgpTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5v
-cmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAg
-ICAgfCA3NSArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNzUgaW5zZXJ0
-aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
-c242NWRzaTg2LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5jYmQyZjBl
-Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQKQEAgLTAsMCArMSw3NSBAQAorU042NURTSTg2
-IERTSSB0byBlRFAgYnJpZGdlIGNoaXAKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-CisKK1RoaXMgaXMgdGhlIGJpbmRpbmcgZm9yIFRleGFzIEluc3RydW1lbnRzIFNONjVEU0k4NiBi
-cmlkZ2UuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IE11c3QgYmUgInRp
-LHNuNjVkc2k4NiIKKy0gcmVnOiBpMmMgYWRkcmVzcyBvZiB0aGUgY2hpcCwgMHgyZCBhcyBwZXIg
-ZGF0YXNoZWV0CistIGVuYWJsZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0
-aW9uIGZvciBFRFBfQlJJSl9FTiBwaW4KKy0gYXV4LXNkYS1ncGlvczogT0YgZGV2aWNlLXRyZWUg
-Z3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFRFBfQlJJSl9JMkNfU0RBIHBpbiBvZiBBVVggY2hhbm5l
-bAorLSBhdXgtc2NsLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9y
-IEVEUF9CUklKX0kyQ19TQ0wgcGluIG9mIEFVWCBjaGFubmVsCistIGJpYXMtZW4tZ3Bpb3M6IE9G
-IGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgRU5fUFAzMzAwX0RYX0VEUCBwaW4g
-dG8KKwkJCWVuYWJsZSAzLjNWIHN1cHBseSB0byBlRFAgY29ubmVjdG9yCistIGJrbHQtZW4tZ3Bp
-b3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgQVBfRURQX0JLTFRFTiBw
-aW4KKworLSB2Y2Npby1zdXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIFBI
-WS4KKy0gdmNjYS1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIENvbnRy
-b2xsZXIuCistIHZjY3Mtc3VwcGx5OiBBIDMuM1Ygc3VwcGx5IHRoYXQgcG93ZXIgdGhlIGVEUCBj
-b25uZWN0b3IKKworT3B0aW9uYWwgcHJvcGVydGllczoKKworLSBpcnEtZ3Bpb3M6IE9GIGRldmlj
-ZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgaW50ZXJydXB0IHBpbgorLSBia2x0LWN0cmwt
-Z3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgRURQX0JLTFRDVEwg
-cGluCisKKy0gc24saXMtcGx1Z2dhYmxlOiBib29sZWFuIHByb3BlcnR5IHRvIHNwZWNpZnkgaWYg
-SFBEIHN1cHBvcnRlZCBvciBub3QKKy0gc24sY3VzdG9tLW1vZGVzOiBPRiBkZXZpY2UtdHJlZSBz
-cGVjaWZpY3Rpb24gdG8gYWRkIHN1cHBvcnQgZm9yIGN1c3RvbSBtb2RlcworCitSZXF1aXJlZCBu
-b2RlczoKKworVGhpcyBkZXZpY2UgaGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29ubmVjdGlv
-bnMgYXJlIG1vZGVsbGVkIHVzaW5nIHRoZSBPRgorZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGlu
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCisKKy0gVmlkZW8g
-cG9ydCAwIGZvciBEU0kgaW5wdXQKKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0CisKK0V4
-YW1wbGUKKy0tLS0tLS0KKworZWRwLWJyaWRnZUAyZCB7CisJY29tcGF0aWJsZSA9ICJ0aSxzbjY1
-ZHNpODYiOworCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCSNzaXplLWNlbGxzID0gPDA+OworCXJl
-ZyA9IDwweDJkPjsKKworCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMyBHUElPX0FDVElWRV9I
-SUdIPjsKKwlhdXgtc2RhLWdwaW9zID0gPCZtc21ncGlvIDM0IEdQSU9fQUNUSVZFX0hJR0g+Owor
-CWF1eC1zY2wtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzUgR1BJT19BQ1RJVkVfSElHSD47CisJYmlhcy1l
-bi1ncGlvcyA9IDwmbXNtZ3BpbyAzNiBHUElPX0FDVElWRV9ISUdIPjsKKwlia2x0LWVuLWdwaW9z
-ID0gPCZtc21ncGlvIDM3IEdQSU9fQUNUSVZFX0hJR0g+OworCisJdmNjaW8tc3VwcGx5ID0gPCZw
-bTg5MTZfbDE3PjsKKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2X2w2PjsKKwl2Y2NzLXN1cHBseSA9
-IDwmcG04OTE2X2w3PjsKKworCXBvcnRzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNz
-aXplLWNlbGxzID0gPDA+OworCisJCXBvcnRAMCB7CisJCQlyZWcgPSA8MD47CisKKwkJCWVkcF9i
-cmlkZ2VfaW46IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+Owor
-CQkJfTsKKwkJfTsKKworCQlwb3J0QDEgeworCQkJcmVnID0gPDE+OworCisJCQllZHBfYnJpZGdl
-X291dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX3BhbmVsX2luPjsK
-KwkJCX07CisJCX07CisJfTsKK30KLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwg
-SW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRh
-dGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2ZyZWVkcmVubwo=
+Hi Chen-Yu,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.16 next-20180412]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Icenowy-Zheng/Add-support-in-dwmac-sun8i-for-accessing-EMAC-clock/20180413-004816
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c:82:24: sparse: symbol 'old_syscon_reg_field' was not declared. Should it be static?
+>> drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c:89:24: sparse: symbol 'single_reg_field' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
