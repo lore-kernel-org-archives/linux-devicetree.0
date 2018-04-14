@@ -1,11 +1,13 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/2] Add R8A77980/Condor eMMC support
-Date: Sat, 14 Apr 2018 22:24:57 +0300
-Message-ID: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
+Subject: [PATCH 1/2] arm64: dts: renesas: r8a77980: add MMC support
+Date: Sat, 14 Apr 2018 22:27:04 +0300
+Message-ID: <aaa58189-2c27-e51f-1f97-3671c50a1479@cogentembedded.com>
+References: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
 Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,16 +22,34 @@ To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin
 Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Define the generic R8A77980 part of the MMC0 (SDHI2) device node.
 
-Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20180412-v4.16' tag. We're adding the R8A77980 MMC (SDHI)
-device nodes and then enable eMMC support on the Condor board. These patches
-are atop of the recently posted PCIe/PFC R8A77980/Condor patches and they
-depend on the R8A77980 SDHI driver support patch (not posted yet) in order
-to work properly...
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/2] arm64: dts: renesas: r8a77980: add MMC support
-[2/2] arm64: dts: renesas: condor: add eMMC support
+---
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-WBR, Sergei
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -371,6 +371,18 @@
+ 			dma-channels = <16>;
+ 		};
+ 
++		mmc0: mmc@ee140000 {
++			compatible = "renesas,sdhi-r8a77980",
++				     "renesas,rcar-gen3-sdhi";
++			reg = <0 0xee140000 0 0x2000>;
++			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 314>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 314>;
++			max-frequency = <200000000>;
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@f1010000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
