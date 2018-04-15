@@ -1,101 +1,35 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: condor: add eMMC support
-Date: Sat, 14 Apr 2018 22:28:29 +0300
-Message-ID: <309b5211-bab6-53de-b8a8-6e1049e1705e@cogentembedded.com>
-References: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <611daf1f-42a2-d463-0814-ebf762871018@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Yaodong Liu <my375229675@gmail.com>
+Subject: [PATCH] ARM: dts: rockchip: disable arm_global_timer for rk3066a
+Date: Sun, 15 Apr 2018 12:35:55 +0800
+Message-ID: <1523766955-9001-1-git-send-email-my375229675@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yaodong Liu <my375229675@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the Condor board dependent part of the MMC0 (connected to eMMC chip)
-device node along with the necessary voltage regulators...
+The arm_global_timer provides unstable clock to sched_clock, it will
+be selected by default instead of rockchip_timer. The same issue has
+been fixed in rk3188.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+So we must disable arm_global_timer to get the correct clocksource.
 
+Signed-off-by: Yaodong Liu <my375229675@gmail.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   43 ++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/boot/dts/rk3066a.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -27,6 +27,24 @@
- 		/* first 128MB is reserved for secure area. */
- 		reg = <0 0x48000000 0 0x78000000>;
- 	};
-+
-+	d3_3v: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vddq_vin01: regulator-1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDQ_VIN01";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 06523ca..1920f93 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -749,3 +749,7 @@
+ &emac {
+ 	compatible = "rockchip,rk3066-emac";
  };
- 
- &avb {
-@@ -52,6 +70,19 @@
- 	clock-frequency = <32768>;
- };
- 
-+&mmc0 {
-+	pinctrl-0 = <&mmc_3_3v_pins>;
-+	pinctrl-1 = <&mmc_1_8v_pins>;
-+	pinctrl-names = "default", "state_uhs";
 +
-+	vmmc-supply = <&d3_3v>;
-+	vqmmc-supply = <&vddq_vin01>;
-+	mmc-hs200-1_8v;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
++&global_timer {
++	status = "disabled";
 +};
-+
- &pciec {
- 	status = "okay";
- };
-@@ -70,6 +101,18 @@
- 		function = "avb";
- 	};
- 
-+	mmc_1_8v_pins: mmc_1_8v {
-+		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
-+		function = "mmc";
-+		power-source = <1800>;
-+	};
-+
-+	mmc_3_3v_pins: mmc_3_3v {
-+		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
-+		function = "mmc";
-+		power-source = <3300>;
-+	};
-+
- 	scif0_pins: scif0 {
- 		groups = "scif0_data";
- 		function = "scif0";
+-- 
+2.7.4
