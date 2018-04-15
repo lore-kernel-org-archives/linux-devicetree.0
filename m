@@ -1,109 +1,52 @@
-From: Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: [PATCH] PCI: dwc: artpec6: Add reset-gpios for PERST# control
-Date: Sun, 15 Apr 2018 20:56:21 +0200
-Message-ID: <20180415185621.GR16746@axis.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH] ARM: dts: da850: use gpio-ranges
+Date: Sun, 15 Apr 2018 13:57:22 -0500
+Message-ID: <e29d0326-fe16-5486-e3a9-53d4d6ebfb0e@lechnology.com>
+References: <1519079371-25493-1-git-send-email-david@lechnology.com>
+ <CACRpkdb=wOomi4QxvXLdNJVfB-rvGfKE+QZvmxvT2SzVDjH4tw@mail.gmail.com>
+ <be660007-cf4b-bf01-d811-a456af74bb49@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <be660007-cf4b-bf01-d811-a456af74bb49@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Tony Lindgren <tony@atomide.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Some devices need an optional external gpio for controlling
-the PERST# signal to bring up for example a PCIe switch
-after a soft reset.
+On 02/23/2018 05:44 AM, Sekhar Nori wrote:
+> On Thursday 22 February 2018 09:04 PM, Linus Walleij wrote:
+>> On Mon, Feb 19, 2018 at 11:29 PM, David Lechner <david@lechnology.com> wrote:
+>>
+>>> This makes use of the gpio-ranges feature that connects GPIO
+>>> controllers and PINMUX controllers.
+>>>
+>>> In da850.dtsi, pinctrl-single,gpio-range is added to the pinmux node
+>>> and gpio-ranges is added to the GPIO node. Unfortunately, the way the
+>>> pinctrl-single driver enumerates the pins (starting with LSB) causes
+>>> them to be in reverse order compared to the way the gpios are assigned.
+>>> As a result, we have to declare the mapping for each GPIO individually.
+>>>
+>>> This also lets us remove all of the GPIO pinmuxes from
+>>> da850-lego-ev3.dts. (Other da850 boards do not currently have any
+>>> GPIO pinmuxes declared.)
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>
+>> Nice,
+>> Acked-by: Linus Walleij <linus.wallei@linaro.org>
+> 
+> Looks good to me too. And quite painstakingly done!
+> 
+> I suppose this needs to wait a bit due to the dependencies? Let me know
+> once its okay to merge.
+> 
+> Thanks,
+> Sekhar
+> 
 
-Without this, some boards (the ARTPEC-6 master devboard)
-would not get the PCIe link back after a soft reset.
+Hi Sekhar,
 
-Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
----
- .../devicetree/bindings/pci/axis,artpec6-pcie.txt    |  4 ++++
- drivers/pci/dwc/pcie-artpec6.c                       | 20 +++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-index 979dc7b6cfe8..810bd461e81c 100644
---- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-@@ -21,6 +21,10 @@ and thus inherits all the common properties defined in designware-pcie.txt.
- - axis,syscon-pcie: A phandle pointing to the ARTPEC-6 system controller,
- 	used to enable and control the Synopsys IP.
- 
-+Optional properties:
-+
-+- reset-gpios: GPIO to generate PCIe PERST# assert and deassert signal.
-+
- Example:
- 
- 	pcie@f8050000 {
-diff --git a/drivers/pci/dwc/pcie-artpec6.c b/drivers/pci/dwc/pcie-artpec6.c
-index 93b3df9ed1b5..1eada6d1a381 100644
---- a/drivers/pci/dwc/pcie-artpec6.c
-+++ b/drivers/pci/dwc/pcie-artpec6.c
-@@ -19,6 +19,8 @@
- #include <linux/interrupt.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- 
- #include "pcie-designware.h"
- 
-@@ -35,6 +37,7 @@ struct artpec6_pcie {
- 	void __iomem		*phy_base;	/* DT phy */
- 	enum artpec_pcie_variants variant;
- 	enum dw_pcie_device_mode mode;
-+	struct gpio_desc	*reset;
- };
- 
- struct artpec_pcie_of_data {
-@@ -350,6 +353,13 @@ static void artpec6_pcie_deassert_core_reset(struct artpec6_pcie *artpec6_pcie)
- 	}
- 	artpec6_pcie_writel(artpec6_pcie, PCIECFG, val);
- 	usleep_range(100, 200);
-+
-+	/* Some boards don't have PCIe reset hardwired, use a GPIO insted. */
-+	if (artpec6_pcie->reset) {
-+		gpiod_set_value_cansleep(artpec6_pcie->reset, 1);
-+		msleep(100);
-+		gpiod_set_value_cansleep(artpec6_pcie->reset, 0);
-+	}
- }
- 
- static void artpec6_pcie_enable_interrupts(struct artpec6_pcie *artpec6_pcie)
-@@ -513,6 +523,7 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 	const struct artpec_pcie_of_data *data;
- 	enum artpec_pcie_variants variant;
- 	enum dw_pcie_device_mode mode;
-+	struct device_node *node = dev->of_node;
- 
- 	match = of_match_device(artpec6_pcie_of_match, dev);
- 	if (!match)
-@@ -548,11 +559,18 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(artpec6_pcie->phy_base);
- 
- 	artpec6_pcie->regmap =
--		syscon_regmap_lookup_by_phandle(dev->of_node,
-+		syscon_regmap_lookup_by_phandle(node,
- 						"axis,syscon-pcie");
- 	if (IS_ERR(artpec6_pcie->regmap))
- 		return PTR_ERR(artpec6_pcie->regmap);
- 
-+	artpec6_pcie->reset = devm_gpiod_get_optional(dev, "reset",
-+						      GPIOD_OUT_LOW);
-+	if (IS_ERR(artpec6_pcie->reset)) {
-+		dev_err(dev, "Failed to request reset gpio\n");
-+		return PTR_ERR(artpec6_pcie->reset);
-+	}
-+
- 	platform_set_drvdata(pdev, artpec6_pcie);
- 
- 	switch (artpec6_pcie->mode) {
--- 
-2.1.4
-
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+The dependencies are in v4.17-rc1 so you can pick up this patch now.
