@@ -1,90 +1,116 @@
-From: =?UTF-8?Q?Hern=C3=A1n_Gonzalez?= <hernan@vanguardiasur.com.ar>
-Subject: Re: [PATCH v2 11/14] staging: iio: ad7746: Add devicetree bindings documentation
-Date: Mon, 16 Apr 2018 11:55:04 -0300
-Message-ID: <CALfa3vFWuethdCs1qeZLM+u9xpmuUn0tADCVozw84NjkKoOA4g@mail.gmail.com>
-References: <1523637411-8531-1-git-send-email-hernan@vanguardiasur.com.ar>
- <1523637411-8531-12-git-send-email-hernan@vanguardiasur.com.ar> <20180415163743.2fa992f9@archlinux>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] Documentation: Documentation for qcom, llcc
+Date: Mon, 16 Apr 2018 09:59:12 -0500
+Message-ID: <20180416145912.ja7d2xd2kqiukrgl@rob-hp-laptop>
+References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
+ <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180415163743.2fa992f9@archlinux>
+Content-Disposition: inline
+In-Reply-To: <1523390893-10904-2-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: knaack.h@gmx.de, lars@metafoo.de, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, gregkh@linuxfoundation.org, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@lists.infradead.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 15, 2018 at 12:37 PM, Jonathan Cameron <jic23@kernel.org> wrote=
-:
-> On Fri, 13 Apr 2018 13:36:48 -0300
-> Hern=C3=A1n Gonzalez <hernan@vanguardiasur.com.ar> wrote:
->
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Hern=C3=A1n Gonzalez <hernan@vanguardiasur.com.ar>
-> A few comments inline.
->
-> Thanks,
->
-> Jonathan
->
->> ---
->>  .../devicetree/bindings/staging/iio/cdc/ad7746.txt | 34 +++++++++++++++=
-+++++++
->>  1 file changed, 34 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/staging/iio/cdc/ad=
-7746.txt
->>
->> diff --git a/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.tx=
-t b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
->> new file mode 100644
->> index 0000000..7740f05
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/staging/iio/cdc/ad7746.txt
->> @@ -0,0 +1,34 @@
->> +Analog Devices AD7746/5/7 capacitive sensor driver
->> +
->> +Required properties:
->> +     - compatible: Should be one of
->> +             * "adi,ad7745"
->> +             * "adi,ad7746"
->> +       * "adi,ad7747"
->> +     - reg: The 7-bits long I2c address of the device
->> +
->> +Optional properties:
->> +     - adi,exclvl: This property defines the excitation voltage level f=
-or the
->> +    capacitance to be measured. Possible values are:
->> +      * 0 =3D +-VDD/8
->> +      * 1 =3D +-VDD/4
->> +      * 2 =3D +-VDD * 3/8
->> +      * 3 =3D +-VDD/2 (Default)
->> +     - adi,nexca_en: Invert excitation output A.
->
-> The naming is rather odd.  Why _en?
->
+On Tue, Apr 10, 2018 at 01:08:12PM -0700, Rishabh Bhatnagar wrote:
+> Documentation for last level cache controller device tree bindings,
+> client bindings usage examples.
 
-Just sticking to the original pdata naming. I'll rename it on next series.
+"Documentation: Documentation ..."? That wastes a lot of the subject 
+line... The preferred prefix is "dt-bindings: ..."
 
->> +     - adi,nexcb_en: Invert excitation output B.
->> +
->> +Example:
->> +Here exclvl would be 1 (VDD/4), Excitation pin A would be inverted and
->> +Excitation pin B would NOT be inverted.
->> +
->> +i2c2 {
->> +
->> +      < . . . >
-> What does this spacer add to the example?
-> Sure, there can be other devices, but no need to illustrate that here.
->
->> +
->> +      ad7746: ad7746@60 {
->> +              compatible =3D "ad7746";
->> +              reg =3D <0x60>;
->> +              adi,exclvl =3D <1>;
->> +              adi,nexca_en;
->> +      };
->> +};
->
+> 
+> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> new file mode 100644
+> index 0000000..497cf0f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> @@ -0,0 +1,58 @@
+> +== Introduction==
+> +
+> +LLCC (Last Level Cache Controller) provides last level of cache memory in SOC,
+> +that can be shared by multiple clients. Clients here are different cores in the
+> +SOC, the idea is to minimize the local caches at the clients and migrate to
+> +common pool of memory
+> +
+> +Properties:
+> +- compatible:
+> +	 Usage: required
+> +	 Value type: <string>
+> +	 Definition: must be "qcom,sdm845-llcc"
+> +
+> +- reg:
+> +	 Usage: required
+> +	 Value Type: <prop-encoded-array>
+> +	 Definition: must be addresses and sizes of the LLCC registers
+
+How many address ranges?
+
+> +
+> +- #cache-cells:
+
+This is all written as it is a common binding, but it is not one.
+
+You already have most of the configuration data for each client in the 
+driver, I think I'd just put the client connection there too. Is there 
+any variation of this for a given SoC?
+
+> +	 Usage: required
+> +	 Value Type: <u32>
+> +	 Definition: Number of cache cells, must be 1
+> +
+> +- max-slices:
+> +	 usage: required
+> +	 Value Type: <u32>
+> +	 Definition: Number of cache slices supported by hardware
+
+What's a slice?
+
+> +
+> +Example:
+> +
+> +	llcc: qcom,llcc@1100000 {
+> +		compatible = "qcom,sdm845-llcc";
+> +		reg = <0x1100000 0x250000>;
+> +		#cache-cells = <1>;
+> +		max-slices = <32>;
+> +	};
+> +
+> +== Client ==
+> +
+> +Properties:
+> +- cache-slice-names:
+> +	 Usage: required
+> +	 Value type: <stringlist>
+> +	 Definition: A set of names that identify the usecase names of a
+> +			client that uses cache slice. These strings are
+> +			used to look up the cache slice entries by name.
+> +
+> +- cache-slices:
+> +	 Usage: required
+> +	 Value type: <prop-encoded-array>
+> +	 Definition: The tuple has phandle to llcc device as the first
+> +			argument and the second argument is the usecase
+> +			id of the client.
+> +For Example:
+> +	venus {
+> +		cache-slice-names = "vidsc0", "vidsc1";
+> +	 	cache-slices = <&llcc VIDSC0_ID>, <&llcc VIDSC1_ID>;
+> +	};
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
