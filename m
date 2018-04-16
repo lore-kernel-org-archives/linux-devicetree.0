@@ -1,42 +1,59 @@
-Return-Path: <sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-From: Stephen Boyd <sboyd@kernel.org>
-In-Reply-To: <469dfad07762787ea2cf446d71d355c0b5d969b3.1523863527.git.viresh.kumar@linaro.org>
-References: <469dfad07762787ea2cf446d71d355c0b5d969b3.1523863527.git.viresh.kumar@linaro.org>
-Message-ID: <152389202198.51482.3779874474342173946@swboyd.mtv.corp.google.com>
-Subject: Re: [PATCH V2] of: Don't create device for OPP tables
-Date: Mon, 16 Apr 2018 08:20:21 -0700
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=GcYR=HF=linaro.org=viresh.kumar@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V2] of: Don't create device for OPP tables
+Date: Mon, 16 Apr 2018 12:56:21 +0530
+Message-Id: <469dfad07762787ea2cf446d71d355c0b5d969b3.1523863527.git.viresh.kumar@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Viresh Kumar (2018-04-16 00:26:21)
-> ---
-> V1->V2:
-> - Added Reviewed-by from Stephen.
+The OPP tables are present as separate nodes, whose phandle is used in
+the "operating-points-v2" property of devices. Currently the OF core
+creates a device for the OPP table unconditionally, which is not used by
+any kernel code.
 
-Ok
+This patch creates another OF device_id table for the nodes which must
+be skipped while creating devices and OPP is the only user of it for now.
 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index c00d81dfac0b..93aff2bf56f9 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -32,6 +32,11 @@ const struct of_device_id of_default_bus_match_table[]=
- =3D {
->         {} /* Empty terminated list */
->  };
->  =
+Reported-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+---
+V1->V2:
+- Added Reviewed-by from Stephen.
+- Created a table for nodes to be skipped.
 
-> +const struct of_device_id of_skipped_node_table[] =3D {
+ drivers/of/platform.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-static?
-
-> +       { .compatible =3D "operating-points-v2", },
-> +       {} /* Empty terminated list */
-> +};
-> +
->  static int of_dev_node_match(struct device *dev, void *data)
->  {
->         return dev->of_node =3D=3D data;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index c00d81dfac0b..93aff2bf56f9 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -32,6 +32,11 @@ const struct of_device_id of_default_bus_match_table[] = {
+ 	{} /* Empty terminated list */
+ };
+ 
++const struct of_device_id of_skipped_node_table[] = {
++	{ .compatible = "operating-points-v2", },
++	{} /* Empty terminated list */
++};
++
+ static int of_dev_node_match(struct device *dev, void *data)
+ {
+ 	return dev->of_node == data;
+@@ -356,6 +361,12 @@ static int of_platform_bus_create(struct device_node *bus,
+ 		return 0;
+ 	}
+ 
++	/* Skip nodes for which we don't want to create devices */
++	if (unlikely(of_match_node(of_skipped_node_table, bus))) {
++		pr_debug("%s() - skipping %pOF node\n", __func__, bus);
++		return 0;
++	}
++
+ 	if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
+ 		pr_debug("%s() - skipping %pOF, already populated\n",
+ 			__func__, bus);
+-- 
+2.15.0.194.g9af6a3dea062
