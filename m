@@ -1,82 +1,109 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] doc: bindings: Add bindings documentation for mtd
- nvmem
-Date: Mon, 16 Apr 2018 16:08:51 -0500
-Message-ID: <20180416210851.shu73nlincslxlde@rob-hp-laptop>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
- <1521933899-362-3-git-send-email-albeu@free.fr>
+Subject: Re: [PATCH v6 10/11] dt-bindings: clock: Add bindings for ZynqMP
+ clock driver
+Date: Mon, 16 Apr 2018 16:28:12 -0500
+Message-ID: <20180416212812.abmxy23r5peiwbik@rob-hp-laptop>
+References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
+ <1523389127-14243-11-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1521933899-362-3-git-send-email-albeu@free.fr>
+In-Reply-To: <1523389127-14243-11-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alban Bedel <albeu@free.fr>
-Cc: linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, mark.rutland@arm.com, linux-clk@vger.kernel.org, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 25, 2018 at 12:24:58AM +0100, Alban Bedel wrote:
-> Config data for drivers, like MAC addresses, is often stored in MTD.
-> Add a binding that define how such data storage can be represented in
-> device tree.
+On Tue, Apr 10, 2018 at 12:38:46PM -0700, Jolly Shah wrote:
+> From: Rajan Vaja <rajanv@xilinx.com>
 > 
-> Signed-off-by: Alban Bedel <albeu@free.fr>
-> ---
-> Changelog:
-> v2: * Added a "Required properties" section with the nvmem-provider
->       property
-> v3: * Fixed my name in From and Signed-off-by
->     * Moved to the new nvmem binding with the nvmem-cells subnode
-> ---
->  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> Add documentation to describe Xilinx ZynqMP clock driver
+> bindings.
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> new file mode 100644
-> index 0000000..c819a69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> @@ -0,0 +1,27 @@
-> += NVMEM in MTD =
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> ---
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  53 ++++++++++
+>  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 +++++++++++++++++++++
+>  2 files changed, 169 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
+
+One nit, otherwise:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> index 1b431d9..ee8d0b0 100644
+> --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> @@ -17,6 +17,53 @@ Required properties:
+>  		  - "smc" : SMC #0, following the SMCCC
+>  		  - "hvc" : HVC #0, following the SMCCC
+>  
+> +--------------------------------------------------------------------------
+> +Device Tree Clock bindings for the Zynq Ultrascale+ MPSoC controlled using
+> +Zynq MPSoC firmware interface
+> +--------------------------------------------------------------------------
+> +The clock controller is a h/w block of Zynq Ultrascale+ MPSoC clock
+> +tree. It reads required input clock frequencies from the devicetree and acts
+> +as clock provider for all clock consumers of PS clocks.
 > +
-> +Config data for drivers, like MAC addresses, is often stored in MTD.
-> +An MTD device, or one of its partition, can be defined as a NVMEM provider
-> +by having an 'nvmem-cells' subnode as defined in nvmem.txt.
+> +See clock_bindings.txt for more information on the generic clock bindings.
 > +
-> +Example:
+> +Required properties:
+> + - #clock-cells:	Must be 1
+> + - compatible:		Must contain:	"xlnx,zynqmp-clk"
+> + - clocks:		List of clock specifiers which are external input
+> +			clocks to the given clock controller. Please refer
+> +			the next section to find the input clocks for a
+> +			given controller.
+> + - clock-names:		List of clock names which are exteral input clocks
+> +			to the given clock controller. Please refer to the
+> +			clock bindings for more details.
 > +
-> +	flash@0 {
-> +		...
+> +Input clocks for zynqmp Ultrascale+ clock controller:
 > +
-> +		partition@2 {
-
-This unit address is not correct...
-
-> +			label = "art";
-> +			reg = <0x7F0000 0x010000>;
-
-Lowercase hex.
-
-> +			read-only;
+> +The Zynq UltraScale+ MPSoC has one primary and four alternative reference clock
+> +inputs. These required clock inputs are:
+> + - pss_ref_clk (PS reference clock)
+> + - video_clk (reference clock for video system )
+> + - pss_alt_ref_clk (alternative PS reference clock)
+> + - aux_ref_clk
+> + - gt_crx_ref_clk (transceiver reference clock)
 > +
-> +			nvmem-cells {
-> +				compatible = "nvmem-cells";
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
+> +The following strings are optional parameters to the 'clock-names' property in
+> +order to provide an optional (E)MIO clock source:
+> + - swdt0_ext_clk
+> + - swdt1_ext_clk
+> + - gem0_emio_clk
+> + - gem1_emio_clk
+> + - gem2_emio_clk
+> + - gem3_emio_clk
+> + - mio_clk_XX		# with XX = 00..77
+> + - mio_clk_50_or_51	#for the mux clock to gem tsu from 50 or 51
 > +
-> +				eeprom@1000 {
+> +
+> +Output clocks are registered based on clock information received
+> +from firmware. Output clocks indexes are mentioned in
+> +include/dt-bindings/clock/xlnx,zynqmp-clk.h.
+> +
+>  -------
+>  Example
+>  -------
+> @@ -25,5 +72,11 @@ firmware {
+>  	zynqmp_firmware: zynqmp-firmware {
+>  		compatible = "xlnx,zynqmp-firmware";
+>  		method = "smc";
+> +		clk: clk {
 
-"eeprom" isn't specific data. The purpose of the nvmem binding is to 
-provide specific data fields like MAC addresseses.
+clock-controller {
 
-Plus "eeprom" is the node name for EEPROM devices.
-
-> +					reg = <0x1000 0x1000>;
-> +				};
-> +			};
+> +			#clock-cells = <1>;
+> +			compatible = "xlnx,zynqmp-clk";
+> +			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+> +			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
 > +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+>  	};
+>  };
