@@ -1,84 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add binding for RAVE SP
- EEPROM driver
-Date: Mon, 16 Apr 2018 10:05:07 -0500
-Message-ID: <20180416150507.2wm4s7opgr242v6a@rob-hp-laptop>
-References: <20180411015948.19562-1-andrew.smirnov@gmail.com>
- <20180411015948.19562-2-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: bcm2835-gpio: Add generic
+ pinctrl support
+Date: Mon, 16 Apr 2018 10:06:39 -0500
+Message-ID: <20180416150639.wt74teumpzah4x7o@rob-hp-laptop>
+References: <f500b25c-eea0-9f01-7d7b-5a9dd90c50fa@castello.eng.br>
+ <1523422726-7910-1-git-send-email-matheus@castello.eng.br>
+ <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180411015948.19562-2-andrew.smirnov@gmail.com>
+In-Reply-To: <1523422726-7910-2-git-send-email-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Aleksander Morgado <aleksander@aleksander.es>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: stefan.wahren@i2se.com, eric@anholt.net, linus.walleij@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 06:59:47PM -0700, Andrey Smirnov wrote:
-> Add Device Tree bindings for RAVE SP EEPROM driver - an MFD cell of
-> parent RAVE SP driver (documented in
-> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On Wed, Apr 11, 2018 at 12:58:44AM -0400, Matheus Castello wrote:
+> Added generic pin configuration and multiplexing support,
+> and should be preferred than brcm legacy one.
 > 
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Aleksander Morgado <aleksander@aleksander.es>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  .../bindings/nvmem/zii,rave-sp-eeprom.txt          | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> new file mode 100644
-> index 000000000000..a4e838c30b67
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> @@ -0,0 +1,29 @@
-> +Zodiac Inflight Innovations RAVE EEPROM Bindings
-> +
-> +RAVE SP EEPROM device is a "MFD cell" device exposing physical EEPROM
-> +attached to RAVE Supervisory Processor. It is expected that its Device
-> +Tree node is specified as a child of the node corresponding to the
-> +parent RAVE SP device (as documented in
-> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "zii,rave-sp-eeprom"
+>  .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt  | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 
-Need to state somewhere this follows the bindings/nvmem/nvmem.txt 
-binding.
-
-> +
-> +Example:
-> +
-> +	rave-sp {
-> +		compatible = "zii,rave-sp-rdu1";
-> +		current-speed = <38400>;
-> +
-> +		main-eeprom {
-
-eeprom@a4
-
-> +			compatible = "zii,rave-sp-eeprom";
-> +			reg = <0xA4 0x4000>;
-
-lowercase hex please.
-
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			wdt_timeout: wdt-timeout@81 {
-> +				reg = <0x81 2>;
-> +			};
-> +		};
-> +	}
-> -- 
-> 2.14.3
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
