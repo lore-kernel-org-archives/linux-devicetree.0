@@ -1,134 +1,219 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 1/3] drm/vc4: Remove the need for the GPU-subsystem DT node.
-Date: Mon, 16 Apr 2018 15:52:59 -0700
-Message-ID: <20180416225259.6571-1-eric@anholt.net>
-References: <CAL_JsqKJD86tV0jno_cZR=nLoOThT5rjRu3BPpzAwpcHgxSArQ@mail.gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v3 01/10] Documentations: dt-bindings: Add documents of
+ generic PECI bus, adapter and client drivers
+Date: Mon, 16 Apr 2018 16:06:16 -0700
+Message-ID: <2ce14097-e003-d59a-a05c-1cee55cb0929@linux.intel.com>
+References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
+ <20180416175936.4vcse73mrnyk242m@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKJD86tV0jno_cZR=nLoOThT5rjRu3BPpzAwpcHgxSArQ@mail.gmail.com>
+In-Reply-To: <20180416175936.4vcse73mrnyk242m@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, linux-rpi-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>
+To: Rob Herring <robh@kernel.org>
+Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-The GPU subsystem node was a workaround to have a central device to
-bind V3D and display to.  Following the lead of 246774d17fc0
-("drm/etnaviv: remove the need for a gpu-subsystem DT node"), remove
-the subsystem node usage and just create a platform device for the DRM
-device to attach to if any of the subsystem devices are present.
+Hi Rob,
 
-v2: Simplify the DT walking code.
-v3: Always put the node.
+Thanks for sharing your time. Please see my answers inline.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- .../bindings/display/brcm,bcm-vc4.txt         |  7 -----
- drivers/gpu/drm/vc4/vc4_drv.c                 | 28 +++++++++++++------
- drivers/gpu/drm/vc4/vc4_hvs.c                 |  1 +
- drivers/gpu/drm/vc4/vc4_v3d.c                 |  1 +
- 4 files changed, 22 insertions(+), 15 deletions(-)
+On 4/16/2018 10:59 AM, Rob Herring wrote:
+> On Tue, Apr 10, 2018 at 11:32:03AM -0700, Jae Hyun Yoo wrote:
+>> This commit adds documents of generic PECI bus, adapter and client drivers.
+> 
+> "dt-bindings: ..." for the subject prefix please.
+>
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-index 284e2b14cfbe..5fd4717101d6 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-@@ -4,9 +4,6 @@ The VC4 device present on the Raspberry Pi includes a display system
- with HDMI output and the HVS (Hardware Video Scaler) for compositing
- display planes.
- 
--Required properties for VC4:
--- compatible:	Should be "brcm,bcm2835-vc4" or "brcm,cygnus-vc4"
--
- Required properties for Pixel Valve:
- - compatible:	Should be one of "brcm,bcm2835-pixelvalve0",
- 		  "brcm,bcm2835-pixelvalve1", or "brcm,bcm2835-pixelvalve2"
-@@ -153,10 +150,6 @@ v3d: v3d@7ec00000 {
- 	interrupts = <1 10>;
- };
- 
--vc4: gpu {
--	compatible = "brcm,bcm2835-vc4";
--};
--
- panel: panel {
- 	compatible = "ontat,yx700wv03", "simple-panel";
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-index 7c95ed5c5cac..e8ba9e7c71d2 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.c
-+++ b/drivers/gpu/drm/vc4/vc4_drv.c
-@@ -364,22 +364,29 @@ static int vc4_platform_drm_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id vc4_of_match[] = {
--	{ .compatible = "brcm,bcm2835-vc4", },
--	{ .compatible = "brcm,cygnus-vc4", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, vc4_of_match);
--
- static struct platform_driver vc4_platform_driver = {
- 	.probe		= vc4_platform_drm_probe,
- 	.remove		= vc4_platform_drm_remove,
- 	.driver		= {
- 		.name	= "vc4-drm",
--		.of_match_table = vc4_of_match,
- 	},
- };
- 
-+static bool
-+driver_of_table_has_a_match(const struct platform_driver *driver)
-+{
-+	struct device_node *node;
-+	bool ret;
-+
-+	node = of_find_matching_node_and_match(NULL,
-+					       driver->driver.of_match_table,
-+					       NULL);
-+	ret = of_device_is_available(node);
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+
- static int __init vc4_drm_register(void)
- {
- 	int ret;
-@@ -389,6 +396,11 @@ static int __init vc4_drm_register(void)
- 	if (ret)
- 		return ret;
- 
-+	if (driver_of_table_has_a_match(&vc4_v3d_driver) ||
-+	    driver_of_table_has_a_match(&vc4_hvs_driver)) {
-+		platform_device_register_simple("vc4-drm", -1, NULL, 0);
-+	}
-+
- 	return platform_driver_register(&vc4_platform_driver);
- }
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-index 2b62fc5b8d85..730813ee74ae 100644
---- a/drivers/gpu/drm/vc4/vc4_hvs.c
-+++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-@@ -262,6 +262,7 @@ static const struct of_device_id vc4_hvs_dt_match[] = {
- 	{ .compatible = "brcm,bcm2835-hvs" },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, vc4_hvs_dt_match);
- 
- struct platform_driver vc4_hvs_driver = {
- 	.probe = vc4_hvs_dev_probe,
-diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-index bfc2fa73d2ae..e77e9ebbab4b 100644
---- a/drivers/gpu/drm/vc4/vc4_v3d.c
-+++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-@@ -459,6 +459,7 @@ static const struct of_device_id vc4_v3d_dt_match[] = {
- 	{ .compatible = "brcm,vc4-v3d" },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, vc4_v3d_dt_match);
- 
- struct platform_driver vc4_v3d_driver = {
- 	.probe = vc4_v3d_dev_probe,
--- 
-2.17.0
+Sure, I'll change the subject.
+
+>>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+>> Reviewed-by: James Feist <james.feist@linux.intel.com>
+>> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+>> Cc: Alan Cox <alan@linux.intel.com>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: Andrew Lunn <andrew@lunn.ch>
+>> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Fengguang Wu <fengguang.wu@intel.com>
+>> Cc: Greg KH <gregkh@linuxfoundation.org>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Jean Delvare <jdelvare@suse.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Julia Cartwright <juliac@eso.teric.us>
+>> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+>> Cc: Milton Miller II <miltonm@us.ibm.com>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
+>> Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
+>> ---
+>>   .../devicetree/bindings/peci/peci-adapter.txt      | 23 ++++++++++++++++++++
+>>   .../devicetree/bindings/peci/peci-bus.txt          | 15 +++++++++++++
+>>   .../devicetree/bindings/peci/peci-client.txt       | 25 ++++++++++++++++++++++
+> 
+> This should be all one document.
+> 
+
+Okay. I'll combine them into one document.
+
+>>   3 files changed, 63 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/peci/peci-adapter.txt
+>>   create mode 100644 Documentation/devicetree/bindings/peci/peci-bus.txt
+>>   create mode 100644 Documentation/devicetree/bindings/peci/peci-client.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/peci/peci-adapter.txt b/Documentation/devicetree/bindings/peci/peci-adapter.txt
+>> new file mode 100644
+>> index 000000000000..9221374f6b11
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/peci/peci-adapter.txt
+>> @@ -0,0 +1,23 @@
+>> +Generic device tree configuration for PECI adapters.
+>> +
+>> +Required properties:
+>> +- compatible     : Should contain hardware specific definition strings that can
+>> +		   match an adapter driver implementation.
+>> +- reg            : Should contain PECI controller registers location and length.
+> 
+> No need for these 2 here.
+> 
+
+Will drop these 2.
+
+>> +- #address-cells : Should be <1>.
+>> +- #size-cells    : Should be <0>.
+> 
+> Some details on the addressing for PECI would be good.
+> 
+
+It is for the PECI client address. Will add details.
+
+>> +
+>> +Example:
+>> +	peci: peci@10000000 {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x10000000 0x1000>;
+>> +
+> 
+> This part of the example is not relevant. Just start with the adapter
+> node.
+> 
+
+Will remove that part. Thanks!
+
+>> +		peci0: peci-bus@0 {
+>> +			compatible = "soc,soc-peci";
+>> +			reg = <0x0 0x1000>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/peci/peci-bus.txt b/Documentation/devicetree/bindings/peci/peci-bus.txt
+>> new file mode 100644
+>> index 000000000000..90bcc791ccb0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/peci/peci-bus.txt
+>> @@ -0,0 +1,15 @@
+>> +Generic device tree configuration for PECI buses.
+>> +
+>> +Required properties:
+>> +- compatible     : Should be "simple-bus".
+> 
+> I don't understand what this has to do with PECI? "simple-bus" already
+> has a defined meaning.
+> 
+
+Maybe I'm wrong but I intended to show this node is an umbrella node of 
+a PECI bus subsystem. What should I use then?
+
+>> +- #address-cells : Should be <1>.
+>> +- #size-cells    : Should be <1>.
+>> +- ranges         : Should contain PECI controller registers ranges.
+>> +
+>> +Example:
+>> +	peci: peci@10000000 {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x10000000 0x1000>;
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/peci/peci-client.txt b/Documentation/devicetree/bindings/peci/peci-client.txt
+>> new file mode 100644
+>> index 000000000000..8e2bfd8532f6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/peci/peci-client.txt
+>> @@ -0,0 +1,25 @@
+>> +Generic device tree configuration for PECI clients.
+>> +
+>> +Required properties:
+>> +- compatible : Should contain target device specific definition strings that can
+>> +	       match a client driver implementation.
+> 
+> Bindings are for h/w, not client drivers.
+> 
+> How are PECI devices defined?
+> 
+
+Got it. I'll correct the description. PECI client device is Intel CPU 
+which is connected through a PECI bus.
+
+>> +- reg        : Should contain address of a client CPU. Address range of CPU
+>> +	       clients is starting from 0x30 based on PECI specification.
+>> +	       <0x30> .. <0x37> (depends on the PECI_OFFSET_MAX definition)
+> 
+> 8 devices should be enough for anyone...
+> 
+> Where is PECI_OFFSET_MAX defined?
+> 
+
+PECI_OFFSET_MAX is defined in include/linux/peci.h based on the maximum 
+CPU numbers of the current IA generation. I'll remove the unnecessary 
+details. A setting out of range would be handled accordingly in kernel.
+
+>> +
+>> +Example:
+>> +	peci-bus@0 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		< more properties >
+>> +
+>> +		function@cpu0 {
+> 
+> Not a valid node name. "function@30" is what it probably should be. For
+> a new bus you can define unit-address format you like, but it must be
+> based on the contents of reg. However, it doesn't look like you should
+> create anything special here.
+> 
+
+Got it. I'll fix these node name like function@30 and function@31.
+
+Thanks a lot for your comments!
+
+-Jae
+
+>> +			compatible = "device,function";
+>> +			reg = <0x30>;
+>> +		};
+>> +
+>> +		function@cpu1 {
+>> +			compatible = "device,function";
+>> +			reg = <0x31>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.16.2
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
