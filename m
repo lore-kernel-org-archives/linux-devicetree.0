@@ -1,59 +1,21 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: afe: add current-sense-shunt and
- voltage-divider
-Date: Mon, 16 Apr 2018 16:00:44 +0200
-Message-ID: <f4665f80-97a8-dedb-6d4b-b5e92b99ed78@axentia.se>
-References: <20180410152802.30958-1-peda@axentia.se>
- <20180410152802.30958-2-peda@axentia.se>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7s: add anatop vdd1p2 regulator
+Date: Mon, 16 Apr 2018 22:16:18 +0800
+Message-ID: <20180416141617.GJ25429@dragon>
+References: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180410152802.30958-2-peda@axentia.se>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1521272215-22514-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Andrew F . Davis" <afd@ti.com>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-10 17:28, Peter Rosin wrote:
-> +Example:
-> +The system voltage is circa 12V, but divided down with a 22/200
-> +voltage divider to adjust it to the ADC range.
-> +
-> +SYSV        ADC       GND
-> +  +          +         +
-> +  |  .-----. | .----.  |
-> +  '--| 200 |-+-| 22 |--'
-> +     '-----'   '----'
-> +
-> +sysv {
-> +	compatible = "voltage-divider";
-> +	io-channels = <&maxadc 1>;
-> +
-> +	/* Multiply the ADC voltage by 222/22 to get the system voltage. */
-> +	numerator = <222>; /* 200 + 22 */
-> +	denominator = <22>;
-> +};
+On Sat, Mar 17, 2018 at 03:36:55PM +0800, Anson Huang wrote:
+> Add i.MX7S/D anatop vdd1p2 regulator.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-While I already got a reviewed-by from Rob, and maybe I shouldn't be
-stirring the pot, but I had an umpteenth look and I now think this
-one looks a bit odd. It shows a bit that it originates from when the
-compatible was the very generic "io-channel-unit-converter" in v1
-of the series. What I mean is that a voltage divider presumable always
-gets you a lower voltage. Therefore, one would assume that the
-denominator should be larger than the numerator. The fact that this
-translates into the inverted fraction when calculating backwards
-through the voltage divider should probably not affect the binding.
-
-So, in the above example, I think it would make more sense to have
-
-	numerator = <22>;
-	denominator = <222>; /* 200 + 22 */
-
-(and then, naturally, adjust the driver to invert the fraction)
-
-Comments?
-
-Cheers,
-Peter
+Applied, thanks.
