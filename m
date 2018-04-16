@@ -1,117 +1,198 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [dragonboard] [PATCH 1/1] dts: qcom: db820c: Add gpio-line-names
- property
-Date: Mon, 16 Apr 2018 11:48:59 +0300
-Message-ID: <9acdd412-9b6d-ec63-c5ca-c5fa8d98d489@linaro.org>
-References: <20180414031811.11351-1-manivannan.sadhasivam@linaro.org>
- <20180414031811.11351-2-manivannan.sadhasivam@linaro.org>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH 2/2] drm/bridge: sii902x: add optional power supplies
+Date: Mon, 16 Apr 2018 09:20:29 +0000
+Message-ID: <f0c50499-4323-5d66-7e4c-dd61a24e3f4b@st.com>
+References: <20180410051927.8268-1-philippe.cornu@st.com>
+ <20180410051927.8268-3-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180414031811.11351-2-manivannan.sadhasivam@linaro.org>
+Content-Type: multipart/mixed; boundary="===============1652718088=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180410051927.8268-3-philippe.cornu@st.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, bjorn.andersson@linaro.org, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dragonboard@lists.96boards.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mani,
+--===============1652718088==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_f0c5049943235d667e4cdd61a24e3f4bstcom_"
 
-Thank you for the patch.
+--_000_f0c5049943235d667e4cdd61a24e3f4bstcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On 14.04.2018 06:18, Manivannan Sadhasivam wrote:
-> Add gpio-line-names property for Dragonboard820c based on APQ8096 SoC.
-> There are 4 gpio-controllers present on this board, including the
-> APQ8096 SoC, PM8994 (GPIO and MPP) and PMI8994 (GPIO).
-> 
-> Lines names are derived from 96Boards CE Specification 1.0, Appendix
-> "Expansion Connector Signal Description". Line names for PMI8994 MPP
-> pins are not added due to the absence of the gpio-controller support.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 240 +++++++++++++++++++++++++++
->  1 file changed, 240 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> index 1c8f1b86472d..1c1deef031c6 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> @@ -19,6 +19,34 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/gpio/gpio.h>
->  
-> +/*
-> + * GPIO name legend: proper name = the GPIO line is used as GPIO
-> + *         NC      = not connected (pin out but not routed from the chip to
-> + *                   anything the board)
-> + *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
-> + *         LSEC    = Low Speed External Connector
-> + *         HSEC    = High Speed External Connector
-> + *         P HSEC  = Primary High Speed External Connector
-> + *         S HSEC  = Secondary High Speed External Connector
-> + *         J14     = Camera Connector
-> + *         TP      = Test Points
-> + *
-> + * Line names are taken from the schematic "DragonBoard 820c",
-> + * drawing no: LM25-P2751-1
-> + *
-> + * For the lines routed to the external connectors the
-> + * lines are named after the 96Boards CE Specification 1.0,
-> + * Appendix "Expansion Connector Signal Description".
-> + *
-> + * When the 96Board naming of a line and the schematic name of
-> + * the same line are in conflict, the 96Board specification
-> + * takes precedence, which means that the external UART on the
-> + * LSEC is named UART0 while the schematic and SoC names this
-> + * UART3. This is only for the informational lines i.e. "[FOO]",
+UmV2aWV3ZWQtYnk6IHlhbm5pY2sgZmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+PG1haWx0
+bzp5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQoNCk9uIDA0LzEwLzIwMTggMDc6MTkgQU0sIFBoaWxp
+cHBlIENvcm51IHdyb3RlOg0KDQpBZGQgdGhlIDMgb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNp
+bmcgdGhlIGV4YWN0IGRlc2NyaXB0aW9uDQpmb3VuZCBpbiB0aGUgZG9jdW1lbnQgbmFtZWQNCiJT
+aUk5MDIyQS9TaUk5MDI0QSBIRE1JIFRyYW5zbWl0dGVyIERhdGEgU2hlZXQgKEF1Z3VzdCAyMDE2
+KSIuDQoNClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5j
+b20+PG1haWx0bzpwaGlsaXBwZS5jb3JudUBzdC5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL3NpaTkwMnguYyB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYw0KaW5kZXggNjAzNzNkN2ViMjIwLi5lMTdiYTZkYjFl
+YzggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYw0KKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCkBAIC0yNCw2ICsyNCw3IEBADQogI2lu
+Y2x1ZGUgPGxpbnV4L2kyYy5oPg0KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVk
+ZSA8bGludXgvcmVnbWFwLmg+DQorI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5o
+Pg0KDQogI2luY2x1ZGUgPGRybS9kcm1QLmg+DQogI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hl
+bHBlci5oPg0KQEAgLTg2LDYgKzg3LDcgQEAgc3RydWN0IHNpaTkwMnggew0KICAgICAgICBzdHJ1
+Y3QgZHJtX2JyaWRnZSBicmlkZ2U7DQogICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5l
+Y3RvcjsNCiAgICAgICAgc3RydWN0IGdwaW9fZGVzYyAqcmVzZXRfZ3BpbzsNCisgICAgICAgc3Ry
+dWN0IHJlZ3VsYXRvcl9idWxrX2RhdGEgc3VwcGxpZXNbM107DQogfTsNCg0KIHN0YXRpYyBpbmxp
+bmUgc3RydWN0IHNpaTkwMnggKmJyaWRnZV90b19zaWk5MDJ4KHN0cnVjdCBkcm1fYnJpZGdlICpi
+cmlkZ2UpDQpAQCAtMzkyLDIzICszOTQsNDMgQEAgc3RhdGljIGludCBzaWk5MDJ4X3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQogICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIo
+c2lpOTAyeC0+cmVzZXRfZ3Bpbyk7DQogICAgICAgIH0NCg0KKyAgICAgICBzaWk5MDJ4LT5zdXBw
+bGllc1swXS5zdXBwbHkgPSAiaW92Y2MiOw0KKyAgICAgICBzaWk5MDJ4LT5zdXBwbGllc1sxXS5z
+dXBwbHkgPSAiYXZjYzEyIjsNCisgICAgICAgc2lpOTAyeC0+c3VwcGxpZXNbMl0uc3VwcGx5ID0g
+ImN2Y2MxMiI7DQorICAgICAgIHJldCA9IGRldm1fcmVndWxhdG9yX2J1bGtfZ2V0KGRldiwgQVJS
+QVlfU0laRShzaWk5MDJ4LT5zdXBwbGllcyksDQorICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHNpaTkwMngtPnN1cHBsaWVzKTsNCisgICAgICAgaWYgKHJldCkgew0KKyAgICAg
+ICAgICAgICAgIGRldl9lcnIoZGV2LCAicmVndWxhdG9yX2J1bGtfZ2V0IGZhaWxlZFxuIik7DQor
+ICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCisgICAgICAgfQ0KKw0KKyAgICAgICByZXQgPSBy
+ZWd1bGF0b3JfYnVsa19lbmFibGUoQVJSQVlfU0laRShzaWk5MDJ4LT5zdXBwbGllcyksDQorICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaWk5MDJ4LT5zdXBwbGllcyk7DQorICAg
+ICAgIGlmIChyZXQpIHsNCisgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgInJlZ3VsYXRvcl9i
+dWxrX2VuYWJsZSBmYWlsZWRcbiIpOw0KKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQorICAg
+ICAgIH0NCisNCisgICAgICAgdXNsZWVwX3JhbmdlKDEwMDAwLCAyMDAwMCk7DQorDQogICAgICAg
+IHNpaTkwMnhfcmVzZXQoc2lpOTAyeCk7DQoNCiAgICAgICAgcmV0ID0gcmVnbWFwX3dyaXRlKHNp
+aTkwMngtPnJlZ21hcCwgU0lJOTAyWF9SRUdfVFBJX1JRQiwgMHgwKTsNCiAgICAgICAgaWYgKHJl
+dCkNCi0gICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KKyAgICAgICAgICAgICAgIGdvdG8gZXJy
+X2Rpc2FibGVfcmVndWxhdG9yOw0KDQogICAgICAgIHJldCA9IHJlZ21hcF9idWxrX3JlYWQoc2lp
+OTAyeC0+cmVnbWFwLCBTSUk5MDJYX1JFR19DSElQSUQoMCksDQogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgJmNoaXBpZCwgNCk7DQogICAgICAgIGlmIChyZXQpIHsNCiAgICAgICAgICAg
+ICAgICBkZXZfZXJyKGRldiwgInJlZ21hcF9yZWFkIGZhaWxlZCAlZFxuIiwgcmV0KTsNCi0gICAg
+ICAgICAgICAgICByZXR1cm4gcmV0Ow0KKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2Rpc2FibGVf
+cmVndWxhdG9yOw0KICAgICAgICB9DQoNCiAgICAgICAgaWYgKGNoaXBpZFswXSAhPSAweGIwKSB7
+DQogICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJJbnZhbGlkIGNoaXBpZDogJTAyeCAoZXhw
+ZWN0aW5nIDB4YjApXG4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgY2hpcGlkWzBdKTsNCi0g
+ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCisgICAgICAgICAgICAgICByZXQgPSAtRUlO
+VkFMOw0KKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2Rpc2FibGVfcmVndWxhdG9yOw0KICAgICAg
+ICB9DQoNCiAgICAgICAgLyogQ2xlYXIgYWxsIHBlbmRpbmcgaW50ZXJydXB0cyAqLw0KQEAgLTQy
+NCw3ICs0NDYsNyBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQg
+KmNsaWVudCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IElSUUZfT05FU0hPVCwgZGV2X25hbWUoZGV2KSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHNpaTkwMngpOw0KICAgICAgICAgICAgICAgIGlmIChyZXQp
+DQotICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KKyAgICAgICAgICAgICAgICAg
+ICAgICAgZ290byBlcnJfZGlzYWJsZV9yZWd1bGF0b3I7DQogICAgICAgIH0NCg0KICAgICAgICBz
+aWk5MDJ4LT5icmlkZ2UuZnVuY3MgPSAmc2lpOTAyeF9icmlkZ2VfZnVuY3M7DQpAQCAtNDM0LDYg
+KzQ1NiwxMiBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNs
+aWVudCwNCiAgICAgICAgaTJjX3NldF9jbGllbnRkYXRhKGNsaWVudCwgc2lpOTAyeCk7DQoNCiAg
+ICAgICAgcmV0dXJuIDA7DQorDQorZXJyX2Rpc2FibGVfcmVndWxhdG9yOg0KKyAgICAgICByZWd1
+bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0+c3VwcGxpZXMpLA0KKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHNpaTkwMngtPnN1cHBsaWVzKTsNCisNCisgICAgICAg
+cmV0dXJuIHJldDsNCiB9DQoNCiBzdGF0aWMgaW50IHNpaTkwMnhfcmVtb3ZlKHN0cnVjdCBpMmNf
+Y2xpZW50ICpjbGllbnQpDQpAQCAtNDQzLDYgKzQ3MSw5IEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9y
+ZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCg0KICAgICAgICBkcm1fYnJpZGdlX3Jl
+bW92ZSgmc2lpOTAyeC0+YnJpZGdlKTsNCg0KKyAgICAgICByZWd1bGF0b3JfYnVsa19kaXNhYmxl
+KEFSUkFZX1NJWkUoc2lpOTAyeC0+c3VwcGxpZXMpLA0KKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHNpaTkwMngtPnN1cHBsaWVzKTsNCisNCiAgICAgICAgcmV0dXJuIDA7DQogfQ0KDQoN
+Cg0K
 
-It seems to me that this can lead to some confusion for cases when
-some schematic names have 96board names and others don't. (An
-example below.) However I don't really see any better way to do
-it. I'm wondering whether adding the schematic name in
-the comment (for gpios which are named with 96board names)
-can help a little. What do you think? Or any other idea?
+--_000_f0c5049943235d667e4cdd61a24e3f4bstcom_
+Content-Type: text/html; charset="utf-8"
+Content-ID: <06C79A1E57D2944F8CFD47027687AA94@st.com>
+Content-Transfer-Encoding: base64
 
-> + * the GPIO named lines "GPIO-A" thru "GPIO-L" are the only
-> + * ones actually used for GPIO.
-> + */
-> +
->  / {
->  	aliases {
->  		serial0 = &blsp2_uart1;
-> @@ -90,6 +118,218 @@
->  			status = "okay";
->  		};
->  
-> +		pinctrl@1010000 {
-> +			gpio-line-names =
-> +				"[SPI0_DOUT]", /* GPIO_0, LSEC pin 14 */
-> +				"[SPI0_DIN]", /* GPIO_1, LSEC pin 10 */
-> +				"[SPI0_CS]", /* GPIO_2, LSEC pin 12 */
-> +				"[SPI0_SCLK]", /* GPIO_3, LSEC pin 8 */
-> +				"[UART1_TxD]", /* GPIO_4, LSEC pin 11 */
-> +				"[UART1_RxD]", /* GPIO_5, LSEC pin 13 */
-> +				"[I2C1_SDA]", /* GPIO_6, LSEC pin 21 */
-> +				"[I2C1_SCL]", /* GPIO_7, LSEC pin 19 */
-> +				"GPIO-H", /* GPIO_8, LSEC pin 30 */
-> +				"TP93", /* GPIO_9 */
-> +				"GPIO-G", /* GPIO_10, LSEC pin 29 */
-> +				"[MDP_VSYNC_S]", /* GPIO_11, P HSEC pin 55 */
-> +				"NC", /* GPIO_12 */
-> +				"[CSI0_MCLK]", /* GPIO_13, P HSEC pin 15 */
-> +				"[CAM_MCLK1]", /* GPIO_14, J14 pin 11 */
-> +				"[CSI1_MCLK]", /* GPIO_15, P HSEC pin 17 */
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHRleHQ9IiMwMDAwMDAi
+IGJnY29sb3I9IiNGRkZGRkYiPg0KPHA+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9u
+dC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMDAyMDUyIiBsYW5n
+PSJFTi1VUyI+UmV2aWV3ZWQtYnk6IHlhbm5pY2sgZmVydHJlDQo8YSBjbGFzcz0ibW96LXR4dC1s
+aW5rLXJmYzIzOTZFIiBocmVmPSJtYWlsdG86eWFubmljay5mZXJ0cmVAc3QuY29tIj4mbHQ7eWFu
+bmljay5mZXJ0cmVAc3QuY29tJmd0OzwvYT48L3NwYW4+PC9wPg0KPGJyPg0KPGRpdiBjbGFzcz0i
+bW96LWNpdGUtcHJlZml4Ij5PbiAwNC8xMC8yMDE4IDA3OjE5IEFNLCBQaGlsaXBwZSBDb3JudSB3
+cm90ZTo8YnI+DQo8L2Rpdj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNpdGU9Im1pZDoyMDE4
+MDQxMDA1MTkyNy44MjY4LTMtcGhpbGlwcGUuY29ybnVAc3QuY29tIj4NCjxwcmUgd3JhcD0iIj5B
+ZGQgdGhlIDMgb3B0aW9uYWwgcG93ZXIgc3VwcGxpZXMgdXNpbmcgdGhlIGV4YWN0IGRlc2NyaXB0
+aW9uDQpmb3VuZCBpbiB0aGUgZG9jdW1lbnQgbmFtZWQNCiZxdW90O1NpSTkwMjJBL1NpSTkwMjRB
+IEhETUkgVHJhbnNtaXR0ZXIgRGF0YSBTaGVldCAoQXVndXN0IDIwMTYpJnF1b3Q7Lg0KDQpTaWdu
+ZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8YSBjbGFzcz0ibW96LXR4dC1saW5rLXJmYzIzOTZF
+IiBocmVmPSJtYWlsdG86cGhpbGlwcGUuY29ybnVAc3QuY29tIj4mbHQ7cGhpbGlwcGUuY29ybnVA
+c3QuY29tJmd0OzwvYT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIHwg
+MzkgJiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQz
+OyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0Mzsm
+IzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0
+MzsmIzQzOy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygmIzQzOyksIDQgZGVs
+ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMngu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jDQppbmRleCA2MDM3M2Q3ZWIyMjAu
+LmUxN2JhNmRiMWVjOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAy
+eC5jDQomIzQzOyYjNDM7JiM0MzsgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYw0K
+QEAgLTI0LDYgJiM0MzsyNCw3IEBADQogI2luY2x1ZGUgJmx0O2xpbnV4L2kyYy5oJmd0Ow0KICNp
+bmNsdWRlICZsdDtsaW51eC9tb2R1bGUuaCZndDsNCiAjaW5jbHVkZSAmbHQ7bGludXgvcmVnbWFw
+LmgmZ3Q7DQomIzQzOyNpbmNsdWRlICZsdDtsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaCZndDsN
+CiANCiAjaW5jbHVkZSAmbHQ7ZHJtL2RybVAuaCZndDsNCiAjaW5jbHVkZSAmbHQ7ZHJtL2RybV9h
+dG9taWNfaGVscGVyLmgmZ3Q7DQpAQCAtODYsNiAmIzQzOzg3LDcgQEAgc3RydWN0IHNpaTkwMngg
+ew0KIAlzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7DQogCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNv
+bm5lY3RvcjsNCiAJc3RydWN0IGdwaW9fZGVzYyAqcmVzZXRfZ3BpbzsNCiYjNDM7CXN0cnVjdCBy
+ZWd1bGF0b3JfYnVsa19kYXRhIHN1cHBsaWVzWzNdOw0KIH07DQogDQogc3RhdGljIGlubGluZSBz
+dHJ1Y3Qgc2lpOTAyeCAqYnJpZGdlX3RvX3NpaTkwMngoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRn
+ZSkNCkBAIC0zOTIsMjMgJiM0MzszOTQsNDMgQEAgc3RhdGljIGludCBzaWk5MDJ4X3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQogCQlyZXR1cm4gUFRSX0VSUihzaWk5MDJ4LSZndDty
+ZXNldF9ncGlvKTsNCiAJfQ0KIA0KJiM0MzsJc2lpOTAyeC0mZ3Q7c3VwcGxpZXNbMF0uc3VwcGx5
+ID0gJnF1b3Q7aW92Y2MmcXVvdDs7DQomIzQzOwlzaWk5MDJ4LSZndDtzdXBwbGllc1sxXS5zdXBw
+bHkgPSAmcXVvdDthdmNjMTImcXVvdDs7DQomIzQzOwlzaWk5MDJ4LSZndDtzdXBwbGllc1syXS5z
+dXBwbHkgPSAmcXVvdDtjdmNjMTImcXVvdDs7DQomIzQzOwlyZXQgPSBkZXZtX3JlZ3VsYXRvcl9i
+dWxrX2dldChkZXYsIEFSUkFZX1NJWkUoc2lpOTAyeC0mZ3Q7c3VwcGxpZXMpLA0KJiM0MzsJCQkJ
+ICAgICAgc2lpOTAyeC0mZ3Q7c3VwcGxpZXMpOw0KJiM0MzsJaWYgKHJldCkgew0KJiM0MzsJCWRl
+dl9lcnIoZGV2LCAmcXVvdDtyZWd1bGF0b3JfYnVsa19nZXQgZmFpbGVkXG4mcXVvdDspOw0KJiM0
+MzsJCXJldHVybiByZXQ7DQomIzQzOwl9DQomIzQzOw0KJiM0MzsJcmV0ID0gcmVndWxhdG9yX2J1
+bGtfZW5hYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0mZ3Q7c3VwcGxpZXMpLA0KJiM0MzsJCQkJICAg
+IHNpaTkwMngtJmd0O3N1cHBsaWVzKTsNCiYjNDM7CWlmIChyZXQpIHsNCiYjNDM7CQlkZXZfZXJy
+KGRldiwgJnF1b3Q7cmVndWxhdG9yX2J1bGtfZW5hYmxlIGZhaWxlZFxuJnF1b3Q7KTsNCiYjNDM7
+CQlyZXR1cm4gcmV0Ow0KJiM0MzsJfQ0KJiM0MzsNCiYjNDM7CXVzbGVlcF9yYW5nZSgxMDAwMCwg
+MjAwMDApOw0KJiM0MzsNCiAJc2lpOTAyeF9yZXNldChzaWk5MDJ4KTsNCiANCiAJcmV0ID0gcmVn
+bWFwX3dyaXRlKHNpaTkwMngtJmd0O3JlZ21hcCwgU0lJOTAyWF9SRUdfVFBJX1JRQiwgMHgwKTsN
+CiAJaWYgKHJldCkNCi0JCXJldHVybiByZXQ7DQomIzQzOwkJZ290byBlcnJfZGlzYWJsZV9yZWd1
+bGF0b3I7DQogDQogCXJldCA9IHJlZ21hcF9idWxrX3JlYWQoc2lpOTAyeC0mZ3Q7cmVnbWFwLCBT
+SUk5MDJYX1JFR19DSElQSUQoMCksDQogCQkJICAgICAgICZhbXA7Y2hpcGlkLCA0KTsNCiAJaWYg
+KHJldCkgew0KIAkJZGV2X2VycihkZXYsICZxdW90O3JlZ21hcF9yZWFkIGZhaWxlZCAlZFxuJnF1
+b3Q7LCByZXQpOw0KLQkJcmV0dXJuIHJldDsNCiYjNDM7CQlnb3RvIGVycl9kaXNhYmxlX3JlZ3Vs
+YXRvcjsNCiAJfQ0KIA0KIAlpZiAoY2hpcGlkWzBdICE9IDB4YjApIHsNCiAJCWRldl9lcnIoZGV2
+LCAmcXVvdDtJbnZhbGlkIGNoaXBpZDogJTAyeCAoZXhwZWN0aW5nIDB4YjApXG4mcXVvdDssDQog
+CQkJY2hpcGlkWzBdKTsNCi0JCXJldHVybiAtRUlOVkFMOw0KJiM0MzsJCXJldCA9IC1FSU5WQUw7
+DQomIzQzOwkJZ290byBlcnJfZGlzYWJsZV9yZWd1bGF0b3I7DQogCX0NCiANCiAJLyogQ2xlYXIg
+YWxsIHBlbmRpbmcgaW50ZXJydXB0cyAqLw0KQEAgLTQyNCw3ICYjNDM7NDQ2LDcgQEAgc3RhdGlj
+IGludCBzaWk5MDJ4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQogCQkJCQkJSVJR
+Rl9PTkVTSE9ULCBkZXZfbmFtZShkZXYpLA0KIAkJCQkJCXNpaTkwMngpOw0KIAkJaWYgKHJldCkN
+Ci0JCQlyZXR1cm4gcmV0Ow0KJiM0MzsJCQlnb3RvIGVycl9kaXNhYmxlX3JlZ3VsYXRvcjsNCiAJ
+fQ0KIA0KIAlzaWk5MDJ4LSZndDticmlkZ2UuZnVuY3MgPSAmYW1wO3NpaTkwMnhfYnJpZGdlX2Z1
+bmNzOw0KQEAgLTQzNCw2ICYjNDM7NDU2LDEyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KIAlpMmNfc2V0X2NsaWVudGRhdGEoY2xpZW50LCBz
+aWk5MDJ4KTsNCiANCiAJcmV0dXJuIDA7DQomIzQzOw0KJiM0MztlcnJfZGlzYWJsZV9yZWd1bGF0
+b3I6DQomIzQzOwlyZWd1bGF0b3JfYnVsa19kaXNhYmxlKEFSUkFZX1NJWkUoc2lpOTAyeC0mZ3Q7
+c3VwcGxpZXMpLA0KJiM0MzsJCQkgICAgICAgc2lpOTAyeC0mZ3Q7c3VwcGxpZXMpOw0KJiM0MzsN
+CiYjNDM7CXJldHVybiByZXQ7DQogfQ0KIA0KIHN0YXRpYyBpbnQgc2lpOTAyeF9yZW1vdmUoc3Ry
+dWN0IGkyY19jbGllbnQgKmNsaWVudCkNCkBAIC00NDMsNiAmIzQzOzQ3MSw5IEBAIHN0YXRpYyBp
+bnQgc2lpOTAyeF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCiANCiAJZHJtX2Jy
+aWRnZV9yZW1vdmUoJmFtcDtzaWk5MDJ4LSZndDticmlkZ2UpOw0KIA0KJiM0MzsJcmVndWxhdG9y
+X2J1bGtfZGlzYWJsZShBUlJBWV9TSVpFKHNpaTkwMngtJmd0O3N1cHBsaWVzKSwNCiYjNDM7CQkJ
+ICAgICAgIHNpaTkwMngtJmd0O3N1cHBsaWVzKTsNCiYjNDM7DQogCXJldHVybiAwOw0KIH0NCiAN
+CjwvcHJlPg0KPC9ibG9ja3F1b3RlPg0KPGJyPg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
-This could be a little misleading.
-96Board name / schametic name:
-CSI0_MCLK / CAM_MCLK0
---------- / CAM_MCLK1
-CSI1_MCLK / CAM_MCLK2
+--_000_f0c5049943235d667e4cdd61a24e3f4bstcom_--
 
-<snip>
+--===============1652718088==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
--- 
-Best regards,
-Todor Tomov
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1652718088==--
