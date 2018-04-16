@@ -1,69 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 02/13] dt-bindings: usb: add documentation for typec
- port controller(TCPCI)
-Date: Mon, 16 Apr 2018 09:28:16 -0500
-Message-ID: <CAL_Jsq+4=hoYPeXy9gXQ6tzwbZ7vvXwj5eZK7Ow6CfBY+aG15Q@mail.gmail.com>
-References: <1522253178-32414-1-git-send-email-jun.li@nxp.com>
- <1522253178-32414-3-git-send-email-jun.li@nxp.com>
- <20180409200402.qkhutincgvtmipao@rob-hp-laptop>
- <VI1PR0402MB391794B3D9A6D7435426189D89B00@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt-bindings: serial: sh-sci: Add support for r8a77965 (H)SCIF
+Date: Mon, 16 Apr 2018 16:29:51 +0200
+Message-ID: <CAMuHMdWv0SbaPY3PgoEBKJ5zpC7pS5VYH7ESKV+H3D+zGnkbEA@mail.gmail.com>
+References: <1523886928-14535-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <VI1PR0402MB391794B3D9A6D7435426189D89B00@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jun Li <jun.li@nxp.com>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Peter Chen <peter.chen@nxp.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "a.hajda@samsung.com" <a.hajda@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523886928-14535-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMTYsIDIwMTggYXQgNjo1NCBBTSwgSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4g
-d3JvdGU6Cj4gSGkKPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gRnJvbTogUm9iIEhl
-cnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddCj4+IFNlbnQ6IDIwMTjlubQ05pyIMTDml6Ug
-NDowNAo+PiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4KPj4gQ2M6IGdyZWdraEBsaW51eGZv
-dW5kYXRpb24ub3JnOyBoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tOwo+PiBsaW51eEBy
-b2Vjay11cy5uZXQ7IGEuaGFqZGFAc2Ftc3VuZy5jb207IHNodWZhbl9sZWVAcmljaHRlay5jb207
-IFBldGVyCj4+IENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOwo+PiBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4
-LWlteEBueHAuY29tPjsKPj4gZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmcKPj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2NCAwMi8xM10gZHQtYmluZGluZ3M6IHVzYjogYWRkIGRvY3VtZW50YXRpb24g
-Zm9yIHR5cGVjCj4+IHBvcnQgY29udHJvbGxlcihUQ1BDSSkKPj4KPj4gT24gVGh1LCBNYXIgMjks
-IDIwMTggYXQgMTI6MDY6MDdBTSArMDgwMCwgTGkgSnVuIHdyb3RlOgoKWy4uLl0KCj4+ID4gK3B0
-bjUxMTBANTAgewo+PiA+ICsgICBjb21wYXRpYmxlID0gInVzYi10Y3BjaSxwdG41MTEwIjsKPj4g
-PiArICAgcmVnID0gPDB4NTA+Owo+PiA+ICsgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMz47
-Cj4+ID4gKyAgIGludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZFTF9MT1c+Owo+PiA+ICsKPj4g
-PiArICAgdXNiX2NvbjogY29ubmVjdG9yIHsKPj4KPj4gSG93IGlzIHRoZSBPRiBncmFwaCBkb25l
-IGluIHRoaXMgY2FzZT8gWW91IG5lZWQgc29tZSBsaW5rIHRvIHRoZSBVU0IgY29udHJvbGxlci4K
-Pgo+IFRoZSBwbGF0Zm9ybShpLk1YOE1RIEVWSykgZm9yIHRoaXMgaXMgc3RpbGwgb24gdGhlIHdh
-eSBvZiBzdGFydCB1cHN0cmVhbSwgSSB3YXMKPiBQbGFubmluZyB0byBhZGQgdGhpcyBwYXJ0IHdp
-dGggZW5hYmxpbmcgVVNCMyBmdW5jdGlvbiwgYXMgb2YgaG93IHRoaXMgd2lsbCBiZSBkb25lLAo+
-IEkgb25seSBoYXZlIHVzYjMgc3MgZGF0YShubyBkaXNwbGF5IHBvcnQgb3IgU2lkZWJhbmQpLCBp
-cyBzb21ldGhpbmcgbGlrZSBiZWxvdyBPSz8KPgo+IHR5cGVjOiBwdG41MTEwQDUwIHsKPiAgICAg
-ICAgIGNvbXBhdGlibGUgPSAibnhwLHB0bjUxMTAiOwo+ICAgICAgICAgLi4uCj4KPiAgICAgICAg
-IHVzYl9jb246IGNvbm5lY3RvciB7Cj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidXNi
-LWMtY29ubmVjdG9yIjsKPiAgICAgICAgICAgICAgICAgbGFiZWwgPSAiVVNCLUMiOwo+ICAgICAg
-ICAgICAgICAgICAuLi4KPgo+ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47Cj4KPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEg
-ewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgdXNiX2Nvbl9zczogZW5kcG9pbnQgewo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ1c2IzX3BoeV9zcz47
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICB9Owo+IH07Cj4KPiAmdXNi
-M19waHkwIHsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPgo+ICAgICAgICAgcG9ydCB7Cj4g
-ICAgICAgICAgICAgICAgIHVzYjNfcGh5X3NzOiBlbmRwb2ludCB7CgpOb3JtYWxseSwgdGhlIGdy
-YXBoIGNvbm5lY3Rpb24gd291bGQgYmUgdG8gdGhlIFVTQiBjb250cm9sbGVyLCBub3QgdGhlCnBo
-eSBhcyB0aGUgcGh5IGlzIGp1c3QgcmVmZXJyZWQgdG8gd2l0aCBhICJwaHlzIiBwcm9wZXJ0eS4K
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ1c2JfY29uX3Nz
-PjsKPiAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgIH07Cj4gfQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxA
-bGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVj
-dC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+On Mon, Apr 16, 2018 at 3:55 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add documentation for r8a77965 compatible string to Renesas sci-serial
+> device tree bindings documentation.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+My
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+on v2 of the full r8a77965 series is still valid.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
