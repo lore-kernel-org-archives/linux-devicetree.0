@@ -1,25 +1,23 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] Documentations: dt-bindings: Add documents of
- generic PECI bus, adapter and client drivers
-Date: Mon, 16 Apr 2018 12:59:36 -0500
-Message-ID: <20180416175936.4vcse73mrnyk242m@rob-hp-laptop>
+Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
+ PECI adapter driver for Aspeed AST24xx/25xx SoCs
+Date: Mon, 16 Apr 2018 13:10:35 -0500
+Message-ID: <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
 References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
+ <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180410183212.16787-2-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 11:32:03AM -0700, Jae Hyun Yoo wrote:
-> This commit adds documents of generic PECI bus, adapter and client drivers.
-
-"dt-bindings: ..." for the subject prefix please.
-
+On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
+> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
+> AST24xx/25xx SoCs.
 > 
 > Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 > Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
@@ -45,133 +43,97 @@ On Tue, Apr 10, 2018 at 11:32:03AM -0700, Jae Hyun Yoo wrote:
 > Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
 > Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
 > ---
->  .../devicetree/bindings/peci/peci-adapter.txt      | 23 ++++++++++++++++++++
->  .../devicetree/bindings/peci/peci-bus.txt          | 15 +++++++++++++
->  .../devicetree/bindings/peci/peci-client.txt       | 25 ++++++++++++++++++++++
-
-This should be all one document.
-
->  3 files changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/peci/peci-adapter.txt
->  create mode 100644 Documentation/devicetree/bindings/peci/peci-bus.txt
->  create mode 100644 Documentation/devicetree/bindings/peci/peci-client.txt
+>  .../devicetree/bindings/peci/peci-aspeed.txt       | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/peci/peci-adapter.txt b/Documentation/devicetree/bindings/peci/peci-adapter.txt
+> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.txt b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
 > new file mode 100644
-> index 000000000000..9221374f6b11
+> index 000000000000..4598bb8c20fa
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/peci/peci-adapter.txt
-> @@ -0,0 +1,23 @@
-> +Generic device tree configuration for PECI adapters.
+> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
+> @@ -0,0 +1,60 @@
+> +Device tree configuration for PECI buses on the AST24XX and AST25XX SoCs.
 > +
 > +Required properties:
-> +- compatible     : Should contain hardware specific definition strings that can
-> +		   match an adapter driver implementation.
-> +- reg            : Should contain PECI controller registers location and length.
+> +- compatible        : Should be "aspeed,ast2400-peci" or "aspeed,ast2500-peci"
+> +		      - aspeed,ast2400-peci: Aspeed AST2400 family PECI
+> +					     controller
+> +		      - aspeed,ast2500-peci: Aspeed AST2500 family PECI
+> +					     controller
+> +- reg               : Should contain PECI controller registers location and
+> +		      length.
+> +- #address-cells    : Should be <1>.
+> +- #size-cells       : Should be <0>.
+> +- interrupts        : Should contain PECI controller interrupt.
+> +- clocks            : Should contain clock source for PECI controller.
+> +		      Should reference clkin.
+> +- clock_frequency   : Should contain the operation frequency of PECI controller
+> +		      in units of Hz.
+> +		      187500 ~ 24000000
 
-No need for these 2 here.
+This is the frequency of the bus or used to derive it? It would be 
+better to specify the bus frequency instead and have the driver 
+calculate its internal freq. And then use "bus-frequency" instead.
 
-> +- #address-cells : Should be <1>.
-> +- #size-cells    : Should be <0>.
+> +
+> +Optional properties:
+> +- msg-timing-nego   : Message timing negotiation period. This value will
+> +		      determine the period of message timing negotiation to be
+> +		      issued by PECI controller. The unit of the programmed
+> +		      value is four times of PECI clock period.
+> +		      0 ~ 255 (default: 1)
+> +- addr-timing-nego  : Address timing negotiation period. This value will
+> +		      determine the period of address timing negotiation to be
+> +		      issued by PECI controller. The unit of the programmed
+> +		      value is four times of PECI clock period.
+> +		      0 ~ 255 (default: 1)
+> +- rd-sampling-point : Read sampling point selection. The whole period of a bit
+> +		      time will be divided into 16 time frames. This value will
+> +		      determine the time frame in which the controller will
+> +		      sample PECI signal for data read back. Usually in the
+> +		      middle of a bit time is the best.
+> +		      0 ~ 15 (default: 8)
+> +- cmd_timeout_ms    : Command timeout in units of ms.
+> +		      1 ~ 60000 (default: 1000)
 
-Some details on the addressing for PECI would be good.
+s/_/-/
+
+
+All these either need vendor prefixes or should be standard properties 
+for PECI adapters. I think probably the latter case. If so, the first 
+2 should probably be in units of clocks (not 4 clocks). And they should 
+then be documented in the common PECI binding doc.
 
 > +
 > +Example:
-> +	peci: peci@10000000 {
+> +	peci: peci@1e78b000 {
 > +		compatible = "simple-bus";
 > +		#address-cells = <1>;
 > +		#size-cells = <1>;
-> +		ranges = <0x0 0x10000000 0x1000>;
+> +		ranges = <0x0 0x1e78b000 0x60>;
+
+No need to show this part in examples.
+
 > +
-
-This part of the example is not relevant. Just start with the adapter 
-node.
-
 > +		peci0: peci-bus@0 {
-> +			compatible = "soc,soc-peci";
-> +			reg = <0x0 0x1000>;
+> +			compatible = "aspeed,ast2500-peci";
+> +			reg = <0x0 0x60>;
 > +			#address-cells = <1>;
 > +			#size-cells = <0>;
-> +		};
-> +	};
-> diff --git a/Documentation/devicetree/bindings/peci/peci-bus.txt b/Documentation/devicetree/bindings/peci/peci-bus.txt
-> new file mode 100644
-> index 000000000000..90bcc791ccb0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/peci/peci-bus.txt
-> @@ -0,0 +1,15 @@
-> +Generic device tree configuration for PECI buses.
-> +
-> +Required properties:
-> +- compatible     : Should be "simple-bus".
-
-I don't understand what this has to do with PECI? "simple-bus" already 
-has a defined meaning.
-
-> +- #address-cells : Should be <1>.
-> +- #size-cells    : Should be <1>.
-> +- ranges         : Should contain PECI controller registers ranges.
-> +
-> +Example:
-> +	peci: peci@10000000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x10000000 0x1000>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/peci/peci-client.txt b/Documentation/devicetree/bindings/peci/peci-client.txt
-> new file mode 100644
-> index 000000000000..8e2bfd8532f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/peci/peci-client.txt
-> @@ -0,0 +1,25 @@
-> +Generic device tree configuration for PECI clients.
-> +
-> +Required properties:
-> +- compatible : Should contain target device specific definition strings that can
-> +	       match a client driver implementation.
-
-Bindings are for h/w, not client drivers.
-
-How are PECI devices defined?
-
-> +- reg        : Should contain address of a client CPU. Address range of CPU
-> +	       clients is starting from 0x30 based on PECI specification.
-> +	       <0x30> .. <0x37> (depends on the PECI_OFFSET_MAX definition)
-
-8 devices should be enough for anyone...
-
-Where is PECI_OFFSET_MAX defined?
-
-> +
-> +Example:
-> +	peci-bus@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		< more properties >
-> +
-> +		function@cpu0 {
-
-Not a valid node name. "function@30" is what it probably should be. For 
-a new bus you can define unit-address format you like, but it must be 
-based on the contents of reg. However, it doesn't look like you should 
-create anything special here.
-
-> +			compatible = "device,function";
-> +			reg = <0x30>;
-> +		};
-> +
-> +		function@cpu1 {
-> +			compatible = "device,function";
-> +			reg = <0x31>;
+> +			interrupts = <15>;
+> +			clocks = <&clk_clkin>;
+> +			clock-frequency = <24000000>;
+> +			msg-timing-nego = <1>;
+> +			addr-timing-nego = <1>;
+> +			rd-sampling-point = <8>;
+> +			cmd-timeout-ms = <1000>;
 > +		};
 > +	};
 > -- 
 > 2.16.2
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
