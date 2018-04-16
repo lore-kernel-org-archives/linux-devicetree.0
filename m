@@ -1,157 +1,90 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
- PECI adapter driver for Aspeed AST24xx/25xx SoCs
-Date: Mon, 16 Apr 2018 16:12:50 -0700
-Message-ID: <53ff5b2b-eba8-8311-64a9-abd4bc72226d@linux.intel.com>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
- <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt-bindings: allow dwmac-sun8i to use
+ other devices' exported regmap
+Date: Tue, 17 Apr 2018 07:17:56 +0800
+Message-ID: <04C9F795-2680-4220-A39A-7B7D5FD74C4A@aosc.io>
+References: <20180411141641.14675-1-icenowy@aosc.io> <20180411141641.14675-2-icenowy@aosc.io> <20180416184745.tqxyvojtcbage4fu@rob-hp-laptop>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBMG62TLAKGQEZWVQQOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180416184745.tqxyvojtcbage4fu@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/16/2018 11:10 AM, Rob Herring wrote:
-> On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
->> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
->> AST24xx/25xx SoCs.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
->> Reviewed-by: James Feist <james.feist@linux.intel.com>
->> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
->> Cc: Alan Cox <alan@linux.intel.com>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Fengguang Wu <fengguang.wu@intel.com>
->> Cc: Greg KH <gregkh@linuxfoundation.org>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Jean Delvare <jdelvare@suse.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Julia Cartwright <juliac@eso.teric.us>
->> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
->> Cc: Milton Miller II <miltonm@us.ibm.com>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
->> Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
+
+
+=E4=BA=8E 2018=E5=B9=B44=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882:=
+47:45, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Wed, Apr 11, 2018 at 10:16:37PM +0800, Icenowy Zheng wrote:
+>> On some Allwinner SoCs the EMAC clock register needed by dwmac-sun8i
+>is
+>> in another device's memory space. In this situation dwmac-sun8i can
+>use
+>> a regmap exported by the other device with only the EMAC clock
+>register.
+>
+>If this is a clock, then why not use the clock binding?
+
+EMAC clock register is only the datasheet name. It contains
+MII mode selection and delay chain configuration.
+
+>
+>>=20
+>> Document this situation in the dwmac-sun8i device tree binding
+>> documentation.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 >> ---
->>   .../devicetree/bindings/peci/peci-aspeed.txt       | 60 ++++++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
->>
->> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.txt b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
->> new file mode 100644
->> index 000000000000..4598bb8c20fa
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
->> @@ -0,0 +1,60 @@
->> +Device tree configuration for PECI buses on the AST24XX and AST25XX SoCs.
->> +
->> +Required properties:
->> +- compatible        : Should be "aspeed,ast2400-peci" or "aspeed,ast2500-peci"
->> +		      - aspeed,ast2400-peci: Aspeed AST2400 family PECI
->> +					     controller
->> +		      - aspeed,ast2500-peci: Aspeed AST2500 family PECI
->> +					     controller
->> +- reg               : Should contain PECI controller registers location and
->> +		      length.
->> +- #address-cells    : Should be <1>.
->> +- #size-cells       : Should be <0>.
->> +- interrupts        : Should contain PECI controller interrupt.
->> +- clocks            : Should contain clock source for PECI controller.
->> +		      Should reference clkin.
->> +- clock_frequency   : Should contain the operation frequency of PECI controller
->> +		      in units of Hz.
->> +		      187500 ~ 24000000
-> 
-> This is the frequency of the bus or used to derive it? It would be
-> better to specify the bus frequency instead and have the driver
-> calculate its internal freq. And then use "bus-frequency" instead.
-> 
-
-I agree with you. Actually, it is being used for operation frequency 
-setting of PECI controller module in SoC so it's different from the 
-meaning of "bus-frequency". I'll change it to "operation-frequency".
-
->> +
->> +Optional properties:
->> +- msg-timing-nego   : Message timing negotiation period. This value will
->> +		      determine the period of message timing negotiation to be
->> +		      issued by PECI controller. The unit of the programmed
->> +		      value is four times of PECI clock period.
->> +		      0 ~ 255 (default: 1)
->> +- addr-timing-nego  : Address timing negotiation period. This value will
->> +		      determine the period of address timing negotiation to be
->> +		      issued by PECI controller. The unit of the programmed
->> +		      value is four times of PECI clock period.
->> +		      0 ~ 255 (default: 1)
->> +- rd-sampling-point : Read sampling point selection. The whole period of a bit
->> +		      time will be divided into 16 time frames. This value will
->> +		      determine the time frame in which the controller will
->> +		      sample PECI signal for data read back. Usually in the
->> +		      middle of a bit time is the best.
->> +		      0 ~ 15 (default: 8)
->> +- cmd_timeout_ms    : Command timeout in units of ms.
->> +		      1 ~ 60000 (default: 1000)
-> 
-> s/_/-/
-> 
-
-Will fix it.
-
-> 
-> All these either need vendor prefixes or should be standard properties
-> for PECI adapters. I think probably the latter case. If so, the first
-> 2 should probably be in units of clocks (not 4 clocks). And they should
-> then be documented in the common PECI binding doc.
-> 
-
-So far I've checked that these are ASPEED PECI controller specific 
-properties so it should be listed in here.
-
->> +
->> +Example:
->> +	peci: peci@1e78b000 {
->> +		compatible = "simple-bus";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0x0 0x1e78b000 0x60>;
-> 
-> No need to show this part in examples.
-> 
-
-Got it. Will drop the part.
-
->> +
->> +		peci0: peci-bus@0 {
->> +			compatible = "aspeed,ast2500-peci";
->> +			reg = <0x0 0x60>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			interrupts = <15>;
->> +			clocks = <&clk_clkin>;
->> +			clock-frequency = <24000000>;
->> +			msg-timing-nego = <1>;
->> +			addr-timing-nego = <1>;
->> +			rd-sampling-point = <8>;
->> +			cmd-timeout-ms = <1000>;
->> +		};
->> +	};
->> -- 
->> 2.16.2
->>
+>>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>> index 3d6d5fa0c4d5..0c5f63a80617 100644
+>> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+>> @@ -20,8 +20,9 @@ Required properties:
+>>  - phy-handle: See ethernet.txt
+>>  - #address-cells: shall be 1
+>>  - #size-cells: shall be 0
+>> -- syscon: A phandle to the syscon of the SoC with one of the
+>following
+>> - compatible string:
+>> +- syscon: A phandle to a device which exports the EMAC clock
+>register as a
+>> + regmap or to the syscon of the SoC with one of the following
+>compatible
+>> + string:
+>>    - allwinner,sun8i-h3-system-controller
+>>    - allwinner,sun8i-v3s-system-controller
+>>    - allwinner,sun50i-a64-system-controller
+>> --=20
+>> 2.15.1
+>>=20
 >> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
+>> To unsubscribe from this list: send the line "unsubscribe devicetree"
+>in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
