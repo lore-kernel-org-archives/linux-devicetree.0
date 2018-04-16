@@ -1,101 +1,47 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC 3/3] arm: shmobile: Add the RZ/N1D SMP enabler driver.
-Date: Mon, 16 Apr 2018 14:46:16 -0700
-Message-ID: <9f33a1d2-3c55-2485-a1f2-909def69e5b0@gmail.com>
-References: <1523871304-48517-1-git-send-email-michel.pollet@bp.renesas.com>
- <1523871304-48517-5-git-send-email-michel.pollet@bp.renesas.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
+Date: Mon, 16 Apr 2018 14:47:42 -0700
+Message-ID: <5af35710-b521-e22e-055b-798cbe343dc6@codeaurora.org>
+References: <1523673401-21611-1-git-send-email-tdas@codeaurora.org>
+ <1523673401-21611-3-git-send-email-tdas@codeaurora.org>
+ <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523871304-48517-5-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <152390031768.51482.12790579493617671456@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, buserror+upstream@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Andy Gross <andy.gross@linaro.org>, Carlo Caione <carlo@endlessm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Frank Rowand <frank.rowand@sony.com>, Juri Lelli <juri.lelli@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Odelu Kukatla <okukatla@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+Hello Taniya,
 
-On 04/16/2018 02:34 AM, Michel Pollet wrote:
-> The Renesas RZ/N1D second CA7 is parked in a ROM pen at boot time, it
-> requires a special enable method to get it started at boot time.
+On 04/16/2018 10:38 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-04-13 19:36:41)
+>> Add the RPMh clock driver to control the RPMh managed clock resources on
+>> some of the Qualcomm Technologies, Inc. SoCs.
+>>
+>> Signed-off-by: David Collins <collinsd@codeaurora.org>
+>> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
 > 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Your signoff chain is very confused. The first signoff should match the
+> "From:" header but that doesn't seem to be the case here. And the sender
+> should be the last in the chain.
 
-Some few comments below. This patch should probably be re-ordered in
-your patch series, I would expect you to have this become patch 2 and
-have patch 2 be patch 3 (first you add infrastructure for using
-something, then you make use of it).
+It looks like the provenance of this driver go muddled during downstream
+propagation between branches.  The original downstream version of the
+clk-rpmh driver was written by Osvaldo Banuelos [1].  I think that the
+best course of action here would be to remove my Signed-off-by, add
+Osvaldo's, and add yours.
 
-> +static int rzn1_smp_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +{
-> +	if (!cpu_bootaddr)
-> +		return -ENODEV;
-> +
-> +	spin_lock(&cpu_lock);
-> +
-> +	writel(virt_to_phys(secondary_startup), cpu_bootaddr);
+Thanks,
+David
 
-Consider using __pa_symbol() instead of virt_to_phys() since
-secondary_startup is part of the kernel's linear memory map.
-
-> +	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-> +
-> +	spin_unlock(&cpu_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void __init rzn1_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +	struct device_node *dn;
-> +	int ret;
-> +	u32 bootaddr;
-> +
-> +	dn = of_get_cpu_node(1, NULL);
-> +	if (!dn) {
-> +		pr_err("CPU#1: missing device tree node\n");
-> +		return;
-> +	}
-> +	/*
-> +	 * Determine the address from which the CPU is polling.
-> +	 */
-> +	ret = of_property_read_u32(dn, "cpu-release-addr", &bootaddr);
-> +	if (ret)
-> +		pr_err("CPU#1: invalid cpu-release-addr property\n");
-> +
-> +	of_node_put(dn);
-> +	/* The bootloader *does* change this property */
-
-This comment should probably be moved above the function that fetches
-"cpu-release-addr"
-
-> +	pr_info("CPU#1: cpu-release-addr %08x\n", (u32)bootaddr);
-> +
-> +	if (!bootaddr)
-> +		return;
-
-Would not you want to show a message here to help catch such conditions
-
-> +
-> +	cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr));
-
-Relying on ioremap() to reject values that might be outside of the
-allowed range may be a little fragile, but I can't suggest any better
-alternative.
-
-> +	if (!cpu_bootaddr)
-> +		pr_err("CPU#1: cpu-release-addr map failed\n");
-> +}
-> +
-> +static const struct smp_operations rzn1_smp_ops __initconst = {
-> +	.smp_prepare_cpus = rzn1_smp_prepare_cpus,
-> +	.smp_boot_secondary = rzn1_smp_boot_secondary,
-> +};
-> +CPU_METHOD_OF_DECLARE(rzn1_smp, "renesas,r9a06g032-smp", &rzn1_smp_ops);
-> 
-
+[1]:
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/?id=11d3623c37afb945ce36755501812a44efeb6cd9
 
 -- 
-Florian
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
