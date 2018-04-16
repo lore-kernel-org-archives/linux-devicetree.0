@@ -1,54 +1,94 @@
-From: saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v4 2/2] drivers: soc: Add LLCC driver
-Date: Mon, 16 Apr 2018 22:50:10 +0530
-Message-ID: <2ca31c0ffd699d0aea13d09a3b2be0a8@codeaurora.org>
-References: <1523390893-10904-1-git-send-email-rishabhb@codeaurora.org>
- <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v2 1/3] drm/vc4: Remove the need for the GPU-subsystem DT node.
+Date: Mon, 16 Apr 2018 10:25:46 -0700
+Message-ID: <20180416172546.32118-1-eric@anholt.net>
+References: <20180413175632.oz62n363g6rxdp6z@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523390893-10904-3-git-send-email-rishabhb@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, tsoni@codeaurora.org, kyan@codeaurora.org, ckadabi@codeaurora.org, stanimir.varbanov@linaro.org, evgreen@chromium.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.orgevgreen@chromium.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180413175632.oz62n363g6rxdp6z@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rishabh,
-
-> +MODULE_DESCRIPTION("QTI sdm845 LLCC driver");
-
-I think it should be QCOM or Qualcomm and not QTI
-
-> +
-> +	desc = devm_kzalloc(dev, sizeof(struct llcc_slice_desc), GFP_KERNEL);
-
-Can use *desc instead
-
-> +struct llcc_slice_desc *llcc_slice_getd(struct device *dev, const char 
-> *name)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	int index = 0;
-> +	const char *slice_name;
-> +	struct property *prop;
-> +
-> +	if (!np)
-> +		return ERR_PTR(-ENOENT);
-
-Is this check required?
-
-> diff --git a/include/linux/soc/qcom/llcc-qcom.h
-> b/include/linux/soc/qcom/llcc-qcom.h
-> new file mode 100644
-> index 0000000..3e97569
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/llcc-qcom.h
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-Should be within /* */ for headers as per kernel licensing rules.
-
-Regards,
-Sai Prakash
+VGhlIEdQVSBzdWJzeXN0ZW0gbm9kZSB3YXMgYSB3b3JrYXJvdW5kIHRvIGhhdmUgYSBjZW50cmFs
+IGRldmljZSB0bwpiaW5kIFYzRCBhbmQgZGlzcGxheSB0by4gIEZvbGxvd2luZyB0aGUgbGVhZCBv
+ZiAyNDY3NzRkMTdmYzAKKCJkcm0vZXRuYXZpdjogcmVtb3ZlIHRoZSBuZWVkIGZvciBhIGdwdS1z
+dWJzeXN0ZW0gRFQgbm9kZSIpLCByZW1vdmUKdGhlIHN1YnN5c3RlbSBub2RlIHVzYWdlIGFuZCBq
+dXN0IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhlIERSTQpkZXZpY2UgdG8gYXR0YWNo
+IHRvIGlmIGFueSBvZiB0aGUgc3Vic3lzdGVtIGRldmljZXMgYXJlIHByZXNlbnQuCgp2MjogU2lt
+cGxpZnkgdGhlIERUIHdhbGtpbmcgY29kZS4KClNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxl
+cmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4
+dCAgICAgICAgIHwgIDcgLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAg
+ICAgICAgICAgICB8IDI5ICsrKysrKysrKysrKysrLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2h2cy5jICAgICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0
+X3YzZC5jICAgICAgICAgICAgICAgICB8ICAxICsKIDQgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0
+aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKaW5kZXggMjg0ZTJi
+MTRjZmJlLi41ZmQ0NzE3MTAxZDYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dApAQCAtNCw5ICs0LDYg
+QEAgVGhlIFZDNCBkZXZpY2UgcHJlc2VudCBvbiB0aGUgUmFzcGJlcnJ5IFBpIGluY2x1ZGVzIGEg
+ZGlzcGxheSBzeXN0ZW0KIHdpdGggSERNSSBvdXRwdXQgYW5kIHRoZSBIVlMgKEhhcmR3YXJlIFZp
+ZGVvIFNjYWxlcikgZm9yIGNvbXBvc2l0aW5nCiBkaXNwbGF5IHBsYW5lcy4KIAotUmVxdWlyZWQg
+cHJvcGVydGllcyBmb3IgVkM0OgotLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJyY20sYmNtMjgz
+NS12YzQiIG9yICJicmNtLGN5Z251cy12YzQiCi0KIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFBp
+eGVsIFZhbHZlOgogLSBjb21wYXRpYmxlOglTaG91bGQgYmUgb25lIG9mICJicmNtLGJjbTI4MzUt
+cGl4ZWx2YWx2ZTAiLAogCQkgICJicmNtLGJjbTI4MzUtcGl4ZWx2YWx2ZTEiLCBvciAiYnJjbSxi
+Y20yODM1LXBpeGVsdmFsdmUyIgpAQCAtMTUzLDEwICsxNTAsNiBAQCB2M2Q6IHYzZEA3ZWMwMDAw
+MCB7CiAJaW50ZXJydXB0cyA9IDwxIDEwPjsKIH07CiAKLXZjNDogZ3B1IHsKLQljb21wYXRpYmxl
+ID0gImJyY20sYmNtMjgzNS12YzQiOwotfTsKLQogcGFuZWw6IHBhbmVsIHsKIAljb21wYXRpYmxl
+ID0gIm9udGF0LHl4NzAwd3YwMyIsICJzaW1wbGUtcGFuZWwiOwogCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5j
+CmluZGV4IDdjOTVlZDVjNWNhYy4uMTNiODQwYjUzNGI4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vdmM0L3ZjNF9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYwpA
+QCAtMzY0LDIyICszNjQsMzAgQEAgc3RhdGljIGludCB2YzRfcGxhdGZvcm1fZHJtX3JlbW92ZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXJldHVybiAwOwogfQogCi1zdGF0aWMgY29u
+c3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRfb2ZfbWF0Y2hbXSA9IHsKLQl7IC5jb21wYXRpYmxl
+ID0gImJyY20sYmNtMjgzNS12YzQiLCB9LAotCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxjeWdudXMt
+dmM0IiwgfSwKLQl7fSwKLX07Ci1NT0RVTEVfREVWSUNFX1RBQkxFKG9mLCB2YzRfb2ZfbWF0Y2gp
+OwotCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2YzRfcGxhdGZvcm1fZHJpdmVyID0g
+ewogCS5wcm9iZQkJPSB2YzRfcGxhdGZvcm1fZHJtX3Byb2JlLAogCS5yZW1vdmUJCT0gdmM0X3Bs
+YXRmb3JtX2RybV9yZW1vdmUsCiAJLmRyaXZlcgkJPSB7CiAJCS5uYW1lCT0gInZjNC1kcm0iLAot
+CQkub2ZfbWF0Y2hfdGFibGUgPSB2YzRfb2ZfbWF0Y2gsCiAJfSwKIH07CiAKK3N0YXRpYyBib29s
+Citkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goY29uc3Qgc3RydWN0IHBsYXRmb3JtX2RyaXZl
+ciAqZHJpdmVyKQoreworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKKworCW5vZGUgPSBvZl9m
+aW5kX21hdGNoaW5nX25vZGVfYW5kX21hdGNoKE5VTEwsCisJCQkJCSAgICAgICBkcml2ZXItPmRy
+aXZlci5vZl9tYXRjaF90YWJsZSwKKwkJCQkJICAgICAgIE5VTEwpOworCWlmIChvZl9kZXZpY2Vf
+aXNfYXZhaWxhYmxlKG5vZGUpKSB7CisJCW9mX25vZGVfcHV0KG5vZGUpOworCQlyZXR1cm4gdHJ1
+ZTsKKwl9CisKKwlyZXR1cm4gZmFsc2U7Cit9CisKIHN0YXRpYyBpbnQgX19pbml0IHZjNF9kcm1f
+cmVnaXN0ZXIodm9pZCkKIHsKIAlpbnQgcmV0OwpAQCAtMzg5LDYgKzM5NywxMSBAQCBzdGF0aWMg
+aW50IF9faW5pdCB2YzRfZHJtX3JlZ2lzdGVyKHZvaWQpCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJl
+dDsKIAorCWlmIChkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goJnZjNF92M2RfZHJpdmVyKSB8
+fAorCSAgICBkcml2ZXJfb2ZfdGFibGVfaGFzX2FfbWF0Y2goJnZjNF9odnNfZHJpdmVyKSkgewor
+CQlwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKCJ2YzQtZHJtIiwgLTEsIE5VTEwsIDAp
+OworCX0KKwogCXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJnZjNF9wbGF0Zm9ybV9k
+cml2ZXIpOwogfQogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYyBi
+L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2h2cy5jCmluZGV4IDJiNjJmYzViOGQ4NS4uNzMwODEz
+ZWU3NGFlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYworKysgYi9k
+cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYwpAQCAtMjYyLDYgKzI2Miw3IEBAIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHZjNF9odnNfZHRfbWF0Y2hbXSA9IHsKIAl7IC5jb21w
+YXRpYmxlID0gImJyY20sYmNtMjgzNS1odnMiIH0sCiAJe30KIH07CitNT0RVTEVfREVWSUNFX1RB
+QkxFKG9mLCB2YzRfaHZzX2R0X21hdGNoKTsKIAogc3RydWN0IHBsYXRmb3JtX2RyaXZlciB2YzRf
+aHZzX2RyaXZlciA9IHsKIAkucHJvYmUgPSB2YzRfaHZzX2Rldl9wcm9iZSwKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
+djNkLmMKaW5kZXggYmZjMmZhNzNkMmFlLi5lNzdlOWViYmFiNGIgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3Yz
+ZC5jCkBAIC00NTksNiArNDU5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+dmM0X3YzZF9kdF9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYnJjbSx2YzQtdjNkIiB9
+LAogCXt9CiB9OworTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgdmM0X3YzZF9kdF9tYXRjaCk7CiAK
+IHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgdmM0X3YzZF9kcml2ZXIgPSB7CiAJLnByb2JlID0gdmM0
+X3YzZF9kZXZfcHJvYmUsCi0tIAoyLjE3LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
