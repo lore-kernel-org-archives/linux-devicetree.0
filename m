@@ -1,109 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 10/11] dt-bindings: clock: Add bindings for ZynqMP
- clock driver
-Date: Mon, 16 Apr 2018 16:28:12 -0500
-Message-ID: <20180416212812.abmxy23r5peiwbik@rob-hp-laptop>
-References: <1523389127-14243-1-git-send-email-jollys@xilinx.com>
- <1523389127-14243-11-git-send-email-jollys@xilinx.com>
+Subject: Re: [PATCH] PCI: dwc: artpec6: Add reset-gpios for PERST# control
+Date: Mon, 16 Apr 2018 16:35:03 -0500
+Message-ID: <20180416213503.im3dfmbqnqho32w7@rob-hp-laptop>
+References: <20180415185621.GR16746@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523389127-14243-11-git-send-email-jollys@xilinx.com>
+In-Reply-To: <20180415185621.GR16746@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, mark.rutland@arm.com, linux-clk@vger.kernel.org, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 12:38:46PM -0700, Jolly Shah wrote:
-> From: Rajan Vaja <rajanv@xilinx.com>
+On Sun, Apr 15, 2018 at 08:56:21PM +0200, Jesper Nilsson wrote:
+> Some devices need an optional external gpio for controlling
+> the PERST# signal to bring up for example a PCIe switch
+> after a soft reset.
 > 
-> Add documentation to describe Xilinx ZynqMP clock driver
-> bindings.
+> Without this, some boards (the ARTPEC-6 master devboard)
+> would not get the PCIe link back after a soft reset.
 > 
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
 > ---
->  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  53 ++++++++++
->  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 +++++++++++++++++++++
->  2 files changed, 169 insertions(+)
->  create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
-
-One nit, otherwise:
+>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt    |  4 ++++
+>  drivers/pci/dwc/pcie-artpec6.c                       | 20 +++++++++++++++++++-
+>  2 files changed, 23 insertions(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> index 1b431d9..ee8d0b0 100644
-> --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> @@ -17,6 +17,53 @@ Required properties:
->  		  - "smc" : SMC #0, following the SMCCC
->  		  - "hvc" : HVC #0, following the SMCCC
->  
-> +--------------------------------------------------------------------------
-> +Device Tree Clock bindings for the Zynq Ultrascale+ MPSoC controlled using
-> +Zynq MPSoC firmware interface
-> +--------------------------------------------------------------------------
-> +The clock controller is a h/w block of Zynq Ultrascale+ MPSoC clock
-> +tree. It reads required input clock frequencies from the devicetree and acts
-> +as clock provider for all clock consumers of PS clocks.
-> +
-> +See clock_bindings.txt for more information on the generic clock bindings.
-> +
-> +Required properties:
-> + - #clock-cells:	Must be 1
-> + - compatible:		Must contain:	"xlnx,zynqmp-clk"
-> + - clocks:		List of clock specifiers which are external input
-> +			clocks to the given clock controller. Please refer
-> +			the next section to find the input clocks for a
-> +			given controller.
-> + - clock-names:		List of clock names which are exteral input clocks
-> +			to the given clock controller. Please refer to the
-> +			clock bindings for more details.
-> +
-> +Input clocks for zynqmp Ultrascale+ clock controller:
-> +
-> +The Zynq UltraScale+ MPSoC has one primary and four alternative reference clock
-> +inputs. These required clock inputs are:
-> + - pss_ref_clk (PS reference clock)
-> + - video_clk (reference clock for video system )
-> + - pss_alt_ref_clk (alternative PS reference clock)
-> + - aux_ref_clk
-> + - gt_crx_ref_clk (transceiver reference clock)
-> +
-> +The following strings are optional parameters to the 'clock-names' property in
-> +order to provide an optional (E)MIO clock source:
-> + - swdt0_ext_clk
-> + - swdt1_ext_clk
-> + - gem0_emio_clk
-> + - gem1_emio_clk
-> + - gem2_emio_clk
-> + - gem3_emio_clk
-> + - mio_clk_XX		# with XX = 00..77
-> + - mio_clk_50_or_51	#for the mux clock to gem tsu from 50 or 51
-> +
-> +
-> +Output clocks are registered based on clock information received
-> +from firmware. Output clocks indexes are mentioned in
-> +include/dt-bindings/clock/xlnx,zynqmp-clk.h.
-> +
->  -------
->  Example
->  -------
-> @@ -25,5 +72,11 @@ firmware {
->  	zynqmp_firmware: zynqmp-firmware {
->  		compatible = "xlnx,zynqmp-firmware";
->  		method = "smc";
-> +		clk: clk {
-
-clock-controller {
-
-> +			#clock-cells = <1>;
-> +			compatible = "xlnx,zynqmp-clk";
-> +			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
-> +			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-> +		};
->  	};
->  };
