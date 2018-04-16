@@ -1,50 +1,35 @@
-Return-Path: <SRS0=wzcr=HF=the-dreams.de=wsa@kernel.org>
-Date: Mon, 16 Apr 2018 21:47:35 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] DT: mmc: tmio_mmc: document R8A77980 bindings
-Message-ID: <20180416194735.33pn5ysnl3d4ucz4@ninjato>
-References: <cee91fe1-7bf0-e4c8-d6a9-5653be3358b0@cogentembedded.com>
+Return-Path: <SRS0=4xjV=HF=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] DT: mmc: tmio_mmc: document R8A77980 bindings
+Message-ID: <cee91fe1-7bf0-e4c8-d6a9-5653be3358b0@cogentembedded.com>
+Date: Mon, 16 Apr 2018 21:30:02 +0300
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gry5sbp56ovzapls"
-Content-Disposition: inline
-In-Reply-To: <cee91fe1-7bf0-e4c8-d6a9-5653be3358b0@cogentembedded.com>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Document the R-Car V3H (R8A77980) SoC in the Renesas SDHI bindings.
 
---gry5sbp56ovzapls
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On Mon, Apr 16, 2018 at 09:30:02PM +0300, Sergei Shtylyov wrote:
-> Document the R-Car V3H (R8A77980) SoC in the Renesas SDHI bindings.
->=20
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+---
+This patch is against the 'next' branch of Ulf Hansson's 'mmc.git' repo.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-
---gry5sbp56ovzapls
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlrU/dIACgkQFA3kzBSg
-KbaQBA/+OMVzl9mmZ4ZDWvmFLm0f/kgivgePFmo+3nXTNZt6dpRG+qWzI3Fkq/vg
-npCj65ngJDIGSJqIUI5KYjUedmkjB+6l0yOv5IFbGFDDrGYCWnY1M+3N9+hdGLtA
-MZjVcg438/sJJkFGpr6UOL2wk7EuFDFBZ5e8u2L4Rcmur3ZU7cZdvwXB/3ZOLP9X
-4pkoKVVXI5qfOhvMdOCZOJCNJD6jHpNJ6uL+ur0kls9NwBN0H1ONPoV8TbCDmq2/
-A27HBudLk/IgugInDBANUgjEZ/Lxj2Z//AU+xt+H7TRqe8xsbT9a02/r2k0ERXXj
-d2428nW430Ak7DGp9psjxUDNdsmh1FmvoTexaqYFjTh03SBUx5MmgGvMm4QGr3AA
-MR24kLFczNq5d9ABuoUnQ+1YVwCc3ClsOkcMHzIUPgz22XOeGPtBE2esOEDcXYfU
-Zvvq0eVci7e4GD8ORB+WurEx0huFB4PU+E7C1vAnQS9Q4VEe6yM5vfExU/7ezWRa
-udKnsET/vrbvlMiDp7H1/if0PtvTPCR3o5NBt8qKi7kGJ3GZh84DR8NM9n08rijd
-OMBD2DYQEB8IzpH+X/yVediRgBU6IgBKgK93fIOR42xHgvMFzLRPUbSw5LlBx+mK
-Xw/6f3jNN22VuOR7imFRav/Tn/0u0otSzBlhF/OjrOVTchyJIac=
-=qblK
------END PGP SIGNATURE-----
-
---gry5sbp56ovzapls--
+Index: mmc/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+===================================================================
+--- mmc.orig/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ mmc/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 		"renesas,sdhi-r8a7794" - SDHI IP on R8A7794 SoC
+ 		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
+ 		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
++		"renesas,sdhi-r8a77980" - SDHI IP on R8A77980 SoC
+ 		"renesas,sdhi-r8a77995" - SDHI IP on R8A77995 SoC
+ 		"renesas,sdhi-shmobile" - a generic sh-mobile SDHI controller
+ 		"renesas,rcar-gen1-sdhi" - a generic R-Car Gen1 SDHI controller
