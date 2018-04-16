@@ -1,54 +1,62 @@
-Return-Path: <SRS0=UpLl=HG=ti.com=t-kristo@kernel.org>
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RFC 03/13] ARM: dts: add subdir for TI SoC DT files
-Date: Tue, 17 Apr 2018 12:10:05 +0300
-Message-ID: <1523956215-28154-4-git-send-email-t-kristo@ti.com>
-In-Reply-To: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+Return-Path: <SRS0=tJus=HF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga18.intel.com ([134.134.136.126]:50540 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754073AbeDPK4O (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Apr 2018 06:56:14 -0400
+Date: Mon, 16 Apr 2018 13:56:11 +0300
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 03/10] media: ov772x: create subdevice device node
+Message-ID: <20180416105610.2lgmkqqlkicr2l27@paasikivi.fi.intel.com>
+References: <1523847111-12986-1-git-send-email-akinobu.mita@gmail.com>
+ <1523847111-12986-4-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com
-Cc: wmills@ti.com, tony@atomide.com, trini@konsulko.com, rmk@armlinux.org.uk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1523847111-12986-4-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add subdir for TI SoC DT files under the main DT source directory.
-Initially, this directory will only be used for DT overlay build purposes.
+Hi Akinobu,
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/Makefile    | 4 ++++
- arch/arm/boot/dts/ti/Makefile | 1 +
- 2 files changed, 5 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/Makefile
+On Mon, Apr 16, 2018 at 11:51:44AM +0900, Akinobu Mita wrote:
+> Set the V4L2_SUBDEV_FL_HAS_DEVNODE flag for the subdevice so that the
+> subdevice device node is created.
+> 
+> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+> * v2
+> - No changes
+> 
+>  drivers/media/i2c/ov772x.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 8badd6f..188f2f1 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -1287,6 +1287,7 @@ static int ov772x_probe(struct i2c_client *client,
+>  	priv->info = client->dev.platform_data;
+>  
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
+> +	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e24249..02f28fc 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -729,6 +729,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	dra72-evm-revc.dtb \
- 	dra71-evm.dtb \
- 	dra76-evm.dtb
-+dts-dirs-$(CONFIG_SOC_DRA7XX) += ti
- dtb-$(CONFIG_ARCH_ORION5X) += \
- 	orion5x-kuroboxpro.dtb \
- 	orion5x-lacie-d2-network.dtb \
-@@ -1163,3 +1164,6 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-opp-witherspoon.dtb \
- 	aspeed-bmc-opp-zaius.dtb \
- 	aspeed-bmc-quanta-q71l.dtb
-+
-+subdir-y	+= $(dts-dirs-y)
-+subdir-		+= $(dts-dirs-)
-diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
-new file mode 100644
-index 0000000..b26328b
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/Makefile
-@@ -0,0 +1 @@
-+clean-files	+= *.dtbo
+Could you move this patch as the last in the set, so that you're enabling
+the sub-device interface only when all the changes to support it are
+actually there?
+
+>  	v4l2_ctrl_handler_init(&priv->hdl, 3);
+>  	v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
+>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+
 -- 
-1.9.1
+Kind regards,
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Sakari Ailus
+sakari.ailus@linux.intel.com
