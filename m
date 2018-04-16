@@ -1,39 +1,55 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: Add the rtc enable clock for watchdog
-Date: Mon, 16 Apr 2018 10:40:04 +0800
-Message-ID: <bc450ea82fe7fbec7e7f74c5cdc8a37d202fe526.1523846102.git.baolin.wang@linaro.org>
-References: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
-In-Reply-To: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
-References: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, orsonzhai@gmail.com, zhang.lyra@gmail.com
-Cc: devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] regulator: axp20x: add drivevbus
+ support for axp803
+Date: Mon, 16 Apr 2018 12:34:39 +0800
+Message-ID: <CAGb2v656MCUYiFd2J6ZE5hze2TKQqkMh7hGAUXhjz58qCj58ug@mail.gmail.com>
+References: <20180327053104.3812-1-jagan@amarulasolutions.com>
+ <CAMty3ZD3ohpgqsBjgNztpyHOmmcu_y7vuUOoop8y-+OpWjLYGA@mail.gmail.com> <20180405064658.rz2grnpm5fq45lhu@flea>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB5WP2DLAKGQE7ZO4WLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180405064658.rz2grnpm5fq45lhu@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the rtc enable clock for watchdog controller to make it work well.
+On Thu, Apr 5, 2018 at 2:46 PM, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Thu, Apr 05, 2018 at 12:11:39PM +0530, Jagan Teki wrote:
+>> On Tue, Mar 27, 2018 at 11:01 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>> > Like axp221, axp223, axp813 the axp803 is also supporting external
+>> > regulator to drive the  OTG VBus through N_VBUSEN PMIC pin.
+>> >
+>> > Add support for it.
+>> >
+>> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> > ---
+>> > Changes for v5:
+>> > - Collect Chen-Yu reviewed-by tag
+>> > Changes for v4:
+>> > - rebase on master
+>> > Changes for v3:
+>> > - Update drivevbus in table of regulators
+>>
+>> Can you pick these, has some dependency with drivevbus on other
+>> patches.
+>
+> I'm not the regulator maintainer, nor the AXP maintainer for that
+> matter. Mark Brown and Chen-Yu are, respectively.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- arch/arm64/boot/dts/sprd/whale2.dtsi |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I've already reviewed all the patches. Please resend the series and
+include Mark Brown, the regulator subsystem maintainer. He clearly
+isn't in the current recipient list, so no wonder things didn't move
+forward. Once he applies the driver bits, we'll apply any pending
+device tree changes.
 
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index bf7e70c..e9db910 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -214,8 +214,9 @@
- 				reg = <0 0x40310000 0 0x1000>;
- 				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- 				timeout-sec = <12>;
--				clock-names = "enable";
--				clocks = <&aon_gate CLK_APCPU_WDG_EB>;
-+				clock-names = "enable", "rtc_enable";
-+				clocks = <&aon_gate CLK_APCPU_WDG_EB>,
-+				       <&aon_gate CLK_AP_WDG_RTC_EB>;
- 			};
- 		};
- 
--- 
-1.7.9.5
+ChenYu
