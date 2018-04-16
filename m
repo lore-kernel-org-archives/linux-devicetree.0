@@ -1,57 +1,57 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv4 07/10] mfd: ti-lmu: register one backlight device per
- channel
-Date: Mon, 16 Apr 2018 15:42:43 +0100
-Message-ID: <20180416144243.3xslyuzgbfz7dc2j@dell>
-References: <20180330172414.26575-1-sebastian.reichel@collabora.co.uk>
- <20180330172414.26575-8-sebastian.reichel@collabora.co.uk>
+Subject: Re: [RESEND PATCH v6 1/5] pwm-backlight: enable/disable the PWM
+ before/after LCD enable toggle.
+Date: Mon, 16 Apr 2018 15:43:32 +0100
+Message-ID: <20180416144332.caww5vttzrzjlnkt@dell>
+References: <20180328170327.5395-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180330172414.26575-8-sebastian.reichel@collabora.co.uk>
+In-Reply-To: <20180328170327.5395-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Sebastian Reichel <sre@kernel.org>, Milo Kim <Milo.Kim@ti.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, groeck@chromium.org, linux-rockchip@lists.infradead.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Mar 2018, Sebastian Reichel wrote:
+On Wed, 28 Mar 2018, Enric Balletbo i Serra wrote:
 
-> All LMU devices support multiple channels, that can be controlled
-> independently. This registers one backlight sub-device per channel.
+> Before this patch the enable signal was set before the PWM signal and
+> vice-versa on power off. This sequence is wrong, at least, it is on
+> the different panels datasheets that I checked, so I inverted the sequence
+> to follow the specs.
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> For reference the following panels have the mentioned sequence:
+>   - N133HSE-EA1 (Innolux)
+>   - N116BGE (Innolux)
+>   - N156BGE-L21 (Innolux)
+>   - B101EAN0 (Auo)
+>   - B101AW03 (Auo)
+>   - LTN101NT05 (Samsung)
+>   - CLAA101WA01A (Chunghwa)
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 > ---
->  drivers/mfd/ti-lmu.c       | 62 +++++++++++++++++++++++++++++++++++++---------
->  include/linux/mfd/ti-lmu.h |  4 +++
->  2 files changed, 54 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
-> index f43b8acc30e1..f4311d215dfa 100644
-> --- a/drivers/mfd/ti-lmu.c
-> +++ b/drivers/mfd/ti-lmu.c
-> @@ -56,8 +56,16 @@ static void ti_lmu_disable_hw(void *data)
->  
->  static const struct mfd_cell lm3532_devices[] = {
->  	{
-> -		.name          = "ti-lmu-backlight",
-> -		.id            = LM3532,
-> +		.name          = "ti-lmu-led-backlight",
-> +		.id            = 0,
+> Changes since v5:
+>  - Add Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Changes since v4:
+>  - Rebase on top of mainline.
+>  - Add the acks from Daniel Thompson and Jingoo Han.
+> Changes since v3:
+>  - List the part numbers for the panel checked (Daniel Thompson)
+> Changes since v2:
+>  - Add this as a separate patch (Thierry Reding)
+> Changes since v1:
+>  - None
+> ---
+>  drivers/video/backlight/pwm_bl.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
-What's the reason for you manually setting .id?
-
-> +	},
-> +	{
-> +		.name          = "ti-lmu-led-backlight",
-> +		.id            = 1,
-> +	},
-> +	{
-> +		.name          = "ti-lmu-led-backlight",
-> +		.id            = 2,
->  	},
->  };
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
