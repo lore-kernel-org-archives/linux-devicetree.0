@@ -1,40 +1,34 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/2] iio: afe: unit-converter: add support for adi,lt6106
-Date: Mon, 16 Apr 2018 09:17:04 +0200
-Message-ID: <30bf0000-acc0-7d06-2870-74b3c559c707@axentia.se>
-References: <20180410152802.30958-1-peda@axentia.se>
- <20180411141555.15044-1-peda@axentia.se>
- <20180411141555.15044-3-peda@axentia.se>
- <a70e8467-d0da-2b37-5dfa-7e14b388634c@ti.com>
- <5d9421cc-5c7b-fcdf-a11f-e97127a3d5bd@metafoo.de>
- <19aeb920-ce5a-4e81-1264-9005e220c237@ti.com>
- <4aac6870-9159-18ba-0aa8-da227c426f38@axentia.se>
- <c2923ac0-5e28-eef0-e32a-1e25ce550a82@ti.com>
- <36e0c96b-89ec-2372-825a-71ead1a43473@axentia.se>
- <d59697bb-60bf-deee-65b5-c552c59e8d5a@ti.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: i.MX6: Add BTicino i.MX6DL Mamoj
+ initial support
+Date: Mon, 16 Apr 2018 15:24:26 +0800
+Message-ID: <20180416072425.GC25429@dragon>
+References: <20180319194114.15349-1-jagan@amarulasolutions.com>
+ <20180319194114.15349-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d59697bb-60bf-deee-65b5-c552c59e8d5a@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180319194114.15349-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-04-13 16:47, Andrew F. Davis wrote:
-> On 04/12/2018 05:31 PM, Peter Rosin wrote:
->> On 2018-04-12 17:35, Andrew F. Davis wrote:
->>> True, how about "current-sense-from-voltage" ?
->>
->> Doesn't cover "voltage-divider" (and we don't need separate drivers
->> doing the exact same calculations, that's a maintenance nightmare).
-> 
-> The driver name doesn't have to cover every use, just more than the
-> other name.
+On Tue, Mar 20, 2018 at 01:11:14AM +0530, Jagan Teki wrote:
+> +&i2c4 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c4>;
+> +	status = "okay";
+> +
+> +	pmic: pfuze100@8 {
 
-I also find current-sense-from-voltage unwieldy. It's simply too long.
+pfuze100: pmic@8
 
-Cheers,
-Peter
+I fixed it up and applied both patches.
+
+Shawn
+
+> +		compatible = "fsl,pfuze100";
+> +		reg = <0x08>;
