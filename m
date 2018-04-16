@@ -1,93 +1,159 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [[RFC]DPU PATCH 2/2] dt-bindings: drm/bridge:
- Document sn65dsi86 bridge bindings
-Date: Mon, 16 Apr 2018 14:32:41 -0500
-Message-ID: <20180416193241.ciz2ehq5s6xf7n2w@rob-hp-laptop>
-References: <1523596981-18913-1-git-send-email-spanda@codeaurora.org>
- <1523596981-18913-3-git-send-email-spanda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] gpio: dwapb: Add support for 1 interrupt per port A
+ GPIO
+Date: Mon, 16 Apr 2018 15:03:29 -0500
+Message-ID: <20180416200329.notqjtdztzjrnim7@rob-hp-laptop>
+References: <1523609472-4481-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523596981-18913-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1523609472-4481-1-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMTMsIDIwMTggYXQgMTA6NTM6MDFBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
-dG8gZURQIGJyaWRnZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFA
-Y29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxz
-bjY1ZHNpODYudHh0ICAgICAgIHwgNzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
-Y2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gaW5kZXggMDAwMDAwMC4uY2JkMmYwZQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
-LnR4dAo+IEBAIC0wLDAgKzEsNzUgQEAKPiArU042NURTSTg2IERTSSB0byBlRFAgYnJpZGdlIGNo
-aXAKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoaXMgaXMgdGhl
-IGJpbmRpbmcgZm9yIFRleGFzIEluc3RydW1lbnRzIFNONjVEU0k4NiBicmlkZ2UuCj4gKwo+ICtS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHNuNjVkc2k4
-NiIKPiArLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBjaGlwLCAweDJkIGFzIHBlciBkYXRhc2hl
-ZXQKPiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBm
-b3IgRURQX0JSSUpfRU4gcGluCj4gKy0gYXV4LXNkYS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3Bp
-byBzcGVjaWZpY2F0aW9uIGZvciBFRFBfQlJJSl9JMkNfU0RBIHBpbiBvZiBBVVggY2hhbm5lbAo+
-ICstIGF1eC1zY2wtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3Ig
-RURQX0JSSUpfSTJDX1NDTCBwaW4gb2YgQVVYIGNoYW5uZWwKCldoYXQgaWYgSSB1c2UgSTJDIGhv
-c3Qgb24gbXkgZGV2aWNlPyBJZiB5b3VyIGJvYXJkIGRlc2lnbiB1c2VzIGJpdGJhbmdlZCAKSTJD
-LCB0aGF0IGlzIG91dHNpZGUgdGhlIHNjb3BlIG9mIHRoaXMgYmluZGluZyBhbmQgaXQgc2hvdWxk
-IHVzZSAKaTJjLWdwaW8gYmluZGluZy4KCj4gKy0gYmlhcy1lbi1ncGlvczogT0YgZGV2aWNlLXRy
-ZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFTl9QUDMzMDBfRFhfRURQIHBpbiB0bwo+ICsJCQll
-bmFibGUgMy4zViBzdXBwbHkgdG8gZURQIGNvbm5lY3Rvcgo+ICstIGJrbHQtZW4tZ3Bpb3M6IE9G
-IGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgQVBfRURQX0JLTFRFTiAKcGluCj4g
-Kwo+ICstIHZjY2lvLXN1cHBseTogQSAxLjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgUEhZ
-Lgo+ICstIHZjY2Etc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBDb250
-cm9sbGVyLgo+ICstIHZjY3Mtc3VwcGx5OiBBIDMuM1Ygc3VwcGx5IHRoYXQgcG93ZXIgdGhlIGVE
-UCBjb25uZWN0b3IKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIGlycS1ncGlv
-czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBpbnRlcnJ1cHQgcGluCgpV
-c2UgImludGVycnVwdHMiIHByb3BlcnR5IGluc3RlYWQuCgo+ICstIGJrbHQtY3RybC1ncGlvczog
-T0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBFRFBfQktMVENUTCBwaW4KPiAr
-Cj4gKy0gc24saXMtcGx1Z2dhYmxlOiBib29sZWFuIHByb3BlcnR5IHRvIHNwZWNpZnkgaWYgSFBE
-IHN1cHBvcnRlZCBvciBub3QKPiArLSBzbixjdXN0b20tbW9kZXM6IE9GIGRldmljZS10cmVlIHNw
-ZWNpZmljdGlvbiB0byBhZGQgc3VwcG9ydCBmb3IgY3VzdG9tIG1vZGVzCgoic24iIGlzIG5vdCBh
-IHZlbmRvci4KCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoaXMgZGV2aWNlIGhhcyB0
-d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyB0aGUg
-T0YKPiArZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICstIFZpZGVvIHBvcnQgMCBmb3IgRFNJIGlucHV0
-Cj4gKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0Cj4gKwo+ICtFeGFtcGxlCj4gKy0tLS0t
-LS0KPiArCj4gK2VkcC1icmlkZ2VAMmQgewo+ICsJY29tcGF0aWJsZSA9ICJ0aSxzbjY1ZHNpODYi
-Owo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCXJl
-ZyA9IDwweDJkPjsKPiArCj4gKwllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzMgR1BJT19BQ1RJ
-VkVfSElHSD47Cj4gKwlhdXgtc2RhLWdwaW9zID0gPCZtc21ncGlvIDM0IEdQSU9fQUNUSVZFX0hJ
-R0g+Owo+ICsJYXV4LXNjbC1ncGlvcyA9IDwmbXNtZ3BpbyAzNSBHUElPX0FDVElWRV9ISUdIPjsK
-PiArCWJpYXMtZW4tZ3Bpb3MgPSA8Jm1zbWdwaW8gMzYgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwli
-a2x0LWVuLWdwaW9zID0gPCZtc21ncGlvIDM3IEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsKPiArCXZj
-Y2lvLXN1cHBseSA9IDwmcG04OTE2X2wxNz47Cj4gKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2X2w2
-PjsKPiArCXZjY3Mtc3VwcGx5ID0gPCZwbTg5MTZfbDc+Owo+ICsKPiArCXBvcnRzIHsKPiArCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9y
-dEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9pbjogZW5kcG9pbnQg
-ewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKPiArCQkJfTsKPiArCQl9Owo+
-ICsKPiArCQlwb3J0QDEgewo+ICsJCQlyZWcgPSA8MT47Cj4gKwo+ICsJCQllZHBfYnJpZGdlX291
-dDogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfcGFuZWxfaW4+Owo+
-ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRp
-b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBh
-IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCj4gLS0KPiBUbyB1bnN1
-YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNl
-dHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVs
-Lm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
-b3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
-ZHJlbm8K
+On Fri, Apr 13, 2018 at 09:51:12AM +0100, Phil Edworthy wrote:
+> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
+> per GPIO in port A, but the driver currently only supports 1 interrupt.
+> See the DesignWare DW_apb_gpio Databook description of the
+> 'GPIO_INTR_IO' parameter.
+> 
+> This change allows the driver to work with up to 32 interrupts, it will
+> get as many interrupts as specified in the DT 'interrupts' property.
+> It doesn't do anything clever with the different interrupts, it just calls
+> the same handler used for single interrupt hardware.
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+> One point to mention is that I have made it possible for users to have
+> unconncted interrupts by specifying holes in the list of interrupts. This is
+> done by supporting the interrupts-extended DT prop.
+> However, I have no use for this and had to hack some test case for this.
+> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
+> 
+> v3:
+>  - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
+> v2:
+>  - Replaced interrupt-mask DT prop with support for the interrupts-extended
+>    prop. This means replacing the call to irq_of_parse_and_map() with calls
+>    to of_irq_parse_one() and irq_create_of_mapping().
+> 
+> Note: There are a few *code* lines over 80 chars, but this is just guidance,
+>    right? Especially as there are already some lines over 80 chars.
+> ---
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 ++++-
+>  drivers/gpio/gpio-dwapb.c                          | 43 +++++++++++++++++-----
+>  drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
+>  include/linux/platform_data/gpio-dwapb.h           |  3 +-
+>  4 files changed, 45 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> index 4a75da7..3c1118b 100644
+> --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> @@ -26,8 +26,13 @@ controller.
+>    the second encodes the triger flags encoded as described in
+>    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  - interrupt-parent : The parent interrupt controller.
+> -- interrupts : The interrupt to the parent controller raised when GPIOs
+> -  generate the interrupts.
+> +- interrupts : The interrupts to the parent controller raised when GPIOs
+> +  generate the interrupts. If the controller provides one combined interrupt
+> +  for all GPIOs, specify a single interrupt. If the controller provides one
+> +  interrupt for each GPIO, provide a list of interrupts that correspond to each
+> +  of the GPIO pins. When specifying multiple interrupts, if any are unconnected,
+> +  use the interrupts-extended property to specify the interrupts and set the
+> +  interrupt controller handle for unused interrupts to 0.
+>  - snps,nr-gpios : The number of pins in the port, a single cell.
+>  - resets : Reset line for the controller.
+>  
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 226977f..3273504 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -441,14 +441,19 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  	irq_gc->chip_types[1].handler = handle_edge_irq;
+>  
+>  	if (!pp->irq_shared) {
+> -		irq_set_chained_handler_and_data(pp->irq, dwapb_irq_handler,
+> -						 gpio);
+> +		int i;
+> +
+> +		for (i = 0; i < pp->ngpio; i++) {
+> +			if (pp->irq[i])
+> +				irq_set_chained_handler_and_data(pp->irq[i],
+> +						dwapb_irq_handler, gpio);
+> +		}
+>  	} else {
+>  		/*
+>  		 * Request a shared IRQ since where MFD would have devices
+>  		 * using the same irq pin
+>  		 */
+> -		err = devm_request_irq(gpio->dev, pp->irq,
+> +		err = devm_request_irq(gpio->dev, pp->irq[0],
+>  				       dwapb_irq_handler_mfd,
+>  				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
+>  		if (err) {
+> @@ -524,7 +529,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>  	if (pp->idx == 0)
+>  		port->gc.set_config = dwapb_gpio_set_config;
+>  
+> -	if (pp->irq)
+> +	if (pp->has_irq)
+>  		dwapb_configure_irqs(gpio, port, pp);
+>  
+>  	err = gpiochip_add_data(&port->gc, port);
+> @@ -535,7 +540,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>  		port->is_registered = true;
+>  
+>  	/* Add GPIO-signaled ACPI event support */
+> -	if (pp->irq)
+> +	if (pp->has_irq)
+>  		acpi_gpiochip_request_interrupts(&port->gc);
+>  
+>  	return err;
+> @@ -601,13 +606,33 @@ dwapb_gpio_get_pdata(struct device *dev)
+>  		if (dev->of_node && pp->idx == 0 &&
+>  			fwnode_property_read_bool(fwnode,
+>  						  "interrupt-controller")) {
+> -			pp->irq = irq_of_parse_and_map(to_of_node(fwnode), 0);
+> -			if (!pp->irq)
+> +			struct device_node *np = to_of_node(fwnode);
+> +			struct of_phandle_args oirq;
+> +			unsigned int j;
+> +
+> +			/*
+> +			 * The IP has configuration options to allow a single
+> +			 * combined interrupt or one per gpio. If one per gpio,
+> +			 * some might not be used.
+> +			 */
+> +			for (j = 0; j < pp->ngpio; j++) {
+> +				if (of_irq_parse_one(np, j, &oirq))
+> +					continue;
+> +
+> +				pp->irq[j] = irq_create_of_mapping(&oirq);
+
+I'm hoping to not have new users of of_irq_parse_one and 
+irq_create_of_mapping. Can you use of_irq_get instead? It will base back 
+error codes so you can distinguish different conditions.
+
+> +				if (pp->irq[j])
+> +					pp->has_irq = true;
+> +			}
+> +
+> +			if (!pp->has_irq)
+>  				dev_warn(dev, "no irq for port%d\n", pp->idx);
+>  		}
+>  
+> -		if (has_acpi_companion(dev) && pp->idx == 0)
+> -			pp->irq = platform_get_irq(to_platform_device(dev), 0);
+> +		if (has_acpi_companion(dev) && pp->idx == 0) {
+> +			pp->irq[0] = platform_get_irq(to_platform_device(dev), 0);
+> +			if (pp->irq[0])
+> +				pp->has_irq = true;
+> +		}
+>  
+>  		pp->irq_shared	= false;
+>  		pp->gpio_base	= -1;
