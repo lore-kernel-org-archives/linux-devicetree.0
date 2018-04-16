@@ -1,139 +1,152 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 04/10] Documentations: dt-bindings: Add a document of
- PECI adapter driver for Aspeed AST24xx/25xx SoCs
-Date: Mon, 16 Apr 2018 13:10:35 -0500
-Message-ID: <20180416181035.rcjvt4rlrwaj5yxf@rob-hp-laptop>
-References: <20180410183212.16787-1-jae.hyun.yoo@linux.intel.com>
- <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 1/2] ARM: dts: exynos: Move syscon poweroff and restart nodes under the PMU
+Date: Mon, 16 Apr 2018 20:11:25 +0200
+Message-ID: <20180416181126.15629-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180410183212.16787-5-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Alan Cox <alan@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Greg KH <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>, Julia Cartwright <juliac@eso.teric.us>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, Stef van Os <stef.van>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 10, 2018 at 11:32:06AM -0700, Jae Hyun Yoo wrote:
-> This commit adds a dt-bindings document of PECI adapter driver for Aspeed
-> AST24xx/25xx SoCs.
-> 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> Reviewed-by: James Feist <james.feist@linux.intel.com>
-> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
-> Cc: Alan Cox <alan@linux.intel.com>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Fengguang Wu <fengguang.wu@intel.com>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Julia Cartwright <juliac@eso.teric.us>
-> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Cc: Milton Miller II <miltonm@us.ibm.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Stef van Os <stef.van.os@prodrive-technologies.com>
-> Cc: Sumeet R Pawnikar <sumeet.r.pawnikar@intel.com>
-> ---
->  .../devicetree/bindings/peci/peci-aspeed.txt       | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.txt b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
-> new file mode 100644
-> index 000000000000..4598bb8c20fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
-> @@ -0,0 +1,60 @@
-> +Device tree configuration for PECI buses on the AST24XX and AST25XX SoCs.
-> +
-> +Required properties:
-> +- compatible        : Should be "aspeed,ast2400-peci" or "aspeed,ast2500-peci"
-> +		      - aspeed,ast2400-peci: Aspeed AST2400 family PECI
-> +					     controller
-> +		      - aspeed,ast2500-peci: Aspeed AST2500 family PECI
-> +					     controller
-> +- reg               : Should contain PECI controller registers location and
-> +		      length.
-> +- #address-cells    : Should be <1>.
-> +- #size-cells       : Should be <0>.
-> +- interrupts        : Should contain PECI controller interrupt.
-> +- clocks            : Should contain clock source for PECI controller.
-> +		      Should reference clkin.
-> +- clock_frequency   : Should contain the operation frequency of PECI controller
-> +		      in units of Hz.
-> +		      187500 ~ 24000000
+The PMU node is the actual block responsible for power management,
+including typical Exynos on/off/restart procedures.  Therefore the
+syscon poweroff and restart nodes logically belong to it.
 
-This is the frequency of the bus or used to derive it? It would be 
-better to specify the bus frequency instead and have the driver 
-calculate its internal freq. And then use "bus-frequency" instead.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> +
-> +Optional properties:
-> +- msg-timing-nego   : Message timing negotiation period. This value will
-> +		      determine the period of message timing negotiation to be
-> +		      issued by PECI controller. The unit of the programmed
-> +		      value is four times of PECI clock period.
-> +		      0 ~ 255 (default: 1)
-> +- addr-timing-nego  : Address timing negotiation period. This value will
-> +		      determine the period of address timing negotiation to be
-> +		      issued by PECI controller. The unit of the programmed
-> +		      value is four times of PECI clock period.
-> +		      0 ~ 255 (default: 1)
-> +- rd-sampling-point : Read sampling point selection. The whole period of a bit
-> +		      time will be divided into 16 time frames. This value will
-> +		      determine the time frame in which the controller will
-> +		      sample PECI signal for data read back. Usually in the
-> +		      middle of a bit time is the best.
-> +		      0 ~ 15 (default: 8)
-> +- cmd_timeout_ms    : Command timeout in units of ms.
-> +		      1 ~ 60000 (default: 1000)
+---
 
-s/_/-/
+Previously was "Fix missing missing reg warning for syscon restart
+nodes" to fix DTC warnings like:
 
+    arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
+        Node /soc/syscon-poweroff missing or empty reg/ranges property
+    arch/arm/boot/dts/exynos4412-trats2.dtb: Warning (simple_bus_reg):
+        Node /soc/syscon-reboot missing or empty reg/ranges property
 
-All these either need vendor prefixes or should be standard properties 
-for PECI adapters. I think probably the latter case. If so, the first 
-2 should probably be in units of clocks (not 4 clocks). And they should 
-then be documented in the common PECI binding doc.
+but this warnings are gone in v4.17-rc1 since 9130ba884640
+("scripts/dtc: Update to upstream version v1.4.6-9-gaadd0b65c987")
+---
+ arch/arm/boot/dts/exynos-syscon-restart.dtsi | 28 ++++++++++++----------------
+ arch/arm/boot/dts/exynos3250.dtsi            |  2 +-
+ arch/arm/boot/dts/exynos4.dtsi               |  3 ++-
+ arch/arm/boot/dts/exynos5.dtsi               |  1 -
+ arch/arm/boot/dts/exynos5250.dtsi            |  1 +
+ arch/arm/boot/dts/exynos5410.dtsi            |  1 +
+ arch/arm/boot/dts/exynos5420.dtsi            |  1 +
+ 7 files changed, 18 insertions(+), 19 deletions(-)
 
-> +
-> +Example:
-> +	peci: peci@1e78b000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x1e78b000 0x60>;
-
-No need to show this part in examples.
-
-> +
-> +		peci0: peci-bus@0 {
-> +			compatible = "aspeed,ast2500-peci";
-> +			reg = <0x0 0x60>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			interrupts = <15>;
-> +			clocks = <&clk_clkin>;
-> +			clock-frequency = <24000000>;
-> +			msg-timing-nego = <1>;
-> +			addr-timing-nego = <1>;
-> +			rd-sampling-point = <8>;
-> +			cmd-timeout-ms = <1000>;
-> +		};
-> +	};
-> -- 
-> 2.16.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+index 4b3dd0549a54..ecf416690a15 100644
+--- a/arch/arm/boot/dts/exynos-syscon-restart.dtsi
++++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+@@ -3,22 +3,18 @@
+  * Samsung's Exynos SoC syscon reboot/poweroff nodes common definition.
+  */
+ 
+-/ {
+-	soc {
+-		compatible = "simple-bus";
+-
+-		poweroff: syscon-poweroff {
+-			compatible = "syscon-poweroff";
+-			regmap = <&pmu_system_controller>;
+-			offset = <0x330C>; /* PS_HOLD_CONTROL */
+-			mask = <0x5200>; /* reset value */
+-		};
++&pmu_system_controller {
++	poweroff: syscon-poweroff {
++		compatible = "syscon-poweroff";
++		regmap = <&pmu_system_controller>;
++		offset = <0x330C>; /* PS_HOLD_CONTROL */
++		mask = <0x5200>; /* reset value */
++	};
+ 
+-		reboot: syscon-reboot {
+-			compatible = "syscon-reboot";
+-			regmap = <&pmu_system_controller>;
+-			offset = <0x0400>; /* SWRESET */
+-			mask = <0x1>;
+-		};
++	reboot: syscon-reboot {
++		compatible = "syscon-reboot";
++		regmap = <&pmu_system_controller>;
++		offset = <0x0400>; /* SWRESET */
++		mask = <0x1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 0a5f989d963b..962af97c1883 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -15,7 +15,6 @@
+  */
+ 
+ #include "exynos4-cpu-thermal.dtsi"
+-#include "exynos-syscon-restart.dtsi"
+ #include <dt-bindings/clock/exynos3250.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+@@ -919,3 +918,4 @@
+ };
+ 
+ #include "exynos3250-pinctrl.dtsi"
++#include "exynos-syscon-restart.dtsi"
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 909a9f2bf5be..dfe41b698745 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -20,7 +20,6 @@
+ #include <dt-bindings/clock/exynos-audss-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+-#include "exynos-syscon-restart.dtsi"
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -1025,3 +1024,5 @@
+ 		};
+ 	};
+ };
++
++#include "exynos-syscon-restart.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index f8d7de1144f1..359f49bdd4e2 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -12,7 +12,6 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+-#include "exynos-syscon-restart.dtsi"
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 45283a6c5eee..85bfa8909af3 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -1117,3 +1117,4 @@
+ };
+ 
+ #include "exynos5250-pinctrl.dtsi"
++#include "exynos-syscon-restart.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index 55509c690328..20e789ea136f 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -439,3 +439,4 @@
+ };
+ 
+ #include "exynos5410-pinctrl.dtsi"
++#include "exynos-syscon-restart.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 2f3cb2a97f71..71e2b154a244 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -1531,3 +1531,4 @@
+ };
+ 
+ #include "exynos5420-pinctrl.dtsi"
++#include "exynos-syscon-restart.dtsi"
+-- 
+2.14.1
